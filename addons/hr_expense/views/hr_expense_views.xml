@@ -743,9 +743,19 @@
                                     nolabel="1"
                                     widget="many2many"
                                     mode="tree,kanban"
-                                    domain="[('state', '=', 'draft'), ('employee_id', '=', employee_id), ('company_id', '=', company_id)]"
+                                    domain="[
+                                        ('state', '=', 'draft'),
+                                        ('employee_id', '=', employee_id),
+                                        ('company_id', '=', company_id),
+                                        ('payment_mode', '=?', payment_mode),
+                                    ]"
                                     options="{'reload_on_button': True}"
-                                    context="{'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header', 'default_company_id': company_id, 'default_employee_id': employee_id}"
+                                    context="{
+                                        'form_view_ref' : 'hr_expense.hr_expense_view_form_without_header',
+                                        'default_company_id': company_id,
+                                        'default_employee_id': employee_id,
+                                        'default_payment_mode': payment_mode,
+                                    }"
                                     attrs="{'readonly': [('is_editable', '=', False)]}"
                                     force_save="1">
                                 <tree decoration-danger="is_refused" editable="bottom" class="o_expense_line_list">
@@ -762,7 +772,7 @@
                                            groups="analytic.group_analytic_accounting"
                                            optional="show"
                                            options="{'product_field': 'product_id', 'account_field': 'account_id', 'business_domain': 'expense'}"/>
-                                    <field name="account_id" optional="hide" readonly="True"/>
+                                    <field name="account_id" optional="hide" groups="account.group_account_readonly"/>
                                     <field name="product_has_cost" invisible="True"/>
                                     <field name="unit_amount" optional="hide" widget="monetary" attrs="{'readonly': [('product_has_cost', '=', False)]}" options="{'currency_field': 'currency_id'}"/>
                                     <field name="currency_id" optional="hide" readonly="True"/>
@@ -940,7 +950,6 @@
                     <searchpanel>
                         <field name="state" expand="1" select="multi" icon="fa-check-square-o" enable_counters="1"/>
                         <field name="employee_id"  limit="20" hierarchize="0" select="one" icon="fa-users"/>
-                        <field name="product_ids" limit="20" select="multi" icon="fa-tags"/>
                         <field name="company_id" expand="1" icon="fa-building" groups="base.group_multi_company"/>
                     </searchpanel>
                 </xpath>

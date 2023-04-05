@@ -114,12 +114,16 @@ class Project(models.Model):
             raise ValueError(_('Invalid operator: %s') % operator)
 
         query = """
-            SELECT P.id
-              FROM project_project P
-         LEFT JOIN project_task T ON P.id = T.project_id
-             WHERE p.allocated_hours != 0 AND p.allow_timesheets
-          GROUP BY P.id
-            HAVING P.allocated_hours - SUM(T.effective_hours) < 0
+            SELECT Project.id
+              FROM project_project AS Project
+              JOIN project_task AS Task
+                ON Project.id = Task.project_id
+             WHERE Project.allocated_hours > 0
+               AND Project.allow_timesheets = TRUE
+               AND Task.parent_id IS NULL
+               AND Task.is_closed IS FALSE
+          GROUP BY Project.id
+            HAVING Project.allocated_hours - SUM(Task.effective_hours) < 0
         """
         if (operator == '=' and value is True) or (operator == '!=' and value is False):
             operator_new = 'inselect'
@@ -327,7 +331,7 @@ class Task(models.Model):
 
     def action_view_subtask_timesheet(self):
         self.ensure_one()
-        tasks = self.with_context(active_test=False)._get_all_subtasks()
+        task_ids = self.with_context(active_test=False)._get_subtask_ids_per_task_id().get(self.id, [])
         action = self.env["ir.actions.actions"]._for_xml_id("hr_timesheet.timesheet_action_all")
         graph_view_id = self.env.ref("hr_timesheet.view_hr_timesheet_line_graph_by_employee").id
         new_views = []
@@ -338,7 +342,7 @@ class Task(models.Model):
         action.update({
             'display_name': _('Timesheets'),
             'context': {'default_project_id': self.project_id.id, 'grid_range': 'week'},
-            'domain': [('project_id', '!=', False), ('task_id', 'in', tasks.ids)],
+            'domain': [('project_id', '!=', False), ('task_id', 'in', task_ids)],
             'views': new_views,
         })
         return action

@@ -301,6 +301,26 @@ snippetsEditor.SnippetsMenu.include({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async cleanForSave() {
+        // Clean unstyled translations
+        return this._super(...arguments).then(() => {
+            for (const el of this.options.editable[0].querySelectorAll('.o_translation_without_style')) {
+                el.classList.remove('o_translation_without_style');
+                if (el.dataset.oeTranslationSaveSha) {
+                    el.dataset.oeTranslationInitialSha = el.dataset.oeTranslationSaveSha;
+                    delete el.dataset.oeTranslationSaveSha;
+                }
+            }
+        });
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -310,6 +330,7 @@ snippetsEditor.SnippetsMenu.include({
     _insertDropzone: function ($hook) {
         var $hookParent = $hook.parent();
         var $dropzone = this._super(...arguments);
+        $dropzone.attr('data-editor-message-default', $hookParent.attr('data-editor-message-default'));
         $dropzone.attr('data-editor-message', $hookParent.attr('data-editor-message'));
         $dropzone.attr('data-editor-sub-message', $hookParent.attr('data-editor-sub-message'));
         return $dropzone;

@@ -966,8 +966,7 @@ section, .oe_img_bg, [data-oe-shape-data] {
     $url-params: '';
     @each $i in $colors {
         $mapped-color: map-get($color-to-cc-bg-map, $i);
-        // %23 is the url-encoded form of '#'
-        $color: str-replace("#{o-color($mapped-color)}", '#', '%23');
+        $color: encode-color(#{o-color($mapped-color)});
         $url-params: '#{$url-params}&c#{$i}=#{$color}';
     }
     @return $url-params;

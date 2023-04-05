@@ -2656,7 +2656,8 @@ class BaseModel(metaclass=MetaModel):
                 # following specific properties:
                 #  - reading inherited fields should not bypass access rights
                 #  - copy inherited fields iff their original field is copied
-                self._add_field(name, field.new(
+                Field = type(field)
+                self._add_field(name, Field(
                     inherited=True,
                     inherited_field=field,
                     related=f"{parent_fname}.{name}",
@@ -2745,11 +2746,12 @@ class BaseModel(metaclass=MetaModel):
                 if not translate:
                     # patch the field definition by adding an override
                     _logger.debug("Patching %s.%s with translate=True", cls._name, name)
-                    fields_.append(fields_[0].new(translate=True))
+                    fields_.append(type(fields_[0])(translate=True))
             if len(fields_) == 1 and fields_[0]._direct and fields_[0].model_name == cls._name:
                 cls._fields[name] = fields_[0]
             else:
-                self._add_field(name, fields_[-1].new(_base_fields=fields_))
+                Field = type(fields_[-1])
+                self._add_field(name, Field(_base_fields=fields_))
 
         # 2. add manual fields
         if self.pool._init_modules:
@@ -3002,12 +3004,12 @@ class BaseModel(metaclass=MetaModel):
         """
         self.ensure_one()
 
-        installed_lang = set(code for code, _ in self.env['res.lang'].get_installed())
-        missing_languages = set(translations) - installed_lang
-        if missing_languages:
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
+        missing_langs = set(translations) - valid_langs
+        if missing_langs:
             raise UserError(
-                _("The following language is not activated: %(missing_names)s",
-                missing_names=', '.join(missing_languages))
+                _("The following languages are not activated: %(missing_names)s",
+                missing_names=', '.join(missing_langs))
             )
 
         field = self._fields[field_name]
@@ -4188,12 +4190,7 @@ class BaseModel(metaclass=MetaModel):
         return records
 
     def _compute_field_value(self, field):
-        # This is for base automation, to have something to override to catch
-        # the changes of values for stored compute fields.
-        if isinstance(field.compute, str):
-            getattr(self, field.compute)()
-        else:
-            field.compute(self)
+        fields.determine(field.compute, self)
 
         if field.store and any(self._ids):
             # check constraints of the fields that have been computed
@@ -4725,6 +4722,7 @@ class BaseModel(metaclass=MetaModel):
         if old.id in seen_map[old._name]:
             return
         seen_map[old._name].add(old.id)
+        valid_langs = set(code for code, _ in self.env['res.lang'].get_installed()) | {'en_US'}
 
         for name, field in old._fields.items():
             if not field.copy:
@@ -4753,6 +4751,11 @@ class BaseModel(metaclass=MetaModel):
                     continue
                 lang = self.env.lang or 'en_US'
                 old_value_lang = old_translations.pop(lang, old_translations['en_US'])
+                old_translations = {
+                    lang: value
+                    for lang, value in old_translations.items()
+                    if lang in valid_langs
+                }
                 if not old_translations:
                     continue
                 if not callable(field.translate):

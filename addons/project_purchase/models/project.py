@@ -178,7 +178,7 @@ class Project(models.Model):
             # account_move_line__move_id is the alias of the joined table account_move in the query
             # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
             # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-            query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line__move_id.move_type')
+            query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type')
             self._cr.execute(query_string, query_param)
             bills_move_line_read = self._cr.dictfetchall()
             if bills_move_line_read:
@@ -191,16 +191,17 @@ class Project(models.Model):
                 amount_invoiced = amount_to_invoice = 0.0
                 for moves_read in bills_move_line_read:
                     price_subtotal = self.analytic_account_id.currency_id.round(moves_read['price_subtotal'] * conversion_rates[moves_read['currency_id']])
+                    analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
                     if moves_read['parent_state'] == 'draft':
                         if moves_read['move_type'] == 'in_invoice':
-                            amount_to_invoice -= price_subtotal
+                            amount_to_invoice -= price_subtotal * analytic_contribution
                         else:  # moves_read['move_type'] == 'in_refund'
-                            amount_to_invoice += price_subtotal
+                            amount_to_invoice += price_subtotal * analytic_contribution
                     else:  # moves_read['parent_state'] == 'posted'
                         if moves_read['move_type'] == 'in_invoice':
-                            amount_invoiced -= price_subtotal
+                            amount_invoiced -= price_subtotal * analytic_contribution
                         else:  # moves_read['move_type'] == 'in_refund'
-                            amount_invoiced += price_subtotal
+                            amount_invoiced += price_subtotal * analytic_contribution
                 # don't display the section if the final values are both 0 (bill -> vendor credit)
                 if amount_invoiced != 0 or amount_to_invoice != 0:
                     costs = profitability_items['costs']

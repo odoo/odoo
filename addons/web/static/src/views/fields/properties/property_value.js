@@ -149,6 +149,10 @@ export class PropertyValue extends Component {
 
         if (this.props.type === "many2one" && value && value.length === 2) {
             return formatMany2one(value);
+        } else if (this.props.type === "integer") {
+            return formatInteger(value || 0);
+        } else if (this.props.type === "float") {
+            return formatFloat(value || 0);
         } else if (!value) {
             return false;
         } else if (this.props.type === "datetime" && value) {
@@ -157,10 +161,6 @@ export class PropertyValue extends Component {
             return formatDate(value);
         } else if (this.props.type === "selection") {
             return this.props.selection.find((option) => option[0] === value)[1];
-        } else if (this.props.type === "float") {
-            return formatFloat(value);
-        } else if (this.props.type === "integer") {
-            return formatInteger(value);
         }
         return value.toString();
     }

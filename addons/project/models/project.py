@@ -54,7 +54,6 @@ PROJECT_TASK_READABLE_FIELDS = {
 PROJECT_TASK_WRITABLE_FIELDS = {
     'name',
     'partner_id',
-    'partner_email',
     'date_deadline',
     'tag_ids',
     'sequence',
@@ -581,8 +580,7 @@ class Project(models.Model):
     def map_tasks(self, new_project_id):
         """ copy and map tasks from old to new project """
         project = self.browse(new_project_id)
-        new_task_ids = []
-        new_subtasks = self.env['project.task']
+        new_tasks = self.env['project.task']
         # We want to copy archived task, but do not propagate an active_test context key
         task_ids = self.env['project.task'].with_context(active_test=False).search([('project_id', '=', self.id), ('parent_id', '=', False)]).ids
         if self.allow_task_dependencies and 'task_mapping' not in self.env.context:
@@ -590,13 +588,13 @@ class Project(models.Model):
         for task in self.env['project.task'].browse(task_ids):
             # preserve task name and stage, normally altered during copy
             defaults = self._map_tasks_default_valeus(task, project)
-            new_task = task.copy(defaults)
-            new_task_ids.append(new_task.id)
-            all_subtasks = new_task._get_all_subtasks()
-            if all_subtasks:
-                new_subtasks += all_subtasks.filtered(lambda child: child.display_project_id == self)
-        project.write({'tasks': [Command.set(new_task_ids)]})
-        new_subtasks.write({'display_project_id': project.id})
+            new_tasks |= task.copy(defaults)
+        project.write({'tasks': [Command.set(new_tasks.ids)]})
+        new_tasks._get_all_subtasks().filtered(
+            lambda child: child.display_project_id == self
+        ).write({
+            'display_project_id': project.id
+        })
         return True
 
     @api.returns('self', lambda value: value.id)
@@ -1029,7 +1027,7 @@ class Project(models.Model):
         if self.privacy_visibility != 'portal':
             return False
         if self.env.user.has_group('base.group_portal'):
-            return self.env.user.partner_id in self.collaborator_ids.partner_id
+            return self.env['project.collaborator'].search([('project_id', '=', self.sudo().id), ('partner_id', '=', self.env.user.partner_id.id)])
         return self.env.user._is_internal()
 
     def _add_collaborators(self, partners):
@@ -1667,8 +1665,9 @@ class Task(models.Model):
 
     @api.depends('child_ids')
     def _compute_subtask_count(self):
+        subtasks_per_task = self._get_subtask_ids_per_task_id()
         for task in self:
-            task.subtask_count = len(task._get_all_subtasks())
+            task.subtask_count = len(subtasks_per_task.get(task.id, []))
 
     @api.onchange('company_id')
     def _onchange_task_company(self):
@@ -2485,16 +2484,51 @@ class Task(models.Model):
     def action_unassign_me(self):
         self.write({'user_ids': [Command.unlink(self.env.uid)]})
 
-    # If depth == 1, return only direct children
-    # If depth == 3, return children to third generation
-    # If depth <= 0, return all children without depth limit
     def _get_all_subtasks(self, depth=0):
-        children = self.mapped('child_ids')
+        return self.browse(set.union(set(), *self._get_subtask_ids_per_task_id().values()))
+
+    def _get_subtask_ids_per_task_id(self):
+        if not self:
+            return {}
+
+        res = dict.fromkeys(self._ids, [])
+        if all(self._ids):
+            self.env.cr.execute(
+                """
+         WITH RECURSIVE task_tree
+                     AS (
+                     SELECT id, id as supertask_id
+                       FROM project_task
+                      WHERE id IN %(ancestor_ids)s
+                      UNION
+                         SELECT t.id, tree.supertask_id
+                           FROM project_task t
+                           JOIN task_tree tree
+                             ON tree.id = t.parent_id
+                            AND t.active in (TRUE, %(active)s)
+               ) SELECT supertask_id, ARRAY_AGG(id)
+                   FROM task_tree
+                  WHERE id != supertask_id
+               GROUP BY supertask_id
+                """,
+                {
+                    "ancestor_ids": tuple(self.ids),
+                    "active": self._context.get('active_test', True),
+                }
+            )
+            res.update(dict(self.env.cr.fetchall()))
+        else:
+            res.update({
+                task.id: task._get_subtasks_recursively().ids
+                for task in self
+            })
+        return res
+
+    def _get_subtasks_recursively(self):
+        children = self.child_ids
         if not children:
             return self.env['project.task']
-        if depth == 1:
-            return children
-        return children + children._get_all_subtasks(depth - 1)
+        return children + children._get_all_subtasks()
 
     def action_open_parent_task(self):
         return {
@@ -2702,14 +2736,58 @@ class ProjectTags(models.Model):
 
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        domain = args
-        if 'project_id' in self.env.context:
-            domain = self._get_project_tags_domain(domain, self.env.context.get('project_id'))
-        return super()._name_search(name, domain, operator, limit, name_get_uid)
-
-    @api.model
-    def name_create(self, name):
-        existing_tag = self.search([('name', '=ilike', name.strip())], limit=1)
-        if existing_tag:
-            return existing_tag.name_get()[0]
-        return super().name_create(name)
+        if self.env.context.get('project_id') and operator == 'ilike':
+            # `args` has the form of the default filter ['!', ['id', 'in', <ids>]]
+            # passed to exclude already selected tags -> exclude them in our query too
+            excluded_ids = list(args[1][2]) \
+                if args and len(args) == 2 and args[0] == '!' and len(args[1]) == 3 and args[1][:2] == ["id", "in"] \
+                else []
+            # UNION ALL is lazy evaluated, if the first query has enough results,
+            # the second is not executed (just planned).
+            query = """
+                WITH query_tags_in_tasks AS (
+                    SELECT tags.id, COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') AS name, 1 AS sequence
+                    FROM project_tags AS tags
+                    JOIN (
+                        SELECT project_tags_id
+                        FROM project_tags_project_task_rel AS rel
+                        JOIN project_task AS task
+                            ON task.project_id = %(project_id)s
+                            AND task.id = rel.project_task_id
+                        ORDER BY task.id DESC
+                        LIMIT 1000 -- arbitrary limit to speed up lookup on huge projects (fallback below on global scope)
+                    ) AS tags__tasks_ids
+                        ON tags__tasks_ids.project_tags_id = tags.id
+                    WHERE tags.id != ALL(%(excluded_ids)s)
+                    AND COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') ILIKE %(search_term)s
+                    GROUP BY 1, 2, 3  -- faster than a distinct
+                    LIMIT %(limit)s
+                ), query_all_tags AS (
+                    SELECT tags.id, COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') AS name, 2 AS sequence
+                    FROM project_tags AS tags
+                    WHERE tags.id != ALL(%(excluded_ids)s)
+                    AND tags.id NOT IN (SELECT id FROM query_tags_in_tasks)
+                    AND COALESCE(tags.name ->> %(lang)s, tags.name ->> 'en_US') ILIKE %(search_term)s
+                    LIMIT %(limit)s
+                )
+                SELECT id FROM (
+                    SELECT id, name, sequence
+                    FROM query_tags_in_tasks
+                    UNION ALL
+                    SELECT id, name, sequence
+                    FROM query_all_tags
+                    LIMIT %(limit)s
+                ) AS tags
+                ORDER BY sequence, name
+            """
+            params = {
+                'project_id': self.env.context.get('project_id'),
+                'excluded_ids': excluded_ids,
+                'limit': limit,
+                'lang': self.env.context.get('lang', 'en_US'),
+                'search_term': '%' + name + '%',
+            }
+            self.env.cr.execute(query, params)
+            return [row[0] for row in self.env.cr.fetchall()]
+        else:
+            return super()._name_search(name, args, operator, limit, name_get_uid)

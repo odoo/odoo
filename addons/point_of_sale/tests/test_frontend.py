@@ -686,3 +686,87 @@ class TestUi(TestPointOfSaleHttpCommon):
         pos_session = self.main_pos_config.current_session_id
         self.assertEqual(len(pos_session.statement_line_ids), 1)
         self.assertEqual(pos_session.statement_line_ids[0].amount, -10)
+
+    def test_fiscal_position_no_tax(self):
+        #create a tax of 15% with price included
+        tax = self.env['account.tax'].create({
+            'name': 'Tax 15%',
+            'amount': 15,
+            'price_include': True,
+            'amount_type': 'percent',
+            'type_tax_use': 'sale',
+        })
+
+        #create a product with the tax
+        self.product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'taxes_id': [(6, 0, [tax.id])],
+            'list_price': 100,
+            'available_in_pos': True,
+        })
+
+        #create a fiscal position that map the tax to no tax
+        fiscal_position = self.env['account.fiscal.position'].create({
+            'name': 'No Tax',
+            'tax_ids': [(0, 0, {
+                'tax_src_id': tax.id,
+                'tax_dest_id': False,
+            })],
+        })
+
+        pricelist = self.env['product.pricelist'].create({
+            'name': 'Test Pricelist',
+            'discount_policy': 'without_discount',
+        })
+
+        self.main_pos_config.write({
+            'tax_regime_selection': True,
+            'fiscal_position_ids': [(6, 0, [fiscal_position.id])],
+            'available_pricelist_ids': [(6, 0, [pricelist.id])],
+            'pricelist_id': pricelist.id,
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="accountman")
+
+    def test_06_pos_discount_display_with_multiple_pricelist(self):
+        """ Test the discount display on the POS screen when multiple pricelists are used."""
+        test_product = self.env['product.product'].create({
+            'name': 'Test Product',
+            'available_in_pos': True,
+            'list_price': 10,
+            'taxes_id': False,
+        })
+
+        base_pricelist = self.env['product.pricelist'].create({
+            'name': 'base_pricelist',
+            'discount_policy': 'without_discount',
+        })
+
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': base_pricelist.id,
+            'product_tmpl_id': test_product.product_tmpl_id.id,
+            'compute_price': 'fixed',
+            'applied_on': '1_product',
+            'fixed_price': 7,
+        })
+
+        special_pricelist = self.env['product.pricelist'].create({
+            'name': 'special_pricelist',
+            'discount_policy': 'without_discount',
+        })
+        self.env['product.pricelist.item'].create({
+            'pricelist_id': special_pricelist.id,
+            'base': 'pricelist',
+            'base_pricelist_id': base_pricelist.id,
+            'compute_price': 'formula',
+            'applied_on': '3_global',
+            'price_discount': 10,
+        })
+
+        self.main_pos_config.write({
+            'pricelist_id': base_pricelist.id,
+            'available_pricelist_ids': [(6, 0, [base_pricelist.id, special_pricelist.id])],
+        })
+
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="accountman")

@@ -107,7 +107,8 @@ class AccountAnalyticAccount(models.Model):
             FROM account_analytic_line line
             JOIN account_analytic_account account ON line.account_id = account.id
             WHERE line.company_id != account.company_id and account.company_id IS NOT NULL
-        ''')
+            AND account.id IN %s
+        ''', [tuple(self.ids)])
 
         if self._cr.fetchone():
             raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))

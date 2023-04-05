@@ -41,7 +41,7 @@
          * @returns {Promise}
          */
         async _makeAvatarWidget() {
-            const modelName = 'hr.employee';
+            const modelName = 'hr.employee.public';
             const fieldName = 'employee_id';
             const recordId = await this.model.makeRecord(modelName, [{
                 name: fieldName,
