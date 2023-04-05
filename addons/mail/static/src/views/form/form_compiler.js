@@ -37,8 +37,9 @@ function compileChatter(node, params) {
                 break;
         }
     }
-    const chatterContainerXml = createElement("Chatter");
+    const chatterContainerXml = createElement("t");
     setAttributes(chatterContainerXml, {
+        "t-component": "__comp__.mailComponents.Chatter",
         hasActivities,
         hasFollowers,
         hasMessageList,
@@ -60,8 +61,9 @@ function compileChatter(node, params) {
 function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerHookXml = createElement("div");
     webClientViewAttachmentViewContainerHookXml.classList.add("o_attachment_preview");
-    const webClientViewAttachmentViewContainerXml = createElement("AttachmentView");
+    const webClientViewAttachmentViewContainerXml = createElement("t");
     setAttributes(webClientViewAttachmentViewContainerXml, {
+        "t-component": "__comp__.mailComponents.AttachmentView",
         threadId: params.threadId,
         threadModel: params.threadModel,
     });
@@ -87,7 +89,9 @@ export class MailFormCompiler extends ViewCompiler {
                 "t-if": `!__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
                 "t-attf-class": "o-aside",
             });
-            const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
+            const chatterContainerXml = chatterContainerHookXml.querySelector(
+                "t[t-component='__comp__.mailComponents.Chatter']"
+            );
             setAttributes(chatterContainerXml, {
                 hasMessageScrollAdjustInChatter: "true",
                 isInFormSheetBg: "false",
@@ -156,7 +160,9 @@ patch(FormCompiler.prototype, "mail", {
         if (!chatterContainerHookXml) {
             return res; // no chatter, keep the result as it is
         }
-        const chatterContainerXml = chatterContainerHookXml.querySelector("Chatter");
+        const chatterContainerXml = chatterContainerHookXml.querySelector(
+            "t[t-component='__comp__.mailComponents.Chatter']"
+        );
         setAttributes(chatterContainerXml, {
             hasMessageScrollAdjustInChatter: "false",
             isInFormSheetBg: "false",
@@ -178,8 +184,9 @@ patch(FormCompiler.prototype, "mail", {
                 "t-if": `__comp__.props.hasAttachmentViewer`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
-            const sheetBgChatterContainerXml =
-                sheetBgChatterContainerHookXml.querySelector("Chatter");
+            const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
+                "t[t-component='__comp__.mailComponents.Chatter']"
+            );
             setAttributes(sheetBgChatterContainerXml, {
                 isInFormSheetBg: "true",
             });

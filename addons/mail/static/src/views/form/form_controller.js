@@ -53,6 +53,7 @@ patch(FormController.prototype, "mail", {
             {}
         );
         this.mailTemplate = mailTemplates.Mail;
+        this.mailComponents = { AttachmentView, Chatter };
 
         this.onResize = useDebounced(this.render, 200);
         onMounted(() => browser.addEventListener("resize", this.onResize));
@@ -80,9 +81,4 @@ patch(FormController.prototype, "mail", {
     evalDomainFromRecord(record, expr) {
         return evalDomain(expr, record.evalContext);
     },
-});
-
-Object.assign(FormController.components, {
-    AttachmentView,
-    Chatter,
 });

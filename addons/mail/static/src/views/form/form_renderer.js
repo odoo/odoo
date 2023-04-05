@@ -7,6 +7,10 @@ import { patch } from "@web/core/utils/patch";
 import { FormRenderer } from "@web/views/form/form_renderer";
 
 patch(FormRenderer.prototype, "mail", {
+    setup() {
+        this._super();
+        this.mailComponents = { AttachmentView, Chatter };
+    },
     get compileParams() {
         return {
             ...this._super(),
@@ -22,9 +26,4 @@ patch(FormRenderer.props, "mail", {
     hasAttachmentViewer: { type: Boolean, optional: true },
     chatter: { type: Object, optional: true },
     saveButtonClicked: { type: Function, optional: true },
-});
-
-Object.assign(FormRenderer.components, {
-    AttachmentView,
-    Chatter,
 });
