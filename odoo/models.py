@@ -3017,9 +3017,10 @@ class BaseModel(metaclass=MetaModel):
         return self._read_format(fnames=fields, load=load)
 
     def unity_read(self, specification=None):
-        specification = self.check_field_access_rights('read', specification)
-        self.fetch(specification)
-        return self._unity_read_format(specification)
+        accessible_field_names = self.check_field_access_rights('read', specification)
+        accessible_specification = {field_name: specification.get(field_name, {}) for field_name in accessible_field_names}
+        self.fetch(accessible_field_names)
+        return self._unity_read_format(accessible_specification)
 
     def _unity_read_format(self, specification: list | dict, limit: int | None = None, offset: int | None = None, order: str | None = None) -> list[dict]:
         # TODO VSC: replace _read_format
@@ -5190,8 +5191,9 @@ class BaseModel(metaclass=MetaModel):
         :return: List of dictionaries containing the asked fields.
         :rtype: list(dict).
         """
-        specification = self.check_field_access_rights('read', specification)
-        records = self.search_fetch(domain or [], specification, offset=offset, limit=limit, order=order)
+        accessible_field_names = self.check_field_access_rights('read', specification)
+        accessible_specification = {field_name: specification.get(field_name, {}) for field_name in accessible_field_names}
+        records = self.search_fetch(domain or [], accessible_field_names, offset=offset, limit=limit, order=order)
 
         # Method _read_format() ignores 'active_test', but it would forward it
         # to any downstream search call(e.g. for x2m or computed fields), and
@@ -5202,7 +5204,7 @@ class BaseModel(metaclass=MetaModel):
             del context['active_test']
             records = records.with_context(context)
 
-        return records._unity_read_format(fnames=specification, **read_kwargs)
+        return records._unity_read_format(accessible_specification, **read_kwargs)
 
     def toggle_active(self):
         "Inverses the value of :attr:`active` on the records in ``self``."
