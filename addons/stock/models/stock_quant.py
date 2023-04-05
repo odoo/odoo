@@ -523,6 +523,20 @@ class StockQuant(models.Model):
             'target': 'new',
         }
 
+    def name_get(self):
+        """name that will be displayed in the detailed operation"""
+        name_parts = []
+        for record in self:
+            name = []
+            if self.env.user.has_group('stock.group_stock_multi_locations'):
+                name.append(record.location_id.display_name)
+            if self.env.user.has_group('stock.group_production_lot') and record.lot_id:
+                name.append(record.lot_id.name)
+            name_parts.append(name)
+        if name_parts:
+            return [(quant.id, ' - '.join(name)) for quant, name in zip(self, name_parts)]
+        return []
+
     @api.constrains('product_id')
     def check_product_id(self):
         if any(elem.product_id.type != 'product' for elem in self):
