@@ -357,6 +357,36 @@
         </field>
     </record>
 
+    <record id="view_stock_quant_form" model="ir.ui.view">
+        <field name="name">view.stock.quant.form</field>
+        <field name="priority">100</field>
+        <field name="model">stock.quant</field>
+        <field name="arch" type="xml">
+            <form string="Create Stock">
+                <div class="alert alert-warning" role="alert" invisible="context.get('readonly_form')">
+                You are going to pick products that are not referenced
+in this location. That leads to a negative stock.
+                </div>
+                <group>
+                    <group>
+                        <field name="location_id" invisible="1"/>
+                        <field name="company_id" invisible="1"/>
+                        <field name="product_id" force_save="1" invisible="1"/>
+                        <field name="lot_id" domain="[('product_id', '=', product_id)]"
+                            groups="stock.group_production_lot" readonly="context.get('readonly_form')"/>
+                        <field name="location_id" groups="stock.group_stock_multi_locations" readonly="context.get('readonly_form')"/>
+                        <field name="package_id" groups="stock.group_tracking_lot" invisible="context.get('readonly_form')"/>
+                        <field name="owner_id" groups="stock.group_tracking_owner" invisible="context.get('readonly_form')"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Confirm" class="btn btn-danger" special="save"/>
+                    <button string="Discard" class="btn btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
     <!-- Inventory Adjustments + Update Quantity (via product) view -->
     <record model="ir.ui.view" id="view_stock_quant_tree_inventory_editable">
         <field name="name">stock.quant.inventory.tree.editable</field>

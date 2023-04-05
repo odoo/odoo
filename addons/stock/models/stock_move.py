@@ -768,7 +768,7 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         if self.product_id.tracking == "serial" and self.state == "assigned":
             self.next_serial = self.env['stock.lot']._get_next_serial(self.company_id, self.product_id)
-
+        quant_mode = self.picking_type_id.code != 'incoming'
         return {
             'name': _('Detailed Operations'),
             'type': 'ir.actions.act_window',
@@ -780,13 +780,13 @@ Please change the quantity done or the rounding precision of your unit of measur
             'res_id': self.id,
             'context': dict(
                 self.env.context,
-                show_owner=self.picking_type_id.code != 'incoming',
-                show_lots_m2o=self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
+                show_owner=not quant_mode,
+                show_quant=quant_mode,
+                show_lots_m2o=not quant_mode and self.has_tracking != 'none' and (self.picking_type_id.use_existing_lots or self.state == 'done' or self.origin_returned_move_id.id),  # able to create lots, whatever the value of ` use_create_lots`.
                 show_lots_text=self.has_tracking != 'none' and self.picking_type_id.use_create_lots and not self.picking_type_id.use_existing_lots and self.state != 'done' and not self.origin_returned_move_id.id,
-                show_source_location=self.picking_type_id.code != 'incoming',
-                show_destination_location=self.picking_type_id.code != 'outgoing',
-                show_package=not self.location_id.usage == 'supplier',
-                show_reserved_quantity=self.state != 'done' and self.picking_type_id.code != 'incoming'
+                show_destination_location=not quant_mode,
+                show_package=not quant_mode,
+                show_reserved_quantity=self.state != 'done' and quant_mode
             ),
         }
 
