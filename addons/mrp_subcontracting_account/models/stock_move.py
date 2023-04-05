@@ -19,10 +19,17 @@ class StockMove(models.Model):
             return rslt
         # split the credit line to two, one for component cost, one for subcontracting service cost
         currency = self.company_id.currency_id
-        subcontract_service_cost = currency.round(subcontract_production.extra_cost * qty)
+        if self.product_id.cost_method == 'standard':
+            # In case of standard price, the component cost is the cost of the product
+            # the subcontracting service cost may not represent the real cost of the subcontracting service
+            # the difference should be posted in price difference account in the end
+            component_cost = currency.round(sum(m.price_unit * m.product_uom_qty for m in subcontract_production.move_raw_ids))
+            subcontract_service_cost = credit_value - component_cost
+        else:
+            subcontract_service_cost = currency.round(subcontract_production.extra_cost * qty)
+            component_cost = credit_value - subcontract_service_cost
         if not currency.is_zero(subcontract_service_cost):
             del rslt['credit_line_vals']
-            component_cost = -credit_value + subcontract_service_cost
             component_cost_account = self.product_id.product_tmpl_id.get_product_accounts()['stock_output']
             rslt['subcontract_credit_line_vals'] = {
                 'name': description,
@@ -41,7 +48,7 @@ class StockMove(models.Model):
                 'product_uom_id': self.product_id.uom_id.id,
                 'ref': description,
                 'partner_id': partner_id,
-                'balance': component_cost,
+                'balance': -component_cost,
                 'account_id': component_cost_account.id,
             }
         return rslt

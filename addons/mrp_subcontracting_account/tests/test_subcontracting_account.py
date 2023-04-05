@@ -333,6 +333,58 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             {'quantity': 2, 'value': 2 * (10 + 20 + 50)},
         ])
 
+    def test_subcontract_cost_different_when_standard_price(self):
+        """Test when subcontracting with standard price when
+            Final product cost != Components cost + Subcontracting cost
+        When posting the account entries for receiving final product, the
+        subcontracting cost will be adjusted based on the difference of the cost.
+        """
+        # pylint: disable=bad-whitespace
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.customer_location = self.env.ref('stock.stock_location_customers')
+        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
+        self.uom_unit = self.env.ref('uom.product_uom_unit')
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.property_cost_method = 'standard'
+        product_category_all.property_valuation = 'real_time'
+        stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
+        stock_out_acc_id = product_category_all.property_stock_account_output_categ_id.id
+        stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
+
+        self.comp1.standard_price = 10
+        self.comp2.standard_price = 20
+        self.finished.standard_price = 40
+
+        all_amls_ids = self.env['account.move.line'].search([]).ids
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 1
+        picking_receipt = picking_form.save()
+        # subcontracting cost is 15
+        picking_receipt.move_ids.price_unit = 15.0
+        picking_receipt.action_confirm()
+
+        picking_receipt.move_ids.quantity_done = 1.0
+        picking_receipt._action_done()
+
+        amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
+        self.assertRecordValues(amls, [
+            # Receipt from subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 40.0,  'credit': 0.0},
+            {'account_id': stock_in_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 10.0},   # adjust according to the difference
+            {'account_id': stock_out_acc_id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
+            # Delivery com2 to subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
+            # Delivery com2 to subcontractor
+            {'account_id': stock_valu_acc_id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
+            {'account_id': stock_out_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
+        ])
+
 
 class TestBomPriceSubcontracting(TestBomPriceCommon):
 
