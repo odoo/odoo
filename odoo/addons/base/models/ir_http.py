@@ -152,7 +152,7 @@ class IrHttp(models.AbstractModel):
     @classmethod
     def _dispatch(cls, endpoint):
         result = endpoint(**request.params)
-        if isinstance(result, Response) and result.is_qweb:
+        if isinstance(result, Response):
             result.flatten()
         return result
 
