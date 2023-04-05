@@ -200,7 +200,6 @@ export class PosStore extends Reactive {
         if (!options) {
             return;
         }
-
         // Add the product after having the extra information.
         this.addProductFromUi(product, options);
         this.numberBuffer.reset();

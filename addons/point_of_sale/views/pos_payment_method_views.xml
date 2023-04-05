@@ -48,6 +48,7 @@
         <field name="arch" type="xml">
             <tree string="Payment Methods" create="1" delete="1">
                 <field name="type" invisible="1"/>
+                <field name="sequence" widget="handle"/>
                 <field name="name" />
                 <field name="split_transactions" optional="hide" />
                 <field name="journal_id" attrs="{'required': [('split_transactions', '=', False)]}" />

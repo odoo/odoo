@@ -17,7 +17,7 @@
                             <tr>
                                 <th>Payment Method</th>
                                 <th>Expected</th>
-                                <th style="width: 25%">Counted</th>
+                                <th style="width: 20%">Counted</th>
                                 <th style="width: 20%">Difference</th>
                             </tr>
                         </thead>
@@ -27,9 +27,9 @@
                                     <td t-esc="defaultCashDetails.name"/>
                                     <td t-esc="env.utils.formatCurrency(defaultCashDetails.amount)"/>
                                     <td class="flex" t-on-input="() => this.handleInputChange(defaultCashDetails.id)">
-                                        <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted"/>
-                                        <div class="button icon" t-on-click="openDetailsPopup">
-                                            <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
+                                        <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted" t-on-focus="ev=>ev.target.select()"/>
+                                        <div class="button icon ClosePosPopup" t-on-click="openDetailsPopup">
+                                            <i class="fa fa-money" role="img" title="Open the money details popup"/>
                                         </div>
                                     </td>
                                     <td t-esc="env.utils.formatCurrency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning': state.payments[defaultCashDetails.id].difference}"/>
@@ -65,17 +65,25 @@
                                 <td t-esc="pm.name"/>
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
-                                <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
+                                <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted" t-on-focus="ev=>ev.target.select()"/></td>
                                 <td t-if="_showDiff" t-esc="env.utils.formatCurrency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
                             </tr>
                         </tbody>
                     </table>
                 </div>
+            </main>
+            <main class="body notes">
                 <div class="notes-container">
-                    <div class="opening-notes" t-if="openingNotes" >
-                        <t t-esc="openingNotes"/>
+                    <div class="opening-notes-container" t-if="openingNotes" >
+                        Opening note
+                        <textarea class="opening-notes">
+                            <t t-esc="openingNotes"/>
+                        </textarea>
                     </div>
-                    <textarea class="closing-notes" placeholder="Add a closing note..." t-model="state.notes"/>
+                    <div class="closing-notes-container">
+                        Closing note
+                        <textarea class="closing-notes" placeholder="Add a closing note..." t-model="state.notes"/>
+                    </div>
                 </div>
             </main>
             <footer class="footer">
@@ -85,6 +93,7 @@
                 <div class="small button icon"
                     t-on-click="downloadSalesReport"
                     title="Download a report with all the sales of the current PoS Session">
+                        <div class="daily sale">Daily Sale</div>
                         <i class="fa fa-download" role="img"/>
                 </div>
                 <!-- Print Sale Details -->

@@ -5,12 +5,13 @@ from odoo.exceptions import UserError
 class PosPaymentMethod(models.Model):
     _name = "pos.payment.method"
     _description = "Point of Sale Payment Methods"
-    _order = "id asc"
+    _order = "sequence"
 
     def _get_payment_terminal_selection(self):
         return []
 
     name = fields.Char(string="Method", required=True, translate=True, help='Defines the name of the payment method that will be displayed in the Point of Sale when the payments are selected.')
+    sequence = fields.Integer(copy=False)
     outstanding_account_id = fields.Many2one('account.account',
         string='Outstanding Account',
         ondelete='restrict',
@@ -81,7 +82,8 @@ class PosPaymentMethod(models.Model):
             pm.is_cash_count = pm.type == 'cash'
 
     def _is_write_forbidden(self, fields):
-        return bool(fields and self.open_session_ids)
+        whitelisted_fields = {'sequence'}
+        return bool(fields - whitelisted_fields and self.open_session_ids)
 
     def write(self, vals):
         if self._is_write_forbidden(set(vals.keys())):

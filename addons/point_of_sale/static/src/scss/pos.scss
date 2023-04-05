@@ -466,6 +466,8 @@ td {
 }
 .pos .oe_link_icon{
     cursor:pointer;
+    text-align: right;
+    width: 50px;
 }
 /*  ********* Contains everything below the  bar ********* */
 
@@ -2516,12 +2518,14 @@ td {
     height:100%;
     background-color: rgba(0,0,0,0.5);
     z-index:1000;
+    display:flex;
+    align-items:center;
+    justify-content:center;
 }
 .pos .modal-dialog header{
     position: relative;
 }
 .pos .modal-dialog .popup{
-    position: absolute;
     margin: auto;
     max-width:500px;
     width: 100%;
@@ -2533,10 +2537,6 @@ td {
     z-index:1200;
     font-family: 'Lato';
     font-family: Lato;
-    /* position the popup at center and and still making it draggable*/
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
 
 .pos .modal-dialog .popup-med{
@@ -2562,7 +2562,7 @@ td {
 .pos .popup .body {
     font-weight: normal;
     font-size: 18px;
-    margin: 16px;
+    padding: 16px;
     white-space: pre-line;
 }
 
@@ -2627,6 +2627,18 @@ td {
 .pos .popup .button.icon {
     width: 40px;
     font-size: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.pos .popup .button.icon.ClosePosPopup{
+    height: 35px;
+    font-size: 20px;
+    margin-top: 0px;
+    margin-right: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .pos .popup .button:active{
     color: white;
@@ -3134,6 +3146,10 @@ td {
     overflow-y: auto;
     font-size: medium;
 }
+.pos .orders .cashier {
+    font-style: italic;
+    font-size: 12px;
+}
 
 .pos .orders .header-row{
     display: flex;
@@ -3173,6 +3189,7 @@ td {
         position: sticky;
         top: 0;
         background: $gray-300;
+        z-index: 100;
     }
     .ticket-screen .controls button.search {
         margin: 0;
@@ -3184,6 +3201,9 @@ td {
 
     .ticket-screen .rightpane {
         width: auto;
+    }
+    .pos .orders {
+        position: sticky;
     }
 }
 
@@ -3252,7 +3272,7 @@ td {
     justify-content: space-between;
     align-items: center;
     padding: 0px 10px;
-    flex: 0 0 80px;
+    flex: 0 0 80px
 }
 
 .ticket-screen .controls button {

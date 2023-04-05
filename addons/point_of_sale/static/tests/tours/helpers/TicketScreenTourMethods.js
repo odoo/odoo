@@ -135,6 +135,12 @@ class Check {
             {
                 trigger: `.ticket-screen .order-row > .col:nth-child(2):contains("${orderName}") ~ .col:nth-child(6):contains(${status})`,
                 run: () => {},
+                mobile: false,
+            },
+            {
+                trigger: `.ticket-screen .order-row .col:nth-child(2) div:contains("${orderName}") ~ div:contains(${status})`,
+                run: () => {},
+                mobile: true,
             },
         ];
     }
