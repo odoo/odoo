@@ -945,15 +945,15 @@ class AccountMove(models.Model):
 
                 # Check if the journal entry is 'reversed' (1 on 1 full reconciliation with entries being of the opposite types)
                 if new_pmt_state == 'paid':
-                    reverse_move_types = []
+                    reverse_move_types = set()
                     for x in reconciliation_vals:
                         for rec_move_type, rec_reversed_entry_id in zip(x['counterpart_move_types'] or [], x['counterpart_reversed_entry_ids'] or []):
                             if rec_reversed_entry_id == invoice.id:
-                                reverse_move_types.append(rec_move_type)
+                                reverse_move_types.add(rec_move_type)
 
-                    if (invoice.move_type in ('in_invoice', 'in_receipt') and reverse_move_types == ['in_refund']) \
-                      or (invoice.move_type in ('out_invoice', 'out_receipt') and reverse_move_types == ['out_refund']) \
-                      or (invoice.move_type in ('entry', 'out_refund', 'in_refund') and reverse_move_types == ['entry']):
+                    if (invoice.move_type in ('in_invoice', 'in_receipt') and reverse_move_types == {'in_refund'}) \
+                      or (invoice.move_type in ('out_invoice', 'out_receipt') and reverse_move_types == {'out_refund'}) \
+                      or (invoice.move_type in ('entry', 'out_refund', 'in_refund') and reverse_move_types == {'entry'}):
                         new_pmt_state = 'reversed'
 
             invoice.payment_state = new_pmt_state

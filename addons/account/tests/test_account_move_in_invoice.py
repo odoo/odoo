@@ -2037,3 +2037,42 @@ class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
         move_form.invoice_date = fields.Date.from_string('2022-05-06')
         move = move_form.save()
         self.assertEqual(move.invoice_date.strftime('%Y-%m-%d'), '2022-05-06')
+
+    def test_reversed_move_state_with_two_partiel_refund(self):
+        """
+        Test the payment state of an invoice after being fully refund with two separate partial refunds
+        """
+        self.invoice.action_post()
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
+            'reason': 'no reason',
+            'refund_method': 'refund',
+            'journal_id': self.invoice.journal_id.id,
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        reverse_move.write({'invoice_line_ids': [Command.set(reverse_move.invoice_line_ids[0].ids)]})
+        self.assertEqual(self.invoice.payment_state, 'not_paid', "Refunding with a draft credit note should keep the invoice 'not_paid'.")
+
+        reverse_move.action_post()
+
+        self.assertEqual(self.invoice.payment_state, 'not_paid', "After a partial refund, an invoice should be in 'not paid' state.")
+
+        self.invoice.js_assign_outstanding_line(self.invoice.invoice_outstanding_credits_debits_widget['content'][0]['id'])
+
+        self.assertEqual(self.invoice.payment_state, 'partial', "After reconciliation with a partial refund, an invoice should be in 'partial' state.")
+
+        move_reversal = self.env['account.move.reversal'].with_context(active_model="account.move", active_ids=self.invoice.ids).create({
+            'reason': 'no reason',
+            'refund_method': 'refund',
+            'journal_id': self.invoice.journal_id.id,
+            'date': self.invoice.invoice_date
+        })
+        reversal = move_reversal.reverse_moves()
+        reverse_move = self.env['account.move'].browse(reversal['res_id'])
+        reverse_move.write({'ref': reverse_move.ref + '-2', 'invoice_line_ids': [Command.set(reverse_move.invoice_line_ids[-1].ids)]})
+
+        reverse_move.action_post()
+
+        self.invoice.js_assign_outstanding_line(self.invoice.invoice_outstanding_credits_debits_widget['content'][0]['id'])
+
+        self.assertEqual(self.invoice.payment_state, 'reversed', "After reconciliation with two partial refund, an invoice should be in 'reversed' state.")
