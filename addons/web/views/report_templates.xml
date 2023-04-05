@@ -573,7 +573,7 @@
                     }
                 }
                 .row > div > table,
-                div#total table {
+                div#total table, .totals_taxes_company_currency table {
                     &amp;:first-child,
                     &amp;:last-child,
                     &amp;.o_subtotal,
@@ -587,6 +587,9 @@
             <t t-elif="layout == 'web.external_layout_boxed'">
                 &amp;.o_report_layout_boxed {
                     #total strong {
+                        color: <t t-esc='primary'/>;
+                    }
+                    .totals_taxes_company_currency strong{
                         color: <t t-esc='primary'/>;
                     }
                     #informations strong {
@@ -613,7 +616,7 @@
                     }
                 }
                 .row > div > table,
-                div#total table {
+                div#total table, .totals_taxes_company_currency table {
                     tr {
                         &amp;.o_total td {
                             background-color: rgba(<t t-esc='primary'/>, 0.9);
@@ -652,7 +655,7 @@
                             }
                         }
                     }
-                    #total {
+                    #total, .totals_taxes_company_currency {
                         strong {
                             color: <t t-esc='secondary'/>;
                         }
@@ -668,6 +671,9 @@
                         color: <t t-esc='secondary'/>;
                     }
                     #total strong{
+                        color: <t t-esc='primary'/>;
+                    }
+                    .totals_taxes_company_currency strong{
                         color: <t t-esc='primary'/>;
                     }
                     table {
