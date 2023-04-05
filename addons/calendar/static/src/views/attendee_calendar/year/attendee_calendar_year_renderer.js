@@ -5,6 +5,6 @@ import { AttendeeCalendarYearPopover } from "@calendar/views/attendee_calendar/y
 
 export class AttendeeCalendarYearRenderer extends CalendarYearRenderer {}
 AttendeeCalendarYearRenderer.components = {
-    ...CalendarYearRenderer,
+    ...CalendarYearRenderer.components,
     Popover: AttendeeCalendarYearPopover,
 };
