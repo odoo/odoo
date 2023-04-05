@@ -136,6 +136,7 @@ export class KanbanHeader extends Component {
             confirm: async () => {
                 this.props.deleteGroup(this.group);
             },
+            confirmLabel: this.env._t("Delete"),
             cancel: () => {},
         });
     }
