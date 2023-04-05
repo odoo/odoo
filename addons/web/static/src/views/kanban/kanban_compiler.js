@@ -123,8 +123,10 @@ export class KanbanCompiler extends ViewCompiler {
         if (!el.hasAttribute("widget")) {
             isSpan = true;
             // fields without a specified widget are rendered as simple spans in kanban records
-            const fieldName = el.getAttribute("name");
-            compiled = createElement("span", { "t-out": `record["${fieldName}"].value` });
+            const fieldId = el.getAttribute("field_id");
+            compiled = createElement("span", {
+                "t-out": `__comp__.getFormattedValue("${fieldId}")`,
+            });
         } else {
             compiled = super.compileField(el, params);
             const fieldId = el.getAttribute("field_id");

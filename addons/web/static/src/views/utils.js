@@ -2,6 +2,7 @@
 
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 
 export const X2M_TYPES = ["one2many", "many2many"];
 const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
@@ -136,6 +137,27 @@ export function evalDomain(modifier, evalContext) {
         modifier = new Domain(modifier).contains(evalContext);
     }
     return Boolean(modifier);
+}
+
+/**
+ * @param {String} fieldName
+ * @param {Object} rawAttrs
+ * @param {Record} record
+ * @returns {String}
+ */
+export function getFormattedValue(record, fieldName, attrs) {
+    const field = record.fields[fieldName];
+    const formatter = registry.category("formatters").get(field.type, (val) => val);
+    const formatOptions = {
+        escape: false,
+        data: record.data,
+        isPassword: "password" in attrs,
+        digits: attrs.digits ? JSON.parse(attrs.digits) : field.digits,
+        field: record.fields[fieldName],
+    };
+    return record.data[fieldName] !== undefined
+            ? formatter(record.data[fieldName], formatOptions)
+            : "";
 }
 
 /**
