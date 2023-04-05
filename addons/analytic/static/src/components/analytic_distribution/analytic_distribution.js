@@ -110,9 +110,6 @@ export class AnalyticDistribution extends Component {
         const data = nextProps.value;
         const analytic_account_ids = Object.keys(data).map((id) => parseInt(id));
         const records = analytic_account_ids.length ? await this.fetchAnalyticAccounts([["id", "in", analytic_account_ids]]) : [];
-        if (records.length < data.length) {
-            console.log('removing tags... value should be updated');
-        }
         let widgetData = Object.assign({}, ...this.allPlans.map((plan) => ({[plan.id]: {...plan, distribution: []}})));
         records.map((record) => {
             if (!widgetData[record.root_plan_id[0]]) {
@@ -130,6 +127,11 @@ export class AnalyticDistribution extends Component {
         });
 
         this.state.list = widgetData;
+        if (records.length < Object.keys(data).length) {
+            // analytic accounts were not found for some keys in the json data, they may have been deleted
+            // save the json without them
+            this.save();
+        }
     }
 
     // ORM
