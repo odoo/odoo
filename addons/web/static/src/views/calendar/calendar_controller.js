@@ -205,6 +205,7 @@ export class CalendarController extends Component {
             confirm: () => {
                 this.model.unlinkRecord(record.id);
             },
+            confirmLabel: _lt("Delete"),
             cancel: () => {
                 // `ConfirmationDialog` needs this prop to display the cancel
                 // button but we do nothing on cancel.
