@@ -190,13 +190,7 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
         columnEl.style.gridArea = `${rowStart} / ${columnStart} / ${rowEnd} / ${columnEnd}`;
         columnEl.classList.add('o_grid_item');
 
-        // Removing the grid classes (since they end with 0) and adding the
-        // correct ones.
-        const regex = /^(g-)/;
-        const toRemove = [...columnEl.classList].filter(c => {
-            return regex.test(c);
-        });
-        columnEl.classList.remove(...toRemove);
+        // Adding the grid classes.
         columnEl.classList.add('g-col-lg-' + columnSpan, 'g-height-' + rowSpan);
 
         // Setting the initial z-index.
@@ -276,8 +270,13 @@ export function _convertColumnToGrid(rowEl, columnEl, columnWidth, columnHeight)
     const columnColCount = Math.round((columnWidth + gridProp.columnGap) / (gridProp.columnSize + gridProp.columnGap));
     const columnRowCount = Math.ceil((columnHeight + gridProp.rowGap) / (gridProp.rowSize + gridProp.rowGap));
 
+    // Removing the padding and offset classes.
+    const regex = /^(pt|pb|col-|offset-)/;
+    const toRemove = [...columnEl.classList].filter(c => regex.test(c));
+    columnEl.classList.remove(...toRemove);
+
     // Adding the grid classes.
-    columnEl.classList.add('g-col-lg-' + columnColCount, 'g-height-' + columnRowCount);
+    columnEl.classList.add('g-col-lg-' + columnColCount, 'g-height-' + columnRowCount, 'col-lg-' + columnColCount);
     columnEl.classList.add('o_grid_item');
 
     return {columnColCount: columnColCount, columnRowCount: columnRowCount};

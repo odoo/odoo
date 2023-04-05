@@ -110,9 +110,6 @@ export class AnalyticDistribution extends Component {
         const data = nextProps.value;
         const analytic_account_ids = Object.keys(data).map((id) => parseInt(id));
         const records = analytic_account_ids.length ? await this.fetchAnalyticAccounts([["id", "in", analytic_account_ids]]) : [];
-        if (records.length < data.length) {
-            console.log('removing tags... value should be updated');
-        }
         let widgetData = Object.assign({}, ...this.allPlans.map((plan) => ({[plan.id]: {...plan, distribution: []}})));
         records.map((record) => {
             if (!widgetData[record.root_plan_id[0]]) {
@@ -124,12 +121,17 @@ export class AnalyticDistribution extends Component {
                 percentage: data[record.id],
                 id: this.nextId++,
                 group_id: record.root_plan_id[0],
-                analytic_account_name: record.name,
+                analytic_account_name: record.display_name,
                 color: record.color,
             });
         });
 
         this.state.list = widgetData;
+        if (records.length < Object.keys(data).length) {
+            // analytic accounts were not found for some keys in the json data, they may have been deleted
+            // save the json without them
+            this.save();
+        }
     }
 
     // ORM
@@ -169,7 +171,7 @@ export class AnalyticDistribution extends Component {
     async fetchAnalyticAccounts(domain, limit=null) {
         const args = {
             domain: domain,
-            fields: ["id", "name", "root_plan_id", "color"],
+            fields: ["id", "display_name", "root_plan_id", "color"],
             context: [],
         }
         if (limit) {
@@ -208,11 +210,11 @@ export class AnalyticDistribution extends Component {
             domain.push(['root_plan_id', '=', this.activeGroup]);
         }
 
-        const records = await this.fetchAnalyticAccounts([...domain, '|', ["name", "ilike", request], ['code', 'ilike', request]], 7);
+        const records = await this.fetchAnalyticAccounts([...domain, '|', ["name", "ilike", request], '|', ['code', 'ilike', request], ['partner_id', 'ilike', request]], 7);
 
         let options = records.map((result) => ({
             value: result.id,
-            label: result.name,
+            label: result.display_name,
             group_id: result.root_plan_id[0],
             color: result.color,
         }));
