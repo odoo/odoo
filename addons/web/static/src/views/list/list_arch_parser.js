@@ -197,7 +197,6 @@ export class ListArchParser extends XMLParser {
                     exportXlsx: archParseBoolean(xmlDoc.getAttribute("export_xlsx"), true),
                 };
                 treeAttr.activeActions = activeActions;
-
                 treeAttr.className = xmlDoc.getAttribute("class") || null;
                 treeAttr.editable = xmlDoc.getAttribute("editable");
                 treeAttr.multiEdit = activeActions.edit

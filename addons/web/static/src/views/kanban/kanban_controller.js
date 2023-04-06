@@ -35,6 +35,7 @@ export class KanbanController extends Component {
             openGroupsByDefault: true,
             tooltipInfo: archInfo.tooltipInfo,
             rootState,
+            canEdit: archInfo.activeActions.edit,
         });
         this.headerButtons = archInfo.headerButtons;
 

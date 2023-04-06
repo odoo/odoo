@@ -138,6 +138,7 @@ export class FormController extends Component {
                 component: this,
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
+                canEdit: this.archInfo.activeActions.edit,
             },
             {
                 ignoreUseSampleModel: true,

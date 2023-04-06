@@ -279,6 +279,9 @@ export class Record extends DataPoint {
      * @returns {boolean}
      */
     isReadonly(fieldName) {
+        if (!this.model.canEdit && !this.model.root.isNew) {
+            return true;
+        }
         const { readonly } = this.activeFields[fieldName].modifiers || {};
         return evalDomain(readonly, this.evalContext);
     }
@@ -1125,6 +1128,7 @@ export class RelationalModel extends Model {
         this.__component = params.component;
 
         this.root = null;
+        this.canEdit = params.canEdit !== false;
 
         this.__bm__ = new this.constructor.LegacyModel(this, {
             fields: params.fields || {},
