@@ -199,7 +199,7 @@ class TestMrpAccountMove(TestAccountMove):
                 "name": "Product B",
                 "type": "product",
                 "default_code": "prda",
-                "categ_id": cls.env.ref("product.product_category_all").id,
+                "categ_id": cls.auto_categ.id,
                 "taxes_id": [(5, 0, 0)],
                 "supplier_taxes_id": [(5, 0, 0)],
                 "lst_price": 100.0,
