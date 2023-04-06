@@ -38,3 +38,4 @@ from . import test_account_payment_register
 from . import test_tour
 from . import test_early_payment_discount
 from . import test_ir_actions_report
+from . import test_download_xsds
