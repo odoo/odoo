@@ -1295,4 +1295,49 @@ QUnit.module("Base Import Tests", (hooks) => {
         assert.strictEqual(target.querySelector("tr:nth-child(3) .o_import_report.alert p b").innerText, "Many2Many / External ID",
             "The error should contain the full path of the relational field");
     });
+
+    QUnit.test("Import view: date format should be converted to strftime", async function (assert) {
+        registerFakeHTTPService();
+        await createImportAction({
+            "base_import.import/parse_preview": async (route, args) => {
+                return parsePreview(args[1]);
+            },
+            "base_import.import/execute_import": (route, args) => {
+                assert.step("execute_import");
+                assert.deepEqual(
+                    args[3],
+                    {
+                        advanced: true,
+                        date_format: "%Y%m%d",
+                        datetime_format: "",
+                        encoding: "",
+                        fallback_values: {},
+                        float_decimal_separator: ".",
+                        float_thousand_separator: ",",
+                        has_headers: true,
+                        import_set_empty_fields: [],
+                        import_skip_records: [],
+                        keep_matches: false,
+                        limit: 2000,
+                        name_create_enabled_fields: {},
+                        quoting: '"',
+                        separator: "",
+                        sheet: "Template",
+                        sheets: ["Template", "Template 2"],
+                        skip: 0,
+                        tracking_disable: true,
+                    },
+                    "options are defaulted as expected"
+                );
+                return executeImport(args);
+            },
+        });
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.csv", { type: "text/plain" });
+        await editInput(target, "input[type='file']", file);
+        await editSelect(target, ".o_import_date_format[name='date_format-3']", "YYYYMMDD");
+        await click(target.querySelector(".o_control_panel button:first-child"));
+        assert.verifySteps(["execute_import"]);
+    });
 });
