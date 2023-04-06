@@ -470,7 +470,7 @@ class AdyenTest(AdyenCommon, PaymentHttpCommon):
         ):
             response = self._make_json_request(url, data=payload).json()
         self.assertEqual(
-            response['result'], '[accepted]', msg="The webhook should always respond '[accepted]'",
+            response, '[accepted]', msg="The webhook should always respond '[accepted]'",
         )
 
     @mute_logger('odoo.addons.payment_adyen.controllers.main')

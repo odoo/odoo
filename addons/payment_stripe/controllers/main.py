@@ -81,14 +81,14 @@ class StripeController(http.Controller):
         # Redirect the user to the status page
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='json', auth='public')
+    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def stripe_webhook(self):
         """ Process the notification data sent by Stripe to the webhook.
 
         :return: An empty string to acknowledge the notification
         :rtype: str
         """
-        event = json.loads(request.httprequest.data)
+        event = request.get_json_data()
         _logger.info("notification received from Stripe with data:\n%s", pprint.pformat(event))
         try:
             if event['type'] in HANDLED_WEBHOOK_EVENTS:
@@ -143,7 +143,8 @@ class StripeController(http.Controller):
                         refund_tx_sudo = self._create_refund_tx_from_refund(tx_sudo, refund)
                         self._include_refund_in_notification_data(refund, data)
                         refund_tx_sudo._handle_notification_data('stripe', data)
-                    return ''  # Don't handle the notification data for the source transaction.
+                    # Don't handle the notification data for the source transaction.
+                    return request.make_json_response('')
                 elif event['type'] == 'charge.refund.updated':  # Refund operation (with update).
                     # A refund was updated by Stripe after it was already processed (possibly to
                     # cancel it). This can happen when the customer's payment method can no longer
@@ -155,7 +156,7 @@ class StripeController(http.Controller):
                 tx_sudo._handle_notification_data('stripe', data)
         except ValidationError:  # Acknowledge the notification to avoid getting spammed
             _logger.exception("unable to handle the notification data; skipping to acknowledge")
-        return ''
+        return request.make_json_response('')
 
     @staticmethod
     def _include_payment_intent_in_notification_data(payment_intent, notification_data):
