@@ -21,3 +21,7 @@ class AccountChartTemplate(models.AbstractModel):
     @template('it', 'account.tax.group')
     def _get_it_withholding_account_tax_group(self):
         return self._parse_csv('it', 'account.tax.group', module='l10n_it_edi_withholding')
+
+    @template('it', 'account.fiscal.position')
+    def _get_it_withholding_account_fiscal_position(self):
+        return self._parse_csv('it', 'account.fiscal.position', module='l10n_it_edi_withholding')

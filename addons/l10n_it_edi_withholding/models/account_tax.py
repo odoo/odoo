@@ -87,9 +87,17 @@ class AccountTax(models.Model):
     l10n_it_pension_fund_type = fields.Selection(PENSION_FUND_TYPE_SELECTION, string="Pension fund type (Italy)", help="Pension Fund Type. Only for Italian accounting EDI.")
 
     def _l10n_it_get_tax_kind(self):
-        return ((self.l10n_it_withholding_type and 'withholding')
-                or (self.l10n_it_pension_fund_type and 'pension_fund')
-                or 'vat')
+        if self.l10n_it_withholding_type:
+            return 'withholding'
+        elif self.l10n_it_pension_fund_type:
+            return 'pension_fund'
+        elif self.l10n_it_vat_due_date == 'S':
+            tax_group = self.tax_group_id
+            if tax_group:
+                xml_id = tax_group.get_external_id()[tax_group.id]
+                if xml_id == f'account.{self.company_id.id}_tax_group_split_payment':
+                    return 'split_payment'
+        return 'vat'
 
     def _l10n_it_filter_kind(self, kind):
         """ Filters taxes depending on _l10n_it_get_tax_kind. """
