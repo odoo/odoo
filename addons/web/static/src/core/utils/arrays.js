@@ -203,3 +203,29 @@ export function sections(array) {
 export function unique(array) {
     return Array.from(new Set(array));
 }
+
+/**
+ * @template T1, T2, T
+ * @param {T1[]} array1
+ * @param {T2[]} array2
+ * @returns {T[]}
+ */
+export function zip(array1, array2) {
+    const result = [];
+    const minLength = Math.min(array1.length, array2.length);
+    for (let i = 0; i < minLength; i++) {
+        result.push([array1[i], array2[i]]);
+    }
+    return result;
+}
+
+/**
+ * @template T1, T2, T
+ * @param {T1[]} array1
+ * @param {T2[]} array2
+ * @param {(e1: T1, e2: T2) => T} func
+ * @returns {T[]}
+ */
+export function zipWith(array1, array2, func) {
+    return zip(array1, array2).map(([e1, e2]) => func(e1, e2));
+}

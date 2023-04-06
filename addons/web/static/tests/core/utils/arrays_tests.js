@@ -7,6 +7,8 @@ import {
     shallowEqual,
     sortBy,
     unique,
+    zip,
+    zipWith,
 } from "@web/core/utils/arrays";
 
 QUnit.module("utils", () => {
@@ -265,5 +267,21 @@ QUnit.module("utils", () => {
         const fn = () => {};
         assert.ok(shallowEqual([fn], [fn]));
         assert.notOk(shallowEqual([() => {}], [() => {}]));
+    });
+
+    QUnit.test("zip", function (assert) {
+        assert.deepEqual(zip([1, 2], []), []);
+        assert.deepEqual(zip([1, 2], ["a"]), [[1, "a"]]);
+        assert.deepEqual(zip([1, 2], ["a", "b"]), [
+            [1, "a"],
+            [2, "b"],
+        ]);
+    });
+
+    QUnit.test("zipWith", function (assert) {
+        assert.deepEqual(
+            zipWith([{ a: 1 }, { b: 2 }], ["a", "b"], (o, k) => o[k]),
+            [1, 2]
+        );
     });
 });
