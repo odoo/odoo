@@ -22,16 +22,16 @@ let container;
  * @returns {Component}
  */
 function getTestComponent(popperOptions = {}) {
-    const reference = document.createElement("div");
-    reference.id = "reference";
-    reference.style.backgroundColor = "yellow";
-    reference.style.height = "50px";
-    reference.style.width = "50px";
-    container.appendChild(reference);
+    const target = document.createElement("div");
+    target.id = "target";
+    target.style.backgroundColor = "yellow";
+    target.style.height = "50px";
+    target.style.width = "50px";
+    container.appendChild(target);
 
     class TestComp extends Component {
         setup() {
-            usePosition(reference, { container, ...popperOptions });
+            usePosition(target, { container, ...popperOptions });
         }
     }
     TestComp.template = xml`<div id="popper" t-ref="popper" />`;
@@ -111,7 +111,7 @@ QUnit.test("popper is an inner element", async (assert) => {
     await mount(TestComp, container);
 });
 
-QUnit.test("can change the popper reference name", async (assert) => {
+QUnit.test("can change the popper target name", async (assert) => {
     assert.expect(2);
     const TestComp = getTestComponent({
         popper: "myRef",
@@ -252,8 +252,8 @@ const CONTAINER_STYLE_MAP = {
     left: { justifyContent: "flex-start" },
     right: { justifyContent: "flex-end" },
     slimfit: { height: "100px", width: "100px" }, // height and width of popper
-    h125: { height: "125px" }, // height of popper + 1/2 reference
-    w125: { width: "125px" }, // width of popper + 1/2 reference
+    h125: { height: "125px" }, // height of popper + 1/2 target
+    w125: { width: "125px" }, // width of popper + 1/2 target
 };
 
 function getRepositionTest(from, to, containerStyleChanges) {
@@ -893,7 +893,7 @@ QUnit.test(
     "reposition from left-fit to right-fit",
     getRepositionTest("left-fit", "right-fit", "left")
 );
-QUnit.test("bottom-fit has the same width as the reference", getFittingTest("bottom-fit", "width"));
-QUnit.test("top-fit has the same width as the reference", getFittingTest("top-fit", "width"));
-QUnit.test("left-fit has the same height as the reference", getFittingTest("left-fit", "height"));
-QUnit.test("right-fit has the same height as the reference", getFittingTest("right-fit", "height"));
+QUnit.test("bottom-fit has the same width as the target", getFittingTest("bottom-fit", "width"));
+QUnit.test("top-fit has the same width as the target", getFittingTest("top-fit", "width"));
+QUnit.test("left-fit has the same height as the target", getFittingTest("left-fit", "height"));
+QUnit.test("right-fit has the same height as the target", getFittingTest("right-fit", "height"));

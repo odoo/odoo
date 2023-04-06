@@ -76,18 +76,18 @@ const DEFAULTS = {
  * Returns the best positioning solution staying in the container or falls back
  * to the requested position.
  * The positioning data used to determine each possible position is based on
- * the reference, popper, and container sizes.
+ * the target, popper, and container sizes.
  * Particularly, a popper must not overflow the container in any direction,
  * it should actually stay at `margin` distance from the border to look good.
  *
- * @param {HTMLElement} reference
+ * @param {HTMLElement} target
  * @param {HTMLElement} popper
  * @param {Options} options
  * @returns {PositioningSolution} the best positioning solution, relative to
  *                                the containing block of the popper.
  *                                => can be applied to popper.style.(top|left)
  */
-function getBestPosition(reference, popper, { container, margin, position }) {
+function getBestPosition(target, popper, { container, margin, position }) {
     // Retrieve directions and variants
     const [directionKey, variantKey = "middle"] = position.split("-");
     const directions =
@@ -100,7 +100,7 @@ function getBestPosition(reference, popper, { container, margin, position }) {
 
     // Boxes
     const popBox = popper.getBoundingClientRect();
-    const refBox = reference.getBoundingClientRect();
+    const targetBox = target.getBoundingClientRect();
     const contBox = container.getBoundingClientRect();
 
     const containerIsHTMLNode = container === document.firstElementChild;
@@ -108,21 +108,21 @@ function getBestPosition(reference, popper, { container, margin, position }) {
     // Compute positioning data
     /** @type {DirectionsData} */
     const directionsData = {
-        t: refBox.top - popBox.height - margin,
-        b: refBox.bottom + margin,
-        r: refBox.right + margin,
-        l: refBox.left - popBox.width - margin,
+        t: targetBox.top - popBox.height - margin,
+        b: targetBox.bottom + margin,
+        r: targetBox.right + margin,
+        l: targetBox.left - popBox.width - margin,
     };
     /** @type {VariantsData} */
     const variantsData = {
-        vf: refBox.left,
-        vs: refBox.left,
-        vm: refBox.left + refBox.width / 2 + -popBox.width / 2,
-        ve: refBox.right - popBox.width,
-        hf: refBox.top,
-        hs: refBox.top,
-        hm: refBox.top + refBox.height / 2 + -popBox.height / 2,
-        he: refBox.bottom - popBox.height,
+        vf: targetBox.left,
+        vs: targetBox.left,
+        vm: targetBox.left + targetBox.width / 2 + -popBox.width / 2,
+        ve: targetBox.right - popBox.width,
+        hf: targetBox.top,
+        hs: targetBox.top,
+        hm: targetBox.top + targetBox.height / 2 + -popBox.height / 2,
+        he: targetBox.bottom - popBox.height,
     };
 
     function getPositioningData(d = directions[0], v = variants[0], containerRestricted = false) {
@@ -209,11 +209,11 @@ function getBestPosition(reference, popper, { container, margin, position }) {
  * When the final position is applied, a corresponding CSS class is also added to the popper.
  * This could be used to further styling.
  *
- * @param {HTMLElement} reference
+ * @param {HTMLElement} target
  * @param {HTMLElement} popper
  * @param {Options} options
  */
-export function reposition(reference, popper, options) {
+export function reposition(target, popper, options) {
     options = { ...DEFAULTS, container: document.documentElement, ...options };
 
     let [directionKey, variantKey = "middle"] = options.position.split("-");
@@ -234,14 +234,14 @@ export function reposition(reference, popper, options) {
     popper.style.left = "0px";
 
     // Get best positioning solution and apply it
-    const position = getBestPosition(reference, popper, options);
+    const position = getBestPosition(target, popper, options);
     const { top, left, variant } = position;
     popper.style.top = `${top}px`;
     popper.style.left = `${left}px`;
 
     if (variant === "fit") {
         const styleProperty = ["top", "bottom"].includes(directionKey) ? "width" : "height";
-        popper.style[styleProperty] = reference.getBoundingClientRect()[styleProperty] + "px";
+        popper.style[styleProperty] = target.getBoundingClientRect()[styleProperty] + "px";
     }
 
     if (options.onPositioned) {
@@ -251,7 +251,7 @@ export function reposition(reference, popper, options) {
 
 /**
  * Makes sure that the `popper` element is always
- * placed at `position` from the `reference` element.
+ * placed at `position` from the `target` element.
  * If doing so the `popper` element is clipped off `container`,
  * sensible fallback positions are tried.
  * If all of fallback positions are also clipped off `container`,
@@ -260,17 +260,16 @@ export function reposition(reference, popper, options) {
  * Note: The popper element should be indicated in your template with a t-ref reference.
  *       This could be customized with the `popper` option.
  *
- * @param {HTMLElement | (() => HTMLElement)} reference
+ * @param {HTMLElement | (() => HTMLElement)} target
  * @param {Options} options
  */
-export function usePosition(reference, options) {
-    const popper = options.popper || DEFAULTS.popper;
-    const popperRef = useRef(popper);
-    const getReference = reference instanceof HTMLElement ? () => reference : reference;
+export function usePosition(target, options) {
+    const popperRef = useRef(options.popper || DEFAULTS.popper);
+    const getTarget = target instanceof HTMLElement ? () => target : target;
     const update = () => {
-        const ref = getReference();
-        if (popperRef.el && ref) {
-            reposition(ref, popperRef.el, options);
+        const targetEl = getTarget();
+        if (popperRef.el && targetEl) {
+            reposition(targetEl, popperRef.el, options);
         }
     };
     useEffect(update);
