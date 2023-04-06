@@ -129,7 +129,8 @@ class SaleOrderLine(models.Model):
         string="Taxes",
         compute='_compute_tax_id',
         store=True, readonly=False, precompute=True,
-        context={'active_test': False})
+        context={'active_test': False},
+        check_company=True)
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -1119,6 +1120,7 @@ class SaleOrderLine(models.Model):
         if self.analytic_distribution and not self.display_type:
             res['analytic_distribution'] = self.analytic_distribution
         if analytic_account_id and not self.display_type:
+            analytic_account_id = str(analytic_account_id)
             if 'analytic_distribution' in res:
                 res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
             else:

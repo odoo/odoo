@@ -89,6 +89,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
@@ -360,6 +367,15 @@ msgstr "30% Peşin, Bakiye 60 Gün Sonra"
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 Gün"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
+"#704A66;'>%(date)s</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -1425,6 +1441,13 @@ msgstr "İkinci bir ödeme oluşturuldu: %s"
 msgid ""
 "A second payment will be created automatically in the destination journal."
 msgstr "Hedef Yevmiyede otomatik olarak ikinci bir ödeme oluşturulacaktır."
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
+msgstr ""
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -14663,6 +14686,22 @@ msgstr ""
 "her iki türden de bazılarını seçtiniz."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
 msgstr "Bu kaydı oluşturan ekstre kalemi"
@@ -15502,6 +15541,15 @@ msgstr "Kayıttaki istisna aktivite türü."
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
 msgstr "UP"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
+msgstr ""
 
 #. module: account
 #. odoo-python

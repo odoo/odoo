@@ -21,12 +21,12 @@
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2022
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Pekko Tuomisto <pekko.tuomisto@web-veistamo.fi>, 2022
 # Martin Trigaux, 2022
 # Simo Suurla <simo@suurla.fi>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
 # 
 msgid ""
@@ -444,7 +444,7 @@ msgstr "Toimenpiteen ikoni"
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_tree
 msgid "Activity by"
-msgstr ""
+msgstr "Toimenpiteen suorittaja"
 
 #. module: hr
 #: model_terms:ir.actions.act_window,help:hr.act_employee_from_department
@@ -552,7 +552,7 @@ msgstr "Muuta"
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
 #: model_terms:ir.ui.view,arch_db:hr.view_employee_form
 msgid "Approvers"
-msgstr ""
+msgstr "Hyväksyjät"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_departure_wizard__archive_private_address
@@ -648,25 +648,25 @@ msgstr "Avatar"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_1024
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_1024
 msgid "Avatar 1024"
-msgstr ""
+msgstr "Avatar 1024"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_128
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_128
 msgid "Avatar 128"
-msgstr ""
+msgstr "Avatar 128"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_256
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_256
 msgid "Avatar 256"
-msgstr ""
+msgstr "Avatar 256"
 
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_hr_employee__avatar_512
 #: model:ir.model.fields,field_description:hr.field_hr_employee_public__avatar_512
 msgid "Avatar 512"
-msgstr ""
+msgstr "Avatar 512"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_users_view_form_profile
@@ -893,7 +893,7 @@ msgstr "Yhteystiedon nimi"
 #: model:ir.model.fields,field_description:hr.field_hr_employee__emergency_phone
 #: model:ir.model.fields,field_description:hr.field_res_users__emergency_phone
 msgid "Contact Phone"
-msgstr ""
+msgstr "Kontaktin puhelin"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_contract_type
@@ -2382,7 +2382,7 @@ msgstr ""
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.hr_plan_view_form
 msgid "Plan Name"
-msgstr ""
+msgstr "Suunnitelman nimi"
 
 #. module: hr
 #: model:ir.model,name:hr.model_hr_plan_wizard
@@ -2431,6 +2431,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Käytäntö, jolla lähetetään viesti asiakirjaan mailgatewayn avulla.\n"
+"- everyone: kaikki voivat lähettää viestin\n"
+"- partners: vain todennetut kumppanit\n"
+"- seuraajat: vain asiaan liittyvän asiakirjan seuraajat tai seuraavien kanavien jäsenet\n"
 
 #. module: hr
 #: model_terms:ir.ui.view,arch_db:hr.res_config_settings_view_form
@@ -2526,7 +2530,7 @@ msgstr ""
 #. module: hr
 #: model:ir.model,name:hr.model_hr_employee_public
 msgid "Public Employee"
-msgstr ""
+msgstr "Julkinen työntekijä"
 
 #. module: hr
 #: model_terms:hr.job,website_description:hr.job_ceo
@@ -2753,7 +2757,7 @@ msgstr "Naimaton"
 #. module: hr
 #: model:ir.model.fields,field_description:hr.field_res_config_settings__module_hr_skills
 msgid "Skills Management"
-msgstr ""
+msgstr "Taitojen hallinta"
 
 #. module: hr
 #: model:ir.model.fields,help:hr.field_hr_employee__sinid
@@ -3131,7 +3135,7 @@ msgstr "Käyttäjä"
 #. odoo-python
 #: code:addons/hr/models/hr_plan_activity_type.py:0
 #, python-format
-msgid "User of coach of employee %s is not set."
+msgid "The user of %s's coach is not set."
 msgstr ""
 
 #. module: hr

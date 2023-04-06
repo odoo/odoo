@@ -734,6 +734,51 @@ class PropertiesCase(TransactionCase):
             self.message_1.attributes[2]['value'], False,
             msg='Boolean value must have been converted to False')
 
+        # When the user sets the value 0 for the property fields of type integer
+        # and float, the system should store the value 0 and shouldn't transform
+        # 0 to False (-> unset value).
+
+        self.message_1.attributes = {'int_value': 0, 'float_value': 0}
+        self.assertEqual(len(self.message_1.attributes), 3)
+        self.assertEqual(self.message_1.attributes[0]['value'], 0)
+        self.assertEqual(self.message_1.attributes[1]['value'], 0)
+        self.assertEqual(self.message_1.attributes[2]['value'], False)
+        self.assertTrue(isinstance(self.message_1.attributes[0]['value'], int))
+        self.assertTrue(isinstance(self.message_1.attributes[1]['value'], int))
+        self.assertTrue(isinstance(self.message_1.attributes[2]['value'], bool))
+        self.assertEqual(self._get_sql_properties(self.message_1), {'int_value': 0, 'float_value': 0, 'boolean_value': False})
+
+    def test_properties_field_integer_float_falsy_value_edge_cases(self):
+        self.discussion_1.attributes_definition = [
+            {
+                'name': 'int_value',
+                'string': 'Int Value',
+                'type': 'integer',
+                'default': 42
+            }, {
+                'name': 'float_value',
+                'string': 'Float Value',
+                'type': 'float',
+                'default': 0.42
+            }
+        ]
+        message_1 = self.env['test_new_api.message'].create({
+            'discussion': self.discussion_1.id,
+            'author': self.user.id,
+            'attributes': {'int_value': 0, 'float_value': 0}
+        })
+
+        # When the user sets the value 0 for the property fields of type integer
+        # and float, the system shouldn't consider 0 as a falsy value and fallback
+        # to the default value.
+
+        self.assertEqual(len(message_1.attributes), 2)
+        self.assertEqual(message_1.attributes[0]['value'], 0)
+        self.assertEqual(message_1.attributes[1]['value'], 0)
+        self.assertTrue(isinstance(message_1.attributes[0]['value'], int))
+        self.assertTrue(isinstance(message_1.attributes[1]['value'], int))
+        self.assertEqual(self._get_sql_properties(message_1), {'int_value': 0, 'float_value': 0})
+
     def test_properties_field_selection(self):
         self.message_3.attributes = [{'name': 'state', 'value': 'done'}]
         self.env.invalidate_all()

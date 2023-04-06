@@ -19,6 +19,7 @@
 # Hanna Kheradroosta, 2023
 # Mohammad Tahmasebi <hit.tah75@gmail.com>, 2023
 # Hamed Mohammadi <hamed@dehongi.com>, 2023
+# Ali Reza Feizi Derakhshi, 2023
 # fardin mardani, 2023
 # 
 msgid ""
@@ -9056,7 +9057,7 @@ msgstr "افزودن"
 #. module: base
 #: model:ir.actions.act_window,name:base.action_view_base_language_install
 msgid "Add Languages"
-msgstr ""
+msgstr "افزودن زبان‌ها"
 
 #. module: base
 #: model:ir.module.module,description:base.module_data_merge_helpdesk
@@ -11488,6 +11489,13 @@ msgstr ""
 
 #. module: base
 #. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "The following language is not activated: %(missing_names)s"
+msgstr ""
+
+#. module: base
+#. odoo-python
 #: code:addons/base/models/assetsbundle.py:0
 #, python-format
 msgid "Cannot create %r because the template to inherit %r is not found."
@@ -12618,6 +12626,12 @@ msgstr "گروه‌های کشور"
 #: model:ir.model.fields,field_description:base.field_res_country__name
 msgid "Country Name"
 msgstr "نام کشور"
+
+#. module: base
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -14979,7 +14993,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_category__exclusive
 msgid "Exclusive"
-msgstr ""
+msgstr "انخصاری"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_cron_view_form
@@ -25349,7 +25363,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Sales"
-msgstr "اصناف مرتبط (سقف‌کاذب، شرکتهای BMS, مجری تاسیسات ...)"
+msgstr "فروش"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -26869,7 +26883,7 @@ msgstr "نام فایل ذخیره شده"
 #: model:ir.model.fields,field_description:base.field_res_partner__street
 #: model:ir.model.fields,field_description:base.field_res_users__street
 msgid "Street"
-msgstr "خیابان"
+msgstr "آدرس"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -26878,7 +26892,7 @@ msgstr "خیابان"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street 2..."
-msgstr "خیابان 2 ..."
+msgstr "آدرس ۲..."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_partner_view_form_private
@@ -26887,7 +26901,7 @@ msgstr "خیابان 2 ..."
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_res_bank_form
 msgid "Street..."
-msgstr "خیابان ..."
+msgstr "آدرس ..."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_bank__street2
@@ -26895,7 +26909,7 @@ msgstr "خیابان ..."
 #: model:ir.model.fields,field_description:base.field_res_partner__street2
 #: model:ir.model.fields,field_description:base.field_res_users__street2
 msgid "Street2"
-msgstr "خیابان۲"
+msgstr "آدرس۲"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_customizations_studio
@@ -27581,6 +27595,14 @@ msgid ""
 "these were drawn up after these standard terms and conditions of sale. In "
 "order to be valid, any derogation must be expressly agreed to in advance in "
 "writing."
+msgstr ""
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
 msgstr ""
 
 #. module: base
@@ -30944,7 +30966,7 @@ msgstr "شما باید دیگر شرایط جستجو را آزمایش کنی�
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
 msgid "You should update this document to reflect your T&amp;C."
-msgstr ""
+msgstr "شما باید این سند را به‌روزرسانی کنید تا T&C شما را منعکس کند."
 
 #. module: base
 #. odoo-python
@@ -31760,3 +31782,9 @@ msgstr "بله"
 #: model:res.country,name:base.ax
 msgid "Åland Islands"
 msgstr "جزایر آلاند"
+
+#. module: base
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""

@@ -149,6 +149,20 @@ export class NewContentModal extends Component {
                 this.modulesInfo[record.name] = {id: record.id, name: record.shortdesc};
             }
         }
+        const modelsToCheck = [];
+        const elementsToUpdate = {};
+        for (const element of this.state.newContentElements) {
+            if (element.model) {
+                modelsToCheck.push(element.model);
+                elementsToUpdate[element.model] = element;
+            }
+        }
+        const accesses = await this.rpc("/website/check_new_content_access_rights", {
+            models: modelsToCheck,
+        });
+        for (const [model, access] of Object.entries(accesses)) {
+            elementsToUpdate[model].isDisplayed = access;
+        }
     }
 
     get sortedNewContentElements() {

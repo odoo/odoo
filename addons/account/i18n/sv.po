@@ -87,6 +87,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
@@ -351,6 +358,15 @@ msgstr "30% nu, resten om 60 dagar"
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 dagar"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
+"#704A66;'>%(date)s</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -1290,6 +1306,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
 msgstr ""
 
 #. module: account
@@ -11492,7 +11515,7 @@ msgstr "Begränsa till förslag som har samma valuta som utdragsraden."
 #: model:ir.model.fields.selection,name:account.selection__account_automatic_entry_wizard__account_type__income
 #, python-format
 msgid "Revenue"
-msgstr ""
+msgstr "Intäkter"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__revenue_accrual_account
@@ -11516,7 +11539,7 @@ msgstr "Återföringsdatum"
 #: model:ir.model.fields,field_description:account.field_account_move__reversal_move_id
 #: model:ir.model.fields,field_description:account.field_account_payment__reversal_move_id
 msgid "Reversal Move"
-msgstr ""
+msgstr "Återkalla Flytt"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_reversal__date
@@ -14072,6 +14095,22 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
 msgstr ""
@@ -14837,6 +14876,15 @@ msgstr "Typ av undantagsaktivitet i posten."
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
 msgstr ""
 
 #. module: account

@@ -295,8 +295,9 @@ class AccountEdiFormat(models.Model):
         if self.env['account_edi_proxy_client.user']._get_demo_state() == 'demo':
             return
 
+        fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for proxy_user in self.env['account_edi_proxy_client.user'].search([('edi_format_code', '=', 'fattura_pa')]):
-            self._receive_fattura_pa(proxy_user)
+            fattura_pa._receive_fattura_pa(proxy_user)
 
     def _receive_fattura_pa(self, proxy_user):
         ''' Check the proxy for incoming invoices for a specified proxy user.
@@ -309,9 +310,17 @@ class AccountEdiFormat(models.Model):
             res = {}
             _logger.error('Error while receiving file from SdiCoop: %s', e)
 
+        retrigger = False
         proxy_acks = []
         for id_transaction, fattura in res.items():
-            if self._save_incoming_attachment_fattura_pa(proxy_user, id_transaction, fattura['filename'], fattura['key']):
+
+            # The server has a maximum number of documents it can send at a time
+            # If that maximum is reached, then we search for more
+            # by re-triggering the download cron, avoiding the timeout.
+            current_num, max_num = fattura.get('current_num', 0), fattura.get('max_num', 0)
+            retrigger = retrigger or current_num == max_num > 0
+
+            if self._save_incoming_attachment_fattura_pa(proxy_user, id_transaction, fattura['filename'], fattura['file'], fattura['key']):
                 proxy_acks.append(id_transaction)
 
         if proxy_acks:
@@ -322,12 +331,17 @@ class AccountEdiFormat(models.Model):
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
 
-    def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, key):
+        if retrigger:
+            _logger.info('Retriggering "Receive invoices from the exchange system"...')
+            self.env.ref('l10n_it_edi.ir_cron_receive_fattura_pa_invoice')._trigger()
+
+    def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, content, key):
         ''' Save an incoming file from the SdI as an attachment.
 
             :param proxy_user:     the user that saves the attachment.
             :param id_transaction: id of the SdI transaction for communication with the IAP proxy.
             :param filename:       name of the file to be saved.
+            :param content:        encrypted content of the file to be saved.
             :param key:            key to decrypt the file.
             :returns:              True if everything went well, or the file already exists.
                                    False if the file cannot be parsed as an XML.
@@ -339,7 +353,7 @@ class AccountEdiFormat(models.Model):
             _logger.info('E-invoice already exists: %s', filename)
             return True
 
-        raw_content = proxy_user._decrypt_data(filename, key)
+        raw_content = proxy_user._decrypt_data(content, key)
         invoice = self.env['account.move'].with_company(company).create({'move_type': 'in_invoice'})
         attachment = self.env['ir.attachment'].create({
             'name': filename,
@@ -531,7 +545,11 @@ class AccountEdiFormat(models.Model):
 
             # Setup the context for the Invoice Form
             invoice_ctx = invoice.with_company(company) \
-                                 .with_context(default_move_type=move_type)
+                                 .with_context(
+                                    default_move_type=move_type,
+                                    account_predictive_bills_predict_product=False,
+                                    account_predictive_bills_predict_taxes=False
+                                )
 
             # move could be a single record (editing) or be empty (new).
             with invoice_ctx._get_edi_creation() as invoice_form:
@@ -808,7 +826,7 @@ class AccountEdiFormat(models.Model):
                         percentage = round(tax_amount / price_subtotal * 100)
 
         natura_element = element.xpath('.//Natura')
-        invoice_line_form.tax_ids = []
+        invoice_line_form.tax_ids = ()
         if percentage is not None:
             l10n_it_kind_exoneration = bool(natura_element) and natura_element[0].text
             conditions = (

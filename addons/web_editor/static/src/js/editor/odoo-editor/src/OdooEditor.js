@@ -73,6 +73,7 @@ import {
     cleanZWS,
     isZWS,
     getDeepestPosition,
+    leftPos,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -634,38 +635,7 @@ export class OdooEditor extends EventTarget {
         // -------
 
         if (this.options.toolbar) {
-            this.toolbar = this.options.toolbar;
-            this.bindExecCommand(this.toolbar);
-            // Ensure anchors in the toolbar don't trigger a hash change.
-            const toolbarAnchors = this.toolbar.querySelectorAll('a');
-            toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
-            const tablepickerDropdown = this.toolbar.querySelector('.oe-tablepicker-dropdown');
-            tablepickerDropdown && tablepickerDropdown.append(this.toolbarTablePicker.el);
-            this.toolbarTablePicker.show();
-            const tableDropdownButton = this.toolbar.querySelector('#tableDropdownButton');
-            tableDropdownButton &&
-                tableDropdownButton.addEventListener('click', () => {
-                    this.toolbarTablePicker.reset();
-                });
-            for (const colorLabel of this.toolbar.querySelectorAll('label')) {
-                colorLabel.addEventListener('mousedown', ev => {
-                    // Hack to prevent loss of focus (done by preventDefault) while still opening
-                    // color picker dialog (which is also prevented by preventDefault on chrome,
-                    // except when click detail is 2, which happens on a double-click but isn't
-                    // triggered by a dblclick event)
-                    if (ev.detail < 2) {
-                        ev.preventDefault();
-                        ev.currentTarget.dispatchEvent(new MouseEvent('click', { detail: 2 }));
-                    }
-                });
-                colorLabel.addEventListener('input', ev => {
-                    this.document.execCommand(ev.target.name, false, ev.target.value);
-                    this.updateColorpickerLabels();
-                });
-            }
-            if (this.isMobile) {
-                this.editable.before(this.toolbar);
-            }
+            this.setupToolbar(this.options.toolbar);
         }
         // placeholder hint
         if (editable.textContent === '' && this.options.placeholder) {
@@ -690,6 +660,39 @@ export class OdooEditor extends EventTarget {
         // Remove table UI
         this._rowUi.remove();
         this._columnUi.remove();
+    }
+
+    setupToolbar(toolbar) {
+        this.toolbar = toolbar;
+        this.autohideToolbar = this.options.autohideToolbar;
+        this.bindExecCommand(this.toolbar);
+        // Ensure anchors in the toolbar don't trigger a hash change.
+        const toolbarAnchors = this.toolbar.querySelectorAll('a');
+        toolbarAnchors.forEach(a => a.addEventListener('click', e => e.preventDefault()));
+        const tablepickerDropdown = this.toolbar.querySelector('.oe-tablepicker-dropdown');
+        tablepickerDropdown && tablepickerDropdown.append(this.toolbarTablePicker.el);
+        this.toolbarTablePicker.show();
+        const tableDropdownButton = this.toolbar.querySelector('#tableDropdownButton');
+        tableDropdownButton &&
+            tableDropdownButton.addEventListener('click', () => {
+                this.toolbarTablePicker.reset();
+            });
+        for (const colorLabel of this.toolbar.querySelectorAll('label')) {
+            colorLabel.addEventListener('mousedown', ev => {
+                // Hack to prevent loss of focus (done by preventDefault) while still opening
+                // color picker dialog (which is also prevented by preventDefault on chrome,
+                // except when click detail is 2, which happens on a double-click but isn't
+                // triggered by a dblclick event)
+                if (ev.detail < 2) {
+                    ev.preventDefault();
+                    ev.currentTarget.dispatchEvent(new MouseEvent('click', { detail: 2 }));
+                }
+            });
+            colorLabel.addEventListener('input', ev => {
+                this.document.execCommand(ev.target.name, false, ev.target.value);
+                this.updateColorpickerLabels();
+            });
+        }
     }
 
     resetContent(value) {
@@ -1868,6 +1871,19 @@ export class OdooEditor extends EventTarget {
                 range.setEnd(commonAncestorContainer, nodeSize(commonAncestorContainer));
             }
         }
+        let insertedZws;
+        if (sel && !sel.isCollapsed && !range.startOffset && !range.startContainer.previousSibling) {
+            // Insert a zero-width space before the selection if the selection
+            // is non-collapsed and at the beginning of its parent, so said
+            // parent will have content after extraction. This ensures that the
+            // parent will not be removed by "tricking" `range.extractContents`.
+            // Eg, <h1><font>[...]</font></h1> will preserve the styles of the
+            // <font> node. If it remains empty, it will be cleaned up later by
+            // the sanitizer.
+            const zws = document.createTextNode('\u200B');
+            range.startContainer.before(zws);
+            insertedZws = zws;
+        }
         let start = range.startContainer;
         let end = range.endContainer;
         // Let the DOM split and delete the range.
@@ -1939,6 +1955,14 @@ export class OdooEditor extends EventTarget {
                 restore();
                 break;
             }
+        }
+        if (insertedZws) {
+            // Remove the zero-width space (zws) that was added to preserve the
+            // parent styles, then call `fillEmpty` to properly add a flagged
+            // zws if still needed.
+            const el = closestElement(insertedZws);
+            insertedZws.remove();
+            el && fillEmpty(el);
         }
         next = range.endContainer && rightLeafOnlyNotBlockPath(range.endContainer).next().value;
         if (
@@ -2725,8 +2749,10 @@ export class OdooEditor extends EventTarget {
      * @param {boolean} [show]
      */
     _updateToolbar(show) {
-        if (!this.options.toolbar) return;
-        if (!this.options.autohideToolbar && this.toolbar.style.visibility !== 'visible') {
+        if (!this.toolbar) {
+            return;
+        }
+        if (!this.autohideToolbar && this.toolbar.style.visibility !== 'visible') {
             this.toolbar.style.visibility = 'visible';
         }
 
@@ -2745,13 +2771,18 @@ export class OdooEditor extends EventTarget {
                 }
             }
         }
-        if (this.options.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
-            if (show !== undefined && !this.isMobile) {
-                this.toolbar.style.visibility = show ? 'visible' : 'hidden';
+        if (this.autohideToolbar && !this.toolbar.contains(sel.anchorNode)) {
+            if (!this.isMobile) {
+                if (show !== undefined) {
+                    this.toolbar.style.visibility = show ? 'visible' : 'hidden';
+                }
+                if (show === false) {
+                    return;
+                }
             }
-            if (show === false) {
-                return;
-            }
+        }
+        if (!this.isSelectionInEditable(sel)) {
+            return;
         }
         const paragraphDropdownButton = this.toolbar.querySelector('#paragraphDropdownButton');
         if (paragraphDropdownButton) {
@@ -2872,13 +2903,13 @@ export class OdooEditor extends EventTarget {
         undoButton && undoButton.classList.toggle('disabled', !this.historyCanUndo());
         const redoButton = this.toolbar.querySelector('#redo');
         redoButton && redoButton.classList.toggle('disabled', !this.historyCanRedo());
-        if (this.options.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
+        if (this.autohideToolbar && !this.isMobile && !this.toolbar.contains(sel.anchorNode)) {
             this._positionToolbar();
         }
     }
     updateToolbarPosition() {
         if (
-            this.options.autohideToolbar &&
+            this.autohideToolbar &&
             !this.isMobile &&
             getComputedStyle(this.toolbar).visibility === 'visible'
         ) {
@@ -3234,12 +3265,16 @@ export class OdooEditor extends EventTarget {
                     if (lastWordMatch) {
                         const matches = getUrlsInfosInString(textSliced);
                         const match = matches[matches.length - 1];
-                        this._createLinkWithUrlInTextNode(
-                            selection.anchorNode,
-                            match.url,
-                            match.index,
-                            match.length,
-                        );
+                        const cloneRange = selection.getRangeAt(0).cloneRange();
+                        const range = this.document.createRange();
+                        range.setStart(selection.anchorNode, match.index);
+                        range.setEnd(selection.anchorNode, match.index + match.length);
+                        const link = this._createLink(range.extractContents().textContent, match.url);
+                        range.insertNode(link);
+                        // Inserting an element into a range clears the selection in Safari
+                        // Hence, use the cloned range to reselect it.
+                        selection.removeAllRanges();
+                        selection.addRange(cloneRange);
                     }
                     selection.collapseToEnd();
                 }
@@ -3528,13 +3563,18 @@ export class OdooEditor extends EventTarget {
             // Move selection if next character is zero-width space
             if (nextCharacter === '\u200B') {
                 focusOffset += 1;
-                while (focusNode && (!focusNode.textContent[focusOffset] || !closestElement(focusNode).isContentEditable)) {
-                    focusNode = nextLeaf(focusNode);
+                let newFocusNode = focusNode;
+                while (newFocusNode && (!newFocusNode.textContent[focusOffset] || !closestElement(newFocusNode).isContentEditable)) {
+                    newFocusNode = nextLeaf(newFocusNode);
                     focusOffset = 0;
                 }
-                const startContainer = ev.shiftKey ? selection.anchorNode : focusNode;
+                if (!focusOffset && closestBlock(focusNode) !== closestBlock(newFocusNode)) {
+                    newFocusNode = focusNode; // Do not move selection to next block.
+                    focusOffset = nodeSize(focusNode);
+                }
+                const startContainer = ev.shiftKey ? selection.anchorNode : newFocusNode;
                 const startOffset = ev.shiftKey ? selection.anchorOffset : focusOffset;
-                setSelection(startContainer, startOffset, focusNode, focusOffset);
+                setSelection(startContainer, startOffset, newFocusNode, focusOffset);
             }
         }
     }
@@ -3561,15 +3601,11 @@ export class OdooEditor extends EventTarget {
                 this.options.onCollaborativeSelectionChange(this.getCurrentCollaborativeSelection());
             }
         }
+        const isSelectionInEditable = this.isSelectionInEditable(selection);
         if (!appliedCustomSelection) {
-            this._updateToolbar(!selection.isCollapsed && this.isSelectionInEditable(selection));
+            this._updateToolbar(!selection.isCollapsed && isSelectionInEditable);
         }
-
-        if (
-            !this.editable.contains(selection.anchorNode) &&
-            !this.editable.contains(selection.focusNode)
-        ) {
-            // Do not affect selection outside of the editable.
+        if (!isSelectionInEditable) {
             return;
         }
         // When CTRL+A in the editor, sometimes the browser use the editable
@@ -3808,16 +3844,16 @@ export class OdooEditor extends EventTarget {
         }
 
         const selectors = {
-            BLOCKQUOTE: 'Empty quote',
-            H1: 'Heading 1',
-            H2: 'Heading 2',
-            H3: 'Heading 3',
-            H4: 'Heading 4',
-            H5: 'Heading 5',
-            H6: 'Heading 6',
-            'UL LI': 'List',
-            'OL LI': 'List',
-            'CL LI': 'To-do',
+            BLOCKQUOTE: this.options._t('Empty quote'),
+            H1: this.options._t('Heading 1'),
+            H2: this.options._t('Heading 2'),
+            H3: this.options._t('Heading 3'),
+            H4: this.options._t('Heading 4'),
+            H5: this.options._t('Heading 5'),
+            H6: this.options._t('Heading 6'),
+            'UL LI': this.options._t('List'),
+            'OL LI': this.options._t('List'),
+            'CL LI': this.options._t('To-do'),
         };
 
         for (const hint of this.editable.querySelectorAll('.oe-hint')) {
@@ -4174,33 +4210,18 @@ export class OdooEditor extends EventTarget {
     }
 
     /**
-     * Create a Link in the node text based on the given data
-     *
-     * @param {Node} textNode
+     * @param {String} label
      * @param {String} url
-     * @param {int} index
-     * @param {int} length
      */
-    _createLinkWithUrlInTextNode(textNode, url, index, length) {
-        const selection = this.document.getSelection();
-        const cloneRange = selection.getRangeAt(0).cloneRange();
-
+    _createLink(label, url) {
         const link = this.document.createElement('a');
         link.setAttribute('href', url);
         for (const [param, value] of Object.entries(this.options.defaultLinkAttributes)) {
             link.setAttribute(param, `${value}`);
         }
-        const range = this.document.createRange();
-        range.setStart(textNode, index);
-        range.setEnd(textNode, index + length);
-        link.appendChild(range.extractContents());
-        range.insertNode(link);
-        // Inserting an element into a range clears the selection in Safari
-        // Hence, use the cloned range to reselect it.
-        selection.removeAllRanges();
-        selection.addRange(cloneRange);
+        link.innerText = label;
+        return link;
     }
-
     /**
      * Add images inside the editable at the current selection.
      *
@@ -4230,181 +4251,152 @@ export class OdooEditor extends EventTarget {
         const odooEditorHtml = ev.clipboardData.getData('text/odoo-editor');
         const clipboardHtml = ev.clipboardData.getData('text/html');
         const targetSupportsHtmlContent = isHtmlContentSupported(sel.anchorNode);
+        // Replace entire link if its label is fully selected.
+        const link = closestElement(sel.anchorNode, 'a');
+        if (link && sel.toString().replace(/\u200B/g, '') === link.innerText.replace(/\u200B/g, '')) {
+            const start = leftPos(link);
+            // Exit link isolation since we're removing the link and editing outside of it.
+            if (this._fixLinkMutatedElements && this._fixLinkMutatedElements.link === link) {
+                this.resetContenteditableLink();
+                this._activateContenteditable();
+            }
+            link.remove();
+            setSelection(...start, ...start, false);
+        }
         if (odooEditorHtml && targetSupportsHtmlContent) {
             const fragment = parseHTML(odooEditorHtml);
             DOMPurify.sanitize(fragment, { IN_PLACE: true });
             if (fragment.hasChildNodes()) {
-                this.execCommand('insert', fragment);
+                this._applyCommand('insert', fragment);
             }
         } else if (files.length && targetSupportsHtmlContent) {
-            this.addImagesFiles(files).then(html => this.execCommand('insert', this._prepareClipboardData(html)));
+            this.addImagesFiles(files).then(html => this._applyCommand('insert', this._prepareClipboardData(html)));
         } else if (clipboardHtml && targetSupportsHtmlContent) {
-            this.execCommand('insert', this._prepareClipboardData(clipboardHtml));
+            this._applyCommand('insert', this._prepareClipboardData(clipboardHtml));
         } else {
             const text = ev.clipboardData.getData('text/plain');
-            let splitAroundUrl = [text];
-            const linkAttributes = this.options.defaultLinkAttributes || {};
             const selectionIsInsideALink = !!closestElement(sel.anchorNode, 'a');
-
+            let splitAroundUrl = [text];
             // Avoid transforming dynamic placeholder pattern to url.
             if(!text.match(/\${.*}/gi)) {
                 splitAroundUrl = text.split(URL_REGEX);
             }
-            this.historyPauseSteps("_onPaste");
-            for (let i = 0; i < splitAroundUrl.length; i++) {
-                const url = /^https?:\/\//gi.test(splitAroundUrl[i])
-                    ? splitAroundUrl[i]
-                    : 'https://' + splitAroundUrl[i];
-                const youtubeUrl = YOUTUBE_URL_GET_VIDEO_ID.exec(url);
+            if (splitAroundUrl.length === 3 && !splitAroundUrl[0] && !splitAroundUrl[2]) {
+                // Pasted content is a single URL.
+                const url = /^https?:\/\//i.test(text) ? text : 'https://' + text;
+                const youtubeUrl = this.options.allowCommandVideo &&YOUTUBE_URL_GET_VIDEO_ID.exec(url);
                 const urlFileExtention = url.split('.').pop();
-                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif'].includes(urlFileExtention.toLowerCase());
-                // Even indexes will always be plain text, and odd indexes will always be URL.
-                // only allow images emebed inside an existing link. No other url or video embed.
-                if (i % 2 && (isImageUrl || !selectionIsInsideALink)) {
-                    const baseEmbedCommand = [
-                        {
-                            category: this.options._t('Paste'),
-                            name: this.options._t('Paste as URL'),
-                            description: this.options._t('Create an URL.'),
-                            fontawesome: 'fa-link',
-                            callback: () => {
-                                this.historyUndo();
-                                const link = document.createElement('A');
-                                link.setAttribute('href', url);
-                                for (const attribute in linkAttributes) {
-                                    link.setAttribute(attribute, linkAttributes[attribute]);
-                                }
-                                link.innerText = splitAroundUrl[i];
-                                const sel = this.document.getSelection();
-                                if (!sel.isCollapsed) {
-                                    this.deleteRange(sel);
-                                }
-                                if (sel.rangeCount) {
-                                    sel.getRangeAt(0).insertNode(link);
-                                    sel.collapseToEnd();
-                                }
-                            },
-                        },
-                        {
-                            category: this.options._t('Paste'),
-                            name: this.options._t('Paste as text'),
-                            description: this.options._t('Simple text paste.'),
-                            fontawesome: 'fa-font',
-                            callback: () => {},
-                        },
-                    ];
-
-                    const execCommandAtStepIndex = (index, callback) => {
-                        this.historyRevertUntil(index);
+                const isImageUrl = ['jpg', 'jpeg', 'png', 'gif', 'svg'].includes(urlFileExtention.toLowerCase());
+                // A url cannot be transformed inside an existing link.
+                // An image can be embedded inside an existing link, a video cannot.
+                if (selectionIsInsideALink) {
+                    if (isImageUrl) {
+                        const img = document.createElement('IMG');
+                        img.setAttribute('src', url);
+                        this._applyCommand('insert', img);
+                    } else {
+                        this._applyCommand('insert', text);
+                    }
+                } else if (isImageUrl || youtubeUrl) {
+                    // Open powerbox with commands to embed media or paste as link.
+                    // Store history step index to revert it later.
+                    const stepIndexBeforeInsert = this._historySteps.length - 1;
+                    // Store mutations before text insertion, to reapply them after history revert.
+                    this.observerFlush();
+                    const currentStepMutations = [...this._currentStep.mutations];
+                    // Insert URL as text, revert it later.
+                    this._applyCommand('insert', text);
+                    const revertTextInsertion = () => {
+                        this.historyRevertUntil(stepIndexBeforeInsert);
                         this.historyStep(true);
                         this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-
-                        callback();
-
-                        this.historyStep(true);
+                        // Reapply mutations that were done before the text insertion.
+                        this.historyApply(currentStepMutations);
                     };
-
+                    let commands;
+                    const pasteAsURLCommand = {
+                        name: this.options._t('Paste as URL'),
+                        description: this.options._t('Create an URL.'),
+                        fontawesome: 'fa-link',
+                        callback: () => {
+                            revertTextInsertion();
+                            this._applyRawCommand('insert', this._createLink(text, url))
+                        },
+                    };
                     if (isImageUrl) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
-                        this.execCommand('insert', splitAroundUrl[i]);
-                        this.powerbox.open([
-                            {
-                                category: this.options._t('Embed'),
-                                name: this.options._t('Embed Image'),
-                                description: this.options._t('Embed the image in the document.'),
-                                fontawesome: 'fa-image',
-                                callback: () => {
-                                    execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-                                        const img = document.createElement('IMG');
-                                        img.setAttribute('src', url);
-                                        const sel = this.document.getSelection();
-                                        if (!sel.isCollapsed) {
-                                            this.deleteRange(sel);
-                                        }
-                                        if (sel.rangeCount) {
-                                            sel.getRangeAt(0).insertNode(img);
-                                            sel.collapseToEnd();
-                                        }
-                                    });
-                                },
+                        const embedImageCommand = {
+                            name: this.options._t('Embed Image'),
+                            description: this.options._t('Embed the image in the document.'),
+                            fontawesome: 'fa-image',
+                            callback: () => {
+                                revertTextInsertion();
+                                const img = document.createElement('IMG');
+                                img.setAttribute('src', url);
+                                this._applyRawCommand('insert', img);
                             },
-                            ...baseEmbedCommand,
-                        ]);
-                    } else if (this.options.allowCommandVideo && youtubeUrl) {
-                        const stepIndexBeforeInsert = this._historySteps.length - 1;
-                        this.execCommand('insert', splitAroundUrl[i]);
-                        this.powerbox.open([
-                            {
-                                category: this.options._t('Embed'),
-                                name: this.options._t('Embed Youtube Video'),
-                                description: this.options._t('Embed the youtube video in the document.'),
-                                fontawesome: 'fa-youtube-play',
-                                callback: async () => {
-                                    let videoElement;
-                                    if (this.options.getYoutubeVideoElement) {
-                                        videoElement = await this.options.getYoutubeVideoElement(youtubeUrl[0]);
-                                    } else {
-                                        videoElement = document.createElement('iframe');
-                                        videoElement.setAttribute('width', '560');
-                                        videoElement.setAttribute('height', '315');
-                                        videoElement.setAttribute(
-                                            'src',
-                                            `https://www.youtube.com/embed/${youtubeUrl[1]}`,
-                                        );
-                                        videoElement.setAttribute('title', 'YouTube video player');
-                                        videoElement.setAttribute('frameborder', '0');
-                                        videoElement.setAttribute(
-                                            'allow',
-                                            'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
-                                        );
-                                        videoElement.setAttribute('allowfullscreen', '1');
-                                    }
-
-                                    execCommandAtStepIndex(stepIndexBeforeInsert, () => {
-
-                                        const sel = this.document.getSelection();
-                                        if (!sel.isCollapsed) {
-                                            this.deleteRange(sel);
-                                        }
-                                        if (sel.rangeCount) {
-                                            sel.getRangeAt(0).insertNode(videoElement);
-                                            sel.collapseToEnd();
-                                        }
-                                    });
-                                },
-                            },
-                            ...baseEmbedCommand,
-                        ]);
+                        };
+                        commands = [embedImageCommand, pasteAsURLCommand];
                     } else {
-                        const link = document.createElement('A');
-                        link.setAttribute('href', url);
-                        for (const attribute in linkAttributes) {
-                            link.setAttribute(attribute, linkAttributes[attribute]);
-                        }
-                        link.innerText = splitAroundUrl[i];
-                        const sel = this.document.getSelection();
-                        if (!sel.isCollapsed) {
-                            this.deleteRange(sel);
-                        }
-                        if (sel.rangeCount) {
-                            sel.getRangeAt(0).insertNode(link);
-                            sel.collapseToEnd();
-                        }
+                         // URL is a YouTube video.
+                        const embedVideoCommand = {
+                            name: this.options._t('Embed Youtube Video'),
+                            description: this.options._t('Embed the youtube video in the document.'),
+                            fontawesome: 'fa-youtube-play',
+                            callback: () => {
+                                revertTextInsertion();
+                                let videoElement;
+                                if (this.options.getYoutubeVideoElement) {
+                                    videoElement = this.options.getYoutubeVideoElement(youtubeUrl[0]);
+                                } else {
+                                    videoElement = document.createElement('iframe');
+                                    videoElement.setAttribute('width', '560');
+                                    videoElement.setAttribute('height', '315');
+                                    videoElement.setAttribute(
+                                        'src',
+                                        `https://www.youtube.com/embed/${youtubeUrl[1]}`,
+                                    );
+                                    videoElement.setAttribute('title', 'YouTube video player');
+                                    videoElement.setAttribute('frameborder', '0');
+                                    videoElement.setAttribute(
+                                        'allow',
+                                        'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture',
+                                    );
+                                    videoElement.setAttribute('allowfullscreen', '1');
+                                }
+                                this._applyRawCommand('insert', videoElement);
+                            },
+                        };
+                        commands = [embedVideoCommand, pasteAsURLCommand];
                     }
-                } else if (splitAroundUrl[i] !== '') {
-                    const textFragments = splitAroundUrl[i].split(/\r?\n/);
-                    let textIndex = 1;
-                    for (const textFragment of textFragments) {
-                        this.execCommand('insert', textFragment);
-                        if (textIndex < textFragments.length) {
-                            this._applyCommand('oShiftEnter');
+                    this.powerbox.open(commands);
+                } else {
+                    this._applyCommand('insert', this._createLink(text, url));
+                }
+            } else {
+                this.historyPauseSteps();
+                for (let i = 0; i < splitAroundUrl.length; i++) {
+                    const url = /^https?:\/\//gi.test(splitAroundUrl[i])
+                        ? splitAroundUrl[i]
+                        : 'https://' + splitAroundUrl[i];
+                    // Even indexes will always be plain text, and odd indexes will always be URL.
+                    // only allow images emebed inside an existing link. No other url or video embed.
+                    if (i % 2 && !selectionIsInsideALink) {
+                        this._applyCommand('insert', this._createLink(splitAroundUrl[i], url));
+                    } else if (splitAroundUrl[i] !== '') {
+                        const textFragments = splitAroundUrl[i].split(/\r?\n/);
+                        let textIndex = 1;
+                        for (const textFragment of textFragments) {
+                            this._applyCommand('insert', textFragment);
+                            if (textIndex < textFragments.length) {
+                                this._applyCommand('oShiftEnter');
+                            }
+                            textIndex++;
                         }
-                        textIndex++;
                     }
                 }
+                this.historyUnpauseSteps();
+                this.historyStep();
             }
-            this.historyUnpauseSteps("_onPaste");
-            this.historyStep();
         }
     }
     _onDragStart(ev) {

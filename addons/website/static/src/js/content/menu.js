@@ -483,7 +483,10 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
  * Note: this works well with the affixMenu... by chance (menuDirection is
  * called after alphabetically).
  *
- * @todo check bootstrap v4: maybe handled automatically now ?
+ * @todo @deprecated For the moment, dynamic positioning of dropdown elements is
+ * explicitly disabled by Bootstrap on dropdowns that are in the navbar. In
+ * master, we will patch the BS dropdown to allow this and remove the following
+ * widget.
  */
 publicWidget.registry.menuDirection = publicWidget.Widget.extend({
     selector: 'header .navbar .nav',
@@ -496,7 +499,8 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'right' : 'left';
+        this.defaultAlignment = this.$el.is('.ms-auto, .ms-auto ~ *') ? 'end' : 'start';
+        this.isRtl = !!this.el.closest('#wrapwrap.o_rtl');
         return this._super.apply(this, arguments);
     },
 
@@ -506,7 +510,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
 
     /**
      * @private
-     * @param {string} alignment - either 'left' or 'right'
+     * @param {string} alignment - either 'start' or 'end'
      * @param {integer} liOffset
      * @param {integer} liWidth
      * @param {integer} menuWidth
@@ -514,7 +518,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @returns {boolean}
      */
     _checkOpening: function (alignment, liOffset, liWidth, menuWidth, pageWidth) {
-        if (alignment === 'left') {
+        if (alignment === 'start' && !this.isRtl || alignment === 'end' && this.isRtl) {
             // Check if ok to open the dropdown to the right (no window overflow)
             return (liOffset + menuWidth <= pageWidth);
         } else {
@@ -531,19 +535,20 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @private
      */
     _onDropdownShow: function (ev) {
-        var $li = $(ev.target);
-        var $menu = $li.children('.dropdown-menu');
-        var liOffset = $li.offset().left;
-        var liWidth = $li.outerWidth();
+        const $dropdown = $(ev.target).closest('.nav-item.dropdown');
+        var $menu = $dropdown.children('.dropdown-menu');
+        var liOffset = $dropdown.offset().left;
+        var liWidth = $dropdown.outerWidth();
         var menuWidth = $menu.outerWidth();
         var pageWidth = $('#wrapwrap').outerWidth();
 
         $menu.removeClass('dropdown-menu-start dropdown-menu-end');
 
         var alignment = this.defaultAlignment;
-        if ($li.nextAll(':visible').length === 0) {
-            // The dropdown is the last menu item, open to the left
-            alignment = 'right';
+        if ($dropdown.nextAll(':visible').length === 0) {
+            // The dropdown is the last menu item, open to the left side
+            // (right side with rtl languages).
+            alignment = 'end';
         }
 
         // If can't open in the current direction because it would overflow the
@@ -551,7 +556,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
         // same, change back the direction.
         for (var i = 0; i < 2; i++) {
             if (!this._checkOpening(alignment, liOffset, liWidth, menuWidth, pageWidth)) {
-                alignment = (alignment === 'left' ? 'right' : 'left');
+                alignment = (alignment === 'start' ? 'end' : 'start');
             }
         }
 
@@ -608,28 +613,24 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
      * @param {Event} ev
      */
     _onMouseEnter: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        // The user must click on the dropdown if he is on mobile (no way to
+        // hover) or if the dropdown is the extra menu ('+').
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.addClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'true');
-        $dropdown.find(this.$dropdownMenus).addClass('show');
+        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).show();
     },
     /**
      * @private
      * @param {Event} ev
      */
     _onMouseLeave: function (ev) {
-        if (config.device.size_class <= config.device.SIZES.SM) {
+        if (config.device.size_class <= config.device.SIZES.SM ||
+            ev.currentTarget.classList.contains('o_extra_menu_items')) {
             return;
         }
-
-        const $dropdown = $(ev.currentTarget);
-        $dropdown.removeClass('show');
-        $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
-        $dropdown.find(this.$dropdownMenus).removeClass('show');
+        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).hide();
     },
 });
 

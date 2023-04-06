@@ -245,8 +245,13 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
         """
         An invoice that has an AAL on one of its line should be taken into account
         for the profitability of the project.
+        The contribution of the line should only be dependent
+        on the project's analytic account % that was set on the line
         """
         self.project.allow_billable = True
+        # a custom analytic contribution (number between 1 -> 100 included)
+        analytic_distribution = 42
+        analytic_contribution = analytic_distribution / 100.
         # create a invoice_1 with the AAL
         invoice_1 = self.env['account.move'].create({
             "name": "Invoice_1",
@@ -255,7 +260,7 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "partner_id": self.partner.id,
             "invoice_date": datetime.today(),
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.analytic_account.id: 100},
+                "analytic_distribution": {self.analytic_account.id: analytic_distribution},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
@@ -269,10 +274,10 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 'data': [{
                     'id': 'other_invoice_revenues',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
-                    'to_invoice': self.product_a.standard_price,
+                    'to_invoice': self.product_a.standard_price * analytic_contribution,
                     'invoiced': 0.0,
                 }],
-                'total': {'to_invoice': self.product_a.standard_price, 'invoiced': 0.0},
+                'total': {'to_invoice': self.product_a.standard_price * analytic_contribution, 'invoiced': 0.0},
             },
         )
         # post invoice_1
@@ -285,9 +290,9 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'id': 'other_invoice_revenues',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
                     'to_invoice': 0.0,
-                    'invoiced': self.product_a.standard_price,
+                    'invoiced': self.product_a.standard_price * analytic_contribution,
                 }],
-                'total': {'to_invoice': 0.0, 'invoiced': self.product_a.standard_price},
+                'total': {'to_invoice': 0.0, 'invoiced': self.product_a.standard_price * analytic_contribution},
             },
         )
         # create another invoice, with 2 lines, 2 diff products, the second line has 2 as quantity
@@ -298,13 +303,13 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
             "partner_id": self.partner.id,
             "invoice_date": datetime.today(),
             "invoice_line_ids": [Command.create({
-                "analytic_distribution": {self.analytic_account.id: 100},
+                "analytic_distribution": {self.analytic_account.id: analytic_distribution},
                 "product_id": self.product_a.id,
                 "quantity": 1,
                 "product_uom_id": self.product_a.uom_id.id,
                 "price_unit": self.product_a.standard_price,
             }), Command.create({
-                "analytic_distribution": {self.analytic_account.id: 100},
+                "analytic_distribution": {self.analytic_account.id: analytic_distribution},
                 "product_id": self.product_b.id,
                 "quantity": 2,
                 "product_uom_id": self.product_b.uom_id.id,
@@ -318,12 +323,12 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                 'data': [{
                     'id': 'other_invoice_revenues',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
-                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price),
-                    'invoiced': self.product_a.standard_price,
+                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'invoiced': self.product_a.standard_price * analytic_contribution,
                 }],
                 'total': {
-                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price),
-                    'invoiced': self.product_a.standard_price,
+                    'to_invoice': (self.product_a.standard_price + 2 * self.product_b.standard_price) * analytic_contribution,
+                    'invoiced': self.product_a.standard_price * analytic_contribution,
                 },
             },
         )
@@ -337,11 +342,11 @@ class TestSaleProjectProfitability(TestProjectProfitabilityCommon, TestSaleCommo
                     'id': 'other_invoice_revenues',
                     'sequence': self.project._get_profitability_sequence_per_invoice_type()['other_invoice_revenues'],
                     'to_invoice': 0.0,
-                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price),
+                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution,
                 }],
                 'total': {
                     'to_invoice': 0.0,
-                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price),
+                    'invoiced': 2 * (self.product_a.standard_price + self.product_b.standard_price) * analytic_contribution,
                 },
             },
         )

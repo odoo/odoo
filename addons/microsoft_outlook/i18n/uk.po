@@ -43,6 +43,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Дійсний токен Outlook\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.ir_mail_server_view_form
@@ -51,6 +54,9 @@ msgid ""
 "                        Outlook Token Valid\n"
 "                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'outlook'), ('microsoft_outlook_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Дійсний токен Outlook\n"
+"                    </span>"
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/microsoft_outlook_mixin.py:0
@@ -82,6 +88,8 @@ msgid ""
 "Connect your Outlook account with the OAuth Authentication process.  \n"
 "By default, only a user with a matching email address will be able to use this server. To extend its use, you should set a \"mail.default.from\" system parameter."
 msgstr ""
+"Підключіть свій обліковий запис Outlook до процесу автентифікації OAuth. \n"
+"За замовчуванням лише користувач із відповідною електронною адресою зможе використовувати цей сервер. Щоб розширити його використання, вам слід встановити системний параметр \"mail.default.from\"."
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
@@ -90,6 +98,8 @@ msgid ""
 "Connect your personal Outlook account using OAuth. \n"
 "You will be redirected to the Outlook login page to accept the permissions."
 msgstr ""
+"Підключіть особистий обліковий запис Outlook за допомогою OAuth.\n"
+"Ви будете перенаправлені на сторінку входу в Outlook, щоб прийняти дозволи."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.microsoft_outlook_oauth_error
@@ -104,7 +114,7 @@ msgstr "ID"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "ID of your Outlook app"
-msgstr ""
+msgstr "ID вашого додатку Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model,name:microsoft_outlook.model_fetchmail_server
@@ -172,7 +182,7 @@ msgstr "Секрет клієнта Outlook"
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__fetchmail_server__server_type__outlook
 #: model:ir.model.fields.selection,name:microsoft_outlook.selection__ir_mail_server__smtp_authentication__outlook
 msgid "Outlook OAuth Authentication"
-msgstr ""
+msgstr "Автентифікація Outlook OAuth"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
@@ -192,6 +202,7 @@ msgstr "Налаштуйте облікові дані Outlook."
 #, python-format
 msgid "Please connect with your Outlook account before using it."
 msgstr ""
+"Підключіться до вашого облікового запису Outlook перед його використанням."
 
 #. module: microsoft_outlook
 #: code:addons/microsoft_outlook/models/ir_mail_server.py:0
@@ -212,7 +223,7 @@ msgstr "Читати більше"
 #: code:addons/microsoft_outlook/models/fetchmail_server.py:0
 #, python-format
 msgid "SSL is required for the server %r."
-msgstr ""
+msgstr "SSL потрібен для сервера."
 
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
@@ -222,7 +233,7 @@ msgstr "Секрет"
 #. module: microsoft_outlook
 #: model_terms:ir.ui.view,arch_db:microsoft_outlook.res_config_settings_view_form
 msgid "Secret of your Outlook app"
-msgstr ""
+msgstr "Секретний ключ вашого додатка Outlook"
 
 #. module: microsoft_outlook
 #: model:ir.model.fields,field_description:microsoft_outlook.field_fetchmail_server__server_type

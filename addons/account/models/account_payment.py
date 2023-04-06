@@ -671,7 +671,7 @@ class AccountPayment(models.Model):
 
     def new(self, values=None, origin=None, ref=None):
         payment = super(AccountPayment, self.with_context(is_payment=True)).new(values, origin, ref)
-        if not payment.journal_id:  # might not be computed because declared by inheritance
+        if not payment.journal_id and not payment.default_get(['journal_id']):  # might not be computed because declared by inheritance
             payment.move_id._compute_journal_id()
         return payment
 
@@ -865,12 +865,14 @@ class AccountPayment(models.Model):
             # Update the existing journal items.
             # If dealing with multiple write-off lines, they are dropped and a new one is generated.
 
-            pay.move_id.write({
-                'partner_id': pay.partner_id.id,
-                'currency_id': pay.currency_id.id,
-                'partner_bank_id': pay.partner_bank_id.id,
-                'line_ids': line_ids_commands,
-            })
+            pay.move_id\
+                .with_context(skip_invoice_sync=True)\
+                .write({
+                    'partner_id': pay.partner_id.id,
+                    'currency_id': pay.currency_id.id,
+                    'partner_bank_id': pay.partner_bank_id.id,
+                    'line_ids': line_ids_commands,
+                })
 
     def _create_paired_internal_transfer_payment(self):
         ''' When an internal transfer is posted, a paired payment is created

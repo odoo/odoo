@@ -46,11 +46,11 @@ export class MassMailingHtmlField extends HtmlField {
         return {
             ...super.wysiwygOptions,
             onIframeUpdated: () => this.onIframeUpdated(),
-            foldSnippets: device.isMobile,
             snippets: 'mass_mailing.email_designer_snippets',
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
-            toolbarTemplate: device.isMobile ? 'web_editor.toolbar' : 'mass_mailing.web_editor_toolbar',
+            toolbarTemplate: 'mass_mailing.web_editor_toolbar',
+            onWysiwygBlur: () => this.wysiwyg.odooEditor.toolbarHide(),
             ...this.props.wysiwygOptions,
         };
     }
@@ -244,6 +244,7 @@ export class MassMailingHtmlField extends HtmlField {
             } else {
                 $codeview.val(this.wysiwyg.getValue());
             }
+            this.wysiwyg.snippetsMenu.activateSnippet(false);
             this.onIframeUpdated();
         });
         const $previewBtn = $snippetsSideBar.find('.o_mobile_preview_btn');
@@ -336,7 +337,7 @@ export class MassMailingHtmlField extends HtmlField {
 
         if (editableAreaIsEmpty) {
             // unfold to prevent toolbar from going over the menu
-            this.wysiwyg.snippetsMenu.setFolded(false);
+            this.wysiwyg.setSnippetsMenuFolded(false);
             $themeSelectorNew.appendTo(this.wysiwyg.$iframeBody);
         }
 
@@ -352,9 +353,8 @@ export class MassMailingHtmlField extends HtmlField {
             this.wysiwyg.$iframeBody.closest('body').removeClass("o_force_mail_theme_choice");
 
             $themeSelectorNew.remove();
-            if (device.isMobile) {
-                this.wysiwyg.snippetsMenu.setFolded(true);
-            }
+
+            this.wysiwyg.setSnippetsMenuFolded(device.isMobile || themeName === 'basic');
 
             this._switchImages(themeParams, $snippets);
 
@@ -405,6 +405,8 @@ export class MassMailingHtmlField extends HtmlField {
             $target.parents('.o_mail_template_preview').remove();
         });
 
+        // Clear any previous theme class before adding new one.
+        this.wysiwyg.$iframeBody.closest('body').removeClass(this._themeClassNames);
         let selectedTheme = this._getSelectedTheme(themesParams);
         if (selectedTheme) {
             this.wysiwyg.$iframeBody.closest('body').addClass(selectedTheme.className);
@@ -420,6 +422,8 @@ export class MassMailingHtmlField extends HtmlField {
             });
             selectedTheme = this._getSelectedTheme(themesParams);
         }
+
+        this.wysiwyg.setSnippetsMenuFolded(device.isMobile || (selectedTheme && selectedTheme.name === 'basic'));
 
         this.wysiwyg.$iframeBody.find('.iframe-utils-zone').removeClass('d-none');
         if (this.env.mailingFilterTemplates && this.wysiwyg) {

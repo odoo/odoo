@@ -148,5 +148,5 @@ class ResConfigSettings(models.TransientModel):
             'res_model': 'mail.template',
             'view_id': False,
             'view_mode': 'form',
-            'res_id': 15
+            'res_id': self.env['ir.model.data']._xmlid_to_res_id("website_sale.mail_template_sale_cart_recovery"),
         }

@@ -124,7 +124,7 @@ export class AnalyticDistribution extends Component {
                 percentage: data[record.id],
                 id: this.nextId++,
                 group_id: record.root_plan_id[0],
-                analytic_account_name: record.name,
+                analytic_account_name: record.display_name,
                 color: record.color,
             });
         });
@@ -169,7 +169,7 @@ export class AnalyticDistribution extends Component {
     async fetchAnalyticAccounts(domain, limit=null) {
         const args = {
             domain: domain,
-            fields: ["id", "name", "root_plan_id", "color"],
+            fields: ["id", "display_name", "root_plan_id", "color"],
             context: [],
         }
         if (limit) {
@@ -208,11 +208,11 @@ export class AnalyticDistribution extends Component {
             domain.push(['root_plan_id', '=', this.activeGroup]);
         }
 
-        const records = await this.fetchAnalyticAccounts([...domain, '|', ["name", "ilike", request], ['code', 'ilike', request]], 7);
+        const records = await this.fetchAnalyticAccounts([...domain, '|', ["name", "ilike", request], '|', ['code', 'ilike', request], ['partner_id', 'ilike', request]], 7);
 
         let options = records.map((result) => ({
             value: result.id,
-            label: result.name,
+            label: result.display_name,
             group_id: result.root_plan_id[0],
             color: result.color,
         }));

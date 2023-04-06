@@ -863,7 +863,7 @@ class Message(models.Model):
                     .display_name
             else:
                 record_name = False
-            reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
+            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
             reaction_groups = [{
@@ -1113,7 +1113,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if model in self.pool and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].browse(res_id).invalidate_recordset(fnames)
 
     def _get_search_domain_share(self):

@@ -46,6 +46,8 @@ import {
     parseHTML,
     formatSelection,
     getDeepestPosition,
+    fillEmpty,
+    isEmptyBlock,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -533,7 +535,11 @@ export const editorCommands = {
         if (!range) return;
         const restoreCursor = preserveCursor(editor.document);
         // Get the <font> nodes to color
-        const selectedNodes = getSelectedNodes(editor.editable).filter(node => !closestElement(node, 'table.o_selected_table'));
+        const selectionNodes = getSelectedNodes(editor.editable);
+        if (isEmptyBlock(range.endContainer)) {
+            selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
+        }
+        const selectedNodes = selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
         const fonts = selectedNodes.flatMap(node => {
             let font = closestElement(node, 'font') || closestElement(node, 'span');
             const children = font && descendants(font);
@@ -546,6 +552,7 @@ export const editorCommands = {
                     font = [];
                 }
             } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+                    || node.nodeName === "BR"
                     || (node.nodeType === Node.ELEMENT_NODE &&
                         ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                         isVisibleStr(node.textContent) &&
@@ -569,22 +576,28 @@ export const editorCommands = {
                 } else {
                     // No <font> found: insert a new one.
                     font = document.createElement('font');
-                    node.parentNode.insertBefore(font, node);
+                    node.after(font);
                 }
-                font.appendChild(node);
+                if (node.textContent) {
+                    font.appendChild(node);
+                } else {
+                    fillEmpty(font);
+                }
             } else {
                 font = []; // Ignore non-text or invisible text nodes.
             }
             return font;
         });
         // Color the selected <font>s and remove uncolored fonts.
-        for (const font of new Set(fonts)) {
+        const fontsSet = new Set(fonts);
+        for (const font of fontsSet) {
             colorElement(font, color, mode);
             if (!hasColor(font, mode) && !font.hasAttribute('style')) {
                 for (const child of [...font.childNodes]) {
                     font.parentNode.insertBefore(child, font);
                 }
                 font.parentNode.removeChild(font);
+                fontsSet.delete(font);
             }
         }
         restoreCursor();
@@ -596,7 +609,7 @@ export const editorCommands = {
             newSelection.removeAllRanges();
             newSelection.addRange(range);
         }
-        return [...fonts, ...coloredTds];
+        return [...fontsSet, ...coloredTds];
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {

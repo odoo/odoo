@@ -10,7 +10,7 @@
                     </span>
                     <t t-if="!env.isMobile || props.mobileSearchBarIsShown">
                         <div class="pos-search-bar">
-                            <i class="fa fa-search" t-on-click="_onPressEnterKey"/>
+                            <i class="fa fa-search" />
                             <input t-ref="search-word-input-product" placeholder="Search Products..." type="text" autofocus="autofocus" t-on-keyup="updateSearch" />
                             <i class="fa fa-times search-clear-partner" t-on-click="_clearSearch"/>
                         </div>

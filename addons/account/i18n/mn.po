@@ -87,6 +87,13 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
+msgstr ""
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid " The %(lock_type)s lock date is set on %(lock_date)s."
@@ -349,6 +356,15 @@ msgstr "Одоо төлбөл 30% хөнгөлнө, 60 хоногт төлнө"
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 хоногт"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
+"#704A66;'>%(date)s</b>"
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -1275,6 +1291,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid ""
 "A second payment will be created automatically in the destination journal."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "A statement should only contain lines from the same journal."
 msgstr ""
 
 #. module: account
@@ -3151,6 +3174,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Доорх бичвэр нь ердөө санал болгож буй бичвэр бөгөөд Odoo S.A. хариуцлага "
+"хүлээхгүй."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
@@ -14228,6 +14253,22 @@ msgid ""
 msgstr ""
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr ""
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"The starting balance doesn't match the ending balance of the previous "
+"statement, or an earlier statement is missing."
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
 msgid "The statement line that created this entry"
 msgstr ""
@@ -15016,6 +15057,15 @@ msgstr "Бичлэг дээрх асуудал бүхий ажилбарын т�
 #: model:ir.model.fields.selection,name:account.selection__account_cash_rounding__rounding_method__up
 msgid "UP"
 msgstr "ДЭЭШ"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid ""
+"Unable to create a statement due to missing transactions. You may want to "
+"reorder the transactions before proceeding."
+msgstr ""
 
 #. module: account
 #. odoo-python

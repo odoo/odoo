@@ -218,7 +218,7 @@ class TestProjectSubtasks(TestProjectCommon):
                 Command.create({'name': 'child 1'}),
                 Command.create({'name': 'child 2', 'display_project_id': self.project_goats.id}),
                 Command.create({'name': 'child 3', 'display_project_id': self.project_pigs.id}),
-                Command.create({'name': 'child 4 with subtask', 'child_ids': [Command.create({'name': 'child 5'})]}),
+                Command.create({'name': 'child 4 with subtask', 'child_ids': [Command.create({'name': 'child 5'}), Command.create({'name': 'child 6 with project', 'display_project_id': self.project_goats.id})]}),
                 Command.create({'name': 'child archived', 'active': False}),
             ],
         })

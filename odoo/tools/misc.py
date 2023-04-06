@@ -1299,14 +1299,14 @@ def get_lang(env, lang_code=False):
     """
     Retrieve the first lang object installed, by checking the parameter lang_code,
     the context and then the company. If no lang is installed from those variables,
-    fallback on the first lang installed in the system.
+    fallback on english or on the first lang installed in the system.
 
     :param env:
     :param str lang_code: the locale (i.e. en_US)
     :return res.lang: the first lang found that is installed on the system.
     """
     langs = [code for code, _ in env['res.lang'].get_installed()]
-    lang = langs[0]
+    lang = 'en_US' if 'en_US' in langs else langs[0]
     if lang_code and lang_code in langs:
         lang = lang_code
     elif env.context.get('lang') in langs:

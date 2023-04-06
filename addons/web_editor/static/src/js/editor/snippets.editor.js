@@ -1541,7 +1541,7 @@ var SnippetEditor = Widget.extend({
     _onRemoveClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.removeSnippet();
+        this.trigger_up('snippet_edition_request', {exec: this.removeSnippet.bind(this)});
     },
     /**
      * @private
@@ -1829,12 +1829,9 @@ var SnippetsMenu = Widget.extend({
         this.$el = this.window.$(this.$el);
         this.$el.data('snippetMenu', this);
 
-        this.folded = !!this.options.foldSnippets;
-
         this.customizePanel = document.createElement('div');
         this.customizePanel.classList.add('o_we_customize_panel', 'd-none');
-        // adds toolbar if not folded
-        this.setFolded(this.folded);
+        this._addToolbar();
         this._checkEditorToolbarVisibilityCallback = this._checkEditorToolbarVisibility.bind(this);
         $(this.options.wysiwyg.odooEditor.document.body).on('click', this._checkEditorToolbarVisibilityCallback);
 
@@ -2126,8 +2123,6 @@ var SnippetsMenu = Widget.extend({
         this.el.classList.toggle('d-none', foldState);
         this.el.ownerDocument.body.classList.toggle('editor_has_snippets', !foldState);
         this.folded = !!foldState;
-        // "add" toolbar to set it inside the snippet menu/in the body
-        this._addToolbar();
     },
     /**
      * Get the editable area.
@@ -2697,7 +2692,15 @@ var SnippetsMenu = Widget.extend({
     _computeSelectorFunctions: function (selector, exclude, target, noCheck, isChildren, excludeParent) {
         var self = this;
 
-        exclude += `${exclude && ', '}.o_snippet_not_selectable`;
+        // TODO the `:not([contenteditable="true"])` part is designed to make
+        // images with such attribute editable even when they are in an
+        // environment where editing is not normally possible. This should be
+        // reviewed if we are to handle more hierarchy of editable nodes being
+        // editable despite their non editable environment.
+        // Without the `:not(.s_social_media)`, it is no longer possible to edit
+        // icons in the social media snippet. This should be fixed in a more
+        // proper way to get rid of this hack.
+        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable:not(.s_social_media) :not([contenteditable="true"])`;
 
         let filterFunc = function () {
             return !$(this).is(exclude);
@@ -4106,7 +4109,6 @@ var SnippetsMenu = Widget.extend({
     },
     _addToolbar(toolbarMode = "text") {
         if (this.folded) {
-            this._addToolbarToOriginalPosition();
             return;
         }
         let titleText = _t("Inline Text");
@@ -4123,37 +4125,24 @@ var SnippetsMenu = Widget.extend({
         }
 
         this.options.wysiwyg.toolbar.el.classList.remove('oe-floating');
-        if (!this._$toolbarContainer) {
-            // Create toolbar custom container.
-            this._$toolbarContainer = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
-            const $title = $("<we-title><span>" + titleText + "</span></we-title>");
-            this._$toolbarContainer.append($title);
-            this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
-            $(this.customizePanel).append(this._$toolbarContainer);
+        // Create toolbar custom container.
+        this._$toolbarContainer = $('<WE-CUSTOMIZEBLOCK-OPTIONS id="o_we_editor_toolbar_container"/>');
+        const $title = $("<we-title><span>" + titleText + "</span></we-title>");
+        this._$toolbarContainer.append($title);
+        this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
+        $(this.customizePanel).append(this._$toolbarContainer);
 
-            // Create table-options custom container.
+        // Create table-options custom container.
 
-            const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
-            this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
-            $(this.customizePanel).append($customizeTableBlock);
-            this._$removeFormatButton = this.options.wysiwyg.toolbar.$el.find('#removeFormat');
-            $title.append(this._$removeFormatButton);
-            this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
-        }
-        this.options.wysiwyg.toolbar.$el.find('#table')[0].classList.add('d-none');
+        const $customizeTableBlock = $(QWeb.render('web_editor.toolbar.table-options'));
+        this.options.wysiwyg.odooEditor.bindExecCommand($customizeTableBlock[0]);
+        $(this.customizePanel).append($customizeTableBlock);
+        this._$removeFormatButton = this.options.wysiwyg.toolbar.$el.find('#removeFormat');
+        $title.append(this._$removeFormatButton);
+        this._$toolbarContainer.append(this.options.wysiwyg.toolbar.$el);
+        this.options.wysiwyg.toolbar.$el.find('#table').remove();
 
         this._checkEditorToolbarVisibility();
-    },
-    _addToolbarToOriginalPosition: function () {
-        const toolbar = this.options.wysiwyg.toolbar.el;
-        toolbar.classList.add('oe-floating');
-        toolbar.querySelector('#table').classList.remove('d-none');
-        if (this.options.wysiwyg.odooEditor.isMobile) {
-            const editorEditable = this.options.wysiwyg.odooEditor.editable;
-            editorEditable.before(toolbar);
-        } else if (this.options.autohideToolbar) {
-            document.body.appendChild(toolbar);
-        }
     },
     /**
      * Update editor UI visibility based on the current range.
