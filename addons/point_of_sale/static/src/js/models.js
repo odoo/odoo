@@ -2127,6 +2127,7 @@ exports.Orderline = Backbone.Model.extend({
         this.pos   = options.pos;
         this.order = options.order;
         this.price_manually_set = options.price_manually_set || false;
+        this.price_automatically_set = options.price_automatically_set || false;
         if (options.json) {
             try {
                 this.init_from_JSON(options.json);
@@ -2160,6 +2161,7 @@ exports.Orderline = Backbone.Model.extend({
         this.set_product_lot(this.product);
         this.price = json.price_unit;
         this.price_manually_set = json.price_manually_set;
+        this.price_automatically_set = json.price_automatically_set;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, 'do not recompute unit price');
         this.set_description(json.description);
@@ -2192,6 +2194,7 @@ exports.Orderline = Backbone.Model.extend({
         orderline.price = this.price;
         orderline.selected = false;
         orderline.price_manually_set = this.price_manually_set;
+        orderline.price_automatically_set = this.price_automatically_set;
         orderline.customerNote = this.customerNote;
         return orderline;
     },
@@ -2336,7 +2339,7 @@ exports.Orderline = Backbone.Model.extend({
         }
 
         // just like in sale.order changing the quantity will recompute the unit price
-        if (!keep_price && !this.price_manually_set && !(
+        if (!keep_price && !(this.price_manually_set || this.price_automatically_set) && !(
             this.pos.config.product_configurator && _.some(this.product.attribute_line_ids, (id) => id in this.pos.attributes_by_ptal_id))){
             this.set_unit_price(this.product.get_price(this.order.pricelist, this.get_quantity(), this.get_price_extra()));
             this.order.fix_tax_included_price(this);
@@ -2465,6 +2468,7 @@ exports.Orderline = Backbone.Model.extend({
             customer_note: this.get_customer_note(),
             refunded_orderline_id: this.refunded_orderline_id,
             price_manually_set: this.price_manually_set,
+            price_automatically_set: this.price_automatically_set,
         };
     },
     //used to create a json of the ticket, to be sent to the printer
@@ -2481,6 +2485,7 @@ exports.Orderline = Backbone.Model.extend({
             price_lst:          this.get_lst_price(),
             fixed_lst_price:    this.get_fixed_lst_price(),
             price_manually_set: this.price_manually_set,
+            price_automatically_set: this.price_automatically_set,
             display_discount_policy:    this.display_discount_policy(),
             price_display_one:  this.get_display_price_one(),
             price_display :     this.get_display_price(),
@@ -3399,7 +3404,7 @@ exports.Order = Backbone.Model.extend({
                 if (lines[i].get_product() === tip_product) {
                     lines[i].set_unit_price(tip);
                     lines[i].set_lst_price(tip);
-                    lines[i].price_manually_set = true;
+                    lines[i].price_automatically_set = true;
                     lines[i].order.tip_amount = tip;
                     return;
                 }
@@ -3409,7 +3414,7 @@ exports.Order = Backbone.Model.extend({
               quantity: 1,
               price: tip,
               lst_price: tip,
-              extras: {price_manually_set: true},
+              extras: {price_automatically_set: true},
             });
         }
     },
@@ -3418,7 +3423,7 @@ exports.Order = Backbone.Model.extend({
         this.pricelist = pricelist;
 
         var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
-            return ! line.price_manually_set;
+            return ! (line.price_manually_set || line.price_automatically_set);
         });
         _.each(lines_to_recompute, function (line) {
             line.set_unit_price(line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra()));
