@@ -145,7 +145,7 @@ class Speedscope:
             stack_ids.append(self.get_frame_id(frame))
         return stack_ids
 
-    def process(self, entries, continuous=True, hide_gaps=False, use_context=True, constant_time=False):
+    def process(self, entries, continuous=True, hide_gaps=False, use_context=True, constant_time=True):
         # constant_time parameters is mainly useful to hide temporality when focussing on sql determinism
         entry_end = previous_end = None
         if not entries:

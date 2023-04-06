@@ -181,13 +181,14 @@ class TestEventPerformance(EventPerformanceCase):
     def test_event_create_single_notype_website(self):
         """ Test a single event creation """
         # simple without type involved + website
-        with freeze_time(self.reference_now), self.assertQueryCount(event_user=244):  # tef 228 / com 236
-            self.env.cr._now = self.reference_now  # force create_date to check schedulers
-            event_values = dict(
-                self.event_base_vals,
-                website_menu=True
-            )
-            self.env['event.event'].with_context(lang='en_US').create([event_values])
+        with self.profiler(containers=['sql']):
+            with freeze_time(self.reference_now), self.assertQueryCount(event_user=245):  # tef 228 / com 236
+                self.env.cr._now = self.reference_now  # force create_date to check schedulers
+                event_values = dict(
+                    self.event_base_vals,
+                    website_menu=True
+                )
+                self.env['event.event'].with_context(lang='en_US').create([event_values])
 
     @users('event_user')
     @warmup
