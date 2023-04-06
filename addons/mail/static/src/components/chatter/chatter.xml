@@ -37,16 +37,16 @@
                                 Log note
                             </button>
                         </div>
-                        <div class="o_ChatterTopbar_tools position-relative d-flex flex-grow-1 border-bottom"
+                        <div class="o_ChatterTopbar_tools position-relative d-flex flex-grow-1"
                             t-att-class="{
-                                'border-start ps-2': hasActivities,
+                                'o_ChatterTopbar_borderLeft ps-2': hasActivities,
                             }"
                         >
                             <button t-if="hasActivities" class="o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity btn btn-light text-nowrap" type="button" t-att-disabled="!isTemporary and !hasWriteAccess" t-on-click="onClickScheduleActivity" data-hotkey="shift+a">
                                 <i class="fa fa-clock-o me-1"/>
                                 <span>Activities</span>
                             </button>
-                            <div class="flex-grow-1 border-start pe-2"
+                            <div class="o_ChatterTopbar_borderLeft flex-grow-1 pe-2"
                                 t-att-class="{
                                     'ms-2': hasActivities,
                                 }"
@@ -120,7 +120,7 @@
                     </div>
                 </div>
                 <div t-if="hasActivityBox" class="o_Chatter_activityBox o_ActivityBoxView">
-                    <a href="#" role="button" class="o_ActivityBoxView_title btn d-flex align-items-center mt-4 p-0 w-100 fw-bold" t-att-aria-expanded="isActivityListVisible ? 'true' : 'false'" t-on-click="onClickActivityBoxTitle">
+                    <a href="#" role="button" class="o_ActivityBoxView_title btn d-flex align-items-center p-0 w-100 fw-bold" t-att-aria-expanded="isActivityListVisible ? 'true' : 'false'" t-on-click="onClickActivityBoxTitle">
                         <hr class="o_ActivityBoxView_titleLine w-auto flex-grow-1 me-3" />
                         <span class="o_ActivityBoxView_titleText">
                             <i class="fa fa-fw" t-att-class="isActivityListVisible ? 'fa-caret-down' : 'fa-caret-right'"/>
