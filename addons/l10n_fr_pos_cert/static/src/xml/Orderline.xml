@@ -3,7 +3,7 @@
 
     <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
         <xpath expr="//ul[hasclass('info-list')]" position="inside">
-            <t t-if="env.pos.is_french_country() !== false and props.line.price !== props.line.get_fixed_lst_price()">
+            <t t-if="env.pos.is_french_country() !== false and props.line.price_manually_set">
                 <li class="info">
                     Old unit price:
                     <span style="font-weight: bold;">
