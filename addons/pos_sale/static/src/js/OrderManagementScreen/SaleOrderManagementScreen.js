@@ -284,7 +284,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                             order: this.env.pos.get_order(),
                             product: down_payment_product,
                             price: down_payment,
-                            price_manually_set: true,
+                            price_automatically_set: true,
                             sale_order_origin_id: clickedOrder,
                             down_payment_details: tab,
                         }
