@@ -12683,4 +12683,48 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["create: partner", "read: partner", "read: partner_type"]);
         assert.strictEqual(target.querySelector(".o_data_row").textContent, "changed5");
     });
+
+    QUnit.test("pressing tab before an onchange is resolved", async (assert) => {
+        const onchangeGetPromise = makeDeferred();
+
+        serverData.models.partner.onchanges = {
+            display_name: (obj) => {
+                obj.display_name = "test";
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom" >
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            async mockRPC(route, args, performRPC) {
+                if (
+                    args.method === "onchange" &&
+                    args.model === "product" &&
+                    args.args[2] === "display_name"
+                ) {
+                    await onchangeGetPromise;
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+
+        await editInput(target, ".o_field_widget[name='display_name'] input", "gold");
+        triggerHotkey("Tab");
+        triggerHotkey("Tab");
+        onchangeGetPromise.resolve();
+        await nextTick();
+
+        assert.containsN(target, ".o_data_row", 2);
+    });
 });
