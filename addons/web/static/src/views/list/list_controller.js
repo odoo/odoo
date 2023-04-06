@@ -34,9 +34,10 @@ export class ListController extends Component {
         this.rootRef = useRef("root");
 
         this.archInfo = this.props.archInfo;
-        this.editable = this.props.editable ? this.archInfo.editable : false;
-        this.multiEdit = this.archInfo.multiEdit;
         this.activeActions = this.archInfo.activeActions;
+        this.editable =
+            this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;
+        this.multiEdit = this.archInfo.multiEdit;
         const fields = { ...this.props.fields };
         const { rootState } = this.props.state || {};
         const { defaultGroupBy, rawExpand } = this.archInfo;
