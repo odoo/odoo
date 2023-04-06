@@ -81,6 +81,7 @@ export class SelectMenu extends Component {
         this.state = useState({
             choices: [],
             displayedOptions: [],
+            searchValue: "",
         });
         this.inputRef = useRef("inputRef");
         this.inputContainerRef = useRef("inputContainerRef");
@@ -128,6 +129,8 @@ export class SelectMenu extends Component {
     }
 
     onOpened() {
+        this.state.searchValue = "";
+
         // Using useAutofocus inside the dropdown does not
         // work properly so we set the focus manually.
         if (this.inputRef.el) {
@@ -157,6 +160,7 @@ export class SelectMenu extends Component {
 
     onInput(searchString) {
         this.filterOptions(searchString);
+        this.state.searchValue = searchString;
 
         // Get reference to dropdown container and scroll to the top.
         const inputContainer = this.inputContainerRef.el;
