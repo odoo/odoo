@@ -1678,7 +1678,8 @@
                                                 <strong>Total:</strong>
                                             </td>
                                             <td class="text-right" width="100">
-                                                <strong t-field="order.amount_total" t-options="{'widget': 'monetary', 'display_currency': order.pricelist_id.currency_id}" />
+                                                <t t-set="last_transaction" t-value="order.get_portal_last_transaction()"/>
+                                                <strong t-field="last_transaction.amount" t-options="{'widget': 'monetary', 'display_currency': last_transaction.currency_id}" />
                                             </td>
                                         </tr>
                                     </tbody>
