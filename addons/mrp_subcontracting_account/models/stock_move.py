@@ -45,3 +45,13 @@ class StockMove(models.Model):
                 'account_id': component_cost_account.id,
             }
         return rslt
+
+    def _get_dest_account(self, account_data):
+        if self.raw_material_production_id.subcontractor_id:
+            return self.product_id.product_tmpl_id.get_product_accounts()['stock_output'].id
+        return super()._get_dest_account(account_data)
+
+    def _get_src_account(self, account_data):
+        if self.production_id.subcontractor_id:
+            return self.product_id.product_tmpl_id.get_product_accounts()['stock_input'].id
+        return super()._get_src_account(account_data)
