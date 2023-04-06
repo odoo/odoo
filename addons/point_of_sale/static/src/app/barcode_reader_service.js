@@ -102,7 +102,7 @@ export class BarcodeReader {
     }
 }
 
-export const barcodeReader = {
+export const barcodeReaderService = {
     dependencies: [...BarcodeReader.serviceDependencies, "popup", "barcode"],
     async start(env, deps) {
         const { popup, barcode } = deps;
@@ -131,4 +131,4 @@ export const barcodeReader = {
     },
 };
 
-registry.category("services").add("barcode_reader", barcodeReader);
+registry.category("services").add("barcode_reader", barcodeReaderService);
