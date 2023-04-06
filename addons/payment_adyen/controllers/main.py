@@ -246,7 +246,7 @@ class AdyenController(http.Controller):
         # Redirect the user to the status page
         return request.redirect('/payment/status')
 
-    @http.route(_webhook_url, type='json', auth='public')
+    @http.route(_webhook_url, type='http', methods=['POST'], auth='public', csrf=False)
     def adyen_webhook(self):
         """ Process the data sent by Adyen to the webhook based on the event code.
 
@@ -256,7 +256,7 @@ class AdyenController(http.Controller):
         :return: The '[accepted]' string to acknowledge the notification
         :rtype: str
         """
-        data = request.dispatcher.jsonrequest
+        data = request.get_json_data()
         for notification_item in data['notificationItems']:
             notification_data = notification_item['NotificationRequestItem']
 
@@ -291,7 +291,7 @@ class AdyenController(http.Controller):
             except ValidationError:  # Acknowledge the notification to avoid getting spammed
                 _logger.exception("unable to handle the notification data; skipping to acknowledge")
 
-        return '[accepted]'  # Acknowledge the notification
+        return request.make_json_response('[accepted]')  # Acknowledge the notification
 
     @staticmethod
     def _verify_notification_signature(notification_data, tx_sudo):
