@@ -197,33 +197,33 @@ QUnit.module("Fields", (hooks) => {
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
         // there should be a field selector in the DOM
         await click(target, ".o_domain_add_first_node_button");
-        assert.containsOnce(target, ".o_field_selector", "there should be a field selector");
+        assert.containsOnce(target, ".o_model_field_selector", "there should be a field selector");
 
         // Focusing the field selector input should open the field selector
         // popover
-        await click(target, ".o_field_selector");
+        await click(target, ".o_model_field_selector");
         assert.containsOnce(
             document.body,
-            ".o_field_selector_popover",
+            ".o_model_field_selector_popover",
             "field selector popover should be visible"
         );
         assert.containsOnce(
             document.body,
-            ".o_field_selector_search input",
+            ".o_model_field_selector_popover_search input",
             "field selector popover should contain a search input"
         );
 
         // The popover should contain the list of partner_type fields and so
         // there should be the "Color index" field
         assert.strictEqual(
-            document.body.querySelector(".o_field_selector_item").textContent,
+            document.body.querySelector(".o_model_field_selector_popover_item").textContent,
             "Color index",
             "field selector popover should contain 'Color index' field"
         );
 
         // Clicking on this field should close the popover, then changing the
         // associated value should reveal one matched record
-        await click(document.body.querySelector(".o_field_selector_item"));
+        await click(document.body.querySelector(".o_model_field_selector_popover_item_name"));
 
         const input = target.querySelector(".o_domain_leaf_value_input");
         input.value = 2;
@@ -264,8 +264,12 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target, ".o_domain_add_first_node_button");
-        await click(target, ".o_field_selector");
-        await click(document.body.querySelector(".o_field_selector_item[data-name='image']"));
+        await click(target, ".o_model_field_selector");
+        await click(
+            document.body.querySelector(
+                ".o_model_field_selector_popover_item[data-name='image'] button"
+            )
+        );
     });
 
     QUnit.test("domain field is correctly reset on every view change", async function (assert) {
@@ -293,15 +297,15 @@ QUnit.module("Fields", (hooks) => {
         // selector to change this
         assert.containsOnce(
             target,
-            ".o_field_domain .o_field_selector",
+            ".o_field_domain .o_model_field_selector",
             "there should be a field selector"
         );
 
         // Focusing its input should open the field selector popover
-        await click(target.querySelector(".o_field_selector"));
+        await click(target.querySelector(".o_model_field_selector"));
         assert.containsOnce(
             document.body,
-            ".o_field_selector_popover",
+            ".o_model_field_selector_popover",
             "field selector popover should be visible"
         );
 
@@ -309,11 +313,11 @@ QUnit.module("Fields", (hooks) => {
         // popover should contain the list of "product" fields
         assert.containsOnce(
             document.body,
-            ".o_field_selector_item",
+            ".o_model_field_selector_popover_item",
             "field selector popover should contain only one field"
         );
         assert.strictEqual(
-            document.body.querySelector(".o_field_selector_item").textContent,
+            document.body.querySelector(".o_model_field_selector_popover_item").textContent,
             "Product Name",
             "field selector popover should contain 'Product Name' field"
         );
@@ -322,22 +326,22 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_widget[name='bar'] input", "partner_type");
 
         // Refocusing the field selector input should open the popover again
-        await click(target.querySelector(".o_field_selector"));
+        await click(target.querySelector(".o_model_field_selector"));
         assert.containsOnce(
             document.body,
-            ".o_field_selector_popover",
+            ".o_model_field_selector_popover",
             "field selector popover should be visible"
         );
 
         // Now the list of fields should be the ones of the "partner_type" model
         assert.containsN(
             document.body,
-            ".o_field_selector_item",
+            ".o_model_field_selector_popover_item",
             2,
             "field selector popover should contain two fields"
         );
         assert.strictEqual(
-            document.body.querySelector(".o_field_selector_item").textContent,
+            document.body.querySelector(".o_model_field_selector_popover_item").textContent,
             "Color index",
             "field selector popover should contain 'Color index' field"
         );
