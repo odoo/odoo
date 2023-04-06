@@ -28,4 +28,4 @@ export const projectStateSelectionField = {
     component: ProjectStateSelectionField,
 };
 
-registry.category("fields").add("kanban.project_state_selection", projectStateSelectionField);
+registry.category("fields").add("project_state_selection", projectStateSelectionField);

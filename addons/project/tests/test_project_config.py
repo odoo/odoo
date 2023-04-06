@@ -17,7 +17,6 @@ class TestProjectConfig(TestProjectCommon):
         cls.Settings = cls.env["res.config.settings"]
         cls.features = (
             # Pairs of associated (config_flag, project_flag)
-            ("group_project_recurring_tasks", "allow_recurring_tasks"),
             ("group_project_rating", "rating_active"),
             )
 

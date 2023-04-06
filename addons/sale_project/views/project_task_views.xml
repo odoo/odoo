@@ -68,6 +68,19 @@
             </xpath>
         </field>
     </record>
+
+    <record id="view_sale_project_quick_create_task_form" model="ir.ui.view">
+        <field name="name">project.task.view.inherit</field>
+        <field name="model">project.task</field>
+        <field name="inherit_id" ref="project.quick_create_task_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='project_id']" position="attributes">
+                <attribute name="context">{'default_allow_billable': True, 'default_type_ids': [(4, context.get('default_stage_id', False))]}
+                </attribute>
+            </xpath>
+        </field>
+    </record>
+
     <record id="view_sale_project_inherit_form" model="ir.ui.view">
         <field name="name">project.task.view.inherit</field>
         <field name="model">project.task</field>
@@ -117,6 +130,9 @@
             <xpath expr="//field[@name='depend_on_ids']/tree/field[@name='partner_id']" position="attributes">
                 <attribute name="attrs">{'column_invisible': [('parent.allow_billable', '=', False)], 'invisible': [('allow_billable', '=', False)]}</attribute>
             </xpath>
+            <field name="project_id" position="attributes">
+                <attribute name="context">{'default_allow_billable': True}</attribute>
+            </field>
         </field>
     </record>
 

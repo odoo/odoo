@@ -233,7 +233,6 @@ class Task(models.Model):
     display_parent_task_button = fields.Boolean(compute='_compute_display_parent_task_button', compute_sudo=True)
 
     # recurrence fields
-    allow_recurring_tasks = fields.Boolean(related='project_id.allow_recurring_tasks')
     recurring_task = fields.Boolean(string="Recurrent")
     recurring_count = fields.Integer(string="Tasks in Recurrence", compute='_compute_recurring_count')
     recurrence_id = fields.Many2one('project.task.recurrence', copy=False)
