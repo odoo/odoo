@@ -76,7 +76,7 @@ export class DiscountButton extends Component {
                               )
                             : this.env._t("No tax")),
                     extras: {
-                        price_manually_set: true,
+                        price_automatically_set: true,
                     },
                 });
             }
