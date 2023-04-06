@@ -25,7 +25,6 @@ class TestFrontend(odoo.tests.HttpCase):
 
         second_cash_journal = self.env['account.journal'].create({
             'name': 'Cash 2',
-            'code': 'CSH2',
             'type': 'cash',
             'company_id': main_company.id
             })
