@@ -168,6 +168,7 @@
         # This bundle includes the unit tests.
         'point_of_sale.qunit_suite_tests': [
             'point_of_sale/static/tests/unit/**/*',
+            'point_of_sale/static/tests/*.js',
         ],
     },
     'license': 'LGPL-3',

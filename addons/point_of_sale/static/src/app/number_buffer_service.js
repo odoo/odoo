@@ -318,11 +318,11 @@ class NumberBuffer extends EventBus {
     }
 }
 
-export const numberBuffer = {
+export const numberBufferService = {
     dependencies: NumberBuffer.serviceDependencies,
     start(env, deps) {
         return new NumberBuffer(deps);
     },
 };
 
-registry.category("services").add("number_buffer", numberBuffer);
+registry.category("services").add("number_buffer", numberBufferService);

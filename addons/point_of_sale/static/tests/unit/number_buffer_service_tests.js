@@ -3,7 +3,7 @@
 import testUtils from "web.test_utils";
 import { mount } from "@web/../tests/helpers/utils";
 import { useService } from "@web/core/utils/hooks";
-import { numberBuffer } from "@point_of_sale/app/number_buffer_service";
+import { numberBufferService } from "@point_of_sale/app/number_buffer_service";
 import { registry } from "@web/core/registry";
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
@@ -12,7 +12,7 @@ import { Component, useState, xml } from "@odoo/owl";
 
 QUnit.module("unit tests for NumberBuffer", {
     async beforeEach() {
-        registry.category("services").add("number_buffer", numberBuffer);
+        registry.category("services").add("number_buffer", numberBufferService);
         registry.category("services").add("sound", { start: () => ({ play() {} }) });
     },
 });
