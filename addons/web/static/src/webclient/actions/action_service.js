@@ -829,7 +829,7 @@ function makeActionManager(env) {
                 env.services.ui.unblock();
             }
         } else {
-            const w = browser.open(url, "_blank", "noreferrer");
+            const w = browser.open(url, "_blank");
             if (!w || w.closed || typeof w.closed === "undefined") {
                 const msg = env._t(
                     "A popup window has been blocked. You may need to change your " +
