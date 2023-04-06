@@ -231,7 +231,8 @@ export const PosDB = core.Class.extend({
     add_packagings: function (product_packagings) {
         var self = this;
         _.map(product_packagings, function (product_packaging) {
-            if (self.product_by_id.find(({ id }) => id === product_packaging.product_id[0])) {
+            const products = Object.values(self.product_by_id);
+            if (products.find(({ id }) => id === product_packaging.product_id[0])) {
                 self.product_packaging_by_barcode[product_packaging.barcode] = product_packaging;
             }
         });
