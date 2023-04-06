@@ -57,8 +57,8 @@ ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
 ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '2.00');
 ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
 ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '3.00');
-ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
 PosLoyalty.check.isRewardButtonHighlighted(false);
+ProductScreen.do.clickDisplayedProduct('Whiteboard Pen');
 ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '4.00');
 PosLoyalty.check.isRewardButtonHighlighted(true);
 

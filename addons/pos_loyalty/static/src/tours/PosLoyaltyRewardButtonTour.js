@@ -144,3 +144,18 @@ PosLoyalty.do.clickRewardButton();
 PosLoyalty.check.hasRewardLine('Free Product - Test Product A', '-11.50', '1.00');
 
 Tour.register('PosLoyaltyFreeProductTour2', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('Billy Fox');
+ProductScreen.exec.addOrderline('Test Product A', '1');
+ProductScreen.exec.addOrderline('Test Product B', '1');
+PosLoyalty.check.isRewardButtonHighlighted(false);
+PosLoyalty.check.hasRewardLine('$ 10 per order on specific products', '-10.00', '1.00');
+PosLoyalty.check.orderTotalIs('10.00');
+
+Tour.register('PosLoyaltyDiscountPerOrderTour', { test: true, url: '/pos/web' }, getSteps());

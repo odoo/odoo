@@ -791,3 +791,63 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyFreeProductTour2",
             login="accountman",
         )
+
+    def test_promotion_rewards_per_order(self):
+        """
+        - Create a promotion with a reward of type "per_order",that applies on specific products
+        - Open the Pos and add the products to the order, and check that reward is added.
+        - Also check that there is no more reward applicable.
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "type": "product",
+            "list_price": 10,
+            "available_in_pos": True,
+            "taxes_id": [(6, 0, [])],
+        })
+        self.product_b = self.env["product.product"].create({
+            "name": "Test Product B",
+            "type": "product",
+            "list_price": 10,
+            "available_in_pos": True,
+            "taxes_id": [(6, 0, [])],
+        })
+        self.product_c = self.env["product.product"].create({
+            "name": "Test Product C",
+            "type": "product",
+            "list_price": 10,
+            "available_in_pos": True,
+            "taxes_id": [(6, 0, [])],
+        })
+
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Promo program - Per Order',
+            'program_type': 'loyalty',
+            'pos_ok': True,
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 5,
+                'minimum_qty': 2,
+                'product_ids': [(6, 0, [self.product_a.id, self.product_b.id, self.product_c.id])],
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'required_points': 2,
+                'discount': 10,
+                'discount_mode': 'per_order',
+                'discount_applicability': 'specific',
+                'discount_product_ids': [(6, 0, [self.product_a.id, self.product_b.id, self.product_c.id])],
+            })],
+        })
+
+        self.main_pos_config.open_ui()
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyDiscountPerOrderTour",
+            login="accountman",
+        )

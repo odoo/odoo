@@ -142,7 +142,7 @@ odoo.define('pos_loyalty.tour.PosCouponTourMethods', function (require) {
                 {
                     trigger: isHighlighted
                         ? '.control-button.highlight:contains("Reward")'
-                        : '.control-button:contains("Reward"):not(:has(.highlight))',
+                        : '.control-button:contains("Reward"):not(.highlight)',
                     run: function () {}, // it's a check
                 },
             ];

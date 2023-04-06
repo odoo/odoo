@@ -1010,6 +1010,9 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                 if (reward.reward_type === 'discount' && totalIsZero) {
                     continue;
                 }
+                if (reward.discount_mode == 'per_order' && this.get_orderlines().some(ol => ol.product.id == reward.discount_line_product_id.id)){
+                    continue;
+                }
                 let potentialQty;
                 if (reward.reward_type === 'product' && !reward.multi_product) {
                     const product = this.pos.db.get_product_by_id(reward.reward_product_ids[0]);
