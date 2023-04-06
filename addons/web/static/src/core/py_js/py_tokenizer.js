@@ -266,7 +266,7 @@ export function tokenize(str) {
         }
         if (pseudomatch.index > end) {
             if (str.slice(end, pseudomatch.index).trim()) {
-                throw new TokenizerError("Invalid expression");
+                throw new TokenizerError("Invalid expression of " + str);
             }
         }
         start = pseudomatch.index;
@@ -311,7 +311,7 @@ export function tokenize(str) {
                 value: token,
             });
         } else {
-            throw new TokenizerError("Invalid expression");
+            throw new TokenizerError("Invalid expression of " + str);
         }
     }
     return tokens;
