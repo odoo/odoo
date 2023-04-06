@@ -73,6 +73,20 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         if (route === "/mail/link_preview") {
             return this._mockRouteMailLinkPreview(args.message_id);
         }
+        if (route == "/mail/link_preview/delete") {
+            const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
+                ["id", "=", args.link_preview_id],
+            ]);
+            this.pyEnv["bus.bus"]._sendone(
+                this.pyEnv.currentPartnerId,
+                "mail.link.preview/delete",
+                {
+                    id: linkPreview.id,
+                    message_id: linkPreview.message_id[0],
+                }
+            );
+            return args;
+        }
         if (route === "/mail/load_message_failures") {
             return this._mockRouteMailLoadMessageFailures();
         }
