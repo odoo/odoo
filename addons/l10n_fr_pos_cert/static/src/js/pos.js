@@ -68,14 +68,14 @@ patch(Order.prototype, "l10n_fr_pos_cert.Order", {
 
 patch(Orderline.prototype, "l10n_fr_pos_cert.Orderline", {
     can_be_merged_with(orderline) {
+        if (!this.pos.is_french_country()) {
+            return this._super(...arguments);
+        }
         const order = this.pos.get_order();
         const orderlines = order.orderlines;
         const lastOrderline = order.orderlines.at(orderlines.length - 1);
 
-        if (
-            this.pos.is_french_country() &&
-            (lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0)
-        ) {
+        if (lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0) {
             return false;
         } else {
             return this._super(...arguments);
