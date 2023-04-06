@@ -295,11 +295,16 @@ QUnit.module("Fields", (hooks) => {
             "partner,false,list": '<tree><field name="display_name"/></tree>',
             "partner,false,search": "<search/>",
         };
-
+        const accessRight = true;
         await makeView({
             type: "kanban",
             resModel: "turtle",
             serverData,
+            mockRPC: (_, { method }) => {
+                if (method === "check_access_rights") {
+                    return accessRight;
+                }
+            },
             arch: `
                 <kanban>
                     <templates>
@@ -438,6 +443,74 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_kanban_record .o_field_many2many_tags_avatar img.o_m2m_avatar")
         );
     });
+
+    QUnit.test(
+        "widget many2many_tags_avatar in kanban view missing access rights",
+        async function (assert) {
+            assert.expect(1);
+
+            for (let id = 5; id <= 15; id++) {
+                serverData.models.partner.records.push({
+                    id,
+                    display_name: `record ${id}`,
+                });
+            }
+
+            serverData.models.turtle.records.push({
+                id: 4,
+                display_name: "crime master gogo",
+                partner_ids: [1, 2, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+            });
+            serverData.models.turtle.records[0].partner_ids = [1];
+            serverData.models.turtle.records[1].partner_ids = [1, 2, 4];
+            serverData.models.turtle.records[2].partner_ids = [1, 2, 4, 5];
+            serverData.views = {
+                "turtle,false,form": '<form><field name="display_name"/></form>',
+                "partner,false,list": '<tree><field name="display_name"/></tree>',
+                "partner,false,search": "<search/>",
+            };
+            const accessRight = false;
+            await makeView({
+                type: "kanban",
+                resModel: "turtle",
+                serverData,
+                mockRPC: (_, { method }) => {
+                    if (method === "check_access_rights") {
+                        return accessRight;
+                    }
+                },
+                arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="display_name"/>
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="partner_ids" widget="many2many_tags_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+                selectRecord(recordId) {
+                    assert.strictEqual(
+                        recordId,
+                        1,
+                        "should call its selectRecord prop with the clicked record"
+                    );
+                },
+            });
+            assert.containsNone(
+                target,
+                ".o_kanban_record:first-child .o_field_many2many_tags_avatar .o_quick_assign",
+                "should not have the assign icon"
+            );
+        }
+    );
 
     QUnit.test("widget many2many_tags_avatar delete tag", async function (assert) {
         await makeView({

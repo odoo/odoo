@@ -8,6 +8,7 @@ import {
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
+import { useAccessRights } from "../access_rights_hook";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     static template = "web.Many2ManyTagsAvatarField";
@@ -151,7 +152,11 @@ export class KanbanMany2ManyTagsAvatarField extends Many2ManyTagsAvatarField {
         isEditable: { type: Boolean, optional: true },
     };
     itemsVisible = 2;
-
+    hasAccess;
+    setup() {
+        super.setup();
+        this.hasAccess = useAccessRights(this.props.record.resModel, "write").value;
+    }
     get popoverProps() {
         const props = {
             ...this.props,

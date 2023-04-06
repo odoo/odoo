@@ -41,7 +41,7 @@
        owl="1">
         <xpath expr="//TagsList" position="attributes">
             <attribute name="popoverProps">popoverProps</attribute>
-            <attribute name="readonly">!props.isEditable</attribute>
+            <attribute name="readonly">!(props.isEditable and hasAccess)</attribute>
         </xpath>
     </t>
     <t t-name="web.Many2ManyTagsAvatarFieldPopover" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary" owl="1">

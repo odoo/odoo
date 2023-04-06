@@ -6,6 +6,7 @@ import { many2OneField, Many2OneField } from "../many2one/many2one_field";
 
 import { Component } from "@odoo/owl";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
+import { useAccessRights } from "../access_rights_hook";
 
 export class Many2OneAvatarField extends Component {
     static template = "web.Many2OneAvatarField";
@@ -61,11 +62,12 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
         ...Many2OneAvatarField.props,
         isEditable: { type: Boolean, optional: true },
     };
+    hasAccess;
     setup() {
         super.setup();
         this.popover = usePopover();
+        this.hasAccess = useAccessRights(this.props.record.resModel, "write").value;
     }
-
     closePopover() {
         this.closePopoverFn();
         this.closePopoverFn = null;
@@ -79,7 +81,7 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
         return props;
     }
     openPopover(ev) {
-        if (!this.props.isEditable) {
+        if (!(this.props.isEditable && this.hasAccess)) {
             return;
         }
         if (this.closePopoverFn) {
