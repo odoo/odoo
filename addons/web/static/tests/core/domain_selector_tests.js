@@ -3,13 +3,13 @@
 import { Component, xml } from "@odoo/owl";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
 import { OPERATOR_DESCRIPTIONS } from "@web/core/domain_selector/domain_selector_operators";
+import { fieldService } from "@web/core/field_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { viewService } from "@web/views/view_service";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
@@ -64,7 +64,7 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("ui", uiService);
         registry.category("services").add("hotkey", hotkeyService);
         registry.category("services").add("localization", makeFakeLocalizationService());
-        registry.category("services").add("view", viewService);
+        registry.category("services").add("field", fieldService);
 
         target = getFixture();
     });

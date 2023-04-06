@@ -41,7 +41,7 @@ export class DomainSelector extends Component {
     };
 
     setup() {
-        this.view = useService("view");
+        this.fieldService = useService("field");
         this.treeBuilder = new DomainTreeBuilder();
         this.tree = useState({
             isSupported: false,
@@ -107,16 +107,16 @@ export class DomainSelector extends Component {
         if ("01".includes(field.toString())) {
             return { type: "integer" };
         }
-
-        const names = field.length ? field.split(".") : [];
-        let currentModel = resModel;
-        let fieldDef = null;
-        for (const name of names) {
-            const model = await this.view.loadFields(currentModel);
-            fieldDef = model[name];
-            currentModel = fieldDef.relation;
+        if (typeof field !== "string" || !field) {
+            return null;
         }
-        return fieldDef;
+        const { isInvalid, names, modelsInfo } = await this.fieldService.loadPath(resModel, field);
+        if (isInvalid) {
+            return null;
+        }
+        const name = names.at(-1);
+        const { fieldDefs } = modelsInfo.at(-1);
+        return fieldDefs[name];
     }
 
     createNewLeaf() {

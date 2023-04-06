@@ -6,12 +6,12 @@ import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { viewService } from "@web/views/view_service";
 import { makeTestEnv } from "../helpers/mock_env";
 import { click, getFixture, triggerEvent, mount, editInput } from "../helpers/utils";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 
 import { Component, xml } from "@odoo/owl";
+import { fieldService } from "@web/core/field_service";
 
 let target;
 let serverData;
@@ -60,7 +60,7 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("orm", ormService);
         registry.category("services").add("localization", makeFakeLocalizationService());
         registry.category("services").add("ui", uiService);
-        registry.category("services").add("view", viewService);
+        registry.category("services").add("field", fieldService);
 
         target = getFixture();
     });
