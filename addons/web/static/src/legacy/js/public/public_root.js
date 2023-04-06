@@ -363,7 +363,7 @@ owl.Component.env = legacyEnv;
  * service, so that the tour manager can let the server know when tours have
  * been consumed.
  */
-export async function createPublicRoot(RootWidget) {
+export async function createPublicRoot(RootWidget, { target } = {}) {
     await lazyloader.allScriptsLoaded;
     AbstractService.prototype.deployServices(legacyEnv);
     // add a bunch of mapping services that will redirect service calls from the legacy env
@@ -416,7 +416,7 @@ export async function createPublicRoot(RootWidget) {
     });
     setLoadXmlDefaultApp(app);
     await Promise.all([
-        app.mount(document.body),
+        app.mount(target ?? document.body),
         publicRoot.attachTo(document.body),
     ]);
     return publicRoot;

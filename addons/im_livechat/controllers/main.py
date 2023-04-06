@@ -5,6 +5,7 @@ from werkzeug.exceptions import NotFound
 from odoo import http, tools, _
 from odoo.http import request
 from odoo.addons.base.models.assetsbundle import AssetsBundle
+from odoo.modules.module import get_resource_path
 
 
 class LivechatController(http.Controller):
@@ -12,20 +13,6 @@ class LivechatController(http.Controller):
     # Note: the `cors` attribute on many routes is meant to allow the livechat
     # to be embedded in an external website.
 
-    @http.route('/im_livechat/external_lib.<any(css,js):ext>', type='http', auth='public')
-    def livechat_lib(self, ext, **kwargs):
-        # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
-        bundle = 'im_livechat.external_lib'
-        files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
-        asset = AssetsBundle(bundle, files)
-
-        mock_attachment = getattr(asset, ext)()
-        if isinstance(mock_attachment, list):  # suppose that CSS asset will not required to be split in pages
-            mock_attachment = mock_attachment[0]
-
-        stream = request.env['ir.binary']._get_stream_from(mock_attachment)
-        return stream.get_response()
-    
     @http.route('/im_livechat/assets_embed.<any(css,js):ext>', type='http', auth='public')
     def embed_assets(self, ext, **kwargs):
         # _get_asset return the bundle html code (script and link list) but we want to use the attachment content
@@ -39,6 +26,11 @@ class LivechatController(http.Controller):
 
         stream = request.env['ir.binary']._get_stream_from(mock_attachment)
         return stream.get_response()
+
+    @http.route('/im_livechat/font-awesome', type='http', auth='none', cors="*")
+    def fontawesome(self, **kwargs):
+        font_awesome_path = get_resource_path('web', 'static/src/libs/fontawesome/fonts/fontawesome-webfont.woff2')
+        return http.Stream.from_path(font_awesome_path).get_response()
 
     @http.route('/im_livechat/load_templates', type='json', auth='none', cors="*")
     def load_templates(self, **kwargs):
