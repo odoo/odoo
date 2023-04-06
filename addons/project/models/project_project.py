@@ -11,7 +11,7 @@ from odoo.addons.rating.models import rating_data
 from odoo.tools.misc import get_lang
 
 from .project_update import STATUS_COLOR
-
+from .project_task import CLOSED_STATES
 
 class Project(models.Model):
     _name = "project.project"
@@ -55,7 +55,7 @@ class Project(models.Model):
             for project, count in self.env['project.task'].with_context(
                 active_test=any(project.active for project in self)
             )._read_group(
-                [('is_closed', '=', False), ('project_id', 'in', self.ids)],
+                [('state', 'not in', list(CLOSED_STATES)), ('project_id', 'in', self.ids)],
                 ['project_id'],
                 ['__count'],
             )
@@ -128,7 +128,7 @@ class Project(models.Model):
     type_ids = fields.Many2many('project.task.type', 'project_task_type_rel', 'project_id', 'type_id', string='Tasks Stages')
     task_count = fields.Integer(compute='_compute_task_count', string="Task Count")
     task_ids = fields.One2many('project.task', 'project_id', string='Tasks',
-                               domain=[('is_closed', '=', False)])
+                               domain=[('state', 'not in', list(CLOSED_STATES))])
     color = fields.Integer(string='Color Index')
     user_id = fields.Many2one('res.users', string='Project Manager', default=lambda self: self.env.user, tracking=True)
     alias_enabled = fields.Boolean(string='Use Email Alias', compute='_compute_alias_enabled', readonly=False)

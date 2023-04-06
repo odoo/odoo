@@ -5,6 +5,8 @@ from collections import defaultdict
 
 from odoo import api, fields, models
 
+from .project_task import CLOSED_STATES
+
 class ProjectMilestone(models.Model):
     _name = 'project.milestone'
     _description = "Project Milestone"
@@ -47,10 +49,10 @@ class ProjectMilestone(models.Model):
     @api.depends('task_ids.milestone_id')
     def _compute_task_count(self):
         all_and_done_task_count_per_milestone = {
-            milestone.id: (count, is_closed_list.count(True))
-            for milestone, count, is_closed_list in self.env['project.task']._read_group(
+            milestone.id: (count, sum(state in CLOSED_STATES for state in state_list))
+            for milestone, count, state_list in self.env['project.task']._read_group(
                 [('milestone_id', 'in', self.ids), ('allow_milestones', '=', True)],
-                ['milestone_id'], ['__count', 'is_closed:array_agg'],
+                ['milestone_id'], ['__count', 'state:array_agg'],
             )
         }
         for milestone in self:
@@ -59,19 +61,20 @@ class ProjectMilestone(models.Model):
     def _compute_can_be_marked_as_done(self):
         if not any(self._ids):
             for milestone in self:
-                milestone.can_be_marked_as_done = not milestone.is_reached and all(milestone.task_ids.is_closed)
+                milestone.can_be_marked_as_done = not milestone.is_reached and all(milestone.task_ids.mapped(lambda t: t.state in CLOSED_STATES))
             return
+
         unreached_milestones = self.filtered(lambda milestone: not milestone.is_reached)
         (self - unreached_milestones).can_be_marked_as_done = False
         task_read_group = self.env['project.task']._read_group(
             [('milestone_id', 'in', unreached_milestones.ids)],
-            ['milestone_id', 'is_closed'],
+            ['milestone_id', 'state'],
             ['__count'],
         )
         task_count_per_milestones = defaultdict(lambda: (0, 0))
-        for milestone, is_closed, count in task_read_group:
+        for milestone, state, count in task_read_group:
             opened_task_count, closed_task_count = task_count_per_milestones[milestone.id]
-            if is_closed:
+            if state in CLOSED_STATES:
                 closed_task_count += count
             else:
                 opened_task_count += count

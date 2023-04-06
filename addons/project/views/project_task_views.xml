@@ -21,13 +21,13 @@
                     <filter string="Starred Tasks" name="starred_tasks" domain="[('priority', '=', '1')]"/>
                     <separator groups="project.group_project_task_dependencies"/>
                     <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies"/>
-                    <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
+                    <filter string="Blocking" name="blocking" domain="[('state', 'not in', ['1_done','1_canceled']), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
                     <separator/>
                     <filter string="Last Stage Update" name="date_last_stage_update" date="date_last_stage_update"/>
                     <separator/>
-                    <filter string="Open Tasks" name="open_tasks" domain="[('is_closed', '=', False)]"/>
-                    <filter string="Closed Tasks" name="closed_tasks" domain="[('is_closed', '=', True)]"/>
-                    <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"/>
+                    <filter string="Open Tasks" name="open_tasks" domain="[('state', 'not in', ['1_done','1_canceled'])]"/>
+                    <filter string="Closed Tasks" name="closed_tasks" domain="[('state', 'in', ['1_done','1_canceled'])]"/>
+                    <filter string="Closed On" name="closed_on" domain="[('state', 'in', ['1_done','1_canceled'])]" date="date_last_stage_update"/>
                     <separator/>
                     <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                     <group expand="0" string="Group By">
@@ -240,7 +240,6 @@
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
                 <form string="Task" class="o_form_project_tasks" js_class="project_task_form">
-                    <field name="is_closed" invisible="1" />
                     <field name="allow_recurring_tasks" invisible="1" />
                     <field name="recurrence_id" invisible="1" />
                     <field name="allow_task_dependencies" invisible="1" />
@@ -374,8 +373,7 @@
                                    context="{'default_user_ids': user_ids, 'default_parent_id': id,
                                     'default_partner_id': partner_id, 'default_milestone_id': allow_milestones and milestone_id}"
                                    widget="subtasks_one2many">
-                                <tree editable="bottom" decoration-muted="is_closed == True">
-                                    <field name="is_closed" invisible="1"/>
+                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="id" optional="hide"/>
@@ -394,7 +392,7 @@
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
                                     <field name="company_id" invisible="1"/>
-                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="hide"/>
+                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="hide"/>
                                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                      <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="hide"/>
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
@@ -410,10 +408,9 @@
                         <page name="task_dependencies" string="Blocked By" attrs="{'invisible': [('allow_task_dependencies', '=', False)]}" groups="project.group_project_task_dependencies">
                             <field name="depend_on_ids" nolabel="1"
                                    context="{'default_project_id': project_id, 'search_view_ref' : 'project.view_task_search_form', 'search_default_project_id': project_id, 'tree_view_ref': 'project.open_view_all_tasks_list_view', 'search_default_open_tasks': 1}">
-                                <tree editable="bottom" decoration-muted="is_closed == True">
+                                <tree editable="bottom" decoration-muted="state in ['1_done','1_canceled']">
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="parent_id" invisible="1" />
-                                    <field name="is_closed" invisible="1" />
                                     <field name="subtask_count" invisible="1"/>
                                     <field name="closed_subtask_count" invisible="1"/>
                                     <field name="id" optional="hide"/>
@@ -431,7 +428,7 @@
                                     <field name="user_ids" widget="many2many_avatar_user" optional="show" domain="[('share', '=', False), ('active', '=', True)]"/>
                                     <field name="company_id" optional="hide" groups="base.group_multi_company" />
                                     <field name="company_id" invisible="1"/>
-                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="hide" />
+                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="hide" />
                                     <field name="activity_ids" string="Next Activity" widget="list_activity" optional="hide"/>
                                     <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="hide"/>
                                     <field name="rating_last_text" string="Rating" decoration-danger="rating_last_text == 'ko'"
@@ -534,7 +531,6 @@
                     <field name="user_ids"/>
                     <field name="partner_id"/>
                     <field name="sequence"/>
-                    <field name="is_closed"/>
                     <field name="displayed_image_id"/>
                     <field name="active"/>
                     <field name="activity_ids"/>
@@ -551,7 +547,7 @@
                     <field name="subtask_count"/>
                     <field name="closed_subtask_count"/>
                     <field name="subtask_count"/>
-                    <progressbar field="state" colors='{"1_done": "success", "03_approved": "success", "02_changes_requested": "warning", "1_canceled": "danger", "01_in_progress": "200", "04_waiting_normal": "200" }'/>
+                    <progressbar field="state" colors='{"1_done": "success-done", "1_canceled": "danger", "03_approved": "success", "02_changes_requested": "warning", "04_waiting_normal": "info", "01_in_progress": "200" }'/>
                     <templates>
                     <t t-name="kanban-menu" t-if="!selection_mode" groups="base.group_user">
                         <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
@@ -563,7 +559,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                             <div class="oe_kanban_content">
-                                <div class="o_kanban_record_top" t-att-class="record.is_closed.raw_value ? 'opacity-50' : ''">
+                                <div class="o_kanban_record_top" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                     <div class="o_kanban_record_headings text-muted">
                                         <strong class="o_kanban_record_title">
                                             <s t-if="!record.active.raw_value">
@@ -587,9 +583,9 @@
                                         </span>
                                     </div>
                                 </div>
-                                <div class="o_kanban_record_body" t-att-class="record.is_closed.raw_value ? 'opacity-50' : 'text-muted'">
+                                <div class="o_kanban_record_body" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : 'text-muted'">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                                    <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}">
+                                    <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}">
                                         <field name="date_deadline" widget="remaining_days"/>
                                     </div>
                                     <div t-if="record.displayed_image_id.value">
@@ -597,7 +593,7 @@
                                     </div>
                                 </div>
                                 <div class="o_kanban_record_bottom" t-if="!selection_mode">
-                                    <div class="oe_kanban_bottom_left" t-att-class="record.is_closed.raw_value ? 'opacity-50' : ''">
+                                    <div class="oe_kanban_bottom_left" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                         <field name="priority" widget="priority" style="margin-right: 5px;"/>
                                         <field name="activity_ids" widget="kanban_activity" style="padding-top: 1.5px;"/>
                                         <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" groups="project.group_project_rating">
@@ -622,7 +618,7 @@
                                         </t>
                                     </div>
                                     <div class="oe_kanban_bottom_right" t-if="!selection_mode">
-                                        <div  t-att-class="record.is_closed.raw_value ? 'opacity-50' : ''">
+                                        <div  t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                             <field name="user_ids" widget="many2many_avatar_user" domain="[('share', '=', False)]"/>
                                         </div>
                                         <field name="state" widget="project_task_state_selection" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
@@ -646,7 +642,7 @@
             <field name="model">project.task</field>
             <field name="arch" type="xml">
                 <tree string="Tasks" sample="1" default_order="priority desc, state, date_deadline asc, sequence, id desc">
-                    <field name="is_closed" invisible="1" />
+                    <field name="company_id" invisible="1"/>
                     <field name="is_private" invisible="1" />
                     <field name="sequence" invisible="1" readonly="1"/>
                     <field name="allow_milestones" invisible="1"/>
@@ -662,7 +658,7 @@
                     <field name="user_ids" optional="show" widget="many2many_avatar_user" domain="[('share', '=', False), ('active', '=', True)]"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show" invisible="context.get('default_project_id')"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
+                    <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show" context="{'project_id': project_id}"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show"/>
                 </tree>
@@ -732,6 +728,7 @@
                     <field name="date_deadline"/>
                     <field name="tag_ids" widget="many2many_tags" attrs="{'invisible': [('tag_ids', '=', [])]}"/>
                     <field name="stage_id"/>
+                    <field name="state" widget="project_task_state_selection" readonly="1"/>
                 </calendar>
             </field>
         </record>
@@ -1000,7 +997,7 @@
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
-            <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False)]</field>
+            <field name="domain">[('state', 'not in', ['1_done', '1_canceled']), ('date_deadline','&lt;',time.strftime('%Y-%m-%d')), ('project_id', '!=', False)]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>

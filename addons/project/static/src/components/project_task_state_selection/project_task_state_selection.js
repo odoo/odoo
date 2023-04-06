@@ -6,6 +6,7 @@ import {
 } from "@web/views/fields/state_selection/state_selection_field";
 import { sprintf } from "@web/core/utils/strings";
 import { useCommand } from "@web/core/commands/command_hook";
+import { formatSelection } from "@web/views/fields/formatters";
 
 import { registry } from "@web/core/registry";
 
@@ -92,6 +93,14 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         return this.options;
     }
 
+    get label() {
+        const fullSelection = [...this.options];
+        fullSelection.push(["04_waiting_normal", "Waiting"]);
+        return formatSelection(this.currentValue, {
+            selection: fullSelection,
+        });
+    }
+
     stateIcon(value) {
         return this.icons[value] || "";
     }
@@ -122,14 +131,14 @@ export class ProjectTaskStateSelection extends StateSelectionField {
     }
 
     getDropdownPosition() {
-        if (this.isView(['kanban', 'list']) || this.env.isSmall) {
+        if (this.isView(['kanban', 'list', 'calendar']) || this.env.isSmall) {
             return '';
         }
         return 'bottom-end';
     }
 
     getTogglerClass(currentValue) {
-        if (this.isView(['kanban', 'list']) || this.env.isSmall) {
+        if (this.isView(['kanban', 'list', 'calendar']) || this.env.isSmall) {
             return 'btn btn-link d-flex p-0';
         }
         return 'o_state_button btn rounded-pill ' + this.colorButton[currentValue];
