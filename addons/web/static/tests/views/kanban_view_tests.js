@@ -11,6 +11,7 @@ import {
     getNodesTextContent,
     makeDeferred,
     mockAnimationFrame,
+    mouseEnter,
     nextTick,
     patchWithCleanup,
     selectDropdownItem,
@@ -8459,7 +8460,9 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("group_by_tooltip option when grouping on a many2one", async (assert) => {
-        assert.expect(14);
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
         delete serverData.models.partner.records[3].product_id;
         const kanban = await makeView({
             type: "kanban",
@@ -8477,7 +8480,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             async mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/product/read") {
-                    assert.strictEqual(args.args[0].length, 2, "read on two groups");
+                    assert.step("read: product");
                     assert.deepEqual(
                         args.args[1],
                         ["display_name", "name"],
@@ -8518,38 +8521,38 @@ QUnit.module("Views", (hooks) => {
             "None",
             "first column should have a default title for when no value is provided"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title").dataset
-                .tooltipInfo,
+
+        const groupsTitle = [...target.querySelectorAll(".o_kanban_group .o_kanban_header_title")];
+        await mouseEnter(groupsTitle[0]);
+        assert.containsNone(
+            target,
+            ".o-tooltip",
             "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value"
         );
-        assert.ok(
-            !target.querySelector(".o_kanban_group:first-child .o_kanban_header_title").dataset
-                .tooltipTemplate,
-            "tooltip of first column should not defined, since group_by_tooltip title and the many2one field has no value"
+        assert.verifySteps([], "should not have done any read on product because no value");
+
+        await mouseEnter(groupsTitle[1]);
+        assert.containsOnce(
+            target,
+            ".o-tooltip",
+            "second column should have a tooltip with the group_by_tooltip title and many2one field value"
         );
+        assert.strictEqual(target.querySelector(".o-tooltip").textContent, "Kikouhello");
         assert.strictEqual(
             target.querySelector(".o_kanban_group:nth-child(2) span.o_column_title").textContent,
             "hello",
             "second column should have a title with a value from the many2one"
         );
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
-                .tooltipInfo,
-            `{"entries":[{"title":"Kikou","value":"hello"}]}`,
-            "second column should have a tooltip with the group_by_tooltip title and many2one field value"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_kanban_group:nth-child(2) .o_kanban_header_title").dataset
-                .tooltipTemplate,
-            "web.KanbanGroupTooltip",
-            "second column should have a tooltip with the group_by_tooltip title and many2one field value"
+        assert.verifySteps(
+            ["read: product"],
+            "should have done one read on product for the second column tooltip"
         );
     });
 
     QUnit.test("asynchronous tooltips when grouped", async (assert) => {
-        assert.expect(10);
-        serviceRegistry.add("tooltip", tooltipService);
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
         const prom = makeDeferred();
         await makeView({
             type: "kanban",
@@ -8567,6 +8570,7 @@ QUnit.module("Views", (hooks) => {
                 </kanban>`,
             async mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/product/read") {
+                    assert.step("read: product");
                     await prom;
                 }
             },
@@ -8574,56 +8578,32 @@ QUnit.module("Views", (hooks) => {
 
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.containsN(target, ".o_column_title", 2);
-        assert.strictEqual(
-            target
-                .querySelectorAll(".o_kanban_header_title")[0]
-                .getAttribute("data-tooltip-template"),
-            null
+
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        assert.containsNone(target, ".o-tooltip");
+
+        await triggerEvent(
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0],
+            null,
+            "mouseleave"
         );
-        assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
-            null
-        );
-        assert.strictEqual(
-            target
-                .querySelectorAll(".o_kanban_header_title")[1]
-                .getAttribute("data-tooltip-template"),
-            null
-        );
-        assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
-            null
-        );
+        assert.containsNone(target, ".o-tooltip");
+
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        assert.containsNone(target, ".o-tooltip");
+
         prom.resolve();
         await nextTick();
 
-        assert.strictEqual(
-            target
-                .querySelectorAll(".o_kanban_header_title")[0]
-                .getAttribute("data-tooltip-template"),
-            "web.KanbanGroupTooltip"
-        );
-        assert.strictEqual(
-            target
-                .querySelectorAll(".o_kanban_header_title")[1]
-                .getAttribute("data-tooltip-template"),
-            "web.KanbanGroupTooltip"
-        );
-        assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
-            '{"entries":[{"title":"Name","value":"hello"}]}'
-        );
-        assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
-            '{"entries":[{"title":"Name","value":"xmo"}]}'
-        );
+        assert.containsOnce(target, ".o-tooltip");
+        assert.strictEqual(target.querySelector(".o-tooltip").textContent.trim(), "Namehello");
+        assert.verifySteps(["read: product"]);
     });
 
-    QUnit.test("concurrency asynchronous tooltips when grouped", async (assert) => {
-        assert.expect(2);
-        serviceRegistry.add("tooltip", tooltipService);
-        const prom = makeDeferred();
-        let rpcCount = 0;
+    QUnit.test("loads data tooltips only when first opening", async (assert) => {
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
         await makeView({
             type: "kanban",
             resModel: "partner",
@@ -8638,48 +8618,29 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            searchViewArch: `
-            <search>
-                <filter name="product_id" string="product" context="{'group_by': 'product_id', 'group_by_tooltip': {'name': 'Name'}}}"/>
-            </search>
-            `,
             async mockRPC(route, args) {
                 if (route === "/web/dataset/call_kw/product/read") {
-                    if (rpcCount++ == 0) {
-                        await prom;
-                    } else {
-                        return [
-                            {
-                                id: 3,
-                                display_name: "hello",
-                                name: "hello",
-                            },
-                            {
-                                id: 5,
-                                display_name: "xmo",
-                                name: "xm",
-                            },
-                        ];
-                    }
+                    assert.step("read: product");
                 }
             },
         });
 
-        // The first tooltip rpc request is blocked and user changes the group by
-        await click(target, ".o_group_by_menu > .dropdown-toggle");
-        await click(target, ".o_group_by_menu > div > span");
-        // The first tooltip request arrives after the second request
-        prom.resolve();
-        await nextTick();
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        assert.containsOnce(target, ".o-tooltip");
+        assert.strictEqual(target.querySelector(".o-tooltip").textContent.trim(), "Namehello");
+        assert.verifySteps(["read: product"]);
 
-        assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[0].getAttribute("data-tooltip-info"),
-            '{"entries":[{"title":"Name","value":"hello"}]}'
+        await triggerEvent(
+            target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0],
+            null,
+            "mouseleave"
         );
-        assert.strictEqual(
-            target.querySelectorAll(".o_kanban_header_title")[1].getAttribute("data-tooltip-info"),
-            '{"entries":[{"title":"Name","value":"xm"}]}'
-        );
+        assert.containsNone(target, ".o-tooltip", "tooltip should be closed");
+
+        await mouseEnter(target.querySelectorAll(".o_kanban_group .o_kanban_header_title")[0]);
+        assert.containsOnce(target, ".o-tooltip");
+        assert.strictEqual(target.querySelector(".o-tooltip").textContent.trim(), "Namehello");
+        assert.verifySteps([]);
     });
 
     QUnit.test("move a record then put it again in the same column", async (assert) => {
