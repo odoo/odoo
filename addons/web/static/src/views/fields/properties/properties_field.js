@@ -143,7 +143,7 @@ export class PropertiesField extends Component {
             return false;
         }
 
-        if (target.closest(".o_field_selector_popover")) {
+        if (target.closest(".o_model_field_selector_popover")) {
             // domain selector
             return false;
         }

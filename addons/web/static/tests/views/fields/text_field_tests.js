@@ -627,9 +627,9 @@ QUnit.module("Fields", (hooks) => {
         await click(target, "[name=txt] textarea");
         assert.strictEqual(document.activeElement, target.querySelector("[name=txt] textarea"));
 
-        assert.containsNone(document.body, ".o_popover .o_field_selector_popover");
+        assert.containsNone(document.body, ".o_popover .o_model_field_selector_popover");
         triggerHotkey("#");
         await nextTick();
-        assert.containsOnce(document.body, ".o_popover .o_field_selector_popover");
+        assert.containsOnce(document.body, ".o_popover .o_model_field_selector_popover");
     });
 });

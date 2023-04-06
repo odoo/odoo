@@ -1,99 +1,118 @@
 /** @odoo-module **/
 
-import { useModelField } from "./model_field_hook";
-import { usePopover } from "@web/core/popover/popover_hook";
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
+import { KeepLast } from "@web/core/utils/concurrency";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
+import { usePopover } from "@web/core/popover/popover_hook";
+import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart, onWillUpdateProps, toRaw, useState } from "@odoo/owl";
-
-export class ModelFieldSelector extends Component {
-    setup() {
-        this.popover = usePopover(this.constructor.components.Popover, {
-            popoverClass: "o_popover_field_selector",
-            onClose: () => {
-                if (this.state.isDirty) {
-                    this.props.update(this.state.fieldName, toRaw(this.state.chain));
-                }
-            },
-        });
-        this.modelField = useModelField();
-        this.state = useState({
-            chain: [],
-            fieldName: this.props.fieldName,
-            isDirty: false,
-        });
-
-        onWillStart(async () => {
-            this.state.chain = await this.loadChain(this.props.resModel, this.props.fieldName);
-        });
-        onWillUpdateProps(async (nextProps) => {
-            this.state.chain = await this.loadChain(nextProps.resModel, nextProps.fieldName);
-            this.state.fieldName = nextProps.fieldName;
-            this.state.isDirty = false;
-        });
+export async function loadFieldInfo(fieldService, resModel, path) {
+    if (typeof path !== "string" || !path) {
+        return { resModel, fieldDef: null };
     }
-
-    get fieldNameChain() {
-        return this.getFieldNameChain(this.state.fieldName ?? this.props.fieldName);
+    const { isInvalid, names, modelsInfo } = await fieldService.loadPath(resModel, path);
+    if (isInvalid) {
+        return { resModel, fieldDef: null };
     }
-
-    getFieldNameChain(fieldName) {
-        return fieldName.length ? fieldName.split(".") : [];
-    }
-
-    async loadChain(resModel, fieldName) {
-        if ("01".includes(fieldName)) {
-            return [{ resModel, field: { string: fieldName } }];
-        }
-        return this.modelField.loadChain(resModel, fieldName);
-    }
-
-    async update(fieldName, isFieldSelected) {
-        this.state.fieldName = fieldName;
-        this.state.isDirty = !isFieldSelected;
-        this.state.chain = await this.loadChain(this.props.resModel, fieldName);
-        if (isFieldSelected) {
-            await this.props.update(fieldName, toRaw(this.state.chain));
-        }
-    }
-
-    onFieldSelectorClick(ev) {
-        if (this.props.readonly) {
-            return;
-        }
-        this.popover.open(ev.currentTarget, {
-            chain: this.state.chain,
-            update: this.update.bind(this),
-            showSearchInput: this.props.showSearchInput,
-            isDebugMode: this.props.isDebugMode,
-            loadChain: this.loadChain.bind(this),
-            filter: this.props.filter,
-            followRelations: this.props.followRelations,
-        });
-    }
+    const name = names.at(-1);
+    const modelInfo = modelsInfo.at(-1);
+    return { resModel: modelInfo.resModel, fieldDef: modelInfo.fieldDefs[name] };
 }
 
-Object.assign(ModelFieldSelector, {
-    template: "web._ModelFieldSelector",
-    components: {
+function makeString(value) {
+    return String(value ?? "-");
+}
+
+export class ModelFieldSelector extends Component {
+    static template = "web._ModelFieldSelector";
+    static components = {
         Popover: ModelFieldSelectorPopover,
-    },
-    props: {
-        fieldName: String,
+    };
+    static props = {
         resModel: String,
+        path: { optional: true },
         readonly: { type: Boolean, optional: true },
         showSearchInput: { type: Boolean, optional: true },
         isDebugMode: { type: Boolean, optional: true },
         update: { type: Function, optional: true },
         filter: { type: Function, optional: true },
         followRelations: { type: Boolean, optional: true },
-    },
-    defaultProps: {
+    };
+    static defaultProps = {
         readonly: true,
         isDebugMode: false,
         showSearchInput: true,
         update: () => {},
-        filter: () => true,
         followRelations: true,
-    },
-});
+    };
+
+    setup() {
+        this.popover = usePopover(this.constructor.components.Popover, {
+            popoverClass: "o_popover_field_selector",
+            onClose: async () => {
+                if (this.newPath) {
+                    const fieldInfo = await loadFieldInfo(
+                        this.fieldService,
+                        this.props.resModel,
+                        this.newPath
+                    );
+                    this.props.update(this.newPath, fieldInfo);
+                }
+            },
+        });
+        this.keepLast = new KeepLast();
+        this.fieldService = useService("field");
+        this.state = useState({
+            isInvalid: false,
+            displayNames: [],
+        });
+        onWillStart(() => this.updatePath(this.props.resModel, this.props.path));
+        onWillUpdateProps((nextProps) => this.updatePath(nextProps.resModel, nextProps.path));
+    }
+
+    async updatePath(resModel, path, isConcurrent) {
+        let prom = this.loadPath(resModel, path);
+        if (isConcurrent) {
+            prom = this.keepLast.add(prom);
+        }
+        const state = await prom;
+        Object.assign(this.state, state);
+    }
+
+    async loadPath(resModel, path) {
+        // the model should be checked maybe
+        if ([0, 1].includes(path)) {
+            return { isInvalid: false, displayNames: [makeString(path)] };
+        }
+        if (typeof path !== "string" || !path) {
+            return { isInvalid: true, displayNames: [makeString()] };
+        }
+        const { isInvalid, modelsInfo, names } = await this.fieldService.loadPath(resModel, path);
+        const result = { isInvalid: !!isInvalid, displayNames: [] };
+        for (let index = 0; index < names.length; index++) {
+            const name = names[index];
+            const fieldDef = modelsInfo[index]?.fieldDefs[name];
+            result.displayNames.push(fieldDef?.string || makeString(name));
+        }
+        return result;
+    }
+
+    openPopover(currentTarget) {
+        if (this.props.readonly) {
+            return;
+        }
+        this.newPath = null;
+        this.popover.open(currentTarget, {
+            resModel: this.props.resModel,
+            path: this.props.path,
+            update: (path) => {
+                this.newPath = path;
+                this.updatePath(this.props.resModel, path, true);
+            },
+            showSearchInput: this.props.showSearchInput,
+            isDebugMode: this.props.isDebugMode,
+            filter: this.props.filter,
+            followRelations: this.props.followRelations,
+        });
+    }
+}
