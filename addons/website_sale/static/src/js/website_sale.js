@@ -140,7 +140,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
         if ('website_sale_cart_quantity' in sessionStorage) {
             this.cartQty = sessionStorage.getItem('website_sale_cart_quantity');
         }
-        if (this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
+        if (this.el.querySelector('.my_cart_quantity')?.innerText != this.cartQty) {
             return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
                 this.cartQty = cartQty;
                 sessionStorage.setItem('website_sale_cart_quantity', this.cartQty);
@@ -151,7 +151,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @private
      */
     _updateCartQuantityText() {
-        if (this.cartQty !== undefined) {
+        if (this.cartQty !== undefined && this.el.querySelector('.my_cart_quantity')) {
             this.el.querySelector('.my_cart_quantity').innerText = this.cartQty;
         }
     }
