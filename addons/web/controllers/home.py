@@ -40,7 +40,7 @@ class Home(http.Controller):
         # Ensure we have both a database and a user
         ensure_db()
         if not request.session.uid:
-            return request.redirect('/web/login', 303)
+            return request.redirect_query('/web/login', query=request.params, code=303)
         if kw.get('redirect'):
             return request.redirect(kw.get('redirect'), 303)
         if not security.check_session(request.session, request.env):
