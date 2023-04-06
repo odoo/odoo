@@ -651,6 +651,29 @@ QUnit.test("chat window should open when receiving a new DM", async (assert) => 
     assert.containsOnce($, ".o-mail-ChatWindow");
 });
 
+QUnit.test("chat window should not open when receiving a new DM from odoobot", async (assert) => {
+    const pyEnv = await startServer();
+    const userId = pyEnv["res.users"].create({ partner_id: pyEnv.odoobotId });
+    pyEnv["mail.channel"].create({
+        channel_member_ids: [
+            [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.odoobotId }],
+        ],
+        channel_type: "chat",
+        uuid: "channel-uuid",
+    });
+    const { env } = await start();
+    // simulate receiving new message from odoobot
+    await afterNextRender(() =>
+        env.services.rpc("/mail/chat_post", {
+            context: { mockedUserId: userId },
+            message_content: "new message",
+            uuid: "channel-uuid",
+        })
+    );
+    assert.containsNone($, ".o-mail-ChatWindow");
+});
+
 QUnit.test(
     "chat window should scroll to the newly posted message just after posting it",
     async (assert) => {

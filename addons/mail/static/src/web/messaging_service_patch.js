@@ -27,7 +27,9 @@ patch(Messaging.prototype, "mail/web", {
     async _handleNotificationNewMessage(notif) {
         await this._super(notif);
         const channel = this.store.threads[createLocalId("mail.channel", notif.payload.id)];
-        this.chatWindowService.insert({ thread: channel });
+        if (channel.correspondent !== this.store.odoobot) {
+            this.chatWindowService.insert({ thread: channel });
+        }
     },
 });
 

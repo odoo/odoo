@@ -114,6 +114,9 @@ export class MessagingMenu extends Component {
             threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
         }
         threads.sort((a, b) => {
+            if (a.correspondent === this.store.odoobot) {
+                return 1;
+            }
             if (!a.mostRecentNonTransientMessage?.datetime) {
                 return -1;
             }
