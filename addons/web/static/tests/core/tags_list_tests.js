@@ -98,6 +98,33 @@ QUnit.module("Web Components", (hooks) => {
         );
     });
 
+    QUnit.test("Tags can be displayed with an icon", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.tags = [
+                    {
+                        icon: "fa-trash",
+                        id: "tag1",
+                        text: "Bad",
+                    },
+                    {
+                        icon: "fa-check",
+                        id: "tag2",
+                        text: "Good",
+                    },
+                ];
+            }
+        }
+        Parent.components = { TagsList };
+        Parent.template = xml`
+        <TagsList tags="tags" />`;
+
+        await mount(Parent, target, { env });
+        assert.containsN(target, ".o_tag", 2);
+        assert.hasClass(target.querySelector(".o_tag:nth-of-type(1) i"), "fa fa-trash");
+        assert.hasClass(target.querySelector(".o_tag:nth-of-type(2) i"), "fa fa-check");
+    });
+
     QUnit.test("Limiting the visible tags displays a counter", async (assert) => {
         class Parent extends Component {
             setup() {
