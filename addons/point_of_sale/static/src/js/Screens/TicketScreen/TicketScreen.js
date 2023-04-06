@@ -432,7 +432,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             return {
                 quantity: -qty,
                 price: orderline.price,
-                extras: { price_manually_set: true },
+                extras: { price_automatically_set: true },
                 merge: false,
                 refunded_orderline_id: orderline.id,
                 tax_ids: orderline.tax_ids,
