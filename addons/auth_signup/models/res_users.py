@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import datetime
 import logging
 
 from ast import literal_eval
@@ -16,6 +17,27 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError, now
 
 _logger = logging.getLogger(__name__)
+
+class ResUsersLog(models.Model):
+    _inherit = 'res.users.log'
+
+    target = fields.Integer(help='Provides information on the user the log points to')
+
+    @api.autovacuum
+    def _gc_user_logs(self):
+        self._cr.execute("""
+            DELETE FROM res_users_log log1 WHERE details='Login' 
+            AND EXISTS (
+                SELECT 1 FROM res_users_log log2
+                WHERE log1.create_uid = log2.create_uid
+                AND log1.create_date < log2.create_date
+            )
+        """)
+        counter = self._cr.rowcount
+        self._cr.execute("""
+            DELETE FROM res_users_log log1 WHERE details='Password Reset'
+        """)
+        _logger.info("GC'd %d user log entries", counter + self._cr.rowcount)
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -196,12 +218,23 @@ class ResUsers(models.Model):
         for user in self:
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
+            if not self.check_password_reset_availability():
+                raise UserError(_("You have asked for too many password resets, please wait a bit."))
             email_values['email_to'] = user.email
             # TDE FIXME: make this template technical (qweb)
             with self.env.cr.savepoint():
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
+            self.env['res.users.log'].create({'details':'Password Reset', 'target':self.id})
+
+    def check_password_reset_availability(self):
+        mails = self.env['res.users.log'].search([('details', '=', 'Password Reset'), ('target', '=', self.id)])
+        if len(mails) < 3:
+            return True
+        if mails[2]['create_date'] < fields.Datetime.now() - datetime.timedelta(minutes=1):
+            return True
+        return False
 
     def send_unregistered_user_reminder(self, after_days=5):
         datetime_min = fields.Datetime.today() - relativedelta(days=after_days)
