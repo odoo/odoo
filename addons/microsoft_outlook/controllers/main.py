@@ -45,19 +45,7 @@ class MicrosoftOutlookController(http.Controller):
                 'rec_id': rec_id,
             })
 
-        model = request.env[model_name]
-
-        if not isinstance(model, request.env.registry['microsoft.outlook.mixin']):
-            # The model must inherits from the "microsoft.outlook.mixin" mixin
-            raise Forbidden()
-
-        record = model.browse(rec_id).exists()
-        if not record:
-            raise Forbidden()
-
-        if not csrf_token or not consteq(csrf_token, record._get_outlook_csrf_token()):
-            _logger.error('Microsoft Outlook: Wrong CSRF token during Outlook authentication.')
-            raise Forbidden()
+        record = self._get_outlook_record(model_name, rec_id, csrf_token)
 
         OutlookToken = request.env['microsoft.outlook.token']
 
@@ -70,11 +58,39 @@ class MicrosoftOutlookController(http.Controller):
                 'rec_id': rec_id,
             })
 
+        return self._redirect_to_outlook_record(email, access_token, expiration, refresh_token, record)
+
+    @http.route('/microsoft_outlook/iap_confirm', type='http', auth='user')
+    def microsoft_outlook_iap_callback(self, model, rec_id, email, csrf_token, access_token, refresh_token, expiration, **kwargs):
+        record = self._get_outlook_record(model, rec_id, csrf_token)
+        return self._redirect_to_outlook_record(email, access_token, expiration, refresh_token, record)
+
+    def _get_outlook_record(self, model_name, rec_id, csrf_token):
+        """Return the given record after checking the CSRF token."""
+        model = request.env[model_name]
+
+        if not isinstance(model, request.env.registry['microsoft.outlook.mixin']):
+            # The model must inherits from the "microsoft.outlook.mixin" mixin
+            _logger.error('Error during Outlook OAuth process, wrong model %r.', model_name)
+            raise Forbidden()
+
+        record = model.browse(int(rec_id)).exists()
+        if not record:
+            _logger.error('Error during Outlook OAuth process, record does not exist %r #%r.', model_name, rec_id)
+            raise Forbidden()
+
+        if not csrf_token or not consteq(csrf_token, record._get_outlook_csrf_token()):
+            _logger.error('Microsoft Outlook: Wrong CSRF token during Outlook authentication.')
+            raise Forbidden()
+
+        return record
+
+    def _redirect_to_outlook_record(self, email, access_token, expiration, refresh_token, record):
         # update existing token or create a new one
-        OutlookToken._search_or_create(email, {
+        request.env['microsoft.outlook.token']._search_or_create(email, {
             'microsoft_outlook_refresh_token': refresh_token,
             'microsoft_outlook_access_token': access_token,
             'microsoft_outlook_access_token_expiration': expiration,
         })
 
-        return request.redirect(f'/odoo/{model_name}/{rec_id}')
+        return request.redirect(f'/odoo/{record._name}/{record.id}')

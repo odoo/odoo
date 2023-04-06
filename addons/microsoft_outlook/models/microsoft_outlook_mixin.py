@@ -3,6 +3,7 @@
 
 import json
 import logging
+import requests
 
 from werkzeug.urls import url_encode, url_join
 
@@ -20,9 +21,8 @@ class MicrosoftOutlookMixin(models.AbstractModel):
 
     _email_field = None
     _server_type_field = None
+    _DEFAULT_OUTLOOK_IAP_ENDPOINT = 'https://outlook.api.odoo.com'
 
-    is_microsoft_outlook_configured = fields.Boolean('Is Outlook Credential Configured',
-        compute='_compute_is_microsoft_outlook_configured')
     microsoft_outlook_uri = fields.Char(
         compute='_compute_microsoft_outlook_uri',
         string='Authentication URI',
@@ -33,29 +33,20 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         compute='_compute_microsoft_outlook_token_id')
 
     @api.depends(lambda self: (self._email_field, self._server_type_field))
-    def _compute_is_microsoft_outlook_configured(self):
-        Config = self.env['ir.config_parameter'].sudo()
-        microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
-        microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
-        is_configured = bool(microsoft_outlook_client_id and microsoft_outlook_client_secret)
-
-        outlook_servers, normal_servers = self._split_outlook_servers()
-        outlook_servers.is_microsoft_outlook_configured = is_configured
-        normal_servers.is_microsoft_outlook_configured = False
-
-    @api.depends(lambda self: (self._email_field, self._server_type_field, 'is_microsoft_outlook_configured'))
     def _compute_microsoft_outlook_uri(self):
         OutlookToken = self.env['microsoft.outlook.token']
         Config = self.env['ir.config_parameter'].sudo()
         base_url = self.get_base_url()
         microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
+        microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
+        is_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
 
         outlook_servers, normal_servers = self._split_outlook_servers()
         normal_servers.microsoft_outlook_uri = False
 
         for record in outlook_servers:
             email = tools.email_normalize(record[self._email_field])
-            if not record.id or not record.is_microsoft_outlook_configured or not email:
+            if not email or not is_configured:
                 record.microsoft_outlook_uri = False
                 continue
 
@@ -97,15 +88,57 @@ class MicrosoftOutlookMixin(models.AbstractModel):
         if not self.env.user.has_group('base.group_system'):
             raise AccessError(_('Only the administrator can link an Outlook mail server.'))
 
-        if not self.is_microsoft_outlook_configured:
-            raise UserError(_('Please configure your Outlook credentials.'))
-
-        if not tools.email_normalize(self[self._email_field]):
+        email = tools.email_normalize(self[self._email_field])
+        if not email:
             raise UserError(_('Please enter a valid email address.'))
+
+        Config = self.env['ir.config_parameter'].sudo()
+        microsoft_outlook_client_id = Config.get_param('microsoft_outlook_client_id')
+        microsoft_outlook_client_secret = Config.get_param('microsoft_outlook_client_secret')
+        is_configured = microsoft_outlook_client_id and microsoft_outlook_client_secret
+
+        if not is_configured:  # use IAP (see '/microsoft_outlook/iap_confirm')
+            outlook_iap_endpoint = self.env['ir.config_parameter'].sudo().get_param(
+                'mail.outlook_iap_endpoint',
+                self._DEFAULT_OUTLOOK_IAP_ENDPOINT,
+            )
+            db_uuid = self.env['ir.config_parameter'].sudo().get_param('database.uuid')
+
+            # final callback URL that will receive the token from IAP
+            callback_url = url_join(self.get_base_url(), '/microsoft_outlook/iap_confirm')
+            callback_url += '?' + url_encode({
+                'model': self._name,
+                'rec_id': self.id,
+                'csrf_token': self._get_outlook_csrf_token(),
+                'email': email,
+            })
+
+            try:
+                response = requests.get(
+                    url_join(outlook_iap_endpoint, '/iap/mail_oauth/outlook'),
+                    params={'db_uuid': db_uuid, 'email': email, 'callback_url': callback_url},
+                    timeout=3)
+                response.raise_for_status()
+            except requests.exceptions.RequestException as e:
+                _logger.error('Can not contact IAP: %s.', e)
+                raise UserError(_('Can not contact IAP.'))
+
+            response = response.json()
+            if 'error' in response:
+                raise UserError(_('An error occurred: %s.', response['error']))
+
+            # URL on IAP that will redirect to Outlook login page
+            microsoft_outlook_uri = response['url']
+
+        else:
+            microsoft_outlook_uri = self.microsoft_outlook_uri
+
+        if not microsoft_outlook_uri:
+            raise UserError(_('Please configure your outlook credentials.'))
 
         return {
             'type': 'ir.actions.act_url',
-            'url': self.microsoft_outlook_uri,
+            'url': microsoft_outlook_uri,
         }
 
     def _get_outlook_csrf_token(self):
