@@ -36,10 +36,19 @@
         margin-top: $o-sheet-cancel-tpadding + 33px;
     }
     .o_FormRenderer_chatterContainer {
+        --ChatterTopbar-padding-left: 0;
+        --ChatterContainer-overflow: visible;
+        --ChatterTopbar-border: none;
+        --ActivityBox_title-margin: #{map-get($spacers, 1)};
+
         margin: 0;
         max-width: unset;
         width: 100%;
         padding: 0;
+
+        .o_MessageListView_separator:first-child {
+            margin-top: -#{map-get($spacers, 3)};
+        }
     }
     .wysiwyg_iframe {
         border: none;
