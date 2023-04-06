@@ -543,7 +543,7 @@ class PurchaseOrder(models.Model):
                     'seller_ids': [(0, 0, supplierinfo)],
                 }
                 # supplier info should be added regardless of the user access rights
-                line.product_id.sudo().write(vals)
+                line.product_id.product_tmpl_id.sudo().write(vals)
 
     def action_create_invoice(self):
         """Create the invoice associated to the PO.
