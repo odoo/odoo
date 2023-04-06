@@ -482,9 +482,6 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_expense_id': 'product.template',
             'property_account_income_id': 'product.template',
             'property_stock_journal': 'product.category',
-            'property_stock_account_input_categ_id': 'product.category',
-            'property_stock_account_output_categ_id': 'product.category',
-            'property_stock_valuation_account_id': 'product.category',
         }.items():
             value = template_data.get(field)
             if value and field in self.env[model]._fields:
