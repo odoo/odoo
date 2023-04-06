@@ -1733,8 +1733,7 @@ export class Product extends PosModel {
     // product.pricelist.item records are loaded with a search_read
     // and were automatically sorted based on their _order by the
     // ORM. After that they are added in this order to the pricelists.
-    get_price(pricelist, quantity, price_extra, recurring = false) {
-        var self = this;
+    get_price(pricelist, quantity, price_extra = 0, recurring = false) {
         var date = moment();
 
         // In case of nested pricelists, it is necessary that all pricelists are made available in
@@ -1751,67 +1750,49 @@ export class Product extends PosModel {
             );
         }
 
-        var category_ids = [];
-        var category = this.categ;
-        while (category) {
-            category_ids.push(category.id);
-            category = category.parent;
+        const rules = !pricelist
+            ? []
+            : _.filter(this.applicablePricelistItems[pricelist.id], (item) =>
+                  this.isPricelistItemUsable(item, date)
+              );
+
+        let price = this.lst_price + (price_extra || 0);
+        const rule = rules.find((rule) => !rule.min_quantity || quantity >= rule.min_quantity);
+        if (!rule) {
+            return price;
         }
 
-        var pricelist_items = [];
-        if (pricelist) {
-            pricelist_items = _.filter(
-                self.applicablePricelistItems[pricelist.id],
-                function (item) {
-                    return self.isPricelistItemUsable(item, date);
-                }
+        if (rule.base === "pricelist") {
+            const base_pricelist = this.pos.pricelists.find(
+                (pricelist) => pricelist.id === rule.base_pricelist_id[0]
             );
+            if (base_pricelist) {
+                price = this.get_price(base_pricelist, quantity, 0, true);
+            }
+        } else if (rule.base === "standard_price") {
+            price = this.standard_price;
         }
 
-        var price = self.lst_price;
-        if (price_extra) {
-            price += price_extra;
+        if (rule.compute_price === "fixed") {
+            price = rule.fixed_price;
+        } else if (rule.compute_price === "percentage") {
+            price = price - price * (rule.percent_price / 100);
+        } else {
+            var price_limit = price;
+            price -= price * (rule.price_discount / 100);
+            if (rule.price_round) {
+                price = round_pr(price, rule.price_round);
+            }
+            if (rule.price_surcharge) {
+                price += rule.price_surcharge;
+            }
+            if (rule.price_min_margin) {
+                price = Math.max(price, price_limit + rule.price_min_margin);
+            }
+            if (rule.price_max_margin) {
+                price = Math.min(price, price_limit + rule.price_max_margin);
+            }
         }
-        pricelist_items.find(function (rule) {
-            if (rule.min_quantity && quantity < rule.min_quantity) {
-                return false;
-            }
-
-            if (rule.base === "pricelist") {
-                const base_pricelist = self.pos.pricelists.find(function (pricelist) {
-                    return pricelist.id === rule.base_pricelist_id[0];
-                });
-                if (base_pricelist) {
-                    price = self.get_price(base_pricelist, quantity, undefined, true);
-                }
-            } else if (rule.base === "standard_price") {
-                price = self.standard_price;
-            }
-
-            if (rule.compute_price === "fixed") {
-                price = rule.fixed_price;
-                return true;
-            } else if (rule.compute_price === "percentage") {
-                price = price - price * (rule.percent_price / 100);
-                return true;
-            } else {
-                var price_limit = price;
-                price = price - price * (rule.price_discount / 100);
-                if (rule.price_round) {
-                    price = round_pr(price, rule.price_round);
-                }
-                if (rule.price_surcharge) {
-                    price += rule.price_surcharge;
-                }
-                if (rule.price_min_margin) {
-                    price = Math.max(price, price_limit + rule.price_min_margin);
-                }
-                if (rule.price_max_margin) {
-                    price = Math.min(price, price_limit + rule.price_max_margin);
-                }
-                return true;
-            }
-        });
 
         // This return value has to be rounded with round_di before
         // being used further. Note that this cannot happen here,
