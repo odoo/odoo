@@ -244,8 +244,9 @@ export class NewContentModal extends Component {
      * perform the 'ir.act_window_close' action, which will be used when
      * the dialog is closed to go to the correct website page.
      */
-    async onAddContent(action, edition = false) {
+    async onAddContent(action, edition = false, context = null) {
         this.action.doAction(action, {
+            additionalContext: (context) ? context: {},
             onClose: (infos) => {
                 if (infos) {
                     this.website.goToWebsite({ path: infos.path, edition: edition });
