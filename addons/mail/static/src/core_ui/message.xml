@@ -94,10 +94,10 @@
                             <div t-if="!state.isEditing" class="o-mail-Message-content position-relative" t-att-class="{'d-flex': env.inDiscussApp}">
                                 <t t-if="message.type !== 'notification' and !message.isTransient and (!message.isBodyEmpty or message.subtypeDescription)">
                                     <div class="position-relative">
-                                        <div class="o-mail-Message-bubble rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
+                                        <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                                     'bg-info-light border border-info': !message.isSelfAuthored and !message.isNote,
                                                     'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
-                                                    }"/>
+                                                    }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                         <div class="position-relative" t-att-class="{
                                                     'p-1': message.isNote,
                                                     'o-mail-Message-body align-self-start text-break mb-0 rounded-end-3 rounded-bottom-3 p-3': !message.isNote,
@@ -112,10 +112,10 @@
 
                             </div>
                             <div t-else="" class="position-relative w-100">
-                                <div class="o-mail-Message-bubble border rounded-end-3 rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
+                                <div class="o-mail-Message-bubble border rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
                                      'bg-info-light border-info': !message.isSelfAuthored,
                                      'bg-success-light border-success opacity-25': message.isSelfAuthored,
-                                }"/>
+                                }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                 <div class="o-mail-Message-editable position-relative flex-grow-1" t-att-class="{
                                     'p-1': message.isNote,
                                     'o-mail-Message-body mb-0 p-3': !message.isNote,
