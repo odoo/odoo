@@ -277,13 +277,15 @@ export function customErrorMessage(assertLocation, value, expected) {
 
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     const testNode = document.createElement('div');
-    document.querySelector('#editor-test-container').innerHTML = '';
-    document.querySelector('#editor-test-container').appendChild(testNode);
+    const testContainer = document.querySelector('#editor-test-container');
+    testContainer.innerHTML = '';
+    testContainer.append(testNode);
+    testContainer.append(document.createTextNode('')); // Formatting spaces.
     let styleTag;
     if (spec.styleContent) {
         styleTag = document.createElement('style');
         styleTag.textContent = spec.styleContent;
-        document.querySelector('#editor-test-container').appendChild(styleTag);
+        testContainer.append(styleTag);
     }
 
     // Add the content to edit and remove the "[]" markers *before* initializing
