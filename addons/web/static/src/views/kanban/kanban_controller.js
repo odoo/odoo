@@ -29,7 +29,6 @@ export class KanbanController extends Component {
             handleField: archInfo.handleField,
             limit: archInfo.limit || limit,
             countLimit: archInfo.countLimit,
-            onCreate: archInfo.onCreate,
             defaultGroupBy,
             defaultOrder: archInfo.defaultOrder,
             viewMode: "kanban",
