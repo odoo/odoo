@@ -2953,6 +2953,31 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
+    QUnit.test(
+        "one2many list: cannot open record in editable=bottom and edit=false list",
+        async function (assert) {
+            serverData.models.partner.records[0].p = [2];
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom" edit="false">
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+                resId: 1,
+            });
+
+            assert.containsOnce(target, ".o_data_cell[name='display_name']");
+            await click(target, ".o_data_cell[name='display_name']");
+            assert.containsNone(target, ".modal-dialog");
+        }
+    );
+
     QUnit.test("one2many list: conditional create/delete actions", async function (assert) {
         serverData.models.partner.records[0].p = [2, 4];
         await makeView({
