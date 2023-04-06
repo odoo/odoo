@@ -35,7 +35,6 @@ class ResConfigSettings(models.TransientModel):
         features = {
             # key: (config_flag, is_global), value: project_flag
             ("group_project_rating", True): "rating_active",
-            ("group_project_recurring_tasks", True): "allow_recurring_tasks",
             ("group_project_task_dependencies", False): "allow_task_dependencies",
             ("group_project_milestone", False): "allow_milestones",
         }
@@ -66,5 +65,7 @@ class ResConfigSettings(models.TransientModel):
         rating_project_request_email_template = self.env.ref('project.rating_project_request_email_template')
         if rating_project_request_email_template.active != self['group_project_rating']:
             rating_project_request_email_template.active = self['group_project_rating']
+        if not self['group_project_recurring_tasks']:
+            self.env['project.task'].sudo().search([('recurring_task', '=', True)]).write({'recurring_task': False})
 
         super().set_values()

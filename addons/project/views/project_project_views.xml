@@ -28,6 +28,9 @@
                     </header>
                 <sheet string="Project">
                     <div class="oe_button_box" name="button_box" groups="base.group_user">
+                        <button class="oe_stat_button" type="object" name="action_view_tasks" icon="fa-tasks">
+                            <field string="Tasks" name="task_count" widget="statinfo"/>
+                        </button>
                         <button class="oe_stat_button" name="project_update_all_action" type="object" groups="project.group_project_manager">
                             <field name="last_update_color" invisible="1"/>
                             <div class="o_stat_info">
@@ -109,9 +112,6 @@
                             <group>
                                 <group name="group_tasks_managment" string="Tasks Management" col="1" class="row mt16 o_settings_container" groups="project.group_project_task_dependencies,project.group_project_milestone,project.group_project_recurring_tasks">
                                     <div>
-                                        <setting id="recurring_tasks_setting" help="Auto-generate tasks for regular activities" groups="project.group_project_recurring_tasks">
-                                            <field name="allow_recurring_tasks"/>
-                                        </setting>
                                         <setting id="task_dependencies_setting" help="Determine the order in which to perform tasks" groups="project.group_project_task_dependencies">
                                             <field name="allow_task_dependencies"/>
                                         </setting>
@@ -217,7 +217,7 @@
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
-                    <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="status_with_color" options="{'hide_label': True}"/>
+                    <field name="last_update_status" string="Status" nolabel="1" optional="show" widget="project_state_selection" options="{'hide_label': True}"/>
                     <field name="stage_id" options="{'no_open': True}" optional="show"/>
                     <button string="View Tasks" name="action_view_tasks" type="object"/>
                 </tree>
@@ -242,9 +242,6 @@
             <field name="inherit_id" ref="project.view_project"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
-                <tree position="attributes">
-                    <attribute name="default_order">sequence, name, id</attribute>
-                </tree>
                 <field name="sequence" position="attributes">
                     <attribute name="invisible">0</attribute>
                     <attribute name="widget">handle</attribute>
@@ -524,7 +521,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//kanban" position="attributes">
                     <attribute name="action"></attribute>
-                    <attribute name="default_order">sequence, name, id</attribute>
                 </xpath>
             </field>
         </record>
