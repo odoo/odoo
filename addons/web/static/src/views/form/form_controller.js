@@ -19,7 +19,7 @@ import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
 
-import { Component, onRendered, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 
 const viewRegistry = registry.category("views");
 
@@ -109,11 +109,6 @@ export class FormController extends Component {
         this.archInfo = this.props.archInfo;
         const activeFields = this.archInfo.activeFields;
 
-        this.beforeLoadResolver = null;
-        const beforeLoadProm = new Promise((r) => {
-            this.beforeLoadResolver = r;
-        });
-
         const { create, edit } = this.archInfo.activeActions;
         this.canCreate = create && !this.props.preventCreate;
         this.canEdit = edit && !this.props.preventEdit;
@@ -134,13 +129,22 @@ export class FormController extends Component {
                 viewMode: "form",
                 rootType: "record",
                 mode,
-                beforeLoadProm,
                 component: this,
                 onRecordSaved: this.onRecordSaved.bind(this),
                 onWillSaveRecord: this.onWillSaveRecord.bind(this),
             },
             {
                 ignoreUseSampleModel: true,
+                onWillStart: () =>
+                    loadSubViews(
+                        this.archInfo.activeFields,
+                        this.props.fields,
+                        this.props.context,
+                        this.props.resModel,
+                        this.viewService,
+                        this.user,
+                        this.env.isSmall
+                    ),
             }
         );
 
@@ -214,19 +218,6 @@ export class FormController extends Component {
                     onUpdate: ({ offset }) => this.onPagerUpdate({ offset, resIds }),
                 };
             }
-        });
-
-        onWillStart(async () => {
-            await loadSubViews(
-                this.archInfo.activeFields,
-                this.props.fields,
-                this.props.context,
-                this.props.resModel,
-                this.viewService,
-                this.user,
-                this.env.isSmall
-            );
-            this.beforeLoadResolver();
         });
 
         onRendered(() => {
