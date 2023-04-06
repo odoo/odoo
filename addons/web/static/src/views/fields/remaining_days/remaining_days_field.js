@@ -22,7 +22,7 @@ export class RemainingDaysField extends Component {
         if (!this.props.value) {
             return null;
         }
-        const today = luxon.DateTime.local().startOf("day");
+        const today = luxon.DateTime.local().toUTC().startOf("day");
         return Math.floor(this.props.value.startOf("day").diff(today, "days").days);
     }
 
