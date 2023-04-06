@@ -615,7 +615,6 @@ class PosConfig(models.Model):
                     'name': _('Cash'),
                     'journal_id': self.env['account.journal'].create({
                                     'name': "Cash",
-                                    'code': "CSH %s" % pos_config.id,
                                     'type': 'cash',
                                 }).id,
                     'company_id': company.id,
