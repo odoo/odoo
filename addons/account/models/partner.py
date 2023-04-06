@@ -7,7 +7,7 @@ import logging
 from psycopg2 import sql, DatabaseError
 
 from odoo import api, fields, models, _
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import mute_logger, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 
@@ -510,6 +510,7 @@ class ResPartner(models.Model):
             raise UserError(_("Record cannot be deleted. Partner used in Accounting"))
         return super(ResPartner, self).unlink()
 
+    @mute_logger('odoo.sql_db')
     def _increase_rank(self, field, n=1):
         if self.ids and field in ['customer_rank', 'supplier_rank']:
             try:
