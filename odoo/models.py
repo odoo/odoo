@@ -3313,9 +3313,9 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # determine fields to fetch
-        fields_to_fetch  = OrderedSet()
+        fields_to_fetch = OrderedSet()
         cache = self.env.cache
-        field_names = { field_name for field_name in self.check_field_access_rights('read', field_names) }
+        field_names = self.check_field_access_rights('read', field_names)
 
         for field_name in field_names:
             field = self._fields.get(field_name)
