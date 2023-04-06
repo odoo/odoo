@@ -506,7 +506,7 @@ class ProcurementGroup(models.Model):
         location = location_id
         while (not result) and location:
             domain = self._get_rule_domain(location, values)
-            result = self._search_rule(values.get('route_ids', False), values.get('product_packaging_id', False), product_id, values.get('warehouse_id', False), domain)
+            result = self._search_rule(values.get('route_ids', False), values.get('product_packaging_id', False), product_id, values.get('warehouse_id', location.warehouse_id), domain)
             location = location.location_id
         return result
 
