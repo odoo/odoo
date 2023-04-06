@@ -12,6 +12,7 @@ import {
     click,
     triggerEvent,
     nextTick,
+    editInput,
 } from "../helpers/utils";
 
 import { Component, useState, xml } from "@odoo/owl";
@@ -226,30 +227,33 @@ QUnit.module("Web Components", (hooks) => {
         );
     });
 
-    QUnit.test("Value with no corresponding choices displays as if no choice was selected", async (assert) => {
-        class Parent extends Component {
-            static components = { SelectMenu };
-            static template = xml`
+    QUnit.test(
+        "Value with no corresponding choices displays as if no choice was selected",
+        async (assert) => {
+            class Parent extends Component {
+                static components = { SelectMenu };
+                static template = xml`
                 <SelectMenu
                     choices="this.choices"
                     value="this.state.value"
                 />
             `;
-            setup() {
-                this.choices = [
-                    { label: "World", value: "world" },
-                    { label: "Hello", value: "hello" },
-                ];
-                this.state = useState({ value: "coucou"});
+                setup() {
+                    this.choices = [
+                        { label: "World", value: "world" },
+                        { label: "Hello", value: "hello" },
+                    ];
+                    this.state = useState({ value: "coucou" });
+                }
+                setValue(newValue) {
+                    this.state.value = newValue;
+                }
             }
-            setValue(newValue) {
-                this.state.value = newValue;
-            }
-        }
 
-        await mount(Parent, target, { env });
-        assert.equal(getValue(), "", `The toggler should be empty`);
-    });
+            await mount(Parent, target, { env });
+            assert.equal(getValue(), "", `The toggler should be empty`);
+        }
+    );
 
     QUnit.test("Changing value props properly updates the selected choice", async (assert) => {
         class Parent extends Component {
@@ -265,7 +269,7 @@ QUnit.module("Web Components", (hooks) => {
                     { label: "Z", value: { hello: "world" } },
                     { label: "A", value: { paper: "company" } },
                 ];
-                this.state = useState({ value: { paper: "company" }});
+                this.state = useState({ value: { paper: "company" } });
             }
             setValue(newValue) {
                 this.state.value = newValue;
@@ -273,11 +277,7 @@ QUnit.module("Web Components", (hooks) => {
         }
 
         const comp = await mount(Parent, target, { env });
-        assert.equal(
-            getValue(),
-            "A",
-            `The select value shoud be "A"`
-        );
+        assert.equal(getValue(), "A", `The select value shoud be "A"`);
 
         comp.setValue({ hello: "world" });
         await nextTick();
@@ -325,7 +325,7 @@ QUnit.module("Web Components", (hooks) => {
     );
 
     QUnit.test(
-        "When the \"required\" props is set to true, the clear button is not shown",
+        'When the "required" props is set to true, the clear button is not shown',
         async (assert) => {
             class Parent extends Component {
                 setup() {
@@ -349,12 +349,20 @@ QUnit.module("Web Components", (hooks) => {
         `;
 
             const parent = await mount(Parent, target, { env });
-            assert.containsNone(target, ".o_select_menu_toggler_clear", 'When the value is not set, there is no "clear" button');
+            assert.containsNone(
+                target,
+                ".o_select_menu_toggler_clear",
+                'When the value is not set, there is no "clear" button'
+            );
 
             parent.setValue("hello");
             await nextTick();
             assert.strictEqual(getValue(), "Hello");
-            assert.containsNone(target, ".o_select_menu_toggler_clear", 'When the value is set, there is no "clear" button');
+            assert.containsNone(
+                target,
+                ".o_select_menu_toggler_clear",
+                'When the value is set, there is no "clear" button'
+            );
         }
     );
 
@@ -440,6 +448,96 @@ QUnit.module("Web Components", (hooks) => {
         await open();
         assert.containsN(target, ".coolClass", 2);
         assert.strictEqual(target.querySelector(".coolClass").textContent, "Hello");
+    });
+
+    QUnit.test(
+        "Custom template for the bottom area of the dropdown using a slot",
+        async (assert) => {
+            class Parent extends Component {
+                setup() {
+                    this.choices = [
+                        { label: "Hello", value: "hello" },
+                        { label: "World", value: "world" },
+                        { label: "How", value: "how" },
+                        { label: "Are", value: "are" },
+                        { label: "You", value: "you" },
+                    ];
+                    this.state = useState({ value: ["world", "you"] });
+                }
+                onSelect(newValue) {
+                    this.state.value = newValue;
+                }
+            }
+            Parent.components = { SelectMenu };
+            Parent.template = xml`
+                <SelectMenu
+                    choices="choices"
+                    multiSelect="true"
+                    onSelect.bind="onSelect"
+                    value="state.value"
+                >
+                    <span class="select_menu_test">Select something</span>
+                    <t t-set-slot="bottomArea" t-slot-scope="select">
+                    <span>
+                        <t t-esc="state.value.length"/> items selected
+                    </span>
+                    </t>
+                </SelectMenu>
+            `;
+
+            await mount(Parent, target, { env });
+            await open();
+            assert.strictEqual(
+                target.querySelector(".o_select_menu_bottom_area").textContent.trim(),
+                "2 items selected"
+            );
+
+            await click(target, ".o_select_menu_item:nth-child(2)");
+            await open();
+            assert.strictEqual(
+                target.querySelector(".o_select_menu_bottom_area").textContent.trim(),
+                "3 items selected"
+            );
+        }
+    );
+
+    QUnit.test("Custom slot for the bottom area sends the current search value", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.choices = [
+                    { label: "Hello", value: "hello" },
+                    { label: "World", value: "world" },
+                ];
+            }
+            onClick(value) {
+                assert.step(value + " clicked");
+            }
+        }
+        Parent.components = { SelectMenu };
+        Parent.template = xml`
+                <SelectMenu
+                    choices="choices"
+                >
+                    <span class="select_menu_test">Select something</span>
+                    <t t-set-slot="bottomArea" t-slot-scope="select">
+                        <div t-if="select.data.searchValue" class="px-2">
+                            <button class="coolClass btn text-primary" t-on-click="() => this.onClick(select.data.searchValue)">
+                                Do something with "<i t-esc="select.data.searchValue" />"
+                            </button>
+                        </div>
+                    </t>
+                </SelectMenu>
+            `;
+
+        await mount(Parent, target, { env });
+        await open();
+        assert.containsNone(target, ".coolClass");
+
+        await editInput(target, ".o_select_menu_input input", "coucou");
+        assert.containsOnce(target, ".coolClass");
+
+        await click(target.querySelector(".coolClass"));
+        assert.verifySteps(["coucou clicked"]);
     });
 
     QUnit.test("Groups properly added in the select", async (assert) => {
