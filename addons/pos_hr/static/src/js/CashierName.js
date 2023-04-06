@@ -17,12 +17,33 @@ const PosHrCashierName = (CashierName) =>
                 const cashier = this.env.pos.get_cashier();
                 return `/web/image/hr.employee/${cashier.id}/avatar_128`;
             }
+<<<<<<< HEAD
             return super.avatar;
         }
         //@Override
         get cssClass() {
             if (this.env.pos.config.module_pos_hr) {
                 return { oe_status: true };
+||||||| parent of 698e888d253 (temp)
+            //@Override
+            get avatar() {
+                if (this.env.pos.config.module_pos_hr) {
+                    const cashier = this.env.pos.get_cashier();
+                    return `/web/image/hr.employee/${cashier.id}/avatar_128`;
+                }
+                return super.avatar;
+=======
+            //@Override
+            get avatar() {
+                if (this.env.pos.config.module_pos_hr) {
+                    const cashier = this.env.pos.get_cashier();
+                    if (!(cashier && cashier.id)) {
+                        return '';
+                    }
+                    return `/web/image/hr.employee/${cashier.id}/avatar_128`;
+                }
+                return super.avatar;
+>>>>>>> 698e888d253 (temp)
             }
             return super.cssClass;
         }
