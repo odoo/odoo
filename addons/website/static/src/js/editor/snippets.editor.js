@@ -4,6 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import Dialog from "@web/legacy/js/core/dialog";
 import weSnippetEditor from "@web_editor/js/editor/snippets.editor";
 import wSnippetOptions from "@website/js/editor/snippets.options";
+import wUtils from "@website/js/utils";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 import { renderToElement } from "@web/core/utils/render";
 const getDeepRange = OdooEditorLib.getDeepRange;
@@ -301,6 +302,12 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _isValidSelection(sel) {
         return sel.rangeCount && [...this.getEditableArea()].some(el => el.contains(sel.anchorNode));
+    },
+    /**
+     * @override
+     */
+    _isMobile() {
+        return wUtils.isMobile(this);
     },
 
     //--------------------------------------------------------------------------

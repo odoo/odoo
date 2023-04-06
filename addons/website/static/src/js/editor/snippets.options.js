@@ -2583,12 +2583,7 @@ options.registry.DeviceVisibility = options.Class.extend({
         }
 
         // Update invisible elements.
-        let isMobile;
-        this.trigger_up('service_context_get', {
-            callback: (ctx) => {
-                isMobile = ctx['isMobile'];
-            },
-        });
+        const isMobile = wUtils.isMobile(this);
         this.trigger_up('snippet_option_visibility_update', {show: widgetValue !== (isMobile ? 'no_mobile' : 'no_desktop')});
     },
     /**
