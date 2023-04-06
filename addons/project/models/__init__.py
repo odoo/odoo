@@ -3,11 +3,11 @@
 
 from . import account_analytic_account
 from . import mail_message
-from . import project_milestone
 from . import project_project_stage
 from . import project_task_recurrence
-# `project_task_stage_personal` has to be loaded before `project`
+# `project_task_stage_personal` has to be loaded before `project_project` and `project_milestone`
 from . import project_task_stage_personal
+from . import project_milestone
 from . import project_project
 from . import project_task
 from . import project_task_type

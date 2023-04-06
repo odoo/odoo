@@ -11,6 +11,8 @@ from odoo.tools import Query
 from datetime import date
 from functools import reduce
 
+from odoo.addons.project.models.project_task import CLOSED_STATES
+
 class Project(models.Model):
     _inherit = 'project.project'
 
@@ -86,7 +88,7 @@ class Project(models.Model):
 
     @api.depends('sale_order_id', 'task_ids.sale_order_id')
     def _compute_sale_order_count(self):
-        sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('is_closed', '=', False)]})
+        sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('state', 'not in', list(CLOSED_STATES))]})
         for project in self:
             project.sale_order_count = len(sale_order_items_per_project_id.get(project.id, self.env['sale.order.line']).order_id)
 
@@ -107,7 +109,7 @@ class Project(models.Model):
 
     def action_view_sos(self):
         self.ensure_one()
-        all_sale_orders = self._fetch_sale_order_items({'project.task': [('is_closed', '=', False)]}).order_id
+        all_sale_orders = self._fetch_sale_order_items({'project.task': [('state', 'not in', list(CLOSED_STATES))]}).order_id
         action_window = {
             "type": "ir.actions.act_window",
             "res_model": "sale.order",

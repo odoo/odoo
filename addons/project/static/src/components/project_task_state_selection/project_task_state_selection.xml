@@ -7,9 +7,13 @@
         <xpath expr="//t[@t-if='props.readonly']/button/span[1]" position="attributes">
             <attribute name="t-attf-class">{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }}</attribute>
         </xpath>
+        <xpath expr="//t[@t-if='props.readonly']/button" position="attributes">
+            <attribute name="style">cursor: default;</attribute>
+            <attribute name="t-att-title">label</attribute>
+        </xpath>
         <!-- Waiting state button -->
         <xpath expr="//t[@t-if='props.readonly']" position="after">
-            <t t-elif="currentValue == '04_waiting_normal' and isView(['kanban', 'list'])">
+            <t t-elif="currentValue == '04_waiting_normal' and isView(['kanban', 'list', 'calendar'])">
                 <button class="d-flex align-items-center btn fw-normal p-0 justify-content-center " title="This task is blocked by another unfinished task" t-att-class="{'o_task_state_list_view': isView(['list'])}">
                     <i class="fa fa-lg fa-hourglass-o"></i>
                 </button>
@@ -18,7 +22,7 @@
         <!-- The toggle mark as done button -->
         <xpath expr="//t[@t-if='props.readonly']" position="after">
             <t t-elif="isToggleMode and currentValue == '01_in_progress'">
-                <button t-if="isView(['kanban', 'list']) or this.env.isSmall"
+                <button t-if="isView(['kanban', 'list', 'calendar']) or this.env.isSmall"
                         class="d-flex align-items-center btn fw-normal p-0"
                         tabindex="-1"
                         t-att-class="{'o_task_state_list_view': isView(['list'])}"
@@ -50,7 +54,7 @@
 
         <!-- Normal dropdown mode toggle button (displayed on the card/record by default) -->
         <xpath expr="//t[@t-set-slot='toggler']/div" position="replace">
-            <div t-if="isView(['kanban', 'list']) or this.env.isSmall" class="d-flex align-items-center" t-att-class="{'o_task_state_list_view': isView(['list'])}" t-att-title="label">
+            <div t-if="isView(['kanban', 'list', 'calendar']) or this.env.isSmall" class="d-flex align-items-center" t-att-class="{'o_task_state_list_view': isView(['list'])}" t-att-title="label">
                 <i t-if="currentValue == '04_waiting_normal'" t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }}" style="color: #4A4F59;"/>
                 <i t-else="" t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }} {{ ['1_done', '1_canceled'].includes(currentValue) and isView(['kanban']) ? 'opacity-50' : '' }}"/>
             </div>
