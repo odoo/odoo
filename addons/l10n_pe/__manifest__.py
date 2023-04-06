@@ -3,7 +3,7 @@
     'name': 'Peru - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['pe'],
-    'version': '2.0',
+    'version': '3.0',
     'category': 'Accounting/Localizations/Account Charts',
     'author': 'Vauxoo, Odoo S.A.',
     'website': 'https://www.odoo.com/documentation/master/applications/finance/fiscal_localizations/peru.html',
