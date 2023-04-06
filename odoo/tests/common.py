@@ -26,7 +26,6 @@ import tempfile
 import threading
 import time
 import unittest
-from . import case
 import warnings
 from collections import defaultdict, deque
 from concurrent.futures import Future, CancelledError, wait
@@ -36,6 +35,7 @@ except ImportError:
     InvalidStateError = NotImplementedError
 from contextlib import contextmanager, ExitStack
 from datetime import datetime
+from functools import lru_cache
 from itertools import zip_longest as izip_longest
 from unittest.mock import patch, _patch
 from xmlrpc import client as xmlrpclib
@@ -53,6 +53,8 @@ from odoo.service import security
 from odoo.sql_db import BaseCursor, Cursor
 from odoo.tools import float_compare, single_email_re, profiler, lower_logging
 from odoo.tools.misc import find_in_path
+
+from . import case
 
 try:
     # the behaviour of decorator changed in 5.0.5 changing the structure of the traceback when
@@ -933,35 +935,7 @@ class ChromeBrowser:
 
     @property
     def executable(self):
-        system = platform.system()
-        if system == 'Linux':
-            for bin_ in ['google-chrome', 'chromium', 'chromium-browser', 'google-chrome-stable']:
-                try:
-                    return find_in_path(bin_)
-                except IOError:
-                    continue
-
-        elif system == 'Darwin':
-            bins = [
-                '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-                '/Applications/Chromium.app/Contents/MacOS/Chromium',
-            ]
-            for bin_ in bins:
-                if os.path.exists(bin_):
-                    return bin_
-
-        elif system == 'Windows':
-            bins = [
-                '%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe',
-                '%ProgramFiles(x86)%\\Google\\Chrome\\Application\\chrome.exe',
-                '%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe',
-            ]
-            for bin_ in bins:
-                bin_ = os.path.expandvars(bin_)
-                if os.path.exists(bin_):
-                    return bin_
-
-        raise unittest.SkipTest("Chrome executable not found")
+        return _find_executable()
 
     def _chrome_without_limit(self, cmd):
         if os.name == 'posix' and platform.system() != 'Darwin':
@@ -1531,6 +1505,37 @@ which leads to stray network requests and inconsistencies."""))
             return m[0]
         return replacer
 
+@lru_cache(1)
+def _find_executable():
+    system = platform.system()
+    if system == 'Linux':
+        for bin_ in ['google-chrome', 'chromium', 'chromium-browser', 'google-chrome-stable']:
+            try:
+                return find_in_path(bin_)
+            except IOError:
+                continue
+
+    elif system == 'Darwin':
+        bins = [
+            '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
+            '/Applications/Chromium.app/Contents/MacOS/Chromium',
+        ]
+        for bin_ in bins:
+            if os.path.exists(bin_):
+                return bin_
+
+    elif system == 'Windows':
+        bins = [
+            '%ProgramFiles%\\Google\\Chrome\\Application\\chrome.exe',
+            '%ProgramFiles(x86)%\\Google\\Chrome\\Application\\chrome.exe',
+            '%LocalAppData%\\Google\\Chrome\\Application\\chrome.exe',
+        ]
+        for bin_ in bins:
+            bin_ = os.path.expandvars(bin_)
+            if os.path.exists(bin_):
+                return bin_
+
+    raise unittest.SkipTest("Chrome executable not found")
 
 class Opener(requests.Session):
     """
