@@ -1534,7 +1534,7 @@ class BaseModel(metaclass=MetaModel):
             return self.browse()
 
         # determine fields to fetch
-        fields_to_fetch = OrderedDict()
+        fields_to_fetch = OrderedSet()
         if field_names:
             field_names = self.check_field_access_rights('read', field_names)
         for field_name in field_names:
@@ -1542,13 +1542,13 @@ class BaseModel(metaclass=MetaModel):
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
             if field.store:
-                fields_to_fetch[field] = dict()
+                fields_to_fetch.add(field)
             elif field.compute:
                 # optimization: fetch direct field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep = self._fields[dotname.split('.', 1)[0]]
                     if dep.prefetch is True and (not dep.groups or self.user_has_groups(dep.groups)):
-                        fields_to_fetch[dep] = dict()
+                        fields_to_fetch.add(dep)
 
         return self._fetch_query(query, fields_to_fetch)
 
