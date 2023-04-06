@@ -4,11 +4,13 @@
 import base64
 import datetime
 import io
+import logging
 import re
 import requests
 import PyPDF2
 import json
 
+from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 from PIL import Image
 from werkzeug import urls
@@ -19,6 +21,8 @@ from odoo.exceptions import UserError, AccessError
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.tools import sql
+
+_logger = logging.getLogger(__name__)
 
 
 class SlidePartnerRelation(models.Model):
@@ -564,25 +568,58 @@ class Slide(models.Model):
     # ---------------------------------------------------------
 
     def _post_publication(self):
+        slides = self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id)
+        if not slides:
+            return True
+        try:
+            template = self.env.ref('mail.mail_notification_light', raise_if_not_found=True)
+        except ValueError:
+            template = False
+            _logger.warning('QWeb template mail.mail_notification_light not found when sending slide channel mails. Sending without layouting.')
+        MailSudo = self.env['mail.mail'].sudo()
+        MessageSudo = self.env['mail.message'].sudo()
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        for slide in self.filtered(lambda slide: slide.website_published and slide.channel_id.publish_template_id):
-            publish_template = slide.channel_id.publish_template_id
-            html_body = publish_template.with_context(base_url=base_url)._render_field('body_html', slide.ids)[slide.id]
-            subject = publish_template._render_field('subject', slide.ids)[slide.id]
-            # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
-            # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
-            # falsy, we don't include it in the 'message_post' call.
-            kwargs = {}
-            reply_to = publish_template._render_field('reply_to', slide.ids)[slide.id]
-            if reply_to:
-                kwargs['reply_to'] = reply_to
-            slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
-                subject=subject,
-                body=html_body,
-                subtype_xmlid='website_slides.mt_channel_slide_published',
-                email_layout_xmlid='mail.mail_notification_light',
-                **kwargs,
-            )
+        user_id = self.env.user
+        mails = MailSudo
+        for slide in slides:
+            channel_id = slide.channel_id
+            partners_by_lang = defaultdict(list)
+            for partner_id in channel_id.message_partner_ids - user_id.partner_id:
+                partners_by_lang[partner_id.lang].append(partner_id)
+            for lang, partner_ids in partners_by_lang.items():
+                self = self.with_context(lang=lang)
+                channel_id = channel_id.with_context(lang=lang)
+                publish_template = channel_id.publish_template_id
+                body_html = publish_template.with_context(base_url=base_url)._render_field('body_html', slide.ids)[slide.id]
+                subject = publish_template._render_field('subject', slide.ids)[slide.id]
+
+                mail_values = {
+                    'email_from': user_id.email_formatted,
+                    'author_id': user_id.partner_id.id,
+                    'subject': subject,
+                    'body_html': body_html,
+                    'auto_delete': True,
+                    'recipient_ids': [(4, pid.id) for pid in partner_ids],
+                    'subtype_id': self.env.ref('website_slides.mt_channel_slide_published').id,
+                }
+                # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
+                # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
+                # falsy, we don't include it in the 'message_post' call.
+                reply_to = publish_template._render_field('reply_to', slide.ids)[slide.id]
+                if reply_to:
+                    mail_values['reply_to'] = reply_to
+
+                if template:
+                    template_ctx = {
+                        'message': MessageSudo.new(dict(body=mail_values['body_html'], record_name=channel_id.name)),
+                        'model_description': self.env['ir.model']._get('slide.channel').display_name,
+                        'company': self.env.company,
+                    }
+                    body = template.with_context(lang=lang)._render(template_ctx, engine='ir.qweb', minimal_qcontext=True)
+                    mail_values['body_html'] = self.env['mail.render.mixin']._replace_local_links(body)
+                mails |= MailSudo.create(mail_values)
+        if mails:
+            mails.send()
         return True
 
     def _generate_signed_token(self, partner_id):
