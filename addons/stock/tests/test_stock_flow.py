@@ -1948,6 +1948,38 @@ class TestStockFlow(TestStockCommon):
 
         self.assertEqual(f.state, 'confirmed')
 
+    def test_scrap_location_readonlyness(self):
+        """ As it seems we keep breaking this thing over and over this small
+        test ensure the location and scrap_location is writable on a scrap order in state 'draft'
+        but not in state 'confirmed'.
+        """
+        grp_multi_loc = self.env.ref('stock.group_stock_multi_locations')
+        self.env.user.write({'groups_id': [(4, grp_multi_loc.id, 0)]})
+
+        product = self.env['product.product'].create({'name': 'Un petit coup de polish', 'type': 'product'})
+        wh = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+
+        self.env['stock.quant']._update_available_quantity(product, wh.wh_qc_stock_loc_id, 10)
+
+        f = Form(self.env['stock.scrap'], view='stock.stock_scrap_form_view')
+        f.product_id = product
+        scrap = f.save()
+
+        f = Form(scrap, view='stock.stock_scrap_form_view')
+        f.location_id = wh.wh_qc_stock_loc_id
+        f.scrap_location_id = wh.wh_pack_stock_loc_id
+        scrap = f.save()
+
+        self.assertEqual(scrap.state, 'draft')
+        scrap.action_validate()
+
+        f = Form(scrap, view='stock.stock_scrap_form_view')
+        self.assertEqual(f.state, 'done')
+        with self.assertRaises(AssertionError, msg="can't write on readonly field location_id"):
+            f.location_id = wh.lot_stock_id
+        with self.assertRaises(AssertionError, msg="can't write on readonly field scrap_location_id"):
+            f.scrap_location_id = wh.wh_input_stock_loc_id
+
     def test_picking_form_immediate_transfer(self):
         picking_form = Form(self.env['stock.picking'].with_context(default_immediate_transfer=True))
 
