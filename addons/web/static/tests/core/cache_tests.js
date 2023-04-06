@@ -56,4 +56,31 @@ QUnit.module("utils", () => {
 
         assert.verifySteps(["read a", "read b", "then a", "then a", "then b"]);
     });
+
+    QUnit.test("clear cache", async (assert) => {
+        const cache = new Cache((key) => assert.step(key));
+
+        cache.read("a");
+        cache.read("b");
+        assert.verifySteps(["a", "b"]);
+
+        cache.read("a");
+        cache.read("b");
+        assert.verifySteps([]);
+
+        cache.clear("a");
+        cache.read("a");
+        cache.read("b");
+        assert.verifySteps(["a"]);
+
+        cache.clear();
+        cache.read("a");
+        cache.read("b");
+        assert.verifySteps([]);
+
+        cache.invalidate();
+        cache.read("a");
+        cache.read("b");
+        assert.verifySteps(["a", "b"]);
+    });
 });
