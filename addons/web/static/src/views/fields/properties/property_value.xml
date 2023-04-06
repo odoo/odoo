@@ -92,6 +92,7 @@
                     </t>
                     <Many2XAutocomplete
                         t-else=""
+                        t-key="props.id + '_' + props.comodel + '_' + props.string"
                         value="propertyValue[1] || ''"
                         id="props.id"
                         resModel="props.comodel"
@@ -122,6 +123,7 @@
                     <TagsList tags="propertyValue"/>
                     <Many2XAutocomplete
                         t-if="!props.readonly"
+                        t-key="props.id + '_' + props.comodel + '_' + props.string"
                         id="props.id"
                         resModel="props.comodel"
                         autoSelect="true"
