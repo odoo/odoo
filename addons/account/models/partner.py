@@ -411,6 +411,25 @@ class ResPartner(models.Model):
         for partner, child_ids in all_partners_and_children.items():
             partner.total_invoiced = sum(price_subtotal_sum for partner, price_subtotal_sum in price_totals if partner.id in child_ids)
 
+    api.depends('credit')
+    def _compute_days_sales_outstanding(self):
+        commercial_partners = {
+            commercial_partner['commercial_partner_id'][0]: (commercial_partner['invoice_date'], commercial_partner['amount_total_signed'])
+            for commercial_partner in self.env['account.move'].read_group(
+                domain=[
+                    ('state', 'not in', ['draft', 'cancel']),
+                    ('move_type', 'in', self.env["account.move"].get_sale_types(include_receipts=True)),
+                    ('company_id', '=', self.env.company.id)
+                ],
+                fields=['invoice_date:min', 'amount_total_signed:sum'],
+                groupby=['commercial_partner_id'],
+            )
+        }
+        for partner in self:
+            oldest_invoice_date, total_invoiced_tax_included = commercial_partners.get(partner.id, (fields.Date.context_today(self), 0))
+            days_since_oldest_invoice = (fields.Date.context_today(self) - oldest_invoice_date).days
+            partner.days_sales_outstanding = ((partner.credit / total_invoiced_tax_included) * days_since_oldest_invoice) if total_invoiced_tax_included else 0
+
     def _compute_journal_item_count(self):
         AccountMoveLine = self.env['account.move.line']
         for partner in self:
@@ -477,6 +496,10 @@ class ResPartner(models.Model):
     show_credit_limit = fields.Boolean(
         default=lambda self: self.env.company.account_use_credit_limit,
         compute='_compute_show_credit_limit', groups='account.group_account_invoice,account.group_account_readonly')
+    days_sales_outstanding = fields.Float(
+        string='Days Sales Outstanding (DSO)',
+        help='[(Total Receivable/Total Revenue) * number of days since the first invoice] for this customer',
+        compute='_compute_days_sales_outstanding')
     debit = fields.Monetary(
         compute='_credit_debit_get', search=_debit_search, string='Total Payable',
         help="Total amount you have to pay to this vendor.",
