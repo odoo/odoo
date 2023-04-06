@@ -21,6 +21,11 @@
 
 .o_ChatterTopbar_tools {
     padding-right: var(--ChatterTopbar-padding-right, 0);
+    border-bottom: var(--ChatterTopbar-border);
+}
+
+.o_ChatterTopbar_borderLeft {
+    border-left: var(--ChatterTopbar-border);
 }
 
 .o_ChatterTopbar_button {
@@ -40,8 +45,12 @@
 // Style
 // ------------------------------------------------------------------
 
+.o_ActivityBoxView_title {
+    margin-top: var(--ActivityBox_title-margin, #{map-get($spacers, 4)});
+}
+
 .o_ActivityBoxView_titleLine {
-    border-top: $border-width $border-color dashed;
+    border-top: $border-width dashed $border-color;
 }
 
 
