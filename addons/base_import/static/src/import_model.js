@@ -7,6 +7,7 @@ import { groupBy, sortBy } from "@web/core/utils/arrays";
 import { sprintf } from "@web/core/utils/strings";
 import { useState } from "@odoo/owl";
 import { ImportBlockUI } from "./import_block_ui";
+import { moment_to_strftime_format } from "web.time";
 
 const mainComponentRegistry = registry.category("main_components");
 
@@ -97,7 +98,9 @@ export class BaseImportModel {
             name_create_enabled_fields: {},
         };
         for (const [name, option] of Object.entries(this.importOptionsValues)) {
-            tempImportOptions[name] = option.value;
+            tempImportOptions[name] = ['date_format', 'datetime_format'].includes(name)
+                ? moment_to_strftime_format(option.value)
+                : option.value;
         }
 
         for (const key in this.fieldsToHandle) {
@@ -666,7 +669,6 @@ export class BaseImportModel {
                 type: "select",
                 value: "",
                 options: [
-                    "%Y-%m-%d",
                     "YYYY-MM-DD",
                     "DD/MM/YY",
                     "DD/MM/YYYY",
