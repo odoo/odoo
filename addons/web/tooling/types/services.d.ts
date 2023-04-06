@@ -5,6 +5,7 @@ declare module "services" {
     import { cookieService } from "@web/core/browser/cookie_service";
     import { dialogService } from "@web/core/dialog/dialog_service";
     import { effectService } from "@web/core/effects/effect_service";
+    import { fieldService } from "@web/core/field_service";
     import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
     import { httpService } from "@web/core/network/http_service";
     import { menuService } from "@web/webclient/menus/menu_service";
@@ -25,6 +26,7 @@ declare module "services" {
         cookie: ReturnType<typeof cookieService.start>;
         dialog: ReturnType<typeof dialogService.start>;
         effect: ReturnType<typeof effectService.start>;
+        field: ReturnType<typeof fieldService.start>;
         hotkey: ReturnType<typeof hotkeyService.start>;
         http: ReturnType<typeof httpService.start>;
         menu: Awaited<ReturnType<typeof menuService.start>>;
