@@ -1,14 +1,13 @@
 /** @odoo-module **/
 
 import { Domain } from "@web/core/domain";
-import { isRelational } from "@web/views/utils";
 import {
     DynamicGroupList,
     DynamicRecordList,
     Group,
     RelationalModel,
 } from "@web/views/relational_model";
-import { KeepLast } from "@web/core/utils/concurrency";
+import { isRelational } from "@web/views/utils";
 
 /**
  * @typedef ProgressBar
@@ -141,38 +140,6 @@ class KanbanGroup extends Group {
             ...super.exportState(),
             progressValue: this.progressValue,
         };
-    }
-
-    async load() {
-        this.loadTooltip();
-        await super.load();
-    }
-
-    /**
-     * Requests the groups tooltips to the server and store them in this.tooltip
-     *
-     * @returns {Promise<void>}
-     */
-    async loadTooltip() {
-        const groupName = this.groupByField.name;
-        if (
-            this.groupByField.type === "many2one" &&
-            this.value &&
-            groupName in this.model.tooltipInfo
-        ) {
-            this.tooltipKeepLast = this.tooltipKeepLast || new KeepLast();
-            const resModel = this.groupByField.relation;
-            const tooltipInfo = this.model.tooltipInfo[groupName];
-            const fieldNames = Object.keys(tooltipInfo);
-            // This read will be batched for all groups
-            const [values] = await this.tooltipKeepLast.add(
-                this.model.orm.silent.read(resModel, [this.value], ["display_name", ...fieldNames])
-            );
-            this.tooltip = fieldNames
-                .filter((fieldName) => values[fieldName])
-                .map((fieldName) => ({ title: tooltipInfo[fieldName], value: values[fieldName] }));
-            this.model.notify();
-        }
     }
 
     /**
@@ -544,7 +511,6 @@ export class KanbanModel extends RelationalModel {
         super.setup(...arguments);
 
         this.progressAttributes = params.progressAttributes;
-        this.tooltipInfo = params.tooltipInfo;
         this.transaction = makeTransactionManager();
     }
 

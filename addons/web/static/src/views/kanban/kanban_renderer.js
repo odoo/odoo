@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { useHotkey } from "@web/core/hotkeys/hotkey_hook";
@@ -8,11 +7,11 @@ import { registry } from "@web/core/registry";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { useSortable } from "@web/core/utils/sortable";
 import { sprintf } from "@web/core/utils/strings";
-import { isNull, isRelational } from "@web/views/utils";
+import { isNull } from "@web/views/utils";
 import { ColumnProgress } from "@web/views/view_components/column_progress";
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { useBounceButton } from "@web/views/view_hook";
 import { KanbanColumnQuickCreate } from "./kanban_column_quick_create";
+import { KanbanHeader } from "./kanban_header";
 import { KanbanRecord } from "./kanban_record";
 import { KanbanRecordQuickCreate } from "./kanban_record_quick_create";
 
@@ -42,6 +41,7 @@ export class KanbanRenderer extends Component {
         DropdownItem,
         ColumnProgress,
         KanbanColumnQuickCreate,
+        KanbanHeader,
         KanbanRecord,
         KanbanRecordQuickCreate,
     };
@@ -57,9 +57,11 @@ export class KanbanRenderer extends Component {
         "canQuickCreate?",
         "quickCreateState?",
     ];
+
     static defaultProps = {
         scrollTop: () => {},
         quickCreateState: { groupId: false },
+        tooltipInfo: {},
     };
 
     setup() {
@@ -280,23 +282,6 @@ export class KanbanRenderer extends Component {
         }
     }
 
-    getGroupName({ groupByField, count, displayName, isFolded }) {
-        let name = displayName;
-        if (groupByField.type === "boolean") {
-            name = name ? this.env._t("Yes") : this.env._t("No");
-        } else if (!name) {
-            if (
-                isRelational(groupByField) ||
-                groupByField.type === "date" ||
-                groupByField.type === "datetime" ||
-                isNull(name)
-            ) {
-                name = this.env._t("None");
-            }
-        }
-        return !this.env.isSmall && isFolded ? `${name} (${count})` : name;
-    }
-
     /**
      * @param {RelationalGroup} group
      * @param {boolean} isGroupProcessing
@@ -332,13 +317,6 @@ export class KanbanRenderer extends Component {
         return (progressBar ? progressBar.count : group.count) - records.length;
     }
 
-    getGroupAggregate(group) {
-        const { sumField } = this.props.list.model.progressAttributes;
-        const value = group.getAggregates(sumField && sumField.name);
-        const title = sumField ? sumField.string : this.env._t("Count");
-        return { value, title };
-    }
-
     generateGhostColumns() {
         let colNames;
         if (this.exampleData && this.exampleData.ghostColumns) {
@@ -368,40 +346,9 @@ export class KanbanRenderer extends Component {
     // Permissions
     // ------------------------------------------------------------------------
 
-    canArchiveGroup(group) {
-        const { activeActions } = this.props.archInfo;
-        const hasActiveField = "active" in group.fields;
-        return (
-            activeActions.archiveGroup &&
-            hasActiveField &&
-            this.props.list.groupByField.type !== "many2many"
-        );
-    }
-
     canCreateGroup() {
         const { activeActions } = this.props.archInfo;
         return activeActions.createGroup && this.props.list.groupByField.type === "many2one";
-    }
-
-    canDeleteGroup(group) {
-        const { activeActions } = this.props.archInfo;
-        const { groupByField } = this.props.list;
-        return activeActions.deleteGroup && isRelational(groupByField) && group.value;
-    }
-
-    canDeleteRecord() {
-        const { activeActions } = this.props.archInfo;
-        return activeActions.delete && this.props.list.groupByField.type !== "many2many";
-    }
-
-    canEditGroup(group) {
-        const { activeActions } = this.props.archInfo;
-        const { groupByField } = this.props.list;
-        return activeActions.editGroup && isRelational(groupByField) && group.value;
-    }
-
-    canEditRecord() {
-        return this.props.archInfo.activeActions.edit;
     }
 
     canQuickCreate() {
@@ -411,10 +358,6 @@ export class KanbanRenderer extends Component {
     // ------------------------------------------------------------------------
     // Edition methods
     // ------------------------------------------------------------------------
-
-    quickCreate(group) {
-        this.props.quickCreateState.groupId = group.id;
-    }
 
     async validateQuickCreate(recordId, mode, group) {
         this.props.quickCreateState.groupId = false;
@@ -435,59 +378,19 @@ export class KanbanRenderer extends Component {
         this.props.quickCreateState.groupId = false;
     }
 
+    async deleteGroup(group) {
+        await this.props.list.deleteGroups([group]);
+        if (this.props.list.groups.length === 0) {
+            this.state.columnQuickCreateIsFolded = false;
+        }
+    }
+
     toggleGroup(group) {
         return group.toggle();
     }
 
     loadMore(group) {
         return group.list.loadMore();
-    }
-
-    editGroup(group) {
-        this.dialogClose.push(
-            this.dialog.add(FormViewDialog, {
-                context: group.context,
-                resId: group.value,
-                resModel: group.resModel,
-                title: sprintf(this.env._t("Edit: %s"), group.displayName),
-
-                onRecordSaved: async () => {
-                    await this.props.list.load();
-                    this.props.list.model.notify();
-                },
-            })
-        );
-    }
-
-    archiveGroup(group) {
-        this.dialog.add(ConfirmationDialog, {
-            body: this.env._t(
-                "Are you sure that you want to archive all the records from this column?"
-            ),
-            confirm: () => group.list.archive(),
-            cancel: () => {},
-        });
-    }
-
-    unarchiveGroup(group) {
-        group.list.unarchive();
-    }
-
-    deleteGroup(group) {
-        this.dialog.add(ConfirmationDialog, {
-            body: this.env._t("Are you sure you want to delete this column?"),
-            confirm: async () => {
-                await this.props.list.deleteGroups([group]);
-                if (this.props.list.groups.length === 0) {
-                    this.state.columnQuickCreateIsFolded = false;
-                }
-            },
-            cancel: () => {},
-        });
-    }
-
-    getGroupEl(groupId) {
-        return this.rootRef.el.querySelector(`.o_kanban_group[data-id="${groupId}"]`);
     }
 
     /**
@@ -656,15 +559,5 @@ export class KanbanRenderer extends Component {
             nextCard.focus();
             return true;
         }
-    }
-
-    tooltipAttributes(group) {
-        if (!group.tooltip.length) {
-            return {};
-        }
-        return {
-            "data-tooltip-template": "web.KanbanGroupTooltip",
-            "data-tooltip-info": JSON.stringify({ entries: group.tooltip }),
-        };
     }
 }

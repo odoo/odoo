@@ -33,7 +33,6 @@ export class KanbanController extends Component {
             defaultOrder: archInfo.defaultOrder,
             viewMode: "kanban",
             openGroupsByDefault: true,
-            tooltipInfo: archInfo.tooltipInfo,
             rootState,
         });
         this.headerButtons = archInfo.headerButtons;
