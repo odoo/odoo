@@ -5,8 +5,10 @@ import datetime
 import json
 import os
 import logging
+import psycopg2
 import re
 import requests
+import time
 import werkzeug.urls
 import werkzeug.utils
 import werkzeug.wrappers
@@ -19,11 +21,11 @@ from xml.etree import ElementTree as ET
 
 import odoo
 
-from odoo import http, models, fields, _
+from odoo import http, models, fields, _, registry
 from odoo.exceptions import AccessError
 from odoo.http import request, SessionExpiredException
 from odoo.osv import expression
-from odoo.tools import OrderedSet, escape_psql, html_escape as escape
+from odoo.tools import OrderedSet, escape_psql, html_escape as escape, mute_logger
 from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
@@ -303,6 +305,26 @@ class Website(Home):
             return request.redirect('/')
         if request.env.lang != request.website.default_lang_id.code:
             return request.redirect('/%s%s' % (request.website.default_lang_id.url_code, request.httprequest.path))
+
+        # Check that user is not refreshing the configuration webpage after starting website configuration
+        cr = request.env.cr
+        try:
+            with mute_logger('odoo.sql_db'):
+                cr.execute("SELECT * FROM ir_module_module FOR UPDATE NOWAIT")
+        except psycopg2.OperationalError:
+            # Modules are installing. Apparently the configurator process is already started. Let's wait for finishing
+            # Close old cursor and create a new one to avoid any extra locks
+            cr.close()
+            with registry(cr.dbname).cursor() as cr:
+                while True:
+                    try:
+                        with cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
+                            cr.execute("SELECT * FROM ir_module_module FOR UPDATE")
+                    except psycopg2.OperationalError:
+                        time.sleep(5)
+            # Redirect to website editor
+            return request.redirect('/web#action=website.website_preview&website_id=%s&enable_editor=1&with_loader=1' % request.website.id)
+
         action_url = '/web#action=website.website_configurator&menu_id=%s' % request.env.ref('website.menu_website_configuration').id
         if step > 1:
             action_url += '&step=' + str(step)

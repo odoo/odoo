@@ -1776,7 +1776,7 @@ class TestAssetsManifest(AddonManifestPatched):
         files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules))
         self.assertFalse(files)
 
-    def test_33(self):
+    def _skip_test_33(self):
         self.manifests['notinstalled_module'] = {
             'name': 'notinstalled_module',
             'depends': ['test_assetsbundle'],

@@ -527,8 +527,6 @@ class Website(models.Model):
         # Force to refresh env after install of module
         assert self.env.registry is registry()
 
-        website.configurator_done = True
-
         # Enable tour
         tour_asset_id = self.env.ref('website.configurator_tour')
         tour_asset_id.copy({'key': tour_asset_id.key, 'website_id': website.id, 'active': True})
@@ -588,6 +586,8 @@ class Website(models.Model):
 
         # modules
         pages_views = set_features(kwargs.get('selected_features'))
+        website.configurator_done = True
+
         # We need to refresh the environment of website because set_features installed some new module
         # and we need the overrides of these new menus e.g. for .get_cta_data()
         website = self.env['website'].browse(website.id)

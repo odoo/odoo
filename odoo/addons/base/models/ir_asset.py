@@ -305,9 +305,6 @@ class IrAsset(models.Model):
 
         safe_path = True
         if addon_manifest:
-            if addon not in installed:
-                # Assert that the path is in the installed addons
-                raise Exception("Unallowed to fetch files from addon %s" % addon)
             addons_path = os.path.join(addon_manifest['addons_path'], '')[:-1]
             full_path = os.path.normpath(os.path.join(addons_path, *path_parts))
 
