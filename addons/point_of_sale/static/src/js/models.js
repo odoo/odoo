@@ -2190,35 +2190,25 @@ export class Orderline extends PosModel {
             orderline.compute_fixed_price(order_line_price),
             this.pos.currency.decimal_places
         );
-        if (this.get_product().id !== orderline.get_product().id) {
-            //only orderline of the same product can be merged
-            return false;
-        } else if (!this.get_unit() || !this.get_unit().is_pos_groupable) {
-            return false;
-        } else if (this.get_discount() > 0) {
-            // we don't merge discounted orderlines
-            return false;
-        } else if (
-            !utils.float_is_zero(
+        // only orderlines of the same product can be merged
+        return (
+            this.get_product().id === orderline.get_product().id &&
+            this.get_unit() &&
+            this.get_unit().is_pos_groupable &&
+            // don't merge discounted orderlines
+            this.get_discount() === 0 &&
+            utils.float_is_zero(
                 price - order_line_price - orderline.get_price_extra(),
                 this.pos.currency.decimal_places
-            )
-        ) {
-            return false;
-        } else if (
-            this.product.tracking == "lot" &&
-            (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
-        ) {
-            return false;
-        } else if (this.description !== orderline.description) {
-            return false;
-        } else if (orderline.get_customer_note() !== this.get_customer_note()) {
-            return false;
-        } else if (this.refunded_orderline_id) {
-            return false;
-        } else {
-            return true;
-        }
+            ) &&
+            !(
+                this.product.tracking === "lot" &&
+                (this.pos.picking_type.use_create_lots || this.pos.picking_type.use_existing_lots)
+            ) &&
+            this.description === orderline.description &&
+            orderline.get_customer_note() === this.get_customer_note() &&
+            !this.refunded_orderline_id
+        );
     }
     merge(orderline) {
         this.order.assert_editable();
