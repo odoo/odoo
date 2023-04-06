@@ -82,6 +82,7 @@ function getSearchParams(props) {
  * @param {Object} params
  * @param {Object} [options]
  * @param {Function} [options.onUpdate]
+ * @param {Function} [options.onWillStart] callback executed before the first load of the model
  * @param {boolean} [options.ignoreUseSampleModel]
  * @returns {InstanceType<T>}
  */
@@ -140,15 +141,8 @@ export function useModel(ModelClass, params, options = {}) {
         }
     }
     onWillStart(async () => {
-        // FIXME: we have a problem here: in the view, we have two onWillStart:
-        //  - 1) to load the subviews that aren't inline
-        //  - 2) to load the data
-        //  2) must be done after 1), but we can't sync two onWillStarts
-        // The problem is also there with the relational model, but it isn't visible
-        // in the tests because the load the sub views in a tick, and we look inside
-        // the fieldsInfo after a tick as well. Here, we look into fieldsInfo directly.
-        if (params.beforeLoadProm) {
-            await params.beforeLoadProm;
+        if (options.onWillStart) {
+            await options.onWillStart();
         }
         await load(component.props);
         started = true;
