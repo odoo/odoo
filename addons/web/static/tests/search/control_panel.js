@@ -138,16 +138,17 @@ QUnit.module("Search", (hooks) => {
     QUnit.test("control panel without bottom-right specifics", async (assert) => {
         class CustomPage extends Component {}
         CustomPage.components = { ControlPanel };
-        CustomPage.template = xml `
+        CustomPage.template = xml`
             <ControlPanel display="{'top-right':false}">
                 <t t-set-slot="control-panel-bottom-right">
                     <div class="o_new_bottom_right">Something else</div>
                 </t>
             </ControlPanel>
         `;
-        // Minimal config, still needs at least an empty breadcrumbs to setup a control_panel 
-        const env = { ...await makeTestEnv(), config: { breadcrumbs: [], } };
-        parent = await mount(CustomPage, target, { env });
+        // Minimal config, still needs at least an empty breadcrumbs to setup a control_panel
+        const env = await makeTestEnv();
+        Object.assign(env, { config: { breadcrumbs: [] } });
+        await mount(CustomPage, target, { env });
         assert.containsOnce(target, ".o_new_bottom_right");
         assert.containsNone(target, ".o_cp_switch_buttons");
         assert.containsNone(target, ".o_pager");
