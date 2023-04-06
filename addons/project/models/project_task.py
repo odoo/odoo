@@ -50,7 +50,6 @@ PROJECT_TASK_WRITABLE_FIELDS = {
     'date_last_stage_update',
     'tag_ids',
     'sequence',
-    'is_closed',
     'stage_id',
     'child_ids',
     'parent_id',
@@ -133,7 +132,7 @@ class Task(models.Model):
         ('03_approved', 'Approved'),
         *CLOSED_STATES.items(),
         ('04_waiting_normal', 'Waiting'),
-    ], string='Status', copy=False, default='01_in_progress', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, recursive=True, tracking=True)
+    ], string='State', copy=False, default='01_in_progress', required=True, compute='_compute_state', inverse='_inverse_state', readonly=False, store=True, recursive=True, tracking=True)
 
     create_date = fields.Datetime("Created On", readonly=True)
     write_date = fields.Datetime("Last Updated On", readonly=True)
@@ -190,7 +189,6 @@ class Task(models.Model):
     # In the domain of displayed_image_id, we couln't use attachment_ids because a one2many is represented as a list of commands so we used res_model & res_id
     displayed_image_id = fields.Many2one('ir.attachment', domain="[('res_model', '=', 'project.task'), ('res_id', '=', id), ('mimetype', 'ilike', 'image')]", string='Cover Image')
 
-    is_closed = fields.Boolean(compute='_compute_is_closed', string="Closed State", store=True, index=True)
     parent_id = fields.Many2one('project.task', string='Parent Task', index=True)
     child_ids = fields.One2many('project.task', 'parent_id', string="Sub-tasks", domain="[('recurring_task', '=', False)]")
     subtask_count = fields.Integer("Sub-task Count", compute='_compute_subtask_count')

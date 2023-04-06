@@ -6,7 +6,7 @@ import { renderToMarkup } from '@web/core/utils/render';
 
 const { markup } = owl;
 const greenBullet = markup(`<span class="o_status d-inline-block o_status_green"></span>`);
-const redBullet = markup(`<span class="o_status d-inline-block o_status_red"></span>`);
+const orangeBullet = markup(`<span class="o_status d-inline-block text-warning"></span>`);
 const star = markup(`<a style="color: gold;" class="fa fa-star"></a>`);
 const clock = markup(`<a class="fa fa-clock-o"></a>`);
 
@@ -22,7 +22,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.generic");
         },
-        bullets: [greenBullet, redBullet, star],
+        bullets: [greenBullet, orangeBullet, star],
     }, {
         name: _lt('Agile Scrum'),
         columns: [_lt('Backlog'), _lt('Sprint Backlog'), _lt('Sprint in Progress')],
@@ -30,7 +30,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.agilescrum");
         },
-        bullets: [greenBullet, redBullet],
+        bullets: [greenBullet, orangeBullet],
     }, {
         name: _lt('Digital Marketing'),
         columns: [_lt('Ideas'), _lt('Researching'), _lt('Writing'), _lt('Editing')],
@@ -38,7 +38,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.digitalmarketing");
         },
-        bullets: [greenBullet, redBullet],
+        bullets: [greenBullet, orangeBullet],
     }, {
         name: _lt('Customer Feedback'),
         columns: [_lt('New'), _lt('In development')],
@@ -46,7 +46,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.customerfeedback");
         },
-        bullets: [greenBullet, redBullet],
+        bullets: [greenBullet, orangeBullet],
     }, {
         name: _lt('Consulting'),
         columns: [_lt('New Projects'), _lt('Resources Allocation'), _lt('In Progress')],
@@ -54,7 +54,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.consulting");
         },
-        bullets: [greenBullet, redBullet],
+        bullets: [greenBullet, orangeBullet],
     }, {
         name: _lt('Research Project'),
         columns: [_lt('Brainstorm'), _lt('Research'), _lt('Draft')],
@@ -62,7 +62,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.researchproject");
         },
-        bullets: [greenBullet, redBullet],
+        bullets: [greenBullet, orangeBullet],
     }, {
         name: _lt('Website Redesign'),
         columns: [_lt('Page Ideas'), _lt('Copywriting'), _lt('Design')],
@@ -85,7 +85,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.generic");
         },
-        bullets: [greenBullet, redBullet, star, clock],
+        bullets: [greenBullet, orangeBullet, star, clock],
     }, {
         name: _lt('Publishing'),
         columns: [_lt('Ideas'), _lt('Writing'), _lt('Editing')],
@@ -93,7 +93,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.generic");
         },
-        bullets: [greenBullet, redBullet, star, clock],
+        bullets: [greenBullet, orangeBullet, star, clock],
     }, {
         name: _lt('Manufacturing'),
         columns: [_lt('New Orders'), _lt('Material Sourcing'), _lt('Manufacturing'), _lt('Assembling')],
@@ -101,7 +101,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.generic");
         },
-        bullets: [greenBullet, redBullet, star, clock],
+        bullets: [greenBullet, orangeBullet, star, clock],
     }, {
         name: _lt('Podcast and Video Production'),
         columns: [_lt('Research'), _lt('Script'), _lt('Recording'), _lt('Mixing')],
@@ -109,7 +109,7 @@ const exampleData = {
         get description() {
             return renderToMarkup("project.example.generic");
         },
-        bullets: [greenBullet, redBullet, star, clock],
+        bullets: [greenBullet, orangeBullet, star, clock],
     }],
 };
 

@@ -35,10 +35,9 @@
                 <field name="portal_user_names"/>
                 <field name="partner_id"/>
                 <field name="sequence"/>
-                <field name="is_closed"/>
+                <field name="state"/>
                 <field name="displayed_image_id"/>
                 <field name="active"/>
-                <field name="is_closed"/>
                 <field name="closed_subtask_count"/>
                 <field name="subtask_count"/>
                 <field name="allow_milestones" />
@@ -72,7 +71,7 @@
                             </div>
                             <div class="o_kanban_record_body">
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" context="{'project_id': project_id}"/>
-                                <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}">
+                                <div t-if="record.date_deadline.raw_value" name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}">
                                     <field name="date_deadline" widget="remaining_days"/>
                                 </div>
                                 <div t-if="record.displayed_image_id.value" groups="base.group_user">
@@ -175,9 +174,9 @@
                             <field name="active" invisible="1"/>
                             <field name="parent_id" invisible="1" />
                             <field name="company_id" invisible="1" />
-                            <field name="is_closed" invisible="1" />
+                            <field name="state" invisible="1" />
                             <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" attrs="{'invisible': [('project_id', '=', False)]}"/>
-                            <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}"/>
+                            <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -188,7 +187,7 @@
                             <field name="child_ids" context="{'default_project_id': project_id, 'default_parent_id': id, 'default_partner_id': partner_id, 'form_view_ref' : 'project.project_sharing_project_task_view_form'}">
                                 <tree editable="bottom">
                                     <field name="project_id" invisible="1"/>
-                                    <field name="is_closed" invisible="1"/>
+                                    <field name="state" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1"/>
                                     <field name="name"/>
@@ -202,7 +201,7 @@
                                     <field name="partner_id" options="{'no_open': True, 'no_create': True, 'no_edit': True}" optional="hide" attrs="{'invisible': [('project_id', '=', False)]}"/>
                                     <field name="user_ids" invisible="1" />
                                     <field name="portal_user_names" string="Assignees" optional="show"/>
-                                    <field name="date_deadline" attrs="{'invisible': [('is_closed', '=', True)]}" optional="show"/>
+                                    <field name="date_deadline" attrs="{'invisible': [('state', 'in', ['1_done','1_canceled'])]}" optional="show"/>
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"

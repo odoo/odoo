@@ -102,7 +102,7 @@ class Project(models.Model):
              WHERE Project.allocated_hours > 0
                AND Project.allow_timesheets = TRUE
                AND Task.parent_id IS NULL
-               AND Task.is_closed IS FALSE
+               AND Task.state NOT IN ('1_done', '1_canceled')
           GROUP BY Project.id
             HAVING Project.allocated_hours - SUM(Task.effective_hours) < 0
         """

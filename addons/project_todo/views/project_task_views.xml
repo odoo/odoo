@@ -22,7 +22,7 @@
                 <field name="message_partner_ids"/>
                 <field name="activity_ids" />
                 <field name="activity_state" />
-                <field name="is_closed"/>
+                <field name="state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>
                     <t t-name="kanban-menu">
@@ -39,7 +39,7 @@
                                             <div>
                                                 <field name="state" widget="todo_done_checkmark" options="{'hide_label': 1}"/>
                                             </div>
-                                            <div t-att-class="record.is_closed.raw_value ? 'opacity-50' : ''">
+                                            <div t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                                 <strong class="o_kanban_record_title align-middle">
                                                     <field name="name" widget="name_with_subtask_count"/>
                                                 </strong>
@@ -47,12 +47,12 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="o_kanban_record_body o_todo_kanban_card_body" t-att-class="record.is_closed.raw_value ? 'opacity-50' : ''">
+                                <div class="o_kanban_record_body o_todo_kanban_card_body" t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left"/>
-                                    <div class="oe_kanban_bottom_right"  t-att-class="record.is_closed.raw_value ? 'opacity-50' : ''">
+                                    <div class="oe_kanban_bottom_right"  t-att-class="['1_done', '1_canceled'].includes(record.state.raw_value) ? 'opacity-50' : ''">
                                         <div t-attf-class="d-flex #{todoHasAssignees ? 'w-100 align-items-center justify-content-end' : 'align-items-end'}">
                                             <div class="d-flex align-items-center me-2 mt-2">
                                                 <div t-if="todoHasAssignees">
@@ -215,9 +215,9 @@
                 <field name="tag_ids"/>
                 <field name="user_ids"/>
                 <field name="personal_stage_type_ids" string="Stage"/>
-                <filter name="open_tasks" string="Open" domain="[('is_closed', '=', False)]"/>
-                <filter name="closed_tasks" string="Closed" domain="[('is_closed', '=', True)]"/>
-                <filter string="Closed On" name="closed_on" domain="[('is_closed', '=', True)]" date="date_last_stage_update"/>
+                <filter name="open_tasks" string="Open" domain="[('state', 'not in', ['1_done','1_canceled'])]"/>
+                <filter name="closed_tasks" string="Closed" domain="[('state', 'in', ['1_done','1_canceled'])]"/>
+                <filter string="Closed On" name="closed_on" domain="[('state', 'in', ['1_done','1_canceled'])]" date="date_last_stage_update"/>
                 <separator/>
                 <filter name="active_false" string="Archived" domain="[('active', '=', False)]"/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"

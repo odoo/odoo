@@ -17,7 +17,14 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
     date_assign = fields.Datetime(string='Assignment Date', readonly=True)
     date_deadline = fields.Date(string='Deadline', readonly=True)
     date_last_stage_update = fields.Date(string='Last Stage Update', readonly=True)
-    is_closed = fields.Boolean("Closing Stage", readonly=True)
+    state = fields.Selection([
+        ('01_in_progress', 'In Progress'),
+        ('1_done', 'Done'),
+        ('04_waiting_normal', 'Waiting'),
+        ('03_approved', 'Approved'),
+        ('1_canceled', 'Canceled'),
+        ('02_changes_requested', 'Changes Requested'),
+    ], string='State', readonly=True)
     milestone_id = fields.Many2one('project.milestone', readonly=True)
     partner_id = fields.Many2one('res.partner', string='Customer', readonly=True)
     project_id = fields.Many2one('project.project', readonly=True)
@@ -38,7 +45,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
             'date_assign',
             'date_deadline',
             'date_last_stage_update',
-            'is_closed',
+            'state',
             'milestone_id',
             'partner_id',
             'project_id',
