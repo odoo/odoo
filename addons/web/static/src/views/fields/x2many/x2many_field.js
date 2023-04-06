@@ -216,7 +216,8 @@ export class X2ManyField extends Component {
                 return true;
             });
 
-        const editable = archInfo.editable || this.props.editable;
+        const editable =
+            (this.archInfo.activeActions.edit && archInfo.editable) || this.props.editable;
         props.activeActions = this.activeActions;
         props.archInfo = { ...archInfo, columns };
         props.cycleOnTab = false;
