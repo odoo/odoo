@@ -5,7 +5,7 @@
         <Dropdown
             class="`o_select_menu border w-auto rounded-2 overflow-hidden ${props.class || ''}`"
             togglerClass="`o_select_menu_toggler btn btn-secondary w-100 bg-light ${props.togglerClass || ''} ${canDeselect ? 'o_can_deselect' : ''}`"
-            menuClass="`o_select_menu_menu${props.searchable ? ' pt-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''}`"
+            menuClass="`o_select_menu_menu${props.searchable ? ' py-0' : ''}${props.multiSelect ? ' o_select_menu_multi_select' : ''}`"
             position="'bottom-fit'"
             beforeOpen.bind="filterOptions"
             onOpened.bind="onOpened"
@@ -61,6 +61,9 @@
                     </t>
                 </DropdownItem>
             </t>
+            <div t-if="props.slots and props.slots.bottomArea" class="o_select_menu_bottom_area position-sticky bottom-0">
+                <t t-slot="bottomArea" data="state"/>
+            </div>
         </Dropdown>
     </t>
 
