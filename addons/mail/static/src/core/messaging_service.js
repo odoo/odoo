@@ -258,10 +258,10 @@ export class Messaging {
                 case "mail.link.preview/delete":
                     {
                         const { id, message_id } = notif.payload;
-                        const index = this.store.messages[message_id].linkPreviews.findIndex(
+                        removeFromArrayWithPredicate(
+                            this.store.messages[message_id].linkPreviews,
                             (linkPreview) => linkPreview.id === id
                         );
-                        delete this.store.messages[message_id].linkPreviews[index];
                     }
                     break;
                 case "mail.message/inbox": {
