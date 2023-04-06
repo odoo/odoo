@@ -31,7 +31,6 @@ import {
     getDataURLBinarySize,
 } from "@web_editor/js/editor/image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
-import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import { pick } from "@web/core/utils/objects";
 import { _t } from "@web/core/l10n/translation";
 import {
@@ -4013,8 +4012,7 @@ const SnippetOptionWidget = Widget.extend({
         if (moveUpOrLeft || moveDownOrRight) {
             // The arrows are not displayed if the target is in a grid and if
             // not in mobile view.
-            const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
-            const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
+            const isMobileView = weUtils.isMobileView(this.$target[0]);
             if (this.$target[0].classList.contains('o_grid_item') && !isMobileView) {
                 return false;
             }
@@ -4683,8 +4681,7 @@ registry.sizing = SnippetOptionWidget.extend({
     async updateUIVisibility() {
         await this._super(...arguments);
 
-        const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
-        const isMobileView = this.$target[0].ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
+        const isMobileView = weUtils.isMobileView(this.$target[0]);
         const isGrid = this.$target[0].classList.contains('o_grid_item');
         if (this.$target[0].parentNode && this.$target[0].parentNode.classList.contains('row')) {
             // Hiding/showing the correct resize handles if we are in grid mode
@@ -5280,8 +5277,7 @@ registry.layout_column = SnippetOptionWidget.extend({
         await this._super(previewMode, widgetValue, params);
 
         const rowEl = this.$target[0];
-        const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
-        const isMobileView = rowEl.ownerDocument.defaultView.frameElement.clientWidth < mobileViewThreshold;
+        const isMobileView = weUtils.isMobileView(rowEl);
         if (["row-gap", "column-gap"].includes(params.cssProperty) && !isMobileView) {
             // Reset the animation.
             this._removeGridPreview();
@@ -8025,10 +8021,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
                 shapeToSelect = possibleShapes[1];
             }
             // Only show on mobile by default if toggled from mobile view
-            const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
-            const isMobileView = this.$target[0].ownerDocument
-                .defaultView.frameElement.clientWidth < mobileViewThreshold;
-            const showOnMobile = isMobileView;
+            const showOnMobile = weUtils.isMobileView(this.$target[0]);
             this.trigger_up('snippet_edition_request', {exec: () => {
                 // options for shape will only be available after _toggleShape() returned
                 this._requestUserValueWidgets('bg_shape_opt')[0].enable();

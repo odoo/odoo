@@ -2513,7 +2513,7 @@ var SnippetsMenu = Widget.extend({
             this.invisibleDOMMap = new Map();
             const $invisibleDOMPanelEl = $(this.invisibleDOMPanelEl);
             $invisibleDOMPanelEl.find('.o_we_invisible_entry').remove();
-            const isMobile = this.options.wysiwyg.websiteService?.context.isMobile;
+            const isMobile = this._isMobile();
             const invisibleSelector = `.o_snippet_invisible, ${isMobile ? '.o_snippet_mobile_invisible' : '.o_snippet_desktop_invisible'}`;
             const $selector = this.options.enableTranslation ? this.$body : globalSelector.all();
             let $invisibleSnippets = $selector.find(invisibleSelector).addBack(invisibleSelector);
@@ -3679,6 +3679,14 @@ var SnippetsMenu = Widget.extend({
         for (const el of tooltipTargetEls) {
             Tooltip.getInstance(el)?.hide();
         }
+    },
+    /**
+     * Returns whether the edited content is a mobile view content.
+     *
+     * @returns {boolean}
+     */
+    _isMobile() {
+        return weUtils.isMobileView(this.$body[0]);
     },
 
     //--------------------------------------------------------------------------

@@ -2,7 +2,6 @@
 
 import options from '@web_editor/js/editor/snippets.options';
 import weUtils from '@web_editor/js/common/utils';
-import {SIZES, MEDIAS_BREAKPOINTS} from '@web/core/ui/ui_service';
 
 options.registry.StepsConnector = options.Class.extend({
     /**
@@ -80,9 +79,7 @@ options.registry.StepsConnector = options.Class.extend({
         // We don't use the service_context_get intentionally because the
         // connectors are hidden as soon as the page is smaller than 992px
         // (the BS lg breakpoint).
-        const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
-        const isMobileView = this.$target[0].ownerDocument.documentElement.clientWidth <
-            mobileViewThreshold;
+        const isMobileView = weUtils.isMobileView(this.$target[0]);
         return !isMobileView && this._super(...arguments);
     },
     /**

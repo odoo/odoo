@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import {
     normalizeCSSColor,
     isCSSColor,
@@ -462,6 +463,18 @@ function _shouldEditableMediaBeEditable(mediaEl) {
         && nonEditableAncestorRootEl.parentElement
         && nonEditableAncestorRootEl.parentElement.isContentEditable;
 }
+/**
+ * Checks if the view of the targeted element is mobile.
+ *
+ * @param {HTMLElement} targetEl - target of the editor
+ * @returns {boolean}
+ */
+function _isMobileView(targetEl) {
+    const mobileViewThreshold = MEDIAS_BREAKPOINTS[SIZES.LG].minWidth;
+    const clientWidth = targetEl.ownerDocument.defaultView?.frameElement?.clientWidth ||
+        targetEl.ownerDocument.documentElement.clientWidth;
+    return clientWidth && clientWidth < mobileViewThreshold;
+}
 
 export default {
     COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES: COLOR_PALETTE_COMPATIBILITY_COLOR_NAMES,
@@ -488,4 +501,5 @@ export default {
     addBackgroundImageAttributes: _addBackgroundImageAttributes,
     isBackgroundImageAttribute: _isBackgroundImageAttribute,
     shouldEditableMediaBeEditable: _shouldEditableMediaBeEditable,
+    isMobileView: _isMobileView,
 };

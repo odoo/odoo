@@ -416,6 +416,23 @@ export function generateGMapLink(dataset) {
         + '&ie=UTF8&iwloc=&output=embed';
 }
 
+/**
+ * Checks if the edited content is currently previewed as in a mobile device.
+ *
+ * @param {Object} self - context object ("this")
+ * @returns {boolean}
+ */
+function isMobile(self) {
+    let isMobile;
+    self.trigger_up("service_context_get", {
+        callback: (ctx) => {
+            isMobile = ctx["isMobile"];
+        },
+    });
+
+    return isMobile;
+}
+
 export default {
     loadAnchors: loadAnchors,
     autocompleteWithPages: autocompleteWithPages,
@@ -427,4 +444,5 @@ export default {
     svgToPNG: svgToPNG,
     generateGMapIframe: generateGMapIframe,
     generateGMapLink: generateGMapLink,
+    isMobile: isMobile,
 };
