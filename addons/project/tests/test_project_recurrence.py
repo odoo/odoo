@@ -19,7 +19,6 @@ class TestProjectRecurrence(TransactionCase):
         cls.stage_b = cls.env['project.task.type'].create({'name': 'b'})
         cls.project_recurring = cls.env['project.project'].with_context({'mail_create_nolog': True}).create({
             'name': 'Recurring',
-            'allow_recurring_tasks': True,
             'type_ids': [
                 (4, cls.stage_a.id),
                 (4, cls.stage_b.id),
@@ -99,3 +98,18 @@ class TestProjectRecurrence(TransactionCase):
         with freeze_time(self.date_01_01 + relativedelta(days=32)):
             task.state = '1_done'
         self.assertEqual(len(task.recurrence_id.task_ids), 2, "Since this is after repeat_until, next occurrence shouldn't have been created")
+
+    def test_recurring_settings_change(self):
+        self.env['res.config.settings'] \
+            .create({'group_project_recurring_tasks': True}) \
+            .execute()
+        test_task = self.env['project.task'].create({
+            'name': "Recurring Task",
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+        })
+        self.assertTrue(test_task.recurring_task, 'The "Recurring" feature should be enabled from settings.')
+        self.env['res.config.settings'] \
+            .create({'group_project_recurring_tasks': False}) \
+            .execute()
+        self.assertFalse(test_task.recurring_task, 'The "Recurring" feature should not be enabled by default.')
