@@ -1795,6 +1795,7 @@ export class Orderline extends PosModel {
         this.pos = options.pos;
         this.order = options.order;
         this.price_manually_set = options.price_manually_set || false;
+        this.price_automatically_set = options.price_automatically_set || false;
         if (options.json) {
             try {
                 this.init_from_JSON(options.json);
@@ -1832,6 +1833,7 @@ export class Orderline extends PosModel {
         this.set_product_lot(this.product);
         this.price = json.price_unit;
         this.price_manually_set = json.price_manually_set;
+        this.price_automatically_set = json.price_automatically_set;
         this.set_discount(json.discount);
         this.set_quantity(json.qty, "do not recompute unit price");
         this.set_description(json.description);
@@ -1868,6 +1870,7 @@ export class Orderline extends PosModel {
         orderline.price = this.price;
         orderline.selected = false;
         orderline.price_manually_set = this.price_manually_set;
+        orderline.price_automatically_set = this.price_automatically_set;
         orderline.customerNote = this.customerNote;
         return orderline;
     }
@@ -2029,7 +2032,7 @@ export class Orderline extends PosModel {
         }
 
         // just like in sale.order changing the quantity will recompute the unit price
-        if (!keep_price && !this.price_manually_set) {
+        if (!keep_price && !(this.price_manually_set || this.price_automatically_set)) {
             this.set_unit_price(
                 this.product.get_price(
                     this.order.pricelist,
@@ -2182,6 +2185,7 @@ export class Orderline extends PosModel {
             customer_note: this.get_customer_note(),
             refunded_orderline_id: this.refunded_orderline_id,
             price_manually_set: this.price_manually_set,
+            price_automatically_set: this.price_automatically_set,
         };
     }
     //used to create a json of the ticket, to be sent to the printer
@@ -2198,6 +2202,7 @@ export class Orderline extends PosModel {
             price_lst: this.get_lst_price(),
             fixed_lst_price: this.get_fixed_lst_price(),
             price_manually_set: this.price_manually_set,
+            price_automatically_set: this.price_automatically_set,
             display_discount_policy: this.display_discount_policy(),
             price_display_one: this.get_display_price_one(),
             price_display: this.get_display_price(),
@@ -3111,7 +3116,7 @@ export class Order extends PosModel {
                 if (lines[i].get_product() === tip_product) {
                     lines[i].set_unit_price(tip);
                     lines[i].set_lst_price(tip);
-                    lines[i].price_manually_set = true;
+                    lines[i].price_automatically_set = true;
                     lines[i].order.tip_amount = tip;
                     return;
                 }
@@ -3121,7 +3126,7 @@ export class Order extends PosModel {
                 quantity: 1,
                 price: tip,
                 lst_price: tip,
-                extras: { price_manually_set: true },
+                extras: { price_automatically_set: true },
             });
         }
     }
@@ -3132,7 +3137,7 @@ export class Order extends PosModel {
         var self = this;
         this.pricelist = pricelist;
 
-        var lines_to_recompute = this.get_orderlines().filter((line) => !line.price_manually_set);
+        var lines_to_recompute = this.get_orderlines().filter((line) => !(line.price_manually_set || line.price_automatically_set));
         lines_to_recompute.forEach((line) => {
             line.set_unit_price(
                 line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra())
