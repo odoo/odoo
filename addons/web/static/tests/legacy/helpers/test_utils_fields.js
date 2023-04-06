@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_fields **/
+/** @odoo-module **/
     
     /**
      * Field Test Utils
@@ -9,7 +9,7 @@
      * testUtils file.
      */
 
-    import testUtilsDom from "web.test_utils_dom";
+    import { click, triggerEvent, triggerEvents } from "./test_utils_dom";
 
     const ARROW_KEYS_MAPPING = {
         down: 'ArrowDown',
@@ -29,7 +29,7 @@
      * @param {string} text Used as default value for the record name
      * @see clickM2OItem
      */
-    async function clickM2OCreateAndEdit(fieldName, text = "ABC") {
+    export async function clickM2OCreateAndEdit(fieldName, text = "ABC") {
         await clickOpenM2ODropdown(fieldName);
         const match = document.querySelector(`.o_field_many2one[name=${fieldName}] input`);
         await editInput(match, text);
@@ -44,11 +44,11 @@
      *    input
      * @returns {Promise}
      */
-    async function clickM2OHighlightedItem(fieldName, selector) {
+    export async function clickM2OHighlightedItem(fieldName, selector) {
         const m2oSelector = `${selector || ''} .o_field_many2one[name=${fieldName}] input`;
         const $dropdown = $(m2oSelector).autocomplete('widget');
         // clicking on an li (no matter which one), will select the focussed one
-        return testUtilsDom.click($dropdown[0].querySelector('li'));
+        return click($dropdown[0].querySelector('li'));
     }
 
     /**
@@ -63,7 +63,7 @@
      * @param {string} searchText
      * @returns {Promise}
      */
-    async function clickM2OItem(fieldName, searchText) {
+    export async function clickM2OItem(fieldName, searchText) {
         const m2oSelector = `.o_field_many2one[name=${fieldName}] input`;
         const $dropdown = $(m2oSelector).autocomplete('widget');
         const $target = $dropdown.find(`li:contains(${searchText})`).first();
@@ -71,7 +71,7 @@
             throw new Error('Menu item should be visible');
         }
         $target.mouseenter(); // This is NOT a mouseenter event. See jquery.js:5516 for more headaches.
-        return testUtilsDom.click($target);
+        return click($target);
     }
 
     /**
@@ -82,14 +82,14 @@
      *    input
      * @returns {Promise<HTMLInputElement>} the main many2one input
      */
-    async function clickOpenM2ODropdown(fieldName, selector) {
+    export async function clickOpenM2ODropdown(fieldName, selector) {
         const m2oSelector = `${selector || ''} .o_field_many2one[name=${fieldName}] input`;
         const matches = document.querySelectorAll(m2oSelector);
         if (matches.length !== 1) {
             throw new Error(`cannot open m2o: selector ${selector} has been found ${matches.length} instead of 1`);
         }
 
-        await testUtilsDom.click(matches[0]);
+        await click(matches[0]);
         return matches[0];
     }
 
@@ -105,7 +105,7 @@
      * @param {string[]} events
      * @returns {Promise}
      */
-    async function editAndTrigger(el, value, events) {
+    export async function editAndTrigger(el, value, events) {
         if (el instanceof jQuery) {
             if (el.length !== 1) {
                 throw new Error(`target ${el.selector} has length ${el.length} instead of 1`);
@@ -114,7 +114,7 @@
         } else {
             el.value = value;
         }
-        return testUtilsDom.triggerEvents(el, events);
+        return triggerEvents(el, events);
     }
 
     /**
@@ -129,7 +129,7 @@
      * @param {string|number} value
      * @returns {Promise}
      */
-    async function editInput(el, value) {
+    export async function editInput(el, value) {
         return editAndTrigger(el, value, ['input']);
     }
 
@@ -145,7 +145,7 @@
      * @param {string|number} value
      * @returns {Promise}
      */
-    function editSelect(el, value) {
+    export function editSelect(el, value) {
         return editAndTrigger(el, value, ['change']);
     }
 
@@ -166,7 +166,7 @@
      * @param {[string]} [options.item]
      * @returns {Promise}
      */
-    async function searchAndClickM2OItem(fieldName, options = {}) {
+    export async function searchAndClickM2OItem(fieldName, options = {}) {
         const input = await clickOpenM2ODropdown(fieldName, options.selector);
         if (options.search) {
             await editInput(input, options.search);
@@ -188,7 +188,7 @@
      *   char to get a letter key- and convert it into a keyCode.
      * @returns {Promise}
      */
-    function triggerKey(type, $el, keyCode) {
+    export function triggerKey(type, $el, keyCode) {
         type = 'key' + type;
         const params = {};
         if (typeof keyCode === 'string') {
@@ -208,7 +208,7 @@
         }
         params.keyCode = keyCode;
         params.which = keyCode;
-        return testUtilsDom.triggerEvent($el, type, params);
+        return triggerEvent($el, type, params);
     }
 
     /**
@@ -218,7 +218,7 @@
      * @param {number|string} keyCode @see triggerKey
      * @returns {Promise}
      */
-    function triggerKeydown($el, keyCode) {
+    export function triggerKeydown($el, keyCode) {
         return triggerKey('down', $el, keyCode);
     }
 
@@ -229,20 +229,6 @@
      * @param {number|string} keyCode @see triggerKey
      * @returns {Promise}
      */
-    function triggerKeyup($el, keyCode) {
+    export function triggerKeyup($el, keyCode) {
         return triggerKey('up', $el, keyCode);
     }
-
-    export default {
-        clickM2OCreateAndEdit,
-        clickM2OHighlightedItem,
-        clickM2OItem,
-        clickOpenM2ODropdown,
-        editAndTrigger,
-        editInput,
-        editSelect,
-        searchAndClickM2OItem,
-        triggerKey,
-        triggerKeydown,
-        triggerKeyup,
-    };

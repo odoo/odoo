@@ -28,7 +28,7 @@ import ActionMenus from "web.ActionMenus";
 import basicFields from "web.basic_fields";
 import Registry from "web.Registry";
 import core from "web.core";
-import makeTestEnvironment from "web.test_env";
+import { makeTestEnvironment } from "@web/../tests/legacy/helpers/test_env";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import {
@@ -47,7 +47,7 @@ import {
     patchWithCleanup,
 } from "../helpers/utils";
 import session from "web.session";
-import LegacyMockServer from "web.MockServer";
+import { MockServer as LegacyMockServer } from "@web/../tests/legacy/helpers/mock_server";
 import Widget from "web.Widget";
 import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter } from "@web/legacy/action_adapters";

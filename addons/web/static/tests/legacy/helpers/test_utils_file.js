@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_file **/
+/** @odoo-module **/
 
 /**
  * FILE Test Utils
@@ -48,7 +48,7 @@ function _createFakeDataTransfer(files) {
  * @param {string} data.contentType
  * @returns {Promise<Object>} resolved with file created
  */
-function createFile(data) {
+export function createFile(data) {
     // Note: this is only supported by Chrome, and does not work in Incognito mode
     return new Promise(function (resolve, reject) {
         var requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -78,7 +78,7 @@ function createFile(data) {
  * @param {$.Element} $el
  * @param {Object} file must have been created beforehand (@see createFile)
  */
-function dragoverFile($el, file) {
+export function dragoverFile($el, file) {
     var ev = new Event('dragover', { bubbles: true });
     Object.defineProperty(ev, 'dataTransfer', {
         value: _createFakeDataTransfer(file),
@@ -92,7 +92,7 @@ function dragoverFile($el, file) {
  * @param {$.Element} $el
  * @param {Object} file must have been created beforehand (@see createFile)
  */
-function dropFile($el, file) {
+export function dropFile($el, file) {
     var ev = new Event('drop', { bubbles: true, });
     Object.defineProperty(ev, 'dataTransfer', {
         value: _createFakeDataTransfer([file]),
@@ -106,7 +106,7 @@ function dropFile($el, file) {
  * @param {$.Element} $el
  * @param {Object[]} files must have been created beforehand (@see createFile)
  */
-function dropFiles($el, files) {
+export function dropFiles($el, files) {
     var ev = new Event('drop', { bubbles: true, });
     Object.defineProperty(ev, 'dataTransfer', {
         value: _createFakeDataTransfer(files),
@@ -121,7 +121,7 @@ function dropFiles($el, files) {
  * @param {Object[]} files must have been created beforehand
  *   @see testUtils.file.createFile
  */
-function inputFiles(el, files) {
+export function inputFiles(el, files) {
     // could not use _createFakeDataTransfer as el.files assignation will only
     // work with a real FileList object.
     const dataTransfer = new window.DataTransfer();
@@ -141,15 +141,3 @@ function inputFiles(el, files) {
         el.dispatchEvent(new Event('change'));
     }
 }
-
-//------------------------------------------------------------------------------
-// Exposed API
-//------------------------------------------------------------------------------
-
-export default {
-    createFile: createFile,
-    dragoverFile: dragoverFile,
-    dropFile: dropFile,
-    dropFiles,
-    inputFiles,
-};

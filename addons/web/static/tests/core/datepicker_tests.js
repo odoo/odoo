@@ -8,7 +8,7 @@ import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import ActionModel from "web.ActionModel";
 import CustomFilterItem from "web.CustomFilterItem";
 import { createComponent } from "web.test_utils";
-import { editSelect } from "web.test_utils_fields";
+import { editSelect } from "@web/../tests/legacy/helpers/test_utils_fields";
 import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";

@@ -1,7 +1,7 @@
 /** @odoo-module **/
     
     import ActionModel from "web.ActionModel";
-    import makeTestEnvironment from "web.test_env";
+    import { makeTestEnvironment } from "@web/../tests/legacy/helpers/test_env";
 
     function createModel(params = {}) {
         const archs = (params.arch && { search: params.arch, }) || {};

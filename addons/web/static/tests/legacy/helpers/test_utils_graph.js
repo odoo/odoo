@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_graph **/
+/** @odoo-module **/
 
 /**
  * Graph Test Utils
@@ -16,10 +16,6 @@
  * @param {GraphController} graph
  * @param {[Object]} params given to the controller reload method
  */
-function reload(graph, params) {
+export function reload(graph, params) {
     return graph.reload(params);
 }
-
-export default {
-    reload: reload,
-};

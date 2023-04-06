@@ -11,17 +11,17 @@ odoo.define('web.test_utils', async function (require) {
      */
 
     const session = require('web.session');
-    const testUtilsCreate = require('web.test_utils_create');
-    const testUtilsControlPanel = require('web.test_utils_control_panel');
-    const testUtilsDom = require('web.test_utils_dom');
-    const testUtilsFields = require('web.test_utils_fields');
-    const testUtilsFile = require('web.test_utils_file');
-    const testUtilsForm = require('web.test_utils_form');
-    const testUtilsGraph = require('web.test_utils_graph');
-    const testUtilsKanban = require('web.test_utils_kanban');
-    const testUtilsMock = require('web.test_utils_mock');
-    const testUtilsModal = require('web.test_utils_modal');
-    const testUtilsPivot = require('web.test_utils_pivot');
+    const testUtilsCreate = require('@web/../tests/legacy/helpers/test_utils_create');
+    const testUtilsControlPanel = require('@web/../tests/legacy/helpers/test_utils_control_panel');
+    const testUtilsDom = require('@web/../tests/legacy/helpers/test_utils_dom');
+    const testUtilsFields = require('@web/../tests/legacy/helpers/test_utils_fields');
+    const testUtilsFile = require('@web/../tests/legacy/helpers/test_utils_file');
+    const testUtilsForm = require('@web/../tests/legacy/helpers/test_utils_form');
+    const testUtilsGraph = require('@web/../tests/legacy/helpers/test_utils_graph');
+    const testUtilsKanban = require('@web/../tests/legacy/helpers/test_utils_kanban');
+    const testUtilsMock = require('@web/../tests/legacy/helpers/test_utils_mock');
+    const testUtilsModal = require('@web/../tests/legacy/helpers/test_utils_modal');
+    const testUtilsPivot = require('@web/../tests/legacy/helpers/test_utils_pivot');
     const tools = require('web.tools');
 
 

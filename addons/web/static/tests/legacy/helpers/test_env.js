@@ -1,8 +1,8 @@
-/** @odoo-module alias=web.test_env **/
+/** @odoo-module **/
     
     import Bus from "web.Bus";
     import session from "web.session";
-    import { makeTestEnvServices } from "@web/../tests/legacy/helpers/test_services";
+    import { makeTestEnvServices } from "./test_services";
     import { templates, setLoadXmlDefaultApp } from "@web/core/assets";
     import { renderToString } from "@web/core/utils/render";
     const { App, Component } = owl;
@@ -18,7 +18,7 @@
      * @param {Function} [providedRPC=null]
      * @returns {Proxy}
      */
-    function makeTestEnvironment(env = {}, providedRPC = null) {
+    export function makeTestEnvironment(env = {}, providedRPC = null) {
         if (!app) {
             app = new App(null, { templates, test: true });
             renderToString.app = app;
@@ -82,5 +82,3 @@
     QUnit.on('OdooBeforeTestHook', function () {
         Component.env = makeTestEnvironment();
     });
-
-    export default makeTestEnvironment;

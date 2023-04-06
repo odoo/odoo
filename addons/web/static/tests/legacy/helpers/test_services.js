@@ -2,7 +2,7 @@
 
 import { buildQuery } from 'web.rpc';
 
-const testEnvServices = {
+export const testEnvServices = {
     getCookie() {},
     httpRequest(/* route, params = {}, readMethod = 'json' */) {
         return Promise.resolve('');
@@ -17,7 +17,7 @@ const testEnvServices = {
  * @param {Object} [env]
  * @returns {Object}
  */
-function makeTestEnvServices(env) {
+export function makeTestEnvServices(env) {
     return Object.assign({}, testEnvServices, {
         ajax: {
             rpc() {
@@ -31,8 +31,3 @@ function makeTestEnvServices(env) {
         ui: { activeElement: document }, // fake service
     }, env.services);
 }
-
-export {
-    makeTestEnvServices,
-    testEnvServices,
-};

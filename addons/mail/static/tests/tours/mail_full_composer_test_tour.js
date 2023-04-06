@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { createFile, inputFiles } from "web.test_utils_file";
+import { createFile, inputFiles } from "@web/../tests/legacy/helpers/test_utils_file";
 
 import { registry } from "@web/core/registry";
 

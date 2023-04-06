@@ -11,7 +11,7 @@
     import { LegacyComponent } from "@web/legacy/legacy_component";
     import { mapLegacyEnvToWowlEnv, useWowlService } from "@web/legacy/utils";
 
-    import makeTestEnvironment from "web.test_env";
+    import { makeTestEnvironment } from "@web/../tests/legacy/helpers/test_env";
     import { makeTestEnv } from "@web/../tests/helpers/mock_env";
     import { getFixture, mount, useLogLifeCycle, destroy } from "@web/../tests/helpers/utils";
 

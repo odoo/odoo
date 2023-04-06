@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_create **/
+/** @odoo-module **/
     
     /**
      * Create Test Utils
@@ -14,10 +14,17 @@
     import ControlPanel from "web.ControlPanel";
     import { useListener } from "@web/core/utils/hooks";
     import dom from "web.dom";
-    import makeTestEnvironment from "web.test_env";
+    import { makeTestEnvironment } from "./test_env";
     import ActionModel from "web.ActionModel";
     import Registry from "web.Registry";
-    import testUtilsMock from "web.test_utils_mock";
+    import {
+        addMockEnvironment,
+        addMockEnvironmentOwl,
+        getView,
+        intercept,
+        patch,
+        unpatch
+    } from "./test_utils_mock";
     import Widget from "web.Widget";
     import { destroy, getFixture, mount, useChild } from "@web/../tests/helpers/utils";
     import { registerCleanup } from "@web/../tests/helpers/cleanup";
@@ -39,7 +46,7 @@
      * @param {boolean} [options.positionalClicks=false]
      * @returns {Promise<CalendarController>}
      */
-    async function createCalendarView(params, options) {
+    export async function createCalendarView(params, options) {
         const calendar = await createView(params);
         if (!options || !options.positionalClicks) {
             return calendar;
@@ -74,14 +81,14 @@
      * @param {Object} [params.props]
      * @returns {Promise<Component>} instance of `constructor`
      */
-    async function createComponent(constructor, params = {}) {
+    export async function createComponent(constructor, params = {}) {
         if (!constructor) {
             throw new Error(`Missing argument "constructor".`);
         }
         if (!(constructor.prototype instanceof Component)) {
             throw new Error(`Argument "constructor" must be an Owl Component.`);
         }
-        const cleanUp = await testUtilsMock.addMockEnvironmentOwl(Component, params);
+        const cleanUp = await addMockEnvironmentOwl(Component, params);
         class Parent extends LegacyComponent {
             setup() {
                 this.Component = constructor;
@@ -120,7 +127,7 @@
      *  - helpers: a suite of bound helpers (see above functions for all
      *    available helpers)
      */
-    async function createControlPanel(params = {}) {
+    export async function createControlPanel(params = {}) {
         const env = makeTestEnvironment(params.env || {});
         const props = Object.assign({
             action: {},
@@ -137,11 +144,11 @@
                 model,
                 data: { [model]: { fields: globalConfig.fields, records: [] } },
             };
-            const mockServer = await testUtilsMock.addMockEnvironment(
+            const mockServer = await addMockEnvironment(
                 new Widget(),
                 serverParams,
             );
-            const { arch } = testUtilsMock.getView(mockServer, {
+            const { arch } = getView(mockServer, {
                 arch: globalConfig.arch,
                 fields: globalConfig.fields,
                 model,
@@ -201,12 +208,12 @@
      * @param {Class} params.Model the model class to use
      * @returns {Model}
      */
-    async function createModel(params) {
+    export async function createModel(params) {
         const widget = new Widget();
 
         const model = new params.Model(widget, params);
 
-        await testUtilsMock.addMockEnvironment(widget, params);
+        await addMockEnvironment(widget, params);
 
         // override the model's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the model and the mockServer.
@@ -227,9 +234,9 @@
      *   any parameters from that method applies
      * @returns {Promise<Widget>}
      */
-    async function createParent(params) {
+    export async function createParent(params) {
         const widget = new Widget();
-        await testUtilsMock.addMockEnvironment(widget, params);
+        await addMockEnvironment(widget, params);
         return widget;
     }
 
@@ -263,7 +270,7 @@
      *   device with a touch screen. Default value is false
      * @returns {Promise<AbstractController>} the instance of the view
      */
-    async function createView(params) {
+    export async function createView(params) {
         const target = prepareTarget(params.debug);
         const widget = new Widget();
         // reproduce the DOM environment of views
@@ -281,8 +288,8 @@
         webClient.append(dialogContainer);
 
         // add mock environment: mock server, session, fieldviewget, ...
-        const mockServer = await testUtilsMock.addMockEnvironment(widget, params);
-        const viewInfo = testUtilsMock.getView(mockServer, params);
+        const mockServer = await addMockEnvironment(widget, params);
+        const viewInfo = getView(mockServer, params);
 
         params.server = mockServer;
 
@@ -306,11 +313,11 @@
         }, params.viewOptions);
         // patch the View to handle the groupBy given in params, as we can't give it
         // in init (unlike the domain and context which can be set in the action)
-        testUtilsMock.patch(View, {
+        patch(View, {
             _updateMVCParams() {
                 this._super(...arguments);
                 this.loadParams.groupedBy = params.groupBy || viewOptions.groupBy || [];
-                testUtilsMock.unpatch(View);
+                unpatch(View);
             },
         });
         if ('hasSelectors' in params) {
@@ -322,7 +329,7 @@
             // TODO: probably needs to create an helper just for that
             view = new params.View({ viewInfo, modelName });
         } else {
-            viewOptions.controlPanelFieldsView = Object.assign(testUtilsMock.getView(mockServer, {
+            viewOptions.controlPanelFieldsView = Object.assign(getView(mockServer, {
                 arch: params.archs && params.archs[params.model + ',false,search'] || '<search/>',
                 fields: viewInfo.fields,
                 model: params.model,
@@ -333,7 +340,7 @@
 
         if (params.interceptsPropagate) {
             for (const name in params.interceptsPropagate) {
-                testUtilsMock.intercept(widget, name, params.interceptsPropagate[name], true);
+                intercept(widget, name, params.interceptsPropagate[name], true);
             }
         }
 
@@ -385,17 +392,7 @@
      *      the DOM. Also, RPCs and uncaught OdooEvent will be logged
      * @returns {HTMLElement}
      */
-    function prepareTarget(debug = false) {
+    export function prepareTarget(debug = false) {
         document.body.classList.toggle('debug', debug);
         return debug ? document.body : document.getElementById('qunit-fixture');
     }
-
-    export default {
-        createCalendarView,
-        createComponent,
-        createControlPanel,
-        createModel,
-        createParent,
-        createView,
-        prepareTarget,
-    };

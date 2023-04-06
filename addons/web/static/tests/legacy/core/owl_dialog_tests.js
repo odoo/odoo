@@ -1,7 +1,7 @@
 /** @odoo-module **/
     
     import LegacyDialog from "web.Dialog";
-    import makeTestEnvironment from "web.test_env";
+    import { makeTestEnvironment } from "@web/../tests/legacy/helpers/test_env";
     import Dialog from "web.OwlDialog";
     import testUtils from "web.test_utils";
 

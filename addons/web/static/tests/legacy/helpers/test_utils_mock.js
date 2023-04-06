@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_mock **/
+/** @odoo-module **/
 
 /**
  * Mock Test Utils
@@ -16,8 +16,8 @@ import Bus from "web.Bus";
 import config from "web.config";
 import core from "web.core";
 import dom from "web.dom";
-import makeTestEnvironment from "web.test_env";
-import MockServer from "web.MockServer";
+import { makeTestEnvironment } from "./test_env";
+import { MockServer } from "./mock_server";
 import RamStorage from "web.RamStorage";
 import session from "web.session";
 import { patchWithCleanup, patchDate } from "@web/../tests/helpers/utils";
@@ -256,7 +256,7 @@ function _observe(widget) {
  * @param {string} params.model
  * @returns {Object} an object with 3 keys: arch, fields and viewFields
  */
-function getView(server, params) {
+export function getView(server, params) {
     var view = server.getView(params);
     const fields = server.fieldsGet(params.model);
     // mock the structure produced by the DataManager
@@ -289,7 +289,7 @@ function getView(server, params) {
  * @param {function} fn callback executed when the even is intercepted
  * @param {boolean} [propagate=false]
  */
-function intercept(widget, eventName, fn, propagate) {
+export function intercept(widget, eventName, fn, propagate) {
     var _trigger_up = widget._trigger_up.bind(widget);
     widget._trigger_up = function (event) {
         if (event.name === eventName) {
@@ -326,7 +326,7 @@ function intercept(widget, eventName, fn, propagate) {
  * @param {MockServer} [mockServer]
  * @returns {Promise<function>} the cleanup function
  */
-async function addMockEnvironmentOwl(Component, params, mockServer) {
+export async function addMockEnvironmentOwl(Component, params, mockServer) {
     params = params || {};
 
     // instantiate a mockServer if not provided
@@ -508,7 +508,7 @@ async function addMockEnvironmentOwl(Component, params, mockServer) {
  *   function. It is necessary for createView so that method can call some
  *   other methods on it.
  */
-async function addMockEnvironment(widget, params) {
+export async function addMockEnvironment(widget, params) {
     // log events triggered up if debug flag is true
     if (params.debug) {
         _observe(widget);
@@ -615,6 +615,7 @@ function legacyPatchDate(year, month, day, hours, minutes, seconds) {
     patchDate(year, month, day, hours, minutes, seconds);
     return function () {}; // all calls to that function are now useless
 }
+export { legacyPatchDate as patchDate };
 
 var patches = {};
 /**
@@ -623,7 +624,7 @@ var patches = {};
  * @param {Class|Object} target
  * @param {Object} props
  */
-function patch(target, props) {
+export function patch(target, props) {
     var patchID = _.uniqueId('patch_');
     target.__patchID = patchID;
     patches[patchID] = {
@@ -679,7 +680,7 @@ function patch(target, props) {
  *
  * @param {Class|Object} target
  */
-function unpatch(target) {
+export function unpatch(target) {
     var patchID = target.__patchID;
     var patch = patches[patchID];
     if (target.prototype) {
@@ -702,7 +703,7 @@ function unpatch(target) {
 }
 
 window.originalSetTimeout = window.setTimeout;
-function patchSetTimeout() {
+export function patchSetTimeout() {
     var original = window.setTimeout;
     var self = this;
     window.setTimeout = function (handler, delay) {
@@ -719,14 +720,3 @@ function patchSetTimeout() {
         window.setTimeout = original;
     };
 }
-
-export default {
-    addMockEnvironment: addMockEnvironment,
-    getView: getView,
-    addMockEnvironmentOwl: addMockEnvironmentOwl,
-    intercept: intercept,
-    patchDate: legacyPatchDate,
-    patch: patch,
-    unpatch: unpatch,
-    patchSetTimeout: patchSetTimeout,
-};

@@ -1,7 +1,7 @@
 /** @odoo-module alias=web_editor.test_utils **/
 
 import ajax from "web.ajax";
-import MockServer from "web.MockServer";
+import { MockServer } from "@web/../tests/legacy/helpers/mock_server";
 import testUtils from "web.test_utils";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import Widget from "web.Widget";

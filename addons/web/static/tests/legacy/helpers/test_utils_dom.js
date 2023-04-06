@@ -1,4 +1,4 @@
-/** @odoo-module alias=web.test_utils_dom **/
+/** @odoo-module **/
     
     import concurrency from "web.concurrency";
     import Widget from "web.Widget";
@@ -131,7 +131,7 @@
      * @param {boolean} [options.last=false] if true, clicks on the last element
      * @returns {Promise}
      */
-    async function click(el, options = {}) {
+    export async function click(el, options = {}) {
         let matches, target;
         let selectorMsg = "";
         if (typeof el === 'string') {
@@ -188,7 +188,7 @@
      *   element event if it is invisible
      * @returns {Promise}
      */
-    async function clickFirst(el, options) {
+    export async function clickFirst(el, options) {
         return click(el, Object.assign({}, options, { first: true }));
     }
 
@@ -203,7 +203,7 @@
      *   element event if it is invisible
      * @returns {Promise}
      */
-    async function clickLast(el, options) {
+    export async function clickLast(el, options) {
         return click(el, Object.assign({}, options, { last: true }));
     }
 
@@ -237,7 +237,7 @@
      * @param {jQuery|EventTarget} [options.ctrlKey=undefined] if the ctrl key should be considered pressed at the time of mouseup
      * @returns {Promise}
      */
-    async function dragAndDrop($el, $to, options) {
+    export async function dragAndDrop($el, $to, options) {
         let el = null;
         if (_isEventTarget($el)) {
             el = $el;
@@ -323,7 +323,7 @@
      * @param {number | string} [elFinder=0]
      * @returns {Element | null}
      */
-    function findItem(el, selector, elFinder = 0) {
+    export function findItem(el, selector, elFinder = 0) {
         const elements = [...getNode(el).querySelectorAll(selector)];
         if (!elements.length) {
             throw new Error(`No element found with selector "${selector}".`);
@@ -367,7 +367,7 @@
      * @param {(Component|Widget|jQuery|HTMLCollection|HTMLElement|string)} target
      * @returns {EventTarget}
      */
-    function getNode(target) {
+    export function getNode(target) {
         let nodes;
         if (target instanceof Component || target instanceof Widget) {
             nodes = [target.el];
@@ -398,7 +398,7 @@
      *
      * @param {jQuery} $datepickerEl element to which a datepicker is attached
      */
-    async function openDatepicker($datepickerEl) {
+    export async function openDatepicker($datepickerEl) {
         return click($datepickerEl.find('.o_datepicker_input'));
     }
 
@@ -410,7 +410,7 @@
      *
      * @returns {Promise}
      */
-    async function returnAfterNextAnimationFrame() {
+    export async function returnAfterNextAnimationFrame() {
         await concurrency.delay(0);
         await new Promise(resolve => {
             window.requestAnimationFrame(resolve);
@@ -430,7 +430,7 @@
      * @param {Boolean} [fast=false] true if the trigger event have to wait for a single tick instead of waiting for the next animation frame
      * @returns {Promise}
      */
-    async function triggerEvent(el, eventType, eventAttrs = {}, fast = false) {
+    export async function triggerEvent(el, eventType, eventAttrs = {}, fast = false) {
         let matches;
         let selectorMsg = "";
         if (_isEventTarget(el)) {
@@ -469,7 +469,7 @@
      * @param {string[]} events the events you want to trigger
      * @returns {Promise}
      */
-    async function triggerEvents(el, events) {
+    export async function triggerEvents(el, events) {
         if (el instanceof jQuery) {
             if (el.length !== 1) {
                 throw new Error(`target has length ${el.length} instead of 1`);
@@ -490,7 +490,7 @@
      * @param {string} char the character, or 'ENTER'
      * @returns {Promise}
      */
-    async function triggerKeypressEvent(char) {
+    export async function triggerKeypressEvent(char) {
         let keycode;
         if (char === 'Enter') {
             keycode = $.ui.keyCode.ENTER;
@@ -515,7 +515,7 @@
      * @param {string} type a mouse event type, such as 'mousedown' or 'mousemove'
      * @returns {Promise}
      */
-    async function triggerMouseEvent($el, type) {
+    export async function triggerMouseEvent($el, type) {
         const el = $el instanceof jQuery ? $el[0] : $el;
         if (!el) {
             throw new Error(`no target found to trigger MouseEvent`);
@@ -538,7 +538,7 @@
      * @param {string} type a mouse event type, such as 'mousedown' or 'mousemove'
      * @returns {HTMLElement}
      */
-    async function triggerPositionalMouseEvent(x, y, type) {
+    export async function triggerPositionalMouseEvent(x, y, type) {
         const ev = document.createEvent("MouseEvent");
         const el = document.elementFromPoint(x, y);
         ev.initMouseEvent(
@@ -561,7 +561,7 @@
      * @param {number} y
      * @returns {HTMLElement}
      */
-    async function triggerPositionalTapEvents(x, y) {
+    export async function triggerPositionalTapEvents(x, y) {
         const element = document.elementFromPoint(x, y);
         const touch = new Touch({
             identifier: 0,
@@ -586,20 +586,3 @@
         });
         return element;
     }
-
-    export default {
-        click,
-        clickFirst,
-        clickLast,
-        dragAndDrop,
-        findItem,
-        getNode,
-        openDatepicker,
-        returnAfterNextAnimationFrame,
-        triggerEvent,
-        triggerEvents,
-        triggerKeypressEvent,
-        triggerMouseEvent,
-        triggerPositionalMouseEvent,
-        triggerPositionalTapEvents,
-    };

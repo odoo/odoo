@@ -2,7 +2,7 @@
     
     import DropdownMenu from "web.DropdownMenu";
     import testUtils from "web.test_utils";
-    import makeTestEnvironment  from "web.test_env";
+    import { makeTestEnvironment }  from "@web/../tests/legacy/helpers/test_env";
     import { mount } from "@web/../tests/helpers/utils";
     import { LegacyComponent } from "@web/legacy/legacy_component";
 
