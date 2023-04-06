@@ -35,11 +35,26 @@
     .o_mass_mailing_mailing_group {
         margin-top: $o-sheet-cancel-tpadding + 33px;
     }
+<<<<<<< HEAD
     .o-mail-Form-chatter {
+||||||| parent of 17ad3d099d0 (temp)
+    .o_FormRenderer_chatterContainer {
+=======
+    .o_FormRenderer_chatterContainer {
+        --ChatterTopbar-padding-left: 0;
+        --ChatterContainer-overflow: visible;
+        --ChatterTopbar-border: none;
+        --ActivityBox_title-margin: #{map-get($spacers, 1)};
+
+>>>>>>> 17ad3d099d0 (temp)
         margin: 0;
         max-width: unset;
         width: 100%;
         padding: 0;
+
+        .o_MessageListView_separator:first-child {
+            margin-top: -#{map-get($spacers, 3)};
+        }
     }
     .wysiwyg_iframe {
         border: none;
