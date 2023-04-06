@@ -509,9 +509,11 @@ export function getNormalizedCursorPosition(node, offset, full = true) {
             if (!leftInlineNode || leftVisibleEmpty) {
                 const rightInlineNode = rightLeafOnlyInScopeNotBlockPath(el, elOffset).next().value;
                 if (rightInlineNode) {
+                    const closest = closestElement(rightInlineNode);
                     const rightVisibleEmpty =
                         isVisibleEmpty(rightInlineNode) ||
-                        !closestElement(rightInlineNode).isContentEditable;
+                        !closest ||
+                        !closest.isContentEditable;
                     if (!(leftVisibleEmpty && rightVisibleEmpty)) {
                         [node, offset] = rightVisibleEmpty
                             ? leftPos(rightInlineNode)

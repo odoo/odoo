@@ -619,6 +619,23 @@ describe('Link', () => {
                 contentAfter: '<p>a<a href="#/">123[]</a>c</p>',
             });
         });
+        it('should delete the content from the link when popover is active', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p><a href="#/">abc[]abc</a></p>',
+                stepFunction: async editor => {
+                    const a = await clickOnLink(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackward(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackward(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackward(editor);
+                    window.chai.expect(a.parentElement.isContentEditable).to.be.equal(false);
+                    await deleteBackward(editor);
+                },
+                contentAfter: '<p><a href="#/">[]abc</a></p>',
+            });
+        });
     });
     describe('existing link', () => {
         it('should parse correctly a span inside a Link', async () => {
