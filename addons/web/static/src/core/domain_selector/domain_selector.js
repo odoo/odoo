@@ -13,7 +13,10 @@ import {
 } from "@web/core/domain_selector/domain_selector_fields";
 import { BranchDomainNode } from "@web/core/domain_selector/domain_selector_nodes";
 import { findOperator } from "@web/core/domain_selector/domain_selector_operators";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import {
+    loadFieldInfo,
+    ModelFieldSelector,
+} from "@web/core/model_field_selector/model_field_selector";
 import { useService } from "@web/core/utils/hooks";
 
 export class DomainSelector extends Component {
@@ -113,16 +116,8 @@ export class DomainSelector extends Component {
         if ("01".includes(field.toString())) {
             return { type: "integer" };
         }
-        if (typeof field !== "string" || !field) {
-            return null;
-        }
-        const { isInvalid, names, modelsInfo } = await this.fieldService.loadPath(resModel, field);
-        if (isInvalid) {
-            return null;
-        }
-        const name = names.at(-1);
-        const { fieldDefs } = modelsInfo.at(-1);
-        return fieldDefs[name];
+        const { fieldDef } = await loadFieldInfo(this.fieldService, resModel, field);
+        return fieldDef;
     }
 
     createNewLeaf() {
@@ -154,13 +149,20 @@ export class DomainSelector extends Component {
         this.notifyChanges();
     }
 
+    resetDomain() {
+        this.notifyChanges();
+    }
+
     updateBranchOperator(node, operator) {
         node.operator = operator;
         this.notifyChanges();
     }
 
-    async updateField(node, field) {
-        const fieldDef = await this.loadFieldDef(this.props.resModel, field);
+    updateField(node, field, { fieldDef }) {
+        if (!fieldDef) {
+            field = "";
+            fieldDef = { type: "integer" };
+        }
         node.field = { ...fieldDef, name: field };
         node.operator = getOperatorsInfo(fieldDef.type)[0];
         node.value = getDefaultFieldValue(fieldDef);

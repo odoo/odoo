@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useModelField } from "@web/core/model_field_selector/model_field_hook";
 import { useService } from "@web/core/utils/hooks";
-import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
 import { useComponent } from "@odoo/owl";
+import { DynamicPlaceholderPopover } from "./dynamic_placeholder_popover";
 
 export function useDynamicPlaceholder(elementRef) {
     const TRIGGER_KEY = "#";
@@ -12,25 +11,23 @@ export function useDynamicPlaceholder(elementRef) {
     const triggerKeyReplaceRegex = new RegExp(`${TRIGGER_KEY}$`);
     let closeCallback;
     let positionCallback;
-    const popover = usePopover(ModelFieldSelectorPopover, {
+    const popover = usePopover(DynamicPlaceholderPopover, {
         onclose: () => closeCallback?.(),
         onPositioned: () => positionCallback?.(),
     });
-    const modelField = useModelField();
     const notification = useService("notification");
 
     let model = null;
-    let dynamicPlaceholderChain = [];
 
-    const onDynamicPlaceholderValidate = function (chain, defaultValue) {
+    const onDynamicPlaceholderValidate = function (path, defaultValue) {
         const element = elementRef?.el;
         if (!element) {
             return;
         }
         let rangeIndex = parseInt(element.getAttribute("data-oe-dynamic-placeholder-range-index"));
-        // When the user cancel/close the popover, the chain is empty.
-        if (chain) {
-            let dynamicPlaceholder = "{{object." + chain.join(".");
+        // When the user cancel/close the popover, the path is empty.
+        if (path) {
+            let dynamicPlaceholder = "{{object." + path;
             dynamicPlaceholder +=
                 defaultValue && defaultValue !== "" ? ` or '''${defaultValue}'''}}` : "}}";
 
@@ -73,19 +70,11 @@ export function useDynamicPlaceholder(elementRef) {
                 { type: "danger" }
             );
         }
-
-        dynamicPlaceholderChain = await modelField.loadChain(model, "");
         closeCallback = opts.closeCallback;
         positionCallback = opts.positionCallback;
         popover.open(elementRef?.el, {
-            chain: dynamicPlaceholderChain,
-            update: (chain) => (dynamicPlaceholderChain = chain),
+            resModel: model,
             validate: opts.validateCallback,
-            showSearchInput: true,
-            isDebugMode: true,
-            needDefaultValue: true,
-            loadChain: modelField.loadChain,
-            filter: (model) => !["one2many", "boolean", "many2many"].includes(model.type),
         });
     }
     async function onKeydown(ev) {

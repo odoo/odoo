@@ -235,9 +235,9 @@ QUnit.module("Search", (hooks) => {
         await openAdvancedSearchDialog(target);
         assert.containsOnce(target, ".modal");
         assert.containsOnce(target, ".modal .modal-body .o_domain_selector");
-        assert.containsOnce(target, ".o_field_selector");
+        assert.containsOnce(target, ".o_model_field_selector");
         assert.strictEqual(
-            target.querySelector(".o_field_selector").innerText,
+            target.querySelector(".o_model_field_selector").innerText,
             "Floaty McFloatface"
         );
         assert.containsOnce(target, ".o_domain_leaf_operator_select");
@@ -273,7 +273,7 @@ QUnit.module("Search", (hooks) => {
         await toggleFilterMenu(target);
         await openAdvancedSearchDialog(target);
 
-        assert.strictEqual(target.querySelector(".o_field_selector").innerText, "User");
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "User");
         assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
         assert.strictEqual(target.querySelector(".o_ds_value_cell input").value, "7");
     });
@@ -604,7 +604,7 @@ QUnit.module("Search", (hooks) => {
         await openAdvancedSearchDialog(target);
 
         assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_field_selector_chain_part")),
+            getNodesTextContent(target.querySelectorAll(".o_model_field_selector_chain_part")),
             ["DateTime", "DateTime", "A date", "A date"]
         ); // 0 not found!
 

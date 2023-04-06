@@ -3,8 +3,8 @@
 
     <t t-name="web._DomainSelector" owl="1">
         <div class="o_domain_node o_domain_tree o_domain_selector" aria-atomic="true" t-att-class="className" t-ref="root">
-            <t t-set="node" t-value="tree.root" />
             <t t-if="tree.isSupported">
+                <t t-set="node" t-value="tree.root" />
                 <t t-if="node.children.length === 0">
                     <span>Match <strong>all records</strong></span>
                     <t t-if="!props.readonly">
@@ -27,7 +27,7 @@
             <t t-else="">
                 This domain is not supported.
                 <t t-if="!props.readonly">
-                    <button class="btn btn-sm btn-primary o_domain_add_first_node_button ms-1" t-on-click="() => this.insertRootLeaf(node)">Reset domain</button>
+                    <button class="btn btn-sm btn-primary o_reset_domain_button ms-1" t-on-click="() => this.resetDomain()">Reset domain</button>
                 </t>
             </t>
             <t t-if="props.isDebugMode and (!tree.isSupported or !props.readonly)">
@@ -138,7 +138,7 @@
     </t>
 
     <t t-name="web._DomainSelector.leaf:readonly" owl="1">
-        <ModelFieldSelector fieldName="node.field.name" resModel="props.resModel" readonly="true" />
+        <ModelFieldSelector path="node.field.name" resModel="props.resModel" readonly="true" />
         <t t-if="typeof node.value === 'boolean'">
             is <t t-if="node.value ? ['is_not', 'not_equal'].includes(node.operator.key) : ['is', 'equal'].includes(node.operator.key)"> not </t> set
         </t>
@@ -156,8 +156,7 @@
     </t>
 
     <t t-name="web._DomainSelector.leaf:editable" owl="1">
-        <ModelFieldSelector fieldName="node.field.name" resModel="props.resModel" readonly="false" update="(field) => this.updateField(node, field)" isDebugMode="props.isDebugMode" />
-
+        <ModelFieldSelector path="node.field.name" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updateField(node, path, fieldInfo)" isDebugMode="props.isDebugMode" />
         <div>
             <select class="o_domain_leaf_operator_select o_input text-truncate pe-3" t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">
                 <t t-foreach="getOperatorsInfo(node)" t-as="operator" t-key="operator.key">
@@ -165,7 +164,6 @@
                 </t>
             </select>
         </div>
-
         <t t-if="node.operator.valueMode !== 'none'">
             <div class="o_ds_value_cell">
                 <t t-set="editor" t-value="getEditorInfo(node)" />

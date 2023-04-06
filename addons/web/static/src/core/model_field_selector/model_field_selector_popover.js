@@ -1,202 +1,274 @@
 /** @odoo-module **/
 
-import { sortBy } from "../utils/arrays";
-import { useModelField } from "./model_field_hook";
-
+import { Component, onWillStart, useEffect, useRef, useState } from "@odoo/owl";
+import { debounce } from "@web/core/utils/timing";
 import { fuzzyLookup } from "@web/core/utils/search";
-import { useAutofocus } from "../utils/hooks";
+import { KeepLast } from "@web/core/utils/concurrency";
+import { sortBy } from "@web/core/utils/arrays";
+import { useService } from "@web/core/utils/hooks";
 
-import { Component, onWillStart } from "@odoo/owl";
-
-export class ModelFieldSelectorPopover extends Component {
-    setup() {
-        this.chain = Array.from(this.props.chain);
-        this.modelField = useModelField();
-        this.unfilteredFields = {};
-        this.fields = {};
-        this.fieldKeys = [];
-        this.currentActiveFieldId = 0;
-        this.searchValue = "";
-        this.defaultValue = "";
-        this.isDefaultValueVisible = false;
-        this.fullFieldName = this.fieldNameChain.join(".");
-        if (!this.env.isSmall) {
-            useAutofocus();
-            useAutofocus({ refName: "autofocusDefaultValue", selectAll: true });
-        }
-
-        onWillStart(async () => {
-            await this.loadFields();
-        });
+class Page {
+    constructor(resModel, fieldDefs, previousPage = null, selectedName = null) {
+        this.resModel = resModel;
+        this.fieldDefs = fieldDefs;
+        this.previousPage = previousPage;
+        this.selectedName = selectedName;
+        this.sortedFieldNames = sortBy(Object.keys(fieldDefs), (key) => fieldDefs[key].string);
+        this.fieldNames = this.sortedFieldNames;
+        this.query = "";
+        this.focusedFieldName = null;
+        this.resetFocusedFieldName();
     }
 
-    get currentActiveField() {
-        return this.fieldKeys[this.currentActiveFieldId];
-    }
-
-    get currentNode() {
-        return this.chain[this.chain.length - 1];
-    }
-    get currentFieldName() {
-        const nodes = this.chain.filter((node) => node.field);
-        return nodes.length ? nodes[nodes.length - 1].field.string : "";
-    }
-
-    get fieldNameChain() {
-        return this.chain.filter((node) => node.field).map((node) => node.field.name);
-    }
-
-    async loadFields() {
-        this.unfilteredFields = await this.modelField.loadModelFields(this.currentNode.resModel);
-        this.fields = { ...this.unfilteredFields };
-        this.fieldKeys = this.sortedKeys(this.fields);
-        for (const key of this.fieldKeys) {
-            const field = this.fields[key];
-            if (!field.searchable || !this.props.filter(field)) {
-                delete this.fields[key];
+    get path() {
+        const previousPath = this.previousPage?.path || "";
+        if (this.selectedName) {
+            if (previousPath) {
+                return `${previousPath}.${this.selectedName}`;
+            } else {
+                return this.selectedName;
             }
         }
-        this.fieldKeys = this.sortedKeys(this.fields);
+        return previousPath;
     }
-    sortedKeys(obj) {
-        const keys = Object.keys(obj);
-        return sortBy(keys, (key) => obj[key].string);
+
+    get selectedField() {
+        return this.fieldDefs[this.selectedName];
     }
-    async update(isSelected) {
-        const fieldNameChain = this.fieldNameChain.join(".");
-        this.fullFieldName = fieldNameChain;
-        await this.loadFields();
-        await this.props.update(fieldNameChain, isSelected);
-        if (isSelected) {
-            this.props.close();
+
+    get title() {
+        const prefix = this.previousPage?.previousPage ? "... > " : "";
+        const title = this.previousPage?.selectedField.string || "";
+        return `${prefix}${title}`;
+    }
+
+    focus(direction) {
+        if (!this.fieldNames.length) {
+            return;
+        }
+        const index = this.fieldNames.indexOf(this.focusedFieldName);
+        if (direction === "previous") {
+            if (index === 0) {
+                this.focusedFieldName = this.fieldNames[this.fieldNames.length - 1];
+            } else {
+                this.focusedFieldName = this.fieldNames[index - 1];
+            }
         } else {
-            this.render();
+            if (index === this.fieldNames.length - 1) {
+                this.focusedFieldName = this.fieldNames[0];
+            } else {
+                this.focusedFieldName = this.fieldNames[index + 1];
+            }
         }
     }
 
-    async onInputKeydown(ev) {
+    resetFocusedFieldName() {
+        if (this.selectedName && this.fieldNames.includes(this.selectedName)) {
+            this.focusedFieldName = this.selectedName;
+        } else {
+            this.focusedFieldName = this.fieldNames.length ? this.fieldNames[0] : null;
+        }
+    }
+
+    searchFields(query = "") {
+        this.query = query;
+        this.fieldNames = this.sortedFieldNames;
+        if (query) {
+            this.fieldNames = fuzzyLookup(
+                query,
+                this.fieldNames,
+                (key) => this.fieldDefs[key].string
+            );
+        }
+        this.resetFocusedFieldName();
+    }
+}
+
+export class ModelFieldSelectorPopover extends Component {
+    static template = "web.ModelFieldSelectorPopover";
+    static props = {
+        close: Function,
+        filter: { type: Function, optional: true },
+        followRelations: { type: Boolean, optional: true },
+        isDebugMode: { type: Boolean, optional: true },
+        path: String,
+        resModel: String,
+        showSearchInput: { type: Boolean, optional: true },
+        update: Function,
+    };
+    static defaultProps = {
+        filter: (fieldDef) => fieldDef.searchable,
+        isDebugMode: false,
+        followRelations: true,
+    };
+
+    setup() {
+        this.fieldService = useService("field");
+        this.state = useState({ page: null });
+
+        this.keepLast = new KeepLast();
+
+        this.debouncedSearchFields = debounce(this.searchFields.bind(this), 250);
+
+        onWillStart(async () => {
+            this.state.page = await this.loadPages(this.props.resModel, this.props.path);
+        });
+
+        const rootRef = useRef("root");
+        useEffect(() => {
+            const focusedElement = rootRef.el.querySelector(
+                ".o_model_field_selector_popover_item.active"
+            );
+            if (focusedElement) {
+                // current page can be empty (e.g. after a search)
+                focusedElement.scrollIntoView({ block: "center" });
+            }
+        });
+        useEffect(
+            () => {
+                if (this.props.showSearchInput) {
+                    const searchInput = rootRef.el.querySelector(
+                        ".o_model_field_selector_popover_search .o_input"
+                    );
+                    searchInput.focus();
+                }
+            },
+            () => [this.state.page]
+        );
+    }
+
+    filter(fieldDefs, path) {
+        const filteredKeys = Object.keys(fieldDefs).filter((k) =>
+            this.props.filter(fieldDefs[k], path)
+        );
+        return Object.fromEntries(filteredKeys.map((k) => [k, fieldDefs[k]]));
+    }
+
+    async followRelation(fieldDef) {
+        const { modelsInfo } = await this.keepLast.add(
+            this.fieldService.loadPath(this.state.page.resModel, `${fieldDef.name}.*`)
+        );
+        this.state.page.selectedName = fieldDef.name;
+        const { resModel, fieldDefs } = modelsInfo.at(-1);
+        this.openPage(
+            new Page(resModel, this.filter(fieldDefs, this.state.page.path), this.state.page)
+        );
+    }
+
+    goToPreviousPage() {
+        this.keepLast.add(Promise.resolve());
+        this.openPage(this.state.page.previousPage);
+    }
+
+    async loadNewPath(path) {
+        const newPage = await this.keepLast.add(this.loadPages(this.props.resModel, path));
+        this.openPage(newPage);
+    }
+
+    async loadPages(resModel, path) {
+        if (typeof path !== "string" || !path.length) {
+            const fieldDefs = await this.fieldService.loadFields(resModel);
+            return new Page(resModel, this.filter(fieldDefs, path));
+        }
+        const { isInvalid, modelsInfo, names } = await this.fieldService.loadPath(resModel, path);
+        switch (isInvalid) {
+            case "model":
+                throw new Error(`Invalid model name: ${resModel}`);
+            case "path": {
+                const { resModel, fieldDefs } = modelsInfo[0];
+                return new Page(resModel, this.filter(fieldDefs, path), null, path);
+            }
+            default: {
+                let page = null;
+                for (let index = 0; index < names.length; index++) {
+                    const name = names[index];
+                    const { resModel, fieldDefs } = modelsInfo[index];
+                    page = new Page(resModel, this.filter(fieldDefs, path), page, name);
+                }
+                return page;
+            }
+        }
+    }
+
+    openPage(page) {
+        this.state.page = page;
+        this.state.page.searchFields();
+        this.props.update(page.path);
+    }
+
+    searchFields(query) {
+        this.state.page.searchFields(query);
+    }
+
+    selectField(field) {
+        this.keepLast.add(Promise.resolve());
+        this.state.page.selectedName = field.name;
+        this.props.update(this.state.page.path);
+        this.props.close();
+    }
+
+    onDebugInputKeydown(ev) {
         switch (ev.key) {
-            case "ArrowUp":
+            case "Enter": {
                 ev.preventDefault();
                 ev.stopPropagation();
-                if (this.currentActiveFieldId > 0) {
-                    this.currentActiveFieldId--;
-                    await this.render();
+                this.loadNewPath(ev.currentTarget.value);
+                break;
+            }
+        }
+    }
+
+    // @TODO should rework/improve this and maybe use hotkeys
+    async onInputKeydown(ev) {
+        const { page } = this.state;
+        switch (ev.key) {
+            case "ArrowUp": {
+                if (ev.target.selectionStart === 0) {
+                    page.focus("previous");
                 }
                 break;
-            case "ArrowDown":
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (this.currentActiveFieldId < this.fieldKeys.length - 1) {
-                    this.currentActiveFieldId++;
-                    await this.render();
+            }
+            case "ArrowDown": {
+                if (ev.target.selectionStart === page.query.length) {
+                    page.focus("next");
                 }
                 break;
-            case "ArrowLeft":
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.onPreviousBtnClick();
+            }
+            case "ArrowLeft": {
+                if (ev.target.selectionStart === 0 && page.previousPage) {
+                    this.goToPreviousPage();
+                }
                 break;
-            case "Escape":
+            }
+            case "ArrowRight": {
+                if (ev.target.selectionStart === page.query.length) {
+                    const focusedFieldName = this.state.page.focusedFieldName;
+                    if (focusedFieldName) {
+                        const fieldDef = this.state.page.fieldDefs[focusedFieldName];
+                        if (fieldDef.relation) {
+                            this.followRelation(fieldDef);
+                        }
+                    }
+                }
+                break;
+            }
+            case "Enter": {
+                const focusedFieldName = this.state.page.focusedFieldName;
+                if (focusedFieldName) {
+                    const fieldDef = this.state.page.fieldDefs[focusedFieldName];
+                    this.selectField(fieldDef);
+                } else {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
+                break;
+            }
+            case "Escape": {
                 ev.preventDefault();
                 ev.stopPropagation();
                 this.props.close();
                 break;
-            case "Enter":
-            case "ArrowRight":
-                ev.preventDefault();
-                ev.stopPropagation();
-                if (this.isDefaultValueVisible) {
-                    this.selectDefaultValue(true);
-                } else {
-                    const field = {
-                        ...this.fields[this.currentActiveField],
-                        name: this.currentActiveField,
-                    };
-                    this.onFieldSelected(field);
-                }
-                break;
-        }
-    }
-    onSearch(ev) {
-        this.searchValue = ev.target.value;
-        let fieldKeys = this.sortedKeys(this.fields);
-        if (this.searchValue) {
-            fieldKeys = fuzzyLookup(this.searchValue, fieldKeys, (key) => this.fields[key].string);
-        }
-        this.fieldKeys = fieldKeys;
-        this.render();
-    }
-    onDefaultValue(ev) {
-        this.defaultValue = ev.target.value;
-        this.render();
-    }
-    onPreviousBtnClick() {
-        this.searchValue = "";
-        if (this.currentNode.field === null) {
-            this.chain.pop();
-        }
-        this.currentNode.field = null;
-        this.update();
-    }
-    onFieldSelected(field) {
-        this.searchValue = "";
-        this.currentActiveFieldId = 0;
-        this.currentNode.field = field;
-        if (field.relation && this.props.followRelations) {
-            this.chain.push({
-                resModel: field.relation,
-                field: null,
-            });
-            this.update();
-        } else if (this.props.needDefaultValue) {
-            this.isDefaultValueVisible = true;
-            this.update();
-        } else {
-            this.update(true);
-            this.props.validate(this.fieldNameChain, this.defaultValue);
-        }
-    }
-    selectDefaultValue(acceptDefaultValue) {
-        if (!acceptDefaultValue) {
-            this.defaultValue = "";
-        }
-        this.update(true);
-        this.props.validate(this.fieldNameChain, this.defaultValue);
-    }
-    async onFieldNameChange(ev) {
-        this.fullFieldName = ev.target.value.replace(/\s+/g, "");
-        const { resModel } = this.props.chain[0];
-        try {
-            this.chain = await this.props.loadChain(resModel, this.fullFieldName);
-            this.update();
-        } catch {
-            // WOWL TODO: rethrow error when not the expected type
-            this.chain = [{ resModel, field: null }];
-            await this.props.update("");
-            this.render();
+            }
         }
     }
 }
-
-ModelFieldSelectorPopover.defaultProps = {
-    validate: () => {},
-    needDefaultValue: false,
-    isDebugMode: false,
-    followRelations: true,
-};
-
-ModelFieldSelectorPopover.props = {
-    chain: Array,
-    update: Function,
-    showSearchInput: Boolean,
-    isDebugMode: { type: Boolean, optional: true },
-    loadChain: Function,
-    filter: Function,
-    close: Function,
-    followRelations: { type: Boolean, optional: true },
-    needDefaultValue: { type: Boolean, optional: true },
-    validate: { type: Function, optional: true },
-};
-
-ModelFieldSelectorPopover.template = "web.ModelFieldSelectorPopover";

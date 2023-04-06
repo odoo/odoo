@@ -91,22 +91,22 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/dynamic_placeho
         },
         {
             content: "Check if the dynamic placeholder popover is opened",
-            trigger: "div.o_field_selector_popover",
+            trigger: "div.o_model_field_selector_popover",
             run: function () {},
         },
         {
             content: "Click on the first entry of the dynamic placeholder",
-            trigger: "div.o_field_selector_popover li:first-child",
+            trigger: "div.o_model_field_selector_popover li:first-child",
         },
         {
             content: "Enter a default value",
             trigger:
-                'div.o_field_selector_popover .o_field_selector_default_value_input input[type="text"]',
+                'div.o_model_field_selector_popover .o_model_field_selector_default_value_input input[type="text"]',
             run: "text defValue",
         },
         {
             content: "Click on the the dynamic placeholder default value",
-            trigger: "div.o_field_selector_popover li:first-child",
+            trigger: "div.o_model_field_selector_popover li:first-child",
         },
         {
             content: "Wait for the popover to disappear",

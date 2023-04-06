@@ -14,6 +14,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { click, editInput, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
+import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 
 let serverData;
 let target;
@@ -108,13 +109,13 @@ QUnit.module("Components", (hooks) => {
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
         await click(target, ".o_domain_add_first_node_button");
-        assert.containsOnce(target, ".o_field_selector", "there should be a field selector");
+        assert.containsOnce(target, ".o_model_field_selector");
 
         // Focusing the field selector input should open a field selector popover
-        await click(target, ".o_field_selector");
+        await click(target, ".o_model_field_selector");
         assert.containsOnce(
             document.body,
-            ".o_field_selector_popover",
+            ".o_model_field_selector_popover",
             "field selector popover should be visible"
         );
 
@@ -122,14 +123,20 @@ QUnit.module("Components", (hooks) => {
         // fields. "Bar" should be among them. "Bar" result li will display the
         // name of the field and some debug info.
         assert.strictEqual(
-            document.body.querySelector(".o_field_selector_popover li").textContent,
+            document.body.querySelector(
+                ".o_model_field_selector_popover .o_model_field_selector_popover_item_name"
+            ).textContent,
             "Barbar (boolean)",
             "field selector popover should contain the 'Bar' field"
         );
 
         // Clicking the "Bar" field should change the internal domain and this
         // should be displayed in the debug textarea
-        await click(document.body.querySelector(".o_field_selector_popover li"));
+        await click(
+            document.body.querySelector(
+                ".o_model_field_selector_popover .o_model_field_selector_popover_item_name"
+            )
+        );
         assert.containsOnce(target, "textarea.o_domain_debug_input");
         assert.strictEqual(
             target.querySelector(".o_domain_debug_input").value,
@@ -429,7 +436,10 @@ QUnit.module("Components", (hooks) => {
                 "should still have a single domain node"
             );
 
-            assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "1");
+            assert.strictEqual(
+                target.querySelector(".o_model_field_selector_chain_part").innerText,
+                "1"
+            );
             assert.strictEqual(
                 target.querySelector(".o_domain_leaf_operator_select").value,
                 "equal"
@@ -451,7 +461,10 @@ QUnit.module("Components", (hooks) => {
                 "should still have a single domain node"
             );
 
-            assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "0");
+            assert.strictEqual(
+                target.querySelector(".o_model_field_selector_chain_part").innerText,
+                "0"
+            );
             assert.strictEqual(
                 target.querySelector(".o_domain_leaf_operator_select").value,
                 "equal"
@@ -545,7 +558,10 @@ QUnit.module("Components", (hooks) => {
         // Create the domain selector and its mock environment
         await mountComponent(Parent);
 
-        assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "State");
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_chain_part").innerText,
+            "State"
+        );
         assert.strictEqual(
             target.querySelector(".o_domain_leaf_operator_select").value,
             "not_equal"
@@ -553,7 +569,10 @@ QUnit.module("Components", (hooks) => {
 
         await editSelect(target, ".o_domain_leaf_operator_select", "equal");
 
-        assert.strictEqual(target.querySelector(".o_field_selector_chain_part").innerText, "State");
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_chain_part").innerText,
+            "State"
+        );
         assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal"); // option "="
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, `"abc"`);
     });
@@ -637,7 +656,7 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: false,
             },
         });
-        assert.containsNone(target, ".o_domain_add_first_node_button");
+        assert.containsNone(target, ".o_reset_domain_button");
         assert.containsNone(target, ".o_domain_debug_input");
     });
 
@@ -650,7 +669,7 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: true,
             },
         });
-        assert.containsNone(target, ".o_domain_add_first_node_button");
+        assert.containsNone(target, ".o_reset_domain_button");
         assert.containsOnce(target, ".o_domain_debug_input");
         assert.ok(target.querySelector(".o_domain_debug_input").hasAttribute("readonly"));
     });
@@ -664,7 +683,7 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: false,
             },
         });
-        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, ".o_reset_domain_button");
         assert.containsNone(target, ".o_domain_debug_input");
     });
 
@@ -677,8 +696,79 @@ QUnit.module("Components", (hooks) => {
                 isDebugMode: true,
             },
         });
-        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, ".o_reset_domain_button");
         assert.containsOnce(target, ".o_domain_debug_input");
         assert.notOk(target.querySelector(".o_domain_debug_input").hasAttribute("readonly"));
+    });
+
+    QUnit.test("reset domain", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.value = `[`;
+            }
+            onUpdate(domain) {
+                assert.step(domain);
+                this.value = domain;
+                this.render();
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`
+            <DomainSelector
+                resModel="'partner'"
+                value="value"
+                readonly="false"
+                update="(domain) => this.onUpdate(domain)"
+            />
+        `;
+        await mountComponent(Parent);
+        assert.strictEqual(
+            target.querySelector(".o_domain_selector").innerText.toLowerCase(),
+            "this domain is not supported. reset domain"
+        );
+        assert.containsOnce(target, ".o_reset_domain_button");
+        assert.containsNone(target, ".o_domain_add_first_node_button");
+
+        await click(target, ".o_reset_domain_button");
+        assert.strictEqual(
+            target.querySelector(".o_domain_selector").innerText.toLowerCase(),
+            "match all records add filter"
+        );
+        assert.containsNone(target, ".o_reset_domain_button");
+        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        assert.verifySteps(["[]"]);
+    });
+
+    QUnit.test("incorrect path in debug input in model field selector popover", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.value = `[("id", "=", 1)]`;
+            }
+            onUpdate(domain) {
+                assert.step(domain);
+                this.value = domain;
+                this.render();
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`
+            <DomainSelector
+                resModel="'partner'"
+                value="value"
+                readonly="false"
+                isDebugMode="true"
+                update="(domain) => this.onUpdate(domain)"
+            />
+        `;
+        await mountComponent(Parent);
+        await openModelFieldSelectorPopover(target);
+        await editInput(target, ".o_model_field_selector_debug", "a");
+        await click(target, ".o_model_field_selector_popover_close");
+        assert.verifySteps([`[("", "=", 1)]`]);
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_chain_part").innerText,
+            "-"
+        );
+        assert.containsOnce(target, ".o_model_field_selector_warning");
     });
 });
