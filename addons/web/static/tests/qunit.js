@@ -440,13 +440,6 @@ export function setupQUnit() {
             });
         }
     });
-    const oldError = QUnit.onError;
-    QUnit.onError = (err) => {
-        if (err.message === "ResizeObserver loop limit exceeded") {
-            return true;
-        }
-        return oldError(err);
-    };
 
     // -----------------------------------------------------------------------------
     // Add sort button
@@ -576,6 +569,9 @@ export function setupQUnit() {
     window.addEventListener("error", async (ev) => {
         // don't do anything if error service is up and we are in a test
         if (registry.category("services").get("error", false) && QUnit.config.current) {
+            return;
+        }
+        if (ev.message === "ResizeObserver loop limit exceeded") {
             return;
         }
         // Do not log to the console as this will kill python test early
