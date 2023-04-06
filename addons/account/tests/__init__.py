@@ -41,3 +41,4 @@ from . import test_early_payment_discount
 from . import test_ir_actions_report
 from . import test_download_xsds
 from . import test_multivat
+from . import test_account_partner

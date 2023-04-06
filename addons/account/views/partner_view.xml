@@ -216,6 +216,7 @@
                                    groups="account.group_account_invoice,account.group_account_readonly"
                                    attrs="{'invisible': [('show_credit_limit', '=', False)]}">
                                 <field name="credit"/>
+                                <field name="days_sales_outstanding"/>
                                 <label for="use_partner_credit_limit"/>
                                 <div class="o_row">
                                     <field name="use_partner_credit_limit"/>
