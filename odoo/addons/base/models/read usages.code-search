@@ -1,0 +1,1184 @@
+# Query: .read(
+# ContextLines: 1
+
+
+
+addons/website/models/mixins.py:
+  361      def _search_render_results(self, fetch_fields, mapping, icon, limit):
+  362:         results_data = self.read(fetch_fields)[:limit]
+  363          for result in results_data:
+
+addons/website/models/website_configurator_feature.py:
+  40          with tools.file_open(preview_svg, 'r') as file:
+  41:             svg = file.read()
+  42  
+
+addons/website/models/website.py:
+    99          with tools.file_open(image_path, 'rb') as f:
+   100:             return base64.b64encode(f.read())
+   101  
+
+   134          with tools.file_open(img_path, 'rb') as f:
+   135:             return base64.b64encode(f.read())
+   136  
+
+  1570          :return: the updated `search_details` containing an additional `results_data` field equivalent
+  1571:             to the result of a `model.read()`
+  1572          """
+
+addons/website/static/src/services/website_custom_menus.js:
+  103          onRecordSaved: (record) => {
+  104:             return services.orm.read('website.page', [record.resId], ['url']).then(res => {
+  105                  services.website.goToWebsite({websiteId: record.data.website_id[0], path: res[0]['url']});
+
+addons/website/views/website_views.xml:
+  217              <field name="state">code</field>
+  218:             <field name="code">action = model.env.ref('website.backend_dashboard').sudo().read()[0]</field>
+  219              <field name="groups_id" eval="[(4, ref('base.group_user'))]"/>
+
+addons/website_event_booth_exhibitor/controllers/event_booth.py:
+  42              'sponsor_website_description': plaintext2html(kwargs.get('sponsor_description')) if kwargs.get('sponsor_description') else '',
+  43:             'sponsor_image_512': base64.b64encode(kwargs['sponsor_image'].read()) if kwargs.get('sponsor_image') else False,
+  44          }
+
+addons/website_event_exhibitor/controllers/exhibitor.py:
+  188          sponsor = request.env['event.sponsor'].browse(sponsor_id)
+  189:         sponsor_data = sponsor.read([
+  190              'name', 'subtitle',
+
+addons/website_event_track/controllers/event_track.py:
+  469              'user_id': False,
+  470:             'image': base64.b64encode(post['image'].read()) if post.get('image') else False,
+  471          })
+
+addons/website_event_track/controllers/webmanifest.py:
+  51          with open(sw_file, 'r') as fp:
+  52:             body = fp.read()
+  53          js_cdn_url = 'undefined'
+
+addons/website_links/controller/main.py:
+  12              return {'error': 'empty_url'}
+  13:         return request.env['link.tracker'].search_or_create(post).read()
+  14  
+
+  23          if new_code > 0:
+  24:             return new_code.read()
+  25          else:
+  26:             return request.env['link.tracker.code'].create({'code': post['new_code'], 'link_id': link_id})[0].read()
+  27  
+
+  36          if code:
+  37:             return request.render("website_links.graphs", code.link_id.read()[0])
+  38          else:
+
+addons/website_membership/controllers/main.py:
+  71              line_domain.append(('partner.country_id', '=', country_id))
+  72:             current_country = Country.browse(country_id).read(['id', 'name'])[0]
+  73              if not any(x['country_id'][0] == country_id for x in countries if x['country_id']):
+
+addons/website_profile/controllers/main.py:
+  127          elif kwargs.get('ufile'):
+  128:             image = kwargs.get('ufile').read()
+  129              values['image_1920'] = base64.b64encode(image)
+
+addons/website_sale/controllers/main.py:
+  915          billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
+  916:         if not all(order.partner_id.read(billing_fields_required)[0].values()):
+  917              return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+
+  919          shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
+  920:         if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
+  921              return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
+
+addons/website_sale/tests/test_customize.py:
+  128          img_path = get_module_resource('product', 'static', 'img', 'product_product_11-image.png')
+  129:         img_content = base64.b64encode(open(img_path, "rb").read())
+  130          self.product_product_11_product_template = self.env['product.template'].create({
+
+addons/website_sale/tests/test_website_sale_image.py:
+   55          f.seek(0)
+   56:         blue_image = base64.b64encode(f.read())
+   57  
+
+   61          f.seek(0)
+   62:         red_image = base64.b64encode(f.read())
+   63  
+
+   67          f.seek(0)
+   68:         green_image = base64.b64encode(f.read())
+   69  
+
+   73          f.seek(0)
+   74:         image_gif = base64.b64encode(f.read())
+   75  
+
+   82          f.seek(0)
+   83:         image_bmp = base64.b64encode(f.read())
+   84  
+
+   88          f.seek(0)
+   89:         image_png = base64.b64encode(f.read())
+   90  
+
+  277          f.seek(0)
+  278:         image = base64.b64encode(f.read())
+  279  
+
+addons/website_slides/controllers/mail.py:
+  90              'rating_count': channel.rating_count,
+  91:             'default_attachment_ids': message.attachment_ids.sudo().read(['id', 'name', 'mimetype', 'file_size', 'access_token']),
+  92              'force_submit_url': '/slides/mail/update_comment',
+
+addons/website_slides/controllers/main.py:
+  199              for slide_partner in slide_partners:
+  200:                 channel_progress[slide_partner.slide_id.id].update(slide_partner.read()[0])
+  201                  if slide_partner.slide_id.question_ids:
+
+  617              if last_message:
+  618:                 last_message_values = last_message.read(['body', 'rating_value', 'attachment_ids'])[0]
+  619                  last_message_attachment_ids = last_message_values.pop('attachment_ids', [])
+
+  623                      last_message_attachment_ids = json.dumps(
+  624:                         request.env['ir.attachment'].sudo().browse(last_message_attachment_ids).read(
+  625                              ['id', 'name', 'mimetype', 'file_size', 'access_token']
+
+addons/website_slides/tests/test_security.py:
+   19  
+   20:         self.channel.with_user(self.user_officer).read(['name'])
+   21:         self.channel.with_user(self.user_manager).read(['name'])
+   22:         self.channel.with_user(self.user_emp).read(['name'])
+   23:         self.channel.with_user(self.user_portal).read(['name'])
+   24:         self.channel.with_user(self.user_public).read(['name'])
+   25  
+   26:         self.slide.with_user(self.user_officer).read(['name'])
+   27:         self.slide.with_user(self.user_manager).read(['name'])
+   28  
+   29          with self.assertRaises(AccessError):
+   30:             self.slide.with_user(self.user_emp).read(['name'])
+   31          with self.assertRaises(AccessError):
+   32:             self.slide.with_user(self.user_portal).read(['name'])
+   33          with self.assertRaises(AccessError):
+   34:             self.slide.with_user(self.user_portal).read(['name'])
+   35  
+
+   40          })
+   41:         self.channel.with_user(self.user_emp).read(['name'])
+   42:         self.slide.with_user(self.user_emp).read(['name'])
+   43  
+
+   45          membership.unlink()
+   46:         self.channel.with_user(self.user_emp).read(['name'])
+   47          with self.assertRaises(AccessError):
+   48:             self.slide.with_user(self.user_emp).read(['name'])
+   49  
+
+   54  
+   55:         self.channel.with_user(self.user_officer).read(['name'])
+   56:         self.channel.with_user(self.user_manager).read(['name'])
+   57:         self.channel.with_user(self.user_emp).read(['name'])
+   58:         self.channel.with_user(self.user_portal).read(['name'])
+   59:         self.channel.with_user(self.user_public).read(['name'])
+   60  
+   61:         self.slide.with_user(self.user_officer).read(['name'])
+   62:         self.slide.with_user(self.user_manager).read(['name'])
+   63  
+   64          with self.assertRaises(AccessError):
+   65:             self.slide.with_user(self.user_emp).read(['name'])
+   66          with self.assertRaises(AccessError):
+   67:             self.slide.with_user(self.user_portal).read(['name'])
+   68          with self.assertRaises(AccessError):
+   69:             self.slide.with_user(self.user_public).read(['name'])
+   70  
+
+   78          self.channel.invalidate_model(['name'])
+   79:         self.channel.with_user(self.user_officer).read(['name'])
+   80          self.channel.invalidate_model(['name'])
+   81:         self.channel.with_user(self.user_manager).read(['name'])
+   82          with self.assertRaises(AccessError):
+   83              self.channel.invalidate_model(['name'])
+   84:             self.channel.with_user(self.user_emp).read(['name'])
+   85          with self.assertRaises(AccessError):
+   86              self.channel.invalidate_model(['name'])
+   87:             self.channel.with_user(self.user_portal).read(['name'])
+   88          with self.assertRaises(AccessError):
+   89              self.channel.invalidate_model(['name'])
+   90:             self.channel.with_user(self.user_public).read(['name'])
+   91  
+
+   93          self.channel.invalidate_model(['name'])
+   94:         self.slide.with_user(self.user_officer).read(['name'])
+   95          self.channel.invalidate_model(['name'])
+   96:         self.slide.with_user(self.user_manager).read(['name'])
+   97          with self.assertRaises(AccessError):
+   98              self.slide.invalidate_model(['name'])
+   99:             self.slide.with_user(self.user_emp).read(['name'])
+  100          with self.assertRaises(AccessError):
+  101              self.slide.invalidate_model(['name'])
+  102:             self.slide.with_user(self.user_portal).read(['name'])
+  103          with self.assertRaises(AccessError):
+  104              self.slide.invalidate_model(['name'])
+  105:             self.slide.with_user(self.user_public).read(['name'])
+  106  
+
+  113              self.channel.invalidate_model(['name'])
+  114:             self.channel.with_user(self.user_emp).read(['name'])
+  115          with self.assertRaises(AccessError):
+  116              self.slide.invalidate_model(['name'])
+  117:             self.slide.with_user(self.user_emp).read(['name'])
+  118  
+
+  128          self.slide.invalidate_model(['name'])
+  129:         self.slide.with_user(self.user_officer).read(['name'])
+  130          self.slide.invalidate_model(['name'])
+  131:         self.slide.with_user(self.user_manager).read(['name'])
+  132          with self.assertRaises(AccessError):
+  133              self.slide.invalidate_model(['name'])
+  134:             self.slide.with_user(self.user_emp).read(['name'])
+  135          with self.assertRaises(AccessError):
+  136              self.slide.invalidate_model(['name'])
+  137:             self.slide.with_user(self.user_portal).read(['name'])
+  138          with self.assertRaises(AccessError):
+  139              self.slide.invalidate_model(['name'])
+  140:             self.slide.with_user(self.user_public).read(['name'])
+  141  
+
+  148  
+  149:         self.slide.with_user(self.user_officer).read(['name'])
+  150:         self.slide.with_user(self.user_manager).read(['name'])
+  151:         self.slide.with_user(self.user_emp).read(['name'])
+  152:         self.slide.with_user(self.user_portal).read(['name'])
+  153:         self.slide.with_user(self.user_public).read(['name'])
+  154  
+
+  160  
+  161:         self.channel.with_user(self.user_officer).read(['name'])
+  162:         self.channel.with_user(self.user_manager).read(['name'])
+  163:         self.channel.with_user(self.user_emp).read(['name'])
+  164:         self.channel.with_user(self.user_portal).read(['name'])
+  165:         self.channel.with_user(self.user_public).read(['name'])
+  166  
+  167:         self.slide.with_user(self.user_officer).read(['name'])
+  168:         self.slide.with_user(self.user_manager).read(['name'])
+  169:         self.slide.with_user(self.user_emp).read(['name'])
+  170:         self.slide.with_user(self.user_portal).read(['name'])
+  171:         self.slide.with_user(self.user_public).read(['name'])
+  172  
+
+  176  
+  177:         self.channel.with_user(self.user_officer).read(['name'])
+  178:         self.channel.with_user(self.user_manager).read(['name'])
+  179          with self.assertRaises(AccessError):
+  180:             self.channel.with_user(self.user_emp).read(['name'])
+  181          with self.assertRaises(AccessError):
+  182:             self.channel.with_user(self.user_portal).read(['name'])
+  183          with self.assertRaises(AccessError):
+  184:             self.channel.with_user(self.user_public).read(['name'])
+  185  
+  186:         self.slide.with_user(self.user_officer).read(['name'])
+  187:         self.slide.with_user(self.user_manager).read(['name'])
+  188          with self.assertRaises(AccessError):
+  189:             self.slide.with_user(self.user_emp).read(['name'])
+  190          with self.assertRaises(AccessError):
+  191:             self.slide.with_user(self.user_portal).read(['name'])
+  192          with self.assertRaises(AccessError):
+  193:             self.slide.with_user(self.user_public).read(['name'])
+  194  
+
+  203  
+  204:         self.channel.with_user(self.user_emp).read(['name'])
+  205          with self.assertRaises(AccessError):
+  206:             self.channel.with_user(self.user_portal).read(['name'])
+  207  
+
+  209          with self.assertRaises(AccessError):
+  210:             self.channel.with_user(self.user_emp).read(['name'])
+  211  
+
+  217          with self.assertRaises(AccessError):
+  218:             self.channel.with_user(self.user_emp).read(['name'])
+  219  
+  220          with self.assertRaises(AccessError):
+  221:             self.channel.with_user(self.user_portal).read(['name'])
+  222  
+
+  227  
+  228:         self.channel.with_user(self.user_officer).read(['name'])
+  229:         self.channel.with_user(self.user_manager).read(['name'])
+  230:         self.channel.with_user(self.user_emp).read(['name'])
+  231:         self.channel.with_user(self.user_portal).read(['name'])
+  232          with self.assertRaises(AccessError):
+  233:             self.channel.with_user(self.user_public).read(['name'])
+  234  
+  235:         self.slide.with_user(self.user_officer).read(['name'])
+  236:         self.slide.with_user(self.user_manager).read(['name'])
+  237          with self.assertRaises(AccessError):
+  238:             self.slide.with_user(self.user_emp).read(['name'])
+  239          with self.assertRaises(AccessError):
+  240:             self.slide.with_user(self.user_portal).read(['name'])
+  241          with self.assertRaises(AccessError):
+  242:             self.slide.with_user(self.user_public).read(['name'])
+  243  
+
+  409          with self.assertRaises(AccessError):
+  410:             resource1.with_user(self.user_public).read(['name'])
+  411:             resource3.with_user(self.user_public).read(['name'])
+  412  
+
+  423          with self.assertRaises(AccessError):
+  424:             resource1.with_user(self.user_portal).read(['name'])
+  425  
+
+  430          })
+  431:         resource1.with_user(self.user_portal).read(['name'])
+  432          with self.assertRaises(AccessError):
+
+  439          )
+  440:         resource1.with_user(user_officer_other).read(['name'])
+  441          with self.assertRaises(AccessError):
+
+addons/website_slides/tests/test_statistics.py:
+   96          slides_emp = slides.with_user(self.user_emp)
+   97:         slides_emp.read(['name'])
+   98          with self.assertRaises(UserError):
+
+  106          slides_emp = slides.with_user(self.user_emp)
+  107:         slides_emp.read(['name'])
+  108          with self.assertRaises(UserError):
+
+addons/website_slides/tests/test_ui_wslides.py:
+  17          pdf_path = get_module_resource('website_slides', 'static', 'src', 'img', 'presentation.pdf')
+  18:         pdf_content = base64.b64encode(open(pdf_path, "rb").read())
+  19          img_path = get_module_resource('website_slides', 'static', 'src', 'img', 'slide_demo_gardening_1.jpg')
+  20:         img_content = base64.b64encode(open(img_path, "rb").read())
+  21  
+
+addons/website_slides_survey/controllers/slides.py:
+  68              try:
+  69:                 request.env['survey.survey'].browse([linked_survey_id]).read(['title'])
+  70              except AccessError:
+
+doc/cla/stats.py:
+  12  cla_glob = "doc/cla/*/*.md"
+  13: cla = ''.join(open(f).read() for f in glob.glob(cla_glob))
+  14  cla = cla.lower()
+
+  29      p = subprocess.Popen("git ls-tree -r -z --name-only HEAD | grep -z '.%s$' | xargs -0 -n1 git blame --line-porcelain HEAD |grep  '^author-mail ' |sort |uniq -c|sort -nr" % ext, shell=True, stdout = subprocess.PIPE)
+  30:     for i in p.stdout.read().split('\n'):
+  31          mo = re.search('(\d+) author-mail <([^ @<]+@[^ @<]+)>',i)
+
+odoo/fields.py:
+  4706              if missing_ids:
+  4707:                 self.read(records.browse(missing_ids))
+  4708  
+
+odoo/http.py:
+  536          with open(self.path, 'rb') as file:
+  537:             return file.read()
+  538  
+
+odoo/models.py:
+  3359              for field in other_fields:
+  3360:                 field.read(fetched)
+  3361  
+
+  3381          if self._log_access:
+  3382:             res = self.read(LOG_ACCESS_COLUMNS)
+  3383          else:
+
+odoo/addons/base/models/assetsbundle.py:
+  870                  with closing(file_open(self._filename, 'rb', filter_ext=EXTENSIONS)) as fp:
+  871:                     return fp.read().decode('utf-8')
+  872              else:
+
+odoo/addons/base/models/avatar_mixin.py:
+  78      def _avatar_get_placeholder(self):
+  79:         return file_open(self._avatar_get_placeholder_path(), 'rb').read()
+  80  
+
+odoo/addons/base/models/ir_actions_report.py:
+  164              return False
+  165:         action_data = action_ref.read()[0]
+  166          action_data['domain'] = [('name', 'ilike', self.report_name.split('.')[1]), ('type', '=', 'qweb')]
+
+  472          with open(pdf_report_path, 'rb') as pdf_document:
+  473:             pdf_content = pdf_document.read()
+  474  
+
+odoo/addons/base/models/ir_actions.py:
+  166                          fields.append(field)
+  167:                 action = action.read(fields)[0]
+  168                  if action.get('groups_id'):
+
+  198              field: value
+  199:             for field, value in self.sudo().read()[0].items()
+  200              if field in readable_fields
+
+  290          """
+  291:         result = super(IrActionsActWindow, self).read(fields, load=load)
+  292          if not fields or 'help' in fields:
+
+  832  
+  833:         result = action.read()[0]
+  834          if action_type != 'ir.actions.act_window':
+
+odoo/addons/base/models/ir_attachment.py:
+  120              with open(full_path, 'rb') as f:
+  121:                 return f.read()
+  122          except (IOError, OSError):
+
+  283              while True:
+  284:                 data = fd.read(BLOCK_SIZE)
+  285                  if data != bin_data[i * BLOCK_SIZE:(i + 1) * BLOCK_SIZE]:
+
+odoo/addons/base/models/ir_binary.py:
+  138                      with open(stream.path, 'rb') as file:
+  139:                         head = file.read(1024)
+  140                  stream.mimetype = guess_mimetype(head, default=default_mimetype)
+
+  237                      stream.path = None
+  238:                     stream.data = file.read()
+  239              stream.data = image_process(
+
+  257          with file_open(path, 'rb', filter_ext=('.png', '.jpg')) as file:
+  258:             return file.read()
+
+odoo/addons/base/models/ir_module.py:
+  172                  with tools.file_open(path, 'rb') as desc_file:
+  173:                     doc = desc_file.read()
+  174                      html = lxml.html.document_fromstring(doc)
+
+  240                  with tools.file_open(path, 'rb') as image_file:
+  241:                     module.icon_image = base64.b64encode(image_file.read())
+  242  
+
+odoo/addons/base/models/ir_ui_menu.py:
+   66              with tools.file_open(icon_path, 'rb') as icon_file:
+   67:                 icon_image = base64.encodebytes(icon_file.read())
+   68          return icon_image
+
+  225          menu_roots = self.get_user_roots()
+  226:         menu_roots_data = menu_roots.read(fields) if menu_roots else []
+  227  
+
+  251          menu_roots = self.get_user_roots()
+  252:         menu_roots_data = menu_roots.read(fields) if menu_roots else []
+  253          menu_root = {
+
+  271          menus = self.search(menus_domain)
+  272:         menu_items = menus.read(fields)
+  273          xmlids = (menu_roots + menus)._get_menuitems_xmlids()
+
+odoo/addons/base/models/ir_ui_view.py:
+  968              fields = list({'arch', 'model'}.union(fields))
+  969:         [result] = self.read(fields)
+  970          result['arch'] = self.get_combined_arch()
+
+odoo/addons/base/models/res_company.py:
+  27      def _get_logo(self):
+  28:         return base64.b64encode(open(os.path.join(tools.config['root_path'], 'addons', 'base', 'static', 'img', 'res_company_logo.png'), 'rb') .read())
+  29  
+
+  36              if original:
+  37:                 return base64.b64encode(f.read())
+  38              # Modify the source image to add a colored bar on the bottom
+
+odoo/addons/base/models/res_config.py:
+  261          base = set(module_name
+  262:                    for installer in self.read()
+  263                     for module_name, to_install in installer.items()
+
+  636          if actions:
+  637:             return actions.read()[0]
+  638          return {}
+
+odoo/addons/base/models/res_users.py:
+   548  
+   549:         return super(Users, self).read(fields=fields, load=load)
+   550  
+
+   682          # the schema of models res.users or res.partner
+   683:         values = user.read(list(name_to_key), load=False)[0]
+   684  
+
+   716      def action_get(self):
+   717:         return self.sudo().env.ref('base.action_res_users_my').read()[0]
+   718  
+
+  1721  
+  1722:         res = super(UsersView, self).read(other_fields, load=load)
+  1723  
+
+odoo/addons/base/tests/test_acl.py:
+  100          self.assertFalse(has_group_system, "`demo` user should not belong to the restricted group")
+  101:         self.assertTrue(partner.read(['bank_ids']))
+  102          self.assertTrue(partner.write({'bank_ids': []}))
+
+  107          with self.assertRaises(AccessError):
+  108:             partner.read(['bank_ids'])
+  109          with self.assertRaises(AccessError):
+
+  115          self.assertTrue(has_group_system, "`demo` user should now belong to the restricted group")
+  116:         self.assertTrue(partner.read(['bank_ids']))
+  117          self.assertTrue(partner.write({'bank_ids': []}))
+
+odoo/addons/base/tests/test_api.py:
+  384          partner1 = partner1.with_prefetch()
+  385:         partner1.read(['company_type'])
+  386          self.assertIn('company_type', partner1._cache)
+
+  391          partner1 = partner1.with_prefetch()
+  392:         partner1.read(['child_ids', 'company_type'])
+  393          self.assertIn('company_type', partner1._cache)
+
+odoo/addons/base/tests/test_db_cursor.py:
+  70          record.invalidate_recordset()
+  71:         self.assertEqual(record.read(['ref'])[0]['ref'], value)
+  72  
+
+odoo/addons/base/tests/test_ir_actions.py:
+  286          bindings = Actions.get_bindings('res.country')
+  287:         self.assertItemsEqual(bindings.get('action'), self.action.read(['name', 'sequence', 'binding_view_types']))
+  288  
+
+odoo/addons/base/tests/test_ir_cron.py:
+  201                              self.registry.cursor(),
+  202:                             self.cron.read(load=None)[0]
+  203                          )
+
+  242  
+  243:             self.cron1_data = env['ir.cron'].create(self._get_cron_data(env, priority=1)).read(load=None)[0]
+  244:             self.cron2_data = env['ir.cron'].create(self._get_cron_data(env, priority=2)).read(load=None)[0]
+  245:             self.partner_data = env['res.partner'].create(self._get_partner_data(env)).read(load=None)[0]
+  246              self.cron_ids = [self.cron1_data['id'], self.cron2_data['id']]
+
+odoo/addons/base/tests/test_misc.py:
+  386          with file_open(path, mode, filter_ext) as f:
+  387:             self.assertIn(needle, f.read())
+  388  
+
+odoo/addons/base/tests/test_orm.py:
+   34          cs = (c1 + c2).with_user(user)
+   35:         self.assertEqual([{'id': c2.id, 'name': 'Y'}], cs.read(['name']), "read() should skip deleted records")
+   36:         self.assertEqual([], cs[0].read(['name']), "read() should skip deleted records")
+   37  
+
+   83          with self.assertRaises(AccessError):
+   84:             p1.with_user(user).read(['name'])
+   85          # write as unprivileged user
+
+   95          with self.assertRaises(AccessError):
+   96:             (p1 + p2).with_user(user).read(['name'])
+   97          # delete mixed records: some deleted and some filtered
+
+  102          partner = self.env['res.partner'].create({'name': 'MyPartner1'})
+  103:         result = partner.read()
+  104          self.assertIsInstance(result, list)
+
+  336          user_foo = self.env['res.users'].create({'name': 'Foo', 'login': 'foo'})
+  337:         user_values, = user_foo.read()
+  338:         partner_values, = user_foo.partner_id.read()
+  339  
+
+  350          })
+  351:         foo_before, = user_foo.read()
+  352          del foo_before['create_date']
+
+  354          user_bar = user_foo.copy({'login': 'bar'})
+  355:         foo_after, = user_foo.read()
+  356          del foo_after['create_date']
+
+  371  
+  372:         foo_before, = user_foo.read()
+  373          del foo_before['create_date']
+
+  377          user_bar = user_foo.copy({'partner_id': partner_bar.id, 'login': 'bar'})
+  378:         foo_after, = user_foo.read()
+  379          del foo_after['create_date']
+
+odoo/addons/base/tests/test_pdf.py:
+  15          file_path = get_module_resource('base', 'tests', 'minimal.pdf')
+  16:         self.file = open(file_path, 'rb').read()
+  17          self.minimal_reader_buffer = io.BytesIO(self.file)
+
+odoo/addons/base/tests/test_profiler.py:
+  22          self.assertEqual(self.env['ir.profile'].search([('id', '=', self.test_profile.id)]), self.test_profile)
+  23:         self.test_profile.read(['name'])
+  24  
+
+  29          with self.assertRaises(AccessError):
+  30:             self.test_profile.with_user(user).read(['name'])
+  31  
+
+odoo/addons/base/tests/test_qweb.py:
+  788                      <t t-set="o" t-value="(lambda a=open: a)()"/>
+  789:                     <t t-out="o('/etc/passwd').read()"/>
+  790                  </div>
+
+odoo/addons/base/tests/test_res_users.py:
+  269          self.assertEqual(user.groups_id & groups, group0)
+  270:         self.assertEqual(user.read([fname])[0][fname], group0.id)
+  271  
+
+  274          self.assertEqual(user.groups_id & groups, group0 + group1)
+  275:         self.assertEqual(user.read([fname])[0][fname], group1.id)
+  276  
+
+  279          self.assertEqual(user.groups_id & groups, groups)
+  280:         self.assertEqual(user.read([fname])[0][fname], group2.id)
+  281  
+
+odoo/addons/base/tests/test_translate.py:
+  545  
+  546:         fr_name = self.category.with_context(lang='fr_FR').read(['name'])
+  547          self.assertEqual(fr_name[0]['name'], "French Name", "Reference field not updated")
+
+odoo/addons/base/tests/test_views.py:
+  747          fields = ['name', 'arch', 'type', 'priority', 'inherit_id', 'model']
+  748:         [data] = view.read(fields)
+  749          self.assertEqual(data, {
+
+odoo/addons/test_access_rights/tests/test_feedback.py:
+  152          with self.assertRaises(AccessError) as ctx:
+  153:             r.read(['val'])
+  154          self.assertEqual(ctx.exception.args[0], expected)
+
+odoo/addons/test_action_bindings/tests/test_bindings.py:
+  25              bindings['action'],
+  26:             (action1 + action2).read(['name', 'binding_view_types']),
+  27              "Wrong action bindings",
+
+  30              bindings['report'],
+  31:             action3.read(['name', 'binding_view_types']),
+  32              "Wrong action bindings",
+
+  42              bindings['action'],
+  43:             action1.read(['name', 'binding_view_types']),
+  44              "Wrong action bindings",
+
+  47              bindings['report'],
+  48:             action3.read(['name', 'binding_view_types']),
+  49              "Wrong action bindings",
+
+odoo/addons/test_converter/tests/test_html.py:
+  219          with open(os.path.join(directory, 'test_vectors', 'image'), 'rb') as f:
+  220:             content = f.read()
+  221  
+
+  228          with open(os.path.join(directory, 'test_vectors', 'pdf'), 'rb') as f:
+  229:             content = f.read()
+  230  
+
+  234          with open(os.path.join(directory, 'test_vectors', 'pptx'), 'rb') as f:
+  235:             content = f.read()
+  236  
+
+odoo/addons/test_http/tests/test_static.py:
+   22          with file_open('test_http/static/src/img/gizeh.png', 'rb') as file:
+   23:             cls.gizeh_data = file.read()
+   24  
+   25          with file_open('web/static/img/placeholder.png', 'rb') as file:
+   26:             cls.placeholder_data = file.read()
+   27  
+
+  296          with file_open('web/static/img/nologo.png', 'rb') as file:
+  297:             cls.logo_no_logo_data = file.read()
+  298          cls.headers_default_logo = {
+
+odoo/addons/test_impex/tests/test_load.py:
+    54          records = self.model.with_context(context or {}).search(domain)
+    55:         return records.read(fields)
+    56  
+
+    64          if data:
+    65:             d = data.read(['name', 'module'])[0]
+    66              if d['module']:
+
+   114              [42], # updated value to imported
+   115:             values(self.read()))
+   116  
+
+   118          self.import_(['id', 'value'], [['somexmlid', '36']])
+   119:         self.assertEqual([36], values(self.read()))
+   120  
+   121          self.import_(['id', 'value'], [['somexmlid', '1234567']])
+   122:         self.assertEqual([1234567], values(self.read()))
+   123  
+
+   136          self.assertFalse(result['messages'])
+   137:         records = self.read()
+   138          self.assertEqual([
+
+   156          self.assertEqual(len(result['ids']), len(falses))
+   157:         self.assertEqual([False] * len(falses), values(self.read()))
+   158  
+
+   176              [True] * 3,
+   177:             values(self.read()))
+   178  
+
+   193              [False],
+   194:             values(self.read()))
+   195  
+
+   204  
+   205:         self.assertEqual([False, False], values(self.read()))
+   206  
+
+   218              1, 42, 2**31-1, 12345678
+   219:         ], values(self.read()))
+   220  
+
+   232              -1, -42, -(2**31 - 1), -(2**31), -12345678
+   233:         ], values(self.read()))
+   234  
+
+   281              [False],
+   282:             values(self.read()))
+   283  
+
+   292  
+   293:         self.assertEqual([False, False], values(self.read()))
+   294  
+
+   308              1, 42, 2**31-1, 12345678, 2.0**33, .000001
+   309:         ], values(self.read()))
+   310  
+
+   324              -1, -42, -(2**31 - 1), -(2**31), -12345678, -2.0**33, -.000001
+   325:         ], values(self.read()))
+   326  
+
+   339          self.assertFalse(result['messages'])
+   340:         self.assertEqual([False], values(self.read()))
+   341  
+
+   357              u"People 'get' typ",
+   358:         ], values(self.read()))
+   359  
+
+   375              u"If they ask you about fun, you tell them – fun is a filthy parasite"
+   376:         ], values(self.read()))
+   377  
+
+   417          self.assertFalse(result['messages'])
+   418:         self.assertEqual([False], values(self.read()))
+   419  
+
+   429          self.assertFalse(result['messages'])
+   430:         self.assertEqual([s], values(self.read()))
+   431  
+
+   449          self.assertFalse(result['messages'])
+   450:         self.assertEqual(['3', '2', '1', '2'], values(self.read()))
+   451  
+
+   466  
+   467:         self.assertEqual(['3', '1', '2'], values(self.read()))
+   468  
+
+   498          self.assertEqual(
+   499:             values(self.read()),
+   500              [False])
+
+   509          self.assertEqual(
+   510:             values(self.read()),
+   511              ['2'])
+
+   534          self.assertFalse(result['messages'])
+   535:         self.assertEqual(values(self.read()), ['3', '1'])
+   536  
+
+   550          self.assertEqual(len(result['ids']), 2)
+   551:         self.assertEqual(values(self.read()), ['1', '2'])
+   552  
+
+   595              (record2.id, name2),],
+   596:             values(self.read()))
+   597  
+
+   631              (record1.id, name1)
+   632:         ], values(self.read()))
+   633  
+
+  1217          self.assertEqual(
+  1218:             [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
+  1219              ['2012-02-02 21:11:11'])
+
+  1225          self.assertEqual(
+  1226:             [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
+  1227              ['2012-02-03 20:41:11'])
+
+  1239          self.assertEqual(
+  1240:             [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
+  1241              ['2012-02-03 01:11:11'])
+
+  1251          self.assertEqual(
+  1252:             [fields.Datetime.to_string(value['value']) for value in self.read(domain=[('id', 'in', result['ids'])])],
+  1253              ['2012-02-03 11:11:11'])
+
+odoo/addons/test_inherits/tests/test_inherits.py:
+  41          pallet = self.env.ref('test_inherits.pallet_a')
+  42:         self.assertEqual(pallet.read(['name']), [{'id': pallet.id, 'name': 'Unit A'}])
+  43  
+
+odoo/addons/test_lint/tests/test_jstranslate.py:
+  93              with tools.file_open(js_file, 'r') as f:
+  94:                 js_txt = f.read()
+  95  
+
+odoo/addons/test_lint/tests/test_l10n.py:
+  47              with open(path, 'rb') as f:
+  48:                 t = ast.parse(f.read(), path)
+  49              rs.extend(zip(itertools.repeat(os.path.relpath(path)), checker.visit(t)))
+
+odoo/addons/test_lint/tests/test_manifests.py:
+  31          with file_open(manifest_file, mode='r') as f:
+  32:             manifest_data.update(literal_eval(f.read()))
+  33  
+
+odoo/addons/test_lint/tests/test_markers.py:
+  19          with open(fullpath_name, 'rb') as f:
+  20:             content = f.read()
+  21              self.assertFalse(any(m in content for m in MARKERS), 'Conflict markers found in %s' % fullpath_name)
+
+odoo/addons/test_lint/tests/test_onchange_domains.py:
+  40              with open(path, 'rb') as f:
+  41:                 t = ast.parse(f.read(), path)
+  42              rs.extend(zip(itertools.repeat(os.path.relpath(path)), checker.visit(t)))
+
+odoo/addons/test_mimetypes/tests/test_guess_mimetypes.py:
+  12      ), 'rb') as f:
+  13:         return f.read()
+  14  
+
+odoo/addons/test_new_api/tests/test_new_fields.py:
+    47          # read it with method read()
+    48:         values = discussion.read(['name'])[0]
+    49          self.assertEqual(values['name'], discussion.name)
+
+    89          with self.assertRaisesRegex(ValueError, 'Invalid field'):
+    90:             cat.read(['zzz'])
+    91  
+
+  1642  
+  1643:             data = message.read(['display_name', 'size'])[0]
+  1644              self.assertEqual(data['display_name'], display_name)
+
+  1714          # special case: should not fail
+  1715:         Discussion.browse([None]).read(['categories'])
+  1716  
+
+  2393          f.seek(0)
+  2394:         image_w = base64.b64encode(f.read())
+  2395  
+
+  2398          f.seek(0)
+  2399:         image_h = base64.b64encode(f.read())
+  2400  
+
+  2614              record.invalidate_recordset(['tags'])
+  2615:             record.read(['tags'])
+  2616  
+
+  2621          record_user.invalidate_recordset(['tags'])
+  2622:         record_user.read(['tags'])
+  2623  
+
+  2627              record_user.invalidate_recordset(['tags'])
+  2628:             record_user.read(['tags'])
+  2629  
+
+  2637          record_user.invalidate_recordset(['tags'])
+  2638:         record_user.read(['tags'])
+  2639  
+
+  2644              record_user.invalidate_recordset(['tags'])
+  2645:             record_user.read(['tags'])
+  2646  
+
+  2654          with self.assertRaises(AccessError):
+  2655:             record_user.read(['tags'])
+  2656  
+
+odoo/addons/test_new_api/tests/test_properties.py:
+   134  
+   135:         self.assertEqual(self.message_3.read(['attributes'])[0]['attributes'], expected)
+   136          self.assertEqual(self.message_3.attributes, expected)
+
+   144          # mix both properties
+   145:         properties_values = (self.message_1 | self.message_3).read(['attributes'])
+   146          properties_values = properties_values[0]['attributes'] + properties_values[1]['attributes']
+
+   167      def test_properties_field_read_batch(self):
+   168:         values = self.message_1.read(['attributes'])[0]['attributes']
+   169          self.assertEqual(len(values), 2)
+
+   230          with self.assertQueryCount(5), self.assertQueries(expected_queries):
+   231:             self.message_1.read(['attributes'])
+   232  
+
+   251          with self.assertQueryCount(5), self.assertQueries(expected_queries):
+   252:             values = messages.read(['attributes'])
+   253  
+
+   260          with self.assertQueryCount(5):
+   261:             values = messages.read(['attributes'])
+   262  
+
+   459  
+   460:         read_values = self.discussion_1.read(['attributes_definition'])[0]['attributes_definition']
+   461          self.assertEqual(
+
+   467          # read the default many2one and deactivate the name_get
+   468:         read_values = self.discussion_1.read(['attributes_definition'], load=None)[0]['attributes_definition']
+   469          self.assertEqual(
+
+   480  
+   481:         properties = message.read(['attributes'])[0]['attributes']
+   482          self.assertEqual(properties[0]['value'], (self.partner.id, self.partner.display_name))
+
+   487          # the default value must be ignored
+   488:         property_definition = self.discussion_1.read(['attributes_definition'])[0]['attributes_definition']
+   489          property_definition[0]['value'] = (self.partner_2.id, 'Alice')
+
+   508          """
+   509:         properties_values = (self.message_1 | self.message_3).read(['attributes'])
+   510  
+
+   544          # disable the name_get
+   545:         properties_values = (self.message_1 | self.message_3).read(['attributes'], load=None)
+   546          many2one_property = properties_values[0]['attributes'][1]
+
+   578          # read the many2one
+   579:         properties = self.message_2.read(['attributes'])[0]['attributes']
+   580          self.assertEqual(properties[1]['value'], (self.partner_2.id, self.partner_2.display_name))
+
+   596              # 2 queries to check if the many2one still exists / name_get
+   597:             self.assertFalse(self.message_2.read(['attributes'])[0]['attributes'][0]['value'])
+   598  
+
+   606          with self.assertQueryCount(4):
+   607:             value = self.message_2.read(['attributes'])
+   608              value = value[0]['attributes']
+
+   621          self.assertEqual(
+   622:             self.message_2.read(['attributes'])[0]['attributes'],
+   623              [{
+
+   632          self.assertEqual(
+   633:             self.message_2.read(['attributes'])[0]['attributes'],
+   634              [{
+
+   661  
+   662:         values = self.discussion_1.read(['attributes_definition'])[0]
+   663          self.assertFalse(values['attributes_definition'][0]['comodel'])
+
+   674  
+   675:         values = self.message_1.read(['attributes'])[0]['attributes']
+   676          self.assertEqual(values[0]['type'], 'many2one', msg='Property type should be preserved')
+
+   726  
+   727:         definition = self.discussion_1.read(['attributes_definition'])[0]['attributes_definition']
+   728          self.assertNotIn('domain', definition)
+   729  
+   730:         properties = self.message_1.read(['attributes'])[0]['attributes']
+   731          self.assertNotIn('domain', properties)
+
+   848          self.assertEqual(self._get_sql_properties(message), {'my_tags': ['be', 'de']})
+   849:         attributes = message.read(['attributes'])[0]['attributes']
+   850          self.assertEqual(
+
+   858          # next write on the child must update the value
+   859:         message.attributes = message.read(['attributes'])[0]['attributes']
+   860  
+
+   904              ]
+   905:             attributes = self.message_1.read(['attributes'], load=None)[0]['attributes']
+   906              self.assertEqual(attributes[0]['value'], partners[:10].ids)
+
+   909          with self.assertQueryCount(4):
+   910:             attributes = self.message_1.read(['attributes'], load=None)[0]['attributes']
+   911              self.assertEqual(attributes[0]['value'], partners[5:10].ids)
+
+   914          with self.assertQueryCount(5):
+   915:             properties = self.message_1.read(['attributes'])[0]['attributes']
+   916          self.assertEqual(properties[0]['value'], partners[6:10].name_get())
+
+   919          # a single read won't clean the removed many2many
+   920:         attributes = self.message_1.read(['attributes'])[0]['attributes']
+   921          self.message_1.invalidate_recordset()
+
+   927          # read and disable name_get
+   928:         properties = self.message_1.read(['attributes'], load=None)[0]['attributes']
+   929          self.assertEqual(
+
+   948  
+   949:         properties = self.message_1.read(['attributes'], load=None)[0]['attributes']
+   950          self.assertEqual(
+
+   976  
+   977:         properties = self.message_1.read(['attributes'])[0]['attributes']
+   978          self.assertEqual(
+
+  1019  
+  1020:         values = message.read(['attributes'])[0]['attributes'][0]['value']
+  1021          self.assertEqual(values, [(tag.id, None if i >= 5 else tag.name) for i, tag in enumerate(tags.sudo())])
+
+  1026              # read to put the partner name in cache
+  1027:             self.message_1.read(['attributes'])
+  1028  
+
+  1358          }]
+  1359:         values = self.message_1.read(['attributes'])[0]['attributes'][0]
+  1360          self.assertEqual(values['value'], (tag.id, 'Test Tag'))
+
+  1362          with patch.object(MultiTag, 'check_access_rights', side_effect=_mocked_check_access_rights):
+  1363:             values = self.message_1.read(['attributes'])[0]['attributes'][0]
+  1364          self.assertEqual(values['value'], (tag.id, None))
+
+odoo/addons/test_performance/tests/test_performance.py:
+  170          # one query for search and read, one query for display_name
+  171:         expected = records.read(['partner_id', 'value_pc'])
+  172          with self.assertQueryCount(2):
+
+  179          # one query for search and read
+  180:         expected = records.read(['partner_id', 'value_pc'], load=False)
+  181          with self.assertQueryCount(1):
+
+odoo/addons/test_translation_import/tests/test_term_count.py:
+   98          with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
+   99:             po_file = base64.encodebytes(f.read())
+  100  
+
+  125          with file_open('test_translation_import/i18n/tlh.po', 'rb') as f:
+  126:             po_file = base64.encodebytes(f.read())
+  127  
+
+  168          with file_open('test_translation_import/i18n/dot.csv', 'rb') as f:
+  169:             po_file = base64.encodebytes(f.read())
+  170  
+
+odoo/cli/scaffold.py:
+  104                  path = os.path.join(root, f)
+  105:                 yield path, open(path, 'rb').read()
+  106  
+
+odoo/cli/shell.py:
+  66              local_vars['__name__'] = '__main__'
+  67:             exec(sys.stdin.read(), local_vars)
+  68          else:
+
+odoo/modules/db.py:
+  34      with odoo.tools.misc.file_open(f) as base_sql_file:
+  35:         cr.execute(base_sql_file.read())  # pylint: disable=sql-injection
+  36  
+
+odoo/modules/module.py:
+  304      with tools.file_open(manifest_file, mode='r') as f:
+  305:         manifest.update(ast.literal_eval(f.read()))
+  306  
+
+  311              with tools.file_open(readme_path[0]) as fd:
+  312:                 manifest['description'] = fd.read()
+  313  
+
+odoo/modules/neutralize.py:
+  20              with odoo.tools.misc.file_open(filename) as file:
+  21:                 yield file.read().strip()
+
+odoo/service/db.py:
+  216          t.seek(0)
+  217:         return base64.b64encode(t.read()).decode()
+  218  
+
+odoo/service/server.py:
+   87      try:
+   88:         while os.read(fd, 1):
+   89              pass
+
+  243              try:
+  244:                 source = open(path, 'rb').read() + b'\n'
+  245                  compile(source, path, 'exec')
+
+odoo/tests/common.py:
+  1297              with open(f['file_path'], 'rb') as b64_file:
+  1298:                 frame = base64.decodebytes(b64_file.read())
+  1299              os.unlink(f['file_path'])
+
+  2785      # field is read alongside `id` then it blows up e.g.
+  2786:     # james.read(['barcode']) works fine but james.read(['id', 'barcode'])
+  2787      # triggers an ACL error on barcode, likewise km_home_work or
+
+  2792          return r
+  2793:     for f, v in record.read(to_read)[0].items():
+  2794          descr = fields[f]
+
+odoo/tools/cloc.py:
+  121                      exclude_list.extend(DEFAULT_EXCLUDE)
+  122:                     d = ast.literal_eval(manifest.read().decode('latin1'))
+  123                      for j in ['cloc_exclude', 'demo', 'demo_xml']:
+
+  152                      # The chars not correctly decoded in latin1 have no impact on how many lines will be counted
+  153:                     content = f.read().decode('latin1')
+  154                  self.book(module_name, file_path, self.parse(content, ext))
+
+odoo/tools/config.py:
+  615          try:
+  616:             p.read([self.rcfile])
+  617              for (name,value) in p.items('options'):
+
+  644          if rc_exists and keys:
+  645:             p.read([self.rcfile])
+  646          if not p.has_section('options'):
+
+odoo/tools/convert.py:
+  102              if f_use != 'id':
+  103:                 ids = [x[f_use] for x in env[f_model].browse(ids).read([f_use])]
+  104              _fields = env[f_model]._fields
+
+  149              with file_open(node.get('file'), 'rb') as f:
+  150:                 data = f.read()
+  151  
+
+  608          if ext == '.csv':
+  609:             convert_csv_import(env, module, pathname, fp.read(), idref, mode, noupdate)
+  610          elif ext == '.sql':
+
+  619  def convert_sql_import(env, fp):
+  620:     env.cr.execute(fp.read()) # pylint: disable=sql-injection
+  621  
+
+odoo/tools/mimetypes.py:
+  66          # associated with the document.
+  67:         marcel = z.read('mimetype').decode('ascii')
+  68          # check that it's not too long (RFC6838 § 4.2 restricts type and
+
+odoo/tools/misc.py:
+  193          >>> with file_open('/opt/odoo/addons/hr/static/description/icon.png', 'rb') as f:
+  194:         ...     contents = f.read()
+  195  
+
+odoo/tools/pdf.py:
+  326          with file_open('tools/data/files/sRGB2014.icc', mode='rb') as icc_profile:
+  327:             icc_profile_file_data = compress(icc_profile.read())
+  328  
+
+odoo/tools/test_reports.py:
+  276      log_test("will be using %s action %s #%d", act_model, act_xmlid, act_id)
+  277:     action = env[act_model].browse(act_id).read()[0]
+  278      assert action, "Could not read action %s[%s]" % (act_model, act_id)
+
+odoo/tools/translate.py:
+  635              # either a BufferedIOBase or result from NamedTemporaryFile
+  636:             self.pofile = polib.pofile(source.read().decode())
+  637              pot_path = get_pot_path(source.name)
+
+odoo/tools/xml_utils.py:
+  251          try:
+  252:             content = archive.read(file_path)
+  253              if modify_xsd_content:
+
+setup/package.py:
+  31  nt_service_name = ...
+  32: exec(open(os.path.join(ROOTDIR, 'odoo', 'release.py'), 'rb').read())
+  33  VERSION = version.split('-')[0].replace('saas~', '')
