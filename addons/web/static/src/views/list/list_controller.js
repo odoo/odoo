@@ -59,6 +59,7 @@ export class ListController extends Component {
             rootState,
             onRecordSaved: this.onRecordSaved.bind(this),
             onWillSaveRecord: this.onWillSaveRecord.bind(this),
+            canEdit: this.archInfo.activeActions.edit,
         });
 
         onWillStart(async () => {

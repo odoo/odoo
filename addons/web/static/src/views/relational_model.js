@@ -788,6 +788,9 @@ export class Record extends DataPoint {
      * @returns {boolean}
      */
     isReadonly(fieldName) {
+        if (!this.model.canEdit && !this.model.root.isNew) {
+            return true;
+        }
         const { readonly } = this.activeFields[fieldName].modifiers || {};
         return evalDomain(readonly, this.evalContext);
     }
@@ -3538,6 +3541,7 @@ export class RelationalModel extends Model {
 
         this.onCreate = params.onCreate;
         this.multiEdit = params.multiEdit || false;
+        this.canEdit = params.canEdit !== false;
         this.quickCreateView = params.quickCreateView;
         this.defaultGroupBy = params.defaultGroupBy || false;
         this.defaultOrderBy = params.defaultOrder;
