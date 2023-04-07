@@ -386,7 +386,9 @@ class WebsiteSale(http.Controller):
             domain = self._get_search_domain(search, category, attrib_values)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
-            from_clause, where_clause, where_params = Product._where_calc(domain).get_sql()
+            query = Product._where_calc(domain)
+            Product._apply_ir_rules(query, 'read')
+            from_clause, where_clause, where_params = query.get_sql()
             query = f"""
                 SELECT COALESCE(MIN(list_price), 0) * {conversion_rate}, COALESCE(MAX(list_price), 0) * {conversion_rate}
                   FROM {from_clause}
