@@ -24,6 +24,7 @@ class Forum(models.Model):
     ]
     _order = "sequence, id"
 
+    @api.model
     def _get_default_welcome_message(self):
         return Markup("""
                 <h1 style="text-align: center;clear-both"><font style="font-size: 62px; font-weight: bold;">%(message_intro)s</font></h1>

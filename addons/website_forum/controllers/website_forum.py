@@ -115,28 +115,21 @@ class WebsiteForum(WebsiteProfile):
             my=my,
             **post
         )
-        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy("forum_posts_only", search,
-            limit=page * self._post_per_page, order=sorting, options=options)
+        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
+            "forum_posts_only", search, limit=page * self._post_per_page, order=sorting, options=options)
         question_ids = details[0].get('results', Post)
         question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
 
-        if tag:
-            url = "/forum/%s/tag/%s/questions" % (slug(forum), slug(tag))
-        else:
-            url = "/forum/%s" % slug(forum)
+        url = f"/forum/{slug(forum)}{f'/tag/{slug(tag)}/questions' if tag else ''}"
+        url_args = {'sorting': sorting}
 
-        url_args = {
-            'sorting': sorting
-        }
-        if search:
-            url_args['search'] = search
-        if filters:
-            url_args['filters'] = filters
-        if my:
-            url_args['my'] = my
-        pager = tools.lazy(lambda: request.website.pager(url=url, total=question_count, page=page,
-                                      step=self._post_per_page, scope=self._post_per_page,
-                                      url_args=url_args))
+        for name, value in zip(['filters', 'search', 'my'], [filters, search, my]):
+            if value:
+                url_args[name] = value
+
+        pager = tools.lazy(lambda: request.website.pager(
+            url=url, total=question_count, page=page, step=self._post_per_page,
+            scope=self._post_per_page, url_args=url_args))
 
         values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
         values.update({
@@ -324,6 +317,8 @@ class WebsiteForum(WebsiteProfile):
             if record.create_uid.id == request.uid:
                 answer = record
                 break
+        else:
+            raise werkzeug.exceptions.NotFound()
         return request.redirect("/forum/%s/post/%s/edit" % (slug(forum), slug(answer)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
@@ -701,10 +696,7 @@ class WebsiteForum(WebsiteProfile):
         posts_ids = Post.search([('id', 'in', list(posts))])
         posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
 
-        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
-        if user == request.env.user:
-            kwargs['my_profile'] = True
-        else:
+        if user != request.env.user:
             kwargs['users'] = True
 
         values = {

@@ -4,13 +4,12 @@
 import logging
 import math
 import re
-
 from datetime import datetime
 
 from odoo import api, fields, models, tools, _
+from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.exceptions import UserError, ValidationError, AccessError
 from odoo.tools import sql
-from odoo.addons.http_routing.models.ir_http import slug, unslug
 
 _logger = logging.getLogger(__name__)
 
@@ -272,8 +271,7 @@ class Post(models.Model):
             raise ValueError('Invalid operator: %s' % (operator,))
 
         if not value:
-            operator = operator == "=" and '!=' or '='
-            value = True
+            operator = '!=' if operator == '=' else '='
 
         user = self.env.user
         # Won't impact sitemap, search() in converter is forced as public user
@@ -294,7 +292,7 @@ class Post(models.Model):
                 )
         """
 
-        op = operator == "=" and "inselect" or "not inselect"
+        op = 'inselect' if operator == '=' else "not inselect"
 
         # don't use param named because orm will add other param (test_active, ...)
         return [('id', op, (req, (user.id, user.karma, user.id, user.karma, user.id)))]
@@ -660,7 +658,7 @@ class Post(models.Model):
         return new_message
 
     @api.model
-    def convert_comment_to_answer(self, message_id, default=None):
+    def convert_comment_to_answer(self, message_id):
         """ Tool to convert a comment (mail.message) into an answer (forum.post).
         The original comment is unlinked and a new answer from the comment's author
         is created. Nothing is done if the comment's author already answered the
@@ -704,21 +702,24 @@ class Post(models.Model):
         return new_post
 
     def unlink_comment(self, message_id):
+        comment = self.env['mail.message'].sudo().browse(message_id)
+        if comment.model != 'forum.post':
+            return [False for _ in self]
+
+        user_karma = self.env.user.karma
         result = []
         for post in self:
-            user = self.env.user
-            comment = self.env['mail.message'].sudo().browse(message_id)
-            if not comment.model == 'forum.post' or not comment.res_id == post.id:
+            if comment.res_id != post.id:
                 result.append(False)
                 continue
             # karma-based action check: must check the message's author to know if own or all
-            karma_unlink = (
-                comment.author_id.id == user.partner_id.id and
-                post.forum_id.karma_comment_unlink_own or post.forum_id.karma_comment_unlink_all
+            karma_required = (
+                post.forum_id.karma_comment_unlink_own
+                if comment.author_id.id == self.env.user.partner_id.id
+                else post.forum_id.karma_comment_unlink_all
             )
-            can_unlink = user.karma >= karma_unlink
-            if not can_unlink:
-                raise AccessError(_('%d karma required to unlink a comment.', karma_unlink))
+            if user_karma < karma_required:
+                raise AccessError(_('%d karma required to delete a comment.', karma_required))
             result.append(comment.unlink())
         return result
 
