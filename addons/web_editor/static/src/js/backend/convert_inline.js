@@ -424,7 +424,7 @@ function classToStyle($editable, cssRules) {
                     style="border-radius: 6px; border-collapse: separate !important;">
                         <tbody>
                             <tr>
-                                <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '')}" ${
+                                <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '').replaceAll('"', '&quot;')}" ${
                                     node.parentElement.style.textAlign === 'center' ? 'align="center" ' : ''
                                 }bgcolor="${rgbToHex(node.style.backgroundColor)}">
                     `));
