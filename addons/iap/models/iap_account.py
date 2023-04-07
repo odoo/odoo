@@ -38,7 +38,7 @@ class IapAccount(models.Model):
                 # use a different SQL cursor to avoid undo the accounts deletion.
 
                 # Flush the pending operations to avoid a deadlock.
-                self.flush()
+                self.env.flush_all()
                 IapAccount = self.with_env(self.env(cr=cr))
                 # Need to use sudo because regular users do not have delete right
                 IapAccount.search(domain + [('account_token', '=', False)]).sudo().unlink()
