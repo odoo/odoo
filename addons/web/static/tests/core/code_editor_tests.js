@@ -38,7 +38,30 @@ QUnit.module("Web Components", (hooks) => {
     }
 
     async function edit(value) {
-        await editInput(target, "textarea", value);
+        const textArea = target.querySelector(".ace_editor textarea");
+        await editInput(textArea, null, value);
+        return null;
+    }
+
+    function getFakeAceEditor() {
+        return {
+            session: {
+                on: () => {},
+                setMode: () => {},
+                setUseWorker: () => {},
+                setOptions: () => {},
+            },
+            renderer: {
+                setOptions: () => {},
+                $cursorLayer: { element: { style: {} } },
+            },
+            setOptions: () => {},
+            setValue: () => {},
+            getValue: () => "",
+            setTheme: () => {},
+            resize: () => {},
+            destroy: () => {},
+        };
     }
 
     QUnit.test("Can be rendered", async (assert) => {
@@ -53,12 +76,7 @@ QUnit.module("Web Components", (hooks) => {
     QUnit.test("onChange props called when code is edited", async (assert) => {
         class Parent extends Component {
             static components = { CodeEditor };
-            static template = xml`
-                <CodeEditor
-                    mode="'xml'"
-                    onChange.bind="onChange"
-                />
-            `;
+            static template = xml`<CodeEditor onChange.bind="onChange" />`;
             onChange(value) {
                 assert.step(value);
             }
@@ -124,19 +142,9 @@ QUnit.module("Web Components", (hooks) => {
     });
 
     QUnit.test("Mode props update imports the mode", async (assert) => {
-        const fakeAceEditor = {
-            session: {
-                setMode: (mode) => {
-                    assert.step(mode);
-                },
-                setUseWorker: () => {},
-                on: () => {},
-            },
-            setValue: () => {},
-            getValue: () => "",
-            setTheme: () => {},
-            resize: () => {},
-            destroy: () => {},
+        const fakeAceEditor = getFakeAceEditor();
+        fakeAceEditor.session.setMode = (mode) => {
+            assert.step(mode);
         };
 
         patchWithCleanup(window.ace, {
@@ -163,19 +171,9 @@ QUnit.module("Web Components", (hooks) => {
     });
 
     QUnit.test("Theme props updates imports the theme", async (assert) => {
-        const fakeAceEditor = {
-            session: {
-                setMode: () => {},
-                setUseWorker: () => {},
-                on: () => {},
-            },
-            setValue: () => {},
-            getValue: () => "",
-            setTheme: (theme) => {
-                assert.step(theme);
-            },
-            resize: () => {},
-            destroy: () => {},
+        const fakeAceEditor = getFakeAceEditor();
+        fakeAceEditor.setTheme = (theme) => {
+            assert.step(theme ? theme : "default");
         };
 
         patchWithCleanup(window.ace, {
@@ -184,12 +182,7 @@ QUnit.module("Web Components", (hooks) => {
 
         class Parent extends Component {
             static components = { CodeEditor };
-            static template = xml`
-                <CodeEditor
-                    mode="'xml'"
-                    theme="state.theme"
-                />
-            `;
+            static template = xml`<CodeEditor theme="state.theme" />`;
             setup() {
                 this.state = useState({ theme: "" });
             }
@@ -199,7 +192,7 @@ QUnit.module("Web Components", (hooks) => {
         }
 
         const codeEditor = await mount(Parent, target, { env });
-        assert.verifySteps(["textmate"], "Default theme should be loaded");
+        assert.verifySteps(["default"], "Default theme should be loaded");
 
         await codeEditor.setTheme("monokai");
         await nextTick();

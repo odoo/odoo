@@ -484,6 +484,7 @@ This module provides the core of the Odoo Web Client.
             "web/static/lib/ace/javascript_highlight_rules.js",
             "web/static/lib/ace/mode-xml.js",
             "web/static/lib/ace/mode-qweb.js",
+            "web/static/lib/ace/mode-python.js",
             "web/static/lib/ace/mode-scss.js",
             "web/static/lib/ace/theme-monokai.js",
         ],

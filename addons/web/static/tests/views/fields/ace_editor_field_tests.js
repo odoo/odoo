@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
-import { getFixture, triggerEvents } from "@web/../tests/helpers/utils";
+import { getFixture, nextTick, triggerEvents } from "@web/../tests/helpers/utils";
 import { pagerNext } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { fakeCookieService } from "@web/../tests/helpers/mock_services";
@@ -46,7 +46,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <field name="foo" widget="ace" />
+                    <field name="foo" widget="code" />
                 </form>`,
         });
 
@@ -57,7 +57,7 @@ QUnit.module("Fields", (hooks) => {
             "should have rendered something with ace editor"
         );
 
-        assert.ok(target.querySelector(".o_field_ace").textContent.includes("yop"));
+        assert.ok(target.querySelector(".o_field_code").textContent.includes("yop"));
     });
 
     QUnit.test("AceEditorField doesn't crash when editing", async (assert) => {
@@ -69,7 +69,7 @@ QUnit.module("Fields", (hooks) => {
             arch: `
                 <form>
                     <field name="display_name" />
-                    <field name="foo" widget="ace" />
+                    <field name="foo" widget="code" />
                 </form>`,
         });
 
@@ -86,14 +86,15 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: /* xml */ `
                 <form>
-                    <field name="foo" widget="ace" />
+                    <field name="foo" widget="code" />
                 </form>`,
         });
 
-        assert.ok(target.querySelector(".o_field_ace").textContent.includes("yop"));
+        assert.ok(target.querySelector(".o_field_code").textContent.includes("yop"));
 
         await pagerNext(target);
+        await nextTick();
 
-        assert.ok(target.querySelector(".o_field_ace").textContent.includes("blip"));
+        assert.ok(target.querySelector(".o_field_code").textContent.includes("blip"));
     });
 });
