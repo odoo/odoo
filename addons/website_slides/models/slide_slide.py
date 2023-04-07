@@ -219,7 +219,7 @@ class Slide(models.Model):
     embed_ids = fields.One2many('slide.embed', 'slide_id', string="External Slide Embeds")
     embed_count = fields.Integer('# of Embeds', compute='_compute_embed_counts')
     slide_views = fields.Integer('# of Website Views', store=True, compute="_compute_slide_views")
-    public_views = fields.Integer('# of Public Views', copy=False)
+    public_views = fields.Integer('# of Public Views', copy=False, default=0, readonly=True)
     total_views = fields.Integer("# Total Views", default="0", compute='_compute_total', store=True)
     # comments
     comments_count = fields.Integer('Number of comments', compute="_compute_comments_count")
