@@ -79,6 +79,8 @@
                 </filter>
                 <filter name="last_stage_update" position="after">
                     <filter string="Deadline" name="deadline" context="{'group_by': 'date_deadline'}"/>
+                    <separator/>
+                    <filter string="Properties" name="group_by_properties" context="{'group_by': 'task_properties'}"/>
                 </filter>
             </field>
         </record>
