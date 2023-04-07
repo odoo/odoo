@@ -63,15 +63,13 @@ class Vote(models.Model):
 
         for vote in self:
             vote._check_general_rights(values)
-            if 'vote' in values:
-                if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0'):
-                    upvote = True
-                elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0'):
-                    upvote = False
+            vote_value = values.get('vote')
+            if vote_value is not None:
+                upvote = vote.vote == '-1' if vote_value == '0' else vote_value == '1'
                 vote._check_karma_rights(upvote)
 
                 # karma update
-                vote._vote_update_karma(vote.vote, values['vote'])
+                vote._vote_update_karma(vote.vote, vote_value)
 
         res = super(Vote, self).write(values)
         return res
@@ -90,7 +88,7 @@ class Vote(models.Model):
             if self._uid != self.user_id.id:
                 raise UserError(_('It is not allowed to modify someone else\'s vote.'))
 
-    def _check_karma_rights(self, upvote=None):
+    def _check_karma_rights(self, upvote=False):
         # karma check
         if upvote and not self.post_id.can_upvote:
             raise AccessError(_('%d karma required to upvote.', self.post_id.forum_id.karma_upvote))
