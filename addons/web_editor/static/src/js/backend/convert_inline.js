@@ -494,9 +494,9 @@ function enforceTablesResponsivity(editable) {
                             <td valign="top" style="width: ${width};">`));
             } else {
                 div.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
-                if (index === tds.length - 1) {
-                    div.after(_createMso(`</td></tr></table>`));
-                }
+            }
+            if (index === tds.length - 1) {
+                div.after(_createMso(`</td></tr></table>`));
             }
             index++;
         }
