@@ -19,11 +19,28 @@ export class InventoryReportListController extends ListController {
             (!this.props.context.inventory_mode || this.props.context.inventory_report_mode)
         ) {
             // hack so we don't show some of the default actions when it's inappropriate to
+<<<<<<< HEAD
             const { print, action } = actionMenus;
             return {
                 action: action.filter((a) => a.name !== this.env._t("Set")),
                 print: print.filter((a) => a.name !== this.env._t("Count Sheet")),
             };
+||||||| parent of 67879ce85de (temp)
+            const {print, action, other} = actionMenus;
+            return Object.assign(
+                {},
+                print.filter(a => a.name !== this.env._t('Count Sheet')),
+                action.filter(a => a.name !== this.env._t('Set')),
+                { other: other },
+            );
+=======
+            const {print, action, other} = actionMenus;
+            return {
+                print: print.filter(a => a.name !== this.env._t('Count Sheet')),
+                action: action.filter(a => a.name !== this.env._t('Set')),
+                other: other,
+            };
+>>>>>>> 67879ce85de (temp)
         }
         return actionMenus;
     }
