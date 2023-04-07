@@ -690,6 +690,10 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(len(pos_session.statement_line_ids), 1)
         self.assertEqual(pos_session.statement_line_ids[0].amount, -10)
 
+    def test_cash_payments_should_reflect_on_next_opening(self):
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="accountman")
+
     def test_fiscal_position_no_tax(self):
         #create a tax of 15% with price included
         tax = self.env['account.tax'].create({
