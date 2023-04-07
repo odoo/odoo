@@ -1173,6 +1173,7 @@ td {
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    margin-top: 20px;
 }
 
 .pos .product .product-img img {
@@ -1216,11 +1217,18 @@ td {
 .pos .product .product-name {
     box-sizing: border-box;
     line-height: 14px;
-    overflow: hidden;
     margin: map-get($spacers, 2);
-    display: -webkit-box;
+    display: flex;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    position: relative;
+    flex-grow: 1;
+}
+
+.pos .product .product-name .product-name-text {
+    flex-grow: 1;
+    position: absolute;
+    bottom: 0;
 }
 
 /*  ********* The BlockUI Component (frontend)  ********* */

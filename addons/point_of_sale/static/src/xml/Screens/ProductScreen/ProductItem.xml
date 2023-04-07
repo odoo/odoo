@@ -11,7 +11,9 @@
             </div>
             <div class="product-content">
                 <div class="product-name" t-attf-id="article_product_{{props.product.id}}">
-                    <t t-esc="props.product.display_name" />
+                    <div class="product-name-text">
+                        <t t-esc="props.product.display_name" />
+                    </div>
                 </div>
                 <span class="price-tag">
                     <t t-esc="price" />
