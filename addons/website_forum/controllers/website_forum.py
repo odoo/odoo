@@ -114,30 +114,23 @@ class WebsiteForum(WebsiteProfile):
             my=my,
             **post
         )
-        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy("forum_posts_only", search,
-            limit=page * self._post_per_page, order=sorting, options=options)
+        question_count, details, fuzzy_search_term = request.website._search_with_fuzzy(
+            "forum_posts_only", search, limit=page * self._post_per_page, order=sorting, options=options)
         question_ids = details[0].get('results', Post)
         question_ids = question_ids[(page - 1) * self._post_per_page:page * self._post_per_page]
 
-        if tag:
-            url = "/forum/%s/tag/%s/questions" % (slug(forum), slug(tag))
-        else:
-            url = "/forum/%s" % slug(forum)
+        url = f"/forum/{slug(forum)}{f'/tag/{slug(tag)}/questions' if tag else ''}"
+        url_args = {'sorting': sorting}
 
-        url_args = {
-            'sorting': sorting
-        }
-        if search:
-            url_args['search'] = search
-        if filters:
-            url_args['filters'] = filters
-        if my:
-            url_args['my'] = my
-        pager = tools.lazy(lambda: request.website.pager(url=url, total=question_count, page=page,
-                                      step=self._post_per_page, scope=self._post_per_page,
-                                      url_args=url_args))
+        for name, value in zip(['filters', 'search', 'my'], [filters, search, my]):
+            if value:
+                url_args[name] = value
 
-        values = self._prepare_user_values(forum=forum, searches=post, header={'ask_hide': not forum.active})
+        pager = tools.lazy(lambda: request.website.pager(
+            url=url, total=question_count, page=page, step=self._post_per_page,
+            scope=self._post_per_page, url_args=url_args))
+
+        values = self._prepare_user_values(forum=forum, searches=post)
         values.update({
             'main_object': tag or forum,
             'edit_in_backend': True,
@@ -323,7 +316,9 @@ class WebsiteForum(WebsiteProfile):
             if record.create_uid.id == request.uid:
                 answer = record
                 break
-        return request.redirect("/forum/%s/post/%s/edit" % (slug(forum), slug(answer)))
+        else:
+            raise werkzeug.exceptions.NotFound()
+        return request.redirect(f'/forum/{slug(forum)}/post/{slug(answer)}/edit')
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/close', type='http', auth="user", methods=['POST'], website=True)
     def question_close(self, forum, question, **post):
@@ -352,7 +347,7 @@ class WebsiteForum(WebsiteProfile):
         user = request.env.user
         if not user.email or not tools.single_email_re.match(user.email):
             return request.redirect("/forum/%s/user/%s/edit?email_required=1" % (slug(forum), request.session.uid))
-        values = self._prepare_user_values(forum=forum, searches={}, header={'ask_hide': True}, new_question=True)
+        values = self._prepare_user_values(forum=forum, searches={}, new_question=True)
         return request.render("website_forum.new_question", values)
 
     @http.route(['/forum/<model("forum.forum"):forum>/new',
@@ -378,7 +373,7 @@ class WebsiteForum(WebsiteProfile):
         })
         if post_parent:
             post_parent._update_last_activity()
-        return request.redirect("/forum/%s/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
+        return request.redirect(f'/forum/{slug(forum)}/{slug(post_parent) if post_parent else new_question.id}')
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
@@ -391,7 +386,7 @@ class WebsiteForum(WebsiteProfile):
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
             question._update_last_activity()
-        return request.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
+        return request.redirect(f'/forum/{slug(forum)}/{slug(question)}')
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
@@ -547,13 +542,14 @@ class WebsiteForum(WebsiteProfile):
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/validate', type='http', auth="user", website=True)
     def post_accept(self, forum, post, **kwargs):
-        url = "/forum/%s/validation_queue" % (slug(forum))
         if post.state == 'flagged':
-            url = "/forum/%s/flagged_queue" % (slug(forum))
+            url = f'/forum/{slug(forum)}/flagged_queue'
         elif post.state == 'offensive':
-            url = "/forum/%s/offensive_posts" % (slug(forum))
+            url = f'/forum/{slug(forum)}/offensive_posts'
         elif post.state == 'close':
-            url = "/forum/%s/closed_posts" % (slug(forum))
+            url = f'/forum/{slug(forum)}/closed_posts'
+        else:
+            url = f'/forum/{slug(forum)}/validation_queue'
         post.validate()
         return request.redirect(url)
 
@@ -585,11 +581,10 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/mark_as_offensive', type='http', auth="user", methods=["POST"], website=True)
     def post_mark_as_offensive(self, forum, post, **kwargs):
         post.mark_as_offensive(reason_id=int(kwargs.get('reason_id', False)))
-        url = ''
         if post.parent_id:
-            url = "/forum/%s/%s/#answer-%s" % (slug(forum), post.parent_id.id, post.id)
+            url = f'/forum/{slug(forum)}/{post.parent_id.id}/#answer-{post.id}'
         else:
-            url = "/forum/%s/%s" % (slug(forum), slug(post))
+            url = f'/forum/{slug(forum)}/{slug(post)}'
         return request.redirect(url)
 
     # User
@@ -599,15 +594,15 @@ class WebsiteForum(WebsiteProfile):
         if partner_id:
             partner = request.env['res.partner'].sudo().search([('id', '=', partner_id)])
             if partner and partner.user_ids:
-                return request.redirect("/forum/%s/user/%d" % (slug(forum), partner.user_ids[0].id))
-        return request.redirect("/forum/%s" % slug(forum))
+                return request.redirect(f'/forum/{slug(forum)}/user/{partner.user_ids[0].id}')
+        return request.redirect('/forum/' + slug(forum))
 
     # Profile
     # -----------------------------------
 
     @http.route(['/forum/<model("forum.forum"):forum>/user/<int:user_id>'], type='http', auth="public", website=True)
     def view_user_forum_profile(self, forum, user_id, forum_origin='/forum', **post):
-        return request.redirect('/profile/user/' + str(user_id) + '?forum_id=' + str(forum.id) + '&forum_origin=' + str(forum_origin))
+        return request.redirect(f'/profile/user/{user_id}?forum_id={forum.id}&forum_origin={forum_origin}')
 
     def _prepare_user_profile_values(self, user, **post):
         values = super(WebsiteForum, self)._prepare_user_profile_values(user, **post)
@@ -667,8 +662,9 @@ class WebsiteForum(WebsiteProfile):
             [('favourite_ids', '=', user.id), ('forum_id', 'in', forums.ids), ('parent_id', '=', False)])
 
         # votes which given on users questions and answers.
-        data = Vote._read_group([('forum_id', 'in', forums.ids), ('recipient_id', '=', user.id)], ['vote'],
-                               aggregates=['__count'])
+        data = Vote._read_group(
+            [('forum_id', 'in', forums.ids), ('recipient_id', '=', user.id)], ['vote'], aggregates=['__count']
+        )
         up_votes, down_votes = 0, 0
         for vote, count in data:
             if vote == '1':
@@ -692,10 +688,7 @@ class WebsiteForum(WebsiteProfile):
         posts_ids = Post.search([('id', 'in', list(posts))])
         posts = {x.id: (x.parent_id or x, x.parent_id and x or False) for x in posts_ids}
 
-        # TDE CLEANME MASTER: couldn't it be rewritten using a 'menu' key instead of one key for each menu ?
-        if user == request.env.user:
-            kwargs['my_profile'] = True
-        else:
+        if user != request.env.user:
             kwargs['users'] = True
 
         values = {
