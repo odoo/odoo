@@ -391,7 +391,7 @@
                         t-attf-title="Number using {{ DECIMAL_POINT }} as decimal separator."
                         t-attf-pattern="[0-9]+([\\{{ DECIMAL_POINT }}][0-9]+)?"
                         t-att-value="condition.displayedValue"
-                        t-on-input="_onValueInput(condition)"
+                        t-on-change="_onValueInput(condition)"
                     />
                     <input t-elif="['integer', 'id'].includes(fieldType)"
                         class="o_input"

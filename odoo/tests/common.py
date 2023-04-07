@@ -760,6 +760,16 @@ class SavepointCase(SingleTransactionCase):
 
         self.addCleanup(self.registry.clear_caches)
 
+        # This prevents precommit functions and data from piling up
+        # until cr.flush is called in 'assertRaises' clauses
+        # (these are not cleared in self.env.clear or envs.clear)
+        cr = self.env.cr
+        def _reset(cb, funcs, data):
+            cb._funcs = funcs
+            cb.data = data
+        for callback in [cr.precommit, cr.postcommit, cr.prerollback, cr.postrollback]:
+            self.addCleanup(_reset, callback, collections.deque(callback._funcs), dict(callback.data))
+
         self._savepoint_id = next(savepoint_seq)
         self.cr.execute('SAVEPOINT test_%d' % self._savepoint_id)
         self.addCleanup(self.cr.execute, 'ROLLBACK TO SAVEPOINT test_%d' % self._savepoint_id)
