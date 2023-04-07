@@ -3569,6 +3569,19 @@ export class OdooEditor extends EventTarget {
             rangeContent.lastChild.remove();
         }
 
+        const commonAncestorElement = closestElement(range.commonAncestorContainer);
+        if (commonAncestorElement && !isBlock(rangeContent.firstChild)) {
+            // Get the list of ancestor elements starting from the provided
+            // commonAncestorElement up to the block-level element.
+            const blockEl = closestBlock(commonAncestorElement);
+            const ancestorsList = [commonAncestorElement, ...ancestors(commonAncestorElement, blockEl)];
+            // Wrap rangeContent with clones of their ancestors to keep the styles.
+            for (const ancestor of ancestorsList) {
+                const clone = ancestor.cloneNode();
+                clone.append(...rangeContent.childNodes);
+                rangeContent.appendChild(clone);
+            }
+        }
         const dataHtmlElement = document.createElement('data');
         dataHtmlElement.append(rangeContent);
         const odooHtml = dataHtmlElement.innerHTML;
