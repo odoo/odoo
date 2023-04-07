@@ -160,6 +160,15 @@ class ResUsers(models.Model):
         return users.action_reset_password()
 
     def action_reset_password(self):
+        try:
+            return self._action_reset_password()
+        except MailDeliveryException as mde:
+            if len(mde.args) == 2 and isinstance(mde.args[1], ConnectionRefusedError):
+                raise UserError(_("Could not contact the mail server, please check your outgoing email server configuration")) from mde
+            else:
+                raise UserError(_("There was an error when trying to deliver your Email, please check your configuration")) from mde
+
+    def _action_reset_password(self):
         """ create signup token for each user, and send their signup url by email """
         if self.env.context.get('install_mode', False):
             return
@@ -241,7 +250,7 @@ class ResUsers(models.Model):
             users_with_email = users.filtered('email')
             if users_with_email:
                 try:
-                    users_with_email.with_context(create_user=True).action_reset_password()
+                    users_with_email.with_context(create_user=True)._action_reset_password()
                 except MailDeliveryException:
                     users_with_email.partner_id.with_context(create_user=True).signup_cancel()
         return users
