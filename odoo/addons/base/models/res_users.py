@@ -1689,9 +1689,13 @@ class UsersView(models.Model):
                 values1[key] = val
 
         if 'groups_id' not in values and (add or rem):
+            added = self.env['res.groups'].sudo().browse(add)
+            added |= added.mapped('trans_implied_ids')
+            added_ids = added._ids
             # remove group ids in `rem` and add group ids in `add`
+            # do not remove groups that are added by implied
             values1['groups_id'] = list(itertools.chain(
-                zip(repeat(3), rem),
+                zip(repeat(3), [gid for gid in rem if gid not in added_ids]),
                 zip(repeat(4), add)
             ))
 
