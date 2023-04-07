@@ -83,7 +83,7 @@ class AccountPaymentTerm(models.Model):
             record.example_preview_discount = ""
             currency = record.currency_id
             if record.early_discount:
-                date = record._get_last_discount_date_formatted(record.example_date)
+                date = record._get_last_discount_date_formatted(record.example_date or fields.Date.context_today(record))
                 discount_amount = record._get_amount_due_after_discount(record.example_amount, 0.0)
                 record.example_preview_discount = _(
                     "Early Payment Discount: <b>%(amount)s</b> if paid before <b>%(date)s</b>",
@@ -93,7 +93,7 @@ class AccountPaymentTerm(models.Model):
 
             if not record.example_invalid:
                 terms = record._compute_terms(
-                    date_ref=record.example_date,
+                    date_ref=record.example_date or fields.Date.context_today(record),
                     currency=currency,
                     company=self.env.company,
                     tax_amount=0,
