@@ -32,6 +32,7 @@ export class CodeEditor extends Component {
             validate: (mode) => CodeEditor.MODES.includes(mode),
         },
         value: { type: String, optional: true },
+        readonly: { type: Boolean, optional: true },
         onChange: { type: Function, optional: true },
         class: { type: String, optional: true },
         theme: {
@@ -41,6 +42,7 @@ export class CodeEditor extends Component {
         },
     };
     static defaultProps = {
+        readonly: false,
         value: "",
         onChange: () => {},
         class: "",
@@ -64,9 +66,19 @@ export class CodeEditor extends Component {
                 // keep in closure
                 const aceEditor = window.ace.edit(el);
                 this.aceEditor = aceEditor;
-                this.aceEditor.session.setUseWorker(false);
-                this.aceEditor.setValue(this.props.value);
 
+                this.aceEditor.setOptions({
+                    maxLines: Infinity,
+                    showPrintMargin: false,
+                });
+                this.aceEditor.session.setOptions({
+                    useWorker: false,
+                    tabSize: 2,
+                    useSoftTabs: true,
+                });
+                this.aceEditor.$blockScrolling = true;
+
+                this.aceEditor.setValue(this.props.value);
                 this.aceEditor.session.on("change", () => {
                     if (this.props.onChange) {
                         this.props.onChange(this.aceEditor.getValue());
@@ -95,16 +107,36 @@ export class CodeEditor extends Component {
         );
 
         useEffect(
-            (theme) => this.aceEditor.setTheme(theme ? `ace/theme/${theme}` : "textmate"),
+            (theme) => this.aceEditor.setTheme(theme ? `ace/theme/${theme}` : ""),
             () => [this.props.theme]
         );
 
-        this.debouncedResize = useDebounced(() => {
+        useEffect(
+            (readonly) => {
+                this.aceEditor.setOptions({
+                    readOnly: readonly,
+                    highlightActiveLine: !readonly,
+                    highlightGutterLine: !readonly,
+                });
+
+                this.aceEditor.renderer.setOptions({
+                    displayIndentGuides: !readonly,
+                    showGutter: !readonly,
+                });
+
+                this.aceEditor.renderer.$cursorLayer.element.style.display = readonly
+                    ? "none"
+                    : "block";
+            },
+            () => [this.props.readonly]
+        );
+
+        const debouncedResize = useDebounced(() => {
             if (this.aceEditor) {
                 this.aceEditor.resize();
             }
         }, 250);
 
-        onResized(this.editorRef, () => this.debouncedResize());
+        onResized(this.editorRef, debouncedResize);
     }
 }

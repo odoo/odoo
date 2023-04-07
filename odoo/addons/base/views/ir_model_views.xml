@@ -124,7 +124,7 @@
                                             <group string="Advanced Properties" groups="base.group_no_one">
                                                 <field name="related"/>
                                                 <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
-                                                <field name="compute" widget="ace" options="{'mode': 'python'}"/>
+                                                <field name="compute" widget="code" options="{'mode': 'python'}"/>
                                             </group>
                                             <div groups="base.group_no_one">
                                                 <h3>How to define a computed field</h3>
@@ -319,7 +319,7 @@
                                 <group string="Advanced Properties" groups="base.group_no_one">
                                     <field name="related"/>
                                     <field name="depends" attrs="{'required': [('compute', 'not in', [False, ''])]}"/>
-                                    <field name="compute" widget="ace" options="{'mode': 'python'}"/>
+                                    <field name="compute" widget="code" options="{'mode': 'python'}"/>
                                 </group>
                                 <div groups="base.group_no_one">
                                     <h3>How to define a computed field</h3>
@@ -672,7 +672,7 @@
                         <field name="perm_create"/>
                         <field name="perm_unlink"/>
                     </group>
-                   </sheet> 
+                   </sheet>
                 </form>
             </field>
         </record>
