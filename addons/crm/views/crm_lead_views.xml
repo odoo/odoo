@@ -716,6 +716,8 @@
                         <separator orientation="vertical" />
                         <filter string="Creation Date" context="{'group_by':'create_date:month'}" name="month"/>
                         <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
+                        <separator />
+                        <filter string="Properties" name="group_by_lead_properties" context="{'group_by':'lead_properties'}"/>
                     </group>
                 </search>
             </field>
@@ -1026,6 +1028,8 @@
                         <filter string="Conversion Date" name="date_conversion" context="{'group_by': 'date_conversion'}" groups="crm.group_use_lead"/>
                         <filter string="Expected Closing" name="date_deadline" context="{'group_by':'date_deadline'}"/>
                         <filter string="Closed Date" name="date_closed" context="{'group_by':'date_closed'}"/>
+                        <separator/>
+                        <filter string="Properties" name="group_by_lead_properties" context="{'group_by':'lead_properties'}"/>
                     </group>
                 </search>
             </field>
