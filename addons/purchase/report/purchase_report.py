@@ -62,7 +62,7 @@ class PurchaseReport(models.Model):
     @property
     def _table_query(self):
         ''' Report needs to be dynamic to take into account multi-company selected + multi-currency rates '''
-        return '%s %s %s' % (self._select(), self._from(), self._group_by())
+        return '%s %s %s %s' % (self._select(), self._from(), self._where(), self._group_by())
 
     def _select(self):
         select_str = """
@@ -119,6 +119,12 @@ class PurchaseReport(models.Model):
             currency_table=self.env['res.currency']._get_query_currency_table({'multi_company': True, 'date': {'date_to': fields.Date.today()}}),
         )
         return from_str
+
+    def _where(self):
+        return """
+            WHERE
+                l.display_type IS NULL
+        """
 
     def _group_by(self):
         group_by_str = """
