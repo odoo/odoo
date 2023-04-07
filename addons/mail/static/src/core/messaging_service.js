@@ -730,10 +730,12 @@ export const messagingService = {
         }
         const messaging = new Messaging(env, services);
         messaging.initialize();
-        services.bus_service.addEventListener("notification", (notifEvent) => {
-            messaging.handleNotification(notifEvent.detail);
+        messaging.isReady.then(() => {
+            services.bus_service.addEventListener("notification", (notifEvent) => {
+                messaging.handleNotification(notifEvent.detail);
+            });
+            services.bus_service.start();
         });
-        services.bus_service.start();
         return messaging;
     },
 };
