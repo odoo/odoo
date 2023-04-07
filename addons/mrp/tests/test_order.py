@@ -2460,20 +2460,19 @@ class TestMrpOrder(TestMrpCommon):
 
         # update real duration to amount above expected duration
         workorder.duration = real_duration_increased_above_expected
-        self.assertEqual(len(workorder.time_ids), 3, "Two more time tracking values should have been created")
-        self.assertEqual(workorder.time_ids[1].loss_type, 'productive', "Duration amount added under the expected duration should be productive time")
-        self.assertEqual(workorder.time_ids[2].loss_type, 'performance', "Duration amount added above expected duration should be performance (i.e. reduced) time")
-        self.assertEqual(workorder.time_ids[1].duration, expected_duration - real_duration_under_expected, "Added (productive) time should be expected duration - already existing duration")
-        self.assertEqual(workorder.time_ids[2].duration, real_duration_increased_above_expected - expected_duration, "Added (reduced) time should be total duration - expected duration")
+        self.assertEqual(len(workorder.time_ids), 2, "One more time tracking values should have been created")
+        # loss times should be inverted!!
+        self.assertEqual(workorder.time_ids[0].loss_type, 'performance', "The first timesheet should change from productive to performance")
+        self.assertEqual(workorder.time_ids[1].loss_type, 'productive', "Duration amount added before expected duration should be productive")
+        self.assertEqual(workorder.time_ids[0].duration, real_duration_increased_above_expected - expected_duration, "Added (reduced) time should be total duration - expected duration")
+        self.assertEqual(workorder.time_ids[1].duration, expected_duration, "Added (productive) time should be expected duration")
 
         # update real duration to amount below expected duration
         workorder.duration = real_duration_decreased
         # reducing time reverses the time_id order... so we reverse the check
-        self.assertEqual(len(workorder.time_ids), 2, "One time tracking values should have been deleted")
-        self.assertEqual(workorder.time_ids[1].loss_type, 'productive', "Original time tracking should be unchanged")
-        self.assertEqual(workorder.time_ids[1].duration, real_duration_under_expected, "Original time tracking should be unchanged")
+        self.assertEqual(len(workorder.time_ids), 1, "One time tracking value should have been deleted")
         self.assertEqual(workorder.time_ids[0].loss_type, 'productive', "Remaining time tracking should be productive")
-        self.assertEqual(workorder.time_ids[0].duration, real_duration_decreased - real_duration_under_expected, "Time tracking duration should have been reduced to reflect new shorter duration")
+        self.assertEqual(workorder.time_ids[0].duration, real_duration_decreased, "Time tracking duration should have been reduced to reflect new shorter duration")
 
     def test_propagate_quantity_on_backorders(self):
         """Create a MO for a product with several work orders.

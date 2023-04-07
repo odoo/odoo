@@ -145,6 +145,7 @@ class TestAnalyticAccount(TestMrpAnalyticAccount):
         self.assertEqual(len(mo.workorder_ids.wc_analytic_account_line_id), 0)
 
         # change duration to 120
+
         with mo_form.workorder_ids.edit(0) as line_edit:
             line_edit.duration = 120.0
         mo_form.save()

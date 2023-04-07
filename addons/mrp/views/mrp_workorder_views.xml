@@ -78,6 +78,7 @@
                 <field name="time_ids" invisible="1"/>
                 <field name="working_state" invisible="1"/>
                 <field name="operation_id" invisible="1" domain="['|', ('bom_id', '=', production_bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
+                <field name="duration_editable" invisible="1"/>
                 <field name="name" string="Operation"/>
                 <field name="workcenter_id"/>
                 <field name="product_id" optional="show"/>
@@ -87,7 +88,7 @@
                 <field name="date_finished" optional="hide" attrs="{'readonly': [('state', 'in', ['progress', 'done', 'cancel'])]}"/>
                 <field name="duration_expected" widget="float_time" sum="expected duration"/>
                 <field name="duration" widget="mrp_timer"
-                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}" sum="real duration"/>
+                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': ['|',('is_user_working', '=', True), ('duration_editable', '=', False)]}" sum="real duration"/>
                 <field name="state" widget="badge" decoration-warning="state == 'progress'" decoration-success="state == 'done'" decoration-danger="state == 'cancel'" decoration-info="state not in ('progress', 'done', 'cancel')"
                   attrs="{'invisible': [('production_state', '=', 'draft')], 'column_invisible': [('parent.state', '=', 'draft')]}"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"

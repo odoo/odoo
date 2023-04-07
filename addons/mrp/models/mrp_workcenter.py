@@ -468,10 +468,11 @@ class MrpWorkcenterProductivity(models.Model):
         workorder_ids = {vals['workorder_id'] for vals in vals_list}
         workorders = self.env['mrp.workorder'].browse(workorder_ids)
 
+        return_created_ids = [time_id for time_id in created_time_ids]
         for wo in workorders:
             self._split(wo)
-            self._merge_timesheets(wo)
-        return created_time_ids
+            return_created_ids = self._merge_timesheets(return_created_ids, wo)
+        return return_created_ids
 
     def write(self, vals_list):
         self.ensure_one()
@@ -485,44 +486,46 @@ class MrpWorkcenterProductivity(models.Model):
         else:
             workorder = self.workorder_id
         self._split(workorder)
-        self._merge_timesheets(workorder)
+        self._merge_timesheets([], workorder)
 
         self.with_context(timesheet_splitting_merging=False)
         return True
 
-    def _merge_timesheets(self, workorder=None):
-        dates_start = {}
-        dates_end = {}
-        for time in workorder.time_ids:
-            dates_start.setdefault(time.date_start, []).append(time)
-            dates_end.setdefault(time.date_end, []).append(time)
-        self._merge(dates_start, dates_end)
-        return
-
-    def _merge(self, dates_start, dates_end):
+    def _merge_timesheets(self, created_time_ids, workorder=None, ):
+        """
+            This method will check if two timesheet intersect and will merge them if necessary
+            2 cases are possible:
+                - a bigger timesheet "contains" a smaller one => the smaller one is deleted
+                - a timesheet ends after of exactly when another one start => merge the two timesheet together
+        """
+        timesheets = [time_id for time_id in workorder.time_ids]
         to_unlink = []
-        for date in dates_start:
-            if date not in dates_end:
-                continue
-            for ts_start in dates_start[date]:
-                for ts_end in dates_end[date]:
-                    if ts_end.id == ts_start.id:
-                        continue
-                    if not self._merge_user_condition(ts_start, ts_end):
-                        continue
-                    if ts_start.loss_id.loss_type != ts_end.loss_id.loss_type:
-                        continue
-                    new_timesheet_vals = self._prepare_merge_timesheets(ts_start, ts_end)
-                    time_sheet = self.with_context(timesheet_splitting_merging=True).create(new_timesheet_vals)
-                    dates_start[ts_end.date_start].remove(ts_end)
-                    dates_end[ts_start.date_end].remove(ts_start)
-                    dates_start[date].remove(ts_start)
-                    dates_end[date].remove(ts_end)
-                    dates_start[time_sheet.date_start].append(time_sheet)
-                    dates_end[time_sheet.date_end].append(time_sheet)
-                    to_unlink.extend([ts_start, ts_end])
-        for item in to_unlink:
-            item.unlink()
+        for ts1 in timesheets:
+            for ts2 in timesheets:
+                if ts1 == ts2:
+                    continue
+                if not self._merge_user_condition(ts1, ts2):
+                    continue
+                if ts1.loss_id != ts2.loss_id:
+                    continue
+                if not ts2.date_end or not ts1.date_end:
+                    continue
+                if ts1.date_start <= ts2.date_start and ts1.date_end >= ts2.date_end:
+                    to_unlink.append(ts2.id)
+                    timesheets.remove(ts2)
+                    created_time_ids.remove(ts2) if ts2 in created_time_ids else False
+                if ts1.date_start <= ts2.date_start and ts1.date_end < ts2.date_end and ts2.date_start <= ts1.date_end:
+                    new_timesheet_vals = self._prepare_merge_timesheets(ts2, ts1)
+                    new_timesheet = self.with_context(timesheet_splitting_merging=True).create(new_timesheet_vals)
+                    timesheets.remove(ts1) if ts1 in timesheets else False
+                    timesheets.remove(ts2) if ts2 in timesheets else False
+                    created_time_ids.remove(ts2) if ts2 in created_time_ids else False
+                    created_time_ids.remove(ts1) if ts1 in created_time_ids else False
+                    timesheets.append(new_timesheet)
+                    created_time_ids.append(new_timesheet)
+                    to_unlink.extend([ts1.id, ts2.id])
+        self.env['mrp.workcenter.productivity'].browse(to_unlink).unlink()
+        return created_time_ids
 
     def _split(self, workorder):
         newly_created = []
@@ -564,13 +567,18 @@ class MrpWorkcenterProductivity(models.Model):
         return new_timesheet_vals
 
     def _prepare_merge_timesheets(self, timesheet_start, timesheet_end):
+        if timesheet_start.date_end:
+            date_end = timesheet_start.date_end
+        else:
+            date_end = timesheet_end.date_start + timedelta(minutes=timesheet_start.duration + timesheet_end.duration) - timedelta(minutes=timesheet_end.date_end - timesheet_start.date_start),
+        duration = (date_end - timesheet_end.date_start).seconds / 60
         new_timesheet_vals = {
             'user_id': timesheet_end.user_id.id,
             'workorder_id': timesheet_end.workorder_id.id,
             'workcenter_id': timesheet_start.workcenter_id.id,
             'date_start': timesheet_end.date_start,
-            'date_end': timesheet_start.date_end if timesheet_start.date_end else timesheet_end.date_start + timedelta(minutes=timesheet_start.duration + timesheet_end.duration),
-            'duration': timesheet_start.duration + timesheet_end.duration,
+            'date_end': date_end,
+            'duration': duration,
             'loss_id': timesheet_end.loss_id.id,
             'company_id': timesheet_end.company_id.id,
         }
