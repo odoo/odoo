@@ -6,15 +6,15 @@ from odoo.tools import mute_logger
 from odoo.tests import tagged
 
 
-@tagged('post_install')
+@tagged('post_install', '-at_install')
 class TestAccountDigest(TestDigestCommon):
 
     @classmethod
     @mute_logger('odoo.models.unlink')
     def setUpClass(cls):
         super().setUpClass()
-        account1 = cls.env['account.account'].search([('internal_group', '=', 'income')], limit=1)
-        account2 = cls.env['account.account'].search([('internal_group', '!=', 'income')], limit=1)
+        account1 = cls.env['account.account'].search([('internal_group', '=', 'income'), ('company_id', '=', cls.company_1.id)], limit=1)
+        account2 = cls.env['account.account'].search([('internal_group', '=', 'expense'), ('company_id', '=', cls.company_1.id)], limit=1)
         cls.env['account.journal'].with_company(cls.company_2).create({
             'name': 'Test Journal',
             'code': 'code',
@@ -23,17 +23,17 @@ class TestAccountDigest(TestDigestCommon):
 
         comp2_account, comp2_account2 = cls.env['account.account'].create([{
             'name': 'Account 1 Company 2',
-            'internal_group': 'income',
+            'account_type': 'expense_depreciation',
             'company_id': cls.company_2.id,
-            'user_type_id': cls.env.ref('account.data_account_type_revenue').id,
-            'code': 'code_account_1_company_2',
+            'code': 'aaaaaa',
         }, {
             'name': 'Account 2 Company 2',
-            'internal_group': 'expense',
+            'account_type': 'income_other',
             'company_id': cls.company_2.id,
-            'user_type_id': cls.env.ref('account.data_account_type_expenses').id,
-            'code': 'code_account_2_company_2',
+            'code': 'bbbbbb',
         }])
+
+        cls.env['account.move'].search([]).state = 'draft'
 
         moves = cls.env['account.move'].create({
             'line_ids': [
@@ -58,7 +58,7 @@ class TestAccountDigest(TestDigestCommon):
         self.assertEqual(int(self.digest_2.kpi_account_total_revenue_value), -2)
         self.assertEqual(int(self.digest_3.kpi_account_total_revenue_value), -13)
 
-        self.digest_3.invalidate_cache()
+        self.digest_3.invalidate_recordset()
         self.assertEqual(
             int(self.digest_3.with_company(self.company_2).kpi_account_total_revenue_value),
             -2,
