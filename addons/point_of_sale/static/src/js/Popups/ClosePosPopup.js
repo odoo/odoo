@@ -38,9 +38,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         } else if (this.hasUserAuthority()) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Payments Difference"),
-                body: this.env._t(
-                    "Do you want to accept payments difference and post a profit/loss journal entry?"
-                ),
+                body: this.env._t("Do you want to accept payments difference and post a profit/loss journal entry?"),
             });
             if (confirmed) {
                 this.closeSession();
@@ -68,18 +66,14 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
     async openDetailsPopup() {
         const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
-            total: this.manualInputCashCount
-                ? 0
-                : this.state.payments[this.defaultCashDetails.id].counted,
+            total: this.manualInputCashCount ? 0 : this.state.payments[this.defaultCashDetails.id].counted,
         });
         if (confirmed) {
             const { total, moneyDetailsNotes, moneyDetails } = payload;
             this.state.payments[this.defaultCashDetails.id].counted = total;
-            this.state.payments[this.defaultCashDetails.id].difference =
-                this.env.pos.round_decimals_currency(
-                    this.state.payments[[this.defaultCashDetails.id]].counted -
-                        this.defaultCashDetails.amount
-                );
+            this.state.payments[this.defaultCashDetails.id].difference = this.env.pos.round_decimals_currency(
+                this.state.payments[[this.defaultCashDetails.id]].counted - this.defaultCashDetails.amount
+            );
             if (moneyDetailsNotes) {
                 this.state.notes = moneyDetailsNotes;
             }
@@ -112,9 +106,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         return Object.entries(this.state.payments).find((pm) => pm[1].difference != 0);
     }
     hasUserAuthority() {
-        const absDifferences = Object.entries(this.state.payments).map((pm) =>
-            Math.abs(pm[1].difference)
-        );
+        const absDifferences = Object.entries(this.state.payments).map((pm) => Math.abs(pm[1].difference));
         return (
             this.isManager ||
             this.amountAuthorizedDiff == null ||
@@ -128,14 +120,13 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         if (!this.closeSessionClicked) {
             this.closeSessionClicked = true;
 
-            if (this.env.pos.config.cashControl) {
+            if (this.cashControl) {
                 const response = await this.orm.call(
                     "pos.session",
-                    "post_closing_cash_details"[this.env.pos.pos_session.id],
+                    "post_closing_cash_details",
+                    [this.env.pos.pos_session.id],
                     {
-                        counted_cash: this.env.pos.config.cashControl
-                            ? this.state.payments[this.defaultCashDetails.id].counted
-                            : 0,
+                        counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
                     }
                 );
 
