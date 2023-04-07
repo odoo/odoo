@@ -140,7 +140,7 @@ class Applicant(models.Model):
             # Count into the companies that are selected from the multi-company widget
             company_ids = self.env.context.get('allowed_company_ids')
             if company_ids:
-                query.add_where('other.company_id in %s', [tuple(company_ids)])
+                query.add_where('other.company_id is null or other.company_id in %s', [tuple(company_ids)])
             self._apply_ir_rules(query)
             from_clause, where_clause, where_clause_params = query.get_sql()
             # In case the applicant phone or mobile is configured in wrong field
@@ -148,9 +148,11 @@ class Applicant(models.Model):
             SELECT hr_applicant.id as appl_id,
                 COUNT(other.id) as count
               FROM hr_applicant
-              JOIN hr_applicant other ON LOWER(other.email_from) = LOWER(hr_applicant.email_from)
-                OR other.partner_phone = hr_applicant.partner_phone OR other.partner_phone = hr_applicant.partner_mobile
-                OR other.partner_mobile = hr_applicant.partner_mobile OR other.partner_mobile = hr_applicant.partner_phone
+              JOIN hr_applicant other ON NULLIF(LOWER(other.email_from), '') = NULLIF(LOWER(hr_applicant.email_from), '')
+                OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_phone, '')
+                OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_mobile, '')
+                OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_mobile, '')
+                OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_phone, '')
             %(where)s
         GROUP BY hr_applicant.id
             """ % {
@@ -420,9 +422,11 @@ class Applicant(models.Model):
         self.env.cr.execute("""
         SELECT other.id
           FROM hr_applicant
-          JOIN hr_applicant other ON LOWER(other.email_from) = LOWER(hr_applicant.email_from)
-            OR other.partner_phone = hr_applicant.partner_phone OR other.partner_phone = hr_applicant.partner_mobile
-            OR other.partner_mobile = hr_applicant.partner_mobile OR other.partner_mobile = hr_applicant.partner_phone
+          JOIN hr_applicant other ON NULLIF(LOWER(other.email_from), '') = NULLIF(LOWER(hr_applicant.email_from), '')
+            OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_phone, '')
+            OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_mobile, '')
+            OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_mobile, '')
+            OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_phone, '')
          WHERE hr_applicant.id in %s
         """, (tuple(self.ids),)
         )
