@@ -96,6 +96,8 @@ export class Call extends Component {
                 });
             }
         }
+        // sort raising hand by raising hand value
+        // sort non-raising hand by local string compare
         return raisingHandCards.concat(cards);
     }
 
