@@ -154,6 +154,43 @@ QUnit.test("has no effect when component is destroyed", async (assert) => {
     );
 });
 
+QUnit.test("is positioned relative to its containing block", async (assert) => {
+    const fixtureBox = getFixture().getBoundingClientRect();
+    // offset the container
+    const margin = 15;
+    container.style.margin = `${margin}px`;
+    let pos1, pos2;
+    let TestComp = getTestComponent({
+        onPositioned: (el, pos) => {
+            pos1 = pos;
+        },
+    });
+    let popper = await mount(TestComp, container);
+
+    const popBox1 = document.getElementById("popper").getBoundingClientRect();
+    destroy(popper);
+    document.getElementById("reference").remove();
+
+    // make container the containing block instead of the viewport
+    container.style.contain = "layout";
+
+    TestComp = getTestComponent({
+        onPositioned: (el, pos) => {
+            pos2 = pos;
+        },
+    });
+    popper = await mount(TestComp, container);
+    const popBox2 = document.getElementById("popper").getBoundingClientRect();
+    destroy(popper);
+
+    // best positions are not the same relative to their containing block
+    assert.equal(pos1.top, pos2.top + margin + fixtureBox.top);
+    assert.equal(pos1.left, pos2.left + margin + fixtureBox.left);
+    // best positions are the same relative to the viewport
+    assert.equal(popBox1.top, popBox2.top);
+    assert.equal(popBox1.left, popBox2.left);
+});
+
 function getPositionTest(position, positionToCheck) {
     return async (assert) => {
         assert.expect(2);
