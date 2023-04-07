@@ -78,7 +78,9 @@ const DEFAULTS = {
  * @param {HTMLElement} reference
  * @param {HTMLElement} popper
  * @param {Options} options
- * @returns {PositioningSolution} the best positioning solution
+ * @returns {PositioningSolution} the best positioning solution, relative to
+ *                                the containing block of the popper.
+ *                                => can be applied to popper.style.(top|left)
  */
 function getBestPosition(reference, popper, { container, margin, position }) {
     // Retrieve directions and variants
@@ -160,7 +162,12 @@ function getBestPosition(reference, popper, { container, margin, position }) {
                   left: directionValue,
               };
         return {
-            ...positioning,
+            // Subtract the offsets of the containing block (relative to the
+            // viewport). It can be done like that because the style top and
+            // left were reset to 0px in `reposition`
+            // https://developer.mozilla.org/en-US/docs/Web/CSS/Containing_block#identifying_the_containing_block
+            top: positioning.top - popBox.top,
+            left: positioning.left - popBox.left,
             direction: DIRECTIONS[d],
             variant: VARIANTS[v],
         };
