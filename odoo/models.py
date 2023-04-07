@@ -5898,7 +5898,7 @@ class BaseModel(metaclass=MetaModel):
         return self.id or 0
 
     def __repr__(self):
-        return f"{self._name}{self._ids}"
+        return f"{self._name}{self._ids!r}"
 
     def __hash__(self):
         return hash((self._name, frozenset(self._ids)))
