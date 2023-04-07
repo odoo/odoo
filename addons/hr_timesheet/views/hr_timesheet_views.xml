@@ -9,8 +9,10 @@
                     <field name="readonly_timesheet" invisible="1"/>
                     <field name="date" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="employee_id" invisible="1" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                    <field name="project_id" required="1" options="{'no_create_edit': True}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
-                    <field name="task_id" optional="show" options="{'no_create_edit': True}" widget="task_with_hours" context="{'default_project_id': project_id}"
+                    <field name="project_id" required="1" options="{'no_create_edit': True}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"
+                        context="{'search_default_my_projects': True}"/>
+                    <field name="task_id" optional="show" options="{'no_create_edit': True}" widget="task_with_hours"
+                        context="{'default_project_id': project_id, 'search_default_my_tasks': True, 'search_default_open_tasks': True}"
                         attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="name" optional="show" required="0" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                     <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"
@@ -125,9 +127,11 @@
                             <group>
                                 <field name="readonly_timesheet" invisible="1"/>
                                 <field name="project_id" required="1" options="{'no_create_edit': True}"
+                                    context="{'search_default_my_projects': True}"
                                     attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                 <field name="task_id" widget="task_with_hours" options="{'no_create_edit': True}"
-                                    context="{'default_project_id': project_id}" attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
+                                    context="{'default_project_id': project_id, 'search_default_my_tasks': True, 'search_default_open_tasks': True}"
+                                    attrs="{'readonly': [('readonly_timesheet', '=', True)]}"/>
                                 <field name="company_id" groups="base.group_multi_company" invisible="1"/>
                             </group>
                             <group>
