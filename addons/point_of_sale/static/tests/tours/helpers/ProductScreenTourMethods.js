@@ -145,21 +145,43 @@ class Do {
     enterOpeningAmount(amount) {
         return [
             {
-                content: 'enter opening amount',
-                trigger: '.cash-input-sub-section > .pos-input',
-                run: 'text ' + amount,
+                content: "enter opening amount",
+                trigger: ".cash-input-sub-section > .pos-input",
+                run: "text " + amount,
             },
         ];
     }
     changeFiscalPosition(name) {
         return [
             {
-                content: 'click fiscal position button',
-                trigger: '.o_fiscal_position_button',
+                content: "click fiscal position button",
+                trigger: ".o_fiscal_position_button",
             },
             {
-                content: 'fiscal position screen is shown',
+                content: "fiscal position screen is shown",
                 trigger: `.selection-item:contains("${name}")`,
+            },
+        ];
+    }
+    clickCloseButton() {
+        return [
+            {
+                trigger: ".header-button",
+            },
+        ];
+    }
+    closeWithCashAmount(val) {
+        return [
+            {
+                trigger: ".pos-input",
+                run: `text ${val}`,
+            },
+        ];
+    }
+    clickCloseSession() {
+        return [
+            {
+                trigger: "footer .button:contains('Close Session')",
             },
         ];
     }
@@ -259,20 +281,20 @@ class Check {
     checkSecondCashClosingDetailsLineAmount(amount, sign) {
         return [
             {
-                content: 'Open menu',
-                trigger: '.menu-button',
+                content: "Open menu",
+                trigger: ".menu-button",
             },
             {
-                content: 'Click close session button',
-                trigger: '.header-button',
+                content: "Click close session button",
+                trigger: ".header-button",
             },
             {
-                content: 'Check closing details',
+                content: "Check closing details",
                 trigger: `.cash-overview tr:nth-child(2) td:contains("${amount}")`,
                 run: () => {}, // it's a check
             },
             {
-                content: 'Check closing details',
+                content: "Check closing details",
                 trigger: `.cash-overview tr:nth-child(2) .cash-sign:contains("${sign}")`,
                 run: () => {}, // it's a check
             },
@@ -281,7 +303,7 @@ class Check {
     noDiscountApplied(originalPrice) {
         return [
             {
-                content: 'no discount is applied',
+                content: "no discount is applied",
                 trigger: `.info:not(:contains(${originalPrice}))`,
             },
         ];
@@ -292,6 +314,23 @@ class Check {
                 content: `discount original price is shown`,
                 trigger: `s:contains('${original_price}')`,
                 run: function () {},
+            },
+        ];
+    }
+    cashDifferenceIs(val) {
+        return [
+            {
+                trigger: `.payment-methods-overview tr td:nth-child(4):contains(${val})`,
+                isCheck: true,
+            },
+        ];
+    }
+    // Temporarily put it here. It should be in the utility methods for the backend views.
+    lastClosingCashIs(val) {
+        return [
+            {
+                trigger: `[name=last_session_closing_cash]:contains(${val})`,
+                isCheck: true,
             },
         ];
     }

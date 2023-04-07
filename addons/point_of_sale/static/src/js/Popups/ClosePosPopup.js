@@ -131,14 +131,13 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         if (!this.closeSessionClicked) {
             this.closeSessionClicked = true;
 
-            if (this.pos.globalState.config.cashControl) {
+            if (this.cashControl) {
                 const response = await this.orm.call(
                     "pos.session",
-                    "post_closing_cash_details"[this.pos.globalState.pos_session.id],
+                    "post_closing_cash_details",
+                    [this.pos.globalState.pos_session.id],
                     {
-                        counted_cash: this.pos.globalState.config.cashControl
-                            ? this.state.payments[this.defaultCashDetails.id].counted
-                            : 0,
+                        counted_cash: this.state.payments[this.defaultCashDetails.id].counted,
                     }
                 );
 

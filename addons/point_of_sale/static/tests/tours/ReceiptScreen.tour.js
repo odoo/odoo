@@ -3,6 +3,7 @@
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
+import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { NumberPopup } from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
@@ -64,18 +65,48 @@ PaymentScreen.do.clickPaymentMethod("Bank");
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.customerNoteIsThere("Test customer note");
 
-registry.category("web_tour.tours").add("ReceiptScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("ReceiptScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
 ProductScreen.do.clickHomeCategory();
-ProductScreen.exec.addOrderline('Test Product', '1');
+ProductScreen.exec.addOrderline("Test Product", "1");
 ProductScreen.do.clickPricelistButton();
-ProductScreen.do.selectPriceList('special_pricelist');
-ProductScreen.check.discountOriginalPriceIs('7.0');
+ProductScreen.do.selectPriceList("special_pricelist");
+ProductScreen.check.discountOriginalPriceIs("7.0");
 ProductScreen.do.clickPayButton();
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.do.clickPaymentMethod("Cash");
 PaymentScreen.do.clickValidate();
-ReceiptScreen.check.discountAmountIs('0.7');
+ReceiptScreen.check.discountAmountIs("0.7");
 
-registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour", { test: true, url: "/pos/ui", steps: getSteps() });
+registry.category("web_tour.tours").add("ReceiptScreenDiscountWithPricelistTour", {
+    test: true,
+    url: "/pos/ui",
+    steps: getSteps(),
+});
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.exec.addOrderline("Desk Pad", "5", "5");
+ProductScreen.check.selectedOrderlineHas("Desk Pad", "5");
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod("Cash");
+PaymentScreen.check.validateButtonIsHighlighted(true);
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.receiptIsThere();
+ReceiptScreen.do.clickNextOrder();
+ProductScreen.check.isShown();
+// Close the session
+Chrome.do.clickMenuButton();
+ProductScreen.do.clickCloseButton();
+ProductScreen.do.closeWithCashAmount("25");
+ProductScreen.check.cashDifferenceIs("0.00");
+ProductScreen.do.clickCloseSession();
+ProductScreen.check.lastClosingCashIs("25.00");
+
+registry
+    .category("web_tour.tours")
+    .add("OrderPaidInCash", { test: true, url: "/pos/ui", steps: getSteps() });
