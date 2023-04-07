@@ -73,7 +73,8 @@ export class Call extends Component {
 
     get visibleCards() {
         const raisingHandCards = [];
-        const cards = [];
+        const sessionCards = [];
+        const invitationCards = [];
         const filterVideos = this.userSettings.showOnlyVideo && this.props.thread.videoCount > 0;
         for (const session of Object.values(this.props.thread.rtcSessions)) {
             if (!filterVideos || session.videoStream) {
@@ -84,21 +85,23 @@ export class Call extends Component {
                 if (session.isRaisingHand) {
                     raisingHandCards.push(data);
                 } else {
-                    cards.push(data);
+                    sessionCards.push(data);
                 }
             }
         }
         if (!filterVideos) {
             for (const memberId of this.props.thread.invitedMemberIds) {
-                cards.push({
+                invitationCards.push({
                     key: "member_" + memberId,
                     member: this.store.channelMembers[memberId],
                 });
             }
         }
-        // sort raising hand by raising hand value
-        // sort non-raising hand by local string compare
-        return raisingHandCards.concat(cards);
+        // sort raising hand cards by raising hand value
+        // sort session cards by local string compare
+        // sort invitation cards by local string compare
+        // triple concat
+        return raisingHandCards.concat(sessionCards, invitationCards);
     }
 
     get visibleMainCards() {
