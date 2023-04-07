@@ -1875,7 +1875,12 @@ def tagged(*tags):
     """
     include = {t for t in tags if not t.startswith('-')}
     exclude = {t[1:] for t in tags if t.startswith('-')}
+
     def tags_decorator(obj):
         obj.test_tags = (getattr(obj, 'test_tags', set()) | include) - exclude
+        at_install = 'at_install' in obj.test_tags
+        post_install = 'post_install' in obj.test_tags
+        if not (at_install ^ post_install):
+            _logger.warning('A tests should be either at_install or post_install, which is not the case of %r', obj)
         return obj
     return tags_decorator
