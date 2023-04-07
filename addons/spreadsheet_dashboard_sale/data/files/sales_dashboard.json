@@ -2048,10 +2048,10 @@
                     "content": "=ODOO.PIVOT(11,\"__count\",\"state\",\"sale\")"
                 },
                 "B6": {
-                    "content": "=ODOO.PIVOT(11,\"__count\")"
+                    "content": "=ODOO.PIVOT(11,\"__count\",\"state\",\"sale\")"
                 },
                 "B7": {
-                    "content": "=ODOO.PIVOT(11,\"amount_untaxed\")"
+                    "content": "=ODOO.PIVOT(11,\"amount_untaxed\",\"state\",\"sale\")"
                 },
                 "B8": {
                     "content": "=IFERROR(B7/B6)"
@@ -2073,10 +2073,10 @@
                     "content": "=ODOO.PIVOT(12,\"__count\",\"state\",\"sale\")"
                 },
                 "C6": {
-                    "content": "=ODOO.PIVOT(12,\"__count\")"
+                    "content": "=ODOO.PIVOT(12,\"__count\",\"state\",\"sale\")"
                 },
                 "C7": {
-                    "content": "=ODOO.PIVOT(12,\"amount_untaxed\")"
+                    "content": "=ODOO.PIVOT(12,\"amount_untaxed\",\"state\",\"sale\")"
                 },
                 "C8": {
                     "content": "=IFERROR(C7/C6)"
@@ -2744,11 +2744,11 @@
             "context": {},
             "domain": [[
                 "state",
-                "not in",
+                "in",
                 [
                     "draft",
                     "sent",
-                    "cancel"
+                    "sale"
                 ]
             ]],
             "id": "11",
@@ -2772,11 +2772,11 @@
             "context": {},
             "domain": [[
                 "state",
-                "not in",
+                "in",
                 [
                     "draft",
                     "sent",
-                    "cancel"
+                    "sale"
                 ]
             ]],
             "id": "12",
