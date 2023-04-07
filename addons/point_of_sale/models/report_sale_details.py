@@ -173,6 +173,7 @@ class ReportSaleDetails(models.AbstractModel):
                     'money_difference': session.cash_register_balance_end_real - session.cash_register_balance_start,
                     'cash_moves': [],
                     'count': True,
+                    'session': session.id,
                 })
         products = []
         refund_products = []
