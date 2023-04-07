@@ -1453,3 +1453,19 @@ QUnit.test("Avatar of unknown author", async (assert) => {
         ".o-mail-Message-avatar[data-src*='mail/static/src/img/email_icon.png']"
     );
 });
+
+QUnit.test("Show email_from of message without author", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["mail.message"].create({
+        author_id: null,
+        body: "<p>Want to know features and benefits of using the new software.</p>",
+        email_from: "md@oilcompany.fr",
+        message_type: "email",
+        subject: "Need Details",
+        model: "res.partner",
+        res_id: pyEnv.currentPartnerId,
+    });
+    const { openFormView } = await start();
+    await openFormView("res.partner", pyEnv.currentPartnerId);
+    assert.containsOnce($, ".o-mail-Message-header:contains(md@oilcompany.fr)");
+});
