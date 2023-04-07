@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.exceptions import RedirectWarning
 
 
 class ResConfigSettings(models.TransientModel):
@@ -162,6 +163,15 @@ class ResConfigSettings(models.TransientModel):
     )
 
     def set_values(self):
+        if self.chart_template and not self.env.company.country_id:
+            action = self.env['ir.actions.actions']._for_xml_id('base.action_res_company_form')
+            action.update({
+                'domain': [('id', '=', self.env.company.id)],
+                'views': [[self.env.ref('base.view_company_form').id, "form"]],
+                'res_id': self.env.company.id,
+            })
+            msg = _('Contry field is missing in company \nPlease go to Company setting.')
+            raise RedirectWarning(msg, action, _('Go to the configuration panel'), {'active_id':self.env.company.id})
         super().set_values()
         # install a chart of accounts for the given company (if required)
         if self.env.company == self.company_id and self.chart_template \
