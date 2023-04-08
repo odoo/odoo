@@ -24,7 +24,7 @@ msgstr ""
 "POT-Creation-Date: 2021-09-14 10:28+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -95,6 +95,10 @@ msgid ""
 "secret on the Microsoft Azure portal or try to stop and restart your "
 "calendar synchronisation."
 msgstr ""
+"Podczas generowania tokena wystąpił błąd. Twój kod autoryzacji może być "
+"nieprawidłowy lub już wygasł [%s]. Należy sprawdzić identyfikator i sekret "
+"klienta w portalu Microsoft Azure lub spróbować zatrzymać i ponownie "
+"uruchomić synchronizację kalendarza."
 
 #. module: microsoft_calendar
 #. openerp-web
@@ -203,6 +207,9 @@ msgid ""
 "Either update the events/attendees or archive these events %s:\n"
 "%s"
 msgstr ""
+"Aby synchronizacja pomiędzy Odoo a Kalendarzem Outlooka przebiegała poprawnie, wszyscy uczestnicy muszą posiadać adres e-mail. Jednak niektóre wydarzenia nie respektują tego warunku. Tak długo jak wydarzenia są nieprawidłowe, kalendarze nie będą synchronizowane.\n"
+"Zaktualizuj wydarzenia/uczestników lub zarchiwizuj te wydarzenia %s:\n"
+"%s"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_microsoft_calendar_account_reset__id
@@ -262,12 +269,12 @@ msgstr ""
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_client_id
 msgid "Microsoft Client_id"
-msgstr ""
+msgstr "Microsoft Client_id"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_config_settings__cal_microsoft_client_secret
 msgid "Microsoft Client_key"
-msgstr ""
+msgstr "Microsoft Client_key"
 
 #. module: microsoft_calendar
 #: model:ir.model.fields,field_description:microsoft_calendar.field_res_users__microsoft_calendar_sync_token

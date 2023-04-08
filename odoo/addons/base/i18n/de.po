@@ -26,7 +26,7 @@ msgstr ""
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1436,6 +1436,36 @@ msgid ""
 "        try to use this method on an invoice for whose payment no mandate can be used.\n"
 "    "
 msgstr ""
+"\n"
+"        Dieses Modul ermöglicht die Erzeugung von XML-Dateien, die konform sind mit SEPA-(SDD-)Lastschriftverfahren (einheitlich mit\n"
+"        pain.008.001.02-Spezifikation), um sie zu Ihrer Bank zu senden, um\n"
+"        eine Reihe von Zahlungen einzuziehen.\n"
+"\n"
+"        TUm für diese Zahlungsmethode in Frage zu kommen, muss der Kunde dem Unternehmen zuvor\n"
+"        ein Mandat erteilt haben, in dem er sein Einverständnis zur Nutzung des Lastschriftverfahrens erklärt.\n"
+"        Dieses Einverständnis muss in Odoo als „Kundenmandatb kodiert worden sein.\n"
+"\n"
+"        Außerdem müssen Sie die folgenden Voraussetzungen erfüllen, um\n"
+"        eine SDD-Datei ordnungsgemäß zu erstellen:\n"
+"        - Ihr Unternehmenskonto muss eine gültige IBAN-Nummer haben\n"
+"        - Ihr Unternehmen muss eine Gläubiger-Identifikationsnummer erhalten haben (dies kann im Menü „Einstellungen“ des Buchhaltungsmoduls vorgenommen werden)\n"
+"        - Ihr Unternehmen muss ein Journal für den Empfang von SDD-Zahlungen definiert haben (wiederum in den „Einstellungen“ des Buchhaltungsmoduls).\n"
+"        - Jeder Kunde, für den Sie eine Zahlung erzeugen, muss eine gültige IBAN-Kontonummer haben.\n"
+"\n"
+"        Odoo wird Sie darüber informieren, wenn eine dieser Anforderungen nicht erfüllt ist.\n"
+"\n"
+"        Alle Rechnungen, die für einen Kunden mit einem Mandat validiert werden, erhalten\n"
+"        automatisch den „bezahl“-Status und eine Zahlung wird erzeugt. Eine\n"
+"        Option im Dashboard ermöglicht es Ihnen dann, alle über SDD\n"
+"        erzeugten Zahlungen einzusehen und eine XML-Sammeldatei für diese zu erstellen, indem diese so gruppiert werden, wie\n"
+"        Sie es möchten.\n"
+"\n"
+"        Eine besondere „SEPA-Lastschrift“-Zahlungsmethode steht auch für offene payment method is also available for\n"
+"        Rechnungen zur Verfügung, wenn ein Bankkonto im „Zahlung verzeichnen“-Assistenten ausgewählt wird.\n"
+"        Nutzen Sie dies, um eine SDD-Zahlung für Rechnungen zu erzeugen, wenn Sie nach der Validierung ein Mandat\n"
+"        für seinen Besitzer hinzugefügt haben. Ihnen wird eine Fehlermeldung angezeigt, wenn Sie\n"
+"        versuchen, diese Methode für eine Rechnung verwenden, für deren Bezahlung kein Mandat verwendet werden kann.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -1657,6 +1687,11 @@ msgid ""
 "    - extended address fields\n"
 "    "
 msgstr ""
+"\n"
+"    Brückenmodul zur Erweiterung des Frachtbriefs (Complemento XML Carta de Porte)\n"
+"    - exportierte Waren (COMEX)\n"
+"    - erweiterte Adressfelder\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_iot
@@ -1873,6 +1908,13 @@ msgid ""
 "    guide.\n"
 "    "
 msgstr ""
+"\n"
+"    Der Frachtbrief (Complemento XML Carta de Porte) dient als Nachweis, dass\n"
+"    Sie Waren zwischen A und B versenden.\n"
+"\n"
+"    Erst wenn ein Lieferauftrag validiert wird, können Sie den Frachtbrief\n"
+"    erstellen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cl_edi_stock
@@ -3607,6 +3649,34 @@ msgid ""
 "If you install this module, and select Custom chart a basic chart will be proposed,\n"
 "but you will need set manually account defaults for taxes.\n"
 msgstr ""
+"\n"
+"Kontenplan für Venezuela.\n"
+"===============================\n"
+"\n"
+"In Venezuela gibt es keinen gesetzlich vorgeschriebenen Kontenplan, aber der in\n"
+"Odoo vorgeschlagende Standard sollte einigen anerkannten bewährten Verfahren in Venezuela entsprechen,\n"
+"dieser Plan entspricht diesen Verfahren.\n"
+"\n"
+"Dieses Modul wurde als Basis für mehr als 1000 Unternehmen getestet, da\n"
+"es auf einer Mischung der gängigsten Software auf dem venezolanischen\n"
+"Markt basiert, was den Buchhaltern die ersten Schritte mit Odoo sicher\n"
+"erleichtern wird.\n"
+"\n"
+"Dieses Modul stellt keine vollständige Lokalisierung für Venezuela dar,\n"
+"aber es wird Ihnen dabei helfen, sehr schnell mit Odoo in diesem Land zu starten.\n"
+"\n"
+"Dieses Modul bietet Ihnen:\n"
+"---------------------\n"
+"\n"
+"- Grundsteuern für Venezuela.\n"
+"- Grundlegende Daten, um Tests mit der Lokalisierung der Community durchzuführen.\n"
+"- Möglichkeit, ein Unternehmen von 0 zu starten, wenn Sie aus buchhalterischer Sicht nur einfache Bedürfnisse haben.\n"
+"\n"
+"Wir empfehlen die Nutzung von account_anglo_saxon, wenn Sie Ihre Bestände wie in Venezuela\n"
+"ohne Rechnungen bewertet haben möchten.\n"
+"\n"
+"Wenn Sie dieses Modul installieren und den benutzerdefinierten Kontenplan auswählen, wird ein Standardkontenplan vorgeschlagen,\n"
+"aber Sie müssen manuell Kontenstandards für Steuern festlegen.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_th
@@ -4643,6 +4713,75 @@ msgid ""
 "For Development information go to http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
 "\n"
 msgstr ""
+"\n"
+"Funktional\n"
+"----------\n"
+"\n"
+"Erstellen Sie Journale in Odoo, um elektronische Kundenrechnungen zu erstellen und dann an AFIP (via Webservices) zu melden.\n"
+"Die verfügbaren Optionen sind:\n"
+"\n"
+"    * Elektronische Rechnung - Webservice\n"
+"    * Ausfuhrnachweis - Webservice\n"
+"    * Elektronischer Steuerbeleg - Webservice\n"
+"\n"
+"Wenn Sie in den elektronischen Journalen eine Rechnung validieren, wird diese sowohl in Odoo als auch bei der AFIP validiert.. Diese Validierung erfolgt\n"
+"in dem Moment, in dem wir von der AFIP den Status „genehmigt/genehmigt mit Beobachtung/abgelehnt“ erhalten. Wenn die Rechnung von der\n"
+"AFIP abgelehnt wird, wird diese nicht im System gebucht und eine Pop-up-Nachricht wird mit den erhaltenen Fehlerdetails (Gründe der Ablehnung)\n"
+"und einem HINWEIS zum möglichen Problem angezeigt.\n"
+"\n"
+"Odoo and AFIP. Zur Überprüfung und Fehlersuche haben wir auch ein Menü „Rechnung in AFIP einsehen“ hinzugefügt, mit dem wir die zuvor an AFIP gesendeten Rechnungen\n"
+"und die zuletzt verwendete Nummer einsehen können, um eventuelle Probleme bei der Synchronisierung der Sequenzen zwischen Odoo und AFIP zu lösen.\n"
+"\n"
+"    ANMERKUNG: on der Formularansicht des Journals aus können wir eine Synchronisierung zwischen den Odoo-Sequenzen zu jedem der Dokumenttypen\n"
+"    in mit den zuletzt in AFIP registrierten Nummern.\n"
+"\n"
+"Bei den Lieferantenrechnungen haben wir eine Funktion hinzugefügt, die in den Buchhaltungseinstellungen konfiguriert werden kann,\n"
+"um Lieferantenrechnungen in AFIP zu überprüfen, um zu sehen, ob die Lieferantenrechnungen echt sind (weitere Informationen finden Sie in der Beschreibung der Einstellung).\n"
+"\n"
+"Konfiguration:\n"
+"\n"
+"1. Auf Buchhaltungseinstellungen > Abschnitt Argentinische Lokalisierung gehen\n"
+"\n"
+"    1.1. Den AFIP-Webservicesmodus konfigurieren:\n"
+"\n"
+"    * Testumgebung zum Verwendung von Demo-Zertifikaten, die verwendet werden, um den Vorgang zu testen, und NICHT, um echte\n"
+"      Rechnungne an die AFIP zu senden. Sie dient nur zum Testen. Sie ist bereits für Demo-Vorgänge vordefiniert und Sie müssen sie nicht konfigurieren\n"
+"      (in der AFIP oft als Homologationsumgebung bezeichnet).\n"
+"    * Produktionsumgebung, um echte Zertifikate und legale Rechnungen für die AFIP zu erstellen.\n"
+"\n"
+"    1.2. Ihr AFIP-Zertifikat konfigurieren: Wenn Sie sich in einem Demo-Vorgang befinden, ist dieser Wert standardmäßig eingestellt. Wenn Sie\n"
+"         sich in einem Produktionsvorgang befinden, müssen Sie nur Ihr AFIP-Zertifikat hochladen.\n"
+"\n"
+"    1.3. Optional können Sie festlegen, ob Sie Lieferantenrechnungen in AFIP prüfen können möchten.\n"
+"\n"
+"2. Erstellen Sie Verkaufsjournale, die jedes Ihrer AFIP-Kassensysteme (verfügbar im AFIP-Portal) repräsentieren, die Sie in Odoo verwenden möchten.\n"
+"\n"
+"    2.1. Die Verwendung des Dokumente-Felds ist standardmäßig eingestellt, bitte ändern Sie dies nicht.\n"
+"    2.2. Das AFIP-Kassensystem für eines der elektronischen festlegen.\n"
+"\n"
+"        * Elektronische Rechnung - Webservice'\n"
+"        * Elektronischer Steuerbeleg - Webservice'\n"
+"        * Ausfuhrnachweis - Webservice'\n"
+"\n"
+"    2.3. Legen Sie die AFIP-Kassensystemnummer und AFIP-Kassensystemadresse fest, unter Berücksichtigung Ihrer Konfiguration in Ihrem AFIP-Portal.\n"
+"\n"
+"    ANMERKUNG: Sie können die Schaltfläche „Verfügbare AFIP-Kassensysteme prüfen“ im Journalformular verwenden, um die für die Erstellung der Journale verwendeten Daten zu bestätigen.\n"
+"\n"
+"Weitere Informationen über die elektronische Rechnungsstellung in Argentinien finden Sie unter http://www.afip.gob.ar/fe/ayuda.asp\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"Die implementierten Webservices sind die am weitesten verbreiteten::\n"
+"\n"
+"* wsfev1 - „Factura Electrónica“ (Elektronische Rechnung)\n"
+"* wsbfev1 - „Bono Fiscal Electrónico“ (Elektronischer Steuerbeleg)\n"
+"* wsfexv1 - „Factura de Exportación Electrónica“ (Elektronische Exportrechnung - das gleiche wie Ausfuhrnachweis)\n"
+"* wscdc - „Constatación de Comprobantes“ (Rechnungsverifizierung)\n"
+"\n"
+"Informationen zur Entwicklung finden Sie unter\n"
+" http://www.afip.gob.ar/fe/documentos/WSBFEv1%20-%20Manual%20para%20el%20desarrollador.pdf\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_latam_invoice_document
@@ -4751,6 +4890,67 @@ msgid ""
 "* Unit of measures AFIP codes\n"
 "* Partners: Consumidor Final and AFIP\n"
 msgstr ""
+"\n"
+"Funktional\n"
+"----------\n"
+"\n"
+"Dieses Modul fügt Buchhaltungsfunktionen für die argentinische Lokalisierung hinzu, die die minimale Konfiguration darstellen, die ein Unternehmen benötigt, um in Argentinien und unter den Vorschriften und Richtlinien der AFIP (Administración Federal de Ingresos Públicos) zu operieren.\n"
+"\n"
+"Folgen Sie den nächsten Konfigurationsschritten für die Produktion:\n"
+"\n"
+"1. Gehen Sie zu Ihrem Unternehmen und konfigurieren Sie Ihre MwSt.-Nummer und den AFIP-Verantwortlichkeitstyp\n"
+"2. Gehen Sie auf Buchhaltung/Einstellungen und stellen Sie den Kontenplan ein, den Sie verwenden möchten.\n"
+"3. Erstellen Sie Ihre Verkaufsjournale unter Berücksichtigung der AFIP-Kassensystem-Informationen.\n"
+"\n"
+"Demo-Daten zum Testen:\n"
+"\n"
+"* Es wurden 3 Unternehmen erstellt, eine für jede AFIP-Verantwortungstyp mit dem entsprechenden Kontenplan installiert. Wählen Sie das Unternehmen, das Sie verwenden möchten, um Tests durchzuführen:\n"
+"\n"
+"* (AR) Responsable Inscripto\n"
+"* (AR) Exento\n"
+"* (AR) Monotributo\n"
+"\n"
+"* Journal-Verkäufe, die auf Vorabdruck und Expo-Rechnungen konfiguriert sind, in allen Unternehmen\n"
+"* Rechnungen und andere Dokumentbeispiele bereits validiert in „(AR) Responsable Inscripto“-Unternehmen\n"
+"* Partnerbeispiel für die verschiedenen Verantwortungstypen:\n"
+"\n"
+"* ADHOC (IVA Responsable Inscripto)\n"
+"* Consejo Municipal Rosario (IVA Sujeto Exento)\n"
+"* Gritti (Monotributo)\n"
+"* Cerro Castor. * IVA Liberado in Zona Franca\n"
+"* Expresso (Cliente del Exterior)\n"
+"* Odoo (Proveedor del Exterior)\n"
+"\n"
+"Highlights:\n"
+"\n"
+"* Der Kontenplan wird nicht automatisch installiert, jede Kontenplanvorlage hängt von der AFIP-Verantwortung des Unternehmens ab, Sie müssen den Kontenplan für Ihre Bedürfnisse installieren.\n"
+"* Bei der Installation eines Kontenplans werden keine Verkaufsjournale erzeugt, Sie müssen Ihre Journale manuell konfigurieren.\n"
+"* Der Dokumenttyp wird beim Erstellen einer Rechnung in Abhängigkeit von der steuerlichen Verantwortung des Ausstellers und Empfängers des Dokuments und des zugehörigen Journals richtig vorausgewählt.\n"
+"* Ein CBU-Kontentyp wurde hinzugefügt und auch die CBU-Validierung.\n"
+"\n"
+"\n"
+"Technisch\n"
+"---------\n"
+"\n"
+"Dieses Modul fügt sowohl Modelle als auch Felder hinzu, die schließlich für das Modul für elektronische Rechnungen verwendet werden. Hier ist eine Zusammenfassung der Hauptmerkmale:\n"
+"\n"
+"Stammdaten:\n"
+"\n"
+"* Kontenplan: einer für jede AFIP-Verantwortung, die mit einer juristischen Person verbunden ist:\n"
+"\n"
+"* Responsable Inscripto (RI)\n"
+"* Exento (EX)\n"
+"* Monotributo (Mono)\n"
+"\n"
+"* Argentinische Steuern und Kontensteuergruppen (MwSt. mit den vorhandenen Aliquoten und anderen Arten)\n"
+"* AFIP-Verantwortungstypen\n"
+"* Steuerpositionen (zur Abbildung von Steuern)\n"
+"* Arten von Rechtsdokumenten in Argentinien\n"
+"* Die in Argentinien gültigen Kennzeichnungsarten.\n"
+"* AFIP-Ländercodes und MwSt.-Ländercodes für juristische, natürliche und andere Personen\n"
+"* AFIP-Codes für Währungen\n"
+"* AFIP-Codes für Maßeinheiten\n"
+"* Partner: Consumidor Final und AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -7848,6 +8048,15 @@ msgid ""
 " - Multiple Fiscal positions\n"
 " "
 msgstr ""
+"\n"
+"Es handelt sich um die neuste israelische Basislokalisierung, die zur Nutzung von Odoo in Israel erforderlich ist:\n"
+"================================================================================\n"
+"\n"
+"Dieses Modul besteht aus:\n"
+" - Allgemeinen israelischen Kontenplan\n"
+" - Steuern und Steuererklärung\n"
+" - Mehreren Steuerpositionen\n"
+" "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_za
@@ -12408,7 +12617,7 @@ msgstr "Barcode Anwesenheiten Mobil"
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_attendance_mobile
 msgid "Attendances Barcode scan in Mobile"
-msgstr ""
+msgstr "Scannen des Anwesenheitsbarcodes auf Handy"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_mass_mailing
@@ -12420,6 +12629,8 @@ msgstr "Bringen Sie Besucher dazu, sich in Mailinglisten einzutragen"
 #, python-format
 msgid "Attribute %(attribute)s evaluation expects a boolean, got %(value)s"
 msgstr ""
+"Bewertung des Attributs %(attribute)s erwartet ein boolesches Feld, hat "
+"%(value)s erhalten"
 
 #. module: base
 #: model:res.country,name:base.au
@@ -13252,6 +13463,8 @@ msgstr "Brücke zwischen Beständen und Buchhaltung"
 msgid ""
 "Bridge created to add the number of assets linked to an AA to a project form"
 msgstr ""
+"Brücke erstellt, um einem Projektformular die Anzahl Vermögenwerte, die mit "
+"einer Kostenstelle verbunden sind, hinzuzuügen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_hr_payroll_account
@@ -13259,6 +13472,8 @@ msgid ""
 "Bridge created to add the number of contracts linked to an AA to a project "
 "form"
 msgstr ""
+"Brücke erstellt, um einem Projektformular die Anzahl Verträge, die mit einer"
+" Kostenstelle verbunden sind, hinzuzuügen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_hr_expense
@@ -13266,6 +13481,8 @@ msgid ""
 "Bridge created to add the number of expenses linked to an AA to a project "
 "form"
 msgstr ""
+"Brücke erstellt, um einem Projektformular die Anzahl Spesen, die mit einer "
+"Kostenstelle verbunden sind, hinzuzuügen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sale_timesheet
@@ -13280,6 +13497,8 @@ msgid ""
 "Bridge created to add the number of subscriptions linked to an AA to a "
 "project form"
 msgstr ""
+"Brücke erstellt, um einem Projektformular die Anzahl Abonnements, die mit "
+"einer Kostenstelle verbunden sind, hinzuzuügen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_project_account
@@ -13294,6 +13513,8 @@ msgid ""
 "Bridge created to compute the planned amount of the budget items linked to "
 "the AA of a project"
 msgstr ""
+"Brücke erstellt, um den geplanten Betrag eines Budgetpostens, der mit der "
+"Kostenstelle eines Projekts zu berechnen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_account
@@ -18739,7 +18960,7 @@ msgstr "Golf-Kooperationsrat (GKR)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
 msgid "Gulf Cooperation Council - Point of Sale"
-msgstr ""
+msgstr "Gulf Cooperation Council - Kassensystem"
 
 #. module: base
 #: model:res.country,name:base.gy
@@ -18819,7 +19040,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__has_iap
 msgid "Has Iap"
-msgstr ""
+msgstr "Hat Iap"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__header_spacing
@@ -18902,7 +19123,7 @@ msgstr "Helpdesk Mail Plugin"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_data_merge_helpdesk
 msgid "Helpdesk Merge action"
-msgstr ""
+msgstr "Kundendienst Aktion Zusammenführen"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_repair
@@ -21327,6 +21548,8 @@ msgstr "Kassensystem und Vertrieb verknüpfen"
 #: model:ir.module.module,summary:base.module_pos_hr_l10n_be
 msgid "Link module between Pos Blackbox Be and Pos HR"
 msgstr ""
+"Verknüpfungsmodul zwischen Kassensystem Blackblox Be und Kassensystem "
+"Personal"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_product_configurator
@@ -22223,12 +22446,12 @@ msgstr "Mexiko - Kontenführung"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock
 msgid "Mexico - Electronic Delivery Guide"
-msgstr ""
+msgstr "Mexiko - Elektronischer Frachtbrief"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended
 msgid "Mexico - Electronic Delivery Guide Comex"
-msgstr ""
+msgstr "Mexiko - Elektronischer Frachtbrief Comex"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -22769,6 +22992,13 @@ msgid ""
 "required by the client to appear as a third party in the context of any "
 "claim for damages filed against the client by an end consumer."
 msgstr ""
+"Mein Unternehmen (San Francisco) gibt sein Bestes, um die Leistungen "
+"rechtzeitig und in Übereinstimmung mit den vereinbarten Fristen zu "
+"erbringen. Keine der Verpflichtungen von My Company (San Francisco) kann "
+"jedoch als Verpflichtung zur Erzielung von Ergebnissen angesehen werden. My "
+"Company (Chicago) kann unter keinen Umständen vom Kunden aufgefordert "
+"werden, im Rahmen einer Schadensersatzklage, die ein Endverbraucher gegen "
+"den Kunden erhebt, als Drittpartei aufzutreten."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_search
@@ -26547,7 +26777,7 @@ msgstr "Pfad"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_asset__path
 msgid "Path (or glob pattern)"
-msgstr ""
+msgstr "Weg (oder glob-Muster)"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -28572,7 +28802,7 @@ msgstr "SMTP Server"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_purchase_stock
 msgid "SO/PO relation in case of MTO"
-msgstr ""
+msgstr "Verbindung zwischen Verkaufs-/Kaufauftrag bei Einzelfertigung"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__order
@@ -28754,7 +28984,7 @@ msgstr "Verkauf Produktkonfigurator"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_project_forecast
 msgid "Sale Project Forecast"
-msgstr ""
+msgstr "Verkauf Projekt Vorhersage"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase
@@ -28764,7 +28994,7 @@ msgstr "Sale Purchase"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_stock_margin
 msgid "Sale Stock Margin"
-msgstr ""
+msgstr "Verkauf Bestand Marge"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_subscription_dashboard
@@ -29376,7 +29606,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_timesheet_margin
 msgid "Service Margins in Sales Orders"
-msgstr ""
+msgstr "Dienstleistungsmargen in Verkaufsaufträgen"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services
