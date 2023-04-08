@@ -621,6 +621,11 @@ class WebsiteSale(http.Controller):
         return {
             'vat': data['vat'],
             'country_id': int(data['country_id']) if data.get('country_id') else False,
+            # To make sure VIES check can be triggered.
+            'is_company': True,
+            # To show actual partner name in error message, instead of just
+            # 'False'.
+            'name': data.get('company_name') or data.get('name') or False,
         }
 
     def _checkout_form_save(self, mode, checkout, all_values):
