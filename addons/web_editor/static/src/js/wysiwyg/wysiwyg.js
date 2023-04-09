@@ -276,7 +276,21 @@ const Wysiwyg = Widget.extend({
         this.$editable.on('click', '.o_image, .media_iframe_video', e => e.preventDefault());
         this.showTooltip = true;
         this.$editable.on('dblclick', mediaSelector, function () {
-            if (this.isContentEditable || (this.parentElement && this.parentElement.isContentEditable)) {
+            let isEditable =
+                // TODO that first check is probably useless/wrong: checking if
+                // the media itself has editable content should not be relevant.
+                // In fact the content of all media should be marked as non
+                // editable anyway.
+                this.isContentEditable ||
+                // For a media to be editable, the base case is to be in a
+                // container whose content is editable.
+                (this.parentElement && this.parentElement.isContentEditable);
+
+            if (!isEditable && this.classList.contains('o_editable_media')) {
+                isEditable = weUtils.shouldEditableMediaBeEditable(this);
+            }
+
+            if (isEditable) {
                 self.showTooltip = false;
                 const $el = $(this);
                 const params = {node: $el};
