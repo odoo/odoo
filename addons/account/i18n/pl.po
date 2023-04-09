@@ -37,7 +37,6 @@
 # Rafał Kozak <rafal.kozak@openglobe.pl>, 2023
 # Maja Stawicka <mjstwck@wp.pl>, 2023
 # Tomasz Leppich <t.leppich@gmail.com>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Cécile Collart <cco@odoo.com>, 2023
 # Jacek Michalski <michalski.jck@gmail.com>, 2023
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
@@ -49,6 +48,7 @@
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # przemekjaroc, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -56,8 +56,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-17 06:41+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: przemekjaroc, 2023\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -90,6 +90,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Grupa podatków: Podatek jest zbiorem podatków cząstkowych.\n"
+"- Stały: Kwota podatku pozostaje taka sama niezależnie od ceny.\n"
+"- Procent ceny: Kwota podatku jest % ceny:\n"
+"np. 100 * (1 + 10%) = 110 (bez ceny)\n"
+"np. 110 / (1 + 10%) = 100 (cena wliczona)\n"
+"- Procent ceny wliczony w cenę: Kwota podatku jest podziałem ceny:\n"
+"np. 180 / (1 - 10%) = 200 (bez ceny wliczonej)\n"
+"np. 200 * (1 - 10%) = 180 (cena wliczona)"
 
 #. module: account
 #. odoo-python
@@ -253,7 +262,7 @@ msgstr "(łącznie z niniejszym dokumentem) "
 #: model:ir.actions.report,print_report_name:account.account_invoices
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
 msgid "(object._get_report_base_filename())"
-msgstr ""
+msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_form
@@ -2527,12 +2536,12 @@ msgstr "Rozbicie analityczne"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_distribution_model
 msgid "Analytic Distribution Model"
-msgstr ""
+msgstr "Analityczny model dystrybucji"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_analytic__distribution_model
 msgid "Analytic Distribution Models"
-msgstr ""
+msgstr "Analityczne modele dystrybucji"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report__filter_analytic
@@ -2557,7 +2566,7 @@ msgstr "Pozycje analityczne"
 #. module: account
 #: model:ir.model,name:account.model_account_analytic_applicability
 msgid "Analytic Plan's Applicabilities"
-msgstr ""
+msgstr "Zastosowania planu analitycznego"
 
 #. module: account
 #: model:ir.ui.menu,name:account.account_analytic_plan_menu
@@ -3068,7 +3077,7 @@ msgstr "Bank i gotówka"
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "Manualna konfiguracja banku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__suspense_account_id
@@ -7555,7 +7564,7 @@ msgstr "Intrastat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Invalid"
-msgstr ""
+msgstr "Błędny"
 
 #. module: account
 #. odoo-python
@@ -8835,6 +8844,12 @@ msgid ""
 "SEPA Credit Transfer: Pay in the SEPA zone by submitting a SEPA Credit Transfer file to your bank. Module account_sepa is necessary.\n"
 "SEPA Direct Debit: Get paid in the SEPA zone thanks to a mandate your partner will have granted to you. Module account_sepa is necessary.\n"
 msgstr ""
+"Instrukcja: Płać lub otrzymuj płatności za pomocą dowolnej metody poza Odoo.\n"
+"Dostawcy płatności: Każdy dostawca płatności ma swoją własną Metodę płatności. Zażądaj transakcji na/do karty dzięki tokenowi płatniczemu zapisanemu przez partnera podczas zakupu lub subskrypcji online.\n"
+"Czek: Płać rachunki czekiem i drukuj go z Odoo.\n"
+"Batch Deposit: Zbierz kilka czeków klientów jednocześnie generując i składając depozyt wsadowy do swojego banku. Konieczny jest moduł account_batch_payment.\n"
+"SEPA Credit Transfer: Płać w strefie SEPA składając plik SEPA Credit Transfer do swojego banku. Moduł account_sepa jest niezbędny.\n"
+"SEPA Direct Debit: Otrzymuj płatności w strefie SEPA dzięki mandatowi, który udzieli Ci Twój partner. Moduł account_sepa jest niezbędny.\n"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__fiscalyear_last_month__3
@@ -9322,7 +9337,7 @@ msgstr "Brak szablonu"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Nie dostarczono załącznika"
 
 #. module: account
 #. odoo-python
@@ -13516,7 +13531,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_res_company__account_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_config_settings__account_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "Kraj, z którego mają być używane raporty podatkowe dla tej firmy"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal

@@ -14,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 14:38+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -3478,7 +3478,7 @@ msgstr "Anzahl der Erstattungsaufträge"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__number_of_rescue_session
 msgid "Number of Rescue Session"
-msgstr ""
+msgstr "Anzahl Auffangsitzungen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error_counter
@@ -4478,7 +4478,7 @@ msgstr "Portalzugriffs-URL"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__pos_allowed_pricelist_ids
 msgid "Pos Allowed Pricelist"
-msgstr ""
+msgstr "Kassensystem Erlaubte Preisliste"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_details_wizard__pos_config_ids
@@ -4678,6 +4678,8 @@ msgid ""
 "Print a QR code on the receipt to allow the user to easily request the "
 "invoice for an order."
 msgstr ""
+"Drucken Sie einen QR-Code auf den Beleg, damit der Benutzer die Rechnung für"
+" einen Auftrag einfach anfordern kann."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -5566,7 +5568,7 @@ msgstr "Einstellungen"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Settings on this page will apply to this point of sale."
-msgstr ""
+msgstr "Die Einstellungen auf dieser Seite gelten für dieses Kassensystem."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__ship_later
@@ -5729,7 +5731,7 @@ msgstr "Startdatum"
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "Start category should belong in the available categories."
-msgstr ""
+msgstr "Die Startkategorie sollte zu den verfügbaren Kategorien gehören."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6163,6 +6165,8 @@ msgid ""
 "The operation couldn't be completed because you are offline. Check your "
 "internet connection and try again."
 msgstr ""
+"Der Vorgang kann nicht abgeschlossenen werden, weil Sie offline sind. Prüfen"
+" Sie Ihre Internetverbindung und versuchen Sie es erneut."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6323,6 +6327,10 @@ msgid ""
 "the meantime have been saved in a Rescue Session, which can be reviewed "
 "anytime and posted to Accounting from Point of Sale's dashboard."
 msgstr ""
+"Die Sitzung wurde bereits von einem anderen Benutzer geschlossen. Alle "
+"Verkäufe, die in der Zwischenzeit abgeschlossen wurden, wurden in einer "
+"Auffangsitzung gespeichert, die jederzeit überprüft und über das Dashboard "
+"des Kassensystems in der Buchhaltung gebucht werden kann."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -6480,7 +6488,7 @@ msgstr "In dieser Sitzung gibt es keine Registrierkasse."
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "There is no product linked to your PoS"
-msgstr ""
+msgstr "Es ist kein Produkt mit Ihrem Kassensystem verbunden."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -6531,7 +6539,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "This invoice has been created from the point of sale session: %s"
-msgstr ""
+msgstr "Die Rechnung wurde aus der Kassensystemsitzung erstellt: %s"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__fiscal_position_ids
@@ -6948,6 +6956,8 @@ msgstr "Barcodes verwenden, um Produkte, Kundenkarten usw. zu scannen"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Use fiscal positions to get different taxes by order"
 msgstr ""
+"Verwenden Sie Steuerpositionen, um unterschiedliche Steuer pro Auftrag zu "
+"erhalten"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -6955,6 +6965,8 @@ msgid ""
 "Used to record product pickings. Products are consumed from its default "
 "source location."
 msgstr ""
+"Verwendung, um Produktkommissionierung zu erfassen. Produkte werden von "
+"ihrem Standardherkunftsstandort verbraucht."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__user_id
@@ -7003,7 +7015,7 @@ msgstr "Vantiv Zahlungsterminal"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_session_check_product_wizard
 msgid "Verify if there are any products for the PoS"
-msgstr ""
+msgstr "Prüfen, ob es Produkte für das Kassensystem gibt"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7134,7 +7146,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You can only have one cash payment method."
-msgstr ""
+msgstr "Sie können nur eine Barzahlungsmethode haben."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7180,6 +7192,8 @@ msgstr "Sie können keine Sitzung vor dem Datum der Buchungssperre erstellen."
 msgid ""
 "You cannot delete a bank statement line linked to Point of Sale session."
 msgstr ""
+"Sie können einen Kontoauszugsposten, der mit einer Kassensitzung verknüpft "
+"ist, nicht löschen."
 
 #. module: point_of_sale
 #. odoo-python
@@ -7222,6 +7236,8 @@ msgid ""
 "You have enabled the \"Identify Customer\" option for %s payment method,but "
 "the order %s does not contain a customer."
 msgstr ""
+"Sie haben die Option „Kunde identifizieren“ für die Zahlungsmethode %s "
+"deaktiviert, aber der Auftrag %s enthält keinen Kunden."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7308,6 +7324,8 @@ msgid ""
 "Your address is missing or incomplete. <br/>\n"
 "                                Please make sure to"
 msgstr ""
+"Ihre Adresse fehlt oder ist unvollständig. <br/>\n"
+"                                Bitte vergewissern Sie sich, dass"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7417,7 +7435,7 @@ msgstr "in"
 #: code:addons/point_of_sale/static/src/xml/Screens/ProductScreen/ProductsWidget.xml:0
 #, python-format
 msgid "in this category."
-msgstr ""
+msgstr "in dieser Kategorie."
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -7490,7 +7508,7 @@ msgstr "Unbezahlte Aufträge konnten nicht importiert werden"
 #: code:addons/point_of_sale/static/src/xml/Screens/PartnerListScreen/PartnerLine.xml:0
 #, python-format
 msgid "unselect"
-msgstr ""
+msgstr "abwählen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_invoice_document

@@ -17,13 +17,13 @@
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Piotr Strębski <strebski@gmail.com>, 2023
 # Judyta Kaźmierczak <judyta.kazmierczak@openglobe.pl>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2023
 # Maksym <ms@myodoo.pl>, 2023
 # Martin Trigaux, 2023
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
 # Dawid Prus, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,8 +31,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 11:02+0000\n"
-"Last-Translator: Dawid Prus, 2023\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1110,6 +1110,8 @@ msgid ""
 "Check if the organizer is alone in the event, i.e. if the organizer is the only one that hasn't declined\n"
 "        the event (only if the organizer is not the only attendee)"
 msgstr ""
+"Sprawdź czy organizator jest sam w wydarzeniu, tzn. czy organizator jest jedyną osobą, która nie odmówiła\n"
+" udziału w wydarzeniu (tylko jeśli organizator nie jest jedynym uczestnikiem)"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_filters__partner_checked
@@ -1300,7 +1302,7 @@ msgstr "Dyskusje"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_channel_id
 msgid "Discuss Channel"
-msgstr ""
+msgstr "Kanał dyskusyjny"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__display_description
@@ -1600,6 +1602,8 @@ msgid ""
 "If the time is shown as 'busy', this event will be visible to other people with either the full         information or simply 'busy' written depending on its privacy. Use this option to let other people know         that you are unavailable during that period of time. \n"
 " If the time is shown as 'free', this event won't         be visible to other people at all. Use this option to let other people know that you are available during         that period of time."
 msgstr ""
+"Jeśli czas jest pokazany jako \"zajęty\", to wydarzenie będzie widoczne dla innych osób z pełną informacją lub po prostu z napisem \"zajęty\" w zależności od prywatności. Użyj tej opcji, aby poinformować innych ludzi, że jesteś niedostępny w tym okresie czasu. \n"
+"Jeśli czas jest pokazany jako 'wolny', to wydarzenie nie będzie w ogóle widoczne dla innych osób. Użyj tej opcji, aby poinformować innych ludzi, że jesteś dostępny w tym okresie czasu."
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_recurrence__interval
@@ -1609,7 +1613,7 @@ msgstr "Interwał"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__invalid_email_partner_ids
 msgid "Invalid Email Partner"
-msgstr ""
+msgstr "Błędny email partnera"
 
 #. module: calendar
 #: model:mail.message.subtype,name:calendar.subtype_invitation
@@ -2033,7 +2037,7 @@ msgstr "Prywatne"
 #: code:addons/calendar/models/calendar_event.py:0
 #, python-format
 msgid "Private Event Excluded"
-msgstr ""
+msgstr "Wyłączone wydarzenie prywatne"
 
 #. module: calendar
 #: model:ir.model.fields.selection,name:calendar.selection__calendar_event__privacy__public
@@ -2314,6 +2318,8 @@ msgid ""
 "The activity is linked to a meeting. Deleting it will remove the meeting as "
 "well. Do you want to proceed?"
 msgstr ""
+"Aktywność jest powiązana z spotkaniem. Usunięcie jej usunie również "
+"spotkanie. Czy chcesz kontynuować?"
 
 #. module: calendar
 #: model_terms:ir.actions.act_window,help:calendar.action_calendar_event
@@ -2471,12 +2477,12 @@ msgstr "Użytkownik"
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__videocall_source
 msgid "Videocall Source"
-msgstr ""
+msgstr "Źródło połączenia wideo."
 
 #. module: calendar
 #: model_terms:ir.ui.view,arch_db:calendar.view_calendar_event_form
 msgid "Videocall URL"
-msgstr ""
+msgstr "Url połączenia wideo"
 
 #. module: calendar
 #: model:ir.model.fields,field_description:calendar.field_calendar_event__wed
@@ -2558,14 +2564,14 @@ msgstr "dla %s wydarzeń"
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on %s"
-msgstr ""
+msgstr "na %s"
 
 #. module: calendar
 #. odoo-python
 #: code:addons/calendar/models/calendar_recurrence.py:0
 #, python-format
 msgid "on the %(position)s %(weekday)s"
-msgstr ""
+msgstr "na %(position)s%(weekday)s"
 
 #. module: calendar
 #. odoo-python
@@ -2577,7 +2583,7 @@ msgstr "do %s"
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_reminder
 msgid "{{ object.event_id.name }} - Reminder"
-msgstr ""
+msgstr "{{ object.event_id.name }} - Przypomnienie"
 
 #. module: calendar
 #: model:mail.template,subject:calendar.calendar_template_meeting_changedate
