@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Duy BQ <duybq86@gmail.com>, 2022
-# Thi Huong Nguyen, 2023
 # Martin Trigaux, 2023
+# Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-15 12:05+0000\n"
 "PO-Revision-Date: 2022-06-17 09:52+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Last-Translator: Thi Huong Nguyen, 2023\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -623,7 +623,7 @@ msgstr "Càng sớm càng tốt"
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__closing
 msgid "At the session closing"
-msgstr ""
+msgstr "Khi đóng phiên"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_res_company__point_of_sale_update_stock_quantities
@@ -1369,7 +1369,7 @@ msgstr "Kết nối đến Proxy"
 #: code:addons/point_of_sale/static/src/xml/Chrome.xml:0
 #, python-format
 msgid "Connecting to devices"
-msgstr ""
+msgstr "Kết nối với thiết bị"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1597,7 +1597,7 @@ msgstr "Hiển thị Khách hàng"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display_via_proxy
 msgid "Customer Facing Display"
-msgstr "Hiển thị khuôn mặt khách hàng"
+msgstr "Màn hình cho khách hàng"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -2540,7 +2540,7 @@ msgstr "Đơn bán phải ở trạng thái mới hoặc huỷ để có thể x
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__res_company__point_of_sale_update_stock_quantities__real
 msgid "In real time (recommended)"
-msgstr ""
+msgstr "Trong thời gian thực (được đề xuất)"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3110,7 +3110,7 @@ msgstr "Biên lợi nhuận: "
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__is_margins_costs_accessible_to_every_user
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Margins & Costs"
-msgstr ""
+msgstr "Biên lợi nhuận & chi phí"
 
 #. module: point_of_sale
 #. openerp-web
@@ -3124,7 +3124,7 @@ msgstr "Đã vượt quá mức tối đa"
 #: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
 #, python-format
 msgid "Maximum value reached"
-msgstr ""
+msgstr "Đã đạt giá trị tối đa"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -4434,7 +4434,7 @@ msgstr "Giá chưa gồm thuế VAT: "
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
 msgid "Price extra"
-msgstr ""
+msgstr "Giá thêm"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5402,7 +5402,7 @@ msgstr "Hiển thị người dùng đăng nhập trên màn hình"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Show margins &amp; costs on product information"
-msgstr ""
+msgstr "Hiển thị biên lợi nhuận và chi phí trên thông tin sản phẩm"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -5779,6 +5779,8 @@ msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
 msgstr ""
+"Số tiền không thể cao hơn số tiền cần thanh toán nếu bạn không cấu hình "
+"phương thức thanh toán bằng tiền mặt."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5826,7 +5828,7 @@ msgstr "Mô-đun dữ liệu tài chính gặp lỗi khi nhận đơn hàng. "
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "The function to load %s has not been implemented."
-msgstr ""
+msgstr "Tính năng dùng để tải %s chưa được triển khai."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__proxy_ip
@@ -6238,6 +6240,8 @@ msgstr ""
 msgid ""
 "This journal is associated with a payment method. You cannot modify its type"
 msgstr ""
+"Sổ nhật ký được liên kết với một phương thức thanh toán. Bạn không thể sửa "
+"đổi loại của sổ nhật ký này"
 
 #. module: point_of_sale
 #. openerp-web
@@ -6794,6 +6798,8 @@ msgid ""
 "When disabled, only PoS manager can view the margin and cost of product "
 "among the Product info."
 msgstr ""
+"Khi tắt, chỉ quản lý POS mới có thể xem biên lợi nhuận và chi phí sản phẩm "
+"trong Thông tin sản phẩm."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -6861,7 +6867,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You can only have one cash payment method."
-msgstr ""
+msgstr "Bạn chỉ có thể có một phương thức thanh toán bằng tiền mặt."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -7197,3 +7203,12 @@ msgstr "bị trùng lặp với đơn hàng đã có"
 #, python-format
 msgid "You don't have the access rights to set the point of sale cash box."
 msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+"Bạn không có quyền truy cập để lấy dữ liệu kiểm soát đóng điểm bán hàng."
