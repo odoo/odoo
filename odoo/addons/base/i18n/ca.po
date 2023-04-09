@@ -38,7 +38,7 @@ msgstr ""
 "POT-Creation-Date: 2023-02-02 11:00+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1452,7 +1452,7 @@ msgstr ""
 "        Mòdul per a la importació de fitxers estàndard FEC, útil per importar l'historial comptable.\n"
 "\n"
 "        Els fitxers FEC (fichier des écritures comptables) són els informes comptables estàndard que les empreses franceses han de presentar a les autoritats fiscals.\n"
-"        Aquest mòdul permet la importació de comptes, diaris, socis i moviments d'aquests fitxers.\n"
+"        Aquest mòdul permet la importació de comptes, diaris, contactes i moviments d'aquests fitxers.\n"
 "\n"
 "        Només s'implementa el format CSV de FEC.\n"
 "        'utf-8', 'utf-8-sig' i 'iso8859_15' són les úniques codificacions permeses.\n"
@@ -1849,7 +1849,7 @@ msgid ""
 msgstr ""
 "\n"
 "Aquest mòdul proporciona la possibilitat de definir dos identificadors\n"
-"        als socis: un per al client i un per al proveïdor, utilitzat per a l'exportació DateV"
+"        als contactes: un per al client i un per al proveïdor, utilitzat per a l'exportació DateV"
 
 #. module: base
 #: model:ir.module.module,description:base.module_maintenance
@@ -2988,6 +2988,12 @@ msgid ""
 "Necessary master data is also included.\n"
 "    "
 msgstr ""
+"\n"
+"Informes comptables per Luxemburg\n"
+"=================================\n"
+"El SAF-T luxemburguès (també conegut com a FAIA) és un format d'arxiu estàndard per exportar diversos tipus de dades transaccionals de comptabilitat utilitzant el format XML.\n"
+"La primera versió del SAF-T Financer està limitada al nivell del llibre major, incloent transaccions de clients i proveïdors.\n"
+"Les dades mestres necessàries també estan incloses."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_no_reports
@@ -3678,6 +3684,10 @@ msgid ""
 "===============================================\n"
 "    "
 msgstr ""
+"\n"
+"Informe anual de l'IVA per Luxemburg - Actualització del 2023\n"
+"===============================================\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_forum
@@ -4731,7 +4741,7 @@ msgstr ""
 "Depèn de les respostes o ressenyes d'algunes preguntes per part dels diferents usuaris. A\n"
 "L'enquesta pot tenir diverses pàgines. Cada pàgina pot contenir diverses preguntes i\n"
 "cada pregunta pot tenir diverses respostes. Els diferents usuaris poden donar diferents\n"
-"respostes de la pregunta i segons aquesta enquesta es fa. Els socis també ho són\n"
+"respostes de la pregunta i segons aquesta enquesta es fa. Els contactes també ho són\n"
 "enviat correus amb testimoni personal per a la invitació de l'enquesta.\n"
 "    "
 
@@ -5708,7 +5718,7 @@ msgstr ""
 "\n"
 "* Vendes de diaris configurats per a factures Pre impreses i Expo a totes les empreses\n"
 "* Exemples de factures i altres documents ja validats a l'empresa “(AR) Responsable Inscripto”.\n"
-"* Exemple de socis per als diferents tipus de responsabilitat:\n"
+"* Exemple de contactes per als diferents tipus de responsabilitat:\n"
 "\n"
 "  * ADHOC (IVA Responsable Inscripto)\n"
 "  * Consejo Municipal Rosario (IVA Subjecte Exempt)\n"
@@ -5746,7 +5756,7 @@ msgstr ""
 "* Codis AFIP de país i codis d'IVA de país per a persones jurídiques, persones físiques i altres\n"
 "* Codis AFIP de moneda\n"
 "* Unitat de mesures Codis AFIP\n"
-"* Socis: Consumidor Final and AFIP\n"
+"* Contactes: Consumidor Final and AFIP\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec
@@ -5808,7 +5818,7 @@ msgstr ""
 "* Tipus de documents (hi ha uns 41 tipus de documents de compra a l'Equador)\n"
 "* Tipus d'identificació\n"
 "* Bancs de l'Equador\n"
-"* Socis: Consumidor Final, SRI, IESS, i també validació bàsica d'IVA\n"
+"* Contactes: Consumidor Final, SRI, IESS, i també validació bàsica d'IVA\n"
 "    "
 
 #. module: base
@@ -5836,6 +5846,14 @@ msgid ""
 "** GSTR-3B: view report\n"
 "    "
 msgstr ""
+"\n"
+"Presentació de declaració de GST utilitzant IAP\n"
+"================================\n"
+"\n"
+"** GSTR-1: Enviar i veure informe resumit\n"
+"** GSTR-2B: coincidència\n"
+"** GSTR-3B: veure informe\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -6218,6 +6236,19 @@ msgid ""
 "For the creation of API username and password please ref this document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
 "    "
 msgstr ""
+"\n"
+"India - E-facturació\n"
+"====================\n"
+"Per enviar factures a través de l'API al govern.\n"
+"Utilitzem \"Tera Software Limited\" com a GSP.\n"
+"\n"
+"Pas 1: Primer cal crear un nom d'usuari i una contrasenya d'API al portal de la E-facturació.\n"
+"Pas 2: Canvieu a l'empresa relacionada amb aquest número de GST.\n"
+"Pas 3: Establiu aquest nom d'usuari i contrasenya a Odoo (Anar a: Facturació/Comptabilitat -> Configuració -> Configuració -> Factures de clients o buscar \"E-factura\" a la barra de cerca)\n"
+"Pas 4: Repetiu els passos 1,2,3 per a tots els GSTIN que tingueu a Odoo. Si teniu una empresa múltiple amb el mateix número de GST, realitzeu el pas 1 només per a la primera empresa.\n"
+"\n"
+"Per a la creació del nom d'usuari i la contrasenya d'API, consulteu aquest document: <https://service.odoo.co.in/einvoice_create_api_user>\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_edi_ewaybill
@@ -6234,6 +6265,17 @@ msgid ""
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "    "
 msgstr ""
+"\n"
+"India - E-waybill\n"
+"====================================\n"
+"Per enviar E-waybill a través de l'API al govern.\n"
+"Utilitzem \"Tera Software Limited\" com a GSP.\n"
+"\n"
+"Pas 1: Primer cal crear un nom d'usuari i una contrasenya d'API al portal de l'E-waybill.\n"
+"Pas 2: Canvieu a l'empresa relacionada amb aquest número de GST.\n"
+"Pas 3: Establiu aquest nom d'usuari i contrasenya a Odoo (Anar a: Facturació/Comptabilitat -> Configuració -> Configuració -> Indian Electronic WayBill o buscar \"E-waybill\" a la barra de cerca)\n"
+"Pas 4: Repetiu els passos 1,2,3 per a tots els GSTIN que tingueu a Odoo. Si teniu una empresa múltiple amb el mateix número de GST, realitzeu el pas 1 només per a la primera empresa.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -6325,6 +6367,13 @@ msgid ""
 "To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
 "  "
 msgstr ""
+"\n"
+"Factura amb codi QR UPI\n"
+"=========================\n"
+"Aquest mòdul afegeix un codi QR a l'informe de factura per al pagament UPI, permetent fer pagaments a través de qualsevol aplicació UPI.\n"
+"\n"
+"Per imprimir el codi QR UPI, afegiu l'ID UPI a l'empresa i marqueu \"Codis QR\" a la configuració.\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -8155,7 +8204,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Envieu les vostres publicacions per correu i feu-ne un seguiment en línia\n"
+"Envieu bpost i feu-ne un seguiment en línia\n"
 "=======================================================\n"
 "\n"
 "Les empreses ubicades a Bèlgica poden aprofitar l'enviament amb el\n"
@@ -8457,6 +8506,12 @@ msgid ""
 "This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
 "    "
 msgstr ""
+"\n"
+"Informe de taxes TCS/TDS per a Índia\n"
+"====================================\n"
+"\n"
+"Aquest mòdul afegeix l'informe de taxes TCS i TDS i carrega les taxes relacionades en l'empresa índia.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -8774,7 +8829,7 @@ msgstr ""
 "        * Preu de llista\n"
 "        * Preu del venedor\n"
 "\n"
-"Preferències de llistes de preus per producte i/o socis.\n"
+"Preferències de llistes de preus per producte i/o contactes.\n"
 "\n"
 "Imprimeix etiquetes de productes amb codi de barres.\n"
 "    "
@@ -8826,7 +8881,7 @@ msgstr ""
 "\n"
 "Assistents proporcionats per aquest mòdul:\n"
 "--------------------------------\n"
-"    * IVA de soci Intra: registreu els socis amb el seu IVA relacionat i facturat\n"
+"    * IVA de soci Intra: registreu els contactes amb el seu IVA relacionat i facturat\n"
 "quantitats. Prepara un format de fitxer XML.\n"
 "\n"
 "        **Camí d'accés:** Facturació/Informes/Informes legals/Declaracions de Bèlgica/IVA del soci Intra\n"
@@ -9727,18 +9782,18 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Aquest mòdul permet publicar als seus revenedors/socis en el seu lloc web i reexpedir-los les iniciatives/oportunitats entrants.\n"
+"Aquest mòdul permet publicar als seus revenedors/contactes en el seu lloc web i reexpedir-los les iniciatives/oportunitats entrants.\n"
 "\n"
 "\n"
 "**Publicar un soci**\n"
 "\n"
-"Per a publicar un soci, estableixi un Nivell* en el seu formulari de contacte (en la secció Assignació de socis) i faci clic en el botó Publicar*.\n"
+"Per a publicar un soci, estableixi un Nivell* en el seu formulari de contacte (en la secció Assignació de contactes) i faci clic en el botó Publicar*.\n"
 "\n"
 "**Reenvia iniciatives**\n"
 "\n"
 "La reexpedició d'iniciatives pot realitzar-se per a un o diversos clients potencials alhora. L'acció està disponible en la secció Interlocutor assignat* de la vista del formulari de iniciatives/oportunitats i en el menú Acció* de la vista de llista.\n"
 "\n"
-"L'assignació automàtica es calcula a partir del pes dels nivells dels socis i la geolocalització. Els socis reben les iniciatives que es troben al seu voltant.\n"
+"L'assignació automàtica es calcula a partir del pes dels nivells dels contactes i la geolocalització. Els contactes reben les iniciatives que es troben al seu voltant.\n"
 "\n"
 "    "
 
@@ -10689,6 +10744,11 @@ msgid ""
 "This module adds the price difference account. Used in standard perpetual valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Mòdul de comptabilitat WMS\n"
+"======================\n"
+"Aquest mòdul afegeix el compte de diferència de preus. S'utilitza en la valoració perpètua estàndard.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -10812,6 +10872,14 @@ msgid ""
 "    Please also update the Italian Accounting module (l10n_it) when you install this module.\n"
 "    "
 msgstr ""
+"\n"
+"Gestió de retencions i fons de pensions per a la implementació de la E-factura per a Itàlia.\n"
+"\n"
+"La retenció fiscal i la taxa del fons de pensions es calculen com qualsevol altra taxa\n"
+"amb l'ordenació per seqüència, així que si us plau, tingueu cura amb l'ordre de les taxes\n"
+"en la configuració de les taxes.\n"
+"\n"
+"Si us plau, actualitzeu també el mòdul de comptabilitat italià (l10n_it) quan instal·leu aquest mòdul."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_crm_livechat
@@ -11715,7 +11783,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2Many commands namespace"
-msgstr ""
+msgstr "<code>Command</code>: Espai de noms de comandes x2Many"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11748,6 +11816,8 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: funció de registre per enregistrar "
+"informació de depuració a la taula <code>ir.logging</code>."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -15224,7 +15294,7 @@ msgstr "Bolívia - Comptabilitat "
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_bo_reports
 msgid "Bolivia - Accounting Reports"
-msgstr ""
+msgstr "Bolívia - Informes comptables"
 
 #. module: base
 #: model:res.country,name:base.bq
@@ -15739,7 +15809,7 @@ msgstr "No es pot agregar el camp %r."
 #: code:addons/models.py:0
 #, python-format
 msgid "The following language is not activated: %(missing_names)s"
-msgstr ""
+msgstr "El següent idioma no està activat: %(missing_names)s"
 
 #. module: base
 #. odoo-python
@@ -16088,8 +16158,8 @@ msgid ""
 "Choose a subview of partners that includes only address fields, to change "
 "the way users can input addresses."
 msgstr ""
-"Trieu una subvista de socis que només inclou camps d'adreça, per canviar la "
-"forma en què els usuaris poden introduir adreces."
+"Trieu una subvista de contactes que només inclou camps d'adreça, per canviar"
+" la forma en què els usuaris poden introduir adreces."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_encryption
@@ -16943,7 +17013,7 @@ msgstr "Nom de país"
 #: code:addons/base/models/res_country.py:0
 #, python-format
 msgid "Country code cannot be empty"
-msgstr ""
+msgstr "El codi de país no pot estar buit."
 
 #. module: base
 #: model:ir.model,name:base.model_res_country_state
@@ -17365,7 +17435,7 @@ msgstr "Croàcia"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr_euro
 msgid "Croatia - Accounting (EURO)"
-msgstr ""
+msgstr "Croàcia - Comptabilitat (EURO)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_hr
@@ -30164,7 +30234,8 @@ msgstr "Publica el vostre directori de membres"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_crm_partner_assign
 msgid "Publish your resellers/partners and forward leads to them"
-msgstr "Publica els teus revenedors/socis i reenvia les iniciatives a ells"
+msgstr ""
+"Publica els teus revenedors/contactes i reenvia les iniciatives a ells"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__published_version
@@ -33674,6 +33745,9 @@ msgid ""
 "country format. You can use '/' to indicate that the partner is not subject "
 "to tax."
 msgstr ""
+"El Número d'Identificació Fiscal. Els valors aquí seran validats en funció "
+"del format del país. També pots utilitzar '/' per indicar que el contacte no"
+" està subjecte a impostos."
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_lang_url_code_uniq
@@ -33889,6 +33963,10 @@ msgid ""
 "previously modified it, and you are therefore not able to modify it yourself"
 " while preserving the content."
 msgstr ""
+"El valor del camp que estàs intentant desar (%s %s) inclou contingut que "
+"està restringit per raons de seguretat. És possible que algú amb permisos "
+"més alts hagi modificat prèviament aquest valor i, per tant, no puguis "
+"modificar-lo tu mateix sense perdre el contingut."
 
 #. module: base
 #. odoo-python
@@ -34208,7 +34286,7 @@ msgid ""
 "ID. It must be unique across all partners of a same country"
 msgstr ""
 "El número de registre de l'empresa. Utilitzeu-lo si és diferent del NIF "
-"fiscal. Ha de ser únic entre tots els socis d'un mateix país"
+"fiscal. Ha de ser únic entre tots els contactes d'un mateix país"
 
 #. module: base
 #. odoo-python

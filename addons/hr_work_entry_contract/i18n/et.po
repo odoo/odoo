@@ -7,11 +7,11 @@
 # Andre Roomet <andreroomet@gmail.com>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
 # Aveli Kannel <aveli@avalah.ee>, 2022
+# Eneli Õigus <enelioigus@gmail.com>, 2022
 # Piia Paurson <piia@avalah.ee>, 2022
 # Algo Kärp <algokarp@gmail.com>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
-# Jana Jaakson, 2023
 # Leaanika Randmets, 2023
+# JanaAvalah, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Leaanika Randmets, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: JanaAvalah, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -40,11 +40,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Määrab tööaja loomise allika\n"
+"        Määrab töökannete genereerimise allika\n"
 "\n"
-"        Working Schedule: Work entries will be generated from the working hours below.\n"
-"        Attendances: Work entries will be generated from the employee's attendances. (requires Attendance app)\n"
-"        Planning: Work entries will be generated from the employee's planning. (requires Planning app)\n"
+"        Tööaeg: Töökanded genereeritakse tööaja põhjal - Standard 40h/nädalas jne\n"
+"        Kohalolekud: Töökanded genereeritakse kohaloleku põhjal(tuleb kasutada Kohalolekud moodulit)\n"
+"        Töögraafik: Töökanded genereeritakse töögraafikust(tuleb kasutada Töögraafik moodulit)\n"
 "    "
 
 #. module: hr_work_entry_contract
@@ -82,9 +82,18 @@ msgstr "<i class=\"fa fa-info-circle me-1\" title=\"Hint\"/>"
 #. module: hr_work_entry_contract
 #: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
 msgid ""
-"<span class=\"text-muted\">Warning: Work Entry Regeneration will erase all "
-"manual configuration (work entry type, deferred time off, ...).</span>"
+"<span class=\"text-muted\">Warning: The work entry regeneration will delete "
+"all manual changes on the selected period.</span>"
 msgstr ""
+
+#. module: hr_work_entry_contract
+#: model_terms:ir.ui.view,arch_db:hr_work_entry_contract.hr_work_entry_regeneration_wizard
+msgid ""
+"<span class=\"text-muted\">Attention: Regenerating these work entries will result in all the manual\n"
+"                        configurations (work entry type, homeworking location, ...) to be lost.</span>"
+msgstr ""
+"<span class=\"text-muted\">Attention: Regenerating these work entries will result in all the manual\n"
+"                        configurations (work entry type, homeworking location, ...) to be lost.</span>"
 
 #. module: hr_work_entry_contract
 #: model:ir.model.fields,help:hr_work_entry_contract.field_hr_work_entry_type__is_leave
@@ -352,4 +361,4 @@ msgstr "Tööaegade allikas"
 #. module: hr_work_entry_contract
 #: model:ir.model.fields.selection,name:hr_work_entry_contract.selection__hr_contract__work_entry_source__calendar
 msgid "Working Schedule"
-msgstr "Töögraafik"
+msgstr "Tööaeg"
