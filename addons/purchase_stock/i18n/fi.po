@@ -113,6 +113,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Tuotekonfiguraation mukaan vastaanotettu määrä voidaan laskea automaattisesti mekanismilla :\n"
+"  - Manuaalinen: määrä asetetaan manuaalisesti linjalla\n"
+"  - Varastosiirrot: määrä tulee vahvistetuista poiminnoista\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -415,6 +418,10 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Toimittajien toimitusaikojen virhemarginaali. Kun järjestelmä luo "
+"ostotilauksia tuotteiden uudelleen tilaamista varten, ne ajoitetaan näin "
+"monta päivää aikaisemmin, jotta voidaan varautua odottamattomiin "
+"toimittajien viivästyksiin."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -586,7 +593,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__qty_received_method
 msgid "Received Qty Method"
-msgstr ""
+msgstr "Vastaanotettu määrä Menetelmä"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_ids

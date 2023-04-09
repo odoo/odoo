@@ -49,7 +49,7 @@ msgstr ""
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
-"Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
+"Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -70,6 +70,15 @@ msgid ""
 "        e.g 200 * (1 - 10%) = 180 (price included)\n"
 "        "
 msgstr ""
+"\n"
+"- Grupa podatków: Podatek jest zbiorem podatków cząstkowych.\n"
+"- Stały: Kwota podatku pozostaje taka sama niezależnie od ceny.\n"
+"- Procent ceny: Kwota podatku jest % ceny:\n"
+"np. 100 * (1 + 10%) = 110 (bez ceny)\n"
+"np. 110 / (1 + 10%) = 100 (cena wliczona)\n"
+"- Procent ceny wliczony w cenę: Kwota podatku jest podziałem ceny:\n"
+"np. 180 / (1 - 10%) = 200 (bez ceny wliczonej)\n"
+"np. 200 * (1 - 10%) = 180 (cena wliczona)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_bills_count
@@ -164,7 +173,7 @@ msgstr "%s pole nie jest przechowywane w bazie danych"
 #: model:ir.actions.report,print_report_name:account.account_invoices
 #: model:ir.actions.report,print_report_name:account.account_invoices_without_payment
 msgid "(object._get_report_base_filename())"
-msgstr ""
+msgstr "(object._get_report_base_filename())"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -2668,7 +2677,7 @@ msgstr "Bank i gotówka"
 #. module: account
 #: model:ir.model,name:account.model_account_setup_bank_manual_config
 msgid "Bank setup manual config"
-msgstr ""
+msgstr "Manualna konfiguracja banku"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__suspense_account_id
@@ -7969,7 +7978,7 @@ msgstr "Brak informacji"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "No attachment was provided"
-msgstr ""
+msgstr "Nie dostarczono załącznika"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -8277,7 +8286,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
 msgid "On the"
-msgstr ""
+msgstr "Na"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tour_upload_bill_email_confirm
@@ -12082,7 +12091,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_move_line__tax_fiscal_country_id
 #: model:ir.model.fields,help:account.field_res_company__account_tax_fiscal_country_id
 msgid "The country to use the tax reports from for this company"
-msgstr ""
+msgstr "Kraj, z którego mają być używane raporty podatkowe dla tej firmy"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_reversal
