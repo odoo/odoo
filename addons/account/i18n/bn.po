@@ -7,6 +7,7 @@
 # Martin Trigaux, 2021
 # Majedul islam <majed.rifat@gmail.com>, 2021
 # Abu Zafar <azmikbal@gmail.com>, 2021
+# Noor E Alam Siddique, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Abu Zafar <azmikbal@gmail.com>, 2021\n"
+"Last-Translator: Noor E Alam Siddique, 2023\n"
 "Language-Team: Bengali (https://www.transifex.com/odoo/teams/41243/bn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -146,7 +147,7 @@ msgstr "-> আংশিকভাবে পুনর্মিলিত এন্�
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid ". You might want to put a higher number here."
-msgstr ""
+msgstr ". আপনি এখানে একটি উচ্চ নম্বর রাখতে চাইতে পারেন."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
@@ -167,12 +168,12 @@ msgstr "2 মাস"
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_21days
 msgid "21 Days"
-msgstr ""
+msgstr "21 দিন"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_30days
 msgid "30 Days"
-msgstr ""
+msgstr "30 দিন"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance
@@ -182,7 +183,7 @@ msgstr "30% অগ্রিম পরবর্তী মাসের শেষ�
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_advance_60days
 msgid "30% Now, Balance 60 Days"
-msgstr ""
+msgstr "এখন 30%, ব্যালেন্স 60 দিন"
 
 #. module: account
 #: model:account.payment.term,name:account.account_payment_term_45days
@@ -283,7 +284,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "<i class=\"fa fa-download\"/> Download"
-msgstr ""
+msgstr "ডাউনলোড করুন"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -354,6 +355,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">Bill</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">Bills</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&gt;', 1)]}\">রসিদ</span>\n"
+"<span attrs=\"{'invisible': [('reconciled_bills_count','&lt;=', 1)]}\">রসিদ</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -368,6 +371,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">Statement</span>\n"
 "                                <span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">Statements</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('reconciled_statements_count','&gt;', 1)]}\">বিবৃতি</span>\n"
+"<span attrs=\"{'invisible': [('reconciled_statements_count','&lt;=', 1)]}\">বিবৃতি</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -398,6 +403,9 @@ msgid ""
 "check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
 "class=\"d-none d-md-inline\"> Reversed</span></span>"
 msgstr ""
+"<span class=\"badge badge-pill badge-success\"><i class=\"fa fa-fw fa-"
+"check\" aria-label=\"Reversed\" title=\"Reversed\" role=\"img\"/><span "
+"class=\"d-none d-md-inline\">বিপরীত</span></span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -438,7 +446,7 @@ msgstr ""
 msgid ""
 "<span class=\"o_form_label\" attrs=\"{'invisible': [('match_amount', '!=', "
 "'between')]}\">and</span>"
-msgstr ""
+msgstr "এবং"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.validate_account_move_view
@@ -463,6 +471,10 @@ msgid ""
 "<span class=\"o_form_label\">Default Taxes</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">পূর্বনির্ধারিত  কর</span><span class=\"fa fa-lg"
+" fa-building-o\" title=\"Values set here are company-specific.\" aria-"
+"label=\"Values set here are company-specific.\" "
+"groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -477,6 +489,8 @@ msgid ""
 "<span class=\"o_form_label\">Main Currency</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">প্রধান মুদ্রা</span>\n"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -680,7 +694,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>View</span>"
-msgstr ""
+msgstr "<span>দেখুন</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -966,7 +980,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 #, python-format
 msgid "Account"
-msgstr ""
+msgstr "হিসাব"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -984,7 +998,7 @@ msgstr "একাউন্ট ক্যাশ রাউন্ডিং"
 #. module: account
 #: model:ir.model,name:account.model_account_chart_template
 msgid "Account Chart Template"
-msgstr ""
+msgstr "অ্যাকাউন্ট চার্ট টেমপ্লেট"
 
 #. module: account
 #: model:ir.model,name:account.model_account_common_report
@@ -1405,7 +1419,7 @@ msgstr "ক্রিয়া"
 #: model:ir.model.fields,field_description:account.field_account_move__message_needaction
 #: model:ir.model.fields,field_description:account.field_account_payment__message_needaction
 msgid "Action Needed"
-msgstr ""
+msgstr "পদক্ষেপ প্রয়োজন"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_actions
@@ -2229,7 +2243,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_payment__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "সংযুক্তি গণনা"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__attachment_ids
@@ -2451,7 +2465,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_search
 msgid "Bank Statement"
-msgstr ""
+msgstr "ব্যাংক দলিল"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -2542,7 +2556,7 @@ msgstr "ভিত্তি"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_base_amount
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Base Amount"
-msgstr ""
+msgstr "ভিত্তি পরিমাণ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_cash_basis_base_account_id
@@ -2644,7 +2658,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 #, python-format
 msgid "Bills"
-msgstr ""
+msgstr "রসিদ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -2870,7 +2884,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 #, python-format
 msgid "Cash"
-msgstr ""
+msgstr "নগদ অর্থ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -2902,7 +2916,7 @@ msgstr ""
 #. module: account
 #: model:ir.model,name:account.model_cash_box_out
 msgid "Cash Box Out"
-msgstr ""
+msgstr "ক্যাশ বক্স আউট"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -2999,7 +3013,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__product_uom_category_id
 msgid "Category"
-msgstr ""
+msgstr "শ্রেণী"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_account_expense_categ_id
@@ -6117,7 +6131,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Info"
-msgstr ""
+msgstr "তথ্য"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
@@ -6474,7 +6488,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "Invoicing"
-msgstr ""
+msgstr "চালান"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__payment_state__invoicing_legacy
@@ -8609,7 +8623,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment"
-msgstr ""
+msgstr "মূল্যপরিশোধ"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -8620,7 +8634,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_date
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Date"
-msgstr ""
+msgstr "মূল্যপরিশোধের তারিখ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_difference
@@ -8651,12 +8665,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_payment_register__payment_method_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "Payment Method"
-msgstr ""
+msgstr "মূল্যপরিশোধ পদ্ধতি"
 
 #. module: account
 #: model:ir.model,name:account.model_account_payment_method
 msgid "Payment Methods"
-msgstr ""
+msgstr "মূল্যপরিশোধ পদ্ধতি"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__qr_code_method
@@ -8680,7 +8694,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__payment_reference
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_reference
 msgid "Payment Reference"
-msgstr ""
+msgstr "মূল্যপরিশোধের তথ্যসূত্র"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__payment_state
@@ -8688,7 +8702,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_move__payment_state
 #: model:ir.model.fields,field_description:account.field_account_payment__payment_state
 msgid "Payment Status"
-msgstr ""
+msgstr "মূল্যপরিশোধের অবস্থা"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_payment_term_form
@@ -8781,7 +8795,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 #, python-format
 msgid "Payments"
-msgstr ""
+msgstr "মূল্যপরিশোধ "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -9093,7 +9107,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
 msgid "Print"
-msgstr ""
+msgstr "মুদ্রণ করুন"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_common_journal_report__amount_currency
@@ -9160,7 +9174,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.product_product_menu_sellable
 #: model_terms:ir.ui.view,arch_db:account.product_template_view_tree
 msgid "Products"
-msgstr ""
+msgstr "পণ্য"
 
 #. module: account
 #. openerp-web
@@ -9462,7 +9476,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Refund"
-msgstr ""
+msgstr "ফেরত"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9485,7 +9499,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:account.action_move_in_refund_type
 #: model:ir.ui.menu,name:account.menu_action_move_in_refund_type
 msgid "Refunds"
-msgstr ""
+msgstr "ফেরত"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -9612,7 +9626,7 @@ msgstr ""
 #: model:ir.ui.menu,name:account.account_report_folder
 #: model:ir.ui.menu,name:account.menu_finance_reports
 msgid "Reporting"
-msgstr ""
+msgstr "প্রতিবেদন"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_cash_rounding__rounding
@@ -10911,7 +10925,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Tax Amount"
-msgstr ""
+msgstr "করের পরিমাণ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_audit
@@ -11210,7 +11224,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_form
 msgid "Taxes"
-msgstr ""
+msgstr "ট্যাক্স / শুল্ক / কর"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12787,7 +12801,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_tree
 msgid "Total"
-msgstr ""
+msgstr "মোট"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_automatic_entry_wizard__total_amount

@@ -24,7 +24,7 @@
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Martin Trigaux, 2020
 # BigBlu <paolo.moroni@air-srl.com>, 2021
-# francesco.foresti <francesco.foresti@ooops404.com>, 2022
+# Francesco Foresti <francesco.foresti@ooops404.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Marianna Ciofani, 2023
 # Sergio Zanchetta <primes2h@gmail.com>, 2023
@@ -36,7 +36,7 @@ msgstr ""
 "POT-Creation-Date: 2020-11-27 13:50+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -854,6 +854,10 @@ msgid ""
 "        This module adds a new building block in the website builder in order to build new forms from scratch in any website page.\n"
 "    "
 msgstr ""
+"\n"
+"        Personalizzazione e creazione di schede web personali.\n"
+"        Questo modulo aggiunge un nuovo componente nel creatore di siti web, per costruire da zero nuove schede in qualsiasi pagina del sito.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_in_purchase_stock
@@ -1171,6 +1175,13 @@ msgid ""
 "        but aims to connect with all European banks later on\n"
 "    "
 msgstr ""
+"\n"
+"        Questo modulo si connette a myponto.com per recuperare gli estratti conto bancari.\n"
+"\n"
+"        Al momento il servizio consente solo di collegarsi a banche belghe\n"
+"        (BNP Paribas Fortis, KBC, CBC, KBC Brussels, Fintro, Hello Bank, ING Belgium, AXA Belgium),\n"
+"        ma in seguito punta a connettersi a tutte le banche europee.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_sepa_direct_debit
@@ -1471,6 +1482,24 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestione degli sconti nei calcoli TaxCloud.\n"
+"    Consultare https://taxcloud.com/support/discounts oppure\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Riepilogo: prima di calcolare le imposte, al prezzo di vendita devono essere applicati tutti gli sconti stabiliti dal venditore.\n"
+"    I venditori devono mostrare ai clienti la metodologia utilizzata con una politica di applicazione degli sconti.\n"
+"\n"
+"    L'algoritmo funziona in questo modo:\n"
+"     - gli sconti specifici per riga vengono applicati per primi, sulle righe a cui dovrebbero essere applicati.\n"
+"       Ciò significa sconti specifici per prodotto o sconti sulla riga più economica.\n"
+"     - vengono quindi applicati gli sconti globali in modo uniforme tra le righe di pagamento, per quanto possibile.\n"
+"       Se è presente un residuo, viene applicato in modo sequenziale in ordine di riga\n"
+"       finché non rimane alcuno sconto o riga scontabile.\n"
+"\n"
+"    Nota: alle righe di sconto (con prezzo negativo) non viene applicata alcuna imposta,\n"
+"    ma il loro importo viene invece dedotto dalla righe a cui vengono applicate durante il calcolo delle imposte.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1484,6 +1513,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestione degli sconti con le consegne nei calcoli TaxCloud.\n"
+"    Questo modulo segue la stessa logica di \"TaxCloud per contabilità - Vendita (buono sconto)\".\n"
+"    Lì possono essere trovate maggiori informazioni su come vengono effettuati i calcoli degli sconti per TaxCloud.\n"
+"\n"
+"    Per lo sconto (spedizione gratuita) sulle consegne è presente un'opzione aggiuntiva.\n"
+"    Con la consegna nei buoni sconto vendita, non viene applicato il calcolo dello sconto nelle righe di consegna.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1516,9 +1553,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"    Sistema PayUMoney per l'India.\n"
+"    Sistema di pagamento PayUMoney per l'India.\n"
 "\n"
-"    Gateway di pagamento PayUMoney che accetta solo la valuta INR.\n"
+"    Il gateway di pagamento PayUMoney supporta solo la valuta INR.\n"
 "    "
 
 #. module: base
@@ -2674,6 +2711,15 @@ msgid ""
 "When you proceed with the reconciliation, simply select the corresponding batch payment to reconcile all the payments within.\n"
 "    "
 msgstr ""
+"\n"
+"Pagamenti raggruppati\n"
+"================================\n"
+"I pagamenti raggruppati consentono di aggregare i pagamenti.\n"
+"\n"
+"Per esempio vengono utilizzati per raggruppare vari assegni ricevuti prima di versarli in banca in un'unica soluzione.\n"
+"L'importo totale versato comparirà quindi come singola operazione nell'estratto conto bancario.\n"
+"Proseguendo con la riconciliazione, selezionare il corrispondente pagamento raggruppato per riconciliare tutti i pagamenti contenuti.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll
@@ -3140,6 +3186,18 @@ msgid ""
 " * Filter and Tag\n"
 " * Statistics\n"
 msgstr ""
+"\n"
+"Creazione corsi online\n"
+"====================\n"
+"\n"
+"Caratteristiche\n"
+"\n"
+" * Gestione integrata dei corsi e delle lezioni\n"
+" * Navigazione a schermo intero\n"
+" * Supporto per video YouTube, documenti Google, PDF, immagini, pagine web\n"
+" * Test di conoscenza con quiz\n"
+" * Filtri ed etichette\n"
+" * Statistiche\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_report
@@ -3901,6 +3959,11 @@ msgid ""
 "\n"
 "This module includes contact phone and mobile numbers validation."
 msgstr ""
+"\n"
+"Generazione di contatti e opportunità nell'applicazione CRM a partire da un scheda di contatto pubblicata nella pagina Contattaci del sito web.\n"
+"La scheda può essere personalizzata grazie a \"Creatore schede\" (disponibile in Odoo Enterprise).\n"
+"\n"
+"Questo modulo include la convalida dei numeri di telefono fisso e mobile dei contatti."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_links
@@ -3923,7 +3986,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generazione di attività nell'applicazione Progetti a partire da un modulo pubblicato nel sito web. Per la creazione del modulo richiede l'utilizzo di *Generatore moduli* (disponibile in Odoo Enterprise).\n"
+"Generazione di attività nell'applicazione progetti a partire da una scheda pubblicata nel sito web. Per la creazione della scheda, il modulo richiede l'utilizzo di *Creatore schede* (disponibile in Odoo Enterprise).\n"
 "    "
 
 #. module: base
@@ -3934,7 +3997,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Generazione di segnalazioni nell'applicazione di assistenza clienti a partire da un modulo pubblicato nel sito web. Il modulo può essere personalizzato grazie a *Generatore moduli* (disponibile in Odoo Enterprise).\n"
+"Generazione di segnalazioni nell'applicazione assistenza clienti a partire da una scheda pubblicata nel sito web. La scheda può essere personalizzata grazie a *Creatore schede* (disponibile in Odoo Enterprise).\n"
 "    "
 
 #. module: base
@@ -3998,6 +4061,15 @@ msgid ""
 "are found in other modules that must be installed separately.\n"
 "\n"
 msgstr ""
+"\n"
+"Proxy hardware\n"
+"=============\n"
+"\n"
+"Questo modulo consente l'utilizzo remoto di periferiche collegate al server.\n"
+"\n"
+"Contiene solo la struttura di attivazione. I driver effettivi dei dispositivi si trovano\n"
+"in altri moduli, che devono essere installati separatamente.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk
@@ -4119,6 +4191,25 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Include i seguenti dati per la localizzazione cinese\n"
+"====================================================\n"
+"\n"
+"Tipo di conto/科目类型\n"
+"\n"
+"Dati stato/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -4875,6 +4966,8 @@ msgid ""
 "\n"
 "Module holding mail improvements for website. It holds the follow widget.\n"
 msgstr ""
+"\n"
+"Modulo che contiene miglioramenti della posta per il sito web. Contiene il widget per seguire.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_followup
@@ -5414,6 +5507,9 @@ msgid ""
 "Please refer to Sale Matrix or Purchase Matrix for the use of this module.\n"
 "    "
 msgstr ""
+"\n"
+"Per l'utilizzo di questo modulo consultare matrice di vendita o matrice di acquisto.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
@@ -5962,6 +6058,12 @@ msgid ""
 "It also enables the \"optional products\" feature.\n"
 "    "
 msgstr ""
+"\n"
+"Modulo tecnico installato quando l'utente seleziona l'impostazione \"module_sale_product_configurator\".\n"
+"Lo scopo principale è di sovrascrivere la vista sale_order per consentire la configurazione dei prodotti nella scheda dell'OdV.\n"
+"\n"
+"Abilita anche la funzionalità \"prodotti opzionali\".\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -6055,6 +6157,9 @@ msgid ""
 "The module adds Microsoft user in res user.\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"Module che aggiunge l'utente Microsoft a res.users.\n"
+"==================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -6671,6 +6776,15 @@ msgid ""
 "\n"
 "Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC\n"
 msgstr ""
+"\n"
+"Modulo per gestire il piano dei conti per la Mongolia.\n"
+"===============================================================\n"
+"\n"
+"    * Piano dei conti ufficiale mongolo\n"
+"    * Piano dei codici imposta mongolo\n"
+"    * Imposte principali utilizzate in Mongolia\n"
+"\n"
+"Requisiti finanziari forniti da: Baskhuu Lodoikhuu. BumanIT LLC\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -6749,9 +6863,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modulo aggiunge una nuova vista dashboard nell'applicazione Website.\n"
-"Questo nuovo tipo di vista contiene alcune statistiche di base, un grafico e una sotto-vista pivot che ti permettono di avere una rapida panoramica delle tue vendite online.\n"
-"Fornisce anche nuovi strumenti per analizzare i tuoi dati."
+"Questo modulo aggiunge una nuova vista bacheca nell'applicazione sito web.\n"
+"Il nuovo tipo di vista contiene alcune statistiche di base, un grafico e una sottovista pivot che consente di avere una rapida panoramica delle vendite online.\n"
+"Fornisce anche nuovi strumenti per analizzare i dati."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting_crm
@@ -6764,10 +6878,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modulo aggiunge un collegamento su uno o più casi di opportunità nel CRM.\n"
+"Modulo che aggiunge una scorciatoia su uno o più casi di opportunità nel CRM.\n"
 "===========================================================================\n"
 "\n"
-"Questa scorciatoia permette di generare un ordine di noleggio basato sul caso selezionato."
+"Questa consente di generare un ordine di noleggio basato sul caso selezionato.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_crm
@@ -6785,14 +6900,14 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modulo aggiunge una scorciatoia su uno o più casi di opportunità nel sistema CRM.\n"
+"Modulo che aggiunge una scorciatoia su uno o più casi di opportunità nel CRM.\n"
 "===========================================================================\n"
 "\n"
-"Questa scorciatoia consente di generare un ordine di vendita in base al caso selezionato.\n"
-"Se diversi casi sono aperti (un elenco), essa genera un ordine di vendita per ogni caso.\n"
-"Il caso viene poi chiuso e collegato all'ordine di vendita generato.\n"
+"Questa consente di generare un ordine di noleggio basato sul caso selezionato.\n"
+"Se i casi aperti sono diversi (un elenco), genera un ordine di vendita per ciascuno di essi.\n"
+"Quindi vengono chiusi e collegati agli ordini di vendita generati.\n"
 "\n"
-"Si consiglia di installare questo modulo se sono stati installati entrambi i moduli Vendite\n"
+"Si consiglia di installare il modulo se sono stati installati i moduli vendite\n"
 "e CRM.\n"
 "    "
 
@@ -6848,11 +6963,11 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modulo aggiunge il 'Margine' sugli ordini di vendita.\n"
-"=============================================\n"
+"Questo modulo aggiunge il \"margine\" sull'ordine di vendita.\n"
+"=========================================================\n"
 "\n"
-"Visualizza il profitto calcolando la differenza tra il prezzo di\n"
-"vendita ed il prezzo di costo.\n"
+"Fornisce la redditività calcolando la differenza tra il prezzo unitario\n"
+" e il prezzo di costo.\n"
 "    "
 
 #. module: base
@@ -6893,11 +7008,11 @@ msgid ""
 "       "
 msgstr ""
 "\n"
-"Questo modulo consente di gestire le presenze dei dipendenti.\n"
-"==================================================\n"
+"Questo modulo ha come scopo la gestione delle presenze dei dipendenti.\n"
+"====================================================================\n"
 "\n"
-"Tiene conto delle presenze dei dipendenti sulla base delle\n"
-"azioni (Check in/Check out) da loro effettuate.\n"
+"Tiene conto delle presenze dei dipendenti sulla base delle loro azioni\n"
+"(Ingresso/Uscita).\n"
 "       "
 
 #. module: base
@@ -6909,8 +7024,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Questo modulo permette ai Dipendenti (e non utenti) di accedere al modulo Punto Vendita usando il codice a barre, un PIN o entrambi.\n"
-"Il registratore di cassa in sè richiede comunque un utente, ma permette ad un numero illimitato di dipendenti di accedere e processare le vendite.\n"
+"Questo modulo consente ai dipendenti (non utenti) di accedere all'applicazione punto vendita usando un codice a barre, un PIN oppure entrambi.\n"
+"Possono accedere in numero illimitato ed elaborare le vendite, ma il registratore di cassa vero e proprio richiede comunque un utente.\n"
 "    "
 
 #. module: base
@@ -7059,6 +7174,11 @@ msgid ""
 "take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo consente di aggiungere facilmente costi aggiuntivi a un ordine di produzione. \n"
+"Consente di decidere la suddivisione di questi costi tra i relativi movimenti di magazzino, \n"
+"tenendone conto nella valutazione delle giacenze.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -7231,6 +7351,11 @@ msgid ""
 "a protection to avoid using it in production environment. However, do\n"
 "not use it in production environment.\n"
 msgstr ""
+"\n"
+"Questo modulo implementa un semplice flusso per un sistema di pagamento di prova.\n"
+"Consente di effettuare test di pagamenti portati a termine con successo nell'e-commerce. Include\n"
+"una protezione per evitarne l'utilizzo in un ambiente di produzione. Ciò nonostante, non\n"
+"utilizzare in un ambiente di produzione.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timer
@@ -7709,7 +7834,7 @@ msgid ""
 "--------------------------------------------------------------\n"
 msgstr ""
 "\n"
-"Utilizza i budget per confrontare le entrate e i costi previsti con quelli effettivi\n"
+"Utilizzo di bilanci previsionali per confrontare i costi e i ricavi attesi con quelli effettivi\n"
 "--------------------------------------------------------------\n"
 
 #. module: base
@@ -7982,6 +8107,8 @@ msgstr ""
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
+"Aggiunge un pulsante statistiche nella vista scheda dei contatti CRM per "
+"accedere alle sessioni chat dal vivo."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_purchase_inter_company_rules
@@ -8980,8 +9107,8 @@ msgid ""
 "A Slide channel can be linked to forum. Also, profiles from slide and forum "
 "are regrouped together"
 msgstr ""
-"Un canale Slide può essere collegato al forum. Inoltre, i profili di slide e"
-" forum sono raggruppati insieme"
+"Un canale dispositiva può essere collegato al forum. Inoltre, i profili da "
+"e-learning e forum sono raggruppati insieme"
 
 #. module: base
 #: code:addons/models.py:0
@@ -9361,7 +9488,7 @@ msgstr "TaxCloud per contabilità - Vendita (buono sconto) - Consegna"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_winbooks_import
 msgid "Account Winbooks Import"
-msgstr "Account Winbooks Import"
+msgstr "Importazione contabilità da Winbooks"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_payment
@@ -9819,7 +9946,7 @@ msgstr "Aggiunge una simulazione di retribuzione da lorda a netta"
 #. module: base
 #: model:ir.module.module,description:base.module_contacts_enterprise
 msgid "Adds notably the map view of contact"
-msgstr "Aggiunge in particolare la visualizzazione del contatto nella mappa."
+msgstr "Aggiunge in particolare la vista mappa del contatto"
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_ldap
@@ -10098,7 +10225,7 @@ msgstr "Consente la modifica delle buste paga"
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
 msgid "Allow per-order lead creation mode"
-msgstr ""
+msgstr "Consente la modalità di creazione contatti CRM per ordine"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
@@ -10160,15 +10287,15 @@ msgstr "Consente di collegare un forum a un corso"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_coupon_delivery
 msgid "Allows to offer free shippings in coupon reward"
-msgstr "Consente di offrire spedizioni gratuite con buoni sconto premio"
+msgstr "Consente di offrire spedizioni gratuite nei buoni sconto premio"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_sale_coupon_delivery
 #: model:ir.module.module,summary:base.module_website_sale_coupon_delivery
 msgid "Allows to offer free shippings in coupon reward on eCommerce"
 msgstr ""
-"Consente di offrire spedizioni gratuite nell'e-commerce con buoni sconto "
-"premio"
+"Consente di offrire spedizioni gratuite nei buoni sconto premio "
+"dell'e-commerce"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sms
@@ -14627,7 +14754,7 @@ msgstr "Funzionalità Enterprise per i contatti"
 #. module: base
 #: model:ir.module.module,summary:base.module_website
 msgid "Enterprise website builder"
-msgstr "Creazione di siti web aziendali"
+msgstr "Creatore di siti web aziendali"
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_R
@@ -15917,7 +16044,7 @@ msgstr "Resoconto vendite GST (imposta su beni e servizi)"
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in_stock
 msgid "GST Stock Report"
-msgstr "Resoconto magazzino con imposta sui beni e servizi"
+msgstr "Resoconto giacenze GST (imposta su beni e servizi)"
 
 #. module: base
 #: model:res.country,vat_label:base.in
@@ -16490,7 +16617,7 @@ msgstr "Assistenza clienti riparazioni"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_sale_coupon
 msgid "Helpdesk Sale Coupon"
-msgstr "Assistenza clienti buoni sconto vendita"
+msgstr "Buoni sconto vendita da assistenza clienti"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_helpdesk_stock
@@ -17406,7 +17533,7 @@ msgstr "India - Resoconto vendite GST (imposta su beni e servizi)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_stock
 msgid "Indian - Stock Report(GST)"
-msgstr "India - Resoconto magazzino GST (imposta su beni e servizi)"
+msgstr "India - Resoconto giacenze GST (imposta su beni e servizi)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -23172,7 +23299,7 @@ msgstr "Sistema di pagamento: implementazione PayU Latam"
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_payumoney
 msgid "Payment Acquirer: PayuMoney Implementation"
-msgstr "Sistema di pagamento: implementazione PayuMoney"
+msgstr "Sistema di pagamento: implementazione PayUMoney"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_sepa_direct_debit
@@ -23239,7 +23366,7 @@ msgstr "Sistema di pagamento Payu Latam"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_payumoney
 msgid "PayuMoney Payment Acquirer"
-msgstr "Sistema di pagamento PayuMoney"
+msgstr "Sistema di pagamento PayUMoney"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_payulatam
@@ -24886,12 +25013,12 @@ msgstr "Ponte tra vendite e Intrastat belga"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon
 msgid "Sale Coupon"
-msgstr "Buono sconto vendita"
+msgstr "Buoni sconto vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_coupon_delivery
 msgid "Sale Coupon Delivery"
-msgstr "Buono sconto di consegna per vendita"
+msgstr "Consegna nei buoni sconto vendita"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_intrastat
@@ -25379,32 +25506,32 @@ msgstr "Invio di SMS come promemoria di eventi"
 #: model:ir.module.module,description:base.module_stock_sms
 #: model:ir.module.module,summary:base.module_stock_sms
 msgid "Send text messages when final stock move"
-msgstr ""
+msgstr "Invio di SMS con l'ultimo movimento di magazzino"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_easypost
 msgid "Send your parcels through Easypost and track them online"
-msgstr "Invio di pacchi tramite Easypost e relativo tracciamento"
+msgstr "Invio di pacchi tramite Easypost e relativo tracciamento online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_dhl
 msgid "Send your shippings through DHL and track them online"
-msgstr "Utilizza DHL per le tue spedizioni e seguile online"
+msgstr "Invio di spedizioni tramite DHL e relativo tracciamento online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_fedex
 msgid "Send your shippings through Fedex and track them online"
-msgstr "Utilizza Fedex per le tue spedizioni e seguile online"
+msgstr "Invio di spedizioni tramite Fedex e relativo tracciamento online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_ups
 msgid "Send your shippings through UPS and track them online"
-msgstr "Utilizza UPS per le tue spedizioni e seguile online"
+msgstr "Invio di spedizioni tramite UPS e relativo tracciamento online"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_usps
 msgid "Send your shippings through USPS and track them online"
-msgstr "Utilizza USPS per le tue spedizioni e seguile online"
+msgstr "Invio di spedizioni tramite USPS e relativo tracciamento online"
 
 #. module: base
 #: model:res.country,name:base.sn
@@ -27403,8 +27530,8 @@ msgid ""
 "This module adds the OdooBot state and notifications in the user form "
 "modified by hr."
 msgstr ""
-"Questo modulo aggiunge lo stato e le notifiche OdooBot nel modulo utente "
-"modificato da hr."
+"Modulo che aggiunge lo stato e le notifiche di OdooBot nella scheda utente "
+"modificata da RU. ."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -27435,7 +27562,7 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
-"Modulo che contiene test relativi alla posta. Si trovano\n"
+"Modulo che contiene test relativi a mail. Si trovano\n"
 "in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
 "test indipendenti da aspetti funzionali di altri modelli. "
 
@@ -27448,6 +27575,10 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Modulo che contiene test relativi a mail. Si trovano\n"
+"in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
+"test indipendenti da aspetti funzionali di altri modelli. Inoltre la maggior parte dei\n"
+"moduli costruiti su mail (sms, snailmail, mail_enterprise) vengono impostati come dipendenze, in modo da effettuare test per l'intera base di codice di mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -27491,7 +27622,7 @@ msgid ""
 "real applications. "
 msgstr ""
 "Modulo che contiene test relativi a varie funzionalità\n"
-"e sottomoduli della posta. Si trovano in un modulo separato in quanto contiene\n"
+"e sottomoduli di mail. Si trovano in un modulo separato in quanto contiene\n"
 "modelli utilizzati solo per eseguire test indipendenti da aspetti funzionali di\n"
 "applicazioni reali. "
 
@@ -27515,6 +27646,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Modulo che contiene test relativi al sito web. Si trovano\n"
+"in un modulo separato in quanto vengono effettuati test di installazione/disinstallazione/aggiornamento,\n"
+"per evitare di dover ricaricare ogni volta il modulo sito web incluse le sue possibili dipendenze. \n"
+"Evita anche di dover aggiungere nel modulo sito web alcuni percorsi, viste e modelli che hanno\n"
+"il solo scopo di eseguire test."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
@@ -27541,9 +27677,8 @@ msgid ""
 "This module ensures that when delivery price is computed online, and taxes are computed with TaxCloud, the tax computation is done correctly on both the order and delivery.\n"
 "    "
 msgstr ""
-"Questo modulo garantisce che, quando il prezzo di consegna è calcolato "
-"online e le imposte sono calcolate con TaxCloud, il calcolo delle imposte è "
-"eseguito correttamente sia sull'ordine che sulla consegna."
+"Questo modulo garantisce che, quando il prezzo di consegna viene calcolato online e le imposte con TaxCloud, il calcolo delle imposte venga effettuato correttamente sia sull'ordine che sulla consegna.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_track_gantt

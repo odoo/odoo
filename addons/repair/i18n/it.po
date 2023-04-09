@@ -9,9 +9,9 @@
 # neveroils <maiolif@mgftools.com>, 2020
 # Léonie Bouchat <lbo@odoo.com>, 2020
 # Stefano Consolaro <stefano.consolaro@mymage.it>, 2020
-# Friederike Fasterling-Nesselbosch, 2022
-# Sergio Zanchetta <primes2h@gmail.com>, 2022
+# Friederike Fasterling-Nesselbosch, 2021
 # Marianna Ciofani, 2023
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:17+0000\n"
-"Last-Translator: Marianna Ciofani, 2023\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -70,6 +70,12 @@ msgid ""
 "* The 'Done' status is set when repairing is completed.\n"
 "* The 'Cancelled' status is used when user cancel repair order."
 msgstr ""
+"* Lo stato \"Bozza\" viene utilizzato quando l'utente sta elaborando un ordine di riparazione nuovo e non confermato.\n"
+"* Lo stato \"Confermato\" viene utilizzato quando un utente confirma l'ordine di riparazione.\n"
+"* Lo stato \"Pronto per riparazione\" viene utilizzato per partire con la riparazione, che può iniziare solo dopo la conferma dell'ordine di riparazione.\n"
+"* Lo stato \"Da fatturare\" viene utilizzato per generare la fattura prima o dopo il completamento della riparazione.\n"
+"* Lo stato \"Completato\" è impostato quando la riparazione è completata.\n"
+"* Lo stato \"Annullato\" viene utilizzato quando l'utente annulla l'ordine di riparazione."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
@@ -103,6 +109,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Spett.le ${object.partner_id.name},<br/>\n"
+"        siamo ad inviarle l'ordine di riparazione n° ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (con riferimento: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            per un importo pari a <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        Per qualsiasi domanda può rispondere a questa e-mail.\n"
+"        <br/><br/>\n"
+"        Grazie,\n"
+"        % if user.signature\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -252,8 +280,9 @@ msgid ""
 "Choose partner for whom the order will be invoiced and delivered. You can "
 "find a partner by its Name, TIN, Email or Internal Reference."
 msgstr ""
-"Scegli il partner per il quale l'ordine sarà fatturato e consegnato. Puoi "
-"trovare un partner per il suo Nome, TIN, e-mail o riferimento interno."
+"Scegliere il partner per il quale l'ordine sarà fatturato e consegnato. È "
+"possibile trovare un partner per nome, codice fiscale, e-mail o riferimento "
+"interno."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_tags__color
@@ -411,7 +440,7 @@ msgstr "Creare veramente le fatture?"
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
 msgid "Done"
-msgstr "Completata"
+msgstr "Completato"
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_line__state__draft
@@ -423,7 +452,7 @@ msgstr "Bozza"
 msgid ""
 "Draft invoices for this order will be cancelled. Do you confirm the action?"
 msgstr ""
-"Le bozze di fatture per questo ordine saranno annullate. Vuoi confermare?"
+"Le fatture in bozza dell'ordine verranno annullate. Confermare l'azione?"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -724,7 +753,7 @@ msgstr "Nessun listino prezzi trovato."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
-msgstr "Nessun prodotto definito sulle tariffe."
+msgstr "Nessun prodotto definito per le tariffe."
 
 #. module: repair
 #: model_terms:ir.actions.act_window,help:repair.action_repair_order_tree
@@ -1067,6 +1096,7 @@ msgstr "Invia preventivo"
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr ""
+"Per la riga operazione del prodotto \"%s\" è necessario il numero di serie"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -1177,7 +1207,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__location_id
 msgid "This is the location where the product to repair is located."
-msgstr "Questo è il luogo dove si trova il prodotto da riparare."
+msgstr "Ubicazione dove si trova il prodotto da riparare."
 
 #. module: repair
 #: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
@@ -1321,13 +1351,13 @@ msgstr "Non è possibile inserire quantità negative."
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot cancel a completed repair order."
-msgstr ""
+msgstr "Impossibile annullare un ordine di riparazione completato."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You cannot delete a completed repair order."
-msgstr ""
+msgstr "Impossibile eliminare un ordine di riparazione completato."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
@@ -1336,14 +1366,16 @@ msgid ""
 "You have to select a pricelist in the Repair form !\n"
 " Please set one before choosing a product."
 msgstr ""
-"Devi selezionare un listino prezzi nel modulo di riparazione!\n"
-"Si prega di impostarne uno prima di scegliere un prodotto."
+"Nella scheda di riparazione deve essere selezionato un listino prezzi,\n"
+"impostarlo prima di scegliere un prodotto."
 
 #. module: repair
 #: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
-msgstr "Seleziona un indirizzo di fattura nel modulo di riparazione."
+msgstr ""
+"Nella scheda di riparazione deve essere selezionato un indirizzo per la "
+"fattura."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.stock_warn_insufficient_qty_repair_form_view
