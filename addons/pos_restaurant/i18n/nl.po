@@ -3,9 +3,9 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:10+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -34,7 +34,7 @@ msgstr "<strong>Verdieping naam: </strong>"
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_kanban
 msgid "<strong>Point of Sales: </strong>"
-msgstr ""
+msgstr "<strong>Kassa: </strong>"
 
 #. module: pos_restaurant
 #: model_terms:ir.actions.act_window,help:pos_restaurant.action_restaurant_floor_form
@@ -89,12 +89,12 @@ msgstr "Knop toevoegen"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.js:0
 #, python-format
 msgid "Add kitchen Note"
-msgstr ""
+msgstr "Keukennotitie toevoegen"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Add kitchen notes on order lines for the kitchen"
-msgstr ""
+msgstr "Keukennotities toevoegen aan orderregels voor de keuken"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -126,7 +126,7 @@ msgstr "Sta het splitsen van de rekening toe"
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__iface_orderline_notes
 msgid "Allow custom kitchen notes on Orderlines."
-msgstr ""
+msgstr "Aangepaste keukennotities toestaan op orderregels."
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -171,7 +171,7 @@ msgstr "Gearchiveerd"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Are you sure?"
-msgstr ""
+msgstr "Weet je het zeker?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -311,6 +311,7 @@ msgstr "Configuratie instellingen"
 #, python-format
 msgid "Couldn't synchronize the orders for the tables because you are offline"
 msgstr ""
+"Kon de bestellingen voor de tafels niet synchroniseren omdat je offline bent"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__create_uid
@@ -502,7 +503,7 @@ msgstr "Gasten:"
 #: code:addons/pos_restaurant/static/src/js/Screens/ProductScreen/ControlButtons/TableGuestsButton.js:0
 #, python-format
 msgid "Guests?"
-msgstr ""
+msgstr "Gasten?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__height
@@ -547,18 +548,18 @@ msgstr "Openhouden"
 #: code:addons/pos_restaurant/static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml:0
 #, python-format
 msgid "Kitchen Note"
-msgstr ""
+msgstr "Keukennotitie"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
 msgid "Kitchen Note added by the waiter."
-msgstr ""
+msgstr "Keukennotitie toegevoegd door de ober."
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_config__iface_orderline_notes
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
 msgid "Kitchen Notes"
-msgstr "Keukenopmerkingen"
+msgstr "Keukennotities"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.res_config_settings_view_form
@@ -649,7 +650,7 @@ msgstr "NIEUW"
 #: code:addons/pos_restaurant/static/src/xml/multiprint.xml:0
 #, python-format
 msgid "NOTE"
-msgstr "OPMERKING"
+msgstr "NOTITIE"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -671,7 +672,7 @@ msgstr "Notitie"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Number of Seats?"
-msgstr ""
+msgstr "Aantal plaatsen?"
 
 #. module: pos_restaurant
 #. odoo-javascript
@@ -1104,7 +1105,7 @@ msgstr "Tafelnaam"
 #: code:addons/pos_restaurant/static/src/app/floor_screen/floor_screen.js:0
 #, python-format
 msgid "Table Name?"
-msgstr ""
+msgstr "Naam van de tafel?"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__table_ids
@@ -1145,6 +1146,8 @@ msgstr "Het standaard aantal klanten dat wordt geholpen aan deze tafel."
 #, python-format
 msgid "The orders for the table could not be loaded because you are offline"
 msgstr ""
+"De bestellingen voor de tafel konden niet worden geladen omdat je offline "
+"bent"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_pos_config__floor_ids

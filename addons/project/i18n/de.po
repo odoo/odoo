@@ -17,7 +17,7 @@ msgstr ""
 "POT-Creation-Date: 2023-03-23 09:08+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Larissa Manderfeld, 2023\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -50,7 +50,7 @@ msgstr ""
 #: code:addons/project/static/src/views/project_calendar/project_calendar_controller.js:0
 #, python-format
 msgid " - Tasks by Deadline"
-msgstr ""
+msgstr " - Aufgaben nach Frist"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__collaborator_count
@@ -103,7 +103,7 @@ msgstr "%(name)s"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Burndown Chart"
-msgstr ""
+msgstr "Burndown-Chart von %(name)s"
 
 #. module: project
 #. odoo-python
@@ -138,7 +138,7 @@ msgstr "Zeiterfassung von %(name)s"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "%(name)s's Updates"
-msgstr ""
+msgstr "Aktualisierungen von %(name)s"
 
 #. module: project
 #. odoo-python
@@ -167,7 +167,7 @@ msgstr "(+ 1 Aufgabe)"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "(due"
-msgstr ""
+msgstr "(fällig"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -507,7 +507,7 @@ msgstr "<strong class=\"d-block mb-2\">Anhänge</strong>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task_planned_hours_template
 msgid "<strong>Allocated Hours:</strong>"
-msgstr ""
+msgstr "<strong>Zugewiesene Stunden:</strong>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -581,6 +581,8 @@ msgid ""
 "A personal stage cannot be linked to a project because it is only visible to"
 " its corresponding user."
 msgstr ""
+"Eine persönliche Phase kann nicht mit einem Projekt verknüpft werden, da sie"
+" nur für den entsprechenden Benutzer sichtbar ist."
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_task_recurring_task_has_no_parent
@@ -827,6 +829,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
+"Analytisches Konto, mit dem diese Aufgaben und seine Zeiterfassungsbögen verknüpft sind. \n"
+"Verfolgen Sie die Kosten und Einnahmen Ihrer Aufgabe, indem Sie dieses analytisches Konto auf Ihre zugehörigen Dokumente (z. B. Verkaufsaufträge, Ausgangsrechnungen, Kaufaufträge, Eingangsrechnungen, Spesen usw.) setzen.\n"
+"Dieses analytische Konto des Projektsist standardmäßig eingestellt. Es kann bei Bedarf für jede Aufgabe einzeln geändert werden."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1631,6 +1636,8 @@ msgid ""
 "Date on which this project ends. The timeframe defined on the project is "
 "taken into account when viewing its planning."
 msgstr ""
+"Datum, an dem dieses Projekt endet. Der auf dem Projekt definierte "
+"Zeitrahmen wird bei der Betrachtung seiner Planung berücksichtigt."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__date_assign
@@ -1685,7 +1692,7 @@ msgstr "Standardplan"
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr ""
+msgstr "Standardplan für ein neues Analysekonto für Projekte"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2054,7 +2061,7 @@ msgstr "Favorit"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "Lieblingsprojekte"
 
 #. module: project
 #. odoo-python
@@ -2083,7 +2090,7 @@ msgstr "In Kanban eingeklappt"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__is_closed
 msgid "Folded in Kanban stages are closing stages."
-msgstr ""
+msgstr "Eingeklappte Phasen in der Kanban-Ansicht sind abgeschlossene Phasen."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2356,6 +2363,9 @@ msgid ""
 "Alternatively, it will be sent at a regular interval as long as the task remains in this stage, depending on the configuration of your project. \n"
 "To use this feature make sure that the 'Customer Ratings' option is enabled on your project."
 msgstr ""
+"Wenn diese Option aktiviert ist, wird automatisch eine Bewertungsanfrage per E-Mail an den Kunden gesendet, wenn die Aufgabe diese Phase erreicht. \n"
+"Alternativ wird sie in regelmäßigen Abständen gesendet, solange sich die Aufgabe in dieser Phase befindet, je nach Konfiguration Ihres Projekts. \n"
+"Um diese Funktion zu nutzen, müssen Sie sicherstellen, dass die Option „Kundenbewertung“ in Ihrem Projekt aktiviert ist."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project_stage__mail_template_id
@@ -2904,7 +2914,7 @@ msgstr "Meine Aufgaben"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_view_search
 msgid "My Updates"
-msgstr ""
+msgstr "Meine Aktualisierungen"
 
 #. module: project
 #. odoo-python
@@ -3376,6 +3386,19 @@ msgid ""
 "\n"
 "In any case, an internal user with no project access rights can still access a task, provided that they are given the corresponding URL (and that they are part of the followers if the project is private)."
 msgstr ""
+"Personen, für die dieses Projekt und seine Aufgaben sichtbar sein werden.\n"
+"\n"
+"- Eingeladene interne Benutzer: Wenn sie einem Projekt folgen, erhalten interne Benutzer unterschiedslos Zugriff auf alle Aufgaben des Projekts. Andernfalls erhalten sie nur Zugang zu den spezifischen Aufgaben, die sie verfolgen. Ein Benutzer mit der Berechtigungsstufe Projekt > Administrator kann auf dieses Projekt und seine Anfragen zugreifen, auch wenn er nicht ausdrücklich zu den Followern gehört.\n"
+"\n"
+"- Alle internen Benutzer: Alle internen Benutzer können unterschiedslos auf das Projekt und all seine Aufgaben zugreifen.\n"
+"\n"
+"-  Eingeladene Portalbenutzer und alle internen Benutzer: Alle internen Benutzer können unterschiedslos auf das Projekt und all seine Aufgaben zugreifen.\n"
+"Wenn Sie einem Projekt folgen, erhalten Portalbenutzer unterschiedlos Zugriff auf alle Aufgaben. Andernfalls erhalten sie nur Zugriff auf die spezifischen Aufgaben, denen sie folgen.\n"
+"\n"
+"Wenn ein Projekt als schreibgeschützt freigegeben ist, wird der Portalbenutzer zu seinem Portal weitergeleitet. Er kann die Aufgaben ansehen, aber nicht bearbeiten.\n"
+"Wenn ein Projekt im Bearbeitungsmodus geteilt wird, wird der Portalbenutzer zur Kanban- und Listenansicht der Aufgaben weitergeleitet. Er kann eine ausgewählte Anzahl von Feldern in den Aufgaben ändern.\n"
+"\n"
+"In jedem Fall kann ein interner Benutzer, der keine Zugriffsrechte auf das Projekt hat, auf eine Aufgabe zugreifen, vorausgesetzt, dass er die entsprechende URL erhält (und dass er zu den Followern gehört, wenn das Projekt privat ist)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
@@ -3407,7 +3430,7 @@ msgstr "Persönliche Aufgabenphase"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__personal_stage_type_id
 msgid "Personal User Stage"
-msgstr ""
+msgstr "Persönliche Benutzerphase"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__partner_phone
@@ -3774,6 +3797,10 @@ msgid ""
 " several projects, you can share this stage among them and get consolidated "
 "information this way."
 msgstr ""
+"Projekte, in denen diese Phase vorhanden ist. Wenn Sie einen ähnlichen "
+"Arbeitsablauf in mehreren Projekten verfolgen, können Sie diese Phase für "
+"alle Projekte freigeben und auf diese Weise zusammengeführte Informationen "
+"erhalten."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__task_properties
@@ -4130,7 +4157,7 @@ msgstr "Nachrichten durchsuchen"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Milestone"
-msgstr ""
+msgstr "In Meilensteinen suchen"
 
 #. module: project
 #. odoo-python
@@ -4390,7 +4417,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
 msgid "Stage Owner"
-msgstr ""
+msgstr "Phasenbesitzer"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
@@ -4487,6 +4514,9 @@ msgid ""
 "linked to this task. Usually less than or equal to the allocated hours of "
 "this task."
 msgstr ""
+"Summe der zugewiesenen Stunden für alle mit dieser Aufgabe verbundenen "
+"Unteraufgaben (und deren eigene Unteraufgaben). In der Regel kleiner oder "
+"gleich den zugewiesenen Stunden für diese Aufgabe."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -4574,7 +4604,7 @@ msgstr "Aufgabenabhängigkeiten"
 #: model:mail.message.subtype,name:project.mt_project_task_dependency_change
 #: model:mail.message.subtype,name:project.mt_task_dependency_change
 msgid "Task Dependency Changes"
-msgstr ""
+msgstr "Änderungen der Aufgabenabhängigkeiten"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_done
@@ -4785,7 +4815,7 @@ msgstr "Die folgenden Meilensteine wurden hinzugefügt:"
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "Das Intervall sollte größer als 0 sein"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -4866,7 +4896,7 @@ msgstr ""
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "The view must be grouped by date and by stage_id"
-msgstr ""
+msgstr "Die Ansicht muss nach Datum und stage_id gruppiert sein."
 
 #. module: project
 #. odoo-javascript
@@ -4950,7 +4980,7 @@ msgstr "Zeitmanagement"
 #: model:digest.tip,name:project.digest_tip_project_1
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1
 msgid "Tip: Create tasks from incoming emails"
-msgstr ""
+msgstr "Tipp: Erstellen Sie Aufgaben aus eingehenden E-Mails"
 
 #. module: project
 #. odoo-python
@@ -5049,6 +5079,9 @@ msgid ""
 "timesheets are linked to an analytic account and any analytic account "
 "belongs to a plan."
 msgstr ""
+"Verfolgen Sie die Rentabilität Ihrer Projekte. Jedes Projekt, seine Aufgaben"
+" und Zeiterfassungsbögen sind mit einem Analysekonto verknüpft und jedes "
+"Analysekonto gehört zu einem Plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5077,7 +5110,7 @@ msgstr "Zweimal pro Monat"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Two tasks cannot depend on each other."
-msgstr ""
+msgstr "Zwei Aufgaben können nicht voneinander abhängen."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_exception_decoration
@@ -5098,7 +5131,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Unarchive Tasks"
-msgstr ""
+msgstr "Archivierung von Aufgaben aufheben"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -5148,7 +5181,7 @@ msgstr "Aktualisierung"
 #: model:mail.message.subtype,name:project.mt_project_update_create
 #: model:mail.message.subtype,name:project.mt_update_create
 msgid "Update Created"
-msgstr ""
+msgstr "Aktualisierung erstellt"
 
 #. module: project
 #: model:project.tags,name:project.project_tags_03
@@ -5170,7 +5203,7 @@ msgstr "E-Mail-Alias nutzen"
 #. module: project
 #: model:res.groups,name:project.group_project_milestone
 msgid "Use Milestones"
-msgstr ""
+msgstr "Meilensteine verwenden"
 
 #. module: project
 #: model:res.groups,name:project.group_project_rating
@@ -5282,7 +5315,7 @@ msgstr "Aufgabe anzeigen"
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:project.view_project
 msgid "View Tasks"
-msgstr ""
+msgstr "Aufgaben sehen"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__privacy_visibility
@@ -5402,6 +5435,8 @@ msgid ""
 "Would you like to unarchive all of the tasks contained in these stages as "
 "well?"
 msgstr ""
+"Möchten Sie die Archivierung aller Aufgaben, die sich in diesen Phasen "
+"befinden, ebenfalls aufheben?"
 
 #. module: project
 #. odoo-javascript
@@ -5446,6 +5481,7 @@ msgstr ""
 #, python-format
 msgid "You can only set a personal stage on a private task."
 msgstr ""
+"Sie können eine persönliche Phase nur bei einer privaten Aufgabe einstellen."
 
 #. module: project
 #. odoo-python
@@ -5552,6 +5588,9 @@ msgid ""
 "You should at least have one personal stage. Create a new stage to which the"
 " tasks can be transferred after this one is deleted."
 msgstr ""
+"Sie sollten mindestens eine persönliche Phase haben. Erstellen Sie eine neue"
+" Phase, in die Aufgaben geschoben werden können, nachdem diese gelöscht "
+"wurde."
 
 #. module: project
 #. odoo-javascript
@@ -5625,7 +5664,7 @@ msgstr "z.B. Büroparty"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "e.g. Product Launch"
-msgstr ""
+msgstr "z. B. Produkteinführung"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_quick_create_task_form
@@ -5641,7 +5680,7 @@ msgstr "z.B. Büro-Party"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "e.g: Product Launch"
-msgstr ""
+msgstr "z. B. Produkteinführung"
 
 #. module: project
 #. odoo-javascript
@@ -5684,7 +5723,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.milestone_deadline
 msgid "ready to be marked as reached"
-msgstr ""
+msgstr "bereit als erreicht markiert zu werden"
 
 #. module: project
 #. odoo-python
@@ -5696,12 +5735,12 @@ msgstr "Aufgabe"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestone has been updated:"
-msgstr ""
+msgstr "die Frist für den folgenden Meilenstein wurde aktualisiert:"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
 msgid "the deadline for the following milestones has been updated:"
-msgstr ""
+msgstr "die Frist für die folgenden Meilensteine wurde aktualisiert:"
 
 #. module: project
 #. odoo-javascript

@@ -3,9 +3,9 @@
 # 	* payment
 # 
 # Translators:
-# Jolien De Paepe, 2023
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Martin Trigaux, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-03-23 09:14+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -65,6 +65,11 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': "
+"[('support_partial_capture', '!=', 'full_only')]}\" title=\"Sommige "
+"transacties die je wilt vastleggen kunnen enkel in hun geheel worden "
+"vastgelegd. Behandel de transacties afzonderlijk om een gedeeltelijk bedrag "
+"vast te leggen.\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -75,12 +80,12 @@ msgstr "<i class=\"fa fa-trash\"/> Verwijder"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "<span class=\"fs-4\">Saved payment methods</span>"
-msgstr ""
+msgstr "<span class=\"fs-4\">Opgeslagen betaalmethodes</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.view_partners_form_payment_defaultcreditcard
 msgid "<span class=\"o_stat_text\">Saved Payment Methods</span>"
-msgstr "<span class=\"o_stat_text\">Opgeslagen betaalmethoden</span>"
+msgstr "<span class=\"o_stat_text\">Opgeslagen betaalmethodes</span>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -121,6 +126,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>Waarschuwing!</strong> Er is een gedeeltelijke vastlegging lopende. Wacht even\n"
+"                    tot het verwerkt is. Controleer de configuratie van je betalingsprovider als\n"
+"                    de vastlegging na enkele minuten nog steeds niet is verwerkt."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -128,6 +136,8 @@ msgid ""
 "<strong>Warning!</strong> You can not capture a negative amount nor more\n"
 "                    than"
 msgstr ""
+"<strong>Waarschuwing!</strong> Je kan geen negatief bedrag vastleggen, noch meer\n"
+"                    dan"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -238,7 +248,7 @@ msgstr "Voeg extra kosten toe"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Add new payment method"
-msgstr ""
+msgstr "Een nieuwe betaalmethode toevoegen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_address
@@ -264,17 +274,17 @@ msgstr "Betalingsprovider toestaan"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__allow_tokenization
 msgid "Allow Saving Payment Methods"
-msgstr "Opslaan van betalingsmethoden toestaan"
+msgstr "Opslaan van betaalmethoden toestaan"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__captured_amount
 msgid "Already Captured"
-msgstr ""
+msgstr "Reeds vastgelegd"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__voided_amount
 msgid "Already Voided"
-msgstr ""
+msgstr "Reeds geannuleerd"
 
 #. module: payment
 #: model:payment.provider,display_as:payment.payment_provider_aps
@@ -297,7 +307,7 @@ msgstr "Maximum bedrag"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__amount_to_capture
 msgid "Amount To Capture"
-msgstr ""
+msgstr "Vast te leggen bedrag"
 
 #. module: payment
 #. odoo-javascript
@@ -335,8 +345,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
-"Weet je zeker dat je de geautoriseerde transactie ongeldig wilt maken? Deze "
-"actie is definitief."
+"Weet je zeker dat je de geautoriseerde transactie wilt annuleren? Deze actie"
+" is definitief."
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_asiapay
@@ -361,7 +371,7 @@ msgstr "Geautoriseerd"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__authorized_amount
 msgid "Authorized Amount"
-msgstr ""
+msgstr "Geautoriseerd bedrag"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -441,7 +451,7 @@ msgstr "Geannuleerde bewerkingen"
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
 #, python-format
 msgid "Capture"
-msgstr ""
+msgstr "Vastleggen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__capture_manually
@@ -472,7 +482,7 @@ msgstr "Onderliggende transacties"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
 msgid "Child transactions"
-msgstr ""
+msgstr "Onderliggende transacties"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_onboarding_wizard_form
@@ -579,7 +589,7 @@ msgstr "Een nieuwe betalingsprovider maken"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.action_payment_method
 msgid "Create a payment method"
-msgstr ""
+msgstr "Een betaalmethode maken"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__create_uid
@@ -857,7 +867,7 @@ msgstr "HTTP routing"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_draft_children
 msgid "Has Draft Children"
-msgstr ""
+msgstr "Heeft onderliggende in concept"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_link_wizard__has_multiple_providers
@@ -867,7 +877,7 @@ msgstr "Heeft meerdere providers"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__has_remaining_amount
 msgid "Has Remaining Amount"
-msgstr ""
+msgstr "Heeft een resterend bedrag"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__is_post_processed
@@ -973,7 +983,7 @@ msgstr "Interne server fout"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__is_amount_to_capture_valid
 msgid "Is Amount To Capture Valid"
-msgstr ""
+msgstr "Is een geldig vast te leggen bedrag"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__is_post_processed
@@ -1049,7 +1059,7 @@ msgstr "Beheer betaalmethodes"
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "Managed by"
-msgstr ""
+msgstr "Beheerd door"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__manual
@@ -1069,7 +1079,7 @@ msgstr "Maximaal bedrag"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__available_amount
 msgid "Maximum Capture Allowed"
-msgstr ""
+msgstr "Maximale toegestane vastlegging"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_mercado_pago
@@ -1147,7 +1157,7 @@ msgstr "Geen betalingsoptie geselecteerd"
 #: code:addons/payment/models/payment_token.py:0
 #, python-format
 msgid "No token can be assigned to the public partner."
-msgstr ""
+msgstr "Er kan geen token toegewezen worden aan de publieke partner."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_provider_onboarding_state__not_done
@@ -1233,7 +1243,7 @@ msgstr "Overige"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "Other payment methods"
-msgstr ""
+msgstr "Andere betaalmethodes"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__paypal_pdt_token
@@ -1274,7 +1284,7 @@ msgstr "PayPal"
 #. module: payment
 #: model:ir.model,name:payment.model_payment_capture_wizard
 msgid "Payment Capture Wizard"
-msgstr ""
+msgstr "Wizard voor het vastleggen van betalingen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__payment_details
@@ -1306,7 +1316,7 @@ msgstr "Betaal ink"
 #: model:ir.model.fields,field_description:payment.field_payment_provider_onboarding_wizard__payment_method
 #: model_terms:ir.ui.view,arch_db:payment.payment_method_form
 msgid "Payment Method"
-msgstr "Betalingsmethode"
+msgstr "Betaalmethode"
 
 #. module: payment
 #: model:ir.actions.act_window,name:payment.action_payment_method
@@ -1563,7 +1573,7 @@ msgstr "Bewaar mijn betalingsgegevens"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Saving your payment method, please wait..."
-msgstr "Opslaan van je betalingsmethode, even geduld..."
+msgstr "Opslaan van je betaalmethode, even geduld..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -1636,7 +1646,7 @@ msgstr "Toon Klaar bericht"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_method_ids
 msgid "Show Payment Method"
-msgstr ""
+msgstr "Betaalmethodes weergeven"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pending_msg
@@ -1661,6 +1671,9 @@ msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
 msgstr ""
+"Sommige transacties die je wilt vastleggen kunnen alleen in hun geheel "
+"worden vastgelegd. Behandel de transacties afzonderlijk om een gedeeltelijk "
+"bedrag vast te leggen."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1695,12 +1708,12 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
+msgstr "Ondersteun gedeeltelijke vastlegging"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
 msgid "Supported Payment Methods"
-msgstr ""
+msgstr "Ondersteunde betaalmethodes"
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__state__test
@@ -1728,11 +1741,12 @@ msgstr "Het toegangstoken is ongeldig."
 #, python-format
 msgid "The amount to capture must be positive and cannot be superior to %s."
 msgstr ""
+"Het vast te leggen bedrag moet positief zijn en mag niet hoger zijn dan %s."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__child_transaction_ids
 msgid "The child transactions of the transaction."
-msgstr ""
+msgstr "De onderliggende transacties van de transactie."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_token__payment_details
@@ -1789,7 +1803,7 @@ msgstr "De interne referentie van de transactie"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_method__provider_ids
 msgid "The list of providers supporting this payment method"
-msgstr ""
+msgstr "De lijst van providers die deze betaalmethode ondersteunen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__main_currency_id
@@ -1869,7 +1883,7 @@ msgstr "De route waarnaar de gebruiker wordt omgeleid na de transactie"
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of the related child transactions"
-msgstr ""
+msgstr "De brontransactie van gerelateerde onderliggende transacties"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1891,8 +1905,7 @@ msgstr ""
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
 msgid "The template rendering the express payment methods' form."
 msgstr ""
-"De sjabloon die het formulier voor uitdrukkelijke betalingsmethoden "
-"weergeeft."
+"De sjabloon die het formulier voor uitdrukkelijke betaalmethoden weergeeft."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
@@ -1985,7 +1998,7 @@ msgid ""
 "provider's database, allowing the customer to reuse it for a next purchase."
 msgstr ""
 "Hiermee wordt bepaald of klanten hun betaalmethoden kunnen opslaan als betaaltokens.\n"
-"Een betalingstoken is een anonieme link naar de details van de betalingsmethode die zijn opgeslagen in de\n"
+"Een betalingstoken is een anonieme link naar de details van de betaalmethode die zijn opgeslagen in de\n"
 "database van de provider, zodat de klant deze kan hergebruiken voor een volgende aankoop."
 
 #. module: payment
@@ -2005,6 +2018,8 @@ msgstr ""
 msgid ""
 "This field holds the image used for this payment method, limited to 64x64 px"
 msgstr ""
+"Dit veld bevat de afbeelding die wordt gebruikt voor deze betaalmethode, "
+"beperkt tot 64x64 px"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -2040,6 +2055,8 @@ msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
 msgstr ""
+"Deze transactie is bevestigd na de verwerking van de gedeeltelijke "
+"vastlegging en de gedeeltelijk geannuleerde transacties (%(provider)s)."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2122,7 +2139,7 @@ msgstr "Geverifieerd"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__void_remaining_amount
 msgid "Void Remaining Amount"
-msgstr ""
+msgstr "Geannuleerd resterend bedrag"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2207,6 +2224,7 @@ msgstr ""
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
 msgstr ""
+"Of de provider van elke transactie de gedeeltelijke vastlegging ondersteunt."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
@@ -2390,7 +2408,7 @@ msgstr "Je betaling is in afwachting."
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Your payment method has been saved."
-msgstr "Je betalingsmethode is bewaard."
+msgstr "Je betaalmethode is bewaard."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_transaction_form
@@ -2455,9 +2473,9 @@ msgstr "waarschuwing"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
 msgid "– created on"
-msgstr ""
+msgstr "– gemaakt op"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.checkout
 msgid "— created on"
-msgstr ""
+msgstr "— gemaakt op"
