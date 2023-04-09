@@ -7,6 +7,7 @@
         <field name="inherit_id" ref="event.event_tag_category_view_form"/>
         <field name="arch" type="xml">
             <field name="tag_ids" position="before">
+                <field name="website_show"/>
                 <field name="is_published" string="Show on Website" widget="boolean_toggle"/>
             </field>
         </field>
