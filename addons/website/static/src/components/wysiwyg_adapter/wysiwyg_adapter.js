@@ -7,6 +7,7 @@ import { useHotkey } from '@web/core/hotkeys/hotkey_hook';
 import { Wysiwyg } from "@web_editor/js/wysiwyg/wysiwyg";
 import { requireWysiwygLegacyModule } from "@web_editor/js/frontend/loader";
 import weUtils from '@web_editor/js/common/utils';
+import { isMediaElement } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 import { EditMenuDialog, MenuDialog } from "../dialog/edit_menu";
 import { WebsiteDialog } from '../dialog/dialog';
@@ -474,12 +475,15 @@ export class WysiwygAdapterComponent extends Wysiwyg {
                 return !$(el).closest('.o_not_editable').length;
             });
 
-        // TODO review in master. This stable fix restores the possibility to
+        // TODO migrate in master. This stable fix restores the possibility to
         // edit the company team snippet images on subsequent editions. Indeed
-        // this badly relies on the contenteditable="true" attribute being on
-        // those images but it is rightfully lost after the first save.
-        // grep: COMPANY_TEAM_CONTENTEDITABLE
-        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+        // this badly relied on the contenteditable="true" attribute being on
+        // those images but it is rightfully lost after the first save. Later,
+        // the o_editable_media class system was implemented and the class was
+        // added in the snippet template but this did not solve existing
+        // snippets in user databases.
+        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable *')
+            .filter((i, el) => isMediaElement(el) || el.tagName === 'IMG');
 
         // To make sure the selection remains bounded to the active tab,
         // each tab is made non editable while keeping its nested

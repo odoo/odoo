@@ -2769,10 +2769,12 @@ var SnippetsMenu = Widget.extend({
     _computeSelectorFunctions: function (selector, exclude, target, noCheck, isChildren, excludeParent) {
         var self = this;
 
-        // TODO the `:not([contenteditable="true"])` part is designed to make
-        // images with such attribute editable even when they are in an
-        // environment where editing is not normally possible. This should be
-        // reviewed if we are to handle more hierarchy of editable nodes being
+        // The `:not(.o_editable_media)` part is handled outside of the selector
+        // (see filterFunc).
+        // Note: the `:not([contenteditable="true"])` part was there for that
+        // same purpose before the implementation of the o_editable_media class.
+        // It still make sense for potential editable areas though. Although it
+        // should be reviewed if we are to handle more hierarchy of nodes being
         // editable despite their non editable environment.
         // Without the `:not(.s_social_media)`, it is no longer possible to edit
         // icons in the social media snippet. This should be fixed in a more
@@ -2780,7 +2782,13 @@ var SnippetsMenu = Widget.extend({
         exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable:not(.s_social_media) :not([contenteditable="true"])`;
 
         let filterFunc = function () {
-            return !$(this).is(exclude);
+            if (!$(this).is(exclude)) {
+                return true;
+            }
+            if (this.classList.contains('o_editable_media')) {
+                return weUtils.shouldEditableMediaBeEditable(this);
+            }
+            return false;
         };
         if (target) {
             const oldFilter = filterFunc;
