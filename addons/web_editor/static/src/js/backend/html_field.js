@@ -79,12 +79,10 @@ export class HtmlField extends Component {
         const domParser = new DOMParser();
         const parsedOriginal = domParser.parseFromString(this.props.value || '', 'text/html');
         this.containsComplexHTML = !!parsedOriginal.head.innerHTML.trim();
-
         this.readonlyElementRef = useRef("readonlyElement");
         this.codeViewRef = useRef("codeView");
         this.iframeRef = useRef("iframe");
         this.codeViewButtonRef = useRef("codeViewButton");
-
         if (this.props.dynamicPlaceholder) {
             this.dynamicPlaceholder = useDynamicPlaceholder();
         }
@@ -297,7 +295,7 @@ export class HtmlField extends Component {
     async startWysiwyg(wysiwyg) {
         this.wysiwyg = wysiwyg;
         await this.wysiwyg.startEdition();
-
+        const startState = this.wysiwyg.odooEditor.editable.innerHTML;
         if (this.props.codeview) {
             const $codeviewButtonToolbar = $(`
                 <div id="codeview-btn-group" class="btn-group">
@@ -309,11 +307,42 @@ export class HtmlField extends Component {
             this.wysiwyg.toolbar.$el.append($codeviewButtonToolbar);
             $codeviewButtonToolbar.click(this.toggleCodeView.bind(this));
         }
-        this.wysiwyg.odooEditor.editable.addEventListener("input", () =>
-            this.props.setDirty(this._isDirty())
-        );
-
+        const processChanges = (changes) => {
+            changes = this.wysiwyg.odooEditor.filterMutationRecords(changes);
+            this.wysiwyg.odooEditor.automaticStepSkipStack();
+            const currentState = this.wysiwyg.odooEditor.editable.innerHTML;
+            const statusButtons = document.querySelector('.o_form_status_indicator_buttons');
+            for (const change of changes) {
+                if( (startState != currentState) &&
+                    (statusButtons && statusButtons.classList.contains('invisible')) &&
+                    (event && !(event.type === 'load'))
+                ){
+                    this.props.setDirty(this._isDirty());
+                }
+            }
+        };
+        this.observer = new MutationObserver(processChanges);
+        this._observe();
+        this.wysiwyg.odooEditor.addEventListener('observerUnactive', () => {
+            if (this.observer) {
+                processChanges(this.observer.takeRecords());
+            }
+        });
+        this.wysiwyg.odooEditor.addEventListener('observerActive', () => {
+            this._observe.bind(this);
+        });
         this.isRendered = true;
+    }
+    _observe(){
+        if (this.observer) {
+            this.observer.observe(this.wysiwyg.odooEditor.editable, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeOldValue: true,
+                characterData: true,
+            });
+        }
     }
     /**
      * Toggle the code view and update the UI.
