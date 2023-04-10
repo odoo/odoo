@@ -547,6 +547,13 @@ class TestUi(TestPointOfSaleHttpCommon):
                     'account_id': tax_received_account.id,
                 }),
             ],
+            'refund_repartition_line_ids': [
+                (0, 0, {'repartition_type': 'base'}),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_received_account.id,
+                }),
+            ],
         })
         zero_amount_product = self.env['product.product'].create({
             'name': 'Zero Amount Product',

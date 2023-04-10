@@ -40,6 +40,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
                     <field name="repartition_type"/>
+                    <field name="document_type" invisible="1"/>
                     <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
                     <field name="tag_ids"
                            widget="many2many_tags"
@@ -157,10 +158,13 @@
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
                                 <field name="country_code" invisible="1"/>
                                 <group string="Distribution for Invoices">
-                                    <field name="invoice_repartition_line_ids" nolabel="1" colspan="2"/>
+                                    <field name="invoice_repartition_line_ids" nolabel="1" colspan="2" context="{'default_document_type': 'invoice'}"/>
                                 </group>
                                 <group string="Distribution for Refunds">
-                                    <field name="refund_repartition_line_ids" nolabel="1" colspan="2"/>
+                                    <field name="refund_repartition_line_ids" nolabel="1" colspan="2" context="{'default_document_type': 'refund'}"/>
+                                </group>
+                                <group invisible="1">
+                                    <field name="repartition_line_ids"/>
                                 </group>
                             </div>
                             <field name="children_tax_ids" attrs="{'invisible':['|', ('amount_type','!=','group'), ('type_tax_use','=','none')]}" domain="[('type_tax_use','in',('none',type_tax_use)), ('amount_type','!=','group')]">

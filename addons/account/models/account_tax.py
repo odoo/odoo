@@ -266,28 +266,29 @@ class AccountTax(models.Model):
         if len(base_line) != 1:
             raise ValidationError(_("Invoice and credit note distribution should each contain exactly one line for the base."))
 
-    @api.constrains('invoice_repartition_line_ids', 'refund_repartition_line_ids')
+    @api.constrains('repartition_line_ids')
     def _validate_repartition_lines(self):
         for record in self:
-            invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted(lambda l: (l.sequence, l.id))
-            refund_repartition_line_ids = record.refund_repartition_line_ids.sorted(lambda l: (l.sequence, l.id))
-            record._check_repartition_lines(invoice_repartition_line_ids)
-            record._check_repartition_lines(refund_repartition_line_ids)
+            if record.invoice_repartition_line_ids or record.refund_repartition_line_ids:
+                invoice_repartition_line_ids = record.invoice_repartition_line_ids.sorted(lambda l: (l.sequence, l.id))
+                refund_repartition_line_ids = record.refund_repartition_line_ids.sorted(lambda l: (l.sequence, l.id))
+                record._check_repartition_lines(invoice_repartition_line_ids)
+                record._check_repartition_lines(refund_repartition_line_ids)
 
-            if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
-                raise ValidationError(_("Invoice and credit note distribution should have the same number of lines."))
+                if len(invoice_repartition_line_ids) != len(refund_repartition_line_ids):
+                    raise ValidationError(_("Invoice and credit note distribution should have the same number of lines."))
 
-            if not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax') or \
-                    not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax'):
-                raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
+                if not invoice_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax') or \
+                        not refund_repartition_line_ids.filtered(lambda x: x.repartition_type == 'tax'):
+                    raise ValidationError(_("Invoice and credit note repartition should have at least one tax repartition line."))
 
-            index = 0
-            while index < len(invoice_repartition_line_ids):
-                inv_rep_ln = invoice_repartition_line_ids[index]
-                ref_rep_ln = refund_repartition_line_ids[index]
-                if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
-                    raise ValidationError(_("Invoice and credit note distribution should match (same percentages, in the same order)."))
-                index += 1
+                index = 0
+                while index < len(invoice_repartition_line_ids):
+                    inv_rep_ln = invoice_repartition_line_ids[index]
+                    ref_rep_ln = refund_repartition_line_ids[index]
+                    if inv_rep_ln.repartition_type != ref_rep_ln.repartition_type or inv_rep_ln.factor_percent != ref_rep_ln.factor_percent:
+                        raise ValidationError(_("Invoice and credit note distribution should match (same percentages, in the same order)."))
+                    index += 1
 
     @api.constrains('children_tax_ids', 'type_tax_use')
     def _check_children_scope(self):
@@ -326,6 +327,9 @@ class AccountTax(models.Model):
     def _sanitize_vals(self, vals):
         """Normalize the create/write values."""
         sanitized = vals.copy()
+        if sanitized.get('repartition_line_ids') and sanitized.get("invoice_repartition_line_ids") and sanitized.get("refund_repartition_line_ids"):
+            sanitized.pop('repartition_line_ids')
+
         # Allow to provide invoice_repartition_line_ids and refund_repartition_line_ids by dispatching them
         # correctly in the repartition_line_ids
         for doc_type in ('invoice', 'refund'):

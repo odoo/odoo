@@ -519,6 +519,17 @@ class TestPoSProductsWithTax(TestPoSCommon):
                     'tag_ids': [(6, 0, self.tax_tag_invoice_tax.ids)],
                 }),
             ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'tag_ids': [(6, 0, self.tax_tag_refund_base.ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': self.tax_received_account.id,
+                    'tag_ids': [(6, 0, self.tax_tag_refund_tax.ids)],
+                }),
+            ],
         })
 
         zero_amount_product = self.env['product.product'].create({
