@@ -1289,6 +1289,7 @@ class WebsiteSale(http.Controller):
         :param dict custom_values: Optional custom values for the creation or edition.
         :return int: The id of the partner created or edited
         """
+        request.update_env(context=request.website.env.context)
         values = self.values_preprocess(partner_details)
 
         # Ensure that we won't write on unallowed fields.
