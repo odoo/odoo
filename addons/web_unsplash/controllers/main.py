@@ -81,7 +81,7 @@ class Web_Unsplash(http.Controller):
         for key, value in unsplashurls.items():
             url = value.get('url')
             try:
-                if not url.startswith('https://images.unsplash.com/') and not request.env.registry.in_test_mode():
+                if not url.startswith(('https://images.unsplash.com/', 'https://plus.unsplash.com/')) and not request.env.registry.in_test_mode():
                     logger.exception("ERROR: Unknown Unsplash URL!: " + url)
                     raise Exception(_("ERROR: Unknown Unsplash URL!"))
 
