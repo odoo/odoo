@@ -166,7 +166,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             self.env['account.analytic.line'].search(search_domain).write({
                 'so_line': sale_order_line.id
             })
-            sale_order_line.with_context({'no_update_planned_hours': True}).write({
+            sale_order_line.with_context({'no_update_allocated_hours': True}).write({
                 'product_uom_qty': sale_order_line.qty_delivered
             })
             # Avoid recomputing price_unit
@@ -241,7 +241,7 @@ class ProjectCreateSalesOrder(models.TransientModel):
             self.env['account.analytic.line'].search(search_domain).write({
                 'so_line': map_entry.sale_line_id.id
             })
-            map_entry.sale_line_id.with_context({'no_update_planned_hours': True}).write({
+            map_entry.sale_line_id.with_context({'no_update_allocated_hours': True}).write({
                 'product_uom_qty': map_entry.sale_line_id.qty_delivered,
             })
             # Avoid recomputing price_unit

@@ -135,14 +135,14 @@ class SaleOrderLine(models.Model):
 
     def write(self, values):
         result = super().write(values)
-        # changing the ordered quantity should change the planned hours on the
+        # changing the ordered quantity should change the allocated hours on the
         # task, whatever the SO state. It will be blocked by the super in case
         # of a locked sale order.
-        if 'product_uom_qty' in values and not self.env.context.get('no_update_planned_hours', False):
+        if 'product_uom_qty' in values and not self.env.context.get('no_update_allocated_hours', False):
             for line in self:
                 if line.task_id and line.product_id.type == 'service':
-                    planned_hours = line._convert_qty_company_hours(line.task_id.company_id or self.env.user.company_id)
-                    line.task_id.write({'planned_hours': planned_hours})
+                    allocated_hours = line._convert_qty_company_hours(line.task_id.company_id or self.env.user.company_id)
+                    line.task_id.write({'allocated_hours': allocated_hours})
         return result
 
     ###########################################
@@ -222,16 +222,16 @@ class SaleOrderLine(models.Model):
 
     def _timesheet_create_task_prepare_values(self, project):
         self.ensure_one()
-        planned_hours = 0.0
+        allocated_hours = 0.0
         if self.product_id.service_type not in ['milestones', 'manual']:
-            planned_hours = self._convert_qty_company_hours(self.company_id)
+            allocated_hours = self._convert_qty_company_hours(self.company_id)
         sale_line_name_parts = self.name.split('\n')
         title = sale_line_name_parts[0] or self.product_id.name
         description = '<br/>'.join(sale_line_name_parts[1:])
         return {
             'name': title if project.sale_line_id else '%s - %s' % (self.order_id.name or '', title),
             'analytic_account_id': project.analytic_account_id.id,
-            'planned_hours': planned_hours,
+            'allocated_hours': allocated_hours,
             'partner_id': self.order_id.partner_id.id,
             'description': description,
             'project_id': project.id,
