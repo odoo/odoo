@@ -250,16 +250,16 @@ class SaleOrderLine(models.Model):
 
     def _convert_qty_company_hours(self, dest_company):
         company_time_uom_id = dest_company.project_time_mode_id
-        planned_hours = 0.0
+        allocated_hours = 0.0
         product_uom = self.product_uom
         if product_uom == self.env.ref('uom.product_uom_unit'):
             product_uom = self.env.ref('uom.product_uom_hour')
         if product_uom.category_id == company_time_uom_id.category_id:
             if product_uom != company_time_uom_id:
-                planned_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
+                allocated_hours = product_uom._compute_quantity(self.product_uom_qty, company_time_uom_id)
             else:
-                planned_hours = self.product_uom_qty
-        return planned_hours
+                allocated_hours = self.product_uom_qty
+        return allocated_hours
 
     def _timesheet_create_project(self):
         project = super()._timesheet_create_project()

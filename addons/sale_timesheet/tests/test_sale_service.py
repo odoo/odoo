@@ -223,10 +223,10 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(self.sale_order.tasks_count, 1, "The SO should have only one task")
         self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
         self.assertFalse(so_line1.task_id.user_ids, "The created task should be unassigned")
-        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
+        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.allocated_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
 
         so_line1.write({'product_uom_qty': 20})
-        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
+        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.allocated_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
 
         # cancel SO
         self.sale_order._action_cancel()
@@ -237,7 +237,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(so_line1.task_id.sale_line_id, so_line1, "The created task is also linked to its origin sale line, for invoicing purpose.")
 
         so_line1.write({'product_uom_qty': 30})
-        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
+        self.assertEqual(so_line1.product_uom_qty, so_line1.task_id.allocated_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
 
         # reconfirm SO
         self.sale_order.action_draft()
@@ -503,14 +503,14 @@ class TestSaleService(TestCommonSaleTimesheet):
         })
 
         self.sale_order.action_confirm()
-        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
+        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.allocated_hours, "The planned hours should be the same as the ordered quantity of the native SO line")
 
         sale_order_line.write({'product_uom_qty': 20})
-        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
+        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.allocated_hours, "The planned hours should have changed when updating the ordered quantity of the native SO line")
 
         self.sale_order._action_cancel()
         sale_order_line.write({'product_uom_qty': 30})
-        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.planned_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
+        self.assertEqual(sale_order_line.product_uom_qty, sale_order_line.task_id.allocated_hours, "The planned hours should have changed when updating the ordered quantity, even after SO cancellation")
 
         self.sale_order.action_lock()
         with self.assertRaises(UserError):
@@ -596,7 +596,7 @@ class TestSaleService(TestCommonSaleTimesheet):
         self.assertEqual(prepaid_service_sol.remaining_hours, 2, "The remaining hours should not change.")
 
     def test_several_uom_sol_to_planned_hours(self):
-        planned_hours_for_uom = {
+        allocated_hours_for_uom = {
             'day': 8.0,
             'hour': 1.0,
             'unit': 1.0,
@@ -619,7 +619,7 @@ class TestSaleService(TestCommonSaleTimesheet):
             'order_id': self.sale_order.id,
         }
 
-        for uom_name in planned_hours_for_uom:
+        for uom_name in allocated_hours_for_uom:
             uom_id = self.env.ref('uom.product_uom_%s' % uom_name)
 
             product_vals.update({
@@ -640,7 +640,7 @@ class TestSaleService(TestCommonSaleTimesheet):
 
         tasks = project.task_ids
         for task in tasks:
-            self.assertEqual(task.planned_hours, planned_hours_for_uom[task.sale_line_id.name])
+            self.assertEqual(task.allocated_hours, allocated_hours_for_uom[task.sale_line_id.name])
 
     def test_add_product_analytic_account(self):
         """ When we have a project with an analytic account and we add a product to the task,
