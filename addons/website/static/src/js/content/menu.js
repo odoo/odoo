@@ -557,7 +557,7 @@ publicWidget.registry.menuDirection = publicWidget.Widget.extend({
      * @private
      */
     _onDropdownShow: function (ev) {
-        const $dropdown = $(ev.target).closest('.nav-item.dropdown');
+        const $dropdown = $(ev.target).closest('.dropdown');
         var $menu = $dropdown.children('.dropdown-menu');
         var liOffset = $dropdown.offset().left;
         var liWidth = $dropdown.outerWidth();
