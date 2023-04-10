@@ -201,7 +201,7 @@ export class Powerbox {
                     this._context.selectedCommand = command;
                     commandElWrapper.classList.add('active');
                 });
-                commandElWrapper.addEventListener('mousedown', ev => {
+                commandElWrapper.addEventListener('click', ev => {
                         ev.preventDefault();
                         ev.stopImmediatePropagation();
                         this._pickCommand(command);
