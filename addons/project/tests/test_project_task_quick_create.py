@@ -38,7 +38,7 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
             task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
             task_form.display_name = expression
             task = task_form.save()
-            results = (task.name, len(task.tag_ids), len(task.user_ids), task.priority, task.planned_hours)
+            results = (task.name, len(task.tag_ids), len(task.user_ids), task.priority, task.hours_allocated)
             self.assertEqual(results, values)
 
     def test_create_task_with_invalid_expressions(self):
@@ -54,5 +54,5 @@ class TestProjectTaskQuickCreate(TestProjectCommon):
             task_form = Form(self.env['project.task'].with_context({'tracking_disable': True, 'default_project_id': self.project_pigs.id}), view="project.quick_create_task_form")
             task_form.display_name = expression
             task = task_form.save()
-            results = (task.name, len(task.tag_ids), len(task.user_ids), task.priority, task.planned_hours)
+            results = (task.name, len(task.tag_ids), len(task.user_ids), task.priority, task.hours_allocated)
             self.assertEqual(results, (expression, 0, 0, '0', 0))

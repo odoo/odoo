@@ -102,7 +102,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         task = Task.with_context(default_project_id=self.project_non_billable.id).create({
             'name': 'first task',
             'partner_id': self.project_non_billable.partner_id.id,
-            'planned_hours': 10,
+            'hours_allocated': 10,
         })
         timesheet1 = Timesheet.create({
             'name': 'Test Line',
@@ -160,7 +160,7 @@ class TestProjectBilling(TestCommonSaleTimesheet):
         task = Task.with_context(default_project_id=self.project_non_billable.id).create({
             'name': 'first task',
             'partner_id': self.project_non_billable.partner_id.id,
-            'planned_hours': 10,
+            'hours_allocated': 10,
         })
         timesheet1 = Timesheet.create({
             'name': 'Test Line',

@@ -10,7 +10,7 @@
                     <attribute name="js_class">hr_timesheet_graphview</attribute>
                 </xpath>
                 <xpath expr="//field[@name='project_id']" position='after'>
-                    <field name="planned_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="hours_allocated" widget="timesheet_uom" type="measure"/>
                     <field name="effective_hours" widget="timesheet_uom" type="measure"/>
                     <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
                 </xpath>
@@ -23,7 +23,7 @@
             <field name="inherit_id" ref="project.view_task_project_user_pivot"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='project_id']" position='after'>
-                    <field name="planned_hours" widget="timesheet_uom" type="measure"/>
+                    <field name="hours_allocated" widget="timesheet_uom" type="measure"/>
                     <field name="effective_hours" widget="timesheet_uom" type="measure"/>
                     <field name="remaining_hours" widget="timesheet_uom" type="measure"/>
                 </xpath>

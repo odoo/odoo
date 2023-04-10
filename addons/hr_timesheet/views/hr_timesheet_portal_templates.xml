@@ -165,10 +165,10 @@
                             <div t-if="is_uom_day">Days recorded on sub-tasks: <span t-esc="timesheets._convert_hours_to_days(timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
                             <div t-else="">Hours recorded on sub-tasks: <span t-esc="timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/></div>
                         </div>
-                        <t t-set="planned_time" t-value="task.planned_hours"></t>
-                        <div t-if="planned_time > 0" name="planned_time" t-attf-class="{{task.remaining_hours &lt; 0 and 'text-danger' or ''}}">
-                            <div t-if="is_uom_day">Remaining Days: <span t-esc="timesheets._convert_hours_to_days(planned_time - timesheets_amount - timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
-                            <div t-else="">Remaining Hours: <span t-esc="planned_time - timesheets_amount - timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/></div>
+                        <t t-set="allocated_time" t-value="task.hours_allocated"></t>
+                        <div t-if="allocated_time > 0" name="allocated_time" t-attf-class="{{task.remaining_hours &lt; 0 and 'text-danger' or ''}}">
+                            <div t-if="is_uom_day">Remaining Days: <span t-esc="timesheets._convert_hours_to_days(allocated_time - timesheets_amount - timesheets_by_subtask_amount)" t-options='{"widget": "timesheet_uom"}'/></div>
+                            <div t-else="">Remaining Hours: <span t-esc="allocated_time - timesheets_amount - timesheets_by_subtask_amount" t-options='{"widget": "float_time"}'/></div>
                         </div>
                     </th>
                 </tr>
