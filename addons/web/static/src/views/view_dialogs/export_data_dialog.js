@@ -266,8 +266,6 @@ export class ExportDataDialog extends Component {
 
     onAddItemExportList(fieldId) {
         this.state.exportList.push(this.knownFields[fieldId]);
-        this.state.search = [];
-        this.searchRef.el.value = "";
         this.enterTemplateEdition();
     }
 
@@ -357,8 +355,16 @@ export class ExportDataDialog extends Component {
             Object.values(this.knownFields),
             // because fuzzyLookup gives an higher score if the string starts with the pattern,
             // reversing the string makes the search more reliable in this context
-            (field) => field.string.split("/").reverse().join("/")
+            (field) => field.id.split("/").reverse().join("/")
         );
+        if (this.isDebug) {
+            this.state.search = unique([
+                ...this.state.search,
+                ...Object.values(this.knownFields).filter((f) => {
+                    return f.id.includes(ev.target.value);
+                }),
+            ]);
+        }
     }
 
     onToggleCompatibleExport(value) {
