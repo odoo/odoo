@@ -3,10 +3,30 @@
 import { Domain } from "@web/core/domain";
 import { cartesian, sections, sortBy, symmetricalDifference } from "@web/core/utils/arrays";
 import { KeepLast, Race } from "@web/core/utils/concurrency";
-import { computeVariation } from "@web/core/utils/numbers";
 import { DEFAULT_INTERVAL } from "@web/search/utils/dates";
 import { Model } from "@web/views/model";
 import { computeReportMeasures, processMeasure } from "@web/views/utils";
+
+/**
+ * @param {number} value
+ * @param {number} comparisonValue
+ * @returns {number}
+ */
+function computeVariation(value, comparisonValue) {
+    if (isNaN(value) || isNaN(comparisonValue)) {
+        return NaN;
+    }
+    if (comparisonValue === 0) {
+        if (value === 0) {
+            return 0;
+        } else if (value > 0) {
+            return 1;
+        } else {
+            return -1;
+        }
+    }
+    return (value - comparisonValue) / Math.abs(comparisonValue);
+}
 
 /**
  * Pivot Model
@@ -1221,10 +1241,7 @@ export class PivotModel extends Model {
                     rowIndex === 0
                         ? undefined
                         : fields[colGroupBys[rowIndex - 1].split(":")[0]].string,
-                title:
-                    group.labels.length
-                        ? group.labels[group.labels.length - 1]
-                        : _t("Total"),
+                title: group.labels.length ? group.labels[group.labels.length - 1] : _t("Total"),
                 width: leafCount * measureCount * (2 * originCount - 1),
             };
             row.push(cell);
@@ -1275,10 +1292,9 @@ export class PivotModel extends Model {
         let rows = [];
         const group = tree.root;
         const rowGroupId = [group.values, []];
-        const title =
-            group.labels.length
-                ? group.labels[group.labels.length - 1]
-                : this.env._t("Total");
+        const title = group.labels.length
+            ? group.labels[group.labels.length - 1]
+            : this.env._t("Total");
         const indent = group.labels.length;
         const isLeaf = !tree.directSubTrees.size;
         const rowGroupBys = this.metaData.fullRowGroupBys;
