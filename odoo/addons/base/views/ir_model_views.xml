@@ -304,6 +304,10 @@
                                         <field name="domain" groups="base.group_no_one"
                                             attrs="{'readonly': [('ttype','not in',['many2one','one2many','many2many'])],
                                                     'invisible': [('ttype','not in',['many2one','one2many','many2many'])]}"/>
+                                        <field name="currency_field"
+                                            attrs="{'required': [('ttype','=','monetary')],
+                                                    'readonly': [('ttype','!=','monetary')],
+                                                    'invisible': [('ttype','!=','monetary')]}"/>
                                     </group>
                                 </group>
                                 <group attrs="{'readonly': [('ttype','not in',['selection','reference'])],

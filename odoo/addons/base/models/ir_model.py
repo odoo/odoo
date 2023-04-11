@@ -546,6 +546,7 @@ class IrModelFields(models.Model):
                                                       "a list of comma-separated field names, like\n\n"
                                                       "    name, partner_id.name")
     store = fields.Boolean(string='Stored', default=True, help="Whether the value is stored in the database.")
+    currency_field = fields.Char(string="Currency field", help="Name of the Many2one field holding the res.currency")
 
     @api.depends('relation', 'relation_field')
     def _compute_relation_field_id(self):
@@ -691,6 +692,24 @@ class IrModelFields(models.Model):
         for rec in self:
             if rec.relation_table:
                 models.check_pg_name(rec.relation_table)
+
+    @api.constrains('currency_field')
+    def _check_currency_field(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.ttype == 'monetary':
+                if not rec.currency_field:
+                    currency_field = self._get(rec.model, 'currency_id') or self._get(rec.model, 'x_currency_id')
+                    if not currency_field:
+                        raise ValidationError(_("Currency field is empty and there is no fallback field in the model"))
+                else:
+                    currency_field = self._get(rec.model, rec.currency_field)
+                    if not currency_field:
+                        raise ValidationError(_("Unknown field name '%s' in currency_field") % (rec.currency_field))
+
+                if currency_field.ttype != 'many2one':
+                    raise ValidationError(_("Currency field does not have type many2one"))
+                if currency_field.relation != 'res.currency':
+                    raise ValidationError(_("Currency field should have a res.currency relation"))
 
     @api.model
     def _custom_many2many_names(self, model_name, comodel_name):
@@ -1054,6 +1073,7 @@ class IrModelFields(models.Model):
             'relation_table': field.relation if field.type == 'many2many' else None,
             'column1': field.column1 if field.type == 'many2many' else None,
             'column2': field.column2 if field.type == 'many2many' else None,
+            'currency_field': field.currency_field if field.type == 'monetary' else None,
         }
 
     def _reflect_fields(self, model_names):
@@ -1185,8 +1205,12 @@ class IrModelFields(models.Model):
             attrs['column1'] = field_data['column1'] or col1
             attrs['column2'] = field_data['column2'] or col2
             attrs['domain'] = safe_eval(field_data['domain'] or '[]')
-        elif field_data['ttype'] == 'monetary' and not self.pool.loaded:
-            return
+        elif field_data['ttype'] == 'monetary':
+            # be sure that custom monetary field are always instanciated
+            if not self.pool.loaded and \
+                not (field_data['currency_field'] and field_data['currency_field'].startswith('x_')):
+                return
+            attrs['currency_field'] = field_data['currency_field']
         # add compute function if given
         if field_data['compute']:
             attrs['compute'] = make_compute(field_data['compute'], field_data['depends'])
