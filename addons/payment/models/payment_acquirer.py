@@ -655,7 +655,7 @@ class PaymentTransaction(models.Model):
     payment_token_id = fields.Many2one('payment.token', 'Payment Token', readonly=True,
                                        domain="[('acquirer_id', '=', acquirer_id)]")
 
-    payment_id = fields.Many2one('account.payment', string='Payment', readonly=True)
+    payment_id = fields.Many2one('account.payment', string='Payment', readonly=True, index=True)
     invoice_ids = fields.Many2many('account.move', 'account_invoice_transaction_rel', 'transaction_id', 'invoice_id',
         string='Invoices', copy=False, readonly=True,
         domain=[('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))])

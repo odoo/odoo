@@ -246,6 +246,7 @@ class AccountMove(models.Model):
     tax_cash_basis_rec_id = fields.Many2one(
         'account.partial.reconcile',
         string='Tax Cash Basis Entry of',
+        index=True,
         help="Technical field used to keep track of the tax cash basis reconciliation. "
              "This is needed when cancelling the source: it will post the inverse journal entry to cancel that part too.")
     tax_cash_basis_move_id = fields.Many2one(

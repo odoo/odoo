@@ -19,6 +19,7 @@ class AccountPartialReconcile(models.Model):
         index=True, required=True)
     full_reconcile_id = fields.Many2one(
         comodel_name='account.full.reconcile',
+        index=True,
         string="Full Reconcile", copy=False)
 
     # ==== Currency fields ====
