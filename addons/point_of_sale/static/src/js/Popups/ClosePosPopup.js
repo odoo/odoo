@@ -93,7 +93,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
     async downloadSalesReport() {
         await this.action.doAction("point_of_sale.sale_details_report", {
             additionalContext: {
-                active_ids: [this.env.pos.pos_session.id],
+                active_ids: [this.pos.globalState.pos_session.id],
             },
         });
     }
