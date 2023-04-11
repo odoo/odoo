@@ -15,7 +15,7 @@ class SuggestionService {
         this.threadService = services["mail.thread"];
         /** @type {import("@mail/core/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
-        /** @type {import("@mail/new/core/channel_member_service").ChannelMemberService} */
+        /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
         this.channelMemberService = services["mail.channel.member"];
     }
 
