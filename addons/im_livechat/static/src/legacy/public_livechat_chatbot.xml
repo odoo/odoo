@@ -41,7 +41,7 @@
                 <t t-foreach="message.getChatbotStepAnswers()" t-as="stepAnswer">
                     <li t-att-data-chatbot-step-answer-id="stepAnswer.id"
                         t-att-data-chatbot-step-redirect-link="stepAnswer.redirect_link"
-                        class="d-inline-block border border-primary rounded p-2 me-3 mb-1 fw-bold">
+                        class="o_livechat_chatbot_stepAnswer d-inline-block border border-primary rounded p-2 me-3 mb-1 fw-bold">
                         <t t-out="stepAnswer.label"/>
                     </li>
                     <br/>
