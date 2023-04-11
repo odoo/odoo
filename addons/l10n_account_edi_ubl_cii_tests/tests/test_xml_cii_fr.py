@@ -304,6 +304,15 @@ class TestCIIFR(TestUBLCommon):
         )
         self._test_import_partner(invoice.ubl_cii_xml_id, self.partner_1, self.partner_2)
 
+    def test_import_in_journal_facturx(self):
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        self._test_import_in_journal(invoice.ubl_cii_xml_id)
+
     def test_import_and_create_partner_facturx(self):
         """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
         """
