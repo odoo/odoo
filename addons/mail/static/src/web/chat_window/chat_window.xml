@@ -7,7 +7,7 @@
         t-att-class="{
                 'w-100 h-100': store.isSmall,
                 'o-folded': props.chatWindow.folded,
-                'position-absolute bottom-0 rounded-top-3 bg-view overflow-hidden d-flex flex-column': !props.chatWindow.hidden
+                'position-absolute bottom-0 rounded-top-3 overflow-hidden d-flex flex-column': !props.chatWindow.hidden
                 }"
         t-on-keydown.stop="onKeydown"
         tabindex="1"
@@ -46,7 +46,7 @@
                 <i class="fa fa-close"></i>
             </div>
         </div>
-        <div t-if="!props.chatWindow.folded" class="o-mail-ChatWindow-content d-flex flex-column h-100 overflow-auto border-start border-end" t-ref="content">
+        <div t-if="!props.chatWindow.folded" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto border-start border-end" t-ref="content">
             <t t-if="thread">
                 <CallSettings t-if="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
                 <ChannelMemberList t-elif="state.activeMode === 'member-list'" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start w-100 h-100'"/>
