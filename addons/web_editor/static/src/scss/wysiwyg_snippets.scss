@@ -220,6 +220,26 @@
     transition: transform 400ms ease 0s;
     transform: translateX(100%);
 
+<<<<<<< HEAD
+||||||| parent of d0968ddd446 (temp)
+    &.o_loaded {
+        transform: none;
+    }
+
+=======
+    &.o_loaded {
+        transform: none;
+        > .o_we_customize_panel .oe-toolbar {
+            #style.dropdown, #font-size.dropdown {
+                > .dropdown-menu {
+                    overflow-y: scroll;
+                    max-height: 280px;
+                }
+            }
+        }
+    }
+
+>>>>>>> d0968ddd446 (temp)
     *::selection {
         background: lighten($o-we-accent, 9);
         color: $o-we-bg-darkest;
