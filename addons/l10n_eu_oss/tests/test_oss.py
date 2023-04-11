@@ -71,14 +71,16 @@ class TestOSSSpain(OssTemplateTestCase):
         tax_oss = self.env['account.tax'].search([('name', 'ilike', f'%{another_eu_country_code}%')], limit=1)
 
         for doc_type, tag_xml_id in (
-                ("invoice", "l10n_es.mod_303_124"),
+                ("invoice", "l10n_es.mod_303_casilla_124_balance"),
         ):
             with self.subTest(doc_type=doc_type, report_line_xml_id=tag_xml_id):
                 oss_tag_id = tax_oss[f"{doc_type}_repartition_line_ids"]\
                     .filtered(lambda x: x.repartition_type == 'base')\
                     .tag_ids
 
-                expected_tag_id = self.env.ref(tag_xml_id)
+                expected_tag_id = self.env.ref(tag_xml_id)\
+                    ._get_matching_tags()\
+                    .filtered(lambda t: not t.tax_negate)
 
                 self.assertIn(expected_tag_id, oss_tag_id, f"{doc_type} tag from Spanish CoA not correctly linked")
 

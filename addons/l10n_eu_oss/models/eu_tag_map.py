@@ -199,25 +199,25 @@ EU_TAG_MAP = {
     },
     # Spain
     'es_assec': {
-        'invoice_base_tag': "l10n_es.mod_303_124",
+        'invoice_base_tag': "l10n_es.mod_303_casilla_124_balance",
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     'es_common': {
-        'invoice_base_tag': "l10n_es.mod_303_124",
+        'invoice_base_tag': "l10n_es.mod_303_casilla_124_balance",
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     'es_full': {
-        'invoice_base_tag': "l10n_es.mod_303_124",
+        'invoice_base_tag': "l10n_es.mod_303_casilla_124_balance",
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
     },
     'es_pymes': {
-        'invoice_base_tag': "l10n_es.mod_303_124",
+        'invoice_base_tag': "l10n_es.mod_303_casilla_124_balance",
         'invoice_tax_tag': None,
         'refund_base_tag': None,
         'refund_tax_tag': None,
