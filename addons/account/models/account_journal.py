@@ -719,6 +719,8 @@ class AccountJournal(models.Model):
 
     def _create_document_from_attachment(self, attachment_ids):
         """ Create the invoices from files."""
+        if not self:
+            self = self.env['account.journal'].browse(self._context.get("default_journal_id"))
         move_type = self._context.get("default_move_type", "entry")
         if not self:
             if move_type in self.env['account.move'].get_sale_types():
