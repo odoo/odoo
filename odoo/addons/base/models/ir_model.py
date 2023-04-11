@@ -287,13 +287,16 @@ class IrModel(models.Model):
         for model in self:
             current_model = self.env.get(model.model)
             if current_model is not None:
+                if current_model._abstract:
+                    continue
+
                 table = current_model._table
                 kind = tools.table_kind(self._cr, table)
                 if kind == tools.TableKind.View:
                     self._cr.execute(sql.SQL('DROP VIEW {}').format(sql.Identifier(table)))
                 elif kind == tools.TableKind.Regular:
                     self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
-                else:
+                elif kind is not None:
                     _logger.warning(
                         "Unable to drop table %r of model %r: unmanaged or unknown tabe type %r",
                         table, model.model, kind
