@@ -706,6 +706,8 @@ async function toInline($editable, cssRules, $iframe) {
     // Styles were applied inline, we don't need a style element anymore.
     $editable.find('style').remove();
 
+    editable.querySelectorAll('.o_converted_col').forEach(node => node.classList.remove('o_converted_col'));
+
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
     }
