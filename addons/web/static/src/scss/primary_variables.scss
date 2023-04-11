@@ -104,7 +104,10 @@ $o-main-favorite-color: #f3cc00 !default;
 $o-main-code-color: #d2317b !default;
 
 // Components colors
-// TODO: move variables in components
+$o-component-active-color:  $o-gray-900 !default;
+$o-component-active-bg: mix($o-action, $o-gray-100, 20%) !default;
+$o-component-active-border: $o-action !default;
+
 $o-view-background-color: white !default;
 $o-shadow-color: #303030 !default;
 
@@ -243,9 +246,9 @@ $o-btns-custom: map-merge((
         hover-border: $o-gray-400,
         hover-color: $o-gray-900,
 
-        active-background: mix($o-action, $o-gray-100, 20%),
-        active-border:  $o-action,
-        active-color: $o-gray-900,
+        active-background: $o-component-active-bg,
+        active-border:  $o-component-active-border,
+        active-color: $o-component-active-color,
     ),
     "light": (
         background: $o-white,

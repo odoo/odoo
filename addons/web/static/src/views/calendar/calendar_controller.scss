@@ -1,5 +1,5 @@
 // Variables
-$o-cw-color-today-accent: #fc3d39;
+$o-cw-color-today-accent: #fe3b30;
 $o-cw-filter-avatar-size: 20px;
 
 // Animations
@@ -66,32 +66,39 @@ $o-cw-filter-avatar-size: 20px;
 
             a,
             span {
-                padding: 5px 0;
+                display: flex;
+                width: 100%;
+                align-items: center;
+                justify-content: center;
+                aspect-ratio: 4/3;
                 background: none;
-                text-align: center;
-                vertical-align: middle;
-                font-size: 1.2rem;
-                color: map-get($grays, "900");
-                font-weight: 400;
+                color: $headings-color;
+                line-height: 1;
             }
 
-            &.ui-datepicker-current-day a {
-                background: $info;
-                color: color-contrast($info);
-                font-weight: bold;
+            &.ui-datepicker-today, &.ui-datepicker-current-day {
+                &, a {
+                    position: relative;
+                    color: var(--ui-datepicker-badge-color, #{$o-component-active-color});
+                }
+
+                &:before {
+                    @include o-position-absolute(0, $left: 50%);
+                    display: block;
+                    height: 100%;
+                    aspect-ratio: 1;
+                    border-radius: 100%;
+                    border: var(--ui-datepicker-badge-border, 1px solid #{$o-component-active-border});
+                    background: var(--ui-datepicker-badge-background, #{$o-component-active-bg});
+                    transform: translateX(-50%);
+                    content: "";
+                }
             }
 
-            &.ui-datepicker-today a {
-                margin: auto;
-                border-radius: 100%;
-                padding: 0.1em;
-                width: 25px;
-                background: mix($o-cw-color-today-accent, white, 80%);
-                color: white;
-            }
-
-            &.ui-datepicker-current-day.ui-datepicker-today a {
-                background: $o-cw-color-today-accent;
+            &.ui-datepicker-today {
+                --ui-datepicker-badge-border: 1px solid #{$o-cw-color-today-accent};
+                --ui-datepicker-badge-background: #{$o-cw-color-today-accent};
+                --ui-datepicker-badge-color: #{color-contrast($o-cw-color-today-accent)};
             }
         }
 
