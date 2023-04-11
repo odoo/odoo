@@ -300,10 +300,10 @@ class AccountEdiFormat(models.Model):
                 else:
                     invoice_node['FechaRegContable'] = fields.Date.context_today(self).strftime('%d-%m-%Y')
 
-                mod_303_10 = self.env.ref('l10n_es.mod_303_10')
-                mod_303_11 = self.env.ref('l10n_es.mod_303_11')
+                mod_303_10 = self.env.ref('l10n_es.mod_303_casilla_10_balance')._get_matching_tags()
+                mod_303_11 = self.env.ref('l10n_es.mod_303_casilla_11_balance')._get_matching_tags()
                 tax_tags = invoice.line_ids.tax_tag_ids
-                intracom = mod_303_10 in tax_tags or mod_303_11 in tax_tags
+                intracom = any(tax in tax_tags for tax in mod_303_10) and any(tax in tax_tags for tax in mod_303_11)
                 invoice_node['ClaveRegimenEspecialOTrascendencia'] = '09' if intracom else '01'
 
             if invoice.move_type == 'out_invoice':

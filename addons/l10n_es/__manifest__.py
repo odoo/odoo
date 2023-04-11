@@ -27,9 +27,11 @@ Spanish charts of accounts (PGCE 2008).
     ],
     'data': [
         'data/res_partner_data.xml',
-        'data/account_tax_data.xml',
         'views/account_move_views.xml',
         'views/report_invoice.xml',
+        'data/mod111.xml',
+        'data/mod115.xml',
+        'data/mod303.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
