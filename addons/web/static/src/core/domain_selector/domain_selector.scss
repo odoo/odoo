@@ -1,5 +1,5 @@
-
-.o_domain_selector_legacy {
+.o_domain_selector:not(.o_domain_selector_legacy) {
+    cursor: default;
 
     &.o_domain_node, .o_domain_node {
         $o-domain-selector-indent: 32px;
@@ -121,12 +121,18 @@
                 padding: 4px ($o-domain-selector-panel-space/2) 4px 0;
 
                 > * {
-                    flex: 1 1 15%; // operator select
                     width: auto;
                     background-color: white;
 
-                    &:first-child { // field selector
-                        flex: 0 1 55%;
+                    &.o_field_selector {
+                        flex: 0 1 40%;
+                        width: 40%;
+
+                        > .o_field_selector_value > .o_field_selector_chain_part {
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            white-space: nowrap;
+                        }
                     }
 
                     &:last-child { // field value
@@ -178,6 +184,9 @@
                 opacity: 0.5;
                 &:hover {
                     opacity: 1.0;
+                    &.o_domain_delete_node_button {
+                        color: var(--danger);
+                    }
                 }
             }
         }

@@ -139,8 +139,8 @@ QUnit.module("Components", (hooks) => {
 
         // There should be a "+" button to add a domain part; clicking on it
         // should add the default "['id', '=', 1]" domain
-        assert.containsOnce(target, ".fa-plus-circle", "there should be a '+' button");
-        await click(target, ".fa-plus-circle");
+        assert.containsOnce(target, ".fa.fa-plus", "there should be a '+' button");
+        await click(target, ".fa.fa-plus");
         assert.strictEqual(
             target.querySelector(".o_domain_debug_input").value,
             `["&", ("bar", "=", True), ("id", "=", 1)]`,
@@ -150,16 +150,16 @@ QUnit.module("Components", (hooks) => {
         // There should be two "..." buttons to add a domain group; clicking on
         // the first one, should add this group with defaults "['id', '=', 1]"
         // domains and the "|" operator
-        assert.containsN(target, ".fa-ellipsis-h", 2, "there should be two '...' buttons");
+        assert.containsN(target, ".fa.fa-sitemap", 2, "there should be two '...' buttons");
 
-        await click(target.querySelector(".fa-ellipsis-h"));
+        await click(target.querySelector(".fa.fa-sitemap"));
         assert.strictEqual(
             target.querySelector(".o_domain_debug_input").value,
             `["&", ("bar", "=", True), "&", "|", ("id", "=", 1), ("id", "=", 1), ("id", "=", 1)]`,
             "the domain input should contain a domain with 'bar', 'id' and a subgroup"
         );
 
-        // There should be five "-" buttons to remove domain part; clicking on
+        // There should be five buttons to remove domain part; clicking on
         // the two last ones, should leave a domain with only the "bar" and
         // "foo" fields, with the initial "&" operator
         assert.containsN(
@@ -168,9 +168,9 @@ QUnit.module("Components", (hooks) => {
             5,
             "there should be five 'x' buttons"
         );
-        let buttons = target.querySelectorAll(".o_domain_delete_node_button");
+        let buttons = target.querySelectorAll(".o_domain_delete_node_button .fa.fa-trash");
         await click(buttons[buttons.length - 1]);
-        buttons = target.querySelectorAll(".o_domain_delete_node_button");
+        buttons = target.querySelectorAll(".o_domain_delete_node_button .fa.fa-trash");
         await click(buttons[buttons.length - 1]);
         assert.strictEqual(
             target.querySelector(".o_domain_debug_input").value,
@@ -286,21 +286,17 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("editing a domain with `parent` key", async (assert) => {
-        assert.expect(1);
-
         // Create the domain selector and its mock environment
         await mountComponent(DomainSelector, {
             props: {
                 resModel: "product",
                 value: `[("name", "=", parent.foo)]`,
                 readonly: false,
-                isDebugMode: true,
             },
         });
         assert.strictEqual(
-            target.lastElementChild.innerHTML,
-            "This domain is not supported.",
-            "an error message should be displayed because of the `parent` key"
+            target.lastElementChild.innerText,
+            `This domain is not supported. RESET DOMAIN`
         );
     });
 
@@ -630,5 +626,59 @@ QUnit.module("Components", (hooks) => {
 
         await editInput(target, ".o_domain_leaf_value_input", `["b"]`);
         assert.strictEqual(comp.value, `[("state", "in", ["b"])]`);
+    });
+
+    QUnit.test("domain not supported (mode readonly)", async (assert) => {
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[`,
+                readonly: true,
+                isDebugMode: false,
+            },
+        });
+        assert.containsNone(target, ".o_domain_add_first_node_button");
+        assert.containsNone(target, ".o_domain_debug_input");
+    });
+
+    QUnit.test("domain not supported (mode readonly + mode debug)", async (assert) => {
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[`,
+                readonly: true,
+                isDebugMode: true,
+            },
+        });
+        assert.containsNone(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, ".o_domain_debug_input");
+        assert.ok(target.querySelector(".o_domain_debug_input").hasAttribute("readonly"));
+    });
+
+    QUnit.test("domain not supported (mode edit)", async (assert) => {
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[`,
+                readonly: false,
+                isDebugMode: false,
+            },
+        });
+        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        assert.containsNone(target, ".o_domain_debug_input");
+    });
+
+    QUnit.test("domain not supported (mode edit + mode debug)", async (assert) => {
+        await mountComponent(DomainSelector, {
+            props: {
+                resModel: "partner",
+                value: `[`,
+                readonly: false,
+                isDebugMode: true,
+            },
+        });
+        assert.containsOnce(target, ".o_domain_add_first_node_button");
+        assert.containsOnce(target, ".o_domain_debug_input");
+        assert.notOk(target.querySelector(".o_domain_debug_input").hasAttribute("readonly"));
     });
 });
