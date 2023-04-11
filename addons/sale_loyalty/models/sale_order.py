@@ -59,7 +59,8 @@ class SaleOrder(models.Model):
             all_coupons = order.applied_coupon_ids | order.coupon_point_ids.coupon_id | order.order_line.coupon_id
             if any(order._get_real_points_for_coupon(coupon) < 0 for coupon in all_coupons):
                 raise ValidationError(_('One or more rewards on the sale order is invalid. Please check them.'))
-            order._update_programs_and_rewards()
+            if order.get_portal_last_transaction().state not in ('pending', 'authorized', 'done'):
+                order._update_programs_and_rewards()
 
         # Remove any coupon from 'current' program that don't claim any reward.
         # This is to avoid ghost coupons that are lost forever.
