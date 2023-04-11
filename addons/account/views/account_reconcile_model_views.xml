@@ -79,7 +79,14 @@
                                 <field name="rule_type" widget="radio"/>
                             </group>
                             <group>
-                                <field name="auto_reconcile" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
+                                <label for="auto_reconcile" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
+                                <div class="o_row" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}">
+                                    <field name="auto_reconcile"/>
+                                    <button name="run_auto_reconciliation" attrs="{'invisible': [('auto_reconcile', '=', False)]}" type="object" class="btn-link">
+                                        <i title="Run manually" role="img" aria-label="Run manually" class="fa fa-refresh"/>
+                                        Run manually
+                                    </button>
+                                </div>
                                 <field name="to_check" attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                                 <field name="past_months_limit" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
                                 <field name="matching_order" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
