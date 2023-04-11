@@ -51,6 +51,12 @@ export class DomainSelector extends Component {
         onWillUpdateProps((np) => this.onPropsUpdated(np));
     }
 
+    get className() {
+        return `${this.props.readonly ? "o_read_mode" : "o_edit_mode"} ${
+            this.props.className
+        }`.trim();
+    }
+
     async onPropsUpdated(p) {
         try {
             // try to parse and execute the domain, if it fails then the domain is not supported.
@@ -67,7 +73,7 @@ export class DomainSelector extends Component {
             this.tree.isSupported = true;
         } catch {
             this.tree.isSupported = false;
-            this.tree.root = null;
+            this.tree.root = this.treeBuilder.build(new Domain([]), {});
         }
     }
 
