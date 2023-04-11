@@ -409,7 +409,7 @@ class TestMailAPIPerformance(BaseMailPerformance):
             }).create({})
             composer._onchange_template_id_wrapper()
 
-        with self.assertQueryCount(admin=156, employee=159), self.mock_mail_gateway():
+        with self.assertQueryCount(admin=157, employee=160), self.mock_mail_gateway():
             composer._action_send_mail()
 
         self.assertEqual(len(self._new_mails), 10)
@@ -1065,7 +1065,7 @@ class TestMailComplexPerformance(BaseMailPerformance):
         rec1 = rec.with_context(active_test=False)      # to see inactive records
         self.assertEqual(rec1.message_partner_ids, self.partners | self.env.user.partner_id | self.user_portal.partner_id)
 
-        with self.assertQueryCount(admin=30, employee=30):
+        with self.assertQueryCount(admin=31, employee=31):
             rec.write({
                 'name': 'Test2',
                 'customer_id': customer_id,

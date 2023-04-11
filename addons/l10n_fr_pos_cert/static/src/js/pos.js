@@ -70,8 +70,8 @@ const L10nFrOrderline = (Orderline) => class L10nFrOrderline extends Orderline {
     can_be_merged_with(orderline) {
         if (this.pos.is_french_country()) {
             const order = this.pos.get_order();
-            const lastId = order.orderlines.last().cid;
-            if ((order.orderlines._byId[lastId].product.id !== orderline.product.id || order.orderlines._byId[lastId].quantity < 0)) {
+            const lastOrderline = order.orderlines.at(order.orderlines.length - 1);
+            if ((lastOrderline.product.id !== orderline.product.id || lastOrderline.quantity < 0)) {
                 return false;
             }
             return super.can_be_merged_with(...arguments);
