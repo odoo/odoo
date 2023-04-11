@@ -2,7 +2,7 @@
     height: 460px;
     width: $o-mail-ChatWindow-width;
     z-index: 999; // messaging menu is dropdown (1000)
-    background-color: $o-mail-ChatWindow-bg;
+    background-color: var(--o-mail-ChatWindow-header-background-color, #{$o-brand-odoo});
     box-shadow: -5px -5px 10px rgba(#000000, 0.09);
     outline: none;
 
@@ -16,7 +16,6 @@
 }
 
 .o-mail-ChatWindow-header {
-    background-color: var(--o-mail-ChatWindow-header-background-color, #{$o-brand-odoo});
     height: 36px;
     color: #ffffff;
 }
