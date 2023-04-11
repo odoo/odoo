@@ -447,6 +447,44 @@
                     </div>
                 </div>
 
+                <div t-if="o.currency_id != o.company_id.currency_id"
+                     class="row clearfix ms-auto text-nowrap border-top border-bottom p-2">
+                    <t t-set="exchange_rate"
+                       t-value="abs(o.amount_total_signed) / o.amount_total"/>
+                    <div name="exchange_rate" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                        <strong>سعر الصرف</strong><br/>
+                        <strong>Exchange Rate</strong>
+                        <p class="m-0"
+                           t-out="exchange_rate"
+                           t-options='{"widget": "float", "precision": 5}'
+                        />
+                    </div>
+                    <div name="subtotal_company_currency" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                        <strong>الإجمالي الفرعي</strong><br/>
+                        <strong>Subtotal</strong>
+                        <p class="m-0"
+                           t-out="abs(o.amount_untaxed_signed)"
+                           t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                        />
+                    </div>
+                    <div name="vat_amount_company_currency" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                        <strong>قيمة الضريبة</strong><br/>
+                        <strong>VAT Amount</strong>
+                        <p class="m-0"
+                           t-out="abs(o.amount_tax_signed)"
+                           t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                        />
+                    </div>
+                    <div name="total_company_currency" t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'}">
+                        <strong>المجموع</strong><br/>
+                        <strong>Total</strong>
+                        <p class="m-0"
+                           t-out="abs(o.amount_total_signed)"
+                           t-options='{"widget": "monetary", "display_currency": o.company_currency_id}'
+                        />
+                    </div>
+                </div>
+
                 <p t-if="o.move_type in ('out_invoice', 'in_refund') and o.payment_reference" name="payment_communication">
                     <div class="row">
                         <div class="col-4">
