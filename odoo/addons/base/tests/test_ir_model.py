@@ -326,6 +326,53 @@ class TestIrModel(TransactionCase):
         self.assertEqual(self.registry.field_depends[type(record).display_name], ())
         self.assertEqual(record.display_name, f"x_bananas,{record.id}")
 
+    def test_monetary_currency_field(self):
+        fields_value = [
+            Command.create({'name': 'x_monetary', 'ttype': 'monetary', 'field_description': 'Monetary', 'currency_field': 'test'}),
+        ]
+        with self.assertRaises(ValidationError):
+            self.env['ir.model'].create({
+                'name': 'Paper Company Model',
+                'model': 'x_paper_model',
+                'field_id': fields_value,
+            })
+
+        fields_value = [
+            Command.create({'name': 'x_monetary', 'ttype': 'monetary', 'field_description': 'Monetary', 'currency_field': 'x_falsy_currency'}),
+            Command.create({'name': 'x_falsy_currency', 'ttype': 'one2many', 'field_description': 'Currency', 'relation': 'res.currency'}),
+        ]
+        with self.assertRaises(ValidationError):
+            self.env['ir.model'].create({
+                'name': 'Paper Company Model',
+                'model': 'x_paper_model',
+                'field_id': fields_value,
+            })
+
+        fields_value = [
+            Command.create({'name': 'x_monetary', 'ttype': 'monetary', 'field_description': 'Monetary', 'currency_field': 'x_falsy_currency'}),
+            Command.create({'name': 'x_falsy_currency', 'ttype': 'many2one', 'field_description': 'Currency', 'relation': 'res.partner'}),
+        ]
+        with self.assertRaises(ValidationError):
+            self.env['ir.model'].create({
+                'name': 'Paper Company Model',
+                'model': 'x_paper_model',
+                'field_id': fields_value,
+            })
+
+        fields_value = [
+            Command.create({'name': 'x_monetary', 'ttype': 'monetary', 'field_description': 'Monetary', 'currency_field': 'x_good_currency'}),
+            Command.create({'name': 'x_good_currency', 'ttype': 'many2one', 'field_description': 'Currency', 'relation': 'res.currency'}),
+        ]
+        model = self.env['ir.model'].create({
+            'name': 'Paper Company Model',
+            'model': 'x_paper_model',
+            'field_id': fields_value,
+        })
+        monetary_field = model.field_id.search([['name', 'ilike', 'x_monetary']])
+        self.assertEqual(len(monetary_field), 1,
+                         "Should have the monetary field in the created ir.model")
+        self.assertEqual(monetary_field.currency_field, "x_good_currency",
+                         "The currency field in monetary should have x_good_currency as name")
 
 @tagged('test_eval_context')
 class TestEvalContext(TransactionCase):
