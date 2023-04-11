@@ -391,13 +391,23 @@ class AccountJournal(models.Model):
             'alias_name': alias_name,
         }
 
+    def _get_unlink_journals(self):
+        # TO BE OVERRIDE
+        return self.env['account.move'].search([('journal_id', 'in', self.ids)]).mapped('journal_id')
+
     def unlink(self):
         bank_accounts = self.env['res.partner.bank'].browse()
+        journals = self._get_unlink_journals()
         for bank_account in self.mapped('bank_account_id'):
             accounts = self.search([('bank_account_id', '=', bank_account.id)])
             if accounts <= self:
                 bank_accounts += bank_account
         self.mapped('alias_id').sudo().unlink()
+        if journals:
+            raise UserError(
+                _("You cannot delete %s journals because it is link with another model.")
+                % ", ".join(journals.mapped('name'))
+            )
         ret = super(AccountJournal, self).unlink()
         bank_accounts.unlink()
         return ret
