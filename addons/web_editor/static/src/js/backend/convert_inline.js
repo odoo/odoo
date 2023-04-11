@@ -19,7 +19,6 @@ const TABLE_ATTRIBUTES = {
     cellspacing: 0,
     cellpadding: 0,
     border: 0,
-    width: '100%',
     align: 'center',
     role: 'presentation',
 };
@@ -1312,12 +1311,12 @@ function _createMso(content='') {
 function _createTable(attributes = []) {
     const table = document.createElement('table');
     Object.entries(TABLE_ATTRIBUTES).forEach(([att, value]) => table.setAttribute(att, value));
-    table.style.setProperty('width', '100%', 'important');
     for (const attr of attributes) {
         if (!(attr.name === 'width' && attr.value === '100%')) {
             table.setAttribute(attr.name, attr.value);
         }
     }
+    table.style.setProperty('width', '100%', 'important');
     if (table.classList.contains('o_layout')) {
         // The top mailing element inherits the body's font size and line-height
         // and should keep them.
