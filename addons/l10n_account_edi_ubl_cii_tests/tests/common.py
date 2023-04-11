@@ -245,6 +245,28 @@ class TestUBLCommon(AccountTestInvoicingCommon):
         new_invoice = self.company_data['default_journal_purchase']._create_document_from_attachment(attachment.ids)
         self.assertEqual(seller, new_invoice.partner_id)
 
+    def _test_import_in_journal(self, attachment):
+        """
+        If the context contains the info about the current default journal, we should use it
+        instead of infering the journal from the move type.
+        """
+        journal2 = self.company_data['default_journal_sale'].copy()
+        journal2.default_account_id = self.company_data['default_account_revenue'].id
+        journal3 = journal2.copy()
+        journal3.default_account_id = self.company_data['default_account_revenue'].id  # Not copied
+
+        # Use the journal if it's set
+        new_invoice = journal2._create_document_from_attachment(attachment.id)
+        self.assertEqual(new_invoice.journal_id, journal2)
+
+        # If no journal, fallback on the context
+        new_invoice2 = self.env['account.journal'].with_context(default_journal_id=journal3.id)._create_document_from_attachment(attachment.id)
+        self.assertEqual(new_invoice2.journal_id, journal3)
+
+        # If no journal and no journal in the context, fallback on the move type
+        new_invoice3 = self.env['account.journal'].with_context(default_move_type='out_invoice')._create_document_from_attachment(attachment.id)
+        self.assertEqual(new_invoice3.journal_id, self.company_data['default_journal_sale'])
+
     def _test_encoding_in_attachment(self, attachment, filename):
         """
         Generate an invoice, assert that the tag '<?xml version='1.0' encoding='UTF-8'?>' is present in the attachment
