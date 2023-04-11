@@ -6,7 +6,7 @@ import { _t } from "@web/core/l10n/translation";
 
 const commandRegistry = registry.category("mail.channel_commands");
 
-class SuggestionService {
+export class SuggestionService {
     constructor(env, services) {
         this.orm = services.orm;
         /** @type {import("@mail/core/store_service").Store} */
