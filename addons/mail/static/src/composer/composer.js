@@ -232,6 +232,7 @@ export class Composer extends Component {
                 markEventHandled(ev, "composer.selectSuggestion");
             },
             options: [],
+            isLoadingRpc: this.suggestion.fetch.inProcess,
         };
         if (!this.hasSuggestions) {
             return props;

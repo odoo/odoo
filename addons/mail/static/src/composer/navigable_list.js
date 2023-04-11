@@ -8,6 +8,18 @@ import { Component, useEffect, useExternalListener, useRef, useState } from "@od
 import { markEventHandled, isEventHandled } from "../utils/misc";
 import { onExternalClick } from "@mail/utils/hooks";
 
+/**
+ * @typedef {Object} Props
+ * @property {{ el: HTMLElement}} anchorRef
+ * @property {string} [class]
+ * @property {Function} onSelect
+ * @property {array|Promise} options
+ * @property {string} [optionTemplate]
+ * @property {string} [placeholder]
+ * @property {import("@web/core/position_hook").Direction | import("@web/core/position_hook").Position} [position] default: "bottom"
+ * @property {boolean} [isLoadingRpc] display a loading indicator if true. Default: false
+ * @extends {Component<Props, Env>}
+ */
 export class NavigableList extends Component {
     static components = { ImStatus };
     static template = "mail.NavigableList";
@@ -19,8 +31,9 @@ export class NavigableList extends Component {
         optionTemplate: { type: String, optional: true },
         placeholder: { type: String, optional: true },
         position: { type: String, optional: true },
+        isLoadingRpc: { type: Boolean, optional: true },
     };
-    static defaultProps = { position: "bottom" };
+    static defaultProps = { position: "bottom", isLoadingRpc: false };
 
     setup() {
         this.rootRef = useRef("root");

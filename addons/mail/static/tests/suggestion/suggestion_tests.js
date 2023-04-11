@@ -1,7 +1,13 @@
 /** @odoo-module **/
 
 import { Composer } from "@mail/composer/composer";
-import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import {
+    click,
+    insertText,
+    start,
+    startServer,
+    waitUntil,
+} from "@mail/../tests/helpers/test_utils";
 import {
     makeDeferred,
     nextTick,
@@ -42,9 +48,8 @@ QUnit.test('display partner mention suggestions on typing "@"', async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestion");
-
     await insertText(".o-mail-Composer-input", "@");
-    assert.containsN($, ".o-mail-Composer-suggestion", 3);
+    await waitUntil(".o-mail-Composer-suggestion", 3);
 });
 
 QUnit.test(
@@ -76,7 +81,7 @@ QUnit.test(
         await nextTick();
 
         await insertText(".o-mail-Composer-input", "@");
-        assert.containsN($, ".o-mail-Composer-suggestion", 3);
+        await waitUntil(".o-mail-Composer-suggestion", 3);
     }
 );
 
@@ -87,6 +92,7 @@ QUnit.test('display partner mention suggestions on typing "@" in chatter', async
     await click("button:contains(Send message)");
     assert.containsNone($, ".o-mail-Composer-suggestion");
     await insertText(".o-mail-Composer-input", "@");
+    await waitUntil(".o-mail-Composer-suggestion");
     assert.containsOnce($, ".o-mail-Composer-suggestion:contains(Mitchell Admin)");
 });
 
@@ -106,6 +112,7 @@ QUnit.test("show other channel member in @ mention", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
+    await waitUntil(".o-mail-Composer-suggestion:contains(TestPartner)");
     assert.containsOnce($, ".o-mail-Composer-suggestion:contains(TestPartner)");
 });
 
@@ -125,6 +132,7 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
+    await waitUntil(".o-mail-Composer-suggestion:contains(TestPartner)");
     await click(".o-mail-Composer-suggestion:contains(TestPartner)");
     assert.strictEqual($(".o-mail-Composer-input").val().trim(), "@TestPartner");
 });
@@ -150,6 +158,7 @@ QUnit.test("use a command for a specific channel type", async (assert) => {
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "/");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -201,6 +210,7 @@ QUnit.test("mention a channel", async (assert) => {
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
+    await waitUntil(".o-mail-Composer-suggestion");
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(

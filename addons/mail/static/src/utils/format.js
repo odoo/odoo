@@ -225,6 +225,6 @@ export function convertBrToLineBreak(str) {
     ).body.textContent;
 }
 
-export function cleanTerm(term) {
+export function cleanTerm(term = "") {
     return unaccent(term.toLowerCase());
 }

@@ -2,6 +2,7 @@
 
 import { useComponent, useEffect, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
+import { useDebounced } from "@web/core/utils/timing";
 
 export function useSuggestion() {
     const comp = useComponent();
@@ -68,6 +69,7 @@ export function useSuggestion() {
             self.clearSearch();
         },
         fetch: {
+            inProcess: false,
             inProgress: false,
             rpcFunction: undefined,
         },
@@ -139,27 +141,32 @@ export function useSuggestion() {
             self.state.items = { type, mainSuggestions, extraSuggestions };
         },
     };
+    const suggestionTrigger = useDebounced(() => {
+        self.update();
+        self.process(async () => {
+            if (self.search.position === undefined || !self.search.delimiter) {
+                return; // ignore obsolete call
+            }
+            if (!comp.props.composer.thread) {
+                return;
+            }
+            await suggestionService.fetchSuggestions(self.search, {
+                thread: comp.props.composer.thread,
+                onFetched() {
+                    self.fetch.inProcess = false;
+                    if (owl.status(comp) === "destroyed") {
+                        return;
+                    }
+                    self.update();
+                },
+            });
+            self.update();
+        });
+    }, 250);
     useEffect(
         () => {
-            self.update();
-            self.process(async () => {
-                if (self.search.position === undefined || !self.search.delimiter) {
-                    return; // ignore obsolete call
-                }
-                if (!comp.props.composer.thread) {
-                    return;
-                }
-                await suggestionService.fetchSuggestions(self.search, {
-                    thread: comp.props.composer.thread,
-                    onFetched() {
-                        if (owl.status(comp) === "destroyed") {
-                            return;
-                        }
-                        self.update();
-                    },
-                });
-                self.update();
-            });
+            self.fetch.inProcess = true;
+            suggestionTrigger();
         },
         () => {
             return [self.search.delimiter, self.search.position, self.search.term];

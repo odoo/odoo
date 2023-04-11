@@ -374,6 +374,7 @@ QUnit.test(
         });
         await openDiscuss(channelId);
         await insertText(".o-mail-Composer-input", "/");
+        await waitUntil(".o-mail-Composer-suggestion");
         await click(".o-mail-Composer-suggestion");
         await insertText(".o-mail-Composer-input", " is user?");
         assert.verifySteps([], "No rpc done");
@@ -391,6 +392,7 @@ QUnit.test("add an emoji after a command", async (assert) => {
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "/");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -423,6 +425,7 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
     await insertText(".o-mail-Composer-input", "e");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner ");
 
@@ -448,7 +451,7 @@ QUnit.test("mention a channel after some text", async (assert) => {
         "text content of composer should have content"
     );
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -468,7 +471,7 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", "#");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -488,6 +491,7 @@ QUnit.test("pending mentions are kept when toggling composer", async (assert) =>
     await openFormView("res.partner", pyEnv.currentPartnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "@");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion:contains(Mitchell Admin)");
     await click("button:contains(Send message)");
     await click("button:contains(Send message)");
@@ -665,7 +669,8 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "Shrek");
-    await afterNextRender(() => triggerHotkey("Enter"));
+    await waitUntil(".o-mail-Composer-suggestion");
+    triggerHotkey("Enter");
     assert.equal($(".o-mail-Composer-input").val().trim(), "@Shrek");
     assert.verifySteps([]);
 });

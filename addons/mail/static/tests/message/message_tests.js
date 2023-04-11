@@ -7,6 +7,7 @@ import {
     insertText,
     afterNextRender,
     nextAnimationFrame,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
@@ -1202,6 +1203,7 @@ QUnit.test("Chat with partner should be opened after clicking on their mention",
     await insertText(".o-mail-Composer-input", "@");
     await insertText(".o-mail-Composer-input", "T");
     await insertText(".o-mail-Composer-input", "e");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion:contains(Test Partner)");
     await click(".o-mail-Composer-send");
     await click(".o_mail_redirect");
@@ -1248,6 +1250,7 @@ QUnit.test("Channel should be opened after clicking on its mention", async (asse
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
     await insertText(".o-mail-Composer-input", "#");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion:contains(my-channel)");
     await click(".o-mail-Composer-send");
     await click(".o_channel_redirect");

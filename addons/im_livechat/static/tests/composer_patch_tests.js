@@ -7,6 +7,7 @@ import {
     click,
     dragenterFiles,
     start,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { editInput, nextTick, triggerHotkey } from "@web/../tests/helpers/utils";
 
@@ -136,6 +137,7 @@ QUnit.test("use a canned response", async (assert) => {
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", ":");
+    await waitUntil(".o-mail-Composer-suggestion");
     assert.containsOnce($, ".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
@@ -167,7 +169,7 @@ QUnit.test("use a canned response some text", async (assert) => {
     await insertText(".o-mail-Composer-input", "bluhbluh ");
     assert.strictEqual($(".o-mail-Composer-input").val(), "bluhbluh ");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
@@ -196,7 +198,7 @@ QUnit.test("add an emoji after a canned response", async (assert) => {
     assert.containsNone($, ".o-mail-Composer-suggestion");
     assert.strictEqual($(".o-mail-Composer-input").val(), "");
     await insertText(".o-mail-Composer-input", ":");
-    assert.containsOnce($, ".o-mail-Composer-suggestion");
+    await waitUntil(".o-mail-Composer-suggestion");
     await click(".o-mail-Composer-suggestion");
     assert.strictEqual(
         $(".o-mail-Composer-input").val().replace(/\s/, " "),
