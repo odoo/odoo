@@ -7,7 +7,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
-from odoo.tools import ustr, consteq, float_compare
+from odoo.tools import ustr, consteq, float_compare, float_repr
 
 
 class PaymentLinkWizard(models.TransientModel):
@@ -55,7 +55,7 @@ class PaymentLinkWizard(models.TransientModel):
     def _compute_values(self):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
         for payment_link in self:
-            token_str = '%s%s%s' % (payment_link.partner_id.id, payment_link.amount, payment_link.currency_id.id)
+            token_str = '%s%s%s' % (payment_link.partner_id.id, float_repr(payment_link.amount, precision_digits=payment_link.currency_id.decimal_places), payment_link.currency_id.id)
             payment_link.access_token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
         # must be called after token generation, obvsly - the link needs an up-to-date token
         self._generate_link()
@@ -73,7 +73,7 @@ class PaymentLinkWizard(models.TransientModel):
                     '&partner_id=%s&access_token=%s') % (
                         record.get_base_url(),
                         urls.url_quote_plus(payment_link.description),
-                        payment_link.amount,
+                        float_repr(payment_link.amount, precision_digits=payment_link.currency_id.decimal_places),
                         payment_link.currency_id.id,
                         payment_link.partner_id.id,
                         payment_link.access_token
@@ -87,7 +87,8 @@ class PaymentLinkWizard(models.TransientModel):
     @api.model
     def check_token(self, access_token, partner_id, amount, currency_id):
         secret = self.env['ir.config_parameter'].sudo().get_param('database.secret')
-        token_str = '%s%s%s' % (partner_id, amount, currency_id)
+        currency = self.env['res.currency'].browse(currency_id)
+        token_str = '%s%s%s' % (partner_id, float_repr(amount, precision_digits=currency.decimal_places), currency_id)
         correct_token = hmac.new(secret.encode('utf-8'), token_str.encode('utf-8'), hashlib.sha256).hexdigest()
         if consteq(ustr(access_token), correct_token):
             return True
