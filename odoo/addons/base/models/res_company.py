@@ -91,7 +91,7 @@ class Company(models.Model):
     def _get_company_address_update(self, partner):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
-    
+
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address
     def _compute_address(self):

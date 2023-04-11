@@ -8,6 +8,7 @@ import logging
 
 import odoo
 import odoo.tools as tools
+from odoo.modules.module import add_module_group
 
 _logger = logging.getLogger(__name__)
 
@@ -59,6 +60,7 @@ class Graph(dict):
         len_graph = len(self)
         for module in module_list:
             info = odoo.modules.module.get_manifest(module)
+            add_module_group(info, module)
             if info and info['installable']:
                 packages.append((module, info)) # TODO directly a dict, like in get_modules_with_version
             elif module != 'studio_customization':
