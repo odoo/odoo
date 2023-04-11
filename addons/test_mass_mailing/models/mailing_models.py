@@ -117,6 +117,16 @@ class MailingOptOut(models.Model):
                 }
         return default_recipients
 
+class MailingTestPartner(models.Model):
+    _description = 'Mailing Model with partner_id'
+    _name = 'mailing.test.partner'
+    _inherit = ['mail.thread.blacklist']
+    _primary_email = 'email_from'
+
+    name = fields.Char()
+    email_from = fields.Char()
+    partner_id = fields.Many2one('res.partner', 'Customer')
+
 
 class MailingPerformance(models.Model):
     """ A very simple model only inheriting from mail.thread to test pure mass
