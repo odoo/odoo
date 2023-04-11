@@ -36,7 +36,14 @@ var WysiwygDialog = Dialog.extend({
 
         var self = this;
         this.opened(function () {
-            self.$('input:visible:first').focus();
+            // Issue seems to be, at least in part, calling .focus() too early
+
+            // self.$('input:visible:first')[0].addEventListener('load', function () { 
+            //     self.$('input:visible:first').focus();
+            // }, false);
+            // Solution above (and similar attempts with .on()) does not trigger (too late ?)
+            setTimeout(function () { self.$('input:visible:first').focus(); }, 20);
+            // Timeout works but is hackish, may fail if loading of input is very slow (very unlikely)
             self.$el.closest('.modal').addClass('o_web_editor_dialog');
             self.$el.closest('.modal').on('hidden.bs.modal', self.options.onClose);
         });

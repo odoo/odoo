@@ -2013,6 +2013,7 @@ export class OdooEditor extends EventTarget {
                 this.historyStep(true);
                 this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
                 setTimeout(() => {
+                    // Line below may steal focus (without timeout)
                     this.editable.focus();
                     getDeepRange(this.editable, { select: true });
                 });
