@@ -246,6 +246,14 @@ body.editor_enable.editor_has_snippets {
 
     &.o_loaded {
         transform: none;
+        > .o_we_customize_panel .oe-toolbar {
+            #style.dropdown, #font-size.dropdown {
+                > .dropdown-menu {
+                    overflow-y: scroll;
+                    max-height: 280px;
+                }
+            }
+        }
     }
 
     *::selection {
