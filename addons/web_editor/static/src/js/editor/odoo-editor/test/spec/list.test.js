@@ -868,6 +868,146 @@ describe('List', () => {
                             </ol>`),
                     });
                 });
+                it("should turn unordered list into ordered list with block style applied to it", async () => {
+                    await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                                        <ul>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2>a[bc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ul>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><h2>abc</h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2>abc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ul>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ul>
+                                                    </li>
+                                                    <li><h2>a]bc</h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                        </ul>
+                                    `),
+                    stepFunction: toggleOrderedList,
+                    contentAfter: unformat(`
+                                        <ol>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2>a[bc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ol>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ol>
+                                                    </li>
+                                                    <li><h2>abc</h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2>abc</h2></li>
+                                                    <li class="oe-nested">
+                                                        <ol>
+                                                            <li><h2>abc</h2></li>
+                                                            <li><h3>abc</h3></li>
+                                                            <li><h4>abc</h4></li>
+                                                        </ol>
+                                                    </li>
+                                                    <li><h2>a]bc</h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1>abc</h1></li>
+                                        </ol>`),
+                    });
+                });
+          it("should turn unordered list into ordered list with block and inline style applied to it", async () => {
+            await testEditor(BasicEditor, {
+              contentBefore: unformat(`
+                                <ul>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li><h3><strong>a[bc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1><strong>abc</strong></h1></li>
+                                        </ul>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ul>
+                                            <li><h3><strong>abc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ul>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ul>
+                                            </li>
+                                            <li><h1><strong>a]bc</strong></h1></li>
+                                        </ul>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                </ul>
+                              `),
+              stepFunction: toggleOrderedList,
+              contentAfter: unformat(`
+                                <ol>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ol>
+                                            <li><h3><strong>a[bc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1><strong>abc</strong></h1></li>
+                                        </ol>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                    <li class="oe-nested">
+                                        <ol>
+                                            <li><h3><strong>abc</strong></h3></li>
+                                            <li class="oe-nested">
+                                                <ol>
+                                                    <li><h2><em>abc</em></h2></li>
+                                                    <li><h2><s>abc</s></h2></li>
+                                                    <li><h2><u>abc</u></h2></li>
+                                                </ol>
+                                            </li>
+                                            <li><h1><strong>a]bc</strong></h1></li>
+                                        </ol>
+                                    </li>
+                                    <li><h1><strong>abc</strong></h1></li>
+                                </ol>`),
+            });
+          });
                 it('should turn an unordered list item and a paragraph into two list items within an ordered list', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<ul><li>ab</li><li>c[d</li></ul><p>e]f</p>',
