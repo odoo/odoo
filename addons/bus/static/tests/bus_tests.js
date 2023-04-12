@@ -37,6 +37,7 @@ QUnit.module('Bus', {
 
         const pyEnv = await startServer();
         const env = await makeTestEnv({ activateMockServer: true });
+        await env.services['bus_service'].start();
         env.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('notification - ' + notifications.map(notif => notif.payload).toString());
         });
@@ -59,6 +60,8 @@ QUnit.module('Bus', {
         const pyEnv = await startServer();
         const firstTabEnv = await makeTestEnv({ activateMockServer: true });
         const secondTabEnv = await makeTestEnv({ activateMockServer: true });
+        await firstTabEnv.services['bus_service'].start();
+        await secondTabEnv.services['bus_service'].start();
 
         firstTabEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('1 - notification - ' + notifications.map(notif => notif.payload).toString());
@@ -129,15 +132,16 @@ QUnit.module('Bus', {
         mainEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             steps.add('main - notification - ' + notifications.map(notif => notif.payload).toString());
         });
-        mainEnv.services['bus_service'].addChannel('lambda');
+        await mainEnv.services['bus_service'].addChannel('lambda');
 
         // slave
         const slaveEnv = await makeTestEnv();
+        await slaveEnv.services['bus_service'].start();
 
         slaveEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             steps.add('slave - notification - ' + notifications.map(notif => notif.payload).toString());
         });
-        slaveEnv.services['bus_service'].addChannel('lambda');
+        await slaveEnv.services['bus_service'].addChannel('lambda');
 
         pyEnv['bus.bus']._sendone('lambda', 'notifType', 'beta');
         // Wait one tick for the worker `postMessage` to reach the bus_service.
@@ -158,6 +162,7 @@ QUnit.module('Bus', {
         const steps = new Set();
         // main
         const mainEnv = await makeTestEnv({ activateMockServer: true });
+        await mainEnv.services['bus_service'].start();
         mainEnv.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             steps.add('main - notification - ' + notifications.map(notif => notif.payload).toString());
         });
@@ -331,7 +336,8 @@ QUnit.module('Bus', {
                 return this._super(...arguments);
             },
         });
-        await makeTestEnv();
+        const env1 = await makeTestEnv();
+        await env1.services['bus_service'].start();
         await updateLastNotificationDeferred;
         // First bus service has never received notifications thus the
         // default is 0.
@@ -345,7 +351,8 @@ QUnit.module('Bus', {
         await nextTick();
 
         updateLastNotificationDeferred = makeDeferred();
-        await makeTestEnv();
+        const env2 = await makeTestEnv();
+        await env2.services['bus_service'].start();
         await updateLastNotificationDeferred;
         // Second bus service sends the last known notification id.
         assert.verifySteps([`initialize_connection - 1`]);
@@ -366,9 +373,11 @@ QUnit.module('Bus', {
         });
 
         const firstTabEnv = await makeTestEnv();
-        firstTabEnv.services["bus_service"].start();
+        await firstTabEnv.services["bus_service"].start();
         firstTabEnv.services['bus_service'].addEventListener('connect', () => {
-            assert.step('connect');
+            if (session.user_id) {
+                assert.step('connect');
+            }
             connectionOpenedDeferred.resolve();
             connectionOpenedDeferred = makeDeferred();
         });
@@ -383,8 +392,8 @@ QUnit.module('Bus', {
         patchWithCleanup(session, {
             user_id: false,
         });
-        await makeTestEnv();
-        await nextTick();
+        const env2 = await makeTestEnv();
+        await env2.services['bus_service'].start();
 
         assert.verifySteps([
             'connect',
@@ -407,7 +416,7 @@ QUnit.module('Bus', {
         });
 
         const firstTabEnv = await makeTestEnv();
-        firstTabEnv.services['bus_service'].start();
+        await firstTabEnv.services['bus_service'].start();
         firstTabEnv.services['bus_service'].addEventListener('connect', () => {
             assert.step("connect");
             websocketConnectedDeferred.resolve();
@@ -425,7 +434,7 @@ QUnit.module('Bus', {
             user_id: 1,
         });
         const env = await makeTestEnv();
-        env.services["bus_service"].start();
+        await env.services["bus_service"].start();
         await websocketConnectedDeferred;
         assert.verifySteps([
             'connect',
@@ -464,7 +473,7 @@ QUnit.module('Bus', {
         const env = await makeTestEnv();
         env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
         env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
-        env.services["bus_service"].start();
+        await env.services["bus_service"].start();
         window.dispatchEvent(new Event("offline"));
         await nextTick();
         window.dispatchEvent(new Event("online"));
@@ -574,7 +583,8 @@ QUnit.module('Bus', {
                     assert.step(message);
                 },
             })
-            await makeTestEnv();
+            const env = await makeTestEnv();
+            await env.services['bus_service'].start();
             assert.verifySteps([
                 "shared-worker creation",
                 "Error while loading \"bus_service\" SharedWorker, fallback on Worker.",
