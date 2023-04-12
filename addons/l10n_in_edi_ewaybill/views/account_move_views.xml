@@ -11,7 +11,7 @@
             </xpath>
             <xpath expr="//notebook/page[@name='other_info']" position="before">
                 <page string="eWayBill" name="l10n_in_edi_ewaybill_page"
-                    attrs="{'invisible':[('move_type', '=', 'entry'), ('country_code', '!=', 'IN')]}">
+                    attrs="{'invisible':['|', ('move_type', '=', 'entry'), ('country_code', '!=', 'IN')]}">
                     <field name="l10n_in_edi_ewaybill_direct_api" invisible="1"/>
                     <group name="ewaybill_group">
                         <group string="Transaction Details" name="Transaction_group" 
