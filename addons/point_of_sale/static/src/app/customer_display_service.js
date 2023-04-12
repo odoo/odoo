@@ -38,7 +38,9 @@ export class LocalDisplay extends Reactive {
         displayBody.appendChild(container.querySelector(".pos-customer_facing_display"));
 
         const orderLines = displayBody.querySelector(".pos_orderlines_list");
-        orderLines.scrollTop = orderLines.scrollHeight;
+        if (orderLines) {
+            orderLines.scrollTop = orderLines.scrollHeight;
+        }
     }
 }
 

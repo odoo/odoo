@@ -67,7 +67,7 @@
                         <div>Price</div>
                     </div>
                     <div class="pos_orderlines_list">
-                        <div t-foreach="order.get_orderlines()" t-as="orderline" class="pos_orderlines_item">
+                        <div t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item">
                             <div><div t-attf-style="background-image:url(#{productImages[orderline.product.id]})"/></div>
                                 <ul>
                                     <li class="info">
