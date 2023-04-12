@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { useEmojiPicker } from "@mail/emoji_picker/emoji_picker";
+import { useRef } from "@odoo/owl";
 
 /*
  * Common code for EmojisTextField and EmojisCharField
@@ -11,7 +12,7 @@ export const EmojisFieldCommon = {
      */
     _setupOverride() {
         this.emojiPicker = useEmojiPicker(
-            "emojisButton",
+            useRef("emojisButton"),
             {
                 onSelect: (codepoints) => {
                     const originalContent = this.targetEditElement.el.value;

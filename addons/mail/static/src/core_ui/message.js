@@ -133,7 +133,7 @@ export class Message extends Component {
             }
         });
         if (this.props.hasActions && this.canAddReaction) {
-            this.emojiPicker = useEmojiPicker("emoji-picker", {
+            this.emojiPicker = useEmojiPicker(useRef("emoji-picker"), {
                 onSelect: (emoji) => {
                     const reaction = this.message.reactions.find(
                         ({ content, personas }) =>
