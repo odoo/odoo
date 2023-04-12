@@ -416,6 +416,17 @@ datetime.timedelta = py.type('timedelta', null, {
         return (!!this.days || !!this.seconds || !!this.microseconds)
             ? py.True
             : py.False;
+    },
+
+    fromJSON: function (days, seconds, microseconds) {
+        return py.PY_call(datetime.timedelta, [days, seconds, microseconds]);
+    },
+
+    toJSON: function () {
+        return {
+            "days": this.days,
+            "seconds": this.seconds,
+            "microseconds": this.microseconds};
     }
 });
 
@@ -756,6 +767,12 @@ datetime.date = py.type('date', null, {
     fromJSON: function (year, month, day) {
         return py.PY_call(datetime.date, [year, month, day]);
     },
+    toJSON: function () {
+        return new Date(
+            this.year,
+            this.month - 1,
+            this.day);
+    },
     today: py.classmethod.fromJSON(function () {
         var d = new Date ();
         return py.PY_call(datetime.date, [
@@ -977,6 +994,12 @@ var relativedelta = py.type('relativedelta', null, {
             minute: this.ops.minute,
             second: this.ops.second
         });
+    },
+    fromJSON: function (values) {
+        return py.PY_call(relativedelta, values);
+    },
+    toJSON: function () {
+        return this.ops;
     }
 });
 
