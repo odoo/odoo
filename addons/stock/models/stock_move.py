@@ -325,7 +325,7 @@ class StockMove(models.Model):
             quantity += move_line.product_uom_id._compute_quantity(move_line.qty_done, self.product_uom, round=False)
         return quantity
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
+    @api.depends('move_line_ids.qty_done', 'move_line_nosuggest_ids.qty_done')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.

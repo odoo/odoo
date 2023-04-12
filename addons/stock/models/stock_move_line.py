@@ -108,7 +108,7 @@ class StockMoveLine(models.Model):
             if line.picking_id:
                 line.picking_type_id = line.picking_id.picking_type_id
 
-    @api.depends('move_id', 'move_id.location_id', 'move_id.location_dest_id')
+    @api.depends('move_id.location_id', 'move_id.location_dest_id')
     def _compute_location_id(self):
         for line in self:
             if not line.location_id:
