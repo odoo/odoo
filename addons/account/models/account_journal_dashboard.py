@@ -387,7 +387,7 @@ class account_journal(models.Model):
                 'number_to_reconcile': number_to_reconcile.get(journal.id, 0),
                 'account_balance': currency.format(journal.current_statement_balance),
                 'has_at_least_one_statement': bool(last_statement),
-                'nb_lines_bank_account_balance': bool(last_statement),
+                'nb_lines_bank_account_balance': bool(journal.has_statement_lines),
                 'outstanding_pay_account_balance': currency.format(outstanding_pay_account_balance),
                 'nb_lines_outstanding_pay_account_balance': has_outstanding,
                 'last_balance': currency.format(last_statement.balance_end_real),
@@ -540,7 +540,7 @@ class account_journal(models.Model):
                                   balance_end_real
                              FROM account_bank_statement
                             WHERE journal_id = journal.id
-                         ORDER BY date DESC
+                         ORDER BY date DESC, id DESC
                             LIMIT 1
                    ) statement ON TRUE
          LEFT JOIN LATERAL (  -- sum all the lines not linked to a statement with a higher index than the last line of the statement
@@ -551,7 +551,7 @@ class account_journal(models.Model):
                             WHERE stl.statement_id IS NULL
                               AND move.state != 'cancel'
                               AND move.journal_id = journal.id
-                              AND stl.internal_index >= statement.first_line_index
+                              AND stl.internal_index >= COALESCE(statement.first_line_index, '')
                    ) without_statement ON TRUE
              WHERE journal.id = ANY(%s)
         """, [(self.ids)])
