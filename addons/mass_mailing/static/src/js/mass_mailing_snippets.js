@@ -1,16 +1,15 @@
-odoo.define('mass_mailing.snippets.options', function (require) {
-"use strict";
+/** @odoo-module alias=mass_mailing.snippets.options **/
 
-const options = require('web_editor.snippets.options');
-const {ColorpickerWidget} = require('web.Colorpicker');
+import options from "web_editor.snippets.options";
+import {ColorpickerWidget} from "web.Colorpicker";
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
-const weUtils = require('web_editor.utils');
-const {
+import weUtils from "web_editor.utils";
+import {
     CSS_PREFIX, BTN_SIZE_STYLES,
     DEFAULT_BUTTON_SIZE, PRIORITY_STYLES, FONT_FAMILIES,
     getFontName, normalizeFontFamily, initializeDesignTabCss,
     transformFontFamilySelector,
-} = require('mass_mailing.design_constants');
+} from "mass_mailing.design_constants";
 
 
 //--------------------------------------------------------------------------
@@ -305,5 +304,4 @@ options.registry.DesignTab = options.Class.extend({
     _getRule(selectorText) {
         return [...(this.styleSheet.cssRules || this.styleSheet.rules)].find(rule => rule.selectorText === selectorText);
     },
-});
 });

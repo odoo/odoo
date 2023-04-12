@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { loadJS } from "@web/core/assets";
 import { registry } from "@web/core/registry";
 
 const blockIDToData = {
@@ -55,18 +54,8 @@ registry.category("web_tour.tours").add('focus_blur_snippets', {
     url: '/?enable_editor=1',
     steps: [
     {
-        content: 'First load our custom JS options',
-        trigger: '#oe_snippets.o_loaded',
-        run: function () {
-            loadJS('/website/static/tests/tour_utils/focus_blur_snippets_options.js').then(function () {
-                $('iframe:not(.o_ignore_in_tour)').contents().find('body').addClass('focus_blur_snippets_options_loaded');
-            });
-        },
-    },
-    {
         content: 'Drag the custom block into the page',
         trigger: '#snippet_structure .oe_snippet:has(.oe_snippet_body.s_focusblur) .oe_snippet_thumbnail',
-        extra_trigger: 'iframe body.focus_blur_snippets_options_loaded',
         run: 'drag_and_drop iframe #wrap',
     },
     ...clickAndCheck('parent', ['focus parent']),

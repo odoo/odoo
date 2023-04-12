@@ -1,7 +1,6 @@
-odoo.define('mass_mailing.fix.LinkDialog', function (require) {
-'use strict';
+/** @odoo-module alias=mass_mailing.fix.LinkDialog **/
 
-const LinkDialog = require('wysiwyg.widgets.LinkDialog');
+import LinkDialog from "wysiwyg.widgets.LinkDialog";
 
 /**
  * Primary and link buttons are "hacked" by mailing themes scss. We thus
@@ -69,5 +68,4 @@ LinkDialog.include({
             });
         }
     },
-});
 });

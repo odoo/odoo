@@ -111,6 +111,14 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'mass_mailing/static/src/scss/mass_mailing.ui.scss',
         ],
+        'mass_mailing.assets_wysiwyg': [
+            'mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
+            'mass_mailing/static/src/js/mass_mailing_snippets.js',
+            'mass_mailing/static/src/snippets/s_masonry_block/options.js',
+            'mass_mailing/static/src/snippets/s_media_list/options.js',
+            'mass_mailing/static/src/snippets/s_showcase/options.js',
+            'mass_mailing/static/src/snippets/s_rating/options.js'
+        ],
         'web_editor.assets_wysiwyg': [
             'mass_mailing/static/src/js/snippets.editor.js',
             'mass_mailing/static/src/js/wysiwyg.js',

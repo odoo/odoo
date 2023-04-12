@@ -1,7 +1,6 @@
-odoo.define('mass_mailing.s_showcase_options', function (require) {
-'use strict';
+/** @odoo-module alias=mass_mailing.s_showcase_options **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.Showcase = options.Class.extend({
     /**
@@ -15,5 +14,4 @@ options.registry.Showcase = options.Class.extend({
         $showcaseCol.find('.s_showcase_icon.ms-3').removeClass('ms-3').addClass('ms-lg-3'); // For compatibility with old version
         $title.find('.s_showcase_icon').toggleClass('me-lg-0 ms-lg-3', isLeftCol);
     },
-});
 });
