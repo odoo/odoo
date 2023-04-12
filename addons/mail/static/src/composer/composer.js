@@ -120,7 +120,7 @@ export class Composer extends Component {
         useChildSubEnv({
             inComposer: true,
         });
-        useEmojiPicker("emoji-picker", {
+        useEmojiPicker(useRef("emoji-picker"), {
             onSelect: (str) => this.addEmoji(str),
             onClose: () => this.state.autofocus++,
         });

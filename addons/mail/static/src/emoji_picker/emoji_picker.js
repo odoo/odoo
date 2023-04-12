@@ -22,13 +22,13 @@ import { escapeRegExp } from "@web/core/utils/strings";
 
 /**
  *
- * @param {Object|string} [target] if string then it's a ref name, otherwise it's a ref
+ * @param {{ el:HTMLElement }} [ref]
  * @param {Object} props
  * @param {import("@web/core/popover/popover_service").PopoverServiceAddOptions} [options]
  * @param {function} [props.onSelect]
  * @param {function} [props.onClose]
  */
-export function useEmojiPicker(target, props, options = {}) {
+export function useEmojiPicker(ref, props, options = {}) {
     const targets = [];
     const popover = usePopover();
     let closePopover = false;
@@ -43,11 +43,9 @@ export function useEmojiPicker(target, props, options = {}) {
     };
 
     /**
-     * @param {string|Object} target a refName or an Object whose el is an HTMl element target
-     * @param {HTMLElement|Function} [target.el]
+     * @param {{ el: HTMLElement }} ref
      */
-    function add(target, onSelect, { show = false } = {}) {
-        const ref = typeof target === "string" ? useRef(target) : target;
+    function add(ref, onSelect, { show = false } = {}) {
         const toggler = () => toggle(ref, onSelect);
         targets.push([ref, toggler]);
         if (!ref.el) {
@@ -78,8 +76,8 @@ export function useEmojiPicker(target, props, options = {}) {
         }
     }
 
-    if (target) {
-        add(target);
+    if (ref) {
+        add(ref);
     }
     onMounted(() => {
         for (const [ref, toggle] of targets) {
