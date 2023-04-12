@@ -48,7 +48,7 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
         tx_context = self.get_tx_checkout_context(**route_values)
 
         self.assertEqual(tx_context['currency_id'], self.order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.order.amount_total)
         self.assertEqual(tx_context['sale_order_id'], self.order.id)
 
@@ -93,7 +93,7 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.amount)
         self.assertEqual(tx_context['sale_order_id'], self.order.id)
 
@@ -111,7 +111,7 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_sudo.sale_order_ids, self.order)
         self.assertEqual(tx_sudo.amount, self.amount)
-        self.assertEqual(tx_sudo.partner_id, self.order.partner_id)
+        self.assertEqual(tx_sudo.partner_id, self.order.partner_invoice_id)
         self.assertEqual(tx_sudo.company_id, self.order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.order.currency_id)
         self.assertEqual(tx_sudo.reference, self.reference)
@@ -147,7 +147,7 @@ class TestSalePayment(PaymentCommon, PaymentHttpCommon):
 
         self.assertEqual(tx2_sudo.sale_order_ids, self.order)
         self.assertEqual(tx2_sudo.amount, self.amount)
-        self.assertEqual(tx2_sudo.partner_id, self.order.partner_id)
+        self.assertEqual(tx2_sudo.partner_id, self.order.partner_invoice_id)
         self.assertEqual(tx2_sudo.company_id, self.order.company_id)
         self.assertEqual(tx2_sudo.currency_id, self.order.currency_id)
 
