@@ -32,32 +32,28 @@ class StockGenerateCommon(TransactionCase):
             'name': 'Room B',
             'location_id': cls.warehouse.lot_stock_id.id,
         })
-        cls.receipt_picking_type = cls.warehouse.in_type_id
+
+        cls.Wizard = cls.env['stock.assign.serial']
 
     def get_new_move(self, nbre_of_lines=0, product=False):
         product = product or self.product_serial
-        move_lines_vals = []
         self.env['stock.quant']._update_available_quantity(product, self.location, nbre_of_lines)
-        for i in range(nbre_of_lines):
-            move_lines_vals.append(Command.create({
+        move_lines_vals = [Command.create({
                 'product_id': product.id,
                 'product_uom_id': self.uom_unit.id,
                 'reserved_uom_qty': 1,
                 'location_id': self.location.id,
-                'location_dest_id': self.location_dest.id
-            }))
+                'location_dest_id': self.location_dest.id,
+            }) for i in range(nbre_of_lines)]
         return self.env['stock.move'].create({
             'name': 'Move Test',
-            'picking_type_id': self.receipt_picking_type.id,
             'product_id': product.id,
             'product_uom': self.uom_unit.id,
             'location_id': self.location.id,
             'location_dest_id': self.location_dest.id,
-            'move_line_ids': move_lines_vals
+            'move_line_ids': move_lines_vals,
         })
 
-
-class StockGenerate(StockGenerateCommon):
     def test_generate_01_sn(self):
         """ Creates a move with 5 move lines, then asks for generates 5 Serial
         Numbers. Checks move has 5 new move lines with each a SN, and the 5
@@ -302,167 +298,6 @@ class StockGenerate(StockGenerateCommon):
             self.assertEqual(move_line.qty_done, 1)
             # The location dest must be now the one from the putaway.
             self.assertEqual(move_line.location_dest_id.id, shelf_location.id)
-
-    def test_set_multiple_lot_name_01(self):
-        """ Sets five SN in one time in stock move view form, then checks move
-        has five new move lines with the right `lot_name`.
-        """
-        nbre_of_lines = 10
-        move = self.get_new_move(nbre_of_lines)
-        # We must begin with a move with 10 move lines.
-        self.assertEqual(len(move.move_line_ids), nbre_of_lines)
-
-        value_list = [
-            'abc-235',
-            'abc-237',
-            'abc-238',
-            'abc-282',
-            'abc-301',
-        ]
-        values = '\n'.join(value_list)
-
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = values
-        move = move_form.save()
-
-        # After we set multiple SN, we must have now 15 move lines.
-        self.assertEqual(len(move.move_line_ids), nbre_of_lines + len(value_list))
-        # Then we look each SN name is correct.
-        for move_line in move.move_line_nosuggest_ids:
-            self.assertEqual(move_line.lot_name, value_list.pop(0))
-        for move_line in (move.move_line_ids - move.move_line_nosuggest_ids):
-            self.assertEqual(move_line.lot_name, False)
-
-    def test_set_multiple_lot_name_02_empty_values(self):
-        """ Sets multiple values with some empty lines in one time, then checks
-        we haven't create useless move line and all move line's `lot_name` have
-        been correctly set.
-        """
-        nbre_of_lines = 5
-        move = self.get_new_move(nbre_of_lines)
-        # We must begin with a move with five move lines.
-        self.assertEqual(len(move.move_line_ids), nbre_of_lines)
-
-        value_list = [
-            '',
-            'abc-235',
-            '',
-            'abc-237',
-            '',
-            '',
-            'abc-238',
-            'abc-282',
-            'abc-301',
-            '',
-        ]
-        values = '\n'.join(value_list)
-
-        # Checks we have more values than move lines.
-        self.assertTrue(len(move.move_line_ids) < len(value_list))
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = values
-        move = move_form.save()
-
-        filtered_value_list = list(filter(lambda line: len(line), value_list))
-        # After we set multiple SN, we must have a line for each value.
-        self.assertEqual(len(move.move_line_ids), nbre_of_lines + len(filtered_value_list))
-        # Then we look each SN name is correct.
-        for move_line in move.move_line_nosuggest_ids:
-            self.assertEqual(move_line.lot_name, filtered_value_list.pop(0))
-        for move_line in (move.move_line_ids - move.move_line_nosuggest_ids):
-            self.assertEqual(move_line.lot_name, False)
-
-    def test_set_multiple_lot_name_03_with_quantity(self):
-        """ In a move line's `lot_name` field, pastes a list of lots and quantities.
-        Checks the values are correctly interpreted when the format is respected,
-        and are used only as a lot name when they are erronous.
-        """
-        product_lot = self.env['product.product'].create({
-            'name': 'Tracked by Lot Numbers',
-            'tracking': 'lot',
-            'type': 'product',
-        })
-        list_lot_and_qty = [
-            {'lot_name': "ln01", "qty": 2},
-            {'lot_name': "ln02", "qty": 3},
-            {'lot_name': "ln03", "qty": 6},
-            {'lot_name': "ln04", "qty": 4},
-            {'lot_name': "ln02", "qty": 5},
-        ]
-        list_using_semicolon = '\n'.join([f'{line["lot_name"]};{line["qty"]}' for line in list_lot_and_qty])
-        list_using_tabs = '\n'.join([f'{line["lot_name"]}\t{line["qty"]}' for line in list_lot_and_qty])
-        # Runs the same test's asserts with two different lists.
-        for stringified_list in [list_using_semicolon, list_using_tabs]:
-            move = self.get_new_move(product=product_lot)
-            move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-            with move_form.move_line_nosuggest_ids.new() as line:
-                line.lot_name = stringified_list
-            move = move_form.save()
-            self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
-            for i, move_line in enumerate(move.move_line_ids):
-                self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-                self.assertEqual(move_line.qty_done, list_lot_and_qty[i]['qty'])
-
-        # Checks with an erronous list, the move lines have the plain text as lot name.
-        erronous_list = [
-            "2;ln01",
-            "3;ln02",
-            "6;ln03",
-            "4;ln04",
-            "5;ln02",
-        ]
-        move_1 = self.get_new_move(product=product_lot)
-        move_form = Form(move_1, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = '\n'.join(erronous_list)
-        move_1 = move_form.save()
-        self.assertEqual(len(move_1.move_line_ids), len(list_lot_and_qty))
-        for i, move_line in enumerate(move_1.move_line_ids):
-            self.assertEqual(move_line.lot_name, erronous_list[i])
-            self.assertEqual(move_line.qty_done, 1)
-
-        # Does the same, but by giving a done quantity to the move line before pasting the list.
-        move_2 = self.get_new_move(product=product_lot)
-        move_form = Form(move_2, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.qty_done = 4
-            line.lot_name = '\n'.join(erronous_list)
-        move_2 = move_form.save()
-        self.assertEqual(len(move_2.move_line_ids), len(list_lot_and_qty))
-        for i, move_line in enumerate(move_2.move_line_ids):
-            self.assertEqual(move_line.lot_name, erronous_list[i])
-            self.assertEqual(move_line.qty_done, 4)
-
-    def test_set_multiple_lot_name_04_serial_with_quantity(self):
-        """ In a move line's `lot_name` field, pastes a list of lots and quantities.
-        Since the product is tracked by serial number, the quantity should be 1, even if the pasted
-        number is greater."""
-        product_serial = self.env['product.product'].create({
-            'name': 'Tracked by Lot Numbers',
-            'tracking': 'serial',
-            'type': 'product',
-        })
-        list_lot_and_qty = [
-            {'lot_name': "sn01", "qty": 2},
-            {'lot_name': "sn02", "qty": 1},
-            {'lot_name': "sn03", "qty": 0},
-            {'lot_name': "sn04", "qty": 12},
-        ]
-        list_using_semicolon = '\n'.join([f'{line["lot_name"]};{line["qty"]}' for line in list_lot_and_qty])
-        list_using_tabs = '\n'.join([f'{line["lot_name"]}\t{line["qty"]}' for line in list_lot_and_qty])
-        # Runs the same test's asserts with two different lists.
-        for stringified_list in [list_using_semicolon, list_using_tabs]:
-            move = self.get_new_move(product=product_serial)
-            move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-            with move_form.move_line_nosuggest_ids.new() as line:
-                line.lot_name = stringified_list
-            move = move_form.save()
-            self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
-            for i, move_line in enumerate(move.move_line_ids):
-                self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
-                self.assertEqual(move_line.qty_done, 1, "qty can't be greater than 1 for serial")
 
     def test_generate_with_putaway_02(self):
         """

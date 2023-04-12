@@ -32,10 +32,9 @@ class TestStockLot(StockGenerateCommon):
         ]
         list_as_string = '\n'.join([f'{line["lot_name"]};{line["date"]}' for line in list_lot_and_qty])
         move = self.get_new_move(product=product_lot)
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = list_as_string
-        move = move_form.save()
+        import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+        import_lot_form.lots = list_as_string
+        import_lot_form.save().action_import_lot()
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
@@ -53,10 +52,9 @@ class TestStockLot(StockGenerateCommon):
         ]
         list_as_string = '\n'.join([f'{line["lot_name"]};{line["date"]}' for line in list_lot_and_qty])
         move = self.get_new_move(product=product_lot)
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = list_as_string
-        move = move_form.save()
+        import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+        import_lot_form.lots = list_as_string
+        import_lot_form.save().action_import_lot()
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
@@ -85,10 +83,9 @@ class TestStockLot(StockGenerateCommon):
         ]
         list_as_string = '\n'.join([f'{line["lot_name"]};{line["date"]}' for line in list_lot_and_qty])
         move = self.get_new_move(product=product_lot)
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = list_as_string
-        move = move_form.save()
+        import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+        import_lot_form.lots = list_as_string
+        import_lot_form.save().action_import_lot()
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
@@ -117,10 +114,9 @@ class TestStockLot(StockGenerateCommon):
         ]
         list_as_string = '\n'.join([f'{line["lot_name"]};{line["date"]}' for line in list_lot_and_qty])
         move = self.get_new_move(product=product_lot)
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = list_as_string
-        move = move_form.save()
+        import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+        import_lot_form.lots = list_as_string
+        import_lot_form.save().action_import_lot()
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
@@ -138,10 +134,9 @@ class TestStockLot(StockGenerateCommon):
         ]
         list_as_string = '\n'.join([f'{line["lot_name"]};{line["date"]}' for line in list_lot_and_qty])
         move = self.get_new_move(product=product_lot)
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = list_as_string
-        move = move_form.save()
+        import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+        import_lot_form.lots = list_as_string
+        import_lot_form.save().action_import_lot()
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
@@ -164,10 +159,9 @@ class TestStockLot(StockGenerateCommon):
         ]
         list_as_string = '\n'.join([f'{line["lot_name"]};{line["date"]}' for line in list_lot_and_qty])
         move = self.get_new_move(product=product_lot)
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = list_as_string
-        move = move_form.save()
+        import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+        import_lot_form.lots = list_as_string
+        import_lot_form.save().action_import_lot()
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
         for i, move_line in enumerate(move.move_line_ids):
             self.assertEqual(move_line.lot_name, list_lot_and_qty[i]['lot_name'])
@@ -198,10 +192,9 @@ class TestStockLot(StockGenerateCommon):
         ]
         list_as_string = '\n'.join(list_lot_and_qty)
         move = self.get_new_move(product=product_lot)
-        move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-        with move_form.move_line_nosuggest_ids.new() as line:
-            line.lot_name = list_as_string
-        move = move_form.save()
+        import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+        import_lot_form.lots = list_as_string
+        import_lot_form.save().action_import_lot()
         self.assertEqual(len(move.move_line_ids), len(list_lot_and_qty))
 
         self.assertEqual(move.move_line_ids[0].lot_name, "ln01")
@@ -249,10 +242,9 @@ class TestStockLot(StockGenerateCommon):
         user_lang.date_format = "%d/%m/%y"
         for lot_name in ["lot-001;20;4 Aug 2048", "lot-001\t04/08/2048\t20"]:
             move = self.get_new_move(product=product_lot)
-            move_form = Form(move, view='stock.view_stock_move_nosuggest_operations')
-            with move_form.move_line_nosuggest_ids.new() as line:
-                line.lot_name = lot_name
-            move = move_form.save()
+            import_lot_form = Form(self.env['stock.import.lot'].with_context(default_move_id=move.id))
+            import_lot_form.lots = lot_name
+            import_lot_form.save().action_import_lot()
             self.assertEqual(move.move_line_ids.lot_name, "lot-001")
             self.assertEqual(move.move_line_ids.qty_done, 20)
             self.assertEqual(move.move_line_ids.expiration_date, datetime(day=4, month=8, year=2048))

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_generate_serial" model="ir.ui.view">
+            <field name="name">view.generate.serial</field>
+            <field name="model">stock.generate.serial</field>
+            <field name="arch" type="xml">
+                <form string="Generate Serial Numbers">
+                    <group>
+                        <group>
+                            <field name="move_id" invisible="1"/>
+                            <field name="picking_code" invisible="1"/>
+                            <field name="move_location_dest_id" invisible="1"/>
+                            <field name="next_serial"/>
+                            <field name="next_serial_count"/>
+                            <field name="location_dest_id" attrs="{'invisible': [('picking_code', '=', 'outgoing')]}"/>
+                        </group>
+                    </group>
+                    <footer>
+                        <button name="action_generate_serial" string="Generate" type="object" class="btn-primary" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

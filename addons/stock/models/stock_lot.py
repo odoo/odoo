@@ -53,11 +53,11 @@ class StockLot(models.Model):
 
         lot_names = []
         for i in range(0, count):
-            lot_names.append('%s%s%s' % (
+            lot_names.append(('%s%s%s' % (
                 prefix,
                 str(initial_number + i).zfill(padding),
                 suffix
-            ))
+            ), 1)) # quantity=1 by default
         return lot_names
 
     @api.model
@@ -68,7 +68,7 @@ class StockLot(models.Model):
                 [('company_id', '=', company.id), ('product_id', '=', product.id)],
                 limit=1, order='id DESC')
             if last_serial:
-                return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1]
+                return self.env['stock.lot'].generate_lot_names(last_serial.name, 2)[1][0]
         return False
 
     @api.constrains('name', 'product_id', 'company_id')
