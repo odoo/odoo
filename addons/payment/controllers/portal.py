@@ -292,8 +292,13 @@ class WebsitePayment(http.Controller):
             'type': 'form_save' if acquirer.save_token != 'none' and partner_id else 'form',
         }
 
+        render_values = {}
         if order_id:
             values['sale_order_ids'] = [(6, 0, [order_id])]
+            order = request.env['sale.order'].sudo().browse(order_id)
+            render_values.update({
+                'billing_partner_id': order.partner_invoice_id.id,
+            })
         elif invoice_id:
             values['invoice_ids'] = [(6, 0, [invoice_id])]
 
@@ -308,10 +313,10 @@ class WebsitePayment(http.Controller):
 
         PaymentProcessing.add_payment_transaction(tx)
 
-        render_values = {
+        render_values.update({
             'partner_id': partner_id,
             'type': tx.type,
-        }
+        })
 
         return acquirer.sudo().render(tx.reference, float(amount), int(currency_id), values=render_values)
 
