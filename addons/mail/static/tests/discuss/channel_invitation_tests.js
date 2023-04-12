@@ -111,6 +111,6 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     await click("button[title='Create Group Chat']");
     assert.strictEqual(
         $(".o-mail-Discuss-threadName").val(),
-        "Mitchell Admin, TestPartner, TestPartner2"
+        "Mitchell Admin, TestPartner, and TestPartner2"
     );
 });
