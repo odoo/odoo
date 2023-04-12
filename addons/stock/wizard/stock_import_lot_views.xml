@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data>
+<record id="view_import_lot" model="ir.ui.view">
+    <field name="name">view.import.lot</field>
+    <field name="model">stock.import.lot</field>
+    <field name="arch" type="xml">
+        <form string="Import Serials/Lots">
+            <div class="alert alert-warning" role="alert">
+                Paste your list of serials/lots here. Each line must
+                contain a lot/SN plus optional quantity and/or expiry
+                date, separated by space or semicolon.
+            </div>
+            <group>
+                <group>
+                    <field name="picking_code" invisible="1"/>
+                    <field name="move_id" invisible="1"/>
+                    <field name="move_location_dest_id" invisible="1"/>
+                    <field name="lots"/>
+                    <field name="location_dest_id" attrs="{'invisible': [('picking_code', '=', 'outgoing')]}"/>
+                </group>
+            </group>
+            <footer>
+                <button name="action_import_lot" string="Import" type="object" class="btn-primary" data-hotkey="q"/>
+                <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z"/>
+            </footer>
+        </form>
+    </field>
+</record>
+</data>
+</odoo>

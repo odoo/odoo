@@ -154,6 +154,7 @@
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_type_entire_packs" invisible="1"/>
                     <field name="display_assign_serial" invisible="1"/>
+                    <field name="display_import_lot" invisible="1"/>
                     <field name="from_immediate_transfer" invisible="1"/>
                     <field name="product_uom_category_id" invisible="1"/>
                     <field name="display_clear_serial" invisible="1"/>
@@ -173,23 +174,6 @@
                                 <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}" /></span>
                                 <span><field name="product_uom" readonly="1" nolabel="1" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}" options="{'no_open': True}"/></span>
                             </div>
-                            <field name="next_serial"
-                                attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
-                            <label for="next_serial_count" attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
-                            <div class="o_row" attrs="{'invisible': [('display_assign_serial', '=', False)]}">
-                                <span><field name="next_serial_count"/></span>
-                                <button name="action_assign_serial_show_details" type="object"
-                                        class="btn-link" data-hotkey="k"
-                                        title="Assign Serial Numbers">
-                                    <span>Assign Serial Numbers</span>
-                                </button>
-                                <button name="action_clear_lines_show_details" type="object"
-                                        class="btn-link" data-hotkey="y"
-                                        title="Clear Lines"
-                                        attrs="{'invisible': [('display_clear_serial', '=', False)]}">
-                                    <span>Clear All</span>
-                                </button>
-                            </div>
                         </group>
                     </group>
                     <field name="move_line_ids"
@@ -197,8 +181,14 @@
                            context="{'tree_view_ref': 'stock.view_stock_move_line_operation_tree', 'default_product_uom_id': product_uom, 'default_picking_id': picking_id, 'default_move_id': id, 'default_product_id': product_id, 'default_location_id': location_id, 'default_location_dest_id': location_dest_id, 'default_company_id': company_id}"
                            widget="sml_x2_many"/>
                     <footer class="d-flex justify-content-between" attrs="{'invisible': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
-                        <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
-                        <button string="Discard" special="cancel" data-hotkey="z"/>
+                        <div>
+                            <button string="Confirm" special="save" data-hotkey="v" class="oe_highlight"/>
+                            <button string="Discard" special="cancel" data-hotkey="z"/>
+                        </div>
+                        <div>
+                            <button name="action_open_generate_serial" attrs="{'invisible': [('display_assign_serial', '=', False)]}" string="Generate Serials" type="object" class="float-end btn-link"/>
+                            <button name="action_open_import_lot" attrs="{'invisible': [('display_import_lot', '=', False)]}" string="Import Serials/Lots" type="object" class="float-end btn-link"/>
+                        </div>
                     </footer>
                     <footer class="oe_edit_only" attrs="{'invisible': ['|', '&amp;', ('state', '!=', 'cancel'), ('state', '!=', 'done'), '&amp;', ('state', '=', 'done'), ('is_locked', '!=', True)]}">
                         <button string="Close" special="cancel" data-hotkey="z"/>

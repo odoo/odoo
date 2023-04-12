@@ -880,6 +880,7 @@ class Picking(models.Model):
         picking_to_reset.do_unreserve()
         picking_to_reset.immediate_transfer = False
         picking_to_reset.move_ids.quantity_done = 0
+        picking_to_reset.move_ids.move_line_ids.unlink()
         picking_to_reset.move_ids.state = 'draft'
 
     def _action_done(self):

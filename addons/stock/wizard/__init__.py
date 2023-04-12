@@ -22,4 +22,5 @@ from . import stock_package_destination
 from . import stock_orderpoint_snooze
 from . import stock_request_count
 from . import stock_replenishment_info
-from . import stock_quant_reserve
+from . import stock_generate_serial
+from . import stock_import_lot
