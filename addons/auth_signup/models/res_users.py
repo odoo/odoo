@@ -197,15 +197,15 @@ class ResUsers(models.Model):
         for user in self:
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
-            if not self.check_password_reset_availability():
+            if not user.check_password_reset_availability():
                 raise UserError(_("You have asked for too many password resets, please wait a bit."))
             email_values['email_to'] = user.email
-            # TDE FIXME: make this template technical (qweb)            
+            # TDE FIXME: make this template technical (qweb)
             with self.env.cr.savepoint():
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
-            message = f"Password Reset Request for user {user.name}, id = {user.id}" 
+            message = f"Password Reset Request for user {user.name}, id = {user.id}"
             self.env['ir.logging'].create({
                         'name': 'Password Reset',
                         'type': 'client',
@@ -222,12 +222,7 @@ class ResUsers(models.Model):
         mails = self.env['ir.logging'].search([('name', '=', 'Password Reset'), ('message', '=', message)])
         if len(mails) < 3:
             return True
-        if mails[2]['create_date'] < fields.Datetime.now() - datetime.timedelta(minutes=1):
-            if mails[1]['create_date'] < fields.Datetime.now() - datetime.timedelta(minutes=1):
-                if mails[0]['create_date'] < fields.Datetime.now() - datetime.timedelta(minutes=1):
-                    mails[0].unlink()
-                mails[1].unlink()
-            mails[2].unlink()
+        if mails[2]['create_date'] < fields.Datetime.now() - datetime.timedelta(hours=6):
             return True
         return False
 
