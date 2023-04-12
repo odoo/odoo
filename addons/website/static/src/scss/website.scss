@@ -336,6 +336,9 @@ $-header-nav-link-height: $nav-link-height;
 // color, we handle that in JS because the inheritance mechanism would make the
 // header ugly if there is a color with transparency.
 #wrapwrap.o_header_overlay header:not(.o_header_is_scrolled) {
+    .js_language_selector, .js_language_selector > button, .js_change_lang, .o_add_language, .badge {
+        color: inherit !important;
+    }
     .nav-item.dropdown .dropdown-menu {
         color: inherit;
 
