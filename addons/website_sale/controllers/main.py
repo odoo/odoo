@@ -1494,7 +1494,7 @@ class WebsiteSale(http.Controller):
         portal_page_values = {
             'website_sale_order': order,
             'errors': [],
-            'partner': order.partner_id,
+            'partner': order.partner_invoice_id,
             'order': order,
             'payment_action_id': request.env.ref('payment.action_payment_provider').id,
         }
@@ -1799,7 +1799,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
-            'partner_id': order_sudo.partner_id.id,
+            'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
