@@ -15,7 +15,9 @@ $black: #000 !default;
 
 // The contrast ratio to reach against white, to determine if color changes from "light" to "dark". Acceptable values for WCAG 2.0 are 3, 4.5 and 7.
 // See https://www.w3.org/TR/WCAG20/#visual-audio-contrast-contrast
-$min-contrast-ratio: 3 !default;
+
+// Overridden here as it is a dependency for some variables/functions afterwards
+$min-contrast-ratio: $o-frontend-min-contrast-ratio !default;
 
 // Prefix for :root CSS variables
 $variable-prefix: '' !default;
