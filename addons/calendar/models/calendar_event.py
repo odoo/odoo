@@ -166,6 +166,7 @@ class Meeting(models.Model):
         'res.partner', 'calendar_event_res_partner_rel',
         string='Attendees', default=_default_partners)
     invalid_email_partner_ids = fields.Many2many('res.partner', compute='_compute_invalid_email_partner_ids')
+    attendees_count = fields.Integer('Attendees Count', compute='_compute_attendees_count')
     # alarms
     alarm_ids = fields.Many2many(
         'calendar.alarm', 'calendar_alarm_calendar_event_rel',
@@ -223,6 +224,11 @@ class Meeting(models.Model):
             event.invalid_email_partner_ids = event.partner_ids.filtered(
                 lambda a: not (a.email and single_email_re.match(a.email))
             )
+
+    @api.depends('attendee_ids')
+    def _compute_attendees_count(self):
+        for event in self:
+            event.attendees_count = len(event.attendee_ids)
 
     def _compute_is_highlighted(self):
         if self.env.context.get('active_model') == 'res.partner':

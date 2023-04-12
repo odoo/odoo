@@ -33,7 +33,7 @@ export class Many2ManyAttendee extends Many2ManyTagsAvatarField {
 export const many2ManyAttendee = {
     ...many2ManyTagsAvatarField,
     component: Many2ManyAttendee,
-    additionalClasses: ["o_field_many2many_tags_avatar"],
+    additionalClasses: ["o_field_many2many_tags_avatar", "w-100"],
     legacySpecialData: "_fetchSpecialAttendeeStatus",
 };
 

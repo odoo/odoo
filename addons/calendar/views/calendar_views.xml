@@ -284,24 +284,25 @@
                 event_open_popup="true"
                 event_limit="5"
                 color="partner_ids">
+                <field name="location" attrs="{'invisible': [('location', '=', False)]}" options="{'icon': 'fa fa-map-marker'}"/>
                 <field name="attendee_status" invisible="1"/>
+                <field name="attendees_count" invisible="1"/>
                 <field name="partner_ids" options="{'block': True, 'icon': 'fa fa-users'}"
-                       filters="1" widget="many2manyattendee" write_model="calendar.filters"
+                       filters="1" widget="many2manyattendeeexpandable" write_model="calendar.filters"
                        write_field="partner_id" filter_field="partner_checked" avatar_field="avatar_128"
                 />
                 <field name="videocall_location" widget="url" text="Join Video Call" options="{'icon': 'fa fa-lg fa-video-camera'}" attrs="{'invisible': [('videocall_location', '=', False)]}"/>
                 <field name="is_highlighted" invisible="1"/>
                 <field name="is_organizer_alone" invisible="1"/>
                 <field name="display_description" invisible="1"/>
-                <field name="location" attrs="{'invisible': [('location', '=', False)]}"/>
-                <field name="description" attrs="{'invisible': [('display_description', '=', False)]}"/>
-                <field name="privacy"/>
-                <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}"/>
-                <field name="categ_ids" attrs="{'invisible': [('categ_ids', '=', [])]}"/>
+                <field name="description" attrs="{'invisible': [('display_description', '=', False)]}" options="{'icon': 'fa fa-bars'}"/>
+                <field name="privacy" invisible="1"/>
+                <field name="alarm_ids" attrs="{'invisible': [('alarm_ids', '=', [])]}" options="{'icon': 'fa fa-bell-o'}"/>
+                <field name="categ_ids" attrs="{'invisible': [('categ_ids', '=', [])]}" options="{'icon': 'fa fa-tag'}"/>
                 <!-- For recurrence update Dialog -->
                 <field name="recurrency" invisible="1"/>
                 <field name="recurrence_update" invisible="1"/>
-                <field name="partner_id" string="Organizer"/>
+                <field name="partner_id" string="Organizer" options="{'icon': 'fa fa-user-o'}"/>
             </calendar>
         </field>
     </record>
