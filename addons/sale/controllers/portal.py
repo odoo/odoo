@@ -306,7 +306,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
-            'partner_id': order_sudo.partner_id.id,
+            'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions tokenizing the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values
@@ -349,7 +349,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
             kwargs.update({
                 'currency_id': order_sudo.currency_id.id,
-                'partner_id': order_sudo.partner_id.id,
+                'partner_id': order_sudo.partner_invoice_id.id,
                 'company_id': order_sudo.company_id.id,
                 'sale_order_id': sale_order_id,
             })
