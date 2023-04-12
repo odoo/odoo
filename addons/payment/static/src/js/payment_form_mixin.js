@@ -1,12 +1,11 @@
-odoo.define('payment.payment_form_mixin', require => {
-    'use strict';
+/** @odoo-module alias=payment.payment_form_mixin **/
 
-    const core = require('web.core');
-    const Dialog = require('web.Dialog');
+    import core from "web.core";
+    import Dialog from "web.Dialog";
 
     const _t = core._t;
 
-    return {
+    export default {
 
         /**
          * @override
@@ -45,8 +44,8 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {boolean} showLoadingAnimation - Whether a spinning loader should be shown
          * @return {undefined}
          */
-        _disableButton: (showLoadingAnimation = true) => {
-            const $submitButton = this.$('button[name="o_payment_submit_button"]');
+        _disableButton(showLoadingAnimation = true) {
+            const $submitButton = $('button[name="o_payment_submit_button"]');
             const iconClass = $submitButton.data('icon-class');
             $submitButton.attr('disabled', true);
             if (showLoadingAnimation) {
@@ -211,7 +210,9 @@ odoo.define('payment.payment_form_mixin', require => {
          * @return {number} The provider id or the token id or of the payment option linked to the
          *                  radio button.
          */
-        _getPaymentOptionIdFromRadio: radio => $(radio).data('payment-option-id'),
+        _getPaymentOptionIdFromRadio(radio) {
+            return $(radio).data('payment-option-id');
+        },
 
         /**
          * Determine and return the provider of the selected payment option.
@@ -220,7 +221,9 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {HTMLInputElement} radio - The radio button linked to the payment option
          * @return {number} The provider of the payment option linked to the radio button.
          */
-        _getProviderFromRadio: radio => $(radio).data('provider'),
+        _getProviderFromRadio(radio) {
+            return $(radio).data('provider');
+        },
 
         /**
          * Remove the error in the provider form.
@@ -228,7 +231,9 @@ odoo.define('payment.payment_form_mixin', require => {
          * @private
          * @return {jQuery} The removed error
          */
-        _hideError: () => this.$('div[name="o_payment_error"]').remove(),
+        _hideError() {
+            return $('div[name="o_payment_error"]').remove();
+        },
 
         /**
          * Collapse all inline forms.
@@ -236,7 +241,9 @@ odoo.define('payment.payment_form_mixin', require => {
          * @private
          * @return {undefined}.
          */
-        _hideInlineForms: () => this.$('[name="o_payment_inline_form"]').addClass('d-none'),
+        _hideInlineForms() {
+            return $('[name="o_payment_inline_form"]').addClass('d-none');
+        },
 
         /**
          * Hide the "Save my payment details" label and checkbox, and the submit button.
@@ -322,7 +329,9 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {string} flow - The online payment flow of the selected payment option
          * @return {Promise}
          */
-        _prepareInlineForm: (code, paymentOptionId, flow) => Promise.resolve(),
+        _prepareInlineForm(code, paymentOptionId, flow) {
+            return Promise.resolve();
+        },
 
         /**
          * Process the payment.
@@ -376,7 +385,9 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {object} processingValues - The processing values of the transaction
          * @return {Promise}
          */
-        _processDirectPayment: (code, providerId, processingValues) => Promise.resolve(),
+        _processDirectPayment(code, providerId, processingValues) {
+            return Promise.resolve();
+        },
 
         /**
          * Redirect the customer by submitting the redirect form included in the processing values.
@@ -390,7 +401,7 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {object} processingValues - The processing values of the transaction
          * @return {undefined}
          */
-        _processRedirectPayment: (code, providerId, processingValues) => {
+        _processRedirectPayment(code, providerId, processingValues) {
             // Append the redirect form to the body
             const $redirectForm = $(processingValues.redirect_form_html).attr(
                 'id', 'o_payment_redirect_form'
@@ -415,7 +426,7 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {object} processingValues - The processing values of the transaction
          * @return {undefined}
          */
-        _processTokenPayment: (provider_code, tokenId, processingValues) => {
+        _processTokenPayment(provider_code, tokenId, processingValues) {
             // The flow is already completed as payments by tokens are immediately processed
             window.location = '/payment/status';
         },
@@ -470,7 +481,7 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {Event} ev
          * @return {undefined}
          */
-        _onClickLessPaymentIcons: ev => {
+        _onClickLessPaymentIcons(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             // Hide the extra payment icons, and the "show less" button
@@ -490,7 +501,7 @@ odoo.define('payment.payment_form_mixin', require => {
          * @param {Event} ev
          * @return {undefined}
          */
-        _onClickMorePaymentIcons: ev => {
+        _onClickMorePaymentIcons(ev) {
             ev.preventDefault();
             ev.stopPropagation();
             // Display all the payment methods icons, and the "show less" button
@@ -529,5 +540,3 @@ odoo.define('payment.payment_form_mixin', require => {
         },
 
     };
-
-});

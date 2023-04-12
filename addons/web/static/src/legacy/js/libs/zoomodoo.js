@@ -1,5 +1,4 @@
-odoo.define('web.zoomodoo', function (require) {
-'use strict';
+/** @odoo-module alias=web.zoomodoo **/
 
 /**
     This code has been more that widely inspired by easyZoom library.
@@ -350,4 +349,3 @@ $.fn.zoomOdoo = function (options) {
         }
     });
 };
-});

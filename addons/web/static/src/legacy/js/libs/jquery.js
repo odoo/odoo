@@ -1,5 +1,4 @@
-odoo.define('web.jquery.extensions', function () {
-'use strict';
+/** @odoo-module **/
 
 /**
  * The jquery library extensions and fixes should be done here to avoid patching
@@ -228,4 +227,3 @@ $.fn.animate = function (properties, ...rest) {
     }
     return originalAnimate.call(this, props, ...rest);
 };
-});

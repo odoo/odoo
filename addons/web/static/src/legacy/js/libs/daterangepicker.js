@@ -1,5 +1,4 @@
-odoo.define('web.daterangepicker.extensions', function () {
-'use strict';
+/** @odoo-module **/
 
 /**
  * Don't allow user to select off days(Dates which are out of current calendar).
@@ -20,5 +19,3 @@ daterangepicker.prototype.move = function () {
     this.drops = this.container.height() < offset.top ? 'up' : 'down';
     moveFunction.apply(this, arguments);
 };
-
-});

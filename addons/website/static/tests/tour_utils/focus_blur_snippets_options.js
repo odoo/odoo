@@ -1,7 +1,6 @@
-odoo.define('website.tour_focus_blur_snippets_options', function (require) {
-'use strict';
+/** @odoo-module **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 const FocusBlur = options.Class.extend({
     onFocus() {
@@ -15,5 +14,3 @@ const FocusBlur = options.Class.extend({
 options.registry.FocusBlurParent = FocusBlur.extend({focusBlurName: 'parent'});
 options.registry.FocusBlurChild1 = FocusBlur.extend({focusBlurName: 'child1'});
 options.registry.FocusBlurChild2 = FocusBlur.extend({focusBlurName: 'child2'});
-
-});
