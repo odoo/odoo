@@ -1,5 +1,4 @@
-odoo.define('web.autocomplete.extensions', function () {
-'use strict';
+/** @odoo-module **/
 
 /**
  * The jquery autocomplete library extensions and fixes should be done here to
@@ -34,5 +33,4 @@ $.extend(proto, {
             .appendTo( ul )
             .addClass(item.classname);
     },
-});
 });

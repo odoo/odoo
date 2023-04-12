@@ -1,7 +1,6 @@
-odoo.define('mass_mailing.masonryOptions', function (require) {
-'use strict';
+/** @odoo-module alias=mass_mailing.masonryOptions **/
 
-const options = require('web_editor.snippets.options');
+import options from "web_editor.snippets.options";
 
 options.registry.MasonryLayout = options.registry.SelectTemplate.extend({
     /**
@@ -12,5 +11,4 @@ options.registry.MasonryLayout = options.registry.SelectTemplate.extend({
         this.containerSelector = '> .container, > .container-fluid, > .o_container_small';
         this.selectTemplateWidgetName = 'masonry_template_opt';
     },
-});
 });

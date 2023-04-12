@@ -1,3 +1,4 @@
+/** @odoo-module alias=web.contentdisposition **/
 /*
 (The MIT License)
 
@@ -26,8 +27,6 @@ SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 /**
  * Stripped down to only parsing/decoding.
  */
-odoo.define('web.contentdisposition', function () {
-'use strict';
 
 /**
  * RegExp to match percent encoding escape.
@@ -243,7 +242,6 @@ function ContentDisposition(type, parameters) {
     this.parameters = parameters
 }
 
-return {
-    parse: parse,
+export default {
+    parse,
 };
-});

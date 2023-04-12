@@ -5,7 +5,7 @@ import { _lt } from "@web/core/l10n/translation";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
 import { initializeDesignTabCss } from "mass_mailing.design_constants";
 import { toInline, getCSSRules } from "web_editor.convertInline";
-import { loadBundle, loadJS } from "@web/core/assets";
+import { getBundle, loadBundle, loadJS } from "@web/core/assets";
 import { qweb } from 'web.core';
 import { useService } from "@web/core/utils/hooks";
 import { buildQuery } from "web.rpc";
@@ -142,16 +142,8 @@ export class MassMailingHtmlField extends HtmlField {
     async startWysiwyg(...args) {
         await super.startWysiwyg(...args);
 
-        await loadBundle({
-            jsLibs: [
-                '/mass_mailing/static/src/js/mass_mailing_link_dialog_fix.js',
-                '/mass_mailing/static/src/js/mass_mailing_snippets.js',
-                '/mass_mailing/static/src/snippets/s_masonry_block/options.js',
-                '/mass_mailing/static/src/snippets/s_media_list/options.js',
-                '/mass_mailing/static/src/snippets/s_showcase/options.js',
-                '/mass_mailing/static/src/snippets/s_rating/options.js',
-            ],
-        });
+        const assets = await getBundle("mass_mailing.assets_wysiwyg");
+        await loadBundle(assets);
 
         await this._resetIframe();
     }
