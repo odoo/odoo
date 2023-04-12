@@ -7,8 +7,8 @@
         <field name="inherit_id" ref="account.view_account_payment_register_form"/>
         <field name="arch" type="xml">
             <group name="group2">
-                <label for="withholding_ids" colspan="2"/>
-                <field name="withholding_ids" nolabel="1" colspan="2">
+                <label for="withholding_ids" colspan="2" attrs="{'invisible': [('country_code', '!=', 'AR')]}"/>
+                <field name="withholding_ids" nolabel="1" colspan="2" attrs="{'invisible': [('country_code', '!=', 'AR')]}">
                     <tree editable="bottom">
                         <field name="tax_id" domain="[('l10n_ar_withholding', '=', parent.partner_type), ('company_id', '=', parent.company_id)]" options="{'no_open': True, 'no_create': True}"/>
                         <field name="name"/>

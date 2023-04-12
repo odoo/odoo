@@ -11,7 +11,7 @@ class AccountTax(models.Model):
         ('untaxed_amount', 'Untaxed Amount'),
         ('tax_amount', 'Tax Amount'),
         ('total_amount', 'Total Amount'),
-    ], 'Base Amount', help='Base amount used to get withholding amount',)
+    ], 'Withholding Base Amount', help='Base amount used to get withholding amount',)
     l10n_ar_withholding_sequence_id = fields.Many2one(
         'ir.sequence', 'Withholding Number Sequence', copy=False,
         domain=[('code', '=', 'l10n_ar.account.tax.withholding')],

@@ -7,17 +7,19 @@
         <field name="inherit_id" ref="account.view_account_payment_form" />
         <field name="arch" type="xml">
             <group position="inside">
-                <group name="group4" string="Withholdings">
+                <group name="group4" string="Withholdings" attrs="{'invisible': [('country_code', '!=', 'AR')]}">
                     <field name="withholding_ids" nolabel="1" colspan="2"
-                        attrs="{'invisible': [('is_internal_transfer', '=', True)]}"
-                        context="{'journal_id': journal_id, 'default_currency_id': currency_id}">
-                        <tree editable="bottom" string="Journal Items" default_order="sequence, date desc, move_name desc, id">
+                        attrs="{'invisible': ['|', ('is_internal_transfer', '=', True), ('country_code', '!=', 'AR')]}"
+                        context="{'journal_id': journal_id, 'default_currency_id': currency_id}" readonly="True">
+                        <tree editable="bottom">
                             <field name="move_name" invisible="1"/>
-                            <field name="tax_line_id" readonly="0" string="Tax" domain="[('company_id', '=', parent.company_id)]" required="1"/>
-                            <!-- <field name="tax_line_id" readonly="0" domain="[('type_tax_use', '=', parent.partner_type), ('company_id', '=', parent.company_id)]" required="1"/> -->
+                            <field name="tax_line_id" domain="[('l10n_ar_withholding', '=', parent.partner_type), ('company_id', '=', parent.company_id)]" options="{'no_open': True, 'no_create': True}" required="1" readonly="0" string="Tax"/>
                             <field name="name" required="1"/>
-                            <field name="tax_base_amount" readonly="0" required="1"/>
-                            <field name="balance" readonly="0" required="1" string="Amount" sum="Total"/>
+                            <!-- TODO tal vez deberíamos crear un campo tax_base_amount_currency y mostrarlo? -->
+                            <!-- <field name="tax_base_amount" readonly="0" required="1"/> -->
+                            <!-- <field name="tax_base_amount_currency" readonly="0" required="1"/> -->
+                            <!-- <field name="balance" readonly="0" required="1" string="Amount" sum="Total"/> -->
+                            <field name="amount_currency" readonly="0" required="1" string="Amount" sum="Total"/>
                         </tree>
                     </field>
                 </group>

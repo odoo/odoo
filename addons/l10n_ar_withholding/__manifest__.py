@@ -23,8 +23,6 @@ Technical
         'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
     ],
-    'demo': [
-    ],
     'installable': True,
     'auto_install': False,
     'application': False,
