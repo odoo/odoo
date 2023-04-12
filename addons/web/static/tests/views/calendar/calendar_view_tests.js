@@ -1353,7 +1353,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(groups[0], ".o_field_char", "should apply char widget");
         assert.strictEqual(
             groups[0].querySelector("strong").textContent,
-            "Custom Name : ",
+            "Custom Name: ",
             "label should be a 'Custom Name'"
         );
         assert.strictEqual(
@@ -1364,7 +1364,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(groups[1], ".o_form_uri", "should apply m20 widget");
         assert.strictEqual(
             groups[1].querySelector("strong").textContent,
-            "user : ",
+            "user: ",
             "label should be a 'user'"
         );
         assert.strictEqual(
@@ -4688,7 +4688,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.strictEqual(
             target.querySelector(".o_cw_popover .o_cw_popover_fields_secondary").textContent,
-            "user : name : event 4"
+            "user: name: event 4"
         );
     });
 
