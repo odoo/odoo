@@ -170,13 +170,23 @@ class AccountAnalyticLine(models.Model):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
             return self.env['ir.rule']._compute_domain(self._name)
-        return ['&',
+        return [
+            '|',
+                '&',
                     '|', '|', '|',
-                    ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                    ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                    ('task_id.project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
-                    ('task_id.allowed_user_ids', 'in', [self.env.user.id]),
-                ('task_id.project_id.privacy_visibility', '=', 'portal')]
+                        ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                        ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                        ('task_id.project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
+                        ('task_id.allowed_user_ids', 'in', [self.env.user.id]),
+                    ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                '&',
+                    ('task_id', '=', False),
+                    '&',
+                        '|',
+                            ('project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                            ('project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
+                        ('project_id.privacy_visibility', '=', 'portal')
+        ]
 
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.
