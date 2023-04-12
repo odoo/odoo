@@ -9,7 +9,7 @@ import {
 } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
-import { groupBy as arrayGroupBy, sortBy as arraySortBy } from "@web/core/utils/arrays";
+import { sortBy as arraySortBy } from "@web/core/utils/arrays";
 
 class UnimplementedRouteError extends Error {}
 
@@ -207,7 +207,7 @@ export class SampleServer {
         if (["date", "datetime"].includes(type)) {
             const fmt = SampleServer.FORMATS[interval];
             return parseDate(value).toFormat(fmt);
-        } else if (type === "many2one") {
+        } else if (["many2many", "many2one"].includes(type)) {
             const rec = this.data[relation].records.find(({ id }) => id === value);
             return [value, rec.display_name];
         } else {
@@ -450,20 +450,44 @@ export class SampleServer {
                 normalizedGroupBys.push(gb);
             }
         }
-        const groups = arrayGroupBy(records, (record) => {
-            const vals = {};
+        const groups = {};
+        for (const record of records) {
+            let valsList = [{}];
             for (const gb of normalizedGroupBys) {
                 const { fieldName, type } = gb;
                 let value;
-                if (["date", "datetime"].includes(type)) {
+                if (type === "many2many") {
+                    const newValsList = [];
+                    for (const vals of valsList) {
+                        for (const relId of record[fieldName]) {
+                            const newVals = Object.assign({}, vals);
+                            newVals[fieldName] = relId;
+                            newValsList.push(newVals);
+                        }
+                    }
+                    valsList = newValsList;
+                    continue;
+                } else if (["date", "datetime"].includes(type)) {
                     value = this._formatValue(record[fieldName], gb);
                 } else {
                     value = record[fieldName];
                 }
-                vals[fieldName] = value;
+                for (const vals of valsList) {
+                    vals[fieldName] = value;
+                }
             }
-            return JSON.stringify(vals);
-        });
+            for (const vals of valsList) {
+                const key = JSON.stringify(vals);
+                if (!groups[key]) {
+                    groups[key] = {
+                        records: [],
+                        vals,
+                    }
+                }
+                groups[key].records.push(record);
+            }
+        }
+
         const measures = [];
         for (const measureSpec of params.fields || Object.keys(fields)) {
             const matches = measureSpec.match(MEASURE_SPEC_REGEX);
@@ -484,20 +508,19 @@ export class SampleServer {
 
         let result = [];
         for (const id in groups) {
-            const records = groups[id];
+            const { records, vals } = groups[id];
             const group = { __domain: [] };
             let countKey = `__count`;
             if (normalizedGroupBys.length && lazy) {
                 countKey = `${normalizedGroupBys[0].fieldName}_count`;
             }
             group[countKey] = records.length;
-            const firstElem = records[0];
             for (const gb of normalizedGroupBys) {
                 const { alias, fieldName, type } = gb;
-                group[alias] = this._formatValue(firstElem[fieldName], gb);
+                const val = vals[fieldName];
+                group[alias] = this._formatValue(val, gb);
                 if (["date", "datetime"].includes(type)) {
                     group.__range = {};
-                    const val = firstElem[fieldName];
                     if (val) {
                         const deserialize = type === "date" ? deserializeDate : deserializeDateTime;
                         const serialize = type === "date" ? serializeDate : serializeDateTime;
