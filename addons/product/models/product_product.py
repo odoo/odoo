@@ -411,6 +411,7 @@ class ProductProduct(models.Model):
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):
         # TDE FIXME: strange
         if self._context.get('search_default_categ_id'):
+            domain = domain.copy()
             domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
