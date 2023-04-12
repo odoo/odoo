@@ -228,13 +228,25 @@ class AccountTax(models.Model):
     def _parse_name_search(name):
         """
         Parse the name to search the taxes faster.
-        Technical:  0EUM    => 0%E%U%M
-                    21M     => 2%1%M%   where the % represents 0, 1 or multiple characters in a SQL 'LIKE' search.
-        Examples:   0EUM    => VAT 0% EU M.
-                    21M     => 21% M , 21% EU M and 21% M.Cocont.
+        Technical:  0EUM      => 0%E%U%M
+                    21M       => 2%1%M%   where the % represents 0, 1 or multiple characters in a SQL 'LIKE' search.
+                    21" M"    => 2%1% M%
+                    21" M"co  => 2%1% M%c%o%
+        Examples:   0EUM      => VAT 0% EU M.
+                    21M       => 21% M , 21% EU M, 21% M.Cocont and 21% EX M.
+                    21" M"    => 21% M and 21% M.Cocont.
+                    21" M"co  => 21% M.Cocont.
         """
-        name = re.sub(r"\W+", "", name)  # Remove non-alphanumeric characters.
-        return '%'.join(list(name))
+        regex = r"(\"[^\"]*\")"
+        list_name = re.split(regex, name)
+        for i, name in enumerate(list_name.copy()):
+            if not name:
+                continue
+            if re.search(regex, name):
+                list_name[i] = "%" + name.replace("%", "_").replace("\"", "") + "%"
+            else:
+                list_name[i] = '%'.join(re.sub(r"\W+", "", name))
+        return ''.join(list_name)
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None, name_get_uid=None):
