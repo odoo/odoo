@@ -259,8 +259,12 @@ class Check {
     checkSecondCashClosingDetailsLineAmount(amount, sign) {
         return [
             {
+                content: 'Open menu',
+                trigger: '.menu-button',
+            },
+            {
                 content: 'Click close session button',
-                trigger: '.fa-sign-out',
+                trigger: '.header-button',
             },
             {
                 content: 'Check closing details',

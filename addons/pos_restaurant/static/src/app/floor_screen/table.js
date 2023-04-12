@@ -24,16 +24,38 @@ export class Table extends Component {
 
     get style() {
         const table = this.props.table;
-        return `
-            width: ${table.width}px;
-            height: ${table.height}px;
-            line-height: ${table.height}px;
-            top: ${table.position_v}px;
-            left: ${table.position_h}px;
-            border-radius: ${table.shape === "round" ? 1000 : 3}px;
-            background: ${table.color || "rgb(53, 211, 116)"};
-            font-size: ${table.height >= 150 && table.width >= 150 ? 32 : 16}px;
-        `;
+
+        if (this.env.pos.floorPlanStyle == "kanban") {
+            const floor = table.floor;
+            const index = floor.tables.indexOf(table);
+            const minWidth = 100 + 20;
+            const nbrHorizontal = Math.floor(window.innerWidth / minWidth);
+            const widthTable = (window.innerWidth - nbrHorizontal*10) / nbrHorizontal;
+            const position_h = widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
+            const position_v = widthTable * Math.floor(index / nbrHorizontal) + 5 + Math.floor(index / nbrHorizontal) * 10;
+            return `
+                width: ${widthTable}px;
+                height: ${widthTable}px;
+                line-height: ${widthTable}px;
+                top: ${position_v}px;
+                left: ${position_h}px;
+                border-radius: ${table.shape === "round" ? 1000 : 3}px;
+                background: ${table.color || "rgb(53, 211, 116)"};
+                font-size: ${widthTable >= 150 ? 32 : 16}px;
+            `;
+        } else {
+            return `
+                width: ${table.width}px;
+                height: ${table.height}px;
+                line-height: ${table.height}px;
+                top: ${table.position_v}px;
+                left: ${table.position_h}px;
+                border-radius: ${table.shape === "round" ? 1000 : 3}px;
+                background: ${table.color || "rgb(53, 211, 116)"};
+                font-size: ${table.height >= 150 && table.width >= 150 ? 32 : 16}px;
+            `;
+        }
+        
     }
     get fill() {
         const customerCount = this.env.pos.getCustomerCount(this.props.table.id);

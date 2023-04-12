@@ -10,7 +10,7 @@ patch(Chrome.prototype, "pos_restaurant.Chrome", {
      * `FloorScreen` is the start screen if there are floors.
      */
     get startScreen() {
-        if (this.env.pos.config.iface_floorplan) {
+        if (this.env.pos.config.is_table_management) {
             const table = this.env.pos.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {

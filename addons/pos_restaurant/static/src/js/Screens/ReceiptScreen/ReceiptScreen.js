@@ -23,12 +23,12 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
     },
     //@override
     _addNewOrder() {
-        if (!this.env.pos.config.iface_floorplan) {
+        if (!this.env.pos.config.is_table_management) {
             this._super(...arguments);
         }
     },
     isResumeVisible() {
-        if (this.env.pos.config.iface_floorplan &&
+        if (this.env.pos.config.is_table_management &&
             this.env.pos.table) {
                 return this.env.pos.getTableOrders(this.env.pos.table.id).length > 1;
             }
@@ -36,7 +36,7 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
     },
     //@override
     get nextScreen() {
-        if (this.env.pos.config.iface_floorplan) {
+        if (this.env.pos.config.is_table_management) {
             const table = this.env.pos.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {

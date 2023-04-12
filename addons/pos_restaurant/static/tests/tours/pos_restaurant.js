@@ -22,6 +22,7 @@ ProductScreen.check.selectedOrderlineHas("Water");
 ProductScreen.check.totalAmountIs("4.40");
 
 // Create 2nd order (paid)
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 ProductScreen.do.clickDisplayedProduct("Coca-Cola");
@@ -41,6 +42,7 @@ FloorScreen.do.clickTable("5");
 ProductScreen.check.totalAmountIs("4.40");
 
 // Create another draft order and go back to floor
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 ProductScreen.do.clickDisplayedProduct("Coca-Cola");
@@ -55,6 +57,7 @@ FloorScreen.check.orderCountSyncedInTableIs("5", "2");
 // Delete the first order then go back to floor
 FloorScreen.do.clickTable("5");
 ProductScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.deleteOrder("-0001");
 Chrome.do.confirmPopup();

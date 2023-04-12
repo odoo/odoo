@@ -259,8 +259,8 @@ steps = steps.concat([
         trigger: ".selection-item:contains('min_quantity ordering')",
     },
     {
-        content: "close the Point of Sale frontend",
-        trigger: ".header-button",
+        content: "open the navbar menu",
+        trigger: ".menu-button",
     },
     {
         content: "confirm closing the frontend",

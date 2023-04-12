@@ -27,6 +27,7 @@ ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod("Bank");
 PaymentScreen.do.clickValidate();
 TipScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 // order 2
@@ -34,6 +35,7 @@ ProductScreen.exec.addOrderline("Coca-Cola", "2", "2");
 ProductScreen.check.totalAmountIs("4.0");
 Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("2", "1");
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains("2", "Tipping");
 TicketScreen.do.clickDiscard();
@@ -47,6 +49,7 @@ ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod("Bank");
 PaymentScreen.do.clickValidate();
 TipScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 // order 4
@@ -54,6 +57,7 @@ ProductScreen.exec.addOrderline("Coca-Cola", "4", "2");
 ProductScreen.check.totalAmountIs("8.0");
 Chrome.do.backToFloor();
 FloorScreen.check.orderCountSyncedInTableIs("5", "1");
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.nthRowContains("4", "Tipping");
 
@@ -68,6 +72,7 @@ TipScreen.do.clickPercentTip("20%");
 TipScreen.check.inputAmountIs("0.40");
 Chrome.do.backToFloor();
 FloorScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 
 // Tip 25% on order3
@@ -81,6 +86,7 @@ TipScreen.do.clickPercentTip("25%");
 TipScreen.check.inputAmountIs("1.50");
 Chrome.do.backToFloor();
 FloorScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 
 // finalize order 4 then tip custom amount
@@ -101,6 +107,7 @@ Chrome.do.backToFloor();
 FloorScreen.check.isShown();
 
 // settle tips here
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectFilter("Tipping");
 TicketScreen.check.tipContains("1.00");
