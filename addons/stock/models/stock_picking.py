@@ -343,6 +343,7 @@ class Picking(models.Model):
         compute="_compute_location_id", store=True, precompute=True, readonly=False,
         check_company=True, required=True,
         states={'done': [('readonly', True)]})
+    is_return = fields.Boolean(string="Return or not", default=False)
     move_ids = fields.One2many('stock.move', 'picking_id', string="Stock Moves", copy=True)
     move_ids_without_package = fields.One2many(
         'stock.move', 'picking_id', string="Stock moves not in package", compute='_compute_move_without_package',
