@@ -18,27 +18,6 @@ from odoo.addons.auth_signup.models.res_partner import SignupError, now
 
 _logger = logging.getLogger(__name__)
 
-class ResUsersLog(models.Model):
-    _inherit = 'res.users.log'
-
-    target = fields.Integer(help='Provides information on the user the log points to')
-
-    @api.autovacuum
-    def _gc_user_logs(self):
-        self._cr.execute("""
-            DELETE FROM res_users_log log1 WHERE details='Login' 
-            AND EXISTS (
-                SELECT 1 FROM res_users_log log2
-                WHERE log1.create_uid = log2.create_uid
-                AND log1.create_date < log2.create_date
-            )
-        """)
-        counter = self._cr.rowcount
-        self._cr.execute("""
-            DELETE FROM res_users_log log1 WHERE details='Password Reset'
-        """)
-        _logger.info("GC'd %d user log entries", counter + self._cr.rowcount)
-
 class ResUsers(models.Model):
     _inherit = 'res.users'
 
@@ -221,18 +200,34 @@ class ResUsers(models.Model):
             if not self.check_password_reset_availability():
                 raise UserError(_("You have asked for too many password resets, please wait a bit."))
             email_values['email_to'] = user.email
-            # TDE FIXME: make this template technical (qweb)
+            # TDE FIXME: make this template technical (qweb)            
             with self.env.cr.savepoint():
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
-            self.env['res.users.log'].create({'details':'Password Reset', 'target':self.id})
+            message = f"Password Reset Request for user {user.name}, id = {user.id}" 
+            self.env['ir.logging'].create({
+                        'name': 'Password Reset',
+                        'type': 'client',
+                        'level': 'INFO',
+                        'dbname': self._cr.dbname,
+                        'message': message,
+                        'func': '',
+                        'path': '',
+                        'line': '',
+                    })
 
     def check_password_reset_availability(self):
-        mails = self.env['res.users.log'].search([('details', '=', 'Password Reset'), ('target', '=', self.id)])
+        message = f"Password Reset Request for user {self.name}, id = {self.id}"
+        mails = self.env['ir.logging'].search([('name', '=', 'Password Reset'), ('message', '=', message)])
         if len(mails) < 3:
             return True
         if mails[2]['create_date'] < fields.Datetime.now() - datetime.timedelta(minutes=1):
+            if mails[1]['create_date'] < fields.Datetime.now() - datetime.timedelta(minutes=1):
+                if mails[0]['create_date'] < fields.Datetime.now() - datetime.timedelta(minutes=1):
+                    mails[0].unlink()
+                mails[1].unlink()
+            mails[2].unlink()
             return True
         return False
 

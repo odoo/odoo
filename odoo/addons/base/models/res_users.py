@@ -246,8 +246,6 @@ class ResUsersLog(models.Model):
     # Currenly only uses the magical fields: create_uid, create_date,
     # for recording logins. To be extended for other uses (chat presence, etc.)
 
-    details = fields.Char(help='Provides details about the log')
-
     @api.autovacuum
     def _gc_user_logs(self):
         self._cr.execute("""
@@ -735,7 +733,7 @@ class Users(models.Model):
     def _update_last_login(self):
         # only create new records to avoid any side-effect on concurrent transactions
         # extra records will be deleted by the periodical garbage collection
-        self.env['res.users.log'].create({'details':'Login'}) # populated by defaults
+        self.env['res.users.log'].create({}) # populated by defaults
 
     @api.model
     def _get_login_domain(self, login):
