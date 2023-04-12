@@ -282,7 +282,7 @@ class SaleAdvancePaymentInv(models.TransientModel):
         if self.advance_payment_method == 'percentage':
             percentage = self.amount / 100
         else:
-            percentage = self.fixed_amount / order.amount_total
+            percentage = self.fixed_amount / order.amount_total if order.amount_total else 1
 
         order_lines = order.order_line.filtered(lambda l: not l.display_type)
         base_downpayment_lines_values = self._prepare_base_downpayment_line_values(order)
