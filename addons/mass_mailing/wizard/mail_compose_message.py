@@ -25,21 +25,32 @@ class MailComposeMessage(models.TransientModel):
             self.mass_mailing_id = mass_mailing.id
         return super()._action_send_mail(auto_commit=auto_commit)
 
-    def _prepare_mail_values(self, res_ids):
-        """ When being in mass mailing mode, add 'mailing.trace' values directly
-        in the o2m field of mail.mail. """
-        mail_values_all = super()._prepare_mail_values(res_ids)
+    def _prepare_mail_values(self, res_ids, mass_include_canceled=False):
+        """ If it is a mass mailing:
 
+        - Add 'mailing.trace' values directly in the o2m field for mail not canceled.
+        - If not mass_include_canceled, create mailing traces for the canceled mail
+        (created in sudo).
+        """
         # use only for allowed models in mass mailing
-        if (self.composition_mode != 'mass_mail' or
-            not self.mass_mailing_id or
-            not self.model_is_thread):
+        is_mass_mailing = self.composition_mode == 'mass_mail' and self.mass_mailing_id and self.model_is_thread
+        mail_values_all = super()._prepare_mail_values(res_ids,
+                                                       mass_include_canceled=mass_include_canceled or is_mass_mailing)
+
+        if not is_mass_mailing:
             return mail_values_all
 
+        canceled_message_traces_values = []
+        results = {}
         trace_values_all = self._prepare_mail_values_mailing_traces(mail_values_all)
         with file_open("mass_mailing/static/src/scss/mass_mailing_mail.scss", "r") as fd:
             styles = fd.read()
         for res_id, mail_values in mail_values_all.items():
+            if not mass_include_canceled and mail_values.get('state') == 'cancel':
+                if res_id in trace_values_all:
+                    canceled_message_traces_values.append(trace_values_all[res_id])
+                continue
+            results[res_id] = mail_values
             if mail_values.get('body_html'):
                 body = self.env['ir.qweb']._render(
                     'mass_mailing.mass_mailing_mail_layout',
@@ -54,7 +65,9 @@ class MailComposeMessage(models.TransientModel):
                 'mailing_id': self.mass_mailing_id.id,
                 'mailing_trace_ids': [(0, 0, trace_values_all[res_id])] if res_id in trace_values_all else False,
             })
-        return mail_values_all
+        self.env['mailing.trace'].sudo().create(canceled_message_traces_values)
+
+        return results
 
     def _get_done_emails(self, mail_values_dict):
         seen_list = super()._get_done_emails(mail_values_dict)

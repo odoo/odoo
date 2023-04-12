@@ -39,6 +39,7 @@ class TestMailTemplate(MailCommon):
 
     @users('employee')
     def test_mail_compose_message_content_from_template_mass_mode(self):
+        self.mail_template.use_default_to = True
         mail_compose_message = self.env['mail.compose.message'].create({
             'composition_mode': 'mass_mail',
             'model': 'res.partner',

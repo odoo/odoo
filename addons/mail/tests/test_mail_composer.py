@@ -220,6 +220,7 @@ class TestMailComposerRendering(TestMailComposer):
 
     @users('employee')
     def test_mail_mass_mode_template_with_mso(self):
+        self.mail_template.use_default_to = True
         mail_compose_message = self.env['mail.compose.message'].create({
             'composition_mode': 'mass_mail',
             'model': 'res.partner',
