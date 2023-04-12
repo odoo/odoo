@@ -46,8 +46,12 @@ export class ActivityArchParser extends XMLParser {
             // Keep track of last update so images can be reloaded when they may have changed.
             if (node.tagName === "img") {
                 const attSrc = node.getAttribute("t-att-src");
-                if (attSrc && /\bactivity_image\b/.test(attSrc) && !fieldNodes.write_date) {
-                    fieldNodes.write_date = { type: "datetime" };
+                if (
+                    attSrc &&
+                    /\bactivity_image\b/.test(attSrc) &&
+                    !Object.values(fieldNodes).some((f) => f.name === "write_date")
+                ) {
+                    fieldNodes.write_date_0 = { name: "write_date", type: "datetime" };
                 }
             }
 
