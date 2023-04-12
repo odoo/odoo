@@ -880,4 +880,50 @@ QUnit.module("test_mail", {}, function () {
         });
         assert.containsN(document.body, ".luxon", 2);
     });
+
+    QUnit.test("test displaying image (write_date field)", async (assert) => {
+        // the presence of write_date field ensures that the image is reloaded when necessary
+        assert.expect(2);
+
+        Object.assign(serverData.views, {
+            "mail.test.activity,false,activity": `
+            <activity string="MailTestActivity">
+                <templates>
+                    <div t-name="activity-box">
+                        <img t-att-src="activity_image('partner', 'image', record.id.raw_value)"/>
+                        <field name="id"/>
+                    </div>
+                </templates>
+            </activity>`,
+        });
+
+        const { target, openView } = await start({
+            serverData,
+            mockRPC(route, { method, kwargs }, result) {
+                if (method === "web_search_read") {
+                    assert.deepEqual(kwargs.fields, ["write_date", "id"]);
+                    return Promise.resolve({
+                        length: 2,
+                        records: [
+                            { id: 1, write_date: "2022-08-05 08:37:00" },
+                            { id: 2, write_date: "2022-08-05 08:37:00" },
+                        ],
+                    });
+                }
+            },
+        });
+        await openView({
+            res_model: "mail.test.activity",
+            views: [[false, "activity"]],
+        });
+
+        assert.ok(
+            target
+                .querySelector(".o_activity_record img")
+                .dataset.src.endsWith(
+                    "/web/image?model=partner&field=image&id=2&unique=1659688620000"
+                ),
+            "image src is the preview image given in option"
+        );
+    });
 });
