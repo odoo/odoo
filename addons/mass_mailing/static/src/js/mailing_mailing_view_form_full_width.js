@@ -30,6 +30,7 @@ export class MassMailingFullWidthViewController extends formView.Controller {
         });
         onWillUnmount(() => {
             $('.o_content').off('.repositionMailingEditorSidebar');
+            this._resizeObserver.disconnect();
         });
     }
     //--------------------------------------------------------------------------
