@@ -163,6 +163,15 @@ var MassMailingFieldHtml = FieldHtml.extend({
 
     /**
      * @override
+     */
+    _renderReadonly: function () {
+        if (!this.value) {
+            this.value = this.recordData[this.nodeOptions['inline-field']];
+        }
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * @override
      * @returns {JQuery}
      */
     _renderTranslateButton: function () {
