@@ -3699,6 +3699,9 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
+        for move in self:
+            if move.is_invoice(include_receipts=True) and not move.vat_date:
+                move.vat_date = move.date
         moves_with_payments = self.filtered('payment_id')
         other_moves = self - moves_with_payments
         if moves_with_payments:
