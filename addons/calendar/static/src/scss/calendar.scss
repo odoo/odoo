@@ -1,3 +1,10 @@
+.o_cw_popover .o_cw_popover_fields_secondary {
+    max-height: 75vh;
+    & > li > div {
+        min-width: 0;
+    }
+}
+
 .o_calendar_invitation {
     @extend .o_status;
 
@@ -63,6 +70,10 @@
     &.o_meeting_bold {
         font-weight: bold;
     }
+}
+
+.o_cw_body {
+    max-width: 328px;
 }
 
 .o_cw_body .o_field_copy {
