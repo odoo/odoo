@@ -71,49 +71,49 @@ export function checkFilterFieldMatching(fieldMatchings) {
  * @returns {Domain|undefined}
  */
 export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldType) {
-    let endDate = now.minus({ day: 1 }).endOf("day");
+    const startOfNextDay = now.plus({ days: 1 }).startOf("day");
+    let endDate = now.endOf("day");
     let startDate = endDate;
     switch (rangeType) {
         case "last_week": {
-            const offsetParam = { day: 7 * offset };
+            const offsetParam = { days: 7 * offset };
             endDate = endDate.plus(offsetParam);
-            startDate = now.minus({ day: 7 }).plus(offsetParam);
+            startDate = startOfNextDay.minus({ days: 7 }).plus(offsetParam);
             break;
         }
         case "last_month": {
-            const offsetParam = { day: 30 * offset };
+            const offsetParam = { days: 30 * offset };
             endDate = endDate.plus(offsetParam);
-            startDate = now.minus({ day: 30 }).plus(offsetParam);
+            startDate = startOfNextDay.minus({ days: 30 }).plus(offsetParam);
             break;
         }
         case "last_three_months": {
-            const offsetParam = { day: 90 * offset };
+            const offsetParam = { days: 90 * offset };
             endDate = endDate.plus(offsetParam);
-            startDate = now.minus({ day: 90 }).plus(offsetParam);
+            startDate = startOfNextDay.minus({ days: 90 }).plus(offsetParam);
             break;
         }
         case "last_six_months": {
-            const offsetParam = { day: 180 * offset };
+            const offsetParam = { days: 180 * offset };
             endDate = endDate.plus(offsetParam);
-            startDate = now.minus({ day: 180 }).plus(offsetParam);
+            startDate = startOfNextDay.minus({ days: 180 }).plus(offsetParam);
             break;
         }
         case "last_year": {
-            const offsetParam = { day: 365 * offset };
+            const offsetParam = { days: 365 * offset };
             endDate = endDate.plus(offsetParam);
-            startDate = now.minus({ day: 365 }).plus(offsetParam);
+            startDate = startOfNextDay.minus({ days: 365 }).plus(offsetParam);
             break;
         }
         case "last_three_years": {
-            const offsetParam = { day: 3 * 365 * offset };
+            const offsetParam = { days: 3 * 365 * offset };
             endDate = endDate.plus(offsetParam);
-            startDate = now.minus({ day: 3 * 365 }).plus(offsetParam);
+            startDate = startOfNextDay.minus({ days: 3 * 365 }).plus(offsetParam);
             break;
         }
         default:
             return undefined;
     }
-    startDate = startDate.startOf("day");
 
     let leftBound, rightBound;
     if (fieldType === "date") {

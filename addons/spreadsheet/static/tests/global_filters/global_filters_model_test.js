@@ -1285,32 +1285,32 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         await addGlobalFilter(model, { filter }, { pivot: { 1: { chain: "date", type: "date" } } });
         let computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 7);
-        assertDateDomainEqual(assert, "date", "2022-05-09", "2022-05-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2022-05-10", "2022-05-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_month" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 30);
-        assertDateDomainEqual(assert, "date", "2022-04-16", "2022-05-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2022-04-17", "2022-05-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_three_months" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 90);
-        assertDateDomainEqual(assert, "date", "2022-02-15", "2022-05-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2022-02-16", "2022-05-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_six_months" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 180);
-        assertDateDomainEqual(assert, "date", "2021-11-17", "2022-05-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2021-11-18", "2022-05-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_year" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 365);
-        assertDateDomainEqual(assert, "date", "2021-05-16", "2022-05-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2021-05-17", "2022-05-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_three_years" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 3 * 365);
-        assertDateDomainEqual(assert, "date", "2019-05-17", "2022-05-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2019-05-18", "2022-05-16", computedDomain);
     });
 
     QUnit.test("Relative date filter with offset domain value", async function (assert) {
@@ -1332,32 +1332,32 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         );
         let computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 7);
-        assertDateDomainEqual(assert, "date", "2022-05-02", "2022-05-08", computedDomain);
+        assertDateDomainEqual(assert, "date", "2022-05-03", "2022-05-09", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_month" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 30);
-        assertDateDomainEqual(assert, "date", "2022-03-17", "2022-04-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2022-03-18", "2022-04-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_three_months" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 90);
-        assertDateDomainEqual(assert, "date", "2021-11-17", "2022-02-14", computedDomain);
+        assertDateDomainEqual(assert, "date", "2021-11-18", "2022-02-15", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_six_months" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 180);
-        assertDateDomainEqual(assert, "date", "2021-05-21", "2021-11-16", computedDomain);
+        assertDateDomainEqual(assert, "date", "2021-05-22", "2021-11-17", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_year" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 365);
-        assertDateDomainEqual(assert, "date", "2020-05-16", "2021-05-15", computedDomain);
+        assertDateDomainEqual(assert, "date", "2020-05-17", "2021-05-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_three_years" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 3 * 365);
-        assertDateDomainEqual(assert, "date", "2016-05-17", "2019-05-16", computedDomain);
+        assertDateDomainEqual(assert, "date", "2016-05-18", "2019-05-17", computedDomain);
     });
 
     QUnit.test(
