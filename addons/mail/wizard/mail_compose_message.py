@@ -737,7 +737,9 @@ class MailComposeMessage(models.TransientModel):
         cleaned_ctx = clean_context(self.env.context)
         for wizard in self:
             res_id = wizard._evaluate_res_ids()[0]
-            post_values = self._prepare_mail_values([res_id])[res_id]
+            post_values = self._manage_mail_values(self._prepare_mail_values([res_id])).get(res_id)
+            if not post_values:
+                continue
             if not post_values['scheduled_date']:
                 raise UserError(_("A scheduled date is needed to schedule a message"))
             create_values.append({
@@ -796,7 +798,7 @@ class MailComposeMessage(models.TransientModel):
         """ Send in comment mode. It calls message_post on model, or the generic
         implementation of it if not available (as message_notify). """
         self.ensure_one()
-        post_values_all = self._prepare_mail_values(res_ids)
+        post_values_all = self._manage_mail_values(self._prepare_mail_values(res_ids))
         ActiveModel = self.env[self.model] if self.model and hasattr(self.env[self.model], 'message_post') else self.env['mail.thread']
         if self.composition_batch:
             # add context key to avoid subscribing the author
@@ -832,12 +834,11 @@ class MailComposeMessage(models.TransientModel):
             self.env['ir.config_parameter'].sudo().get_param('mail.batch_size')
         ) or self._batch_size or 50  # be sure to not have 0, as otherwise no iteration is done
         for res_ids_iter in tools.split_every(batch_size, res_ids):
-            res_ids_values = list(self._prepare_mail_values(res_ids_iter).values())
-
-            iter_mails_sudo = self.env['mail.mail'].sudo().create(res_ids_values)
+            prepared_mail_values_filtered = self._manage_mail_values(self._prepare_mail_values(res_ids_iter))
+            iter_mails_sudo = self.env['mail.mail'].sudo().create(list(prepared_mail_values_filtered.values()))
             mails_sudo += iter_mails_sudo
 
-            records = self.env[self.model].browse(res_ids_iter) if self.model and hasattr(self.env[self.model], 'message_post') else False
+            records = self.env[self.model].browse(prepared_mail_values_filtered.keys()) if self.model and hasattr(self.env[self.model], 'message_post') else False
             if records:
                 records._message_mail_after_hook(iter_mails_sudo)
 
@@ -996,6 +997,14 @@ class MailComposeMessage(models.TransientModel):
                 message_id = self.env['mail.message']._get_message_id(mail_values)
                 mail_values['message_id'] = message_id
                 mail_values['references'] = message_id
+        return mail_values_all
+
+    def _manage_mail_values(self, mail_values_all):
+        """Meant to be overridden to filter out and handle mail that must not be sent.
+
+        :param dict mail_values_all: mail values by res_id
+        :return dict: filtered mail_vals_all
+        """
         return mail_values_all
 
     def _prepare_mail_values_static(self):
