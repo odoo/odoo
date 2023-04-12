@@ -14,6 +14,7 @@ startSteps();
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 ProductScreen.exec.addOrderline("Desk Pad", "1", "2", "2.0");
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.checkStatus("-0001", "Ongoing");
 
@@ -22,6 +23,7 @@ TicketScreen.do.clickNewTicket();
 ProductScreen.exec.addOrderline("Monitor Stand", "3", "4", "12.0");
 ProductScreen.do.clickPayButton();
 PaymentScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.checkStatus("-0002", "Payment");
 
@@ -34,6 +36,7 @@ PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.validateButtonIsHighlighted(true);
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.checkStatus("-0003", "Receipt");
 
@@ -43,17 +46,20 @@ ProductScreen.check.productIsDisplayed("Desk Pad");
 ProductScreen.check.selectedOrderlineHas("Desk Pad", "1.0", "2.0");
 
 // Select order 2, should be at Payment Screen
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0002");
 PaymentScreen.check.emptyPaymentlines("12.0");
 PaymentScreen.check.validateButtonIsHighlighted(false);
 
 // Select order 3, should be at Receipt Screen
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0003");
 ReceiptScreen.check.totalAmountContains("30.0");
 
 // Pay order 1, with change
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.selectOrder("-0001");
 ProductScreen.check.isShown();
@@ -66,6 +72,7 @@ PaymentScreen.do.clickValidate();
 ReceiptScreen.check.totalAmountContains("2.0");
 
 // Order 1 now should have Receipt status
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.check.checkStatus("-0001", "Receipt");
 
@@ -78,6 +85,7 @@ ReceiptScreen.check.totalAmountContains("30.0");
 // then delete the new empty order
 ReceiptScreen.do.clickNextOrder();
 ProductScreen.check.orderIsEmpty();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.deleteOrder("-0004");
 TicketScreen.do.deleteOrder("-0001");

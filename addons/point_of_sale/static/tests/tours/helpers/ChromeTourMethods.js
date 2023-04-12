@@ -22,6 +22,14 @@ class Do {
             },
         ];
     }
+    clickMenuButton() {
+        return [
+            {
+                content: "Click on the menu button",
+                trigger: ".menu-button",
+            }
+        ];
+    }
 }
 // FIXME: this is a horrible hack to export an object as named exports.
 // eslint-disable-next-line no-undef

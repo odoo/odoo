@@ -363,18 +363,12 @@ td {
     cursor: pointer;
 }
 
-.pos .ticket-button {
-    display: flex;
-}
-
 /*  b) The right part of the top-bar */
 
 .pos .pos-rightheader {
     flex-grow: 1;
     height:100%;
     display: flex;
-    overflow : hidden;
-    overflow-x: auto;
 }
 .pos .pos-rightheader > * {
     border-right: 1px solid $o-brand-odoo;
@@ -394,11 +388,17 @@ td {
     padding: 0 10px; /*$dropdown-item-padding-x * .5*/
 }
 
+.pos .status-buttons .cashier-name {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
 .pos .status-buttons i.fa {
     font-size: large;
 }
 
-.pos .status-buttons .avatar, .pos .status-buttons i.fa-sign-out {
+.pos .status-buttons .avatar {
     vertical-align: middle;
 }
 
@@ -478,20 +478,6 @@ td {
     display: flex;
     -webkit-flex: 1;
     flex: 1;
-}
-
-/*  c) The session buttons */
-
-.pos .pos-rightheader .header-button {
-    cursor: pointer;
-
-    -webkit-transition-property: background;
-    -webkit-transition-duration: 0.2s;
-    -webkit-transition-timing-function: ease-out;
-}
-.pos .pos-rightheader .header-button:active{
-    background: rgba(0,0,0,0.2);
-    color:#EEE;
 }
 
 /*  c) The notifications indicator */
@@ -3411,28 +3397,6 @@ td {
     transition: all 300ms linear;
 }
 
-.ticket-button {
-    display: flex;
-    align-items: center;
-    padding: 0 15px;
-    font-size: medium;
-    color: white;
-}
-
-.ticket-button.highlight {
-    background: rgba(0, 0, 0, .08);
-}
-
-.ticket-button:hover {
-    background: rgba(0, 0, 0, .08);
-    cursor: pointer;
-}
-
-.ticket-button .with-badge {
-    margin-right: 0.7em;
-    font-size: larger;
-}
-
 [badge] {
     position: relative;
 }
@@ -3447,8 +3411,8 @@ td {
     padding: 2px;
     position: absolute;
     text-align: center;
-    left: 0.6em;
-    bottom: 0.6em;
+    left: 5em;
+    bottom: 0;
 }
 
 [badge^="-"]:after,
@@ -3457,7 +3421,7 @@ td {
  display: none;
 }
 
-.cash-move-button {
+.navbar-button {
     display: flex;
     align-items: center;
     padding: 0 15px;
@@ -3465,7 +3429,7 @@ td {
     color: white;
 }
 
-.cash-move-button:hover {
+.navbar-button:hover {
     background: rgba(0, 0, 0, .08);
     cursor: pointer;
 }
@@ -3782,4 +3746,37 @@ td {
     100% {
         transform: translate(24px, 0);
     }
+}
+
+.menu {
+    color: white;
+    z-index: 1000;
+    font-size: medium;
+
+	&-item {
+		display: flex;
+		position: relative;
+
+		.sub-menu {
+			position: absolute;
+			top: 33px;
+            right: -16px;
+            width: 216px;
+            display: flex;
+            flex-direction: column;
+			background-color: white;
+            z-index: 9999;
+            align-items: stretch;
+
+            .menu-item {
+                padding: 10px;
+                
+                span, i {
+                    color: black;
+                    inline-size: 196px;
+                    overflow-wrap: break-word;
+                }
+            }
+		}
+	}
 }

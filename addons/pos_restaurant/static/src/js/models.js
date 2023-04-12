@@ -16,6 +16,8 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         this.orderToTransfer = null; // table transfer feature
         this.transferredOrdersSet = new Set(); // used to know which orders has been transferred but not sent to the back end yet
         this.printers_category_ids_set = new Set();
+        this.floorPlanStyle = "default";
+        this.isEditMode = false;
     },
     //@override
     async _processData(loadedData) {
@@ -31,7 +33,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     //@override
     async after_load_server_data() {
         var res = await this._super(...arguments);
-        if (this.config.iface_floorplan) {
+        if (this.config.is_table_management) {
             this.table = null;
         }
         return res;
@@ -40,7 +42,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     // if we have tables, we do not load a default order, as the default order will be
     // set when the user selects a table.
     set_start_order() {
-        if (!this.config.iface_floorplan) {
+        if (!this.config.is_table_management) {
             this._super(...arguments);
         }
     },
@@ -131,7 +133,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         this._replaceOrders(tableOrders, ordersJsons);
     },
     async _getOrdersJson() {
-        if (this.config.iface_floorplan) {
+        if (this.config.is_table_management) {
             const tableIds = [].concat(
                 ...this.floors.map((floor) => floor.tables.map((table) => table.id))
             );
@@ -175,16 +177,13 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     loadRestaurantFloor() {
         // we do this in the front end due to the circular/recursive reference needed
         // Ignore floorplan features if no floor specified.
-        this.config.iface_floorplan = !!(this.floors && this.floors.length > 0);
-        if (this.config.iface_floorplan) {
-            this.floors_by_id = {};
-            this.tables_by_id = {};
-            for (const floor of this.floors) {
-                this.floors_by_id[floor.id] = floor;
-                for (const table of floor.tables) {
-                    this.tables_by_id[table.id] = table;
-                    table.floor = floor;
-                }
+        this.floors_by_id = {};
+        this.tables_by_id = {};
+        for (const floor of this.floors) {
+            this.floors_by_id[floor.id] = floor;
+            for (const table of floor.tables) {
+                this.tables_by_id[table.id] = table;
+                table.floor = floor;
             }
         }
     },
@@ -244,8 +243,11 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         return new Printer(url, this);
     },
     isOpenOrderShareable() {
-        return this._super(...arguments) || this.config.iface_floorplan;
+        return this._super(...arguments) || this.config.is_table_management;
     },
+    toggleEditMode() {
+        this.isEditMode = !this.isEditMode;
+    }
 });
 
 // New orders are now associated with the current table, if any.
@@ -254,7 +256,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
         this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
             if (
-                this.pos.config.iface_floorplan &&
+                this.pos.config.is_table_management &&
                 !this.tableId &&
                 !options.json &&
                 this.pos.table
@@ -278,7 +280,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     export_as_JSON() {
         const json = this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (this.pos.config.iface_floorplan) {
+            if (this.pos.config.is_table_management) {
                 json.table_id = this.tableId;
             }
             json.customer_count = this.customerCount;
@@ -294,7 +296,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     init_from_JSON(json) {
         this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (this.pos.config.iface_floorplan) {
+            if (this.pos.config.is_table_management) {
                 this.tableId = json.table_id;
                 this.validation_date = moment.utc(json.creation_date).local().toDate();
             }
@@ -323,7 +325,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     export_for_printing() {
         const json = this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (this.pos.config.iface_floorplan && this.getTable()) {
+            if (this.pos.config.is_table_management && this.getTable()) {
                 json.table = this.getTable().name;
             }
             json.customer_count = this.getCustomerCount();
@@ -410,7 +412,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
         this.customerCount = Math.max(count, 0);
     },
     getTable() {
-        if (this.pos.config.iface_floorplan) {
+        if (this.pos.config.is_table_management) {
             return this.pos.tables_by_id[this.tableId];
         }
         return null;
@@ -496,8 +498,8 @@ patch(Order.prototype, "pos_restaurant.Order", {
                 const printingChanges = {
                     new: changes["new"],
                     cancelled: changes["cancelled"],
-                    table_name: this.pos.config.iface_floorplan ? this.getTable().name : false,
-                    floor_name: this.pos.config.iface_floorplan
+                    table_name: this.pos.config.is_table_management ? this.getTable().name : false,
+                    floor_name: this.pos.config.is_table_management
                         ? this.getTable().floor.name
                         : false,
                     name: this.name || "unknown order",

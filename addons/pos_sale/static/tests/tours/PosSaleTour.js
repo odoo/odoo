@@ -21,6 +21,7 @@ ProductScreen.do.clickPayButton();
 PaymentScreen.do.clickPaymentMethod('Bank');
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 
 registry.category("web_tour.tours").add('PosSettleOrder', { test: true, url: '/pos/ui', steps: getSteps() });

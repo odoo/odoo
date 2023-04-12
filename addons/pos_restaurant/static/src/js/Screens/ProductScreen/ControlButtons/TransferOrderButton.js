@@ -20,6 +20,6 @@ export class TransferOrderButton extends Component {
 ProductScreen.addControlButton({
     component: TransferOrderButton,
     condition: function () {
-        return this.env.pos.config.iface_floorplan;
+        return this.env.pos.config.is_table_management;
     },
 });

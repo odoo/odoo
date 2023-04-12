@@ -95,6 +95,7 @@ PaymentScreen.do.clickPaymentMethod('Cash');
 PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
@@ -121,6 +122,7 @@ PaymentScreen.do.clickPaymentMethod('Cash');
 PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
@@ -147,6 +149,7 @@ PaymentScreen.do.clickPaymentMethod('Cash');
 PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
@@ -159,6 +162,7 @@ PaymentScreen.do.clickPaymentMethod('Cash');
 PaymentScreen.check.remainingIs('0.0');
 PaymentScreen.check.changeIs('0.0');
 
+Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 

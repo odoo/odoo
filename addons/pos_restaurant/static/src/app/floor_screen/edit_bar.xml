@@ -2,61 +2,78 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_restaurant.EditBar" owl="1">
-        <div class="edit-bar" t-attf-style="top:{{props.floorMapScrollTop}}px;">
+        <div class="edit-bar-top">
+            <span class="edit-button first-button" t-if="!env.isMobile"></span>
             <span class="edit-button" t-on-click.stop="props.createTable">
-                <i class="fa fa-plus" role="img" aria-label="Add" title="Add"></i>
+                <i class="fa fa-plus icon-button" role="img" aria-label="Add" title="Add"></i>
+                <span class="text-button">ADD</span>
             </span>
-            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="props.duplicateTable">
-                <i class="fa fa-files-o" role="img" aria-label="Duplicate" title="Duplicate"></i>
+            <span class="edit-button" t-att-class="{ disabled: props.selectedTables.length == 0 }" t-on-click.stop="props.changeSeatsNum">
+                <i class="fa fa-user icon-button" role="img" aria-label="Seats" title="Seats"></i>
+                <span class="text-button">SEATS</span>
             </span>
-            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="props.renameTable">
-                <i class="fa fa-font" role="img" aria-label="Rename" title="Rename"></i>
-            </span>
-            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="props.changeSeatsNum">
-                <i class="fa fa-user" role="img" aria-label="Seats" title="Seats"></i>
-            </span>
-            <span class="edit-button" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="props.changeShape">
-                <span t-if="!props.selectedTable or props.selectedTable.shape == 'square'" class="button-option square">
-                    <i class="fa fa-square-o" role="img" aria-label="Square Shape" title="Square Shape"></i>
+            <span class="edit-button" t-if="getSelectedTablesShape() == 'square'" t-att-class="{ disabled: props.selectedTables.length == 0 }" t-on-click.stop="props.changeToCircle">
+                <span class="button-option round">
+                    <i class="fa fa-circle-o icon-button" role="img" aria-label="Round Shape" title="Round Shape"></i>
                 </span>
-                <span t-else="" class="button-option round">
-                    <i class="fa fa-circle-o" role="img" aria-label="Round Shape" title="Round Shape"></i>
+                <span class="text-button">SHAPE</span>
+            </span>
+            <span class="edit-button" t-else="" t-att-class="{ disabled: props.selectedTables.length == 0 }" t-on-click.stop="props.changeToSquare">
+                <span class="button-option square">
+                    <i class="fa fa-square-o icon-button" role="img" aria-label="Square Shape" title="Square Shape"></i>
                 </span>
+                <span class="text-button">SHAPE</span>
             </span>
-            <span class="edit-button" t-on-click.stop="() => { state.isColorPicker = !state.isColorPicker }">
-                <i class="fa fa-tint" role="img" aria-label="Tint" title="Tint"></i>
+            <span t-if="!props.isColorPicker" class="edit-button" t-on-click.stop="props.toggleColorPicker">
+                <i class="fa fa-paint-brush icon-button" role="img" aria-label="Tint" title="Tint"></i>
+                <span class="text-button">FILL</span>
             </span>
-            <div t-if="state.isColorPicker and props.selectedTable" class="color-picker fg-picker">
-                <div  class="close-picker" title="Close" role="img" aria-label="Close" t-on-click.stop="() => { state.isColorPicker = false; }">
-                    <i class="fa fa-times" />
+            <span t-else="" class="edit-button is-active" t-on-click.stop="props.toggleColorPicker">
+                <i class="fa fa-paint-brush icon-button" role="img" aria-label="Tint" title="Tint"></i>
+                <span class="text-button">FILL</span>
+            </span>
+            <span class="edit-button" t-att-class="{ disabled: props.selectedTables.length > 1 }" t-on-click.stop="props.renameTable">
+                <i class="fa fa-pencil-square-o icon-button" role="img" aria-label="Rename" title="Rename"></i>
+                <span class="text-button">RENAME</span>
+            </span>
+            <span class="edit-button" t-on-click.stop="props.duplicateTableOrFloor">
+                <i class="fa fa-clone icon-button" role="img" aria-label="Copy" title="Copy"></i>
+                <span class="text-button">COPY</span>
+            </span>
+            <span class="edit-button trash" t-on-click.stop="props.deleteFloorOrTable">
+                <i class="fa fa-trash icon-button" role="img" aria-label="Delete" title="Delete"></i>
+                <span class="text-button">DELETE</span>
+            </span>
+            <span class="edit-button" t-on-click.stop="props.toggleEditMode">
+                <div class="close-edit-button">
+                    <i class="fa fa-times icon-button" role="img" aria-label="Close" title="Close"></i>
+                    <span class="text-button">CLOSE</span>
                 </div>
-                <span class="color tl"  style="background-color:#EB6D6D" role="img" aria-label="Red" title="Red" t-on-click.stop="() => props.setTableColor('#EB6D6D')" />
-                <span class="color"     style="background-color:#35D374" role="img" aria-label="Green" title="Green" t-on-click.stop="() => props.setTableColor('#35D374')" />
-                <span class="color tr"  style="background-color:#6C6DEC" role="img" aria-label="Blue" title="Blue" t-on-click.stop="() => props.setTableColor('#6C6DEC')" />
-                <span class="color"     style="background-color:#EBBF6D" role="img" aria-label="Orange" title="Orange" t-on-click.stop="() => props.setTableColor('#EBBF6D')" />
-                <span class="color"     style="background-color:#EBEC6D" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="() => props.setTableColor('#EBEC6D')" />
-                <span class="color"     style="background-color:#AC6DAD" role="img" aria-label="Purple" title="Purple" t-on-click.stop="() => props.setTableColor('#AC6DAD')" />
-                <span class="color bl"  style="background-color:#6C6D6D" role="img" aria-label="Grey" title="Grey" t-on-click.stop="() => props.setTableColor('#6C6D6D')" />
-                <span class="color"     style="background-color:#ACADAD" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="() => props.setTableColor('#ACADAD')" />
-                <span class="color br"  style="background-color:#4ED2BE" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="() => props.setTableColor('#4ED2BE')" />
-            </div>
-            <div t-if="state.isColorPicker and !props.selectedTable" class="color-picker bg-picker">
-                <div  class="close-picker" title="Close" role="img" aria-label="Close" t-on-click.stop="() => { state.isColorPicker = false; }">
-                    <i class="fa fa-times" />
-                </div>
-                <span class="color tl"  style="background-color:rgb(244, 149, 149)" role="img" aria-label="Red" title="Red" t-on-click.stop="() => props.setFloorColor('rgb(244, 149, 149)')" />
-                <span class="color"     style="background-color:rgb(130, 233, 171)" role="img" aria-label="Green" title="Green" t-on-click.stop="() => props.setFloorColor('rgb(130, 233, 171)')" />
-                <span class="color tr"  style="background-color:rgb(136, 137, 242)" role="img" aria-label="Blue" title="Blue" t-on-click.stop="() => props.setFloorColor('rgb(136, 137, 242)')" />
-                <span class="color"     style="background-color:rgb(255, 214, 136)" role="img" aria-label="Orange" title="Orange" t-on-click.stop="() => props.setFloorColor('rgb(255, 214, 136)')" />
-                <span class="color"     style="background-color:rgb(254, 255, 154)" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="() => props.setFloorColor('rgb(254, 255, 154)')" />
-                <span class="color"     style="background-color:rgb(209, 171, 210)" role="img" aria-label="Purple" title="Purple" t-on-click.stop="() => props.setFloorColor('rgb(209, 171, 210)')" />
-                <span class="color bl"  style="background-color:rgb(75, 75, 75)"    role="img" aria-label="Grey" title="Grey" t-on-click.stop="() => props.setFloorColor('rgb(75, 75, 75)')" />
-                <span class="color"     style="background-color:rgb(210, 210, 210)" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="() => props.setFloorColor('rgb(210, 210, 210)')" />
-                <span class="color br"  style="background-color:rgb(127, 221, 236)" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="() => props.setFloorColor('rgb(127, 221, 236)')" />
-            </div>
-            <span class="edit-button trash" t-att-class="{ disabled: !props.selectedTable }" t-on-click.stop="props.deleteTable">
-                <i class="fa fa-trash" role="img" aria-label="Delete" title="Delete"></i>
             </span>
+        </div>
+        <div t-if="props.isColorPicker and props.selectedTables.length > 0" class="color-picker">
+            <span class="color"  style="background-color:#FFFFFF" role="img" aria-label="White" title="White" t-on-click.stop="() => props.setTableColor('#FFFFFF')" />
+            <span class="color"  style="background-color:#EB6D6D" role="img" aria-label="Red" title="Red" t-on-click.stop="() => props.setTableColor('#EB6D6D')" />
+            <span class="color"  style="background-color:#35D374" role="img" aria-label="Green" title="Green" t-on-click.stop="() => props.setTableColor('#35D374')" />
+            <span class="color"  style="background-color:#6C6DEC" role="img" aria-label="Blue" title="Blue" t-on-click.stop="() => props.setTableColor('#6C6DEC')" />
+            <span class="color"  style="background-color:#EBBF6D" role="img" aria-label="Orange" title="Orange" t-on-click.stop="() => props.setTableColor('#EBBF6D')" />
+            <span class="color"  style="background-color:#EBEC6D" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="() => props.setTableColor('#EBEC6D')" />
+            <span class="color"  style="background-color:#AC6DAD" role="img" aria-label="Purple" title="Purple" t-on-click.stop="() => props.setTableColor('#AC6DAD')" />
+            <span class="color"  style="background-color:#6C6D6D" role="img" aria-label="Grey" title="Grey" t-on-click.stop="() => props.setTableColor('#6C6D6D')" />
+            <span class="color"  style="background-color:#ACADAD" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="() => props.setTableColor('#ACADAD')" />
+            <span class="color"  style="background-color:#4ED2BE" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="() => props.setTableColor('#4ED2BE')" />
+        </div>
+        <div t-if="props.isColorPicker and props.selectedTables.length == 0" class="color-picker">    
+            <span class="color"  style="background-color:rgb(255, 255, 255)" role="img" aria-label="White" title="White" t-on-click.stop="() => props.setFloorColor('rgb(255, 255, 255)')" />
+            <span class="color"  style="background-color:rgb(244, 149, 149)" role="img" aria-label="Red" title="Red" t-on-click.stop="() => props.setFloorColor('rgb(244, 149, 149)')" />
+            <span class="color"  style="background-color:rgb(130, 233, 171)" role="img" aria-label="Green" title="Green" t-on-click.stop="() => props.setFloorColor('rgb(130, 233, 171)')" />
+            <span class="color"  style="background-color:rgb(136, 137, 242)" role="img" aria-label="Blue" title="Blue" t-on-click.stop="() => props.setFloorColor('rgb(136, 137, 242)')" />
+            <span class="color"  style="background-color:rgb(255, 214, 136)" role="img" aria-label="Orange" title="Orange" t-on-click.stop="() => props.setFloorColor('rgb(255, 214, 136)')" />
+            <span class="color"  style="background-color:rgb(254, 255, 154)" role="img" aria-label="Yellow" title="Yellow" t-on-click.stop="() => props.setFloorColor('rgb(254, 255, 154)')" />
+            <span class="color"  style="background-color:rgb(209, 171, 210)" role="img" aria-label="Purple" title="Purple" t-on-click.stop="() => props.setFloorColor('rgb(209, 171, 210)')" />
+            <span class="color"  style="background-color:rgb(75, 75, 75)"    role="img" aria-label="Grey" title="Grey" t-on-click.stop="() => props.setFloorColor('rgb(75, 75, 75)')" />
+            <span class="color"  style="background-color:rgb(210, 210, 210)" role="img" aria-label="Light grey" title="Light grey" t-on-click.stop="() => props.setFloorColor('rgb(210, 210, 210)')" />
+            <span class="color"  style="background-color:rgb(127, 221, 236)" role="img" aria-label="Turquoise" title="Turquoise" t-on-click.stop="() => props.setFloorColor('rgb(127, 221, 236)')" />
         </div>
     </t>
 

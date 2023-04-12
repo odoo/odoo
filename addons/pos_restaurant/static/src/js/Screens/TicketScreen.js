@@ -22,7 +22,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     //@override
     _getSearchFields() {
-        if (!this.env.pos.config.iface_floorplan) {
+        if (!this.env.pos.config.is_table_management) {
             return this._super(...arguments);
         }
         return Object.assign({}, this._super(...arguments), {
@@ -34,7 +34,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         });
     },
     async _setOrder(order) {
-        if (!this.env.pos.config.iface_floorplan || this.env.pos.table) {
+        if (!this.env.pos.config.is_table_management || this.env.pos.table) {
             this._super(order);
         } else {
             // we came from the FloorScreen
@@ -44,7 +44,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     get allowNewOrders() {
-        return this.env.pos.config.iface_floorplan
+        return this.env.pos.config.is_table_management
             ? Boolean(this.env.pos.table)
             : this._super(...arguments);
     },
@@ -73,14 +73,14 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     //@override
     _selectNextOrder(currentOrder) {
-        if (this.env.pos.config.iface_floorplan && this.env.pos.table) {
+        if (this.env.pos.config.is_table_management && this.env.pos.table) {
             return this._super(...arguments);
         }
     },
     //@override
     async onDeleteOrder(order) {
         const _super = this._super;
-        if (this.env.pos.config.iface_floorplan) {
+        if (this.env.pos.config.is_table_management) {
             this.env.pos.setOrderToRemove(order);
             if (!this.env.pos.table) {
                 try {
@@ -139,7 +139,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     async onDoRefund() {
         const order = this.getSelectedSyncedOrder();
-        if (this.env.pos.config.iface_floorplan && order) {
+        if (this.env.pos.config.is_table_management && order) {
             this.env.pos.setTable(
                 order.table ? order.table : Object.values(this.env.pos.tables_by_id)[0]
             );
@@ -147,7 +147,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         this._super(...arguments);
     },
     isDefaultOrderEmpty(order) {
-        if (this.env.pos.config.iface_floorplan) {
+        if (this.env.pos.config.is_table_management) {
             return false;
         }
         return this._super(...arguments);
