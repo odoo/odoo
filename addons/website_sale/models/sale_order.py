@@ -349,7 +349,8 @@ class SaleOrder(models.Model):
                     lambda product:
                         product not in products and
                         (not product.company_id or product.company_id == line.company_id) and
-                        product._is_variant_possible(parent_combination=combination)
+                        product._is_variant_possible(parent_combination=combination) and
+                        not product.product_tmpl_id._get_combination_info(combination, pricelist=self.pricelist_id, add_qty=line.product_uom_qty).get('prevent_zero_price_sale')
                 )
 
         return random.sample(all_accessory_products, len(all_accessory_products))

@@ -306,6 +306,10 @@ class ProductTemplate(models.Model):
                 prevent_zero_price_sale=prevent_zero_price_sale,
                 compare_list_price=compare_list_price,
             )
+            if prevent_zero_price_sale:
+                combination_info.update(
+                    base_unit_price=0
+                )
 
         return combination_info
 

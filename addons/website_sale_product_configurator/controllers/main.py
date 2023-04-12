@@ -15,9 +15,12 @@ class WebsiteSaleProductConfiguratorController(ProductConfiguratorController):
         This route is called in JS by appending _website to the base route.
         """
         kw.pop('pricelist_id')
+        pricelist = request.website.get_current_pricelist()
         product = request.env['product.product'].browse(int(product_id))
         combination = request.env['product.template.attribute.value'].browse(variant_values)
-        has_optional_products = product.optional_product_ids.filtered(lambda p: p._is_add_to_cart_possible(combination))
+        has_optional_products = product.optional_product_ids.filtered(
+            lambda p: p._is_add_to_cart_possible(combination) and not
+            p._get_combination_info(combination, add_qty=kw.get('add_qty') or 1, pricelist=pricelist).get('prevent_zero_price_sale'))
         force_dialog = kw.get('force_dialog')
 
         if not force_dialog and not has_optional_products and (product.product_variant_count <= 1 or variant_values):
