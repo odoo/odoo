@@ -723,6 +723,7 @@ class MailComposeMessage(models.TransientModel):
         cleaned_ctx = clean_context(self.env.context)
         for wizard in self:
             res_id = wizard._evaluate_res_ids()[0]
+            # As composition_mode is "comment", _prepare_mail_values must return a value for res_id.
             post_values = self._prepare_mail_values([res_id])[res_id]
             if not post_values['scheduled_date']:
                 raise UserError(_("A scheduled date is needed to schedule a message"))
@@ -943,8 +944,10 @@ class MailComposeMessage(models.TransientModel):
 
         :param list res_ids: list of record IDs on which composer runs;
 
-        :return dict: for each res_id, values to create the mail.mail or to
-          give to message_post, depending on composition mode;
+        :return dict: for each res_id not already handled, values to create the
+            mail.mail or to give to message_post, depending on composition mode;
+            ! Overrides can return a dict containing only a part of the res_ids.
+              i.e. the method has already handled the record (ex.: logging an error).
         """
         self.ensure_one()
         email_mode = self.composition_mode == 'mass_mail'

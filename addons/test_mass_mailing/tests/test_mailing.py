@@ -420,8 +420,7 @@ class TestMassMailing(TestMassMailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             mailing.action_send_mail()
 
-        self.assertMailTraces(
-            [{
+        expected_traces = [{
                 'email': record.email_normalized,
                 'email_to_mail': record.email_from,
             } for record in recipients[:3]] + [{
@@ -429,10 +428,13 @@ class TestMassMailing(TestMassMailCommon):
                 'email_to_mail': record.email_from,
                 'failure_type': 'mail_bl',
                 'trace_status': 'cancel',
-            } for record in recipients[3:]],
-            mailing, recipients, check_mail=True
-        )
+            } for record in recipients[3:]]
+        self.assertMailTraces(expected_traces, mailing, recipients, check_mail=True)
         self.assertEqual(mailing.canceled, 2)
+        self.assertEqual(len(self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)])), 3,
+                         "Only the 3 sent mails have been created, the canceled ones have not been created")
+        expected_message_count = [0 if t.get('trace_status') == 'cancel' else 1 for t in expected_traces]
+        self.assertMessageRecordsCount(recipients, expected_message_count)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -451,10 +453,17 @@ class TestMassMailing(TestMassMailCommon):
 
         with self.mock_mail_gateway(mail_unlink_sent=False):
             self.mailing_bl.action_send_mail()
-        self.assertMailTraces([
+        expected_traces = [
             {'email': email_normalize(test_records[0].email_from), 'trace_status': 'cancel', 'failure_type': 'mail_bl'},
             {'email': email_normalize(test_records[1].email_from), 'trace_status': 'sent'},
-        ], self.mailing_bl, test_records, check_mail=False)
+        ]
+        self.assertMailTraces(expected_traces, self.mailing_bl, test_records, check_mail=False)
+
+        self.assertEqual(self.mailing_bl.canceled, 1)
+        self.assertEqual(len(self.env['mail.mail'].sudo().search([('mailing_id', '=', self.mailing_bl.id)])), 1,
+                         "Only the sent mail has been created, the canceled one has not been created")
+        expected_message_count = [0 if t.get('trace_status') == 'cancel' else 1 for t in expected_traces]
+        self.assertMessageRecordsCount(test_records, expected_message_count)
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_mail')
@@ -474,8 +483,7 @@ class TestMassMailing(TestMassMailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             mailing.action_send_mail()
 
-        self.assertMailTraces(
-            [{
+        expected_traces = [{
                 'email': record.email_normalized,
                 'email_to_mail': record.email_from,
                 'failure_type': 'mail_optout',
@@ -488,10 +496,13 @@ class TestMassMailing(TestMassMailCommon):
                 'email_to_mail': record.email_from,
                 'failure_type': 'mail_bl',
                 'trace_status': 'cancel'
-            } for record in recipients[4:]],
-            mailing, recipients, check_mail=True
-        )
+            } for record in recipients[4:]]
+        self.assertMailTraces(expected_traces, mailing, recipients, check_mail=True)
         self.assertEqual(mailing.canceled, 3)
+        self.assertEqual(len(self.env['mail.mail'].sudo().search([('mailing_id', '=', self.mailing_bl.id)])), 2,
+                         "Only the 2 sent mails have been created, the canceled ones have not been created")
+        expected_message_count = [0 if t.get('trace_status') == 'cancel' else 1 for t in expected_traces]
+        self.assertMessageRecordsCount(recipients, expected_message_count)
 
     @users('user_marketing')
     def test_mailing_w_seenlist(self):
@@ -574,6 +585,7 @@ class TestMassMailing(TestMassMailCommon):
         mailing_contact_3 = self.env['mailing.contact'].create({'name': 'test 3', 'email': 'test3@test.example.com'})
         mailing_contact_4 = self.env['mailing.contact'].create({'name': 'test 4', 'email': 'test4@test.example.com'})
         mailing_contact_5 = self.env['mailing.contact'].create({'name': 'test 5', 'email': 'test5@test.example.com'})
+        records = mailing_contact_1 + mailing_contact_2 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5
 
         # create mailing list record
         mailing_list_1 = self.env['mailing.list'].create({
@@ -614,15 +626,18 @@ class TestMassMailing(TestMassMailCommon):
         with self.mock_mail_gateway(mail_unlink_sent=False):
             mailing.action_send_mail()
 
+        expected_traces = [
+            {'email': 'test@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_dup'},
+            {'email': 'test@test.example.com', 'trace_status': 'sent'},
+            {'email': 'test3@test.example.com'},
+            {'email': 'test4@test.example.com'},
+            {'email': 'test5@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_optout'}]
         self.assertMailTraces(
-            [{'email': 'test@test.example.com', 'trace_status': 'sent'},
-             {'email': 'test@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_dup'},
-             {'email': 'test3@test.example.com'},
-             {'email': 'test4@test.example.com'},
-             {'email': 'test5@test.example.com', 'trace_status': 'cancel', 'failure_type': 'mail_optout'}],
+            expected_traces,
             mailing,
-            # mailing_contact_1 + mailing_contact_2 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5,
-            mailing_contact_2 + mailing_contact_1 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5,
+            mailing_contact_1 + mailing_contact_2 + mailing_contact_3 + mailing_contact_4 + mailing_contact_5,
             check_mail=True
         )
         self.assertEqual(mailing.canceled, 2)
+        expected_message_count = [0 if t.get('trace_status') == 'cancel' else 1 for t in expected_traces]
+        self.assertMessageRecordsCount(records, expected_message_count)
