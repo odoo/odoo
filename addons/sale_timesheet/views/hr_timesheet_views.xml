@@ -7,8 +7,7 @@
             <field name="inherit_id" ref="hr_timesheet.hr_timesheet_line_search_base"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='task_id']" position="after">
-                    <field name="order_id" string="Sales Order" groups="sales_team.group_sale_salesman"/>
-                    <field name="so_line" groups="sales_team.group_sale_salesman"/>
+                    <field name="order_id" string="Sales Order" filter_domain="['|', ('so_line', 'ilike', self), ('order_id', 'ilike', self)]"/>
                 </xpath>
                 <xpath expr="//filter[@name='month']" position="before">
                     <filter name="billable_fixed" string="Billed at a Fixed Price" domain="[('timesheet_invoice_type', '=', 'billable_fixed')]"
@@ -24,8 +23,6 @@
                     <separator/>
                 </xpath>
                 <xpath expr="//filter[@name='groupby_employee']" position="after">
-                    <filter string="Sales Order" name="groupby_sale_order" domain="[]" context="{'group_by': 'order_id'}"
-                        groups="sales_team.group_sale_salesman"/>
                     <filter string="Sales Order Item" name="groupby_sale_order_item" domain="[]" context="{'group_by': 'so_line'}"
                         groups="sales_team.group_sale_salesman"/>
                     <filter string="Invoice" name="groupby_invoice" domain="[]" context="{'group_by': 'timesheet_invoice_id'}"
