@@ -8,5 +8,9 @@
             <a t-out="late_element.name" t-on-click="openElement" href="#" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
         </t>
         planned on <t t-out="props.delay_alert_date"/>.</p>
+        <button class="btn btn-primary"
+                t-on-click.stop="rescheduleDates">
+            Replan
+        </button>
     </div>
 </templates>

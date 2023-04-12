@@ -7,12 +7,13 @@ import {
     popoverWidgetField,
 } from "@stock/widgets/popover_widget";
 
-class  StockRescheculingPopoverComponent extends PopoverComponent {
-    setup(){
+class StockReschedulingPopoverComponent extends PopoverComponent {
+    setup() {
         this.action = useService("action");
+        this.orm = useService("orm");
     }
 
-    openElement(ev){
+    openElement(ev) {
         this.action.doAction({
             res_model: ev.currentTarget.getAttribute('element-model'),
             res_id: parseInt(ev.currentTarget.getAttribute('element-id')),
@@ -21,27 +22,38 @@ class  StockRescheculingPopoverComponent extends PopoverComponent {
             view_mode: "form",
         });
     }
+
+    rescheduleDates(ev) {
+        this.orm.call(
+            this.props.record.resModel,
+            "action_reschedule_dates",
+            [this.props.record.resId],
+        ).then(() => {
+            this.props.record.model.load();
+        });
+    }
 }
 
-class StockRescheculingPopover extends PopoverWidgetField {
-    setup(){
+class StockReschedulingPopover extends PopoverWidgetField {
+    setup() {
         super.setup();
         this.color = this.jsonValue.color || 'text-danger';
         this.icon = this.jsonValue.icon || 'fa-exclamation-triangle';
     }
 
-    showPopup(ev){
-        if (!this.jsonValue.late_elements){
+    showPopup(ev) {
+        if (!this.jsonValue.late_elements) {
             return;
         }
         super.showPopup(ev);
     }
 }
-StockRescheculingPopover.components = {
-    Popover: StockRescheculingPopoverComponent
+
+StockReschedulingPopover.components = {
+    Popover: StockReschedulingPopoverComponent
 }
 
 registry.category("fields").add("stock_rescheduling_popover", {
     ...popoverWidgetField,
-    component: StockRescheculingPopover,
+    component: StockReschedulingPopover,
 });
