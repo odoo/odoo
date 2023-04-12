@@ -204,7 +204,7 @@ class Project(models.Model):
         ('done', 'Done'),
     ], default='to_define', compute='_compute_last_update_status', store=True, readonly=False, required=True)
     last_update_color = fields.Integer(compute='_compute_last_update_color')
-    milestone_ids = fields.One2many('project.milestone', 'project_id', copy=True)
+    milestone_ids = fields.One2many('project.milestone', 'project_id')
     milestone_count = fields.Integer(compute='_compute_milestone_count', groups='project.group_project_milestone')
     milestone_count_reached = fields.Integer(compute='_compute_milestone_reached_count', groups='project.group_project_milestone')
     is_milestone_exceeded = fields.Boolean(compute="_compute_is_milestone_exceeded", search='_search_is_milestone_exceeded')
@@ -385,6 +385,10 @@ class Project(models.Model):
         project = super(Project, self_with_mail_context).copy(default)
         for follower in self.message_follower_ids:
             project.message_subscribe(partner_ids=follower.partner_id.ids, subtype_ids=follower.subtype_ids.ids)
+        if self.allow_milestones:
+            if 'milestone_mapping' not in self.env.context:
+                self = self.with_context(milestone_mapping=dict())
+            project.milestone_ids = [milestone.copy().id for milestone in self.milestone_ids]
         if 'tasks' not in default:
             self.map_tasks(project.id)
 
