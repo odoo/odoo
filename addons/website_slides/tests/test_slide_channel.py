@@ -2,56 +2,26 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.website_slides.tests import common as slides_common
-from odoo.tests.common import users
+from odoo.tests.common import tagged, users
 
 
-class TestSlidesManagement(slides_common.SlidesCase):
+@tagged('mail_thread')
+class TestChannelMailing(slides_common.SlidesCase):
 
-    @users('user_officer')
-    def test_get_categorized_slides(self):
-        new_category = self.env['slide.slide'].create({
-            'name': 'Cooking Tips for Cooking Humans',
-            'channel_id': self.channel.id,
-            'is_category': True,
-            'sequence': 5,
-        })
-        order = self.env['slide.slide']._order_by_strategy['sequence']
-        categorized_slides = self.channel._get_categorized_slides([], order)
-        self.assertEqual(categorized_slides[0]['category'], False)
-        self.assertEqual(categorized_slides[1]['category'], self.category)
-        self.assertEqual(categorized_slides[1]['total_slides'], 2)
-        self.assertEqual(categorized_slides[2]['total_slides'], 0)
-        self.assertEqual(categorized_slides[2]['category'], new_category)
+    @classmethod
+    def setUpClass(cls):
+        super(TestChannelMailing, cls).setUpClass()
 
-    @users('user_manager')
-    def test_archive(self):
-        self.env['slide.slide.partner'].create({
-            'slide_id': self.slide.id,
-            'channel_id': self.channel.id,
-            'partner_id': self.user_manager.partner_id.id,
-            'completed': True
-        })
-        channel_partner = self.channel._action_add_members(self.user_manager.partner_id)
+        cls.customers = cls.env['res.partner'].create([
+            {
+                'email': f'test_partner_{idx}@example.com',
+                'mobile': f'047500{idx:02d}{idx:02d}',
+                'name': f'Partner_{idx}',
+                'phone': f'047511{idx:02d}{idx:02d}',
 
-        self.assertTrue(self.channel.active)
-        self.assertTrue(self.channel.is_published)
-        self.assertFalse(channel_partner.completed)
-        for slide in self.channel.slide_ids:
-            self.assertTrue(slide.active, "All slide should be archived when a channel is archived")
-            self.assertTrue(slide.is_published, "All slide should be unpublished when a channel is archived")
-
-        self.channel.toggle_active()
-        self.assertFalse(self.channel.active)
-        self.assertFalse(self.channel.is_published)
-        # channel_partner should still NOT be marked as completed
-        self.assertFalse(channel_partner.completed)
-
-        for slide in self.channel.slide_ids:
-            self.assertFalse(slide.active, "All slides should be archived when a channel is archived")
-            if not slide.is_category:
-                self.assertFalse(slide.is_published, "All slides should be unpublished when a channel is archived, except categories")
-            else:
-                self.assertTrue(slide.is_published, "All slides should be unpublished when a channel is archived, except categories")
+            }
+            for idx in range(10)
+        ])
 
     def test_mail_completed(self):
         """ When the slide.channel is completed, an email is supposed to be sent to people that completed it. """
@@ -133,6 +103,90 @@ class TestSlidesManagement(slides_common.SlidesCase):
             slide_created_mails.mapped('subject'),
             ['Congratulations! You completed %s' % self.channel.name, 'ATestSubject']
         )
+
+    @users('user_manager')
+    def test_member_follower(self):
+        """ Test follower management in channels, when adding members. """
+        channel = self.channel.with_user(self.env.user)
+        customers = self.customers.with_user(self.env.user)
+        self.assertEqual(channel.message_partner_ids, self.user_officer.partner_id)
+
+        # add members: those are currently added in followers of channel
+        channel._action_add_members(customers)
+        self.assertEqual(channel.message_partner_ids, self.user_officer.partner_id + customers)
+
+    @users('user_manager')
+    def test_post_publication(self):
+        """ Test publication management when a new content is available """
+        channel = self.channel.with_user(self.env.user)
+        customers = self.customers.with_user(self.env.user)
+        channel._action_add_members(customers)
+
+        with self.mock_mail_gateway():
+            _new_slides = self.env['slide.slide'].create([
+                {
+                    'channel_id': channel.id,
+                    'is_published': True,
+                    'name': 'New1',
+                },
+                {
+                    'channel_id': channel.id,
+                    'is_published': True,
+                    'name': 'New2',
+                },
+            ])
+        self.assertEqual(len(self._new_mails), 4, 'Created 4 mail.mail: 1 for user, 1 for customer / slide')
+        for mail in self._new_mails:
+            print(mail.author_id.name, mail.recipient_ids.mapped('name'), mail.email_to, mail.subject)
+        self.assertEqual(len(self._mails), 22, 'Sent 22 emails: 11 followers / slide')
+
+class TestSlidesManagement(slides_common.SlidesCase):
+
+    @users('user_officer')
+    def test_get_categorized_slides(self):
+        new_category = self.env['slide.slide'].create({
+            'name': 'Cooking Tips for Cooking Humans',
+            'channel_id': self.channel.id,
+            'is_category': True,
+            'sequence': 5,
+        })
+        order = self.env['slide.slide']._order_by_strategy['sequence']
+        categorized_slides = self.channel._get_categorized_slides([], order)
+        self.assertEqual(categorized_slides[0]['category'], False)
+        self.assertEqual(categorized_slides[1]['category'], self.category)
+        self.assertEqual(categorized_slides[1]['total_slides'], 2)
+        self.assertEqual(categorized_slides[2]['total_slides'], 0)
+        self.assertEqual(categorized_slides[2]['category'], new_category)
+
+    @users('user_manager')
+    def test_archive(self):
+        self.env['slide.slide.partner'].create({
+            'slide_id': self.slide.id,
+            'channel_id': self.channel.id,
+            'partner_id': self.user_manager.partner_id.id,
+            'completed': True
+        })
+        channel_partner = self.channel._action_add_members(self.user_manager.partner_id)
+
+        self.assertTrue(self.channel.active)
+        self.assertTrue(self.channel.is_published)
+        self.assertFalse(channel_partner.completed)
+        for slide in self.channel.slide_ids:
+            self.assertTrue(slide.active, "All slide should be archived when a channel is archived")
+            self.assertTrue(slide.is_published, "All slide should be unpublished when a channel is archived")
+
+        self.channel.toggle_active()
+        self.assertFalse(self.channel.active)
+        self.assertFalse(self.channel.is_published)
+        # channel_partner should still NOT be marked as completed
+        self.assertFalse(channel_partner.completed)
+
+        for slide in self.channel.slide_ids:
+            self.assertFalse(slide.active, "All slides should be archived when a channel is archived")
+            if not slide.is_category:
+                self.assertFalse(slide.is_published, "All slides should be unpublished when a channel is archived, except categories")
+            else:
+                self.assertTrue(slide.is_published, "All slides should be unpublished when a channel is archived, except categories")
 
     def test_unlink_slide_channel(self):
         self.assertTrue(self.channel.slide_content_ids.mapped('question_ids').exists(),
