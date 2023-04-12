@@ -85,7 +85,7 @@ class AccountMove(models.Model):
         currency_id = (
                 self.partner_id.property_purchase_currency_id
                 or self.env.context.get("default_currency_id")
-                or self.env.company.currency_id
+                or self.currency_id
         )
 
         if self.partner_id and self.move_type in ['in_invoice', 'in_refund'] and self.currency_id != currency_id:
