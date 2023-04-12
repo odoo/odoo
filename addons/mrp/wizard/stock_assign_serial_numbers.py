@@ -20,7 +20,7 @@ class StockAssignSerialNumbers(models.TransientModel):
 
     def generate_serial_numbers_production(self):
         if self.next_serial_number and self.next_serial_count:
-            generated_serial_numbers = "\n".join(self.env['stock.lot'].generate_lot_names(self.next_serial_number, self.next_serial_count))
+            generated_serial_numbers = "\n".join(lot[0] for lot in self.env['stock.lot'].generate_lot_names(self.next_serial_number, self.next_serial_count))
             self.serial_numbers = "\n".join([self.serial_numbers, generated_serial_numbers]) if self.serial_numbers else generated_serial_numbers
             self._onchange_serial_numbers()
         action = self.env["ir.actions.actions"]._for_xml_id("mrp.act_assign_serial_numbers_production")

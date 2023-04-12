@@ -31,4 +31,4 @@ class StockAssignSerialNumbers(models.TransientModel):
     def generate_serial_numbers(self):
         self.ensure_one()
         self.move_id.next_serial = self.next_serial_number or ""
-        return self.move_id._generate_serial_numbers(next_serial_count=self.next_serial_count)
+        return self.move_id._generate_serial_numbers(self.next_serial_number, next_serial_count=self.next_serial_count)
