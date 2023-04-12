@@ -13,7 +13,6 @@ class ProjectProject(models.Model):
                 project._message_sms_with_template(
                     template=project.stage_id.sms_template_id,
                     partner_ids=project.partner_id.ids,
-                    sms_numbers=project.partner_id.mapped('mobile'),
                 )
 
     @api.model_create_multi
