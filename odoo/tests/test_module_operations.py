@@ -70,6 +70,7 @@ def parse_args():
         help="Comma-separated list of paths to directories containing extra Odoo modules")
     parser.add_argument("--uninstall", "-U", type=str,
         help="Comma-separated list of modules to uninstall/reinstall")
+    parser.add_argument("--no-reinstall", '-n', dest="reinstall", action='store_false', default=True)
     parser.add_argument("--standalone", type=str,
         help="Launch standalone scripts tagged with @standalone. Accepts a list of "
              "module names or tags separated by commas. 'all' will run all available scripts."
@@ -121,8 +122,7 @@ def test_uninstall(args):
 
     for module_id, module_name in modules_todo:
         uninstall(args.database, module_id, module_name)
-        if module_name not in INSTALL_BLACKLIST:
-            install(args.database, module_id, module_name)
+        if args.reinstall and module_name not in INSTALL_BLACKLIST:
 
 
 def test_scripts(args):
@@ -175,5 +175,6 @@ if __name__ == '__main__':
             test_scripts(args)
         else:
             test_full(args)
-    except Exception as e:
-        _logger.exception("An error occured during standalone tests: %s", e)
+    except Exception:
+        _logger.error("%s tests failed", "uninstall" if args.uninstall else "standalone" if args.standalone else "cycle")
+        raise
