@@ -23,24 +23,6 @@
              </field>
         </record>
 
-        <record id="report_project_task_user_view_tree" model="ir.ui.view">
-            <field name="name">report.project.task.user.view.tree</field>
-            <field name="model">report.project.task.user</field>
-            <field name="arch" type="xml">
-                <tree string="Tasks Analysis" create="false" editable="top" delete="false" edit="false">
-                    <field name="name"/>
-                    <field name="partner_id" optional="hide"/>
-                    <field name="project_id" options="{'no_open': True}" optional="show"/>
-                    <field name="user_ids" optional="show" widget="many2many_avatar_user"/>
-                    <field name="stage_id" optional="show"/>
-                    <field name="company_id" optional="show" groups="base.group_multi_company"/>
-                    <field name="date_deadline" optional="hide"/>
-                    <field name="tag_ids" optional="hide"/>
-                    <field name="rating_last_text" optional="hide" groups="project.group_project_rating"/>
-                </tree>
-            </field>
-        </record>
-
         <record id="view_task_project_user_search" model="ir.ui.view">
             <field name="name">report.project.task.user.search</field>
             <field name="model">report.project.task.user</field>
