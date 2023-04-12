@@ -112,12 +112,10 @@ class MrpTimerField extends Component {
             }
         });
         onWillUpdateProps((nextProps) => {
-            const rerun = !this.ongoing && nextProps.record.data.is_user_working;
             this.ongoing = nextProps.record.data.is_user_working;
-            if (rerun) {
-                this.duration = nextProps.record.data[nextProps.name];
-            }
+            this.duration = nextProps.record.data[nextProps.name];
         });
+
         onWillDestroy(() => clearTimeout(this.timer));
     }
 
