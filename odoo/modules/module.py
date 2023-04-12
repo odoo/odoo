@@ -331,7 +331,10 @@ def load_manifest(module, mod_path=None):
     elif manifest['auto_install']:
         manifest['auto_install'] = set(manifest['depends'])
 
-    manifest['version'] = adapt_version(manifest['version'])
+    try:
+        manifest['version'] = adapt_version(manifest['version'])
+    except ValueError as e:
+        raise ValueError(f"Module {module}: invalid manifest") from e
     manifest['addons_path'] = normpath(opj(mod_path, os.pardir))
 
     return manifest
@@ -426,7 +429,15 @@ def get_modules_with_version():
 def adapt_version(version):
     serie = release.major_version
     if version == serie or not version.startswith(serie + '.'):
+        base_version = version
         version = '%s.%s' % (serie, version)
+    else:
+        base_version = version[len(serie) + 1:]
+
+    if not re.match(r"^[0-9]+\.[0-9]+(?:\.[0-9]+)?$", base_version):
+        raise ValueError(f"Invalid version {base_version!r}. Modules should have a version in format `x.y` or `x.y.z`.")
+
     return version
+
 
 current_test = None
