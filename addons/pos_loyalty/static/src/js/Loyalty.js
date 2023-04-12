@@ -7,6 +7,7 @@ import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
+import { sprintf } from "@web/core/utils/strings";
 
 // FIXME: Perhaps MutexedDropPrevious can be replaced by the new KeepLast.
 // > This might require thorough investigation on how _updateRewards work.
@@ -1579,6 +1580,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
             return rule.mode === "with_code" && (rule.promo_barcode === code || rule.code === code);
         });
         let claimableRewards = null;
+        let coupon = null;
         if (rule) {
             if (this.codeActivatedProgramRules.includes(rule.id)) {
                 return _t("That promo code program has already been activated.");
@@ -1610,7 +1612,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                         return _t("Unpaid gift card rejected.");
                     }
                 }
-                const coupon = new PosLoyaltyCard(
+                coupon = new PosLoyaltyCard(
                     code,
                     payload.coupon_id,
                     payload.program_id,
@@ -1634,12 +1636,19 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 this._updateRewards();
             }
         }
+        if (!rule && this.orderlines.length === 0 && coupon) {
+            return sprintf(
+                _t("Gift Card: %s\nBalance: %s"),
+                code,
+                this.pos.format_currency(coupon.balance)
+            );
+        }
         return true;
     },
     async activateCode(code) {
         const res = await this._activateCode(code);
         if (res !== true) {
-            this.pos.env.services.pos_notification.add(res);
+            this.pos.env.services.pos_notification.add(res, 5000);
         }
     },
     isProgramsResettable() {
