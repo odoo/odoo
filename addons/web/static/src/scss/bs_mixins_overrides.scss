@@ -7,6 +7,29 @@
 // otherwise we will have deprecation messages for assets_common generation
 $enable-deprecation-messages: false !default;
 
+// Override color-contrast function to handle the alpha component of colors
+@function color-contrast($background, $color-contrast-dark: $color-contrast-dark, $color-contrast-light: $color-contrast-light, $min-contrast-ratio: $min-contrast-ratio, $main-background: $body-bg) {
+    $real-color: opaque($main-background, $background);
+
+    $foregrounds: $color-contrast-light, $color-contrast-dark, $white, $black;
+    $max-ratio: 0;
+    $max-ratio-color: null;
+
+    @each $color in $foregrounds {
+      $contrast-ratio: contrast-ratio($real-color, $color);
+      @if $contrast-ratio > $min-contrast-ratio {
+        @return $color;
+      } @else if $contrast-ratio > $max-ratio {
+        $max-ratio: $contrast-ratio;
+        $max-ratio-color: $color;
+      }
+    }
+
+    @warn "Found no color leading to #{$min-contrast-ratio}:1 contrast ratio against #{$real-color} (mix of given color and background)...";
+
+    @return $max-ratio-color;
+}
+
 @function mute-color($color) {
     @return scale-color($color, $alpha: -30%);
 }
@@ -27,7 +50,7 @@ $o-color-extras-nesting-selector: '&' !default;
     @if ($color) {
         $-yiq-threshold-met: alpha($color) > $yiq-min-opacity-threshold;
 
-        $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-contrast($color), null));
+        $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-contrast($color, $main-background: $background), null));
         background-color: $color#{if($important, ' !important', '')};
         color: $-yiq-color; // not important so that text utilities still work
 
