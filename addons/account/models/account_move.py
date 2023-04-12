@@ -269,6 +269,13 @@ class AccountMove(models.Model):
         index=True,
         copy=False,
     )
+    vat_date = fields.Date(
+        string='VAT Date',
+        readonly=True,
+        states={'draft': [('readonly', False)]},
+        index=True,
+        copy=False,
+    )
     invoice_date_due = fields.Date(
         string='Due Date',
         compute='_compute_invoice_date_due', store=True, readonly=False,
@@ -3693,6 +3700,9 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
+        for move in self:
+            if move.is_invoice(include_receipts=True) and not move.vat_date:
+                move.vat_date = move.date
         moves_with_payments = self.filtered('payment_id')
         other_moves = self - moves_with_payments
         if moves_with_payments:
