@@ -25,7 +25,9 @@ import {
     isVisibleEmpty,
     isNotEditableNode,
     createDOMPathGenerator,
+    isEmptyBlock,
 } from '../utils/utils.js';
+import './toggleList.js';
 
 Text.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
     const parentNode = this.parentNode;
@@ -205,6 +207,20 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
     let [cursorNode, cursorOffset] = moveNodes(...moveDest, this, offset, currentNodeIndex);
     setSelection(cursorNode, cursorOffset);
 
+    /*  Removing previous element sibling if empty, preserving current node.
+        E.g. (previousEl == empty)
+             <p><br></p><h1>[]def</h1> + BACKSPACE
+        <=>  <h1>[]def</h1>
+        E.g. (previousEl != empty)
+             <h3>abc</p><h3>[]def</h1> + BACKSPACE
+        <=>  <h3>abc[]def</h3>
+    */
+    const previousEl = this.previousElementSibling;
+    const nonRemovableNodes = ['TR','TD','TABLE','TBODY','UL','OL','LI'];
+    if (isEmptyBlock(previousEl) && !isUnremovable(this) && !nonRemovableNodes.includes(this.nodeName) && this === cursorNode) {
+        this.previousElementSibling.remove();
+        return;
+    }
     // Propagate if this is still a block on the left of where the nodes were
     // moved.
     if (
@@ -236,14 +252,19 @@ HTMLElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, 
     }
 };
 
-HTMLLIElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {
-    if (offset > 0 || this.previousElementSibling) {
-        // If backspace inside li content or if the li is not the first one,
-        // it behaves just like in a normal element.
+HTMLLIElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false, cursorOffset) {
+    const currentFocusNode = document.getSelection().focusNode;
+    const currentNode = isEmptyBlock(this) ? this : this.childNodes[offset];
+    // Comparing current node for seprating behaviour of delete forward and backward.
+    if (offset > 0 || currentNode !== currentFocusNode || (cursorOffset && this.previousElementSibling)) {
+        // If deleteforward, merge the node to its preceding list item.
         HTMLElement.prototype.oDeleteBackward.call(this, offset, alreadyMoved);
         return;
+    } else {
+        // If backspace,move the node outside the list breaking the list in two.
+        this.oToggleList(offset);
+        return;
     }
-    this.oShiftTab(offset);
 };
 
 HTMLBRElement.prototype.oDeleteBackward = function (offset, alreadyMoved = false) {

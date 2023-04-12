@@ -1879,7 +1879,15 @@ export function moveNodes(
             ...rightPos(sourceEl.childNodes[endIndex - 1]),
         );
         const fragment = document.createDocumentFragment();
-        nodes.forEach(node => fragment.appendChild(node));
+
+        // Preventing deletion of node if previous sibling is empty and not table or lists.
+        let removableNodes = ['DIV', 'TR', 'TD', 'TABLE', 'TBODY', 'UL', 'OL', 'LI'];
+        if(!isEmptyBlock(sourceEl.previousElementSibling) || !isEmptyBlock(destinationEl.childNodes[destinationOffset-1])){
+            removableNodes.push('P'); // Adding p to removable nodes only in certain conditions.
+        }
+        if (!isEmptyBlock(sourceEl.previousElementSibling) || removableNodes.includes(sourceEl.nodeName) || !isEmptyBlock(destinationEl.previousElementSibling) || nodes[0].previousElementSibling) {
+            nodes.forEach(node => fragment.appendChild(node));
+        }
         const posRightNode = destinationEl.childNodes[destinationOffset];
         if (posRightNode) {
             destinationEl.insertBefore(fragment, posRightNode);

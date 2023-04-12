@@ -798,12 +798,11 @@ X[]
                         contentAfter: '<h1>ab[]</h1>',
                     });
                 });
-                it('should merge a heading1 with text into an empty paragraph (keeping the heading)', async () => {
+                it('should remove empty paragraph (keeping the heading)', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><br>[]</p><h1>ab</h1>',
                         stepFunction: deleteForward,
-                        // JW cAfter: '<h1>[]ab</h1>',
-                        contentAfter: '<p>[]ab</p>',
+                        contentAfter: '<h1>[]ab</h1>',
                     });
                 });
                 it('should merge a text following a paragraph (keeping the text)', async () => {
@@ -820,12 +819,11 @@ X[]
                 });
             });
             describe('With attributes', () => {
-                it('should merge a paragraph without class into an empty paragraph with a class', async () => {
+                it('should remove empty paragraph with class', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p class="a"><br>[]</p><p>abc</p>',
                         stepFunction: deleteForward,
-                        // JW cAfter: '<p>[]abc</p>',
-                        contentAfter: '<p class="a">[]abc</p>',
+                        contentAfter: '<p>[]abc</p>',
                     });
                 });
                 it('should merge two paragraphs with spans of same classes', async () => {
@@ -1112,23 +1110,23 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>[abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>[<b>abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
                 // Backward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>]abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>]<b>abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteForward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
             });
             it('should not break unbreakables', async () => {
@@ -1877,12 +1875,11 @@ X[]
                         contentAfter: '<h1>ab[]</h1>',
                     });
                 });
-                it('should merge a heading1 with text into an empty paragraph (keeping the heading)', async () => {
+                it('should remove empty paragraph (keeping the heading)', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p><br></p><h1>[]ab</h1>',
                         stepFunction: deleteBackward,
-                        // JW cAfter: '<h1>[]ab</h1>',
-                        contentAfter: '<p>[]ab</p>',
+                        contentAfter: '<h1>[]ab</h1>',
                     });
                 });
                 it('should merge with previous node (default behaviour)', async () => {
@@ -1934,12 +1931,11 @@ X[]
                 });
             });
             describe('With attributes', () => {
-                it('should merge a paragraph without class into an empty paragraph with a class', async () => {
+                it('should remove paragraph with class', async () => {
                     await testEditor(BasicEditor, {
                         contentBefore: '<p class="a"><br></p><p>[]abc</p>',
                         stepFunction: deleteBackward,
-                        // JW cAfter: '<p>[]abc</p>',
-                        contentAfter: '<p class="a">[]abc</p>',
+                        contentAfter: '<p>[]abc</p>',
                     });
                 });
                 it('should merge two paragraphs with spans of same classes', async () => {
@@ -2122,7 +2118,7 @@ X[]
                     await testEditor(BasicEditor, {
                         contentBefore: '<p>abc</p><h1><br></h1><p>[]def</p>',
                         stepFunction: deleteBackward,
-                        contentAfter: '<p>abc</p><h1>[]def</h1>',
+                        contentAfter: '<p>abc</p><p>[]def</p>',
                     });
                 });
                 it('should remove only one br between contents', async () => {
@@ -2351,23 +2347,23 @@ X[]
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>[abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>[<b>abcd</b></h1><p>ef]gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
                 // Backward selection
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1><b>]abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
                 await testEditor(BasicEditor, {
                     contentBefore: '<h1>]<b>abcd</b></h1><p>ef[gh</p>',
                     stepFunction: deleteBackward,
-                    contentAfter: '<h1>[]gh</h1>',
+                    contentAfter: '<h1>[]<br></h1><p>gh</p>',
                 });
             });
             it('should delete a heading (triple click backspace)', async () => {
