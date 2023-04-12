@@ -220,10 +220,6 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
-        # profiling
-        'profile_session': None,
-        'profile_collectors': None,
-        'profile_params': None,
     }
 
 # Two empty objects used when the geolocalization failed. They have the
