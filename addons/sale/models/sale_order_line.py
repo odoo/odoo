@@ -972,7 +972,21 @@ class SaleOrderLine(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        # all vals_list share the same order_id at creation ??
+        # is the order_id always present ??
+
+        current_sequence_max = 0
+        if vals_list and 'order_id' in vals_list[0]:
+            current_sequence_max = max(
+                self.env['sale.order'].browse(vals_list[0]['order_id'])
+                .order_line.mapped('sequence')
+                or [9]
+            )
+
         for vals in vals_list:
+            if current_sequence_max:
+                current_sequence_max += 1
+                vals['sequence'] = current_sequence_max
             if vals.get('display_type') or self.default_get(['display_type']).get('display_type'):
                 vals['product_uom_qty'] = 0.0
 
