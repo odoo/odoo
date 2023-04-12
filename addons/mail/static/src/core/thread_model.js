@@ -180,9 +180,13 @@ export class Thread {
             );
         }
         if (this.type === "group" && !this.name) {
-            return this.channelMembers
-                .map((channelMember) => channelMember.persona.name)
-                .join(_t(", "));
+            const listFormatter = new Intl.ListFormat(
+                this._store.env.services["user"].lang.replace("_", "-"),
+                { type: "conjunction", style: "long" }
+            );
+            return listFormatter.format(
+                this.channelMembers.map((channelMember) => channelMember.persona.name)
+            );
         }
         return this.name;
     }
