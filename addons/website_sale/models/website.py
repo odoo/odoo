@@ -393,7 +393,6 @@ class Website(models.Model):
             # change the partner, and trigger the computes (fpos)
             sale_order_sudo.write({
                 'partner_id': partner_sudo.id,
-                'partner_invoice_id': partner_sudo.id,
                 'payment_term_id': self.sale_get_payment_term(partner_sudo),
                 # Must be specified to ensure it is not recomputed when it shouldn't
                 'pricelist_id': pricelist_id,
@@ -418,7 +417,7 @@ class Website(models.Model):
 
     def _prepare_sale_order_values(self, partner_sudo):
         self.ensure_one()
-        addr = partner_sudo.address_get(['delivery'])
+        addr = partner_sudo.address_get(['delivery', 'invoice'])
         if not request.website.is_public_user():
             # FIXME VFE why not use last_website_so_id field ?
             last_sale_order = self.env['sale.order'].sudo().search(
@@ -426,8 +425,11 @@ class Website(models.Model):
                 limit=1,
                 order="date_order desc, id desc",
             )
-            if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
-                addr['delivery'] = last_sale_order.partner_shipping_id.id
+            if last_sale_order:
+                if last_sale_order.partner_shipping_id.active:  # first = me
+                    addr['delivery'] = last_sale_order.partner_shipping_id.id
+                if last_sale_order.partner_invoice_id.active:
+                    addr['invoice'] = last_sale_order.partner_invoice_id.id
 
         affiliate_id = request.session.get('affiliate_id')
         salesperson_user_sudo = self.env['res.users'].sudo().browse(affiliate_id).exists()
@@ -439,7 +441,7 @@ class Website(models.Model):
 
             'fiscal_position_id': self.fiscal_position_id.id,
             'partner_id': partner_sudo.id,
-            'partner_invoice_id': partner_sudo.id,
+            'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
 
             'pricelist_id': self.pricelist_id.id,
