@@ -66,7 +66,7 @@ class SurveyInvite(models.TransientModel):
     survey_users_can_signup = fields.Boolean(related='survey_id.users_can_signup')
     deadline = fields.Datetime(string="Answer deadline")
     send_email = fields.Boolean(compute="_compute_send_email",
-                                inverse="_inverse_send_email")
+                                inverse="_inverse_send_email", company_dependent=True)
 
     @api.depends('survey_access_mode')
     def _compute_send_email(self):
