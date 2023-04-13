@@ -22,20 +22,19 @@ class PriceRule(models.Model):
     def _compute_name(self):
         for rule in self:
             name = 'if %s %s %.02f then' % (rule.variable, rule.operator, rule.max_value)
+            if rule.currency_id:
+                base_price = format_amount(self.env, rule.list_base_price, rule.currency_id)
+                price = format_amount(self.env, rule.list_price, rule.currency_id)
+            else:
+                base_price = "%.2f" % rule.list_base_price
+                price = "%.2f" % rule.list_price
             if rule.list_base_price and not rule.list_price:
-                name = '%s fixed price %s' % (
-                    name, format_amount(self.env, rule.list_base_price, rule.currency_id)
-                )
+                name = '%s fixed price %s' % (name, base_price)
             elif rule.list_price and not rule.list_base_price:
-                name = '%s %s times %s' % (name, format_amount(
-                    self.env, rule.list_price, rule.currency_id
-                ), rule.variable_factor)
+                name = '%s %s times %s' % (name, price, rule.variable_factor)
             else:
                 name = '%s fixed price %s plus %s times %s' % (
-                    name,
-                    format_amount(self.env, rule.list_base_price, rule.currency_id),
-                    format_amount(self.env, rule.list_price, rule.currency_id),
-                    rule.variable_factor,
+                    name, base_price, price, rule.variable_factor
                 )
             rule.name = name
 
