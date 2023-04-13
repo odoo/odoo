@@ -140,6 +140,9 @@ class AccountBankStatementLine(models.Model):
         related='statement_id.is_valid',
     )
 
+    # Technical field to store details about the bank statement line
+    transaction_details = fields.Json(readonly=True)
+
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
