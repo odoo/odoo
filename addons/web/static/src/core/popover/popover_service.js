@@ -6,10 +6,10 @@ import { PopoverController } from "./popover_controller";
 
 /**
  * @typedef {{
- *   closeOnClickAway?: boolean || (target: HTMLElement) => boolean;
+ *   closeOnClickAway?: boolean | (target: HTMLElement) => boolean;
  *   onClose?: () => void;
  *   popoverClass?: string;
- *   position?: import("@web/core/position_hook").Direction;
+ *   position?: import("@web/core/position_hook").Options["position"];
  *   onPositioned?: import("@web/core/position_hook").PositionEventHandler;
  * }} PopoverServiceAddOptions
  */
