@@ -28,7 +28,7 @@ class TestWebsiteResetPassword(HttpCase):
             return original_send_mail(*args, **kwargs)
 
         def remove_mail_logs(user):
-            mails = self.env['ir.logging'].search([('name', '=', 'Password Reset'), ('path', '=', f"user:{self.id}")]).unlink
+            self.env['ir.logging'].search([('name', '=', 'Password Reset'), ('path', '=', f"user:{user.id}")]).unlink()
 
         with patch.object(MailMail, 'unlink', lambda self: None), patch.object(MailTemplate, 'send_mail', my_send_mail):
             user = self.env['res.users'].create({

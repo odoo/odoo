@@ -218,7 +218,7 @@ class ResUsers(models.Model):
                         'message': message,
                         'func': 'action_reset_password',
                         'path': path,
-                        'line': request.httprequest.remote_addr,
+                        'line': request.httprequest.remote_addr if request else 'None',
                     })
 
     def check_password_reset_availability(self):
