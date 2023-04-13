@@ -26,7 +26,7 @@
                         <i class="fa fa-chevron-down"/>
                     </button>
                     <button
-                        t-if="!props.readonly &amp;&amp; props.canChangeDefinition"
+                        t-if="!props.readonly and props.canChangeDefinition"
                         class="btn text-danger p-0 float-end o_field_property_definition_delete ms-3"
                         title="Remove Property"
                         t-on-click="props.onDelete">
@@ -126,7 +126,7 @@
                     </td>
                 </tr>
                 <tr t-if="(state.propertyDefinition.type === 'many2one' || state.propertyDefinition.type === 'many2many')
-                    &amp;&amp; state.propertyDefinition.comodel &amp;&amp; state.propertyDefinition.comodel.length">
+                    and state.propertyDefinition.comodel and state.propertyDefinition.comodel.length">
                     <td class="o_td_label align-top pe-2">
                         <b>Domain</b>
                     </td>
@@ -149,8 +149,8 @@
                     </td>
                 </tr>
                 <tr t-if="!['tags', 'selection'].includes(state.propertyDefinition.type)
-                    &amp;&amp; (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
-                    || (state.propertyDefinition.comodel &amp;&amp; state.propertyDefinition.comodel.length))"
+                    and (!['many2one', 'many2many'].includes(state.propertyDefinition.type)
+                    || (state.propertyDefinition.comodel and state.propertyDefinition.comodel.length))"
                     class="o_field_property_definition_value">
                     <td class="o_td_label align-top pe-2">
                         <label t-att-for="getUniqueDomID('default')">
