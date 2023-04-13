@@ -543,10 +543,8 @@ class Project(models.Model):
         if not self.rating_active:
             res -= self.env.ref('project.mt_project_task_rating')
         if len(self) == 1:
-            dependency_subtype = self.env.ref('project.mt_project_task_dependency_change')
             waiting_subtype = self.env.ref('project.mt_project_task_waiting')
-            if not self.allow_task_dependencies and dependency_subtype in res:
-                res -= dependency_subtype
+            if not self.allow_task_dependencies and waiting_subtype in res:
                 res -= waiting_subtype
         return res
 
