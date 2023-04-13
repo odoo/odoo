@@ -190,6 +190,8 @@ class AlarmManager(models.AbstractModel):
                 alarm.mail_template_id,
                 force_send=True
             )
+        # Create cron trigger for next recurring events
+        events.recurrence_id._setup_alarms(recurrence_update=True)
 
     @api.model
     def get_next_notif(self):
