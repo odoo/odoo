@@ -110,7 +110,6 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/fonts/fonts.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'web/static/lib/daterangepicker/daterangepicker.css',
             'point_of_sale/static/src/scss/pos.scss',
             'point_of_sale/static/src/css/pos_receipts.css',
             'point_of_sale/static/src/css/popups/product_info_popup.css',
