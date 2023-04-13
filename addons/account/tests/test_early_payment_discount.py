@@ -87,7 +87,8 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
             {'display_type': 'epd',             'balance': -100.0},
             {'display_type': 'epd',             'balance': 100.0},
             {'display_type': 'product',         'balance': -1000.0},
-            {'display_type': 'tax',             'balance': -135.0},
+            {'display_type': 'tax',             'balance': -150},
+            {'display_type': 'tax',             'balance': 15.0},
             {'display_type': 'tax',             'balance': -0.05},
             {'display_type': 'payment_term',    'balance': 1135.05},
         ], {
