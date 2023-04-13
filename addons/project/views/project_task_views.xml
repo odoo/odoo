@@ -13,11 +13,12 @@
                     <field name="stage_id"/>
                     <field name="milestone_id" groups="project.group_project_milestone"/>
                     <field name="partner_id" operator="child_of"/>
-                    <field name="description"/>
                     <filter string="Followed" name="followed_by_me" domain="[('message_is_follower', '=', True)]"/>
                     <filter string="Unassigned" name="unassigned" domain="[('user_ids', '=', False)]"/>
                     <separator invisible="context.get('default_project_id')"/>
                     <filter string="Favorite Projects" name="favorite_projects" domain="[('project_id.is_favorite', '=', True)]" invisible="context.get('default_project_id')"/>
+                    <separator/>
+                    <filter string="Starred Tasks" name="starred_tasks" domain="[('priority', '=', '1')]"/>
                     <separator groups="project.group_project_task_dependencies"/>
                     <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies"/>
                     <filter string="Blocking" name="blocking" domain="[('is_closed', '=', False), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
@@ -33,6 +34,7 @@
                         <filter string="Assignees" name="user" context="{'group_by': 'user_ids'}"/>
                         <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
                         <filter string="Milestone" name="milestone" context="{'group_by': 'milestone_id'}" groups="project.group_project_milestone"/>
+                        <filter string="Tags" name="tags" context="{'group_by': 'tag_ids'}"/>
                         <filter string="Customer" name="customer" context="{'group_by': 'partner_id'}"/>
                         <filter string="Company" name="company_id" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                         <filter string="Creation Date" name="create_date" context="{'group_by': 'create_date'}"/>
@@ -56,8 +58,6 @@
                 </field>
                 <field name="partner_id" position="after">
                     <field name="company_id" groups="base.group_multi_company"/>
-                </field>
-                <field name="description" position="after">
                     <filter string="My Tasks" name="my_tasks" domain="[('user_ids', 'in', uid)]"/>
                 </field>
                 <filter name="stage" position="after">
@@ -90,9 +90,9 @@
             <field name="mode">primary</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <field name="description" position="after">
+                <filter name="my_tasks" position="before">
                     <field string="Properties" name="task_properties"/>
-                </field>
+                </filter>
                 <filter name="inactive" position="before">
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>
                     <separator/>
