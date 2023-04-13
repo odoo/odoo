@@ -74,6 +74,12 @@ export function getRelativeDateDomain(now, offset, rangeType, fieldName, fieldTy
     let endDate = now.minus({ day: 1 }).endOf("day");
     let startDate = endDate;
     switch (rangeType) {
+        case "year_to_date": {
+            const offsetParam = { years: offset };
+            startDate = now.startOf("year").plus(offsetParam);
+            endDate = now.endOf("day").plus(offsetParam);
+            break;
+        }
         case "last_week": {
             const offsetParam = { day: 7 * offset };
             endDate = endDate.plus(offsetParam);
