@@ -123,7 +123,7 @@ class MailRenderMixin(models.AbstractModel):
         mailings. It replaces
 
          * href of links (mailto will not match the regex)
-         * src of images/v:fill (base64 hardcoded data will not match the regex)
+         * src of images/v:fill/v:image (base64 hardcoded data will not match the regex)
          * styling using url like background-image: url or background="url"
 
         It is done using regex because it is shorter than using an html parser
@@ -146,7 +146,7 @@ class MailRenderMixin(models.AbstractModel):
             return match.group(1) + urls.url_join(_sub_relative2absolute.base_url, match.group(2))
 
         _sub_relative2absolute.base_url = base_url
-        html = re.sub(r"""(<(?:img|v:fill)(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
+        html = re.sub(r"""(<(?:img|v:fill|v:image)(?=\s)[^>]*\ssrc=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(r"""(<a(?=\s)[^>]*\shref=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(r"""(<[\w-]+(?=\s)[^>]*\sbackground=")(/[^/][^"]+)""", _sub_relative2absolute, html)
         html = re.sub(re.compile(
