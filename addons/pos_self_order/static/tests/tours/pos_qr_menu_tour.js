@@ -2,17 +2,27 @@
 
 import { registry } from "@web/core/registry";
 
-registry.category("web_tour.tours").add("pos_self_order_tour", {
+// TODO: use custom class names for the selectors instead of bootstrap classes
+registry.category("web_tour.tours").add("pos_qr_menu_tour", {
     test: true,
     steps: [
         {
-            content: "Test that the default View Menu button is present",
+            content: "Test that the default `View Menu` button is present",
             trigger: ".btn",
+        },
+        {
+            content: "Test that the `My Orders` button is not present",
+            trigger: "body:not(:has(a:contains('No products found')))",
         },
         {
             content: "Test that products are present",
             trigger: ".o_self_order_item_card",
             isCheck: true,
+        },
+        {
+            content: "Test that the `Add to Cart` button is not present",
+            // TODO: add a class name to the button
+            trigger: "body:not(:has(button:))",
         },
         {
             content: "Test that the 'No products found' message is not present",

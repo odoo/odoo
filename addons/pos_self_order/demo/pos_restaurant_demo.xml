@@ -1,6 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
-    <record id="pos_restaurant.pos_config_restaurant" model="pos.config">
-        <field name="self_order_view_mode">True</field>
-    </record>
+    <data noupdate="1">
+        <record id="pos_restaurant.pos_config_restaurant" model="pos.config">
+            <field name="self_order_view_mode">True</field>
+            <field name="self_order_table_mode">True</field>
+        </record>
+        <function model="restaurant.table" name="set_access_token_to_demo_data_records" />
+    </data>
 </odoo>

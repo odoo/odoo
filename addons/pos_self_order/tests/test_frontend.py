@@ -8,30 +8,65 @@ import odoo.tests
 class TestFrontend(odoo.tests.HttpCase):
     def setUp(self):
         super().setUp()
-        self.pos_config = self.env["pos.config"].create(
+        self.pos_config_view_mode = self.env["pos.config"].create(
             {
                 "name": "Bar",
                 "module_pos_restaurant": True,
                 "is_table_management": True,
-                "iface_splitbill": True,
-                "iface_printbill": True,
-                "iface_orderline_notes": True,
-                "start_category": True,
                 "self_order_view_mode": True,
             }
         )
-        basic_product = {
-            "name": "Test Product",
+        self.pos_config_pay_after_each_mode = self.env["pos.config"].create(
+            {
+                "name": "Bar",
+                "module_pos_restaurant": True,
+                "is_table_management": True,
+                "self_order_view_mode": True,
+                "self_order_table_mode": True,
+            }
+        )
+        self.pos_config_pay_after_meal_mode = self.env["pos.config"].create(
+            {
+                "name": "Bar",
+                "module_pos_restaurant": True,
+                "is_table_management": True,
+                "self_order_view_mode": True,
+                "self_order_table_mode": True,
+                "self_order_pay_after": "meal",
+            }
+        )
+        basic_product = lambda i: {
+            "name": f"Product {i}",
             "type": "product",
             "available_in_pos": True,
-            "list_price": 10,
+            "list_price": i,
             "taxes_id": False,
         }
-        self.env["product.product"].create([basic_product for i in range(1000)])
+        self.env["product.product"].create([basic_product(i) for i in range(1, 1000)])
 
-    def test_self_order_tour(self):
+    def test_self_order_view_mode_tour(self):
         self.start_tour(
-            f"/menu/{self.pos_config.id}",
-            "pos_self_order_tour",
+            f"/menu/{self.pos_config_view_mode.id}",
+            "pos_qr_menu_tour",
             login=None,
+            watch=True,
+            step_delay=500,
+        )
+
+    def test_self_order_pay_after_each_tour(self):
+        self.start_tour(
+            f"/menu/{self.pos_config_pay_after_each_mode.id}",
+            "self_order_pay_after_each_tour",
+            login=None,
+            watch=True,
+            step_delay=500,
+        )
+
+    def test_self_order_pay_after_meal_tour(self):
+        self.start_tour(
+            f"/menu/{self.pos_config_pay_after_meal_mode.id}",
+            "self_order_pay_after_meal_tour",
+            login=None,
+            watch=True,
+            step_delay=500,
         )
