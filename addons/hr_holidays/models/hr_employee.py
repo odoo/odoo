@@ -112,11 +112,6 @@ class HrEmployeeBase(models.AbstractModel):
                             else virtual_remaining_leaves / (employee.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
             employee.allocation_remaining_display = "%g" % float_round(employee_remaining_leaves, precision_digits=2)
 
-    def _compute_presence_state(self):
-        super()._compute_presence_state()
-        employees = self.filtered(lambda employee: employee.hr_presence_state != 'present' and employee.is_absent)
-        employees.update({'hr_presence_state': 'absent'})
-
     def _compute_presence_icon(self):
         super()._compute_presence_icon()
         employees_absent = self.filtered(lambda employee:
