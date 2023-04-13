@@ -63,7 +63,7 @@ class Holidays(models.Model):
             timesheet_task_id are set on the corresponding leave type. The generated timesheet will
             be attached to this project/task.
         """
-        holidays = self.filtered(
+        holidays = self.sudo().filtered(
             lambda l: l.holiday_type == 'employee' and
             l.holiday_status_id.timesheet_project_id and
             l.holiday_status_id.timesheet_task_id and
