@@ -119,6 +119,7 @@ class RecurrenceRule(models.Model):
     weekday = fields.Selection(WEEKDAY_SELECTION, string='Weekday')
     byday = fields.Selection(BYDAY_SELECTION, string='By day')
     until = fields.Date('Repeat Until')
+    trigger_id = fields.Many2one('ir.cron.trigger')
 
     _sql_constraints = [
         ('month_day',
@@ -244,6 +245,41 @@ class RecurrenceRule(models.Model):
         }
         self.env['calendar.event'].with_context(context).create(event_vals)
         return detached_events
+
+    def _setup_alarms(self, recurrence_update=False):
+        """ Schedule cron triggers for future events
+        Create one ir.cron.trigger per recurrence.
+        :param recurrence_update: boolean: if true, update all recurrences in self, else only the recurrences
+               without trigger
+        """
+        now = fields.Datetime.now()
+        # get next events
+        self.env['calendar.event'].flush_model(fnames=['recurrence_id', 'start'])
+        if recurrence_update:
+            recurrence = self
+        else:
+            recurrence = self.filtered(lambda rec: not rec.trigger_id)
+        if not recurrence.calendar_event_ids.ids:
+            return
+
+        self.env.cr.execute("""
+            SELECT DISTINCT ON (recurrence_id) id event_id, recurrence_id
+                    FROM calendar_event 
+                   WHERE start > %s
+                     AND id IN %s
+                ORDER BY recurrence_id,start ASC;
+        """, (now, tuple(recurrence.calendar_event_ids.ids)))
+        result = self.env.cr.dictfetchall()
+        if not result:
+            return
+        events = self.env['calendar.event'].browse(value['event_id'] for value in result)
+        triggers_by_events = events._setup_alarms()
+        for vals in result:
+            trigger_id = triggers_by_events.get(vals['event_id'])
+            if not trigger_id:
+                continue
+            recurrence = self.env['calendar.recurrence'].browse(vals['recurrence_id'])
+            recurrence.trigger_id = trigger_id
 
     def _split_from(self, event, recurrence_values=None):
         """Stops the current recurrence at the given event and creates a new one starting

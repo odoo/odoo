@@ -516,8 +516,15 @@ class Meeting(models.Model):
         )
         events._sync_activities(fields={f for vals in vals_list for f in vals.keys()})
         if not self.env.context.get('dont_notify'):
-            events._setup_alarms()
-
+            alarm_events = self.env['calendar.event']
+            for event, values in zip(events, vals_list):
+                if values.get('allday'):
+                    # All day events will trigger the _inverse_date method which will create the trigger.
+                    continue
+                alarm_events |= event
+            recurring_events = alarm_events.filtered('recurrence_id')
+            recurring_events.recurrence_id._setup_alarms()
+            (alarm_events - recurring_events)._setup_alarms()
         return events.with_context(is_calendar_event_new=False)
 
     def _compute_field_value(self, field):
@@ -619,7 +626,9 @@ class Meeting(models.Model):
         # Notify attendees if there is an alarm on the modified event, or if there was an alarm
         # that has just been removed, as it might have changed their next event notification
         if not self.env.context.get('dont_notify') and update_alarms:
-            self._setup_alarms()
+            self.recurrence_id._setup_alarms(recurrence_update=True)
+            if not self.recurrence_id:
+                self._setup_alarms()
         attendee_update_events = self.filtered(lambda ev: ev.user_id != self.env.user)
         if update_time and attendee_update_events:
             # Another user update the event time fields. It should not be auto accepted for the organizer.
@@ -927,18 +936,22 @@ class Meeting(models.Model):
         cron = self.env.ref('calendar.ir_cron_scheduler_alarm').sudo()
         alarm_types = self._get_trigger_alarm_types()
         events_to_notify = self.env['calendar.event']
-
+        triggers_by_events = {}
         for event in self:
+            existing_trigger = event.recurrence_id.trigger_id
             for alarm in (alarm for alarm in event.alarm_ids if alarm.alarm_type in alarm_types):
                 at = event.start - timedelta(minutes=alarm.duration_minutes)
-                if not cron.lastcall or at > cron.lastcall:
+                create_trigger = not existing_trigger or existing_trigger and existing_trigger.call_at != at
+                if create_trigger and (not cron.lastcall or at > cron.lastcall):
                     # Don't trigger for past alarms, they would be skipped by design
-                    cron._trigger(at=at)
+                    trigger = cron._trigger(at=at)
+                    triggers_by_events[event.id] = trigger.id
             if any(alarm.alarm_type == 'notification' for alarm in event.alarm_ids):
                 # filter events before notifying attendees through calendar_alarm_manager
                 events_to_notify |= event.filtered(lambda ev: ev.alarm_ids and ev.stop >= fields.Datetime.now())
         if events_to_notify:
             self.env['calendar.alarm_manager']._notify_next_alarm(events_to_notify.partner_ids.ids)
+        return triggers_by_events
 
     # ------------------------------------------------------------
     # RECURRENCY
