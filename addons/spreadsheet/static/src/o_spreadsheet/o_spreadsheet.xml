@@ -193,7 +193,7 @@
             t-on-click="() => this.onColorClick(color)"
             t-attf-style="background-color:{{color}};">
             <div
-              t-if="props.currentColor === color"
+              t-if="isSameColor(props.currentColor, color)"
               align="center"
               t-attf-style="color:{{getCheckMarkColor()}}">
             &#10004;
@@ -864,7 +864,8 @@
       maxWidth="cellPopover.Component.size and cellPopover.Component.size.maxHidth"
       anchorRect="cellPopover.anchorRect"
       containerRect="env.getPopoverContainerRect()"
-      onMouseWheel="props.onMouseWheel">
+      onMouseWheel="props.onMouseWheel"
+      zIndex="zIndex">
       <t
         t-component="cellPopover.Component"
         t-props="{...cellPopover.props, onClosed : () => props.onClosePopover()}"
@@ -1736,7 +1737,11 @@
 
   <t t-name="o-spreadsheet-Popover" owl="1">
     <t t-portal="'.o-spreadsheet'">
-      <div class="o-popover" t-ref="popover" t-on-wheel="props.onMouseWheel">
+      <div
+        class="o-popover"
+        t-ref="popover"
+        t-on-wheel="props.onMouseWheel"
+        t-att-style="popoverStyle">
         <t t-slot="default"/>
       </div>
     </t>
@@ -3500,7 +3505,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.2.1';
-  __info__.date = '2023-03-23T11:47:01.165Z';
-  __info__.hash = 'd1e5470';
+  __info__.version = '16.2.2';
+  __info__.date = '2023-04-13T09:06:19.212Z';
+  __info__.hash = 'a38f31a';
 -->
