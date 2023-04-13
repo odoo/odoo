@@ -493,15 +493,23 @@ export function setupQUnit() {
     let passedEl;
     let failedEl;
     let skippedEl;
+    let todoCompletedEl;
+    let todoUncompletedEl;
     function insertStats() {
         const toolbar = document.querySelector("#qunit-testrunner-toolbar .qunit-url-config");
         const statsEl = document.createElement("label");
         passedEl = document.createElement("span");
         passedEl.classList.add("text-success", "ms-5", "me-3");
         statsEl.appendChild(passedEl);
+        todoCompletedEl = document.createElement("span");
+        todoCompletedEl.classList.add("text-warning", "me-3");
+        statsEl.appendChild(todoCompletedEl);
         failedEl = document.createElement("span");
         failedEl.classList.add("text-danger", "me-3");
         statsEl.appendChild(failedEl);
+        todoUncompletedEl = document.createElement("span");
+        todoUncompletedEl.classList.add("text-primary", "me-3");
+        statsEl.appendChild(todoUncompletedEl);
         skippedEl = document.createElement("span");
         skippedEl.classList.add("text-dark");
         statsEl.appendChild(skippedEl);
@@ -511,20 +519,36 @@ export function setupQUnit() {
     let testPassedCount = 0;
     let testFailedCount = 0;
     let testSkippedCount = 0;
-    QUnit.testDone(({ skipped, failed }) => {
+    let todoCompletedCount = 0;
+    let todoUncompletedCount = 0;
+    QUnit.testDone(({ skipped, failed, todo }) => {
         if (!passedEl) {
             insertStats();
         }
         if (!skipped) {
             if (failed > 0) {
-                testFailedCount++;
+                if (todo) {
+                    todoUncompletedCount++;
+                } else {
+                    testFailedCount++;
+                }
             } else {
-                testPassedCount++;
+                if (todo) {
+                    todoCompletedCount++;
+                } else {
+                    testPassedCount++;
+                }
             }
         } else {
             testSkippedCount++;
         }
         passedEl.innerText = `${testPassedCount} passed`;
+        if (todoCompletedCount > 0) {
+            todoCompletedEl.innerText = `${todoCompletedCount} todo completed`;
+        }
+        if (todoUncompletedCount > 0) {
+            todoUncompletedEl.innerText = `${todoUncompletedCount} todo uncompleted`;
+        }
         if (testFailedCount > 0) {
             failedEl.innerText = `${testFailedCount} failed`;
         }
