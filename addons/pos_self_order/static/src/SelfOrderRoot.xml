@@ -10,9 +10,15 @@
             </t>
             <t t-set-slot="/menu/{string:pos_name}/products/{int:productId}" t-slot-scope="url">
                 <ProductMainView 
-                    product="selfOrder.products.find(x => x.product_id === url.productId)"/>
+                    product="selfOrder.getProduct({ id: url.productId })"/>
+            </t>
+            <t t-set-slot="/menu/{string:pos_name}/cart">
+                <CartView/>
+            </t>
+            <t t-set-slot="/menu/{string:pos_name}/orders">
+                <OrdersView/>
             </t>
         </Router>
+        <MainComponentsContainer/>
     </t>
 </templates>
-
