@@ -1,50 +1,84 @@
-html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    position: fixed;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  position: fixed;
+  box-sizing: border-box;
 }
 
 .break-line {
-    box-sizing: border-box;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
-.o_self_order_item_card--image {
-    width:110px;
-    min-width: 110px;
-	min-height: 110px;
-    
-    & img {
-        object-fit: cover;
-    }
+.o_self_order_item_card_image {
+  width: 110px !important;
+  min-width: 110px;
+  min-height: 110px;
+
+  & img {
+    object-fit: cover;
+  }
 }
 .o_self_order_item_card {
-    border-right: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
+  border-right: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
 
-    @include media-breakpoint-down(md) {
-        &:nth-child(1n) {
-                border-right: 0;
-            }
+  @include media-breakpoint-down(md) {
+    &:nth-child(1n) {
+      border-right: 0;
     }
-    @include media-breakpoint-up(md) {
-        &:nth-child(2n+1) {
-            border-right: 0;
-        }
+  }
+  @include media-breakpoint-up(md) {
+    &:nth-child(2n + 1) {
+      border-right: 0;
     }
-    @include media-breakpoint-up(xl) {
-        &:nth-child(2n+1) {
-            border-right: 1px solid $border-color;
-        }
-    
-        &:nth-child(4n+1) {
-            border-right: 0;
-        }
+  }
+  @include media-breakpoint-up(xl) {
+    &:nth-child(2n + 1) {
+      border-right: 1px solid $border-color;
     }
+
+    &:nth-child(4n + 1) {
+      border-right: 0;
+    }
+  }
+}
+.o_self_order_floating_button {
+  @extend .o_self_order_responsive_width_button;
+  @extend .position-fixed;
+  @extend .bottom-0;
+  @extend .mb-3;
+  @extend .start-50;
+  @extend .translate-middle;
+}
+.o_self_order_floating {
+  @extend .position-fixed;
+  @extend .bottom-0;
+  @extend .mb-3;
+  @extend .start-50;
+  @extend .translate-middle;
+}
+
+.o_self_order_responsive_width_button {
+  @extend .o_self_order_button;
+  @extend .o_self_order_responsive_width;
+}
+.o_self_order_responsive_width {
+  @extend .w-75;
+  @extend .w-md-50;
+  @extend .w-xxl-25;
+}
+
+.o_self_order_button {
+  @extend .btn;
+  @extend .btn-primary;
+  @extend .btn-lg;
+  @extend .text-white;
 }

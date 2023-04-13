@@ -4,7 +4,7 @@ import { Component } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 export class NavBar extends Component {
     static template = "pos_self_order.NavBar";
-    static props = { previousPage: String };
+    static props = { customText: { type: String, optional: true } };
     setup() {
         this.selfOrder = useSelfOrder();
     }

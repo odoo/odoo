@@ -12,7 +12,13 @@
                 <ProductMainView 
                     product="selfOrder.products.find(x => x.product_id === url.productId)"/>
             </t>
+            <t t-set-slot="/menu/{string:pos_name}/cart">
+                <CartView/>
+            </t>
+            <t t-set-slot="/menu/{string:pos_name}/orders">
+                <OrdersView/>
+            </t>
         </Router>
+        <MainComponentsContainer/>
     </t>
 </templates>
-

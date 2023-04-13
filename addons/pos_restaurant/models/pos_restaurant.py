@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+# FIXME: we will move this to pos_self_order module
+import uuid
+
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
 

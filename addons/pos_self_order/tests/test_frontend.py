@@ -34,4 +34,6 @@ class TestFrontend(odoo.tests.HttpCase):
             f"/menu/{self.pos_config.id}",
             "pos_self_order_tour",
             login=None,
+            watch=True,
+            step_delay=500,
         )

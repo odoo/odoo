@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.IncrementCounter" owl="1">
+        <div class="btn-group text-center" role="group" aria-label="Quantity select">
+            <button type="button"
+                    t-on-click = "() => props.onClick(false)" 
+                    class="btn btn-outline-secondary btn-lg"> - </button>
+            <div class="m-3"
+                t-esc="props.value"/>
+            <button type="button" 
+                    t-on-click = "() => props.onClick(true)" 
+                    class="btn btn-outline-secondary btn-lg"> + </button>
+        </div>
+    </t>
+</templates>

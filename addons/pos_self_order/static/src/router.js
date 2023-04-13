@@ -4,6 +4,7 @@ import { Component, useState, useSubEnv, xml } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { browser } from "@web/core/browser/browser";
 import { zip } from "@web/core/utils/arrays";
+import { useSelfOrder } from "./SelfOrderService";
 
 function parseParams(matches, paramSpecs) {
     return Object.fromEntries(
@@ -21,8 +22,11 @@ function parseParams(matches, paramSpecs) {
     );
 }
 export class Router extends Component {
+    static props = { pos_config_id: Number, slots: Object };
     static template = xml`<t t-slot="{{state.activeSlot}}" t-props="state.slotProps"/>`;
     setup() {
+        this.selfOrder = useSelfOrder();
+        this.selfOrder.navigate = this.navigate.bind(this);
         useSubEnv({ navigate: this.navigate.bind(this) });
         this.state = useState({
             activeSlot: "default",

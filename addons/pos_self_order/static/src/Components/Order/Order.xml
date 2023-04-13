@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.Order" owl="1">
+        <div class="d-flex align-items-center justify-content-between">
+            <h6 class="fst-italic"
+                t-esc="props.order.pos_reference"/>
+            <span class="badge bg-primary"
+                t-esc="props.order.state"/>
+        </div>
+        <p class="fst-italic"
+            t-esc="props.order.date"/>
+        <OrderLines t-if="props.order.items" lines="props.order.items"/>
+        <PriceDetails tax="props.order.amount_tax" total="props.order.amount_total"/>
+    </t>
+</templates>

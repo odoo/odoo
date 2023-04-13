@@ -23,6 +23,13 @@
                         </div>
                     </div>
                 </setting>
+                <setting string="Self Order" help="Allow customers to order from their phones" id="pos_self_order_table_mode">
+                    <field name="pos_self_order_table_mode"/>
+                    <div class="content-group" attrs="{'invisible': [('pos_self_order_table_mode','=',False)]}">
+                        <label string="Pay after" for="pos_self_order_pay_after" class="me-2"/>
+                        <field name="pos_self_order_pay_after"/>
+                    </div>
+                </setting>
             </setting>
         </field>
     </record>

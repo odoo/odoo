@@ -2,6 +2,7 @@
 
 import { registry } from "@web/core/registry";
 
+// TODO: use custom class names for the selectors instead of bootstrap classes
 registry.category("web_tour.tours").add("pos_self_order_tour", {
     test: true,
     steps: [

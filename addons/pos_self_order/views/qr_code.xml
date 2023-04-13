@@ -28,10 +28,15 @@
                 wkhtmltopdf does not handle flex-wrap. ( at least not in this version )
                 This makes it so the bootstrap grid system does not work.
                 We have to do a workaround -->
-                <t t-foreach="groups_of_tables" t-as="group_of_tables">
-                    <div class="d-flex">
-                        <t t-foreach="group_of_tables" t-as="table">
-                            <t t-call="pos_self_order.qr_code"/>
+                <t t-foreach="pages_of_tables" t-as="page_of_tables">
+                    <div style="page-break-after:always;">
+                        <t t-foreach="page_of_tables" t-as="row_of_tables">
+                        <!-- FIXME: align the qr codes -->
+                            <div class="d-flex">
+                                <t t-foreach="row_of_tables" t-as="table">
+                                    <t t-call="pos_self_order.qr_code"/>
+                                </t>
+                            </div>
                         </t>
                     </div>
                 </t>
@@ -49,7 +54,11 @@
                 <t t-call="pos_self_order.first_letter_of_odoo_logo_svg"/>
             </div>
         </div>
+        <h4 t-if="table['id']">
+            Table: <t t-esc="table['name']"/>
+        </h4>
     </template>
+
     <template id="first_letter_of_odoo_logo_svg">
         <svg 
             class="position-absolute top-50 start-50"

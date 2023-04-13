@@ -2,15 +2,18 @@
 
 import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
-import { useAutofocus } from "@web/core/utils/hooks";
-import { formatMonetary } from "@web/views/fields/formatters";
-import { NavBar } from "@pos_self_order/NavBar/NavBar";
+import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
+import { NavBar } from "@pos_self_order/Components/NavBar/NavBar";
+import { FloatingButton } from "@pos_self_order/Components/FloatingButton/FloatingButton";
+import { ProductCard } from "@pos_self_order/Components/ProductCard/ProductCard";
 import { fuzzyLookup } from "@web/core/utils/search";
 export class ProductList extends Component {
     static template = "pos_self_order.ProductList";
     static props = [];
     static components = {
         NavBar,
+        FloatingButton,
+        ProductCard,
     };
     setup() {
         this.privateState = useState({
@@ -22,10 +25,13 @@ export class ProductList extends Component {
             scrolling: false,
         });
         this.selfOrder = useSelfOrder();
-        this.formatMonetary = formatMonetary;
         useAutofocus({ refName: "searchInput", mobile: true });
         this.productsList = useRef("productsList");
-        this.currentProductCard = useRef(`product_${this.env.state.currentProduct}`);
+
+        // reference to the last visited product
+        // (used to scroll back to it when the user comes back from the product page)
+        this.currentProductCard = useChildRef();
+
         // object with references to each tag heading
         this.productGroup = Object.fromEntries(
             Array.from(this.selfOrder.tagList).map((tag) => {
@@ -50,7 +56,7 @@ export class ProductList extends Component {
 
             // if the user is coming from the product page
             // we scroll back to the product card that he was looking at before
-            if (this.env.state.currentProduct) {
+            if (this.selfOrder.currentProduct) {
                 this.scrollTo(this.currentProductCard);
             }
         });
@@ -226,10 +232,5 @@ export class ProductList extends Component {
     closeSearch() {
         this.privateState.searchIsFocused = false;
         this.privateState.searchInput = "";
-    }
-    clickOnProduct(product) {
-        if (product.has_image || product.description_sale || product.attributes.length) {
-            this.env.navigate("/products/" + product.product_id);
-        }
     }
 }

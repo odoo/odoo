@@ -166,6 +166,22 @@
             <field name="value_ids" eval="[(6, 0, [ref('fabric_attribute_plastic'), ref('fabric_attribute_leather'), ref('fabric_attribute_custom')])]"/>
         </record>
 
+        <!--
+        Handle automatically created product.template.attribute.value.
+        This will allow setting fields like "price_extra" and "exclude_for"
+         -->
+        <function model="ir.model.data" name="_update_xmlids">
+            <value model="base" eval="[{
+                'xml_id': 'point_of_sale.desk_organizer_attribute_fabric_value_leather',
+                'record': obj().env.ref('point_of_sale.desk_organizer_fabric').product_template_value_ids[1],
+                'noupdate': True,
+            },]"/>
+        </function>
+        
+        <record id="point_of_sale.desk_organizer_attribute_fabric_value_leather" model="product.template.attribute.value">
+            <field name="price_extra">23</field>
+        </record>
+
         <record id="magnetic_board" model="product.product">
           <field name="available_in_pos">True</field>
           <field name="list_price">1.98</field>

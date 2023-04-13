@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_self_order.PriceDetails" owl="1">
+        <p class="ml-auto text-muted">
+            Tax: <t t-esc="selfOrder.formatMonetary(props.tax)"/>
+            Total: <t t-esc="selfOrder.formatMonetary(props.total)"/>
+        </p>
+    </t>
+</templates>
