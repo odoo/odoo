@@ -51,12 +51,22 @@ class MailComposeMessage(models.TransientModel):
                                 {'body': mail_values['body_html']},
                                 minimal_qcontext=True, raise_if_not_found=False)
                     if body:
-                        mail_values['body_html'] = Markup(
-                            html_element_attrs_re.sub(
-                                r'<html\1 xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">',
-                                str(body)
-                            )
+                        complete_body_html = html_element_attrs_re.sub(
+                            r'<html\1 xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">',
+                            str(body)
                         )
+                        complete_body_html = complete_body_html.replace(
+                            '</head>',
+                            """<!--[if mso]>
+                                <xml>
+                                    <o:OfficeDocumentSettings>
+                                        <o:AllowPNG/>
+                                        <o:PixelsPerInch>96</o:PixelsPerInch>
+                                    </o:OfficeDocumentSettings>
+                                </xml>
+                            <![endif]--></head>"""
+                        )
+                        mail_values['body_html'] = Markup(complete_body_html)
 
                 trace_vals = {
                     'model': self.model,
