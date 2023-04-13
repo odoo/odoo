@@ -49,14 +49,8 @@ class ResConfigSettings(models.TransientModel):
                 else:
                     projects[project_flag] = config_feature_enabled
 
-        # Hide the task dependency changes subtype when the dependency setting is disabled
-        task_dep_change_subtype_id = self.env.ref('project.mt_task_dependency_change')
-        project_task_dep_change_subtype_id = self.env.ref('project.mt_project_task_dependency_change')
         task_waiting_subtype_id = self.env.ref('project.mt_task_waiting')
         project_task_waiting_subtype_id = self.env.ref('project.mt_project_task_waiting')
-        if task_dep_change_subtype_id.hidden != (not self['group_project_task_dependencies']):
-            task_dep_change_subtype_id.hidden = not self['group_project_task_dependencies']
-            project_task_dep_change_subtype_id.hidden = not self['group_project_task_dependencies']
         if task_waiting_subtype_id.hidden != (not self['group_project_task_dependencies']):
             task_waiting_subtype_id.hidden = not self['group_project_task_dependencies']
             project_task_waiting_subtype_id.hidden = not self['group_project_task_dependencies']

@@ -58,13 +58,6 @@
         <field name="description">Task Waiting</field>
         <field name="hidden" eval="True"/>
     </record>
-    <record id="mt_task_dependency_change" model="mail.message.subtype">
-        <field name="name">Task Dependency Changes</field>
-        <field name="res_model">project.task</field>
-        <field name="default" eval="False"/>
-        <field name="sequence" eval="107"/>
-        <field name="hidden" eval="True"/>
-    </record>
     <record id="mt_task_rating" model="mail.message.subtype">
         <field name="name">Task Rating</field>
         <field name="res_model">project.task</field>
@@ -110,15 +103,6 @@
         <field name="res_model">project.project</field>
         <field name="default" eval="False"/>
         <field name="parent_id" ref="mt_task_rating"/>
-        <field name="relation_field">project_id</field>
-        <field name="hidden" eval="True"/>
-    </record>
-    <record id="mt_project_task_dependency_change" model="mail.message.subtype">
-        <field name="name">Task Dependency Changes</field>
-        <field name="sequence">26</field>
-        <field name="res_model">project.project</field>
-        <field name="default" eval="False"/>
-        <field name="parent_id" ref="mt_task_dependency_change"/>
         <field name="relation_field">project_id</field>
         <field name="hidden" eval="True"/>
     </record>
