@@ -1665,7 +1665,7 @@ const Wysiwyg = Widget.extend({
             let manualOpening = false;
             // Prevent dropdown closing on colorpicker click
             $dropdown.on('hide.bs.dropdown', ev => {
-                return !(ev.clickEvent && ev.clickEvent.originalEvent && ev.clickEvent.originalEvent.__isColorpickerClick);
+                return !(ev.clickEvent && ev.clickEvent.__isColorpickerClick);
             });
             $dropdown.on('show.bs.dropdown', () => {
                 if (manualOpening) {
