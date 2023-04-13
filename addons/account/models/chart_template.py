@@ -2,7 +2,7 @@
 
 import ast
 import csv
-from collections import defaultdict
+from collections import defaultdict, namedtuple
 from functools import wraps
 from inspect import getmembers
 
@@ -48,7 +48,8 @@ def template(template=None, model='template_data'):
                 # remove the template code argument as we already know it from the decorator
                 args, kwargs = args[:1], {}
             return func(*args, **kwargs)
-        return api.attrsetter('_l10n_template', (template, model))(wrapper)
+        l10n_template_key = namedtuple('TemplateKey', ('code', 'model'))(template, model)
+        return api.attrsetter('_l10n_template_key', l10n_template_key)(wrapper)
     return decorator
 
 
@@ -59,11 +60,11 @@ class AccountChartTemplate(models.AbstractModel):
     @property
     def _template_register(self):
         def is_template(func):
-            return callable(func) and hasattr(func, '_l10n_template')
+            return callable(func) and hasattr(func, '_l10n_template_key')
         template_register = defaultdict(lambda: defaultdict(list))
         cls = type(self)
         for _attr, func in getmembers(cls, is_template):
-            template, model = func._l10n_template
+            template, model = func._l10n_template_key
             template_register[template][model].append(func)
         cls._template_register = template_register
         return template_register

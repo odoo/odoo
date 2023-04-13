@@ -9,54 +9,55 @@ def get_flag(country_code):
     return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
 
 
-def templ(env, code, name=None, country='', **kwargs):
-    country_code = country or code.split('_')[0] if country is not None else None
-    country = country_code and env.ref(f"base.{country_code}", raise_if_not_found=False)
-    country_name = f"{get_flag(country.code)} {country.name}" if country else ''
-    return {
-        'name': country_name and (f"{country_name} - {name}" if name else country_name) or name,
-        'country_id': country and country.id,
-        'country_code': country and country.code,
-        **kwargs,
-    }
-
-template_module = lambda m: ismodule(m) and m.__name__.split('.')[-1].startswith('template_')
-template_class = isclass
-template_function = lambda f: isfunction(f) and hasattr(f, '_l10n_template') and f._l10n_template[1] == 'template_data'
-
 class IrModule(models.Model):
     _inherit = "ir.module.module"
 
     account_templates = fields.Binary(compute='_compute_account_templates', exportable=False)
 
-    def _compute_account_templates(self):
-        chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
-        ChartTemplate = self.env['account.chart.template']
-        for module in self:
-            templates = {}
-            if module.category_id == chart_category or module.name == 'account':
-                try:
-                    python_module = import_module(f"odoo.addons.{module.name}.models")
-                except ModuleNotFoundError:
-                    templates = {}
-                else:
-                    templates = {
-                        fct._l10n_template[0]: {
-                            'name': fct(ChartTemplate).get('name'),
-                            'parent': fct(ChartTemplate).get('parent'),
-                            'country': fct(ChartTemplate).get('country', ''),
-                            'visible': fct(ChartTemplate).get('visible', True),
-                            'module': module.name,
-                        }
-                        for _name, mdl in getmembers(python_module, template_module)
-                        for _name, cls in getmembers(mdl, template_class)
-                        for _name, fct in getmembers(cls, template_function)
-                    }
+    def _get_template_data_function(self):
+        self.ensure_one()
 
-            module.account_templates = {
-                code: templ(self.env, code, **vals)
-                for code, vals in templates.items()
-            }
+        chart_category = self.env.ref('base.module_category_accounting_localizations_account_charts')
+        if self.category_id != chart_category and self.name != 'account':
+            return
+
+        try:
+            loaded_module = import_module(f"odoo.addons.{self.name}.models")
+        except ModuleNotFoundError:
+            return
+
+        def filter_template_module(m):
+            return ismodule(m) and m.__name__.split('.')[-1].startswith('template_')
+        def filter_template_data_function(f):
+            return isfunction(f) and hasattr(f, '_l10n_template_key') and f._l10n_template_key.model == 'template_data'
+
+        for _mname, template_module in getmembers(loaded_module, filter_template_module):
+            for _cname, template_class in getmembers(template_module, isclass):
+                for _fname, template_data_function in getmembers(template_class, filter_template_data_function):
+                    yield template_data_function
+
+    def _compute_account_templates(self):
+        for module in self:
+            module.account_templates = {}
+            for template_data_function in module._get_template_data_function():
+                template_data = template_data_function(self.env['account.chart.template'])
+                template_code = template_data_function._l10n_template_key.code
+                template_name = template_data.get('name')
+                template_country = template_data.get('country', '')
+                country_code = template_country or template_country is not None and template_code.split('_')[0]
+                country = country_code and self.env.ref(f"base.{country_code}", raise_if_not_found=False)
+                country_name = f"{get_flag(country.code)} {country.name}" if country else ''
+                description = country_name and (f"{country_name} - {template_name}" if template_name else country_name) or template_name
+
+                module.account_templates[template_code] = {
+                    'name': description,
+                    'module': module.name,
+                    'parent': template_data.get('parent'),
+                    'country': country,
+                    'country_id': country and country.id,
+                    'country_code': country and country.code,
+                    'visible': template_data.get('visible', True),
+                }
 
     def write(self, vals):
         # Instanciate the first template of the module on the current company upon installing the module
