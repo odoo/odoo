@@ -20,7 +20,7 @@ export class Many2ManyAttendeeExpandable extends Many2ManyAttendee {
             const popover = document.querySelector(".o_field_many2manyattendeeexpandable")
                 .closest(".o_popover");
             const targetElement = document.querySelector(`.fc-event[data-event-id="${this.props.record.resId}"]`);
-            reposition(targetElement, popover, { position: "right", margin: 0 });
+            reposition(targetElement, popover, null, { position: "right", margin: 0 });
         }, () => [ this.state.expanded ]);
     }
 
