@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class SaleOrder(models.Model):
@@ -68,6 +69,12 @@ class SaleOrderLine(models.Model):
         'event.event.ticket', string='Event Ticket',
         help="Choose an event ticket and it will automatically create a registration for this event ticket.")
     event_ok = fields.Boolean(compute='_compute_event_ok')
+
+    @api.constrains('event_id', 'event_ticket_id')
+    def _check_event_id_and_event_type_id(self):
+        order_lines = self.filtered(lambda l: l.product_id.detailed_type == 'event' and not (l.event_id and l.event_ticket_id))
+        if order_lines:
+            raise UserError(_("Event and Event Ticket are required!"))
 
     @api.depends('product_id.detailed_type')
     def _compute_event_ok(self):

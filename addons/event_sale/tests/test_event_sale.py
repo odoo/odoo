@@ -6,6 +6,7 @@ from odoo.addons.mail.tests.common import mail_new_test_user
 
 from odoo.tests import tagged
 from odoo.tests.common import users
+from odoo.exceptions import UserError
 
 
 @tagged('event_flow')
@@ -279,3 +280,24 @@ class TestEventSale(TestEventSaleCommon):
         self.assertEqual(event.seats_expected, 1)
         self.sale_order.action_cancel()
         self.assertEqual(event.seats_expected, 0)
+
+    def test_check_event_id_and_event_ticket_id(self):
+        """ Ensure events created from sale order lines have an associated event. """
+        so = self.env['sale.order'].create({
+            'partner_id': self.event_customer.id,
+        })
+
+        sol_1 = (self.env['sale.order.line'].create({
+            'name': self.event_0.name,
+            'product_id': self.event_product.id,
+            'product_uom_qty': 1,
+            'product_uom': self.event_product.uom_id.id,
+            'price_unit': self.event_product.list_price,
+            'order_id': so.id,
+            'event_id': self.event_0.id,
+            'event_ticket_id': self.ticket.id,
+        }))
+
+        with self.assertRaises(UserError, msg="Event and Event Ticket are required!"):
+            sol_1.write({'event_id': False, 'event_ticket_id': False})
+        so.action_confirm()
