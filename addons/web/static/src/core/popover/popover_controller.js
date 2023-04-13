@@ -23,7 +23,7 @@ export class PopoverController extends Component {
     setup() {
         if (this.props.target.isConnected) {
             this.popoverRef = useChildRef();
-            useExternalListener(window, "click", this.onClickAway, { capture: true });
+            useExternalListener(window, "mousedown", this.onClickAway, { capture: true });
             const targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
             targetObserver.observe(this.props.target.parentElement, { childList: true });
             onWillDestroy(() => targetObserver.disconnect());

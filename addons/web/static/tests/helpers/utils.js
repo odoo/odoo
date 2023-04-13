@@ -176,6 +176,18 @@ function keyboardEventBubble(args) {
     return Object.assign({}, args, { bubbles: true, keyCode: args.which, cancelable: true });
 }
 
+function pointerEventMapping(args) {
+    return {
+        clientX: args ? args.pageX : undefined,
+        clientY: args ? args.pageY : undefined,
+        pointerType: "mouse",
+        ...args,
+        bubbles: true,
+        cancelable: true,
+        view: window,
+    };
+}
+
 function mouseEventMapping(args) {
     return {
         clientX: args ? args.pageX : undefined,
@@ -239,6 +251,8 @@ const EVENT_TYPES = {
     mouseleave: { constructor: MouseEvent, processParameters: mouseEventNoBubble },
     mouseover: { constructor: MouseEvent, processParameters: mouseEventMapping },
     mouseout: { constructor: MouseEvent, processParameters: mouseEventMapping },
+    pointerdown: { constructor: PointerEvent, processParameters: pointerEventMapping },
+    pointerup: { constructor: PointerEvent, processParameters: pointerEventMapping },
     focus: { constructor: FocusEvent, processParameters: noBubble },
     focusin: { constructor: FocusEvent, processParameters: onlyBubble },
     blur: { constructor: FocusEvent, processParameters: noBubble },
@@ -365,11 +379,10 @@ export async function triggerScroll(
 }
 
 export function click(el, selector, skipVisibilityCheck = false) {
-    return triggerEvent(
+    return triggerEvents(
         el,
         selector,
-        "click",
-        { bubbles: true, cancelable: true },
+        ["pointerdown", "mousedown", "pointerup", "mouseup", "click"],
         { skipVisibilityCheck }
     );
 }

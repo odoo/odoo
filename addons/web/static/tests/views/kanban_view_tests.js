@@ -2649,7 +2649,11 @@ QUnit.module("Views", (hooks) => {
             // click to input and drag the mouse outside, should not cancel the quick creation
             await quickCreateRecord();
             await triggerEvent(target, ".o_kanban_quick_create input", "mousedown");
-            await click(target, ".o_kanban_group:first-child .o_kanban_record:last-of-type");
+            await triggerEvent(
+                target,
+                ".o_kanban_group:first-child .o_kanban_record:last-of-type",
+                "click"
+            );
             assert.containsOnce(
                 target,
                 ".o_kanban_quick_create",
