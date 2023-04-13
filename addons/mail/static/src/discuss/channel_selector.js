@@ -185,7 +185,7 @@ export class ChannelSelector extends Component {
     get navigableListProps() {
         return {
             anchorRef: this.rootRef.el,
-            position: "bottom",
+            position: "bottom-fit",
             onSelect: (ev, option) => this.onSelect(option),
             placeholder: _t("Loading"),
             optionTemplate:
