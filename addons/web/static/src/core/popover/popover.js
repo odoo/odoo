@@ -39,10 +39,14 @@ export class Popover extends Component {
         switch (position) {
             case "tm": // top-middle
             case "bm": // bottom-middle
+            case "tf": // top-fit
+            case "bf": // bottom-fit
                 arrowEl.classList.add("start-0", "end-0", "mx-auto");
                 break;
             case "lm": // left-middle
             case "rm": // right-middle
+            case "lf": // left-fit
+            case "rf": // right-fit
                 arrowEl.classList.add("top-0", "bottom-0", "my-auto");
                 break;
             case "ts": // top-start
@@ -81,7 +85,13 @@ Popover.props = {
     },
     position: {
         type: String,
-        validate: (p) => ["top", "bottom", "left", "right"].includes(p),
+        validate: (p) => {
+            const [d, v = "middle"] = p.split("-");
+            return (
+                ["top", "bottom", "left", "right"].includes(d) &&
+                ["start", "middle", "end", "fit"].includes(v)
+            );
+        },
         optional: true,
     },
     onPositioned: {
