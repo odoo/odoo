@@ -3,7 +3,7 @@
 
     <t t-name="web.KanbanHeader" owl="1">
         <div class="o_kanban_header top-0" t-ref="root" t-attf-class="{{ !env.isSmall and group.isFolded ? 'pt-3' : 'py-3' }}">
-            <div t-ref="title" class="o_kanban_header_title position-relative d-flex align-items-baseline lh-lg text-900" t-on-mouseenter="() => this.openTooltip()" t-on-mouseleave="(ev) => this.closeTooltip()">
+            <div class="o_kanban_header_title position-relative d-flex align-items-baseline lh-lg text-900" t-on-mouseenter="onTitleMouseEnter" t-on-mouseleave="onTitleMouseLeave">
                 <span class="o_column_title flex-grow-1 d-inline-block mw-100 text-truncate fs-4 fw-bold align-top" t-att-class="{ 'overflow-visible': !env.isSmall and group.isFolded }" t-esc="groupName"/>
                 <t t-if="env.isSmall or !group.isFolded">
                     <Dropdown class="'o_kanban_config'" togglerClass="'btn p-0 border-0'" position="'bottom-end'" container="() => this.rootRef.el">

@@ -60,8 +60,9 @@ export class Discuss extends Component {
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
-        this.popover = usePopover();
-        this.closePopover = null;
+        this.popover = usePopover(ChannelInvitation, {
+            onClose: () => (this.state.isAddingUsers = false),
+        });
         this.addUsersRef = useRef("addUsers");
         this.state = useState({
             activeMode: this.MODES.NONE,
@@ -120,23 +121,11 @@ export class Discuss extends Component {
     }
 
     toggleInviteForm() {
-        if (this.closePopover) {
-            this.closePopover();
-            this.closePopover = null;
+        if (this.popover.isOpen) {
+            this.popover.close();
         } else {
-            const el = this.addUsersRef.el;
             this.state.isAddingUsers = true;
-            this.closePopover = this.popover.add(
-                el,
-                ChannelInvitation,
-                { thread: this.thread },
-                {
-                    onClose: () => {
-                        this.state.isAddingUsers = false;
-                        this.closePopover = null;
-                    },
-                }
-            );
+            this.popover.open(this.addUsersRef.el, { thread: this.thread });
         }
     }
 

@@ -15,7 +15,8 @@ AccountPaymentPopOver.template = "account.AccountPaymentPopOver";
 
 export class AccountPaymentField extends Component {
     setup() {
-        this.popover = usePopover();
+        const position = localization.direction === "rtl" ? "bottom" : "left";
+        this.popover = usePopover(AccountPaymentPopOver, { position });
         this.orm = useService("orm");
         this.action = useService("action");
 
@@ -45,28 +46,12 @@ export class AccountPaymentField extends Component {
     }
 
     onInfoClick(ev, idx) {
-        if (this.popoverCloseFn) {
-            this.closePopover();
-        }
-        this.popoverCloseFn = this.popover.add(
-            ev.currentTarget,
-            AccountPaymentPopOver,
-            {
-                title: this.env._t("Journal Entry Info"),
-                ...this.lines[idx],
-                _onRemoveMoveReconcile: this.removeMoveReconcile.bind(this),
-                _onOpenMove: this.openMove.bind(this),
-                onClose: this.closePopover,
-            },
-            {
-                position: localization.direction === "rtl" ? "bottom" : "left",
-            },
-        );
-    }
-
-    closePopover() {
-        this.popoverCloseFn();
-        this.popoverCloseFn = null;
+        this.popover.open(ev.currentTarget, {
+            title: this.env._t("Journal Entry Info"),
+            ...this.lines[idx],
+            _onRemoveMoveReconcile: this.removeMoveReconcile.bind(this),
+            _onOpenMove: this.openMove.bind(this),
+        });
     }
 
     async assignOutstandingCredit(id) {
@@ -76,7 +61,7 @@ export class AccountPaymentField extends Component {
     }
 
     async removeMoveReconcile(moveId, partialId) {
-        this.closePopover();
+        this.popover.close();
         await this.orm.call(this.props.record.resModel, 'js_remove_outstanding_partial', [moveId, partialId], {});
         await this.props.record.model.root.load();
         this.props.record.model.notify();

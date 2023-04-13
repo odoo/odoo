@@ -2,9 +2,9 @@
 
 import { browser } from "@web/core/browser/browser";
 import { Tooltip } from "@web/core/tooltip/tooltip";
-import { useService } from "@web/core/utils/hooks";
-
+import { usePopover } from "@web/core/popover/popover_hook";
 import { Component, useRef } from "@odoo/owl";
+
 export class CopyButton extends Component {
     static template = "web.CopyButton";
     static props = {
@@ -17,16 +17,12 @@ export class CopyButton extends Component {
 
     setup() {
         this.button = useRef("button");
-        this.popover = useService("popover");
+        this.popover = usePopover(Tooltip);
     }
 
     showTooltip() {
-        const closeTooltip = this.popover.add(this.button.el, Tooltip, {
-            tooltip: this.props.successText,
-        });
-        browser.setTimeout(() => {
-            closeTooltip();
-        }, 800);
+        this.popover.open(this.button.el, { tooltip: this.props.successText });
+        browser.setTimeout(this.popover.close, 800);
     }
 
     async onClick() {
@@ -43,7 +39,7 @@ export class CopyButton extends Component {
         }
         try {
             await write(this.props.content);
-        } catch(error) {
+        } catch (error) {
             return browser.console.warn(error);
         }
         this.showTooltip();
