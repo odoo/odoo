@@ -19,6 +19,9 @@ var DateWidget = Widget.extend({
         'show.datetimepicker': '_onDateTimePickerShow',
         'hide.datetimepicker': '_onDateTimePickerHide',
     },
+    jsLibs: (Widget.prototype.jsLibs || []).concat([
+        "/web/static/lib/tempusdominus/tempusdominus.js",
+    ]),
     /**
      * @override
      */
