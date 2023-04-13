@@ -134,7 +134,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             toolbar.push(['history', ['undo', 'redo']]);
 
             var options = {
-                height: 200,
+                height: 350,
                 minHeight: 80,
                 toolbar: toolbar,
                 styleWithSpan: false,
