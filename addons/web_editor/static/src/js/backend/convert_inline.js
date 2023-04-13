@@ -1233,9 +1233,11 @@ function _backgroundImageToVml(backgroundImage) {
 
     // Create the VML structure, with the content of the original element inside.
     const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
-    const vml = `<v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false"
-                    style="width:${width*.75}pt;height:${height*.75}pt;v-text-anchor:middle;">
-        <v:fill src="${url}" origin="-0.5,-0.5" position="-0.5,-0.5" type="frame" size="1,1" aspect="atleast" color="#000000"/>
+    const vml = `<v:image xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" ` +
+        `style="border: 0; display: inline-block; width: ${width}px; height: ${height}px;" src="${url}"/>
+    <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" ` +
+        `style="border: 0; display: inline-block; position: absolute; width:${width}px; height:${height}px; v-text-anchor:middle;">
+        <v:fill opacity="0%" color="#000000"/>
         <v:textbox inset="0,0,0,0">
             <table border="0" cellpadding="0" cellspacing="0">
                 <tr>

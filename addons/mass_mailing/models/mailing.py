@@ -13,6 +13,10 @@ from ast import literal_eval
 from dateutil.relativedelta import relativedelta
 from markupsafe import Markup
 from werkzeug.urls import url_join
+from PIL import Image
+from io import BytesIO
+import urllib.request
+import base64
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
@@ -461,6 +465,7 @@ class MassMailing(models.Model):
         for values in vals_list:
             if values.get('body_html'):
                 values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+                values['body_html'] = self._crop_vml_images(values['body_html'])
             if values.get('ab_testing_schedule_datetime'):
                 at = fields.Datetime.from_string(values['ab_testing_schedule_datetime'])
                 ab_testing_cron._trigger(at=at)
@@ -473,6 +478,7 @@ class MassMailing(models.Model):
     def write(self, values):
         if values.get('body_html'):
             values['body_html'] = self._convert_inline_images_to_urls(values['body_html'])
+            values['body_html'] = self._crop_vml_images(values['body_html'])
         # If ab_testing is already enabled on a mailing and the campaign is removed, we raise a ValidationError
         if values.get('campaign_id') is False and any(mailing.ab_testing_enabled for mailing in self) and 'ab_testing_enabled' not in values:
             raise ValidationError(_("A campaign should be set when A/B test is enabled"))
@@ -1350,6 +1356,52 @@ class MassMailing(models.Model):
             return lxml.html.tostring(root, encoding='unicode')
 
         return body_html
+
+    def _crop_vml_images(self, body_html):
+        """
+        Find VML v:image elements, crop their source images, make an attachement
+        out of them and replace their source with an url to the attachement.
+        """
+
+        def _image_to_url(b64image: bytes):
+            """Store an image in an attachement and returns an url"""
+            attachment = self.env['ir.attachment'].create({
+                'datas': b64image,
+                'name': "cropped_image_mailing_{}".format(self.id),
+                'type': 'binary',})
+
+            attachment.generate_access_token()
+
+            return '/web/image/%s?access_token=%s' % (
+                attachment.id, attachment.access_token)
+
+        root = lxml.html.fromstring(body_html)
+        modified = False
+        for comment in root.xpath('//comment()'):
+            is_mso = mso_re.match(comment.text)
+            if is_mso:
+                matches = re.findall(r'<v:image[^>]*>', comment.text)
+                if matches:
+                    for match in matches:
+                        try:
+                            url = re.search(r'src=\s*\"([^\"]+)\"', match).group(1)
+                            absolute_url = url
+                            if url.startswith('/'):
+                                absolute_url = self.get_base_url() + url
+                            urllib.request.urlretrieve(absolute_url, 'temp.jpg')
+                            buffered = BytesIO()
+                            image = Image.open('temp.jpg')
+                            image.save(buffered, format="JPEG")
+                            width = float(re.search(r'width:\s*([0-9]+)\s*px', match).group(1))
+                            height = float(re.search(r'height:\s*([0-9]+)\s*px', match).group(1))
+                            image_processor = tools.ImageProcess(buffered.getvalue())
+                            image = image_processor.crop_resize(width, height).image
+                            buffered = BytesIO()
+                            image.save(buffered, format="JPEG")
+                            comment.text = comment.text.replace(url, _image_to_url(base64.b64encode(buffered.getvalue())))
+                            modified = True
+                        except Exception:
+                            pass
 
         if modified:
             return lxml.html.tostring(root, encoding='unicode')
