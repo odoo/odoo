@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Component, onWillDestroy, useExternalListener, xml } from "@odoo/owl";
+import { useHotkey } from "../hotkeys/hotkey_hook";
 import { useChildRef } from "../utils/hooks";
 import { Popover } from "./popover";
 
@@ -24,6 +25,7 @@ export class PopoverController extends Component {
         if (this.props.target.isConnected) {
             this.popoverRef = useChildRef();
             useExternalListener(window, "mousedown", this.onClickAway, { capture: true });
+            useHotkey("escape", () => this.props.close());
             const targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
             targetObserver.observe(this.props.target.parentElement, { childList: true });
             onWillDestroy(() => targetObserver.disconnect());
