@@ -282,7 +282,7 @@
                                 <span class="ps-0" style="flex:1">
                                     <field name="skill_level_id"
                                             attrs="{'readonly': [('skill_id', '=', False)]}"
-                                            context="{'from_skill_level_dropdown': True}" />
+                                            context="{'from_skill_level_dropdown': True, 'default_skill_type_id': skill_type_id}" />
                                 </span>
                                 <span style="flex:1">
                                     <field name="level_progress" widget="progressbar" class="o_hr_skills_progress" attrs="{'invisible': [('skill_level_id', '=', False)]}" />
