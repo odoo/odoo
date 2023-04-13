@@ -41,18 +41,28 @@ export const BUTTON_CLICK_PARAMS = [
 ];
 
 /**
- * Add dependencies to activeFields
+ * Add dependencies to activeFields (and to fields if needed) from an "info" object,
+ * which is expected to contain either a "field" or a "widget" key containing the
+ * list of dependencies or a function returning it.
  *
- * @param {Object} activeFields
- * @param {Object} [dependencies={}]
+ * @param {Record<string, any>} info
+ * @param {Record<string, Object>} activeFields
+ * @param {Record<string, Object>} fields
  */
-export function addFieldDependencies(activeFields, fields, dependencies = []) {
-    for (const dependency of dependencies) {
+export function addFieldDependencies(info, activeFields, fields) {
+    const { fieldDependencies } = info.field || info.widget;
+    const deps =
+        typeof fieldDependencies === "function" ? fieldDependencies(info) : fieldDependencies;
+    for (const dependency of deps || []) {
         const { name } = dependency;
         if (!(name in activeFields)) {
-            activeFields[name] = Object.assign({ name, attrs: {} }, dependency, {
-                modifiers: { invisible: true },
-            });
+            activeFields[name] = {
+                name,
+                attrs: {},
+                options: {},
+                ...dependency,
+                modifiers: { invisible: true, ...dependency.modifiers },
+            };
         }
         if (!(name in fields)) {
             fields[name] = { ...dependency };

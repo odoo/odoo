@@ -7,16 +7,16 @@ import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
-import { getDefaultConfig, View } from "@web/views/view";
+import { View, getDefaultConfig } from "@web/views/view";
 import {
     fakeCompanyService,
     makeFakeLocalizationService,
     makeFakeRouterService,
-    makeFakeUserService
+    makeFakeUserService,
 } from "../helpers/mock_services";
 import {
     setupControlPanelFavoriteMenuRegistry,
-    setupControlPanelServiceRegistry
+    setupControlPanelServiceRegistry,
 } from "../search/helpers";
 import { addLegacyMockEnvironment } from "../webclient/helpers";
 
@@ -40,9 +40,10 @@ const rootDialogTemplate = xml`<Dialog><View t-props="props.viewProps"/></Dialog
  */
 
 /**
+ * @template {Component} T
  * @param {MakeViewParams} params
  * @param {boolean} [inDialog=false]
- * @returns {Component}
+ * @returns {Promise<T>}
  */
 async function _makeView(params, inDialog = false) {
     const props = { ...params };
@@ -123,7 +124,6 @@ async function _makeView(params, inDialog = false) {
 
 /**
  * @param {MakeViewParams} params
- * @returns {Component}
  */
 export function makeView(params) {
     return _makeView(params);
@@ -131,7 +131,6 @@ export function makeView(params) {
 
 /**
  * @param {MakeViewParams} params
- * @returns {Component}
  */
 export function makeViewInDialog(params) {
     return _makeView(params, true);

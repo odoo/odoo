@@ -210,6 +210,7 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
     const field = getFieldFromRegistry(fields[name].type, widget, viewType, jsClass);
     const fieldInfo = {
         name,
+        type: fields[name].type,
         viewType,
         widget,
         modifiers: {},

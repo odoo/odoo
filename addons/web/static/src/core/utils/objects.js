@@ -35,10 +35,9 @@ export function deepCopy(obj) {
  * @template {keyof T} K
  * @param {T} object
  * @param {K[]} properties
- * @returns {Omit<T, K>}
  */
 export function omit(object, ...properties) {
-    /** @type {any} */
+    /** @type {Omit<T, K>} */
     const result = {};
     const propertiesSet = new Set(properties);
     for (const key in object) {
