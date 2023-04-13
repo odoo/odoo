@@ -5,7 +5,6 @@ import os
 import sys
 import time
 
-
 sys.path.append(os.path.abspath(os.path.join(__file__,'../../../')))
 
 import odoo
@@ -56,9 +55,18 @@ class CheckAddons(argparse.Action):
 
 def parse_args():
     parser = argparse.ArgumentParser(
-        description="Script for testing the install / uninstall / reinstall cycle of Odoo modules")
+        description="Script for testing the install / uninstall / reinstall"
+                    " cycle of Odoo modules. Prefer the 'cycle' subcommand to"
+                    " running this without anything specified (this is the"
+                    " default behaviour).")
+    parser.set_defaults(
+        func=test_cycle,
+        reinstall=True,
+    )
+    fake_commands = parser.add_mutually_exclusive_group()
+
     parser.add_argument("--database", "-d", type=str, required=True,
-        help="The database to test (note: must have only 'base' installed)")
+        help="The database to test (/ run the command on)")
     parser.add_argument("--data-dir", "-D", dest="data_dir", type=str,
         help="Directory where to store Odoo data"
     )
@@ -68,17 +76,52 @@ def parse_args():
         help="Skip modules (only install) up to the specified one in topological order")
     parser.add_argument("--addons-path", "-p", type=str, action=CheckAddons,
         help="Comma-separated list of paths to directories containing extra Odoo modules")
-    parser.add_argument("--uninstall", "-U", type=str,
-        help="Comma-separated list of modules to uninstall/reinstall")
-    parser.add_argument("--no-reinstall", '-n', dest="reinstall", action='store_false', default=True)
-    parser.add_argument("--standalone", type=str,
-        help="Launch standalone scripts tagged with @standalone. Accepts a list of "
-             "module names or tags separated by commas. 'all' will run all available scripts."
+
+    cmds = parser.add_subparsers(title="subcommands", metavar='')
+    cycle = cmds.add_parser(
+        'cycle', help="Full install/uninstall/reinstall cycle.",
+        description="Installs, uninstalls, and reinstalls all modules which are"
+                    " not skipped or blacklisted, the database should have"
+                    " 'base' installed (only).")
+    cycle.set_defaults(func=test_cycle)
+
+    fake_commands.add_argument(
+        "--uninstall", "-U", action=UninstallAction,
+        help="Comma-separated list of modules to uninstall/reinstall. Prefer the 'uninstall' subcommand."
     )
+    uninstall = cmds.add_parser(
+        'uninstall', help="Uninstallation",
+        description="Uninstalls then (by default) reinstalls every specified "
+                    "module. Modules which are not installed before running "
+                    "are ignored.")
+    uninstall.set_defaults(func=test_uninstall)
+    uninstall.add_argument('uninstall', help="comma-separated list of modules to uninstall/reinstall")
+    uninstall.add_argument(
+        '-n', '--no-reinstall', dest='reinstall', action='store_false',
+        help="Skips reinstalling the module(s) after uninstalling."
+    )
+
+    fake_commands.add_argument("--standalone", action=StandaloneAction,
+        help="Launch standalone scripts tagged with @standalone. Accepts a list of "
+             "module names or tags separated by commas. 'all' will run all available scripts. Prefer the 'standalone' subcommand."
+    )
+    standalone = cmds.add_parser('standalone', help="Run scripts tagged with @standalone")
+    standalone.set_defaults(func=test_standalone)
+    standalone.add_argument('standalone', help="List of module names or tags separated by commas, 'all' will run all available scripts.")
+
     return parser.parse_args()
 
+class UninstallAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        namespace.func = test_uninstall
+        setattr(namespace, self.dest, values)
 
-def test_full(args):
+class StandaloneAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        namespace.func = test_standalone
+        setattr(namespace, self.dest, values)
+
+def test_cycle(args):
     """ Test full install/uninstall/reinstall cycle for all modules """
     with odoo.registry(args.database).cursor() as cr:
         env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
@@ -125,7 +168,7 @@ def test_uninstall(args):
         if args.reinstall and module_name not in INSTALL_BLACKLIST:
 
 
-def test_scripts(args):
+def test_standalone(args):
     """ Tries to launch standalone scripts tagged with @post_testing """
     # load the registry once for script discovery
     registry = odoo.registry(args.database)
@@ -169,12 +212,7 @@ if __name__ == '__main__':
     logging.getLogger('odoo.sql_db').setLevel(logging.CRITICAL)
 
     try:
-        if args.uninstall:
-            test_uninstall(args)
-        elif args.standalone:
-            test_scripts(args)
-        else:
-            test_full(args)
+        args.func(args)
     except Exception:
-        _logger.error("%s tests failed", "uninstall" if args.uninstall else "standalone" if args.standalone else "cycle")
+        _logger.error("%s tests failed", args.func.__name__[5:])
         raise
