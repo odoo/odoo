@@ -92,7 +92,7 @@
           t-on-click="() => this.onColorClick(color)"
           t-attf-style="background-color:{{color}};">
           <div
-            t-if="props.currentColor === color"
+            t-if="isSameColor(props.currentColor, color)"
             align="center"
             t-attf-style="color:{{getCheckMarkColor()}}">
             &#10004;
@@ -118,7 +118,7 @@
           t-attf-style="background-color:{{color}};"
           t-on-click="() => this.onColorClick(color)">
           <div
-            t-if="props.currentColor === color"
+            t-if="isSameColor(props.currentColor, color)"
             align="center"
             t-attf-style="color:{{getCheckMarkColor()}}">
             &#10004;
@@ -703,7 +703,8 @@
       maxWidth="cellPopover.Component.size and cellPopover.Component.size.maxHidth"
       anchorRect="cellPopover.anchorRect"
       containerRect="env.getPopoverContainerRect()"
-      onMouseWheel="props.onMouseWheel">
+      onMouseWheel="props.onMouseWheel"
+      zIndex="zIndex">
       <t
         t-component="cellPopover.Component"
         t-props="{...cellPopover.props, onClosed : () => props.onClosePopover()}"
@@ -1527,7 +1528,11 @@
 
   <t t-name="o-spreadsheet-Popover" owl="1">
     <t t-portal="'.o-spreadsheet'">
-      <div class="o-popover" t-ref="popover" t-on-wheel="props.onMouseWheel">
+      <div
+        class="o-popover"
+        t-ref="popover"
+        t-on-wheel="props.onMouseWheel"
+        t-att-style="popoverStyle">
         <t t-slot="default"/>
       </div>
     </t>
@@ -2224,7 +2229,7 @@
           <ColorPicker
             t-if="state.openedColorPicker === 'backgroundColor'"
             onColorPicked="(color) => this.setColor(color, 'backgroundColor')"
-            currentColor="props.definition.brackground"
+            currentColor="props.definition.background"
             t-key="backgroundColor"
           />
         </div>
@@ -3308,7 +3313,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.1.6';
-  __info__.date = '2023-03-23T11:46:07.016Z';
-  __info__.hash = '3bad828';
+  __info__.version = '16.1.7';
+  __info__.date = '2023-04-13T09:05:09.828Z';
+  __info__.hash = '3141a6d';
 -->

@@ -112,88 +112,88 @@
     const FILTERS_COLOR = "#188038";
     const BACKGROUND_HEADER_FILTER_COLOR = "#E6F4EA";
     const BACKGROUND_HEADER_SELECTED_FILTER_COLOR = "#CEEAD6";
-    // Color picker
+    // Color picker defaults as upper case HEX to match `toHex`helper
     const COLOR_PICKER_DEFAULTS = [
         "#000000",
         "#434343",
         "#666666",
         "#999999",
-        "#b7b7b7",
-        "#cccccc",
-        "#d9d9d9",
-        "#efefef",
-        "#f3f3f3",
-        "#ffffff",
+        "#B7B7B7",
+        "#CCCCCC",
+        "#D9D9D9",
+        "#EFEFEF",
+        "#F3F3F3",
+        "#FFFFFF",
         "#980000",
-        "#ff0000",
-        "#ff9900",
-        "#ffff00",
-        "#00ff00",
-        "#00ffff",
-        "#4a86e8",
-        "#0000ff",
-        "#9900ff",
-        "#ff00ff",
-        "#e6b8af",
-        "#f4cccc",
-        "#fce5cd",
-        "#fff2cc",
-        "#d9ead3",
-        "#d0e0e3",
-        "#c9daf8",
-        "#cfe2f3",
-        "#d9d2e9",
-        "#ead1dc",
-        "#dd7e6b",
-        "#ea9999",
-        "#f9cb9c",
-        "#ffe599",
-        "#b6d7a8",
-        "#a2c4c9",
-        "#a4c2f4",
-        "#9fc5e8",
-        "#b4a7d6",
-        "#d5a6bd",
-        "#cc4125",
-        "#e06666",
-        "#f6b26b",
-        "#ffd966",
-        "#93c47d",
-        "#76a5af",
-        "#6d9eeb",
-        "#6fa8dc",
-        "#8e7cc3",
-        "#c27ba0",
-        "#a61c00",
-        "#cc0000",
-        "#e69138",
-        "#f1c232",
-        "#6aa84f",
-        "#45818e",
-        "#3c78d8",
-        "#3d85c6",
-        "#674ea7",
-        "#a64d79",
-        "#85200c",
+        "#FF0000",
+        "#FF9900",
+        "#FFFF00",
+        "#00FF00",
+        "#00FFFF",
+        "#4A86E8",
+        "#0000FF",
+        "#9900FF",
+        "#FF00FF",
+        "#E6B8AF",
+        "#F4CCCC",
+        "#FCE5CD",
+        "#FFF2CC",
+        "#D9EAD3",
+        "#D0E0E3",
+        "#C9DAF8",
+        "#CFE2F3",
+        "#D9D2E9",
+        "#EAD1DC",
+        "#DD7E6B",
+        "#EA9999",
+        "#F9CB9C",
+        "#FFE599",
+        "#B6D7A8",
+        "#A2C4C9",
+        "#A4C2F4",
+        "#9FC5E8",
+        "#B4A7D6",
+        "#D5A6BD",
+        "#CC4125",
+        "#E06666",
+        "#F6B26B",
+        "#FFD966",
+        "#93C47D",
+        "#76A5AF",
+        "#6D9EEB",
+        "#6FA8DC",
+        "#8E7CC3",
+        "#C27BA0",
+        "#A61C00",
+        "#CC0000",
+        "#E69138",
+        "#F1C232",
+        "#6AA84F",
+        "#45818E",
+        "#3C78D8",
+        "#3D85C6",
+        "#674EA7",
+        "#A64D79",
+        "#85200C",
         "#990000",
-        "#b45f06",
-        "#bf9000",
-        "#38761d",
-        "#134f5c",
-        "#1155cc",
-        "#0b5394",
-        "#351c75",
-        "#741b47",
-        "#5b0f00",
+        "#B45F06",
+        "#BF9000",
+        "#38761D",
+        "#134F5C",
+        "#1155CC",
+        "#0B5394",
+        "#351C75",
+        "#741B47",
+        "#5B0F00",
         "#660000",
-        "#783f04",
-        "#7f6000",
-        "#274e13",
-        "#0c343d",
-        "#1c4587",
+        "#783F04",
+        "#7F6000",
+        "#274E13",
+        "#0C343D",
+        "#1C4587",
         "#073763",
-        "#20124d",
-        "#4c1130",
+        "#20124D",
+        "#4C1130",
     ];
     // Dimensions
     const MIN_ROW_HEIGHT = 10;
@@ -232,7 +232,7 @@
     const DEFAULT_BORDER_DESC = ["thin", "#000"];
     const DEFAULT_FILTER_BORDER_DESC = ["thin", FILTERS_COLOR];
     // DateTimeRegex
-    const DATETIME_FORMAT = /[ymd:]/;
+    const DATETIME_FORMAT = /[ymdhs:]/;
     // Ranges
     const INCORRECT_RANGE_STRING = CellErrorType.InvalidReference;
     // Max Number of history steps kept in memory
@@ -269,11 +269,13 @@
         ComponentsImportance[ComponentsImportance["Highlight"] = 5] = "Highlight";
         ComponentsImportance[ComponentsImportance["Figure"] = 10] = "Figure";
         ComponentsImportance[ComponentsImportance["ScrollBar"] = 15] = "ScrollBar";
-        ComponentsImportance[ComponentsImportance["Dropdown"] = 16] = "Dropdown";
-        ComponentsImportance[ComponentsImportance["Composer"] = 20] = "Composer";
+        ComponentsImportance[ComponentsImportance["GridPopover"] = 19] = "GridPopover";
+        ComponentsImportance[ComponentsImportance["GridComposer"] = 20] = "GridComposer";
+        ComponentsImportance[ComponentsImportance["Dropdown"] = 21] = "Dropdown";
         ComponentsImportance[ComponentsImportance["ColorPicker"] = 25] = "ColorPicker";
         ComponentsImportance[ComponentsImportance["IconPicker"] = 25] = "IconPicker";
-        ComponentsImportance[ComponentsImportance["Popover"] = 30] = "Popover";
+        ComponentsImportance[ComponentsImportance["TopBarComposer"] = 30] = "TopBarComposer";
+        ComponentsImportance[ComponentsImportance["Popover"] = 35] = "Popover";
         ComponentsImportance[ComponentsImportance["ChartAnchor"] = 1000] = "ChartAnchor";
     })(ComponentsImportance || (ComponentsImportance = {}));
     const DEFAULT_SHEETVIEW_SIZE = 1000;
@@ -1036,6 +1038,8 @@
         return matrix[0].map((_, i) => matrix.map((row) => row[i]));
     }
 
+    const RBA_REGEX = /rgba?\(|\s+|\)/gi;
+    const HEX_MATCH = /^#([A-F\d]{2}){3,4}$/g;
     const colors$1 = [
         "#eb6d00",
         "#0074d9",
@@ -1061,7 +1065,10 @@
     }
     /**
      * Converts any CSS color value to a standardized hex6 value.
-     * Accepts: hex3, hex6, hex8 and rgb (rgba is not supported)
+     * Accepts: hex3, hex6, hex8, rgb[1] and rgba[1].
+     *
+     * [1] under the form rgb(r, g, b, a?) or rgba(r, g, b, a?)
+     * with r,g,b ∈ [0, 255] and a ∈ [0, 1]
      *
      * toHex("#ABC")
      * >> "#AABBCC"
@@ -1072,27 +1079,31 @@
      * toHex("rgb(30, 80, 16)")
      * >> "#1E5010"
      *
+     *  * toHex("rgb(30, 80, 16, 0.5)")
+     * >> "#1E501080"
+     *
      */
     function toHex(color) {
-        if (color.includes("rgba")) {
-            throw new Error(`rgba() conversion currently not supported: ${color}`);
+        let hexColor = color;
+        if (color.startsWith("rgb")) {
+            hexColor = rgbaStringToHex(color);
         }
-        if (color.includes("rgb")) {
-            return rgbToHex6(color);
+        else {
+            hexColor = color.replace("#", "").toUpperCase();
+            if (hexColor.length === 3 || hexColor.length === 4) {
+                hexColor = hexColor.split("").reduce((acc, h) => acc + h + h, "");
+            }
+            hexColor = `#${hexColor}`;
         }
-        color = color.replace("#", "").toUpperCase();
-        if (color.length === 3 || color.length === 4) {
-            color = color.split("").reduce((acc, h) => acc + h + h, "");
+        if (!hexColor.match(HEX_MATCH)) {
+            throw new Error(`invalid color input: ${color}`);
         }
-        if (color.replace(/[a-f0-9]/gi, "") !== "") {
-            throw new Error("invalid color");
-        }
-        return "#" + color;
+        return hexColor;
     }
     function isColorValid(color) {
         try {
-            const { r, g, b, a } = colorToRGBA(color);
-            return (isColorValueValid(r) && isColorValueValid(g) && isColorValueValid(b) && isColorValueValid(a));
+            toHex(color);
+            return true;
         }
         catch (error) {
             return false;
@@ -1125,15 +1136,29 @@
     /**
      * Convert a CSS rgb color string to a standardized hex6 color value.
      *
-     * rgbToHex6("rgb(30, 80, 16)")
+     * rgbaStringToHex("rgb(30, 80, 16)")
      * >> "#1E5010"
+     *
+     * rgbaStringToHex("rgba(30, 80, 16, 0.5)")
+     * >> "#1E501080"
+     *
+     * DOES NOT SUPPORT NON INTEGER RGB VALUES
      */
-    function rgbToHex6(color) {
-        return ("#" +
-            concat(color
-                .slice(4, -1)
-                .split(",")
-                .map((valueString) => parseInt(valueString, 10).toString(16).padStart(2, "0"))).toUpperCase());
+    function rgbaStringToHex(color) {
+        const stringVals = color.replace(RBA_REGEX, "").split(",");
+        let alphaHex = 255;
+        if (stringVals.length !== 3 && stringVals.length !== 4) {
+            throw new Error("invalid color");
+        }
+        else if (stringVals.length === 4) {
+            const alpha = parseFloat(stringVals.pop() || "1");
+            alphaHex = Math.round((alpha || 1) * 255);
+        }
+        const vals = stringVals.map((val) => parseInt(val, 10));
+        if (alphaHex !== 255) {
+            vals.push(alphaHex);
+        }
+        return "#" + concat(vals.map((value) => value.toString(16).padStart(2, "0"))).toUpperCase();
     }
     /**
      * RGBA to HEX representation (#RRGGBBAA).
@@ -1155,7 +1180,7 @@
             a = "0" + a;
         if (a === "ff")
             a = "";
-        return "#" + r + g + b + a;
+        return ("#" + r + g + b + a).toUpperCase();
     }
     /**
      * Color string to RGBA representation
@@ -1276,6 +1301,9 @@
         s = +(s * 100).toFixed(1);
         l = +(l * 100).toFixed(1);
         return { a: rgba.a, h, s, l };
+    }
+    function isSameColor(color1, color2) {
+        return isColorValid(color1) && isColorValid(color2) && toHex(color1) === toHex(color2);
     }
 
     /** Reference of a cell (eg. A1, $B$5) */
@@ -1427,7 +1455,7 @@
      *   formula, commas are used to separate arguments
      * - it does not support % symbol, in formulas % is an operator
      */
-    const formulaNumberRegexp = /^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+/;
+    const formulaNumberRegexp = /(^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+)(?!\w|!)/;
     const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
     const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
     const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
@@ -3022,6 +3050,7 @@
     const LINE_HEIGHT = 1.2;
     css /* scss */ `
   div.o-scorecard {
+    font-family: ${DEFAULT_FONT};
     user-select: none;
     background-color: white;
     display: flex;
@@ -5646,6 +5675,11 @@
                 this.currentPosition = newPosition;
             });
         }
+        get popoverStyle() {
+            return cssPropertiesToCss({
+                "z-index": `${this.props.zIndex}`,
+            });
+        }
     }
     Popover.template = "o-spreadsheet-Popover";
     Popover.defaultProps = {
@@ -5654,6 +5688,7 @@
         onMouseWheel: () => { },
         onPopoverMoved: () => { },
         onPopoverHidden: () => { },
+        zIndex: ComponentsImportance.Popover,
     };
     Popover.props = {
         anchorRect: Object,
@@ -5665,6 +5700,7 @@
         onMouseWheel: { type: Function, optional: true },
         onPopoverHidden: { type: Function, optional: true },
         onPopoverMoved: { type: Function, optional: true },
+        zIndex: { type: Number, optional: true },
         slots: Object,
     };
     class PopoverPositionContext {
@@ -17035,10 +17071,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     padding: 0;
     margin: 0;
     border: 0;
-    z-index: ${ComponentsImportance.Composer};
     flex-grow: 1;
     max-height: inherit;
     .o-composer {
+      font-family: ${DEFAULT_FONT};
       caret-color: black;
       padding-left: 3px;
       padding-right: 3px;
@@ -17072,6 +17108,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
   /* Custom css to highlight topbar composer on focus */
   .o-topbar-toolbar .o-composer-container:focus-within {
     border: 1px solid ${SELECTION_BORDER_COLOR};
+  }
+
+  .o-topbar-toolbar .o-composer-container {
+    z-index: ${ComponentsImportance.TopBarComposer};
   }
 `;
     class Composer extends owl.Component {
@@ -17521,7 +17561,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     const COMPOSER_BORDER_WIDTH = 3 * 0.4 * window.devicePixelRatio || 1;
     css /* scss */ `
   div.o-grid-composer {
-    z-index: ${ComponentsImportance.Composer};
+    z-index: ${ComponentsImportance.GridComposer};
     box-sizing: border-box;
     position: absolute;
     border: ${COMPOSER_BORDER_WIDTH}px solid ${SELECTION_BORDER_COLOR};
@@ -20057,6 +20097,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { display, background, left, top } = this.state.style;
             return `display:${display};${display === "block" ? `background-color:${background};left:${left};top:${top};` : ""}`;
         }
+        isSameColor(color1, color2) {
+            return isSameColor(color1, color2);
+        }
     }
     ColorPicker.template = "o-spreadsheet-ColorPicker";
     ColorPicker.defaultProps = {
@@ -20200,6 +20243,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             var _a;
             const cancelledReasons = [...(((_a = this.state.sectionRuleDispatchResult) === null || _a === void 0 ? void 0 : _a.reasons) || [])];
             return cancelledReasons.map((error) => ChartTerms.Errors[error] || ChartTerms.Errors.Unexpected);
+        }
+        onClick(ev) {
+            this.state.openedMenu = undefined;
+        }
+        setup() {
+            owl.useExternalListener(window, "click", this.onClick);
         }
         updateBackgroundColor(color) {
             this.state.openedMenu = undefined;
@@ -20383,6 +20432,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.state = owl.useState({
                 openedColorPicker: undefined,
             });
+        }
+        onClick(ev) {
+            this.state.openedColorPicker = undefined;
+        }
+        setup() {
+            owl.useExternalListener(window, "click", this.onClick);
         }
         updateTitle(ev) {
             this.props.updateChart({
@@ -22346,6 +22401,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     };
 
     class GridPopover extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.zIndex = ComponentsImportance.GridPopover;
+        }
         get cellPopover() {
             const popover = this.env.model.getters.getCellPopover(this.props.hoveredCell);
             if (!popover.isOpen) {
@@ -24563,6 +24622,70 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         });
     }
 
+    const XLSX_DATE_FORMAT_REGEX = /^(yy|yyyy|m{1,5}|d{1,4}|h{1,2}|s{1,2}|am\/pm|a\/m|\s|-|\/|\.|:)+$/i;
+    /**
+     * Convert excel format to o_spreadsheet format
+     *
+     * Excel format are defined in openXML §18.8.31
+     */
+    function convertXlsxFormat(numFmtId, formats, warningManager) {
+        var _a, _b, _c;
+        if (numFmtId === 0) {
+            return undefined;
+        }
+        // Format is either defined in the imported data, or the formatId is defined in openXML §18.8.30
+        let format = XLSX_FORMATS_CONVERSION_MAP[numFmtId] || ((_a = formats.find((f) => f.id === numFmtId)) === null || _a === void 0 ? void 0 : _a.format);
+        if (format) {
+            try {
+                let convertedFormat = format.replace(/(.*?);.*/, "$1"); // only take first part of multi-part format
+                convertedFormat = convertedFormat.replace(/\[(.*)-[A-Z0-9]{3}\]/g, "[$1]"); // remove currency and locale/date system/number system info (ECMA §18.8.31)
+                convertedFormat = convertedFormat.replace(/\[\$\]/g, ""); // remove empty bocks
+                // Quotes in format escape sequences of characters. ATM we only support [$...] blocks to escape characters, and only one of them per format
+                const numberOfQuotes = ((_b = convertedFormat.match(/"/g)) === null || _b === void 0 ? void 0 : _b.length) || 0;
+                const numberOfOpenBrackets = ((_c = convertedFormat.match(/\[/g)) === null || _c === void 0 ? void 0 : _c.length) || 0;
+                if (numberOfQuotes / 2 + numberOfOpenBrackets > 1) {
+                    throw new Error("Multiple escaped blocks in format");
+                }
+                convertedFormat = convertedFormat.replace(/"(.*)"/g, "[$$$1]"); // replace '"..."' by '[$...]'
+                convertedFormat = convertedFormat.replace(/_.{1}/g, ""); // _ == ignore width of next char for align purposes. Not supported ATM
+                convertedFormat = convertedFormat.replace(/\*.{1}/g, ""); // * == repeat next character enough to fill the line. Not supported ATM
+                convertedFormat = convertedFormat.replace(/\\ /g, " "); // unescape spaces
+                convertedFormat = convertedFormat.replace(/\\./g, (match) => match[1]); // unescape other characters
+                if (isXlsxDateFormat(convertedFormat)) {
+                    convertedFormat = convertDateFormat$1(convertedFormat);
+                }
+                if (isFormatSupported(convertedFormat)) {
+                    return convertedFormat;
+                }
+            }
+            catch (e) { }
+        }
+        warningManager.generateNotSupportedWarning(WarningTypes.NumFmtIdNotSupported, format || `nmFmtId ${numFmtId}`);
+        return undefined;
+    }
+    function isFormatSupported(format) {
+        try {
+            formatValue(0, format);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+    function isXlsxDateFormat(format) {
+        return format.match(XLSX_DATE_FORMAT_REGEX) !== null;
+    }
+    function convertDateFormat$1(format) {
+        // Some of these aren't defined neither in the OpenXML spec not the Xlsx extension of OpenXML,
+        // but can still occur and are supported by Excel/Google sheets
+        format = format.toLowerCase();
+        format = format.replace(/mmmmm/g, "mmm");
+        format = format.replace(/am\/pm|a\/m/g, "a");
+        format = format.replace(/hhhh/g, "hh");
+        format = format.replace(/\bh\b/g, "hh");
+        return format;
+    }
+
     function convertBorders(data, warningManager) {
         const borderArray = data.borders.map((border) => {
             addBorderWarnings(border, warningManager);
@@ -24626,41 +24749,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             }
         }
         return arrayToObject(formats, 1);
-    }
-    /**
-     * Convert excel format to o_spreadsheet format
-     *
-     * Excel format are defined in openXML §18.8.31
-     */
-    function convertXlsxFormat(numFmtId, formats, warningManager) {
-        var _a, _b, _c;
-        if (numFmtId === 0) {
-            return undefined;
-        }
-        // Format is either defined in the imported data, or the formatId is defined in openXML §18.8.30
-        let format = XLSX_FORMATS_CONVERSION_MAP[numFmtId] || ((_a = formats.find((f) => f.id === numFmtId)) === null || _a === void 0 ? void 0 : _a.format);
-        if (format) {
-            try {
-                let convertedFormat = format.replace(/(.*?);.*/, "$1"); // only take first part of multi-part format
-                convertedFormat = convertedFormat.replace(/\[(.*)-[A-Z0-9]{3}\]/g, "[$1]"); // remove currency and locale/date system/number system info (ECMA §18.8.31)
-                convertedFormat = convertedFormat.replace(/\[\$\]/g, ""); // remove empty bocks
-                // Quotes in format escape sequences of characters. ATM we only support [$...] blocks to escape characters, and only one of them per format
-                const numberOfQuotes = ((_b = convertedFormat.match(/"/g)) === null || _b === void 0 ? void 0 : _b.length) || 0;
-                const numberOfOpenBrackets = ((_c = convertedFormat.match(/\[/g)) === null || _c === void 0 ? void 0 : _c.length) || 0;
-                if (numberOfQuotes / 2 + numberOfOpenBrackets > 1) {
-                    throw new Error("Multiple escaped blocks in format");
-                }
-                convertedFormat = convertedFormat.replace(/"(.*)"/g, "[$$$1]"); // replace '"..."' by '[$...]'
-                convertedFormat = convertedFormat.replace(/_.{1}/g, ""); // _ == ignore with of next char for align purposes. Not supported ATM
-                convertedFormat = convertedFormat.replace(/\*.{1}/g, ""); // * == repeat next character enough to fill the line. Not supported ATM
-                convertedFormat = convertedFormat.replace(/\\ /g, " "); // unescape spaces
-                formatValue(0, convertedFormat);
-                return convertedFormat;
-            }
-            catch (e) { }
-        }
-        warningManager.generateNotSupportedWarning(WarningTypes.NumFmtIdNotSupported, format || `nmFmtId ${numFmtId}`);
-        return undefined;
     }
     /**
      * We currently only support only a set of font sizes, we cannot define new font sizes.
@@ -31828,9 +31916,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 // remove duplicates first to check validity on a reduced
                 // set of colors, then normalize to HEX and remove duplicates
                 // again
-                [...new Set([...usedColors, ...this.customColors])]
-                    .filter(isColorValid)
-                    .map((c) => toHex(c).toLowerCase())),
+                [...new Set([...usedColors, ...this.customColors])].filter(isColorValid).map(toHex)),
             ]).filter((color) => !COLOR_PICKER_DEFAULTS.includes(color));
         }
         getColorsFromCells(cells) {
@@ -31891,7 +31977,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return [...chartsColors];
         }
         tryToAddColor(color) {
-            const formattedColor = toHex(color).toLowerCase();
+            const formattedColor = toHex(color);
             if (color && !COLOR_PICKER_DEFAULTS.includes(formattedColor)) {
                 this.customColors.add(formattedColor);
             }
@@ -32896,8 +32982,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.getters = getters;
             this.sheetId = sheetId;
             this.boundaries = boundaries;
-            this.width = sizeInGrid.width;
-            this.height = sizeInGrid.height;
+            this.viewportWidth = sizeInGrid.width;
+            this.viewportHeight = sizeInGrid.height;
             this.offsetScrollbarX = offsets.x;
             this.offsetScrollbarY = offsets.y;
             this.canScrollVertically = options.canScrollVertically;
@@ -32908,6 +32994,10 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             this.adjustViewportOffsetY();
         }
         // PUBLIC
+        /** Returns the maximum size (in Pixels) of the viewport relative to its allocated client size
+         * When the viewport grid size is smaller than its client width (resp. height), it will return
+         * the client width (resp. height).
+         */
         getMaxSize() {
             const lastCol = this.getters.findLastVisibleColRowIndex(this.sheetId, "COL", {
                 first: this.boundaries.left,
@@ -32919,20 +33009,24 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             });
             const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(this.sheetId, lastCol);
             const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(this.sheetId, lastRow);
-            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.width, 0);
+            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.viewportWidth, 0);
             const leftColSize = this.getters.getColSize(this.sheetId, leftColIndex);
-            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.height, 0);
+            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.viewportHeight, 0);
             const topRowSize = this.getters.getRowSize(this.sheetId, leftRowIndex);
-            const width = lastColEnd -
-                this.offsetCorrectionX +
-                (this.canScrollHorizontally
-                    ? Math.max(DEFAULT_CELL_WIDTH, Math.min(leftColSize, this.width - lastColSize))
-                    : 0);
-            const height = lastRowEnd -
-                this.offsetCorrectionY +
-                (this.canScrollVertically
-                    ? Math.max(DEFAULT_CELL_HEIGHT + 5, Math.min(topRowSize, this.height - lastRowSize))
-                    : 0);
+            let width = lastColEnd - this.offsetCorrectionX;
+            if (this.canScrollHorizontally) {
+                width += Math.max(DEFAULT_CELL_WIDTH, // leave some minimal space to let the user know they scrolled all the way
+                Math.min(leftColSize, this.viewportWidth - lastColSize) // Add pixels that allows the snapping at maximum horizontal scroll
+                );
+                width = Math.max(width, this.viewportWidth); // if the viewport grid size is smaller than its client width, return client width
+            }
+            let height = lastRowEnd - this.offsetCorrectionY;
+            if (this.canScrollVertically) {
+                height += Math.max(DEFAULT_CELL_HEIGHT + 5, // leave some space to let the user know they scrolled all the way
+                Math.min(topRowSize, this.viewportHeight - lastRowSize) // Add pixels that allows the snapping at maximum vertical scroll
+                );
+                height = Math.max(height, this.viewportHeight); // if the viewport grid size is smaller than its client height, return client height
+            }
             return { width, height };
         }
         /**
@@ -32941,7 +33035,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * It returns -1 if no column is found.
          */
         getColIndex(x, absolute = false) {
-            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.width) {
+            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.viewportWidth) {
                 return -1;
             }
             return this.searchHeaderIndex("COL", x - this.offsetCorrectionX, this.left, absolute);
@@ -32952,7 +33046,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
          * It returns -1 if no row is found.
          */
         getRowIndex(y, absolute = false) {
-            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.height) {
+            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.viewportHeight) {
                 return -1;
             }
             return this.searchHeaderIndex("ROW", y - this.offsetCorrectionY, this.top, absolute);
@@ -32979,7 +33073,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         adjustPositionX(col) {
             const sheetId = this.sheetId;
             const { start, end } = this.getters.getColDimensions(sheetId, col);
-            while (end > this.offsetX + this.offsetCorrectionX + this.width &&
+            while (end > this.offsetX + this.offsetCorrectionX + this.viewportWidth &&
                 this.offsetX + this.offsetCorrectionX < start) {
                 this.offsetX = this.getters.getColDimensions(sheetId, this.left).end - this.offsetCorrectionX;
                 this.offsetScrollbarX = this.offsetX;
@@ -33001,7 +33095,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         adjustPositionY(row) {
             const sheetId = this.sheetId;
             while (this.getters.getRowDimensions(sheetId, row).end >
-                this.offsetY + this.height + this.offsetCorrectionY &&
+                this.offsetY + this.viewportHeight + this.offsetCorrectionY &&
                 this.offsetY + this.offsetCorrectionY < this.getters.getRowDimensions(sheetId, row).start) {
                 this.offsetY = this.getters.getRowDimensions(sheetId, this.top).end - this.offsetCorrectionY;
                 this.offsetScrollbarY = this.offsetY;
@@ -33039,8 +33133,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
                 const x = this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
                     this.offsetCorrectionX;
                 const y = this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) + this.offsetCorrectionY;
-                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.width);
-                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.height);
+                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.viewportWidth);
+                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.viewportHeight);
                 return {
                     x,
                     y,
@@ -33103,12 +33197,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         adjustViewportOffsetX() {
             if (this.canScrollHorizontally) {
                 const { width: viewportWidth } = this.getMaxSize();
-                if (this.width + this.offsetScrollbarX > viewportWidth) {
-                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.width);
+                if (this.viewportWidth + this.offsetScrollbarX > viewportWidth) {
+                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.viewportWidth);
                 }
             }
             this.left = this.getColIndex(this.offsetScrollbarX, true);
-            this.right = this.getColIndex(this.offsetScrollbarX + this.width, true);
+            this.right = this.getColIndex(this.offsetScrollbarX + this.viewportWidth, true);
             if (this.right === -1) {
                 this.right = this.boundaries.right;
             }
@@ -33120,12 +33214,12 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         adjustViewportOffsetY() {
             if (this.canScrollVertically) {
                 const { height: paneHeight } = this.getMaxSize();
-                if (this.height + this.offsetScrollbarY > paneHeight) {
-                    this.offsetScrollbarY = Math.max(0, paneHeight - this.height);
+                if (this.viewportHeight + this.offsetScrollbarY > paneHeight) {
+                    this.offsetScrollbarY = Math.max(0, paneHeight - this.viewportHeight);
                 }
             }
             this.top = this.getRowIndex(this.offsetScrollbarY, true);
-            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.width, true);
+            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.viewportWidth, true);
             if (this.bottom === -1) {
                 this.bottom = this.boundaries.bottom;
             }
@@ -33136,7 +33230,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         adjustViewportZoneX() {
             const sheetId = this.sheetId;
             this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
-            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.width, this.left));
+            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.viewportWidth, this.left));
             if (this.right === -1) {
                 this.right = this.getters.getNumberCols(sheetId) - 1;
             }
@@ -33149,7 +33243,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
         adjustViewportZoneY() {
             const sheetId = this.sheetId;
             this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
-            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.height, this.top));
+            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.viewportHeight, this.top));
             if (this.bottom === -1) {
                 this.bottom = this.getters.getNumberRows(sheetId) - 1;
             }
@@ -33411,8 +33505,7 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
         }
         /**
-         * Return the main viewport maximum size. That is the zone dimension
-         * with some bottom and right padding.
+         * Return the main viewport maximum size relative to the client size.
          */
         getMainViewportRect() {
             const sheetId = this.getters.getActiveSheetId();
@@ -33428,8 +33521,8 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
             const { width, height } = this.getMainViewportRect();
             const viewport = this.getMainInternalViewport(sheetId);
             return {
-                maxOffsetX: Math.max(0, width - viewport.width + 1),
-                maxOffsetY: Math.max(0, height - viewport.height + 1),
+                maxOffsetX: Math.max(0, width - viewport.viewportWidth + 1),
+                maxOffsetY: Math.max(0, height - viewport.viewportHeight + 1),
             };
         }
         getColRowOffsetInViewport(dimension, referenceIndex, index) {
@@ -40133,9 +40226,6 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
       color: #333;
     }
 
-    * {
-      font-family: "Roboto", "RobotoDraft", Helvetica, Arial, sans-serif;
-    }
     &,
     *,
     *:before,
@@ -43933,9 +44023,9 @@ day_count_convention (number, default=${DEFAULT_DAY_COUNT_CONVENTION} ) ${_lt("A
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.1.6';
-    __info__.date = '2023-03-23T11:46:03.748Z';
-    __info__.hash = '3bad828';
+    __info__.version = '16.1.7';
+    __info__.date = '2023-04-13T09:05:05.197Z';
+    __info__.hash = '3141a6d';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
