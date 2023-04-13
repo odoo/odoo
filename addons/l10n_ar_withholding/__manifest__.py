@@ -20,12 +20,11 @@ Technical
     'data': [
         'views/account_tax_views.xml',
         'views/account_payment_view.xml',
+        'views/product_template_view.xml',
         'wizards/account_payment_register_views.xml',
         'security/ir.model.access.csv',
     ],
     'installable': True,
-    'auto_install': False,
-    'application': False,
     'post_init_hook': '_l10n_ar_withholding_post_init',
     'license': 'LGPL-3',
 }
