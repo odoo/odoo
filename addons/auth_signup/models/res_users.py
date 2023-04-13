@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
+from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import ustr
 
@@ -17,6 +18,8 @@ from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.addons.auth_signup.models.res_partner import SignupError, now
 
 _logger = logging.getLogger(__name__)
+
+HOURS_THRESHOLD = 2 # Modify this to change the duration of the password reset request spam limitation (value is in hours, can be float)
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -205,24 +208,23 @@ class ResUsers(models.Model):
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
-            message = f"Password Reset Request for user {user.name}, id = {user.id}"
+            message = _("Password Reset Request for user ") + user.name
+            path = f"user:{user.id}"
             self.env['ir.logging'].create({
                         'name': 'Password Reset',
                         'type': 'client',
                         'level': 'INFO',
                         'dbname': self._cr.dbname,
                         'message': message,
-                        'func': '',
-                        'path': '',
-                        'line': '',
+                        'func': 'action_reset_password',
+                        'path': path,
+                        'line': request.httprequest.remote_addr,
                     })
 
     def check_password_reset_availability(self):
-        message = f"Password Reset Request for user {self.name}, id = {self.id}"
-        mails = self.env['ir.logging'].search([('name', '=', 'Password Reset'), ('message', '=', message)])
-        if len(mails) < 3:
-            return True
-        if mails[2]['create_date'] < fields.Datetime.now() - datetime.timedelta(hours=6):
+        threshold_date = fields.Datetime.now() - datetime.timedelta(hours=HOURS_THRESHOLD)
+        mails = self.env['ir.logging'].search_count([('name', '=', 'Password Reset'), ('path', '=', f"user:{self.id}"), ('create_date', '>', threshold_date)], limit=3)
+        if mails < 3:
             return True
         return False
 
