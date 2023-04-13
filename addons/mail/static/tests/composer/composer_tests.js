@@ -18,9 +18,11 @@ import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services
 const { inputFiles } = file;
 
 import {
+    getFixture,
     makeDeferred,
     nextTick,
     patchWithCleanup,
+    triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { Composer } from "@mail/composer/composer";
@@ -246,12 +248,20 @@ QUnit.test(
             res_id: channelId,
         });
         await openDiscuss(channelId);
+
+        await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
         $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
+
+        await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
         $(".o-mail-EmojiPicker-content")[0].scrollTop = 200;
+
+        await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
         assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 150);
+
+        await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
         assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 200);
     }
