@@ -39,10 +39,10 @@ QUnit.test("popover can have more than one custom class", async (assert) => {
 });
 
 QUnit.test("popover is rendered nearby target (default)", async (assert) => {
-    assert.expect(1);
     const TestPopover = class extends Popover {
-        onPositioned(el, { direction }) {
+        onPositioned(el, { direction, variant }) {
             assert.equal(direction, "bottom");
+            assert.equal(variant, "middle");
         }
     };
     await mount(TestPopover, fixture, {
@@ -52,8 +52,9 @@ QUnit.test("popover is rendered nearby target (default)", async (assert) => {
 
 QUnit.test("popover is rendered nearby target (bottom)", async (assert) => {
     const TestPopover = class extends Popover {
-        onPositioned(el, { direction }) {
+        onPositioned(el, { direction, variant }) {
             assert.equal(direction, "bottom");
+            assert.equal(variant, "middle");
         }
     };
     await mount(TestPopover, fixture, {
@@ -63,8 +64,9 @@ QUnit.test("popover is rendered nearby target (bottom)", async (assert) => {
 
 QUnit.test("popover is rendered nearby target (top)", async (assert) => {
     const TestPopover = class extends Popover {
-        onPositioned(el, { direction }) {
+        onPositioned(el, { direction, variant }) {
             assert.equal(direction, "top");
+            assert.equal(variant, "middle");
         }
     };
     await mount(TestPopover, fixture, {
@@ -74,8 +76,9 @@ QUnit.test("popover is rendered nearby target (top)", async (assert) => {
 
 QUnit.test("popover is rendered nearby target (left)", async (assert) => {
     const TestPopover = class extends Popover {
-        onPositioned(el, { direction }) {
+        onPositioned(el, { direction, variant }) {
             assert.equal(direction, "left");
+            assert.equal(variant, "middle");
         }
     };
     await mount(TestPopover, fixture, {
@@ -85,12 +88,61 @@ QUnit.test("popover is rendered nearby target (left)", async (assert) => {
 
 QUnit.test("popover is rendered nearby target (right)", async (assert) => {
     const TestPopover = class extends Popover {
-        onPositioned(el, { direction }) {
+        onPositioned(el, { direction, variant }) {
             assert.equal(direction, "right");
+            assert.equal(variant, "middle");
         }
     };
     await mount(TestPopover, fixture, {
         props: { target: popoverTarget, position: "right" },
+    });
+});
+
+QUnit.test("popover is rendered nearby target (bottom-start)", async (assert) => {
+    const TestPopover = class extends Popover {
+        onPositioned(el, { direction, variant }) {
+            assert.equal(direction, "bottom");
+            assert.equal(variant, "start");
+        }
+    };
+    await mount(TestPopover, fixture, {
+        props: { target: popoverTarget, position: "bottom-start" },
+    });
+});
+
+QUnit.test("popover is rendered nearby target (bottom-middle)", async (assert) => {
+    const TestPopover = class extends Popover {
+        onPositioned(el, { direction, variant }) {
+            assert.equal(direction, "bottom");
+            assert.equal(variant, "middle");
+        }
+    };
+    await mount(TestPopover, fixture, {
+        props: { target: popoverTarget, position: "bottom-middle" },
+    });
+});
+
+QUnit.test("popover is rendered nearby target (bottom-end)", async (assert) => {
+    const TestPopover = class extends Popover {
+        onPositioned(el, { direction, variant }) {
+            assert.equal(direction, "bottom");
+            assert.equal(variant, "end");
+        }
+    };
+    await mount(TestPopover, fixture, {
+        props: { target: popoverTarget, position: "bottom-end" },
+    });
+});
+
+QUnit.test("popover is rendered nearby target (bottom-fit)", async (assert) => {
+    const TestPopover = class extends Popover {
+        onPositioned(el, { direction, variant }) {
+            assert.equal(direction, "bottom");
+            assert.equal(variant, "fit");
+        }
+    };
+    await mount(TestPopover, fixture, {
+        props: { target: popoverTarget, position: "bottom-fit" },
     });
 });
 
