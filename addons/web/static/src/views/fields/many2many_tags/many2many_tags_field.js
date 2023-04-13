@@ -59,7 +59,7 @@ export class Many2ManyTagsField extends Component {
     setup() {
         this.orm = useService("orm");
         this.previousColorsMap = {};
-        this.popover = usePopover();
+        this.popover = usePopover(this.constructor.components.Popover);
         this.dialog = useService("dialog");
         this.dialogClose = [];
 
@@ -312,37 +312,22 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
         return props;
     }
 
-    closePopover() {
-        this.popoverCloseFn();
-        this.popoverCloseFn = null;
-    }
-
     onBadgeClick(ev, record) {
         if (!this.props.canEditColor) {
             return;
         }
-        const isClosed = !document.querySelector(".o_tag_popover");
-        if (isClosed) {
-            this.currentPopoverEl = null;
-        }
-        if (this.popoverCloseFn) {
-            this.closePopover();
-        }
-        if (isClosed || this.currentPopoverEl !== ev.currentTarget) {
-            this.currentPopoverEl = ev.currentTarget;
-            this.popoverCloseFn = this.popover.add(
-                ev.currentTarget,
-                this.constructor.components.Popover,
-                {
-                    colors: this.constructor.RECORD_COLORS,
-                    tag: {
-                        id: record.id,
-                        colorIndex: record.data[this.props.colorField],
-                    },
-                    switchTagColor: this.switchTagColor.bind(this),
-                    onTagVisibilityChange: this.onTagVisibilityChange.bind(this),
-                }
-            );
+        if (this.popover.isOpen) {
+            this.popover.close();
+        } else {
+            this.popover.open(ev.currentTarget, {
+                colors: this.constructor.RECORD_COLORS,
+                tag: {
+                    id: record.id,
+                    colorIndex: record.data[this.props.colorField],
+                },
+                switchTagColor: this.switchTagColor.bind(this),
+                onTagVisibilityChange: this.onTagVisibilityChange.bind(this),
+            });
         }
     }
 
@@ -357,7 +342,7 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
             [this.props.colorField]: isHidden ? 0 : this.previousColorsMap[tagRecord.resId] || 1,
         });
         tagRecord.save();
-        this.closePopover();
+        this.popover.close();
     }
 
     switchTagColor(colorIndex, tag) {
@@ -366,7 +351,7 @@ export class Many2ManyTagsFieldColorEditable extends Many2ManyTagsField {
         );
         tagRecord.update({ [this.props.colorField]: colorIndex });
         tagRecord.save();
-        this.closePopover();
+        this.popover.close();
     }
 }
 

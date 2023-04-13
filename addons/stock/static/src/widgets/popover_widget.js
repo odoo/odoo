@@ -26,23 +26,16 @@ PopoverComponent.template = 'stock.popoverContent';
 
 export class PopoverWidgetField extends Component {
     setup(){
-        this.popover = usePopover();
-        this.closePopover = null;
         let fieldValue = this.props.record.data[this.props.name];
         this.jsonValue = JSON.parse(fieldValue || "{}");
+        const position = this.jsonValue.position || "top";
+        this.popover = usePopover(this.constructor.components.Popover, { position });
         this.color = this.jsonValue.color || 'text-primary';
         this.icon = this.jsonValue.icon || 'fa-info-circle';
     }
 
     showPopup(ev){
-        this.closePopover = this.popover.add(
-            ev.currentTarget,
-            this.constructor.components.Popover,
-            {...this.jsonValue, record: this.props.record},
-            {
-                position: this.jsonValue.position || 'top',
-            }
-            );
+        this.popover.open(ev.currentTarget, { ...this.jsonValue, record: this.props.record });
     }
 }
 

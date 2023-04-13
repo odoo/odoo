@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { useUniquePopover } from "@web/core/model_field_selector/unique_popover_hook";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { useModelField } from "@web/core/model_field_selector/model_field_hook";
 import { useService } from "@web/core/utils/hooks";
 import { ModelFieldSelectorPopover } from "@web/core/model_field_selector/model_field_selector_popover";
@@ -10,7 +10,12 @@ export function useDynamicPlaceholder(elementRef) {
     const TRIGGER_KEY = "#";
     const ownerField = useComponent();
     const triggerKeyReplaceRegex = new RegExp(`${TRIGGER_KEY}$`);
-    const popover = useUniquePopover();
+    let closeCallback;
+    let positionCallback;
+    const popoverOptions = {};
+    Object.defineProperty(popoverOptions, "onClose", { get: () => closeCallback });
+    Object.defineProperty(popoverOptions, "onPositioned", { get: () => positionCallback });
+    const popover = usePopover(ModelFieldSelectorPopover, popoverOptions);
     const modelField = useModelField();
     const notification = useService("notification");
 
@@ -54,12 +59,12 @@ export function useDynamicPlaceholder(elementRef) {
      * placeholder string in the Input with or without a default text value.
      *
      * @public
-     * @param {Object} options
+     * @param {Object} opts
      * @param {function} options.validateCallback
      * @param {function} options.closeCallback
      * @param {function} [options.positionCallback]
      */
-    async function open(options) {
+    async function open(opts) {
         if (!model) {
             return notification.add(
                 ownerField.env._t(
@@ -70,25 +75,18 @@ export function useDynamicPlaceholder(elementRef) {
         }
 
         dynamicPlaceholderChain = await modelField.loadChain(model, "");
-        popover.add(
-            elementRef?.el,
-            ModelFieldSelectorPopover,
-            {
-                chain: dynamicPlaceholderChain,
-                update: (chain) => { dynamicPlaceholderChain = chain; },
-                validate: options.validateCallback,
-                showSearchInput: true,
-                isDebugMode: true,
-                needDefaultValue: true,
-                loadChain: modelField.loadChain,
-                filter: (model) => !["one2many", "boolean", "many2many"].includes(model.type),
-            },
-            {
-                closeOnClickAway: true,
-                onClose: options.closeCallback,
-                onPositioned: options.positionCallback,
-            }
-        );
+        closeCallback = opts.closeCallback;
+        positionCallback = opts.positionCallback;
+        popover.open(elementRef?.el, {
+            chain: dynamicPlaceholderChain,
+            update: (chain) => (dynamicPlaceholderChain = chain),
+            validate: opts.validateCallback,
+            showSearchInput: true,
+            isDebugMode: true,
+            needDefaultValue: true,
+            loadChain: modelField.loadChain,
+            filter: (model) => !["one2many", "boolean", "many2many"].includes(model.type),
+        });
     }
     async function onKeydown(ev) {
         const element = elementRef?.el;

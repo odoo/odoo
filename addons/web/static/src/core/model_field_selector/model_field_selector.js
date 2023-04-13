@@ -1,14 +1,21 @@
 /** @odoo-module **/
 
 import { useModelField } from "./model_field_hook";
-import { useUniquePopover } from "./unique_popover_hook";
+import { usePopover } from "@web/core/popover/popover_hook";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
 
 import { Component, onWillStart, onWillUpdateProps, toRaw, useState } from "@odoo/owl";
 
 export class ModelFieldSelector extends Component {
     setup() {
-        this.popover = useUniquePopover();
+        this.popover = usePopover(this.constructor.components.Popover, {
+            popoverClass: "o_popover_field_selector",
+            onClose: () => {
+                if (this.state.isDirty) {
+                    this.props.update(this.state.fieldName, toRaw(this.state.chain));
+                }
+            },
+        });
         this.modelField = useModelField();
         this.state = useState({
             chain: [],
@@ -54,28 +61,15 @@ export class ModelFieldSelector extends Component {
         if (this.props.readonly) {
             return;
         }
-        this.popover.add(
-            ev.currentTarget,
-            this.constructor.components.Popover,
-            {
-                chain: this.state.chain,
-                update: this.update.bind(this),
-                showSearchInput: this.props.showSearchInput,
-                isDebugMode: this.props.isDebugMode,
-                loadChain: this.loadChain.bind(this),
-                filter: this.props.filter,
-                followRelations: this.props.followRelations,
-            },
-            {
-                closeOnClickAway: true,
-                popoverClass: "o_popover_field_selector",
-                onClose: () => {
-                    if (this.state.isDirty) {
-                        this.props.update(this.state.fieldName, toRaw(this.state.chain));
-                    }
-                },
-            }
-        );
+        this.popover.open(ev.currentTarget, {
+            chain: this.state.chain,
+            update: this.update.bind(this),
+            showSearchInput: this.props.showSearchInput,
+            isDebugMode: this.props.isDebugMode,
+            loadChain: this.loadChain.bind(this),
+            filter: this.props.filter,
+            followRelations: this.props.followRelations,
+        });
     }
 }
 

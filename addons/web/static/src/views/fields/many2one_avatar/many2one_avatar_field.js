@@ -63,12 +63,10 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
     };
     setup() {
         super.setup();
-        this.popover = usePopover();
-    }
-
-    closePopover() {
-        this.closePopoverFn();
-        this.closePopoverFn = null;
+        this.popover = usePopover(Many2OneFieldPopover, {
+            popoverClass: "o_m2o_tags_avatar_field_popover",
+            closeOnClickAway: (target) => !target.closest(".modal"),
+        });
     }
     get popoverProps() {
         const props = {
@@ -82,25 +80,13 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
         if (!this.props.isEditable) {
             return;
         }
-        if (this.closePopoverFn) {
-            this.closePopover();
-        }
-        this.closePopoverFn = this.popover.add(
-            ev.currentTarget,
-            Many2OneFieldPopover,
-            {
-                ...this.popoverProps,
-                canCreate: false,
-                canCreateEdit: false,
-                canQuickCreate: false,
-                placeholder: this.env._t("Search user..."),
-            },
-            {
-                position: "bottom",
-                popoverClass: "o_m2o_tags_avatar_field_popover",
-                closeOnClickAway: (target) => !target.closest(".modal"),
-            }
-        );
+        this.popover.open(ev.currentTarget, {
+            ...this.popoverProps,
+            canCreate: false,
+            canCreateEdit: false,
+            canQuickCreate: false,
+            placeholder: this.env._t("Search user..."),
+        });
     }
 }
 

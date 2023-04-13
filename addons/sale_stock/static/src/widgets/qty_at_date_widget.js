@@ -6,7 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
 
-const { Component, EventBus, onWillRender } = owl;
+const { Component, onWillRender } = owl;
 
 export class QtyAtDatePopover extends Component {
     setup() {
@@ -30,9 +30,7 @@ QtyAtDatePopover.template = "sale_stock.QtyDetailPopOver";
 
 export class QtyAtDateWidget extends Component {
     setup() {
-        this.bus = new EventBus();
-        this.popover = usePopover();
-        this.closePopover = null;
+        this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.calcData = {};
         onWillRender(() => {
             this.initCalcData();
@@ -74,15 +72,10 @@ export class QtyAtDateWidget extends Component {
 
     showPopup(ev) {
         this.updateCalcData();
-        this.closePopover = this.popover.add(
-            ev.currentTarget,
-            this.constructor.components.Popover,
-            {bus: this.bus, record: this.props.record, calcData: this.calcData},
-            {
-                position: 'top',
-            }
-            );
-        this.bus.addEventListener('close-popover', this.closePopover);
+        this.popover.open(ev.currentTarget, {
+            record: this.props.record,
+            calcData: this.calcData,
+        });
     }
 }
 

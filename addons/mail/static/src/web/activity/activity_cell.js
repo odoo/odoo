@@ -21,7 +21,7 @@ export class ActivityCell extends Component {
     static template = "mail.ActivityCell";
 
     setup() {
-        this.popover = usePopover();
+        this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.contentRef = useRef("content");
     }
 
@@ -43,27 +43,18 @@ export class ActivityCell extends Component {
     }
 
     onClick() {
-        if (this.closePopover) {
-            this.closePopover();
-            this.closePopover = undefined;
+        if (this.popover.isOpen) {
+            this.popover.close();
         } else {
-            this.closePopover = this.popover.add(
-                this.contentRef.el,
-                ActivityListPopover,
-                {
-                    activityIds: this.props.activityIds,
-                    defaultActivityTypeId: this.props.activityTypeId,
-                    onActivityChanged: () => {
-                        this.props.reloadFunc();
-                    },
-                    resId: this.props.resId,
-                    resModel: this.props.resModel,
+            this.popover.open(this.contentRef.el, {
+                activityIds: this.props.activityIds,
+                defaultActivityTypeId: this.props.activityTypeId,
+                onActivityChanged: () => {
+                    this.props.reloadFunc();
                 },
-                {
-                    onClose: () => (this.closePopover = undefined),
-                    position: "bottom", // should be "bottom-start" but not supported for some reason
-                }
-            );
+                resId: this.props.resId,
+                resModel: this.props.resModel,
+            });
         }
     }
 }

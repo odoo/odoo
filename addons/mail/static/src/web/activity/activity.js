@@ -41,7 +41,7 @@ export class Activity extends Component {
             showDetails: false,
             delay: computeDelay(this.props.data.date_deadline),
         });
-        this.popover = usePopover();
+        this.popover = usePopover(ActivityMarkAsDone, { position: "right" });
         onMounted(() => {
             this.updateDelayAtNight();
         });
@@ -70,21 +70,15 @@ export class Activity extends Component {
     }
 
     async onClickMarkAsDone(ev) {
-        if (this.closePopover) {
-            this.closePopover();
-            this.closePopover = undefined;
+        if (this.popover.isOpen) {
+            this.popover.close();
             return;
         }
-        this.closePopover = this.popover.add(
-            ev.currentTarget,
-            ActivityMarkAsDone,
-            {
-                activity: this.props.data,
-                hasHeader: true,
-                reload: this.props.onUpdate,
-            },
-            { position: "right" }
-        );
+        this.popover.open(ev.currentTarget, {
+            activity: this.props.data,
+            hasHeader: true,
+            reload: this.props.onUpdate,
+        });
     }
 
     async onFileUploaded(data) {
