@@ -14,7 +14,6 @@ import {
     toggleSaveFavorite,
 } from "@web/../tests/search/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { dialogService } from "@web/core/dialog/dialog_service";
 import { _lt } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
@@ -27,7 +26,6 @@ import { browser } from "@web/core/browser/browser";
 import { LegacyComponent } from "@web/legacy/legacy_component";
 
 import { xml } from "@odoo/owl";
-const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
 
 let serverData;
@@ -77,7 +75,6 @@ QUnit.module("LegacyViews", (hooks) => {
         };
         setupControlPanelFavoriteMenuRegistry();
         setupControlPanelServiceRegistry();
-        serviceRegistry.add("dialog", dialogService);
 
         class ToyController extends LegacyComponent {}
         ToyController.template = xml`<div class="o_toy_view"><ControlPanel /></div>`;
