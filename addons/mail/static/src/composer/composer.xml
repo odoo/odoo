@@ -6,7 +6,7 @@
     <t t-set="normal" t-value="props.mode === 'normal'"/>
     <t t-set="extended" t-value="props.mode === 'extended'"/>
     <div t-ref="composer">
-        <div class="o-mail-Composer d-grid flex-shrink-0 bg-view"
+        <div class="o-mail-Composer d-grid flex-shrink-0"
                 t-att-class="{
                     'px-3 py-4 o-extended': extended,
                     'p-3': normal,
@@ -77,7 +77,7 @@
                         <button t-if="thread and thread.type === 'chatter'" class="btn btn-light fa fa-expand mx-1 border-0 rounded-pill" title="Full composer" aria-label="Full composer" type="button" t-on-click="onClickFullComposer"/>
                     </div>
                 </div>
-                <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-primary o-last border-start-0"
+                <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-secondary o-last border-start-0"
                     t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended}"
                     t-on-click="sendMessage"
                     type="button"
