@@ -17,7 +17,7 @@ QUnit.module("Client Actions", (hooks) => {
         // serverData = getActionManagerServerData();
         serverData = {
             models: {
-                "hr.employee": {
+                "hr.employee.public": {
                     fields: {
                         name: { string: "Name", type: "char" },
                         attendance_state: {
@@ -114,7 +114,7 @@ QUnit.module("Client Actions", (hooks) => {
         const mockRPC = async (route, args) => {
             if (args.method === "attendance_scan" && args.model === "hr.employee") {
                 rpcCount++;
-                return serverData.models["hr.employee"].records.find((r) => r.id === args.args[0]);
+                return serverData.models["hr.employee.public"].records.find((r) => r.id === args.args[0]);
             }
         };
         const webClient = await createWebClient({ serverData, mockRPC });

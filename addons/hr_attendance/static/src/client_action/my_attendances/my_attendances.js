@@ -20,7 +20,7 @@ export class MyAttendances extends Component {
 
     async onWillStart() {
         const result = await this.orm.searchRead(
-            "hr.employee",
+            "hr.employee.public",
             [["user_id", "=", this.user.userId]],
             ["attendance_state", "name", "hours_today"]
         );
