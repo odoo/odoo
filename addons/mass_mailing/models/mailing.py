@@ -1326,26 +1326,30 @@ class MassMailing(models.Model):
                 attachment.id, attachment.access_token)
 
         root = lxml.html.fromstring(body_html)
-        def _images_to_url(root):
-            modified = False
-            for node in root.iter('img'):
-                match = image_re.match(node.attrib.get('src', ''))
-                if match:
-                    mime = match.group(1)  # unsed
-                    image = match.group(2).encode()  # base64 image as bytes
+        modified = False
+        for node in root.iter('img'):
+            match = image_re.match(node.attrib.get('src', ''))
+            if match:
+                mime = match.group(1)  # unused
+                image = match.group(2).encode()  # base64 image as bytes
 
-                    node.attrib['src'] = _image_to_url(image)
-                    modified = True
-            return modified
-        modified = _images_to_url(root)
+                node.attrib['src'] = _image_to_url(image)
+                modified = True
         # handle the images in mso comments
         for comment in root.xpath('//comment()'):
-            match = mso_re.match(comment.text)
-            if match:
-                mso = lxml.html.fromstring('<div>' + comment.text.replace('[if mso]>', '').replace('<![endif]', '') + '</div>')
-                mso_modified = _images_to_url(mso)
-                modified = modified or mso_modified
-                comment.text = b'[if mso]>' + lxml.html.tostring(mso)[5:-6] + b'<![endif]'
+            is_mso = mso_re.match(comment.text)
+            if is_mso:
+                matches = re.findall(r'<img[^>]*src="(data:image/[A-Za-z]+;base64,[^"]*)"', comment.text)
+                if matches:
+                    modified = True
+                    for match in matches:
+                        image = re.sub(r'data:image/[A-Za-z]+;base64,', '', match).encode()  # base64 image as bytes
+                        comment.text = comment.text.replace(match, _image_to_url(image))
+
+        if modified:
+            return lxml.html.tostring(root, encoding='unicode')
+
+        return body_html
 
         if modified:
             return lxml.html.tostring(root, encoding='unicode')
