@@ -156,13 +156,30 @@ export function touching(elements, targetRect) {
 //  - redefine this selector in tests env with ":not(#qunit *)" ?
 
 // Following selector is based on this spec: https://html.spec.whatwg.org/multipage/interaction.html#dom-tabindex
-let TABABLE_SELECTOR = "[tabindex], a, area, button, frame, iframe, input, object, select, textarea, details > summary:nth-child(1),"
-    .split(",")
-    .join(':not([tabindex="-1"]):not(:disabled),');
-TABABLE_SELECTOR = TABABLE_SELECTOR.slice(0, TABABLE_SELECTOR.length - 1);
+const TABABLE_SELECTOR = [
+    "[tabindex]",
+    "a",
+    "area",
+    "button",
+    "frame",
+    "iframe",
+    "input",
+    "object",
+    "select",
+    "textarea",
+    "details > summary:nth-child(1)",
+]
+    .map((sel) => `${sel}:not([tabindex="-1"]):not(:disabled)`)
+    .join(",");
 
+/**
+ * Returns all focusable elements in the given container.
+ *
+ * @param {HTMLElement} [container=document.body]
+ */
 export function getTabableElements(container = document.body) {
     const elements = container.querySelectorAll(TABABLE_SELECTOR);
+    /** @type {Record<number, HTMLElement[]>} */
     const byTabIndex = {};
     for (const el of [...elements]) {
         if (!byTabIndex[el.tabIndex]) {

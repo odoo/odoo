@@ -144,7 +144,7 @@ export function getFixture() {
     if (QUnit.config.debug) {
         return document.body;
     } else {
-        return document.querySelector("#qunit-fixture");
+        return document.getElementById("qunit-fixture");
     }
 }
 

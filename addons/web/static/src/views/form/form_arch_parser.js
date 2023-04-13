@@ -29,11 +29,7 @@ export class FormArchParser extends XMLParser {
                 if (archParseBoolean(node.getAttribute("default_focus") || "")) {
                     autofocusFieldId = fieldId;
                 }
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    fieldInfo.field.fieldDependencies
-                );
+                addFieldDependencies(fieldInfo, activeFields, models[modelName]);
                 return false;
             } else if (node.tagName === "div" && node.classList.contains("oe_chatter")) {
                 // remove this when chatter fields are declared as attributes on the root node
@@ -43,11 +39,7 @@ export class FormArchParser extends XMLParser {
                 const widgetId = `widget_${++widgetNextId}`;
                 widgetNodes[widgetId] = widgetInfo;
                 node.setAttribute("widget_id", widgetId);
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    widgetInfo.widget.fieldDependencies
-                );
+                addFieldDependencies(widgetInfo, activeFields, models[modelName]);
             }
         });
         // TODO: generate activeFields for the model based on fieldNodes (merge duplicated fields)
