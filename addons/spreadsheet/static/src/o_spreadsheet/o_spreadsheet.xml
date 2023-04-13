@@ -193,7 +193,7 @@
             t-on-click="() => this.onColorClick(color)"
             t-attf-style="background-color:{{color}};">
             <div
-              t-if="props.currentColor === color"
+              t-if="isSameColor(props.currentColor, color)"
               align="center"
               t-attf-style="color:{{getCheckMarkColor()}}">
             &#10004;
@@ -201,13 +201,13 @@
           </div>
         </div>
         <div class="o-separator"/>
-        <div class="o-color-picker-section-name">
+        <div
+          class="o-color-picker-section-name o-color-picker-toggler"
+          t-on-click="toggleColorPicker">
           <span>Custom</span>
         </div>
-        <div class="colors-grid">
-          <div
-            class="o-color-picker-toggler o-color-picker-line-item"
-            t-on-click.stop="toggleColorPicker">
+        <div class="colors-grid o-color-picker-toggler" t-on-click.stop="toggleColorPicker">
+          <div class="o-color-picker-line-item o-color-picker-toggler">
             <div align="center">+</div>
           </div>
           <div
@@ -879,7 +879,8 @@
       maxWidth="cellPopover.Component.size and cellPopover.Component.size.maxHidth"
       anchorRect="cellPopover.anchorRect"
       containerRect="env.getPopoverContainerRect()"
-      onMouseWheel="props.onMouseWheel">
+      onMouseWheel="props.onMouseWheel"
+      zIndex="zIndex">
       <t
         t-component="cellPopover.Component"
         t-props="{...cellPopover.props, onClosed : () => props.onClosePopover()}"
@@ -1710,7 +1711,7 @@
   </t>
 
   <t t-name="o-spreadsheet-Menu" owl="1">
-    <Popover t-if="visibleMenuItems.length" t-props="popoverProps">
+    <Popover t-if="menuItemsAndSeparators.length" t-props="popoverProps">
       <div
         t-ref="menu"
         class="o-menu"
@@ -1718,31 +1719,33 @@
         t-on-wheel.stop=""
         t-on-click.stop=""
         t-on-contextmenu.prevent="">
-        <t t-foreach="visibleMenuItems" t-as="menuItem" t-key="menuItem.id">
-          <t t-set="isMenuRoot" t-value="isRoot(menuItem)"/>
-          <t t-set="isMenuEnabled" t-value="isEnabled(menuItem)"/>
-          <div
-            t-att-title="getName(menuItem)"
-            t-att-data-name="menuItem.id"
-            t-on-click="() => this.onClickMenu(menuItem, menuItem_index)"
-            t-on-mouseover="() => this.onMouseOver(menuItem, menuItem_index)"
-            class="o-menu-item"
-            t-att-class="{ 'o-menu-root': isMenuRoot, 'disabled': !isMenuEnabled, 'o-menu-item-active': isParentMenu(subMenu, menuItem)}"
-            t-att-style="getColor(menuItem)">
-            <span class="o-menu-item-name" t-esc="getName(menuItem)"/>
-            <span
-              t-if="menuItem.description"
-              class="o-menu-item-description"
-              t-esc="menuItem.description"
-            />
-            <t t-if="isMenuRoot">
-              <span t-call="o-spreadsheet-Icon.TRIANGLE_RIGHT"/>
-            </t>
-            <t t-elif="menuItem.icon">
-              <i t-att-class="menuItem.icon" class="o-menu-item-icon"/>
-            </t>
-          </div>
-          <div t-if="menuItem.separator and !menuItem_last" class="o-separator"/>
+        <t t-foreach="menuItemsAndSeparators" t-as="menuItem" t-key="menuItem_index">
+          <div t-if="menuItem === 'separator'" class="o-separator"/>
+          <t t-else="">
+            <t t-set="isMenuRoot" t-value="isRoot(menuItem)"/>
+            <t t-set="isMenuEnabled" t-value="isEnabled(menuItem)"/>
+            <div
+              t-att-title="getName(menuItem)"
+              t-att-data-name="menuItem.id"
+              t-on-click="(ev) => this.onClickMenu(menuItem, menuItem_index, ev)"
+              t-on-mouseover="(ev) => this.onMouseOver(menuItem, menuItem_index, ev)"
+              class="o-menu-item"
+              t-att-class="{ 'o-menu-root': isMenuRoot, 'disabled': !isMenuEnabled, 'o-menu-item-active': isParentMenu(subMenu, menuItem)}"
+              t-att-style="getColor(menuItem)">
+              <span class="o-menu-item-name" t-esc="getName(menuItem)"/>
+              <span
+                t-if="menuItem.description"
+                class="o-menu-item-description"
+                t-esc="menuItem.description"
+              />
+              <t t-if="isMenuRoot">
+                <span t-call="o-spreadsheet-Icon.TRIANGLE_RIGHT"/>
+              </t>
+              <t t-elif="menuItem.icon">
+                <i t-att-class="menuItem.icon" class="o-menu-item-icon"/>
+              </t>
+            </div>
+          </t>
         </t>
       </div>
       <Menu
@@ -1760,7 +1763,11 @@
 
   <t t-name="o-spreadsheet-Popover" owl="1">
     <t t-portal="'.o-spreadsheet'">
-      <div class="o-popover" t-ref="popover" t-on-wheel="props.onMouseWheel">
+      <div
+        class="o-popover"
+        t-ref="popover"
+        t-on-wheel="props.onMouseWheel"
+        t-att-style="popoverStyle">
         <t t-slot="default"/>
       </div>
     </t>
@@ -1841,15 +1848,6 @@
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
         />
-        <label>
-          <input
-            type="checkbox"
-            t-att-checked="props.definition.dataSetsHaveTitle"
-            t-on-change="onUpdateDataSetsHaveTitle"
-            class="align-middle"
-          />
-          Data series include title
-        </label>
       </div>
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
@@ -1869,6 +1867,19 @@
             class="align-middle"
           />
           Aggregate
+        </label>
+      </div>
+      <div class="o-section o-use-row-as-headers" t-if="calculateHeaderPosition()">
+        <label>
+          <input
+            type="checkbox"
+            t-att-checked="props.definition.dataSetsHaveTitle"
+            t-on-change="onUpdateDataSetsHaveTitle"
+            class="align-middle"
+          />
+          Use row
+          <span t-esc="calculateHeaderPosition()"/>
+          as headers
         </label>
       </div>
       <div class="o-section o-sidepanel-error" t-if="errorMessages">
@@ -2104,15 +2115,6 @@
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
         />
-        <label>
-          <input
-            type="checkbox"
-            t-att-checked="props.definition.dataSetsHaveTitle"
-            t-on-change="onUpdateDataSetsHaveTitle"
-            class="align-middle"
-          />
-          Data series include title
-        </label>
       </div>
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
@@ -2132,6 +2134,19 @@
             class="align-middle"
           />
           Aggregate
+        </label>
+      </div>
+      <div class="o-section o-use-row-as-headers" t-if="calculateHeaderPosition()">
+        <label>
+          <input
+            type="checkbox"
+            t-att-checked="props.definition.dataSetsHaveTitle"
+            t-on-change="onUpdateDataSetsHaveTitle"
+            class="align-middle"
+          />
+          Use row
+          <span t-esc="calculateHeaderPosition()"/>
+          as headers
         </label>
       </div>
       <div class="o-section o-sidepanel-error" t-if="errorMessages">
@@ -2207,15 +2222,6 @@
           onSelectionChanged="(ranges) => this.onDataSeriesRangesChanged(ranges)"
           onSelectionConfirmed="() => this.onDataSeriesConfirmed()"
         />
-        <label>
-          <input
-            type="checkbox"
-            t-att-checked="props.definition.dataSetsHaveTitle"
-            t-on-change="onUpdateDataSetsHaveTitle"
-            class="align-middle"
-          />
-          Data series include title
-        </label>
       </div>
       <div class="o-section o-data-labels">
         <div class="o-section-title">Categories / Labels</div>
@@ -2247,6 +2253,19 @@
             Treat labels as text
           </label>
         </div>
+      </div>
+      <div class="o-section o-use-row-as-headers" t-if="calculateHeaderPosition()">
+        <label>
+          <input
+            type="checkbox"
+            t-att-checked="props.definition.dataSetsHaveTitle"
+            t-on-change="onUpdateDataSetsHaveTitle"
+            class="align-middle"
+          />
+          Use row
+          <span t-esc="calculateHeaderPosition()"/>
+          as headers
+        </label>
       </div>
       <div class="o-section o-sidepanel-error" t-if="errorMessages">
         <div t-foreach="errorMessages" t-as="error" t-key="error">
@@ -3550,7 +3569,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.3.0-alpha.2';
-  __info__.date = '2023-03-23T11:47:49.776Z';
-  __info__.hash = '59f25bb';
+  __info__.version = '16.3.0-alpha.3';
+  __info__.date = '2023-04-13T09:07:06.746Z';
+  __info__.hash = '6431610';
 -->
