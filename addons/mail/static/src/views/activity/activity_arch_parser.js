@@ -36,11 +36,7 @@ export class ActivityArchParser extends XMLParser {
                 fieldNodes[fieldId] = fieldInfo;
                 node.setAttribute("field_id", fieldId);
 
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    fieldInfo.field.fieldDependencies
-                );
+                addFieldDependencies(fieldInfo, activeFields, models[modelName]);
             }
 
             // Keep track of last update so images can be reloaded when they may have changed.

@@ -169,7 +169,7 @@ export class Race {
 /**
  * Deferred is basically a resolvable/rejectable extension of Promise.
  */
-export class Deferred {
+export class Deferred extends Promise {
     constructor() {
         let resolve;
         let reject;

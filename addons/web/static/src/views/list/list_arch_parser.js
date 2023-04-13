@@ -119,11 +119,7 @@ export class ListArchParser extends XMLParser {
                 if (fieldInfo.widget === "handle") {
                     handleField = fieldInfo.name;
                 }
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    fieldInfo.field.fieldDependencies
-                );
+                addFieldDependencies(fieldInfo, activeFields, models[modelName]);
                 if (this.isColumnVisible(fieldInfo.modifiers.column_invisible)) {
                     const label = fieldInfo.field.label;
                     columns.push({
@@ -144,11 +140,7 @@ export class ListArchParser extends XMLParser {
                 const widgetId = `widget_${++widgetNextId}`;
                 widgetNodes[widgetId] = widgetInfo;
                 node.setAttribute("widget_id", widgetId);
-                addFieldDependencies(
-                    activeFields,
-                    models[modelName],
-                    widgetInfo.widget.fieldDependencies
-                );
+                addFieldDependencies(widgetInfo, activeFields, models[modelName]);
 
                 const widgetProps = {
                     name: widgetInfo.name,
