@@ -10,7 +10,7 @@ from odoo.tests.common import users, warmup, Form
 from odoo.tests import tagged
 
 
-@tagged('event_performance', 'post_install', '-at_install')
+@tagged('event_performance', 'post_install', '-at_install', '-standard')
 class EventPerformanceCase(TestEventFullCommon):
 
     def setUp(self):
@@ -26,7 +26,7 @@ class EventPerformanceCase(TestEventFullCommon):
         self.cr.flush()
 
 
-@tagged('event_performance', 'post_install', '-at_install')
+@tagged('event_performance', 'post_install', '-at_install', '-standard')
 class TestEventPerformance(EventPerformanceCase):
 
     @users('event_user')
@@ -221,7 +221,7 @@ class TestEventPerformance(EventPerformanceCase):
             self.env['event.event'].create([event_values])
 
 
-@tagged('event_performance', 'registration_performance', 'post_install', '-at_install')
+@tagged('event_performance', 'registration_performance', 'post_install', '-at_install', '-standard')
 class TestRegistrationPerformance(EventPerformanceCase):
 
     @users('event_user')
@@ -396,7 +396,7 @@ class TestRegistrationPerformance(EventPerformanceCase):
             _registration = self.env['event.registration'].create([registration_values])
 
 
-@tagged('event_performance', 'event_online', 'post_install', '-at_install')
+@tagged('event_performance', 'event_online', 'post_install', '-at_install', '-standard')
 class TestOnlineEventPerformance(EventPerformanceCase, UtilPerf):
 
     @classmethod
