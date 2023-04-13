@@ -12,6 +12,7 @@ from reportlab.lib import colors
 from reportlab.lib.units import cm
 from reportlab.lib.utils import ImageReader
 from reportlab.pdfgen import canvas
+from odoo.tools.parse_version import parse_version
 
 try:
     # class were renamed in PyPDF2 > 2.0
@@ -36,6 +37,7 @@ except ImportError:
 from PyPDF2.generic import DictionaryObject, NameObject, ArrayObject, DecodedStreamObject, NumberObject, createStringObject, ByteStringObject
 
 try:
+    import fontTools
     from fontTools.ttLib import TTFont
 except ImportError:
     TTFont = None
@@ -369,7 +371,10 @@ class OdooPdfFileWriter(PdfFileWriter):
                 stream = io.BytesIO(decompress(font_file._data))
                 ttfont = TTFont(stream)
                 font_upm = ttfont['head'].unitsPerEm
-                glyphs = ttfont.getGlyphSet()._hmtx.metrics
+                if parse_version(fontTools.__version__) < parse_version('4.37.2'):
+                    glyphs = ttfont.getGlyphSet()._hmtx.metrics
+                else:
+                    glyphs = ttfont.getGlyphSet().hMetrics
                 glyph_widths = []
                 for key, values in glyphs.items():
                     if key[:5] == 'glyph':
