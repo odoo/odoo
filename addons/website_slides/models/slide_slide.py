@@ -415,7 +415,7 @@ class Slide(models.Model):
         # We don't use read_group() function, otherwise we will have issue with flushing the
         # data as completion_time is recursive and when it'll try to flush data before it is calculated
         for category in self.filtered(lambda slide: slide.is_category):
-            filtered_slides = category.slide_ids.filtered(lambda slide: slide.is_published)
+            filtered_slides = category.channel_id.slide_ids.filtered(lambda l: l.category_id == category and l.is_published)
             category.completion_time = sum(filtered_slides.mapped("completion_time"))
 
     @api.depends('slide_category', 'source_type', 'video_source_type')
