@@ -4,6 +4,7 @@ import { Component, useState, useSubEnv, xml } from "@odoo/owl";
 import { escapeRegExp } from "@web/core/utils/strings";
 import { browser } from "@web/core/browser/browser";
 import { zip } from "@web/core/utils/arrays";
+import { useSelfOrder } from "./SelfOrderService";
 
 function parseParams(matches, paramSpecs) {
     return Object.fromEntries(
@@ -21,9 +22,15 @@ function parseParams(matches, paramSpecs) {
     );
 }
 export class Router extends Component {
+    static props = { slots: Object, pos_config_id: Number };
     static template = xml`<t t-slot="{{state.activeSlot}}" t-props="state.slotProps"/>`;
     setup() {
-        useSubEnv({ navigate: this.navigate.bind(this) });
+        this.selfOrder = useSelfOrder();
+        this.selfOrder.navigate = this.navigate.bind(this);
+        useSubEnv({
+            navigate: this.navigate.bind(this),
+            getCurrentRoute: this.getCurrentRoute.bind(this),
+        });
         this.state = useState({
             activeSlot: "default",
             slotProps: {},
@@ -69,18 +76,23 @@ export class Router extends Component {
     /**
      * Navigate to the given relative route.
      * We use the history API to navigate to it.
-     * (this means that we don't make aditional requests to the server)
+     * (this means that we don't make additional requests to the server)
      * @param {string} route
-     * @param {Event} event
+     * @param {number} pos_config_id
      */
-    navigate(route, event = null) {
-        if (!route.startsWith("/")) {
-            return;
-        }
-        event?.preventDefault();
+    navigate(route, pos_config_id = this.props.pos_config_id) {
         const url = new URL(browser.location.href);
-        url.pathname = `menu/${this.props.pos_config_id}${route}`;
+        url.pathname = `menu/${pos_config_id}${route}`;
         history.pushState({}, "", url);
         this.matchURL();
+    }
+    /**
+     * @returns {string[]}
+     */
+    getCurrentRoute() {
+        const baseLength = "/menu/{string:pos_name}".split("/").length;
+        // The base part of the route is there on all routes, so it
+        // makes no sense to have it in the return
+        return this.state.activeSlot.split("/").splice(baseLength);
     }
 }

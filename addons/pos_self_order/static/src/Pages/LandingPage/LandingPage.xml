@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.LandingPage" owl="1">
         <div class="d-flex flex-column h-100 align-items-center p-4 overflow-auto"
             t-attf-style="
-                background-image: linear-gradient(to bottom, transparent 33%, #000000 99%), url(/menu/get-bg-image?pos_config_id={{selfOrder.pos_config_id}});
+                background-image: linear-gradient(to bottom, transparent 33%, #000000 99%), url(/menu/get-bg-image/{{selfOrder.pos_config_id}});
                 background-size: cover;
                 background-position: center;
             ">
@@ -11,18 +11,28 @@
                 <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
                     <a type="button" 
                         t-attf-href="{{!link.url.startsWith('/') and link.url}}"
-                        t-on-click="(event)=> link.url.startsWith('/') and env.navigate(link.url, event)"
-                        t-attf-class="btn btn-lg w-100 w-md-50 w-lg-25 mx-auto my-2 rounded btn-{{link.style}}">
+                        t-on-click="(event)=> link.url.startsWith('/') and env.navigate(link.url)"
+                        t-attf-class="btn btn-{{link.style}} py-3 my-1 rounded">
                         <t t-esc="link.name"/>
+                    </a>
+                </t>
+                <t t-if="selfOrder.orders.length">
+                    <hr class="bg-500"/>
+                    <a 
+                        type="button" 
+                        t-on-click="()=> env.navigate('/orders')"
+                        class="btn btn-outline-light py-3 my-2">
+                        My Orders
                     </a>
                 </t>
             </div>
             <t t-call="pos_self_order.LandingPageFooter"/>
         </div>
     </t>
+
     <t t-name="pos_self_order.LandingPageFooter" owl="1">
         <div class="d-flex align-items-center py-2 px-3 text-white-50 small">Powered By
-            <span class="o_pos_self_order_odoo_logo ms-1 mt-n1">
+            <span class="o_pos_self_order_odoo_logo ms-2 mt-n1">
                 <svg height="16" viewBox="0 0 621 196" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
                     <title>Odoo Logo</title>
                     <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
@@ -36,4 +46,3 @@
         </div>
     </t>
 </templates>
-

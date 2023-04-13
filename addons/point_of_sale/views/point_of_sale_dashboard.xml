@@ -71,7 +71,7 @@
                     <t t-name="kanban-menu">
                         <div class="container dropdown-pos-config">
                             <div class="row">
-                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view">
+                                <div class="col-6 o_kanban_card_manage_section o_kanban_manage_view w-100">
                                     <div role="menuitem" class="o_kanban_card_manage_title">
                                         <span>View</span>
                                     </div>
@@ -103,7 +103,7 @@
                         <div>
                             <div class="o_kanban_card_header">
                                 <div class="o_kanban_card_header_title mb16">
-                                    <div class="o_primary">
+                                    <div class="o_primary o_kanban_card_header_title_name">
                                         <t t-esc="record.name.value"/>
                                     </div>
                                     <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
