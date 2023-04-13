@@ -634,9 +634,9 @@ class WebsiteSale(http.Controller):
     # ------------------------------------------------------
 
     def checkout_check_address(self, order):
-        billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
-        if not all(order.partner_id.read(billing_fields_required)[0].values()):
-            return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+        billing_fields_required = self._get_mandatory_fields_billing(order.partner_invoice_id.country_id.id)
+        if not all(order.partner_invoice_id.read(billing_fields_required)[0].values()):
+            return request.redirect('/shop/address?partner_id=%d' % order.partner_invoice_id.id)
 
         shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
         if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
@@ -811,7 +811,7 @@ class WebsiteSale(http.Controller):
         if lang:
             new_values['lang'] = lang
         if mode == ('edit', 'billing') and order.partner_id.type == 'contact':
-            new_values['type'] = 'other'
+            new_values['type'] = 'invoice'
         if mode[1] == 'shipping':
             new_values['parent_id'] = order.partner_id.commercial_partner_id.id
             new_values['type'] = 'delivery'
@@ -840,7 +840,7 @@ class WebsiteSale(http.Controller):
         # IF ORDER LINKED TO A PARTNER
         else:
             if partner_id > 0:
-                if partner_id == order.partner_id.id:
+                if partner_id == order.partner_invoice_id.id:
                     mode = ('edit', 'billing')
                     can_edit_vat = order.partner_id.can_edit_vat()
                 else:

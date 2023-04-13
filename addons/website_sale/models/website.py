@@ -215,7 +215,7 @@ class Website(models.Model):
         self.ensure_one()
         affiliate_id = request.session.get('affiliate_id')
         salesperson_id = affiliate_id if self.env['res.users'].sudo().browse(affiliate_id).exists() else request.website.salesperson_id.id
-        addr = partner.address_get(['delivery'])
+        addr = partner.address_get(['delivery', 'invoice'])
         if not request.website.is_public_user():
             last_sale_order = self.env['sale.order'].sudo().search([('partner_id', '=', partner.id)], limit=1, order="date_order desc, id desc")
             if last_sale_order and last_sale_order.partner_shipping_id.active:  # first = me
@@ -226,7 +226,7 @@ class Website(models.Model):
             'pricelist_id': pricelist.id,
             'payment_term_id': self.sale_get_payment_term(partner),
             'team_id': self.salesteam_id.id or partner.parent_id.team_id.id or partner.team_id.id,
-            'partner_invoice_id': partner.id,
+            'partner_invoice_id': addr['invoice'],
             'partner_shipping_id': addr['delivery'],
             'user_id': salesperson_id or self.salesperson_id.id or default_user_id,
             'website_id': self._context.get('website_id'),
@@ -329,7 +329,7 @@ class Website(models.Model):
             # change the partner, and trigger the onchange
             sale_order.write({'partner_id': partner.id})
             sale_order.with_context(not_self_saleperson=True).onchange_partner_id()
-            sale_order.write({'partner_invoice_id': partner.id})
+            # sale_order.write({'partner_invoice_id': partner.id})
             sale_order.onchange_partner_shipping_id() # fiscal position
             sale_order['payment_term_id'] = self.sale_get_payment_term(partner)
 
