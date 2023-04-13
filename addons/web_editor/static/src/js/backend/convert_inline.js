@@ -797,7 +797,6 @@ function fontToImg($editable) {
             image.style.setProperty('line-height', lineHeight);
             image.style.setProperty('width', intrinsicWidth + 'px');
             image.style.setProperty('height', intrinsicHeight + 'px');
-            image.style.setProperty('display', 'block');
             if (!padding) {
                 image.style.setProperty('margin', _getStylePropertyValue(font, 'margin'));
             }
@@ -806,7 +805,8 @@ function fontToImg($editable) {
             // doesn't get cropped in the process.
             // TODO: generalize for all border radius elements.
             const borderRadius = getComputedStyle(font).borderRadius;
-            if (borderRadius) {
+            if (borderRadius && borderRadius !== '0px') {
+                image.style.setProperty('display', 'block');
                 const wrapper = document.createElement('span');
                 wrapper.style.setProperty('display', 'inline-block');
                 wrapper.style.setProperty('padding', padding);
@@ -816,7 +816,7 @@ function fontToImg($editable) {
                 wrapper.style.setProperty('background-color', image.style.backgroundColor);
                 wrapper.setAttribute('class',
                     'oe_unbreakable ' + // prevent sanitize from grouping image wrappers
-                    font.getAttribute('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '') // remove inline font-awsome style
+                    font.getAttribute('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '') // remove inline font-awesome style
                 );
                 // Replace the font with the wrapped image.
                 wrapper.append(image);
@@ -836,6 +836,7 @@ function fontToImg($editable) {
                 _hideForOutlook(wrapper, 'opening');
                 _hideForOutlook(wrapper, 'closing');
             } else {
+                image.style.setProperty('display', 'inline');
                 // Replace the font with the image.
                 font.before(image);
                 font.remove();
