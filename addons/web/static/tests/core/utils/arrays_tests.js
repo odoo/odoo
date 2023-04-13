@@ -2,6 +2,7 @@
 
 import {
     cartesian,
+    ensureArray,
     groupBy,
     intersection,
     shallowEqual,
@@ -236,6 +237,18 @@ QUnit.module("utils", () => {
 
     QUnit.test("cartesian product of four arrays", function (assert) {
         assert.deepEqual(cartesian([1], [2], [3], [4]), [[1, 2, 3, 4]]);
+    });
+
+    QUnit.test("ensure array", async (assert) => {
+        const arrayRef = [];
+        assert.notEqual(ensureArray(arrayRef), arrayRef, "Should be a different array");
+        assert.deepEqual(ensureArray([]), []);
+        assert.deepEqual(ensureArray(), [undefined]);
+        assert.deepEqual(ensureArray(null), [null]);
+        assert.deepEqual(ensureArray({ a: 1 }), [{ a: 1 }]);
+        assert.deepEqual(ensureArray("foo"), ["foo"]);
+        assert.deepEqual(ensureArray([1, 2, "3"]), [1, 2, "3"]);
+        assert.deepEqual(ensureArray(new Set([1, 2, 3])), [1, 2, 3]);
     });
 
     QUnit.test("unique array", function (assert) {
