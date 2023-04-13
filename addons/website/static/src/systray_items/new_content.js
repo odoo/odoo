@@ -203,14 +203,14 @@ export class NewContentModal extends Component {
         const {id, name} = this.modulesInfo[element.moduleName];
         const dialogProps = {
             title: element.title,
-            installationText: _.str.sprintf(this.newContentText.installNeeded, name),
+            installationText: sprintf(this.newContentText.installNeeded, name),
             installModule: async () => {
                 // Update the NewContentElement with installing icon and text.
                 this.state.newContentElements = this.state.newContentElements.map(el => {
                     if (el.moduleXmlId === element.moduleXmlId) {
                         el.status = MODULE_STATUS.INSTALLING;
                         el.icon = xml`<i class="fa fa-spin fa-circle-o-notch"/>`;
-                        el.title = _.str.sprintf(this.newContentText.installPleaseWait, name);
+                        el.title = sprintf(this.newContentText.installPleaseWait, name);
                     }
                     return el;
                 });
@@ -226,7 +226,7 @@ export class NewContentModal extends Component {
                         if (el.moduleXmlId === element.moduleXmlId) {
                             el.status = MODULE_STATUS.FAILED_TO_INSTALL;
                             el.icon = xml`<i class="fa fa-exclamation-triangle"/>`;
-                            el.title = _.str.sprintf(this.newContentText.failed, name);
+                            el.title = sprintf(this.newContentText.failed, name);
                         }
                         return el;
                     });

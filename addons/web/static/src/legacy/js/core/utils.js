@@ -9,6 +9,7 @@
 import translation from "web.translation";
 
 import { Component } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 var _t = translation._t;
 var id = -1;
@@ -633,7 +634,7 @@ const utils = {
             return sindent + node.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
         } else if (typeof(node.tag) !== 'string' || node.children && !(node.children instanceof Array) || node.attrs && !(node.attrs instanceof Object)) {
             throw new Error(
-                _.str.sprintf(_t("Node [%s] is not a JSONified XML node"),
+                sprintf(_t("Node [%s] is not a JSONified XML node"),
                             JSON.stringify(node)));
         }
         for (var attr in node.attrs) {

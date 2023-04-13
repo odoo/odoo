@@ -27,7 +27,7 @@ LinkDialog.include({
             this.__realMMColors = {};
             const $previewArea = $('<div/>').addClass('o_mail_snippet_general');
             $(this.editable).find('.o_layout').append($previewArea);
-            _.each(['link', 'primary', 'secondary'], type => {
+            ['link', 'primary', 'secondary'].forEach(type => {
                 const $el = $('<a href="#" class="btn btn-' + type + '"/>');
                 $el.appendTo($previewArea);
                 this.__realMMColors[type] = {
@@ -62,7 +62,7 @@ LinkDialog.include({
             $preview.css('border-color', '');
             $preview.css('background-color', '');
             $preview.css('color', '');
-            _.each(['link', 'primary', 'secondary'], type => {
+            ['link', 'primary', 'secondary'].forEach(type => {
                 if ($preview.hasClass('btn-' + type) || type === 'link' && !$preview.hasClass('btn')) {
                     $preview.css(this.__realMMColors[type]);
                 }

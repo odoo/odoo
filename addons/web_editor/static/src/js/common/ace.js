@@ -7,6 +7,7 @@ import dom from "web.dom";
 import Dialog from "web.Dialog";
 import Widget from "web.Widget";
 import localStorage from "web.local_storage";
+import { sprintf } from "@web/core/utils/strings";
 
 var _t = core._t;
 
@@ -283,9 +284,9 @@ var ViewEditor = Widget.extend({
                 if (typeof this.viewKey === "number") {
                     initResID = this.viewKey;
                 } else {
-                    var view = _.findWhere(this.views, {xml_id: this.viewKey});
+                    var view = Object.values(this.views).find(view => view.xml_id === this.viewKey);
                     if (!view) {
-                        view = _.findWhere(this.views, {key: this.viewKey});
+                        view = Object.values(this.views).find(view => view.key === this.viewKey);
                     }
                     initResID = view.id;
                 }
@@ -425,11 +426,11 @@ var ViewEditor = Widget.extend({
         this.aceEditor.setSession(editingSession);
 
         if (this.currentType === 'xml') {
-            this.$viewID.text(_.str.sprintf(_t("Template ID: %s"), this.views[resID].key));
+            this.$viewID.text(sprintf(_t("Template ID: %s"), this.views[resID].key));
         } else if (this.currentType === 'scss') {
-            this.$viewID.text(_.str.sprintf(_t("SCSS file: %s"), resID));
+            this.$viewID.text(sprintf(_t("SCSS file: %s"), resID));
         } else {
-            this.$viewID.text(_.str.sprintf(_t("JS file: %s"), resID));
+            this.$viewID.text(sprintf(_t("JS file: %s"), resID));
         }
         const isCustomized = this._isCustomResource(resID);
         this.$lists[this.currentType].select2('val', resID);
@@ -518,9 +519,7 @@ var ViewEditor = Widget.extend({
 
         function _processViews(views) {
             // Only keep the active views and index them by ID.
-            Object.assign(this.views, _.indexBy(_.filter(views, function (view) {
-                return view.active;
-            }), 'id'));
+            Object.assign(this.views, _.indexBy(views.filter(view => view.active), 'id'));
 
             // Initialize a 0 level for each view and assign them an array containing their children.
             var self = this;
@@ -893,7 +892,7 @@ var ViewEditor = Widget.extend({
                     label: bundleInfos[0],
                 }).appendTo($list);
                 _.each(bundleInfos[1], function (dataInfo) {
-                    var name = dataInfo.url.substring(_.lastIndexOf(dataInfo.url, '/') + 1, dataInfo.url.length - lettersToRemove);
+                    var name = dataInfo.url.substring(dataInfo.url.lastIndexOf('/') + 1, dataInfo.url.length - lettersToRemove);
                     $optgroup.append($('<option/>', {
                         value: dataInfo.url,
                         text: name,

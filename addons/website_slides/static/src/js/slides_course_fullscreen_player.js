@@ -288,7 +288,7 @@
          */
         _getCurrentIndex: function () {
             var slide = this.get('slideEntry');
-            var currentIndex = _.findIndex(this.slideEntries, function (entry) {
+            var currentIndex = this.slideEntries.findIndex(entry =>{
                 return entry.id === slide.id && entry.isQuiz === slide.isQuiz;
             });
             return currentIndex;
@@ -609,11 +609,11 @@
                 } else if (slideData.category === 'video' && slideData.videoSourceType === 'vimeo') {
                     slideData.embedCode = Markup(slideData.embedCode);
                 } else if (slideData.category === 'infographic') {
-                    slideData.embedUrl = _.str.sprintf('/web/image/slide.slide/%s/image_1024', slideData.id);
+                    slideData.embedUrl = `/web/image/slide.slide/${slideData.id}/image_1024`;
                 } else if (slideData.category === 'document') {
                     slideData.embedUrl = $(slideData.embedCode).attr('src');
                 }
-                // fill empty property to allow searching on it with _.filter(list, matcher)
+                // fill empty property to allow searching on it with list.filter(matcher)
                 slideData.isQuiz = !!slideData.isQuiz;
                 slideData.hasQuestion = !!slideData.hasQuestion;
                 // technical settings for the Fullscreen to work
@@ -644,7 +644,7 @@
             if (this.get('slide').isQuiz){
                 params.quiz = 1;
             }
-            var fullscreenUrl = _.str.sprintf('%s?%s', url, $.param(params));
+            var fullscreenUrl = `${url}?${$.param(params)}`;
             history.pushState(null, '', fullscreenUrl);
         },
         /**
@@ -755,8 +755,7 @@
         _toggleSlideCompleted: async function (slide, completed = true) {
             await this._super(...arguments);
 
-            const slideMatch = _.matcher({id: slide.id});
-            const fsSlides = _.filter(this.slides, slideMatch);
+            const fsSlides = this.slides.filter(_slide => _slide.id === slide.id);
 
             fsSlides.forEach(slide => slide.completed = completed);
 

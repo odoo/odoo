@@ -483,7 +483,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
         }
 
         var submitPromise = self._rpc({
-            route: _.str.sprintf('%s/%s/%s', route, self.options.surveyToken, self.options.answerToken),
+            route: `${route}/${self.options.surveyToken}/${self.options.answerToken}`,
             params: params,
         });
         this._nextScreen(submitPromise, options);
@@ -736,7 +736,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
                     break;
             }
         });
-        if (_.keys(errors).length > 0) {
+        if (Object.keys(errors).length > 0) {
             this._showErrors(errors);
             return false;
         }
@@ -1170,8 +1170,8 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
     _showErrors: function (errors) {
         var self = this;
-        var errorKeys = _.keys(errors);
-        _.each(errorKeys, function (key) {
+        var errorKeys = Object.keys(errors || {});
+        errorKeys.forEach(key => {
             self.$("#" + key + '>.o_survey_question_error').append($('<p>', {text: errors[key]})).addClass("slide_in");
             if (errorKeys[0] === key) {
                 self._scrollToError(self.$('.js_question-wrapper#' + key));

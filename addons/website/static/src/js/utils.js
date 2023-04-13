@@ -1,5 +1,6 @@
 /** @odoo-module alias=website.utils **/
 
+import { intersection } from "@web/core/utils/arrays";
 import core from "web.core";
 
 const { qweb, _t } = core;
@@ -186,7 +187,7 @@ function prompt(options, _qweb) {
         btn_secondary_title: _t('Cancel'),
     }, options || {});
 
-    var type = _.intersection(Object.keys(options), ['input', 'textarea', 'select']);
+    var type = intersection(Object.keys(options), ['input', 'textarea', 'select']);
     type = type.length ? type[0] : 'input';
     options.field_type = type;
     options.field_name = options.field_name || options[type];

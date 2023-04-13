@@ -7,6 +7,7 @@ import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor
 import Widget from "web.Widget";
 import Wysiwyg from "web_editor.wysiwyg";
 import options from "web_editor.snippets.options";
+import { range } from "@web/core/utils/numbers";
 
 const COLOR_PICKER_TEMPLATE = `
     <colorpicker>
@@ -356,7 +357,7 @@ var keyboardMap = {
     "91": "OS_KEY", // 'left command': Windows Key (Windows) or Command Key (Mac)
     "93": "CONTEXT_MENU", // 'right command'
 };
-_.each(_.range(40, 127), function (keyCode) {
+_.each(range(40, 127), function (keyCode) {
     if (!keyboardMap[keyCode]) {
         keyboardMap[keyCode] = String.fromCharCode(keyCode);
     }

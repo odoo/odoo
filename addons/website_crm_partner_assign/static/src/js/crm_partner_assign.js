@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { sprintf } from "@web/core/utils/strings";
 import {_t} from "web.core";
 import publicWidget from "web.public.widget";
 import time from "web.time";
@@ -238,7 +239,7 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
         const contactName = ev.currentTarget.value.trim();
         let titleEl = this.el.querySelector('.title');
         if (!titleEl.value.trim()) {
-            titleEl.value = contactName ? _.str.sprintf(_t("%s's Opportunity"), contactName) : '';
+            titleEl.value = contactName ? sprintf(_t("%s's Opportunity"), contactName) : '';
         }
     },
     /**

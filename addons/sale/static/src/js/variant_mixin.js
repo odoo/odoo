@@ -4,6 +4,7 @@ import concurrency from "web.concurrency";
 import core from "web.core";
 import utils from "web.utils";
 import ajax from "web.ajax";
+import { sprintf } from "@web/core/utils/strings";
 var _t = core._t;
 
 var VariantMixin = {
@@ -500,7 +501,7 @@ var VariantMixin = {
             }
             excludedByData.push(excludedByName);
 
-            $target.attr('title', _.str.sprintf(_t('Not available with %s'), excludedByData.join(', ')));
+            $target.attr('title', sprintf(_t('Not available with %s'), excludedByData.join(', ')));
             $target.data('excluded-by', JSON.stringify(excludedByData));
         }
     },
@@ -600,7 +601,7 @@ var VariantMixin = {
         if ($('.decimal_precision').length) {
             precision = parseInt($('.decimal_precision').last().data('precision'));
         }
-        var formatted = _.str.sprintf('%.' + precision + 'f', price).split('.');
+        var formatted = price.toFixed(precision).split(".");
         formatted[0] = utils.insert_thousand_seps(formatted[0]);
         return formatted.join(l10n.decimal_point);
     },

@@ -63,9 +63,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             maximumSelectionSize: 5,
             lastsearch: [],
             createSearchChoice: function (term) {
-                if (_.filter(self.lastsearch, function (s) {
-                    return s.text.localeCompare(term) === 0;
-                }).length === 0) {
+                if (self.lastsearch.filter(s => s.text.localeCompare(term) === 0).length === 0) {
                     //check Karma
                     if (parseInt($('#karma').val()) >= parseInt($('#karma_edit_retag').val())) {
                         return {

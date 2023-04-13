@@ -82,6 +82,8 @@
  *   element, so it can be edited later.
  */
 
+import { intersection, unique } from "@web/core/utils/arrays";
+import { sprintf } from "@web/core/utils/strings";
 import AbstractModel from "web.AbstractModel";
 import concurrency from "web.concurrency";
 import Context from "web.Context";
@@ -860,8 +862,8 @@ var BasicModel = AbstractModel.extend({
             record.data[field.name] = null;
             if (field.type === 'many2one') {
                 if (field.value) {
-                    var id = _.isArray(field.value) ? field.value[0] : field.value;
-                    var display_name = _.isArray(field.value) ? field.value[1] : undefined;
+                    var id = Array.isArray(field.value) ? field.value[0] : field.value;
+                    var display_name = Array.isArray(field.value) ? field.value[1] : undefined;
                     dataPoint = self._makeDataPoint({
                         modelName: field.relation,
                         data: {
@@ -991,7 +993,7 @@ var BasicModel = AbstractModel.extend({
         if (parent.static) {
             // x2Many case: the new record has been stored in _changes, as a
             // command so we remove the command(s) related to that record
-            parent._changes = _.filter(parent._changes, function (change) {
+            parent._changes = parent._changes.filter( change => {
                 if (change.id === elementID &&
                     change.operation === 'ADD' && // For now, only an ADD command increases limits
                     parent.tempLimitIncrement) {
@@ -1072,7 +1074,7 @@ var BasicModel = AbstractModel.extend({
                         }
                         if (dataType === 'list') {
                             data.data = _.sortBy(data.data, function (d) {
-                                return _.indexOf(resIDs, self.localData[d].res_id)
+                                return resIDs.indexOf(self.localData[d].res_id);
                             });
                         }
                     }
@@ -1247,9 +1249,7 @@ var BasicModel = AbstractModel.extend({
                 list.orderedBy[0].asc = !list.orderedBy[0].asc;
             }
         } else {
-            var orderedBy = _.reject(list.orderedBy, function (o) {
-                return o.name === fieldName;
-            });
+            var orderedBy = list.orderedBy.filter(o => o.name !== fieldName);
             list.orderedBy = [{name: fieldName, asc: true}].concat(orderedBy);
         }
 
@@ -1538,7 +1538,7 @@ var BasicModel = AbstractModel.extend({
 
         if (options.notifyChange === false) {
             return Promise.all(defs).then(function () {
-                return Promise.resolve(_.keys(changes));
+                return Promise.resolve(Object.keys(changes));
             });
         }
 
@@ -1558,7 +1558,7 @@ var BasicModel = AbstractModel.extend({
                     self._performOnChange(record, onChangeFields, { viewType: options.viewType })
                     .then(function (result) {
                         delete record._warning;
-                        resolve(_.keys(changes).concat(Object.keys(result && result.value || {})));
+                        resolve(Object.keys(changes).concat(Object.keys(result && result.value || {})));
                     }).guardedCatch(function () {
                         self._visitChildren(record, function (elem) {
                             Object.assign(elem, initialData[elem.id]);
@@ -1566,13 +1566,13 @@ var BasicModel = AbstractModel.extend({
                         reject();
                     });
                 } else {
-                    resolve(_.keys(changes));
+                    resolve(Object.keys(changes));
                 }
             }).then(function (fieldNames) {
                 return self._fetchSpecialData(record).then(function (fieldNames2) {
                     // Return the names of the fields that changed (onchange or
                     // associated special data change)
-                    return _.union(fieldNames, fieldNames2);
+                    return fieldNames.concat(fieldNames2);
                 });
             });
         });
@@ -1729,7 +1729,7 @@ var BasicModel = AbstractModel.extend({
                 if (val) {
                     // when the value isn't false, it can be either
                     // an array [id, display_name] or just an id.
-                    var data = _.isArray(val) ?
+                    var data = Array.isArray(val) ?
                         {id: val[0], display_name: val[1]} :
                         {id: val};
                     if (!oldValue || (self.localData[oldValue].res_id !== data.id)) {
@@ -1961,7 +1961,7 @@ var BasicModel = AbstractModel.extend({
                 list._forceM2MLink = true;
                 // handle multiple add: command[2] may be a dict of values (1
                 // record added) or an array of dict of values
-                var data = _.isArray(command.ids) ? command.ids : [command.ids];
+                var data = Array.isArray(command.ids) ? command.ids : [command.ids];
 
                 // name_create records for which there is no id (typically, could
                 // be the case of a quick_create in a many2many_tags, so data.length
@@ -2066,23 +2066,22 @@ var BasicModel = AbstractModel.extend({
                 // no 'ADD' operation for that dataPoint, as it would mean
                 // that the record wasn't in the relation yet
                 var idsToRemove = command.ids;
-                list._changes = _.reject(list._changes, function (change, index) {
-                    var idInCommands = _.contains(command.ids, change.id);
+
+                list._changes = list._changes.filter(change => {
+                    var idInCommands = command.ids.includes(change.id);
                     if (idInCommands && change.operation === 'ADD') {
-                        idsToRemove = _.without(idsToRemove, change.id);
+                        idsToRemove = idsToRemove.filter(id => id !== change.id);
                     }
-                    return idInCommands;
+                    return !idInCommands;
                 });
-                _.each(idsToRemove, function (id) {
+                idsToRemove.forEach(id => {
                     var operation = list._forceM2MUnlink ? 'FORGET': 'DELETE';
                     list._changes.push({operation: operation, id: id});
                 });
                 break;
             case 'DELETE_ALL':
                 // first remove all pending 'ADD' operations
-                list._changes = _.reject(list._changes, function (change) {
-                    return change.operation === 'ADD';
-                });
+                list._changes = list._changes.filter(change => change.operation !== 'ADD');
 
                 // then apply 'DELETE' on existing records
                 return this._applyX2ManyChange(record, fieldName, {
@@ -2393,7 +2392,7 @@ var BasicModel = AbstractModel.extend({
                 evalContext = evalContext || this._getEvalContext(element);
                 evaluated[k] = new Domain(mod, evalContext).compute(evalContext);
             } catch (e) {
-                throw new Error(_.str.sprintf('for modifier "%s": %s', k, e.message));
+                throw new Error(sprintf('for modifier "%s": %s', k, e.message));
             }
         }
         return evaluated;
@@ -2436,12 +2435,12 @@ var BasicModel = AbstractModel.extend({
                     const referenceFieldName = record.fields[fieldName].string;
 
                     this.displayNotification({
-                        title: _.str.sprintf(
+                        title: sprintf(
                             _t(`'%s' is unsynchronized with '%s'.`),
                             referenceFieldName,
                             modelFieldName,
                         ),
-                        message: _.str.sprintf(
+                        message: sprintf(
                             _t(`If you change %s or %s, the synchronization will be reapplied and the data will be modified.`),
                             modelFieldName,
                             referenceFieldName,
@@ -2512,7 +2511,7 @@ var BasicModel = AbstractModel.extend({
         return this._rpc({
                 model: model,
                 method: 'name_get',
-                args: [_.uniq(ids)],
+                args: [unique(ids)],
                 context: list.context,
             })
             .then(function (name_gets) {
@@ -2539,7 +2538,7 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         options = options || {};
         var fieldNames = options.fieldNames || record.getFieldNames(options);
-        fieldNames = _.uniq(fieldNames.concat(['display_name']));
+        fieldNames = unique(fieldNames.concat(['display_name']));
         return this._rpc({
                 model: record.model,
                 method: 'read',
@@ -2761,7 +2760,7 @@ var BasicModel = AbstractModel.extend({
      */
     _fetchRelatedData: function (list, toFetch, fieldName) {
         var self = this;
-        var ids = _.keys(toFetch);
+        var ids = Object.keys(toFetch || {});
         for (var i = 0; i < ids.length; i++) {
             ids[i] = Number(ids[i]);
         }
@@ -2772,7 +2771,7 @@ var BasicModel = AbstractModel.extend({
         }
 
         var def;
-        var fieldNames = _.keys(fieldInfo.relatedFields);
+        var fieldNames = Object.keys(fieldInfo.relatedFields || {});
         if (fieldNames.length) {
             var field = list.fields[fieldName];
             def = this._rpc({
@@ -2782,12 +2781,14 @@ var BasicModel = AbstractModel.extend({
                 context: list.getContext({withoutRecordData: true}) || {},
             });
         } else {
-            def = Promise.resolve(_.map(ids, function (id) {
-                return {id:id};
-            }));
+            def = Promise.resolve(
+                ids.map((id) => {
+                    return { id: id };
+                })
+            );
         }
         return def.then(function (result) {
-            var records = _.uniq(_.flatten(_.values(toFetch)));
+            var records = unique(Object.values(toFetch || {}).flat());
             self._updateRecordsData(records, fieldName, result);
         });
     },
@@ -3121,7 +3122,7 @@ var BasicModel = AbstractModel.extend({
         _.each(list.data, function (groupIndex) {
             var group = self.localData[groupIndex];
             var nextDataToFetch = self._getDataToFetch(group, fieldName);
-            _.each(_.keys(nextDataToFetch), function (id) {
+            _.each(Object.keys(nextDataToFetch), function (id) {
                 if (toFetch[id]) {
                     toFetch[id] = toFetch[id].concat(nextDataToFetch[id]);
                 } else {
@@ -3316,9 +3317,7 @@ var BasicModel = AbstractModel.extend({
                 list = this._applyX2ManyOperations(list);
                 this._sortList(list);
                 if (type === 'many2many' || list._forceM2MLink) {
-                    var relRecordCreated = _.filter(relRecordAdded, function (rec) {
-                        return typeof rec.res_id === 'string';
-                    });
+                    var relRecordCreated = relRecordAdded.filter(rec => typeof rec.res_id === 'string');
                     var realIDs = _.difference(list.res_ids, _.pluck(relRecordCreated, 'res_id'));
                     // deliberately generate a single 'replace' command instead
                     // of a 'delete' and a 'link' commands with the exact diff
@@ -3342,7 +3341,7 @@ var BasicModel = AbstractModel.extend({
                 } else if (type === 'one2many') {
                     var removedIds = _.difference(oldResIDs, list.res_ids);
                     var addedIds = _.difference(list.res_ids, oldResIDs);
-                    var keptIds = _.intersection(oldResIDs, list.res_ids);
+                    var keptIds = intersection(oldResIDs, list.res_ids);
 
                     // the didChange variable keeps track of the fact that at
                     // least one id was updated
@@ -3878,7 +3877,7 @@ var BasicModel = AbstractModel.extend({
             }
             if (field.type === 'one2many' || field.type === 'many2many') {
                 var ids;
-                if (!context[fieldName] || _.isArray(context[fieldName])) { // no dataPoint created yet
+                if (!context[fieldName] || Array.isArray(context[fieldName])) { // no dataPoint created yet
                     ids = context[fieldName] ? context[fieldName].slice(0) : [];
                 } else {
                     relDataPoint = this._applyX2ManyOperations(this.localData[context[fieldName]]);
@@ -3894,9 +3893,7 @@ var BasicModel = AbstractModel.extend({
                      * The webClient doesn't do literal id list comparison like ids == list
                      * Only relevant in o2m: m2m does create actual records in db
                      */
-                    ids = _.filter(ids, function (id) {
-                        return typeof id !== 'string';
-                    });
+                    ids = ids.filter(id => typeof id !== 'string');
                 }
                 context[fieldName] = ids;
             }
@@ -3949,7 +3946,7 @@ var BasicModel = AbstractModel.extend({
                 }
                 if (field.type === 'one2many' || field.type === 'many2many') {
                     let ids;
-                    if (!fieldValue || _.isArray(fieldValue)) { // no dataPoint created yet
+                    if (!fieldValue || Array.isArray(fieldValue)) { // no dataPoint created yet
                         ids = fieldValue ? fieldValue.slice(0) : [];
                     } else {
                         relDataPoint = self._applyX2ManyOperations(self.localData[fieldValue]);
@@ -3965,13 +3962,11 @@ var BasicModel = AbstractModel.extend({
                         * The webClient doesn't do literal id list comparison like ids == list
                         * Only relevant in o2m: m2m does create actual records in db
                         */
-                        ids = _.filter(ids, function (id) {
-                            return typeof id !== 'string';
-                        });
+                        ids = ids.filter(id => typeof id !== 'string');
                     }
                     return ids;
                 }
-                if (field.type === "properties" && _.isArray(fieldValue)) {
+                if (field.type === "properties" && Array.isArray(fieldValue)) {
                     // remove deleted properties to be able
                     // to filter based on empty properties field
                     return fieldValue.filter(definition => !definition.definition_deleted);
@@ -4193,7 +4188,7 @@ var BasicModel = AbstractModel.extend({
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             loadMoreOffset: 0,
             model: params.modelName,
-            offset: params.offset || (type === 'record' ? _.indexOf(res_ids, res_id) : 0),
+            offset: params.offset || (type === 'record' ? res_ids.indexOf(res_id) : 0),
             openGroupByDefault: params.openGroupByDefault,
             orderedBy: params.orderedBy || [],
             orderedResIDs: params.orderedResIDs,
@@ -4265,7 +4260,7 @@ var BasicModel = AbstractModel.extend({
 
         if (parentRecord && parentRecord.viewType in parentRecord.fieldsInfo) {
             var originView = parentRecord.viewType;
-            fieldNames = _.union(fieldNames, Object.keys(parentRecord.fieldsInfo[originView]));
+            fieldNames = fieldNames.concat(Object.keys(parentRecord.fieldsInfo[originView]));
             fieldsInfo[targetView] = _.defaults({}, fieldsInfo[targetView], parentRecord.fieldsInfo[originView]);
             fields = _.defaults({}, fields, parentRecord.fields);
         }
@@ -4594,7 +4589,7 @@ var BasicModel = AbstractModel.extend({
         var many2ones = {};
         var r;
         commands = commands || []; // handle false value
-        var isCommandList = commands.length && _.isArray(commands[0]);
+        var isCommandList = commands.length && Array.isArray(commands[0]);
         if (!isCommandList) {
             commands = [[6, false, commands]];
         }
@@ -4673,7 +4668,7 @@ var BasicModel = AbstractModel.extend({
         });
 
         // fetch many2ones display_name
-        _.each(_.keys(many2ones), function (name) {
+        _.each(Object.keys(many2ones), function (name) {
             defs.push(self._fetchNameGets(x2manyList, name));
         });
 
@@ -4701,7 +4696,7 @@ var BasicModel = AbstractModel.extend({
             }
             var record = self.localData[dataPointID];
             var data = Object.assign({}, record.data, record._changes);
-            if (_.difference(fieldNames, _.keys(data)).length) {
+            if (_.difference(fieldNames, Object.keys(data)).length) {
                 missingIDs.push(resId);
             }
         }
@@ -4770,9 +4765,9 @@ var BasicModel = AbstractModel.extend({
         var groupByField = list.groupedBy[0];
         var rawGroupBy = groupByField.split(':')[0];
         var fields = _.uniq(list.getFieldNames().concat(rawGroupBy));
-        var orderedBy = _.filter(list.orderedBy, function (order) {
+        var orderedBy = list.orderedBy?.filter(order => {
             return order.name === rawGroupBy || list.fields[order.name].group_operator !== undefined;
-        });
+        }) || [];
         var openGroupsLimit = list.groupsLimit || self.OPEN_GROUP_LIMIT;
         var expand = list.openGroupByDefault && options.fetchRecordsWithGroups;
         return this._rpc({
@@ -4924,7 +4919,7 @@ var BasicModel = AbstractModel.extend({
         if (list.res_ids.length > list.limit && list.orderedBy.length) {
             if (!list.orderedResIDs) {
                 var fieldNames = _.pluck(list.orderedBy, 'name');
-                def = this._readMissingFields(list, _.filter(list.res_ids, _.isNumber), fieldNames, options.withoutRecordData);
+                def = this._readMissingFields(list, list.res_ids.filter(id => Number.isFinite(id)), fieldNames, options.withoutRecordData);
             }
             def.then(function () {
                 self._sortList(list);
@@ -4953,7 +4948,7 @@ var BasicModel = AbstractModel.extend({
             var fieldNames = list.getFieldNames();
             for (var i = list.offset; i < upperBound; i++) {
                 var resId = currentResIDs[i];
-                if (_.isNumber(resId)) {
+                if (Number.isFinite(resId)) {
                     resIDs.push(resId);
                 }
             }
@@ -5045,7 +5040,7 @@ var BasicModel = AbstractModel.extend({
             element.count = element.res_ids.length;
         }
         if (element.type === 'record') {
-            element.offset = _.indexOf(element.res_ids, element.res_id);
+            element.offset = element.res_ids.indexOf(element.res_id);
         }
         var loadOptions = _.pick(options, 'fieldNames', 'viewType');
         return this._load(element, loadOptions).then(function (result) {

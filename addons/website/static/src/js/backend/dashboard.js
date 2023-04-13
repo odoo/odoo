@@ -55,7 +55,7 @@ var Dashboard = AbstractAction.extend({
         return Promise.all([loadBundle(this), this._super()]).then(function() {
             return self.fetch_data();
         }).then(function(){
-            var website = _.findWhere(self.websites, {selected: true});
+            var website = self.websites.find(w => w.selected);
             self.website_id = website ? website.id : false;
         });
     },
@@ -102,7 +102,7 @@ var Dashboard = AbstractAction.extend({
 
     on_go_to_website: function (ev) {
         ev.preventDefault();
-        var website = _.findWhere(this.websites, {selected: true});
+        var website = this.websites.find(website => website.selected);
         window.location.replace(`/web#action=website.website_preview&website_id=${website.id}`);
     },
 

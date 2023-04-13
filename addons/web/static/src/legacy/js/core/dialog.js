@@ -312,7 +312,7 @@ var Dialog = Widget.extend({
     _setButtonsTo($target, buttons) {
         var self = this;
         $target.empty();
-        _.each(buttons, function (buttonData) {
+        buttons.forEach(buttonData => {
             var $button = dom.renderButton({
                 attrs: {
                     class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),

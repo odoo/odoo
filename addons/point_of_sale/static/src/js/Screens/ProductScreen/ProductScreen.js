@@ -214,9 +214,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             }
             if (newQuantity >= selectedLine.saved_quantity) {
                 if (newQuantity == 0) {
-                    order.remove_orderline(selectedLine)
+                    order.remove_orderline(selectedLine);
                 }
-                selectedLine.set_quantity(newQuantity)
+                selectedLine.set_quantity(newQuantity);
                 return;
             }
             const newLine = selectedLine.clone();
@@ -241,10 +241,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                     this.pos.showScreen("TicketScreen", {
                         ui: { filter: "SYNCED", searchDetails },
                     });
-                    this.notification.add(
-                        _.str.sprintf(this.env._t("The order has been already paid.")),
-                        3000
-                    );
+                    this.notification.add(this.env._t("The order has been already paid."), 3000);
                     this.env.pos.removeOrder(this.env.pos.get_order(), false);
                     this.env.pos.add_new_order();
                     return;

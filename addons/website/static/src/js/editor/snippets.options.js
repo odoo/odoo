@@ -11,6 +11,7 @@ import wLinkPopoverWidget from "@website/js/widgets/link_popover_widget";
 import wUtils from "website.utils";
 import {isImageSupportedForStyle} from "web_editor.image_processing";
 import "website.s_popup_options";
+import { range } from "@web/core/utils/numbers";
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -1387,7 +1388,7 @@ options.registry.OptionsTab = options.Class.extend({
         await this._super(...arguments);
         const extraSaturationRangeEl = uiFragment.querySelector(`we-range[data-param=${this.GRAY_PARAMS.EXTRA_SATURATION}]`);
         if (extraSaturationRangeEl) {
-            const baseGrays = _.range(100, 1000, 100).map(id => {
+            const baseGrays = range(100, 1000, 100).map(id => {
                 const gray = weUtils.getCSSVariableValue(`base-${id}`);
                 const grayRGB = ColorpickerWidget.convertCSSColorToRgba(gray);
                 const hsl = ColorpickerWidget.convertRgbToHsl(grayRGB.red, grayRGB.green, grayRGB.blue);

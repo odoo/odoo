@@ -92,7 +92,7 @@ const Feedback = Widget.extend({
     _onClickSend() {
         this.$(".o_livechat_rating_reason").hide();
         this._showThanksMessage();
-        if (_.isNumber(this.rating)) {
+        if (Number.isFinite(this.rating)) {
             this._sendFeedback(this.$("textarea").val());
         }
     },

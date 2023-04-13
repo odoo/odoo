@@ -2,6 +2,7 @@
 
 import { _t } from "web.core";
 import * as spreadsheet from "@odoo/o-spreadsheet";
+import { sprintf } from "@web/core/utils/strings";
 
 const { arg, toString, toNumber } = spreadsheet.helpers;
 const { functionRegistry } = spreadsheet.registries;
@@ -12,7 +13,7 @@ const { functionRegistry } = spreadsheet.registries;
 
 function assertListsExists(listId, getters) {
     if (!getters.isExistingList(listId)) {
-        throw new Error(_.str.sprintf(_t('There is no list with id "%s"'), listId));
+        throw new Error(sprintf(_t('There is no list with id "%s"'), listId));
     }
 }
 

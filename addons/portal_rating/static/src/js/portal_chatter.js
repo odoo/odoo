@@ -136,7 +136,7 @@ PortalChatter.include({
             'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
             'percent': [],
         };
-        _.each(_.sortBy(_.keys(result['rating_stats']['percent'])).reverse(), function (rating) {
+        _.each(_.sortBy(Object.keys(result['rating_stats']['percent'])).reverse(), function (rating) {
             ratingData['percent'].push({
                 'num': self.roundToHalf(rating),
                 'percent': utils.round_precision(result['rating_stats']['percent'][rating], 0.01),
@@ -172,7 +172,7 @@ PortalChatter.include({
         return {
             mes_index: messageIndex,
             publisher_id: this.options.partner_id,
-            publisher_avatar: _.str.sprintf('/web/image/res.partner/%s/avatar_128/50x50', this.options.partner_id),
+            publisher_avatar: `/web/image/res.partner/${this.options.partner_id}/avatar_128/50x50`,
             publisher_name: _t("Write your comment"),
             publisher_datetime: '',
             publisher_comment: '',
@@ -197,7 +197,7 @@ PortalChatter.include({
         if (rawRating.publisher_id && rawRating.publisher_id.length >= 2) {
             ratingData.publisher_id = rawRating.publisher_id[0];
             ratingData.publisher_name = rawRating.publisher_id[1];
-            ratingData.publisher_avatar = _.str.sprintf('/web/image/res.partner/%s/avatar_128/50x50', ratingData.publisher_id);
+            ratingData.publisher_avatar = `/web/image/res.partner/${ratingData.publisher_id}/avatar_128/50x50`;
         }
         var commentData = Object.assign(this._newPublisherCommentData(messageIndex), ratingData);
         return commentData;

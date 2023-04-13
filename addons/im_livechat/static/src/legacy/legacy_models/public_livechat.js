@@ -181,7 +181,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
                 ? [this.messaging.publicLivechatGlobal.publicLivechat.operator]
                 : [];
         const sortedTypingMembers = _.sortBy(typingMembers, function (member) {
-            return _.indexOf(typingPartnerIDs, member.id);
+            return typingPartnerIDs.indexOf(member.id);
         });
         const displayableTypingMembers = sortedTypingMembers.slice(0, 3);
 
@@ -330,9 +330,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
         if (!_.contains(this._typingPartnerIDs, partnerID)) {
             return;
         }
-        this._typingPartnerIDs = _.reject(this._typingPartnerIDs, function (id) {
-            return id === partnerID;
-        });
+        this._typingPartnerIDs = this._typingPartnerIDs.filter((id) => id !== partnerID);
         this._warnUpdatedTypingPartners();
     },
 

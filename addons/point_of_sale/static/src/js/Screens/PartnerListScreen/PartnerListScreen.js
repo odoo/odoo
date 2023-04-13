@@ -8,6 +8,7 @@ import { PartnerLine } from "./PartnerLine";
 import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component, onWillUnmount, useRef } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 /**
  * Render this screen using `showTempScreen` to select partner.
@@ -115,7 +116,7 @@ export class PartnerListScreen extends Component {
         const result = await this.searchPartner();
         if (result.length > 0) {
             this.notification.add(
-                _.str.sprintf(
+                sprintf(
                     this.env._t('%s customer(s) found for "%s".'),
                     result.length,
                     this.state.query
@@ -124,14 +125,10 @@ export class PartnerListScreen extends Component {
             );
         } else {
             this.notification.add(
-                _.str.sprintf(
-                    this.env._t('No more customer found for "%s".'),
-                    this.state.query
-                ),
+                sprintf(this.env._t('No more customer found for "%s".'), this.state.query),
                 3000
             );
         }
-        
     }
     _clearSearch() {
         this.searchWordInputRef.el.value = "";
@@ -188,7 +185,7 @@ export class PartnerListScreen extends Component {
     async getNewPartners() {
         let domain = [];
         const limit = 30;
-        if(this.state.query) {
+        if (this.state.query) {
             domain = [
                 "|",
                 ["name", "ilike", this.state.query + "%"],
@@ -199,7 +196,8 @@ export class PartnerListScreen extends Component {
         const result = await this.orm.silent.call(
             "pos.session",
             "get_pos_ui_res_partner_by_params",
-            [[odoo.pos_session_id], { domain, limit: limit, offset: this.state.currentOffset }]);
+            [[odoo.pos_session_id], { domain, limit: limit, offset: this.state.currentOffset }]
+        );
         return result;
     }
 }

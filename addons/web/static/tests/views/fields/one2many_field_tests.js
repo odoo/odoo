@@ -2303,7 +2303,7 @@ QUnit.module("Fields", (hooks) => {
                 if (args.method === "write") {
                     saveCount++;
                     const nbCommands = args.args[1].p.length;
-                    const nbLinkCommands = _.filter(args.args[1].p, function (command) {
+                    const nbLinkCommands = args.args[1].p.filter((command) => {
                         return command[0] === 4;
                     }).length;
                     switch (saveCount) {

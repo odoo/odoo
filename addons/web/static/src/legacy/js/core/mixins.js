@@ -305,7 +305,7 @@ var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
         _.each(events, function (eventName) {
             self.__edispatcherEvents.off(eventName, func, dest);
             if (dest && dest.__eventDispatcherMixin) {
-                dest.__edispatcherRegisteredEvents = _.filter(dest.__edispatcherRegisteredEvents, function (el) {
+                dest.__edispatcherRegisteredEvents = dest.__edispatcherRegisteredEvents.filter(el => {
                     return !(el.name === eventName && el.func === func && el.source === self);
                 });
             }
@@ -386,7 +386,7 @@ var PropertiesMixin = Object.assign({}, EventDispatcherMixin, {
             // remove this, or move it elsewhere.  Also, learn OO programming.
             if (key === 'value' && self.field && self.field.type === 'float' && tmp && val){
                 var digits = self.field.digits;
-                if (_.isArray(digits)) {
+                if (Array.isArray(digits)) {
                     if (utils.float_is_zero(tmp - val, digits[1])) {
                         return;
                     }

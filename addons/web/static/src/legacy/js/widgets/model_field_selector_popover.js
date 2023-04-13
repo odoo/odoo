@@ -245,7 +245,7 @@ var ModelFieldSelectorPopover = Widget.extend({
                 }).bind(this));
         }
         return def.then((function () {
-            return _.filter(modelFieldsCache.cache[model], function (f) {
+            return modelFieldsCache.cache[model].filter(f => {
                 return (!filters.searchable || f.searchable) && self.options.filter(f);
             });
         }).bind(this));
@@ -429,7 +429,12 @@ var ModelFieldSelectorPopover = Widget.extend({
         var page = this.pages.at(-1);
         this.$(".o_field_selector_popover_header .o_field_selector_title").text(this._getTitle());
 
-        var lines = _.filter(page, this.options.filter);
+        var lines = page.filter((item) => {
+            return Object.keys(this.options.filter).every((key) => {
+                return item[key] === this.options.filter[key];
+            });
+        });
+
         if (this.searchValue) {
             lines = fuzzyLookup(this.searchValue, lines, (l) => l.string);
         }

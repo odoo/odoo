@@ -12,6 +12,7 @@ import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { sprintf } from "@web/core/utils/strings";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {
     static components = { SaleDetailsButton };
@@ -51,7 +52,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         } else {
             await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Payments Difference"),
-                body: _.str.sprintf(
+                body: sprintf(
                     this.env._t(
                         "The maximum difference allowed is %s.\n\
                         Please contact your manager to accept the closing difference."

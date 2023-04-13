@@ -6,6 +6,8 @@ import publicWidget from "web.public.widget";
 import time from "web.time";
 import portalComposer from "portal.composer";
 import {Markup} from "web.utils";
+import { range } from "@web/core/utils/numbers";
+import { sprintf } from "@web/core/utils/strings";
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -101,8 +103,8 @@ var PortalChatter = publicWidget.Widget.extend({
      */
     preprocessMessages(messages) {
         _.each(messages, function (m) {
-            m['author_avatar_url'] = _.str.sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
-            m['published_date_str'] = _.str.sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
+            m['author_avatar_url'] = sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
+            m['published_date_str'] = sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
             m['body'] = Markup(m.body);
         });
         return messages;
@@ -245,9 +247,7 @@ var PortalChatter = publicWidget.Widget.extend({
         }
 
         var pages = [];
-        _.each(_.range(pmin, pmax + 1), function (index) {
-            pages.push(index);
-        });
+        range(pmin, pmax + 1).forEach(index => pages.push(index));
 
         return {
             "page_count": pageCount,

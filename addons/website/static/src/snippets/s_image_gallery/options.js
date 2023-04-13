@@ -312,7 +312,7 @@ options.registry.gallery = options.Class.extend({
             this.mode('reset', this.getMode());
         } else if (name === 'image_index_request') {
             var imgs = this._getImages();
-            var position = _.indexOf(imgs, data.$image[0]);
+            var position = imgs.indexOf(data.$image[0]);
             imgs.splice(position, 1);
             switch (data.position) {
                 case 'first':
