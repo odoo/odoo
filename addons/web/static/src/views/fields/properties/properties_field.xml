@@ -16,7 +16,7 @@
                             t-attf-class="o_field_property_label o_form_label text-break {{state.movedPropertyName === propertyConfiguration.name ? 'o_property_field_highlight' : ''}} d-flex align-items-center"
                             t-att-for="domId">
                             <b
-                                t-if="propertyConfiguration.string &amp;&amp; propertyConfiguration.string.length"
+                                t-if="propertyConfiguration.string and propertyConfiguration.string.length"
                                 t-out="propertyConfiguration.string"
                                 class="text-900"/>
                             <i
@@ -24,7 +24,7 @@
                                 New Property
                             </i>
                             <i
-                                t-if="state.canChangeDefinition &amp;&amp; !props.readonly"
+                                t-if="state.canChangeDefinition and !props.readonly"
                                 class="o_field_property_open_popover fa fa-pencil ms-2"
                                 t-on-click="(event) => this.onPropertyEdit(event, propertyConfiguration.name)"/>
                         </label>
@@ -52,7 +52,7 @@
                         class="o_field_property_add"
                         t-att-class="{'g-col-2': props.columns !== 1, 'd-none': state.hideAddButton}">
                         <button
-                            t-if="!props.readonly &amp;&amp; state.canChangeDefinition &amp;&amp; definitionRecordId"
+                            t-if="!props.readonly and state.canChangeDefinition and definitionRecordId"
                             class="btn btn-light text-muted text-break m-0"
                             t-on-click="onPropertyCreate">
                             <i class="fa fa-plus"/>
@@ -61,7 +61,6 @@
                     </div>
                 </div>
             </t>
-
         </div>
     </t>
 </templates>
