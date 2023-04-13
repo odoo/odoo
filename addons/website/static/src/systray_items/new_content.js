@@ -182,6 +182,7 @@ export class NewContentModal extends Component {
             [id],
         );
         if (redirectUrl) {
+            this.website.prepareOutLoader();
             window.location.replace(redirectUrl);
         } else {
             const { id, metadata: { path, viewXmlid } } = this.website.currentWebsite;
@@ -191,6 +192,7 @@ export class NewContentModal extends Component {
             }
             // A reload is needed after installing a new module, to instantiate
             // a NewContentModal with patches from the installed module.
+            this.website.prepareOutLoader();
             window.location.replace(`/web#action=website.website_preview&website_id=${id}&path=${encodeURIComponent(url.toString())}&display_new_content=true`);
         }
     }

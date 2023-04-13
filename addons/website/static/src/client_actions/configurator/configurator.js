@@ -341,8 +341,12 @@ class ApplyConfiguratorScreen extends Component {
         };
 
         if (themeName !== undefined) {
-            this.websiteService.showLoader({ showTips: true });
             const selectedFeatures = Object.values(this.state.features).filter((feature) => feature.selected).map((feature) => feature.id);
+            this.websiteService.showLoader({
+                showTips: true,
+                selectedFeatures: selectedFeatures,
+                showWaitingMessages: true,
+            });
             let selectedPalette = this.state.selectedPalette.name;
             if (!selectedPalette) {
                 selectedPalette = [
@@ -369,10 +373,11 @@ class ApplyConfiguratorScreen extends Component {
 
             this.props.clearStorage();
 
+            this.websiteService.prepareOutLoader();
             // Here the website service goToWebsite method is not used because
             // the web client needs to be reloaded after the new modules have
             // been installed.
-            window.location.replace(`/web#action=website.website_preview&website_id=${encodeURIComponent(resp.website_id)}&enable_editor=1&with_loader=1`);
+            window.location.replace(`/web#action=website.website_preview&website_id=${encodeURIComponent(resp.website_id)}&enable_editor=1`);
         }
     }
 }

@@ -243,6 +243,9 @@ export const websiteService = {
             hideLoader() {
                 bus.trigger('HIDE-WEBSITE-LOADER');
             },
+            prepareOutLoader() {
+                bus.trigger("PREPARE-OUT-WEBSITE-LOADER");
+            },
             /**
              * Returns the (translated) "functional" name of a model
              * (_description) given its "technical" name (_name).

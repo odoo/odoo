@@ -54,3 +54,23 @@ class WebsiteBackend(http.Controller):
             model: request.env[model].check_access_rights('create', raise_exception=False)
             for model in models
         }
+
+    @http.route('/website/track_installing_modules', type='json', auth='user')
+    def website_track_installing_modules(self, selected_features, total_features=None):
+        """
+        During the website configuration, this route allows to track the
+        website features being installed and their dependencies in order to
+        show the progress between installed and yet to install features.
+        """
+        features_not_installed = request.env['website.configurator.feature']\
+            .browse(selected_features).module_id.upstream_dependencies(exclude_states=('',))\
+            .filtered(lambda feature: feature.state != 'installed')
+
+        # On the 1st run, the total tallies the targeted, not yet installed
+        # features. From then on, the compared to total should not change.
+        total_features = total_features or len(features_not_installed)
+        features_info = {
+            'total': total_features,
+            'nbInstalled': total_features - len(features_not_installed)
+        }
+        return features_info

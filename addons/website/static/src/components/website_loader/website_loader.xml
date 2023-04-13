@@ -3,8 +3,11 @@
 <t t-name="website.website_loader" owl="1">
     <div t-if="state.isVisible" class="o_website_loader_container position-fixed fixed-top fixed-left
         h-100 w-100 d-flex flex-column align-items-center fw-bold text-center">
-        <t t-if="state.title" t-esc="state.title"/>
-        <t t-elif="state.showTips">Building your website...</t>
+        <div t-if="state.showWaitingMessages" t-out="currentWaitingMessage.title"/>
+        <div t-elif="state.title" t-out="state.title"/>
+        <div t-elif="state.showTips">Building your website...</div>
+        <p t-if="state.showWaitingMessages" t-out="currentWaitingMessage.description"
+            class="o_website_loader_tip w-25"/>
         <div class="o_website_loader"/>
         <p class="o_website_loader_tip w-25">
             <t t-if="state.showTips">
@@ -15,6 +18,14 @@
                 <br/>pointer to build the perfect page in 7 steps.
             </t>
         </p>
+        <div t-if="featuresInstallInfo.total > 0"
+            class="o_website_loader_progress progress rounded-pill mt-3">
+            <div role="progressbar" aria-label="Installing your features"
+                class="progress-bar bg-success progress-bar-striped progress-bar-animated rounded-pill"
+                t-att-aria-valuemax="featuresInstallInfo.total"
+                t-att-aria-valuenow="featuresInstallInfo.nbInstalled"
+                t-attf-style="width: #{featuresInstallInfo.nbInstalled * 100 / featuresInstallInfo.total}%"/>
+        </div>
     </div>
 </t>
 </templates>

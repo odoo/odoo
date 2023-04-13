@@ -1,8 +1,9 @@
 .o_website_loader_container {
+    $-accent-color: #BB86FC; // dark mode primary color
     --website-loader-color: #{$white};
 
     font-family: "Montserrat", $font-family-sans-serif;
-    background-color: rgba($o-shadow-color, .9);
+    background-color: $o-shadow-color;
     pointer-events: all;
     font-size: 3.5rem;
     justify-content: space-evenly;
@@ -31,6 +32,16 @@
         .o_tour_pointer {
             --TourPointer__height: 1em;
             --TourPointer__width: 1em;
+            --TourPointer__color: #{$-accent-color};
+            --TourPointer__color-accent: #{lighten($-accent-color, 7%)};
         }
+    }
+
+    .o_website_loader_text_highlight {
+        color: $-accent-color;
+    }
+
+    .o_website_loader_progress {
+        width: 15rem;
     }
 }
