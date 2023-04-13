@@ -592,6 +592,9 @@ function handleMasonry(editable) {
                 const wrapper = document.createElement('div');
                 wrapper.style.setProperty('display', 'inline-block');
                 wrapper.style.setProperty('width', '100%');
+                // Transfer color to wrapper for Outlook on MacOS/iOS.
+                const tdStyle = getComputedStyle(td);
+                wrapper.style.setProperty('color', tdStyle.color);
                 const firstNonCommentChild = [...td.childNodes].find(child => child.nodeType !== Node.COMMENT_NODE);
                 let anchor;
                 if (firstNonCommentChild) {
@@ -686,11 +689,11 @@ async function toInline($editable, cssRules, $iframe) {
     cardToTable(editable);
     listGroupToTable(editable);
     addTables($editable);
+    handleMasonry(editable);
     normalizeColors($editable);
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
-    handleMasonry(editable);
     enforceTablesResponsivity(editable);
     flattenBackgroundImages(editable);
     responsiveToStaticForOutlook(editable);
