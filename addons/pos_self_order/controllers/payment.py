@@ -1,11 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import urllib.parse
 import werkzeug
 
 from odoo import _, http
-from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.http import request
 
 from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
@@ -15,19 +13,6 @@ from odoo.addons.payment.controllers import portal as payment_portal
 
 from odoo import fields
 
-# TODO: where is the best place to put this function?
-def find_amount_to_pay(order_to_pay_sudo):
-    if not order_to_pay_sudo:
-        # TODO: refactor using odoo logger ??
-        print(f"ERROR: order not found")
-        # FIXME: this redirect is not working
-        return request.redirect(f"pos-self-order")
-    order_to_pay_amount = order_to_pay_sudo.read(['amount_total', 'amount_paid'])[0]
-    amount_to_pay = order_to_pay_amount.get('amount_total') - order_to_pay_amount.get('amount_paid')
-    if amount_to_pay <= 0:
-        # TODO: create this page
-        return request.redirect(f"pos-self-order")
-    return amount_to_pay
     
 
 
@@ -42,7 +27,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
         :return: The rendered payment form
         :rtype: str
         """
-        
                 
         # TODO: we want the user to not have to login to pay for the order
         # if request.env.user._is_public():
@@ -59,7 +43,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         # that checks if the order was correctly paid will fail. (because the reference is not the same)
         kwargs = {
             # 'pos_order_id': pos_order_id,
-            'amount': find_amount_to_pay(order_to_pay_sudo),
+            'amount': self.find_amount_to_pay(order_to_pay_sudo),
             'reference': pos_order_id,
             'currency_id': request.env.company.currency_id.id,
         }
@@ -93,9 +77,12 @@ class PaymentPortal(payment_portal.PaymentPortal):
             PaymentPostProcessing.remove_transactions(tx_sudo)
         
             order_to_pay_sudo = request.env['pos.order'].sudo().search([('pos_reference', '=', tx_sudo.reference)], limit=1)
+
+            if not order_to_pay_sudo:
+                return request.redirect(error_url)
             
             error_url = f"pos-self-order?pos_id={order_to_pay_sudo.session_id.config_id.id}&table_id={order_to_pay_sudo.table_id.id}&message_to_display=pay_error"
-            if tx_sudo.amount < find_amount_to_pay(order_to_pay_sudo):
+            if tx_sudo.amount < self.find_amount_to_pay(order_to_pay_sudo):
                 return request.redirect(error_url)
 
             # now that the payment is done, we have to 
@@ -107,7 +94,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             if not payment_method_sudo:
                 print("ERROR: You need to create a payment method with the name 'Online Payment' to use this module")
                 return request.redirect(error_url)
-            payment_method_id = payment_method_sudo[0].id
+            payment_method_id = payment_method_sudo.id
 
             order_to_pay_sudo.add_payment({'amount': tx_sudo.amount, 
                                             'payment_date': fields.Datetime.now(), 
@@ -123,3 +110,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
             order_to_pay_sudo.action_pos_order_paid()
             # now that the order is paid, we have to redirect the user back to the pos self order page
             return request.redirect(f"/pos-self-order?pos_id={order_to_pay_sudo.session_id.config_id.id}&table_id={order_to_pay_sudo.table_id.id}&message_to_display=pay_success")
+
+    def find_amount_to_pay(self, order_to_pay_sudo):
+        amount_to_pay = order_to_pay_sudo.amount_total - order_to_pay_sudo.amount_paid
+        if amount_to_pay <= 0:
+            # TODO: create this page
+            return request.redirect(f"pos-self-order")
+        return amount_to_pay
