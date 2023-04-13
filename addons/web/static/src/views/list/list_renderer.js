@@ -56,8 +56,20 @@ const FIXED_FIELD_COLUMN_WIDTHS = {
     handle: "33px",
 };
 
-function getElementToFocus(cell) {
-    return getTabableElements(cell)[0] || cell;
+/**
+ * @param {HTMLElement} parent
+ */
+function containsActiveElement(parent) {
+    const { activeElement } = document;
+    return parent !== activeElement && parent.contains(activeElement);
+}
+
+/**
+ * @param {HTMLElement} cell
+ * @param {number} index
+ */
+function getElementToFocus(cell, index) {
+    return getTabableElements(cell).at(index) || cell;
 }
 
 export class ListRenderer extends Component {
@@ -449,16 +461,20 @@ export class ListRenderer extends Component {
         }
     }
 
+    /**
+     * @param {HTMLOrSVGElement} el
+     */
     focus(el) {
+        if (!el) {
+            return;
+        }
         el.focus();
-        if (["text", "search", "URL", "tel", "password", "textarea"].includes(el.type)) {
-            if (el.selectionStart === null) {
-                return;
-            }
-            if (el.selectionStart === el.selectionEnd) {
-                el.selectionStart = 0;
-                el.selectionEnd = el.value.length;
-            }
+        if (
+            ["text", "search", "url", "tel", "password", "textarea"].includes(el.type) &&
+            el.selectionStart === el.selectionEnd
+        ) {
+            el.selectionStart = 0;
+            el.selectionEnd = el.value.length;
         }
     }
 
@@ -988,6 +1004,11 @@ export class ListRenderer extends Component {
         }
     }
 
+    /**
+     * @param {Object} record
+     * @param {Object} column
+     * @param {PointerEvent} ev
+     */
     async onCellClicked(record, column, ev) {
         if (ev.target.special_click) {
             return;
@@ -1001,6 +1022,13 @@ export class ListRenderer extends Component {
 
         if ((this.props.list.model.multiEdit && record.selected) || this.isInlineEditable(record)) {
             if (record.isInEdition && this.props.list.editedRecord === record) {
+                const cell = this.tableRef.el.querySelector(
+                    `.o_selected_row td[name='${column.name}']`
+                );
+                if (containsActiveElement(cell)) {
+                    // Cell is already focused.
+                    return;
+                }
                 this.focusCell(column);
                 this.cellToFocus = null;
             } else {
@@ -1126,6 +1154,10 @@ export class ListRenderer extends Component {
 
         const closestCell = ev.target.closest("td, th");
 
+        if (this.toggleFocusInsideCell(hotkey, closestCell)) {
+            return;
+        }
+
         const handled = this.props.list.editedRecord
             ? this.onCellKeydownEditMode(hotkey, closestCell, group, record)
             : this.onCellKeydownReadOnlyMode(hotkey, closestCell, group, record); // record is supposed to be not null here
@@ -1152,11 +1184,12 @@ export class ListRenderer extends Component {
             ) {
                 continue;
             }
-            const toFocus = getElementToFocus(c);
+            const toFocus = getElementToFocus(c, 0);
             if (toFocus !== c) {
                 return toFocus;
             }
         }
+
         return null;
     }
 
@@ -1174,11 +1207,12 @@ export class ListRenderer extends Component {
             ) {
                 continue;
             }
-            const toFocus = getElementToFocus(c);
+            const toFocus = getElementToFocus(c, -1);
             if (toFocus !== c) {
                 return toFocus;
             }
         }
+
         return null;
     }
 
@@ -1233,7 +1267,7 @@ export class ListRenderer extends Component {
                 futureRecord = list.selection[index + 1] || list.selection[0];
                 if (record === futureRecord) {
                     // Refocus first cell of same record
-                    toFocus = this.findNextFocusableOnRow(row);
+                    toFocus = this.findNextFocusableOnRow(row, cell);
                     this.focus(toFocus);
                     return true;
                 }
@@ -1244,7 +1278,7 @@ export class ListRenderer extends Component {
                     list.selection[index - 1] || list.selection[list.selection.length - 1];
                 if (record === futureRecord) {
                     // Refocus last cell of same record
-                    toFocus = this.findPreviousFocusableOnRow(row);
+                    toFocus = this.findPreviousFocusableOnRow(row, cell);
                     this.focus(toFocus);
                     return true;
                 }
@@ -1664,6 +1698,26 @@ export class ListRenderer extends Component {
         return !group.isFolded && group.list.limit < group.count;
     }
 
+    /**
+     * Returns true if the focus was toggled inside the same cell.
+     *
+     * @param {string} hotkey
+     * @param {HTMLTableCellElement} cell
+     */
+    toggleFocusInsideCell(hotkey, cell) {
+        if (!["tab", "shift+tab"].includes(hotkey) || !containsActiveElement(cell)) {
+            return false;
+        }
+        const focusableEls = getTabableElements(cell).filter(
+            (el) => el === document.activeElement || ["INPUT", "TEXTAREA"].includes(el.tagName)
+        );
+        const index = focusableEls.indexOf(document.activeElement);
+        return (
+            (hotkey === "tab" && index < focusableEls.length - 1) ||
+            (hotkey === "shift+tab" && index > 0)
+        );
+    }
+
     toggleGroup(group) {
         group.toggle();
     }
@@ -1750,8 +1804,8 @@ export class ListRenderer extends Component {
         if (this.activeElement !== this.uiService.activeElement) {
             return;
         }
-        // Legacy DatePicker
-        if (target.closest(".daterangepicker")) {
+        // DateTime picker
+        if (target.closest(".o_datetime_picker")) {
             return;
         }
         // Legacy autocomplete
