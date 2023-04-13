@@ -239,7 +239,7 @@
     },
     {
         content: "Add new shipping address",
-        trigger: '.one_kanban form[action^="/shop/address"] .btn',
+        trigger: '.all_shipping .one_kanban form[action^="/shop/address"] .btn',
     },
     {
         content: "Fulfill shipping address form",

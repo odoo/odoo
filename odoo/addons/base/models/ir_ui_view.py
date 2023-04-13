@@ -1760,12 +1760,12 @@ actual arch.
                 pass
             elif node.tag == 'input' and node.get('type') in ('button', 'submit', 'reset'):
                 pass
-            elif any(klass in classes for klass in ('btn-group', 'btn-toolbar', 'btn-ship')):
+            elif any(klass in classes for klass in ('btn-group', 'btn-toolbar', 'btn-addr')):
                 pass
             else:
                 msg = ("A simili button must be in tag a/button/select or tag `input` "
                         "with type button/submit/reset or have class in "
-                        "btn-group/btn-toolbar/btn-ship")
+                        "btn-group/btn-toolbar/btn-addr")
                 self._log_view_warning(msg, node)
 
     def _validate_fa_class_accessibility(self, node, description):

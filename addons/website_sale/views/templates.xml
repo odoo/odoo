@@ -1735,7 +1735,7 @@
             <t t-set="no_footer" t-value="1"/>
             <div id="wrap">
                 <div class="container oe_website_sale py-2">
-                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
+                    <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
                     <div class="row">
                         <div class="col-12">
                             <t t-call="website_sale.wizard_checkout">
@@ -1752,47 +1752,23 @@
                                 <div class="col-lg-12">
                                     <h3 class="o_page_header mt8">Billing Address</h3>
                                 </div>
-                                <div class="col-lg-6 one_kanban">
-                                    <t t-call="website_sale.address_kanban">
-                                        <t t-set='contact' t-value="order.partner_id"/>
-                                        <t t-set='selected' t-value="1"/>
-                                        <t t-set='readonly' t-value="1"/>
-                                        <t t-set='allow_edit' t-value="1"/>
-                                    </t>
-                                </div>
                             </div>
+                            <t t-call="website_sale.row_addresses">
+                                <t t-set="order" t-value="order"/>
+                                <t t-set="is_invoice" t-value="1"/>
+                                <t t-set="addresses" t-value="billings"/>
+                            </t>
                             <t t-if="not only_services" groups="account.group_delivery_invoice_address">
                                 <div class="row">
                                     <div class="col-lg-12">
                                         <h3 class="o_page_header mt16 mb4">Shipping Address</h3>
                                     </div>
                                 </div>
-                                <div class="row all_shipping">
-                                    <div class="col-lg-12">
-                                        <div class="row mt8">
-                                            <div class="col-md-12 col-lg-12 one_kanban">
-                                                <form action="/shop/address" method="post" class=''>
-                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
-                                                    <a role="button" href="#" class='a-submit btn btn-secondary mb-2 btn-block'>
-                                                        <i class="fa fa-plus-square"/>
-                                                        <span>Add an address</span>
-                                                    </a>
-                                                </form>
-                                            </div>
-                                            <t t-foreach="shippings" t-as="ship">
-                                                <div class="col-md-12 col-lg-6 one_kanban mb-2">
-                                                    <t t-call="website_sale.address_kanban">
-                                                        <t t-set='contact' t-value="ship"/>
-                                                        <t t-set='selected' t-value="order.partner_shipping_id==ship"/>
-                                                        <t t-set='readonly' t-value="bool(len(shippings)==1)"/>
-                                                        <t t-set='edit_billing' t-value="bool(ship==order.partner_id)"/>
-                                                        <t t-set="allow_edit" t-value="not order.partner_id or (ship.id in order.partner_id.child_ids.ids)" />
-                                                    </t>
-                                                </div>
-                                            </t>
-                                        </div>
-                                    </div>
-                                </div>
+                                <t t-call="website_sale.row_addresses">
+                                    <t t-set="order" t-value="order"/>
+                                    <t t-set="is_invoice" t-value="0"/>
+                                    <t t-set="addresses" t-value="shippings"/>
+                                </t>
                             </t>
                             <div class="d-flex justify-content-between mt-3">
                                 <a role="button" href="/shop/cart" class="btn btn-secondary mb32">
@@ -1810,29 +1786,71 @@
             </div>
         </t>
     </template>
-
+    <template id="row_addresses">
+        <div t-attf-class="row {{'all_billing' if is_invoice else 'all_shipping'}}">
+            <div class="col-lg-12">
+                <div class="row mt8">
+                    <div class="col-md-12 col-lg-12 one_kanban">
+                        <form action="/shop/address" method="post" class="">
+                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
+                            <t t-if="is_invoice">
+                                <input type="hidden" name="is_invoice" t-att-value="is_invoice" />
+                                <input type="hidden" name="callback" value="/shop/checkout" />
+                            </t>
+                            <a role="button" href="#" class="a-submit btn btn-secondary mb-2 btn-block">
+                                <i class="fa fa-plus-square"/>
+                                <span>Add an address</span>
+                            </a>
+                        </form>
+                    </div>
+                    <div t-foreach="addresses" t-as="addr"
+                         class="col-md-12 col-lg-6 one_kanban mb-2">
+                        <t t-call="website_sale.address_kanban">
+                            <t t-set="is_invoice" t-value="is_invoice"/>
+                            <t t-set="contact" t-value="addr"/>
+                            <t t-set="order" t-value="order"/>
+                            <t t-if="not is_invoice" t-set="selected" t-value="order.partner_shipping_id==addr or len(addresses)==1"/>
+                            <t t-if="is_invoice" t-set="selected" t-value="order.partner_invoice_id==addr or len(addresses)==1"/>
+                            <t t-set="readonly" t-value="bool(len(addresses)==1)"/>
+                            <t t-set="allow_edit"
+                                t-value="(website.is_public_user() or order.partner_id.id == addr.id or (addr.id in order.partner_id.commercial_partner_id.child_ids.ids))
+                                    and is_invoice or addr.type=='delivery'"
+                            />
+                        </t>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
     <template id="address_kanban" name="Kanban address">
             <form action="/shop/checkout" method="POST" class="d-none">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                 <input type="hidden" name="partner_id" t-att-value="contact.id" />
-                <t t-if='edit_billing'>
-                    <input type="hidden" name="callback" value="/shop/checkout?use_billing" />
+                <t t-if="is_invoice">
+                    <input type="hidden" name="is_invoice" t-att-value="is_invoice"/>
+                    <input type="hidden" name="callback" value="/shop/checkout"/>
                 </t>
-                <input type='submit'/>
+                <input type="submit"/>
             </form>
-            <div t-attf-class="card #{selected and 'border border-primary' or 'js_change_shipping'}">
-                <div class='card-body' style='min-height: 130px;'>
+            <div t-attf-class="card #{selected and 'border border-primary' or is_invoice and 'js_change_billing' or 'js_change_shipping'}">
+                <div class="card-body" style="min-height: 130px;">
                     <a t-if="allow_edit" href="#" class="btn btn-link float-end p-0 js_edit_address no-decoration" role="button" title="Edit this address" aria-label="Edit this address"><i class='fa fa-edit'/></a>
                     <t t-esc="contact" t-options="dict(widget='contact', fields=['name', 'address'], no_marker=True)"/>
                 </div>
-                <div class='card-footer' t-if='not readonly'>
-                    <span class='btn-ship' t-att-style="'' if selected else 'display:none;'">
-                        <a role="button" href='#' class="btn btn-block btn-primary">
-                            <i class='fa fa-check'></i> Ship to this address
+                <div class="card-footer" t-if="not readonly">
+                    <span class="btn-addr" t-att-style="'' if selected else 'display:none;'">
+                        <a role="button" href="#" class="btn btn-block btn-primary">
+                            <i class="fa fa-check"/>
+                            <t t-if="is_invoice">
+                                Bill to this address
+                            </t>
+                            <t t-else="">
+                                Ship to this address
+                            </t>
                         </a>
                     </span>
-                    <span class='btn-ship' t-att-style="'' if not selected else 'display:none;'">
-                        <a role="button" href='#' class="btn btn-block btn-secondary">
+                    <span class="btn-addr" t-att-style="'' if not selected else 'display:none;'">
+                        <a role="button" href="#" class="btn btn-block btn-secondary">
                             Select this address
                         </a>
                     </span>
@@ -1861,14 +1879,14 @@
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div>
-                                <t t-if="mode == ('new', 'billing')">
+                                <t t-if="mode == ('new', 'billing') and is_public_user">
                                     <h2 class="o_page_header mt8">
                                         <span t-if="account_on_checkout != 'mandatory'">Fill in your address</span>
                                         <small class="text-muted" t-if="account_on_checkout == 'optional'"> or </small>
                                         <a t-if="account_on_checkout != 'disabled'" role="button" href='/web/login?redirect=/shop/checkout'  style="margin-top: -11px"> Sign in</a>
                                     </h2>
                                 </t>
-                                <t t-if="mode == ('edit', 'billing')">
+                                <t t-elif="mode == ('edit', 'billing') or mode[1] == 'billing' and not is_public_user">
                                     <h2 class="o_page_header mt8">Your Address</h2>
                                 </t>
                                 <t t-if="mode[1] == 'shipping'">
@@ -1975,8 +1993,10 @@
                                             <div class="col-lg-12">
                                                 <div class="checkbox">
                                                   <label>
-                                                    <input type="checkbox" id='shipping_use_same' class="mr8" name='use_same' value="1" checked='checked'/>Ship to the same address
-                                                    <span class='ship_to_other text-muted' style="display: none">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>
+                                                    <input type="checkbox" id='shipping_use_same' class="mr8" name='use_same' value="1" t-att-checked='website.is_public_user()'/>Ship to the same address
+                                                    <t t-if='website.is_public_user()'>
+                                                        <span class='ship_to_other text-muted' style="display: none">&amp;nbsp;(<i>Your shipping address will be requested later) </i></span>
+                                                    </t>
                                                     </label>
                                                 </div>
                                             </div>
@@ -1987,6 +2007,9 @@
                                     <input type="hidden" name="submitted" value="1" />
                                     <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
                                     <input type="hidden" name="callback" t-att-value="callback" />
+                                    <t t-if="mode[1] == 'billing'">
+                                        <input type="hidden" name="is_invoice" value="1" />
+                                    </t>
                                     <!-- Example -->
                                     <input type="hidden" name="field_required" t-att-value="'phone,name'" />
 
@@ -2015,10 +2038,10 @@
         <div class="card">
             <div class="card-body" id="shipping_and_billing">
                 <a class="float-end no-decoration" href="/shop/checkout"><i class="fa fa-edit"/> Edit</a>
-                <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_id or only_services)" />
+                <t t-set="same_shipping" t-value="bool(order.partner_shipping_id==order.partner_invoice_id or only_services)" />
                 <div>
                     <b>Billing<t t-if="same_shipping and not only_services"> &amp; Shipping</t>: </b>
-                    <span t-esc="order.partner_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
+                    <span t-esc="order.partner_invoice_id" t-options="dict(widget='contact', fields=['address'], no_marker=True, separator=', ')" class="address-inline"/>
                 </div>
                 <div t-if="not same_shipping and not only_services" groups="account.group_delivery_invoice_address">
                     <b>Shipping: </b>

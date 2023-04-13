@@ -146,6 +146,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             'name': 'a res.partner address', 'email': 'email@email.email', 'street': 'ooo',
             'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
         }
+        self.default_billing_address_values = self.default_address_values | {'is_invoice': 1}
 
     def _create_so(self, partner_id=None, company_id=None):
         values = {
@@ -165,7 +166,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
         return self.env['sale.order'].create(values)
 
     def _get_last_address(self, partner):
-        ''' Useful to retrieve the last created shipping address '''
+        """ Useful to retrieve the last created address (shipping or billing) """
         return partner.child_ids.sorted('id', reverse=True)[0]
 
     # TEST WEBSITE
@@ -233,7 +234,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
 
             # 2. Logged in user/internal user, should not edit name or email address of billing
             self.default_address_values['partner_id'] = self.demo_partner.id
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.address(**self.default_billing_address_values)
             self.assertEqual(self.demo_partner.company_id, self.company_c, "Logged in user edited billing (the partner itself) should not get its company modified.")
             self.assertNotEqual(self.demo_partner.name, self.default_address_values['name'], "Employee cannot change their name during the checkout process.")
             self.assertNotEqual(self.demo_partner.email, self.default_address_values['email'], "Employee cannot change their email during the checkout process.")
@@ -257,7 +258,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
 
             # 2. Public user, edit billing
             self.default_address_values['partner_id'] = new_partner.id
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.address(**self.default_billing_address_values)
             self.assertEqual(new_partner.company_id, self.website.company_id, "Public user edited billing (the partner itself) should not get its company modified.")
 
     def test_04_apply_empty_pl(self):
@@ -353,7 +354,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
 
             # 2. Portal user, edit billing
             self.default_address_values['partner_id'] = self.portal_partner.id
-            self.WebsiteSaleController.address(**self.default_address_values)
+            self.WebsiteSaleController.address(**self.default_billing_address_values)
             # Name cannot be changed if there are issued invoices
             self.assertNotEqual(self.portal_partner.name, self.default_address_values['name'], "Portal User should not be able to change the name if they have invoices under their name.")
 
@@ -383,7 +384,7 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
             {'name': 'Tax 20% excl', 'amount': 20, 'price_include': False},
             {'name': 'Tax 15% incl', 'amount': 15, 'price_include': True},
         ])
-        self.env['account.fiscal.position'].create([
+        fpos_be, fpos_nl = self.env['account.fiscal.position'].create([
             {
                 'sequence': 1,
                 'name': 'BE',
@@ -427,12 +428,63 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo, HttpCaseWithUs
 
             self.WebsiteSaleController.address(**be_address_POST)
             self.assertEqual(
+                so.fiscal_position_id,
+                fpos_be,
+            )
+            self.assertEqual(
                 [so.amount_untaxed, so.amount_tax, so.amount_total],
                 [90.91, 18.18, 109.09] # (100 : (1 + 10%)) * (1 + 20%) = 109.09
             )
 
             self.WebsiteSaleController.address(**nl_address_POST)
             self.assertEqual(
+                so.fiscal_position_id,
+                fpos_nl,
+            )
+            self.assertEqual(
                 [so.amount_untaxed, so.amount_tax, so.amount_total],
                 [90.91, 13.64, 104.55] # (100 : (1 + 10%)) * (1 + 15%) = 104.55
             )
+
+    def test_08_new_user_address_state(self):
+        ''' Test the billing and shipping addresses creation values. '''
+        self._setUp_multicompany_env()
+        so = self._create_so(self.demo_partner.id)
+
+        env = api.Environment(self.env.cr, self.demo_user.id, {})
+        # change also website env for `sale_get_order` to not change order partner_id
+        with MockRequest(env, website=self.website.with_env(env), sale_order_id=so.id) as req:
+            req.httprequest.method = "POST"
+
+            # check the default values
+            self.assertEqual(self.demo_partner, so.partner_invoice_id)
+            self.assertEqual(self.demo_partner, so.partner_shipping_id)
+
+            # 1. Logged-in user, new shipping
+            self.WebsiteSaleController.address(**self.default_address_values)
+            new_shipping = self._get_last_address(self.demo_partner)
+            msg = "New shipping address should have its type set as 'delivery'"
+            self.assertTrue(new_shipping.type == 'delivery', msg)
+
+            # 2. Logged-in user, new billing
+            self.WebsiteSaleController.address(**self.default_billing_address_values)
+            new_billing = self._get_last_address(self.demo_partner)
+            msg = "New billing should have its type set as 'invoice'"
+            self.assertTrue(new_billing.type == 'invoice', msg)
+            self.assertNotEqual(new_billing, self.demo_partner)
+
+            # 3. Check that invoice/shipping address of so changed
+            self.assertEqual(new_billing, so.partner_invoice_id)
+            self.assertEqual(new_shipping, so.partner_shipping_id)
+
+            # 4. Logged-in user, new billing use same
+            use_same = self.default_billing_address_values | {'use_same': 1}
+            self.WebsiteSaleController.address(**use_same)
+            new_billing_use_same = self._get_last_address(self.demo_partner)
+            msg = "New billing use same should have its type set as 'other'"
+            self.assertTrue(new_billing_use_same.type == 'other', msg)
+            self.assertNotEqual(new_billing, self.demo_partner)
+
+            # 5. Check that invoice/shipping address of so changed
+            self.assertEqual(new_billing_use_same, so.partner_invoice_id)
+            self.assertEqual(new_billing_use_same, so.partner_shipping_id)
