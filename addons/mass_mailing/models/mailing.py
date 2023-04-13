@@ -1395,7 +1395,7 @@ class MassMailing(models.Model):
                             width = float(re.search(r'width:\s*([0-9]+)\s*px', match).group(1))
                             height = float(re.search(r'height:\s*([0-9]+)\s*px', match).group(1))
                             image_processor = tools.ImageProcess(buffered.getvalue())
-                            image = image_processor.crop_resize(width, height).image
+                            image = image_processor.crop_resize(width, height, 0, 0).image
                             buffered = BytesIO()
                             image.save(buffered, format="JPEG")
                             comment.text = comment.text.replace(url, _image_to_url(base64.b64encode(buffered.getvalue())))
