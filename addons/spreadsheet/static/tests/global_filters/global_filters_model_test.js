@@ -1287,6 +1287,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.equal(getDateDomainDurationInDays(computedDomain), 7);
         assertDateDomainEqual(assert, "date", "2022-05-10", "2022-05-16", computedDomain);
 
+        await setGlobalFilterValue(model, { id: "42", value: "year_to_date" });
+        computedDomain = model.getters.getPivotComputedDomain("1");
+        assertDateDomainEqual(assert, "date", "2022-01-01", "2022-05-16", computedDomain);
+
         await setGlobalFilterValue(model, { id: "42", value: "last_month" });
         computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 30);
@@ -1333,6 +1337,10 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         let computedDomain = model.getters.getPivotComputedDomain("1");
         assert.equal(getDateDomainDurationInDays(computedDomain), 7);
         assertDateDomainEqual(assert, "date", "2022-05-03", "2022-05-09", computedDomain);
+
+        await setGlobalFilterValue(model, { id: "42", value: "year_to_date" });
+        computedDomain = model.getters.getPivotComputedDomain("1");
+        assertDateDomainEqual(assert, "date", "2021-01-01", "2021-05-16", computedDomain);
 
         await setGlobalFilterValue(model, { id: "42", value: "last_month" });
         computedDomain = model.getters.getPivotComputedDomain("1");
