@@ -285,29 +285,28 @@ export function usePosition(target, options) {
     const popperRef = useRef(options.popper || DEFAULTS.popper);
     const getTarget = typeof target === "function" ? target : () => target;
     const throttledReposition = useThrottleForAnimation(reposition);
-    useEffect(
-        (targetEl, popperEl) => {
-            if (!targetEl || !popperEl) {
-                return;
-            }
+    useEffect(() => {
+        const targetEl = getTarget();
+        const popperEl = popperRef.el;
+        if (!targetEl || !popperEl) {
+            return;
+        }
 
-            // Prepare
-            const targetDocument = targetEl.ownerDocument;
-            const iframe = getIFrame(targetEl);
-            const currentOptions = { ...DEFAULTS, ...options };
+        // Prepare
+        const targetDocument = targetEl.ownerDocument;
+        const iframe = getIFrame(targetEl);
+        const currentOptions = { ...DEFAULTS, ...options };
 
-            // Reposition
-            reposition(targetEl, popperEl, iframe, currentOptions);
+        // Reposition
+        reposition(targetEl, popperEl, iframe, currentOptions);
 
-            // Attach listeners to keep the positioning up to date
-            const listener = () => throttledReposition(targetEl, popperEl, iframe, currentOptions);
-            targetDocument.addEventListener("scroll", listener, { capture: true });
-            window.addEventListener("resize", listener);
-            return () => {
-                targetDocument.removeEventListener("scroll", listener, { capture: true });
-                window.removeEventListener("resize", listener);
-            };
-        },
-        () => [getTarget(), popperRef.el]
-    );
+        // Attach listeners to keep the positioning up to date
+        const listener = () => throttledReposition(targetEl, popperEl, iframe, currentOptions);
+        targetDocument.addEventListener("scroll", listener, { capture: true });
+        window.addEventListener("resize", listener);
+        return () => {
+            targetDocument.removeEventListener("scroll", listener, { capture: true });
+            window.removeEventListener("resize", listener);
+        };
+    });
 }

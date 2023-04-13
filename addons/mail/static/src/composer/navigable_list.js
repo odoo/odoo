@@ -4,15 +4,7 @@ import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
 import { ImStatus } from "../discuss/im_status"; // Used in composer suggestion template
-import {
-    Component,
-    onMounted,
-    onPatched,
-    useEffect,
-    useExternalListener,
-    useRef,
-    useState,
-} from "@odoo/owl";
+import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 import { markEventHandled, isEventHandled } from "../utils/misc";
 import { onExternalClick } from "@mail/utils/hooks";
 
@@ -64,19 +56,6 @@ export class NavigableList extends Component {
             },
             () => [this.props]
         );
-        onMounted(() => {
-            this.resizeObserver = new ResizeObserver(() => {
-                const { width } = this.props.anchorRef.getBoundingClientRect();
-                if (this.rootRef && this.rootRef.el) {
-                    this.rootRef.el.style.width = width + "px";
-                }
-            });
-        });
-        onPatched(() => {
-            if (this.props.anchorRef) {
-                this.resizeObserver.observe(this.props.anchorRef);
-            }
-        });
     }
 
     get show() {
