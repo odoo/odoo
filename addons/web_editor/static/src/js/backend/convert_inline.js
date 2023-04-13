@@ -669,18 +669,6 @@ async function toInline($editable, cssRules, $iframe) {
         }
     }
 
-    // Fix outlook image rendering bug.
-    for (const attributeName of ['width', 'height']) {
-        const images = editable.querySelectorAll('img');
-        for (const image of images) {
-            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
-            if (!value) {
-                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
-            }
-            image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, value + 'px');
-        };
-    };
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
     await svgToPng($editable);
@@ -698,6 +686,19 @@ async function toInline($editable, cssRules, $iframe) {
     flattenBackgroundImages(editable);
     responsiveToStaticForOutlook(editable);
     formatTables($editable);
+    // Fix outlook image rendering bug (this change will be kept in both
+    // fields).
+    for (const attributeName of ['width', 'height']) {
+        const images = editable.querySelectorAll('img');
+        for (const image of images) {
+            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
+            if (!value) {
+                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
+            }
+            image.setAttribute(attributeName, value);
+            image.style.setProperty(attributeName, value + 'px');
+        };
+    };
     enforceImagesResponsivity(editable);
 
     // Remove contenteditable attributes
@@ -803,44 +804,20 @@ function fontToImg($editable) {
             // For rounded images, apply the rounded border to a wrapper, make
             // sure it doesn't get applied to the image itself so the image
             // doesn't get cropped in the process.
-            // TODO: generalize for all border radius elements.
-            const borderRadius = getComputedStyle(font).borderRadius;
-            if (borderRadius && borderRadius !== '0px') {
-                image.style.setProperty('display', 'block');
-                const wrapper = document.createElement('span');
-                wrapper.style.setProperty('display', 'inline-block');
-                wrapper.style.setProperty('padding', padding);
-                wrapper.style.setProperty('width', width + 'px');
-                wrapper.style.setProperty('height', height + 'px');
-                wrapper.style.setProperty('vertical-align', 'middle');
-                wrapper.style.setProperty('background-color', image.style.backgroundColor);
-                wrapper.setAttribute('class',
-                    'oe_unbreakable ' + // prevent sanitize from grouping image wrappers
-                    font.getAttribute('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '') // remove inline font-awesome style
-                );
-                // Replace the font with the wrapped image.
-                wrapper.append(image);
-                font.before(wrapper);
-                font.remove();
-                // Handle Outlook with VML.
-                wrapper.before(_createMso(`
-                    <v:roundrect xmlns:v="urn:schemas-microsoft-com:vml" xmlns:w="urn:schemas-microsoft-com:office:word"
-                        style="width:${width}px;height:${height}px;v-text-anchor:middle;"
-                        arcsize="${borderRadius}"
-                        strokecolor="${wrapper.style.backgroundColor}"
-                        fillcolor="${wrapper.style.backgroundColor}"
-                    >
-                        <w:anchorlock/>
-                        <center>`));
-                wrapper.append(_createMso(`</center></v:roundrect>`));
-                _hideForOutlook(wrapper, 'opening');
-                _hideForOutlook(wrapper, 'closing');
-            } else {
-                image.style.setProperty('display', 'inline');
-                // Replace the font with the image.
-                font.before(image);
-                font.remove();
-            }
+            const wrapper = document.createElement('span');
+            wrapper.style.setProperty('display', 'inline-block');
+            wrapper.append(image);
+            font.before(wrapper);
+            font.remove();
+            wrapper.style.setProperty('padding', padding);
+            wrapper.style.setProperty('width', width + 'px');
+            wrapper.style.setProperty('height', height + 'px');
+            wrapper.style.setProperty('vertical-align', 'middle');
+            wrapper.style.setProperty('background-color', image.style.backgroundColor);
+            wrapper.setAttribute('class',
+                'oe_unbreakable ' + // prevent sanitize from grouping image wrappers
+                font.getAttribute('class').replace(new RegExp('(^|\\s+)' + icon + '(-[^\\s]+)?', 'gi'), '') // remove inline font-awsome style
+            );
         } else {
             font.remove();
         }
