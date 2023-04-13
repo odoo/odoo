@@ -37,7 +37,12 @@ export class PropertiesField extends Component {
         this.orm = useService("orm");
         this.user = useService("user");
         this.dialogService = useService("dialog");
-        this.popover = usePopover();
+        this.popover = usePopover(PropertyDefinition, {
+            closeOnClickAway: this.checkPopoverClose,
+            popoverClass: "o_property_field_popover",
+            position: "top",
+            onClose: () => this.onCloseCurrentPopover?.(),
+        });
         this.propertiesRef = useRef("properties");
 
         this.state = useState({
@@ -261,10 +266,7 @@ export class PropertiesField extends Component {
             ),
             confirmLabel: _lt("Delete"),
             confirm: () => {
-                if (this.popoverCloseFn) {
-                    this.popoverCloseFn();
-                    this.popoverCloseFn = null;
-                }
+                this.popover.close();
                 const propertiesDefinitions = this.propertiesList;
                 propertiesDefinitions.find(
                     (property) => property.name === propertyName
@@ -459,38 +461,31 @@ export class PropertiesField extends Component {
             return propertyName;
         };
 
-        this.popoverCloseFn = this.popover.add(
-            target,
-            PropertyDefinition,
-            {
-                readonly: this.props.readonly || !this.state.canChangeDefinition,
-                canChangeDefinition: this.state.canChangeDefinition,
-                propertyDefinition: this.propertiesList.find(
-                    (property) => property.name === currentName(propertyName)
-                ),
-                context: this.props.context,
-                onChange: this.onPropertyDefinitionChange.bind(this),
-                onDelete: () => this.onPropertyDelete(currentName(propertyName)),
-                onPropertyMove: (direction) =>
-                    this.onPropertyMove(currentName(propertyName), direction),
-                isNewlyCreated: isNewlyCreated,
-                propertyIndex: propertyIndex,
-                propertiesSize: propertiesList.length,
-                hideKanbanOption: this.props.hideKanbanOption,
-            },
-            {
-                closeOnClickAway: this.checkPopoverClose,
-                popoverClass: "o_property_field_popover",
-                position: "top",
-                onClose: () => {
-                    this.state.movedPropertyName = null;
-                    target.classList.remove("disabled");
-                    if (isNewlyCreated) {
-                        this._setDefaultPropertyValue(currentName(propertyName));
-                    }
-                },
+        this.onCloseCurrentPopover = () => {
+            this.onCloseCurrentPopover = null;
+            this.state.movedPropertyName = null;
+            target.classList.remove("disabled");
+            if (isNewlyCreated) {
+                this._setDefaultPropertyValue(currentName(propertyName));
             }
-        );
+        };
+
+        this.popover.open(target, {
+            readonly: this.props.readonly || !this.state.canChangeDefinition,
+            canChangeDefinition: this.state.canChangeDefinition,
+            propertyDefinition: this.propertiesList.find(
+                (property) => property.name === currentName(propertyName)
+            ),
+            context: this.props.context,
+            onChange: this.onPropertyDefinitionChange.bind(this),
+            onDelete: () => this.onPropertyDelete(currentName(propertyName)),
+            onPropertyMove: (direction) =>
+                this.onPropertyMove(currentName(propertyName), direction),
+            isNewlyCreated: isNewlyCreated,
+            propertyIndex: propertyIndex,
+            propertiesSize: propertiesList.length,
+            hideKanbanOption: this.props.hideKanbanOption,
+        });
     }
 
     /**

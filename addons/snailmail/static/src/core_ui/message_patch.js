@@ -54,22 +54,10 @@ patch(Message.prototype, "snailmail", {
             },
         });
     },
-
-    onClickNotificationIcon(ev) {
-        if (this.message.type === "snailmail") {
-            this.popover.add(
-                ev.target,
-                SnailmailNotificationPopover,
-                { message: this.message },
-                { position: "top" }
-            );
-        } else {
-            this._super(...arguments);
-        }
-    },
 });
 
 Message.components = {
     ...Message.components,
+    Popover: SnailmailNotificationPopover,
     SnailmailError,
 };

@@ -17,11 +17,9 @@ export class CallParticipantCard extends Component {
     static components = { CallParticipantVideo };
     static template = "mail.CallParticipantCard";
 
-    closePopover;
-
     setup() {
         this.contextMenuAnchorRef = useRef("contextMenuAnchor");
-        this.popover = usePopover();
+        this.popover = usePopover(CallContextMenu);
         this.rpc = useService("rpc");
         this.rtc = useRtc();
         this.store = useStore();
@@ -125,24 +123,15 @@ export class CallParticipantCard extends Component {
     onContextMenu(ev) {
         ev.preventDefault();
         markEventHandled(ev, "CallParticipantCard.clickVolumeAnchor");
-        if (this.closePopover) {
-            this.closePopover();
-            this.closePopover = undefined;
+        if (this.popover.isOpen) {
+            this.popover.close();
             return;
         }
         if (!this.contextMenuAnchorRef?.el) {
             return;
         }
-        this.closePopover = this.popover.add(
-            this.contextMenuAnchorRef.el,
-            CallContextMenu,
-            {
-                rtcSession: this.rtcSession,
-            },
-            {
-                onClose: () => (this.closePopover = undefined),
-                position: "bottom",
-            }
-        );
+        this.popover.open(this.contextMenuAnchorRef.el, {
+            rtcSession: this.rtcSession,
+        });
     }
 }

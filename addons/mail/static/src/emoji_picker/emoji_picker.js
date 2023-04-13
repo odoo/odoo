@@ -30,8 +30,7 @@ import { escapeRegExp } from "@web/core/utils/strings";
  */
 export function useEmojiPicker(ref, props, options = {}) {
     const targets = [];
-    const popover = usePopover();
-    let closePopover = false;
+    const popover = usePopover(EmojiPicker, { ...options, popoverClass: "o-fast-popover" });
     props.storeScroll = {
         scrollValue: 0,
         set: (value) => {
@@ -59,20 +58,10 @@ export function useEmojiPicker(ref, props, options = {}) {
     }
 
     function toggle(ref, onSelect = props.onSelect) {
-        if (closePopover) {
-            closePopover();
-            closePopover = false;
+        if (popover.isOpen) {
+            popover.close();
         } else {
-            closePopover = popover.add(
-                ref.el,
-                EmojiPicker,
-                { ...props, onSelect },
-                {
-                    ...options,
-                    onClose: () => (closePopover = false),
-                    popoverClass: "o-fast-popover",
-                }
-            );
+            popover.open(ref.el, { ...props, onSelect });
         }
     }
 
@@ -109,7 +98,7 @@ export function useEmojiPicker(ref, props, options = {}) {
     return {
         add,
         get isOpen() {
-            return Boolean(closePopover);
+            return popover.isOpen;
         },
     };
 }

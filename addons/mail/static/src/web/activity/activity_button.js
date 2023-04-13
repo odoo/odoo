@@ -11,9 +11,8 @@ export class ActivityButton extends Component {
     static template = "mail.ActivityButton";
 
     setup() {
-        this.popover = usePopover();
+        this.popover = usePopover(ActivityListPopover, { position: "bottom-start" });
         this.buttonRef = useRef("button");
-        this.closePopover = undefined;
     }
 
     get buttonClass() {
@@ -53,26 +52,17 @@ export class ActivityButton extends Component {
     }
 
     onClick() {
-        if (this.closePopover) {
-            this.closePopover();
-            this.closePopover = undefined;
+        if (this.popover.isOpen) {
+            this.popover.close();
         } else {
-            this.closePopover = this.popover.add(
-                this.buttonRef.el,
-                ActivityListPopover,
-                {
-                    activityIds: this.props.record.data.activity_ids.currentIds,
-                    onActivityChanged: () => {
-                        this.props.record.model.load({ resId: this.props.record.resId });
-                    },
-                    resId: this.props.record.resId,
-                    resModel: this.props.record.resModel,
+            this.popover.open(this.buttonRef.el, {
+                activityIds: this.props.record.data.activity_ids.currentIds,
+                onActivityChanged: () => {
+                    this.props.record.model.load({ resId: this.props.record.resId });
                 },
-                {
-                    onClose: () => (this.closePopover = undefined),
-                    position: "bottom", // should be "bottom-start" but not supported for some reason
-                }
-            );
+                resId: this.props.record.resId,
+                resModel: this.props.record.resModel,
+            });
         }
     }
 }

@@ -24,7 +24,7 @@ Object.assign(PropertyTagAutoComplete, { timeout: 0 });
 export class PropertyTags extends Component {
     setup() {
         this.notification = useService("notification");
-        this.popover = usePopover();
+        this.popover = usePopover(this.constructor.components.Popover);
     }
 
     /* --------------------------------------------------------
@@ -251,18 +251,11 @@ export class PropertyTags extends Component {
             event.currentTarget.blur();
             return;
         }
-        this.popoverCloseFn = this.popover.add(
-            event.currentTarget,
-            this.constructor.components.Popover,
-            {
-                colors: [...Array(ColorList.COLORS.length).keys()],
-                tag: { id: tagId, colorIndex: tagColor },
-                switchTagColor: this.onTagColorSwitch.bind(this),
-            },
-            {
-                closeOnClickAway: true,
-            }
-        );
+        this.popover.open(event.currentTarget, {
+            colors: [...Array(ColorList.COLORS.length).keys()],
+            tag: { id: tagId, colorIndex: tagColor },
+            switchTagColor: this.onTagColorSwitch.bind(this),
+        });
     }
 
     /**
@@ -277,8 +270,7 @@ export class PropertyTags extends Component {
         this.props.onTagsChange(availableTags);
 
         // close the color popover
-        this.popoverCloseFn();
-        this.popoverCloseFn = null;
+        this.popover.close();
     }
 }
 

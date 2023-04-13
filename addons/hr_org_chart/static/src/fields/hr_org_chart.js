@@ -7,23 +7,6 @@ import { onEmployeeSubRedirect } from './hooks';
 
 const { Component, onWillStart, onWillRender, useState } = owl;
 
-function useUniquePopover() {
-    const popover = usePopover();
-    let remove = null;
-    return Object.assign(Object.create(popover), {
-        add(target, component, props, options) {
-            if (remove) {
-                remove();
-            }
-            remove = popover.add(target, component, props, options);
-            return () => {
-                remove();
-                remove = null;
-            };
-        },
-    });
-}
-
 class HrOrgChartPopover extends Component {
     async setup() {
         super.setup();
@@ -56,7 +39,7 @@ export class HrOrgChart extends Component {
         this.orm = useService('orm');
         this.actionService = useService("action");
         this.user = useService("user");
-        this.popover = useUniquePopover();
+        this.popover = usePopover(HrOrgChartPopover);
 
         this.state = useState({'employee_id': null});
         this._onEmployeeSubRedirect = onEmployeeSubRedirect();
@@ -109,12 +92,7 @@ export class HrOrgChart extends Component {
     }
 
     _onOpenPopover(event, employee) {
-        this.popover.add(
-            event.currentTarget,
-            HrOrgChartPopover,
-            {employee},
-            {closeOnClickAway: true}
-        );
+        this.popover.open(event.currentTarget, { employee });
     }
 
     /**

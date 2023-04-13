@@ -35,33 +35,24 @@ export class KanbanHeader extends Component {
     setup() {
         this.dialog = useService("dialog");
         this.orm = useService("orm");
-
         this.rootRef = useRef("root");
-        const titleRef = useRef("title");
+        this.popover = usePopover(KanbanHeaderTooltip);
+        this.onTitleMouseEnter = useDebounced(this.onTitleMouseEnter, 400);
+    }
 
-        const popover = usePopover();
+    async onTitleMouseEnter(ev) {
+        if (!this.hasTooltip) {
+            return;
+        }
+        const tooltip = await this.loadTooltip();
+        if (tooltip.length) {
+            this.popover.open(ev.target, { tooltip });
+        }
+    }
 
-        let shouldOpenTooltip;
-        const debouncedOpenTooltip = useDebounced(async () => {
-            shouldOpenTooltip = true;
-            if (this.hasTooltip) {
-                const tooltip = await this.loadTooltip();
-                if (tooltip.length && shouldOpenTooltip) {
-                    this.closeTooltip = popover.add(titleRef.el, KanbanHeaderTooltip, {
-                        tooltip: tooltip,
-                    });
-                    shouldOpenTooltip = false;
-                }
-            }
-        }, 400);
-
-        this.openTooltip = () => {
-            this.closeTooltip = () => {
-                shouldOpenTooltip = false;
-                debouncedOpenTooltip.cancel();
-            };
-            debouncedOpenTooltip();
-        };
+    onTitleMouseLeave() {
+        this.onTitleMouseEnter.cancel();
+        this.popover.close();
     }
 
     // ------------------------------------------------------------------------

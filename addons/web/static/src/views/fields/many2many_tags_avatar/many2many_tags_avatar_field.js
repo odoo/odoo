@@ -101,39 +101,26 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
     };
     setup() {
         super.setup();
-        this.popover = usePopover();
+        this.popover = usePopover(Many2ManyTagsAvatarFieldPopover, {
+            popoverClass: "o_m2m_tags_avatar_field_popover",
+            closeOnClickAway: (target) => !target.closest(".modal"),
+        });
     }
     get visibleTagsCount() {
         return this.props.itemsVisible;
-    }
-    closePopover() {
-        this.closePopoverFn();
-        this.closePopoverFn = null;
     }
     openPopover(ev) {
         if (this.props.readonly) {
             return;
         }
-        if (this.closePopoverFn) {
-            this.closePopover();
-        }
-        this.closePopoverFn = this.popover.add(
-            ev.currentTarget.parentElement,
-            Many2ManyTagsAvatarFieldPopover,
-            {
-                ...this.props.popoverProps,
-                readonly: false,
-                canCreate: false,
-                canCreateEdit: false,
-                canQuickCreate: false,
-                placeholder: this.env._t("Search users..."),
-            },
-            {
-                position: "bottom",
-                popoverClass: "o_m2m_tags_avatar_field_popover",
-                closeOnClickAway: (target) => !target.closest(".modal"),
-            }
-        );
+        this.popover.open(ev.currentTarget.parentElement, {
+            ...this.props.popoverProps,
+            readonly: false,
+            canCreate: false,
+            canCreateEdit: false,
+            canQuickCreate: false,
+            placeholder: this.env._t("Search users..."),
+        });
     }
     get canDisplayQuickAssignAvatar() {
         return !this.props.readonly && !(this.props.tags && this.otherTags.length);

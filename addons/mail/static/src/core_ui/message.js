@@ -58,6 +58,7 @@ export class Message extends Component {
         MessageReactions,
         MessageSeenIndicator,
         ImStatus,
+        Popover: MessageNotificationPopover,
         RelativeTime,
     };
     static defaultProps = {
@@ -78,7 +79,7 @@ export class Message extends Component {
     static template = "mail.Message";
 
     setup() {
-        this.popover = usePopover();
+        this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
             isEditing: false,
             isHovered: false,
@@ -456,12 +457,7 @@ export class Message extends Component {
     }
 
     onClickNotificationIcon(ev) {
-        this.popover.add(
-            ev.target,
-            MessageNotificationPopover,
-            { message: this.message },
-            { position: "top" }
-        );
+        this.popover.open(ev.target, { message: this.message });
     }
 
     onClickFailure(ev) {

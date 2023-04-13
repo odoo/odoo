@@ -48,17 +48,17 @@ QUnit.test("close popover when component is unmounted", async (assert) => {
 
     class CompWithPopover extends Component {
         setup() {
-            this.popover = usePopover();
+            this.popover = usePopover(Comp);
         }
     }
     CompWithPopover.template = xml`<div />`;
 
     const comp1 = await mount(CompWithPopover, target, { env });
-    comp1.popover.add(popoverTarget, Comp, { id: "comp1" });
+    comp1.popover.open(popoverTarget, { id: "comp1" });
     await nextTick();
 
     const comp2 = await mount(CompWithPopover, target, { env });
-    comp2.popover.add(popoverTarget, Comp, { id: "comp2" });
+    comp2.popover.open(popoverTarget, { id: "comp2" });
     await nextTick();
 
     assert.containsN(target, ".o_popover", 2);
