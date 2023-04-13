@@ -6,6 +6,7 @@ import requests
 import zipfile
 from io import BytesIO
 from lxml import etree
+import contextlib
 
 from odoo.exceptions import UserError
 
@@ -176,11 +177,6 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
     :rtype: odoo.api.ir.attachment | bool
     :return: every XSD attachment created/fetched or False if an error occurred (see warning logs)
     """
-    if not url.endswith(('.xsd', '.zip')):
-        _logger.warning("The given URL (%s) needs to lead to an XSD file or a ZIP archive", url)
-        return False
-    is_zip = url.endswith('.zip')
-
     try:
         _logger.info("Fetching file/archive from given URL: %s", url)
         response = requests.get(url, timeout=request_max_timeout)
@@ -199,10 +195,14 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
     if not content:
         _logger.warning("The HTTP response from %s is empty (no content)", url)
         return False
-    if modify_xsd_content and not is_zip:
-        content = modify_xsd_content(content)
 
-    if not is_zip:
+    archive = None
+    with contextlib.suppress(zipfile.BadZipFile):
+        archive = zipfile.ZipFile(BytesIO(content))
+
+    if archive is None:
+        if modify_xsd_content:
+            content = modify_xsd_content(content)
         if not file_name:
             file_name = f"{url.split('/')[-1]}"
             _logger.info("XSD name not provided, defaulting to %s", file_name)
@@ -221,8 +221,6 @@ def load_xsd_files_from_url(env, url, file_name=None, force_reload=False,
                 'public': True,
             })
 
-    _logger.info("Unzipping loaded archive")
-    archive = zipfile.ZipFile(BytesIO(content))
     saved_attachments = env['ir.attachment']
     for file_path in archive.namelist():
         if not file_path.endswith('.xsd'):
