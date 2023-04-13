@@ -1455,7 +1455,6 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
                     [0, 0, {'lot_name': '1001'}],
                 ]
             })],
-            'pricelist_id': 1,
             'amount_paid': 6.0,
             'amount_total': 6.0,
             'amount_tax': 0.0,
