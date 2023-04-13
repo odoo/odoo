@@ -238,7 +238,9 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
         } else {
             viewMode = viewMode.replace("tree", "list");
         }
-        fieldInfo.viewMode = viewMode;
+        if (viewMode !== null) {
+            fieldInfo.viewMode = viewMode;
+        }
         fieldInfo.views = views;
 
         let relatedFields = field.relatedFields;
