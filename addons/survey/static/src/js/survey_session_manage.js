@@ -250,10 +250,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
             args: [[this.surveyId]],
         }).then(function () {
             if ($(ev.currentTarget).data('showResults')) {
-                document.location = _.str.sprintf(
-                    '/survey/results/%s',
-                    self.surveyId
-                );
+                document.location = `/survey/results/${encodeURIComponent(self.surveyId)}`;
             } else {
                 window.history.back();
             }
@@ -359,7 +356,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         }
 
         var nextQuestionPromise = this._rpc({
-            route: _.str.sprintf('/survey/session/next_question/%s', self.surveyAccessToken),
+            route: `/survey/session/next_question/${self.surveyAccessToken}`,
             params: {
                 'go_back': goBack,
             }
@@ -472,7 +469,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         var self = this;
 
         return this._rpc({
-            route: _.str.sprintf('/survey/session/results/%s', self.surveyAccessToken)
+            route: `/survey/session/results/${self.surveyAccessToken}`,
         }).then(function (questionResults) {
             if (questionResults) {
                 self.attendeesCount = questionResults.attendees_count;

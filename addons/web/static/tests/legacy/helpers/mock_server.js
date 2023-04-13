@@ -381,14 +381,14 @@ var MockServer = Class.extend({
                     var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
                     if (inTreeView && !inListHeader && a === 'invisible') {
                         modifiers.column_invisible = v;
-                    } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
+                    } else if (v || !(a in modifiers) || !Array.isArray(modifiers[a])) {
                         modifiers[a] = v;
                     }
                 }
             });
 
             _.each(modifiersNames, function (a) {
-                if (a in modifiers && (!!modifiers[a] === false || (_.isArray(modifiers[a]) && !modifiers[a].length))) {
+                if (a in modifiers && (!!modifiers[a] === false || (Array.isArray(modifiers[a]) && !modifiers[a].length))) {
                     delete modifiers[a];
                 }
             });
@@ -470,7 +470,7 @@ var MockServer = Class.extend({
      * @returns {Object[]} a list of records
      */
     _getRecords: function (model, domain, { active_test = true } = {}) {
-        if (!_.isArray(domain)) {
+        if (!Array.isArray(domain)) {
             throw new Error("MockServer._getRecords: given domain has to be an array.");
         }
 
@@ -517,9 +517,7 @@ var MockServer = Class.extend({
                 }
                 return criterion;
             });
-            records = _.filter(records, function (record) {
-                return self._evaluateDomain(domain, record);
-            });
+            records = records.filter(record => self._evaluateDomain(domain, record));
         }
 
         return records;
@@ -1217,7 +1215,7 @@ var MockServer = Class.extend({
                 }
             }
             var key = [model, viewID, viewType].join(',');
-            var arch = self.archs[key] || _.find(self.archs, function (_v, k) {
+            var arch = self.archs[key] || Object.keys(self.archs).find(k => {
                 var ka = k.split(',');
                 viewID = parseInt(ka[1], 10);
                 return ka[0] === model && ka[2] === viewType;
@@ -1252,7 +1250,7 @@ var MockServer = Class.extend({
         else if (!ids) {
             return []
         }
-        if (!_.isArray(ids)) {
+        if (!Array.isArray(ids)) {
             ids = [ids];
         }
         var records = this.data[model].records;
@@ -1299,9 +1297,7 @@ var MockServer = Class.extend({
         var domain = (args && args[1]) || _kwargs.args || [];
         var records = this._getRecords(model, domain);
         if (str.length) {
-            records = _.filter(records, function (record) {
-                return record.display_name.indexOf(str) !== -1;
-            });
+            records = records.filter(record => record.display_name.indexOf(str) !== -1);
         }
         var result = _.map(records, function (record) {
             return [record.id, record.display_name];
@@ -1380,7 +1376,7 @@ var MockServer = Class.extend({
     _mockRead: function (model, args, _kwargs) {
         var self = this;
         var ids = args[0];
-        if (!_.isArray(ids)) {
+        if (!Array.isArray(ids)) {
             ids = [ids];
         }
         var fields = args[1] && args[1].length ? _.uniq(args[1].concat(['id'])) : Object.keys(this.data[model].fields);
@@ -1467,7 +1463,7 @@ var MockServer = Class.extend({
 
         // if no fields have been given, the server picks all stored fields
         if (kwargs.fields.length === 0) {
-            aggregatedFields = _.keys(this.data[model].fields);
+            aggregatedFields = Object.keys(this.data[model].fields);
         }
 
         var groupByFieldNames = _.map(groupBy, function (groupByField) {
@@ -1475,7 +1471,7 @@ var MockServer = Class.extend({
         });
 
         // filter out non existing fields
-        aggregatedFields = _.filter(aggregatedFields, function (name) {
+        aggregatedFields = aggregatedFields.filter(name => {
             return name in self.data[model].fields && !(_.contains(groupByFieldNames,name));
         });
 
@@ -1827,7 +1823,7 @@ var MockServer = Class.extend({
         var records = this._getRecords(args.model, args.domain || [], {
           active_test,
         });
-        var fields = args.fields && args.fields.length ? args.fields : _.keys(this.data[args.model].fields);
+        var fields = args.fields && args.fields.length ? args.fields : Object.keys(this.data[args.model].fields);
         var nbRecords = records.length;
         var offset = args.offset || 0;
         if (args.sort) {
@@ -1870,12 +1866,10 @@ var MockServer = Class.extend({
      */
     _mockUnlink: function (model, args) {
         var ids = args[0];
-        if (!_.isArray(ids)) {
+        if (!Array.isArray(ids)) {
             ids = [ids];
         }
-        this.data[model].records = _.reject(this.data[model].records, function (record) {
-            return _.contains(ids, record.id);
-        });
+        this.data[model].records = this.data[model].records.filter(record => !_.contains(ids, record.id));
 
         // update value of relationnal fields pointing to the deleted records
         _.each(this.data, function (d) {

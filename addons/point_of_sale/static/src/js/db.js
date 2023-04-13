@@ -493,9 +493,7 @@ export const PosDB = core.Class.extend({
     },
     remove_order: function (order_id) {
         var orders = this.load("orders", []);
-        orders = _.filter(orders, function (order) {
-            return order.id !== order_id;
-        });
+        orders = orders.filter((order) => order.id !== order_id);
         this.save("orders", orders);
     },
     remove_all_orders: function () {
@@ -534,9 +532,7 @@ export const PosDB = core.Class.extend({
     },
     remove_unpaid_order: function (order) {
         var orders = this.load("unpaid_orders", []);
-        orders = _.filter(orders, function (o) {
-            return o.id !== order.uid;
-        });
+        orders = orders.filter((o) => o.id !== order.uid);
         this.save("unpaid_orders", orders);
     },
     remove_all_unpaid_orders: function () {
@@ -591,9 +587,7 @@ export const PosDB = core.Class.extend({
     set_ids_removed_from_server: function (ids) {
         var to_remove = this.load("unpaid_orders_to_remove", []);
 
-        to_remove = _.filter(to_remove, function (id) {
-            return !ids.includes(id);
-        });
+        to_remove = to_remove.filter((id) => !ids.includes(id));
         this.save("unpaid_orders_to_remove", to_remove);
     },
 });

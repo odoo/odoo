@@ -4,13 +4,14 @@ import concurrency from "web.concurrency";
 import core from "web.core";
 import Dialog from "web.Dialog";
 import dom from "web.dom";
-import {Markup, sprintf, confine} from "web.utils";
+import {Markup, confine} from "web.utils";
 import Widget from "web.Widget";
 import options from "web_editor.snippets.options";
 import {ColorPaletteWidget} from "web_editor.ColorPalette";
 import SmoothScrollOnDrag from "web.smooth_scroll_on_drag";
 import {getCSSVariableValue} from "web_editor.utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
+import { sprintf } from "@web/core/utils/strings";
 const QWeb = core.qweb;
 import {closestElement} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
 
@@ -666,7 +667,7 @@ var SnippetEditor = Widget.extend({
      */
     toggleTargetVisibility: async function (show) {
         show = this._toggleVisibilityStatus(show);
-        var styles = _.values(this.styles);
+        var styles = Object.values(this.styles);
         const proms = _.sortBy(styles, '__order').map(style => {
             return show ? style.onTargetShow() : style.onTargetHide();
         });
@@ -2905,12 +2906,12 @@ var SnippetsMenu = Widget.extend({
                     const btnRenameEl = document.createElement('we-button');
                     btnRenameEl.dataset.snippetId = $snippet.data('oeSnippetId');
                     btnRenameEl.classList.add('o_rename_btn', 'fa', 'fa-pencil', 'btn', 'o_we_hover_success');
-                    btnRenameEl.title = _.str.sprintf(_t("Rename %s"), name);
+                    btnRenameEl.title = sprintf(_t("Rename %s"), name);
                     $snippet.append(btnRenameEl);
                     const btnEl = document.createElement('we-button');
                     btnEl.dataset.snippetId = $snippet.data('oeSnippetId');
                     btnEl.classList.add('o_delete_btn', 'fa', 'fa-trash', 'btn', 'o_we_hover_danger');
-                    btnEl.title = _.str.sprintf(_t("Delete %s"), name);
+                    btnEl.title = sprintf(_t("Delete %s"), name);
                     $snippet.append(btnEl);
                 }
             })
@@ -3733,9 +3734,9 @@ var SnippetsMenu = Widget.extend({
         var moduleID = $snippet.data('moduleId');
         var name = $snippet.attr('name');
         new Dialog(this, {
-            title: _.str.sprintf(_t("Install %s"), name),
+            title: sprintf(_t("Install %s"), name),
             size: 'medium',
-            $content: $('<div/>', {text: _.str.sprintf(_t("Do you want to install the %s App?"), name)}).append(
+            $content: $('<div/>', {text: sprintf(_t("Do you want to install the %s App?"), name)}).append(
                 $('<a/>', {
                     target: '_blank',
                     href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
@@ -3822,7 +3823,7 @@ var SnippetsMenu = Widget.extend({
         new Dialog(this, {
             size: 'medium',
             title: _t('Confirmation'),
-            $content: $('<div><p>' + _.str.sprintf(_t("Are you sure you want to delete the snippet: %s?"), $snippet.attr('name')) + '</p></div>'),
+            $content: $('<div><p>' + sprintf(_t("Are you sure you want to delete the snippet: %s?"), $snippet.attr('name')) + '</p></div>'),
             buttons: [{
                 text: _t("Yes"),
                 close: true,

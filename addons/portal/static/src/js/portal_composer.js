@@ -1,5 +1,6 @@
 /** @odoo-module alias=portal.composer **/
 
+import { sprintf } from "@web/core/utils/strings";
 import ajax from "web.ajax";
 import core from "web.core";
 import publicWidget from "web.public.widget";
@@ -91,7 +92,7 @@ var PortalComposer = publicWidget.Widget.extend({
                 'access_token': accessToken,
             },
         }).then(function () {
-            self.attachments = _.reject(self.attachments, {'id': attachmentId});
+            self.attachments = self.attachments.filter(attachment => attachment.id !== attachmentId);
             self._updateAttachments();
             self.$sendButton.prop('disabled', false);
         });
@@ -124,7 +125,7 @@ var PortalComposer = publicWidget.Widget.extend({
                     resolve();
                 }).guardedCatch(function (error) {
                     self.displayNotification({
-                        message: _.str.sprintf(_t("Could not save file <strong>%s</strong>"),
+                        message: sprintf(_t("Could not save file <strong>%s</strong>"),
                             _.escape(file.name)),
                         type: 'warning',
                         sticky: true,

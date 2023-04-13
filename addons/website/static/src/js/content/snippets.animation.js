@@ -921,7 +921,7 @@ registry.socialShare = publicWidget.Widget.extend({
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
         };
-        if (!_.contains(_.keys(socialNetworks), social)) {
+        if (!_.contains(Object.keys(socialNetworks), social)) {
             return;
         }
         var wHeight = 500;

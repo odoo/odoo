@@ -16,6 +16,7 @@ import { PaymentScreenPaymentLines } from "./PaymentScreenPaymentLines";
 import { PaymentScreenStatus } from "./PaymentScreenStatus";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { Component } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 export class PaymentScreen extends Component {
     static template = "PaymentScreen";
@@ -334,7 +335,7 @@ export class PaymentScreen extends Component {
             const paymentMethod = splitPayments[0].payment_method;
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Customer Required"),
-                body: _.str.sprintf(
+                body: sprintf(
                     this.env._t("Customer is required for %s payment method."),
                     paymentMethod.name
                 ),

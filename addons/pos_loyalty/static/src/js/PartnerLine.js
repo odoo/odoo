@@ -2,6 +2,7 @@
 
 import { PartnerLine } from "@point_of_sale/js/Screens/PartnerListScreen/PartnerLine";
 import { patch } from "@web/core/utils/patch";
+import { sprintf } from "@web/core/utils/strings";
 
 patch(PartnerLine.prototype, "pos_loyalty.PartnerLine", {
     _getLoyaltyPointsRepr(loyaltyCard) {
@@ -13,6 +14,6 @@ patch(PartnerLine.prototype, "pos_loyalty.PartnerLine", {
         if (program.portal_visible) {
             return `${balanceRepr} ${program.portal_point_name}`;
         }
-        return _.str.sprintf(this.env._t("%s Points"), balanceRepr);
+        return sprintf(this.env._t("%s Points"), balanceRepr);
     },
 });

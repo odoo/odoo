@@ -3,6 +3,7 @@
 import { _t } from "web.core";
 import Widget from "web.Widget";
 import { computeScore } from "@auth_password_policy/password_policy";
+import { sprintf } from "@web/core/utils/strings";
 
 export default Widget.extend({
     tagName: "meter",
@@ -27,7 +28,7 @@ export default Widget.extend({
         );
         this.el.setAttribute(
             "title",
-            _.str.sprintf(helpMessage, String(this._required) || _t("no requirements"))
+            sprintf(helpMessage, String(this._required) || _t("no requirements"))
         );
         return this._super().then(function () {});
     },

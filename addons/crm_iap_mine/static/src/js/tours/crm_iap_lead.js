@@ -7,7 +7,7 @@ import core from "web.core";
 import "@crm/js/tours/crm";
 var _t = core._t;
 
-var DragOppToWonStepIndex = _.findIndex(registry.category("web_tour.tours").get("crm_tour").steps, function (step) {
+var DragOppToWonStepIndex = registry.category("web_tour.tours").get("crm_tour").steps.findIndex(step => {
     return (step.id === 'drag_opportunity_to_won_step');
 });
 

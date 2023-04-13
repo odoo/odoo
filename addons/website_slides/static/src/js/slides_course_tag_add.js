@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { sprintf } from '@web/core/utils/strings';
 import { _t } from 'web.core';
 import Dialog from 'web.Dialog';
 import publicWidget from 'web.public.widget';
@@ -111,7 +112,7 @@ var TagCourseDialog = Dialog.extend({
             },
             createSearchChoice: function (term, data) {
                 var addedTags = $(this.opts.element).select2('data');
-                if (_.filter(_.union(addedTags, data), function (tag) {
+                if (addedTags.concat(data).filter(tag => {
                     return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
                 }).length === 0) {
                     if (this.opts.can_create) {
@@ -119,7 +120,7 @@ var TagCourseDialog = Dialog.extend({
                             id: _.uniqueId('tag_'),
                             create: true,
                             tag: term,
-                            text: _.str.sprintf(_t("Create new %s '%s'"), tag, term),
+                            text: sprintf(_t("Create new %s '%s'"), tag, term),
                         };
                     } else {
                         return undefined;

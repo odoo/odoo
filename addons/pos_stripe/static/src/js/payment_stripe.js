@@ -5,6 +5,7 @@ import core from "web.core";
 import rpc from "web.rpc";
 import { PaymentInterface } from "@point_of_sale/js/payment";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { sprintf } from "@web/core/utils/strings";
 
 const _t = core._t;
 
@@ -48,7 +49,7 @@ export const PaymentStripe = PaymentInterface.extend({
     discoverReaders: async function () {
         const discoverResult = await this.terminal.discoverReaders({});
         if (discoverResult.error) {
-            this._showError(_.str.sprintf(_t("Failed to discover: %s"), discoverResult.error));
+            this._showError(sprintf(_t("Failed to discover: %s"), discoverResult.error));
         } else if (discoverResult.discoveredReaders.length === 0) {
             this._showError(_t("No available Stripe readers."));
         } else {
@@ -100,7 +101,7 @@ export const PaymentStripe = PaymentInterface.extend({
             }
         }
         this._showError(
-            _.str.sprintf(
+            sprintf(
                 this.env._t("Stripe readers %s not listed in your account"),
                 this.payment_method.stripe_serial_number
             )

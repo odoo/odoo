@@ -146,7 +146,7 @@ async function _getMockedOwlEnv(params, mockServer) {
             delete servicesToDeploy[serviceName];
             services[serviceName].start();
         } else {
-            const serviceNames = _.keys(servicesToDeploy);
+            const serviceNames = Object.keys(servicesToDeploy);
             if (serviceNames.length) {
                 console.warn("Non loaded services:", serviceNames);
             }

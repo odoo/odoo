@@ -12,11 +12,31 @@ import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfig
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 import { markRaw, reactive } from "@odoo/owl";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-import { escape } from "@web/core/utils/strings";
+import { escape, sprintf } from "@web/core/utils/strings";
 import { Mutex } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
+
+/* Returns an array containing all elements of the given
+ * array corresponding to the rule function {agg} and without duplicates
+ *
+ * @template T
+ * @template F
+ * @param {T[]} array
+ * @param {F} function
+ * @returns {T[]}
+ */
+export function uniqueBy(array, agg) {
+    const map = new Map();
+    for (const item of array) {
+        const key = agg(item);
+        if (!map.has(key)) {
+            map.set(key, item);
+        }
+    }
+    return [...map.values()];
+}
 
 var round_di = utils.round_decimals;
 var round_pr = utils.round_precision;
@@ -720,7 +740,7 @@ export class PosGlobalState extends PosModel {
         const pricelistsNames = pricelistsJson.map((pricelist) => {
             return pricelist.display_name;
         });
-        message = _.str.sprintf(
+        message = sprintf(
             _t("%s fiscal position(s) added to the configuration."),
             pricelistsNames.join(", ")
         );
@@ -759,7 +779,7 @@ export class PosGlobalState extends PosModel {
         const fiscalPositionNames = fiscalPositionJson.map((fp) => {
             return fp.display_name;
         });
-        message = _.str.sprintf(
+        message = sprintf(
             _t("%s fiscal position(s) added to the configuration."),
             fiscalPositionNames.join(", ")
         );
@@ -1115,7 +1135,7 @@ export class PosGlobalState extends PosModel {
                 this.orders.add(orders);
             }
 
-            report.unpaid_skipped_sessions = _.keys(skipped_sessions);
+            report.unpaid_skipped_sessions = Object.keys(skipped_sessions);
         }
 
         return report;
@@ -1394,7 +1414,7 @@ export class PosGlobalState extends PosModel {
                 }
             }
         }
-        return _.uniq(mappedTaxes, (tax) => tax.id);
+        return uniqueBy(mappedTaxes, (tax) => tax.id);
     }
 
     /**
@@ -1978,7 +1998,7 @@ export class Orderline extends PosModel {
                 } else {
                     this.pos.env.services.popup.add(ErrorPopup, {
                         title: _t("Greater than allowed"),
-                        body: _.str.sprintf(
+                        body: sprintf(
                             _t(
                                 "The requested quantity to be refunded is higher than the refundable quantity of %s."
                             ),
@@ -2377,7 +2397,7 @@ export class Orderline extends PosModel {
 
         var product = this.get_product();
         var taxes_ids = this.tax_ids || product.taxes_id;
-        taxes_ids = _.filter(taxes_ids, (t) => t in this.pos.taxes_by_id);
+        taxes_ids = taxes_ids.filter((t) => t in this.pos.taxes_by_id);
         var taxdetail = {};
         var product_taxes = this.pos.get_taxes_after_fp(taxes_ids, this.order.fiscal_position);
 
@@ -2700,7 +2720,7 @@ export class Order extends PosModel {
             this.access_token = uuidv4(); // unique uuid used to identify the authenticity of the request from the QR code.
             this.ticketCode = this._generateTicketCode(); // 5-digits alphanum code shown on the receipt
             this.uid = this.generate_unique_id();
-            this.name = _.str.sprintf(_t("Order %s"), this.uid);
+            this.name = sprintf(_t("Order %s"), this.uid);
             this.validation_date = undefined;
             this.fiscal_position = this.pos.fiscal_positions.find(function (fp) {
                 return fp.id === self.pos.config.default_fiscal_position_id[0];
@@ -2737,7 +2757,7 @@ export class Order extends PosModel {
         }
         this.session_id = this.pos.pos_session.id;
         this.uid = json.uid;
-        this.name = _.str.sprintf(_t("Order %s"), this.uid);
+        this.name = sprintf(_t("Order %s"), this.uid);
         this.validation_date = json.creation_date;
         this.server_id = json.server_id ? json.server_id : false;
         this.user_id = json.user_id;
@@ -3139,9 +3159,7 @@ export class Order extends PosModel {
         var self = this;
         this.pricelist = pricelist;
 
-        var lines_to_recompute = _.filter(this.get_orderlines(), function (line) {
-            return !line.price_manually_set;
-        });
+        var lines_to_recompute = this.get_orderlines().filter((line) => !line.price_manually_set);
         _.each(lines_to_recompute, function (line) {
             line.set_unit_price(
                 line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra())

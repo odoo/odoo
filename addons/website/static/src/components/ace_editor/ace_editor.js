@@ -36,7 +36,7 @@ export const WebsiteAceEditor = AceEditor.extend({
                 // We need to find the new ID (either because the view became
                 // specific or because its parent was edited too and the view
                 // got copy/unlink).
-                const selectedView = _.findWhere(this.views, {id: this._getSelectedResource()});
+                const selectedView = Object.values(this.views).find(view => view.id === this._getSelectedResource());
                 let context;
                 this.trigger_up('context_get', {
                     callback: (ctx) => {

@@ -10,6 +10,7 @@
     import SearchBar from "web.SearchBar";
     import { useModel } from "web.Model";
     import { LegacyComponent } from "@web/legacy/legacy_component";
+import { sprintf } from "@web/core/utils/strings";
 
     const {
         onMounted,
@@ -132,7 +133,7 @@
 
             this.fields = this._formatFields(toRaw(this.props.fields || {}));
 
-            this.sprintf = _.str.sprintf;
+            this.sprintf = sprintf;
 
             onWillDestroy(() => {
                 const content = this.props.cp_content;

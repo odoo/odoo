@@ -52,7 +52,7 @@ var SelectBox = publicWidget.Widget.extend({
                 if (self._objectExists(term)) {
                     return null;
                 }
-                return {id: term, text: _.str.sprintf("Create '%s'", term)};
+                return { id: term, text: `Create '${term}'` };
             },
             createSearchChoicePosition: 'bottom',
             multiple: false,

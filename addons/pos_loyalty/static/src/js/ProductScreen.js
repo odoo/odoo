@@ -5,6 +5,7 @@ import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { useService } from "@web/core/utils/hooks";
+import { sprintf } from "@web/core/utils/strings";
 
 patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
     setup() {
@@ -43,7 +44,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             const reward = this.env.pos.reward_by_id[selectedLine.reward_id];
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Deactivating reward"),
-                body: _.str.sprintf(
+                body: sprintf(
                     this.env._t(
                         "Are you sure you want to remove %s from this order?\n You will still be able to claim it through the reward button."
                     ),
