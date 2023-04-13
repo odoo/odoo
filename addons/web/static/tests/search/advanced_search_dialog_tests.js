@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { Component, xml } from "@odoo/owl";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     click,
     editInput,
@@ -10,6 +9,10 @@ import {
     patchDate,
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
+import { browser } from "@web/core/browser/browser";
+import { fieldService } from "@web/core/field_service";
+import { registry } from "@web/core/registry";
+import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     editFavoriteName,
     getFacetTexts,
@@ -26,10 +29,6 @@ import {
     toggleMenuItemOption,
     toggleSaveFavorite,
 } from "./helpers";
-import { browser } from "@web/core/browser/browser";
-import { registry } from "@web/core/registry";
-import { popoverService } from "@web/core/popover/popover_service";
-import { fieldService } from "@web/core/field_service";
 
 async function makeTestComponent(props) {
     class TestComponent extends Component {
@@ -142,13 +141,12 @@ QUnit.module("Search", (hooks) => {
                         <filter name="date_filter" string="Date Filter" date="date_field"/>
                         <filter name="simple_group_by" string="Simple GroupBy" context="{'group_by': 'boolean_field'}"/>
                         <filter name="date_group_by" string="Date GroupBy" context="{'group_by': 'date_time_field'}"/>
-                    </search>    
+                    </search>
                 `,
             },
         };
         setupControlPanelServiceRegistry();
         setupControlPanelFavoriteMenuRegistry();
-        registry.category("services").add("popover", popoverService);
         registry.category("services").add("field", fieldService);
         target = getFixture();
         patchWithCleanup(browser, {

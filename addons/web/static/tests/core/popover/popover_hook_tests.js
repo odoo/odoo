@@ -7,6 +7,8 @@ import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { destroy, getFixture, mount, nextTick } from "../../helpers/utils";
 
 import { Component, xml } from "@odoo/owl";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { makeFakeLocalizationService } from "../../helpers/mock_services";
 
 let env;
 let target;
@@ -34,7 +36,11 @@ PseudoWebClient.template = xml`
 QUnit.module("Popover hook", {
     async beforeEach() {
         clearRegistryWithCleanup(mainComponents);
-        registry.category("services").add("popover", popoverService);
+        registry
+            .category("services")
+            .add("popover", popoverService)
+            .add("localization", makeFakeLocalizationService())
+            .add("hotkey", hotkeyService);
         target = getFixture();
         env = await makeTestEnv();
         await mount(PseudoWebClient, target, { env });

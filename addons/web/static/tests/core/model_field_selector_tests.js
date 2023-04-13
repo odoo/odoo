@@ -1,6 +1,17 @@
 /** @odoo-module **/
 
+import { Component, useState, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
+import { fieldService } from "@web/core/field_service";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
+import { MainComponentsContainer } from "@web/core/main_components_container";
+import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
+import { ormService } from "@web/core/orm_service";
+import { popoverService } from "@web/core/popover/popover_service";
+import { registry } from "@web/core/registry";
+import { uiService } from "@web/core/ui/ui_service";
+import { makeTestEnv } from "../helpers/mock_env";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
 import {
     click,
     editInput,
@@ -11,16 +22,6 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
-import { Component, useState, xml } from "@odoo/owl";
-import { fieldService } from "@web/core/field_service";
-import { MainComponentsContainer } from "@web/core/main_components_container";
-import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { makeTestEnv } from "../helpers/mock_env";
-import { ModelFieldSelector } from "@web/core/model_field_selector/model_field_selector";
-import { ormService } from "@web/core/orm_service";
-import { popoverService } from "@web/core/popover/popover_service";
-import { registry } from "@web/core/registry";
-import { uiService } from "@web/core/ui/ui_service";
 
 let target;
 let serverData;
@@ -123,6 +124,7 @@ QUnit.module("Components", (hooks) => {
         registry.category("services").add("localization", makeFakeLocalizationService());
         registry.category("services").add("ui", uiService);
         registry.category("services").add("field", fieldService);
+        registry.category("services").add("hotkey", hotkeyService);
 
         target = getFixture();
     });

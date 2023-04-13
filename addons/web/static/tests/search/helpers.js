@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import {
     click,
@@ -10,12 +11,12 @@ import {
     nextTick,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { Component, xml } from "@odoo/owl";
 import { commandService } from "@web/core/commands/command_service";
+import { dialogService } from "@web/core/dialog/dialog_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { notificationService } from "@web/core/notifications/notification_service";
 import { ormService } from "@web/core/orm_service";
+import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
 import { WithSearch } from "@web/search/with_search/with_search";
@@ -33,6 +34,7 @@ export function setupControlPanelServiceRegistry() {
     serviceRegistry.add("hotkey", hotkeyService);
     serviceRegistry.add("notification", notificationService);
     serviceRegistry.add("orm", ormService);
+    serviceRegistry.add("popover", popoverService);
     serviceRegistry.add("view", viewService);
     serviceRegistry.add("command", commandService);
 }

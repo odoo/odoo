@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
+import { App, Component, useState, xml } from "@odoo/owl";
+import { templates } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { popoverService } from "@web/core/popover/popover_service";
-import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { registry } from "@web/core/registry";
-import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
-import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
+import { tooltipService } from "@web/core/tooltip/tooltip_service";
 import { registerCleanup } from "../../helpers/cleanup";
+import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
 import { makeFakeLocalizationService } from "../../helpers/mock_services";
-import { templates } from "@web/core/assets";
-
-import { App, Component, useState, xml } from "@odoo/owl";
+import { getFixture, nextTick, patchWithCleanup, triggerEvent } from "../../helpers/utils";
 
 const mainComponents = registry.category("main_components");
 
@@ -49,6 +49,7 @@ export async function makeParent(Child, options = {}) {
     registry.category("services").add("popover", popoverService);
     registry.category("services").add("tooltip", tooltipService);
     registry.category("services").add("localization", makeFakeLocalizationService());
+    registry.category("services").add("hotkey", hotkeyService, { force: true });
     let env = await makeTestEnv();
     if (options.extraEnv) {
         env = Object.create(env, Object.getOwnPropertyDescriptors(options.extraEnv));

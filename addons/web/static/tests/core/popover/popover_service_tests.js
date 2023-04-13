@@ -1,11 +1,12 @@
 /** @odoo-module **/
 
+import { Component, xml } from "@odoo/owl";
+import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { clearRegistryWithCleanup, makeTestEnv } from "../../helpers/mock_env";
-import { click, getFixture, mount, nextTick } from "../../helpers/utils";
-
-import { Component, xml } from "@odoo/owl";
+import { makeFakeLocalizationService } from "../../helpers/mock_services";
+import { click, getFixture, mount, nextTick, triggerEvent } from "../../helpers/utils";
 
 let env;
 let fixture;
@@ -35,7 +36,11 @@ PseudoWebClient.template = xml`
 QUnit.module("Popover service", {
     async beforeEach() {
         clearRegistryWithCleanup(mainComponents);
-        registry.category("services").add("popover", popoverService);
+        registry
+            .category("services")
+            .add("popover", popoverService)
+            .add("localization", makeFakeLocalizationService())
+            .add("hotkey", hotkeyService);
 
         fixture = getFixture();
         env = await makeTestEnv();
@@ -75,6 +80,22 @@ QUnit.test("close on click away", async (assert) => {
     assert.containsOnce(fixture, ".o_popover #comp");
 
     await click(fixture, "#close");
+
+    assert.containsNone(fixture, ".o_popover");
+    assert.containsNone(fixture, ".o_popover #comp");
+});
+
+QUnit.test("close on 'Escape' keydown", async (assert) => {
+    class Comp extends Component {}
+    Comp.template = xml`<div id="comp">in popover</div>`;
+
+    popovers.add(popoverTarget, Comp, {});
+    await nextTick();
+
+    assert.containsOnce(fixture, ".o_popover");
+    assert.containsOnce(fixture, ".o_popover #comp");
+
+    await triggerEvent(fixture, null, "keydown", { key: "Escape" });
 
     assert.containsNone(fixture, ".o_popover");
     assert.containsNone(fixture, ".o_popover #comp");
