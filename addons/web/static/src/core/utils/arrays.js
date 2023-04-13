@@ -54,6 +54,14 @@ function _getExtractorFrom(criterion) {
 }
 
 /**
+ * @template T
+ * @param {T | T[]} value
+ */
+export function ensureArray(value) {
+    return value && typeof value === "object" && value[Symbol.iterator] ? [...value] : [value];
+}
+
+/**
  * Returns the array of elements contained in both arrays.
  *
  * @template T
