@@ -114,88 +114,88 @@
     const BACKGROUND_HEADER_FILTER_COLOR = "#E6F4EA";
     const BACKGROUND_HEADER_SELECTED_FILTER_COLOR = "#CEEAD6";
     const SEPARATOR_COLOR = "#E0E2E4";
-    // Color picker
+    // Color picker defaults as upper case HEX to match `toHex`helper
     const COLOR_PICKER_DEFAULTS = [
         "#000000",
         "#434343",
         "#666666",
         "#999999",
-        "#b7b7b7",
-        "#cccccc",
-        "#d9d9d9",
-        "#efefef",
-        "#f3f3f3",
-        "#ffffff",
+        "#B7B7B7",
+        "#CCCCCC",
+        "#D9D9D9",
+        "#EFEFEF",
+        "#F3F3F3",
+        "#FFFFFF",
         "#980000",
-        "#ff0000",
-        "#ff9900",
-        "#ffff00",
-        "#00ff00",
-        "#00ffff",
-        "#4a86e8",
-        "#0000ff",
-        "#9900ff",
-        "#ff00ff",
-        "#e6b8af",
-        "#f4cccc",
-        "#fce5cd",
-        "#fff2cc",
-        "#d9ead3",
-        "#d0e0e3",
-        "#c9daf8",
-        "#cfe2f3",
-        "#d9d2e9",
-        "#ead1dc",
-        "#dd7e6b",
-        "#ea9999",
-        "#f9cb9c",
-        "#ffe599",
-        "#b6d7a8",
-        "#a2c4c9",
-        "#a4c2f4",
-        "#9fc5e8",
-        "#b4a7d6",
-        "#d5a6bd",
-        "#cc4125",
-        "#e06666",
-        "#f6b26b",
-        "#ffd966",
-        "#93c47d",
-        "#76a5af",
-        "#6d9eeb",
-        "#6fa8dc",
-        "#8e7cc3",
-        "#c27ba0",
-        "#a61c00",
-        "#cc0000",
-        "#e69138",
-        "#f1c232",
-        "#6aa84f",
-        "#45818e",
-        "#3c78d8",
-        "#3d85c6",
-        "#674ea7",
-        "#a64d79",
-        "#85200c",
+        "#FF0000",
+        "#FF9900",
+        "#FFFF00",
+        "#00FF00",
+        "#00FFFF",
+        "#4A86E8",
+        "#0000FF",
+        "#9900FF",
+        "#FF00FF",
+        "#E6B8AF",
+        "#F4CCCC",
+        "#FCE5CD",
+        "#FFF2CC",
+        "#D9EAD3",
+        "#D0E0E3",
+        "#C9DAF8",
+        "#CFE2F3",
+        "#D9D2E9",
+        "#EAD1DC",
+        "#DD7E6B",
+        "#EA9999",
+        "#F9CB9C",
+        "#FFE599",
+        "#B6D7A8",
+        "#A2C4C9",
+        "#A4C2F4",
+        "#9FC5E8",
+        "#B4A7D6",
+        "#D5A6BD",
+        "#CC4125",
+        "#E06666",
+        "#F6B26B",
+        "#FFD966",
+        "#93C47D",
+        "#76A5AF",
+        "#6D9EEB",
+        "#6FA8DC",
+        "#8E7CC3",
+        "#C27BA0",
+        "#A61C00",
+        "#CC0000",
+        "#E69138",
+        "#F1C232",
+        "#6AA84F",
+        "#45818E",
+        "#3C78D8",
+        "#3D85C6",
+        "#674EA7",
+        "#A64D79",
+        "#85200C",
         "#990000",
-        "#b45f06",
-        "#bf9000",
-        "#38761d",
-        "#134f5c",
-        "#1155cc",
-        "#0b5394",
-        "#351c75",
-        "#741b47",
-        "#5b0f00",
+        "#B45F06",
+        "#BF9000",
+        "#38761D",
+        "#134F5C",
+        "#1155CC",
+        "#0B5394",
+        "#351C75",
+        "#741B47",
+        "#5B0F00",
         "#660000",
-        "#783f04",
-        "#7f6000",
-        "#274e13",
-        "#0c343d",
-        "#1c4587",
+        "#783F04",
+        "#7F6000",
+        "#274E13",
+        "#0C343D",
+        "#1C4587",
         "#073763",
-        "#20124d",
-        "#4c1130",
+        "#20124D",
+        "#4C1130",
     ];
     // Dimensions
     const MIN_ROW_HEIGHT = 10;
@@ -224,7 +224,6 @@
     const MENU_ITEM_HEIGHT = 28;
     const MENU_SEPARATOR_BORDER_WIDTH = 1;
     const MENU_SEPARATOR_PADDING = 5;
-    const MENU_SEPARATOR_HEIGHT = MENU_SEPARATOR_BORDER_WIDTH + 2 * MENU_SEPARATOR_PADDING;
     // Fonts
     const DEFAULT_FONT_WEIGHT = "400";
     const DEFAULT_FONT_SIZE = 10;
@@ -234,7 +233,7 @@
     const DEFAULT_BORDER_DESC = ["thin", "#000"];
     const DEFAULT_FILTER_BORDER_DESC = ["thin", FILTERS_COLOR];
     // DateTimeRegex
-    const DATETIME_FORMAT = /[ymd:]/;
+    const DATETIME_FORMAT = /[ymdhs:]/;
     // Ranges
     const INCORRECT_RANGE_STRING = CellErrorType.InvalidReference;
     // Max Number of history steps kept in memory
@@ -272,11 +271,12 @@
         ComponentsImportance[ComponentsImportance["Highlight"] = 5] = "Highlight";
         ComponentsImportance[ComponentsImportance["Figure"] = 10] = "Figure";
         ComponentsImportance[ComponentsImportance["ScrollBar"] = 15] = "ScrollBar";
-        ComponentsImportance[ComponentsImportance["Dropdown"] = 16] = "Dropdown";
+        ComponentsImportance[ComponentsImportance["GridPopover"] = 19] = "GridPopover";
         ComponentsImportance[ComponentsImportance["GridComposer"] = 20] = "GridComposer";
-        ComponentsImportance[ComponentsImportance["TopBarComposer"] = 21] = "TopBarComposer";
+        ComponentsImportance[ComponentsImportance["Dropdown"] = 21] = "Dropdown";
         ComponentsImportance[ComponentsImportance["IconPicker"] = 25] = "IconPicker";
-        ComponentsImportance[ComponentsImportance["Popover"] = 30] = "Popover";
+        ComponentsImportance[ComponentsImportance["TopBarComposer"] = 30] = "TopBarComposer";
+        ComponentsImportance[ComponentsImportance["Popover"] = 35] = "Popover";
         ComponentsImportance[ComponentsImportance["FigureAnchor"] = 1000] = "FigureAnchor";
         ComponentsImportance[ComponentsImportance["FigureSnapLine"] = 1001] = "FigureSnapLine";
     })(ComponentsImportance || (ComponentsImportance = {}));
@@ -715,7 +715,7 @@
      * '\w' captures [0-9][a-z][A-Z] and _.
      * @param sheetName Name of the sheet
      */
-    function getComposerSheetName(sheetName) {
+    function getCanonicalSheetName(sheetName) {
         var _a;
         if (((_a = sheetName.match(/\w/g)) === null || _a === void 0 ? void 0 : _a.length) !== sheetName.length) {
             sheetName = `'${sheetName}'`;
@@ -736,8 +736,9 @@
             return DEFAULT_CELL_HEIGHT;
         }
         const fontSize = computeTextFontSizeInPixels(cell.style);
-        const multiLineText = cell.content.split(NEWLINE);
-        return computeTextLinesHeight(fontSize, multiLineText.length) + 2 * PADDING_AUTORESIZE_VERTICAL;
+        // the number of lines should be computed from the formula result, but it's not evaluated at this point
+        const numberOfLines = cell.isFormula ? 1 : cell.content.split(NEWLINE).length;
+        return computeTextLinesHeight(fontSize, numberOfLines) + 2 * PADDING_AUTORESIZE_VERTICAL;
     }
     function computeTextWidth(context, text, style) {
         context.save();
@@ -1089,6 +1090,8 @@
         return text;
     }
 
+    const RBA_REGEX = /rgba?\(|\s+|\)/gi;
+    const HEX_MATCH = /^#([A-F\d]{2}){3,4}$/g;
     const colors$1 = [
         "#eb6d00",
         "#0074d9",
@@ -1114,7 +1117,10 @@
     }
     /**
      * Converts any CSS color value to a standardized hex6 value.
-     * Accepts: hex3, hex6, hex8 and rgb (rgba is not supported)
+     * Accepts: hex3, hex6, hex8, rgb[1] and rgba[1].
+     *
+     * [1] under the form rgb(r, g, b, a?) or rgba(r, g, b, a?)
+     * with r,g,b ∈ [0, 255] and a ∈ [0, 1]
      *
      * toHex("#ABC")
      * >> "#AABBCC"
@@ -1125,27 +1131,31 @@
      * toHex("rgb(30, 80, 16)")
      * >> "#1E5010"
      *
+     *  * toHex("rgb(30, 80, 16, 0.5)")
+     * >> "#1E501080"
+     *
      */
     function toHex(color) {
-        if (color.includes("rgba")) {
-            throw new Error(`rgba() conversion currently not supported: ${color}`);
+        let hexColor = color;
+        if (color.startsWith("rgb")) {
+            hexColor = rgbaStringToHex(color);
         }
-        if (color.includes("rgb")) {
-            return rgbToHex6(color);
+        else {
+            hexColor = color.replace("#", "").toUpperCase();
+            if (hexColor.length === 3 || hexColor.length === 4) {
+                hexColor = hexColor.split("").reduce((acc, h) => acc + h + h, "");
+            }
+            hexColor = `#${hexColor}`;
         }
-        color = color.replace("#", "").toUpperCase();
-        if (color.length === 3 || color.length === 4) {
-            color = color.split("").reduce((acc, h) => acc + h + h, "");
+        if (!hexColor.match(HEX_MATCH)) {
+            throw new Error(`invalid color input: ${color}`);
         }
-        if (color.replace(/[a-f0-9]/gi, "") !== "") {
-            throw new Error("invalid color");
-        }
-        return "#" + color;
+        return hexColor;
     }
     function isColorValid(color) {
         try {
-            const { r, g, b, a } = colorToRGBA(color);
-            return (isColorValueValid(r) && isColorValueValid(g) && isColorValueValid(b) && isColorValueValid(a));
+            toHex(color);
+            return true;
         }
         catch (error) {
             return false;
@@ -1178,15 +1188,29 @@
     /**
      * Convert a CSS rgb color string to a standardized hex6 color value.
      *
-     * rgbToHex6("rgb(30, 80, 16)")
+     * rgbaStringToHex("rgb(30, 80, 16)")
      * >> "#1E5010"
+     *
+     * rgbaStringToHex("rgba(30, 80, 16, 0.5)")
+     * >> "#1E501080"
+     *
+     * DOES NOT SUPPORT NON INTEGER RGB VALUES
      */
-    function rgbToHex6(color) {
-        return ("#" +
-            concat(color
-                .slice(4, -1)
-                .split(",")
-                .map((valueString) => parseInt(valueString, 10).toString(16).padStart(2, "0"))).toUpperCase());
+    function rgbaStringToHex(color) {
+        const stringVals = color.replace(RBA_REGEX, "").split(",");
+        let alphaHex = 255;
+        if (stringVals.length !== 3 && stringVals.length !== 4) {
+            throw new Error("invalid color");
+        }
+        else if (stringVals.length === 4) {
+            const alpha = parseFloat(stringVals.pop() || "1");
+            alphaHex = Math.round((alpha || 1) * 255);
+        }
+        const vals = stringVals.map((val) => parseInt(val, 10));
+        if (alphaHex !== 255) {
+            vals.push(alphaHex);
+        }
+        return "#" + concat(vals.map((value) => value.toString(16).padStart(2, "0"))).toUpperCase();
     }
     /**
      * RGBA to HEX representation (#RRGGBBAA).
@@ -1208,7 +1232,7 @@
             a = "0" + a;
         if (a === "ff")
             a = "";
-        return "#" + r + g + b + a;
+        return ("#" + r + g + b + a).toUpperCase();
     }
     /**
      * Color string to RGBA representation
@@ -1329,6 +1353,9 @@
         s = +(s * 100).toFixed(1);
         l = +(l * 100).toFixed(1);
         return { a: rgba.a, h, s, l };
+    }
+    function isSameColor(color1, color2) {
+        return isColorValid(color1) && isColorValid(color2) && toHex(color1) === toHex(color2);
     }
 
     /** Reference of a cell (eg. A1, $B$5) */
@@ -1480,7 +1507,7 @@
      *   formula, commas are used to separate arguments
      * - it does not support % symbol, in formulas % is an operator
      */
-    const formulaNumberRegexp = /^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+/;
+    const formulaNumberRegexp = /(^-?\d+(\.?\d*(e\d+)?)?|^-?\.\d+)(?!\w|!)/;
     const pIntegerAndDecimals = "(\\d+(,\\d{3,})*(\\.\\d*)?)"; // pattern that match integer number with or without decimal digits
     const pOnlyDecimals = "(\\.\\d+)"; // pattern that match only expression with decimal digits
     const pScientificFormat = "(e(\\+|-)?\\d+)?"; // pattern that match scientific format between zero and one time (should be placed before pPercentFormat)
@@ -3089,6 +3116,7 @@
     const LINE_HEIGHT = 1.2;
     css /* scss */ `
   div.o-scorecard {
+    font-family: ${DEFAULT_FONT};
     user-select: none;
     background-color: white;
     display: flex;
@@ -5155,6 +5183,11 @@
                 this.currentPosition = newPosition;
             });
         }
+        get popoverStyle() {
+            return cssPropertiesToCss({
+                "z-index": `${this.props.zIndex}`,
+            });
+        }
     }
     Popover.template = "o-spreadsheet-Popover";
     Popover.defaultProps = {
@@ -5163,6 +5196,7 @@
         onMouseWheel: () => { },
         onPopoverMoved: () => { },
         onPopoverHidden: () => { },
+        zIndex: ComponentsImportance.Popover,
     };
     Popover.props = {
         anchorRect: Object,
@@ -5174,6 +5208,7 @@
         onMouseWheel: { type: Function, optional: true },
         onPopoverHidden: { type: Function, optional: true },
         onPopoverMoved: { type: Function, optional: true },
+        zIndex: { type: Number, optional: true },
         slots: Object,
     };
     class PopoverPositionContext {
@@ -5376,23 +5411,29 @@
                 }
             });
         }
-        get visibleMenuItems() {
-            return this.props.menuItems.filter((x) => x.isVisible(this.env));
+        get menuItemsAndSeparators() {
+            const menuItemsAndSeparators = [];
+            for (let i = 0; i < this.props.menuItems.length; i++) {
+                const menuItem = this.props.menuItems[i];
+                if (menuItem.isVisible(this.env)) {
+                    menuItemsAndSeparators.push(menuItem);
+                }
+                if (menuItem.separator &&
+                    i !== this.props.menuItems.length - 1 && // no separator at the end
+                    menuItemsAndSeparators[menuItemsAndSeparators.length - 1] !== "separator" // no double separator
+                ) {
+                    menuItemsAndSeparators.push("separator");
+                }
+            }
+            if (menuItemsAndSeparators.length === 1 && menuItemsAndSeparators[0] === "separator") {
+                return [];
+            }
+            return menuItemsAndSeparators;
         }
         get subMenuPosition() {
             const position = Object.assign({}, this.subMenu.position);
             position.y -= this.subMenu.scrollOffset || 0;
             return position;
-        }
-        get menuHeight() {
-            const menuItems = this.visibleMenuItems;
-            let menuItemsHeight = this.getMenuItemsHeight(menuItems);
-            // We don't display separator at the end of a menu
-            if (menuItems[menuItems.length - 1].separator) {
-                menuItemsHeight -= MENU_SEPARATOR_HEIGHT;
-            }
-            const menuHeight = 2 * MENU_VERTICAL_PADDING + menuItemsHeight;
-            return this.props.maxHeight ? Math.min(menuHeight, this.props.maxHeight) : menuHeight;
         }
         get popoverProps() {
             const isRoot = this.props.depth === 1;
@@ -5407,7 +5448,6 @@
                 verticalOffset: isRoot ? 0 : MENU_VERTICAL_PADDING,
                 onPopoverHidden: () => this.closeSubMenu(),
                 onPopoverMoved: () => this.closeSubMenu(),
-                maxHeight: this.menuHeight,
             };
         }
         getColor(menu) {
@@ -5423,14 +5463,6 @@
             this.closeSubMenu();
             this.props.onClose();
         }
-        /**
-         * Return the number of pixels between the top of the menu
-         * and the menu item at a given index.
-         */
-        subMenuVerticalPosition(menuIndex) {
-            const menusAbove = this.visibleMenuItems.slice(0, menuIndex);
-            return this.position.y + this.getMenuItemsHeight(menusAbove) + MENU_VERTICAL_PADDING;
-        }
         onExternalClick(ev) {
             // Don't close a root menu when clicked to open the submenus.
             const el = this.menuRef.el;
@@ -5439,10 +5471,6 @@
             }
             ev.closedMenuId = this.props.menuId;
             this.close();
-        }
-        getMenuItemsHeight(menuItems) {
-            const numberOfSeparators = menuItems.filter((m) => m.separator).length;
-            return MENU_ITEM_HEIGHT * menuItems.length + MENU_SEPARATOR_HEIGHT * numberOfSeparators;
         }
         getName(menu) {
             return menu.name(this.env);
@@ -5463,8 +5491,11 @@
          * If the given menu is not disabled, open it's submenu at the
          * correct position according to available surrounding space.
          */
-        openSubMenu(menu, menuIndex) {
-            const y = this.subMenuVerticalPosition(menuIndex);
+        openSubMenu(menu, menuIndex, ev) {
+            const parentMenuEl = ev.currentTarget;
+            if (!parentMenuEl)
+                return;
+            const y = parentMenuEl.getBoundingClientRect().top;
             this.subMenu.position = {
                 x: this.position.x + this.props.depth * MENU_WIDTH,
                 y: y - (this.subMenu.scrollOffset || 0),
@@ -5481,20 +5512,20 @@
             this.subMenu.isOpen = false;
             this.subMenu.parentMenu = undefined;
         }
-        onClickMenu(menu, menuIndex) {
+        onClickMenu(menu, menuIndex, ev) {
             if (this.isEnabled(menu)) {
                 if (this.isRoot(menu)) {
-                    this.openSubMenu(menu, menuIndex);
+                    this.openSubMenu(menu, menuIndex, ev);
                 }
                 else {
                     this.activateMenu(menu);
                 }
             }
         }
-        onMouseOver(menu, position) {
+        onMouseOver(menu, position, ev) {
             if (menu.isEnabled(this.env)) {
                 if (this.isRoot(menu)) {
-                    this.openSubMenu(menu, position);
+                    this.openSubMenu(menu, position, ev);
                 }
                 else {
                     this.closeSubMenu();
@@ -6071,8 +6102,8 @@
         const dataSets = [];
         for (const sheetXC of dataSetsString) {
             const dataRange = getters.getRangeFromSheetXC(sheetId, sheetXC);
-            const { unboundedZone: zone, sheetId: dataSetSheetId, invalidSheetName } = dataRange;
-            if (invalidSheetName) {
+            const { unboundedZone: zone, sheetId: dataSetSheetId, invalidSheetName, invalidXc } = dataRange;
+            if (invalidSheetName || invalidXc) {
                 continue;
             }
             // It's a rectangle. We treat all columns (arbitrary) as different data series.
@@ -6097,14 +6128,8 @@
                         : undefined));
                 }
             }
-            else if (zone.left === zone.right && zone.top === zone.bottom) {
-                // A single cell. If it's only the title, the dataset is not added.
-                if (!dataSetsHaveTitle) {
-                    dataSets.push(createDataSet(getters, dataSetSheetId, zone, undefined));
-                }
-            }
             else {
-                /* 1 row or 1 column */
+                /* 1 cell, 1 row or 1 column */
                 dataSets.push(createDataSet(getters, dataSetSheetId, zone, dataSetsHaveTitle
                     ? {
                         top: zone.top,
@@ -6157,6 +6182,18 @@
             label: ds.labelCell ? getters.getRangeString(ds.labelCell, "forceSheetReference") : undefined,
             range: getters.getRangeString(dataRange, "forceSheetReference"),
         };
+    }
+    function toExcelLabelRange(getters, labelRange, shouldRemoveFirstLabel) {
+        if (!labelRange)
+            return undefined;
+        let zone = {
+            ...labelRange.zone,
+        };
+        if (shouldRemoveFirstLabel && labelRange.zone.bottom > labelRange.zone.top) {
+            zone.top = zone.top + 1;
+        }
+        const range = labelRange.clone({ zone });
+        return getters.getRangeString(range, "forceSheetReference");
     }
     /**
      * Transform a chart definition which supports dataSets (dataSets and LabelRange)
@@ -6241,6 +6278,20 @@
             }
         }
         return 0 /* CommandResult.Success */;
+    }
+    function shouldRemoveFirstLabel(labelRange, dataset, dataSetsHaveTitle) {
+        if (!dataSetsHaveTitle)
+            return false;
+        if (!labelRange)
+            return false;
+        if (!dataset)
+            return true;
+        const datasetLength = getZoneArea(dataset.dataRange.zone);
+        const labelLength = getZoneArea(labelRange.zone);
+        if (labelLength < datasetLength) {
+            return false;
+        }
+        return true;
     }
     // ---------------------------------------------------------------------------
     // Scorecard
@@ -6611,6 +6662,7 @@
             this.legendPosition = definition.legendPosition;
             this.stacked = definition.stacked;
             this.aggregated = definition.aggregated;
+            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
         }
         static transformDefinition(definition, executed) {
             return transformChartDefinitionWithDataSetsWithZone(definition, executed);
@@ -6678,11 +6730,13 @@
             const dataSets = this.dataSets
                 .map((ds) => toExcelDataset(this.getters, ds))
                 .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
             return {
                 ...this.getDefinition(),
                 backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
                 fontColor: toXlsxHexColor(chartFontColor(this.background)),
                 dataSets,
+                labelRange,
             };
         }
         updateRanges(applyChange) {
@@ -6750,6 +6804,11 @@
         const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
         let labels = labelValues.formattedValues;
         let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        if (chart.dataSetsHaveTitle &&
+            dataSetsValues[0] &&
+            labels.length > dataSetsValues[0].data.length) {
+            labels.shift();
+        }
         ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
         if (chart.aggregated) {
             ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
@@ -7172,6 +7231,7 @@
             this.labelsAsText = definition.labelsAsText;
             this.stacked = definition.stacked;
             this.aggregated = definition.aggregated;
+            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
         }
         static validateChartDefinition(validator, definition) {
             return validator.checkValidations(definition, checkDataset, checkLabelRange);
@@ -7239,11 +7299,13 @@
             const dataSets = this.dataSets
                 .map((ds) => toExcelDataset(this.getters, ds))
                 .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
             return {
                 ...this.getDefinition(),
                 backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
                 fontColor: toXlsxHexColor(chartFontColor(this.background)),
                 dataSets,
+                labelRange,
             };
         }
         copyForSheetId(sheetId) {
@@ -7381,6 +7443,11 @@
         const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
         let labels = axisType === "linear" ? labelValues.values : labelValues.formattedValues;
         let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        if (chart.dataSetsHaveTitle &&
+            dataSetsValues[0] &&
+            labels.length > dataSetsValues[0].data.length) {
+            labels.shift();
+        }
         ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
         if (axisType === "time") {
             ({ labels, dataSetsValues } = fixEmptyLabelsForDateCharts(labels, dataSetsValues));
@@ -7439,6 +7506,7 @@
             this.background = definition.background;
             this.legendPosition = definition.legendPosition;
             this.aggregated = definition.aggregated;
+            this.dataSetsHaveTitle = definition.dataSetsHaveTitle;
         }
         static transformDefinition(definition, executed) {
             return transformChartDefinitionWithDataSetsWithZone(definition, executed);
@@ -7502,12 +7570,14 @@
             const dataSets = this.dataSets
                 .map((ds) => toExcelDataset(this.getters, ds))
                 .filter((ds) => ds.range !== ""); // && range !== INCORRECT_RANGE_STRING ? show incorrect #ref ?
+            const labelRange = toExcelLabelRange(this.getters, this.labelRange, shouldRemoveFirstLabel(this.labelRange, this.dataSets[0], this.dataSetsHaveTitle));
             return {
                 ...this.getDefinition(),
                 backgroundColor: toXlsxHexColor(this.background || BACKGROUND_CHART_COLOR),
                 fontColor: toXlsxHexColor(chartFontColor(this.background)),
                 verticalAxisPosition: "left",
                 dataSets,
+                labelRange,
             };
         }
         updateRanges(applyChange) {
@@ -7553,6 +7623,11 @@
         const labelValues = getChartLabelValues(getters, chart.dataSets, chart.labelRange);
         let labels = labelValues.formattedValues;
         let dataSetsValues = getChartDatasetValues(getters, chart.dataSets);
+        if (chart.dataSetsHaveTitle &&
+            dataSetsValues[0] &&
+            labels.length > dataSetsValues[0].data.length) {
+            labels.shift();
+        }
         ({ labels, dataSetsValues } = filterEmptyDataPoints(labels, dataSetsValues));
         if (chart.aggregated) {
             ({ labels, dataSetsValues } = aggregateDataForLabels(labels, dataSetsValues));
@@ -8188,7 +8263,6 @@
             labelRangeXc = zoneToXc({
                 ...zone,
                 right: zone.left,
-                top: dataSetsHaveTitle ? zone.top + 1 : zone.top,
             });
         }
         // Only display legend for several datasets.
@@ -15106,7 +15180,7 @@
                 cellReference = rowPart + colPart;
             }
             if (sheet !== undefined) {
-                return `${getComposerSheetName(toString(sheet))}!${cellReference}`;
+                return `${getCanonicalSheetName(toString(sheet))}!${cellReference}`;
             }
             return cellReference;
         },
@@ -16931,6 +17005,22 @@
                 aggregated: ev.target.checked,
             });
         }
+        calculateHeaderPosition() {
+            if (this.isDatasetInvalid || this.isLabelInvalid) {
+                return undefined;
+            }
+            const getters = this.env.model.getters;
+            const sheetId = getters.getActiveSheetId();
+            const labelRange = createRange(getters, sheetId, this.labelRange);
+            const dataSets = createDataSets(getters, this.dataSeriesRanges, sheetId, this.props.definition.dataSetsHaveTitle);
+            if (dataSets.length) {
+                return dataSets[0].dataRange.zone.top + 1;
+            }
+            else if (labelRange) {
+                return labelRange.zone.top + 1;
+            }
+            return undefined;
+        }
     }
     LineBarPieConfigPanel.template = "o-spreadsheet-LineBarPieConfigPanel";
     LineBarPieConfigPanel.components = { SelectionInput };
@@ -17177,6 +17267,9 @@
                 left,
                 top,
             });
+        }
+        isSameColor(color1, color2) {
+            return isSameColor(color1, color2);
         }
     }
     ColorPicker.template = "o-spreadsheet-ColorPicker";
@@ -19419,6 +19512,8 @@
                         start = 0;
                     if (end > textLength)
                         end = textLength;
+                    if (start > textLength)
+                        start = textLength;
                 }
                 let startNode = this.findChildAtCharacterIndex(start);
                 let endNode = this.findChildAtCharacterIndex(end);
@@ -19688,6 +19783,7 @@
       padding-right: 2px;
 
       box-sizing: border-box;
+      font-family: ${DEFAULT_FONT};
 
       caret-color: black;
       padding-left: 3px;
@@ -20130,7 +20226,7 @@
             const highlights = this.env.model.getters.getHighlights();
             const refSheet = sheetName
                 ? this.env.model.getters.getSheetIdByName(sheetName)
-                : this.env.model.getters.getEditionSheet();
+                : this.env.model.getters.getCurrentEditedCell().sheetId;
             const highlight = highlights.find((highlight) => {
                 if (highlight.sheetId !== refSheet)
                     return false;
@@ -20291,7 +20387,7 @@
         get cellReference() {
             const { col, row, sheetId } = this.env.model.getters.getCurrentEditedCell();
             const prefixSheet = sheetId !== this.env.model.getters.getActiveSheetId();
-            return `${prefixSheet ? getComposerSheetName(this.env.model.getters.getSheetName(sheetId)) + "!" : ""}${toXC(col, row)}`;
+            return `${prefixSheet ? getCanonicalSheetName(this.env.model.getters.getSheetName(sheetId)) + "!" : ""}${toXC(col, row)}`;
         }
         get cellReferenceStyle() {
             const { x: left, y: top } = this.rect;
@@ -20476,14 +20572,17 @@
         return { x, y };
     }
 
-    function dragFigureForMove({ x: mouseX, y: mouseY }, { x: mouseInitialX, y: mouseInitialY }, initialFigure, { x: viewportX, y: viewportY }, { scrollX, scrollY }) {
+    function dragFigureForMove({ x: mouseX, y: mouseY }, { x: mouseInitialX, y: mouseInitialY }, initialFigure, { x: viewportX, y: viewportY }, { maxX, maxY }, { scrollX, scrollY }) {
         const minX = viewportX ? 0 : -scrollX;
         const minY = viewportY ? 0 : -scrollY;
-        let deltaX = mouseX - mouseInitialX;
-        const newX = Math.max(initialFigure.x + deltaX, minX);
-        let deltaY = mouseY - mouseInitialY;
-        const newY = Math.max(initialFigure.y + deltaY, minY);
+        const deltaX = mouseX - mouseInitialX;
+        const newX = clamp(initialFigure.x + deltaX, minX, maxX - initialFigure.width - scrollX);
+        const deltaY = mouseY - mouseInitialY;
+        const newY = clamp(initialFigure.y + deltaY, minY, maxY - initialFigure.height - scrollY);
         return { ...initialFigure, x: newX, y: newY };
+    }
+    function clamp(value, min, max) {
+        return Math.min(Math.max(value, min), max);
     }
     function dragFigureForResize(initialFigure, dirX, dirY, { x: mouseX, y: mouseY }, { x: mouseInitialX, y: mouseInitialY }, keepRatio, minFigSize) {
         let { x, y, width, height } = initialFigure;
@@ -20883,12 +20982,16 @@
             }
             const sheetId = this.env.model.getters.getActiveSheetId();
             const initialMousePosition = { x: ev.clientX, y: ev.clientY };
+            const maxDimensions = {
+                maxX: this.env.model.getters.getColDimensions(sheetId, this.env.model.getters.getNumberCols(sheetId) - 1).end,
+                maxY: this.env.model.getters.getRowDimensions(sheetId, this.env.model.getters.getNumberRows(sheetId) - 1).end,
+            };
             const { x, y } = internalFigureToScreen(this.env.model.getters, figure);
             const initialFig = { ...figure, x, y };
             const onMouseMove = (ev) => {
                 const getters = this.env.model.getters;
                 const currentMousePosition = { x: ev.clientX, y: ev.clientY };
-                const draggedFigure = dragFigureForMove(currentMousePosition, initialMousePosition, initialFig, this.env.model.getters.getMainViewportCoordinates(), getters.getActiveSheetScrollInfo());
+                const draggedFigure = dragFigureForMove(currentMousePosition, initialMousePosition, initialFig, this.env.model.getters.getMainViewportCoordinates(), maxDimensions, getters.getActiveSheetScrollInfo());
                 const otherFigures = this.getOtherFigures(figure.id);
                 const internalDragged = screenFigureToInternal(getters, draggedFigure);
                 const snapResult = snapForMove(getters, internalDragged, otherFigures);
@@ -21218,6 +21321,10 @@
     };
 
     class GridPopover extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.zIndex = ComponentsImportance.GridPopover;
+        }
         get cellPopover() {
             const popover = this.env.model.getters.getCellPopover(this.props.hoveredCell);
             if (!popover.isOpen) {
@@ -22582,6 +22689,10 @@
             }
         }
         onInput(ev) {
+            // the user meant to paste in the sheet, not open the composer with the pasted content
+            if (!ev.isComposing && ev.inputType === "insertFromPaste") {
+                return;
+            }
             if (ev.data) {
                 // if the user types a character on the grid, it means he wants to start composing the selected cell with that
                 // character
@@ -23430,6 +23541,70 @@
         });
     }
 
+    const XLSX_DATE_FORMAT_REGEX = /^(yy|yyyy|m{1,5}|d{1,4}|h{1,2}|s{1,2}|am\/pm|a\/m|\s|-|\/|\.|:)+$/i;
+    /**
+     * Convert excel format to o_spreadsheet format
+     *
+     * Excel format are defined in openXML §18.8.31
+     */
+    function convertXlsxFormat(numFmtId, formats, warningManager) {
+        var _a, _b, _c;
+        if (numFmtId === 0) {
+            return undefined;
+        }
+        // Format is either defined in the imported data, or the formatId is defined in openXML §18.8.30
+        let format = XLSX_FORMATS_CONVERSION_MAP[numFmtId] || ((_a = formats.find((f) => f.id === numFmtId)) === null || _a === void 0 ? void 0 : _a.format);
+        if (format) {
+            try {
+                let convertedFormat = format.replace(/(.*?);.*/, "$1"); // only take first part of multi-part format
+                convertedFormat = convertedFormat.replace(/\[(.*)-[A-Z0-9]{3}\]/g, "[$1]"); // remove currency and locale/date system/number system info (ECMA §18.8.31)
+                convertedFormat = convertedFormat.replace(/\[\$\]/g, ""); // remove empty bocks
+                // Quotes in format escape sequences of characters. ATM we only support [$...] blocks to escape characters, and only one of them per format
+                const numberOfQuotes = ((_b = convertedFormat.match(/"/g)) === null || _b === void 0 ? void 0 : _b.length) || 0;
+                const numberOfOpenBrackets = ((_c = convertedFormat.match(/\[/g)) === null || _c === void 0 ? void 0 : _c.length) || 0;
+                if (numberOfQuotes / 2 + numberOfOpenBrackets > 1) {
+                    throw new Error("Multiple escaped blocks in format");
+                }
+                convertedFormat = convertedFormat.replace(/"(.*)"/g, "[$$$1]"); // replace '"..."' by '[$...]'
+                convertedFormat = convertedFormat.replace(/_.{1}/g, ""); // _ == ignore width of next char for align purposes. Not supported ATM
+                convertedFormat = convertedFormat.replace(/\*.{1}/g, ""); // * == repeat next character enough to fill the line. Not supported ATM
+                convertedFormat = convertedFormat.replace(/\\ /g, " "); // unescape spaces
+                convertedFormat = convertedFormat.replace(/\\./g, (match) => match[1]); // unescape other characters
+                if (isXlsxDateFormat(convertedFormat)) {
+                    convertedFormat = convertDateFormat$1(convertedFormat);
+                }
+                if (isFormatSupported(convertedFormat)) {
+                    return convertedFormat;
+                }
+            }
+            catch (e) { }
+        }
+        warningManager.generateNotSupportedWarning(WarningTypes.NumFmtIdNotSupported, format || `nmFmtId ${numFmtId}`);
+        return undefined;
+    }
+    function isFormatSupported(format) {
+        try {
+            formatValue(0, format);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
+    function isXlsxDateFormat(format) {
+        return format.match(XLSX_DATE_FORMAT_REGEX) !== null;
+    }
+    function convertDateFormat$1(format) {
+        // Some of these aren't defined neither in the OpenXML spec not the Xlsx extension of OpenXML,
+        // but can still occur and are supported by Excel/Google sheets
+        format = format.toLowerCase();
+        format = format.replace(/mmmmm/g, "mmm");
+        format = format.replace(/am\/pm|a\/m/g, "a");
+        format = format.replace(/hhhh/g, "hh");
+        format = format.replace(/\bh\b/g, "hh");
+        return format;
+    }
+
     function convertBorders(data, warningManager) {
         const borderArray = data.borders.map((border) => {
             addBorderWarnings(border, warningManager);
@@ -23491,41 +23666,6 @@
             }
         }
         return arrayToObject(formats, 1);
-    }
-    /**
-     * Convert excel format to o_spreadsheet format
-     *
-     * Excel format are defined in openXML §18.8.31
-     */
-    function convertXlsxFormat(numFmtId, formats, warningManager) {
-        var _a, _b, _c;
-        if (numFmtId === 0) {
-            return undefined;
-        }
-        // Format is either defined in the imported data, or the formatId is defined in openXML §18.8.30
-        let format = XLSX_FORMATS_CONVERSION_MAP[numFmtId] || ((_a = formats.find((f) => f.id === numFmtId)) === null || _a === void 0 ? void 0 : _a.format);
-        if (format) {
-            try {
-                let convertedFormat = format.replace(/(.*?);.*/, "$1"); // only take first part of multi-part format
-                convertedFormat = convertedFormat.replace(/\[(.*)-[A-Z0-9]{3}\]/g, "[$1]"); // remove currency and locale/date system/number system info (ECMA §18.8.31)
-                convertedFormat = convertedFormat.replace(/\[\$\]/g, ""); // remove empty bocks
-                // Quotes in format escape sequences of characters. ATM we only support [$...] blocks to escape characters, and only one of them per format
-                const numberOfQuotes = ((_b = convertedFormat.match(/"/g)) === null || _b === void 0 ? void 0 : _b.length) || 0;
-                const numberOfOpenBrackets = ((_c = convertedFormat.match(/\[/g)) === null || _c === void 0 ? void 0 : _c.length) || 0;
-                if (numberOfQuotes / 2 + numberOfOpenBrackets > 1) {
-                    throw new Error("Multiple escaped blocks in format");
-                }
-                convertedFormat = convertedFormat.replace(/"(.*)"/g, "[$$$1]"); // replace '"..."' by '[$...]'
-                convertedFormat = convertedFormat.replace(/_.{1}/g, ""); // _ == ignore with of next char for align purposes. Not supported ATM
-                convertedFormat = convertedFormat.replace(/\*.{1}/g, ""); // * == repeat next character enough to fill the line. Not supported ATM
-                convertedFormat = convertedFormat.replace(/\\ /g, " "); // unescape spaces
-                formatValue(0, convertedFormat);
-                return convertedFormat;
-            }
-            catch (e) { }
-        }
-        warningManager.generateNotSupportedWarning(WarningTypes.NumFmtIdNotSupported, format || `nmFmtId ${numFmtId}`);
-        return undefined;
     }
     // ---------------------------------------------------------------------------
     // Warnings
@@ -24081,16 +24221,18 @@
         };
     }
     function convertChartData(chartData) {
-        var _a;
-        const labelRange = (_a = chartData.dataSets[0].label) === null || _a === void 0 ? void 0 : _a.replace(/\$/g, "");
-        let dataSets = chartData.dataSets.map((data) => data.range.replace(/\$/g, ""));
+        const dataSetsHaveTitle = chartData.dataSets[0].label !== undefined;
+        const labelRange = chartData.labelRange
+            ? convertExcelRangeToSheetXC(chartData.labelRange, dataSetsHaveTitle)
+            : undefined;
+        let dataSets = chartData.dataSets.map((data) => convertExcelRangeToSheetXC(data.range, dataSetsHaveTitle));
         // For doughnut charts, in chartJS first dataset = outer dataset, in excel first dataset = inner dataset
         if (chartData.type === "pie") {
             dataSets.reverse();
         }
         return {
             dataSets,
-            dataSetsHaveTitle: false,
+            dataSetsHaveTitle,
             labelRange,
             title: chartData.title || "",
             type: chartData.type,
@@ -24101,6 +24243,28 @@
             aggregated: false,
             labelsAsText: false,
         };
+    }
+    function convertExcelRangeToSheetXC(range, dataSetsHaveTitle) {
+        let { sheetName, xc } = splitReference(range);
+        if (sheetName) {
+            sheetName = getCanonicalSheetName(sheetName) + "!";
+        }
+        else {
+            sheetName = "";
+        }
+        let zone = toUnboundedZone(xc);
+        if (dataSetsHaveTitle && zone.bottom !== undefined && zone.right !== undefined) {
+            const height = zone.bottom - zone.top + 1;
+            const width = zone.right - zone.left + 1;
+            if (height === 1) {
+                zone = { ...zone, left: zone.left - 1 };
+            }
+            else if (width === 1) {
+                zone = { ...zone, top: zone.top - 1 };
+            }
+        }
+        const dataXC = zoneToXc(zone);
+        return sheetName + dataXC;
     }
 
     /**
@@ -25168,6 +25332,7 @@
                     title: chartTitle,
                     type: CHART_TYPE_CONVERSION_MAP[chartType],
                     dataSets: this.extractChartDatasets(this.querySelector(rootChartElement, `c:${chartType}`)),
+                    labelRange: this.extractChildTextContent(rootChartElement, "c:ser c:cat c:f"),
                     backgroundColor: this.extractChildAttr(rootChartElement, "c:chartSpace > c:spPr a:srgbClr", "val", {
                         default: "ffffff",
                     }).asString(),
@@ -25187,7 +25352,7 @@
         extractChartDatasets(chartElement) {
             return this.mapOnElements({ parent: chartElement, query: "c:ser" }, (chartDataElement) => {
                 return {
-                    label: this.extractChildTextContent(chartDataElement, "c:cat c:f"),
+                    label: this.extractChildTextContent(chartDataElement, "c:tx c:f"),
                     range: this.extractChildTextContent(chartDataElement, "c:val c:f", { required: true }),
                 };
             });
@@ -29104,6 +29269,39 @@
                 case "DELETE_FIGURE":
                     this.removeFigure(cmd.id, cmd.sheetId);
                     break;
+                case "REMOVE_COLUMNS_ROWS":
+                    this.onRowColDelete(cmd.sheetId, cmd.dimension);
+            }
+        }
+        onRowColDelete(sheetId, dimension) {
+            dimension === "ROW" ? this.onRowDeletion(sheetId) : this.onColDeletion(sheetId);
+        }
+        onRowDeletion(sheetId) {
+            const numHeader = this.getters.getNumberRows(sheetId);
+            let gridHeight = 0;
+            for (let i = 0; i < numHeader; i++) {
+                gridHeight += this.getters.getRowSize(sheetId, i);
+            }
+            const figures = this.getters.getFigures(sheetId);
+            for (const figure of figures) {
+                const newY = Math.min(figure.y, gridHeight - figure.height);
+                if (newY !== figure.y) {
+                    this.dispatch("UPDATE_FIGURE", { sheetId, id: figure.id, y: newY });
+                }
+            }
+        }
+        onColDeletion(sheetId) {
+            const numHeader = this.getters.getNumberCols(sheetId);
+            let gridWidth = 0;
+            for (let i = 0; i < numHeader; i++) {
+                gridWidth += this.getters.getColSize(sheetId, i);
+            }
+            const figures = this.getters.getFigures(sheetId);
+            for (const figure of figures) {
+                const newX = Math.min(figure.x, gridWidth - figure.width);
+                if (newX !== figure.x) {
+                    this.dispatch("UPDATE_FIGURE", { sheetId, id: figure.id, x: newX });
+                }
             }
         }
         updateFigure(sheetId, figure) {
@@ -30774,7 +30972,7 @@
                     sheetName = rangeImpl.invalidSheetName;
                 }
                 else {
-                    sheetName = getComposerSheetName(this.getters.getSheetName(rangeImpl.sheetId));
+                    sheetName = getCanonicalSheetName(this.getters.getSheetName(rangeImpl.sheetId));
                 }
             }
             if (prefixSheet && !sheetName) {
@@ -31825,9 +32023,7 @@
                 // remove duplicates first to check validity on a reduced
                 // set of colors, then normalize to HEX and remove duplicates
                 // again
-                [...new Set([...usedColors, ...this.customColors])]
-                    .filter(isColorValid)
-                    .map((c) => toHex(c).toLowerCase())),
+                [...new Set([...usedColors, ...this.customColors])].filter(isColorValid).map(toHex)),
             ]).filter((color) => !COLOR_PICKER_DEFAULTS.includes(color));
         }
         getColorsFromCells(cells) {
@@ -31888,7 +32084,7 @@
             return [...chartsColors];
         }
         tryToAddColor(color) {
-            const formattedColor = toHex(color).toLowerCase();
+            const formattedColor = toHex(color);
             if (color && !COLOR_PICKER_DEFAULTS.includes(formattedColor)) {
                 this.customColors.add(formattedColor);
             }
@@ -32903,8 +33099,8 @@
             this.getters = getters;
             this.sheetId = sheetId;
             this.boundaries = boundaries;
-            this.width = sizeInGrid.width;
-            this.height = sizeInGrid.height;
+            this.viewportWidth = sizeInGrid.width;
+            this.viewportHeight = sizeInGrid.height;
             this.offsetScrollbarX = offsets.x;
             this.offsetScrollbarY = offsets.y;
             this.canScrollVertically = options.canScrollVertically;
@@ -32915,6 +33111,10 @@
             this.adjustViewportOffsetY();
         }
         // PUBLIC
+        /** Returns the maximum size (in Pixels) of the viewport relative to its allocated client size
+         * When the viewport grid size is smaller than its client width (resp. height), it will return
+         * the client width (resp. height).
+         */
         getMaxSize() {
             const lastCol = this.getters.findLastVisibleColRowIndex(this.sheetId, "COL", {
                 first: this.boundaries.left,
@@ -32926,20 +33126,24 @@
             });
             const { end: lastColEnd, size: lastColSize } = this.getters.getColDimensions(this.sheetId, lastCol);
             const { end: lastRowEnd, size: lastRowSize } = this.getters.getRowDimensions(this.sheetId, lastRow);
-            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.width, 0);
+            const leftColIndex = this.searchHeaderIndex("COL", lastColEnd - this.viewportWidth, 0);
             const leftColSize = this.getters.getColSize(this.sheetId, leftColIndex);
-            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.height, 0);
+            const leftRowIndex = this.searchHeaderIndex("ROW", lastRowEnd - this.viewportHeight, 0);
             const topRowSize = this.getters.getRowSize(this.sheetId, leftRowIndex);
-            const width = lastColEnd -
-                this.offsetCorrectionX +
-                (this.canScrollHorizontally
-                    ? Math.max(DEFAULT_CELL_WIDTH, Math.min(leftColSize, this.width - lastColSize))
-                    : 0);
-            const height = lastRowEnd -
-                this.offsetCorrectionY +
-                (this.canScrollVertically
-                    ? Math.max(DEFAULT_CELL_HEIGHT + 5, Math.min(topRowSize, this.height - lastRowSize))
-                    : 0);
+            let width = lastColEnd - this.offsetCorrectionX;
+            if (this.canScrollHorizontally) {
+                width += Math.max(DEFAULT_CELL_WIDTH, // leave some minimal space to let the user know they scrolled all the way
+                Math.min(leftColSize, this.viewportWidth - lastColSize) // Add pixels that allows the snapping at maximum horizontal scroll
+                );
+                width = Math.max(width, this.viewportWidth); // if the viewport grid size is smaller than its client width, return client width
+            }
+            let height = lastRowEnd - this.offsetCorrectionY;
+            if (this.canScrollVertically) {
+                height += Math.max(DEFAULT_CELL_HEIGHT + 5, // leave some space to let the user know they scrolled all the way
+                Math.min(topRowSize, this.viewportHeight - lastRowSize) // Add pixels that allows the snapping at maximum vertical scroll
+                );
+                height = Math.max(height, this.viewportHeight); // if the viewport grid size is smaller than its client height, return client height
+            }
             return { width, height };
         }
         /**
@@ -32948,7 +33152,7 @@
          * It returns -1 if no column is found.
          */
         getColIndex(x, absolute = false) {
-            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.width) {
+            if (x < this.offsetCorrectionX || x > this.offsetCorrectionX + this.viewportWidth) {
                 return -1;
             }
             return this.searchHeaderIndex("COL", x - this.offsetCorrectionX, this.left, absolute);
@@ -32959,7 +33163,7 @@
          * It returns -1 if no row is found.
          */
         getRowIndex(y, absolute = false) {
-            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.height) {
+            if (y < this.offsetCorrectionY || y > this.offsetCorrectionY + this.viewportHeight) {
                 return -1;
             }
             return this.searchHeaderIndex("ROW", y - this.offsetCorrectionY, this.top, absolute);
@@ -32986,7 +33190,7 @@
         adjustPositionX(col) {
             const sheetId = this.sheetId;
             const { start, end } = this.getters.getColDimensions(sheetId, col);
-            while (end > this.offsetX + this.offsetCorrectionX + this.width &&
+            while (end > this.offsetX + this.offsetCorrectionX + this.viewportWidth &&
                 this.offsetX + this.offsetCorrectionX < start) {
                 this.offsetX = this.getters.getColDimensions(sheetId, this.left).end - this.offsetCorrectionX;
                 this.offsetScrollbarX = this.offsetX;
@@ -33008,7 +33212,7 @@
         adjustPositionY(row) {
             const sheetId = this.sheetId;
             while (this.getters.getRowDimensions(sheetId, row).end >
-                this.offsetY + this.height + this.offsetCorrectionY &&
+                this.offsetY + this.viewportHeight + this.offsetCorrectionY &&
                 this.offsetY + this.offsetCorrectionY < this.getters.getRowDimensions(sheetId, row).start) {
                 this.offsetY = this.getters.getRowDimensions(sheetId, this.top).end - this.offsetCorrectionY;
                 this.offsetScrollbarY = this.offsetY;
@@ -33046,8 +33250,8 @@
                 const x = this.getters.getColRowOffset("COL", this.zone.left, targetZone.left) +
                     this.offsetCorrectionX;
                 const y = this.getters.getColRowOffset("ROW", this.zone.top, targetZone.top) + this.offsetCorrectionY;
-                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.width);
-                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.height);
+                const width = Math.min(this.getters.getColRowOffset("COL", targetZone.left, targetZone.right + 1), this.viewportWidth);
+                const height = Math.min(this.getters.getColRowOffset("ROW", targetZone.top, targetZone.bottom + 1), this.viewportHeight);
                 return {
                     x,
                     y,
@@ -33110,12 +33314,12 @@
         adjustViewportOffsetX() {
             if (this.canScrollHorizontally) {
                 const { width: viewportWidth } = this.getMaxSize();
-                if (this.width + this.offsetScrollbarX > viewportWidth) {
-                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.width);
+                if (this.viewportWidth + this.offsetScrollbarX > viewportWidth) {
+                    this.offsetScrollbarX = Math.max(0, viewportWidth - this.viewportWidth);
                 }
             }
             this.left = this.getColIndex(this.offsetScrollbarX, true);
-            this.right = this.getColIndex(this.offsetScrollbarX + this.width, true);
+            this.right = this.getColIndex(this.offsetScrollbarX + this.viewportWidth, true);
             if (this.right === -1) {
                 this.right = this.boundaries.right;
             }
@@ -33127,12 +33331,12 @@
         adjustViewportOffsetY() {
             if (this.canScrollVertically) {
                 const { height: paneHeight } = this.getMaxSize();
-                if (this.height + this.offsetScrollbarY > paneHeight) {
-                    this.offsetScrollbarY = Math.max(0, paneHeight - this.height);
+                if (this.viewportHeight + this.offsetScrollbarY > paneHeight) {
+                    this.offsetScrollbarY = Math.max(0, paneHeight - this.viewportHeight);
                 }
             }
             this.top = this.getRowIndex(this.offsetScrollbarY, true);
-            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.width, true);
+            this.bottom = this.getRowIndex(this.offsetScrollbarY + this.viewportWidth, true);
             if (this.bottom === -1) {
                 this.bottom = this.boundaries.bottom;
             }
@@ -33143,7 +33347,7 @@
         adjustViewportZoneX() {
             const sheetId = this.sheetId;
             this.left = this.searchHeaderIndex("COL", this.offsetScrollbarX, this.boundaries.left);
-            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.width, this.left));
+            this.right = Math.min(this.boundaries.right, this.searchHeaderIndex("COL", this.viewportWidth, this.left));
             if (this.right === -1) {
                 this.right = this.getters.getNumberCols(sheetId) - 1;
             }
@@ -33156,7 +33360,7 @@
         adjustViewportZoneY() {
             const sheetId = this.sheetId;
             this.top = this.searchHeaderIndex("ROW", this.offsetScrollbarY, this.boundaries.top);
-            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.height, this.top));
+            this.bottom = Math.min(this.boundaries.bottom, this.searchHeaderIndex("ROW", this.viewportHeight, this.top));
             if (this.bottom === -1) {
                 this.bottom = this.getters.getNumberRows(sheetId) - 1;
             }
@@ -33419,8 +33623,7 @@
             return [...new Set(viewports.map((v) => range(v.top, v.bottom + 1)).flat())].filter((row) => !this.getters.isHeaderHidden(sheetId, "ROW", row));
         }
         /**
-         * Return the main viewport maximum size. That is the zone dimension
-         * with some bottom and right padding.
+         * Return the main viewport maximum size relative to the client size.
          */
         getMainViewportRect() {
             const sheetId = this.getters.getActiveSheetId();
@@ -33436,8 +33639,8 @@
             const { width, height } = this.getMainViewportRect();
             const viewport = this.getMainInternalViewport(sheetId);
             return {
-                maxOffsetX: Math.max(0, width - viewport.width + 1),
-                maxOffsetY: Math.max(0, height - viewport.height + 1),
+                maxOffsetX: Math.max(0, width - viewport.viewportWidth + 1),
+                maxOffsetY: Math.max(0, height - viewport.viewportHeight + 1),
             };
         }
         getColRowOffsetInViewport(dimension, referenceIndex, index) {
@@ -35657,7 +35860,7 @@
             const inputSheetId = this.activeSheet;
             const sheetId = this.getters.getActiveSheetId();
             const sheetName = this.getters.getSheetName(sheetId);
-            this.add([sheetId === inputSheetId ? xc : `${getComposerSheetName(sheetName)}!${xc}`]);
+            this.add([sheetId === inputSheetId ? xc : `${getCanonicalSheetName(sheetName)}!${xc}`]);
         }
         handle(cmd) {
             switch (cmd.type) {
@@ -37904,13 +38107,19 @@
          */
         paste(target) {
             const sheetId = this.getters.getActiveSheetId();
+            const { width, height } = this.copiedFigure;
+            const numCols = this.getters.getNumberCols(sheetId);
+            const numRows = this.getters.getNumberRows(sheetId);
+            const targetX = this.getters.getColDimensions(sheetId, target[0].left).start;
+            const targetY = this.getters.getRowDimensions(sheetId, target[0].top).start;
+            const maxX = this.getters.getColDimensions(sheetId, numCols - 1).end;
+            const maxY = this.getters.getRowDimensions(sheetId, numRows - 1).end;
             const position = {
-                x: this.getters.getColDimensions(sheetId, target[0].left).start,
-                y: this.getters.getRowDimensions(sheetId, target[0].top).start,
+                x: maxX < width ? 0 : Math.min(targetX, maxX - width),
+                y: maxY < height ? 0 : Math.min(targetY, maxY - height),
             };
-            const size = { height: this.copiedFigure.height, width: this.copiedFigure.width };
             const newId = new UuidGenerator().uuidv4();
-            this.copiedFigureContent.paste(sheetId, newId, position, size);
+            this.copiedFigureContent.paste(sheetId, newId, position, { height, width });
             if (this.operation === "CUT") {
                 this.dispatch("DELETE_FIGURE", {
                     sheetId: this.copiedFigureContent.sheetId,
@@ -38276,7 +38485,7 @@
             return token;
         const { xc, sheetName } = splitReference(token.value);
         const [left, right] = xc.split(":");
-        const sheetRef = sheetName ? `${getComposerSheetName(sheetName)}!` : "";
+        const sheetRef = sheetName ? `${getCanonicalSheetName(sheetName)}!` : "";
         const updatedLeft = getTokenNextReferenceType(left);
         const updatedRight = right ? `:${getTokenNextReferenceType(right)}` : "";
         return { ...token, value: sheetRef + updatedLeft + updatedRight };
@@ -38534,9 +38743,6 @@
                 return this.getComposerContent(this.getters.getActivePosition());
             }
             return this.currentContent;
-        }
-        getEditionSheet() {
-            return this.sheetId;
         }
         getComposerSelection() {
             return {
@@ -38821,8 +39027,8 @@
         getZoneReference(zone, fixedParts = [{ colFixed: false, rowFixed: false }]) {
             const sheetId = this.getters.getActiveSheetId();
             let selectedXc = this.getters.zoneToXC(sheetId, zone, fixedParts);
-            if (this.getters.getEditionSheet() !== this.getters.getActiveSheetId()) {
-                const sheetName = getComposerSheetName(this.getters.getSheetName(this.getters.getActiveSheetId()));
+            if (this.getters.getCurrentEditedCell().sheetId !== this.getters.getActiveSheetId()) {
+                const sheetName = getCanonicalSheetName(this.getters.getSheetName(this.getters.getActiveSheetId()));
                 selectedXc = `${sheetName}!${selectedXc}`;
             }
             return selectedXc;
@@ -38836,7 +39042,7 @@
                 _fixedParts.pop();
             }
             const newRange = range.clone({ parts: _fixedParts });
-            return this.getters.getSelectionRangeString(newRange, this.getters.getEditionSheet());
+            return this.getters.getSelectionRangeString(newRange, this.getters.getCurrentEditedCell().sheetId);
         }
         /**
          * Replace the current selection by a new text.
@@ -38869,7 +39075,7 @@
             if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
                 return;
             }
-            const editionSheetId = this.getters.getEditionSheet();
+            const editionSheetId = this.getters.getCurrentEditedCell().sheetId;
             const XCs = this.getReferencedRanges().map((range) => this.getters.getRangeString(range, editionSheetId));
             const colorsToKeep = {};
             for (const xc of XCs) {
@@ -38898,7 +39104,7 @@
             if (!this.currentContent.startsWith("=") || this.mode === "inactive") {
                 return [];
             }
-            const editionSheetId = this.getters.getEditionSheet();
+            const editionSheetId = this.getters.getCurrentEditedCell().sheetId;
             const rangeColor = (rangeString) => {
                 const colorIndex = this.colorIndexByRange[rangeString];
                 return colors$1[colorIndex % colors$1.length];
@@ -38916,7 +39122,7 @@
          * Return ranges currently referenced in the composer
          */
         getReferencedRanges() {
-            const editionSheetId = this.getters.getEditionSheet();
+            const editionSheetId = this.getters.getCurrentEditedCell().sheetId;
             return this.currentTokens
                 .filter((token) => token.type === "REFERENCE")
                 .map((token) => this.getters.getRangeFromSheetXC(editionSheetId, token.value));
@@ -38975,7 +39181,6 @@
         "isSelectingForComposer",
         "showSelectionIndicator",
         "getCurrentContent",
-        "getEditionSheet",
         "getComposerSelection",
         "getCurrentTokens",
         "getTokenAtCursor",
@@ -40298,10 +40503,6 @@
     .o-bottom-bar-arrows {
       .o-bottom-bar-arrow {
         cursor: pointer;
-        &.o-disabled {
-          opacity: 0.4;
-          cursor: default;
-        }
         &:hover:not([class*="o-disabled"]) {
           .o-icon {
             opacity: 0.9;
@@ -41139,11 +41340,6 @@
           margin: 0 6px;
         }
 
-        .o-disabled {
-          opacity: 0.6;
-          cursor: default;
-        }
-
         .o-dropdown {
           position: relative;
           display: flex;
@@ -41518,10 +41714,12 @@
     button {
       color: #333;
     }
-
-    * {
-      font-family: "Roboto", "RobotoDraft", Helvetica, Arial, sans-serif;
+    .o-disabled {
+      opacity: 0.4;
+      pointer: default;
+      pointer-events: none;
     }
+
     &,
     *,
     *:before,
@@ -44891,6 +45089,13 @@
              */
             this.status = 0 /* Status.Ready */;
             /**
+             * Check if a command can be dispatched, and returns a DispatchResult object with the possible
+             * reasons the dispatch failed.
+             */
+            this.canDispatch = (type, payload) => {
+                return this.checkDispatchAllowed({ ...payload, type });
+            };
+            /**
              * The dispatch method is the only entry point to manipulate data in the model.
              * This is through this method that commands are dispatched most of the time
              * recursively until no plugin want to react anymore.
@@ -45033,7 +45238,10 @@
             owl.markRaw(this);
         }
         get handlers() {
-            return [this.range, ...this.corePlugins, ...this.allUIPlugins, this.history];
+            return [...this.coreHandlers, ...this.allUIPlugins, this.history];
+        }
+        get coreHandlers() {
+            return [this.range, ...this.corePlugins];
         }
         get allUIPlugins() {
             return [...this.statefulUIPlugins, ...this.coreViewsPlugins, ...this.featurePlugins];
@@ -45161,6 +45369,16 @@
          * Check if the given command is allowed by all the plugins and the history.
          */
         checkDispatchAllowed(command) {
+            if (isCoreCommand(command)) {
+                return this.checkDispatchAllowedCoreCommand(command);
+            }
+            return this.checkDispatchAllowedLocalCommand(command);
+        }
+        checkDispatchAllowedCoreCommand(command) {
+            const results = this.coreHandlers.map((handler) => handler.allowDispatch(command));
+            return new DispatchResult(results.flat());
+        }
+        checkDispatchAllowedLocalCommand(command) {
             const results = this.handlers.map((handler) => handler.allowDispatch(command));
             return new DispatchResult(results.flat());
         }
@@ -45391,9 +45609,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.0-alpha.2';
-    __info__.date = '2023-03-23T11:47:46.254Z';
-    __info__.hash = '59f25bb';
+    __info__.version = '16.3.0-alpha.3';
+    __info__.date = '2023-04-13T09:07:02.420Z';
+    __info__.hash = '6431610';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
