@@ -796,6 +796,7 @@ publicWidget.registry.WebsiteSaleLayout = publicWidget.Widget.extend({
 publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
     selector: '.oe_website_sale .oe_cart',
     events: {
+        'click .js_change_billing': '_onClickChangeBilling',
         'click .js_change_shipping': '_onClickChangeShipping',
         'click .js_edit_address': '_onClickEditAddress',
         'click .js_delete_product': '_onClickDeleteProduct',
@@ -809,15 +810,29 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
      * @private
      * @param {Event} ev
      */
+    _onClickChangeBilling: function (ev) {
+        this._onClickChangeAddress(ev, 'all_billing', 'js_change_billing');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
     _onClickChangeShipping: function (ev) {
-        var $old = $('.all_shipping').find('.card.border.border-primary');
-        $old.find('.btn-ship').toggle();
-        $old.addClass('js_change_shipping');
+        this._onClickChangeAddress(ev, 'all_shipping', 'js_change_shipping');
+    },
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onClickChangeAddress: function (ev, rowAddrClass, cardClass) {
+        var $old = $(`.${rowAddrClass}`).find('.card.border.border-primary');
+        $old.find('.btn-addr').toggle();
+        $old.addClass(cardClass);
         $old.removeClass('border border-primary');
 
         var $new = $(ev.currentTarget).parent('div.one_kanban').find('.card');
-        $new.find('.btn-ship').toggle();
-        $new.removeClass('js_change_shipping');
+        $new.find('.btn-addr').toggle();
+        $new.removeClass(cardClass);
         $new.addClass('border border-primary');
 
         var $form = $(ev.currentTarget).parent('div.one_kanban').find('form.d-none');

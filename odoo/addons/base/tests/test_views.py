@@ -3040,7 +3040,7 @@ class TestViews(ViewCase):
         self.assertValid('<form><input type="reset" class="btn" role="button"/></form>')
         self.assertValid('<form><div type="reset" class="btn btn-group" role="button"/></form>')
         self.assertValid('<form><div type="reset" class="btn btn-toolbar" role="button"/></form>')
-        self.assertValid('<form><div type="reset" class="btn btn-ship" role="button"/></form>')
+        self.assertValid('<form><div type="reset" class="btn btn-addr" role="button"/></form>')
         self.assertWarning('<form><div class="btn" role="button"/></form>')
         self.assertWarning('<form><input type="email" class="btn" role="button"/></form>')
 

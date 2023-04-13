@@ -8,7 +8,7 @@
             </xpath>
         </template>
 
-        <template id="website_sale_mondialrelay_checkout" inherit_id="website_sale.checkout">
+        <template id="website_sale_mondialrelay_checkout" inherit_id="website_sale.row_addresses">
             <xpath expr="//t[@t-set='allow_edit']" position="after">
                 <t t-set="allow_edit" t-value="allow_edit and not contact.is_mondialrelay"/>
             </xpath>

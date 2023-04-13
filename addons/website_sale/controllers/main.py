@@ -959,12 +959,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
     # ------------------------------------------------------
 
     def checkout_check_address(self, order):
-        billing_fields_required = self._get_mandatory_fields_billing(order.partner_id.country_id.id)
-        if not all(order.partner_id.read(billing_fields_required)[0].values()):
-            return request.redirect('/shop/address?partner_id=%d' % order.partner_id.id)
+        partner_invoice = order.partner_invoice_id
+        if not self._check_billing_partner_mandatory_fields(partner_invoice):
+            return request.redirect('/shop/address?partner_id=%d&is_invoice=1' % partner_invoice.id)
 
-        shipping_fields_required = self._get_mandatory_fields_shipping(order.partner_shipping_id.country_id.id)
-        if not all(order.partner_shipping_id.read(shipping_fields_required)[0].values()):
+        if not self._check_shipping_partner_mandatory_fields(order.partner_shipping_id):
             return request.redirect('/shop/address?partner_id=%d' % order.partner_shipping_id.id)
 
     def checkout_redirection(self, order):
@@ -987,28 +986,48 @@ class WebsiteSale(payment_portal.PaymentPortal):
 
     def checkout_values(self, **kw):
         order = request.website.sale_get_order(force_create=True)
-        shippings = []
+        bill_partners = []
+        ship_partners = []
         if order.partner_id != request.website.user_id.sudo().partner_id:
             Partner = order.partner_id.with_context(show_address=1).sudo()
-            shippings = Partner.search([
-                ("id", "child_of", order.partner_id.commercial_partner_id.ids),
-                '|', ("type", "in", ["delivery", "other"]), ("id", "=", order.partner_id.commercial_partner_id.id)
+            commercial_partner = order.partner_id.commercial_partner_id
+            bill_partners = Partner.search([
+                ("id", "child_of", commercial_partner.ids),
+                '|', ("type", "in", ["invoice", "other"]), ("id", "=", commercial_partner.id)
             ], order='id desc')
-            if shippings:
-                if kw.get('partner_id') or 'use_billing' in kw:
-                    if 'use_billing' in kw:
-                        partner_id = order.partner_id.id
-                    else:
-                        partner_id = int(kw.get('partner_id'))
-                    if partner_id in shippings.mapped('id'):
-                        order.partner_shipping_id = partner_id
+            ship_partners = Partner.search([
+                ("id", "child_of", commercial_partner.ids),
+                '|', ("type", "in", ["delivery", "other"]), ("id", "=", commercial_partner.id)
+            ], order='id desc')
+
+            # do not show commercial_partner_id if its mandatory fields are not complete to children
+            # as children can not edit (fill) the commercial_partner_id
+            if commercial_partner != order.partner_id:
+                if not self._check_billing_partner_mandatory_fields(commercial_partner):
+                    bill_partners = bill_partners.filtered(lambda p: p.id != commercial_partner.id)
+
+                if not self._check_shipping_partner_mandatory_fields(commercial_partner):
+                    ship_partners = ship_partners.filtered(lambda p: p.id != commercial_partner.id)
+
+            partner_id = int(kw.get('partner_id', 0))
+            if partner_id:
+                if 'is_invoice' in kw and bill_partners and partner_id in bill_partners.mapped('id'):
+                    order.partner_invoice_id = partner_id
+                elif ship_partners and partner_id in ship_partners.mapped('id'):
+                    order.partner_shipping_id = partner_id
 
         values = {
             'order': order,
-            'shippings': shippings,
+            'shippings': ship_partners,
+            'billings': bill_partners,
             'only_services': order and order.only_services or False
         }
         return values
+
+    def _check_billing_partner_mandatory_fields(self, partner_id):
+        ''' return True if all mandatory fields for billing address are complete '''
+        billing_fields_required = self._get_mandatory_fields_billing(partner_id.country_id.id)
+        return all(partner_id.read(billing_fields_required)[0].values())
 
     def _get_mandatory_fields_billing(self, country_id=False):
         req = ["name", "email", "street", "city", "country_id"]
@@ -1019,6 +1038,11 @@ class WebsiteSale(payment_portal.PaymentPortal):
             if country.zip_required:
                 req += ['zip']
         return req
+
+    def _check_shipping_partner_mandatory_fields(self, partner_id):
+        ''' return True if all mandatory fields for shipping address are complete '''
+        shipping_fields_required = self._get_mandatory_fields_shipping(partner_id.country_id.id)
+        return all(partner_id.read(shipping_fields_required)[0].values())
 
     def _get_mandatory_fields_shipping(self, country_id=False):
         req = ["name", "street", "city", "country_id"]
@@ -1037,13 +1061,16 @@ class WebsiteSale(payment_portal.PaymentPortal):
         error = dict()
         error_message = []
 
-        if data.get('partner_id'):
+        if mode == ('edit', 'billing') and data.get('partner_id'):
             partner_su = request.env['res.partner'].sudo().browse(int(data['partner_id'])).exists()
-            name_change = partner_su and 'name' in data and data['name'] != partner_su.name
-            email_change = partner_su and 'email' in data and data['email'] != partner_su.email
+            name_change = partner_su and partner_su.name and 'name' in data and data['name'] != partner_su.name
+            email_change = partner_su and 'email' in data and data['email'] != partner_su.email and partner_su.email
+            invoices = request.env['account.move'].sudo().search(
+                [('partner_id', '=', partner_su.id)], limit=1
+            ) if partner_su else False
 
             # Prevent changing the billing partner name if invoices have been issued.
-            if mode[1] == 'billing' and name_change and not partner_su.can_edit_vat():
+            if name_change and not partner_su.can_edit_vat() and invoices:
                 error['name'] = 'error'
                 error_message.append(_(
                     "Changing your name is not allowed once documents have been issued for your"
@@ -1151,20 +1178,23 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if request.website.specific_user_account:
             new_values['website_id'] = request.website.id
 
+        commercial_partner_id = order.partner_id.commercial_partner_id
         if mode[0] == 'new':
+            lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
+            if lang:
+                new_values['lang'] = lang
             new_values['company_id'] = request.website.company_id.id
             new_values['team_id'] = request.website.salesteam_id and request.website.salesteam_id.id
             new_values['user_id'] = request.website.salesperson_id.id
-
-        lang = request.lang.code if request.lang.code in request.website.mapped('language_ids.code') else None
-        if lang:
-            new_values['lang'] = lang
-        if mode == ('edit', 'billing') and order.partner_id.type == 'contact':
-            new_values['type'] = 'other'
-        if mode[1] == 'shipping':
-            new_values['parent_id'] = order.partner_id.commercial_partner_id.id
-            new_values['type'] = 'delivery'
-
+            # define type of the new partner
+            if mode[1] == 'billing':
+                new_values['type'] = 'other' if 'use_same' in values else 'invoice'
+                # for public user avoid linking to default archived 'Public user' partner
+                if commercial_partner_id.active:
+                    new_values['parent_id'] = commercial_partner_id.id
+            elif mode[1] == 'shipping':
+                new_values['type'] = 'delivery'
+                new_values['parent_id'] = commercial_partner_id.id
         return new_values, errors, error_msg
 
     @http.route(['/shop/address'], type='http', methods=['GET', 'POST'], auth="public", website=True, sitemap=False)
@@ -1176,35 +1206,36 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection:
             return redirection
 
-        mode = (False, False)
         can_edit_vat = False
         values, errors = {}, {}
 
         partner_id = int(kw.get('partner_id', -1))
 
-        # IF PUBLIC ORDER
-        if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
+        if order._is_public_order():
             mode = ('new', 'billing')
             can_edit_vat = True
-        # IF ORDER LINKED TO A PARTNER
-        else:
+        else:  # IF ORDER LINKED TO A PARTNER
             if partner_id > 0:
-                if partner_id == order.partner_id.id:
-                    mode = ('edit', 'billing')
-                    can_edit_vat = order.partner_id.can_edit_vat()
+                partners = Partner.search(
+                    [('id', 'child_of', order.partner_id.commercial_partner_id.ids)]
+                )
+                if 'is_invoice' in kw:
+                    bill_partners_ids = partners.filtered(lambda p: p.type != 'delivery').ids
+                    if partner_id in bill_partners_ids or order.partner_id.id == partner_id:
+                        mode = ('edit', 'billing')
+                        can_edit_vat = order.partner_id.can_edit_vat()
+                    else:
+                        return Forbidden()
                 else:
-                    shippings = Partner.search([('id', 'child_of', order.partner_id.commercial_partner_id.ids)])
-                    if order.partner_id.commercial_partner_id.id == partner_id:
-                        mode = ('new', 'shipping')
-                        partner_id = -1
-                    elif partner_id in shippings.mapped('id'):
+                    ship_partners_ids = partners.filtered(lambda p: p.type != 'invoice').ids
+                    if partner_id in ship_partners_ids:
                         mode = ('edit', 'shipping')
                     else:
                         return Forbidden()
                 if mode and partner_id != -1:
                     values = Partner.browse(partner_id)
             elif partner_id == -1:
-                mode = ('new', 'shipping')
+                mode = ('new', 'billing') if 'is_invoice' in kw else ('new', 'shipping')
             else: # no mode - refresh without post?
                 return request.redirect('/shop/checkout')
 
@@ -1218,28 +1249,52 @@ class WebsiteSale(payment_portal.PaymentPortal):
                 errors['error_message'] = error_msg
                 values = kw
             else:
+                update_mode, address_mode = mode
                 partner_id = self._checkout_form_save(mode, post, kw)
                 # We need to validate _checkout_form_save return, because when partner_id not in shippings
                 # it returns Forbidden() instead the partner_id
                 if isinstance(partner_id, Forbidden):
                     return partner_id
+
                 fpos_before = order.fiscal_position_id
-                if mode[1] == 'billing':
-                    order.partner_id = partner_id
-                    # This is the *only* thing that the front end user will see/edit anyway when choosing billing address
-                    order.partner_invoice_id = partner_id
-                    if not kw.get('use_same'):
-                        kw['callback'] = kw.get('callback') or \
-                            (not order.only_services and (mode[0] == 'edit' and '/shop/checkout' or '/shop/address'))
-                    # We need to update the pricelist(by the one selected by the customer), because onchange_partner reset it
-                    # We only need to update the pricelist when it is not redirected to /confirm_order
-                    if kw.get('callback', False) != '/shop/confirm_order':
-                        request.website.sale_get_order(update_pricelist=True)
-                elif mode[1] == 'shipping':
-                    order.partner_shipping_id = partner_id
+                update_values = {}
+                if update_mode == 'new':  # New address
+                    if order._is_public_order():
+                        update_values['partner_id'] = partner_id
+
+                    if address_mode == 'billing':
+                        update_values['partner_invoice_id'] = partner_id
+                        if kw.get('use_same'):
+                            update_values['partner_shipping_id'] = partner_id
+                        elif not kw.get('callback') and not order.only_services:
+                            # Now that the billing is set, if shipping is necessary
+                            # request the user to fill the shipping address
+                            kw['callback'] = '/shop/address'
+                    elif address_mode == 'shipping':
+                        update_values['partner_shipping_id'] = partner_id
+                elif update_mode == 'edit':  # Updating an existing address
+                    if order.partner_id.id == partner_id:
+                        # Editing the main partner of the SO --> also trigger a partner update to
+                        # recompute fpos & any partner-related fields
+                        update_values['partner_id'] = partner_id
+
+                    if address_mode == 'billing':
+                        update_values['partner_invoice_id'] = partner_id
+                        if not kw.get('callback') and not order.only_services:
+                            kw['callback'] = '/shop/checkout'
+                    elif address_mode == 'shipping':
+                        update_values['partner_shipping_id'] = partner_id
+
+                order.write(update_values)
 
                 if order.fiscal_position_id != fpos_before:
+                    # Recompute taxes on fpos change
+                    # TODO recompute all prices too to correctly manage price_include taxes ?
                     order._recompute_taxes()
+
+                if 'partner_id' in update_values:
+                    # Force recomputation of pricelist on main customer address update
+                    request.website.sale_get_order(update_pricelist=True)
 
                 # TDE FIXME: don't ever do this
                 # -> TDE: you are the guy that did what we should never do in commit e6f038a
@@ -1438,8 +1493,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         order = render_values['website_sale_order']
 
         def_country_id = order.partner_id.country_id
-        # IF PUBLIC ORDER
-        if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
+        if order._is_public_order():
             if request.geoip.country_code:
                 def_country_id = request.env['res.country'].search([('code', '=', request.geoip.country_code)], limit=1)
             else:
@@ -1463,7 +1517,7 @@ class WebsiteSale(payment_portal.PaymentPortal):
         if redirection:
             return redirection
 
-        if order.partner_id.id == request.website.user_id.sudo().partner_id.id:
+        if order._is_public_order():
             return request.redirect('/shop/address')
 
         redirection = self.checkout_check_address(order)

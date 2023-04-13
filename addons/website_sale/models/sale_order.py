@@ -622,3 +622,9 @@ class SaleOrder(models.Model):
         ]).available_carriers(
             self.partner_shipping_id
         ).filtered(_is_carrier_available)
+
+    #=== TOOLING ===#
+
+    def _is_public_order(self):
+        self.ensure_one()
+        return self.partner_id.id == request.website.user_id.sudo().partner_id.id
