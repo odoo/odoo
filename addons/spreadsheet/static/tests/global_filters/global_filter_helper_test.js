@@ -8,6 +8,12 @@ import {
 const { DateTime } = luxon;
 
 QUnit.module("spreadsheet > Global filters helpers", {}, () => {
+    QUnit.test("getRelativeDateDomain > year_to_date (year to date)", async function (assert) {
+        const now = DateTime.fromISO("2022-05-16");
+        const domain = getRelativeDateDomain(now, 0, "year_to_date", "field", "date");
+        assertDateDomainEqual(assert, "field", "2022-01-01", "2022-05-16", domain);
+    });
+
     QUnit.test("getRelativeDateDomain > last_week (last 7 days)", async function (assert) {
         const now = DateTime.fromISO("2022-05-16");
         const domain = getRelativeDateDomain(now, 0, "last_week", "field", "date");
@@ -105,6 +111,15 @@ QUnit.module("spreadsheet > Global filters helpers", {}, () => {
                 "2022-05-16 21:59:59",
                 domain
             );
+        }
+    );
+
+    QUnit.test(
+        "getRelativeDateDomain > with offset > year_to_date (year to date)",
+        async function (assert) {
+            const now = DateTime.fromISO("2022-05-16");
+            const domain = getRelativeDateDomain(now, -1, "year_to_date", "field", "date");
+            assertDateDomainEqual(assert, "field", "2021-01-01", "2021-05-16", domain);
         }
     );
 
