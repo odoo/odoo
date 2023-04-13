@@ -1,50 +1,18 @@
-html, body {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    position: fixed;
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  // overflow: none;
+  position: fixed;
+  box-sizing: border-box;
 }
 
-.break-line {
-    box-sizing: border-box;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+.dvh-100{
+  // we specify the 100vh as a fallback in case the browser does not 
+  // know dvh
+  height: 100vh !important;
+  height: 100dvh !important;
 }
 
-.o_self_order_item_card--image {
-    width:110px;
-    min-width: 110px;
-	min-height: 110px;
-    
-    & img {
-        object-fit: cover;
-    }
-}
-.o_self_order_item_card {
-    border-right: 1px solid $border-color;
-    border-bottom: 1px solid $border-color;
-
-    @include media-breakpoint-down(md) {
-        &:nth-child(1n) {
-                border-right: 0;
-            }
-    }
-    @include media-breakpoint-up(md) {
-        &:nth-child(2n+1) {
-            border-right: 0;
-        }
-    }
-    @include media-breakpoint-up(xl) {
-        &:nth-child(2n+1) {
-            border-right: 1px solid $border-color;
-        }
-    
-        &:nth-child(4n+1) {
-            border-right: 0;
-        }
-    }
-}

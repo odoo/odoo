@@ -1,19 +1,24 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { clickOn } from "./tour_utils";
 
-registry.category("web_tour.tours").add("pos_self_order_tour", {
+registry.category("web_tour.tours").add("pos_qr_menu_tour", {
     test: true,
     steps: [
         {
-            content: "Test that the default View Menu button is present",
-            trigger: ".btn",
+            content: "Close the `Pos is Closed` notification",
+            trigger: "button.o_notification_close",
         },
+        ...clickOn("My Orders", { isCheck: true, isNot: true }),
+        ...clickOn("View Menu"),
         {
             content: "Test that products are present",
             trigger: ".o_self_order_item_card",
             isCheck: true,
         },
+        ...clickOn("Add to Cart", { isCheck: true, isNot: true }),
+
         {
             content: "Test that the 'No products found' message is not present",
             trigger: "body:not(:has(p:contains('No products found')))",
@@ -105,14 +110,15 @@ registry.category("web_tour.tours").add("pos_self_order_tour", {
         },
         {
             content: "Test that the product description is present and click on it",
-            trigger: "p.text-muted.small.break-line",
+            trigger: "p.o_self_order_item_card_description",
         },
         // We should now be on the product screen
         {
             content: "Test that the product name is present in the product screen",
-            trigger: "div.d-flex.flex-column.py-3 > h3",
+            trigger: ".o_self_order_product_main_view_name",
             isCheck: true,
         },
+        ...clickOn("Add", { isCheck: true, isNot: true }),
         {
             content: "Test that the back button is present on the product screen and click on it",
             trigger: "nav.o_self_order_navbar > button",
@@ -125,11 +131,7 @@ registry.category("web_tour.tours").add("pos_self_order_tour", {
         },
         // on the landing page, we look for the View Menu button
         // finding it also means that the back button works properly
-        {
-            content: "Test that the default View Menu button is present",
-            trigger: ".btn",
-            isCheck: true,
-        },
+        ...clickOn("View Menu", { isCheck: true }),
         {
             content: "Test that the back button is not present on the landing page",
             trigger: "body:not(:has(nav.o_self_order_navbar > button))",
