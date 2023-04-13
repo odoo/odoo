@@ -8,6 +8,7 @@ import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/r
 import { ProductItem } from "./ProductItem";
 import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
 import { Component, useState } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
@@ -88,7 +89,7 @@ export class ProductsWidget extends Component {
         const result = await this.loadProductFromDB();
         if (result.length > 0) {
             this.notification.add(
-                _.str.sprintf(
+                sprintf(
                     this.env._t('%s product(s) found for "%s".'),
                     result.length,
                     this.env.pos.searchProductWord
@@ -97,7 +98,7 @@ export class ProductsWidget extends Component {
             );
         } else {
             this.notification.add(
-                _.str.sprintf(
+                sprintf(
                     this.env._t('No more product found for "%s".'),
                     this.env.pos.searchProductWord
                 ),
@@ -112,34 +113,47 @@ export class ProductsWidget extends Component {
         }
     }
     async loadProductFromDB() {
-        if(!this.env.pos.searchProductWord)
+        if (!this.env.pos.searchProductWord) {
             return;
+        }
 
         try {
             const limit = 30;
-            let ProductIds = await this.orm.call(
+            const ProductIds = await this.orm.call(
                 "product.product",
                 "search",
-                [['&',['available_in_pos', '=', true], '|','|',
-                    ['name', 'ilike', this.env.pos.searchProductWord],
-                    ['default_code', 'ilike', this.env.pos.searchProductWord],
-                    ['barcode', 'ilike', this.env.pos.searchProductWord]]],
+                [
+                    [
+                        "&",
+                        ["available_in_pos", "=", true],
+                        "|",
+                        "|",
+                        ["name", "ilike", this.env.pos.searchProductWord],
+                        ["default_code", "ilike", this.env.pos.searchProductWord],
+                        ["barcode", "ilike", this.env.pos.searchProductWord],
+                    ],
+                ],
                 {
                     offset: this.state.currentOffset,
                     limit: limit,
                 }
             );
-            if(ProductIds.length) {
+            if (ProductIds.length) {
                 await this.env.pos._addProducts(ProductIds, false);
             }
             this.updateProductList();
             return ProductIds;
         } catch (error) {
-            const identifiedError = identifyError(error)
-            if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {
+            const identifiedError = identifyError(error);
+            if (
+                identifiedError instanceof ConnectionLostError ||
+                identifiedError instanceof ConnectionAbortedError
+            ) {
                 return this.popup.add("OfflineErrorPopup", {
                     title: this.env._t("Network Error"),
-                    body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
+                    body: this.env._t(
+                        "Product is not loaded. Tried loading the product from the server but there is a network error."
+                    ),
                 });
             } else {
                 throw error;

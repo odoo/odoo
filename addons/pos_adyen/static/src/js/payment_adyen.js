@@ -4,6 +4,7 @@ import core from "web.core";
 import rpc from "web.rpc";
 import { PaymentInterface } from "@point_of_sale/js/payment";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
+import { sprintf } from "@web/core/utils/strings";
 
 var _t = core._t;
 
@@ -78,7 +79,7 @@ export const PaymentAdyen = PaymentInterface.extend({
 
     _adyen_get_sale_id: function () {
         var config = this.pos.config;
-        return _.str.sprintf("%s (ID: %s)", config.display_name, config.id);
+        return sprintf("%s (ID: %s)", config.display_name, config.id);
     },
 
     _adyen_common_message_header: function () {
@@ -192,9 +193,9 @@ export const PaymentAdyen = PaymentInterface.extend({
         return output_text.reduce(function (acc, entry) {
             var params = new URLSearchParams(entry.Text);
             if (params.get("name") && !params.get("value")) {
-                return acc + _.str.sprintf("\n%s", params.get("name"));
+                return acc + sprintf("\n%s", params.get("name"));
             } else if (params.get("name") && params.get("value")) {
-                return acc + _.str.sprintf("\n%s: %s", params.get("name"), params.get("value"));
+                return acc + sprintf("\n%s: %s", params.get("name"), params.get("value"));
             }
 
             return acc;
@@ -287,7 +288,7 @@ export const PaymentAdyen = PaymentInterface.extend({
                         resolve(true);
                     } else {
                         var message = additional_response.get("message");
-                        self._show_error(_.str.sprintf(_t("Message from Adyen: %s"), message));
+                        self._show_error(sprintf(_t("Message from Adyen: %s"), message));
 
                         // this means the transaction was cancelled by pressing the cancel button on the device
                         if (message.startsWith("108 ")) {
@@ -327,7 +328,7 @@ export const PaymentAdyen = PaymentInterface.extend({
             }
 
             this._show_error(
-                _.str.sprintf(_t("An unexpected error occurred. Message from Adyen: %s"), msg)
+                sprintf(_t("An unexpected error occurred. Message from Adyen: %s"), msg)
             );
             if (line) {
                 line.set_payment_status("force_done");

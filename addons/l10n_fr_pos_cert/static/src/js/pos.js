@@ -3,8 +3,8 @@
 import { PosGlobalState, Order, Orderline } from "@point_of_sale/js/models";
 import core from "web.core";
 import { patch } from "@web/core/utils/patch";
+import { sprintf } from "@web/core/utils/strings";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-
 var _t = core._t;
 
 patch(PosGlobalState.prototype, "l10n_fr_pos_cert.PosGlobalState", {
@@ -13,10 +13,7 @@ patch(PosGlobalState.prototype, "l10n_fr_pos_cert.PosGlobalState", {
         if (!this.company.country) {
             this.env.services.popup.add(ErrorPopup, {
                 title: _t("Missing Country"),
-                body: _.str.sprintf(
-                    _t("The company %s doesn't have a country set."),
-                    this.company.name
-                ),
+                body: sprintf(_t("The company %s doesn't have a country set."), this.company.name),
             });
             return false;
         }

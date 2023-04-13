@@ -1,6 +1,7 @@
 /** @odoo-module alias=web.viewUtils **/
 
 
+import { unique } from '@web/core/utils/arrays';
 import * as dom from 'web.dom';
 import * as utils from 'web.utils';
 
@@ -93,7 +94,7 @@ var viewUtils = {
         };
         if (options && options.extraClass) {
             var classes = btnOptions.attrs.class ? btnOptions.attrs.class.split(' ') : [];
-            btnOptions.attrs.class = _.uniq(classes.concat(options.extraClass.split(' '))).join(' ');
+            btnOptions.attrs.class = unique(classes.concat(options.extraClass.split(' '))).join(' ');
         }
         var str = (node.attrs.string || '').replace(/_/g, '');
         if (str) {

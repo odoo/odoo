@@ -116,7 +116,7 @@ export class ProfilingQwebView extends Component {
      * @returns {string}
      */
     _formatDelay(delay) {
-        return delay ? _.str.sprintf("%.1f", Math.ceil(delay * 10) / 10) : ".";
+        return delay ? (Math.ceil(delay * 10) / 10).toFixed(1) : ".";
     }
 
     /**

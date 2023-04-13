@@ -1,5 +1,6 @@
 /** @odoo-module alias=web.Domain **/
 
+import { intersection } from "@web/core/utils/arrays";
 import collections from "web.collections";
 import pyUtils from "web.py_utils";
 var py = window.py; // look py.js
@@ -34,7 +35,7 @@ var Domain = collections.Tree.extend({
      */
     init: function (domain, evalContext) {
         this._super.apply(this, arguments);
-        if (_.isArray(domain) || _.isString(domain)) {
+        if (Array.isArray(domain) || _.isString(domain)) {
             this._parse(this.normalizeArray(_.clone(this.stringToArray(domain, evalContext))));
         } else {
             this._data = !!domain;
@@ -57,7 +58,7 @@ var Domain = collections.Tree.extend({
         if (this._data === true || this._data === false) {
             // The domain is a always-true or a always-false domain
             return this._data;
-        } else if (_.isArray(this._data)) {
+        } else if (Array.isArray(this._data)) {
             // The domain is a [name, operator, value] entity
             // First check if we have the field value in the field values set
             // and if the first part of the domain contains 'parent.field'
@@ -78,10 +79,7 @@ var Domain = collections.Tree.extend({
                         fieldName in values.parent;
                 }
                 if (!(this._data[0] in values) && !(isParentField)) {
-                    throw new Error(_.str.sprintf(
-                        "Unknown field %s in domain",
-                        this._data[0]
-                    ));
+                    throw new Error(`Unknown field ${this._data[0]} in domain`);
                 }
                 fieldValue = isParentField ? values.parent[fieldName] : values[fieldName];
             }
@@ -102,14 +100,14 @@ var Domain = collections.Tree.extend({
                 case ">=":
                     return (fieldValue >= this._data[2]);
                 case "in":
-                    return _.intersection(
-                        _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    return intersection(
+                        Array.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
+                        Array.isArray(fieldValue) ? fieldValue : [fieldValue],
                     ).length !== 0;
                 case "not in":
-                    return _.intersection(
-                        _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    return intersection(
+                        Array.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
+                        Array.isArray(fieldValue) ? fieldValue : [fieldValue],
                     ).length === 0;
                 case "like":
                     if (fieldValue === false) {
@@ -132,10 +130,7 @@ var Domain = collections.Tree.extend({
                     }
                     return new RegExp(this._data[2].replace(/%/g, '.*'), 'i').test(fieldValue);
                 default:
-                    throw new Error(_.str.sprintf(
-                        "Domain %s uses an unsupported operator",
-                        this._data
-                    ));
+                    throw new Error(`Domain ${this._data} uses an unsupported operator`);
             }
         } else { // The domain is a set of [name, operator, value] entitie(s)
             switch (this._data) {
@@ -289,7 +284,7 @@ var Domain = collections.Tree.extend({
     normalizeArray: function (domain) {
         if (domain.length === 0) { return domain; }
         var expected = 1;
-        _.each(domain, function (item) {
+        domain.forEach(item => {
             if (item === "&" || item === "|") {
                 expected++;
             } else if (item !== "!") {
@@ -299,10 +294,7 @@ var Domain = collections.Tree.extend({
         if (expected < 0) {
             domain.unshift.apply(domain, _.times(Math.abs(expected), _.constant("&")));
         } else if (expected > 0) {
-            throw new Error(_.str.sprintf(
-                "invalid domain %s (missing %d segment(s))",
-                JSON.stringify(domain), expected
-            ));
+            throw new Error(`invalid domain ${JSON.stringify(domain)} (missing ${expected.toFixed(0)} segment(s))`);
         }
         return domain;
     },

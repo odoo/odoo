@@ -17,6 +17,7 @@ import { ReprintReceiptButton } from "./ControlButtons/ReprintReceiptButton";
 import { SearchBar } from "../../Misc/SearchBar";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { onMounted, useState } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 export class TicketScreen extends IndependentToOrderScreen {
     static template = "TicketScreen";
@@ -126,7 +127,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         ) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Existing orderlines"),
-                body: _.str.sprintf(
+                body: sprintf(
                     this.env._t(
                         "%s has a total amount of %s, are you sure you want to delete this order?"
                     ),
@@ -207,7 +208,7 @@ export class TicketScreen extends IndependentToOrderScreen {
                 this.numberBuffer.reset();
                 this.popup.add(ErrorPopup, {
                     title: this.env._t("Maximum Exceeded"),
-                    body: _.str.sprintf(
+                    body: sprintf(
                         this.env._t(
                             "The requested quantity to be refunded is higher than the ordered quantity. %s is requested while only %s can be refunded."
                         ),
@@ -656,19 +657,28 @@ export class TicketScreen extends IndependentToOrderScreen {
         const limit = this._state.syncedOrders.nPerPage;
         const offset =
             (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
-        const { ordersInfo, totalCount } = await this.orm.call("pos.order", "search_paid_order_ids", [], {
-            config_id: this.env.pos.config.id,
-            domain,
-            limit,
-            offset,
-        });
-        const idsNotInCache = ordersInfo.filter((orderInfo) => !(orderInfo[0] in this._state.syncedOrders.cache));
-        const idsNotUpToDate = ordersInfo.filter((orderInfo) => format.datetime(moment(orderInfo[1]), {}, {}) > format.datetime(moment(this._state.syncedOrders.cacheDate), {}, { timezone: false }));
+        const { ordersInfo, totalCount } = await this.orm.call(
+            "pos.order",
+            "search_paid_order_ids",
+            [],
+            {
+                config_id: this.env.pos.config.id,
+                domain,
+                limit,
+                offset,
+            }
+        );
+        const idsNotInCache = ordersInfo.filter(
+            (orderInfo) => !(orderInfo[0] in this._state.syncedOrders.cache)
+        );
+        const idsNotUpToDate = ordersInfo.filter(
+            (orderInfo) =>
+                format.datetime(moment(orderInfo[1]), {}, {}) >
+                format.datetime(moment(this._state.syncedOrders.cacheDate), {}, { timezone: false })
+        );
         const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
         if (idsToLoad.length > 0) {
-            const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [
-                idsToLoad,
-            ]);
+            const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [idsToLoad]);
             // Check for missing products and partners and load them in the PoS
             await this.env.pos._loadMissingProducts(fetchedOrders);
             await this.env.pos._loadMissingPartners(fetchedOrders);

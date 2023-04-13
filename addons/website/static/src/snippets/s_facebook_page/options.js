@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { pick } from "@web/core/utils/objects";
 import options from "web_editor.snippets.options";
 
 options.registry.facebookPage = options.Class.extend({
@@ -19,8 +20,7 @@ options.registry.facebookPage = options.Class.extend({
             small_header: true,
             hide_cover: true,
         };
-        this.fbData = _.defaults(_.pick(this.$target[0].dataset, _.keys(defaults)), defaults);
-
+        this.fbData = Object.assign({}, defaults, pick(this.$target[0].dataset, Object.keys(defaults)), defaults);
         if (!this.fbData.href) {
             // Fetches the default url for facebook page from website config
             var self = this;

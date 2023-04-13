@@ -268,7 +268,7 @@ export class MassMailingHtmlField extends HtmlField {
             this._themeClassNames = "";
             const displayableThemes =
                 device.isMobile ?
-                _.filter($themes, theme => !$(theme).data("hideFromMobile")) :
+                $themes.filter(theme => !$(theme).data("hideFromMobile")) :
                 $themes;
             this._themeParams = _.map(displayableThemes, (theme) => {
                 const $theme = $(theme);

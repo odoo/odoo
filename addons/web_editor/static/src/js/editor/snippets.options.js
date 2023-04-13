@@ -33,6 +33,7 @@ import {
 } from "web_editor.image_processing";
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
+import { sprintf } from "@web/core/utils/strings";
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -5771,9 +5772,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
             1024: '1024px',
             1920: '1920px',
         };
-        widths[img.naturalWidth] = _.str.sprintf(_t("%spx"), img.naturalWidth);
-        widths[optimizedWidth] = _.str.sprintf(_t("%dpx (Suggested)"), optimizedWidth);
-        widths[maxWidth] = _.str.sprintf(_t("%dpx (Original)"), maxWidth);
+        widths[img.naturalWidth] = sprintf(_t("%spx"), img.naturalWidth);
+        widths[optimizedWidth] = sprintf(_t("%dpx (Suggested)"), optimizedWidth);
+        widths[maxWidth] = sprintf(_t("%dpx (Original)"), maxWidth);
         return Object.entries(widths)
             .filter(([width]) => width <= maxWidth)
             .sort(([v1], [v2]) => v1 - v2);
@@ -7815,7 +7816,7 @@ registry.SnippetSave = SnippetOptionWidget.extend({
                                 reloadEditor: true,
                                 invalidateSnippetCache: true,
                                 onSuccess: async () => {
-                                    const defaultSnippetName = _.str.sprintf(_t("Custom %s"), this.data.snippetName);
+                                    const defaultSnippetName = sprintf(_t("Custom %s"), this.data.snippetName);
                                     const targetCopyEl = this.$target[0].cloneNode(true);
                                     delete targetCopyEl.dataset.name;
                                     // By the time onSuccess is called after request_save, the

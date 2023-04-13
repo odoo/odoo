@@ -4,6 +4,7 @@ import core from "web.core";
 import publicWidget from "web.public.widget";
 import time from "web.time";
 import session from "web.session";
+import { sprintf } from "@web/core/utils/strings";
 
 var _t = core._t;
 
@@ -40,9 +41,9 @@ var PortalSidebar = publicWidget.Widget.extend({
                 } else if (diff > 0) {
                     // Workaround: force uniqueness of these two translations. We use %1d because the string
                     // with %d is already used in mail and mail's translations are not sent to the frontend.
-                    displayStr = _.str.sprintf(_t('Due in %1d days'), Math.abs(diff));
+                    displayStr = sprintf(_t('Due in %s days'), Math.abs(diff).toFixed(1));
                 } else {
-                    displayStr = _.str.sprintf(_t('%1d days overdue'), Math.abs(diff));
+                    displayStr = sprintf(_t('%s days overdue'), Math.abs(diff).toFixed(1));
                 }
                 $(el).text(displayStr);
             });

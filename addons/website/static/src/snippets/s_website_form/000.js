@@ -8,6 +8,7 @@
     import publicWidget from "web.public.widget";
     import dom from "web.dom";
     import concurrency from "web.concurrency";
+import { sprintf } from "@web/core/utils/strings";
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -415,9 +416,7 @@
                         // filter neither on required, nor on checkbox and
                         // checking the validity of the group of checkbox is
                         // currently done for each checkbox of that group...
-                        var checkboxes = _.filter(inputs, function (input) {
-                            return input.required && input.type === 'checkbox';
-                        });
+                        var checkboxes = inputs.filter(input => input.required && input.type === 'checkbox');
                         return !_.any(checkboxes, checkbox => checkbox.checkValidity());
 
                     // Special cases for dates and datetimes
@@ -493,13 +492,13 @@
                     if (datetime.isValid()) {
                         return time.datetime_to_str(datetime.toDate());
                     }
-                    throw new Error(_.str.sprintf(_t("'%s' is not a correct datetime"), value));
+                    throw new Error(sprintf(_t("'%s' is not a correct datetime"), value));
                 case 'date':
                     var date = moment(value, [date_pattern, date_pattern_wo_zero], true);
                     if (date.isValid()) {
                         return time.date_to_str(date.toDate());
                     }
-                    throw new Error(_.str.sprintf(_t("'%s' is not a correct date"), value));
+                    throw new Error(sprintf(_t("'%s' is not a correct date"), value));
             }
             return value;
         },

@@ -98,7 +98,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                     await this.env.pos._loadPartners([sale_order.partner_id[0]]);
                 } catch {
                     const title = this.env._t("Customer loading error");
-                    const body = _.str.sprintf(
+                    const body = sprintf(
                         this.env._t("There was a problem in loading the %s customer."),
                         sale_order.partner_id[1]
                     );

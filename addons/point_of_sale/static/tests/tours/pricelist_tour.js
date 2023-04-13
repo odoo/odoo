@@ -13,7 +13,7 @@ function assert(condition, message) {
 
 function assertProductPrice(product, pricelist_name, quantity, expected_price) {
     return function () {
-        var pricelist = _.findWhere(posmodel.pricelists, { name: pricelist_name });
+        var pricelist = posmodel.pricelists.find((pricelist) => pricelist.name === pricelist_name);
         var frontend_price = product.get_price(pricelist, quantity);
         frontend_price = round_di(frontend_price, posmodel.dp["Product Price"]);
 

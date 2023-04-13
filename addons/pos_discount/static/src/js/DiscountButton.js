@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { Component } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 export class DiscountButton extends Component {
     static template = "DiscountButton";
@@ -68,7 +69,7 @@ export class DiscountButton extends Component {
                     description:
                         `${pc}%, ` +
                         (tax_ids_array.length
-                            ? _.str.sprintf(
+                            ? sprintf(
                                   this.env._t("Tax: %s"),
                                   tax_ids_array
                                       .map((taxId) => this.env.pos.taxes_by_id[taxId].amount + "%")

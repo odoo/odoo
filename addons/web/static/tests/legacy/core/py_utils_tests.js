@@ -85,10 +85,20 @@ QUnit.module('core', function () {
             return String(d.getFullYear()) + '-01-30';
         });
 
-        check("time.strftime('%Y-%m-%d %H:%M:%S')", function(d) {
-            return _.str.sprintf('%04d-%02d-%02d %02d:%02d:%02d',
-                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate(),
-                d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds());
+        check("time.strftime('%Y-%m-%d %H:%M:%S')", function (d) {
+            return (
+                [
+                    String(d.getUTCFullYear()).padStart(4, "0"),
+                    String(d.getUTCMonth() + 1).padStart(2, "0"),
+                    String(d.getUTCDate()).padStart(2, "0"),
+                ].join("-") +
+                " " +
+                [
+                    String(d.getUTCHours()).padStart(2, "0"),
+                    String(d.getUTCMinutes()).padStart(2, "0"),
+                    String(d.getUTCSeconds()).padStart(2, "0"),
+                ].join(":")
+            );
         });
     });
 
@@ -98,8 +108,11 @@ QUnit.module('core', function () {
         var check = makeTimeCheck(assert, pyUtils);
 
         check("context_today().strftime('%Y-%m-%d')", function(d) {
-            return String(_.str.sprintf('%04d-%02d-%02d',
-                d.getFullYear(), d.getMonth() + 1, d.getDate()));
+            return [
+                String(d.getFullYear()).padStart(4, "0"),
+                String(d.getMonth() + 1).padStart(2, "0"),
+                String(d.getDate()).padStart(2, "0"),
+            ].join("-");
         });
     });
 
@@ -709,8 +722,11 @@ QUnit.module('core', function () {
         });
 
         var d = new Date();
-        var today = _.str.sprintf("%04d-%02d-%02d",
-                d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate());
+        var today = [
+            String(d.getUTCFullYear()).padStart(4, "0"),
+            String(d.getUTCMonth() + 1).padStart(2, "0"),
+            String(d.getUTCDate()).padStart(2, "0"),
+        ].join("-");
         assert.deepEqual(result.domain, [
             ["type", "=", "contract"],
             "|", ["state", "in", ["open", "draft"]],
@@ -777,8 +793,11 @@ QUnit.module('core', function () {
         });
 
         var date = new Date();
-        var today = _.str.sprintf("%04d-%02d-%02d",
-            date.getFullYear(), date.getMonth() + 1, date.getDate());
+        var today = [
+            String(date.getFullYear()).padStart(4, "0"),
+            String(date.getMonth() + 1).padStart(2, "0"),
+            String(date.getDate()).padStart(2, "0"),
+        ].join("-");
         assert.deepEqual(result.domain, [
             ['state', '!=', 'cancel'],
             ['opening_date', '>', today]
@@ -794,11 +813,17 @@ QUnit.module('core', function () {
             contexts: [],
         });
         var date = new Date();
-        var today = _.str.sprintf("%04d-%02d-%02d",
-            date.getFullYear(), date.getMonth() + 1, date.getDate());
+        var today = [
+            String(date.getFullYear()).padStart(4, "0"),
+            String(date.getMonth() + 1).padStart(2, "0"),
+            String(date.getDate()).padStart(2, "0"),
+        ].join("-");
         date.setDate(date.getDate() - 15);
-        var ago_15_d = _.str.sprintf("%04d-%02d-%02d",
-            date.getFullYear(), date.getMonth() + 1, date.getDate());
+        var ago_15_d = [
+            String(date.getFullYear()).padStart(4, "0"),
+            String(date.getMonth() + 1).padStart(2, "0"),
+            String(date.getDate()).padStart(2, "0"),
+        ].join("-");
         assert.deepEqual(result.domain, [
             ['type', '=', 'in'],
             ['day', '<=', today],

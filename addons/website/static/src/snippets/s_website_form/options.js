@@ -7,6 +7,7 @@ import Dialog from "web.Dialog";
 import dom from "web.dom";
 import {generateHTMLId} from "web_editor.utils";
 import "website.editor.snippets.options";
+import { sprintf } from "@web/core/utils/strings";
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -307,9 +308,9 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             model: 'ir.model',
             method: 'get_compatible_form_models',
         });
-
+        
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
-        this.activeForm = _.findWhere(this.models, {model: targetModelName});
+        this.activeForm = this.models.find(m => m.model === targetModelName);
         // Create the Form Action select
         this.selectActionEl = document.createElement('we-select');
         this.selectActionEl.setAttribute('string', 'Action');
@@ -708,7 +709,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 oldFormInfo = FormEditorRegistry.get(oldFormKey);
             }
             this.$target.find('.s_website_form_field').remove();
-            this.activeForm = _.findWhere(this.models, {id: modelId});
+            this.activeForm = this.models.find(model => model.id === modelId);
         }
         const formKey = this.activeForm.website_form_key;
         const formInfo = FormEditorRegistry.get(formKey);
@@ -1293,7 +1294,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         const list = document.createElement('we-list');
         const optionText = select ? 'Option' : type === 'selection' ? 'Radio' : 'Checkbox';
         list.setAttribute('string', `${optionText} List`);
-        list.dataset.addItemTitle = _.str.sprintf(_t("Add new %s"), optionText);
+        list.dataset.addItemTitle = sprintf(_t("Add new %s"), optionText);
         list.dataset.renderListItems = '';
 
         list.dataset.hasDefault = ['one2many', 'many2many'].includes(type) ? 'multiple' : 'unique';

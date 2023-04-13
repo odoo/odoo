@@ -62,10 +62,7 @@ export class Navbar extends Component {
                     this.env.pos.setLoadingOrderState(true);
                     const message = await this.env.pos._syncAllOrdersFromServer();
                     if (message) {
-                        this.notification.add(
-                            _.str.sprintf(message),
-                            5000
-                        );
+                        this.notification.add(message, 5000);
                     }
                 } finally {
                     this.env.pos.setLoadingOrderState(false);

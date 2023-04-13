@@ -5,6 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { Component } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 export class TableGuestsButton extends Component {
     static template = "TableGuestsButton";
@@ -34,7 +35,7 @@ export class TableGuestsButton extends Component {
             if (guestCount > max_capacity) {
                 await this.popup.add(ErrorPopup, {
                     title: this.env._t("Blocked action"),
-                    body: _.str.sprintf(
+                    body: sprintf(
                         this.env._t("You cannot put a number that exceeds %s "),
                         max_capacity
                     ),
