@@ -3950,13 +3950,14 @@ class MailThread(models.AbstractModel):
     # THREAD MESSAGE UPDATE
     # ------------------------------------------------------
 
-    def message_change_thread(self, new_thread, new_parent_message=False):
+    def message_change_thread(self, new_thread, move_attachments=False, move_activities=False, new_parent_message=False):
         """
         Transfer the list of the mail thread messages from an model to another
 
-        :param id : the old res_id of the mail.message
-        :param new_res_id : the new res_id of the mail.message
-        :param new_model : the name of the new model of the mail.message
+        :param <mail.thread> new_thread : the thread to transfer the messages to
+        :param bool move_attachments : if True, also transfer the attachments from the old thread to the new one
+        :param bool move_activities : if True, also transfer the activities from the old thread to the new one
+        :param <mail.message> new_parent_message : the new parent message of the transferred messages
 
         Example :   my_lead.message_change_thread(my_project_task)
                     will transfer the context of the thread of my_lead to my_project_task
@@ -3988,6 +3989,21 @@ class MailThread(models.AbstractModel):
         # other than comment: reset subtype
         msg_vals["subtype_id"] = None
         msg_not_comment.write(msg_vals)
+
+        # move the attachments
+        if move_attachments:
+            attachments = self.env['ir.attachment'].sudo().search([('res_model', '=', self._name), ('res_id', '=', self.id)])
+            attachments.write({'res_model': new_thread._name, 'res_id': new_thread.id})
+
+        # move the activities
+        if move_activities:
+            activities = self.env['mail.activity'].sudo().search([('res_model', '=', self._name), ('res_id', '=', self.id)])
+            activities.write({'res_model': new_thread._name, 'res_id': new_thread.id})
+            # reset activity types if they are incompatible with the new model
+            if self._name != new_thread._name:
+                new_activity_type = self.env['mail.activity']._default_activity_type_for_model(new_thread._name)
+                activities.filtered('activity_type_id.res_model').activity_type_id = new_activity_type
+
         return True
 
     def _message_update_content(self, message, body, attachment_ids=None,
