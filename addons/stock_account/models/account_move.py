@@ -207,16 +207,16 @@ class AccountMove(models.Model):
                         lambda line: line.account_id == product_interim_account and not line.reconciled and line.move_id.state == "posted"
                     )
 
+                    stock_aml = product_account_moves.filtered(lambda aml: aml.move_id.stock_valuation_layer_ids.stock_move_id)
+                    invoice_aml = product_account_moves.filtered(lambda aml: aml.move_id == move)
+                    correction_amls = product_account_moves - stock_aml - invoice_aml
                     # Reconcile.
-                    if any(aml.amount_currency and not aml.balance for aml in product_account_moves):
-                        stock_aml = product_account_moves.filtered(lambda aml: aml.move_id.stock_valuation_layer_ids.stock_move_id)
-                        invoice_aml = product_account_moves.filtered(lambda aml: aml.move_id == move)
-                        correction_amls = product_account_moves - stock_aml - invoice_aml
+                    if correction_amls:
                         if sum(correction_amls.mapped('balance')) > 0:
                             product_account_moves.with_context(no_exchange_difference=True).reconcile()
                         else:
                             (invoice_aml | correction_amls).with_context(no_exchange_difference=True).reconcile()
-                            (invoice_aml | stock_aml).with_context(no_exchange_difference=True).reconcile()
+                            (invoice_aml.filtered(lambda aml: not aml.reconciled) | stock_aml).with_context(no_exchange_difference=True).reconcile()
                     else:
                         product_account_moves.reconcile()
 
