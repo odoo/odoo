@@ -240,12 +240,10 @@ export class Link extends Component {
      * @private
      */
     _correctLink(url) {
-        if (url.indexOf('mailto:') === 0 || url.indexOf('tel:') === 0) {
+        if (url.indexOf('tel:') === 0) {
             url = url.replace(/^tel:([0-9]+)$/, 'tel://$1');
-        } else if (url.indexOf('@') !== -1 && url.indexOf(':') === -1) {
-            url = 'mailto:' + url;
-        } else if (url && url.indexOf('://') === -1 && url[0] !== '/'
-                    && url[0] !== '#' && url.slice(0, 2) !== '${') {
+        } else if (url && !url.startsWith('mailto:') && url.indexOf('://') === -1
+                    && url[0] !== '/' && url[0] !== '#' && url.slice(0, 2) !== '${') {
             url = 'http://' + url;
         }
         return url;
@@ -292,11 +290,9 @@ export class Link extends Component {
             (type && size ? (' btn-' + size) : '');
         var isNewWindow = this._isNewWindow(url);
         var doStripDomain = this._doStripDomain();
-        if (
-            url.indexOf('@') >= 0 && url.indexOf('mailto:') < 0 && !url.match(/^http[s]?/i) ||
-            this._link && this._link.href.includes('mailto:') && !url.includes('mailto:')
-        ) {
-            url = ('mailto:' + url);
+        const emailMatch = url.match(EMAIL_REGEX);
+        if (emailMatch) {
+            url = emailMatch[1] ? emailMatch[0] : 'mailto:' + emailMatch[0];
         } else if (url.indexOf(location.origin) === 0 && doStripDomain) {
             url = url.slice(location.origin.length);
         }
