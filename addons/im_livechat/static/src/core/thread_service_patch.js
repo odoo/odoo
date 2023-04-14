@@ -51,7 +51,7 @@ patch(ThreadService.prototype, "im_livechat", {
 
     getCounter(thread) {
         if (thread.type === "livechat") {
-            return thread.message_needaction_counter;
+            return thread.message_unread_counter;
         }
         return this._super(thread);
     },

@@ -449,3 +449,28 @@ QUnit.test("Clicking on unpin button unpins the channel", async (assert) => {
     await click(".o-mail-DiscussCategoryItem [title='Unpin Conversation']");
     assert.verifySteps(["You unpinned your conversation with Visitor 11"]);
 });
+
+QUnit.test("Message unread counter", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
+    const userId = pyEnv["res.users"].create({ name: "Harry", partner_id: partnerId });
+    const channelId = pyEnv["mail.channel"].create({
+        anonymous_name: "Visitor 11",
+        channel_member_ids: [
+            [0, 0, { partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: pyEnv.publicPartnerId }],
+        ],
+        channel_type: "livechat",
+        livechat_operator_id: pyEnv.currentPartnerId,
+    });
+    const { env, openDiscuss } = await start();
+    await openDiscuss();
+    await afterNextRender(async () =>
+        env.services.rpc("/mail/chat_post", {
+            context: { mockedUserId: userId },
+            message_content: "hu",
+            uuid: pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0].uuid,
+        })
+    );
+    assert.containsOnce($, ".o-mail-DiscussCategoryItem .badge:contains(1)");
+});
