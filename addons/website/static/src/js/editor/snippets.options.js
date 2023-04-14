@@ -3721,6 +3721,23 @@ options.registry.GridImage = options.Class.extend({
     },
 });
 
+options.registry.layout_column.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * TODO adapt in master: used to hide the "Layout" options on "Images Wall"
+     * (which has its own options to handle the layout).
+     *
+     * @override
+     */
+    _computeVisibility() {
+        return !this.$target[0].closest('[data-snippet="s_images_wall"]');
+    },
+});
+
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
