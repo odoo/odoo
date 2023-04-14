@@ -90,6 +90,24 @@ describe('insert HTML', () => {
                 contentAfter: '<pre>abcdef[]<br>ghi</pre>',
             });
         });
+        it('should not unwrap single node if the selection anchorNode is the editable', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content</p>[]',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<p>def</p>'));
+                },
+                contentAfter: '<p>content</p><p>def[]</p>',
+            });
+        });
+        it('should not unwrap nodes if the selection anchorNode is the editable', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content</p>[]',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<div>abc</div><p>def</p>'));
+                },
+                contentAfter: '<p>content</p><div>abc</div><p>def[]</p>',
+            });
+        });
     });
     describe('not collapsed selection', () => {
         it('should delete selection and insert html in its place', async () => {
