@@ -48,6 +48,9 @@ export class BomOverviewComponent extends Component {
     //---- Data ----
 
     async initBomData() {
+        const variantId = this.props.action.context.active_product_id;
+        this.state.currentVariantId = variantId ? variantId : false;
+
         const bomData = await this.getBomData();
         this.state.bomQuantity = bomData["bom_qty"];
         this.state.showOptions.uom = bomData["is_uom_applied"];
@@ -55,7 +58,7 @@ export class BomOverviewComponent extends Component {
         this.variants = bomData["variants"];
         this.showVariants = bomData["is_variant_applied"];
         if (this.showVariants) {
-            this.state.currentVariantId = Object.keys(this.variants)[0];
+            this.state.currentVariantId ||= Object.keys(this.variants)[0];
         }
         this.state.precision = bomData["precision"];
     }
@@ -105,7 +108,7 @@ export class BomOverviewComponent extends Component {
             await this.getBomData();
         }
     }
-    
+
     async onChangeVariant(variantId) {
         if (this.state.currentVariantId != variantId) {
             this.state.currentVariantId = variantId;
