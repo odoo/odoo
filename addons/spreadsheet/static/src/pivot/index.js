@@ -30,7 +30,7 @@ invalidateEvaluationCommands.add("INSERT_PIVOT");
 cellMenuRegistry.add("pivot_see_records", {
     name: _lt("See records"),
     sequence: 175,
-    action: async (env) => {
+    execute: async (env) => {
         const position = env.model.getters.getActivePosition();
         await SEE_RECORDS_PIVOT(position, env);
     },

@@ -16,7 +16,7 @@ featurePluginRegistry.add("odooAccountingAggregates", AccountingPlugin);
 cellMenuRegistry.add("move_lines_see_records", {
     name: _lt("See records"),
     sequence: 176,
-    async action(env) {
+    async execute(env) {
         const position = env.model.getters.getActivePosition();
         const cell = env.model.getters.getCell(position);
         const { args } = getFirstAccountFunction(cell.content);
