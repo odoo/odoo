@@ -156,7 +156,7 @@ export class CalendarCommonRenderer extends Component {
         this.popover.open(
             target,
             this.getPopoverProps(record),
-            `o_cw_popover o_calendar_color_${record.colorIndex}`
+            `w-25 o_cw_popover o_calendar_color_${record.colorIndex}`
         );
     }
     updateSize() {

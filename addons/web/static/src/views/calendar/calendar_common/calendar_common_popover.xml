@@ -17,7 +17,7 @@
 
     <t t-name="web.CalendarCommonPopover.popover" owl="1">
         <div class="card-header d-flex justify-content-between py-2 pe-2">
-            <h4 class="p-0 pt-1">
+            <h4 class="p-0 pt-1 text-truncate">
                 <span class="popover-header border-0" t-esc="props.record.title" />
             </h4>
             <span class="o_cw_popover_close ms-4 mt-2 me-2" t-on-click.stop="() => props.close()">
