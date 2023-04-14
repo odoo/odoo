@@ -25,16 +25,18 @@
 
                     <t t-set-slot="control-panel-additional-actions">
                         <t t-if="props.info.actionMenus">
-                            <CombinedActionMenus
-                                getActiveIds="() => model.root.isNew ? [] : [model.root.resId]"
-                                context="props.context"
-                                items="actionMenuItems"
-                                isDomainSelected="model.root.isDomainSelected"
-                                resModel="model.root.resModel"
-                                domain="props.domain"
-                                onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
-                                shouldExecuteAction.bind="shouldExecuteAction"
-                            />
+                            <CogMenu>
+                                <ActionMenusItems
+                                    getActiveIds="() => model.root.isNew ? [] : [model.root.resId]"
+                                    context="props.context"
+                                    items="actionMenuItems"
+                                    isDomainSelected="model.root.isDomainSelected"
+                                    resModel="model.root.resModel"
+                                    domain="props.domain"
+                                    onActionExecuted="() => model.load({ resId: model.root.resId, resIds: model.root.resIds })"
+                                    shouldExecuteAction.bind="shouldExecuteAction"
+                                />
+                            </CogMenu>
                         </t>
                     </t>
 

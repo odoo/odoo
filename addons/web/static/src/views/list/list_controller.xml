@@ -63,14 +63,21 @@
                         </t>
                     </div>
                     <t t-else="">
-                        <Dropdown togglerClass="'d-print-none btn btn-text ms-1 lh-sm'">
-                            <t t-set-slot="toggler">
-                                <i class="fa fa-cog"/>
-                            </t>
+                        <CogMenu>
                             <DropdownItem t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable" onSelected.bind="onDirectExportData">
                                 Export All
                             </DropdownItem>
-                        </Dropdown>
+                            <t t-if="props.info.actionMenus">
+                                <ActionMenusItems
+                                    getActiveIds="() => model.root.selection.map((r) => r.resId)"
+                                    context="props.context"
+                                    domain="props.domain"
+                                    items="actionMenuItems"
+                                    isDomainSelected="model.root.isDomainSelected"
+                                    resModel="model.root.resModel"
+                                    onActionExecuted="() => model.load()"/>
+                            </t>
+                        </CogMenu>
                     </t>
                 </t>
                 <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>

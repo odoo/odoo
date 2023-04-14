@@ -13,6 +13,7 @@ import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
 import { Component, useState } from "@odoo/owl";
 
@@ -219,5 +220,6 @@ CalendarController.components = {
     Layout,
     SearchBar,
     ViewScaleSelector,
+    CogMenu,
 };
 CalendarController.template = "web.CalendarController";
