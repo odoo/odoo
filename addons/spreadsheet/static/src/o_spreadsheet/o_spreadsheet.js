@@ -32640,48 +32640,66 @@
                 this.adjustPositionY(row);
             }
         }
-        adjustPositionX(col) {
+        adjustPositionX(targetCol) {
             const sheetId = this.sheetId;
-            const { start, end } = this.getters.getColDimensions(sheetId, col);
-            while (end > this.offsetX + this.offsetCorrectionX + this.viewportWidth &&
-                this.offsetX + this.offsetCorrectionX < start) {
-                this.offsetX = this.getters.getColDimensions(sheetId, this.left).end - this.offsetCorrectionX;
-                this.offsetScrollbarX = this.offsetX;
-                this.adjustViewportZoneX();
-            }
-            while (col < this.left) {
-                let leftCol;
-                for (leftCol = this.left; leftCol >= 0; leftCol--) {
-                    if (!this.getters.isColHidden(sheetId, leftCol)) {
+            const { end } = this.getters.getColDimensions(sheetId, targetCol);
+            const maxCol = this.getters.getNumberCols(sheetId);
+            if (this.offsetX + this.offsetCorrectionX + this.viewportWidth < end) {
+                for (let col = this.left; this.offsetX + this.offsetCorrectionX + this.viewportWidth < end; col++) {
+                    if (col > maxCol) {
                         break;
                     }
+                    if (this.getters.isColHidden(sheetId, col)) {
+                        continue;
+                    }
+                    this.offsetX = this.getters.getColDimensions(sheetId, col).end - this.offsetCorrectionX;
+                    this.offsetScrollbarX = this.offsetX;
+                    this.adjustViewportZoneX();
                 }
-                this.offsetX =
-                    this.getters.getColDimensions(sheetId, leftCol - 1).start - this.offsetCorrectionX;
-                this.offsetScrollbarX = this.offsetX;
-                this.adjustViewportZoneX();
+            }
+            else if (this.left > targetCol) {
+                for (let col = this.left; col >= targetCol; col--) {
+                    if (col < 0) {
+                        break;
+                    }
+                    if (this.getters.isColHidden(sheetId, col)) {
+                        continue;
+                    }
+                    this.offsetX = this.getters.getColDimensions(sheetId, col).start - this.offsetCorrectionX;
+                    this.offsetScrollbarX = this.offsetX;
+                    this.adjustViewportZoneX();
+                }
             }
         }
-        adjustPositionY(row) {
+        adjustPositionY(targetRow) {
             const sheetId = this.sheetId;
-            while (this.getters.getRowDimensions(sheetId, row).end >
-                this.offsetY + this.viewportHeight + this.offsetCorrectionY &&
-                this.offsetY + this.offsetCorrectionY < this.getters.getRowDimensions(sheetId, row).start) {
-                this.offsetY = this.getters.getRowDimensions(sheetId, this.top).end - this.offsetCorrectionY;
-                this.offsetScrollbarY = this.offsetY;
-                this.adjustViewportZoneY();
-            }
-            while (row < this.top) {
-                let topRow;
-                for (topRow = this.top; topRow >= 0; topRow--) {
-                    if (!this.getters.isRowHidden(sheetId, topRow)) {
+            const { end } = this.getters.getRowDimensions(sheetId, targetRow);
+            const maxRow = this.getters.getNumberRows(sheetId);
+            if (this.offsetY + this.viewportHeight + this.offsetCorrectionY < end) {
+                for (let row = this.top; this.offsetY + this.viewportHeight + this.offsetCorrectionY < end; row++) {
+                    if (row > maxRow) {
                         break;
                     }
+                    if (this.getters.isRowHidden(sheetId, row)) {
+                        continue;
+                    }
+                    this.offsetY = this.getters.getRowDimensions(sheetId, row).end - this.offsetCorrectionY;
+                    this.offsetScrollbarY = this.offsetY;
+                    this.adjustViewportZoneY();
                 }
-                this.offsetY =
-                    this.getters.getRowDimensions(sheetId, topRow - 1).start - this.offsetCorrectionY;
-                this.offsetScrollbarY = this.offsetY;
-                this.adjustViewportZoneY();
+            }
+            else if (this.top > targetRow) {
+                for (let row = this.top; row >= targetRow; row--) {
+                    if (row < 0) {
+                        break;
+                    }
+                    if (this.getters.isRowHidden(sheetId, row)) {
+                        continue;
+                    }
+                    this.offsetY = this.getters.getRowDimensions(sheetId, row).start - this.offsetCorrectionY;
+                    this.offsetScrollbarY = this.offsetY;
+                    this.adjustViewportZoneY();
+                }
             }
         }
         setViewportOffset(offsetX, offsetY) {
@@ -45073,9 +45091,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.2';
-    __info__.date = '2023-04-13T09:06:14.035Z';
-    __info__.hash = 'a38f31a';
+    __info__.version = '16.2.3';
+    __info__.date = '2023-04-14T13:29:29.488Z';
+    __info__.hash = '4514375';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
