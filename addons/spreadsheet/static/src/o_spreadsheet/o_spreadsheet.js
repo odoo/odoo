@@ -114,6 +114,7 @@
     const BACKGROUND_HEADER_FILTER_COLOR = "#E6F4EA";
     const BACKGROUND_HEADER_SELECTED_FILTER_COLOR = "#CEEAD6";
     const SEPARATOR_COLOR = "#E0E2E4";
+    const ICONS_COLOR = "#4A4F59";
     // Color picker defaults as upper case HEX to match `toHex`helper
     const COLOR_PICKER_DEFAULTS = [
         "#000000",
@@ -220,8 +221,10 @@
     const FILTER_ICON_EDGE_LENGTH = 17;
     // Menus
     const MENU_WIDTH = 250;
-    const MENU_VERTICAL_PADDING = 8;
-    const MENU_ITEM_HEIGHT = 28;
+    const MENU_VERTICAL_PADDING = 6;
+    const MENU_ITEM_HEIGHT = 26;
+    const MENU_ITEM_PADDING_HORIZONTAL = 13;
+    const MENU_ITEM_PADDING_VERTICAL = 4;
     const MENU_SEPARATOR_BORDER_WIDTH = 1;
     const MENU_SEPARATOR_PADDING = 5;
     // Fonts
@@ -229,6 +232,7 @@
     const DEFAULT_FONT_SIZE = 10;
     const HEADER_FONT_SIZE = 11;
     const DEFAULT_FONT = "'Roboto', arial";
+    const DEFAULT_VERTICAL_ALIGN = "middle";
     // Borders
     const DEFAULT_BORDER_DESC = ["thin", "#000"];
     const DEFAULT_FILTER_BORDER_DESC = ["thin", FILTERS_COLOR];
@@ -280,7 +284,13 @@
         ComponentsImportance[ComponentsImportance["FigureAnchor"] = 1000] = "FigureAnchor";
         ComponentsImportance[ComponentsImportance["FigureSnapLine"] = 1001] = "FigureSnapLine";
     })(ComponentsImportance || (ComponentsImportance = {}));
-    const DEFAULT_SHEETVIEW_SIZE = 1000;
+    let DEFAULT_SHEETVIEW_SIZE = 0;
+    function getDefaultSheetViewSize() {
+        return DEFAULT_SHEETVIEW_SIZE;
+    }
+    function setDefaultSheetViewSize(size) {
+        DEFAULT_SHEETVIEW_SIZE = size;
+    }
     const MAXIMAL_FREEZABLE_RATIO = 0.85;
     const NEWLINE = "\n";
     const FONT_SIZES = [6, 7, 8, 9, 10, 11, 12, 14, 18, 24, 36];
@@ -5352,7 +5362,7 @@
       align-items: center;
       box-sizing: border-box;
       height: ${MENU_ITEM_HEIGHT}px;
-      padding: 4px 16px;
+      padding: ${MENU_ITEM_PADDING_VERTICAL}px ${MENU_ITEM_PADDING_HORIZONTAL}px;
       cursor: pointer;
       user-select: none;
 
@@ -5366,11 +5376,18 @@
         display: flex;
         justify-content: space-between;
       }
+
       .o-menu-item-icon {
-        margin-top: auto;
-        margin-bottom: auto;
+        display: inline-block;
+        margin-right: calc(${MENU_ITEM_PADDING_HORIZONTAL}px * 3 / 5);
+        width: ${MENU_ITEM_HEIGHT - 2 * MENU_ITEM_PADDING_VERTICAL}px;
+        line-height: ${MENU_ITEM_HEIGHT - 2 * MENU_ITEM_PADDING_VERTICAL}px;
+
+        .o-icon {
+          color: ${ICONS_COLOR};
+        }
       }
-      .o-icon {
+      .o-menu-item-root {
         width: 10px;
       }
 
@@ -5450,12 +5467,22 @@
                 onPopoverMoved: () => this.closeSubMenu(),
             };
         }
+        get childrenHaveIcon() {
+            return this.props.menuItems.some((menuItem) => !menuItem.icon && !!menuItem.isActive);
+        }
+        getIconName(menu) {
+            var _a;
+            if ((_a = menu.isActive) === null || _a === void 0 ? void 0 : _a.call(menu, this.env)) {
+                return "o-spreadsheet-Icon.CHECK";
+            }
+            return "";
+        }
         getColor(menu) {
             return menu.textColor ? `color: ${menu.textColor}` : undefined;
         }
         async activateMenu(menu) {
             var _a, _b, _c;
-            const result = await ((_a = menu.action) === null || _a === void 0 ? void 0 : _a.call(menu, this.env));
+            const result = await ((_a = menu.execute) === null || _a === void 0 ? void 0 : _a.call(menu, this.env));
             this.close();
             (_c = (_b = this.props).onMenuClicked) === null || _c === void 0 ? void 0 : _c.call(_b, { detail: result });
         }
@@ -5476,7 +5503,7 @@
             return menu.name(this.env);
         }
         isRoot(menu) {
-            return !menu.action;
+            return !menu.execute;
         }
         isEnabled(menu) {
             if (menu.isEnabled(this.env)) {
@@ -5523,7 +5550,7 @@
             }
         }
         onMouseOver(menu, position, ev) {
-            if (menu.isEnabled(this.env)) {
+            if (this.isEnabled(menu)) {
                 if (this.isRoot(menu)) {
                     this.openSubMenu(menu, position, ev);
                 }
@@ -5660,11 +5687,82 @@
         onClosed: { type: Function, optional: true },
     };
 
-    function createMenu(menuItems) {
-        return menuItems.map(createMenuItem).sort((a, b) => a.sequence - b.sequence);
+    const linkSheet = {
+        name: _lt("Link sheet"),
+        children: [
+            (env) => {
+                const sheets = env.model.getters
+                    .getSheetIds()
+                    .map((sheetId) => env.model.getters.getSheet(sheetId));
+                return sheets.map((sheet) => ({
+                    id: sheet.id,
+                    name: sheet.name,
+                    execute: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
+                }));
+            },
+        ],
+    };
+    const deleteSheet = {
+        name: _lt("Delete"),
+        isVisible: (env) => {
+            return env.model.getters.getSheetIds().length > 1;
+        },
+        execute: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
+            env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
+        }),
+    };
+    const duplicateSheet = {
+        name: _lt("Duplicate"),
+        execute: (env) => {
+            const sheetIdFrom = env.model.getters.getActiveSheetId();
+            const sheetIdTo = env.model.uuidGenerator.uuidv4();
+            env.model.dispatch("DUPLICATE_SHEET", {
+                sheetId: sheetIdFrom,
+                sheetIdTo,
+            });
+            env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
+        },
+    };
+    const renameSheet = (args) => {
+        return {
+            name: _lt("Rename"),
+            execute: args.renameSheetCallback,
+        };
+    };
+    const sheetMoveRight = {
+        name: _lt("Move right"),
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const sheetIds = env.model.getters.getVisibleSheetIds();
+            return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
+        },
+        execute: (env) => env.model.dispatch("MOVE_SHEET", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            delta: 1,
+        }),
+    };
+    const sheetMoveLeft = {
+        name: _lt("Move left"),
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
+        },
+        execute: (env) => env.model.dispatch("MOVE_SHEET", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            delta: -1,
+        }),
+    };
+    const hideSheet = {
+        name: _lt("Hide sheet"),
+        isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
+        execute: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
+    };
+
+    function createActions(menuItems) {
+        return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
     }
     const uuidGenerator$1 = new UuidGenerator();
-    function createMenuItem(item) {
+    function createAction(item) {
         const name = item.name;
         const children = item.children;
         return {
@@ -5672,23 +5770,25 @@
             name: typeof name === "function" ? name : () => name,
             isVisible: item.isVisible ? item.isVisible : () => true,
             isEnabled: item.isEnabled ? item.isEnabled : () => true,
-            action: item.action,
+            isActive: item.isActive,
+            execute: item.execute,
             children: children
                 ? (env) => {
                     return children
                         .map((child) => (typeof child === "function" ? child(env) : child))
                         .flat()
-                        .map(createMenuItem);
+                        .map(createAction);
                 }
                 : () => [],
             isReadonlyAllowed: item.isReadonlyAllowed || false,
             separator: item.separator || false,
-            icon: item.icon,
+            icon: item.icon || "",
             description: item.description || "",
             textColor: item.textColor,
             sequence: item.sequence || 0,
         };
     }
+
     /**
      * The class Registry is extended in order to add the function addChild
      *
@@ -5735,7 +5835,7 @@
             return this;
         }
         getMenuItems() {
-            return createMenu(this.getAll());
+            return createActions(this.getAll());
         }
     }
 
@@ -5743,20 +5843,9 @@
     // Link Menu Registry
     //------------------------------------------------------------------------------
     const linkMenuRegistry = new MenuItemRegistry();
-    linkMenuRegistry
-        .add("sheet", {
-        name: _lt("Link sheet"),
+    linkMenuRegistry.add("sheet", {
+        ...linkSheet,
         sequence: 10,
-    })
-        .addChild("sheet_list", ["sheet"], (env) => {
-        const sheets = env.model.getters
-            .getSheetIds()
-            .map((sheetId) => env.model.getters.getSheet(sheetId));
-        return sheets.map((sheet) => ({
-            id: sheet.id,
-            name: sheet.name,
-            action: () => markdownLink(sheet.name, buildSheetLink(sheet.id)),
-        }));
     });
 
     const MENU_OFFSET_X = 320;
@@ -6419,18 +6508,6 @@
             [42 /* CommandResult.GaugeLowerInflectionPointNaN */]: _lt("The lower inflection point value must be a number"),
             [43 /* CommandResult.GaugeUpperInflectionPointNaN */]: _lt("The upper inflection point value must be a number"),
         },
-    };
-    const NumberFormatTerms = {
-        Automatic: _lt("Automatic"),
-        Number: _lt("Number"),
-        Percent: _lt("Percent"),
-        Currency: _lt("Currency"),
-        CurrencyRounded: _lt("Currency rounded"),
-        Date: _lt("Date"),
-        Time: _lt("Time"),
-        DateTime: _lt("Date time"),
-        Duration: _lt("Duration"),
-        CustomCurrency: _lt("Custom currency"),
     };
     const CustomCurrencyTerms = {
         Custom: _lt("Custom"),
@@ -7975,7 +8052,7 @@
                 id: "edit",
                 name: _lt("Edit"),
                 sequence: 1,
-                action: () => {
+                execute: () => {
                     env.model.dispatch("SELECT_FIGURE", { id: figureId });
                     env.openSidePanel("ChartPanel");
                 },
@@ -7984,7 +8061,7 @@
             getCutMenuItem(figureId, env),
             getDeleteMenuItem(figureId, onFigureDeleted, env),
         ];
-        return createMenu(menuItemSpecs);
+        return createActions(menuItemSpecs);
     }
     function getImageMenuRegistry(figureId, onFigureDeleted, env) {
         const menuItemSpecs = [
@@ -7994,7 +8071,7 @@
                 id: "reset_size",
                 name: _lt("Reset size"),
                 sequence: 4,
-                action: () => {
+                execute: () => {
                     const size = env.model.getters.getImageSize(figureId);
                     const { height, width } = getMaxFigureSize(env.model.getters, size);
                     env.model.dispatch("UPDATE_FIGURE", {
@@ -8007,7 +8084,7 @@
             },
             getDeleteMenuItem(figureId, onFigureDeleted, env),
         ];
-        return createMenu(menuItemSpecs);
+        return createActions(menuItemSpecs);
     }
     function getCopyMenuItem(figureId, env) {
         return {
@@ -8015,7 +8092,7 @@
             name: _lt("Copy"),
             sequence: 2,
             description: "Ctrl+C",
-            action: async () => {
+            execute: async () => {
                 env.model.dispatch("SELECT_FIGURE", { id: figureId });
                 env.model.dispatch("COPY");
                 await env.clipboard.write(env.model.getters.getClipboardContent());
@@ -8028,7 +8105,7 @@
             name: _lt("Cut"),
             sequence: 3,
             description: "Ctrl+X",
-            action: async () => {
+            execute: async () => {
                 env.model.dispatch("SELECT_FIGURE", { id: figureId });
                 env.model.dispatch("CUT");
                 await env.clipboard.write(env.model.getters.getClipboardContent());
@@ -8040,7 +8117,7 @@
             id: "delete",
             name: _lt("Delete"),
             sequence: 10,
-            action: () => {
+            execute: () => {
                 env.model.dispatch("DELETE_FIGURE", {
                     sheetId: env.model.getters.getActiveSheetId(),
                     id: figureId,
@@ -8145,6 +8222,22 @@
                 elements: cmd.elements,
             },
         ];
+    }
+
+    const AddMergeInteractiveContent = {
+        MergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
+        MergeInFilter: _lt("You can't merge cells inside of an existing filter."),
+    };
+    function interactiveAddMerge(env, sheetId, target) {
+        const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
+        if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
+            env.raiseError(AddMergeInteractiveContent.MergeInFilter);
+        }
+        else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
+            env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
+                env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
+            });
+        }
     }
 
     /**
@@ -8502,9 +8595,9 @@
         interactiveCut(env);
         await env.clipboard.write(env.model.getters.getClipboardContent());
     };
-    const PASTE_ACTION = async (env) => paste(env);
-    const PASTE_VALUE_ACTION = async (env) => paste(env, "onlyValue");
-    async function paste(env, pasteOption) {
+    const PASTE_ACTION = async (env) => paste$1(env);
+    const PASTE_VALUE_ACTION = async (env) => paste$1(env, "onlyValue");
+    async function paste$1(env, pasteOption) {
         const spreadsheetClipboard = env.model.getters.getClipboardTextContent();
         const osClipboard = await env.clipboard.readText();
         switch (osClipboard.status) {
@@ -9058,364 +9151,158 @@
         return env.model.getters.getSelectedZones().length === 1;
     };
 
-    //------------------------------------------------------------------------------
-    // Context Menu Registry
-    //------------------------------------------------------------------------------
-    const cellMenuRegistry = new MenuItemRegistry();
-    cellMenuRegistry
-        .add("cut", {
-        name: _lt("Cut"),
-        description: "Ctrl+X",
-        sequence: 10,
-        action: CUT_ACTION,
-    })
-        .add("copy", {
+    const undo = {
+        name: _lt("Undo"),
+        description: "Ctrl+Z",
+        execute: UNDO_ACTION,
+        isEnabled: (env) => env.model.getters.canUndo(),
+        icon: "o-spreadsheet-Icon.UNDO",
+    };
+    const redo = {
+        name: _lt("Redo"),
+        description: "Ctrl+Y",
+        execute: REDO_ACTION,
+        isEnabled: (env) => env.model.getters.canRedo(),
+        icon: "o-spreadsheet-Icon.REDO",
+    };
+    const copy = {
         name: _lt("Copy"),
         description: "Ctrl+C",
-        sequence: 20,
         isReadonlyAllowed: true,
-        action: COPY_ACTION,
-    })
-        .add("paste", {
-        name: _lt("Paste"),
-        description: "Ctrl+V",
-        sequence: 30,
-        action: PASTE_ACTION,
-    })
-        .add("paste_special", {
-        name: _lt("Paste special"),
-        sequence: 40,
-        separator: true,
-        isVisible: IS_NOT_CUT_OPERATION,
-    })
-        .addChild("paste_value_only", ["paste_special"], {
-        name: _lt("Paste values only"),
-        sequence: 10,
-        action: PASTE_VALUE_ACTION,
-    })
-        .addChild("paste_format_only", ["paste_special"], {
-        name: _lt("Paste format only"),
-        sequence: 20,
-        action: PASTE_FORMAT_ACTION,
-    })
-        .add("add_row_before", {
-        name: CELL_INSERT_ROWS_BEFORE_NAME,
-        sequence: 70,
-        action: INSERT_ROWS_BEFORE_ACTION,
-        isVisible: IS_ONLY_ONE_RANGE,
-    })
-        .add("add_column_before", {
-        name: CELL_INSERT_COLUMNS_BEFORE_NAME,
-        sequence: 90,
-        action: INSERT_COLUMNS_BEFORE_ACTION,
-        isVisible: IS_ONLY_ONE_RANGE,
-    })
-        .add("insert_cell", {
-        name: _lt("Insert cells"),
-        sequence: 100,
-        isVisible: IS_ONLY_ONE_RANGE,
-        separator: true,
-    })
-        .addChild("insert_cell_down", ["insert_cell"], {
-        name: _lt("Shift down"),
-        sequence: 10,
-        action: INSERT_CELL_SHIFT_DOWN,
-    })
-        .addChild("insert_cell_right", ["insert_cell"], {
-        name: _lt("Shift right"),
-        sequence: 20,
-        action: INSERT_CELL_SHIFT_RIGHT,
-    })
-        .add("delete_row", {
-        name: REMOVE_ROWS_NAME,
-        sequence: 110,
-        action: REMOVE_ROWS_ACTION,
-        isVisible: IS_ONLY_ONE_RANGE,
-    })
-        .add("delete_column", {
-        name: REMOVE_COLUMNS_NAME,
-        sequence: 120,
-        action: REMOVE_COLUMNS_ACTION,
-        isVisible: IS_ONLY_ONE_RANGE,
-    })
-        .add("delete_cell", {
-        name: _lt("Delete cells"),
-        sequence: 130,
-        isVisible: IS_ONLY_ONE_RANGE,
-    })
-        .addChild("delete_cell_up", ["delete_cell"], {
-        name: _lt("Shift up"),
-        sequence: 10,
-        action: DELETE_CELL_SHIFT_UP,
-    })
-        .addChild("delete_cell_down", ["delete_cell"], {
-        name: _lt("Shift left"),
-        sequence: 20,
-        action: DELETE_CELL_SHIFT_LEFT,
-    })
-        .add("insert_link", {
-        name: _lt("Insert link"),
-        separator: true,
-        sequence: 150,
-        action: INSERT_LINK,
-    });
-
-    const colMenuRegistry = new MenuItemRegistry();
-    colMenuRegistry
-        .add("cut", {
+        execute: COPY_ACTION,
+    };
+    const cut = {
         name: _lt("Cut"),
         description: "Ctrl+X",
-        sequence: 10,
-        action: CUT_ACTION,
-    })
-        .add("copy", {
-        name: _lt("Copy"),
-        description: "Ctrl+C",
-        sequence: 20,
-        isReadonlyAllowed: true,
-        action: COPY_ACTION,
-    })
-        .add("paste", {
+        execute: CUT_ACTION,
+    };
+    const paste = {
         name: _lt("Paste"),
         description: "Ctrl+V",
-        sequence: 30,
-        action: PASTE_ACTION,
-    })
-        .add("paste_special", {
+        execute: PASTE_ACTION,
+    };
+    const pasteSpecial = {
         name: _lt("Paste special"),
-        sequence: 40,
-        separator: true,
         isVisible: IS_NOT_CUT_OPERATION,
-    })
-        .addChild("paste_value_only", ["paste_special"], {
+    };
+    const pasteSpecialValue = {
         name: _lt("Paste value only"),
-        sequence: 10,
-        action: PASTE_VALUE_ACTION,
-    })
-        .addChild("paste_format_only", ["paste_special"], {
+        execute: PASTE_VALUE_ACTION,
+    };
+    const pasteSpecialFormat = {
         name: _lt("Paste format only"),
-        sequence: 20,
-        action: PASTE_FORMAT_ACTION,
-    })
-        .add("sort_columns", {
-        name: (env) => env.model.getters.getActiveCols().size > 1 ? _lt("Sort columns") : _lt("Sort column"),
-        sequence: 50,
-        isVisible: IS_ONLY_ONE_RANGE,
-        separator: true,
-    })
-        .addChild("sort_ascending", ["sort_columns"], {
-        name: _lt("Ascending (A ⟶ Z)"),
-        sequence: 10,
-        action: SORT_CELLS_ASCENDING,
-    })
-        .addChild("sort_descending", ["sort_columns"], {
-        name: _lt("Descending (Z ⟶ A)"),
-        sequence: 20,
-        action: SORT_CELLS_DESCENDING,
-    })
-        .add("add_column_before", {
-        name: COLUMN_INSERT_COLUMNS_BEFORE_NAME,
-        sequence: 70,
-        action: INSERT_COLUMNS_BEFORE_ACTION,
-    })
-        .add("add_column_after", {
-        name: COLUMN_INSERT_COLUMNS_AFTER_NAME,
-        sequence: 80,
-        action: INSERT_COLUMNS_AFTER_ACTION,
-    })
-        .add("delete_column", {
-        name: REMOVE_COLUMNS_NAME,
-        sequence: 90,
-        action: REMOVE_COLUMNS_ACTION,
-    })
-        .add("clear_column", {
-        name: DELETE_CONTENT_COLUMNS_NAME,
-        sequence: 100,
-        action: DELETE_CONTENT_COLUMNS_ACTION,
-    })
-        .add("hide_columns", {
-        name: HIDE_COLUMNS_NAME,
-        sequence: 85,
-        action: HIDE_COLUMNS_ACTION,
-        isVisible: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            const hiddenCols = env.model.getters.getHiddenColsGroups(sheetId).flat();
-            return (env.model.getters.getNumberCols(sheetId) >
-                hiddenCols.length + env.model.getters.getElementsFromSelection("COL").length);
-        },
-        separator: true,
-    })
-        .add("unhide_columns", {
-        name: _lt("Unhide columns"),
-        sequence: 86,
-        action: UNHIDE_COLUMNS_ACTION,
-        isVisible: (env) => {
-            const hiddenCols = env.model.getters
-                .getHiddenColsGroups(env.model.getters.getActiveSheetId())
-                .flat();
-            const currentCols = env.model.getters.getElementsFromSelection("COL");
-            return currentCols.some((col) => hiddenCols.includes(col));
-        },
-        separator: true,
-    })
-        .add("conditional_formatting", {
-        name: _lt("Conditional formatting"),
-        sequence: 110,
-        action: OPEN_CF_SIDEPANEL_ACTION,
-    });
-
-    const rowMenuRegistry = new MenuItemRegistry();
-    rowMenuRegistry
-        .add("cut", {
-        name: _lt("Cut"),
-        sequence: 10,
-        description: "Ctrl+X",
-        action: CUT_ACTION,
-    })
-        .add("copy", {
-        name: _lt("Copy"),
-        description: "Ctrl+C",
-        sequence: 20,
+        execute: PASTE_FORMAT_ACTION,
+    };
+    const findAndReplace = {
+        name: _lt("Find and replace"),
+        description: "Ctrl+H",
         isReadonlyAllowed: true,
-        action: COPY_ACTION,
-    })
-        .add("paste", {
-        name: _lt("Paste"),
-        description: "Ctrl+V",
-        sequence: 30,
-        action: PASTE_ACTION,
-    })
-        .add("paste_special", {
-        name: _lt("Paste special"),
-        sequence: 40,
-        separator: true,
-        isVisible: IS_NOT_CUT_OPERATION,
-    })
-        .addChild("paste_value_only", ["paste_special"], {
-        name: _lt("Paste value only"),
-        sequence: 10,
-        action: PASTE_VALUE_ACTION,
-    })
-        .addChild("paste_format_only", ["paste_special"], {
-        name: _lt("Paste format only"),
-        sequence: 20,
-        action: PASTE_FORMAT_ACTION,
-    })
-        .add("add_row_before", {
-        name: ROW_INSERT_ROWS_BEFORE_NAME,
-        sequence: 50,
-        action: INSERT_ROWS_BEFORE_ACTION,
-    })
-        .add("add_row_after", {
-        name: ROW_INSERT_ROWS_AFTER_NAME,
-        sequence: 60,
-        action: INSERT_ROWS_AFTER_ACTION,
-    })
-        .add("delete_row", {
+        execute: OPEN_FAR_SIDEPANEL_ACTION,
+    };
+    const deleteValues = {
+        name: _lt("Delete values"),
+        execute: DELETE_CONTENT_ACTION,
+    };
+    const deleteRows = {
         name: REMOVE_ROWS_NAME,
-        sequence: 70,
-        action: REMOVE_ROWS_ACTION,
-    })
-        .add("clear_row", {
+        execute: REMOVE_ROWS_ACTION,
+    };
+    const deleteRow = {
+        ...deleteRows,
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const clearRows = {
         name: DELETE_CONTENT_ROWS_NAME,
-        sequence: 80,
-        action: DELETE_CONTENT_ROWS_ACTION,
-    })
-        .add("hide_rows", {
-        name: HIDE_ROWS_NAME,
-        sequence: 85,
-        action: HIDE_ROWS_ACTION,
-        isVisible: (env) => {
-            const sheetId = env.model.getters.getActiveSheetId();
-            const hiddenRows = env.model.getters.getHiddenRowsGroups(sheetId).flat();
-            return (env.model.getters.getNumberRows(sheetId) >
-                hiddenRows.length + env.model.getters.getElementsFromSelection("ROW").length);
-        },
-        separator: true,
-    })
-        .add("unhide_rows", {
-        name: _lt("Unhide rows"),
-        sequence: 86,
-        action: UNHIDE_ROWS_ACTION,
-        isVisible: (env) => {
-            const hiddenRows = env.model.getters
-                .getHiddenRowsGroups(env.model.getters.getActiveSheetId())
-                .flat();
-            const currentRows = env.model.getters.getElementsFromSelection("ROW");
-            return currentRows.some((col) => hiddenRows.includes(col));
-        },
-        separator: true,
-    })
-        .add("conditional_formatting", {
-        name: _lt("Conditional formatting"),
-        sequence: 90,
-        action: OPEN_CF_SIDEPANEL_ACTION,
-    });
-
-    function getSheetMenuRegistry(args) {
-        const sheetMenuRegistry = new MenuItemRegistry();
-        sheetMenuRegistry
-            .add("delete", {
-            name: _lt("Delete"),
-            sequence: 10,
-            isVisible: (env) => {
-                return env.model.getters.getSheetIds().length > 1;
-            },
-            action: (env) => env.askConfirmation(_lt("Are you sure you want to delete this sheet ?"), () => {
-                env.model.dispatch("DELETE_SHEET", { sheetId: env.model.getters.getActiveSheetId() });
-            }),
-        })
-            .add("duplicate", {
-            name: _lt("Duplicate"),
-            sequence: 20,
-            action: (env) => {
-                const sheetIdFrom = env.model.getters.getActiveSheetId();
-                const sheetIdTo = env.model.uuidGenerator.uuidv4();
-                env.model.dispatch("DUPLICATE_SHEET", {
-                    sheetId: sheetIdFrom,
-                    sheetIdTo,
-                });
-                env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom, sheetIdTo });
-            },
-        })
-            .add("rename", {
-            name: _lt("Rename"),
-            sequence: 30,
-            action: () => args.renameSheetCallback(),
-        })
-            .add("move_right", {
-            name: _lt("Move right"),
-            sequence: 40,
-            isVisible: (env) => {
-                const sheetId = env.model.getters.getActiveSheetId();
-                const sheetIds = env.model.getters.getVisibleSheetIds();
-                return sheetIds.indexOf(sheetId) !== sheetIds.length - 1;
-            },
-            action: (env) => env.model.dispatch("MOVE_SHEET", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                delta: 1,
-            }),
-        })
-            .add("move_left", {
-            name: _lt("Move left"),
-            sequence: 50,
-            isVisible: (env) => {
-                const sheetId = env.model.getters.getActiveSheetId();
-                return env.model.getters.getVisibleSheetIds()[0] !== sheetId;
-            },
-            action: (env) => env.model.dispatch("MOVE_SHEET", {
-                sheetId: env.model.getters.getActiveSheetId(),
-                delta: -1,
-            }),
-        })
-            .add("hide_sheet", {
-            name: _lt("Hide sheet"),
-            sequence: 60,
-            isVisible: (env) => env.model.getters.getVisibleSheetIds().length !== 1,
-            action: (env) => env.model.dispatch("HIDE_SHEET", { sheetId: env.model.getters.getActiveSheetId() }),
-        });
-        return sheetMenuRegistry;
+        execute: DELETE_CONTENT_ROWS_ACTION,
+    };
+    const deleteCols = {
+        name: REMOVE_COLUMNS_NAME,
+        execute: REMOVE_COLUMNS_ACTION,
+    };
+    const deleteCol = {
+        ...deleteCols,
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const clearCols = {
+        name: DELETE_CONTENT_COLUMNS_NAME,
+        execute: DELETE_CONTENT_COLUMNS_ACTION,
+    };
+    const deleteCells = {
+        name: _lt("Delete cells"),
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const deleteCellShiftUp = {
+        name: _lt("Delete cell and shift up"),
+        execute: DELETE_CELL_SHIFT_UP,
+    };
+    const deleteCellShiftLeft = {
+        name: _lt("Delete cell and shift left"),
+        execute: DELETE_CELL_SHIFT_LEFT,
+    };
+    const mergeCells = {
+        name: _lt("Merge cells"),
+        isEnabled: (env) => !cannotMerge(env),
+        isActive: (env) => isInMerge(env),
+        execute: (env) => toggleMerge(env),
+        icon: "o-spreadsheet-Icon.MERGE_CELL",
+    };
+    function cannotMerge(env) {
+        const zones = env.model.getters.getSelectedZones();
+        const { top, left, right, bottom } = env.model.getters.getSelectedZone();
+        const { sheetId } = env.model.getters.getActivePosition();
+        const { xSplit, ySplit } = env.model.getters.getPaneDivisions(sheetId);
+        return (zones.length > 1 ||
+            (top === bottom && left === right) ||
+            (left < xSplit && xSplit <= right) ||
+            (top < ySplit && ySplit <= bottom));
     }
+    function isInMerge(env) {
+        if (!cannotMerge(env)) {
+            const zones = env.model.getters.getSelectedZones();
+            const { col, row, sheetId } = env.model.getters.getActivePosition();
+            const zone = env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
+            return isEqual(zones[0], zone);
+        }
+        return false;
+    }
+    function toggleMerge(env) {
+        if (cannotMerge(env)) {
+            return;
+        }
+        const zones = env.model.getters.getSelectedZones();
+        const target = [zones[zones.length - 1]];
+        const sheetId = env.model.getters.getActiveSheetId();
+        if (isInMerge(env)) {
+            env.model.dispatch("REMOVE_MERGE", { sheetId, target });
+        }
+        else {
+            interactiveAddMerge(env, sheetId, target);
+        }
+    }
+
+    var ACTION_EDIT = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        undo: undo,
+        redo: redo,
+        copy: copy,
+        cut: cut,
+        paste: paste,
+        pasteSpecial: pasteSpecial,
+        pasteSpecialValue: pasteSpecialValue,
+        pasteSpecialFormat: pasteSpecialFormat,
+        findAndReplace: findAndReplace,
+        deleteValues: deleteValues,
+        deleteRows: deleteRows,
+        deleteRow: deleteRow,
+        clearRows: clearRows,
+        deleteCols: deleteCols,
+        deleteCol: deleteCol,
+        clearCols: clearCols,
+        deleteCells: deleteCells,
+        deleteCellShiftUp: deleteCellShiftUp,
+        deleteCellShiftLeft: deleteCellShiftLeft,
+        mergeCells: mergeCells
+    });
 
     //------------------------------------------------------------------------------
     // Arg description DSL
@@ -16177,6 +16064,593 @@
         }
     }
 
+    const rowInsertRowBefore = {
+        name: ROW_INSERT_ROWS_BEFORE_NAME,
+        execute: INSERT_ROWS_BEFORE_ACTION,
+    };
+    const topBarInsertRowsBefore = {
+        ...rowInsertRowBefore,
+        name: MENU_INSERT_ROWS_BEFORE_NAME,
+        isVisible: (env) => env.model.getters.getActiveCols().size === 0,
+    };
+    const cellInsertRowsBefore = {
+        ...rowInsertRowBefore,
+        name: CELL_INSERT_ROWS_BEFORE_NAME,
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const rowInsertRowsAfter = {
+        execute: INSERT_ROWS_AFTER_ACTION,
+        name: ROW_INSERT_ROWS_AFTER_NAME,
+    };
+    const topBarInsertRowsAfter = {
+        ...rowInsertRowsAfter,
+        name: MENU_INSERT_ROWS_AFTER_NAME,
+        isVisible: (env) => env.model.getters.getActiveCols().size === 0,
+    };
+    const colInsertColsBefore = {
+        name: COLUMN_INSERT_COLUMNS_BEFORE_NAME,
+        execute: INSERT_COLUMNS_BEFORE_ACTION,
+    };
+    const topBarInsertColsBefore = {
+        ...colInsertColsBefore,
+        name: MENU_INSERT_COLUMNS_BEFORE_NAME,
+        isVisible: (env) => env.model.getters.getActiveRows().size === 0,
+    };
+    const cellInsertColsBefore = {
+        ...colInsertColsBefore,
+        name: CELL_INSERT_COLUMNS_BEFORE_NAME,
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const colInsertColsAfter = {
+        name: COLUMN_INSERT_COLUMNS_AFTER_NAME,
+        execute: INSERT_COLUMNS_AFTER_ACTION,
+    };
+    const topBarInsertColsAfter = {
+        ...colInsertColsAfter,
+        name: MENU_INSERT_COLUMNS_AFTER_NAME,
+        execute: INSERT_COLUMNS_AFTER_ACTION,
+        isVisible: (env) => env.model.getters.getActiveRows().size === 0,
+    };
+    const insertCell = {
+        name: _lt("Insert cells"),
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const insertCellShiftDown = {
+        name: _lt("Insert cells and shift down"),
+        execute: INSERT_CELL_SHIFT_DOWN,
+    };
+    const insertCellShiftRight = {
+        name: _lt("Insert cells and shift right"),
+        execute: INSERT_CELL_SHIFT_RIGHT,
+    };
+    const insertChart = {
+        name: _lt("Chart"),
+        execute: CREATE_CHART,
+    };
+    const insertImage = {
+        name: _lt("Image"),
+        execute: CREATE_IMAGE,
+        isVisible: (env) => env.imageProvider !== undefined,
+    };
+    const insertFunction = {
+        name: _lt("Function"),
+    };
+    const insertFunctionSum = {
+        name: _lt("SUM"),
+        execute: (env) => env.startCellEdition(`=SUM(`),
+    };
+    const insertFunctionAverage = {
+        name: _lt("AVERAGE"),
+        execute: (env) => env.startCellEdition(`=AVERAGE(`),
+    };
+    const insertFunctionCount = {
+        name: _lt("COUNT"),
+        execute: (env) => env.startCellEdition(`=COUNT(`),
+    };
+    const insertFunctionMax = {
+        name: _lt("MAX"),
+        execute: (env) => env.startCellEdition(`=MAX(`),
+    };
+    const insertFunctionMin = {
+        name: _lt("MIN"),
+        execute: (env) => env.startCellEdition(`=MIN(`),
+    };
+    const categorieFunctionAll = {
+        name: _lt("All"),
+        children: allFunctionListMenuBuilder(),
+    };
+    function allFunctionListMenuBuilder() {
+        const fnNames = functionRegistry.getKeys();
+        return createFormulaFunctions(fnNames);
+    }
+    const categoriesFunctionListMenuBuilder = () => {
+        const functions = functionRegistry.content;
+        const categories = [...new Set(functionRegistry.getAll().map((fn) => fn.category))].filter(isDefined$1);
+        return categories.sort().map((category, i) => {
+            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category);
+            return {
+                name: category,
+                children: createFormulaFunctions(functionsInCategory),
+            };
+        });
+    };
+    const insertLink = {
+        name: _lt("Link"),
+        execute: INSERT_LINK,
+    };
+    const insertSheet = {
+        name: _lt("New sheet"),
+        execute: CREATE_SHEET_ACTION,
+    };
+    function createFormulaFunctions(fnNames) {
+        return fnNames.sort().map((fnName, i) => {
+            return {
+                name: fnName,
+                sequence: i * 10,
+                execute: (env) => env.startCellEdition(`=${fnName}(`),
+            };
+        });
+    }
+
+    //------------------------------------------------------------------------------
+    // Context Menu Registry
+    //------------------------------------------------------------------------------
+    const cellMenuRegistry = new MenuItemRegistry();
+    cellMenuRegistry
+        .add("cut", {
+        ...cut,
+        sequence: 10,
+    })
+        .add("copy", {
+        ...copy,
+        sequence: 20,
+    })
+        .add("paste", {
+        ...paste,
+        sequence: 30,
+    })
+        .add("paste_special", {
+        ...pasteSpecial,
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("paste_value_only", ["paste_special"], {
+        ...pasteSpecialValue,
+        sequence: 10,
+    })
+        .addChild("paste_format_only", ["paste_special"], {
+        ...pasteSpecialFormat,
+        sequence: 20,
+    })
+        .add("add_row_before", {
+        ...cellInsertRowsBefore,
+        sequence: 70,
+    })
+        .add("add_column_before", {
+        ...cellInsertColsBefore,
+        sequence: 90,
+    })
+        .add("insert_cell", {
+        ...insertCell,
+        sequence: 100,
+        separator: true,
+    })
+        .addChild("insert_cell_down", ["insert_cell"], {
+        ...insertCellShiftDown,
+        name: _lt("Shift down"),
+        sequence: 10,
+    })
+        .addChild("insert_cell_right", ["insert_cell"], {
+        ...insertCellShiftRight,
+        name: _lt("Shift right"),
+        sequence: 20,
+    })
+        .add("delete_row", {
+        ...deleteRow,
+        sequence: 110,
+    })
+        .add("delete_column", {
+        ...deleteCol,
+        sequence: 120,
+    })
+        .add("delete_cell", {
+        ...deleteCells,
+        sequence: 130,
+    })
+        .addChild("delete_cell_up", ["delete_cell"], {
+        ...deleteCellShiftUp,
+        name: _lt("Shift up"),
+        sequence: 10,
+    })
+        .addChild("delete_cell_left", ["delete_cell"], {
+        ...deleteCellShiftLeft,
+        name: _lt("Shift left"),
+        sequence: 20,
+    })
+        .add("insert_link", {
+        ...insertLink,
+        name: _lt("Insert link"),
+        sequence: 150,
+        separator: true,
+    });
+
+    const sortRange = {
+        name: _lt("Sort range"),
+        isVisible: IS_ONLY_ONE_RANGE,
+    };
+    const sortAscending = {
+        name: _lt("Ascending (A ⟶ Z)"),
+        execute: SORT_CELLS_ASCENDING,
+    };
+    const sortDescending = {
+        name: _lt("Descending (Z ⟶ A)"),
+        execute: SORT_CELLS_DESCENDING,
+    };
+    const addDataFilter = {
+        name: _lt("Create filter"),
+        execute: FILTERS_CREATE_FILTER_TABLE,
+        isVisible: (env) => !SELECTION_CONTAINS_FILTER(env),
+        isEnabled: (env) => SELECTION_IS_CONTINUOUS(env),
+        icon: "o-spreadsheet-Icon.FILTER_ICON_INACTIVE",
+    };
+    const removeDataFilter = {
+        name: _lt("Remove filter"),
+        execute: FILTERS_REMOVE_FILTER_TABLE,
+        isVisible: SELECTION_CONTAINS_FILTER,
+        icon: "o-spreadsheet-Icon.FILTER_ICON_INACTIVE",
+    };
+
+    const formatNumberAutomatic = {
+        name: _lt("Automatic"),
+        execute: FORMAT_AUTOMATIC_ACTION,
+        isActive: (env) => isAutomaticFormatSelected(env),
+    };
+    const formatNumberNumber = {
+        name: _lt("Number"),
+        description: "1,000.12",
+        execute: FORMAT_NUMBER_ACTION,
+        isActive: (env) => isFormatSelected(env, "#,##0.00"),
+    };
+    const formatPercent = {
+        name: _lt("Format as percent"),
+        execute: FORMAT_PERCENT_ACTION,
+        icon: "o-spreadsheet-Icon.PERCENT",
+    };
+    const formatNumberPercent = {
+        name: _lt("Percent"),
+        description: "10.12%",
+        execute: FORMAT_PERCENT_ACTION,
+        isActive: (env) => isFormatSelected(env, "0.00%"),
+    };
+    const formatNumberCurrency = {
+        name: _lt("Currency"),
+        description: "$1,000.12",
+        execute: FORMAT_CURRENCY_ACTION,
+        isActive: (env) => isFormatSelected(env, "[$$]#,##0.00"),
+    };
+    const formatNumberCurrencyRounded = {
+        name: _lt("Currency rounded"),
+        description: "$1,000",
+        execute: FORMAT_CURRENCY_ROUNDED_ACTION,
+        isActive: (env) => isFormatSelected(env, "[$$]#,##0"),
+    };
+    const formatCustomCurrency = {
+        name: _lt("Custom currency"),
+        isVisible: (env) => env.loadCurrencies !== undefined,
+        execute: OPEN_CUSTOM_CURRENCY_SIDEPANEL_ACTION,
+    };
+    const formatNumberDate = {
+        name: _lt("Date"),
+        description: "9/26/2008",
+        execute: FORMAT_DATE_ACTION,
+        isActive: (env) => isFormatSelected(env, "m/d/yyyy"),
+    };
+    const formatNumberTime = {
+        name: _lt("Time"),
+        description: "10:43:00 PM",
+        execute: FORMAT_TIME_ACTION,
+        isActive: (env) => isFormatSelected(env, "hh:mm:ss a"),
+    };
+    const formatNumberDateTime = {
+        name: _lt("Date time"),
+        description: "9/26/2008 22:43:00",
+        execute: FORMAT_DATE_TIME_ACTION,
+        isActive: (env) => isFormatSelected(env, "m/d/yyyy hh:mm:ss"),
+    };
+    const formatNumberDuration = {
+        name: _lt("Duration"),
+        description: "27:51:38",
+        execute: FORMAT_DURATION_ACTION,
+        isActive: (env) => isFormatSelected(env, "hhhh:mm:ss"),
+    };
+    const incraseDecimalPlaces = {
+        name: _lt("Increase decimal places"),
+        icon: "o-spreadsheet-Icon.INCREASE_DECIMAL",
+        execute: (env) => env.model.dispatch("SET_DECIMAL", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+            step: 1,
+        }),
+    };
+    const decraseDecimalPlaces = {
+        name: _lt("Decrease decimal places"),
+        icon: "o-spreadsheet-Icon.DECRASE_DECIMAL",
+        execute: (env) => env.model.dispatch("SET_DECIMAL", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+            step: -1,
+        }),
+    };
+    const formatBold = {
+        name: _lt("Bold"),
+        description: "Ctrl+B",
+        execute: FORMAT_BOLD_ACTION,
+        icon: "o-spreadsheet-Icon.BOLD",
+        isActive: (env) => !!env.model.getters.getCurrentStyle().bold,
+    };
+    const formatItalic = {
+        name: _lt("Italic"),
+        description: "Ctrl+I",
+        execute: FORMAT_ITALIC_ACTION,
+        icon: "o-spreadsheet-Icon.ITALIC",
+        isActive: (env) => !!env.model.getters.getCurrentStyle().italic,
+    };
+    const formatUnderline = {
+        name: _lt("Underline"),
+        description: "Ctrl+U",
+        execute: FORMAT_UNDERLINE_ACTION,
+        icon: "o-spreadsheet-Icon.UNDERLINE",
+        isActive: (env) => !!env.model.getters.getCurrentStyle().underline,
+    };
+    const formatStrikethrough = {
+        name: _lt("Strikethrough"),
+        execute: FORMAT_STRIKETHROUGH_ACTION,
+        icon: "o-spreadsheet-Icon.STRIKE",
+        isActive: (env) => !!env.model.getters.getCurrentStyle().strikethrough,
+    };
+    const formatFontSize = {
+        name: _lt("Font size"),
+        children: fontSizeMenuBuilder(),
+    };
+    const formatAlignment = {
+        name: _lt("Alignment"),
+        icon: "o-spreadsheet-Icon.ALIGN_LEFT",
+    };
+    const formatAlignmentHorizontal = {
+        name: _lt("Horizontal align"),
+        icon: "o-spreadsheet-Icon.ALIGN_LEFT",
+    };
+    const formatAlignmentLeft = {
+        name: _lt("Left"),
+        execute: (env) => setStyle(env, { align: "left" }),
+        isActive: (env) => getHorizontalAlign(env) === "left",
+        icon: "o-spreadsheet-Icon.ALIGN_LEFT",
+    };
+    const formatAlignmentCenter = {
+        name: _lt("Center"),
+        execute: (env) => setStyle(env, { align: "center" }),
+        isActive: (env) => getHorizontalAlign(env) === "center",
+        icon: "o-spreadsheet-Icon.ALIGN_CENTER",
+    };
+    const formatAlignmentRight = {
+        name: _lt("Right"),
+        execute: (env) => setStyle(env, { align: "right" }),
+        isActive: (env) => getHorizontalAlign(env) === "right",
+        icon: "o-spreadsheet-Icon.ALIGN_RIGHT",
+    };
+    const formatAlignmentVertical = {
+        name: _lt("Vertical align"),
+        icon: "o-spreadsheet-Icon.ALIGN_MIDDLE",
+    };
+    const formatAlignmentTop = {
+        name: _lt("Top"),
+        execute: (env) => setStyle(env, { verticalAlign: "top" }),
+        isActive: (env) => (env.model.getters.getCurrentStyle().verticalAlign || DEFAULT_VERTICAL_ALIGN) === "top",
+        icon: "o-spreadsheet-Icon.ALIGN_TOP",
+    };
+    const formatAlignmentMiddle = {
+        name: _lt("Middle"),
+        execute: (env) => setStyle(env, { verticalAlign: "middle" }),
+        isActive: (env) => (env.model.getters.getCurrentStyle().verticalAlign || DEFAULT_VERTICAL_ALIGN) === "middle",
+        icon: "o-spreadsheet-Icon.ALIGN_MIDDLE",
+    };
+    const formatAlignmentBottom = {
+        name: _lt("Bottom"),
+        execute: (env) => setStyle(env, { verticalAlign: "bottom" }),
+        isActive: (env) => (env.model.getters.getCurrentStyle().verticalAlign || DEFAULT_VERTICAL_ALIGN) === "bottom",
+        icon: "o-spreadsheet-Icon.ALIGN_BOTTOM",
+    };
+    const formatWrapping = {
+        name: _lt("Wrapping"),
+        icon: "o-spreadsheet-Icon.WRAPPING_OVERFLOW",
+    };
+    const formatWrappingOverflow = {
+        name: _lt("Overflow"),
+        execute: (env) => setStyle(env, { wrapping: "overflow" }),
+        isActive: (env) => (env.model.getters.getCurrentStyle().wrapping || "overflow") === "overflow",
+        icon: "o-spreadsheet-Icon.WRAPPING_OVERFLOW",
+    };
+    const formatWrappingWrap = {
+        name: _lt("Wrap"),
+        execute: (env) => setStyle(env, { wrapping: "wrap" }),
+        isActive: (env) => env.model.getters.getCurrentStyle().wrapping === "wrap",
+        icon: "o-spreadsheet-Icon.WRAPPING_WRAP",
+    };
+    const formatWrappingClip = {
+        name: _lt("Clip"),
+        execute: (env) => setStyle(env, { wrapping: "clip" }),
+        isActive: (env) => env.model.getters.getCurrentStyle().wrapping === "clip",
+        icon: "o-spreadsheet-Icon.WRAPPING_CLIP",
+    };
+    const textColor = {
+        name: _lt("Text Color"),
+        icon: "o-spreadsheet-Icon.TEXT_COLOR",
+    };
+    const fillColor = {
+        name: _lt("Fill Color"),
+        icon: "o-spreadsheet-Icon.FILL_COLOR",
+    };
+    const formatCF = {
+        name: _lt("Conditional formatting"),
+        execute: OPEN_CF_SIDEPANEL_ACTION,
+    };
+    const paintFormat = {
+        name: _lt("Paint Format"),
+        execute: (env) => env.model.dispatch("ACTIVATE_PAINT_FORMAT", {
+            target: env.model.getters.getSelectedZones(),
+        }),
+        icon: "o-spreadsheet-Icon.PAINT_FORMAT",
+        isActive: (env) => env.model.getters.isPaintingFormat(),
+    };
+    const clearFormat = {
+        name: _lt("Clear formatting"),
+        execute: FORMAT_CLEARFORMAT_ACTION,
+        icon: "o-spreadsheet-Icon.CLEAR_FORMAT",
+    };
+    const borders = {
+        name: _lt("Borders"),
+        icon: "o-spreadsheet-Icon.BORDERS",
+    };
+    const bordersAll = {
+        name: _lt("All borders"),
+        execute: (env) => setBorder(env, "all"),
+        icon: "o-spreadsheet-Icon.BORDERS",
+    };
+    const bordersInner = {
+        name: _lt("Inner borders"),
+        execute: (env) => setBorder(env, "hv"),
+        icon: "o-spreadsheet-Icon.BORDER_HV",
+    };
+    const bordersHorizontal = {
+        name: _lt("Horizontal borders"),
+        execute: (env) => setBorder(env, "h"),
+        icon: "o-spreadsheet-Icon.BORDER_H",
+    };
+    const bordersVertical = {
+        name: _lt("Vertical borders"),
+        execute: (env) => setBorder(env, "v"),
+        icon: "o-spreadsheet-Icon.BORDER_V",
+    };
+    const bordersExternal = {
+        name: _lt("External borders"),
+        execute: (env) => setBorder(env, "external"),
+        icon: "o-spreadsheet-Icon.BORDER_EXTERNAL",
+    };
+    const bordersLeft = {
+        name: _lt("Left borders"),
+        execute: (env) => setBorder(env, "left"),
+        icon: "o-spreadsheet-Icon.BORDER_LEFT",
+    };
+    const bordersTop = {
+        name: _lt("Top borders"),
+        execute: (env) => setBorder(env, "top"),
+        icon: "o-spreadsheet-Icon.BORDER_TOP",
+    };
+    const bordersRight = {
+        name: _lt("Right borders"),
+        execute: (env) => setBorder(env, "right"),
+        icon: "o-spreadsheet-Icon.BORDER_RIGHT",
+    };
+    const bordersBottom = {
+        name: _lt("Bottom borders"),
+        execute: (env) => setBorder(env, "bottom"),
+        icon: "o-spreadsheet-Icon.BORDER_BOTTOM",
+    };
+    const bordersClear = {
+        name: _lt("Clear borders"),
+        execute: (env) => setBorder(env, "clear"),
+        icon: "o-spreadsheet-Icon.BORDER_CLEAR",
+    };
+    function fontSizeMenuBuilder() {
+        return FONT_SIZES.map((fs) => {
+            return {
+                name: fs.toString(),
+                sequence: fs,
+                id: `font_size_${fs}`,
+                execute: (env) => setStyle(env, { fontSize: fs }),
+                isActive: (env) => isFontSizeSelected(env, fs),
+            };
+        });
+    }
+    function isAutomaticFormatSelected(env) {
+        const activeCell = env.model.getters.getActiveCell();
+        return !activeCell || !activeCell.format;
+    }
+    function isFormatSelected(env, format) {
+        const activeCell = env.model.getters.getActiveCell();
+        return activeCell && activeCell.format === format;
+    }
+    function isFontSizeSelected(env, fontSize) {
+        const currentFontSize = env.model.getters.getCurrentStyle().fontSize || DEFAULT_FONT_SIZE;
+        return currentFontSize === fontSize;
+    }
+    function setBorder(env, command) {
+        env.model.dispatch("SET_FORMATTING", {
+            sheetId: env.model.getters.getActiveSheetId(),
+            target: env.model.getters.getSelectedZones(),
+            border: command,
+        });
+    }
+    function getHorizontalAlign(env) {
+        const style = env.model.getters.getCurrentStyle();
+        if (style.align) {
+            return style.align;
+        }
+        const cell = env.model.getters.getActiveCell();
+        return cell.defaultAlign;
+    }
+
+    var ACTION_FORMAT = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        formatNumberAutomatic: formatNumberAutomatic,
+        formatNumberNumber: formatNumberNumber,
+        formatPercent: formatPercent,
+        formatNumberPercent: formatNumberPercent,
+        formatNumberCurrency: formatNumberCurrency,
+        formatNumberCurrencyRounded: formatNumberCurrencyRounded,
+        formatCustomCurrency: formatCustomCurrency,
+        formatNumberDate: formatNumberDate,
+        formatNumberTime: formatNumberTime,
+        formatNumberDateTime: formatNumberDateTime,
+        formatNumberDuration: formatNumberDuration,
+        incraseDecimalPlaces: incraseDecimalPlaces,
+        decraseDecimalPlaces: decraseDecimalPlaces,
+        formatBold: formatBold,
+        formatItalic: formatItalic,
+        formatUnderline: formatUnderline,
+        formatStrikethrough: formatStrikethrough,
+        formatFontSize: formatFontSize,
+        formatAlignment: formatAlignment,
+        formatAlignmentHorizontal: formatAlignmentHorizontal,
+        formatAlignmentLeft: formatAlignmentLeft,
+        formatAlignmentCenter: formatAlignmentCenter,
+        formatAlignmentRight: formatAlignmentRight,
+        formatAlignmentVertical: formatAlignmentVertical,
+        formatAlignmentTop: formatAlignmentTop,
+        formatAlignmentMiddle: formatAlignmentMiddle,
+        formatAlignmentBottom: formatAlignmentBottom,
+        formatWrapping: formatWrapping,
+        formatWrappingOverflow: formatWrappingOverflow,
+        formatWrappingWrap: formatWrappingWrap,
+        formatWrappingClip: formatWrappingClip,
+        textColor: textColor,
+        fillColor: fillColor,
+        formatCF: formatCF,
+        paintFormat: paintFormat,
+        clearFormat: clearFormat,
+        borders: borders,
+        bordersAll: bordersAll,
+        bordersInner: bordersInner,
+        bordersHorizontal: bordersHorizontal,
+        bordersVertical: bordersVertical,
+        bordersExternal: bordersExternal,
+        bordersLeft: bordersLeft,
+        bordersTop: bordersTop,
+        bordersRight: bordersRight,
+        bordersBottom: bordersBottom,
+        bordersClear: bordersClear
+    });
+
     function interactiveFreezeColumnsRows(env, dimension, base) {
         const sheetId = env.model.getters.getActiveSheetId();
         const cmd = dimension === "COL" ? "FREEZE_COLUMNS" : "FREEZE_ROWS";
@@ -16186,524 +16660,740 @@
         }
     }
 
-    const topbarMenuRegistry = new MenuItemRegistry();
-    topbarMenuRegistry
-        .add("file", { name: _lt("File"), sequence: 10 })
-        .add("edit", { name: _lt("Edit"), sequence: 20 })
-        .add("view", { name: _lt("View"), sequence: 30 })
-        .add("insert", { name: _lt("Insert"), sequence: 40 })
-        .add("format", { name: _lt("Format"), sequence: 50 })
-        .add("data", { name: _lt("Data"), sequence: 60 })
-        .addChild("save", ["file"], {
-        name: _lt("Save"),
-        description: "Ctrl+S",
-        sequence: 10,
-        action: () => console.log("Not implemented"),
-    })
-        .addChild("undo", ["edit"], {
-        name: _lt("Undo"),
-        description: "Ctrl+Z",
-        sequence: 10,
-        action: UNDO_ACTION,
-    })
-        .addChild("redo", ["edit"], {
-        name: _lt("Redo"),
-        description: "Ctrl+Y",
-        sequence: 20,
-        action: REDO_ACTION,
-        separator: true,
-    })
-        .addChild("copy", ["edit"], {
-        name: _lt("Copy"),
-        description: "Ctrl+C",
-        sequence: 30,
-        isReadonlyAllowed: true,
-        action: COPY_ACTION,
-    })
-        .addChild("cut", ["edit"], {
-        name: _lt("Cut"),
-        description: "Ctrl+X",
-        sequence: 40,
-        action: CUT_ACTION,
-    })
-        .addChild("paste", ["edit"], {
-        name: _lt("Paste"),
-        description: "Ctrl+V",
-        sequence: 50,
-        action: PASTE_ACTION,
-    })
-        .addChild("paste_special", ["edit"], {
-        name: _lt("Paste special"),
-        sequence: 60,
-        separator: true,
-        isVisible: IS_NOT_CUT_OPERATION,
-    })
-        .addChild("paste_special_value", ["edit", "paste_special"], {
-        name: _lt("Paste value only"),
-        sequence: 10,
-        action: PASTE_VALUE_ACTION,
-    })
-        .addChild("paste_special_format", ["edit", "paste_special"], {
-        name: _lt("Paste format only"),
-        sequence: 20,
-        action: PASTE_FORMAT_ACTION,
-    })
-        .addChild("sort_range", ["data"], {
-        name: _lt("Sort range"),
-        sequence: 20,
-        isVisible: IS_ONLY_ONE_RANGE,
-        separator: true,
-    })
-        .addChild("sort_ascending", ["data", "sort_range"], {
-        name: _lt("Ascending (A ⟶ Z)"),
-        sequence: 10,
-        action: SORT_CELLS_ASCENDING,
-    })
-        .addChild("sort_descending", ["data", "sort_range"], {
-        name: _lt("Descending (Z ⟶ A)"),
-        sequence: 20,
-        action: SORT_CELLS_DESCENDING,
-    })
-        .addChild("find_and_replace", ["edit"], {
-        name: _lt("Find and replace"),
-        description: "Ctrl+H",
-        sequence: 65,
-        isReadonlyAllowed: true,
-        action: OPEN_FAR_SIDEPANEL_ACTION,
-        separator: true,
-    })
-        .addChild("edit_delete_cell_values", ["edit"], {
-        name: _lt("Delete values"),
-        sequence: 70,
-        action: DELETE_CONTENT_ACTION,
-    })
-        .addChild("edit_delete_row", ["edit"], {
-        name: REMOVE_ROWS_NAME,
-        sequence: 80,
-        action: REMOVE_ROWS_ACTION,
-    })
-        .addChild("edit_delete_column", ["edit"], {
-        name: REMOVE_COLUMNS_NAME,
-        sequence: 90,
-        action: REMOVE_COLUMNS_ACTION,
-    })
-        .addChild("edit_delete_cell_shift_up", ["edit"], {
-        name: _lt("Delete cell and shift up"),
-        sequence: 93,
-        action: DELETE_CELL_SHIFT_UP,
-    })
-        .addChild("edit_delete_cell_shift_left", ["edit"], {
-        name: _lt("Delete cell and shift left"),
-        sequence: 97,
-        action: DELETE_CELL_SHIFT_LEFT,
-    })
-        .addChild("edit_unhide_columns", ["edit"], {
+    const hideCols = {
+        name: HIDE_COLUMNS_NAME,
+        execute: HIDE_COLUMNS_ACTION,
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const hiddenCols = env.model.getters.getHiddenColsGroups(sheetId).flat();
+            return (env.model.getters.getNumberCols(sheetId) >
+                hiddenCols.length + env.model.getters.getElementsFromSelection("COL").length);
+        },
+    };
+    const unhideCols = {
+        name: _lt("Unhide columns"),
+        execute: UNHIDE_COLUMNS_ACTION,
+        isVisible: (env) => {
+            const hiddenCols = env.model.getters
+                .getHiddenColsGroups(env.model.getters.getActiveSheetId())
+                .flat();
+            const currentCols = env.model.getters.getElementsFromSelection("COL");
+            return currentCols.some((col) => hiddenCols.includes(col));
+        },
+    };
+    const unhideAllCols = {
         name: _lt("Unhide all columns"),
-        sequence: 100,
-        action: UNHIDE_ALL_COLUMNS_ACTION,
+        execute: UNHIDE_ALL_COLUMNS_ACTION,
         isVisible: (env) => env.model.getters.getHiddenColsGroups(env.model.getters.getActiveSheetId()).length > 0,
-    })
-        .addChild("edit_unhide_rows", ["edit"], {
+    };
+    const hideRows = {
+        name: HIDE_ROWS_NAME,
+        execute: HIDE_ROWS_ACTION,
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const hiddenRows = env.model.getters.getHiddenRowsGroups(sheetId).flat();
+            return (env.model.getters.getNumberRows(sheetId) >
+                hiddenRows.length + env.model.getters.getElementsFromSelection("ROW").length);
+        },
+    };
+    const unhideRows = {
+        name: _lt("Unhide rows"),
+        execute: UNHIDE_ROWS_ACTION,
+        isVisible: (env) => {
+            const hiddenRows = env.model.getters
+                .getHiddenRowsGroups(env.model.getters.getActiveSheetId())
+                .flat();
+            const currentRows = env.model.getters.getElementsFromSelection("ROW");
+            return currentRows.some((col) => hiddenRows.includes(col));
+        },
+    };
+    const unhideAllRows = {
         name: _lt("Unhide all rows"),
-        sequence: 100,
-        action: UNHIDE_ALL_ROWS_ACTION,
+        execute: UNHIDE_ALL_ROWS_ACTION,
         isVisible: (env) => env.model.getters.getHiddenRowsGroups(env.model.getters.getActiveSheetId()).length > 0,
-    })
-        .addChild("insert_row_before", ["insert"], {
-        name: MENU_INSERT_ROWS_BEFORE_NAME,
-        sequence: 10,
-        action: INSERT_ROWS_BEFORE_ACTION,
-        isVisible: (env) => env.model.getters.getActiveCols().size === 0,
-    })
-        .addChild("insert_row_after", ["insert"], {
-        name: MENU_INSERT_ROWS_AFTER_NAME,
-        sequence: 20,
-        action: INSERT_ROWS_AFTER_ACTION,
-        isVisible: (env) => env.model.getters.getActiveCols().size === 0,
-        separator: true,
-    })
-        .addChild("insert_column_before", ["insert"], {
-        name: MENU_INSERT_COLUMNS_BEFORE_NAME,
-        sequence: 30,
-        action: INSERT_COLUMNS_BEFORE_ACTION,
-        isVisible: (env) => env.model.getters.getActiveRows().size === 0,
-    })
-        .addChild("insert_column_after", ["insert"], {
-        name: MENU_INSERT_COLUMNS_AFTER_NAME,
-        sequence: 40,
-        action: INSERT_COLUMNS_AFTER_ACTION,
-        isVisible: (env) => env.model.getters.getActiveRows().size === 0,
-        separator: true,
-    })
-        .addChild("insert_insert_cell_shift_down", ["insert"], {
-        name: _lt("Insert cells and shift down"),
-        sequence: 43,
-        action: INSERT_CELL_SHIFT_DOWN,
-    })
-        .addChild("insert_insert_cell_shift_right", ["insert"], {
-        name: _lt("Insert cells and shift right"),
-        sequence: 47,
-        action: INSERT_CELL_SHIFT_RIGHT,
-        separator: true,
-    })
-        .addChild("insert_chart", ["insert"], {
-        name: _lt("Chart"),
-        sequence: 50,
-        action: CREATE_CHART,
-    })
-        .addChild("insert_image", ["insert"], {
-        name: _lt("Image"),
-        sequence: 55,
-        action: CREATE_IMAGE,
-        isVisible: (env) => env.imageProvider !== undefined,
-    })
-        .addChild("insert_function", ["insert"], {
-        name: _lt("Function"),
-        sequence: 60,
-    })
-        .addChild("insert_function_sum", ["insert", "insert_function"], {
-        name: _lt("SUM"),
-        action: (env) => env.startCellEdition(`=SUM(`),
-        sequence: 0,
-    })
-        .addChild("insert_function_average", ["insert", "insert_function"], {
-        name: _lt("AVERAGE"),
-        action: (env) => env.startCellEdition(`=AVERAGE(`),
-        sequence: 10,
-    })
-        .addChild("insert_function_count", ["insert", "insert_function"], {
-        name: _lt("COUNT"),
-        action: (env) => env.startCellEdition(`=COUNT(`),
-        sequence: 20,
-    })
-        .addChild("insert_function_max", ["insert", "insert_function"], {
-        name: _lt("MAX"),
-        action: (env) => env.startCellEdition(`=MAX(`),
-        sequence: 30,
-    })
-        .addChild("insert_function_min", ["insert", "insert_function"], {
-        name: _lt("MIN"),
-        action: (env) => env.startCellEdition(`=MIN(`),
-        sequence: 40,
-        separator: true,
-    })
-        .addChild("categorie_function_all", ["insert", "insert_function"], {
-        name: _lt("All"),
-        sequence: 50,
-    })
-        .addChild("all_function_list", ["insert", "insert_function", "categorie_function_all"], () => {
-        const fnNames = functionRegistry.getKeys();
-        return createFormulaFunctionMenuItems(fnNames);
-    })
-        .addChild("categories_function_list", ["insert", "insert_function"], () => {
-        const functions = functionRegistry.content;
-        const categories = [...new Set(functionRegistry.getAll().map((fn) => fn.category))].filter(isDefined$1);
-        return categories.sort().map((category, i) => {
-            const functionsInCategory = Object.keys(functions).filter((key) => functions[key].category === category);
-            return {
-                name: category,
-                sequence: 60 + i * 10,
-                children: createFormulaFunctionMenuItems(functionsInCategory),
-            };
-        });
-    })
-        .addChild("insert_link", ["insert"], {
-        name: _lt("Link"),
-        separator: true,
-        sequence: 70,
-        action: INSERT_LINK,
-    })
-        .addChild("insert_sheet", ["insert"], {
-        name: _lt("New sheet"),
-        sequence: 80,
-        action: CREATE_SHEET_ACTION,
-        separator: true,
-    })
-        .addChild("unfreeze_panes", ["view"], {
+    };
+    const unFreezePane = {
         name: _lt("Unfreeze"),
-        sequence: 4,
         isVisible: (env) => {
             const { xSplit, ySplit } = env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId());
             return xSplit + ySplit > 0;
         },
-        action: (env) => env.model.dispatch("UNFREEZE_COLUMNS_ROWS", {
+        execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS_ROWS", {
             sheetId: env.model.getters.getActiveSheetId(),
         }),
-    })
-        .addChild("freeze_panes", ["view"], {
+    };
+    const freezePane = {
         name: _lt("Freeze"),
-        sequence: 5,
-        separator: true,
-    })
-        .addChild("unfreeze_rows", ["view", "freeze_panes"], {
+    };
+    const unFreezeRows = {
         name: _lt("No rows"),
-        action: (env) => env.model.dispatch("UNFREEZE_ROWS", {
+        execute: (env) => env.model.dispatch("UNFREEZE_ROWS", {
             sheetId: env.model.getters.getActiveSheetId(),
         }),
         isReadonlyAllowed: true,
-        sequence: 5,
         isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).ySplit,
-    })
-        .addChild("freeze_first_row", ["view", "freeze_panes"], {
+    };
+    const freezeFirstRow = {
         name: _lt("1 row"),
-        action: (env) => interactiveFreezeColumnsRows(env, "ROW", 1),
+        execute: (env) => interactiveFreezeColumnsRows(env, "ROW", 1),
         isReadonlyAllowed: true,
-        sequence: 10,
-    })
-        .addChild("freeze_second_row", ["view", "freeze_panes"], {
+    };
+    const freezeSecondRow = {
         name: _lt("2 rows"),
-        action: (env) => interactiveFreezeColumnsRows(env, "ROW", 2),
+        execute: (env) => interactiveFreezeColumnsRows(env, "ROW", 2),
         isReadonlyAllowed: true,
-        sequence: 15,
-    })
-        .addChild("freeze_current_row", ["view", "freeze_panes"], {
+    };
+    const freezeCurrentRow = {
         name: _lt("Up to current row"),
-        action: (env) => {
+        execute: (env) => {
             const { bottom } = env.model.getters.getSelectedZone();
             interactiveFreezeColumnsRows(env, "ROW", bottom + 1);
         },
         isReadonlyAllowed: true,
-        sequence: 20,
-        separator: true,
-    })
-        .addChild("unfreeze_columns", ["view", "freeze_panes"], {
+    };
+    const unFreezeCols = {
         name: _lt("No columns"),
-        action: (env) => env.model.dispatch("UNFREEZE_COLUMNS", {
+        execute: (env) => env.model.dispatch("UNFREEZE_COLUMNS", {
             sheetId: env.model.getters.getActiveSheetId(),
         }),
         isReadonlyAllowed: true,
-        sequence: 25,
         isVisible: (env) => !!env.model.getters.getPaneDivisions(env.model.getters.getActiveSheetId()).xSplit,
-    })
-        .addChild("freeze_first_col", ["view", "freeze_panes"], {
+    };
+    const freezeFirstCol = {
         name: _lt("1 column"),
-        action: (env) => interactiveFreezeColumnsRows(env, "COL", 1),
+        execute: (env) => interactiveFreezeColumnsRows(env, "COL", 1),
         isReadonlyAllowed: true,
-        sequence: 30,
-    })
-        .addChild("freeze_second_col", ["view", "freeze_panes"], {
+    };
+    const freezeSecondCol = {
         name: _lt("2 columns"),
-        action: (env) => interactiveFreezeColumnsRows(env, "COL", 2),
+        execute: (env) => interactiveFreezeColumnsRows(env, "COL", 2),
         isReadonlyAllowed: true,
-        sequence: 35,
-    })
-        .addChild("freeze_current_col", ["view", "freeze_panes"], {
+    };
+    const freezeCurrentCol = {
         name: _lt("Up to current column"),
-        action: (env) => {
+        execute: (env) => {
             const { right } = env.model.getters.getSelectedZone();
             interactiveFreezeColumnsRows(env, "COL", right + 1);
         },
         isReadonlyAllowed: true,
-        sequence: 40,
-    })
-        .addChild("view_gridlines", ["view"], {
+    };
+    const viewGridlines = {
         name: (env) => env.model.getters.getGridLinesVisibility(env.model.getters.getActiveSheetId())
             ? _lt("Hide gridlines")
             : _lt("Show gridlines"),
-        action: SET_GRID_LINES_VISIBILITY_ACTION,
+        execute: SET_GRID_LINES_VISIBILITY_ACTION,
+    };
+    const viewFormulas = {
+        name: (env) => env.model.getters.shouldShowFormulas() ? _lt("Hide formulas") : _lt("Show formulas"),
+        execute: SET_FORMULA_VISIBILITY_ACTION,
+        isReadonlyAllowed: true,
+    };
+    const createRemoveFilter = {
+        name: (env) => selectionContainsFilter(env) ? _lt("Remove selected filters") : _lt("Create filter"),
+        isActive: (env) => selectionContainsFilter(env),
+        isEnabled: (env) => !cannotCreateFilter(env),
+        execute: (env) => createRemoveFilterAction(env),
+        icon: "o-spreadsheet-Icon.FILTER_ICON_INACTIVE",
+    };
+    function selectionContainsFilter(env) {
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selectedZones = env.model.getters.getSelectedZones();
+        return env.model.getters.doesZonesContainFilter(sheetId, selectedZones);
+    }
+    function cannotCreateFilter(env) {
+        return !areZonesContinuous(...env.model.getters.getSelectedZones());
+    }
+    function createRemoveFilterAction(env) {
+        if (selectionContainsFilter(env)) {
+            env.model.dispatch("REMOVE_FILTER_TABLE", {
+                sheetId: env.model.getters.getActiveSheetId(),
+                target: env.model.getters.getSelectedZones(),
+            });
+            return;
+        }
+        if (cannotCreateFilter(env)) {
+            return;
+        }
+        env.model.selection.selectTableAroundSelection();
+        const sheetId = env.model.getters.getActiveSheetId();
+        const selection = env.model.getters.getSelectedZones();
+        interactiveAddFilter(env, sheetId, selection);
+    }
+
+    var ACTION_VIEW = /*#__PURE__*/Object.freeze({
+        __proto__: null,
+        hideCols: hideCols,
+        unhideCols: unhideCols,
+        unhideAllCols: unhideAllCols,
+        hideRows: hideRows,
+        unhideRows: unhideRows,
+        unhideAllRows: unhideAllRows,
+        unFreezePane: unFreezePane,
+        freezePane: freezePane,
+        unFreezeRows: unFreezeRows,
+        freezeFirstRow: freezeFirstRow,
+        freezeSecondRow: freezeSecondRow,
+        freezeCurrentRow: freezeCurrentRow,
+        unFreezeCols: unFreezeCols,
+        freezeFirstCol: freezeFirstCol,
+        freezeSecondCol: freezeSecondCol,
+        freezeCurrentCol: freezeCurrentCol,
+        viewGridlines: viewGridlines,
+        viewFormulas: viewFormulas,
+        createRemoveFilter: createRemoveFilter
+    });
+
+    const colMenuRegistry = new MenuItemRegistry();
+    colMenuRegistry
+        .add("cut", {
+        ...cut,
+        sequence: 10,
+    })
+        .add("copy", {
+        ...copy,
+        sequence: 20,
+    })
+        .add("paste", {
+        ...paste,
+        sequence: 30,
+    })
+        .add("paste_special", {
+        ...pasteSpecial,
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("paste_value_only", ["paste_special"], {
+        ...pasteSpecialValue,
+        sequence: 10,
+    })
+        .addChild("paste_format_only", ["paste_special"], {
+        ...pasteSpecialFormat,
+        sequence: 20,
+    })
+        .add("sort_columns", {
+        ...sortRange,
+        name: (env) => env.model.getters.getActiveCols().size > 1 ? _lt("Sort columns") : _lt("Sort column"),
+        sequence: 50,
+        separator: true,
+    })
+        .addChild("sort_ascending", ["sort_columns"], {
+        ...sortAscending,
+        sequence: 10,
+    })
+        .addChild("sort_descending", ["sort_columns"], {
+        ...sortDescending,
+        sequence: 20,
+    })
+        .add("add_column_before", {
+        ...colInsertColsBefore,
+        sequence: 70,
+    })
+        .add("add_column_after", {
+        ...colInsertColsAfter,
+        sequence: 80,
+    })
+        .add("delete_column", {
+        ...deleteCols,
+        sequence: 90,
+    })
+        .add("clear_column", {
+        ...clearCols,
+        sequence: 100,
+    })
+        .add("hide_columns", {
+        ...hideCols,
+        sequence: 85,
+        separator: true,
+    })
+        .add("unhide_columns", {
+        ...unhideCols,
+        sequence: 86,
+        separator: true,
+    })
+        .add("conditional_formatting", {
+        ...formatCF,
+        sequence: 110,
+    });
+
+    const numberFormatMenuRegistry = new MenuItemRegistry();
+    numberFormatMenuRegistry
+        .add("format_number_automatic", {
+        ...formatNumberAutomatic,
+        sequence: 10,
+        separator: true,
+    })
+        .add("format_number_number", {
+        ...formatNumberNumber,
+        sequence: 20,
+    })
+        .add("format_number_percent", {
+        ...formatNumberPercent,
+        sequence: 30,
+        separator: true,
+    })
+        .add("format_number_currency", {
+        ...formatNumberCurrency,
+        sequence: 40,
+    })
+        .add("format_number_currency_rounded", {
+        ...formatNumberCurrencyRounded,
+        sequence: 50,
+    })
+        .add("format_custom_currency", {
+        ...formatCustomCurrency,
+        sequence: 60,
+        separator: true,
+    })
+        .add("format_number_date", {
+        ...formatNumberDate,
+        sequence: 70,
+    })
+        .add("format_number_time", {
+        ...formatNumberTime,
+        sequence: 80,
+    })
+        .add("format_number_date_time", {
+        ...formatNumberDateTime,
+        sequence: 90,
+    })
+        .add("format_number_duration", {
+        ...formatNumberDuration,
+        sequence: 100,
+        separator: true,
+    });
+    const formatNumberMenuItemSpec = {
+        name: _lt("More formats"),
+        icon: "o-spreadsheet-Icon.NUMBER_FORMATS",
+        children: [() => numberFormatMenuRegistry.getAll()],
+    };
+
+    const rowMenuRegistry = new MenuItemRegistry();
+    rowMenuRegistry
+        .add("cut", {
+        ...cut,
+        sequence: 10,
+    })
+        .add("copy", {
+        ...copy,
+        sequence: 20,
+    })
+        .add("paste", {
+        ...paste,
+        sequence: 30,
+    })
+        .add("paste_special", {
+        ...pasteSpecial,
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("paste_value_only", ["paste_special"], {
+        ...pasteSpecialValue,
+        sequence: 10,
+    })
+        .addChild("paste_format_only", ["paste_special"], {
+        ...pasteSpecialFormat,
+        sequence: 20,
+    })
+        .add("add_row_before", {
+        ...rowInsertRowBefore,
+        sequence: 50,
+    })
+        .add("add_row_after", {
+        ...rowInsertRowsAfter,
+        sequence: 60,
+    })
+        .add("delete_row", {
+        ...deleteRows,
+        sequence: 70,
+    })
+        .add("clear_row", {
+        ...clearRows,
+        sequence: 80,
+    })
+        .add("hide_rows", {
+        ...hideRows,
+        sequence: 85,
+        separator: true,
+    })
+        .add("unhide_rows", {
+        ...unhideRows,
+        sequence: 86,
+        separator: true,
+    })
+        .add("conditional_formatting", {
+        ...formatCF,
+        sequence: 90,
+    });
+
+    function getSheetMenuRegistry(args) {
+        const sheetMenuRegistry = new MenuItemRegistry();
+        sheetMenuRegistry
+            .add("delete", {
+            ...deleteSheet,
+            sequence: 10,
+        })
+            .add("duplicate", {
+            ...duplicateSheet,
+            sequence: 20,
+        })
+            .add("rename", {
+            ...renameSheet(args),
+            sequence: 30,
+        })
+            .add("move_right", {
+            ...sheetMoveRight,
+            sequence: 40,
+        })
+            .add("move_left", {
+            ...sheetMoveLeft,
+            sequence: 50,
+        })
+            .add("hide_sheet", {
+            ...hideSheet,
+            sequence: 60,
+        });
+        return sheetMenuRegistry;
+    }
+
+    const topbarMenuRegistry = new MenuItemRegistry();
+    topbarMenuRegistry
+        // ---------------------------------------------------------------------
+        // FILE MENU ITEMS
+        // ---------------------------------------------------------------------
+        .add("file", {
+        name: _lt("File"),
+        sequence: 10,
+    })
+        // ---------------------------------------------------------------------
+        // EDIT MENU ITEMS
+        // ---------------------------------------------------------------------
+        .add("edit", {
+        name: _lt("Edit"),
+        sequence: 20,
+    })
+        .addChild("undo", ["edit"], {
+        ...undo,
+        sequence: 10,
+    })
+        .addChild("redo", ["edit"], {
+        ...redo,
+        sequence: 20,
+        separator: true,
+    })
+        .addChild("copy", ["edit"], {
+        ...copy,
+        sequence: 30,
+    })
+        .addChild("cut", ["edit"], {
+        ...cut,
+        sequence: 40,
+    })
+        .addChild("paste", ["edit"], {
+        ...paste,
+        sequence: 50,
+    })
+        .addChild("paste_special", ["edit"], {
+        ...pasteSpecial,
+        sequence: 60,
+        separator: true,
+    })
+        .addChild("paste_special_value", ["edit", "paste_special"], {
+        ...pasteSpecialValue,
+        sequence: 10,
+    })
+        .addChild("paste_special_format", ["edit", "paste_special"], {
+        ...pasteSpecialFormat,
+        sequence: 20,
+    })
+        .addChild("find_and_replace", ["edit"], {
+        ...findAndReplace,
+        sequence: 65,
+        separator: true,
+    })
+        .addChild("edit_delete_cell_values", ["edit"], {
+        ...deleteValues,
+        sequence: 70,
+    })
+        .addChild("edit_delete_row", ["edit"], {
+        ...deleteRows,
+        sequence: 80,
+    })
+        .addChild("edit_delete_column", ["edit"], {
+        ...deleteCols,
+        sequence: 90,
+    })
+        .addChild("edit_delete_cell_shift_up", ["edit"], {
+        ...deleteCellShiftUp,
+        sequence: 93,
+    })
+        .addChild("edit_delete_cell_shift_left", ["edit"], {
+        ...deleteCellShiftLeft,
+        sequence: 97,
+    })
+        .addChild("edit_unhide_columns", ["edit"], {
+        ...unhideAllCols,
+        sequence: 100,
+    })
+        .addChild("edit_unhide_rows", ["edit"], {
+        ...unhideAllRows,
+        sequence: 100,
+    })
+        // ---------------------------------------------------------------------
+        // VIEW MENU ITEMS
+        // ---------------------------------------------------------------------
+        .add("view", {
+        name: _lt("View"),
+        sequence: 30,
+    })
+        .addChild("unfreeze_panes", ["view"], {
+        ...unFreezePane,
+        sequence: 4,
+    })
+        .addChild("freeze_panes", ["view"], {
+        ...freezePane,
+        sequence: 5,
+        separator: true,
+    })
+        .addChild("unfreeze_rows", ["view", "freeze_panes"], {
+        ...unFreezeRows,
+        sequence: 5,
+    })
+        .addChild("freeze_first_row", ["view", "freeze_panes"], {
+        ...freezeFirstRow,
+        sequence: 10,
+    })
+        .addChild("freeze_second_row", ["view", "freeze_panes"], {
+        ...freezeSecondRow,
+        sequence: 15,
+    })
+        .addChild("freeze_current_row", ["view", "freeze_panes"], {
+        ...freezeCurrentRow,
+        sequence: 20,
+        separator: true,
+    })
+        .addChild("unfreeze_columns", ["view", "freeze_panes"], {
+        ...unFreezeCols,
+        sequence: 25,
+    })
+        .addChild("freeze_first_col", ["view", "freeze_panes"], {
+        ...freezeFirstCol,
+        sequence: 30,
+    })
+        .addChild("freeze_second_col", ["view", "freeze_panes"], {
+        ...freezeSecondCol,
+        sequence: 35,
+    })
+        .addChild("freeze_current_col", ["view", "freeze_panes"], {
+        ...freezeCurrentCol,
+        sequence: 40,
+    })
+        .addChild("view_gridlines", ["view"], {
+        ...viewGridlines,
         sequence: 10,
     })
         .addChild("view_formulas", ["view"], {
-        name: (env) => env.model.getters.shouldShowFormulas() ? _lt("Hide formulas") : _lt("Show formulas"),
-        action: SET_FORMULA_VISIBILITY_ACTION,
-        isReadonlyAllowed: true,
+        ...viewFormulas,
         sequence: 15,
     })
-        .addChild("format_number", ["format"], {
-        name: _lt("Numbers"),
-        sequence: 10,
-        separator: true,
-    })
-        .addChild("format_number_automatic", ["format", "format_number"], {
-        name: NumberFormatTerms.Automatic,
-        sequence: 10,
-        separator: true,
-        action: FORMAT_AUTOMATIC_ACTION,
-    })
-        .addChild("format_number_number", ["format", "format_number"], {
-        name: NumberFormatTerms.Number,
-        description: "1,000.12",
-        sequence: 20,
-        action: FORMAT_NUMBER_ACTION,
-    })
-        .addChild("format_number_percent", ["format", "format_number"], {
-        name: NumberFormatTerms.Percent,
-        description: "10.12%",
-        sequence: 30,
-        separator: true,
-        action: FORMAT_PERCENT_ACTION,
-    })
-        .addChild("format_number_currency", ["format", "format_number"], {
-        name: NumberFormatTerms.Currency,
-        description: "$1,000.12",
-        sequence: 37,
-        action: FORMAT_CURRENCY_ACTION,
-    })
-        .addChild("format_number_currency_rounded", ["format", "format_number"], {
-        name: NumberFormatTerms.CurrencyRounded,
-        description: "$1,000",
-        sequence: 38,
-        action: FORMAT_CURRENCY_ROUNDED_ACTION,
-    })
-        .addChild("format_custom_currency", ["format", "format_number"], {
-        name: NumberFormatTerms.CustomCurrency,
-        sequence: 39,
-        separator: true,
-        isVisible: (env) => env.loadCurrencies !== undefined,
-        action: OPEN_CUSTOM_CURRENCY_SIDEPANEL_ACTION,
-    })
-        .addChild("format_number_date", ["format", "format_number"], {
-        name: NumberFormatTerms.Date,
-        description: "9/26/2008",
+        // ---------------------------------------------------------------------
+        // INSERT MENU ITEMS
+        // ---------------------------------------------------------------------
+        .add("insert", {
+        name: _lt("Insert"),
         sequence: 40,
-        action: FORMAT_DATE_ACTION,
     })
-        .addChild("format_number_time", ["format", "format_number"], {
-        name: NumberFormatTerms.Time,
-        description: "10:43:00 PM",
-        sequence: 50,
-        action: FORMAT_TIME_ACTION,
+        .addChild("insert_row_before", ["insert"], {
+        ...topBarInsertRowsBefore,
+        sequence: 10,
     })
-        .addChild("format_number_date_time", ["format", "format_number"], {
-        name: NumberFormatTerms.DateTime,
-        description: "9/26/2008 22:43:00",
-        sequence: 60,
-        action: FORMAT_DATE_TIME_ACTION,
-    })
-        .addChild("format_number_duration", ["format", "format_number"], {
-        name: NumberFormatTerms.Duration,
-        description: "27:51:38",
-        sequence: 70,
+        .addChild("insert_row_after", ["insert"], {
+        ...topBarInsertRowsAfter,
+        sequence: 20,
         separator: true,
-        action: FORMAT_DURATION_ACTION,
+    })
+        .addChild("insert_column_before", ["insert"], {
+        ...topBarInsertColsBefore,
+        sequence: 30,
+    })
+        .addChild("insert_column_after", ["insert"], {
+        ...topBarInsertColsAfter,
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("insert_insert_cell_shift_down", ["insert"], {
+        ...insertCellShiftDown,
+        sequence: 43,
+    })
+        .addChild("insert_insert_cell_shift_right", ["insert"], {
+        ...insertCellShiftRight,
+        sequence: 47,
+        separator: true,
+    })
+        .addChild("insert_chart", ["insert"], {
+        ...insertChart,
+        sequence: 50,
+    })
+        .addChild("insert_image", ["insert"], {
+        ...insertImage,
+        sequence: 55,
+    })
+        .addChild("insert_function", ["insert"], {
+        ...insertFunction,
+        sequence: 60,
+    })
+        .addChild("insert_function_sum", ["insert", "insert_function"], {
+        ...insertFunctionSum,
+        sequence: 0,
+    })
+        .addChild("insert_function_average", ["insert", "insert_function"], {
+        ...insertFunctionAverage,
+        sequence: 10,
+    })
+        .addChild("insert_function_count", ["insert", "insert_function"], {
+        ...insertFunctionCount,
+        sequence: 20,
+    })
+        .addChild("insert_function_max", ["insert", "insert_function"], {
+        ...insertFunctionMax,
+        sequence: 30,
+    })
+        .addChild("insert_function_min", ["insert", "insert_function"], {
+        ...insertFunctionMin,
+        sequence: 40,
+        separator: true,
+    })
+        .addChild("categorie_function_all", ["insert", "insert_function"], {
+        ...categorieFunctionAll,
+        sequence: 50,
+    })
+        .addChild("categories_function_list", ["insert", "insert_function"], categoriesFunctionListMenuBuilder)
+        .addChild("insert_link", ["insert"], {
+        ...insertLink,
+        separator: true,
+        sequence: 70,
+    })
+        .addChild("insert_sheet", ["insert"], {
+        ...insertSheet,
+        sequence: 80,
+        separator: true,
+    })
+        // ---------------------------------------------------------------------
+        // FORMAT MENU ITEMS
+        // ---------------------------------------------------------------------
+        .add("format", { name: _lt("Format"), sequence: 50 })
+        .addChild("format_number", ["format"], {
+        ...formatNumberMenuItemSpec,
+        name: _lt("Number"),
+        sequence: 10,
+        separator: true,
     })
         .addChild("format_bold", ["format"], {
-        name: _lt("Bold"),
+        ...formatBold,
         sequence: 20,
-        description: "Ctrl+B",
-        action: FORMAT_BOLD_ACTION,
     })
         .addChild("format_italic", ["format"], {
-        name: _lt("Italic"),
+        ...formatItalic,
         sequence: 30,
-        description: "Ctrl+I",
-        action: FORMAT_ITALIC_ACTION,
     })
         .addChild("format_underline", ["format"], {
-        name: _lt("Underline"),
-        description: "Ctrl+U",
+        ...formatUnderline,
         sequence: 40,
-        action: FORMAT_UNDERLINE_ACTION,
     })
         .addChild("format_strikethrough", ["format"], {
-        name: _lt("Strikethrough"),
+        ...formatStrikethrough,
         sequence: 50,
-        action: FORMAT_STRIKETHROUGH_ACTION,
         separator: true,
     })
         .addChild("format_font_size", ["format"], {
-        name: _lt("Font size"),
+        ...formatFontSize,
         sequence: 60,
         separator: true,
     })
         .addChild("format_alignment", ["format"], {
-        name: _lt("Alignment"),
+        ...formatAlignment,
         sequence: 70,
     })
         .addChild("format_alignment_left", ["format", "format_alignment"], {
-        name: "Left",
+        ...formatAlignmentLeft,
         sequence: 10,
-        action: (env) => setStyle(env, { align: "left" }),
     })
         .addChild("format_alignment_center", ["format", "format_alignment"], {
-        name: "Center",
+        ...formatAlignmentCenter,
         sequence: 20,
-        action: (env) => setStyle(env, { align: "center" }),
     })
         .addChild("format_alignment_right", ["format", "format_alignment"], {
-        name: "Right",
+        ...formatAlignmentRight,
         sequence: 30,
-        action: (env) => setStyle(env, { align: "right" }),
         separator: true,
     })
         .addChild("format_alignment_top", ["format", "format_alignment"], {
-        name: "Top",
+        ...formatAlignmentTop,
         sequence: 40,
-        action: (env) => setStyle(env, { verticalAlign: "top" }),
     })
         .addChild("format_alignment_middle", ["format", "format_alignment"], {
-        name: "Middle",
+        ...formatAlignmentMiddle,
         sequence: 50,
-        action: (env) => setStyle(env, { verticalAlign: "middle" }),
     })
         .addChild("format_alignment_bottom", ["format", "format_alignment"], {
-        name: "Bottom",
+        ...formatAlignmentBottom,
         sequence: 60,
-        action: (env) => setStyle(env, { verticalAlign: "bottom" }),
         separator: true,
     })
         .addChild("format_wrapping", ["format"], {
-        name: _lt("Wrapping"),
+        ...formatWrapping,
         sequence: 80,
         separator: true,
     })
         .addChild("format_wrapping_overflow", ["format", "format_wrapping"], {
-        name: _lt("Overflow"),
+        ...formatWrappingOverflow,
         sequence: 10,
-        action: (env) => setStyle(env, { wrapping: "overflow" }),
     })
         .addChild("format_wrapping_wrap", ["format", "format_wrapping"], {
-        name: _lt("Wrap"),
+        ...formatWrappingWrap,
         sequence: 20,
-        action: (env) => setStyle(env, { wrapping: "wrap" }),
     })
         .addChild("format_wrapping_clip", ["format", "format_wrapping"], {
-        name: _lt("Clip"),
+        ...formatWrappingClip,
         sequence: 30,
-        action: (env) => setStyle(env, { wrapping: "clip" }),
     })
         .addChild("format_cf", ["format"], {
-        name: _lt("Conditional formatting"),
+        ...formatCF,
         sequence: 90,
-        action: OPEN_CF_SIDEPANEL_ACTION,
         separator: true,
     })
         .addChild("format_clearFormat", ["format"], {
-        name: _lt("Clear formatting"),
+        ...clearFormat,
         sequence: 100,
-        action: FORMAT_CLEARFORMAT_ACTION,
         separator: true,
     })
-        .addChild("add_data_filter", ["data"], {
-        name: _lt("Create filter"),
+        // ---------------------------------------------------------------------
+        // DATA MENU ITEMS
+        // ---------------------------------------------------------------------
+        .add("data", {
+        name: _lt("Data"),
+        sequence: 60,
+    })
+        .addChild("sort_range", ["data"], {
+        ...sortRange,
+        sequence: 20,
+        separator: true,
+    })
+        .addChild("sort_ascending", ["data", "sort_range"], {
+        ...sortAscending,
         sequence: 10,
-        action: FILTERS_CREATE_FILTER_TABLE,
-        isVisible: (env) => !SELECTION_CONTAINS_FILTER(env),
-        isEnabled: (env) => SELECTION_IS_CONTINUOUS(env),
+    })
+        .addChild("sort_descending", ["data", "sort_range"], {
+        ...sortDescending,
+        sequence: 20,
+    })
+        .addChild("add_data_filter", ["data"], {
+        ...addDataFilter,
+        sequence: 10,
     })
         .addChild("remove_data_filter", ["data"], {
-        name: _lt("Remove filter"),
+        ...removeDataFilter,
         sequence: 10,
-        action: FILTERS_REMOVE_FILTER_TABLE,
-        isVisible: SELECTION_CONTAINS_FILTER,
     });
-    // Font-sizes
-    for (let fs of FONT_SIZES) {
-        topbarMenuRegistry.addChild(`format_font_size_${fs}`, ["format", "format_font_size"], {
-            name: fs.toString(),
-            sequence: fs,
-            action: (env) => setStyle(env, { fontSize: fs }),
-        });
-    }
-    function createFormulaFunctionMenuItems(fnNames) {
-        return fnNames.sort().map((fnName, i) => {
-            return {
-                name: fnName,
-                sequence: i * 10,
-                action: (env) => env.startCellEdition(`=${fnName}(`),
-            };
-        });
-    }
 
     class OTRegistry extends Registry {
         /**
@@ -17286,8 +17976,9 @@
 
     css /* scss */ `
   .o-color-picker-widget {
-    display: inline-block;
+    display: flex;
     position: relative;
+    align-items: center;
 
     .o-color-picker-button-style {
       display: flex;
@@ -17303,6 +17994,7 @@
     }
 
     .o-color-picker-button {
+      height: 30px;
       > span {
         border-bottom: 4px solid;
         height: 16px;
@@ -33187,48 +33879,66 @@
                 this.adjustPositionY(row);
             }
         }
-        adjustPositionX(col) {
+        adjustPositionX(targetCol) {
             const sheetId = this.sheetId;
-            const { start, end } = this.getters.getColDimensions(sheetId, col);
-            while (end > this.offsetX + this.offsetCorrectionX + this.viewportWidth &&
-                this.offsetX + this.offsetCorrectionX < start) {
-                this.offsetX = this.getters.getColDimensions(sheetId, this.left).end - this.offsetCorrectionX;
-                this.offsetScrollbarX = this.offsetX;
-                this.adjustViewportZoneX();
-            }
-            while (col < this.left) {
-                let leftCol;
-                for (leftCol = this.left; leftCol >= 0; leftCol--) {
-                    if (!this.getters.isColHidden(sheetId, leftCol)) {
+            const { end } = this.getters.getColDimensions(sheetId, targetCol);
+            const maxCol = this.getters.getNumberCols(sheetId);
+            if (this.offsetX + this.offsetCorrectionX + this.viewportWidth < end) {
+                for (let col = this.left; this.offsetX + this.offsetCorrectionX + this.viewportWidth < end; col++) {
+                    if (col > maxCol) {
                         break;
                     }
+                    if (this.getters.isColHidden(sheetId, col)) {
+                        continue;
+                    }
+                    this.offsetX = this.getters.getColDimensions(sheetId, col).end - this.offsetCorrectionX;
+                    this.offsetScrollbarX = this.offsetX;
+                    this.adjustViewportZoneX();
                 }
-                this.offsetX =
-                    this.getters.getColDimensions(sheetId, leftCol - 1).start - this.offsetCorrectionX;
-                this.offsetScrollbarX = this.offsetX;
-                this.adjustViewportZoneX();
+            }
+            else if (this.left > targetCol) {
+                for (let col = this.left; col >= targetCol; col--) {
+                    if (col < 0) {
+                        break;
+                    }
+                    if (this.getters.isColHidden(sheetId, col)) {
+                        continue;
+                    }
+                    this.offsetX = this.getters.getColDimensions(sheetId, col).start - this.offsetCorrectionX;
+                    this.offsetScrollbarX = this.offsetX;
+                    this.adjustViewportZoneX();
+                }
             }
         }
-        adjustPositionY(row) {
+        adjustPositionY(targetRow) {
             const sheetId = this.sheetId;
-            while (this.getters.getRowDimensions(sheetId, row).end >
-                this.offsetY + this.viewportHeight + this.offsetCorrectionY &&
-                this.offsetY + this.offsetCorrectionY < this.getters.getRowDimensions(sheetId, row).start) {
-                this.offsetY = this.getters.getRowDimensions(sheetId, this.top).end - this.offsetCorrectionY;
-                this.offsetScrollbarY = this.offsetY;
-                this.adjustViewportZoneY();
-            }
-            while (row < this.top) {
-                let topRow;
-                for (topRow = this.top; topRow >= 0; topRow--) {
-                    if (!this.getters.isRowHidden(sheetId, topRow)) {
+            const { end } = this.getters.getRowDimensions(sheetId, targetRow);
+            const maxRow = this.getters.getNumberRows(sheetId);
+            if (this.offsetY + this.viewportHeight + this.offsetCorrectionY < end) {
+                for (let row = this.top; this.offsetY + this.viewportHeight + this.offsetCorrectionY < end; row++) {
+                    if (row > maxRow) {
                         break;
                     }
+                    if (this.getters.isRowHidden(sheetId, row)) {
+                        continue;
+                    }
+                    this.offsetY = this.getters.getRowDimensions(sheetId, row).end - this.offsetCorrectionY;
+                    this.offsetScrollbarY = this.offsetY;
+                    this.adjustViewportZoneY();
                 }
-                this.offsetY =
-                    this.getters.getRowDimensions(sheetId, topRow - 1).start - this.offsetCorrectionY;
-                this.offsetScrollbarY = this.offsetY;
-                this.adjustViewportZoneY();
+            }
+            else if (this.top > targetRow) {
+                for (let row = this.top; row >= targetRow; row--) {
+                    if (row < 0) {
+                        break;
+                    }
+                    if (this.getters.isRowHidden(sheetId, row)) {
+                        continue;
+                    }
+                    this.offsetY = this.getters.getRowDimensions(sheetId, row).start - this.offsetCorrectionY;
+                    this.offsetScrollbarY = this.offsetY;
+                    this.adjustViewportZoneY();
+                }
             }
         }
         setViewportOffset(offsetX, offsetY) {
@@ -33421,8 +34131,8 @@
              * In the absence of a component (standalone model), is it mandatory to set reasonable default values
              * to ensure the correct operation of this plugin.
              */
-            this.sheetViewWidth = DEFAULT_SHEETVIEW_SIZE;
-            this.sheetViewHeight = DEFAULT_SHEETVIEW_SIZE;
+            this.sheetViewWidth = getDefaultSheetViewSize();
+            this.sheetViewHeight = getDefaultSheetViewSize();
             this.gridOffsetX = 0;
             this.gridOffsetY = 0;
             this.sheetsWithDirtyViewports = new Set();
@@ -39853,7 +40563,7 @@
     const clickableCellRegistry = new Registry();
     clickableCellRegistry.add("link", {
         condition: (position, env) => !!env.model.getters.getEvaluatedCell(position).link,
-        action: (position, env) => openLink(env.model.getters.getEvaluatedCell(position).link, env),
+        execute: (position, env) => openLink(env.model.getters.getEvaluatedCell(position).link, env),
         sequence: 5,
     });
 
@@ -40310,7 +41020,7 @@
                     name: this.getComposedFnName(fnName, fnValue),
                     sequence: i,
                     isReadonlyAllowed: true,
-                    action: () => {
+                    execute: () => {
                         this.selectedStatisticFn = fnName;
                     },
                 });
@@ -40478,10 +41188,6 @@
     font-size: 15px;
     border-top: 1px solid lightgrey;
 
-    .o-add-sheet.disabled {
-      cursor: not-allowed;
-    }
-
     .o-sheet-item {
       cursor: pointer;
       &:hover {
@@ -40587,7 +41293,7 @@
                     sequence: i,
                     isReadonlyAllowed: true,
                     textColor: sheet.isVisible ? undefined : "grey",
-                    action: (env) => {
+                    execute: (env) => {
                         env.model.dispatch("ACTIVATE_SHEET", { sheetIdFrom: from, sheetIdTo: sheetId });
                     },
                 });
@@ -40844,7 +41550,7 @@
         getClickableAction(position) {
             for (const items of clickableCellRegistry.getAll().sort((a, b) => a.sequence - b.sequence)) {
                 if (items.condition(position, this.env)) {
-                    return items.action;
+                    return items.execute;
                 }
             }
             return false;
@@ -41072,21 +41778,66 @@
         onCloseSidePanel: Function,
     };
 
-    const AddMergeInteractiveContent = {
-        MergeIsDestructive: _lt("Merging these cells will only preserve the top-leftmost value. Merge anyway?"),
-        MergeInFilter: _lt("You can't merge cells inside of an existing filter."),
-    };
-    function interactiveAddMerge(env, sheetId, target) {
-        const result = env.model.dispatch("ADD_MERGE", { sheetId, target });
-        if (result.isCancelledBecause(80 /* CommandResult.MergeInFilter */)) {
-            env.raiseError(AddMergeInteractiveContent.MergeInFilter);
+    css /* scss */ `
+  .o-menu-item-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 2px;
+    padding: 0px 3px;
+    border-radius: 2px;
+    min-width: 20px;
+  }
+  .o-disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+`;
+    class ActionButton extends owl.Component {
+        constructor() {
+            super(...arguments);
+            this.actionButton = createAction(this.props.action);
         }
-        else if (result.isCancelledBecause(3 /* CommandResult.MergeIsDestructive */)) {
-            env.askConfirmation(AddMergeInteractiveContent.MergeIsDestructive, () => {
-                env.model.dispatch("ADD_MERGE", { sheetId, target, force: true });
-            });
+        setup() {
+            owl.onWillUpdateProps(() => (this.actionButton = createAction(this.props.action)));
+        }
+        get isVisible() {
+            return this.actionButton.isVisible(this.env);
+        }
+        get isEnabled() {
+            return this.actionButton.isEnabled(this.env);
+        }
+        get isActive() {
+            var _a, _b;
+            return (_b = (_a = this.actionButton).isActive) === null || _b === void 0 ? void 0 : _b.call(_a, this.env);
+        }
+        get title() {
+            const name = this.actionButton.name(this.env);
+            const description = this.actionButton.description;
+            return name + (description ? ` (${description})` : "");
+        }
+        get iconTitle() {
+            return this.actionButton.icon;
+        }
+        onClick(ev) {
+            var _a, _b, _c, _d;
+            if (this.isEnabled) {
+                (_b = (_a = this.props).onClick) === null || _b === void 0 ? void 0 : _b.call(_a, ev);
+                (_d = (_c = this.actionButton).execute) === null || _d === void 0 ? void 0 : _d.call(_c, this.env);
+            }
+        }
+        get buttonStyle() {
+            if (this.props.selectedColor) {
+                return cssPropertiesToCss({
+                    "border-bottom": `4px solid ${this.props.selectedColor}`,
+                    height: "16px",
+                    "margin-top": "2px",
+                });
+            }
+            return "";
         }
     }
+    ActionButton.template = "o-spreadsheet-ActionButton";
 
     const COMPOSER_MAX_HEIGHT = 100;
     css /* scss */ `
@@ -41147,6 +41898,14 @@
     input::-webkit-outer-spin-button,
     input::-webkit-inner-spin-button {
       -webkit-appearance: none;
+    }
+
+    .o-text-options > div {
+      line-height: 26px;
+      padding: 3px 12px;
+      &:hover {
+        background-color: rgba(0, 0, 0, 0.08);
+      }
     }
   }
 `;
@@ -41216,41 +41975,6 @@
         dropdownStyle: String,
     };
 
-    const FORMATS = [
-        { name: "automatic", text: NumberFormatTerms.Automatic },
-        { name: "number", text: NumberFormatTerms.Number, description: "1,000.12", value: "#,##0.00" },
-        { name: "percent", text: NumberFormatTerms.Percent, description: "10.12%", value: "0.00%" },
-        {
-            name: "currency",
-            text: NumberFormatTerms.Currency,
-            description: "$1,000.12",
-            value: "[$$]#,##0.00",
-        },
-        {
-            name: "currency_rounded",
-            text: NumberFormatTerms.CurrencyRounded,
-            description: "$1,000",
-            value: "[$$]#,##0",
-        },
-        { name: "date", text: NumberFormatTerms.Date, description: "9/26/2008", value: "m/d/yyyy" },
-        { name: "time", text: NumberFormatTerms.Time, description: "10:43:00 PM", value: "hh:mm:ss a" },
-        {
-            name: "datetime",
-            text: NumberFormatTerms.DateTime,
-            description: "9/26/2008 22:43:00",
-            value: "m/d/yyyy hh:mm:ss",
-        },
-        {
-            name: "duration",
-            text: NumberFormatTerms.Duration,
-            description: "27:51:38",
-            value: "hhhh:mm:ss",
-        },
-    ];
-    const CUSTOM_FORMATS = [
-        { name: "custom_currency", text: NumberFormatTerms.CustomCurrency, sidePanel: "CustomCurrency" },
-    ];
-    const ICONS_COLOR = "#4A4F59";
     // If we ever change these colors, make sure the filter tool stays green to match the icon in the grid
     const ACTIVE_BG_COLOR = BACKGROUND_HEADER_FILTER_COLOR;
     const ACTIVE_FONT_COLOR = FILTERS_COLOR;
@@ -41315,23 +42039,10 @@
 
       /* Toolbar */
       .o-toolbar-tools {
-        .o-tool {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin: 2px;
-          padding: 0px 3px;
-          border-radius: 2px;
-          min-width: 20px;
-        }
-
-        .o-filter-tool {
-          margin-right: 8px;
-        }
-
-        .o-border-dropdown {
-          padding: 4px;
-        }
+        display: flex;
+        flex-shrink: 0;
+        margin: 0px 6px 0px 16px;
+        cursor: default;
 
         .o-divider {
           display: inline-block;
@@ -41345,16 +42056,8 @@
           display: flex;
           align-items: center;
 
-          .o-dropdown-button {
+          > span {
             height: 30px;
-          }
-
-          .o-text-options > div {
-            line-height: 26px;
-            padding: 3px 12px;
-            &:hover {
-              background-color: rgba(0, 0, 0, 0.08);
-            }
           }
 
           .o-dropdown-content {
@@ -41363,40 +42066,17 @@
             left: 0;
             overflow-y: auto;
             overflow-x: hidden;
+            padding: 2px;
             z-index: ${ComponentsImportance.Dropdown};
             box-shadow: 1px 2px 5px 2px rgba(51, 51, 51, 0.15);
             background-color: white;
 
             .o-dropdown-line {
               display: flex;
-              margin: 1px;
 
-              .o-line-item {
+              > span {
                 padding: 4px;
-                width: 18px;
-                height: 18px;
               }
-            }
-
-            &.o-format-tool {
-              padding: 5px 0;
-              width: 250px;
-              font-size: 12px;
-              > div {
-                padding: 0 20px;
-                white-space: nowrap;
-
-                &.o-dropdown-active:before {
-                  content: "✓";
-                  font-weight: bold;
-                  position: absolute;
-                  left: 5px;
-                }
-              }
-            }
-
-            .o-dropdown-align-item {
-              padding: 7px 10px;
             }
           }
         }
@@ -41407,24 +42087,20 @@
     class TopBar extends owl.Component {
         constructor() {
             super(...arguments);
-            this.commonFormats = FORMATS;
-            this.customFormats = CUSTOM_FORMATS;
-            this.currentFormatName = "automatic";
-            this.style = {};
             this.state = owl.useState({
                 menuState: { isOpen: false, position: null, menuItems: [] },
                 activeTool: "",
+                fillColor: "#ffffff",
+                textColor: "#000000",
             });
             this.isSelectingMenu = false;
             this.openedEl = null;
-            this.inMerge = false;
-            this.cannotMerge = false;
-            this.undoTool = false;
-            this.redoTool = false;
-            this.paintFormatTool = false;
-            this.fillColor = "#ffffff";
-            this.textColor = "#000000";
             this.menus = [];
+            this.EDIT = ACTION_EDIT;
+            this.FORMAT = ACTION_FORMAT;
+            this.VIEW = ACTION_VIEW;
+            this.formatNumberMenuItemSpec = formatNumberMenuItemSpec;
+            this.isntToolbarMenu = false;
         }
         get dropdownStyle() {
             return `max-height:${this.props.dropdownMaxHeight}px`;
@@ -41454,28 +42130,8 @@
             this.props.onClick();
             this.closeMenus();
         }
-        toggleStyle(style) {
-            setStyle(this.env, { [style]: !this.style[style] });
-        }
-        toggleFormat(formatName) {
-            const formatter = FORMATS.find((f) => f.name === formatName);
-            const value = (formatter && formatter.value) || "";
-            setFormatter(this.env, value);
-        }
-        toggleHorizontalAlign(align) {
-            setStyle(this.env, { align });
-            this.onClick();
-        }
-        toggleVerticalAlign(verticalAlign) {
-            setStyle(this.env, { verticalAlign });
-            this.onClick();
-        }
-        toggleTextWrapping(wrapping) {
-            setStyle(this.env, { wrapping });
-            this.onClick();
-        }
         onMenuMouseOver(menu, ev) {
-            if (this.isSelectingMenu) {
+            if (this.isSelectingMenu && this.isntToolbarMenu) {
                 this.openMenu(menu, ev);
             }
         }
@@ -41486,15 +42142,27 @@
             this.openedEl = isOpen ? null : ev.target;
         }
         toggleContextMenu(menu, ev) {
-            if (this.state.menuState.isOpen) {
+            if (this.state.menuState.isOpen && this.isntToolbarMenu) {
                 this.closeMenus();
             }
             else {
                 this.openMenu(menu, ev);
+                this.isntToolbarMenu = true;
+            }
+        }
+        toggleToolbarContextMenu(menuSpec, ev) {
+            if (this.state.menuState.isOpen && !this.isntToolbarMenu) {
+                this.closeMenus();
+            }
+            else {
+                const menu = createAction(menuSpec);
+                this.openMenu(menu, ev);
+                this.isntToolbarMenu = false;
             }
         }
         openMenu(menu, ev) {
-            const { left, top, height } = ev.target.getBoundingClientRect();
+            const { left, top, height } = ev.currentTarget.getBoundingClientRect();
+            this.state.activeTool = "";
             this.state.menuState.isOpen = true;
             this.state.menuState.position = { x: left, y: top + height };
             this.state.menuState.menuItems = menu.children(this.env);
@@ -41511,134 +42179,28 @@
             this.openedEl = null;
         }
         updateCellState() {
-            const zones = this.env.model.getters.getSelectedZones();
-            const { col, row, sheetId } = this.env.model.getters.getActivePosition();
-            this.inMerge = false;
-            const { top, left, right, bottom } = this.env.model.getters.getSelectedZone();
-            const { xSplit, ySplit } = this.env.model.getters.getPaneDivisions(sheetId);
-            this.cannotMerge =
-                zones.length > 1 ||
-                    (top === bottom && left === right) ||
-                    (left < xSplit && xSplit <= right) ||
-                    (top < ySplit && ySplit <= bottom);
-            if (!this.cannotMerge) {
-                const zone = this.env.model.getters.expandZone(sheetId, positionToZone({ col, row }));
-                this.inMerge = isEqual(zones[0], zone);
-            }
-            this.undoTool = this.env.model.getters.canUndo();
-            this.redoTool = this.env.model.getters.canRedo();
-            this.paintFormatTool = this.env.model.getters.isPaintingFormat();
-            const cell = this.env.model.getters.getActiveCell();
-            if (cell.format) {
-                const currentFormat = this.commonFormats.find((f) => f.value === cell.format);
-                this.currentFormatName = currentFormat ? currentFormat.name : "";
-            }
-            else {
-                this.currentFormatName = "automatic";
-            }
-            this.style = { ...this.env.model.getters.getCurrentStyle() };
-            this.style.align = this.style.align || cell.defaultAlign;
-            this.fillColor = this.style.fillColor || "#ffffff";
-            this.textColor = this.style.textColor || "#000000";
+            const style = this.env.model.getters.getCurrentStyle();
+            this.state.fillColor = style.fillColor || "#ffffff";
+            this.state.textColor = style.textColor || "#000000";
             this.menus = topbarMenuRegistry.getMenuItems();
         }
         getMenuName(menu) {
             return menu.name(this.env);
         }
-        toggleMerge() {
-            if (this.cannotMerge) {
-                return;
-            }
-            const zones = this.env.model.getters.getSelectedZones();
-            const target = [zones[zones.length - 1]];
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            if (this.inMerge) {
-                this.env.model.dispatch("REMOVE_MERGE", { sheetId, target });
-            }
-            else {
-                interactiveAddMerge(this.env, sheetId, target);
-            }
-        }
         setColor(target, color) {
             setStyle(this.env, { [target]: color });
             this.onClick();
         }
-        setBorder(command) {
-            this.env.model.dispatch("SET_FORMATTING", {
-                sheetId: this.env.model.getters.getActiveSheetId(),
-                target: this.env.model.getters.getSelectedZones(),
-                border: command,
-            });
-            this.onClick();
-        }
-        setFormat(format, custom) {
-            if (!custom) {
-                this.toggleFormat(format);
-            }
-            else {
-                this.openCustomFormatSidePanel(format);
-            }
-            this.onClick();
-        }
-        openCustomFormatSidePanel(custom) {
-            const customFormatter = CUSTOM_FORMATS.find((c) => c.name === custom);
-            const sidePanel = (customFormatter && customFormatter.sidePanel) || "";
-            this.env.openSidePanel(sidePanel);
-        }
-        setDecimal(step) {
-            this.env.model.dispatch("SET_DECIMAL", {
-                sheetId: this.env.model.getters.getActiveSheetId(),
-                target: this.env.model.getters.getSelectedZones(),
-                step: step,
-            });
-        }
-        paintFormat() {
-            this.env.model.dispatch("ACTIVATE_PAINT_FORMAT", {
-                target: this.env.model.getters.getSelectedZones(),
-            });
-        }
-        clearFormatting() {
-            this.env.model.dispatch("CLEAR_FORMATTING", {
-                sheetId: this.env.model.getters.getActiveSheetId(),
-                target: this.env.model.getters.getSelectedZones(),
-            });
-        }
-        doAction(action) {
-            action(this.env);
-            this.closeMenus();
-        }
-        undo() {
-            this.env.model.dispatch("REQUEST_UNDO");
-        }
-        redo() {
-            this.env.model.dispatch("REQUEST_REDO");
-        }
-        get selectionContainsFilter() {
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const selectedZones = this.env.model.getters.getSelectedZones();
-            return this.env.model.getters.doesZonesContainFilter(sheetId, selectedZones);
-        }
-        get cannotCreateFilter() {
-            return !areZonesContinuous(...this.env.model.getters.getSelectedZones());
-        }
-        createFilter() {
-            if (this.cannotCreateFilter) {
-                return;
-            }
-            this.env.model.selection.selectTableAroundSelection();
-            const sheetId = this.env.model.getters.getActiveSheetId();
-            const selection = this.env.model.getters.getSelectedZones();
-            interactiveAddFilter(this.env, sheetId, selection);
-        }
-        removeFilter() {
-            this.env.model.dispatch("REMOVE_FILTER_TABLE", {
-                sheetId: this.env.model.getters.getActiveSheetId(),
-                target: this.env.model.getters.getSelectedZones(),
-            });
-        }
     }
     TopBar.template = "o-spreadsheet-TopBar";
-    TopBar.components = { ColorPickerWidget, Menu, TopBarComposer, FontSizeEditor };
+    TopBar.components = {
+        ColorPickerWidget,
+        ColorPicker,
+        Menu,
+        TopBarComposer,
+        FontSizeEditor,
+        ActionButton,
+    };
     TopBar.props = {
         onClick: Function,
         focusComposer: String,
@@ -41747,6 +42309,10 @@
     width: ${CF_ICON_EDGE_LENGTH}px;
     height: ${CF_ICON_EDGE_LENGTH}px;
     vertical-align: sub;
+  }
+
+  .o-text-icon {
+    vertical-align: middle;
   }
 `;
     // -----------------------------------------------------------------------------
@@ -45519,6 +46085,7 @@
         inverseCommandRegistry,
         urlRegistry,
         cellPopoverRegistry,
+        numberFormatMenuRegistry,
     };
     const helpers = {
         arg,
@@ -45603,15 +46170,16 @@
     exports.parse = parse;
     exports.readonlyAllowedCommands = readonlyAllowedCommands;
     exports.registries = registries;
+    exports.setDefaultSheetViewSize = setDefaultSheetViewSize;
     exports.setTranslationMethod = setTranslationMethod;
     exports.tokenize = tokenize;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.0-alpha.3';
-    __info__.date = '2023-04-13T09:07:02.420Z';
-    __info__.hash = '6431610';
+    __info__.version = '16.3.0-alpha.4';
+    __info__.date = '2023-04-14T13:55:06.449Z';
+    __info__.hash = '6824b8a';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);

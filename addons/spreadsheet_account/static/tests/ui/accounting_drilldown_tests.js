@@ -72,7 +72,7 @@ QUnit.module("spreadsheet_account > Accounting Drill down", { beforeEach }, () =
             .getMenuItems()
             .find((item) => item.id === "move_lines_see_records");
         assert.equal(root.isVisible(env), true);
-        await root.action(env);
+        await root.execute(env);
         assert.verifySteps(["drill down action"]);
         selectCell(model, "A2");
         assert.equal(root.isVisible(env), false);
