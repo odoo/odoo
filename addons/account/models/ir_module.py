@@ -29,7 +29,7 @@ class IrModule(models.Model):
         def filter_template_module(m):
             return ismodule(m) and m.__name__.split('.')[-1].startswith('template_')
         def filter_template_data_function(f):
-            return isfunction(f) and hasattr(f, '_l10n_template_key') and f._l10n_template_key.model == 'template_data'
+            return self.env['account.chart.template']._is_template_function(f) and f._l10n_template_key.model == 'template_data'
 
         for _mname, template_module in getmembers(loaded_module, filter_template_module):
             for _cname, template_class in getmembers(template_module, isclass):

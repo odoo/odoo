@@ -59,15 +59,26 @@ class AccountChartTemplate(models.AbstractModel):
 
     @property
     def _template_register(self):
-        def is_template(func):
-            return callable(func) and hasattr(func, '_l10n_template_key')
         template_register = defaultdict(lambda: defaultdict(list))
         cls = type(self)
-        for _attr, func in getmembers(cls, is_template):
-            template, model = func._l10n_template_key
-            template_register[template][model].append(func)
+        for data in self._get_template_functions_data():
+            template_register[data.template_code][data.model].append(data.func)
         cls._template_register = template_register
         return template_register
+
+    @classmethod
+    def _is_template_function(cls, func):
+        return callable(func) and hasattr(func, '_l10n_template_key')
+
+    @classmethod
+    def _get_template_functions_data(cls, filter_func=None):
+        vals = []
+        TemplateFunctionData = namedtuple('TemplateFunctionData', ('func', 'template_code', 'model'))
+        for _name, func in getmembers(cls, cls._is_template_function):
+            data = TemplateFunctionData(func, *func._l10n_template_key)
+            if not filter_func or filter_func(data):
+                vals.append(data)
+        return vals
 
     def _setup_complete(self):
         super()._setup_complete()
