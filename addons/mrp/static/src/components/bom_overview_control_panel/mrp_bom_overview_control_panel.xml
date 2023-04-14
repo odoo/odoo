@@ -29,7 +29,7 @@
                         <div class="input-group">
                             <div class="input-group-text">Variant</div>
                             <select class="o_input form-control" t-on-change="(ev) => this.props.changeVariant(ev.target.value)">
-                                <option t-foreach="props.variants" t-as="variant" t-att-value="variant" t-key="variant">
+                                <option t-foreach="props.variants" t-as="variant" t-att-value="variant" t-key="variant" t-att-selected="variant == this.props.data.link_id">
                                     <t t-esc="props.variants[variant]"/>
                                 </option>
                             </select>
