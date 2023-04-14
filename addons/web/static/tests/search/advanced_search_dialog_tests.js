@@ -165,8 +165,10 @@ QUnit.module("Search", (hooks) => {
         await makeTestComponent();
         await toggleFilterMenu(target);
         assert.containsNone(target, ".modal");
+        assert.containsOnce(target, ".o_filter_menu .dropdown-menu");
 
         await openAdvancedSearchDialog(target);
+        assert.containsNone(target, ".o_filter_menu .dropdown-menu");
         assert.containsOnce(target, ".modal");
         assert.containsOnce(target, ".modal .modal-header h4");
         assert.strictEqual(target.querySelector(".modal header h4").innerText, "Advanced Search");
@@ -178,14 +180,13 @@ QUnit.module("Search", (hooks) => {
 
         await click(target, ".modal footer button:nth-child(2)");
         assert.containsNone(target, ".modal");
-        assert.containsOnce(target, ".o_filter_menu .dropdown-menu");
 
+        await toggleFilterMenu(target);
         await openAdvancedSearchDialog(target);
         assert.containsOnce(target, ".modal");
 
         await click(target, ".modal footer button:nth-child(1)");
         assert.containsNone(target, ".modal");
-        assert.containsNone(target, ".o_filter_menu .dropdown-menu");
     });
 
     QUnit.test("start with an empty query", async function (assert) {
