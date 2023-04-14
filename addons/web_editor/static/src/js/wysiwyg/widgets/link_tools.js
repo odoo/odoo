@@ -470,8 +470,34 @@ const LinkTools = Link.extend({
     __onURLInput() {
         this._super(...arguments);
         this.options.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._syncContent();
         this._adaptPreview();
         this.options.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
+    },
+    /**
+     * If content is equal to previous URL, update it to match current URL.
+     *
+     * @private
+     */
+    _syncContent() {
+        const previousUrl = this._link.getAttribute('href');
+        if (!previousUrl) {
+            return;
+        }
+        const protocolLessPrevUrl = previousUrl.replace(/^https?:\/\/|^mailto:/i, '');
+        const content = this._link.innerText;
+        if (content === previousUrl || content === protocolLessPrevUrl) {
+            const newUrl = this.el.querySelector('input[name="url"]').value;
+            const protocolLessNewUrl = newUrl.replace(/^https?:\/\/|^mailto:/i, '')
+            const newContent = content.replace(protocolLessPrevUrl, protocolLessNewUrl);
+            this._observer.disconnect();
+            // Update link content with `force: true` otherwise it would fail if
+            // new content matches `originalText`. The `url` parameter is set to
+            // an empty string so that the link's content is set to the empty
+            // string if `newContent` has no length.
+            this._updateLinkContent(this.$link, { content: newContent, url: '' }, { force: true });
+            this._setLinkContent = false;
+        }
     },
 });
 
