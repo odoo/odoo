@@ -100,6 +100,7 @@ registry.category("web_tour.tours").add('project_tour', {
     trigger: ".o-mail-Chatter-topbar button:contains(Activities)",
     extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
+    position: "bottom",
 }, {
     trigger: ".modal-dialog .btn-primary",
     extra_trigger: '.o_form_project_tasks',
