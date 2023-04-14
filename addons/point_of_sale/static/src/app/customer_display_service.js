@@ -37,9 +37,15 @@ export class LocalDisplay extends Reactive {
         displayBody.textContent = "";
         displayBody.appendChild(container.querySelector(".pos-customer_facing_display"));
 
-        const orderLines = displayBody.querySelector(".pos_orderlines_list");
-        if (orderLines) {
-            orderLines.scrollTop = orderLines.scrollHeight;
+        const currentScreen = this.globalState.get_order()?.get_screen_data().name;
+        if (currentScreen === "ProductScreen") {
+            const orderlinesList = displayBody.querySelector(".pos_orderlines_list");
+            if (orderlinesList) {
+                const selectedOrderline = orderlinesList.querySelector(".selected_orderline");
+                if (selectedOrderline) {
+                    selectedOrderline.scrollIntoView({ behavior: "instant", block: "start" });
+                }
+            }
         }
     }
 }

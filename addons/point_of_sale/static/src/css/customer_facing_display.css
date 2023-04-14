@@ -46,6 +46,10 @@ body .pos-customer_facing_display {
   -ms-flex-direction: row;
   -o-flex-direction: row;
   flex-direction: row;
+  overflow: hidden;
+}
+body .pos-customer_facing_display .pos-customer_products {
+    overflow: auto;
 }
 body .pos-customer_facing_display .pos-customer_products,
 body .pos-customer_facing_display .pos-payment_info {
@@ -67,6 +71,64 @@ body .pos-customer_facing_display .pos-payment_info {
   -ms-flex-positive: 1;
   flex-grow: 1;
 }
+
+.pos-customer_facing_display .pos_orderlines_list {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.pos-customer_facing_display .pos_orderlines_list table {
+    text-align: center;
+    vertical-align: middle;
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.pos-customer_facing_display .pos_orderlines_list table th {
+    position: sticky;
+    top: 0;
+    padding: 0.5rem;
+}
+
+.pos-customer_facing_display .pos_orderlines_list table td {
+    word-wrap: break-word;
+    max-width: min(13vw, 8rem);
+    padding: 0 0.3vw;
+}
+
+.pos-customer_facing_display .pos_orderlines_list table td.product_text_info {
+    min-width: 15vw;
+    max-width: 30vw;
+}
+
+.pos-customer_facing_display .pos_orderlines_list table .product_text_info ul {
+    text-align: left;
+    margin: 0;
+}
+
+.pos-customer_facing_display .pos_orderlines_list table td.product_img {
+    max-width: 20vw;
+}
+
+.pos-customer_facing_display .pos_orderlines_list table td.product_img img {
+    width: auto;
+    height: min(20vh, 20vw);
+}
+
+.pos-customer_facing_display .order-empty {
+    text-align: center;
+    margin: 5vw;
+}
+
+.pos-customer_facing_display .order-empty .fa {
+    font-size: 64px;
+}
+
+.pos-customer_facing_display .order-empty h1 {
+    font-size: 20px;
+}
+
 body .pos-customer_facing_display .pos_orderlines {
   width: 100%;
   height: 100%;
@@ -87,35 +149,17 @@ body .pos-customer_facing_display .pos_orderlines .pos_orderlines_list {
   position: relative;
   height: 100%;
 }
+.pos-customer_facing_display .pos_orderlines .pos_orderlines_item td:first-child, .pos-customer_facing_display .pos_orderlines .pos_orderlines_item td:last-child {
+    border-left-style: solid;
+    border-top-left-radius: 0.3vw;
+    border-bottom-left-radius: 0.3vw;
+}
 body .pos-customer_facing_display .pos_orderlines .pos_orderlines_item {
-  margin-bottom: 1vw;
   padding: 1%;
   border-radius: 0.3vw;
-  height: auto;
-  -webkit-box-flex: 0 1 auto;
-  -webkit-flex: 0 1 auto;
-  -moz-box-flex: 0 1 auto;
-  -ms-flex: 0 1 auto;
-  flex: 0 1 auto;
-  -webkit-display: flex;
-  -moz-display: flex;
-  -ms-display: flex;
-  -o-display: flex;
-  display: flex;
-  -webkit-flex-direction: row;
-  -moz-flex-direction: row;
-  -ms-flex-direction: row;
-  -o-flex-direction: row;
-  flex-direction: row;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -moz-box-align: center;
-  -ms-flex-align: center;
-  -ms-grid-row-align: center;
-  align-items: center;
 }
-body .pos-customer_facing_display .pos_orderlines .pos_orderlines_item:last-of-type {
-  animation: item_in 1s ease;
+body .pos-customer_facing_display .pos_orderlines_list .selected_orderline.animate {
+    animation: item_in 1s ease;
 }
 body .pos-customer_facing_display .pos_orderlines .pos_orderlines_item.pos_orderlines_header {
   background-color: transparent;
@@ -292,14 +336,6 @@ body .pos-customer_facing_display .pos-payment_info .pos-payment_info_details .p
     -o-flex-direction: column;
     flex-direction: column;
   }
-  body .pos-customer_facing_display:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 17vh;
-  }
   body .pos-customer_facing_display .pos-payment_info .pos-adv {
     position: fixed;
     top: 0;
@@ -321,9 +357,8 @@ body .pos-customer_facing_display .pos-payment_info .pos-payment_info_details .p
     padding-top: 0;
   }
   body .pos-customer_facing_display .pos-customer_products {
-    padding-top: 17vh;
     height: 72vw;
-    overflow: hidden;
+    overflow: auto;
   }
   body .pos-customer_facing_display .pos-customer_products .pos_orderlines {
     -webkit-box-flex: 1 0 auto;
@@ -461,6 +496,9 @@ body .pos-hidden {
   background: #f6f6f6;
   color: #585858;
 }
+.pos-palette_01.pos-customer_facing_display .pos_orderlines_list table th {
+    background-color: #f6f6f6;
+}
 .pos-palette_01 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
   color: #3E3E3E;
@@ -482,6 +520,9 @@ body .pos-hidden {
 .pos-palette_02 .pos-customer_products {
   background: #ecf2f6;
   color: #364152;
+}
+.pos-palette_02.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ecf2f6;
 }
 .pos-palette_02 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
@@ -505,6 +546,9 @@ body .pos-hidden {
   background: #ececec;
   color: #585858;
 }
+.pos-palette_03.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ececec;
+}
 .pos-palette_03 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
   color: #3E3E3E;
@@ -526,6 +570,9 @@ body .pos-hidden {
 .pos-palette_04 .pos-customer_products {
   background: #efeeec;
   color: #585858;
+}
+.pos-palette_04.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #efeeec;
 }
 .pos-palette_04 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
@@ -549,6 +596,9 @@ body .pos-hidden {
   background: #ececec;
   color: #585858;
 }
+.pos-palette_05.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ececec;
+}
 .pos-palette_05 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
   color: #3E3E3E;
@@ -570,6 +620,9 @@ body .pos-hidden {
 .pos-palette_06 .pos-customer_products {
   background: #f6f6f6;
   color: #585858;
+}
+.pos-palette_06.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #f6f6f6;
 }
 .pos-palette_06 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
@@ -593,6 +646,9 @@ body .pos-hidden {
   background: #ececec;
   color: #585858;
 }
+.pos-palette_07.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ececec;
+}
 .pos-palette_07 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
   color: #3E3E3E;
@@ -614,6 +670,9 @@ body .pos-hidden {
 .pos-palette_08 .pos-customer_products {
   background: #ececec;
   color: #585858;
+}
+.pos-palette_08.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ececec;
 }
 .pos-palette_08 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
@@ -637,6 +696,9 @@ body .pos-hidden {
   background: #ececec;
   color: #585858;
 }
+.pos-palette_09.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ececec;
+}
 .pos-palette_09 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
   color: #3E3E3E;
@@ -658,6 +720,9 @@ body .pos-hidden {
 .pos-palette_10 .pos-customer_products {
   background: #ececec;
   color: #585858;
+}
+.pos-palette_10.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ececec;
 }
 .pos-palette_10 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
@@ -681,6 +746,9 @@ body .pos-hidden {
   background: #ececec;
   color: #585858;
 }
+.pos-palette_11.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #ececec;
+}
 .pos-palette_11 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: white;
   color: #3E3E3E;
@@ -703,6 +771,9 @@ body .pos-hidden {
   background: #5b5b5b;
   color: #bdb9b9;
 }
+.pos-palette_12.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #5b5b5b;
+}
 .pos-palette_12 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: #f5f5f5;
   color: #3E3E3E;
@@ -724,6 +795,9 @@ body .pos-hidden {
 .pos-palette_13 .pos-customer_products {
   background: #a2a2ab;
   color: #f6f6f6;
+}
+.pos-palette_13.pos-customer_facing_display .pos_orderlines_list table th {
+  background-color: #a2a2ab;
 }
 .pos-palette_13 .pos-customer_products .pos_orderlines_list .pos_orderlines_item {
   background-color: #f6f6f6;

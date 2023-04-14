@@ -55,40 +55,65 @@
             <!-- and if the order is not already paid for -->
             <!-- we show the order items -->
             <t t-if="order">
-            <!-- in order to see if the order has been paid for ( validated ), -->
-            <!-- we look at the state of the POS screen: -->
-            <!-- if the screen state is 'ReceiptScreen', -->
-            <!-- that means that the order has been validated -->
-                <t t-if ="order.get_screen_data().name != 'ReceiptScreen'">
-                    <div class="pos_orderlines_item pos_orderlines_header">
-                        <div/>
-                        <div/>
-                        <div>Quantity</div>
-                        <div>Price</div>
-                    </div>
-                    <div class="pos_orderlines_list">
-                        <div t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item">
-                            <div><div t-attf-style="background-image:url(#{productImages[orderline.product.id]})"/></div>
-                                <ul>
-                                    <li class="info">
-                                        <!-- name of item -->
-                                        <div t-esc="orderline.get_full_product_name()"/>
-                                    </li>
-                                    <!-- we show the specific discount applied to this item -->
-                                    <t t-if="orderline.get_discount_str() !== '0'">
-                                        <li class="info">
-                                            <em>
-                                            With a
-                                                <t t-esc="orderline.get_discount_str()" />%
-                                            discount
-                                            </em>
-                                        </li>
-                                    </t>
-                                </ul>
-                            <div t-esc="orderline.get_quantity_str()"/>
-                            <div t-esc="pos.format_currency(orderline.get_display_price())"/>
+                <!-- in order to see if the order has been paid for ( validated ), -->
+                <!-- we look at the state of the POS screen: -->
+                <!-- if the screen state is 'ReceiptScreen', -->
+                <!-- that means that the order has been validated -->
+                <t t-if="order.get_screen_data().name != 'ReceiptScreen'">
+                    <t t-if="order.get_orderlines().length > 0">
+                        <div class="pos_orderlines_list">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th>Quantity</th>
+                                        <th>Price</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="order.get_orderlines()" t-key="orderline.id" t-as="orderline" class="pos_orderlines_item" t-att-class="{ 'selected_orderline': orderline.id === order.get_selected_orderline().id, 'animate': order.get_screen_data().name === 'ProductScreen'}">
+                                        <td class="product_img">
+                                            <img t-attf-src="#{productImages[orderline.product.id]}" />
+                                        </td>
+                                        <td class="product_text_info">
+                                            <ul>
+                                                <li class="info">
+                                                    <!-- name of item -->
+                                                    <div t-esc="orderline.get_full_product_name()" />
+                                                </li>
+                                                <!-- we show the specific discount applied to this item -->
+                                                <t t-if="orderline.get_discount_str() !== '0'">
+                                                    <li class="info">
+                                                        <em> With a <t t-esc="orderline.get_discount_str()" />% discount </em>
+                                                    </li>
+                                                </t>
+                                                <t t-if="orderline.get_customer_note()">
+                                                    <li class="info orderline-note">
+                                                        <i class="fa fa-sticky-note" role="img" aria-label="Customer Note" title="Customer Note"/>
+                                                        <em> Note: <t t-esc="orderline.get_customer_note()" /></em>
+                                                    </li>
+                                                </t>
+                                            </ul>
+                                        </td>
+                                        <td>
+                                            <div t-esc="orderline.get_quantity_str()" /><div t-esc="orderline.get_unit().name" />
+                                        </td>
+                                        <td>
+                                            <div t-esc="pos.format_currency(orderline.get_display_price())" />
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
+                    </t>
+                    <t t-else="">
+                        <div class='order-empty'>
+                            <i class='fa fa-shopping-cart' role="img" aria-label="Shopping cart"
+                                title="Shopping cart" />
+                            <h1>This order is empty</h1>
+                        </div>
+                    </t>
                 </t>
                 <!-- after the order has been validated -->
                 <!-- we show the 'thank you' message -->
