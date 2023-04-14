@@ -2199,7 +2199,7 @@ export class Orderline extends PosModel {
             discount: this.get_discount(),
             product_name: this.get_product().display_name,
             product_name_wrapped: this.generate_wrapped_product_name(),
-            price_lst: this.get_lst_price(),
+            price_lst: this.get_taxed_lst_unit_price(),
             fixed_lst_price: this.get_fixed_lst_price(),
             price_manually_set: this.price_manually_set,
             price_automatically_set: this.price_automatically_set,
@@ -2311,7 +2311,8 @@ export class Orderline extends PosModel {
             return this.compute_all(product_taxes, lst_price, 1, this.pos.currency.rounding)
                 .total_included;
         }
-        return lst_price;
+        var digits = this.pos.dp['Product Price'];
+        return lst_price.toFixed(digits)
     }
     get_price_without_tax() {
         return this.get_all_prices().priceWithoutTax;
@@ -3386,6 +3387,13 @@ export class Order extends PosModel {
     }
     _get_ignored_product_ids_total_discount() {
         return [];
+    }
+    _reduce_total_discount_callback(sum, orderLine) {
+        sum += (orderLine.get_unit_price() * (orderLine.get_discount()/100) * orderLine.get_quantity());
+        if (orderLine.display_discount_policy() === 'without_discount'){
+            sum += ((orderLine.get_taxed_lst_unit_price() - orderLine.get_unit_price()) * orderLine.get_quantity());
+        }
+        return sum;
     }
     get_total_discount() {
         const ignored_product_ids = this._get_ignored_product_ids_total_discount();
