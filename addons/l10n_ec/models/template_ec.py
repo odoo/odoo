@@ -13,7 +13,7 @@ class AccountChartTemplate(models.AbstractModel):
             'property_account_payable_id': 'ec210301',
             'property_account_expense_categ_id': 'ec110307',
             'property_account_income_categ_id': 'ec410201',
-            'property_account_expense_id': 'ec52040201',
+            'property_account_expense_id': 'ec_expense_others',
             'property_stock_account_input_categ_id': 'ec110307',
             'property_stock_account_output_categ_id': 'ec510102',
             'property_stock_valuation_account_id': 'ec110306',
@@ -31,8 +31,10 @@ class AccountChartTemplate(models.AbstractModel):
                 'account_default_pos_receivable_account_id': 'ec1102050101',
                 'income_currency_exchange_account_id': 'ec430501',
                 'expense_currency_exchange_account_id': 'ec520304',
-                'account_journal_early_pay_discount_loss_account_id': 'ec9993',
-                'account_journal_early_pay_discount_gain_account_id': 'ec9994',
+                'account_journal_early_pay_discount_loss_account_id': 'ec_early_pay_discount_loss',
+                'account_journal_early_pay_discount_gain_account_id': 'ec_early_pay_discount_gain',
+                'default_cash_difference_income_account_id': 'ec_income_cash_difference',
+                'default_cash_difference_expense_account_id': 'ec_expense_cash_difference',
             },
         }
 
