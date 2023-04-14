@@ -140,3 +140,25 @@ PosLoyalty.check.orderTotalIs("6.40");
 PosLoyalty.exec.finalizeOrder("Cash", "10");
 
 Tour.register("PosLoyaltyLoyaltyProgram2", { test: true, url: "/pos/web" }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+// Generates 10.2 points and use points to get the reward product with zero sale price
+ProductScreen.exec.addOrderline('Desk Organizer', '2');
+ProductScreen.do.clickPartnerButton();
+ProductScreen.do.clickCustomer('Test Partner AAA');
+
+// At this point, the free_product program is triggered.
+// The reward button should be highlighted.
+PosLoyalty.check.isRewardButtonHighlighted(true);
+
+PosLoyalty.do.clickRewardButton();
+PosLoyalty.check.hasRewardLine('Free Product - Whiteboard Pen', '0.0', '1.00');
+
+PosLoyalty.check.orderTotalIs('10.2');
+PosLoyalty.exec.finalizeOrder('Cash', '10.2');
+
+Tour.register('PosLoyaltyLoyaltyProgram3', { test: true, url: '/pos/web' }, getSteps());
