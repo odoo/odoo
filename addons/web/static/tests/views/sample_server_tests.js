@@ -466,6 +466,22 @@ QUnit.module(
             }
         );
 
+        QUnit.test(
+            "Send 'read_group' RPC: multiple groupBys among which a many2many",
+            async function (assert) {
+                const server = new DeterministicSampleServer("res.users", fields["res.users"]);
+                const result = await server.mockRpc({
+                    method: "read_group",
+                    model: "res.users",
+                    fields: [],
+                    groupBy: ["height", "tag_ids"],
+                    lazy: false,
+                });
+                assert.ok(typeof result[0].tag_ids[0] === "number");
+                assert.ok(typeof result[0].tag_ids[1] === "string");
+            }
+        );
+
         QUnit.test("Send 'read' RPC: no id", async function (assert) {
             assert.expect(1);
 
