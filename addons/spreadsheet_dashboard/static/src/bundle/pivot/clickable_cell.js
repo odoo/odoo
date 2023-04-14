@@ -8,7 +8,7 @@ const { clickableCellRegistry } = spreadsheet.registries;
 
 clickableCellRegistry.add("pivot", {
     condition: SEE_RECORDS_PIVOT_VISIBLE,
-    action: SEE_RECORDS_PIVOT,
+    execute: SEE_RECORDS_PIVOT,
     sequence: 3,
 });
 
@@ -21,7 +21,7 @@ clickableCellRegistry.add("pivot_set_filter_matching", {
             env.model.getters.getFiltersMatchingPivot(cell.content).length > 0
         );
     },
-    action: (position, env) => {
+    execute: (position, env) => {
         const cell = env.model.getters.getCell(position);
         const filters = env.model.getters.getFiltersMatchingPivot(cell.content);
         env.model.dispatch("SET_MANY_GLOBAL_FILTER_VALUE", { filters });

@@ -29,7 +29,7 @@ export async function mountSpreadsheet(model) {
 }
 
 export async function doMenuAction(registry, path, env) {
-    await getMenuItem(registry, path, env).action(env);
+    await getMenuItem(registry, path, env).execute(env);
 }
 
 function getMenuItem(registry, _path, env) {

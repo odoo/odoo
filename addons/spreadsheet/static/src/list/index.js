@@ -31,7 +31,7 @@ invalidateEvaluationCommands.add("REMOVE_ODOO_LIST");
 cellMenuRegistry.add("list_see_record", {
     name: _lt("See record"),
     sequence: 200,
-    action: async (env) => {
+    execute: async (env) => {
         const position = env.model.getters.getActivePosition();
         await SEE_RECORD_LIST(position, env);
     },
