@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="web.CogMenu" owl="1">
+        <div t-if="hasItems" class="o_cp_action_menus d-flex pe-2 gap-1">
+            <Dropdown togglerClass="'d-print-none btn btn-text ms-1 lh-sm'">
+                <t t-set-slot="toggler">
+                    <i class="fa fa-cog"/>
+                </t>
+                <t t-foreach="cogItems" t-as="item" t-key="item.id or item.key">
+                    <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
+                        <div role="separator" class="dropdown-divider"/>
+                    </t>
+                    <t t-component="item.Component"/>
+                    <t t-set="currentGroup" t-value="item.groupNumber"/>
+                </t>
+                <t t-slot="default"/>
+            </Dropdown>
+        </div>
+    </t>
+
+</templates>

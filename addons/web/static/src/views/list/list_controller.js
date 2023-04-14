@@ -23,6 +23,8 @@ import { ListConfirmationDialog } from "./list_confirmation_dialog";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { ActionMenusItems } from "@web/search/cog_menu/action_menus_items";
 
 import { Component, onMounted, onWillStart, useEffect, useRef, useSubEnv } from "@odoo/owl";
 
@@ -589,7 +591,7 @@ export class ListController extends Component {
 }
 
 ListController.template = `web.ListView`;
-ListController.components = { ActionMenus, Layout, ViewButton, MultiRecordViewButton, SearchBar, Dropdown, DropdownItem };
+ListController.components = { ActionMenus, Layout, ViewButton, MultiRecordViewButton, SearchBar, Dropdown, DropdownItem, CogMenu, ActionMenusItems };
 ListController.props = {
     ...standardViewProps,
     allowSelectors: { type: Boolean, optional: true },
