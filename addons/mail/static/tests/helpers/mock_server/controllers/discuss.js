@@ -283,7 +283,9 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             if (message.model === "mail.channel") {
                 target = this.pyEnv["mail.channel"].search([["id", "=", message.res_id]]);
             }
-            this.pyEnv["bus.bus"]._sendmany([[target, "mail.link.preview/insert", linkPreviews]]);
+            this.pyEnv["bus.bus"]._sendmany([
+                [target, "mail.record/insert", { LinkPreview: linkPreviews }],
+            ]);
         }
     },
     /**

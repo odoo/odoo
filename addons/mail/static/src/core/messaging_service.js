@@ -603,7 +603,7 @@ export class Messaging {
         const { LinkPreview: linkPreviews } = notif.payload;
         if (linkPreviews) {
             for (const linkPreview of linkPreviews) {
-                this.store.messages[linkPreview.message.id].linkPreviews.push(
+                this.store.messages[linkPreview.message.id]?.linkPreviews.push(
                     new LinkPreview(linkPreview)
                 );
             }

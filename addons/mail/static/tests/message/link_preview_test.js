@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { click, nextAnimationFrame, start, startServer } from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("link preview");
 
@@ -239,4 +239,26 @@ QUnit.test("Remove link preview image", async (assert) => {
     assert.containsOnce($, "p:contains(Do you really want to delete this preview?)");
     await click(".modal-footer button:contains(Ok)");
     assert.containsNone($, ".o-mail-LinkPreviewImage");
+});
+
+QUnit.test("No crash on receiving link preview of non-known message", async (assert) => {
+    const pyEnv = await startServer();
+    const linkPreviewId = pyEnv["mail.link.preview"].create({
+        image_mimetype: "image/jpg",
+        source_url:
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
+    });
+    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const messageId = pyEnv["mail.message"].create({
+        body: "https://make-link-preview.com",
+        link_preview_ids: [linkPreviewId],
+        message_type: "comment",
+        model: "mail.channel",
+        res_id: channelId,
+    });
+    const { env, openDiscuss } = await start();
+    await openDiscuss();
+    env.services.rpc("/mail/link_preview", { message_id: messageId });
+    await nextAnimationFrame();
+    assert.ok(true);
 });
