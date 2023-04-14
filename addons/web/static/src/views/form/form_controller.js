@@ -9,7 +9,6 @@ import { SIZES } from "@web/core/ui/ui_service";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { omit } from "@web/core/utils/objects";
 import { createElement } from "@web/core/utils/xml";
-import { CombinedActionMenus } from "@web/search/combined_action_menus/combined_action_menus";
 import { Layout } from "@web/search/layout";
 import { usePager } from "@web/search/pager_hook";
 import { useModel } from "@web/views/model";
@@ -21,6 +20,8 @@ import { FormStatusIndicator } from "./form_status_indicator/form_status_indicat
 import { ButtonBox } from "./button_box/button_box";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { Field } from "@web/views/fields/field";
+import { CogMenu } from "@web/search/cog_menu/cog_menu";
+import { ActionMenusItems } from "@web/search/cog_menu/action_menus_items";
 
 import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
 import { useViewCompiler } from "../view_compiler";
@@ -496,12 +497,13 @@ export class FormController extends Component {
 
 FormController.template = `web.FormView`;
 FormController.components = {
-    CombinedActionMenus,
     FormStatusIndicator,
     Layout,
     ButtonBox,
     ViewButton,
     Field,
+    CogMenu,
+    ActionMenusItems,
 };
 FormController.props = {
     ...standardViewProps,
