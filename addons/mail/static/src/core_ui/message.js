@@ -37,7 +37,7 @@ import { url } from "@web/core/utils/urls";
 
 /**
  * @typedef {Object} Props
- * @property {boolean} [hasActions]
+ * @property {boolean} [disableActions]
  * @property {boolean} [highlighted]
  * @property {function} [onParentMessageClick]
  * @property {import("@mail/core/message_model").Message} message
@@ -62,11 +62,11 @@ export class Message extends Component {
         RelativeTime,
     };
     static defaultProps = {
-        hasActions: true,
+        disableActions: false,
         isInChatWindow: false,
     };
     static props = [
-        "hasActions?",
+        "disableActions?",
         "isInChatWindow?",
         "highlighted?",
         "onParentMessageClick?",
@@ -133,7 +133,7 @@ export class Message extends Component {
                 this.root.el.scrollIntoView({ behavior: "smooth", block: "center" });
             }
         });
-        if (this.props.hasActions && this.canAddReaction) {
+        if (!this.props.disableActions && this.canAddReaction) {
             this.emojiPicker = useEmojiPicker(useRef("emoji-picker"), {
                 onSelect: (emoji) => {
                     const reaction = this.message.reactions.find(
@@ -211,7 +211,7 @@ export class Message extends Component {
     }
 
     get editable() {
-        if (!this.props.hasActions) {
+        if (this.props.disableActions) {
             return false;
         }
         return this.message.editable;
@@ -235,7 +235,7 @@ export class Message extends Component {
      * @returns {boolean}
      */
     get hasOpenChatFeature() {
-        if (!this.props.hasActions) {
+        if (this.props.disableActions) {
             return false;
         }
         if (!this.message.author) {

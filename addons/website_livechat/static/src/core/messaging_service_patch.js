@@ -12,7 +12,6 @@ patch(Messaging.prototype, "website_livechat", {
                     ...notification.payload,
                     id: notification.payload.id,
                     model: "discuss.channel",
-                    serverData: notification.payload,
                     type: notification.payload.channel.channel_type,
                 });
                 const chatWindow = this.chatWindowService.insert({ thread: channel });

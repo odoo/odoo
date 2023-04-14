@@ -5,7 +5,7 @@
     <Dialog size="'xl'" title="title">
         <p class="mx-3 mb-3" t-esc="props.prompt"/>
         <blockquote class="mx-3 mb-3 fst-normal" style="pointer-events:none;">
-            <t t-component="props.messageComponent" message="props.message" hasActions="false"/>
+            <t t-component="props.messageComponent" message="props.message" disableActions="true"/>
         </blockquote>
         <t t-set-slot="footer">
             <button class="btn btn-primary me-2" t-on-click="onClickConfirm">Confirm</button>
@@ -15,4 +15,3 @@
 </t>
 
 </templates>
-

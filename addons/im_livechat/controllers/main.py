@@ -240,7 +240,7 @@ class LivechatController(http.Controller):
             message_type='comment',
             subtype_xmlid='mail.mt_comment'
         )
-        return message.id if message else False
+        return message.message_format()[0] if message else False
 
     @http.route(['/im_livechat/chat_history'], type="json", auth="public", cors="*")
     def im_livechat_chat_history(self, uuid, last_id=False, limit=20):

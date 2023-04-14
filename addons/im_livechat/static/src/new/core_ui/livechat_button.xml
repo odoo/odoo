@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<t t-name="im_livechat.LivechatButton" owl="1">
+    <button
+        t-if="isShown"
+        class="btn o-livechat-LivechatButton position-fixed bottom-0 end-0 me-5 pt-3 pb-2 px-3 fw-bold rounded-top-3"
+        t-attf-style="color: {{livechatService.options.button_text_color}}; background-color: {{livechatService.options.button_background_color}}"
+        t-esc="livechatService.options.button_text"
+        t-on-click="onClick"
+    />
+</t>
+
+</templates>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Thread" t-inherit-mode="extension">
+        <xpath expr="//*[@t-name='messageListBefore']" position="after">
+            <div class="bg-100 py-3">
+                <Message message="props.thread.welcomeMessage" thread="props.thread"/>
+            </div>
+        </xpath>
+    </t>
+</templates>

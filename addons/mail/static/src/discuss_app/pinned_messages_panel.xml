@@ -18,7 +18,7 @@
                                 <i class="d-block fa fa-times"/>
                             </button>
                         </div>
-                        <Message hasActions="false" message="message" thread="props.thread"/>
+                        <Message disableActions="true" message="message" thread="props.thread"/>
                     </div>
                 </div>
                 <p t-if="pinnedMessages.length === 0" t-esc="emptyMessage" class="text-center fst-italic text-500 fs-6"/>

@@ -26,7 +26,7 @@
                 <MessageInReply t-if="message.parentMessage" alignedRight="isAlignedRight" message="message" onClick="props.onParentMessageClick"/>
                 <div class="o-mail-Message-core position-relative d-flex flex-shrink-0">
                     <div class="o-mail-Message-sidebar d-flex flex-shrink-0" t-att-class="{ 'justify-content-end': isAlignedRight, 'align-items-center': props.squashed }">
-                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative bg-view" t-on-click="ev => this.onClickAuthor(ev)">
+                        <div t-if="!props.squashed" class="o-mail-Message-avatarContainer position-relative" t-on-click="ev => this.onClickAuthor(ev)">
                             <img class="o-mail-Message-avatar w-100 h-100 rounded-circle o_object_fit_cover"
                                 t-att-title="authorText"
                                 t-att-src="authorAvatarUrl"
@@ -127,7 +127,8 @@
                                     <Composer autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'"/>
                                 </div>
                             </div>
-                            <div t-if="props.hasActions and !message.isTransient" class="o-mail-Message-actions bg-view"
+                            <div t-if="!props.disableActions and message.hasActions"
+                            class="o-mail-Message-actions bg-view"
                                 t-att-class="{
                                     'position-absolute top-0': !env.inDiscussApp,
                                     'start-0 ms-3': isAlignedRight,

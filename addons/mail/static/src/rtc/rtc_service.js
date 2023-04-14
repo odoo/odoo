@@ -739,10 +739,8 @@ export class Rtc {
         this.state.logs.clear();
         this.state.channel = channel;
         this.threadService.update(this.state.channel, {
-            serverData: {
-                rtcSessions,
-                invitedMembers,
-            },
+            rtcSessions,
+            invitedMembers,
         });
         this.state.selfSession = this.store.rtcSessions[sessionId];
         this.state.iceServers = iceServers || DEFAULT_ICE_SERVERS;
