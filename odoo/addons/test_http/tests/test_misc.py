@@ -9,7 +9,7 @@ import odoo
 from odoo.http import root
 from odoo.tests import tagged
 from odoo.tests.common import HOST, new_test_user, get_db_name
-from odoo.tools import config, file_path
+from odoo.tools import config, file_path, submap
 from odoo.addons.test_http.controllers import CT_JSON
 
 from .test_common import TestHttpBase
@@ -22,31 +22,49 @@ class TestHttpMisc(TestHttpBase):
         self.assertEqual(res.status_code, 404)
 
     def test_misc1_reverse_proxy(self):
-        # client <-> reverse-proxy <-> odoo
+        # client <-> cloudflare <-> nginx <-> odoo
         client_ip = '127.0.0.16'
-        reverseproxy_ip = gethostbyname(HOST)
+        cloudflare_ip = '127.0.0.17'
+        nginx_ip = gethostbyname(HOST)
         host = 'mycompany.odoo.com'
 
+        wsgi_keys = {'REMOTE_ADDR', 'HTTP_HOST', 'wsgi.url_scheme'}
         headers = {
             'Host': '',
-            'X-Forwarded-For': client_ip,
+            'X-Forwarded-For': f'{client_ip}, {cloudflare_ip}',
             'X-Forwarded-Host': host,
             'X-Forwarded-Proto': 'https'
         }
 
-        # Don't trust client-sent forwarded headers
+        # Don't trust any X-Forwarded header
         with patch.object(config, 'options', {**config.options, 'proxy_mode': False}):
             res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
-            self.assertEqual(res.status_code, 200)
-            self.assertEqual(res.json()['REMOTE_ADDR'], reverseproxy_ip)
-            self.assertEqual(res.json()['HTTP_HOST'], '')
+            res.raise_for_status()
+            self.assertEqual(submap(res.json(), wsgi_keys), {
+                'REMOTE_ADDR': nginx_ip,
+                'HTTP_HOST': '',
+                'wsgi.url_scheme': 'http'
+            })
 
-        # Trust proxy-sent forwarded headers
+        # Only trust nginx
         with patch.object(config, 'options', {**config.options, 'proxy_mode': True}):
             res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
-            self.assertEqual(res.status_code, 200)
-            self.assertEqual(res.json()['REMOTE_ADDR'], client_ip)
-            self.assertEqual(res.json()['HTTP_HOST'], host)
+            res.raise_for_status()
+            self.assertEqual(submap(res.json(), wsgi_keys), {
+                'REMOTE_ADDR': cloudflare_ip,
+                'HTTP_HOST': host,
+                'wsgi.url_scheme': 'https'
+            })
+
+        # Trust both nginx and cloudflare
+        with patch.object(config, 'options', {**config.options, 'proxy_mode': 2}):
+            res = self.nodb_url_open('/test_http/wsgi_environ', headers=headers)
+            res.raise_for_status()
+            self.assertEqual(submap(res.json(), wsgi_keys), {
+                'REMOTE_ADDR': client_ip,
+                'HTTP_HOST': host,
+                'wsgi.url_scheme': 'https'
+            })
 
     def test_misc2_local_redirect(self):
         def local_redirect(path):

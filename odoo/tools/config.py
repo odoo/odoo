@@ -142,9 +142,11 @@ class configmanager(object):
                          help="Listen port for the gevent worker", type="int", metavar="PORT")
         group.add_option("--no-http", dest="http_enable", action="store_false", my_default=True,
                          help="Disable the HTTP and Longpolling services entirely")
-        group.add_option("--proxy-mode", dest="proxy_mode", action="store_true", my_default=False,
+        group.add_option("--proxy-mode", dest="proxy_mode", action="callback", callback=self._proxy_mode, my_default=0,
                          help="Activate reverse proxy WSGI wrappers (headers rewriting) "
-                              "Only enable this when running behind a trusted web proxy!")
+                              "Only enable this when running behind a trusted web proxy! "
+                              "Will trust the 1st LAST proxy by default, can trust a previous "
+                              "proxy by using --proxy-mode N where N is the nth last proxy.")
         group.add_option("--x-sendfile", dest="x_sendfile", action="store_true", my_default=False,
                          help="Activate X-Sendfile (apache) and X-Accel-Redirect (nginx) "
                               "HTTP response header to delegate the delivery of large "
@@ -540,6 +542,10 @@ class configmanager(object):
 
         self.options['test_enable'] = bool(self.options['test_tags'])
 
+        self.options['proxy_mode'] = int(self.options['proxy_mode'])
+        die(self.options['proxy_mode'] < 0,
+            "the proxy-mode option must be a positive integer")
+
         if opt.save:
             self.save()
 
@@ -614,6 +620,14 @@ class configmanager(object):
     def _test_enable_callback(self, option, opt, value, parser):
         if not parser.values.test_tags:
             parser.values.test_tags = "+standard"
+
+    def _proxy_mode(self, option, opt, value, parser):
+        try:
+            int(parser.rargs[0])
+        except (IndexError, ValueError):
+            parser.values.proxy_mode = 1
+        else:
+            parser.values.proxy_mode = int(parser.rargs.pop(0))
 
     def load(self):
         outdated_options_map = {
