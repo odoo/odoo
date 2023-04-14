@@ -4,6 +4,7 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { BomOverviewDisplayFilter } from "../bom_overview_display_filter/mrp_bom_overview_display_filter";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 
 const { Component } = owl;
 
@@ -29,6 +30,11 @@ export class BomOverviewControlPanel extends Component {
     clickUnfold() {
         this.env.overviewBus.trigger("unfold-all");
     }
+
+    getDomain() {
+        const keys = Object.keys(this.props.variants);
+        return [['id', 'in', keys]];
+    }
 }
 
 BomOverviewControlPanel.template = "mrp.BomOverviewControlPanel";
@@ -37,12 +43,14 @@ BomOverviewControlPanel.components = {
     DropdownItem,
     ControlPanel,
     BomOverviewDisplayFilter,
+    Many2XAutocomplete,
 };
 BomOverviewControlPanel.props = {
     bomQuantity: Number,
     showOptions: Object,
     showVariants: { type: Boolean, optional: true },
     variants: { type: Object, optional: true },
+    data: { type: Object, optional: true },
     showUom: { type: Boolean, optional: true },
     uomName: { type: String, optional: true },
     currentWarehouse: Object,
