@@ -25,14 +25,16 @@
                             <div t-if="props.showOptions.uom" t-esc="props.uomName" class="input-group-text">Quantity</div>
                         </div>
                     <t t-if="props.showVariants" >
-                        <label class="visually-hidden" for="bom_quantity">Variant</label>
-                        <div class="input-group">
-                            <div class="input-group-text">Variant</div>
-                            <select class="o_input form-control" t-on-change="(ev) => this.props.changeVariant(ev.target.value)">
-                                <option t-foreach="props.variants" t-as="variant" t-att-value="variant" t-key="variant" t-att-selected="variant == this.props.data.link_id">
-                                    <t t-esc="props.variants[variant]"/>
-                                </option>
-                            </select>
+                        <label class="col-xl-2 col-lg-3 col-sm-4">Variant:</label>
+                        <div class="col-xl-10 col-lg-9 col-sm-8">
+                            <Many2XAutocomplete
+                                value="props.data.name"
+                                getDomain.bind="getDomain"
+                                resModel="'product.product'"
+                                fieldString="props.data.name"
+                                activeActions="{}"
+                                update.bind="(ev) => this.props.changeVariant(ev[0]?.id)"
+                            />
                         </div>
                     </t>
                 </form>
