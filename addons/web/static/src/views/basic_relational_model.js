@@ -601,6 +601,7 @@ export class Record extends DataPoint {
                 {
                     title: this.model.env._t("Invalid fields: "),
                     type: "danger",
+                    sticky: true
                 }
             );
             resolveSavePromise();

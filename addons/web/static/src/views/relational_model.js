@@ -1426,6 +1426,7 @@ export class Record extends DataPoint {
             this.model.notificationService.add(markup(`<ul>${invalidFields.join("")}</ul>`), {
                 title: this.model.env._t("Invalid fields: "),
                 type: "danger",
+                sticky: true
             });
             return false;
         }
