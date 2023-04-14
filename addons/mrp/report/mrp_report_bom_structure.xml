@@ -10,7 +10,7 @@
                     <h6 t-if="data['bom_code']">Reference: <t t-esc="data['bom_code']"/></h6>
                 </div>
                 <t t-set="currency" t-value="data['currency']"/>
-                <table class="o_mrp_bom_expandable table">
+                <table class="o_mrp_bom_expandable table table-borderless">
                     <thead>
                         <tr>
                             <th name="th_mrp_bom_h">Product</th>
@@ -54,6 +54,8 @@
                             <td t-if="data['show_costs']" class="text-end" t-esc="data['prod_cost']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                         </tr>
                         <t t-call="mrp.report_mrp_bom_pdf_line"/>
+                    </tbody>
+                    <tfoot>
                         <tr t-if="data['show_costs']">
                             <td name="td_mrp_bom_f" class="text-end">
                                 <span t-if="data['byproducts']" t-esc="data['name']"/>
@@ -82,7 +84,7 @@
                                 <td class="text-end" t-esc="byproduct['prod_cost'] / byproduct['quantity']" t-options='{"widget": "monetary", "display_currency": currency}'/>
                             </tr>
                         </t>
-                    </tbody>
+                    </tfoot>
                 </table>
             </div>
             <div t-else="" class="d-flex align-items-center justify-content-center h-50">
