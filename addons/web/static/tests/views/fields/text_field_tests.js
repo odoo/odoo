@@ -8,9 +8,12 @@ import {
     clickSave,
     editInput,
     getFixture,
+    nextTick,
     triggerEvent,
+    triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { fieldService } from "@web/core/field_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -255,11 +258,7 @@ QUnit.module("Fields", (hooks) => {
         });
 
         const textarea = target.querySelector("textarea");
-        assert.strictEqual(
-            textarea.rows,
-            4,
-            "rowCount should be the one set on the field",
-        );
+        assert.strictEqual(textarea.rows, 4, "rowCount should be the one set on the field");
     });
 
     QUnit.test(
@@ -282,8 +281,9 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // ensure that autoresize is correctly done
-            let height = target.querySelector(".o_field_widget[name=text_field] textarea")
-                .offsetHeight;
+            let height = target.querySelector(
+                ".o_field_widget[name=text_field] textarea"
+            ).offsetHeight;
             // focus the field to manually trigger autoresize
             await triggerEvent(target, ".o_field_widget[name=text_field] textarea", "focus");
             assert.strictEqual(
@@ -352,8 +352,9 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelectorAll(".o_notebook .nav .nav-link")[2]);
         assert.hasClass(target.querySelectorAll(".o_notebook .nav .nav-link")[2], "active");
 
-        height = target.querySelector(".o_field_widget[name=text_field_empty] textarea")
-            .offsetHeight;
+        height = target.querySelector(
+            ".o_field_widget[name=text_field_empty] textarea"
+        ).offsetHeight;
         assert.strictEqual(height, 50, "empty textarea should have height of 50px");
     });
 
@@ -591,5 +592,44 @@ QUnit.module("Fields", (hooks) => {
             document.activeElement,
             "text area should have the focus"
         );
+    });
+
+    QUnit.test("field text with dynamic placeholder", async (assert) => {
+        registry.category("services").add("field", fieldService);
+
+        serverData.models.partner.fields.model_reference_field = {
+            string: "Model Reference Field",
+            type: "char",
+            default: "partner",
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="model_reference_field" invisible="1"/>
+                    <sheet>
+                        <group>
+                            <field
+                                name="txt"
+                                options="{
+                                    'dynamic_placeholder': true,
+                                    'dynamic_placeholder_model_reference_field': 'model_reference_field'
+                                }"
+                            />
+                        </group>
+                    </sheet>
+                </form>`,
+        });
+
+        await click(target, "[name=txt] textarea");
+        assert.strictEqual(document.activeElement, target.querySelector("[name=txt] textarea"));
+
+        assert.containsNone(document.body, ".o_popover .o_field_selector_popover");
+        triggerHotkey("#");
+        await nextTick();
+        assert.containsOnce(document.body, ".o_popover .o_field_selector_popover");
     });
 });

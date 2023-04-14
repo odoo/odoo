@@ -12,10 +12,10 @@ export function useDynamicPlaceholder(elementRef) {
     const triggerKeyReplaceRegex = new RegExp(`${TRIGGER_KEY}$`);
     let closeCallback;
     let positionCallback;
-    const popoverOptions = {};
-    Object.defineProperty(popoverOptions, "onClose", { get: () => closeCallback });
-    Object.defineProperty(popoverOptions, "onPositioned", { get: () => positionCallback });
-    const popover = usePopover(ModelFieldSelectorPopover, popoverOptions);
+    const popover = usePopover(ModelFieldSelectorPopover, {
+        onclose: () => closeCallback?.(),
+        onPositioned: () => positionCallback?.(),
+    });
     const modelField = useModelField();
     const notification = useService("notification");
 
@@ -60,9 +60,9 @@ export function useDynamicPlaceholder(elementRef) {
      *
      * @public
      * @param {Object} opts
-     * @param {function} options.validateCallback
-     * @param {function} options.closeCallback
-     * @param {function} [options.positionCallback]
+     * @param {function} opts.validateCallback
+     * @param {function} opts.closeCallback
+     * @param {function} [opts.positionCallback]
      */
     async function open(opts) {
         if (!model) {
