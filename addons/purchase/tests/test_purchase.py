@@ -381,7 +381,6 @@ class TestPurchase(AccountTestInvoicingCommon):
         company_b = self.company_data_2['company']
         product = self.env['product.product'].create({
             'name': 'product_test',
-            'type': 'product',
         })
         # create a purchase order in the company A
         self.env['purchase.order'].with_company(company_a).create({
