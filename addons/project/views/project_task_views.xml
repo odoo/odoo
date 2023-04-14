@@ -497,7 +497,7 @@
             <field name="arch" type="xml">
                 <form class="o_form_project_tasks">
                     <group>
-                        <field name="display_name" string= "Task Title" placeholder="e.g. Send Invitations"/>
+                        <field name="display_name" string= "Task Title" placeholder="e.g. Send Invitations" required="1"/>
                         <field name="project_id" 
                                widget="project_private_task"
                                invisible="context.get('default_project_id', False)" 
