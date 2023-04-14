@@ -119,7 +119,7 @@
       </t>
   </template>
 
-  <template id="portal_my_purchase_order" name="Purchase Order Portal Template" inherit_id="portal.portal_sidebar" primary="True">
+  <template id="portal_my_purchase_order" name="Purchase Order" inherit_id="portal.portal_sidebar" primary="True">
       <xpath expr="//div[hasclass('o_portal_sidebar')]" position="inside">
           <t t-set="o_portal_fullwidth_alert" groups="purchase.group_purchase_manager">
               <t t-call="portal.portal_back_in_edit_mode">
