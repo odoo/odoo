@@ -1,6 +1,8 @@
 /** @odoo-module */
 
+import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
+import { ReceiptScreen } from "@point_of_sale/../tests/tours/helpers/ReceiptScreenTourMethods";
 import { TextAreaPopup } from "@point_of_sale/../tests/tours/helpers/TextAreaPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
@@ -142,6 +144,12 @@ ProductScreen.check.totalAmountIs('100.00');
 ProductScreen.do.changeFiscalPosition('No Tax');
 ProductScreen.check.noDiscountApplied("100.00");
 ProductScreen.check.totalAmountIs('86.96');
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod('Bank');
+PaymentScreen.check.remainingIs('0.00');
+PaymentScreen.do.clickValidate();
+ReceiptScreen.check.isShown();
+ReceiptScreen.check.noOrderlineContainsDiscount();
 
 registry.category("web_tour.tours").add("FiscalPositionNoTax", { test: true, url: "/pos/ui", steps: getSteps() });
 

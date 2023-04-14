@@ -90,6 +90,15 @@ class Check {
             },
         ];
     }
+
+    noOrderlineContainsDiscount() {
+        return [
+            {
+                trigger: `.orderlines:not(:contains('->'))`,
+                run: () => { },
+            },
+        ];
+    }
 }
 
 class Execute {
