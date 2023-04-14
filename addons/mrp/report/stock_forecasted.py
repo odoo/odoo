@@ -7,20 +7,6 @@ from odoo import api, models
 class StockForecasted(models.AbstractModel):
     _inherit = 'stock.forecasted_product_product'
 
-    @api.model
-    def action_reserve_linked_picks(self, move_id):
-        """ In case of move connected to MOs instead of picking we want to reserve the MO
-        """
-        linked_move_ids = super().action_reserve_linked_picks(move_id)
-        production_ids = linked_move_ids.raw_material_production_id | linked_move_ids.production_id
-        production_ids.filtered(lambda m: m.state not in ['draft', 'cancel', 'done']).action_assign()
-
-    @api.model
-    def action_unreserve_linked_picks(self, move_id):
-        linked_move_ids = super().action_unreserve_linked_picks(move_id)
-        production_ids = linked_move_ids.raw_material_production_id | linked_move_ids.production_id
-        production_ids.filtered(lambda m: m.state not in ['draft', 'cancel', 'done']).do_unreserve()
-
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False, reserved_move=False, in_transit=False, read=True):
         line = super()._prepare_report_line(quantity, move_out, move_in, replenishment_filled, product, reserved_move, in_transit, read)
 
