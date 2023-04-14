@@ -130,9 +130,6 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this._addNewOrder();
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
-        if (this.env.pos.config.iface_customer_facing_display) {
-            this.env.pos.send_current_order_to_customer_facing_display();
-        }
     }
     resumeOrder() {
         this.env.pos.removeOrder(this.currentOrder);
