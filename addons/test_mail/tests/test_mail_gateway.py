@@ -1514,6 +1514,36 @@ class TestMailgateway(TestMailCommon):
         # This explains the multiple "�" in the attachment.
         self.assertIn("Chauss������e de Bruxelles", record.message_main_attachment_id.raw.decode())
 
+    def test_message_route_reply_model_none(self):
+        """
+        Test the message routing and reply functionality when the model is None.
+
+        This test case verifies the behavior of the message routing and reply process
+        when the 'model' field of a mail.message is set to None. It checks that the
+        message is correctly processed and associated with the appropriate record.
+        The code invokes function `format_and_process` to automatically test rounting
+        and then makes checks on created record.
+
+        """
+        message = self.env['mail.message'].create({
+            'body': '<p>test</p>',
+            'email_from': self.email_from,
+            'message_type': 'email',
+            'model': None,
+            'res_id': None,
+        })
+
+        self.env['mail.alias'].create({'alias_name': 'test', 'alias_model_id': self.env['ir.model']._get('mail.test.gateway').id})
+        record = self.format_and_process(
+            MAIL_TEMPLATE, self.email_from, 'test@test.com',
+            subject=message.message_id, extra=f'In-Reply-To:\r\n\t{message.message_id}\n',
+            model=None)
+
+        self.assertTrue(record)
+        self.assertEqual(record._name, 'mail.test.gateway')
+        self.assertEqual(record.message_ids.subject, message.message_id)
+        self.assertFalse(record.message_ids.parent_id)
+
 
 class TestMailThreadCC(TestMailCommon):
 
