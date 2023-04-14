@@ -208,7 +208,10 @@ options.registry.gallery = options.Class.extend({
                     $lowest = $col;
                 }
             });
-            $lowest.append(imgs.shift());
+            // Only on Chrome: appended images are sometimes invisible and not
+            // correctly loaded from cache, we use a clone of the image to force
+            // the loading.
+            $lowest.append(imgs.shift().cloneNode());
         }
     },
     /**
