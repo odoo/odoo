@@ -476,6 +476,7 @@ export class LinkTools extends Link {
     __onURLInput() {
         super.__onURLInput(...arguments);
         this.props.wysiwyg.odooEditor.historyPauseSteps('_onURLInput');
+        this._syncContent();
         this._adaptPreview();
         this.props.wysiwyg.odooEditor.historyUnpauseSteps('_onURLInput');
     }
@@ -495,6 +496,25 @@ export class LinkTools extends Link {
         // Without this, no update if input is same as original text.
         this._updateLinkContent(this.$link, data, {force: true});
         this._observer.observe(this.props.link, {subtree: true, childList: true, characterData: true});
+    }
+    /* If content is equal to previous URL, update it to match current URL.
+     *
+     * @private
+     */
+    _syncContent() {
+        const previousUrl = this.linkEl.getAttribute('href');
+        if (!previousUrl) {
+            return;
+        }
+        const protocolLessPrevUrl = previousUrl.replace(/^https?:\/\/|^mailto:/i, '');
+        const content = this.linkEl.innerText;
+        if (content === previousUrl || content === protocolLessPrevUrl) {
+            const newUrl = this.linkComponentWrapperRef.el.querySelector('input[name="url"]').value;
+            const protocolLessNewUrl = newUrl.replace(/^https?:\/\/|^mailto:/i, '')
+            const newContent = content.replace(protocolLessPrevUrl, protocolLessNewUrl);
+            this.linkComponentWrapperRef.el.querySelector('#o_link_dialog_label_input').value = newContent;
+            this._onLabelInput();
+        }
     }
 }
 
