@@ -293,7 +293,7 @@ class HrEmployeePrivate(models.Model):
             self.env['mail.channel'].sudo().search([
                 ('subscription_department_ids', 'in', employee.department_id.id)
             ])._subscribe_users_automatically()
-        employee.message_subscribe(employee.address_home_id.ids)
+        employee._message_subscribe(employee.address_home_id.ids)
         # Launch onboarding plans
         url = '/web#%s' % url_encode({
             'action': 'hr.plan_wizard_action',
@@ -310,7 +310,8 @@ class HrEmployeePrivate(models.Model):
             if account_id:
                 self.env['res.partner.bank'].browse(account_id).partner_id = vals['address_home_id']
             self.message_unsubscribe(self.address_home_id.ids)
-            self.message_subscribe([vals['address_home_id']])
+            if vals['address_home_id']:
+                self._message_subscribe([vals['address_home_id']])
         if vals.get('user_id'):
             # Update the profile pictures with user, except if provided 
             vals.update(self._sync_user(self.env['res.users'].browse(vals['user_id']),
