@@ -196,7 +196,7 @@ class AccountPaymentTerm(models.Model):
 
         #We sort by the last line of a term
         term_lines = self.line_ids.sorted(lambda l: l == self.line_ids[-1])
-        last_percent_line = term_lines.filtered(lambda l: l.value == 'percent')[-1]
+        last_percent_line = term_lines.filtered(lambda l: l.value == 'percent')[-1:]
         for line in self.line_ids.sorted(lambda l: l == self.line_ids[-1]):
             term_vals = {
                 'date': line._get_due_date(date_ref),
