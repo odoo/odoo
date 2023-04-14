@@ -2,6 +2,7 @@
 
 import { ActionMenus } from "@web/search/action_menus/action_menus";
 
+
 /**
  * Combined Action menus (or Action/Print bar, previously called 'Sidebar')
  *
@@ -14,6 +15,6 @@ import { ActionMenus } from "@web/search/action_menus/action_menus";
  *
  * @extends Component
  */
-export class CombinedActionMenus extends ActionMenus {
-    static template = "web.CombinedActionMenus";
+export class ActionMenusItems extends ActionMenus {
+    static template = "web.ActionMenusItems";
 }
