@@ -57,9 +57,9 @@ class ProductCategory(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_default_category(self):
-        main_category = self.env.ref('product.product_category_all')
-        if main_category in self:
+        main_category = self.env.ref('product.product_category_all', raise_if_not_found=False)
+        if main_category and main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
-        expense_category = self.env.ref('product.cat_expense')
-        if expense_category in self:
+        expense_category = self.env.ref('product.cat_expense', raise_if_not_found=False)
+        if expense_category and expense_category in self:
             raise UserError(_("You cannot delete the %s product category.", expense_category.name))
