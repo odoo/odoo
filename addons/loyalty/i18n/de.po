@@ -252,6 +252,12 @@ msgid ""
 "                            Generate \n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('will_send_mail', '=', False)]}\">\n"
+"                            Generieren und senden \n"
+"                        </span>\n"
+"                        <span attrs=\"{'invisible': [('will_send_mail', '=', True)]}\">\n"
+"                            Generieren \n"
+"                        </span>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -1193,12 +1199,12 @@ msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "If minimum"
-msgstr ""
+msgstr "Bei Kauf in Höhe von mindestens"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "In exchange of"
-msgstr ""
+msgstr "Im Austausch gegen"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_card_view_search
@@ -1540,7 +1546,7 @@ msgstr "Programmart"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "Program trigger"
-msgstr ""
+msgstr "Programmauslöser"
 
 #. module: loyalty
 #. odoo-python
@@ -1585,12 +1591,12 @@ msgstr "Menge"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_form
 msgid "Quantity rewarded"
-msgstr ""
+msgstr "Belohnte Menge"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_generate_wizard_view_form
 msgid "Quantity to generate"
-msgstr ""
+msgstr "Zu generierende Menge"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_amount
@@ -1697,6 +1703,8 @@ msgid ""
 "Set up conditional rules on the order that will give access to rewards for "
 "customers"
 msgstr ""
+"Stellen Sie bedingte Regeln für den Auftrag ein, die Kunden Belohnungen "
+"gewähren"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
@@ -1711,7 +1719,7 @@ msgstr "Bestimmte Produkte"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_rule__reward_point_split
 msgid "Split per unit"
-msgstr ""
+msgstr "Je Einheit teilen"
 
 #. module: loyalty
 #. odoo-python
@@ -2000,6 +2008,8 @@ msgid ""
 "on your order\n"
 "                                        <br/>"
 msgstr ""
+"auf Ihren Auftrag\n"
+"                                        <br/>"
 
 #. module: loyalty
 #. odoo-python
@@ -2032,7 +2042,7 @@ msgstr "bestimmte Produkte"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
 msgid "spent"
-msgstr ""
+msgstr "ausgegeben werden"
 
 #. module: loyalty
 #. odoo-python
