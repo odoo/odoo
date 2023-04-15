@@ -198,7 +198,7 @@
             <div class="mb-3">
                 <label class="form-label" for="content">Title</label>
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post_name}"
+                <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post_name}" maxlength="60"
                     class="form-control form-control-lg" placeholder="A clear, explicit and concise title" title="Title must not be empty"/>
                 <input type="hidden" name="karma" t-attf-value="#{user.karma}" id="karma"/>
                 <div class="form-text small text-muted">
@@ -251,7 +251,7 @@
             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
             <div t-if="not is_answer" class="mb-3">
                 <label class="form-label" for="post_name">Title</label>
-                <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post.name}"
+                <input type="text" name="post_name" required="required" pattern=".*\S.*" t-attf-value="#{post.name}" maxlength="60"
                     class="form-control form-control-lg" placeholder="Edit your Post" title="Title must not be empty"/>
                 <div class="form-text small text-muted">
                     <a data-bs-toggle="collapse" href="#newQuestionExample" role="button" aria-expanded="false" aria-controls="newQuestionExample">
