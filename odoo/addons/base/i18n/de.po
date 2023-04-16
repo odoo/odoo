@@ -5828,6 +5828,14 @@ msgid ""
 "** GSTR-3B: view report\n"
 "    "
 msgstr ""
+"\n"
+"Einreichung der GST-Erklärung über IAP\n"
+"================================\n"
+"\n"
+"** GSTR-1: Zusammenfassungsbericht senden und ansehen\n"
+"** GSTR-2B: Übereinstimmung\n"
+"** GSTR-3B: Bericht ansehen\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_gamification
@@ -6250,6 +6258,17 @@ msgid ""
 "Step 4: Repeat steps 1,2,3 for all GSTIN you have in odoo. If you have a multi-company with the same GST number then perform step 1 for the first company only.\n"
 "    "
 msgstr ""
+"\n"
+"Indisch - E-waybill\n"
+"====================================\n"
+"Um E-waybill durch API bei der Regierung einzureichen.\n"
+"Wir verwenden „Tera Software Limited“ als GSP\n"
+"\n"
+"Schritt 1: Zuerst müssen Sie einen API-Benutzernamen und -Passwort im E-waybill-Portal erstellen.\n"
+"Schritt 2: Zu einem Unternehmen mit dieser GST-Nummer wechseln\n"
+"Step 3: Schritt 3: Diesen Benutzernamen und dieses Passwort in Odoo einsetzen (Gehen Sie zu: Rechnungsstellung/Buchhaltung -> Konfiguration -> Einstellungen -> Indisches Elektronisches WayBill oder „E-waybill“ in der Suchleiste suchen)\n"
+"Schritt 4: Schritte 1, 2 ,3 für alle GSTIN, die Sie in Odoo haben, wiederholen. Wenn Sie mehrere Unternehmen mit der gleichen GST-Nummer haben, führen Sie Schritt 1 nur für das erste Unternehmen aus.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_in
@@ -6340,6 +6359,13 @@ msgid ""
 "To print UPI Qr code add UPI id in company and tick \"QR Codes\" in configuration\n"
 "  "
 msgstr ""
+"\n"
+"Rechnung mit UPI-QR-Code\n"
+"=========================\n"
+"Dieses Modul fügt dem Rechnungsbericht für UPI-Zahlungen einen QR-Code hinzu, der es ermöglicht, Zahlungen über jede UPI-App zu tätigen.\n"
+"\n"
+"Um einen UPI-QR-Code zu drucken, UPI-ID in Unternehmen hinzufügen und „QR Codes“ in Konfiguration ankreuzen\n"
+"  "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account
@@ -7544,6 +7570,43 @@ msgid ""
 "\n"
 "  * Those operations can be done with multiple checks at once\n"
 msgstr ""
+"\n"
+"Verwaltung eigener Schecks\n"
+"---------------------\n"
+"\n"
+"Erweitert das Modul „Scheckdruck-Basis“, um eigene Schecks mit weiteren Funktionen zu verwalten:\n"
+"\n"
+"* die Verwendung eigener Schecks ermöglichen, die nicht gedruckt, sondern vom Benutzer manuell ausgefüllt werden\n"
+"* die Verwendung von aufgeschobenen oder elektronischen Schecks ermöglichen\n"
+"  * Drucken ist deaktiviert\n"
+"  * Schecknummer wird manuell vom Benutzer eingestellt\n"
+"* ein optionales „Scheckeinlösedatumb für vordatierte Schecks (aufgeschobene Zahlungen) hinzufügen\n"
+"* ein Menü zur Verfolgung eigener Schecks hinzufügen\n"
+"\n"
+"Verwaltung von Schecks von Dritten\n"
+"-----------------------------\n"
+"\n"
+"Neue Funktion „Verwaltung von Schecks von Dritten“ hinzufügen.\n"
+"\n"
+"Es gibt 2 Hauptergänzungen für Zahlungsmethoden:\n"
+"\n"
+"* Neue Verwaltung von Schecks von Dritten:\n"
+"\n"
+"  * Zahlungen mit dieser Zahlungsmethode stellen den Scheck dar, den Sie von einem Kunden erhalten, wenn Sie bezahlt werden (von einer Rechnung oder einer manuellen Zahlung)\n"
+"\n"
+"\n"
+"* Bestehende Schecks von Dritten.\n"
+"\n"
+"  * Zahlungen dieser Zahlungsmethode dienen zur Verfolgung der Bewegungen des Schecks, z. B:\n"
+"\n"
+"    * Scheck verwenden, um Lieferanten zu bezahlen\n"
+"    * Scheck bei der Bank einreichen\n"
+"    * Scheck durch die Bank (Ablehnung) zurückerhalten\n"
+"    * Scheck durch die Bank (Ablehnung oder Rückgabe) zurückerhalten\n"
+"    * Scheck von einem Scheckjournal eines Dritten zum anderen (von einem Geschäft zum anderen) übertragen\n"
+"\n"
+"  * Diese Vorgänge können mit mehreren Schecks auf einmal durchgeführt werden\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_workorder_plm
@@ -7836,6 +7899,35 @@ msgid ""
 "    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
 "    "
 msgstr ""
+"\n"
+"Zweck des Moduls:\n"
+"======================\n"
+"\n"
+"Als Teil der SII-Anforderungen (gesetzliche Anforderung in Chile), \n"
+"müssen ab März 2021 Boletas-Transaktionen im Rahmen der elektronischen\n"
+"Rechnungsstellungsabläufen an die SII gesendet werden wobei ein anderer Webservice als der für elektronische Rechnungen genutzte verwendet wird. \n"
+"Zuvor mussten die Boletas nicht an die SII gesendet werden, sondern nur ein Tagesbericht.\n"
+"\n"
+"Die Anforderung, ein tägliches Verkaufsbuch\n"
+"„Libro de ventas diarias“ (vorher „reporte de consumo de folios“ or RCOF) zu senden, wurde ab dem 1. August 2022 \n"
+" von der Behörde abgeschafft. Daher wurde es aus der neuen Odoo-Version entfernt.\n"
+"\n"
+"Unterschiede zwischen elektronischen Boletas und elektronischen Rechnungsstellungsabläufen:\n"
+"=========================================================================\n"
+"\n"
+"Diese Abläufe weisen einige wichtige Unterschiede auf, die uns dazu veranlasst haben, diese PR mit den spezifischen Änderungen durchzuführen..\n"
+"Hier sind die Unterschiede:\n"
+"\n"
+"* Der Mechanismus für den Versand der elektronischen Boletas-Informationen benötigt dedizierte Server, die sich von denen unterscheiden, die für den Empfang der elektronischen Rechnung verwendet werden (\"Palena\" für die Produktionsumgebung - palena.sii.cl und \"Maullin\" für die Testumgebung - maullin.sii.cl).\n"
+"* Die Authentifizierungsdienste, die den Status einer Lieferung und den Status eines Dokuments abfragen, werden unterschiedlich sein.\n"
+"* Das erhaltene Authentifizierungs-Token\n"
+"* Das XML-Schema für den Versand der elektronischen boletas wurde durch die Aufnahme neuer Tags aktualisiert.\n"
+"* Die Validierungsdiagnose der elektronischen Boletas wird über einen „REST“-Webservice bereitgestellt, der als Eingabe die Verfolgungs-ID der Lieferung hat. Elektronische Rechnungen erhalten ihre Diagnosen weiterhin per E-Mail.\n"
+"* Die Verfolgungs-ID („identificador de envío“), die mit den elektronischen Boletas verbunden ist, wird 15 Ziffern lang sein. (Elektronische Rechnungen haben 10 Stellen)\n"
+"\n"
+"ighlights aus diesem SII-Leitfaden:\n"
+"    https://www.sii.cl/factura_electronica/factura_mercado/Instructivo_Emision_Boleta_Elect.pdf\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality
@@ -8349,6 +8441,12 @@ msgid ""
 "This module adds TCS and TDS Tax Report and load related Taxes in Indian Company.\n"
 "    "
 msgstr ""
+"\n"
+"TCS/TDS-Steuerberichte für Indien\n"
+"====================================\n"
+"\n"
+"Dieses Modul fügt die Steuerberichte TCS und TDS hinzu und lädt entsprechende Steuern in indischen Unternehmen.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -9776,6 +9874,11 @@ msgid ""
 "\n"
 "    "
 msgstr ""
+"\n"
+"Dieses Modul weist den Mitarbeitern einen Stundenlohn zu, der von anderen Modulen verwendet werden kann.\n"
+"============================================================================\n"
+"\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_mass_mailing
@@ -10289,6 +10392,20 @@ msgid ""
 "can setup API keys to replace their main password.\n"
 "    "
 msgstr ""
+"\n"
+"Zwei-Faktoren-Authentifizierung (TOTP)\n"
+"================================\n"
+"Ermöglicht Benutzern die Konfiguration der Zwei-Faktor-Authentifizierung für ihr Benutzerkonto\n"
+"für zusätzliche Sicherheit, indem zeitbasierte Einmalpasswörter (Time-based One-Time Password, TOTP) verwendet werden.\n"
+"\n"
+"Nach der Aktivierung muss der Benutzer einen 6-stelligen Code eingeben,\n"
+"der von seiner Authentifizierungs-App bereitgestellt wird, bevor ihm der Zugang zum System gewährt wird.\n"
+"Alle gängigen Authentifizierungs-Apps werden unterstützt.\n"
+"\n"
+"Hinweis: Logischerweise verhindert die Zwei-Faktor-Authentifizierung den passwortbasierten RPC-Zugang für Benutzer,\n"
+"bei denen sie aktiviert ist. Um RPC-Skripte ausführen zu können, kann der Benutzer\n"
+"API-Schlüssel einrichten, um ihre Hauptpasswörter zu ersetzen.where it is enabled.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -10545,6 +10662,11 @@ msgid ""
 "This module adds the price difference account. Used in standard perpetual valuation.\n"
 "    "
 msgstr ""
+"\n"
+"WMS-Buchhaltungsmodul\n"
+"======================\n"
+"Dieses Modul fügt das Preisdifferenzkonto hinzu. Wird in der permanenten Standardbewertung verwendet.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_stock_account
@@ -10800,7 +10922,7 @@ msgstr ""
 "Wir haben uns für die Integration mit der API der\n"
 "[Weiterleitung](https://paymentservices-reference.payfort.com/docs/api/build/index.html#redirection)\n"
 "entschieden, da es, von den drei Gateways, die Amazon Payment\n"
-"Services ab Juli 2022 anbietet, unsere Bedürfnisse am besten abdeckt. . Einzelheiten zu den anderen Gateways finden Sie in den Entwicklungshinweisen der Aufgabe.\n"
+"Services ab Juli 2022 anbietet, unsere Bedürfnisse am besten abdeckt. Einzelheiten zu den anderen Gateways finden Sie in den Entwicklungshinweisen der Aufgabe.\n"
 "\n"
 "## Details zusammenführen\n"
 "\n"
@@ -11009,6 +11131,47 @@ msgid ""
 "\n"
 "https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 msgstr ""
+"# Mercado Pago\n"
+"\n"
+"## Implementierungsdetails\n"
+"\n"
+"### Unterstützte Funktionen\n"
+"\n"
+"- Zahlung mit Weiterleitungsvorgang\n"
+"- Mehrere Zahlungsmethoden wie Kredit- und Debitkarten sowie\n"
+"  [andere](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-methods/other-payment-methods).\n"
+"- [Webhook]-Benachrichtigungen(https://www.mercadopago.com.mx/developers/en/docs/notifications/webhooks/webhooks)\n"
+"  .\n"
+"\n"
+"### Nichtimplementierte Funktionen\n"
+"\n"
+"- [Manuelle Erfassung](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/capture-authorized-payment).\n"
+"- [Teilerstattungen](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/payment-management/cancellations-and-refunds).\n"
+"\n"
+"### API und Gateway\n"
+"\n"
+"Wir haben uns für die Integration der Kombination aus den Lösungen\n"
+"[Checkout Pro](https://www.mercadopago.com.mx/developers/en/docs/checkout-pro/landing) und\n"
+"[Checkout API](https://www.mercadopago.com.mx/developers/en/docs/checkout-api/landing) entschieden:\n"
+"Der Zahlungsvorgang mit Weiterleitungsvorgang wird durch das Senden einer HTTP-Anfrage mit einer formularverschlüsselten\n"
+"Nutzlast eingeleitet, wie es das JavaScript-SDK von Checkout Pro unter der Haube tut. Die restlichen API-Aufrufe werden\n"
+"entsprechend der Dokumentation der Checkout-API gemacht. Es war nicht möglich, nur mit Checkout Pro zu integrieren,\n"
+"da es nur ermöglicht, dass Kunden zur Zahlungsseite weitergeleitet werden, und auch nicht mit der Checkout-API, da sie\n"
+"die Erstellung eines benutzerdefinierten Zahlungsformulars erfordert, um direkte Zahlungen von der Website des Händlers zu akzeptieren.\n"
+"\n"
+"Die anderen Gateways wurden ausgeschlossen. Einzelheiten zu den anderen Gateways finden Sie in den Entwicklungshinweisen der Aufgabe.\n"
+"\n"
+"Die von diesem Modul implementierte API ist nicht versioniert.\n"
+"\n"
+"## Details zusammenführen\n"
+"\n"
+"Die erste Version des Moduls wurde in der Aufgabe\n"
+"[2704764](https://www.odoo.com/web#id=2704764&model=project.task) spezifiziert und mit PR\n"
+"odoo/odoo#83957 in `saas-15.5` zusammengeführt.\n"
+"\n"
+"## Testanleitungen\n"
+"\n"
+"https://www.mercadopago.com.mx/developers/en/docs/checkout-api/integration-test/test-cards\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_payment_razorpay
@@ -11050,6 +11213,42 @@ msgid ""
 "See https://razorpay.com/docs/payments/payments/test-card-upi-details/ for the list of test\n"
 "payment details.\n"
 msgstr ""
+"# Razorpay\n"
+"\n"
+"## Implementierungsdetails\n"
+"\n"
+"### Unterstützte Funktionen\n"
+"\n"
+"- Zahlung mit Weiterleitungsvorgang\n"
+"- Manuelle Erfassung\n"
+"- Teilerstattungen\n"
+"- Mehrere Zahlungsmethoden wie Kredit- und Debitkarten, Internetbanking, UPI und\n"
+"  [andere](https://razorpay.com/docs/payments/payment-methods/).\n"
+"- [Webhook](https://razorpay.com/docs/webhooks).\n"
+"\n"
+"Darüber hinaus ermöglicht Razorpay auch die Implementierung von Tokenization, erfordert aber die Weitergabe des Karten-Secrets für\n"
+"jede Transaktion.\n"
+"\n"
+"### API und Gateway\n"
+"\n"
+"Wir haben uns für die Integration mit\n"
+"[Razorpay Hosted Checkout](https://razorpay.com/docs/payments/payment-gateway/web-integration/hosted) entschieden.\n"
+"Die anderen Gateways wurden ausgeschlossen. Einzelheiten zu den anderen Gateways finden Sie in den Entwicklungshinweisen der Aufgabe.\n"
+"\n"
+"Die von diesem Modul implementierte API ist v1.\n"
+"\n"
+"## Details zusammenführen\n"
+"\n"
+"Die erste Version des Moduls wurde in der Aufgabe\n"
+"[2800823](https://www.odoo.com/web#id=2800823&model=project.task) spezifiziert und mit PR\n"
+"odoo/odoo#92848 in `saas-15.5` zusammengeführt.\n"
+"\n"
+"## Testanleitungen\n"
+"\n"
+"Die Telefonnummer des Partners muss eine gültige indische Telefonnumer sein, zum Beispiel: +91123456789\n"
+"\n"
+"Siehe https://razorpay.com/docs/payments/payments/test-card-upi-details/ für die Liste der\n"
+"Testzahlungsdetails.\n"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_users__rules_count
@@ -11312,6 +11511,11 @@ msgid ""
 "- Private: Private addresses are only visible by authorized users and contain sensitive data (employee home addresses, ...).\n"
 "- Other: Other address for the company (e.g. subsidiary, ...)"
 msgstr ""
+"- Verwenden Sie dies, um die Kontaktdaten der Mitarbeiter eines bestimmten Unternehmens zu organisieren (z. B. CEO, CFO ...)\n"
+"- Rechnungsadresse: Bevorzugte Adresse für alle Rechnungen. Wird standardmäßig ausgewählt, wenn Sie einen Auftrag in Rechnung stellen, der zu diesem Unternehmen gehört.\n"
+"- Lieferadresse: Bevorzugte Adresse für alle Lieferungen. Wird standardmäßig ausgewählt, wenn Sie einen Auftrag liefern, der zu diesem Unternehmen gehört.\n"
+"- Privat: Privatadressen sind nur für autorisierte Benutzer sichtbar und enthalten sensible Daten (Privatadressen von Mitarbeitern ...).\n"
+"- Andere: Andere Adresse für das Unternehmen (z. B. Niederlassung ...)."
 
 #. module: base
 #. odoo-python
@@ -11321,6 +11525,8 @@ msgid ""
 "- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Datensatz ist Unternehmen %(company)r und %(field)r (%(fname)s: "
+"%(values)s) gehört zu einem anderen Unternehmen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -11488,7 +11694,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
 msgid "<code>Command</code>: x2many commands namespace"
-msgstr ""
+msgstr "<code>Command</code>: x2many-Befehlsnamensfeld"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11504,6 +11710,8 @@ msgstr ""
 msgid ""
 "<code>_logger.info(message)</code>: logger to emit messages in server logs"
 msgstr ""
+"<code>_logger.info(message)</code>: Datenspeicher zur Ausgabe von Meldungen "
+"in Serverprotokollen"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
@@ -11528,6 +11736,8 @@ msgid ""
 "<code>float_compare()</code>: utility function to compare floats based on a "
 "specific precision"
 msgstr ""
+"<code>float_compare()</code>: Utility-Funktion zum Vergleich von "
+"Zahlenkonstanten auf der Grundlage einer bestimmten Genauigkeit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11535,6 +11745,9 @@ msgid ""
 "<code>log(message, level='info')</code>: logging function to record debug "
 "information in <code>ir.logging</code> table"
 msgstr ""
+"<code>log(message, level='info')</code>: Protokollierfunktion zur "
+"Aufzeichnung von Fehlerbeseitigungsinformationen in "
+"<code>ir.logging</code>-Tabelle"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11542,6 +11755,8 @@ msgid ""
 "<code>model</code>: model of the record on which the action is triggered; is"
 " a void recordset"
 msgstr ""
+"<code>model:</code> Modell des Datensatzes, für den die Aktion ausgelöst "
+"wird; ist ein leerer Datensatz"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -11750,6 +11965,9 @@ msgid ""
 "<span>Preferred address for all deliveries. Selected by default when you "
 "deliver an order that belongs to this company.</span>"
 msgstr ""
+"<span>Bevorzugte Adresse für alle Lieferungen. Wird standardmäßig "
+"ausgewählt, wenn Sie einen Auftrag liefern, der zu diesem Unternehmen "
+"gehört</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -11757,6 +11975,9 @@ msgid ""
 "<span>Preferred address for all invoices. Selected by default when you "
 "invoice an order that belongs to this company.</span>"
 msgstr ""
+"<span>Bevorzugte Adresse für alle Rechnungen. Wird standardmäßig ausgewählt,"
+" wenn Sie einen Auftrag in Rechnung stellen, der zu diesem Unternehmen "
+"gehört</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -11764,6 +11985,8 @@ msgid ""
 "<span>Private addresses are only visible by authorized users and contain "
 "sensitive data (employee home addresses, ...).</span>"
 msgstr ""
+"<span>Privatadressen sind nur für autorisierte Benutzer sichtbar und "
+"enthalten sensible Daten (Privatadressen von Mitarbeitern ...).</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -11771,6 +11994,8 @@ msgid ""
 "<span>Use this to organize the contact details of employees of a given "
 "company (e.g. CEO, CFO, ...).</span>"
 msgstr ""
+"<span>Verwenden Sie dies, um die Kontaktdaten der Mitarbeiter eines "
+"bestimmten Unternehmens zu organisieren (z. B. CEO, CFO ...).</span>"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodulereference
@@ -12108,7 +12333,7 @@ msgstr "A - LANDWIRTSCHAFT, FORSTWIRTSCHAFT UND FISCHEREI"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "A <graph> can only contains <field> nodes, found a <%s>"
-msgstr ""
+msgstr "Eine <graph> kann nur <field>-Knoten enthalten, <%s> gefunden"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_adyen
@@ -12262,6 +12487,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Company "
 "Registry</span></span> already exists ("
 msgstr ""
+"Ein Partner mit derselben <span><span "
+"class=\"o_vat_label\">Registernummer</span></span> existiert bereits ("
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
@@ -12313,6 +12540,9 @@ msgid ""
 "A user without any rights on Appraisals will be able to see the application,"
 " create and manage appraisals for himself and the people he's manager of."
 msgstr ""
+"Ein Benutzer, der keine Rechte für Mitarbeiterbeurteilung hat, kann die "
+"Anwendung sehen, Beurteilungen für sich selbst und die Personen, deren "
+"Vorgesetzter er ist, erstellen und verwalten."
 
 #. module: base
 #: model:ir.module.category,description:base.module_category_human_resources_time_off
@@ -12392,7 +12622,7 @@ msgstr "ABA Überweisung"
 #. module: base
 #: model:res.country,vat_label:base.au
 msgid "ABN"
-msgstr ""
+msgstr "ABN"
 
 #. module: base
 #: model:ir.model,name:base.model_res_users_apikeys_description
@@ -12495,7 +12725,7 @@ msgstr "Zugriffsrechte"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Access Rights Mismatch"
-msgstr ""
+msgstr "Keine Übereinstummung der Zugriffsrechte"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__access_token
@@ -13398,7 +13628,7 @@ msgstr ""
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_N
 msgid "Administrative/Utilities"
-msgstr ""
+msgstr "Verwaltung/Hilfsmittel"
 
 #. module: base
 #. odoo-python
@@ -17494,6 +17724,9 @@ msgid ""
 "Database fetch misses ids (%(missing)s) and has extra ids (%(extra)s), may "
 "be caused by a type incoherence in a previous request"
 msgstr ""
+"Der Datenbankabfrage fehlen IDs (%(missing)s) und hat zusätzliche IDs "
+"(%(extra)s), kann durch eine Typinkohärenz in einer früheren Abfrage "
+"verursacht worden sein"
 
 #. module: base
 #. odoo-python
@@ -18781,7 +19014,7 @@ msgstr "Mitarbeiter - Mexiko"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_hr_account
 msgid "Employees cost registration on production"
-msgstr ""
+msgstr "Kostenregistrierung der Mitarbeiter auf Produktion"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_gantt
@@ -19701,6 +19934,8 @@ msgid ""
 "Field '%(name)s' found in 'groupby' node can only be of type many2one, found"
 " %(type)s"
 msgstr ""
+"In „groupby“-Knoten gefundenes Feld „%(name)s'“ kann nur vom Typ many2one "
+"sein, gefunden %(type)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__help
@@ -20935,7 +21170,7 @@ msgstr "Hardware-Proxy"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
 msgid "Has Diff"
-msgstr ""
+msgstr "Hat Diff."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__has_iap
@@ -22066,12 +22301,12 @@ msgstr "Indien – Lagerbericht (GST)"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_tcs_tds
 msgid "Indian - TCS/TDS Accounting Report and Taxes"
-msgstr ""
+msgstr "Indisch - TCS/TDS-Buchhaltungsbericht und Steuern"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_upi
 msgid "Indian - UPI"
-msgstr ""
+msgstr "Indisch - UPI"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_hr_payroll
@@ -22535,7 +22770,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid special '%(value)s' in button"
-msgstr ""
+msgstr "Ungültige spezielle „%(value)s“ in Schaltfläche"
 
 #. module: base
 #. odoo-python
@@ -22577,7 +22812,7 @@ msgstr "Ungültige Ansicht %(name)sDefinition in %(file)s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid xmlid %(xmlid)s for button of type action."
-msgstr ""
+msgstr "Ungültige xmlid %(xmlid)s für Schaltflächen des Typs Aktion."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_inventory
@@ -22944,7 +23179,7 @@ msgstr "Kirgisistan"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_L
 msgid "L - REAL ESTATE ACTIVITIES"
-msgstr ""
+msgstr "L - IMMOBILIENWIRTSCHAFT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_latam_invoice_document
@@ -23703,7 +23938,7 @@ msgstr "MRP-Features für die Qualitätskontrolle mit IoT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
 msgid "MTO Sale <-> Purchase"
-msgstr ""
+msgstr "Einzelfertigung Verkauf <-> Einkauf"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -24463,7 +24698,7 @@ msgstr "Mexiko - Elektronischer Frachtbrief Comex 4.0"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
 msgid "Mexico - Month 13 Trial Balance"
-msgstr ""
+msgstr "Mexiko - Monat 13 Rohbilanz"
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -25605,6 +25840,7 @@ msgstr "N° Tahiti"
 #: model:res.partner.industry,full_name:base.res_partner_industry_O
 msgid "O - PUBLIC ADMINISTRATION AND DEFENCE; COMPULSORY SOCIAL SECURITY"
 msgstr ""
+"O - ÖFFENTLICHE VERWALTUNG UND VERTEIDIGUNG; GESETZLICHE SOZIALVERSICHERUNG"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_auth_oauth
@@ -27678,7 +27914,7 @@ msgstr "Einführungsratschläge"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_onboarding
 msgid "Onboarding Toolbox"
-msgstr ""
+msgstr "Werkzeugkasten Einführungsphase"
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_stock_margin
@@ -28545,7 +28781,7 @@ msgstr "Kassensystem Stripe"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Page direct ancestor must be notebook"
-msgstr ""
+msgstr "Der direkte Vorfahr der Seite muss ein Notebook sein"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__page_height
@@ -29257,7 +29493,7 @@ msgstr "PostgreSQL Tabellenname implementiert eine many2many Beziehung."
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
 msgid "Precision Digits"
-msgstr ""
+msgstr "Genauigkeitsziffern"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -30004,7 +30240,7 @@ msgstr "Python Expression"
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_Q
 msgid "Q - HUMAN HEALTH AND SOCIAL WORK ACTIVITIES"
-msgstr ""
+msgstr "Q - GESUNDHEIT UND SOZIALARBEIT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__type__qweb
@@ -30078,7 +30314,7 @@ msgstr "Qualitätsschritte und IoT-Geräte"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__sql_count
 msgid "Queries Count"
-msgstr ""
+msgstr "Anzahl Abfragen"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_questions
@@ -30242,7 +30478,7 @@ msgstr "RTN"
 #. module: base
 #: model:res.country,vat_label:base.ec
 msgid "RUC"
-msgstr ""
+msgstr "RUC"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
@@ -32151,7 +32387,7 @@ msgstr "Schneckenpost"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account
 msgid "Snail Mail - Account"
-msgstr ""
+msgstr "Postsendung - Konto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_snailmail_account_followup
@@ -32984,6 +33220,9 @@ msgid ""
 "T - ACTIVITIES OF HOUSEHOLDS AS EMPLOYERS; UNDIFFERENTIATED GOODS- AND "
 "SERVICES-PRODUCING ACTIVITIES OF HOUSEHOLDS FOR OWN USE"
 msgstr ""
+"T - TÄTIGKEITEN PRIVATER HAUSHALTE IN IHRER EIGENSCHAFT ALS ARBEITGEBER; "
+"ERBRINGUNG VON WAREN UND DIENSTLEISTUNGEN DURCH PRIVATE HAUSHALTE FÜR DEN "
+"EIGENBEDARF OHNE AUSGEPRÄGTEN SCHWERPUNKT"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__tgz
@@ -33465,7 +33704,7 @@ msgstr ""
 #: code:addons/base/models/ir_attachment.py:0
 #, python-format
 msgid "The attachment collides with an existing file."
-msgstr ""
+msgstr "Der Anhang kollidiert mit einer bestehenden Datei."
 
 #. module: base
 #: model_terms:res.company,invoice_terms_html:base.main_company
@@ -33854,6 +34093,12 @@ msgid ""
 "Model: %(model_name)s (%(model_tech_name)s)\n"
 "Field: %(field_name)s (%(field_tech_name)s)\n"
 msgstr ""
+"Der Vorgang kann nicht abgeschlossen werden:\n"
+"- Erstellen/Aktualisieren: ein Pflichtfeld ist nicht eingestellt.\n"
+"- Löschen: Ein anderes Modell erfordert das Löschen des Datensatzes. Wenn möglich, archivieren Sie ihn stattdessen.\n"
+"\n"
+"Modell: %(model_name)s (%(model_tech_name)s)\n"
+"Feld: %(field_name)s (%(field_tech_name)s)\n"
 
 #. module: base
 #. odoo-python
@@ -34014,6 +34259,8 @@ msgid ""
 "The root node of a %(view_type)s view should be a <%(view_type)s>, not a "
 "<%(tag)s>"
 msgstr ""
+"Die Wurzel einer %(view_type)s-Ansicht sollte eine <%(view_type)s>, kein "
+"<%(tag)s> sein"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rounding_gt_zero
@@ -34110,6 +34357,9 @@ msgid ""
 "specific access. They'll have access thanks to their interviewer "
 "assignation."
 msgstr ""
+"Der Benutzer, der als Interviewer mit der Anwendung interagiert, benötigt "
+"keinen speziellen Zugang. Sie haben dank ihrer Interviewer-Zuweisung "
+"Zugriff."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__user_id
@@ -34364,6 +34614,8 @@ msgid ""
 "This module allows ecommerce users to choose to deliver to Pick-Up points "
 "for the FEDEX connector."
 msgstr ""
+"Dieses Modul ermöglicht es E-Commerce-Benutzern, Bestellungen an eine "
+"Abholstelle für den FEDEX-Konnektor liefern zu lassen."
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_hr_recruitment
@@ -37572,7 +37824,7 @@ msgstr "Many2many"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "many2many-Felder können nicht per Referenz ausgewertet werden"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

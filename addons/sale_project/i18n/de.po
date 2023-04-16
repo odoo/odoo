@@ -215,6 +215,10 @@ msgid ""
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"Stellen Sie diese Dienstleistung in Rechnung, wenn sie erbracht wurde (legen"
+" Sie die Menge in den Verkaufsauftragspositionen manuell fest). Erstellen "
+"Sie ein Projekt für den Auftrag mit einer Aufgabe für jede "
+"Verkaufsauftragszeile, um die aufgewendete Zeit zu verfolgen."
 
 #. module: sale_project
 #. odoo-python
@@ -225,6 +229,10 @@ msgid ""
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"Stellen Sie diese Dienstleistung in Rechnung, wenn sie erbracht wurde (legen"
+" Sie die Menge in den Verkaufsauftragszeilen manuell fest). Erstellen Sie "
+"eine Aufgabe in einem bestehenden Projekt, um die aufgewendete Zeit zu "
+"verfolgen."
 
 #. module: sale_project
 #. odoo-python
@@ -372,7 +380,7 @@ msgstr "Keine Auftragsposition"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 #: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
 msgid "Non-billable"
-msgstr ""
+msgstr "Nichtabrechenbar"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -550,7 +558,7 @@ msgid ""
 msgstr ""
 "Verkaufauftragsposition, zu der die für diese Aufgabe aufgewendete Zeit hinzugefügt wird, um sie Ihrem Kunden in Rechnung zu stellen.\n"
 "Standardmäßig wird die für das Projekt festgelegte Verkaufauftragsposition ausgewählt. Ist dies nicht der Fall, wird die letzte vorausbezahlte Verkaufauftragsposition verwendet, die noch Zeit übrig hat.\n"
-"Entfernen Sie die Verkaufauftragsposition, um diese Aufgabe nicht fakturierbar zu machen. Sie können die Verkaufauftragsposition auch für jeden Zeiterfassungseintrag einzeln ändern oder entfernen."
+"Entfernen Sie die Verkaufauftragsposition, um diese Aufgabe nichtabrechenbar zu machen. Sie können die Verkaufauftragsposition auch für jeden Zeiterfassungseintrag einzeln ändern oder entfernen."
 
 #. module: sale_project
 #. odoo-python
@@ -579,6 +587,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Verkaufsauftragsposition, die standardmäßig auf den Aufgaben und Zeiterfassungsbögen dieses Projekts ausgewählt wird, es sei denn, der auf den Zeiterfassungsbögen eingestellte Mitarbeiter ist ausdrücklich mit einer anderen Verkaufsauftragsposition des Projekts verknüpft.\n"
+"Er kann bei Bedarf für jede Aufgabe und jeden Zeiterfassungseintrag einzeln geändert werden."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -704,7 +714,7 @@ msgstr ""
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
-msgstr ""
+msgstr "Diese Aufgabe wurde erstellt aus: %s (%s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
@@ -733,7 +743,7 @@ msgstr "Eingangsrechnungen"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "View Sales Order"
-msgstr ""
+msgstr "Verkaufsauftrag anzeigen"
 
 #. module: sale_project
 #. odoo-python
