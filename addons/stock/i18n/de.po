@@ -43,8 +43,8 @@
 # Florian Pose <fp@igh.de>, 2021
 # Robert Förster <hello@suppliot.eu>, 2021
 # Friederike Fasterling-Nesselbosch, 2022
-# Larissa Manderfeld, 2023
 # Niyas Raphy, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -52,7 +52,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Niyas Raphy, 2023\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
 "Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1775,6 +1775,7 @@ msgstr "Datumsverarbeitung"
 #: model:ir.model.fields,help:stock.field_stock_picking__date_deadline
 msgid "Date Promise to the customer on the top level document (SO/PO)"
 msgstr ""
+"Dem Kunden versprochenes Datum auf Auftragsdokument (Verkauf-/Kaufauftrag)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
@@ -3040,12 +3041,12 @@ msgstr "Sofortige Lieferung"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_immediate_transfer_line
 msgid "Immediate Transfer Line"
-msgstr ""
+msgstr "Sofortige Lieferungszeile"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_immediate_transfer__immediate_transfer_line_ids
 msgid "Immediate Transfer Lines"
-msgstr ""
+msgstr "Sofortige Lieferungszeilen"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5251,12 +5252,16 @@ msgstr ""
 #, python-format
 msgid "Quant's creation is restricted, you can't do this operation."
 msgstr ""
+"Mengenerstellung ist eingeschränkt, Sie können diesen Vorgang nicht "
+"durchführen"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Quant's editing is restricted, you can't do this operation."
 msgstr ""
+"Mengenbearbeitung ist eingeschränkt, Sie können diesen Vorgang nicht "
+"durchführen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__quantity
@@ -5573,7 +5578,7 @@ msgstr "Minimale Nachbestellmenge"
 #: model_terms:ir.ui.view,arch_db:stock.stock_reorder_report_search
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Reordering Rule"
-msgstr ""
+msgstr "Nachbestellregeln"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_orderpoint
@@ -5821,7 +5826,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
 msgid "Rule Message"
-msgstr ""
+msgstr "Regelnachricht"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_rules_form
@@ -6280,7 +6285,7 @@ msgstr "Schlummerdatum"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_orderpoint_snooze
 msgid "Snooze Orderpoint"
-msgstr ""
+msgstr "Bestellpunkt schlummern"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_orderpoint_snooze__predefined_date
@@ -6500,7 +6505,7 @@ msgstr "Lagerregel"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_rules_report
 msgid "Stock Rules Report"
-msgstr ""
+msgstr "Bericht über Bestandsregeln"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rules_report
@@ -6602,6 +6607,9 @@ msgid ""
 "Trigger Another Rule: the system will try to find a stock rule to bring the products in the source location. The available stock will be ignored.\n"
 "Take From Stock, if Unavailable, Trigger Another Rule: the products will be taken from the available stock of the source location.If there is no stock available, the system will try to find a  rule to bring the products in the source location."
 msgstr ""
+"Aus dem Bestand nehmen: Die Produkte werden aus dem verfügbaren Bestand des Herkunftsstandortes entnommen.\n"
+"Eine andere Regel auslösen: Das System wird versuchen, eine Bestandsregel zu finden, um die Produkte an den Herkunftsstandort zu bringen. Der verfügbare Bestand wird ignoriert.\n"
+"Aus dem Bestand nehmen, wenn nicht verfügbar, andere Regel auslösen: Die Produkte werden aus dem verfügbaren Bestand des Herkunftsstandortes entnommen; wenn kein Bestand verfügbar ist, versucht das System, eine Regel zu finden, um die Produkte an den Herkunftsstandort zu bringen."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -7344,6 +7352,8 @@ msgstr "Transfers für Gruppen"
 msgid ""
 "Transfers that are late on scheduled time or one of pickings will be late"
 msgstr ""
+"Verspätete Transfers zur geplanten Zeit oder eine der Abholungen werden "
+"verspätet sein"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__transit
@@ -8055,6 +8065,7 @@ msgstr ""
 #, python-format
 msgid "You can not change the type of a product that was already used."
 msgstr ""
+"Sie können nicht den Typ eines Produkts ändern, das bereits benutzt wurde,"
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
