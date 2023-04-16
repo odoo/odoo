@@ -9409,6 +9409,20 @@ msgid ""
 "can setup API keys to replace their main password.\n"
 "    "
 msgstr ""
+"\n"
+"Zwei-Faktoren-Authentifizierung (TOTP)\n"
+"================================\n"
+"Ermöglicht Benutzern die Konfiguration der Zwei-Faktor-Authentifizierung für ihr Benutzerkonto\n"
+"für zusätzliche Sicherheit, indem zeitbasierte Einmalpasswörter (Time-based One-Time Password, TOTP) verwendet werden.\n"
+"\n"
+"Nach der Aktivierung muss der Benutzer einen 6-stelligen Code eingeben,\n"
+"der von seiner Authentifizierungs-App bereitgestellt wird, bevor ihm der Zugang zum System gewährt wird.\n"
+"Alle gängigen Authentifizierungs-Apps werden unterstützt.\n"
+"\n"
+"Hinweis: Logischerweise verhindert die Zwei-Faktor-Authentifizierung den passwortbasierten RPC-Zugang für Benutzer,\n"
+"bei denen sie aktiviert ist. Um RPC-Skripte ausführen zu können, kann der Benutzer\n"
+"API-Schlüssel einrichten, um ihre Hauptpasswörter zu ersetzen.where it is enabled.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_tr
@@ -10134,6 +10148,8 @@ msgid ""
 "- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) "
 "belongs to another company."
 msgstr ""
+"- Datensatz ist Unternehmen %(company)r und %(field)r (%(fname)s: "
+"%(values)s) gehört zu einem anderen Unternehmen."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.report_irmodeloverview
@@ -10874,7 +10890,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "A <graph> can only contains <field> nodes, found a <%s>"
-msgstr ""
+msgstr "Eine <graph> kann nur <field>-Knoten enthalten, <%s> gefunden"
 
 #. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_A
@@ -17853,6 +17869,8 @@ msgid ""
 "Field '%(name)s' found in 'groupby' node can only be of type many2one, found"
 " %(type)s"
 msgstr ""
+"In „groupby“-Knoten gefundenes Feld „%(name)s'“ kann nur vom Typ many2one "
+"sein, gefunden %(type)s"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__help
@@ -19059,7 +19077,7 @@ msgstr "Hardware-Proxy"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__has_diff
 msgid "Has Diff"
-msgstr ""
+msgstr "Hat Diff."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_module_module__has_iap
@@ -20621,7 +20639,7 @@ msgstr ""
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid special '%(value)s' in button"
-msgstr ""
+msgstr "Ungültige spezielle „%(value)s“ in Schaltfläche"
 
 #. module: base
 #: code:addons/template_inheritance.py:0
@@ -20651,7 +20669,7 @@ msgstr "Ungültige Ansicht %(name)sDefinition in %(file)s"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Invalid xmlid %(xmlid)s for button of type action."
-msgstr ""
+msgstr "Ungültige xmlid %(xmlid)s für Schaltflächen des Typs Aktion."
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_inventory
@@ -21814,7 +21832,7 @@ msgstr "MRP-Features für die Qualitätskontrolle mit IoT"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_purchase_stock
 msgid "MTO Sale <-> Purchase"
-msgstr ""
+msgstr "Einzelfertigung Verkauf <-> Einkauf"
 
 #. module: base
 #: model:res.country,name:base.mo
@@ -26562,7 +26580,7 @@ msgstr "Kassensystem Six"
 #: code:addons/base/models/ir_ui_view.py:0
 #, python-format
 msgid "Page direct ancestor must be notebook"
-msgstr ""
+msgstr "Der direkte Vorfahr der Seite muss ein Notebook sein"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_report_paperformat__page_height
@@ -34693,7 +34711,7 @@ msgstr "Many2many"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "many2many fields cannot be evaluated by reference"
-msgstr ""
+msgstr "many2many-Felder können nicht per Referenz ausgewertet werden"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__many2one

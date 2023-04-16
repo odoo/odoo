@@ -2300,7 +2300,7 @@ msgstr "Erzwingen erledigt"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr ""
+msgstr "Erzwungenes Ausstehendes Konto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -2953,12 +2953,12 @@ msgstr "Eingeschränktes Partnerkonto"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_loading
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Limited Partners Loading"
-msgstr ""
+msgstr "Begrenzte Anzahl Partner laden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_products_loading
 msgid "Limited Product Loading"
-msgstr ""
+msgstr "Begrenzte Anzahl Produkte laden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_products_amount
@@ -2968,7 +2968,7 @@ msgstr "Betrag eingeschränkter Produkte"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Limited Products Loading"
-msgstr ""
+msgstr "Begrenzte Anzahl Produkte laden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -3879,7 +3879,7 @@ msgstr "Partner"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__partner_load_background
 msgid "Partner Load Background"
-msgstr ""
+msgstr "Hintergrund beim Laden von Partnern"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4067,7 +4067,7 @@ msgstr "Anzahl auswählen"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "Abholung Kassensystem"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_stock_picking_type
@@ -4470,7 +4470,7 @@ msgstr "Preis zzgl. MwSt.:"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__price_extra
 msgid "Price extra"
-msgstr ""
+msgstr "Preiszusatz"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4606,7 +4606,7 @@ msgstr "Produktkonfigurator"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__product_load_background
 msgid "Product Load Background"
-msgstr ""
+msgstr "Hintergrund beim Laden von Produkten"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4849,7 +4849,7 @@ msgstr "Erstattete Bestellung"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_orderline_id
 msgid "Refunded Order Line"
-msgstr ""
+msgstr "Erstatte Auftragszeile"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5032,7 +5032,7 @@ msgstr "Rundungsfehler in den Zahlungspositionen"
 #: code:addons/point_of_sale/static/src/backend/debug_manager.js:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "JS-Tests für Kassensystem durchführen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -5288,7 +5288,7 @@ msgstr "Sitzungs-ID"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "Journalbuchung der Sitzung"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5651,7 +5651,7 @@ msgstr "Erfolgreich importiert"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "Successfully made a cash %s of %s."
-msgstr ""
+msgstr "Bargeld%s in Höhe von %s war erfolgreich."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
@@ -7181,7 +7181,7 @@ msgstr "Für einen Auftrag von"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "forecasted"
-msgstr ""
+msgstr "prognostiziert"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7219,7 +7219,7 @@ msgstr "Aufträge"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "out"
-msgstr ""
+msgstr "Einzahlung"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7260,6 +7260,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining products in the background.\n"
 "In the meantime, you can click on the 'database icon' in the searchbar to load products from database."
 msgstr ""
+"Wir laden alle mit Sternchen versehenen Produkte (Favoriten), alle Dienstleistungen, kürzliche Lagerbewegungen von Produkten und die zuletzt aktualisierten Produkte.\n"
+"Wenn die Sitzung offen ist, laden wir alle restlichen Produkte weiterhin im Hintergrund.\n"
+"In der Zwischenzeit können Sie auf das „Datenbanksymbol“ in der Suchleiste klicken, um Produkte aus der Datenbank zu laden."
 
 #. module: point_of_sale
 #. openerp-web
