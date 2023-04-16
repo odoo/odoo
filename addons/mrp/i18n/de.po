@@ -10,6 +10,7 @@
 # EugenBrodskiSAMSAIT <eugen.brodski@samsa-it.de>, 2023
 # Ermin Trevisan <trevi@twanda.com>, 2023
 # Martin Trigaux, 2023
+# Niyas Raphy, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -632,7 +633,7 @@ msgstr "Erlaubt"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reserve_visible
 msgid "Allowed to Reserve Production"
-msgstr ""
+msgstr "Reservierte Produktion erlaubt"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__unreserve_visible
@@ -1813,7 +1814,7 @@ msgstr ""
 #: code:addons/mrp/static/src/components/bom_overview_display_filter/mrp_bom_overview_display_filter.xml:0
 #, python-format
 msgid "Display:"
-msgstr ""
+msgstr "Anzeige:"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -2805,7 +2806,7 @@ msgstr "Referenz des Fertigungsauftrags"
 #. module: mrp
 #: model:ir.actions.client,name:mrp.mrp_reception_action
 msgid "MRP Reception Report"
-msgstr ""
+msgstr "MRP-Empfangsbericht"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__group_mrp_routings
@@ -3005,7 +3006,7 @@ msgstr "Fertigungsreferenz"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Manufacturing Visibility Days"
-msgstr ""
+msgstr "Fertigungssichtbarkeitstage"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_workcenter_action
@@ -3130,7 +3131,7 @@ msgstr "Zu verfolgende Buchungen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_consumption_warning_line_ids
 msgid "Mrp Consumption Warning Line"
-msgstr ""
+msgstr "MRP-Verbrauchswarnungszeile"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_consumption_warning__mrp_production_ids
@@ -3298,7 +3299,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_assign_serial_numbers_production
 msgid "Note that components"
-msgstr ""
+msgstr "Beachten Sie, dass die Komponenten"
 
 #. module: mrp
 #. odoo-python
@@ -4753,6 +4754,7 @@ msgstr "Spezifische Kapazitäten"
 msgid ""
 "Specific number of pieces that can be produced in parallel per product."
 msgstr ""
+"Bestimmte Anzahl Teile, die parallel pro  Produkt produziert werden können."
 
 #. module: mrp
 #: model:ir.actions.server,name:mrp.action_production_order_split
@@ -4763,7 +4765,7 @@ msgstr "Aufteilen"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__counter
 msgid "Split #"
-msgstr ""
+msgstr "Aufteilung #"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production_split__production_detailed_vals_ids
@@ -4897,7 +4899,7 @@ msgstr "Lagerbuchungen"
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_reception
 msgid "Stock Reception Report"
-msgstr ""
+msgstr "Bestandsempfangsbericht"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_forecasted_product_product
@@ -4999,11 +5001,15 @@ msgstr "Technisches Feld für Arbeitsplatzansicht"
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce_all
 msgid "Technical field to check if produce all button can be shown"
 msgstr ""
+"Technisches Feld zur Prüfung, ob „Alle produzieren“-Schaltfläche angezeigt "
+"werden kann"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__show_produce
 msgid "Technical field to check if produce button can be shown"
 msgstr ""
+"Technisches Feld zur Prüfung, ob „Produzieren“-Schaltfläche angezeigt werden"
+" kann"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__reserve_visible
@@ -5303,7 +5309,7 @@ msgstr ""
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "This production has been merge in %s"
-msgstr ""
+msgstr "Diese Produktion wurde in %s zusammengeführt."
 
 #. module: mrp
 #. odoo-python
@@ -5728,6 +5734,8 @@ msgid ""
 "Use Manufacturing Orders (MO) to build finished products while consuming "
 "components: i.e. 1 Table = 4 Table Legs + 1 Table Top"
 msgstr ""
+"Verwenden Sie Fertigungsaufträge, um unvollendete Produkte zu bauen, während"
+" Komponenten verbraucht werden: z. B. 1 Tisch = 4 Tischbeine + 1 Tischplatte"
 
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_workorder_dependencies
@@ -5737,7 +5745,7 @@ msgstr "Vorgangsabhängigkeiten verwenden"
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_reception_report
 msgid "Use Reception Report with Manufacturing Orders"
-msgstr ""
+msgstr "Empfangsbericht mit Fertigungsaufträgen verwenden"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.product_product_form_view_bom_button
@@ -5798,7 +5806,7 @@ msgstr "Gefertigtee Mengen anzeigen und zuordnen."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse_orderpoint__manufacturing_visibility_days
 msgid "Visibility Days applied on the manufacturing routes."
-msgstr ""
+msgstr "Auf die Fertigungsrouten angewandte Sichtbarkeitstage."
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__reservation_state__confirmed
@@ -6550,6 +6558,8 @@ msgid ""
 "have multiple lot reservations.<br/>\n"
 "                        Do you want to confirm anyway ?"
 msgstr ""
+"mehrere Losreservierungen haben.<br/>\n"
+"                        Möchten Sie dennoch bestätigen?"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -6582,7 +6592,7 @@ msgstr "Fertigungsauftrag"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "merged"
-msgstr ""
+msgstr "zusammengeführt"
 
 #. module: mrp
 #. odoo-python
@@ -6629,7 +6639,7 @@ msgstr "tatsächliche Dauer"
 #: code:addons/mrp/models/mrp_production.py:0
 #, python-format
 msgid "split"
-msgstr ""
+msgstr "trennen"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_form_view

@@ -14,7 +14,7 @@ msgstr ""
 "POT-Creation-Date: 2023-03-23 09:14+0000\n"
 "PO-Revision-Date: 2023-03-23 10:40+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -64,6 +64,9 @@ msgid ""
 "transactions you intend to capture can only be captured in full. Handle the "
 "transactions individually to capture a partial amount.\"/>"
 msgstr ""
+"<i class=\"fa fa-info-circle oe_inline\" attrs=\"{'invisible': "
+"[('support_partial_capture', '!=', 'full_only')]}\" "
+"title=\"你打算收款的交易中，有部份只能作全額收款。若要進行未足額收款，請分開處理個別交易。\"/>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.manage
@@ -119,6 +122,9 @@ msgid ""
 "                    moment for it to be processed. Check your payment provider configuration if\n"
 "                    the capture is still pending after a few minutes."
 msgstr ""
+"<strong>警告！</strong>有一項未足額收款正待處理。\n"
+"                    請稍等，讓系統先完成處理該筆收款。\n"
+"                    若幾分鐘後，收款仍在處理中，請檢查付款服務商相關設置。"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_capture_wizard_view_form
@@ -1632,7 +1638,7 @@ msgstr "Sips"
 msgid ""
 "Some of the transactions you intend to capture can only be captured in full."
 " Handle the transactions individually to capture a partial amount."
-msgstr ""
+msgstr "你打算收款的交易中，有部份只能作全額收款。若要進行未足額收款，請分開處理個別交易。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
@@ -1667,7 +1673,7 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_capture_wizard__support_partial_capture
 msgid "Support Partial Capture"
-msgstr ""
+msgstr "支援未足額收款"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__payment_method_ids
@@ -1969,7 +1975,7 @@ msgstr "我們的系統尚未驗證此付款方式。"
 msgid ""
 "This transaction has been confirmed following the processing of its partial "
 "capture and partial void transactions (%(provider)s)."
-msgstr ""
+msgstr "交易的未足額收款及未足額取消交易，已完成處理（服務商：%(provider)s），整項交易現予確認。"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
@@ -2132,7 +2138,7 @@ msgstr "交易後處理時是否應建立支付密鑰"
 #: model:ir.model.fields,help:payment.field_payment_capture_wizard__support_partial_capture
 msgid ""
 "Whether each of the transactions' provider supports the partial capture."
-msgstr ""
+msgstr "是否全部交易服務商，都支援未足額收款。"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__callback_is_done
