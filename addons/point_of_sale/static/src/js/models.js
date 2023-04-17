@@ -2038,11 +2038,13 @@ class Orderline extends PosModel {
      * @returns {Number} the total amount of price included taxes
      */
     get_total_taxes_included_in_price() {
-            return this.get_taxes()
-                .filter(tax => tax.price_include)
-                .reduce((sum, tax) => sum + this.get_tax_details()[tax.id],
-                0
-            );
+        const productTaxes = this._getProductTaxesAfterFiscalPosition();
+        const taxDetails = this.get_tax_details();
+        return productTaxes
+            .filter(tax => tax.price_include)
+            .reduce((sum, tax) => sum + taxDetails[tax.id],
+            0
+        );
     }
     _map_tax_fiscal_position(tax, order = false) {
         return this.pos._map_tax_fiscal_position(tax, order);
@@ -2062,6 +2064,17 @@ class Orderline extends PosModel {
      */
     compute_all(taxes, price_unit, quantity, currency_rounding, handle_price_include=true) {
         return this.pos.compute_all(taxes, price_unit, quantity, currency_rounding, handle_price_include);
+    }
+    /**
+     * Calculates the taxes for a product, and converts the taxes based on the fiscal position of the order.
+     *
+     * @returns {Object} The calculated product taxes after filtering and fiscal position conversion.
+     */
+    _getProductTaxesAfterFiscalPosition() {
+        const product = this.get_product();
+        let taxesIds = this.tax_ids || product.taxes_id;
+        taxesIds = _.filter(taxesIds, t => t in this.pos.taxes_by_id);
+        return this.get_taxes_after_fp(taxesIds);
     }
     get_all_prices(){
         var price_unit = this.get_unit_price() * (1.0 - (this.get_discount() / 100.0));
@@ -2679,7 +2692,7 @@ class Order extends PosModel {
     }
     _get_tax_group_key(line) {
         return line
-            .get_taxes()
+            ._getProductTaxesAfterFiscalPosition()
             .map(tax => tax.id)
             .join(',');
     }
