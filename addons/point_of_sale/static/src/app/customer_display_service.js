@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { batched } from "@point_of_sale/js/utils";
 import { effect, Reactive } from "@point_of_sale/utils";
 import { registry } from "@web/core/registry";
 import { pick } from "@web/core/utils/objects";
@@ -136,7 +137,10 @@ export const customerDisplayService = {
             // of having it be a part of the chrome and having to propagate complexity everywhere.
             env.services.customer_display = display;
             // Register an effect to update the display automatically when anything it renders changes
-            effect((display) => display.update(), [display]);
+            effect(
+                batched((display) => display.update()),
+                [display]
+            );
         });
 
         return service;
