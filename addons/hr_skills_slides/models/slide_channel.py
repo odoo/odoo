@@ -60,8 +60,8 @@ class SlideChannelPartner(models.Model):
 class Channel(models.Model):
     _inherit = 'slide.channel'
 
-    def _action_add_members(self, target_partners):
-        res = super()._action_add_members(target_partners)
+    def _action_add_members(self, target_partners, raise_on_access=False):
+        res = super()._action_add_members(target_partners, raise_on_access=raise_on_access)
         for channel in self:
             channel._message_employee_chatter(
                 Markup(_('The employee subscribed to the course <a href="%(link)s">%(course)s</a>')) % {
