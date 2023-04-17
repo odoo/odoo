@@ -11,6 +11,7 @@ import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
 import { memoize } from "@web/core/utils/functions";
 import { url } from "@web/core/utils/urls";
+import { escapeHTML } from "@web/core/utils/strings";
 
 const FETCH_LIMIT = 30;
 
@@ -185,7 +186,7 @@ export class ThreadService {
         }
         try {
             // ordered messages received: newest to oldest
-            const rawMessages = await this.rpc(this.getFetchRoute(thread), {
+            const { messages: rawMessages } = await this.rpc(this.getFetchRoute(thread), {
                 ...this.getFetchParams(thread),
                 limit: FETCH_LIMIT,
                 after,
@@ -295,7 +296,7 @@ export class ThreadService {
      */
     async loadAround(thread, messageId) {
         if (!thread.messages.some(({ id }) => id === messageId)) {
-            const messages = await this.rpc(this.getFetchRoute(thread), {
+            const { messages } = await this.rpc(this.getFetchRoute(thread), {
                 ...this.getFetchParams(thread),
                 around: messageId,
             });
@@ -925,6 +926,32 @@ export class ThreadService {
                 thread.messages.splice(afterIndex - 1, 0, message);
             }
         }
+    }
+
+    /**
+     * @param {string} searchTerm
+     * @param {Thread} thread
+     * @param {number|false} [before]
+     */
+    async search(searchTerm, thread, before = false) {
+        const { messages, count } = await this.rpc(this.getFetchRoute(thread), {
+            ...this.getFetchParams(thread),
+            search_term: escapeHTML(searchTerm),
+            before,
+        });
+        return {
+            count,
+            loadMore: messages.length === FETCH_LIMIT,
+            messages: messages.map((message) => {
+                message.body = markup(message.body);
+                if (message.parentMessage) {
+                    message.parentMessage.body = message.parentMessage.body
+                        ? markup(message.parentMessage.body)
+                        : message.parentMessage.body;
+                }
+                return this.store.Message.insert(message);
+            }),
+        };
     }
 }
 

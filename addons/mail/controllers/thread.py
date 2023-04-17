@@ -16,16 +16,16 @@ class ThreadController(http.Controller):
         return thread._get_mail_thread_data(request_list)
 
     @http.route("/mail/thread/messages", methods=["POST"], type="json", auth="user")
-    def mail_thread_messages(self, thread_model, thread_id, before=None, after=None, around=None, limit=30):
+    def mail_thread_messages(self, thread_model, thread_id, search_term=None, before=None, after=None, around=None, limit=30):
         domain = [
             ("res_id", "=", int(thread_id)),
             ("model", "=", thread_model),
             ("message_type", "!=", "user_notification"),
         ]
-        messages = request.env["mail.message"]._message_fetch(domain, before, after, around, limit)
+        res = request.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
         if not request.env.user._is_public():
-            messages.set_message_done()
-        return messages.message_format()
+            res["messages"].set_message_done()
+        return {**res, "messages": res["messages"].message_format()}
 
     @http.route("/mail/partner/from_email", methods=["POST"], type="json", auth="user")
     def mail_thread_partner_from_email(self, emails):

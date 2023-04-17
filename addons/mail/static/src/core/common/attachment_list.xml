@@ -65,7 +65,7 @@
                     <t t-ref="nonImageMain">
                         <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
                         <div class="overflow-auto d-flex justify-content-center flex-column px-1">
-                            <div t-if="attachment.name" class="text-truncate" t-esc="attachment.name"/>
+                            <div t-if="attachment.name" class="text-truncate" t-out="props.messageSearch?.highlight(attachment.name) ?? attachment.name"/>
                             <small t-if="attachment.extension" class="text-uppercase" t-esc="attachment.extension"/>
                         </div>
                     </t>

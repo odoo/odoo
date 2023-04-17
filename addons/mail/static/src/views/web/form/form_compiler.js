@@ -92,7 +92,7 @@ patch(FormCompiler.prototype, {
             "t[t-component='__comp__.mailComponents.Chatter']"
         );
         setAttributes(chatterContainerXml, {
-            hasMessageListScrollAdjust: "false",
+            isChatterAside: "false",
             isInFormSheetBg: "false",
             saveRecord: "__comp__.props.saveButtonClicked",
         });
@@ -122,7 +122,7 @@ patch(FormCompiler.prototype, {
             );
             setAttributes(sheetBgChatterContainerXml, {
                 isInFormSheetBg: "true",
-                hasMessageListScrollAdjust: "false",
+                isChatterAside: "false",
             });
         }
         // after sheet bg (standard position, either aside or below)
@@ -133,12 +133,12 @@ patch(FormCompiler.prototype, {
             });
             setAttributes(chatterContainerXml, {
                 isInFormSheetBg: "__comp__.hasFileViewer()",
-                hasMessageListScrollAdjust: `__comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
+                isChatterAside: `__comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
             });
         } else {
             setAttributes(chatterContainerXml, {
                 isInFormSheetBg: "false",
-                hasMessageListScrollAdjust: `__comp__.uiService.size >= ${SIZES.XXL}`,
+                isChatterAside: `__comp__.uiService.size >= ${SIZES.XXL}`,
             });
             setAttributes(chatterContainerHookXml, {
                 "t-attf-class": `{{ __comp__.uiService.size >= ${SIZES.XXL} ? "o-aside" : "mt-4 mt-md-0" }}`,

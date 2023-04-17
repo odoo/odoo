@@ -11,7 +11,7 @@ import { Component } from "@odoo/owl";
 export class ActionPanel extends Component {
     static template = "mail.ActionPanel";
     static props = {
-        title: String,
+        title: { type: String, optional: true },
         slots: { type: Object, optional: true },
     };
 }

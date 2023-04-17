@@ -24,22 +24,14 @@ patch(Message.prototype, {
             this.messagePinService.pin(this.message);
         }
     },
-    get attClass() {
-        const res = super.attClass;
-        return Object.assign(res, {
-            "o-cancelSelfAuthored": this.env.pinnedPanel,
-            "mt-1": res["mt-1"] && !this.env.pinnedPanel,
-            "px-3": res["px-3"] && !this.env.pinnedPanel,
-        });
-    },
     get isAlignedRight() {
-        return !this.env.pinnedPanel && super.isAlignedRight;
+        return !this.env.messageCard && super.isAlignedRight;
     },
     getPinOptionText() {
         return this.messagePinService.getPinnedAt(this.message.id) ? _t("Unpin") : _t("Pin");
     },
     get shouldDisplayAuthorName() {
-        if (this.env.pinnedPanel) {
+        if (this.env.messageCard) {
             return true;
         }
         return super.shouldDisplayAuthorName;

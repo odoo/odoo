@@ -849,7 +849,7 @@ class UnfollowFromInboxTest(MailCommon):
         partner_id = self.env.user.partner_id.id
         return list(filter(
             lambda m: m['id'] == message_id,
-            MailMessage._message_fetch(domain=[('needaction', '=', True)])._message_format_personalize(partner_id)))
+            MailMessage._message_fetch(domain=[('needaction', '=', True)])["messages"]._message_format_personalize(partner_id)))
 
     @users('employee')
     @mute_logger('odoo.models')
