@@ -1164,6 +1164,9 @@ var SnippetsMenu = Widget.extend({
             }
             const $oeStructure = $target.closest('.oe_structure');
             if ($oeStructure.length && !$oeStructure.children().length && this.$snippets) {
+                // Deselect any snippet that might be selected (e.g. within a
+                // mega menu)
+                this._activateSnippet(false);
                 // If empty oe_structure, encourage using snippets in there by
                 // making them "wizz" in the panel.
                 this.$snippets.odooBounce();

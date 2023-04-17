@@ -89,6 +89,36 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         self.assertEqual(round(report[0]['delay']), -10, msg="The PO has been confirmed 10 days in advance")
         self.assertEqual(round(report[0]['delay_pass']), 5, msg="There are 5 days between the order date and the planned date")
 
+    def test_02_po_report_note_section_filter(self):
+        po = self.env['purchase.order'].create({
+            'partner_id': self.partner_a.id,
+            'currency_id': self.currency_data['currency'].id,
+            'order_line': [
+                (0, 0, {
+                    'name': 'This is a note',
+                    'display_type': 'line_note',
+                    'product_id': False,
+                    'product_qty': 0.0,
+                    'product_uom': False,
+                    'price_unit': 0.0,
+                    'taxes_id': False,
+                }),
+                (0, 0, {
+                    'name': 'This is a section',
+                    'display_type': 'line_section',
+                    'product_id': False,
+                    'product_qty': 0.0,
+                    'product_uom': False,
+                    'price_unit': 0.0,
+                    'taxes_id': False,
+                }),
+            ],
+        })
+        po.button_confirm()
+
+        result_po = self.env['purchase.report'].search([('order_id', '=', po.id)])
+        self.assertFalse(result_po, "The report should ignore the notes and sections")
+
     def test_avg_price_calculation(self):
         """
             Check that the average price is calculated based on the quantity ordered in each line
