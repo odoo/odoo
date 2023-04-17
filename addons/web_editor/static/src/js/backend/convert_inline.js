@@ -1,7 +1,7 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import { getAdjacentPreviousSiblings, isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
+import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from '../editor/odoo-editor/src/utils/utils';
 
 //--------------------------------------------------------------------------
 // Constants
@@ -685,6 +685,10 @@ async function toInline($editable, cssRules, $iframe) {
             }
         }
     }
+    // Fix card-img-top heights (must happen before we transform everything).
+    for (const imgTop of editable.querySelectorAll('.card-img-top')) {
+        imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
+    }
 
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
@@ -944,8 +948,9 @@ function formatTables($editable) {
         } else if (alignItems === 'flex-end' || alignItems === 'baseline') {
             row.style.verticalAlign = 'bottom';
         } else if (alignItems === 'stretch') {
-            const columns = [...row.children].filter(child => child.nodeName === 'TD');
-            const biggestHeight = Math.max(...columns.map(column => column.clientHeight));
+            const columns = [...row.querySelectorAll('td.o_converted_col')];
+            const commonAncestor = commonParentGet(columns[0], columns[1]);
+            const biggestHeight = commonAncestor.clientHeight;
             for (const column of columns) {
                 column.style.height = biggestHeight + 'px';
             }
