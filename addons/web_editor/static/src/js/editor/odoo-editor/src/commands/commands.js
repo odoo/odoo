@@ -565,7 +565,7 @@ export const editorCommands = {
                     font = [];
                 }
             } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
-                    || node.nodeName === "BR"
+                    || (isEmptyBlock(node.parentNode))
                     || (node.nodeType === Node.ELEMENT_NODE &&
                         ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                         isVisibleStr(node.textContent) &&
