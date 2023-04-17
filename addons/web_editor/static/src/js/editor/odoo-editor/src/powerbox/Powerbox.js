@@ -340,7 +340,7 @@ export class Powerbox {
                     .replace(REGEX_RESERVED_CHARS, '\\$&');
                 if (term.length) {
                     const exactRegex = new RegExp(term, 'i');
-                    const fuzzyRegex = new RegExp(term.split('').join('.*'), 'i');
+                    const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
                     this._context.filteredCommands = this._context.commands.filter(command => {
                         const commandText = (command.category + ' ' + command.name);
                         const commandDescription = command.description.replace(/\s/g, '');
