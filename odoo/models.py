@@ -3520,13 +3520,6 @@ class BaseModel(metaclass=MetaModel):
             if func._ondelete or not self._context.get(MODULE_UNINSTALL_FLAG):
                 func(self)
 
-        # TOFIX: this avoids an infinite loop when trying to recompute a
-        # field, which triggers the recomputation of another field using the
-        # same compute function, which then triggers again the computation
-        # of those two fields
-        for field in self._fields.values():
-            self.env.remove_to_compute(field, self)
-
         self.env.flush_all()
 
         cr = self._cr
@@ -3553,6 +3546,13 @@ class BaseModel(metaclass=MetaModel):
             # been deleted (like updating a sum of lines after deleting one line)
             with self.env.protecting(self._fields.values(), records):
                 self.modified(self._fields, before=True)
+
+            # TOFIX: this avoids an infinite loop when trying to recompute a
+            # field, which triggers the recomputation of another field using the
+            # same compute function, which then triggers again the computation
+            # of those two fields
+            for field in self._fields.values():
+                self.env.remove_to_compute(field, self)
 
             query = f'DELETE FROM "{self._table}" WHERE id IN %s'
             cr.execute(query, (sub_ids,))
