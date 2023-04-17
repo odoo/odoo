@@ -699,17 +699,20 @@ async function toInline($editable, cssRules, $iframe) {
     flattenBackgroundImages(editable);
     responsiveToStaticForOutlook(editable);
     formatTables($editable);
-    // Fix outlook image rendering bug (this change will be kept in both
-    // fields).
+    // Fix outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
         const images = editable.querySelectorAll('img');
         for (const image of images) {
-            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
-            if (!value) {
-                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
+            if (image.style[attributeName] !== 'auto') {
+                let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
+                if (!value) {
+                    value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
+                }
+                if (value) {
+                    image.setAttribute(attributeName, value);
+                    image.style.setProperty(attributeName, value + 'px');
+                }
             }
-            image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, value + 'px');
         };
     };
     enforceImagesResponsivity(editable);
