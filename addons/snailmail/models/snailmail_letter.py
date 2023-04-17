@@ -119,7 +119,14 @@ class SnailmailLetter(models.Model):
 
         self.env['mail.notification'].sudo().create(notification_vals)
 
+        letters.attachment_id.check('read')
         return letters
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'attachment_id' in vals:
+            self.attachment_id.check('read')
+        return res
 
     def _fetch_attachment(self):
         """
