@@ -972,6 +972,32 @@ export async function drag(from, pointerType = "mouse") {
     return dragHelpers;
 }
 
+/**
+ * Returns the dropdown menu for a specific toggler.
+ *
+ * @param {HTMLElement} target
+ * @param {String|HTMLElement} togglerSelector
+ * @returns {HTMLElement|undefined}
+ */
+export function getDropdownMenu(target, togglerSelector) {
+    if (!(target instanceof HTMLElement)) {
+        throw new Error(`getDropdownMenu: target is not an HTMLElement.`);
+    }
+    const el =
+        togglerSelector instanceof HTMLElement
+            ? togglerSelector
+            : target.querySelector(togglerSelector);
+    if (!el) {
+        throw new Error(`getDropdownMenu: Could not find element "${togglerSelector}".`);
+    }
+    if (!el.dataset.popoverFor) {
+        throw new Error(
+            `getDropdownMenu: "${togglerSelector}" is not a dropdown toggler or it is not open.`
+        );
+    }
+    return target.querySelector(`.o-dropdown--menu[data-popover-id="${el.dataset.popoverFor}"]`);
+}
+
 export async function clickDropdown(target, fieldName) {
     const dropdownInput = target.querySelector(`[name='${fieldName}'] .dropdown input`);
     dropdownInput.focus();

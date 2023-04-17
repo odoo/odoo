@@ -348,10 +348,20 @@ export function usePosition(target, options) {
             targetDocument?.addEventListener("scroll", throttledUpdate, { capture: true });
             targetDocument?.addEventListener("load", throttledUpdate, { capture: true });
             window.addEventListener("resize", throttledUpdate);
+
+            // TODO: Validate this fix
+            let resizeObserver = undefined;
+            if (popperRef.el) {
+                resizeObserver = new ResizeObserver(throttledUpdate);
+                resizeObserver.observe(popperRef.el);
+            }
+
             return () => {
                 targetDocument?.removeEventListener("scroll", throttledUpdate, { capture: true });
                 targetDocument?.removeEventListener("load", throttledUpdate, { capture: true });
                 window.removeEventListener("resize", throttledUpdate);
+
+                resizeObserver?.disconnect();
             };
         }
     });

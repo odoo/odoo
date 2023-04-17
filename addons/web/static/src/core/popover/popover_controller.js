@@ -13,25 +13,45 @@ export class PopoverController extends Component {
         </Popover>
     `;
     static components = { Popover };
-    static props = [
-        "target",
-        "close",
-        "closeOnClickAway",
-        "closeOnHoverAway",
-        "component",
-        "componentProps",
-        "popoverProps",
-    ];
+    static props = {
+        target: true,
+        close: true,
+        closeOnClickAway: {
+            type: Function,
+            optional: true,
+        },
+        closeOnHoverAway: {
+            type: Boolean,
+            optional: true,
+        },
+        closeOnEscape: {
+            type: Boolean,
+            optional: true,
+        },
+        component: true,
+        componentProps: true,
+        popoverProps: true,
+        ref: { type: Function, optional: true },
+    };
 
     setup() {
         if (this.props.target.isConnected) {
             this.popoverRef = useChildRef();
+
+            if (this.props.ref) {
+                this.props.ref(this.popoverRef);
+            }
+
             useExternalListener(window, "mousedown", this.onClickAway, { capture: true });
             if (this.props.closeOnHoverAway) {
                 this.closePopoverTimeout = false;
                 useExternalListener(window, "mouseover", this.onHoverAway, { capture: true });
             }
-            useHotkey("escape", () => this.props.close());
+
+            if (this.props.closeOnEscape) {
+                useHotkey("escape", () => this.props.close());
+            }
+
             const targetObserver = new MutationObserver(this.onTargetMutate.bind(this));
             targetObserver.observe(this.props.target.parentElement, { childList: true });
             onWillDestroy(() => targetObserver.disconnect());
