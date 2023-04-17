@@ -139,6 +139,7 @@ function bootstrapToTable(editable) {
     }
     // Now convert all containers with rows to tables.
     for (const container of [...containers].filter(n => [...n.children].some(c => c.classList.contains('row')))) {
+        const isMasonry = container.classList.contains('s_masonry_block') || container.closest('.s_masonry_block');
         // The width of the table was stored in a temporary attribute. Fetch it
         // for use in `_applyColspan` and remove the attribute at the end.
         const containerWidth = parseFloat(container.getAttribute('o-temp-width'));
@@ -175,11 +176,14 @@ function bootstrapToTable(editable) {
             // Apply the row's left/right margin/padding to a wrapper around the
             // table. This allows Bootstrap's weird negative margin strategy on
             // rows to works.
-            const sideSpaceProps = ['margin-left', 'margin-right', 'padding-left', 'padding-right'];
-            if (sideSpaceProps.some(prop => tr.style[prop])) {
+            const horizontalSpacingProps = ['margin-left', 'margin-right', 'padding-left', 'padding-right'];
+            if (!isMasonry && horizontalSpacingProps.some(prop => tr.style[prop])) {
+                // Masonry is so nuts we need to handle it separately and this
+                // particular fix somehow breaks it.
                 const div = document.createElement('div');
-                for (const prop of sideSpaceProps) {
+                for (const prop of horizontalSpacingProps) {
                     div.style.setProperty(prop, tr.style[prop]);
+                    div.classList.add('o_horizontal_spacing');
                     tr.style.removeProperty(prop);
                 }
                 table.before(div);
