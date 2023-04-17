@@ -20,6 +20,20 @@ class TestTracking(MailCommon):
         self.flush_tracking()
         self.record = record.with_context(mail_notrack=False)
 
+    def test_message_track_author(self):
+        """ Checks that the author of the log note matches the user at the time of writing"""
+        with self.mock_mail_gateway():
+            self.record._track_set_author(self.partner_admin)
+            self.record.write({
+                'customer_id': self.partner_employee.id,
+            })
+            self.flush_tracking()
+
+        self.assertEqual(len(self.record.message_ids), 1)
+        self.assertEqual(len(self.record.message_ids.tracking_value_ids), 1)
+
+        self.assertEqual(self.record.message_ids.author_id, self.partner_admin)
+
     def test_message_track_no_tracking(self):
         """ Update a set of non tracked fields -> no message, no tracking """
         self.record.write({
@@ -41,6 +55,7 @@ class TestTracking(MailCommon):
 
         # one new message containing tracking; without subtype linked to tracking, a note is generated
         self.assertEqual(len(self.record.message_ids), 1)
+        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
         self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('mail.mt_note'))
 
         # no specific recipients except those following notes, no email
@@ -70,6 +85,7 @@ class TestTracking(MailCommon):
         self.flush_tracking()
         # one new message containing tracking; subtype linked to tracking
         self.assertEqual(len(self.record.message_ids), 1)
+        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
         self.assertEqual(self.record.message_ids.subtype_id, self.env.ref('test_mail.st_mail_test_ticket_container_upd'))
 
         # no specific recipients except those following container
@@ -97,6 +113,7 @@ class TestTracking(MailCommon):
         self.assertEqual(len(self.record.message_ids), 2, 'should have 2 new messages: one for tracking, one for template')
 
         # one new message containing the template linked to tracking
+        self.assertEqual(self.record.message_ids[0].author_id, self.partner_employee)
         self.assertEqual(self.record.message_ids[0].subject, 'Test Template')
         self.assertEqual(self.record.message_ids[0].body, '<p>Hello Test2</p>')
 
@@ -125,6 +142,7 @@ class TestTracking(MailCommon):
 
         self.assertEqual(len(record.message_ids), 1, 'should have 1 new messages for template')
         # one new message containing the template linked to tracking
+        self.assertEqual(record.message_ids[0].author_id, self.partner_employee)
         self.assertEqual(record.message_ids[0].subject, 'Test Template')
         self.assertEqual(record.message_ids[0].body, '<p>Hello Test</p>')
         # one email send due to template
@@ -256,6 +274,7 @@ class TestTracking(MailCommon):
 
         # should have a single message with all tracked fields
         self.assertEqual(len(self.record.message_ids), 1, 'should have 1 tracking message')
+        self.assertEqual(self.record.message_ids.author_id, self.partner_employee)
         self.assertTracking(self.record.message_ids[0], [
             ('customer_id', 'many2one', False, self.user_admin.partner_id),
             ('user_id', 'many2one', False, self.user_admin),
@@ -280,6 +299,7 @@ class TestTracking(MailCommon):
         self.flush_tracking()
         self.assertEqual(len(record.message_ids), 2)
         self.assertEqual(len(record.message_ids[0].tracking_value_ids), 4)
+        self.assertEqual(record.message_ids.author_id, self.partner_root)
         self.assertTracking(record.message_ids[0], [
             ('partner_id', 'many2one', False, partner),
             ('partner_name', 'char', False, 'Foo'),

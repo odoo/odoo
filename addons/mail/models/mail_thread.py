@@ -538,6 +538,14 @@ class MailThread(models.AbstractModel):
         # we have to flush() again in case we triggered some recomputations
         self.env.flush_all()
 
+    def _track_set_author(self, author):
+        """ Set the author of the tracking message. """
+        if not self._track_get_fields():
+            return
+        authors = self.env.cr.precommit.data.setdefault(f'mail.tracking.author.{self._name}', {})
+        for id_ in self.ids:
+            authors[id_] = author
+
     def _track_set_log_message(self, message):
         """ Link tracking to a message logged as body, in addition to subtype
         description (if set) and tracking values that make the core content of
@@ -596,6 +604,7 @@ class MailThread(models.AbstractModel):
 
         # find content to log as body
         bodies = self.env.cr.precommit.data.pop(f'mail.tracking.message.{self._name}', {})
+        authors = self.env.cr.precommit.data.pop(f'mail.tracking.author.{self._name}', {})
         for record in self:
             changes, tracking_value_ids = tracking.get(record.id, (None, None))
             if not changes:
@@ -606,18 +615,21 @@ class MailThread(models.AbstractModel):
                 dict((col_name, initial_values_dict[record.id][col_name])
                      for col_name in changes)
             )
+            author_id = authors[record.id].id if record.id in authors else None
             if subtype:
                 if not subtype.exists():
                     _logger.debug('subtype "%s" not found' % subtype.name)
                     continue
                 record.message_post(
                     body=bodies.get(record.id) or '',
+                    author_id=author_id,
                     subtype_id=subtype.id,
                     tracking_value_ids=tracking_value_ids
                 )
             elif tracking_value_ids:
                 record._message_log(
                     body=bodies.get(record.id) or '',
+                    author_id=author_id,
                     tracking_value_ids=tracking_value_ids
                 )
 
