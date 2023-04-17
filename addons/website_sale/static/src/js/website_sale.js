@@ -8,7 +8,8 @@ var _t = core._t;
 var timeout;
 
 publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
-    selector: '#top_menu a[href$="/shop/cart"]',
+    // TODO in master: remove the second selector.
+    selector: '#top a[href$="/shop/cart"], #top_menu a[href$="/shop/cart"]',
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
