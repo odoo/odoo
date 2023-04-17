@@ -14,7 +14,7 @@ registry.category("web_tour.tours").add("mail.load_message_order", {
             run: "click",
         },
         {
-            trigger: ".o-discuss-PinnedMessagesPanel-jump",
+            trigger: ".o-mail-MessageCard-jump",
             run: "click",
         },
         {

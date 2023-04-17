@@ -933,28 +933,31 @@ class Message(models.Model):
         return {}
 
     @api.model
-    def _message_fetch(self, domain, before=None, after=None, around=None, limit=30):
-        """ Get a limited amount of formatted messages with provided domain.
-            :param domain: the domain to filter messages;
-            :param before: fetch messages before this message id.
-            :param after: fetch messages after this message id.
-            :param around: fetch messages around this message id
-                i.e. limit//2 before and limit//2 after.
-            :param limit: the maximum amount of messages to get;
-            :returns: record set of mail.message sorted in descending order.
-        """
+    def _message_fetch(self, domain, search_term=None, before=None, after=None, around=None, limit=30):
+        res = {}
+        if search_term:
+            # we replace every space by a % to avoid hard spacing matching
+            search_term = search_term.replace(" ", "%")
+            domain = expression.AND([domain, expression.OR([
+                [("attachment_ids.name", "ilike", search_term)],
+                [("body", "ilike", search_term)],
+                [("subject", "ilike", search_term)],
+                [("subtype_id.description", "ilike", search_term)],
+            ])])
+            domain = expression.AND([domain, [("message_type", "not in", ["user_notification", "notification"])]])
+            res["count"] = self.search_count(domain)
         if around:
             messages_before = self.search(domain=[*domain, ('id', '<=', around)], limit=limit // 2, order="id DESC")
             messages_after = self.search(domain=[*domain, ('id', '>', around)], limit=limit // 2, order='id ASC')
-            return (messages_after + messages_before).sorted('id', reverse=True)
+            return {**res, "messages": (messages_after + messages_before).sorted('id', reverse=True)}
         if before:
             domain = expression.AND([domain, [('id', '<', before)]])
         if after:
             domain = expression.AND([domain, [('id', '>', after)]])
-        message_ids = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
+        res["messages"] = self.search(domain, limit=limit, order='id ASC' if after else 'id DESC')
         if after:
-            message_ids = message_ids.sorted('id', reverse=True)
-        return message_ids
+            res["messages"] = res["messages"].sorted('id', reverse=True)
+        return res
 
     def message_format(self, format_reply=True, msg_vals=None):
         """ Get the message values in the format for web client. Since message

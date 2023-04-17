@@ -69,7 +69,7 @@
                                    'justify-content-end': isAlignedRight,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,
                                    'ps-2': env.inChatWindow and isAlignedRight and state.isEditing,
-                                   'pe-4': env.inChatWindow and !isAlignedRight and !state.isEditing,
+                                   'pe-4': env.inChatWindow and !isAlignedRight and !state.isEditing and !env.messageCard,
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
@@ -94,11 +94,11 @@
                                                     <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="env.inChatter ? 'extended' : 'compact'" sidebar="false"/>
                                                     <t t-else="">
                                                         <button t-if="message.type === 'email'" class="o-mail-Message-originalEmailText d-block float-end p-1 mb-1 btn btn-link opacity-75 fst-italic" t-att-class="env.inChatWindow and isAlignedRight ? 'me-3' : 'ms-3'" t-esc="originalEmailText" t-on-click="() => this.state.originalEmail = !this.state.originalEmail"/>
-                                                        <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
+                                                        <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-out="props.messageSearch?.highlight(message.subject) ?? message.subject"/></em>
                                                         <div t-if="message.type === 'email'" t-ref="shadowBody"/>
-                                                        <t t-elif="message.body" t-out="message.body"/>
+                                                        <t t-if="message.body" t-out="props.messageSearch?.highlight(message.body) ?? message.body"/>
                                                         <!-- <small t-if="message.editDate" class="o-mail-Message-edited fst-italic text-muted" t-att-class="{ 'ms-2': !message.isBodyEmpty }" t-att-title="message.editDatetimeHuge">(edited)</small> --> <!-- DISABLED because new messages sent by email are wrongly flagged as (edited) -->
-                                                        <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
+                                                        <t t-if="showSubtypeDescription" t-out="props.messageSearch?.highlight(message.subtypeDescription) ?? message.subtypeDescription"/>
                                                     </t>
                                                 </div>
                                             </div>
@@ -110,7 +110,8 @@
                                     t-if="message.attachments.length > 0"
                                     attachments="message.attachments.map((a) => a)"
                                     unlinkAttachment.bind="onClickAttachmentUnlink"
-                                    imagesHeight="message.attachments.length === 1 ? 300 : 75"/>
+                                    imagesHeight="message.attachments.length === 1 ? 300 : 75"
+                                    messageSearch="props.messageSearch"/>
                                 <LinkPreviewList t-if="message.linkPreviews.length > 0 and store.hasLinkPreviewFeature and !message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="deletable"/>
                             </div>
                             <t t-if="!message.hasTextContent or env.inChatWindow" t-call="mail.Message.actions"/>

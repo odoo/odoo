@@ -157,6 +157,10 @@ export function useAutoScroll(refName, shouldScrollPredicate = () => true) {
     onPatched(applyScroll);
 }
 
+/**
+ * @param {string} refName
+ * @param {function} cb
+ */
 export function useVisible(refName, cb, { init = false } = {}) {
     const ref = useRef(refName);
     const state = { isVisible: init };
@@ -198,12 +202,11 @@ export function useVisible(refName, cb, { init = false } = {}) {
  * This hook eases adjusting scroll position by snapshotting scroll
  * properties of scrollable in onWillPatch / onPatched hooks.
  *
- * @param {string} refName
+ * @param {import("@web/core/utils/hooks").Ref} ref
  * @param {function} param1.onWillPatch
  * @param {function} param1.onPatched
  */
-export function useScrollSnapshot(refName, { onWillPatch: p_onWillPatch, onPatched: p_onPatched }) {
-    const ref = useRef(refName);
+export function useScrollSnapshot(ref, { onWillPatch: p_onWillPatch, onPatched: p_onPatched }) {
     const snapshot = {
         scrollHeight: null,
         scrollTop: null,

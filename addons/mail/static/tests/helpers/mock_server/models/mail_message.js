@@ -147,7 +147,13 @@ patch(MockServer.prototype, {
      * @param {integer} [limit=30]
      * @returns {Object[]}
      */
-    _mockMailMessage_MessageFetch(domain, before, after, around, limit = 30) {
+    _mockMailMessage_MessageFetch(domain, search_term, before, after, around, limit = 30) {
+        const res = {};
+        if (search_term) {
+            search_term = search_term.replace(" ", "%");
+            domain.push(["body", "ilike", search_term]);
+            res.count = this.pyEnv["mail.message"].searchCount(domain);
+        }
         if (around) {
             const messagesBefore = this.getRecords(
                 "mail.message",
@@ -159,7 +165,7 @@ patch(MockServer.prototype, {
                 domain.concat([["id", ">", around]])
             ).sort((m1, m2) => m1.id - m2.id);
             messagesAfter.length = Math.min(messagesAfter.length, limit / 2);
-            return messagesAfter.concat(messagesBefore.reverse());
+            return { ...res, messages: messagesAfter.concat(messagesBefore.reverse()) };
         }
         if (before) {
             domain.push(["id", "<", before]);
@@ -174,7 +180,8 @@ patch(MockServer.prototype, {
         });
         // pick at most 'limit' messages
         messages.length = Math.min(messages.length, limit);
-        return messages;
+        res.messages = messages;
+        return res;
     },
     /**
      * Simulates `message_format` on `mail.message`.

@@ -13,10 +13,11 @@ import { url } from "@web/core/utils/urls";
  * @property {import("models").Attachment[]} attachments
  * @property {function} unlinkAttachment
  * @property {number} imagesHeight
+ * @property {ReturnType<import('@mail/core/common/message_search_hook').useMessageSearch>} [messageSearch]
  * @extends {Component<Props, Env>}
  */
 export class AttachmentList extends Component {
-    static props = ["attachments", "unlinkAttachment", "imagesHeight"];
+    static props = ["attachments", "unlinkAttachment", "imagesHeight", "messageSearch?"];
     static template = "mail.AttachmentList";
 
     setup() {

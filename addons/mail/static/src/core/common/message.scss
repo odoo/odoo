@@ -36,7 +36,7 @@
     }
 }
 
-.o-mail-ChatWindow .o-mail-Message:not(.o-cancelSelfAuthored).o-selfAuthored {
+.o-mail-ChatWindow .o-mail-Message.o-selfAuthored {
     flex-direction: row-reverse;
 
     .o-mail-Message-core, .o-mail-Message-textContent {
@@ -72,6 +72,10 @@
     &:hover {
         background-color: rgba(0, 0, 0, 0.075);
     }
+}
+
+.o-mail-Message-searchHighlight {
+    background: rgba($warning, 0.75);
 }
 
 .o-mail-Message-starred {
