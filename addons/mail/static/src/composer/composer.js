@@ -484,7 +484,7 @@ export class Composer extends Component {
     async editMessage() {
         if (this.ref.el.value || this.props.composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
-                this.messageService.update(
+                this.messageService.edit(
                     this.props.composer.message,
                     value,
                     this.props.composer.attachments,

@@ -29,7 +29,7 @@ export class MessageService {
         this.attachmentService = services["mail.attachment"];
     }
 
-    async update(message, body, attachments = [], rawMentions) {
+    async edit(message, body, attachments = [], rawMentions) {
         if (convertBrToLineBreak(message.body) === body && attachments.length === 0) {
             return;
         }
@@ -198,10 +198,9 @@ export class MessageService {
 
     /**
      * @param {Object} data
-     * @param {boolean} [fromFetch=false]
      * @returns {Message}
      */
-    insert(data, fromFetch = false) {
+    insert(data) {
         let message;
         if (data.res_id) {
             // FIXME this prevents cyclic dependencies between mail.thread and mail.message
@@ -217,7 +216,7 @@ export class MessageService {
             message._store = this.store;
             message = this.store.messages[data.id] = message;
         }
-        this._update(message, data, fromFetch);
+        this.update(message, data);
         this.updateNotifications(message);
         // return reactive version
         return message;
@@ -226,9 +225,8 @@ export class MessageService {
     /**
      * @param {import("@mail/core/message_model").Message} message
      * @param {Object} data
-     * @param {boolean} [fromFetch=false]
      */
-    _update(message, data, fromFetch = false) {
+    update(message, data) {
         if (message.pinned_at && data.pinned_at === false) {
             removeFromArrayWithPredicate(
                 message.originThread.pinnedMessages,
