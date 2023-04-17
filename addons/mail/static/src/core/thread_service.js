@@ -243,8 +243,7 @@ export class ThreadService {
                         : data.parentMessage.body;
                 }
                 return this.messageService.insert(
-                    Object.assign(data, { body: data.body ? markup(data.body) : data.body }),
-                    true
+                    Object.assign(data, { body: data.body ? markup(data.body) : data.body })
                 );
             });
             this.update(thread, { isLoaded: true });
