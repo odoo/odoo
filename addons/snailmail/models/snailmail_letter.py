@@ -114,7 +114,14 @@ class SnailmailLetter(models.Model):
             'notification_status': 'ready',
         })
 
+        letter.attachment_id.check('read')
         return letter
+
+    def write(self, vals):
+        res = super().write(vals)
+        if 'attachment_id' in vals:
+            self.attachment_id.check('read')
+        return res
 
     def _fetch_attachment(self):
         """
