@@ -333,7 +333,7 @@ export class Powerbox {
         term = term.replace(/\s/g, '\\s');
         term = term.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
         const exactRegex = new RegExp(term, 'i');
-        const fuzzyRegex = new RegExp(term.split('').join('.*'), 'i');
+        const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
         if (term.length) {
             commands = initialCommands.filter(command => {
                 const commandText = (command.groupName + ' ' + command.title);
