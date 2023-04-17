@@ -29,7 +29,8 @@
             >
                 <div class="d-flex bg-view flex-grow-1"
                     t-att-class="{
-                        'border-top border-bottom': compact,
+                        'border-top border-bottom': compact and !props.composer.message,
+                        'border': props.composer.message,
                         'border border-end-0 rounded-start-3' : normal,
                         'border rounded-3 align-self-stretch flex-column' : extended,
                     }"
