@@ -6,7 +6,7 @@
         inherit_id="sale.sale_order_portal_content">
         <xpath expr="//div[@id='so_date']" position="after">
             <div t-if="sale_order.incoterm" class="row">
-                <div class="mb-3 col-6 ms-auto">
+                <div class="mb-3 col-6">
                     <div class="col-auto mw-100 mb-2" t-if="sale_order.incoterm" name="invoice_incoterm_id">
                         <strong>Incoterm:</strong>
                         <p t-if="sale_order.incoterm_location">
@@ -29,21 +29,23 @@
                         <t t-set="delivery_report_url"
                            t-value="'/my/picking/pdf/%s?%s' % (picking.id, keep_query())"/>
                         <div name="delivery_order"
-                            class="d-flex flex-wrap align-items-center justify-content-between">
+                            class="d-flex flex-wrap align-items-center">
                             <div name="delivery_details">
                                 <a t-att-href="delivery_report_url">
                                     <span t-esc="picking.name"/>
                                 </a>
-                                <div class="small d-lg-inline-block ms-3">
-                                    Date:
-                                    <span class="text-muted"
-                                        t-field="picking.date_done"
-                                        t-options="{'date_only': True}"/>
-                                    <span t-if="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
-                                        class="text-muted"
-                                        t-field="picking.scheduled_date"
-                                        t-options="{'date_only': True}"/>
-                                </div>
+                                <t t-if="picking.date_done or picking.scheduled_date">
+                                    <div class="small d-lg-inline-block ms-3">
+                                        Date:
+                                        <span class="text-muted"
+                                            t-field="picking.date_done"
+                                            t-options="{'date_only': True}"/>
+                                        <span t-if="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
+                                            class="text-muted"
+                                            t-field="picking.scheduled_date"
+                                            t-options="{'date_only': True}"/>
+                                    </div>
+                                </t>
                             </div>
                             <div t-if="picking.state == 'done'">
                                 <span class="small badge text-bg-success orders_label_text_align">
@@ -55,12 +57,12 @@
                                 </a>
                             </div>
                             <span t-elif="picking.state == 'cancel'"
-                                class="small badge text-bg-danger orders_label_text_align">
-                                <i class="fa fa-fw fa-times"/> <b>Cancelled</b>
+                                class="small badge bg-danger-light text-danger fw-normal orders_label_text_align">
+                                <i class="fa fa-fw fa-times"/>Cancelled
                             </span>
                             <span t-elif="picking.state in ['draft', 'waiting', 'confirmed', 'assigned']"
                                 class="small badge text-bg-info orders_label_text_align">
-                                <i class="fa fa-fw fa-clock-o"/> <b>Preparation</b>
+                                <i class="fa fa-fw fa-clock-o"/>Preparation
                             </span>
                         </div>
                     </t>

@@ -75,7 +75,7 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
                         lastLI = $("<li class='nav-item'>")
                             .append(
                                 $(
-                                    '<a class="nav-link" style="max-width: 200px;" href="#' +
+                                    '<a class="nav-link p-0" style="max-width: 200px;" href="#' +
                                         id +
                                         '"/>'
                                 ).text(text)
@@ -96,7 +96,7 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
                             $("<li class='nav-item'>")
                                 .append(
                                     $(
-                                        '<a class="nav-link" style="max-width: 200px;" href="#' +
+                                        '<a class="nav-link p-0" style="max-width: 200px;" href="#' +
                                             id +
                                             '"/>'
                                     ).text(text)

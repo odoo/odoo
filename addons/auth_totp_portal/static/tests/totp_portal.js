@@ -73,7 +73,7 @@ registry.category("web_tour.tours").add('totportal_login_enabled', {
     }
 }, {
     content: "check we're logged in",
-    trigger: "h3:contains(Documents)",
+    trigger: "h3:contains(My account)",
     run: () => {}
 }, {
     content: "go back to security",
@@ -117,6 +117,6 @@ registry.category("web_tour.tours").add('totportal_login_disabled', {
     trigger: 'button:contains("Log in")',
 }, {
     content: "check we're logged in",
-    trigger: "h3:contains(Documents)",
+    trigger: "h3:contains(My account)",
     run: () => {}
 }]});
