@@ -695,6 +695,7 @@ async function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
+    enforceImagesResponsivity(editable);
     enforceTablesResponsivity(editable);
     flattenBackgroundImages(editable);
     responsiveToStaticForOutlook(editable);
@@ -715,7 +716,6 @@ async function toInline($editable, cssRules, $iframe) {
             }
         };
     };
-    enforceImagesResponsivity(editable);
 
     // Remove contenteditable attributes
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
