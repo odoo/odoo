@@ -1,9 +1,10 @@
 /* @odoo-module */
 
-import { useComponent, useState } from "@odoo/owl";
+import { useSubEnv, useComponent, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 
 export const threadActionsRegistry = registry.category("mail.thread/actions");
 
@@ -49,6 +50,37 @@ threadActionsRegistry
             component.close();
         },
         sequence: 100,
+    })
+    .add("search-messages", {
+        component: SearchMessagesPanel,
+        condition(component) {
+            return (
+                ["discuss.channel", "mail.box"].includes(component.thread?.model) &&
+                (!component.props.chatWindow || component.props.chatWindow.isOpen)
+            );
+        },
+        panelOuterClass: "o-mail-SearchMessagesPanel",
+        icon: "oi oi-fw oi-search",
+        iconLarge: "oi oi-fw oi-search",
+        name: _t("Search Messages"),
+        nameActive: _t("Close Search"),
+        sequence: (component) => {
+            const res = component.env.inDiscussApp ? 8 : 16;
+            return res;
+        },
+        setup(action) {
+            useSubEnv({
+                searchMenu: {
+                    open: () => action.open(),
+                    close: () => {
+                        if (action.isActive) {
+                            action.close();
+                        }
+                    },
+                },
+            });
+        },
+        toggle: true,
     });
 
 function transformAction(component, id, action) {

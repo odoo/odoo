@@ -52,17 +52,17 @@ class ChannelController(http.Controller):
 
     @http.route("/discuss/channel/messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context
-    def discuss_channel_messages(self, channel_id, before=None, after=None, limit=30, around=None):
+    def discuss_channel_messages(self, channel_id, search_term=None, before=None, after=None, limit=30, around=None):
         channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_context_or_raise(channel_id=int(channel_id))
         domain = [
             ("res_id", "=", channel_id),
             ("model", "=", "discuss.channel"),
             ("message_type", "!=", "user_notification"),
         ]
-        messages = channel_member_sudo.env["mail.message"]._message_fetch(domain, before, after, around, limit)
+        res = channel_member_sudo.env["mail.message"]._message_fetch(domain, search_term=search_term, before=before, after=after, around=around, limit=limit)
         if not request.env.user._is_public() and not around:
-            messages.set_message_done()
-        return messages.message_format()
+            res["messages"].set_message_done()
+        return {**res, "messages": res["messages"].message_format()}
 
     @http.route("/discuss/channel/pinned_messages", methods=["POST"], type="json", auth="public")
     @add_guest_to_context

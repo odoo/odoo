@@ -25,24 +25,25 @@ export const PRESENT_THRESHOLD = 2500;
  * @property {import("@mail/utils/common/hooks").MessageToReplyTo} [messageToReplyTo]
  * @property {"asc"|"desc"} [order="asc"]
  * @property {import("models").Thread} thread
+ * @property {string} [searchTerm]
+ * @property {import("@web/core/utils/hooks").Ref} [scrollRef]
  * @extends {Component<Props, Env>}
  */
 export class Thread extends Component {
     static components = { Message, Transition, DateSection };
     static props = [
         "isInChatWindow?",
-        "hasScrollAdjust?",
         "jumpPresent?",
         "thread",
         "messageEdition?",
         "messageToReplyTo?",
         "order?",
+        "scrollRef?",
     ];
     static defaultProps = {
         isInChatWindow: false,
-        hasScrollAdjust: true,
         jumpPresent: 0,
-        order: "asc", // 'asc' or 'desc'
+        order: "asc",
     };
     static template = "mail.Thread";
 
@@ -55,17 +56,16 @@ export class Thread extends Component {
             showJumpPresent: false,
         });
         this.threadService = useState(useService("mail.thread"));
-        if (!this.env.inChatter || !this.props.hasScrollAdjust) {
-            useAutoScroll("messages", () => {
-                if (this.env.messageHighlight?.highlightedMessageId) {
-                    return false;
-                }
-                if (this.props.thread.scrollPosition.isSaved) {
-                    return false;
-                }
-                return true;
-            });
-        }
+        useAutoScroll("messages", () => {
+            if (this.env.messageHighlight?.highlightedMessageId) {
+                return false;
+            }
+            if (this.props.thread.scrollPosition.isSaved) {
+                return false;
+            }
+            return true;
+        });
+        /** @type {ReturnType<import('@mail/utils/common/hooks').useMessageHighlight>|null} */
         this.messageHighlight = this.env.messageHighlight
             ? useState(this.env.messageHighlight)
             : null;
@@ -92,34 +92,35 @@ export class Thread extends Component {
             this.props.thread.scrollPosition,
             "bottom"
         );
-        if (!this.env.inChatter || !this.props.hasScrollAdjust) {
-            useScrollSnapshot("messages", {
-                onWillPatch: () => {
-                    return {
-                        hasMoreMsgsAbove:
-                            this.props.thread.oldestPersistentMessage?.id <
-                                this.oldestPersistentMessage && this.props.order === "asc",
-                        hasMoreMsgBelow:
-                            this.props.thread.loadNewer &&
-                            this.props.thread.newestPersistentMessage?.id >
-                                this.newestPersistentMessage &&
-                            this.props.order === "asc",
-                    };
-                },
-                onPatched: ({ hasMoreMsgsAbove, hasMoreMsgBelow, scrollTop, scrollHeight }) => {
-                    const el = this.messagesRef.el;
-                    if (!this.isJumpingRecent) {
-                        if (hasMoreMsgsAbove) {
-                            el.scrollTop = scrollTop + el.scrollHeight - scrollHeight;
-                        } else if (hasMoreMsgBelow) {
-                            el.scrollTop = scrollTop;
-                        }
+        useScrollSnapshot(this.env.inChatter ? this.props.scrollRef : this.messagesRef, {
+            onWillPatch: () => {
+                return {
+                    hasMoreMsgsAbove:
+                        this.props.thread.oldestPersistentMessage?.id <
+                        this.oldestPersistentMessage,
+                    hasMoreMsgBelow:
+                        this.props.thread.loadNewer &&
+                        this.props.thread.newestPersistentMessage?.id >
+                            this.newestPersistentMessage,
+                };
+            },
+            onPatched: ({ hasMoreMsgsAbove, hasMoreMsgBelow, scrollTop, scrollHeight }) => {
+                const el = this.messagesRef.el;
+                if (!this.isJumpingRecent) {
+                    if (hasMoreMsgsAbove) {
+                        el.scrollTop = this.env.inChatter
+                            ? scrollTop
+                            : scrollTop + el.scrollHeight - scrollHeight;
+                    } else if (hasMoreMsgBelow) {
+                        el.scrollTop = this.env.inChatter
+                            ? scrollTop + el.scrollHeight - scrollHeight
+                            : scrollTop;
                     }
-                    this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
-                    this.newestPersistentMessage = this.props.thread.newestPersistentMessage?.id;
-                },
-            });
-        }
+                }
+                this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
+                this.newestPersistentMessage = this.props.thread.newestPersistentMessage?.id;
+            },
+        });
         useEffect(
             () => this.updateShowJumpPresent(),
             () => [this.props.thread.loadNewer]
@@ -142,7 +143,7 @@ export class Thread extends Component {
                     return;
                 }
                 this.oldestPersistentMessage = this.props.thread.oldestPersistentMessage?.id;
-                if (!this.env.inChatter || !this.props.hasScrollAdjust) {
+                if (!this.env.inChatter) {
                     this.scrollPosition.restore();
                     this.updateShowJumpPresent();
                 }

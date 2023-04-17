@@ -898,7 +898,8 @@ class Channel(models.Model):
         domain = ["&", ("model", "=", "discuss.channel"), ("res_id", "in", self.ids)]
         if last_id:
             domain.append(("id", "<", last_id))
-        return self.env['mail.message']._message_fetch(domain=domain, limit=limit).message_format()
+        res = self.env['mail.message']._message_fetch(domain=domain, limit=limit)
+        return res["messages"].message_format()
 
     def _channel_format(self, fields=None):
         if not fields:

@@ -7,10 +7,11 @@ import { useDropzone } from "@mail/core/common/dropzone_hook";
 import { Thread } from "@mail/core/common/thread";
 import { Activity } from "@mail/core/web/activity";
 import { SuggestedRecipientsList } from "@mail/core/web/suggested_recipient_list";
-import { useHover, useScrollPosition } from "@mail/utils/common/hooks";
+import { useHover, useMessageHighlight, useScrollPosition } from "@mail/utils/common/hooks";
 import { isDragSourceExternalFile } from "@mail/utils/common/misc";
 import { RecipientList } from "./recipient_list";
 import { FollowerList } from "./follower_list";
+import { SearchMessagesPanel } from "@mail/core/common/search_messages_panel";
 
 import {
     Component,
@@ -51,6 +52,7 @@ export class Chatter extends Component {
         FileUploader,
         FollowerList,
         SuggestedRecipientsList,
+        SearchMessagesPanel,
     };
     static props = [
         "close?",
@@ -59,7 +61,7 @@ export class Chatter extends Component {
         "hasActivities?",
         "hasFollowers?",
         "hasMessageList?",
-        "hasMessageListScrollAdjust?",
+        "isChatterAside?",
         "hasParentReloadOnAttachmentsChanged?",
         "hasParentReloadOnFollowersUpdate?",
         "hasParentReloadOnMessagePosted?",
@@ -75,7 +77,7 @@ export class Chatter extends Component {
         hasActivities: true,
         hasFollowers: true,
         hasMessageList: true,
-        hasMessageListScrollAdjust: false,
+        isChatterAside: false,
         hasParentReloadOnAttachmentsChanged: false,
         hasParentReloadOnFollowersUpdate: false,
         hasParentReloadOnMessagePosted: false,
@@ -103,6 +105,7 @@ export class Chatter extends Component {
             showAttachmentLoading: false,
             /** @type {import("models").Thread} */
             thread: undefined,
+            isSearchOpen: false,
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
@@ -112,7 +115,11 @@ export class Chatter extends Component {
         this.rootRef = useRef("root");
         this.onScrollDebounced = useThrottleForAnimation(this.onScroll);
         this.recipientsPopover = usePopover(RecipientList);
-        useChildSubEnv({ inChatter: true });
+        this.messageHighlight = useMessageHighlight();
+        useChildSubEnv({
+            inChatter: true,
+            messageHighlight: this.messageHighlight,
+        });
         useDropzone(
             this.rootRef,
             async (ev) => {
@@ -163,6 +170,9 @@ export class Chatter extends Component {
                 if (!this.onNextUpdate(nextProps)) {
                     this.onNextUpdate = null;
                 }
+            }
+            if (nextProps.threadId) {
+                this.closeSearch();
             }
         });
         useEffect(
@@ -335,6 +345,7 @@ export class Chatter extends Component {
     }
 
     toggleComposer(mode = false) {
+        this.closeSearch();
         const toggle = () => {
             if (this.state.composerType === mode) {
                 this.state.composerType = false;
@@ -364,6 +375,7 @@ export class Chatter extends Component {
     }
 
     async scheduleActivity() {
+        this.closeSearch();
         const schedule = async (threadId) => {
             await this.activityService.schedule(this.props.threadModel, threadId);
             this.load(this.props.threadId, ["activities", "messages"]);
@@ -410,6 +422,15 @@ export class Chatter extends Component {
         if (this.state.isAttachmentBoxOpened) {
             this.state.scrollToAttachments++;
         }
+    }
+
+    onClickSearch() {
+        this.state.composerType = false;
+        this.state.isSearchOpen = !this.state.isSearchOpen;
+    }
+
+    closeSearch() {
+        this.state.isSearchOpen = false;
     }
 
     async onClickAttachFile(ev) {

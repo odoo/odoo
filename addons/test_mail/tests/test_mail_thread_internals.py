@@ -304,18 +304,18 @@ class TestDiscuss(MailCommon, TestRecipients):
         message2 = self.test_record.with_user(self.user_admin).message_post(body='Message 2', partner_ids=[user1.partner_id.id, user2.partner_id.id])
 
         # both notified users should have the 2 messages in Inbox initially
-        messages = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
-        self.assertEqual(len(messages), 2)
-        messages = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
-        self.assertEqual(len(messages), 2)
+        res = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(res["messages"]), 2)
+        res = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(res["messages"]), 2)
 
         # first user is marking one message as done: the other message is still Inbox, while the other user still has the 2 messages in Inbox
         message1.with_user(user1).set_message_done()
-        messages = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
-        self.assertEqual(len(messages), 1)
-        self.assertEqual(messages[0].id, message2.id)
-        messages = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
-        self.assertEqual(len(messages), 2)
+        res = self.env['mail.message'].with_user(user1)._message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(res["messages"]), 1)
+        self.assertEqual(res["messages"][0].id, message2.id)
+        res = self.env['mail.message'].with_user(user2)._message_fetch(domain=[['needaction', '=', True]])
+        self.assertEqual(len(res["messages"]), 2)
 
     def test_notification_has_error_filter(self):
         """Ensure message_has_error filter is only returning threads for which

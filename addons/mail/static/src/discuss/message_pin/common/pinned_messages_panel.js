@@ -1,16 +1,22 @@
 /* @odoo-module */
 
-import { Message } from "@mail/core/common/message";
+import { MessageCardList } from "@mail/core/common/message_card_list";
 import { ActionPanel } from "@mail/discuss/core/common/action_panel";
 
-import { Component, onWillStart, onWillUpdateProps, useState, useSubEnv } from "@odoo/owl";
+import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
+/**
+ * @typedef {Object} Props
+ * @property {import("@mail/core/common/thread_model").Thread} thread
+ * @property {string} [className]
+ * @extends {Component<Props, Env>}
+ */
 export class PinnedMessagesPanel extends Component {
     static components = {
-        Message,
+        MessageCardList,
         ActionPanel,
     };
     static props = ["thread", "className?"];
@@ -19,7 +25,6 @@ export class PinnedMessagesPanel extends Component {
     setup() {
         this.store = useService("mail.store");
         this.rpc = useService("rpc");
-        this.ui = useState(useService("ui"));
         this.messagePinService = useState(useService("discuss.message.pin"));
         onWillStart(() => {
             this.messagePinService.fetchPinnedMessages(this.props.thread);
@@ -29,32 +34,13 @@ export class PinnedMessagesPanel extends Component {
                 this.messagePinService.fetchPinnedMessages(nextProps.thread);
             }
         });
-        useSubEnv({
-            pinnedPanel: true,
-        });
-    }
-
-    /**
-     * Highlight the given message and scrolls to it. In small mode, the
-     * pin menu is closed beforwards
-     *
-     * @param {Message} message
-     */
-    async onClickJump(message) {
-        if (this.ui.isSmall || this.env.inChatWindow) {
-            this.env.pinMenu.close();
-            // Give the time to the pin menu to close before scrolling
-            // to the message.
-            await new Promise((resolve) => setTimeout(() => requestAnimationFrame(resolve)));
-        }
-        await this.env.messageHighlight?.highlightMessage(message, this.props.thread);
     }
 
     /**
      * Prompt the user for confirmation and unpin the given message if
      * confirmed.
      *
-     * @param {Message} message
+     * @param {import('@mail/core/common/message_model').Message} message
      */
     onClickUnpin(message) {
         this.messagePinService.unpin(message);
@@ -63,7 +49,7 @@ export class PinnedMessagesPanel extends Component {
     /**
      * Get the message to display when nothing is pinned on this thread.
      */
-    get emptyMessage() {
+    get emptyText() {
         if (this.props.thread.type === "channel") {
             return _t("This channel doesn't have any pinned messages.");
         } else {
