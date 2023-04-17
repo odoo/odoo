@@ -465,6 +465,8 @@ class ir_cron(models.Model):
         :param Optional[Union[datetime.datetime, list[datetime.datetime]]] at:
             When to execute the cron, at one or several moments in time instead
             of as soon as possible.
+        :return: the created triggers records
+        :rtype: recordset
         """
         if at is None:
             at_list = [fields.Datetime.now()]
@@ -474,7 +476,7 @@ class ir_cron(models.Model):
             at_list = list(at)
             assert all(isinstance(at, datetime) for at in at_list)
 
-        self._trigger_list(at_list)
+        return self._trigger_list(at_list)
 
     def _trigger_list(self, at_list):
         """
@@ -482,6 +484,8 @@ class ir_cron(models.Model):
 
         :param list[datetime.datetime] at_list:
             Execute the cron later, at precise moments in time.
+        :return: the created triggers records
+        :rtype: recordset
         """
         self.ensure_one()
         now = fields.Datetime.now()
@@ -491,9 +495,9 @@ class ir_cron(models.Model):
             at_list = [at for at in at_list if at > now]
 
         if not at_list:
-            return
+            return self.env['ir.cron.trigger']
 
-        self.env['ir.cron.trigger'].sudo().create([
+        triggers = self.env['ir.cron.trigger'].sudo().create([
             {'cron_id': self.id, 'call_at': at}
             for at in at_list
         ])
@@ -503,6 +507,7 @@ class ir_cron(models.Model):
 
         if min(at_list) <= now or os.getenv('ODOO_NOTIFY_CRON_CHANGES'):
             self._cr.postcommit.add(self._notifydb)
+        return triggers
 
     def _notifydb(self):
         """ Wake up the cron workers
