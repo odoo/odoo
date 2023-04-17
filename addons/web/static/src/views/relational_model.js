@@ -1675,9 +1675,6 @@ class DynamicList extends DataPoint {
     // -------------------------------------------------------------------------
 
     async _multiSave(record) {
-        if (this.blockUpdate) {
-            return;
-        }
         const selection = this.selection;
         const changes = record.getChanges();
         if (!changes) {

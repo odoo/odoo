@@ -216,6 +216,7 @@ export class ListController extends Component {
             this.model.root.removeRecord(editedRecord);
         } else {
             editedRecord.discard();
+            editedRecord.switchMode("readonly");
         }
     }
 
@@ -225,12 +226,10 @@ export class ListController extends Component {
 
     onMouseDownDiscard(mouseDownEvent) {
         const list = this.model.root;
-        list.blockUpdate = true;
         document.addEventListener(
             "mouseup",
             (mouseUpEvent) => {
                 if (mouseUpEvent.target !== mouseDownEvent.target) {
-                    list.blockUpdate = false;
                     list.multiSave(list.editedRecord);
                 }
             },
