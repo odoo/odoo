@@ -172,6 +172,19 @@ function bootstrapToTable(editable) {
             if (!tr.className) {
                 tr.removeAttribute('class');
             }
+            // Apply the row's left/right margin/padding to a wrapper around the
+            // table. This allows Bootstrap's weird negative margin strategy on
+            // rows to works.
+            const sideSpaceProps = ['margin-left', 'margin-right', 'padding-left', 'padding-right'];
+            if (sideSpaceProps.some(prop => tr.style[prop])) {
+                const div = document.createElement('div');
+                for (const prop of sideSpaceProps) {
+                    div.style.setProperty(prop, tr.style[prop]);
+                    tr.style.removeProperty(prop);
+                }
+                table.before(div);
+                div.replaceChildren(table);
+            }
             for (const child of [...bootstrapRow.childNodes]) {
                 tr.append(child);
             }
