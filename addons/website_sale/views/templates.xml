@@ -2464,13 +2464,13 @@
     </template>
 
     <template id="sale_order_re_order_btn" inherit_id="sale.sale_order_portal_template" name="Sale Order Order Again">
-        <xpath expr="//t[@t-set='entries']/ul/li" position="after">
-            <li t-if="request.website.enabled_portal_reorder_button and sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()" class="list-group-item flex-grow-1">
+        <xpath expr="//t[@t-set='entries']/div/div" position="after">
+            <div t-if="request.website.enabled_portal_reorder_button and sale_order.with_user(request.env.user).sudo()._is_reorder_allowed()" class="list-group-item flex-grow-1">
                 <button class="btn btn-primary w-100 o_wsale_reorder_button" t-att-data-sale-order-id="sale_order.id">
                     <i class="fa fa-rotate-right me-1"/>
                     Order Again
                 </button>
-            </li>
+            </div>
         </xpath>
     </template>
 </odoo>

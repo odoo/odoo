@@ -4,9 +4,10 @@
     <template id="portal_my_home_productions" name="Productions" customize_show="True" inherit_id="portal.portal_my_home" priority="20">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
-                <t t-set="title">Productions</t>
+                <t t-set="icon" t-value="'/mrp_subcontracting/static/src/img/manufacturing.svg'"/>
+                <t t-set="title">Manufacturing Orders</t>
+                <t t-set="text">Follow manufacturing orders you have to fulfill</t>
                 <t t-set="url" t-value="'/my/productions'"/>
-                <t t-set="placeholder_count" t-value="'production_count'"/>
             </t>
         </xpath>
     </template>
@@ -28,7 +29,7 @@
             </t>
 
             <t t-if="not pickings">
-                <p>There are currently no productions for your account.</p>
+                <p class="alert alert-warning">There are currently no productions for your account.</p>
             </t>
 
             <t t-if="pickings" t-call="portal.portal_table">

@@ -19,14 +19,14 @@
             <li t-if="page_name == 'project_subtasks' and task and project" class="breadcrumb-item active">
                 <a t-attf-href="/my/projects/{{ project.id }}/task/{{ task.id }}?{{ keep_query() }}"><t t-esc="task.name"/></a>
             </li>
-            <li t-elif="task" class="breadcrumb-item active text-truncate">
+            <li t-elif="task" class="breadcrumb-item active text-break">
                 <span t-field="task.name"/>
             </li>
             <li t-if="page_name == 'project_subtasks' or (task and subtask and project)" t-attf-class="breadcrumb-item text-truncate #{'active ' if not subtask else ''}">
                 <a t-if="subtask" t-attf-href="/my/tasks/{{ task.id }}/subtasks?{{ keep_query() }}">Sub-tasks</a>
                 <t t-else="">Sub-tasks</t>
             </li>
-            <li t-if="subtask" class="breadcrumb-item active text-truncate">
+            <li t-if="subtask" class="breadcrumb-item active text-break">
                 <span t-field="subtask.name"/>
             </li>
         </xpath>
@@ -35,14 +35,16 @@
     <template id="portal_my_home" name="Show Projects / Tasks" customize_show="True" inherit_id="portal.portal_my_home" priority="40">
         <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
             <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/project/static/src/img/folder.svg'"/>
                 <t t-set="title">Projects</t>
                 <t t-set="url" t-value="'/my/projects'"/>
-                <t t-set="placeholder_count" t-value="'project_count'"/>
+                <t t-set="text">Follow the evolution of your projects</t>
             </t>
             <t t-call="portal.portal_docs_entry">
+                <t t-set="icon" t-value="'/project/static/src/img/tasks.svg'"/>
                 <t t-set="title">Tasks</t>
                 <t t-set="url" t-value="'/my/tasks'"/>
-                <t t-set="placeholder_count" t-value="'task_count'"/>
+                <t t-set="text">Follow and comments tasks of your projects</t>
             </t>
         </xpath>
     </template>
@@ -55,7 +57,7 @@
                 <t t-set="title">Projects</t>
             </t>
             <t t-if="not projects">
-                <div class="alert alert-warning mt8" role="alert">
+                <div class="alert alert-warning" role="alert">
                     There are no projects.
                 </div>
             </t>
@@ -88,7 +90,7 @@
                 <t t-set="title">Tasks</t>
             </t>
             <t t-if="not grouped_tasks">
-                <div class="alert alert-warning mt8" role="alert">
+                <div class="alert alert-warning" role="alert">
                     There are no tasks.
                 </div>
             </t>

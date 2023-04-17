@@ -28,7 +28,7 @@ $o-color-extras-nesting-selector: '&' !default;
         $-yiq-threshold-met: alpha($color) > $yiq-min-opacity-threshold;
 
         $-yiq-color: if($text-color, $text-color, if($-yiq-threshold-met, color-contrast($color), null));
-        background-color: $color#{if($important, ' !important', '')};
+        background-color: $color;
         color: $-yiq-color; // not important so that text utilities still work
 
         @if $with-extras and $-yiq-threshold-met {
