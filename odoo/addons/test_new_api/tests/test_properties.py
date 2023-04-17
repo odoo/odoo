@@ -1895,6 +1895,100 @@ class PropertiesSearchCase(TestPropertiesMixin):
         self.assertFalse(messages, "The ilike on relational properties is not supported")
 
     @mute_logger('odoo.fields')
+    def test_properties_field_search_related(self):
+        """Test the search on a properties field which is related."""
+        Model = self.env['test_new_api.related_properties']
+        records = Model.create([
+            {'message_id': self.message_1.id},
+            {'message_id': self.message_2.id},
+            {'message_id': self.message_3.id},
+            {'message_id': False},
+        ])
+        # check that the create didn't change the properties value on the parent model
+        sql_values = self._get_sql_properties(self.message_1)
+        self.assertEqual(sql_values, {'discussion_color_code': 'Test', 'moderator_partner_id': self.partner.id})
+        self.assertEqual(records[0].related_attributes, self.message_1.attributes)
+        self.assertEqual(records[1].related_attributes, self.message_2.attributes)
+        self.assertEqual(records[2].related_attributes, self.message_3.attributes)
+        self.assertFalse(records[3].related_attributes)
+        result = Model.search([('related_attributes.discussion_color_code', '=', 'Test')])
+        self.assertEqual(result, records[0])
+        result = Model.search([('related_attributes.discussion_color_code', 'in', ('Test', 'blue'))])
+        self.assertEqual(result, records[0] | records[1])
+        # "= False" on related in domain means "the related is set AND the value is set to False"
+        # so records[3] is not returned by the search
+        result = Model.search([('related_attributes.discussion_color_code', '=', False)])
+        self.assertEqual(result, records[2])
+        result = Model.search([('related_attributes.state', '=', 'draft')])
+        self.assertEqual(result, records[2])
+
+        # related properties with 2 levels
+        Model = self.env['test_new_api.related_related_properties']
+        records = Model.create([
+            {'related_id': records[0].id},
+            {'related_id': records[1].id},
+            {'related_id': records[2].id},
+            {'related_id': records[3].id},
+            {'related_id': False},
+        ])
+        # check that the create didn't change the properties value on the parent model
+        sql_values = self._get_sql_properties(self.message_1)
+        self.assertEqual(sql_values, {'discussion_color_code': 'Test', 'moderator_partner_id': self.partner.id})
+        self.assertEqual(records[0].related_related_attributes, self.message_1.attributes)
+        self.assertEqual(records[1].related_related_attributes, self.message_2.attributes)
+        self.assertEqual(records[2].related_related_attributes, self.message_3.attributes)
+        self.assertFalse(records[3].related_related_attributes)
+        result = Model.search([('related_related_attributes.discussion_color_code', '=', 'Test')])
+        self.assertEqual(result, records[0])
+        result = Model.search([('related_related_attributes.discussion_color_code', 'in', ('Test', 'blue'))])
+        self.assertEqual(result, records[0] | records[1])
+        # "= False" on related in domain means "the related is set AND the value is set to False"
+        # so records[3] and records[4] are not returned by the search
+        result = Model.search([('related_related_attributes.discussion_color_code', '=', False)])
+        self.assertEqual(result, records[2])
+        result = Model.search([('related_related_attributes.state', '=', 'draft')])
+        self.assertEqual(result, records[2])
+
+        # test inherits
+        Model = self.env['test_new_api.emailmessage']
+        records = Model.create([
+            {'message': self.message_1.id},
+            {'message': self.message_2.id},
+            {'message': self.message_3.id},
+        ])
+
+        # check that the create didn't change the properties value on the parent model
+        sql_values = self._get_sql_properties(self.message_1)
+        self.assertEqual(sql_values, {'discussion_color_code': 'Test', 'moderator_partner_id': self.partner.id})
+
+        self.assertEqual(records[0].attributes, self.message_1.attributes)
+        self.assertEqual(records[1].attributes, self.message_2.attributes)
+        self.assertEqual(records[2].attributes, self.message_3.attributes)
+
+        result = Model.search([('attributes.discussion_color_code', '=', 'Test')])
+        self.assertEqual(result, records[0])
+        result = Model.search([('attributes.discussion_color_code', 'in', ('Test', 'blue'))])
+        self.assertEqual(result, records[0] | records[1])
+        result = Model.search([('attributes.discussion_color_code', '=', False)])
+        self.assertEqual(result, records[2])
+        result = Model.search([('attributes.state', '=', 'draft')])
+        self.assertEqual(result, records[2])
+
+        record = Model.create([{
+            'attributes': [{
+                'type': 'char',
+                'name': 'my_char',
+                'default': 'default value',
+                'definition_changed': True
+            }],
+            'discussion': self.discussion_1.id,
+        }])
+        self.assertEqual(
+            record.read(["attributes"])[0]["attributes"],
+            [{'type': 'char', 'name': 'my_char', 'default': 'default value', 'value': 'default value'}],
+        )
+
+    @mute_logger('odoo.fields')
     def test_properties_field_search_tags(self):
         self.messages.discussion = self.discussion_1
         self.message_1.attributes = [{
