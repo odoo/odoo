@@ -11,10 +11,10 @@
                 <Typing t-if="props.thread.hasTypingMembers" channel="props.thread" size="props.size" displayText="false"/>
                 <t t-else="">
                     <t name="chat_static">
-                        <div t-if="chatPartner.im_status === 'online'" class="o-mail-ThreadIcon-online fa fa-fw fa-circle" title="Online"/>
+                        <div t-if="chatPartner.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online"/>
                         <div t-elif="chatPartner.im_status === 'offline'" class="fa fa-fw fa-circle-o" title="Offline"/>
                         <div t-elif="chatPartner.im_status === 'away'" class="fa fa-fw fa-circle text-warning" title="Away"/>
-                        <div t-elif="chatPartner.im_status === 'bot'" class="o-mail-ThreadIcon-online fa fa-fw fa-heart" title="Bot"/>
+                        <div t-elif="chatPartner.im_status === 'bot'" class="fa fa-fw fa-heart text-success" title="Bot"/>
                         <t t-else="" name="noImStatusCondition">
                             <div class="fa fa-fw fa-question-circle" title="No IM status available"/>
                         </t>
