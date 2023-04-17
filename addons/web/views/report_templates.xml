@@ -315,7 +315,13 @@
             </div>
             <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" class="float-left" alt="Logo"/>
             <div class="float-left company_address">
-                <span t-if="company.company_details" t-field="company.company_details"></span>
+                <ul class="list-unstyled" t-if="company.company_details or forced_vat">
+                    <li t-if="company.company_details"> <t t-esc="company.company_details"/></li>
+                    <li t-if="forced_vat">
+                        <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                        <span t-esc="forced_vat"/>
+                    </li>
+                </ul>
             </div>
             <div class="clearfix mb8"/>
             </div>
@@ -351,7 +357,13 @@
                 <div class="col-6 text-right mb4">
                     <h4 class="mt0" t-field="company.report_header"/>
                     <div name="company_address" class="float-right mb4">
-                        <span t-if="company.company_details" t-field="company.company_details"></span>
+                        <ul class="list-unstyled" t-if="company.company_details or forced_vat">
+                            <li t-if="company.company_details"> <t t-esc="company.company_details"/></li>
+                            <li t-if="forced_vat">
+                                <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                                <span t-esc="forced_vat"/>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
@@ -440,7 +452,13 @@
             </div>
             <div class="row">
                 <div class="col-6" name="company_address">
-                    <span t-if="company.company_details" t-field="company.company_details"></span>
+                    <ul class="list-unstyled" t-if="company.company_details or forced_vat">
+                        <li t-if="company.company_details"> <t t-esc="company.company_details"/></li>
+                        <li t-if="forced_vat">
+                            <t t-esc="company.country_id.vat_label or 'Tax ID'"/>:
+                            <span t-esc="forced_vat"/>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -571,6 +589,7 @@
 
     <template id="styles_company_report">
         <t t-foreach="company_ids" t-as="company" t-translation="off">
+            <t t-set="forced_vat" t-value="False"/>
             <t t-set="font" t-value="company.font or 'Lato'" />
             <t t-set="primary" t-value="company.primary_color or 'black'" />
             <t t-set="secondary" t-value="company.secondary_color or 'black'" />
