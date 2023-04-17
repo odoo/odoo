@@ -148,7 +148,7 @@ class HolidaysType(models.Model):
         date_from = self._context.get('default_date_from', fields.Datetime.today())
         employee_id = self._context.get('default_employee_id', self._context.get('employee_id', self.env.user.employee_id.id))
         for holiday_type in self:
-            if holiday_type.requires_allocation:
+            if holiday_type.requires_allocation == 'yes':
                 allocation = self.env['hr.leave.allocation'].search([
                     ('holiday_status_id', '=', holiday_type.id),
                     ('employee_id', '=', employee_id),
