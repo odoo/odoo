@@ -397,7 +397,7 @@ QUnit.test("sidebar: chat im_status rendering", async (assert) => {
     assert.strictEqual(chat2.textContent, "Partner2");
     assert.strictEqual(chat3.textContent, "Partner3");
     assert.containsOnce(chat1, ".o-mail-ThreadIcon div[title='Offline']");
-    assert.containsOnce(chat2, ".o-mail-ThreadIcon-online");
+    assert.containsOnce(chat2, ".fa-circle.text-success");
     assert.containsOnce(chat3, ".o-mail-ThreadIcon div[title='Away']");
 });
 
