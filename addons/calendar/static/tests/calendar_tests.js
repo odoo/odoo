@@ -102,7 +102,7 @@ QUnit.module(
                 "the tag should be correctly named"
             );
             assert.hasClass(
-                badges[0],
+                badges[0].querySelector('img'),
                 "o_attendee_border_accepted",
                 "Jesus should attend the meeting"
             );
@@ -112,7 +112,7 @@ QUnit.module(
                 "the tag should be correctly named"
             );
             assert.hasClass(
-                badges[1],
+                badges[1].querySelector('img'),
                 "o_attendee_border_tentative",
                 "Mohamet should still confirm his attendance to the meeting"
             );
