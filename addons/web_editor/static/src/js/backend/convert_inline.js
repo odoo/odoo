@@ -811,6 +811,7 @@ function fontToImg($editable) {
             image.style.setProperty('line-height', lineHeight);
             image.style.setProperty('width', intrinsicWidth + 'px');
             image.style.setProperty('height', intrinsicHeight + 'px');
+            image.style.setProperty('vertical-align', 'unset'); // undo Bootstrap's default (middle).
             if (!padding) {
                 image.style.setProperty('margin', _getStylePropertyValue(font, 'margin'));
             }
