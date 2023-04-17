@@ -79,7 +79,7 @@ export class Message {
      * @returns {boolean}
      */
     get editable() {
-        if (!this._store.user?.isAdmin && !this.isSelfAuthored) {
+        if (!this.isSelfAuthored) {
             return false;
         }
         if (this.type !== "comment") {
