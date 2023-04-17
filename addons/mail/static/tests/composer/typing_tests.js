@@ -335,7 +335,7 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
     const { env, openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($(".o-mail-DiscussCategoryItem"), ".o-mail-DiscussCategoryItem-threadIcon");
-    assert.containsOnce($, ".o-mail-ThreadIcon-online");
+    assert.containsOnce($, ".fa-circle.text-success");
 
     // simulate receive typing notification from demo "is typing"
     await afterNextRender(() =>
@@ -356,5 +356,5 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
             is_typing: false,
         })
     );
-    assert.containsOnce($, ".o-mail-ThreadIcon-online");
+    assert.containsOnce($, ".fa-circle.text-success");
 });
