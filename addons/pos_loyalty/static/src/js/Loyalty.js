@@ -847,11 +847,13 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                                 || line.ignoreLoyaltyPoints({ program })) {
                                 continue;
                             }
-                            let price_to_use = line.get_price_with_tax();
+
+                            let pointsPerUnit = 0;
                             if (program.program_type === 'gift_card') {
-                                price_to_use = line.price;
+                                pointsPerUnit = line.price;
+                            } else {
+                                pointsPerUnit = round_precision(rule.reward_point_amount * line.get_price_with_tax() / line.get_quantity(), 0.01);
                             }
-                            const pointsPerUnit = round_precision(rule.reward_point_amount * price_to_use / line.get_quantity(), 0.01);
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(...Array.apply(null, Array(line.get_quantity())).map(() => {
                                     if (line.giftBarcode && line.get_quantity() == 1) {

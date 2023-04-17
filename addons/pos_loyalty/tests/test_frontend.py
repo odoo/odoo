@@ -812,5 +812,5 @@ class TestUi(TestPointOfSaleHttpCommon):
             login="accountman",
         )
         # Check the created gift cards.
-        self.assertEqual(len(programs['gift_card_1'].coupon_ids), 1)
-        self.assertEqual(programs['gift_card_1'].coupon_ids.points, 50)
+        self.assertEqual(len(programs['gift_card_1'].coupon_ids), 50)
+        self.assertEqual(len(programs['gift_card_1'].coupon_ids.filtered(lambda c: c.points == 50)), 50)

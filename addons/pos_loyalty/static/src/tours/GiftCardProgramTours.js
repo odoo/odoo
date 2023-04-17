@@ -55,8 +55,9 @@ startSteps();
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
 ProductScreen.do.clickDisplayedProduct('Gift Card');
-ProductScreen.do.pressNumpad('Disc 5 0');
-PosLoyalty.check.orderTotalIs('25.00');
-PosLoyalty.exec.finalizeOrder('Cash', '25');
+ProductScreen.do.pressNumpad('Disc 5');
+ProductScreen.do.pressNumpad('Qty 5');
+PosLoyalty.check.orderTotalIs('1,250.00');
+PosLoyalty.exec.finalizeOrder('Cash', '1250');
 Tour.register('GiftCardWithDiscountTour', { test: true, url: '/pos/web' }, getSteps());
 //#endregion
