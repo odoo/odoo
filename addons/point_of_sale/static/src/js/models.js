@@ -2639,12 +2639,14 @@ exports.Orderline = Backbone.Model.extend({
      * Calculate the amount of taxes of a specific Orderline, that are included in the price.
      * @returns {Number} the total amount of price included taxes
      */
-        get_total_taxes_included_in_price() {
-            return this.get_taxes()
-                .filter(tax => tax.price_include)
-                .reduce((sum, tax) => sum + this.get_tax_details()[tax.id],
-                0
-            );
+    get_total_taxes_included_in_price() {
+        const productTaxes = this._getProductTaxesAfterFiscalPosition();
+        const taxDetails = this.get_tax_details();
+        return productTaxes
+            .filter(tax => tax.price_include)
+            .reduce((sum, tax) => sum + taxDetails[tax.id],
+            0
+        );
     },
     _map_tax_fiscal_position: function(tax, order = false) {
         return this.pos._map_tax_fiscal_position(tax, order);
@@ -2664,6 +2666,17 @@ exports.Orderline = Backbone.Model.extend({
      */
     compute_all: function(taxes, price_unit, quantity, currency_rounding, handle_price_include=true) {
         return this.pos.compute_all(taxes, price_unit, quantity, currency_rounding, handle_price_include);
+    },
+    /**
+     * Calculates the taxes for a product, and converts the taxes based on the fiscal position of the order.
+     *
+     * @returns {Object} The calculated product taxes after filtering and fiscal position conversion.
+     */
+    _getProductTaxesAfterFiscalPosition: function() {
+        const product = this.get_product();
+        let taxesIds = this.tax_ids || product.taxes_id;
+        taxesIds = _.filter(taxesIds, t => t in this.pos.taxes_by_id);
+        return this.get_taxes_after_fp(taxesIds);
     },
     get_all_prices: function(){
 
@@ -3346,7 +3359,7 @@ exports.Order = Backbone.Model.extend({
     },
     _get_tax_group_key(line) {
         return line
-            .get_taxes()
+            ._getProductTaxesAfterFiscalPosition()
             .map(tax => tax.id)
             .join(',');
     },
