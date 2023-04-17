@@ -705,20 +705,20 @@ class Channel(models.Model):
             'context': local_context,
         }
 
-    def _action_add_member(self):
+    def _action_add_member(self, raise_on_access=False):
         """ Adds the logged in user in the channel members.
         (see '_action_add_members' for more info)
 
         Returns True if added successfully, False otherwise."""
-        return bool(self._action_add_members(self.env.user.partner_id))
+        return bool(self._action_add_members(self.env.user.partner_id, raise_on_access=raise_on_access))
 
-    def _action_add_members(self, target_partners):
+    def _action_add_members(self, target_partners, raise_on_access=False):
         """ Add the target_partner as a member of the channel (to its slide.channel.partner).
         This will make the content (slides) of the channel available to that partner.
 
         Returns the added 'slide.channel.partner's (! as sudo !)
         """
-        to_join = self._filter_add_members(target_partners)
+        to_join = self._filter_add_members(target_partners, raise_on_access=raise_on_access)
         if to_join:
             existing_channel_partners = self.env['slide.channel.partner'].with_context(active_test=False).sudo().search([
                 ('channel_id', 'in', self.ids),
@@ -743,15 +743,16 @@ class Channel(models.Model):
             return slide_partners_sudo | archived_members
         return self.env['slide.channel.partner'].sudo()
 
-    def _filter_add_members(self, target_partners):
+    def _filter_add_members(self, target_partners, raise_on_access=False):
         allowed = self.filtered(lambda channel: channel.enroll == 'public')
         on_invite = self.filtered(lambda channel: channel.enroll == 'invite')
         if on_invite:
             try:
                 on_invite.check_access_rights('write')
                 on_invite.check_access_rule('write')
-            except:
-                pass
+            except AccessError:
+                if raise_on_access:
+                    raise AccessError(_('You are not allowed to add members to this course. Please contact the course responsible or an administrator.'))
             else:
                 allowed |= on_invite
         return allowed
