@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.ChatWindow" t-inherit-mode="extension">
+        <xpath expr="//*[@t-name='chatWindowContent']" position="replace">
+           <FeedbackPanel
+                t-if="state.activeMode === 'feedback'"
+                onClickClose="() => this.close()"
+                sendFeedback="(rating, feedback) => this.sendFeedback(rating, feedback)"
+                thread="thread"
+            />
+           <t t-else="">$0</t>
+        </xpath>
+    </t>
+</templates>

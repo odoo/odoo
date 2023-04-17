@@ -40,6 +40,13 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
             const context = args.context;
             return this._mockRouteImLivechatChatPost(uuid, message_content, context);
         }
+        if (route === "/im_livechat/feedback") {
+            const { uuid, rate, reason } = args;
+            return this._mockRouteImLivechatFeedback(uuid, rate, reason);
+        }
+        if (route === "/im_livechat/email_livechat_transcript") {
+            return true;
+        }
         return this._super(...arguments);
     },
     /**
@@ -166,6 +173,37 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
             return;
         }
         this._mockDiscussChannel_closeLivechatSession(channel);
+    },
+
+    /**
+     * Simulates the `/im_livechat/feedback` route.
+     *
+     * @param {string} uuid
+     * @param {number} rate
+     * @param {string|undefined} reason
+     * @returns
+     */
+    _mockRouteImLivechatFeedback(uuid, rate, reason) {
+        let [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        if (!channel) {
+            return false;
+        }
+        const values = {
+            rating: rate,
+            consumed: true,
+            feedback: reason,
+            is_internal: false,
+            res_id: channel.id,
+            res_model: "discuss.channel",
+            rated_partner_id: channel.channel_partner_ids[0],
+        };
+        if (channel.rating_ids.length === 0) {
+            this.pyEnv["rating.rating"].create(values);
+        } else {
+            this.pyEnv["rating.rating"].write([channel.rating_ids[0]], values);
+        }
+        [channel] = this.pyEnv["discuss.channel"].searchRead([["uuid", "=", uuid]]);
+        return channel.rating_ids[0];
     },
 
     /**

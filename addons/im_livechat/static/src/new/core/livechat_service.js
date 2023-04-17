@@ -3,7 +3,15 @@
 import { registry } from "@web/core/registry";
 import { _t } from "@web/core/l10n/translation";
 import { session } from "@web/session";
+import { sprintf } from "@web/core/utils/strings";
+import { RATING } from "../feedback_panel/feedback_panel";
 import { reactive } from "@odoo/owl";
+
+export const RATING_TO_EMOJI = {
+    [RATING.GOOD]: "😊",
+    [RATING.OK]: "😐",
+    [RATING.BAD]: "😞",
+};
 
 export const SESSION_STATE = Object.freeze({
     NONE: "NONE",
@@ -111,6 +119,32 @@ export class LivechatService {
 
     get options() {
         return session.livechatData?.options ?? {};
+    }
+
+    /**
+     * @param {number} rate
+     * @param {string} reason
+     */
+    async sendFeedback(uuid, rate, reason) {
+        await this.rpc("/im_livechat/feedback", { reason, rate, uuid });
+        await this.rpc("/im_livechat/chat_post", {
+            uuid,
+            message_content: sprintf(_t("Rating: %s"), RATING_TO_EMOJI[rate]),
+        });
+        if (reason) {
+            await this.rpc("/im_livechat/chat_post", {
+                uuid,
+                message_content: sprintf(_t("Rating reason: %s"), reason),
+            });
+        }
+    }
+
+    /**
+     * @param {number} uuid
+     * @param {string} email
+     */
+    sendTranscript(uuid, email) {
+        return this.rpc("/im_livechat/email_livechat_transcript", { uuid, email });
     }
 }
 

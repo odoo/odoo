@@ -208,7 +208,7 @@ class LivechatController(http.Controller):
         if channel:
             channel._email_livechat_transcript(email)
 
-    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public")
+    @http.route('/im_livechat/visitor_leave_session', type='json', auth="public", cors="*")
     def visitor_leave_session(self, uuid):
         """ Called when the livechat visitor leaves the conversation.
          This will clean the chat request and warn the operator that the conversation is over.

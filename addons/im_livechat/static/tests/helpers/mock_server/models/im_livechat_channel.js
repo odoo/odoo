@@ -57,6 +57,7 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
             operator.livechat_username ? operator.livechat_username : operator.name,
         ];
         return {
+            channel_partner_ids: [operator_partner_id],
             channel_member_ids: membersToAdd,
             livechat_active: true,
             livechat_operator_id: operator_partner_id,

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="im_livechat.TranscriptSender" owl="1">
+    <div class="form-text" t-esc="hint"/>
+    <div class="input-group has-validation mb-3">
+        <input t-model="state.email" t-att-disabled="inputDisabled" type="text" class="form-control" placeholder="mail@example.com"/>
+        <button class="btn btn-primary" type="button" t-att-disabled="buttonDisabled" t-on-click="onClickSend">
+            <i t-attf-class="fa {{ icon }}"/>
+        </button>
+    </div>
+</t>
+</templates>
