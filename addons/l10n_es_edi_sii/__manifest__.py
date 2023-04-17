@@ -34,6 +34,7 @@
         'data/res_partner_data.xml',
 
         'security/ir.model.access.csv',
+        'security/l10n_es_edi_certificate.xml',
 
         'views/account_tax_views.xml',
         'views/l10n_es_edi_certificate_views.xml',
