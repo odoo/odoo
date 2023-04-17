@@ -334,7 +334,7 @@ function factory(dependencies) {
          * @returns {boolean}
          */
         _computeCanBeDeleted() {
-            if (!session.is_admin && !this.isCurrentUserOrGuestAuthor) {
+            if (!this.isCurrentUserOrGuestAuthor) {
                 return false;
             }
             if (!this.originThread) {
