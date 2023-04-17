@@ -914,6 +914,14 @@ function formatTables($editable) {
         if (alignSelf === 'start' || justifyContent === 'start' || justifyContent === 'flex-start') {
             cell.style.verticalAlign = 'top';
         } else if (alignSelf === 'center' || justifyContent === 'center') {
+            const convertedNestedParentTable = cell.closest('tr > td > div.w100p > table');
+            if (convertedNestedParentTable) {
+                convertedNestedParentTable.style.height = '100%'; // table
+                convertedNestedParentTable.parentElement.style.height = '100%'; // div.w100p
+                convertedNestedParentTable.parentElement.parentElement.style.height = 'inherit'; // td
+                // will be ignored but needed for the percentage heights to work:
+                convertedNestedParentTable.parentElement.parentElement.parentElement.style.height = '0px'; // tr
+            }
             cell.style.verticalAlign = 'middle';
         } else if (alignSelf === 'end' || justifyContent === 'end' || justifyContent === 'flex-end') {
             cell.style.verticalAlign = 'bottom';
