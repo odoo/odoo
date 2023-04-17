@@ -20,6 +20,45 @@ class TestMailTemplateTools(TestMailTemplateCommon):
         self.assertEqual(len(self.test_template.partner_to.split(',')), 2)
         self.assertTrue(self.test_record.email_from)
 
+    def test_mail_template_preview_empty_database(self):
+        """Check behaviour of the wizard when there is no record for the target model."""
+        self.env['mail.test.lang'].search([]).unlink()
+        test_template = self.env['mail.template'].browse(self.test_template.ids)
+        preview = self.env['mail.template.preview'].create({
+            'mail_template_id': test_template.id,
+        })
+
+        self.assertFalse(preview.error_msg)
+        for field in preview._MAIL_TEMPLATE_FIELDS:
+            if field in ['partner_to', 'report_template_ids']:
+                continue
+            self.assertEqual(test_template[field], preview[field])
+
+    def test_mail_template_preview_dynamic_attachment(self):
+        """Check behaviour with templates that use reports."""
+        test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
+        test_report = self.env['ir.actions.report'].sudo().create({
+                'name': 'Test Report',
+                'model': test_record._name,
+                'print_report_name': "'TestReport for %s' % object.name",
+                'report_type': 'qweb-pdf',
+                'report_name': 'test_mail.mail_test_ticket_test_template',
+        })
+        self.test_template.write({
+            'report_template_ids': test_report.ids,
+            'attachment_ids': False,
+        })
+
+        preview = self.env['mail.template.preview'].with_context({
+            'force_report_rendering': False, # this also invalidates the test records...
+            }).create({
+            'mail_template_id': self.test_template.id,
+            'resource_ref': test_record,
+        })
+
+        self.assertEqual(preview.body_html, f'<p>EnglishBody for {test_record.name}</p>')
+        self.assertFalse(preview.attachment_ids, 'Reports should not be listed in attachments')
+
     def test_mail_template_preview_force_lang(self):
         test_record = self.env['mail.test.lang'].browse(self.test_record.ids)
         test_record.write({
