@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { attr, one, clear, increment, Model } from "@im_livechat/legacy/model";
+import { debounce } from "@web/core/utils/timing";
 
 import { qweb } from "web.core";
 import { Markup } from "web.utils";
@@ -410,7 +411,7 @@ Model({
         debouncedAwaitUserInput: attr({
             compute() {
                 // debounced to let the user type several sentences, see 'Chatbot/awaitUserInput' for details
-                return _.debounce(this.awaitUserInput, this.awaitUserInputDebounceTime);
+                return debounce(this.awaitUserInput, this.awaitUserInputDebounceTime);
             },
         }),
         hasRestartButton: attr({

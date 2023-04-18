@@ -90,7 +90,7 @@ export default {
         var self = this;
         this.fontIcons.forEach((data) => {
             data.cssData = self.getCssSelectors(data.parser);
-            data.alias = _.flatten(_.map(data.cssData, _.property('names')));
+            data.alias = _.map(data.cssData, _.property('names')).flat();
         });
     }),
 };

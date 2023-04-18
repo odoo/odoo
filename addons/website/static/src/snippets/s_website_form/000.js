@@ -8,7 +8,8 @@
     import publicWidget from "web.public.widget";
     import dom from "web.dom";
     import concurrency from "web.concurrency";
-import { sprintf } from "@web/core/utils/strings";
+    import { sprintf } from "@web/core/utils/strings";
+    import { debounce } from "@web/core/utils/timing";
 
     var _t = core._t;
     var qweb = core.qweb;
@@ -91,7 +92,7 @@ import { sprintf } from "@web/core/utils/strings";
             }
             this._updateFieldsVisibility();
 
-            this._onFieldInputDebounced = _.debounce(this._onFieldInput.bind(this), 400);
+            this._onFieldInputDebounced = debounce(this._onFieldInput.bind(this), 400);
             this.$el.on('input.s_website_form', '.s_website_form_field', this._onFieldInputDebounced);
 
             // Initialize datetimepickers
@@ -459,7 +460,7 @@ import { sprintf } from "@web/core/utils/strings";
                 if (invalid_inputs.length || error_fields[field_name]) {
                     $field.addClass('o_has_error');
                     $controls.addClass('is-invalid');
-                    if (_.isString(error_fields[field_name])) {
+                    if (typeof error_fields[field_name] === "string") {
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
                         $field.data("bs.popover").config.content = error_fields[field_name];

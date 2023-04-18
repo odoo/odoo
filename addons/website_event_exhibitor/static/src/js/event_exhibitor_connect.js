@@ -1,5 +1,6 @@
 /** @odoo-module alias=website_event_exhibitor.event_exhibitor_connect **/
 
+import { debounce } from "@web/core/utils/timing";
 import Dialog from "web.Dialog";
 import publicWidget from "web.public.widget";
 import {Markup} from "web.utils";
@@ -63,7 +64,7 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
      */
     init: function () {
         this._super(...arguments);
-        this._onConnectClick = _.debounce(this._onConnectClick, 500, true);
+        this._onConnectClick = debounce(this._onConnectClick, 500, true);
     },
 
     /**

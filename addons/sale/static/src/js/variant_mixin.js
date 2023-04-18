@@ -5,6 +5,8 @@ import core from "web.core";
 import utils from "web.utils";
 import ajax from "web.ajax";
 import { sprintf } from "@web/core/utils/strings";
+import { memoize } from "@web/core/utils/functions";
+
 var _t = core._t;
 
 var VariantMixin = {
@@ -39,7 +41,7 @@ var VariantMixin = {
         if (!$parent.data('uniqueId')) {
             $parent.data('uniqueId', _.uniqueId());
         }
-        this._throttledGetCombinationInfo($parent.data('uniqueId'))(ev);
+        this._throttledGetCombinationInfo(this, $parent.data('uniqueId'))(ev);
     },
     /**
      * @see onChangeVariant
@@ -523,7 +525,7 @@ var VariantMixin = {
         $default_price.text(self._priceToStr(combination.list_price));
 
         var isCombinationPossible = true;
-        if (!_.isUndefined(combination.is_combination_possible)) {
+        if (typeof combination.is_combination_possible !== "undefined") {
             isCombinationPossible = combination.is_combination_possible;
         }
         this._toggleDisable($parent, isCombinationPossible);
@@ -628,12 +630,10 @@ var VariantMixin = {
      * @param {string} uniqueId
      * @returns {function}
      */
-    _throttledGetCombinationInfo: _.memoize(function (uniqueId) {
+    _throttledGetCombinationInfo: memoize(function (self, uniqueId) {
         var dropMisordered = new concurrency.DropMisordered();
-        var _getCombinationInfo = _.throttle(this._getCombinationInfo.bind(this), 500);
-        return function (ev, params) {
-            return dropMisordered.add(_getCombinationInfo(ev, params));
-        };
+        var _getCombinationInfo = _.throttle(self._getCombinationInfo.bind(self), 500);
+        return (ev, params) => dropMisordered.add(_getCombinationInfo(ev, params));
     }),
     /**
      * Toggles the disabled class depending on the $parent element

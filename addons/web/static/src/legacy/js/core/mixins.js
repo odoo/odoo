@@ -277,7 +277,7 @@ var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
         };
     },
     _delegateCustomEvents: function () {
-        if (_.isEmpty(this.custom_events)) { return; }
+        if (Object.keys(this.custom_events || {}).length === 0) { return; }
         for (var key in this.custom_events) {
             if (!this.custom_events.hasOwnProperty(key)) { continue; }
 

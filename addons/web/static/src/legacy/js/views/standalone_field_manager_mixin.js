@@ -42,7 +42,7 @@ var StandaloneFieldManagerMixin = Object.assign({}, FieldManagerMixin, {
         var result = FieldManagerMixin._confirmChange.apply(this, arguments);
         var record = this.model.get(id);
         for (const [fieldName, widget] of Object.entries(this.registeredWidgets[id])) {
-            if (_.contains(fields, fieldName)) {
+            if (fields.includes(fieldName)) {
                 widget.reset(record, event);
             }
         }

@@ -391,7 +391,7 @@ function classToStyle($editable, cssRules) {
                 style = `${key}:${value};${style}`;
             }
         };
-        if (_.isEmpty(style)) {
+        if (Object.keys(style || {}).length === 0) {
             writes.push(() => { node.removeAttribute('style'); });
         } else {
             writes.push(() => {
@@ -1371,7 +1371,12 @@ function _normalizeStyle(style) {
     const normalizedStyle = {};
     for (const styleName of style) {
         const value = style[styleName];
-        if (value && !styleName.includes('animation') && !styleName.includes('-webkit') && _.isString(value)) {
+        if (
+            value &&
+            !styleName.includes("animation") &&
+            !styleName.includes("-webkit") &&
+            typeof value === "string"
+        ) {
             const normalizedStyleName = styleName.replace(/-(.)/g, (a, b) => b.toUpperCase());
             normalizedStyle[styleName] = style[normalizedStyleName];
             if (style.getPropertyPriority(styleName) === 'important') {

@@ -949,7 +949,7 @@ const utils = {
      */
     toBoolElse: function (str, elseValues, trueValues, falseValues) {
         var ret = _.str.toBool(str, trueValues, falseValues);
-        if (_.isUndefined(ret)) {
+        if (typeof ret === "undefined") {
             return elseValues;
         }
         return ret;

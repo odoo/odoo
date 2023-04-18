@@ -34,7 +34,7 @@ var SelectBox = publicWidget.Widget.extend({
                 fields: ['id', 'name'],
             },
         }).then(function (result) {
-            self.objects = _.map(result, function (val) {
+            self.objects = result.map((val) => {
                 return {id: val.id, text: val.name};
             });
         }));
@@ -103,7 +103,7 @@ var SelectBox = publicWidget.Widget.extend({
      * @param {Object} ev
      */
     _onChange: function (ev) {
-        if (!ev.added || !_.isString(ev.added.id)) {
+        if (!ev.added || typeof ev.added.id !== "string") {
             return;
         }
         this._createObject(ev.added.id);
@@ -327,7 +327,9 @@ var RecentLinks = publicWidget.Widget.extend({
      * @private
      */
     removeLinks: function () {
-        _.invoke(this.getChildren(), 'destroy');
+        this.getChildren().forEach((child) => {
+            child.destroy();
+        });
     },
     /**
      * @private

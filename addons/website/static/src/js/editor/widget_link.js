@@ -2,6 +2,7 @@
 
 import weWidgets from "wysiwyg.widgets";
 import wUtils from "website.utils";
+import { debounce } from "@web/core/utils/timing";
 
 weWidgets.LinkTools.include({
     custom_events: Object.assign({}, weWidgets.LinkTools.prototype.custom_events || {}, {
@@ -14,7 +15,7 @@ weWidgets.LinkTools.include({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._adaptPageAnchor = _.debounce(this._adaptPageAnchor, this.LINK_DEBOUNCE);
+        this._adaptPageAnchor = debounce(this._adaptPageAnchor, this.LINK_DEBOUNCE);
     },
     /**
      * Allows the URL input to propose existing website pages.

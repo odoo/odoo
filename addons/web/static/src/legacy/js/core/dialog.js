@@ -137,7 +137,7 @@ var Dialog = Widget.extend({
                 self.$footer = self.$modal.find(".modal-footer");
                 self.set_buttons(self.buttons);
             }
-            self.$modal.on('hidden.bs.modal', _.bind(self.destroy, self));
+            self.$modal.on('hidden.bs.modal', self.destroy.bind(self));
         });
     },
     /**
@@ -312,7 +312,7 @@ var Dialog = Widget.extend({
     _setButtonsTo($target, buttons) {
         var self = this;
         $target.empty();
-        buttons.forEach(buttonData => {
+        buttons.forEach((buttonData) => {
             var $button = dom.renderButton({
                 attrs: {
                     class: buttonData.classes || (buttons.length > 1 ? 'btn-secondary' : 'btn-primary'),

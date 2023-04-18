@@ -1374,7 +1374,7 @@
 
             await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
-                assert.ok(_.isEqual(record.data.category.res_ids, [12, 14]),
+                assert.ok(JSON.stringify(record.data.category.res_ids) === JSON.stringify([12, 14]),
                     "category field should have correct default value");
             });
 

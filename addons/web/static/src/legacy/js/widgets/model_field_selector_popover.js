@@ -158,7 +158,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      * @returns {Promise} resolved once the re-rendering is finished
      */
     setChain: function (chain) {
-        if (_.isEqual(chain, this.chain)) {
+        if (JSON.stringify(chain) === JSON.stringify(this.chain)) {
             return Promise.resolve();
         }
 
@@ -284,7 +284,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      * @param {Object} field - the field to add to the chain node
      */
     _goToNextPage: function (field) {
-        if (!_.isEqual(this._getLastPageField(field.name), field)) return;
+        if (JSON.stringify(this._getLastPageField(field.name)) !== JSON.stringify(field)) return;
 
         this._validate(true);
         this._addChainNode(field.name);
@@ -489,7 +489,7 @@ var ModelFieldSelectorPopover = Widget.extend({
      * @param {Object} field - the field to select
      */
     _selectField: function (field) {
-        if (!_.isEqual(this._getLastPageField(field.name), field)) return;
+        if (JSON.stringify(this._getLastPageField(field.name)) !== JSON.stringify(field)) return;
 
         this._validate(true);
         this._addChainNode(field.name);

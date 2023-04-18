@@ -121,9 +121,7 @@ publicWidget.registry.websiteSlidesShare = publicWidget.Widget.extend({
         clipboard.on('success', function () {
             clipboard.destroy();
             $clipboardBtn.tooltip('show');
-            _.delay(function () {
-                $clipboardBtn.tooltip("hide");
-            }, 800);
+            setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
         });
         clipboard.on('error', function (e) {
             console.log(e);
@@ -152,7 +150,7 @@ publicWidget.registry.websiteSlidesEmbedShare = publicWidget.Widget.extend({
         clipboard.on('success', function () {
             clipboard.destroy();
             $clipboardBtn.tooltip('show');
-            _.delay(function () {
+            setTimeout(function () {
                 $clipboardBtn.tooltip("hide");
             }, 800);
         });

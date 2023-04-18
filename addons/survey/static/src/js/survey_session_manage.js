@@ -116,9 +116,7 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend(SurveyPre
         clipboard.on('success', function () {
             clipboard.destroy();
             $clipboardBtn.popover('show');
-            _.delay(function () {
-                $clipboardBtn.popover('hide');
-            }, 800);
+            setTimeout(() => $clipboardBtn.popover('hide'), 800);
         });
 
         clipboard.on('error', function (e) {

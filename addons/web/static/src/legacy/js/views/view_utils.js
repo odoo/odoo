@@ -62,12 +62,12 @@ var viewUtils = {
         }
         var dateTypes = ['date', 'datetime'];
         if (!list.fields[groupByField].readonly &&
-            _.contains(dateTypes, list.fields[groupByField].type)) {
+            dateTypes.includes(list.fields[groupByField].type)) {
             return list.fieldsInfo && list.fieldsInfo[list.viewType][groupByField] &&
                 list.fieldsInfo[list.viewType][groupByField].allowGroupRangeValue;
         }
         var availableTypes = ['char', 'boolean', 'many2one', 'selection'];
-        return _.contains(availableTypes, list.fields[groupByField].type);
+        return availableTypes.includes(list.fields[groupByField].type);
     },
     /**
      * @param {string} arch view arch

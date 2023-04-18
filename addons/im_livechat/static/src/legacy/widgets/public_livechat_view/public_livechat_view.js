@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import * as mailUtils from "@mail/js/utils";
+import { debounce } from "@web/core/utils/timing";
 
 import core from "web.core";
 import time from "web.time";
@@ -324,7 +325,7 @@ const PublicLivechatView = Widget.extend({
      * @param {string} options.model
      * @param {integer} options.id
      */
-    _redirect: _.debounce(
+    _redirect: debounce(
         function (options) {
             if ("channelID" in options) {
                 this.trigger("redirect_to_channel", options.channelID);

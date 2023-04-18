@@ -40,11 +40,13 @@ function parseAndTransform(htmlString, transformFunction) {
  * @return {string}
  */
 function _parseAndTransform(nodes, transformFunction) {
-    return _.map(nodes, function (node) {
-        return transformFunction(node, function () {
-            return _parseAndTransform(node.childNodes, transformFunction);
-        });
-    }).join("");
+    return Array.from($(nodes))
+        .map((node) => {
+            return transformFunction(node, function () {
+                return _parseAndTransform(node.childNodes, transformFunction);
+            });
+        })
+        .join("");
 }
 
 /**
@@ -85,16 +87,19 @@ function linkify(text, attrs) {
     if (attrs.target === "_blank") {
         attrs.rel = "noreferrer noopener";
     }
-    attrs = _.map(attrs, function (value, key) {
-        return key + '="' + _.escape(value) + '"';
-    }).join(" ");
+    attrs = Object.keys(attrs || {})
+        .map((key) => {
+            const value = attrs[key];
+            return `${key}="${escape(value)}"`;
+        })
+        .join(" ");
     let curIndex = 0;
     let result = "";
     let match;
     while ((match = urlRegexp.exec(text)) !== null) {
         result += _escapeEntities(text.slice(curIndex, match.index));
         const url = match[0];
-        const href = !/^https?:\/\//i.test(url) ? "http://" + _.escape(url) : _.escape(url);
+        const href = !/^https?:\/\//i.test(url) ? "http://" + encodeURI(url) : encodeURI(url);
         result += "<a " + attrs + ' href="' + href + '">' + _escapeEntities(url) + "</a>";
         curIndex = match.index + match[0].length;
     }
@@ -175,11 +180,11 @@ function parseEmail(text) {
     if (text) {
         var result = text.match(/"?(.*?)"? <(.*@.*)>/);
         if (result) {
-            return [_.str.trim(result[1]), _.str.trim(result[2])];
+            return [(result[1] || "").trim(), (result[2] || "").trim()];
         }
         result = text.match(/(.*@.*)/);
         if (result) {
-            return [_.str.trim(result[1]), _.str.trim(result[1])];
+            return [String(result[1] || "").trim(), String(result[1] || "").trim()];
         }
         return [text, false];
     }

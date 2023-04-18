@@ -4,6 +4,7 @@ import core from "web.core";
 import config from "web.config";
 import utils from "web.utils";
 import Widget from "web.Widget";
+import { debounce } from "@web/core/utils/timing";
 
 
 /**
@@ -147,7 +148,7 @@ var NameAndSignature = Widget.extend({
         }
 
         // Resize the signature area if it is resized
-        $(window).on('resize.o_web_sign_name_and_signature', _.debounce(function () {
+        $(window).on('resize.o_web_sign_name_and_signature', debounce(function () {
             if (self.isDestroyed()) {
                 // May happen since this is debounced
                 return;

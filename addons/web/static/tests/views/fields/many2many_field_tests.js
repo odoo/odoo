@@ -286,7 +286,8 @@ QUnit.module("Fields", (hooks) => {
                     });
                     var ids = _.sortBy([12, 15, 18].concat(createdType.id), _.identity.bind(_));
                     assert.ok(
-                        _.isEqual(_.sortBy(commands[0][2], _.identity.bind(_)), ids),
+                        JSON.stringify(_.sortBy(commands[0][2], _.identity.bind(_))) ===
+                            JSON.stringify(ids),
                         "new value should be " + ids
                     );
                 }

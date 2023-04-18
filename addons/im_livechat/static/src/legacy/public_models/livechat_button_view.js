@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { attr, clear, one, Model } from "@im_livechat/legacy/model";
+import { debounce } from "@web/core/utils/timing";
 
 import { getCookie, deleteCookie } from "web.utils.cookies";
 
@@ -480,7 +481,7 @@ Model({
         }),
         openChatDebounced: attr({
             compute() {
-                return _.debounce(this._openChat, 200, true);
+                return debounce(this._openChat, 200, true);
             },
         }),
         publicLivechatGlobalOwner: one("PublicLivechatGlobal", {

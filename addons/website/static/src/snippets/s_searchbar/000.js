@@ -5,6 +5,7 @@ import publicWidget from 'web.public.widget';
 
 import {qweb} from 'web.core';
 import {Markup} from 'web.utils';
+import { debounce } from '@web/core/utils/timing';
 
 publicWidget.registry.searchBar = publicWidget.Widget.extend({
     selector: '.o_searchbar_form',
@@ -24,8 +25,8 @@ publicWidget.registry.searchBar = publicWidget.Widget.extend({
 
         this._dp = new concurrency.DropPrevious();
 
-        this._onInput = _.debounce(this._onInput, 400);
-        this._onFocusOut = _.debounce(this._onFocusOut, 100);
+        this._onInput = debounce(this._onInput, 400);
+        this._onFocusOut = debounce(this._onFocusOut, 100);
     },
     /**
      * @override

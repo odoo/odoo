@@ -16,6 +16,7 @@ import session from "web.session";
 import field_utils from "web.field_utils";
 import utils from "web.utils";
 import { sprintf } from "@web/core/utils/strings";
+import { debounce } from "@web/core/utils/timing";
 
 var _t = core._t;
 var _lt = core._lt;
@@ -238,7 +239,7 @@ var DebouncedField = AbstractField.extend({
         this._isDirty = false;
         if (this.mode === 'edit') {
             if (this.DEBOUNCE) {
-                this._doDebouncedAction = _.debounce(this._doAction, this.DEBOUNCE);
+                this._doDebouncedAction = debounce(this._doAction, this.DEBOUNCE);
             } else {
                 this._doDebouncedAction = this._doAction;
             }

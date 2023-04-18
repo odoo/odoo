@@ -4,7 +4,7 @@
     import ajax from "web.ajax";
     import core from "web.core";
     import "web.dom_ready";
-    import { sprintf } from "@web/core/utils/strings";
+    import { sprintf, escape } from "@web/core/utils/strings";
 
     var _t = core._t;
 
@@ -48,7 +48,7 @@ if ($('.o_unsubscribe_form').length) {
         if (unsubscribed_list){
             $('#subscription_info').html(sprintf(
                 _t("You have been <strong>successfully unsubscribed from %s</strong>."),
-                _.escape(unsubscribed_list)
+                escape(unsubscribed_list)
             ));
         }
         else{

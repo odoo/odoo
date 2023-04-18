@@ -12,6 +12,7 @@ import dom from "web.dom";
 import { cartesian } from "@web/core/utils/arrays";
 import { ComponentWrapper } from "web.OwlCompatibility";
 import { ProductImageViewerWrapper } from "@website_sale/js/components/website_sale_image_viewer";
+import { debounce } from "@web/core/utils/timing";
 
 publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, cartHandlerMixin, {
     selector: '.oe_website_sale',
@@ -49,8 +50,8 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
     init: function () {
         this._super.apply(this, arguments);
 
-        this._changeCartQuantity = _.debounce(this._changeCartQuantity.bind(this), 500);
-        this._changeCountry = _.debounce(this._changeCountry.bind(this), 500);
+        this._changeCartQuantity = debounce(this._changeCartQuantity.bind(this), 500);
+        this._changeCountry = debounce(this._changeCountry.bind(this), 500);
 
         this.isWebsite = true;
         this.filmStripStartX = 0;
@@ -181,9 +182,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      */
     _setUrlHash: function ($parent) {
         var $attributes = $parent.find('input.js_variant_change:checked, select.js_variant_change option:selected');
-        var attributeIds = _.map($attributes, function (elem) {
-            return $(elem).data('value_id');
-        });
+        var attributeIds = $attributes.toArray().map((elem) => $(elem).data("value_id"));
         window.location.replace('#attr=' + attributeIds.join(','));
     },
     /**

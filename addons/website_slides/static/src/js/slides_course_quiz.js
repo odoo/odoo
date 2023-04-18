@@ -280,7 +280,7 @@
                 $question.find('a.o_wslides_quiz_answer').each(function () {
                     var $answer = $(this);
                     if (!$answer.find('input[type=radio]')[0].checked &&
-                        _.contains(self.slide.sessionAnswers, $answer.data('answerId'))) {
+                        self.slide.sessionAnswers.includes($answer.data('answerId'))) {
                         $answer.find('input[type=radio]').prop('checked', true);
                     }
                 });

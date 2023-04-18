@@ -175,7 +175,7 @@ registry.category("web_tour.tours").add("website_form_editor_tour_results", {
                     $('body').append('<div id="website_form_editor_success_test_tour_'+model+'"></div>');
                 }
             };
-            mailDef.then(_.bind(success, this, 'mail_mail'));
+            mailDef.then(success.bind(this, 'mail_mail'));
         }
     },
     {

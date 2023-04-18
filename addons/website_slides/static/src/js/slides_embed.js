@@ -1,4 +1,5 @@
 /* global PDFSlidesViewer */
+
 /**
  * This is a minimal version of the PDFViewer widget.
  * It is NOT use in the website_slides module, but it is called when embedding
@@ -6,6 +7,14 @@
  * (see website_slides.slide_embed_assets bundle, in website_slides_embed.xml)
  */
 $(function () {
+
+    function debounce(func, timeout = 300){
+        let timer;
+        return (...args) => {
+          clearTimeout(timer);
+          timer = setTimeout(() => { func.apply(this, args); }, timeout);
+        };
+    }
 
     if ($('#PDFViewer') && $('#PDFViewerCanvas')) { // check if presentation only
         var MIN_ZOOM=1, MAX_ZOOM=10, ZOOM_INCREMENT=.5;
@@ -177,7 +186,7 @@ $(function () {
                 return false;
             }
         });
-        $(window).on('resize', _.debounce(function() {
+        $(window).on("resize", debounce(() => {
             embeddedViewer.on_resize();
         }, 500));
 

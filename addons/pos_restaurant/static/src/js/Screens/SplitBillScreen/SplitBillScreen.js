@@ -5,7 +5,7 @@ import { Order } from "@point_of_sale/js/models";
 import { SplitOrderline } from "./SplitOrderline";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { Component, useState, onMounted  } from "@odoo/owl";
+import { Component, useState, onMounted } from "@odoo/owl";
 
 export class SplitBillScreen extends Component {
     static template = "SplitBillScreen";
@@ -46,7 +46,7 @@ export class SplitBillScreen extends Component {
         this.pos.showScreen("ProductScreen");
     }
     proceed() {
-        if (_.isEmpty(this.splitlines)) {
+        if (Object.keys(this.splitlines || {})?.length === 0) {
             // Splitlines is empty
             return;
         }

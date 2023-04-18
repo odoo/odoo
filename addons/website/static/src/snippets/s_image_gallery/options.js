@@ -278,7 +278,7 @@ options.registry.gallery = options.Class.extend({
      */
     slideshow: function () {
         const imageEls = this._getImages();
-        const images = _.map(imageEls, img => ({
+        const images = imageEls.map((img) => ({
             // Use getAttribute to get the attribute value otherwise .src
             // returns the absolute url.
             src: img.getAttribute('src'),

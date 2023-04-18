@@ -694,7 +694,7 @@ var DomainLeaf = DomainNode.extend({
                 // Set list of operators according to field type
                 var selectedField = this.fieldSelector.getSelectedField() || {};
                 this.operators = this._getOperatorsFromType(selectedField.type);
-                if (_.contains(["child_of", "parent_of", "like", "not like", "=like", "=ilike"], this.operator)) {
+                if (["child_of", "parent_of", "like", "not like", "=like", "=ilike"].includes(this.operator)) {
                     // In case user entered manually or from demo data
                     this.operators[this.operator] = operator_mapping[this.operator];
                 } else if (!this.operators[this.operator]) {
@@ -726,7 +726,7 @@ var DomainLeaf = DomainNode.extend({
                 }
 
                 // TODO the value could be a m2o input, etc...
-                if (_.contains(["date", "datetime"], selectedField.type)) {
+                if (["date", "datetime"].includes(selectedField.type)) {
                     this.valueWidget = new (selectedField.type === "datetime" ? datepicker.DateTimeWidget : datepicker.DateWidget)(this);
                     wDefs.push(this.valueWidget.appendTo("<div/>").then((function () {
                         this.valueWidget.$el.addClass("o_domain_leaf_value_input");
@@ -821,10 +821,10 @@ var DomainLeaf = DomainNode.extend({
     _changeOperator: function (operator, silent) {
         this.operator = operator;
 
-        if (_.contains(["set", "not set"], this.operator)) {
+        if (["set", "not set"].includes(this.operator)) {
             this.operator = this.operator === "not set" ? "=" : "!=";
             this.value = false;
-        } else if (_.contains(["in", "not in"], this.operator)) {
+        } else if (["in", "not in"].includes(this.operator)) {
             this.value = Array.isArray(this.value) ? this.value : this.value ? ("" + this.value).split(",") : [];
         } else {
             if (Array.isArray(this.value)) {
@@ -857,22 +857,22 @@ var DomainLeaf = DomainNode.extend({
         }
 
         if (selectedField.type === "boolean") {
-            if (!_.isBoolean(this.value)) { // Convert boolean-like value to boolean
+            if (typeof this.value !== "boolean") { // Convert boolean-like value to boolean
                 this.value = !!parseFloat(this.value);
             }
         } else if (selectedField.type === "selection") {
             if (!_.some(selectedField.selection, (function (option) { return option[0] === this.value; }).bind(this))) {
                 this.value = selectedField.selection[0][0];
             }
-        } else if (_.contains(["date", "datetime"], selectedField.type)) {
-            if (couldNotParse || _.isBoolean(this.value)) {
+        } else if (["date", "datetime"].includes(selectedField.type)) {
+            if (couldNotParse || typeof this.value === "boolean") {
                 this.value = field_utils.parse[selectedField.type](field_utils.format[selectedField.type](moment())).toJSON(); // toJSON to get date with server format
             } else {
                 this.value = this.value.toJSON(); // toJSON to get date with server format
             }
         } else {
             // Never display "true" or "false" strings from boolean value
-            if (_.isBoolean(this.value)) {
+            if (typeof this.value === "boolean") {
                 this.value = "";
             } else if (_.isObject(this.value) && !Array.isArray(this.value)) { // Can be object if parsed to x2x representation
                 this.value = this.value.id || value || "";
@@ -975,7 +975,7 @@ var DomainLeaf = DomainNode.extend({
     // TODO The two following functions should be in an independant widget
     on_add_tag: function (e) {
         if (e.type === "keyup" && e.which !== $.ui.keyCode.ENTER) return;
-        if (!_.contains(["not in", "in"], this.operator)) return;
+        if (!["not in", "in"].includes(this.operator)) return;
 
         var values = Array.isArray(this.value) ? this.value.slice() : [];
 

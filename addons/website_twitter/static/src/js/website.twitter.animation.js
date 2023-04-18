@@ -3,6 +3,7 @@
 import core from "web.core";
 import {Markup} from "web.utils";
 import publicWidget from "web.public.widget";
+import { escape } from "@web/core/utils/strings";
 
 var qweb = core.qweb;
 
@@ -31,13 +32,13 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 return;
             }
 
-            if (_.isEmpty(data)) {
+            if (Object.keys(data || {}).length === 0) {
                 return;
             }
 
-            var tweets = _.map(data, function (tweet) {
+            var tweets = data.map((tweet) => {
                 // Parse tweet date
-                if (_.isEmpty(tweet.created_at)) {
+                if (Object.keys(tweet.created_at || {}).length === 0) {
                     tweet.created_at = '';
                 } else {
                     var v = tweet.created_at.split(' ');
@@ -46,7 +47,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 }
 
                 // Parse tweet text
-                tweet.text = Markup(_.escape(tweet.text)
+                tweet.text = Markup(escape(tweet.text)
                     .replace(
                         /[A-Za-z]+:\/\/[A-Za-z0-9-_]+\.[A-Za-z0-9-_:%&~\?\/.=]+/g,
                         function (url) {

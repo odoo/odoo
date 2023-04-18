@@ -1,5 +1,6 @@
 /** @odoo-module alias=web.Popover **/
     
+    import { debounce } from "@web/core/utils/timing";
     import { LegacyComponent } from "@web/legacy/legacy_component";
     const { status, onWillUnmount, useEffect, useRef, useState } = owl;
 
@@ -29,7 +30,7 @@
             this._onResizeWindow = this._onResizeWindow.bind(this);
 
             this._onScrollDocument = _.throttle(this._onScrollDocument, 50);
-            this._onResizeWindow = _.debounce(this._onResizeWindow, 250);
+            this._onResizeWindow = debounce(this._onResizeWindow, 250);
 
             /**
              * Those events are only necessary if the popover is currently open,

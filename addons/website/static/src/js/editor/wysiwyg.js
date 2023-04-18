@@ -16,7 +16,7 @@ import socialMediaOptions from "@website/snippets/s_social_media/options";
  * @returns {Promise<jQuery>}
  */
 function toggleDropdown($toggles, show) {
-    return Promise.all(_.map($toggles, toggle => {
+    return Promise.all($($toggles).toArray().map(toggle => {
         // We must select the element via the iframe so that the event handlers
         // declared on the iframe are triggered.
         const $toggle = toggle.ownerDocument.defaultView.$(toggle);

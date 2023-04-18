@@ -1,6 +1,7 @@
 /** @odoo-module alias=website_event_track.website_event_track_reminder **/
 
 import { sprintf } from "@web/core/utils/strings";
+import { debounce } from "@web/core/utils/timing";
 import core from "web.core";
 var _t = core._t;
 import publicWidget from "web.public.widget";
@@ -16,7 +17,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._onReminderToggleClick = _.debounce(this._onReminderToggleClick, 500, true);
+        this._onReminderToggleClick = debounce(this._onReminderToggleClick, 500, true);
     },
 
     //--------------------------------------------------------------------------

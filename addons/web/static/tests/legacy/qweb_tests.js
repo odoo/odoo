@@ -4,6 +4,7 @@ import {Markup} from "web.utils";
 
 var qwebPath = '/web/static/lib/qweb/';
 import {hushConsole} from "@web/../tests/helpers/utils";
+import { escape } from "@web/core/utils/strings";
 
 function trim(s) {
     return s.replace(/(^\s+|\s+$)/g, '');
@@ -114,13 +115,13 @@ QUnit.module('QWeb', {
     QUnit.test('escape', assert => {
         // not strictly about qweb...
         assert.expect(8);
-        assert.equal(_.escape('a'), 'a');
-        assert.equal(_.escape('<a>'), '&lt;a&gt;');
+        assert.equal(escape('a'), 'a');
+        assert.equal(escape('<a>'), '&lt;a&gt;');
         assert.equal(_.escape({[_.escapeMethod]() { return 'a'; }}), 'a');
         assert.equal(_.escape({[_.escapeMethod]() { return '<a>'; }}), '<a>');
-        assert.equal(_.escape(Markup('a')), 'a');
+        assert.equal(escape(Markup('a')), 'a');
         assert.equal(_.escape(Markup('<a>')), '<a>');
-        assert.equal(_.escape(Markup`a`), 'a');
+        assert.equal(escape(Markup`a`), 'a');
         assert.equal(_.escape(Markup`<a>`), '<a>');
     });
     QUnit.module('t-out', {}, () => {

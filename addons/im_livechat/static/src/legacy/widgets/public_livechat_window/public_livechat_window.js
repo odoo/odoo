@@ -6,6 +6,7 @@ import Widget from "web.Widget";
 
 import { unaccent } from "web.utils";
 import { setCookie } from "web.utils.cookies";
+import { debounce } from "@web/core/utils/timing";
 
 /**
  * This is the widget that represent windows of livechat in the frontend.
@@ -35,7 +36,7 @@ const PublicLivechatWindow = Widget.extend({
         this._super(parent);
         this.messaging = messaging;
 
-        this._debouncedOnScroll = _.debounce(this._onScroll.bind(this), 100);
+        this._debouncedOnScroll = debounce(this._onScroll.bind(this), 100);
     },
     /**
      * @override
@@ -175,7 +176,7 @@ const PublicLivechatWindow = Widget.extend({
      *   Otherwise, fold/unfold the window if set/unset.
      */
     toggleFold(folded) {
-        if (!_.isBoolean(folded)) {
+        if (typeof folded !== "boolean") {
             folded = !this.messaging.publicLivechatGlobal.publicLivechat.isFolded;
         }
         this.messaging.publicLivechatGlobal.publicLivechat.update({ isFolded: folded });
@@ -327,7 +328,7 @@ const PublicLivechatWindow = Widget.extend({
         ev.stopPropagation(); // to prevent jquery's blockUI to cancel event
         // ENTER key (avoid requiring jquery ui for external livechat)
         if (ev.which === 13) {
-            const content = _.str.trim(this.$input.val());
+            const content = String(this.$input.val() || "").trim();
             const messageData = {
                 content,
                 attachment_ids: [],

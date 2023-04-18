@@ -3,6 +3,7 @@
     import publicWidget from "web.public.widget";
 
     import paymentFormMixin from "payment.payment_form_mixin";
+    import { debounce } from "@web/core/utils/timing";
 
     publicWidget.registry.PaymentCheckoutForm = publicWidget.Widget.extend(paymentFormMixin, {
         selector: 'form[name="o_payment_checkout"]',
@@ -19,7 +20,7 @@
          */
         init: function () {
             const preventDoubleClick = handlerMethod => {
-                return _.debounce(handlerMethod, 500, true);
+                return debounce(handlerMethod, 500, true);
             };
             this._super(...arguments);
             // Prevent double-clicks and browser glitches on all inputs

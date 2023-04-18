@@ -1,6 +1,7 @@
 /** @odoo-module **/
     
-    import checkoutForm from "payment.checkout_form";
+    import { debounce } from "@web/core/utils/timing";
+import checkoutForm from "payment.checkout_form";
     import publicWidget from "web.public.widget";
 
     const websiteSalePaymentMixin = {
@@ -9,7 +10,7 @@
          * @override
          */
         init: function () {
-            this._onClickTCCheckbox = _.debounce(this._onClickTCCheckbox, 100, true);
+            this._onClickTCCheckbox = debounce(this._onClickTCCheckbox, 100, true);
             this._super(...arguments);
         },
 
@@ -60,9 +61,7 @@
          * @return {boolean} Whether the submit button can be enabled
          */
         _isButtonReady: function () {
-            const disabledReasonFound = _.contains(
-                this.$submitButton.data('disabled_reasons'), true
-            );
+            const disabledReasonFound = this.$submitButton.data("disabled_reasons");
             return !disabledReasonFound && this._super();
         },
 
@@ -115,10 +114,7 @@
              */
             _onClickTCCheckbox: function () {
                 this._adaptConfirmButton();
-
-                const disabledReasonFound = _.contains(
-                    this.$submitButton.data('disabled_reasons'), true
-                );
+                const disabledReasonFound = this.$submitButton.data("disabled_reasons");
                 this.$submitButton.prop('disabled', disabledReasonFound);
             },
         }));
