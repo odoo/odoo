@@ -12,11 +12,11 @@ class ResPartner(models.Model):
         string="Format",
         selection=[
             ('facturx', "Factur-X (CII)"),
-            ('xrechnung', "XRechnung (UBL)"),
+            ('ubl_bis3', "Peppol BIS Billing 3.0"),
+            ('xrechnung', "XRechnung CIUS"),
             ('nlcius', "NLCIUS"),
-            ('ubl_bis3', "Peppol Bis Billing 3.0"),
-            ('ubl_a_nz', "A-NZ BIS Billing 3.0"),
-            ('ubl_sg', "SG BIS Billing 3.0"),
+            ('ubl_a_nz', "Peppol BIS Billing 3.0 A-NZ"),
+            ('ubl_sg', "Peppol BIS Billing 3.0 SG"),
         ],
         compute='_compute_ubl_cii_format',
         store=True,
@@ -28,6 +28,7 @@ class ResPartner(models.Model):
         compute="_compute_peppol_endpoint",
         store=True,
         readonly=False,
+        tracking=True,
     )
     peppol_eas = fields.Selection(
         string="Peppol e-address (EAS)",
@@ -36,6 +37,7 @@ class ResPartner(models.Model):
         compute="_compute_peppol_eas",
         store=True,
         readonly=False,
+        tracking=True,
         selection=[
             ('0002', "0002 - System Information et Repertoire des Entreprise et des Etablissements: SIRENE"),
             ('0007', "0007 - Organisationsnummer (Swedish legal entities)"),
@@ -137,7 +139,7 @@ class ResPartner(models.Model):
             else:
                 partner.ubl_cii_format = partner.ubl_cii_format
 
-    @api.depends('country_code', 'vat')
+    @api.depends('country_code')
     def _compute_peppol_endpoint(self):
         for partner in self:
             if partner.ubl_cii_format != 'facturx' and partner.country_code in EAS_MAPPING:
@@ -152,7 +154,7 @@ class ResPartner(models.Model):
             else:
                 partner.peppol_endpoint = partner.peppol_endpoint
 
-    @api.depends('country_code', 'vat')
+    @api.depends('country_code')
     def _compute_peppol_eas(self):
         for partner in self:
             if partner.ubl_cii_format != 'facturx' and partner.country_code in EAS_MAPPING:
