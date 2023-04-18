@@ -57,9 +57,7 @@ function fromField(f, record) {
             clipboard.on('success', function () {
                 clipboard.destroy();
                 $(copyButton).tooltip('show');
-                _.delay(function () {
-                    $(copyButton).tooltip("hide");
-                }, 800);
+                setTimeout(() => $(copyButton).tooltip("hide"), 800);
             });
             clipboard.on('error', function (e) {
                 clipboard.destroy();

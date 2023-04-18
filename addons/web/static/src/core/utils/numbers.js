@@ -16,15 +16,16 @@ export function clamp(num, min, max) {
  * A function to create flexibly-numbered lists of integers, handy for each and map loops.
  * step defaults to 1.
  * Returns a list of integers from start (inclusive) to stop (exclusive), incremented (or decremented) by step.
- * @param {number} min default 0
- * @param {number} max
+ * @param {number} start default 0
+ * @param {number} stop
  * @param {number} step default 1
  * @returns {number[]}
  */
 export function range(start, stop, step = 1) {
     const array = [];
-    for (let i = start; i < stop; i += step) {
-        array.push(i);
+    const nsteps = Math.floor((stop - start) / step);
+    for (let i = 0; i < nsteps; i++) {
+        array.push(start + step * i);
     }
     return array;
 }

@@ -115,7 +115,7 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
         const records = this.getRecords(res_model, domain);
 
         const activityTypes = this.getRecords("mail.activity.type", []);
-        const activityIds = _.pluck(records, "activity_ids").flat();
+        const activityIds = records.map((x) => x.activity_ids).flat();
 
         const groupedActivities = {};
         const resIdToDeadline = {};
@@ -157,7 +157,7 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
                 count: group.__count,
                 state: state,
                 o_closest_deadline: group.date_deadline,
-                ids: _.pluck(activites, "id"),
+                ids: activites.map((x) => x.id),
             };
         });
 
@@ -177,9 +177,12 @@ patch(MockServer.prototype, "mail/models/mail_activity", {
                 }
                 return [type.id, type.display_name, mailTemplates];
             }),
-            activity_res_ids: _.sortBy(_.pluck(records, "id"), function (id) {
-                return moment(resIdToDeadline[id]);
-            }),
+            activity_res_ids: _.sortBy(
+                records.map((x) => x.id),
+                function (id) {
+                    return moment(resIdToDeadline[id]);
+                }
+            ),
             grouped_activities: groupedActivities,
         };
     },

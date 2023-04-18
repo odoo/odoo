@@ -86,7 +86,9 @@ function blockUI() {
 }
 
 function unblockUI() {
-    _.invoke(throbbers, 'destroy');
+    throbbers.forEach((throbber) => {
+        throbber.destroy();
+    });
     throbbers = [];
     $(document.body).removeClass('o_ui_blocked');
     unblockAccessKeys();

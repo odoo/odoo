@@ -114,7 +114,10 @@ function _updateSizeProps() {
     }
 }
 
-_.invoke(medias, 'addListener', _updateSizeProps);
+medias.forEach((media) => {
+    media.addListener(_updateSizeProps);
+});
+
 _updateSizeProps();
 
 export default config;

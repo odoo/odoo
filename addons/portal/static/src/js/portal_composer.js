@@ -147,8 +147,8 @@ var PortalComposer = publicWidget.Widget.extend({
     _prepareMessageData: function () {
         return Object.assign(this.options || {}, {
             'message': this.$('textarea[name="message"]').val(),
-            'attachment_ids': _.pluck(this.attachments, 'id'),
-            'attachment_tokens': _.pluck(this.attachments, 'access_token'),
+            attachment_ids: this.attachments.map((a) => a.id),
+            attachment_tokens: this.attachments.map((a) => a.access_token),
         });
     },
     /**

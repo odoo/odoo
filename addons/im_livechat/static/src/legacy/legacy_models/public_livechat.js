@@ -102,7 +102,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             });
         }
 
-        if (_.isBoolean(params.data.folded)) {
+        if (typeof params.data.folded === "boolean") {
             this.messaging.publicLivechatGlobal.publicLivechat.update({
                 isFolded: params.data.folded,
             });
@@ -207,7 +207,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {boolean}
      */
     hasMessages() {
-        return !_.isEmpty(this.getMessages());
+        return Object.keys(this.getMessages() || {}).length > 0;
     },
     /**
      * Tells if someone other than current user is typing something on this
@@ -216,7 +216,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
      * @returns {boolean}
      */
     isSomeoneTyping() {
-        return !_.isEmpty(this._typingPartnerIDs);
+        return Object.keys(this._typingPartnerIDs || {}).length > 0;
     },
     /**
      * Mark the thread as read, which resets the unread counter to 0. This is
@@ -269,7 +269,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
             timeoutCallbackArguments: [partnerID],
             timerID: partnerID,
         });
-        if (_.contains(this._typingPartnerIDs, partnerID)) {
+        if (this._typingPartnerIDs.includes(partnerID)) {
             return;
         }
         this._typingPartnerIDs.push(partnerID);
@@ -327,7 +327,7 @@ const PublicLivechat = Class.extend(Mixins.EventDispatcherMixin, {
     unregisterTyping(params) {
         const partnerID = params.partnerID;
         this._othersTypingTimers.unregisterTimer({ timerID: partnerID });
-        if (!_.contains(this._typingPartnerIDs, partnerID)) {
+        if (!this._typingPartnerIDs.includes(partnerID)) {
             return;
         }
         this._typingPartnerIDs = this._typingPartnerIDs.filter((id) => id !== partnerID);

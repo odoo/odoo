@@ -251,7 +251,7 @@ export const PublicRoot = publicWidget.RootWidget.extend({
             args = args.concat(ev.target);
 
             var route = args[0];
-            if (_.str.startsWith(route, '/web/dataset/call_kw/')) {
+            if (String(route).startsWith("/web/dataset/call_kw/")) {
                 var params = args[1];
                 var options = args[2];
                 var noContextKeys;

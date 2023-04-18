@@ -8,6 +8,7 @@ import Dialog from "web.Dialog";
 import Widget from "web.Widget";
 import localStorage from "web.local_storage";
 import { sprintf } from "@web/core/utils/strings";
+import { debounce } from "@web/core/utils/timing";
 
 var _t = core._t;
 
@@ -110,10 +111,10 @@ var checkSCSS = (function () {
     return function (scss) {
         var stack = [];
         var line = 1;
-        for (var i = 0 ; i < scss.length ; i++) {
-            if (_.contains(openings, scss[i])) {
+        for (var i = 0; i < scss.length; i++) {
+            if (openings.includes(scss[i])) {
                 stack.push(scss[i]);
-            } else if (_.contains(closings, scss[i])) {
+            } else if (closings.includes(scss[i])) {
                 if (stack.pop() !== mapping[scss[i]]) {
                     return _getCheckReturn(false, line, _t("Unexpected ") + scss[i]);
                 }
@@ -254,7 +255,7 @@ var ViewEditor = Widget.extend({
         var refX = 0;
         var resizing = false;
         var minWidth = 400;
-        var debounceStoreEditorWidth = _.debounce(storeEditorWidth, 500);
+        var debounceStoreEditorWidth = debounce(storeEditorWidth, 500);
 
         this._updateViewSelectDOM();
 
@@ -262,8 +263,8 @@ var ViewEditor = Widget.extend({
         var initType;
         if (this.options.initialResID) {
             initResID = this.options.initialResID;
-            if (_.isString(initResID) && initResID[0] === '/') {
-                if (_.str.endsWith(initResID, '.scss')) {
+            if (typeof initResID === "string" && initResID[0] === '/') {
+                if (initResID.endsWith(".scss")) {
                     initType = 'scss';
                 } else {
                     initType = 'js';
@@ -739,7 +740,7 @@ var ViewEditor = Widget.extend({
         } else {
             var onChangeSession = (function () {
                 this.aceEditor.off('changeSession', onChangeSession);
-                _.delay(__showErrorLine.bind(this, line), 400);
+                setTimeout(__showErrorLine.bind(this, line), 400);
             }).bind(this);
             this.aceEditor.on('changeSession', onChangeSession);
             this._displayResource(resID, this.currentType);
@@ -799,7 +800,7 @@ var ViewEditor = Widget.extend({
             this.errorSession = this.aceEditor.getSession();
             this.errorSessionChangeCallback = __restore.bind(this);
             this.errorSession.on('change', this.errorSessionChangeCallback);
-            this.errorSessionScrollCallback = _.debounce(__updateErrorLineDisplay.bind(this, line), 10);
+            this.errorSessionScrollCallback = debounce(__updateErrorLineDisplay.bind(this, line), 10);
             this.errorSession.on('changeScrollTop', this.errorSessionScrollCallback);
 
             __updateErrorLineDisplay.call(this, line);

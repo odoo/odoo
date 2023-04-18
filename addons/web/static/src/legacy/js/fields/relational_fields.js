@@ -582,7 +582,7 @@ var FieldMany2One = AbstractField.extend({
      * @returns {string} escaped html of value lines
      */
     _renderValueLines: function (needFirstLine) {
-        const escapedValue = _.escape((this.m2o_value || "").trim());
+        const escapedValue = escape((this.m2o_value || "").trim());
         const lines = escapedValue.split('\n');
         if (!needFirstLine) {
             lines.shift();
@@ -1050,7 +1050,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @returns {Promise}
      */
     _addTag: function (data) {
-        if (!_.contains(this.value.res_ids, data.id)) {
+        if (!this.value.res_ids.includes(data.id)) {
             return this._setValue({
                 operation: 'ADD_M2M',
                 ids: data
@@ -1076,7 +1076,7 @@ var FieldMany2ManyTags = AbstractField.extend({
      * @returns {Object}
      */
     _getRenderTagsContext: function () {
-        var elements = this.value ? _.pluck(this.value.data, 'data') : [];
+        var elements = this.value ? this.value.data.map((d) => d.data) : [];
         return {
             colorField: this.colorField,
             elements: elements,
@@ -1249,7 +1249,7 @@ const M2MAvatarMixin = {
             html: true,
             placement: 'auto',
             content: () => {
-                const elements = this.value ? _.pluck(this.value.data, 'data') : [];
+                const elements = this.value ? this.value.data.map((d) => d.data) : [];
                 return qweb.render('Many2ManyTagAvatarPopover', {
                     elements: elements.slice(this.visibleAvatarCount - 1),
                 });

@@ -210,7 +210,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         var noVariantAttributeValues = mainProduct.no_variant_attribute_values;
         var noVariantCommands = [{ operation: "DELETE_ALL" }];
         if (noVariantAttributeValues && noVariantAttributeValues.length !== 0) {
-            var resIds = _.map(noVariantAttributeValues, function (noVariantValue) {
+            var resIds = noVariantAttributeValues.map((noVariantValue) => {
                 return { id: parseInt(noVariantValue.value) };
             });
 

@@ -34,6 +34,7 @@ import {
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import { sprintf } from "@web/core/utils/strings";
+import { debounce } from "@web/core/utils/timing";
 
 var qweb = core.qweb;
 var _t = core._t;
@@ -2370,7 +2371,7 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
             this.containerEl.appendChild(this.outputEl);
         }
 
-        this._onInputChange = _.debounce(this._onInputChange, 100);
+        this._onInputChange = debounce(this._onInputChange, 100);
     },
 
     //--------------------------------------------------------------------------
@@ -4767,8 +4768,8 @@ registry['sizing_x'] = registry.sizing.extend({
         var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         this.grid = {
-            e: [_.map(gridE, v => ('col-lg-' + v)), _.map(gridE, v => width / 12 * v), 'width'],
-            w: [_.map(gridW, v => ('offset-lg-' + v)), _.map(gridW, v => width / 12 * v), 'margin-left'],
+            e: [gridE.map(v => ('col-lg-' + v)), gridE.map(v => width / 12 * v), 'width'],
+            w: [gridW.map(v => ('offset-lg-' + v)), gridW.map(v => width / 12 * v), 'margin-left'],
         };
         return this.grid;
     },
@@ -4847,10 +4848,10 @@ registry['sizing_grid'] = registry.sizing.extend({
         const gridE = [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
         this.grid = {
-            n: [_.map(gridN, v => ('g-height-' + (rowEnd - v))), _.map(gridN, v => ((gridProp.rowSize + gridProp.rowGap) * (v - 1))), 'grid-row-start'],
-            s: [_.map(gridS, v => ('g-height-' + (v - rowStart))), _.map(gridS, v => ((gridProp.rowSize + gridProp.rowGap) * (v - 1))), 'grid-row-end'],
-            w: [_.map(gridW, v => ('g-col-lg-' + (columnEnd - v))), _.map(gridW, v => ((gridProp.columnSize + gridProp.columnGap) * (v - 1))), 'grid-column-start'],
-            e: [_.map(gridE, v => ('g-col-lg-' + (v - columnStart))), _.map(gridE, v => ((gridProp.columnSize + gridProp.columnGap) * (v - 1))), 'grid-column-end'],
+            n: [gridN.map(v => ('g-height-' + (rowEnd - v))), gridN.map(v => ((gridProp.rowSize + gridProp.rowGap) * (v - 1))), 'grid-row-start'],
+            s: [gridS.map(v => ('g-height-' + (v - rowStart))), gridS.map(v => ((gridProp.rowSize + gridProp.rowGap) * (v - 1))), 'grid-row-end'],
+            w: [gridW.map(v => ('g-col-lg-' + (columnEnd - v))), gridW.map(v => ((gridProp.columnSize + gridProp.columnGap) * (v - 1))), 'grid-column-start'],
+            e: [gridE.map(v => ('g-col-lg-' + (v - columnStart))), gridE.map(v => ((gridProp.columnSize + gridProp.columnGap) * (v - 1))), 'grid-column-end'],
         };
 
         return this.grid;

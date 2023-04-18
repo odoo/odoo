@@ -15,6 +15,7 @@ import { Table } from "./table";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { Component, onPatched, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
+import { sprintf } from "@web/core/utils/strings";
 
 export class FloorScreen extends Component {
     static components = { EditableTable, EditBar, Table };
@@ -98,7 +99,7 @@ export class FloorScreen extends Component {
     _onDeselectTable() {
         this.state.selectedTableIds = [];
     }
-    async _createTableHelper(copyTable, duplicateFloor=false) {
+    async _createTableHelper(copyTable, duplicateFloor = false) {
         const existingTable = this.activeFloor.tables;
         let newTable;
         if (copyTable) {
@@ -226,9 +227,13 @@ export class FloorScreen extends Component {
         this.activeFloor.table_ids.push(newTable.id);
         return newTable;
     }
-    _getNewTableName() {     
+    _getNewTableName() {
         let firstNum = 1;
-        const tablesNameNumber = this.activeTables.map(table => +table.name).sort(function(a, b){return a-b});
+        const tablesNameNumber = this.activeTables
+            .map((table) => +table.name)
+            .sort(function (a, b) {
+                return a - b;
+            });
 
         for (let i = 0; i < tablesNameNumber.length; i++) {
             if (tablesNameNumber[i] == firstNum) {
@@ -262,7 +267,9 @@ export class FloorScreen extends Component {
                 //This will lead in receiving information on orders from a table that we do not have.
                 //If we do not have a table in the PoS but still receive information about it, we reload the tables
                 //from the server.
-                const result = await this.orm.call("pos.session", "get_pos_ui_restaurant_floor", [[odoo.pos_session_id]]);
+                const result = await this.orm.call("pos.session", "get_pos_ui_restaurant_floor", [
+                    [odoo.pos_session_id],
+                ]);
                 if (this.env.pos.config.is_table_management) {
                     this.env.pos.floors = result;
                     this.env.pos.loadRestaurantFloor();
@@ -279,8 +286,10 @@ export class FloorScreen extends Component {
             table_obj.order_count = table.orders + unsynced_orders;
         }
     }
-    get activeFloor() { 
-        return this.state.selectedFloorId ? this.env.pos.floors_by_id[this.state.selectedFloorId] : null;
+    get activeFloor() {
+        return this.state.selectedFloorId
+            ? this.env.pos.floors_by_id[this.state.selectedFloorId]
+            : null;
     }
     get activeTables() {
         return this.activeFloor ? this.activeFloor.tables : null;
@@ -368,7 +377,11 @@ export class FloorScreen extends Component {
         if (!confirmed) {
             return;
         }
-        const floor = await this.orm.call("restaurant.floor", "create_from_ui", [newName, "#ACADAD",this.env.pos.config.id]);
+        const floor = await this.orm.call("restaurant.floor", "create_from_ui", [
+            newName,
+            "#ACADAD",
+            this.env.pos.config.id,
+        ]);
         this.env.pos.floors_by_id[floor.id] = floor;
         this.env.pos.floors.push(floor);
         this.selectFloor(floor);
@@ -386,10 +399,14 @@ export class FloorScreen extends Component {
             const floor = this.activeFloor;
             const tables = this.activeFloor.tables;
             const newFloorName = floor.name + " (copy)";
-            const newFloor = await this.orm.call("restaurant.floor", "create_from_ui", [newFloorName, floor.background_color, this.env.pos.config.id]);
+            const newFloor = await this.orm.call("restaurant.floor", "create_from_ui", [
+                newFloorName,
+                floor.background_color,
+                this.env.pos.config.id,
+            ]);
             this.env.pos.floors_by_id[newFloor.id] = newFloor;
             this.env.pos.floors.push(newFloor);
-            this.selectFloor(newFloor)
+            this.selectFloor(newFloor);
             for (const table of tables) {
                 await this._createTableHelper(table, true);
             }
@@ -458,8 +475,7 @@ export class FloorScreen extends Component {
                 selectedTable.seats = newSeatsNum;
                 await this._save(selectedTable);
             }
-        })
-        
+        });
     }
     async changeToCircle() {
         await this.changeShape("round");
@@ -474,7 +490,7 @@ export class FloorScreen extends Component {
         this.selectedTables.forEach(async (selectedTable) => {
             selectedTable.shape = form;
             await this._save(selectedTable);
-        })
+        });
         this.render();
     }
     async setTableColor(color) {
@@ -482,7 +498,7 @@ export class FloorScreen extends Component {
         selectedTables.forEach(async (selectedTable) => {
             selectedTable.color = color;
             await this._save(selectedTable);
-        })
+        });
         this.render();
         this.state.isColorPicker = false;
     }
@@ -500,8 +516,8 @@ export class FloorScreen extends Component {
     async deleteFloorOrTable() {
         if (this.selectedTables.length == 0) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
-                title: _.str.sprintf("Removing floor %s", this.activeFloor.name),
-                body: _.str.sprintf(
+                title: `Removing floor ${this.activeFloor.name}`,
+                body: sprintf(
                     this.env._t("Removing a floor cannot be undone. Do you still wanna remove %s?"),
                     this.activeFloor.name
                 ),
@@ -511,7 +527,8 @@ export class FloorScreen extends Component {
             }
             const originalSelectedFloorId = this.activeFloor.id;
             await this.orm.call("restaurant.floor", "deactivate_floor", [
-                originalSelectedFloorId, this.env.pos.pos_session.id
+                originalSelectedFloorId,
+                this.env.pos.pos_session.id,
             ]);
             const floor = this.env.pos.floors_by_id[originalSelectedFloorId];
             const orderList = [...this.env.pos.get_order_list()];
@@ -524,7 +541,9 @@ export class FloorScreen extends Component {
                 delete this.env.pos.tables_by_id[tableId];
             });
             delete this.env.pos.floors_by_id[originalSelectedFloorId];
-            this.env.pos.floors = this.env.pos.floors.filter((floor) => floor.id != originalSelectedFloorId);
+            this.env.pos.floors = this.env.pos.floors.filter(
+                (floor) => floor.id != originalSelectedFloorId
+            );
             this.env.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
             if (this.env.pos.floors.length > 0) {
                 this.selectFloor(this.env.pos.floors[0]);
@@ -558,17 +577,17 @@ export class FloorScreen extends Component {
                 await this.orm.call("restaurant.table", "create_from_ui", [
                     { active: false, id: id },
                 ]);
-                this.activeFloor.tables = this.activeTables.filter(
-                    (table) => table.id !== id
-                );
+                this.activeFloor.tables = this.activeTables.filter((table) => table.id !== id);
                 delete this.env.pos.tables_by_id[id];
             } else {
                 await this.popup.add(ErrorPopup, {
                     title: this.env._t("Delete Error"),
-                    body: this.env._t("You cannot delete a table with orders still in draft for this table."),
+                    body: this.env._t(
+                        "You cannot delete a table with orders still in draft for this table."
+                    ),
                 });
             }
-        })
+        });
         // Value of an object can change inside async function call.
         //   Which means that in this code block, the value of `state.selectedTableId`
         //   before the await call can be different after the finishing the await call.
@@ -577,7 +596,7 @@ export class FloorScreen extends Component {
         //   else is selected during the rpc call.
         const equalsCheck = (a, b) => {
             return JSON.stringify(a) === JSON.stringify(b);
-        }
+        };
         if (equalsCheck(this.state.selectedTableIds, originalSelectedTableIds)) {
             this.state.selectedTableIds = [];
         }

@@ -40,7 +40,7 @@ QUnit.module('core', {}, function () {
 
         try {
             window.Date = function (v) {
-                if (_.isUndefined(v)) {
+                if (typeof v === "undefined") {
                     v = '2013-10-31 12:34:56';
                 }
                 return new wDate(v);
@@ -73,7 +73,7 @@ QUnit.module('core', {}, function () {
 
         try {
             window.Date = function (v) {
-                if (_.isUndefined(v)) {
+                if (typeof v === "undefined") {
                     v = '2013-10-31 12:34:56';
                 }
                 return new wDate(v);

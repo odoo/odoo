@@ -50,7 +50,7 @@ export function getFirstVisibleElement($elements) {
 }
 
 export function getJQueryElementFromSelector(selector) {
-    const iframeSplit = _.isString(selector) && selector.match(/(.*\biframe[^ ]*)(.*)/);
+    const iframeSplit = typeof selector === "string" && selector.match(/(.*\biframe[^ ]*)(.*)/);
     if (iframeSplit && iframeSplit[2]) {
         var $iframe = $(`${iframeSplit[1]}:not(.o_ignore_in_tour)`);
         if ($iframe.is('[is-ready="false"]')) {

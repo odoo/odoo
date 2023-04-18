@@ -5,6 +5,7 @@
     import testUtils from "web.test_utils";
 
     import * as cpHelpers from "@web/../tests/search/helpers";
+    
     const { createControlPanel, mock } = testUtils;
     const { patchDate } = mock;
 

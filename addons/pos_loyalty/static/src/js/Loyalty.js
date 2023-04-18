@@ -377,7 +377,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
     },
     wait_for_push_order() {
         return (
-            !_.isEmpty(this.couponPointChanges) ||
+            Object.keys(this.couponPointChanges || {}).length > 0 ||
             this._has_gift_card_product() ||
             this._get_reward_lines().length ||
             this._super(...arguments)
@@ -931,12 +931,11 @@ patch(Order.prototype, "pos_loyalty.Order", {
                                 continue;
                             }
                             let price_to_use = line.get_price_with_tax();
-                            if (program.program_type === 'gift_card') {
+                            if (program.program_type === "gift_card") {
                                 price_to_use = line.price;
                             }
                             const pointsPerUnit = round_precision(
-                                (rule.reward_point_amount * price_to_use) /
-                                    line.get_quantity(),
+                                (rule.reward_point_amount * price_to_use) / line.get_quantity(),
                                 0.01
                             );
                             if (pointsPerUnit > 0) {

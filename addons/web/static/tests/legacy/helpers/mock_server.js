@@ -216,7 +216,7 @@ var MockServer = Class.extend({
                 if ('default' in model.fields[fieldName]) {
                     const def = model.fields[fieldName].default;
                     record[fieldName] = typeof def === 'function' ? def.call(this) : def;
-                } else if (_.contains(['one2many', 'many2many'], model.fields[fieldName].type)) {
+                } else if (["one2many", "many2many"].includes(model.fields[fieldName].type)) {
                     record[fieldName] = [];
                 } else {
                     record[fieldName] = false;
@@ -1254,7 +1254,7 @@ var MockServer = Class.extend({
             ids = [ids];
         }
         var records = this.data[model].records;
-        var names = _.map(ids, function (id) {
+        var names = ids.map(id => {
             return id ? [id, _.findWhere(records, {id: id}).display_name] : [null, ""];
         });
         return names;
@@ -1299,7 +1299,7 @@ var MockServer = Class.extend({
         if (str.length) {
             records = records.filter(record => record.display_name.indexOf(str) !== -1);
         }
-        var result = _.map(records, function (record) {
+        var result = records.map(record => {
             return [record.id, record.display_name];
         });
         return result.slice(0, limit);
@@ -1471,8 +1471,8 @@ var MockServer = Class.extend({
         });
 
         // filter out non existing fields
-        aggregatedFields = aggregatedFields.filter(name => {
-            return name in self.data[model].fields && !(_.contains(groupByFieldNames,name));
+        aggregatedFields = aggregatedFields.filter((name) => {
+            return name in self.data[model].fields && !groupByFieldNames.includes(name);
         });
 
         function aggregateFields(group, records) {
@@ -1487,7 +1487,7 @@ var MockServer = Class.extend({
                     }
                 }
                 if (type === 'many2one') {
-                    var ids = _.pluck(records, aggregatedFields[i]);
+                    var ids = records.map((record) => aggregatedFields[i]);
                     group[aggregatedFields[i]] = _.uniq(ids).length || null;
                 }
             }
@@ -1657,7 +1657,7 @@ var MockServer = Class.extend({
                     group.__domain = [[fieldName, "=", value]].concat(group.__domain);
                 }
             }
-            if (_.isEmpty(group.__range)) {
+            if (Object.keys(group.__range || {}).length === 0) {
                 delete group.__range;
             }
             // compute count key to match dumb server logic...
@@ -1869,7 +1869,9 @@ var MockServer = Class.extend({
         if (!Array.isArray(ids)) {
             ids = [ids];
         }
-        this.data[model].records = this.data[model].records.filter(record => !_.contains(ids, record.id));
+        this.data[model].records = this.data[model].records.filter(
+            (record) => !ids.includes(record.id)
+        );
 
         // update value of relationnal fields pointing to the deleted records
         Object.values(this.data).forEach((d) => {
@@ -1995,7 +1997,10 @@ var MockServer = Class.extend({
             case '/web/dataset/resequence':
                 return this._mockResequence(args);
         }
-        if (route.indexOf('/web/image') >= 0 || _.contains(['.png', '.jpg'], route.substr(route.length - 4))) {
+        if (
+            route.indexOf("/web/image") >= 0 ||
+            [".png", ".jpg"].includes(route.substr(route.length - 4))
+        ) {
             return;
         }
         switch (args.method) {
@@ -2204,7 +2209,7 @@ var MockServer = Class.extend({
             if (!field) {
                 throw Error(`Mock: Can't write value "${JSON.stringify(value)}" on field "${field_changed}" on record "${model},${id}" (field is undefined)`);
             }
-            if (_.contains(['one2many', 'many2many'], field.type)) {
+            if (["one2many", "many2many"].includes(field.type)) {
                 var ids = _.clone(record[field_changed]) || [];
 
                 if (
@@ -2234,7 +2239,7 @@ var MockServer = Class.extend({
                     } else if (command[0] === 3) { // FORGET
                         ids = _.without(ids, command[1]);
                     } else if (command[0] === 4) { // LINK_TO
-                        if (!_.contains(ids, command[1])) {
+                        if (!ids.includes(command[1])) {
                             ids.push(command[1]);
                         }
                     } else if (command[0] === 5) { // DELETE ALL

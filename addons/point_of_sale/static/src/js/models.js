@@ -1011,7 +1011,7 @@ export class PosGlobalState extends PosModel {
         // Keep the order ids that are about to be sent to the
         // backend. In between create_from_ui and the success callback
         // new orders may have been added to it.
-        var order_ids_to_sync = _.pluck(orders, "id");
+        var order_ids_to_sync = orders.map((o) => o.id);
 
         for (const order of orders) {
             order.to_invoice = options.to_invoice || false;
@@ -1590,10 +1590,9 @@ export class Product extends PosModel {
         let draftPackLotLines, weight, description, packLotLinesToEdit;
 
         if (this.attribute_line_ids.some((id) => id in this.pos.attributes_by_ptal_id)) {
-            const attributes = _.map(
-                this.attribute_line_ids,
-                (id) => this.pos.attributes_by_ptal_id[id]
-            ).filter((attr) => attr !== undefined);
+            const attributes = this.attribute_line_ids
+                .map((id) => this.pos.attributes_by_ptal_id[id])
+                .filter((attr) => attr !== undefined);
             const { confirmed, payload } = await this.pos.env.services.popup.add(
                 ProductConfiguratorPopup,
                 {
@@ -2172,15 +2171,7 @@ export class Orderline extends PosModel {
             price_subtotal_incl: this.get_price_with_tax(),
             discount: this.get_discount(),
             product_id: this.get_product().id,
-            tax_ids: [
-                [
-                    6,
-                    false,
-                    _.map(this.get_applicable_taxes(), function (tax) {
-                        return tax.id;
-                    }),
-                ],
-            ],
+            tax_ids: [[6, false, this.get_applicable_taxes().map((tax) => tax.id)]],
             id: this.id,
             pack_lot_ids: pack_lot_ids,
             description: this.description,
@@ -2441,7 +2432,7 @@ export class Orderline extends PosModel {
                 if (line_taxes.length && line_taxes[0].price_include) {
                     new_included_taxes = new_included_taxes.concat(line_taxes);
                 }
-                if (tax.price_include && !_.contains(line_taxes, tax)) {
+                if (tax.price_include && !line_taxes.includes(tax)) {
                     mapped_included_taxes.push(tax);
                 }
             });
@@ -2521,7 +2512,7 @@ export class Packlotline extends PosModel {
     }
 
     set_lot_name(name) {
-        this.lot_name = _.str.trim(name) || null;
+        this.lot_name = String(name || "").trim() || null;
     }
 
     get_lot_name() {
@@ -2836,11 +2827,9 @@ export class Order extends PosModel {
             return orderLines.push([0, 0, item.export_as_JSON()]);
         });
         paymentLines = [];
-        this.paymentlines.forEach(
-            _.bind(function (item) {
-                return paymentLines.push([0, 0, item.export_as_JSON()]);
-            }, this)
-        );
+        this.paymentlines.forEach((item) => {
+            return paymentLines.push([0, 0, item.export_as_JSON()]);
+        });
         var json = {
             name: this.get_name(),
             amount_paid: this.get_total_paid() - this.get_change(),
