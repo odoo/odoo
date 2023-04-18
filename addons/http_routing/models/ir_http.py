@@ -19,7 +19,7 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models, exceptions, tools, http
+from odoo import api, models, exceptions, tools, http, _
 from odoo.addons.base.models import ir_http
 from odoo.addons.base.models.ir_http import RequestUID
 from odoo.addons.base.models.ir_qweb import QWebException
@@ -91,7 +91,7 @@ def slugify(s, max_length=0, path=False):
 def slug(value):
     try:
         if not value.id:
-            raise ValueError("Cannot slug non-existent record %s" % value)
+            raise exceptions.MissingError(_("This page does not exist"))
         # [(id, name)] = value.name_get()
         identifier, name = value.id, getattr(value, 'seo_name', False) or value.display_name
     except AttributeError:
