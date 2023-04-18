@@ -8,7 +8,7 @@ from odoo import api, models
 from odoo.tools import misc
 from odoo.addons.base.models.assetsbundle import EXTENSIONS
 
-_match_asset_file_url_regex = re.compile(r"^/(\w+)/(.+?)(\.custom\.(.+))?\.(\w+)$")
+_match_asset_file_url_regex = re.compile(r"^(/_custom/([^/]+))?/(\w+)/([/\w]+\.\w+)$")
 
 
 class Assets(models.AbstractModel):
@@ -162,10 +162,10 @@ class Assets(models.AbstractModel):
         if not m:
             return False
         return {
-            'module': m.group(1),
-            'resource_path': "%s.%s" % (m.group(2), m.group(5)),
-            'customized': bool(m.group(3)),
-            'bundle': m.group(4) or False
+            'module': m.group(3),
+            'resource_path': m.group(4),
+            'customized': bool(m.group(1)),
+            'bundle': m.group(2) or False
         }
 
     @api.model
@@ -182,8 +182,7 @@ class Assets(models.AbstractModel):
             str: the URL the given asset would have if it was customized in the
                  given bundle
         """
-        parts = url.rsplit(".", 1)
-        return "%s.custom.%s.%s" % (parts[0], bundle_xmlid, parts[1])
+        return f"/_custom/{bundle_xmlid}{url}"
 
     @api.model
     def _get_custom_attachment(self, custom_url, op='='):

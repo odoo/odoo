@@ -302,7 +302,7 @@ class Website(models.Model):
             ('website_id', 'in', self.ids),
             '|', '|',
             ('key', '!=', False),  # theme attachment
-            ('url', 'ilike', '.custom.'),  # customized theme attachment
+            ('url', '=like', '/_custom/%'),  # customized theme attachment
             ('url', 'ilike', '.assets\\_'),
         ])
         attachments_to_unlink.unlink()

@@ -831,8 +831,9 @@ class WebAsset(object):
 
     def stat(self):
         if not (self.inline or self._filename or self._ir_attach):
-            path = (segment for segment in self.url.split('/') if segment)
-            self._filename = get_resource_path(*path)
+            path = [segment for segment in self.url.split('/') if segment]
+            if path and path[0] != '_custom':
+                self._filename = get_resource_path(*path)
             if self._filename:
                 return
             try:
