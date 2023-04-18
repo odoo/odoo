@@ -2501,7 +2501,7 @@ class IrQWeb(models.AbstractModel):
                 files.append({
                     'atype': mimetype,
                     'url': path,
-                    'filename': get_resource_path(*segments) if segments else None,
+                    'filename': get_resource_path(*segments) if segments and segments[0] != '_custom' else None,
                     'content': '',
                     'media': media,
                 })
