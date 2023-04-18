@@ -55,6 +55,80 @@ class test_search(TransactionCase):
         self.assertEqual([e, ab, b, a, d, c], list(id_desc_active_asc), "Search with 'ID DESC, ACTIVE ASC' order failed.")
         id_desc_active_desc = Partner.search([('name', 'like', 'test_search_order%'), '|', ('active', '=', True), ('active', '=', False)], order="id desc, active desc")
         self.assertEqual([e, ab, b, a, d, c], list(id_desc_active_desc), "Search with 'ID DESC, ACTIVE DESC' order failed.")
+        a.ref = "ref1"
+        c.ref = "ref2"
+        ids = (a | b | c).ids
+        for order, result in [
+            ('ref', a | c | b),
+            ('ref desc', b | c | a),
+            ('ref asc nulls first', b | a | c),
+            ('ref asc nulls last', a | c | b),
+            ('ref desc nulls first', b | c | a),
+            ('ref desc nulls last', c | a | b)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
+        # sorting by an m2o should alias to the natural order of the m2o
+        self.patch_order('res.country', 'phone_code')
+        a.country_id, c.country_id = self.env['res.country'].create([{
+            'name': "Country 1",
+            'code': 'C1',
+            'phone_code': '01',
+        }, {
+            'name': 'Country 2',
+            'code': 'C2',
+            'phone_code': '02'
+        }])
+
+        for order, result in [
+            ('country_id', a | c | b),
+            ('country_id desc', b | c | a),
+            ('country_id asc nulls first', b | a | c),
+            ('country_id asc nulls last', a | c | b),
+            ('country_id desc nulls first', b | c | a),
+            ('country_id desc nulls last', c | a | b)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
+        # NULLS applies to the m2o itself, not its sub-fields, so a null `phone_code`
+        # will sort normally (larger than non-null codes)
+        b.country_id = self.env['res.country'].create({'name': "Country X", 'code': 'C3'})
+
+        for order, result in [
+            ('country_id', a | c | b),
+            ('country_id desc', b | c | a),
+            ('country_id asc nulls first', a | c | b),
+            ('country_id asc nulls last', a | c | b),
+            ('country_id desc nulls first', b | c | a),
+            ('country_id desc nulls last', b | c | a)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
+        # a field DESC should reverse the nested behaviour (and thus the inner
+        # NULLS clauses), but the outer NULLS clause still has no effect
+        self.patch_order('res.country', 'phone_code NULLS FIRST')
+        for order, result in [
+            ('country_id', b | a | c),
+            ('country_id desc', c | a | b),
+            ('country_id asc nulls first', b | a | c),
+            ('country_id asc nulls last', b | a | c),
+            ('country_id desc nulls first', c | a | b),
+            ('country_id desc nulls last', c | a | b)
+        ]:
+            with self.subTest(order):
+                self.assertEqual(
+                    Partner.search([('id', 'in', ids)], order=order).mapped('name'),
+                    result.mapped('name'))
+
 
     def test_10_inherits_m2order(self):
         Users = self.env['res.users']
