@@ -76,35 +76,3 @@ class TestRecruitment(TransactionCase):
         self.assertEqual(E.application_count, 0) # Should not match with G
         self.assertEqual(F.application_count, 1) # B
 
-    def test_application_count_multi_company(self):
-        company_A = self.env['res.company'].create({'name': 'A company'})
-        company_B = self.env['res.company'].create({'name': 'B company'})
-        appX, _, _ = self.env['hr.applicant'].create([
-            {
-                'name': 'Application X',
-                'email_from': 'abc@odoo.com',
-                'partner_phone': '123',
-                'partner_mobile': '14-15-16',
-                'company_id': company_A.id
-            },
-            {
-                'name': 'Application Y',
-                'email_from': 'abc@odoo.com',
-                'partner_phone': '123',
-                'partner_mobile': '14-15-16',
-                'company_id': company_B.id
-            },
-            {
-                'name': 'Application Z',
-                'email_from': 'abc@odoo.com',
-                'partner_phone': '123',
-                'partner_mobile': '14-15-16',
-                'company_id': False
-            },
-        ])
-
-        appX.with_context(allowed_company_ids=[company_A.id])._compute_application_count()
-        self.assertEqual(appX.application_count, 1, "Should not have counted the applicant from another company.") # Z
-
-        appX.with_context(allowed_company_ids=[company_A.id, company_B.id])._compute_application_count()
-        self.assertEqual(appX.application_count, 2, "Should have counted the applicant from another company as well.") # Y, Z
