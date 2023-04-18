@@ -107,3 +107,123 @@ class ProjectTaskRecurrence(models.Model):
             Command.create(self._create_next_occurrence_values(child)) for child in occurrence_from.with_context(active_test=False).child_ids
         ]
         return create_values
+<<<<<<< HEAD
+||||||| parent of 709867e3c83 (temp)
+
+    def _create_next_task(self):
+        for recurrence in self:
+            task = recurrence.sudo().task_ids[-1]
+            create_values = recurrence._new_task_values(task)
+            new_task = self.env['project.task'].sudo().create(create_values)
+            if not new_task.parent_id and task.child_ids:
+                children = []
+                # copy the subtasks of the original task
+                for child in task.child_ids:
+                    child_values = recurrence._new_task_values(child)
+                    child_values['parent_id'] = new_task.id
+                    children.append(child_values)
+                self.env['project.task'].create(children)
+
+    def _set_next_recurrence_date(self):
+        today = fields.Date.today()
+        tomorrow = today + relativedelta(days=1)
+        for recurrence in self.filtered(
+            lambda r:
+            r.repeat_type == 'after' and r.recurrence_left >= 0
+            or r.repeat_type == 'until' and r.repeat_until >= today
+            or r.repeat_type == 'forever'
+        ):
+            if recurrence.repeat_type == 'after' and recurrence.recurrence_left == 0:
+                recurrence.next_recurrence_date = False
+            else:
+                next_date = self._get_next_recurring_dates(tomorrow, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month, count=1)
+                recurrence.next_recurrence_date = next_date[0] if next_date else False
+
+    @api.model
+    def _cron_create_recurring_tasks(self):
+        if not self.env.user.has_group('project.group_project_recurring_tasks'):
+            return
+        today = fields.Date.today()
+        recurring_today = self.search([('next_recurrence_date', '<=', today)])
+        recurring_today._create_next_task()
+        for recurrence in recurring_today.filtered(lambda r: r.repeat_type == 'after'):
+            recurrence.recurrence_left -= 1
+        recurring_today._set_next_recurrence_date()
+
+    @api.model
+    def create(self, vals):
+        if vals.get('repeat_number'):
+            vals['recurrence_left'] = vals.get('repeat_number')
+        res = super(ProjectTaskRecurrence, self).create(vals)
+        res._set_next_recurrence_date()
+        return res
+
+    def write(self, vals):
+        if vals.get('repeat_number'):
+            vals['recurrence_left'] = vals.get('repeat_number')
+
+        res = super(ProjectTaskRecurrence, self).write(vals)
+
+        if 'next_recurrence_date' not in vals:
+            self._set_next_recurrence_date()
+        return res
+=======
+
+    def _create_next_task(self):
+        for recurrence in self:
+            task = max(recurrence.sudo().task_ids, key=lambda t: t.id)
+            create_values = recurrence._new_task_values(task)
+            new_task = self.env['project.task'].sudo().create(create_values)
+            if not new_task.parent_id and task.child_ids:
+                children = []
+                # copy the subtasks of the original task
+                for child in task.child_ids:
+                    child_values = recurrence._new_task_values(child)
+                    child_values['parent_id'] = new_task.id
+                    children.append(child_values)
+                self.env['project.task'].create(children)
+
+    def _set_next_recurrence_date(self):
+        today = fields.Date.today()
+        tomorrow = today + relativedelta(days=1)
+        for recurrence in self.filtered(
+            lambda r:
+            r.repeat_type == 'after' and r.recurrence_left >= 0
+            or r.repeat_type == 'until' and r.repeat_until >= today
+            or r.repeat_type == 'forever'
+        ):
+            if recurrence.repeat_type == 'after' and recurrence.recurrence_left == 0:
+                recurrence.next_recurrence_date = False
+            else:
+                next_date = self._get_next_recurring_dates(tomorrow, recurrence.repeat_interval, recurrence.repeat_unit, recurrence.repeat_type, recurrence.repeat_until, recurrence.repeat_on_month, recurrence.repeat_on_year, recurrence._get_weekdays(), recurrence.repeat_day, recurrence.repeat_week, recurrence.repeat_month, count=1)
+                recurrence.next_recurrence_date = next_date[0] if next_date else False
+
+    @api.model
+    def _cron_create_recurring_tasks(self):
+        if not self.env.user.has_group('project.group_project_recurring_tasks'):
+            return
+        today = fields.Date.today()
+        recurring_today = self.search([('next_recurrence_date', '<=', today)])
+        recurring_today._create_next_task()
+        for recurrence in recurring_today.filtered(lambda r: r.repeat_type == 'after'):
+            recurrence.recurrence_left -= 1
+        recurring_today._set_next_recurrence_date()
+
+    @api.model
+    def create(self, vals):
+        if vals.get('repeat_number'):
+            vals['recurrence_left'] = vals.get('repeat_number')
+        res = super(ProjectTaskRecurrence, self).create(vals)
+        res._set_next_recurrence_date()
+        return res
+
+    def write(self, vals):
+        if vals.get('repeat_number'):
+            vals['recurrence_left'] = vals.get('repeat_number')
+
+        res = super(ProjectTaskRecurrence, self).write(vals)
+
+        if 'next_recurrence_date' not in vals:
+            self._set_next_recurrence_date()
+        return res
+>>>>>>> 709867e3c83 (temp)
