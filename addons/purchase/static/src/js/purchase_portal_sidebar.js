@@ -118,22 +118,19 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
     _extractText: function ($node) {
         var self = this;
         var rawText = [];
-        $node
-            .contents()
-            .toArray()
-            .forEach((el) => {
-                var current = $(el);
-                if ($.trim(current.text())) {
-                    var tagName = current.prop("tagName");
-                    if (
-                        _.isUndefined(tagName) ||
-                        (!_.isUndefined(tagName) &&
-                            _.contains(self.authorizedTextTag, tagName.toLowerCase()))
-                    ) {
-                        rawText.push($.trim(current.text()));
-                    }
+        Array.from($node.contents()).forEach((el) => {
+            var current = $(el);
+            if ($.trim(current.text())) {
+                var tagName = current.prop("tagName");
+                if (
+                    typeof tagName === "undefined" ||
+                    (typeof tagName !== "undefined" &&
+                        self.authorizedTextTag.includes(tagName.toLowerCase()))
+                ) {
+                    rawText.push($.trim(current.text()));
                 }
-            });
+            }
+        });
         return rawText.join(" ");
     },
 });

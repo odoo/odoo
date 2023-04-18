@@ -72,11 +72,9 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     _computeSnippetTemplates: function (html) {
         const $html = $(html);
-        const fontVariables = _.map($html.find('we-fontfamilypicker[data-variable]'), el => {
-            return el.dataset.variable;
-        });
+        const toFind = $html.find("we-fontfamilypicker[data-variable]").toArray();
+        const fontVariables = toFind.map((el) => el.dataset.variable);
         FontFamilyPickerUserValueWidget.prototype.fontVariables = fontVariables;
-
         return this._super(...arguments);
     },
     /**

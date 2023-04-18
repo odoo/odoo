@@ -8,6 +8,7 @@ import wysiwygLoader from "web_editor.loader";
 import publicWidget from "web.public.widget";
 import { Markup } from "web.utils";
 import session from "web.session";
+import { escape } from "@web/core/utils/strings";
 var qweb = core.qweb;
 
 var _t = core._t;
@@ -76,9 +77,9 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
             formatResult: function (term) {
                 if (term.isNew) {
-                    return '<span class="badge bg-primary">New</span> ' + _.escape(term.text);
+                    return '<span class="badge bg-primary">New</span> ' + escape(term.text);
                 } else {
-                    return _.escape(term.text);
+                    return escape(term.text);
                 }
             },
             ajax: {
@@ -616,9 +617,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
     _onMarkSpamClick: function (ev) {
         var key = this.$('.modal .tab-pane.active').data('key');
         var $inputs = this.$('.modal .tab-pane.active input.form-check-input:checked');
-        var values = _.map($inputs, function (o) {
-            return parseInt(o.value);
-        });
+        var values = $inputs.map((o) => parseInt(o.value));
         return this._rpc({model: 'forum.post',
             method: 'mark_as_offensive_batch',
             args: [this.spamIDs, key, values],

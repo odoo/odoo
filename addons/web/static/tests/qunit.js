@@ -8,6 +8,7 @@ import {
     fullAnnotatedTraceback,
 } from "@web/core/errors/error_utils";
 import { registry } from "@web/core/registry";
+import { escape } from "@web/core/utils/strings";
 
 function setQUnitDebugMode() {
     owl.whenReady(() => document.body.classList.add("debug")); // make the test visible to the naked eye
@@ -263,15 +264,15 @@ export function setupQUnit() {
             modulesAlert.classList.toggle("alert-info");
             let error = "Some modules couldn't be started:<ul>";
             if (info.failed.length) {
-                const failedList = info.failed.map((mod) => "<li>" + _.escape(mod) + "</li>");
+                const failedList = info.failed.map((mod) => "<li>" + escape(mod) + "</li>");
                 error += `<li> Failed modules: <ul>${failedList.join("")}</ul> </li>`;
             }
             if (info.missing.length) {
-                const missingList = info.missing.map((mod) => "<li>" + _.escape(mod) + "</li>");
+                const missingList = info.missing.map((mod) => "<li>" + escape(mod) + "</li>");
                 error += `<li> Missing dependencies: <ul>${missingList.join("")}</ul> </li>`;
             }
             if (info.unloaded.length) {
-                const unloadedList = info.unloaded.map((mod) => "<li>" + _.escape(mod) + "</li>");
+                const unloadedList = info.unloaded.map((mod) => "<li>" + escape(mod) + "</li>");
                 error += `
                     <li> Non loaded modules due to missing dependencies:
                         <ul>${unloadedList.join("")}</ul>

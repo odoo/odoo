@@ -4,13 +4,14 @@ import { attr, Model } from "@im_livechat/legacy/model";
 import { browser } from "@web/core/browser/browser";
 import { isMobileOS } from "@web/core/browser/feature_detection";
 import { SIZES } from "@web/core/ui/ui_service";
+import { debounce } from "@web/core/utils/timing";
 
 Model({
     name: "Device",
     lifecycleHooks: {
         _created() {
             this._refresh();
-            this._onResize = _.debounce(() => this._refresh(), 100);
+            this._onResize = debounce(() => this._refresh(), 100);
         },
         _willDelete() {
             browser.removeEventListener("resize", this._onResize);

@@ -14,7 +14,7 @@
  * conversions.
  */
 
-import { sprintf } from "@web/core/utils/strings";
+import { escape, escapeRegExp, sprintf } from "@web/core/utils/strings";
 import core from "web.core";
 import dom from "web.dom";
 import session from "web.session";
@@ -87,10 +87,10 @@ function formatBoolean(value, field, options) {
 function formatChar(value, field, options) {
     value = typeof value === 'string' ? value : '';
     if (options && options.isPassword) {
-        return _.str.repeat('*', value ? value.length : 0);
+        return "*".repeat(value ? value.length : 0);
     }
     if (options && options.escape) {
-        value = _.escape(value);
+        value = escape(value);
     }
     return value;
 }
@@ -241,7 +241,7 @@ function formatFloatTime(value, field, options) {
 function formatInteger(value, field, options) {
     options = options || {};
     if (options.isPassword) {
-        return _.str.repeat('*', String(value).length);
+        return "*".repeat(String(value).length);
     }
     if (!value && value !== 0) {
         // previously, it returned 'false'. I don't know why.  But for the Pivot
@@ -282,8 +282,8 @@ function formatMany2one(value, field, options) {
             value = value.data.display_name || '';
         }
     }
-    if (options && options.escape) {
-        value = _.escape(value);
+    if (options?.escape) {
+        value = escape(value);
     }
     return value;
 }
@@ -373,7 +373,7 @@ function formatMonetary(value, field, options) {
     if (options.forceString) {
         return val.join(' ');
     }
-    return utils.Markup(val.map((v) => _.escape(v)).join(NBSP));
+    return utils.Markup(val.map((v) => escape(v)).join(NBSP));
 }
 /**
  * Returns a string representing the given value (multiplied by 100)
@@ -408,8 +408,8 @@ function formatSelection(value, field, options) {
         return '';
     }
     value = val[1];
-    if (options && options.escape) {
-        value = _.escape(value);
+    if (options?.escape) {
+        value = escape(value);
     }
     return value;
 }
@@ -575,8 +575,9 @@ function parseDateTime(value, field, options) {
  * @returns {float|NaN} the number value contained in the string representation
  */
 function parseNumber(value) {
+
     if (core._t.database.parameters.thousands_sep) {
-        var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
+        var escapedSep = escapeRegExp(core._t.database.parameters.thousands_sep);
         value = value.replace(new RegExp(escapedSep, 'g'), '');
     }
     if (core._t.database.parameters.decimal_point) {
@@ -735,7 +736,7 @@ function parseMany2one(value) {
             display_name: value[1],
         };
     }
-    if (Number.isFinite(value) || _.isString(value)) {
+    if (Number.isFinite(value) || typeof value === "string") {
         return {
             id: parseInt(value, 10),
         };
@@ -753,7 +754,7 @@ export default {
         float: formatFloat,
         float_factor: formatFloatFactor,
         float_time: formatFloatTime,
-        html: _.identity, // todo
+        html: (value) => value, // todo
         integer: formatInteger,
         many2many: formatX2Many,
         many2one: formatMany2one,
@@ -767,25 +768,25 @@ export default {
         json: formatJson,
     },
     parse: {
-        binary: _.identity,
-        boolean: _.identity, // todo
-        char: _.identity, // todo
+        binary: (value) => value,
+        boolean: (value) => value, // todo
+        char: (value) => value, // todo
         date: parseDate, // todo
         datetime: parseDateTime, // todo
         float: parseFloat,
         float_factor: parseFloatFactor,
         float_time: parseFloatTime,
-        html: _.identity, // todo
+        html: (value) => value, // todo
         integer: parseInteger,
-        many2many: _.identity, // todo
+        many2many: (value) => value, // todo
         many2one: parseMany2one,
         many2one_reference: parseInteger,
         monetary: parseMonetary,
-        one2many: _.identity,
+        one2many: (value) => value,
         percentage: parsePercentage,
         reference: parseMany2one,
-        selection: _.identity, // todo
-        text: _.identity, // todo
-        json: _.identity, // todo
+        selection: (value) => value, // todo
+        text: (value) => value, // todo
+        json: (value) => value, // todo
     },
 };

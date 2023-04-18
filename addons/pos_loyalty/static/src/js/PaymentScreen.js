@@ -33,7 +33,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
             return;
         }
         // No need to do an rpc if no existing coupon is being used.
-        if (!_.isEmpty(pointChanges) || newCodes.length) {
+        if (Object.keys(pointChanges || {}).length > 0 || newCodes.length) {
             try {
                 const { successful, payload } = await this.orm.call(
                     "pos.order",
@@ -121,7 +121,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                 return true;
             })
         );
-        if (!_.isEmpty(couponData)) {
+        if (Object.keys(couponData || []).length > 0) {
             const payload = await this.orm.call("pos.order", "confirm_coupon_programs", [
                 server_ids,
                 couponData,

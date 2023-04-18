@@ -481,7 +481,10 @@ QUnit.module("Fields", (hooks) => {
                         6,
                         "generated command should be REPLACE WITH"
                     );
-                    assert.ok(_.isEqual(commands[0][2], [12]), "new value should be [12]");
+                    assert.ok(
+                        JSON.stringify(commands[0][2]) === JSON.stringify([12]),
+                        "new value should be [12]"
+                    );
                 }
             },
         });

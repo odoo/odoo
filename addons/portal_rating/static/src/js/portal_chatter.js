@@ -32,7 +32,7 @@ PortalChatter.include({
     init: function (parent, options) {
         this._super.apply(this, arguments);
         // options
-        if (!_.contains(this.options, 'display_rating')) {
+        if (!Object.keys(this.options).includes("display_rating")) {
             this.options = _.defaults(this.options, {
                 'display_rating': false,
                 'rating_default_value': 0.0,

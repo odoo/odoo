@@ -47,7 +47,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         // must be able to customize server
         var window_origin = location.protocol + "//" + location.host;
         origin = origin ? origin.replace( /\/+$/, '') : window_origin;
-        if (!_.isUndefined(this.origin) && this.origin !== origin)
+        if (typeof this.origin !== "undefined" && this.origin !== origin)
             throw new Error('Session already bound to ' + this.origin);
         else
             this.origin = origin;
@@ -256,7 +256,7 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         }
 
         // TODO: remove
-        if (! _.isString(url)) {
+        if (typeof url !== "string") {
             Object.assign(options, url);
             url = url.url;
         }

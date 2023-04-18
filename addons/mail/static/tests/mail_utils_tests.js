@@ -18,6 +18,7 @@ QUnit.test("add_link utility function", function (assert) {
         "https://tenor.com/view/chỗgiặt-dog-smile-gif-13860250": true,
         "http://www.boîtenoire.be": true,
     };
+
     for (const [content, willLinkify] of Object.entries(testInputs)) {
         const output = utils.parseAndTransform(content, utils.addLink);
         if (willLinkify) {

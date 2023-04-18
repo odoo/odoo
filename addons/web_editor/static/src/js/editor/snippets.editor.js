@@ -11,9 +11,10 @@ import {ColorPaletteWidget} from "web_editor.ColorPalette";
 import SmoothScrollOnDrag from "web.smooth_scroll_on_drag";
 import {getCSSVariableValue} from "web_editor.utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
-import { sprintf } from "@web/core/utils/strings";
+import { sprintf, escape } from "@web/core/utils/strings";
 const QWeb = core.qweb;
 import {closestElement} from "@web_editor/js/editor/odoo-editor/src/utils/utils";
+import { debounce } from "@web/core/utils/timing";
 
 var _t = core._t;
 
@@ -23,7 +24,7 @@ let cacheSnippetTemplate = {};
 $.extend($.expr[':'], {
     o_editable: function (node, i, m) {
         while (node) {
-            if (node.className && _.isString(node.className)) {
+            if (node.className && typeof node.className === "string") {
                 if (node.className.indexOf('o_not_editable') !== -1) {
                     return false;
                 }
@@ -2011,7 +2012,7 @@ var SnippetsMenu = Widget.extend({
             const range = selection.getRangeAt(0);
             $(range.startContainer).closest('.o_default_snippet_text').removeClass('o_default_snippet_text');
         });
-        const refreshSnippetEditors = _.debounce(() => {
+        const refreshSnippetEditors = debounce(() => {
             for (const snippetEditor of this.snippetEditors) {
                 this._mutex.exec(() => snippetEditor.destroy());
             }
@@ -2042,7 +2043,7 @@ var SnippetsMenu = Widget.extend({
                 this.options.wysiwyg.odooEditor.addEventListener('observerApply', () => {
                     $(this.options.wysiwyg.odooEditor.editable).trigger('content_changed');
                 });
-                this.options.wysiwyg.odooEditor.addEventListener('historyRevert', _.debounce(() => {
+                this.options.wysiwyg.odooEditor.addEventListener('historyRevert', debounce(() => {
                     this.trigger_up('widgets_start_request', {
                         $target: this.options.wysiwyg.$editable,
                         editableMode: true,
@@ -2878,8 +2879,8 @@ var SnippetsMenu = Widget.extend({
             .addClass('oe_snippet')
             .each((i, el) => {
                 const $snippet = $(el);
-                const name = _.escape(el.getAttribute('name'));
-                const thumbnailSrc = _.escape(el.dataset.oeThumbnail);
+                const name = escape(el.getAttribute('name'));
+                const thumbnailSrc = escape(el.dataset.oeThumbnail);
                 const $sbody = $snippet.children().addClass('oe_snippet_body');
                 const isCustomSnippet = !!el.closest('#snippet_custom');
 

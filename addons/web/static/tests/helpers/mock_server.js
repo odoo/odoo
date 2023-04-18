@@ -544,7 +544,8 @@ export class MockServer {
                                 item.includes("readonly")
                             ))) &&
                     (!["1", "True"].includes(node.getAttribute("readonly")) ||
-                        !_.isEmpty(evaluateExpr(node.getAttribute("attrs") || "{}")))
+                        Object.keys(evaluateExpr(node.getAttribute("attrs") || "{}") || {}).length >
+                            0)
                 );
             }
             default:
@@ -1275,7 +1276,7 @@ export class MockServer {
                     group.__domain = [[fieldName, "=", value]].concat(group.__domain);
                 }
             }
-            if (_.isEmpty(group.__range)) {
+            if (Object.keys(group.__range || {}).length === 0) {
                 delete group.__range;
             }
             // compute count key to match dumb server logic...

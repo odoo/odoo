@@ -93,19 +93,17 @@ QUnit.module("Fields", (hooks) => {
             "should have 10% as pie value since int_field=10"
         );
         assert.ok(
-            _.str.include(
+            String(
                 target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                    .transform,
-                "rotate(180deg)"
-            ),
+                    .transform
+            ).includes("rotate(180deg)"),
             "left mask should be covering the whole left side of the pie"
         );
         assert.ok(
-            _.str.include(
+            String(
                 target.querySelectorAll(".o_field_percent_pie.o_field_widget .o_pie .o_mask")[1]
-                    .style.transform,
-                "rotate(36deg)"
-            ),
+                    .style.transform
+            ).includes("rotate(36deg)"),
             "right mask should be rotated from 360*(10/100) = 36 degrees"
         );
 
@@ -162,11 +160,10 @@ QUnit.module("Fields", (hooks) => {
             "should have 80% as pie value since int_field=80"
         );
         assert.ok(
-            _.str.include(
+            String(
                 target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                    .transform,
-                "rotate(288deg)"
-            ),
+                    .transform
+            ).includes("rotate(288deg)"),
             "left mask should be rotated from 360*(80/100) = 288 degrees"
         );
         assert.hasClass(

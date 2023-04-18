@@ -35,7 +35,7 @@ var Domain = collections.Tree.extend({
      */
     init: function (domain, evalContext) {
         this._super.apply(this, arguments);
-        if (Array.isArray(domain) || _.isString(domain)) {
+        if (Array.isArray(domain) || typeof domain === "string") {
             this._parse(this.normalizeArray(_.clone(this.stringToArray(domain, evalContext))));
         } else {
             this._data = !!domain;
@@ -87,10 +87,10 @@ var Domain = collections.Tree.extend({
             switch (this._data[1]) {
                 case "=":
                 case "==":
-                    return _.isEqual(fieldValue, this._data[2]);
+                    return JSON.stringify(fieldValue) === JSON.stringify(this._data[2]);
                 case "!=":
                 case "<>":
-                    return !_.isEqual(fieldValue, this._data[2]);
+                    return JSON.stringify(fieldValue) !== JSON.stringify(this._data[2]);
                 case "<":
                     return (fieldValue < this._data[2]);
                 case ">":
@@ -156,9 +156,10 @@ var Domain = collections.Tree.extend({
             return [];
         } else {
             var arr = [this._data];
-            return arr.concat.apply(arr, _.map(this._children, function (child) {
-                return child.toArray();
-            }));
+            return arr.concat.apply(
+                arr,
+                this._children.map((child) => child.toArray())
+            );
         }
     },
     /**
@@ -239,7 +240,7 @@ var Domain = collections.Tree.extend({
      * @returns {string}
      */
     arrayToString: function (domain) {
-        if (_.isString(domain)) return domain;
+        if (typeof domain === "string") return domain;
 
         function jsToPy(p) {
             switch (p) {
@@ -267,7 +268,7 @@ var Domain = collections.Tree.extend({
      * @returns {Array}
      */
     stringToArray: function (domain, evalContext) {
-        if (!_.isString(domain)) return _.clone(domain);
+        if (typeof domain !== "string") return _.clone(domain);
         return pyUtils.eval("domain", domain ? domain.replace(/%%/g, '%') : "[]", evalContext);
     },
     /**

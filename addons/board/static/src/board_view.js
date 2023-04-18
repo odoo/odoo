@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { BoardController } from "./board_controller";
 import { XMLParser } from "@web/core/utils/xml";
 import { Domain } from "@web/core/domain";
+import { escape } from "@web/core/utils/strings";
 
 export class BoardArchParser extends XMLParser {
     parse(arch, customViewId) {
@@ -36,7 +37,7 @@ export class BoardArchParser extends XMLParser {
                     const isFolded = Boolean(
                         node.hasAttribute("fold") ? parseInt(node.getAttribute("fold"), 10) : 0
                     );
-                    let action = {
+                    const action = {
                         id: nextId++,
                         title: node.getAttribute("string"),
                         actionId: parseInt(node.getAttribute("name"), 10),
@@ -45,10 +46,12 @@ export class BoardArchParser extends XMLParser {
                         isFolded,
                     };
                     if (node.hasAttribute("domain")) {
-                        action.domain = new Domain(_.unescape(node.getAttribute("domain"))).toList();
+                        action.domain = new Domain(
+                            _.unescape(node.getAttribute("domain"))
+                        ).toList();
                         // so it can be serialized when reexporting board xml
                         // we unescape before re-escaping, to avoid double escaping due to subsequent layout change
-                        action.domain.toString = () => _.escape(_.unescape(node.getAttribute("domain")));
+                        action.domain.toString = () => escape(node.getAttribute("domain"));
                     }
                     archInfo.columns[currentIndex].actions.push(action);
                     break;

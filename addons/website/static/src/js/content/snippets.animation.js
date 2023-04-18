@@ -5,6 +5,8 @@
  */
 
 import { loadJS } from "@web/core/assets";
+import { escape } from "@web/core/utils/strings";
+import { debounce } from "@web/core/utils/timing";
 import Class from "web.Class";
 import config from "web.config";
 import core from "web.core";
@@ -229,7 +231,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
                 this.play(e);
 
                 clearTimeout(pauseTimer);
-                pauseTimer = _.delay((function () {
+                pauseTimer = setTimeout((() => {
                     this.pause();
                     pauseTimer = null;
                 }).bind(this), 2000);
@@ -310,7 +312,7 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         var animationState = this._getStateCallback(elapsedTime, this._newEvent);
         if (!this._newEvent
          && animationState !== undefined
-         && _.isEqual(animationState, this._animationLastState)) {
+         && JSON.stringify(animationState) === JSON.stringify(this._animationLastState)) {
             return;
         }
         this._animationLastState = animationState;
@@ -451,7 +453,7 @@ registry.slider = publicWidget.Widget.extend({
         this._computeHeights();
         // Initialize carousel and pause if in edit mode.
         this.$el.carousel(this.editableMode ? 'pause' : undefined);
-        $(window).on('resize.slider', _.debounce(() => this._computeHeights(), 250));
+        $(window).on('resize.slider', debounce(() => this._computeHeights(), 250));
         return this._super.apply(this, arguments);
     },
     /**
@@ -524,7 +526,7 @@ registry.Parallax = Animation.extend({
      */
     start: function () {
         this._rebuild();
-        $(window).on('resize.animation_parallax', _.debounce(this._rebuild.bind(this), 500));
+        $(window).on('resize.animation_parallax', debounce(this._rebuild.bind(this), 500));
         this.modalEl = this.$target[0].closest('.modal');
         if (this.modalEl) {
             $(this.modalEl).on('shown.bs.modal.animation_parallax', () => {
@@ -724,7 +726,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         // the src is saved in the 'data-src' attribute or the
         // 'data-oe-expression' one (the latter is used as a workaround in 10.0
         // system but should obviously be reviewed in master).
-        var src = _.escape(this.$el.data('oe-expression') || this.$el.data('src'));
+        var src = escape(this.$el.data('oe-expression') || this.$el.data('src'));
         // Validate the src to only accept supported domains we can trust
         var m = src.match(/^(?:https?:)?\/\/([^/?#]+)/);
         if (!m) {
@@ -733,7 +735,7 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
         }
         var domain = m[1].replace(/^www\./, '');
         var supportedDomains = ['youtu.be', 'youtube.com', 'youtube-nocookie.com', 'instagram.com', 'vine.co', 'player.vimeo.com', 'vimeo.com', 'dailymotion.com', 'player.youku.com', 'youku.com'];
-        if (!_.contains(supportedDomains, domain)) {
+        if (!supportedDomains.includes(domain)) {
             // Unsupported domain, don't inject iframe
             return;
         }
@@ -923,7 +925,7 @@ registry.socialShare = publicWidget.Widget.extend({
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
             'linkedin': 'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
         };
-        if (!_.contains(Object.keys(socialNetworks), social)) {
+        if (!Object.keys(socialNetworks).includes(social)) {
             return;
         }
         var wHeight = 500;
@@ -1036,7 +1038,7 @@ registry.FullScreenHeight = publicWidget.Widget.extend({
             // rules may alter the full-screen-height class behavior in some
             // cases (blog...).
             this._adaptSize();
-            $(window).on('resize.FullScreenHeight', _.debounce(() => this._adaptSize(), 250));
+            $(window).on('resize.FullScreenHeight', debounce(() => this._adaptSize(), 250));
         }
         return this._super(...arguments);
     },
@@ -1162,7 +1164,7 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
      */
     async start() {
         this.$scrollingElement = $().getScrollingElement();
-        this.__hideBottomFixedElements = _.debounce(() => this._hideBottomFixedElements(), 100);
+        this.__hideBottomFixedElements = debounce(() => this._hideBottomFixedElements(), 100);
         this.$scrollingElement.on('scroll.bottom_fixed_element', this.__hideBottomFixedElements);
         $(window).on('resize.bottom_fixed_element', this.__hideBottomFixedElements);
         return this._super(...arguments);

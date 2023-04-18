@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { debounce } from "@web/core/utils/timing";
 import publicWidget from "web.public.widget";
 import {getCookie, setCookie} from "web.utils.cookies";
 
@@ -15,7 +16,7 @@ publicWidget.registry.productsRecentlyViewedUpdate = publicWidget.Widget.extend(
      */
     init: function () {
         this._super.apply(this, arguments);
-        this._onProductChange = _.debounce(this._onProductChange, this.debounceValue);
+        this._onProductChange = debounce(this._onProductChange, this.debounceValue);
     },
 
     //--------------------------------------------------------------------------

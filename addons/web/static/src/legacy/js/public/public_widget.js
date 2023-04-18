@@ -212,14 +212,14 @@ var PublicWidget = Widget.extend({
             }
             // If the method has no meaningful options, use the default Widget
             // system
-            var isAsync = _.contains(methodOptions, 'async');
+            var isAsync = methodOptions.includes('async');
             if (!isAsync) {
                 events[event] = method;
                 return;
             }
 
             method = self.proxy(methodOptions[methodOptions.length - 1]);
-            if (_.str.startsWith(event, 'click')) {
+            if (String(event).startsWith("click")) {
                 // Protect click handler to be called multiple times by
                 // mistake by the user and add a visual disabling effect
                 // for buttons.

@@ -170,9 +170,13 @@ options.registry.InnerChart = options.Class.extend({
         } else {
             // Find max value from each row/column data
             const datasets = JSON.parse(dataset.data).datasets || [];
-            const dataValue = _.flatten(datasets.map(el => el.data.map(data => {
-                return !isNaN(parseInt(data)) ? parseInt(data) : 0;
-            })));
+            const dataValue = datasets
+                .map((el) => {
+                    return el.data.map((data) => {
+                        return !isNaN(parseInt(data)) ? parseInt(data) : 0;
+                    });
+                })
+                .flat();
             // When max value is not given and min value is greater than chart
             // data values
             if (minValue >= Math.max(...dataValue)) {

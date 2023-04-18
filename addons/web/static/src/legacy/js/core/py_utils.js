@@ -109,8 +109,8 @@ function eval_contexts(contexts, evaluation_context) {
     return _(contexts).reduce(function (result_context, ctx) {
         // __eval_context evaluations can lead to some of `contexts`'s
         // values being null, skip them as well as empty contexts
-        if (_.isEmpty(ctx)) { return result_context; }
-        if (_.isString(ctx)) {
+        if (Object.keys(ctx || {}).length === 0) { return result_context; }
+        if (typeof ctx === "string") {
             // wrap raw strings in context
             ctx = { __ref: 'context', __debug: ctx };
         }
@@ -144,7 +144,7 @@ function eval_domains(domains, evaluation_context) {
         (domains[0][0] === "|" || domains[0][0] === "!")
     );
     _(domains).each(function (domain) {
-        if (_.isString(domain)) {
+        if (typeof domain === "string") {
             // wrap raw strings in domain
             domain = { __ref: 'domain', __debug: domain };
         }
@@ -190,7 +190,7 @@ function eval_groupbys(contexts, evaluation_context) {
     evaluation_context = Object.assign(pycontext(), evaluation_context || {});
     var result_group = [];
     _(contexts).each(function (ctx) {
-        if (_.isString(ctx)) {
+        if (typeof ctx === "string") {
             // wrap raw strings in context
             ctx = { __ref: 'context', __debug: ctx };
         }

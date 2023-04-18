@@ -100,7 +100,7 @@ QUnit.module('core', {}, function () {
 
         assert.strictEqual(widget.el.nodeName, 'DIV', "should have generated the default element");
         assert.strictEqual(widget.el.attributes.length, 0, "should not have generated any attribute");
-        assert.ok(_.isEmpty(widget.$el.html(), "should not have generated any content"));
+        assert.ok(Object.keys(widget.$el.html() || {}).length === 0, "should not have generated any content");
         widget.destroy();
     });
 

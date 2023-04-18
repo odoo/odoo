@@ -450,9 +450,7 @@
             clipboard.on('success', function () {
                 clipboard.destroy();
                 $clipboardBtn.tooltip('show');
-                _.delay(function () {
-                    $clipboardBtn.tooltip("hide");
-                }, 800);
+                setTimeout(() => $clipboardBtn.tooltip("hide"), 800);
             });
             clipboard.on('error', function (e) {
                 clipboard.destroy();
@@ -619,7 +617,7 @@
                 // technical settings for the Fullscreen to work
                 var autoSetDone = false;
                 if (!slideData.hasQuestion) {
-                    if (_.contains(['infographic', 'document', 'article'], slideData.category)) {
+                    if (['infographic', 'document', 'article'].includes(slideData.category)) {
                         autoSetDone = true;  // images, documents (local + external) and articles are marked as completed when opened
                     } else if (slideData.category === 'video' && slideData.videoSourceType === 'google_drive') {
                         autoSetDone = true;  // google drive videos do not benefit from the YouTube integration and are marked as completed when opened
@@ -669,7 +667,7 @@
             }
 
             // render slide content
-            if (_.contains(['document', 'infographic'], slide.category)) {
+            if (['document', 'infographic'].includes(slide.category)) {
                 $content.html(QWeb.render('website.slides.fullscreen.content', {widget: this}));
             } else if (slide.category === 'video' && slide.videoSourceType === 'youtube') {
                 this.videoPlayer = new VideoPlayerYouTube(this, slide);

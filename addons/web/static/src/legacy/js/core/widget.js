@@ -218,7 +218,7 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * @param {boolean} [display] use true to show the widget or false to hide it
      */
     do_toggle: function (display) {
-        if (_.isBoolean(display)) {
+        if (typeof display === "boolean") {
             display ? this.do_show() : this.do_hide();
         } else if (this.$el) {
             this.$el.hasClass('o_hidden') ? this.do_show() : this.do_hide();
@@ -283,9 +283,9 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      * @returns {Promise}
      */
     replace: function (target) {
-        return this._widgetRenderAndInsert(_.bind(function (t) {
+        return this._widgetRenderAndInsert((t) => {
             this.$el.replaceAll(t);
-        }, this), target);
+        }, target);
     },
     /**
      * Re-sets the widget's root element (el/$el/$el).
@@ -337,7 +337,7 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
      */
     _delegateEvents: function () {
         var events = this.events;
-        if (_.isEmpty(events)) { return; }
+        if (Object.keys(events || {}).length === 0) { return; }
 
         for(var key in events) {
             if (!events.hasOwnProperty(key)) { continue; }
@@ -372,7 +372,7 @@ var Widget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
             attrs['class'] = this.className;
         }
         var $el = $(document.createElement(this.tagName));
-        if (!_.isEmpty(attrs)) {
+        if (Object.keys(attrs || {}).length > 0) {
             $el.attr(attrs);
         }
         return $el;

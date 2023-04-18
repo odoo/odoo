@@ -100,17 +100,17 @@ var SlideQuizFinishModal = Dialog.extend({
         if (this.quiz.rankProgress.level_up) {
             this.$('.o_wslides_quiz_modal_title').text(_t('Level up!'));
             $progressBar.css('width', '100%');
-            _.delay(function () {
+            setTimeout(() => {
                 self.$('.o_wslides_quiz_modal_rank_lower_bound')
                     .text(self.quiz.rankProgress.new_rank.lower_bound);
                 self.$('.o_wslides_quiz_modal_rank_upper_bound')
                     .text(self.quiz.rankProgress.new_rank.upper_bound || "");
 
                 // we need to use _.delay to force DOM re-rendering between 0 and new percentage
-                _.delay(function () {
+                setTimeout(() => {
                     $progressBar.addClass('no-transition').width('0%');
                 }, 1);
-                _.delay(function () {
+                setTimeout(() => {
                     $progressBar
                         .removeClass('no-transition')
                         .width(self.quiz.rankProgress.new_rank.progress + '%');
@@ -128,15 +128,15 @@ var SlideQuizFinishModal = Dialog.extend({
      */
     _animateText: function () {
         var self = this;
-       _.delay(function () {
+        setTimeout(function () {
             self.$('h4.o_wslides_quiz_modal_xp_gained').addClass('show in');
             self.$('.o_wslides_quiz_modal_dismiss').removeClass('d-none');
         }, 800);
 
         if (this.quiz.rankProgress.level_up) {
-            _.delay(function () {
+            setTimeout(function () {
                 self.$('.o_wslides_quiz_modal_rank_motivational').addClass('fade');
-                _.delay(function () {
+                setTimeout(function () {
                     self.$('.o_wslides_quiz_modal_rank_motivational').html(
                         self.quiz.rankProgress.last_rank ?
                             self.quiz.rankProgress.description :
