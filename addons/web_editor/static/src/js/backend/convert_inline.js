@@ -1140,6 +1140,22 @@ function normalizeRem($editable, rootFontSize=16) {
         if (td.closest('.s_masonry_block')) {
             outlookTd.style.padding = 0; // Not sure why this is needed.
         }
+        // Outlook doesn't support left/right padding on images. When we can
+        // (when the image is the only child of its parent), apply said padding
+        // to the parent.
+        if (td.children.length === 1 && td.firstElementChild.nodeName === 'IMG') {
+            const tdComputedStyle = getComputedStyle(td);
+            for (const side of ['left', 'right']) {
+                if (td.firstElementChild.style.width === '100%') {
+                    const prop = `padding-${side}`;
+                    const imagePadding = +td.firstElementChild.style[prop].replace('px', '');
+                    if (imagePadding > 0) {
+                        const tdPadding = +tdComputedStyle[prop].replace('px', '') || 0;
+                        outlookTd.style[prop] = tdPadding + imagePadding + 'px';
+                    }
+                }
+            }
+        }
         // The opening tag of `outlookTd` is for Outlook.
         td.before(_createMso(outlookTd.outerHTML.replace('</td>', '')));
         // The opening tag of `td` is for the others.
