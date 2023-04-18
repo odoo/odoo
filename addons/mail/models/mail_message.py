@@ -796,12 +796,11 @@ class Message(models.Model):
     @api.model
     def unstar_all(self):
         """ Unstar messages for the current partner. """
-        partner_id = self.env.user.partner_id.id
+        partner = self.env.user.partner_id
 
-        starred_messages = self.search([('starred_partner_ids', 'in', partner_id)])
-        starred_messages.write({'starred_partner_ids': [Command.unlink(partner_id)]})
-
-        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
+        starred_messages = self.search([('starred_partner_ids', 'in', partner.id)])
+        partner.starred_message_ids -= starred_messages
+        self.env['bus.bus']._sendone(partner, 'mail.message/toggle_star', {
             'message_ids': starred_messages.ids,
             'starred': False,
         })
@@ -813,12 +812,13 @@ class Message(models.Model):
         # a user should always be able to star a message they can read
         self.check_access_rule('read')
         starred = not self.starred
+        partner = self.env.user.partner_id
         if starred:
-            self.sudo().write({'starred_partner_ids': [Command.link(self.env.user.partner_id.id)]})
+            partner.starred_message_ids |= self
         else:
-            self.sudo().write({'starred_partner_ids': [Command.unlink(self.env.user.partner_id.id)]})
+            partner.starred_message_ids -= self
 
-        self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.message/toggle_star', {
+        self.env['bus.bus']._sendone(partner, 'mail.message/toggle_star', {
             'message_ids': [self.id],
             'starred': starred,
         })
@@ -913,6 +913,8 @@ class Message(models.Model):
                 'messageReactionGroups': reaction_groups,
                 'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,
+                'create_date': message_sudo.create_date,
+                'write_date': message_sudo.write_date,
             })
         return vals_list
 

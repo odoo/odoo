@@ -469,7 +469,13 @@ export class Messaging {
                     break;
                 case "ir.attachment/delete":
                     {
-                        const attachment = this.store.attachments[notif.payload.id];
+                        const { id: attachmentId, message: messageData } = notif.payload;
+                        if (messageData) {
+                            this.messageService.insert({
+                                ...messageData,
+                            });
+                        }
+                        const attachment = this.store.attachments[attachmentId];
                         if (!attachment) {
                             return;
                         }
