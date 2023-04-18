@@ -185,8 +185,6 @@ function bootstrapToTable(editable) {
                     div.style.setProperty(prop, tr.style[prop]);
                     div.classList.add('o_horizontal_spacing');
                     tr.style.removeProperty(prop);
-                    _hideForOutlook(div, 'opening');
-                    _hideForOutlook(div, 'closing');
                 }
                 table.before(div);
                 div.replaceChildren(table);
@@ -732,6 +730,12 @@ async function toInline($editable, cssRules, $iframe) {
 
     // Hide replaced cells on Outlook
     editable.querySelectorAll('.mso-hide').forEach(_hideForOutlook);
+
+    // Hide horizontal spacing wrappers for Outlook
+    for (const div of editable.querySelectorAll('.o_horizontal_spacing')) {
+        _hideForOutlook(div, 'opening');
+        _hideForOutlook(div, 'closing');
+    }
 
     // Styles were applied inline, we don't need a style element anymore.
     $editable.find('style').remove();
