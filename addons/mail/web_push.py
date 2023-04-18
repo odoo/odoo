@@ -1,94 +1,24 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
-import binascii
 import json
 import logging as logger
 import os
 import struct
 import textwrap
-import time
 
 from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import hashes, serialization
-from cryptography.hazmat.primitives.asymmetric import ec, utils
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives.ciphers.aead import AESGCM
 from cryptography.hazmat.primitives.kdf.hkdf import HKDF
 from cryptography.hazmat.primitives.serialization import Encoding, PublicFormat
-from urllib.parse import urlparse
+from urllib.parse import urlsplit
+
+from .tools import jwt
 
 MAX_PAYLOAD_SIZE = 4096
 
 _logger = logger.getLogger(__name__)
-
-def _base64_decode_with_padding(value):
-    return base64.urlsafe_b64decode(value + '==')
-
-def generate_web_push_vapid_key():
-    """
-    Generate the VAPID (Voluntary Application Server Identification) used for the Web Push
-    This function generates a signing key pair usable with the Elliptic Curve Digital
-    Signature Algorithm (ECDSA) over the P-256 curve.
-    These keys will be used during communication with the endpoint/browser
-    https://www.rfc-editor.org/rfc/rfc8292
-    """
-    private_key = ec.generate_private_key(ec.SECP256R1(), default_backend())
-    private_int = private_key.private_numbers().private_value
-    private = private_int.to_bytes(32, 'big')
-    private_string = base64.urlsafe_b64encode(private).decode('ascii').strip('=')
-
-    public_key = private_key.public_key()
-    public = public_key.public_bytes(
-        encoding=serialization.Encoding.X962,
-        format=serialization.PublicFormat.UncompressedPoint
-    )
-    public_string = base64.urlsafe_b64encode(public).decode('ascii').strip('=')
-    return private_string, public_string
-
-def _generate_jwt(endpoint, base_url, vapid_private_key):
-    """
-    JWT are a pair of JSON objects, turned into base64 strings, and signed with the private ECDH key
-    https://www.rfc-editor.org/rfc/rfc7519
-    https://www.rfc-editor.org/rfc/rfc8291
-    :param endpoint: the browser endpoint
-    :param base_url: the base url
-    :param vapid_private_key: the private ECDH key generate at mail_entreprise install
-    :return:
-    """
-    url = urlparse(endpoint)
-
-    jwt_info = base64.urlsafe_b64encode(json.dumps({
-        'typ': 'JWT',
-        'alg': 'ES256'
-    }).encode())
-
-    # The expiration is a timestamp in seconds and must be no longer 12 hours.
-    token_validity = 12 * 60 * 60
-
-    jwt_data = base64.urlsafe_b64encode(json.dumps({
-        # aud: The “Audience” is a JWT construct that indicates the recipient scheme and host
-        # e.g. for an endpoint like https://updates.push.services.mozilla.com/wpush/v2/gAAAAABY...,
-        #      the “aud” would be https://updates.push.services.mozilla.com
-        'aud': '{}://{}'.format(url.scheme, url.netloc),
-        # sub: the sub value needs to be either a URL address. This is so that if a push service needed to reach out
-        # to sender, it can find contact information from the JWT.
-        'sub': base_url,
-        # exp: It's the expiration of the JWT, this prevents snoopers from being able to re-use a JWT if they intercept it.
-        'exp': int(time.time()) + token_validity
-    }).encode())
-
-    unsigned_token = '{}.{}'.format(jwt_info.decode().strip('='), jwt_data.decode().strip('='))
-
-    # Retrieve the private key using a P256 elliptic curve
-    vapid_private_key_decoded = _base64_decode_with_padding(vapid_private_key)
-    private_key = ec.derive_private_key(int(binascii.hexlify(vapid_private_key_decoded), 16), ec.SECP256R1(), default_backend())
-
-    # sign with ECDSA SHA-256
-    signature = private_key.sign(unsigned_token.encode(), ec.ECDSA(hashes.SHA256()))
-    (r, s) = utils.decode_dss_signature(signature)
-    sig = base64.urlsafe_b64encode(r.to_bytes(32, 'big') + s.to_bytes(32, 'big'))
-
-    return '{}.{}'.format(unsigned_token, sig.decode().strip('='))
 
 def _iv(base, counter):
     mask = int.from_bytes(base[4:], 'big')
@@ -97,8 +27,8 @@ def _iv(base, counter):
 def _derive_key(salt, private_key, device):
     # browser keys
     device_keys = json.loads(device["keys"])
-    p256dh = _base64_decode_with_padding(device_keys.get('p256dh'))
-    auth = _base64_decode_with_padding(device_keys.get('auth'))
+    p256dh = jwt.base64_decode_with_padding(device_keys.get('p256dh'))
+    auth = jwt.base64_decode_with_padding(device_keys.get('auth'))
 
     # generate a public key derived from the browser public key
     pub_key = ec.EllipticCurvePublicKey.from_encoded_point(ec.SECP256R1(), p256dh)
@@ -176,15 +106,28 @@ def _encrypt_payload(content, device, record_size=MAX_PAYLOAD_SIZE):
     return header + body
 
 def push_to_end_point(base_url, device, payload, vapid_private_key, vapid_public_key, session):
+    """
+    https://www.rfc-editor.org/rfc/rfc8291
+    """
     endpoint = device["endpoint"]
-    jwt = _generate_jwt(endpoint, base_url, vapid_private_key)
+    url = urlsplit(endpoint)
+    jwt_claims = {
+        # aud: The “Audience” is a JWT construct that indicates the recipient scheme and host
+        # e.g. for an endpoint like https://updates.push.services.mozilla.com/wpush/v2/gAAAAABY...,
+        #      the “aud” would be https://updates.push.services.mozilla.com
+        'aud': '{}://{}'.format(url.scheme, url.netloc),
+        # sub: the sub value needs to be either a URL address. This is so that if a push service needed to reach out
+        # to sender, it can find contact information from the JWT.
+        'sub': base_url,
+    }
+    token = jwt.sign(jwt_claims, vapid_private_key, ttl=12 * 60 * 60, algorithm=jwt.Algorithm.ES256)
     body_payload = payload.encode()
     payload = _encrypt_payload(body_payload, device)
     headers = {
         #  Authorization header field contains these parameters:
         #  - "t" is the JWT;
         #  - "k" the base64url-encoded key that signed that token.
-        'Authorization': 'vapid t={}, k={}'.format(jwt, vapid_public_key),
+        'Authorization': 'vapid t={}, k={}'.format(token, vapid_public_key),
         'Content-Encoding': 'aes128gcm',
         'TTL': '0',
     }

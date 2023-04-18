@@ -94,6 +94,20 @@ export class RtcSession extends Record {
         return isActive && this.videoStreams.get(type);
     }
 
+    /**
+     * @returns {{isSelfMuted: boolean, isDeaf: boolean, isTalking: boolean, isRaisingHand: boolean}}
+     */
+    get info() {
+        return {
+            isSelfMuted: this.isSelfMuted,
+            isRaisingHand: Boolean(this.raisingHand),
+            isDeaf: this.isDeaf,
+            isTalking: this.isTalking,
+            isCameraOn: this.isCameraOn,
+            isScreenSharingOn: this.isScreenSharingOn,
+        };
+    }
+
     get partnerId() {
         const persona = this.channelMember?.persona;
         return persona.type === "partner" ? persona.id : undefined;
