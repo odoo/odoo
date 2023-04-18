@@ -80,6 +80,7 @@ class TestChannelRTC(MailCommon):
                 ('DELETE', [{'id': channel_member.rtc_session_ids.id - 1}]),
             ],
             'sessionId': channel_member.rtc_session_ids.id,
+            'serverInfo': None,
         })
 
     @users('employee')

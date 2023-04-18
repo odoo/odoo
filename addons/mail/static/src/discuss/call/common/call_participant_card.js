@@ -59,6 +59,9 @@ export class CallParticipantCard extends Component {
         if (!this.rtcSession) {
             return false;
         }
+        if (this.env.debug) {
+            return true;
+        }
         return !this.rtcSession?.eq(this.rtc.state.selfSession);
     }
 
@@ -77,8 +80,16 @@ export class CallParticipantCard extends Component {
     get showConnectionState() {
         return Boolean(
             this.isOfActiveCall &&
-                !this.rtcSession.channelMember?.persona.eq(this.store.self) &&
+                this.rtcSession?.peerConnection &&
                 !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
+        );
+    }
+
+    get showServerState() {
+        return Boolean(
+            this.rtcSession.channelMember?.persona.eq(this.store.self) &&
+                this.rtc.state.serverState &&
+                this.rtc.state.serverState !== "connected"
         );
     }
 
