@@ -16,6 +16,7 @@ import { ChannelInvitation } from "@mail/discuss/channel_invitation";
 import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss/channel_selector";
 import { PinnedMessagesPanel } from "@mail/discuss/pinned_messages_panel";
+import { _t } from "@web/core/l10n/translation";
 
 /**
  * @typedef {Object} Props
@@ -159,6 +160,7 @@ export class ChatWindow extends Component {
             {
                 type: "ir.actions.client",
                 tag: "mail.action_discuss",
+                name: _t("Discuss"),
             },
             { clearBreadcrumbs: true }
         );

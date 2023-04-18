@@ -1929,3 +1929,17 @@ QUnit.test("Member list and settings menu are exclusive", async (assert) => {
     assert.containsOnce($, ".o-mail-CallSettings");
     assert.containsNone($, ".o-mail-ChannelMemberList");
 });
+
+QUnit.test(
+    "Correct breadcrumb when open discuss from chat window then see settings",
+    async (assert) => {
+        const pyEnv = await startServer();
+        pyEnv["mail.channel"].create({ name: "General" });
+        await start();
+        await click(".o_main_navbar i[aria-label='Messages']");
+        await click(".o-mail-NotificationItem:contains(General)");
+        await click(".o-mail-ChatWindow [title='Open in Discuss']");
+        await click(".o-mail-DiscussCategoryItem:contains(General) [title='Channel settings']");
+        assert.strictEqual($(".breadcrumb").text(), "DiscussGeneral");
+    }
+);
