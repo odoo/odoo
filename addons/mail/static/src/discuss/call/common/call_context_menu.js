@@ -6,6 +6,8 @@ import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
+import { CONNECTION_TYPES } from "@mail/discuss/call/common/rtc_service";
+
 const PROTOCOLS_TEXT = { host: "HOST", srflx: "STUN", prflx: "STUN", relay: "TURN" };
 
 export class CallContextMenu extends Component {
@@ -13,44 +15,123 @@ export class CallContextMenu extends Component {
     static template = "discuss.CallContextMenu";
 
     updateStatsTimeout;
+    rtcConnectionTypes = CONNECTION_TYPES;
 
     setup() {
         this.userSettings = useState(useService("mail.user_settings"));
+        this.rtc = useState(useService("discuss.rtc"));
+        this.state = useState({
+            downloadStats: {},
+            uploadStats: {},
+            producerStats: {},
+        });
         onMounted(() => {
             if (!this.env.debug) {
                 return;
             }
-            this.props.rtcSession.updateStats();
-            this.updateStatsTimeout = browser.setInterval(
-                () => this.props.rtcSession.updateStats(),
-                3000
-            );
+            this.updateStats();
+            this.updateStatsTimeout = browser.setInterval(() => this.updateStats(), 3000);
         });
         onWillUnmount(() => browser.clearInterval(this.updateStatsTimeout));
     }
 
+    get isSelf() {
+        return this.rtc.state.selfSession?.eq(this.props.rtcSession);
+    }
+
     get inboundConnectionTypeText() {
-        if (!this.props.rtcSession.remoteCandidateType) {
-            return _t("no connection");
-        }
-        return _t("%(candidateType)s (%(protocol)s)", {
-            candidateType: this.props.rtcSession.remoteCandidateType,
-            protocol: PROTOCOLS_TEXT[this.props.rtcSession.remoteCandidateType],
-        });
+        const candidateType =
+            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
+                ? this.state.downloadStats.remoteCandidateType
+                : this.props.rtcSession.remoteCandidateType;
+        return this.formatProtocol(candidateType);
     }
 
     get outboundConnectionTypeText() {
-        if (!this.props.rtcSession.localCandidateType) {
-            return _t("no connection");
-        }
-        return _t("%(candidateType)s (%(protocol)s)", {
-            candidateType: this.props.rtcSession.localCandidateType,
-            protocol: PROTOCOLS_TEXT[this.props.rtcSession.localCandidateType],
-        });
+        const candidateType =
+            this.rtc.state.connectionType === CONNECTION_TYPES.SERVER
+                ? this.state.uploadStats.localCandidateType
+                : this.props.rtcSession.localCandidateType;
+        return this.formatProtocol(candidateType);
     }
 
     get volume() {
         return this.userSettings.getVolume(this.props.rtcSession);
+    }
+
+    /**
+     * @param {string} candidateType
+     * @returns {string} a formatted string that describes the connection type e.g: "prflx (STUN)"
+     */
+    formatProtocol(candidateType) {
+        if (!candidateType) {
+            return _t("no connection");
+        }
+        return _t("%(candidateType)s (%(protocol)s)", {
+            candidateType,
+            protocol: PROTOCOLS_TEXT[candidateType],
+        });
+    }
+
+    async updateStats() {
+        if (this.rtc.state.selfSession?.eq(this.props.rtcSession)) {
+            if (this.rtc.sfuClient) {
+                const { uploadStats, downloadStats, ...producerStats } =
+                    await this.rtc.sfuClient.getStats();
+                const formattedUploadStats = {};
+                for (const value of uploadStats.values?.() || []) {
+                    switch (value.type) {
+                        case "candidate-pair":
+                            if (value.state === "succeeded" && value.localCandidateId) {
+                                formattedUploadStats.localCandidateType =
+                                    uploadStats.get(value.localCandidateId)?.candidateType || "";
+                                formattedUploadStats.availableOutgoingBitrate =
+                                    value.availableOutgoingBitrate;
+                            }
+                            break;
+                        case "transport":
+                            formattedUploadStats.dtlsState = value.dtlsState;
+                            formattedUploadStats.iceState = value.iceState;
+                            formattedUploadStats.packetsSent = value.packetsSent;
+                            break;
+                    }
+                }
+                const formattedDownloadStats = {};
+                for (const value of downloadStats.values?.() || []) {
+                    switch (value.type) {
+                        case "candidate-pair":
+                            if (value.state === "succeeded" && value.localCandidateId) {
+                                formattedDownloadStats.remoteCandidateType =
+                                    downloadStats.get(value.remoteCandidateId)?.candidateType || "";
+                            }
+                            break;
+                        case "transport":
+                            formattedDownloadStats.dtlsState = value.dtlsState;
+                            formattedDownloadStats.iceState = value.iceState;
+                            formattedDownloadStats.packetsReceived = value.packetsReceived;
+                            break;
+                    }
+                }
+                const formattedProducerStats = {};
+                for (const [type, stat] of Object.entries(producerStats)) {
+                    const currentTypeStats = {};
+                    for (const value of stat.values()) {
+                        switch (value.type) {
+                            case "codec":
+                                currentTypeStats.codec = value.mimeType;
+                                currentTypeStats.clockRate = value.clockRate;
+                                break;
+                        }
+                    }
+                    formattedProducerStats[type] = currentTypeStats;
+                }
+                this.state.uploadStats = formattedUploadStats;
+                this.state.downloadStats = formattedDownloadStats;
+                this.state.producerStats = formattedProducerStats;
+            }
+            return;
+        }
+        await this.props.rtcSession.updateStats();
     }
 
     onChangeVolume(ev) {

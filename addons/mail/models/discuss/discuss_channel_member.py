@@ -1,8 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import requests
+
 from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.osv import expression
+from ...tools import jwt, discuss
+
+_logger = logging.getLogger(__name__)
+SFU_MODE_THRESHOLD = 3
 
 
 class ChannelMember(models.Model):
@@ -212,13 +219,16 @@ class ChannelMember(models.Model):
         self.rtc_session_ids.unlink()
         rtc_session = self.env['discuss.channel.rtc.session'].create({'channel_member_id': self.id})
         current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
+        ice_servers = self.env["mail.ice.server"]._get_ice_servers()
+        self._join_sfu(ice_servers)
         res = {
-            'iceServers': self.env['mail.ice.server']._get_ice_servers() or False,
+            'iceServers': ice_servers or False,
             'rtcSessions': [
                 ('ADD', [rtc_session_sudo._mail_rtc_session_format() for rtc_session_sudo in current_rtc_sessions]),
                 ('DELETE', [{'id': missing_rtc_session_sudo.id} for missing_rtc_session_sudo in outdated_rtc_sessions]),
             ],
             'sessionId': rtc_session.id,
+            'serverInfo': self._get_rtc_server_info(rtc_session, ice_servers),
         }
         if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type in {'chat', 'group'}:
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
@@ -226,6 +236,62 @@ class ChannelMember(models.Model):
             if invited_members:
                 res['invitedMembers'] = [('ADD', list(invited_members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
         return res
+
+    def _join_sfu(self, ice_servers=None):
+        if len(self.channel_id.rtc_session_ids) < SFU_MODE_THRESHOLD:
+            if self.channel_id.sfu_channel_uuid:
+                self.channel_id.sfu_channel_uuid = None
+                self.channel_id.sfu_server_url = None
+            return
+        elif self.channel_id.sfu_channel_uuid and self.channel_id.sfu_server_url:
+            return
+        sfu_server_url = discuss.get_sfu_url(self.env)
+        if not sfu_server_url:
+            return
+        sfu_server_key = discuss.get_sfu_key(self.env)
+        json_web_token = jwt.sign(
+            {"iss": f"{self.get_base_url()}:channel:{self.channel_id.id}"},
+            key=sfu_server_key,
+            ttl=30,
+            algorithm=jwt.Algorithm.HS256,
+        )
+        try:
+            response = requests.get(
+                sfu_server_url + "/v1/channel",
+                headers={"Authorization": "jwt " + json_web_token},
+                timeout=3,
+            )
+            response.raise_for_status()
+        except requests.exceptions.RequestException as error:
+            _logger.warning("Failed to obtain a channel from the SFU server, user will stay in p2p: %s", error)
+            return
+        response_dict = response.json()
+        self.channel_id.sfu_channel_uuid = response_dict["uuid"]
+        self.channel_id.sfu_server_url = response_dict["url"]
+        notifications = [
+            [
+                session.guest_id or session.partner_id,
+                "discuss.channel.rtc.session/sfu_hot_swap",
+                {"serverInfo": self._get_rtc_server_info(session, ice_servers, key=sfu_server_key)},
+            ]
+            for session in self.channel_id.rtc_session_ids
+        ]
+        self.env["bus.bus"]._sendmany(notifications)
+
+    def _get_rtc_server_info(self, rtc_session, ice_servers=None, key=None):
+        sfu_channel_uuid = self.channel_id.sfu_channel_uuid
+        sfu_server_url = self.channel_id.sfu_server_url
+        if not sfu_channel_uuid or not sfu_server_url:
+            return None
+        if not key:
+            key = discuss.get_sfu_key(self.env)
+        claims = {
+            "sfu_channel_uuid": sfu_channel_uuid,
+            "session_id": rtc_session.id,
+            "ice_servers": ice_servers,
+        }
+        json_web_token = jwt.sign(claims, key=key, ttl=60 * 60 * 8, algorithm=jwt.Algorithm.HS256)  # 8 hours
+        return {"url": sfu_server_url, "jsonWebToken": json_web_token}
 
     def _rtc_leave_call(self):
         self.ensure_one()
