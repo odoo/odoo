@@ -298,6 +298,16 @@ function bootstrapToTable(editable) {
     for (const table of editable.querySelectorAll('table')) {
         table.removeAttribute('o-temp-width');
     }
+    // Merge tables in tds into one common table, each in its own row.
+    const tds = [...editable.querySelectorAll('td:has(table)')]
+        .filter(td => td.children.length > 1 && [...td.children].every(child => child.nodeName === 'TABLE'))
+        .reverse();
+    for (const td of tds) {
+        const table = _createTable();
+        const trs = [...td.children].map(child => _wrap(child, 'td')).map(wrappedChild => _wrap(wrappedChild, 'tr'));
+        trs[0].before(table);
+        table.append(...trs);
+    }
 }
 /**
  * Convert Bootstrap cards to table structures.
@@ -927,8 +937,8 @@ function formatTables($editable) {
                 convertedNestedParentTable.style.height = '100%'; // table
                 convertedNestedParentTable.parentElement.style.height = '100%'; // div.w100p
                 convertedNestedParentTable.parentElement.parentElement.style.height = 'inherit'; // td
-                // will be ignored but needed for the percentage heights to work:
-                convertedNestedParentTable.parentElement.parentElement.parentElement.style.height = 0; // tr
+                const tr = convertedNestedParentTable.parentElement.parentElement.parentElement;
+                tr.style.height = getComputedStyle(tr).height;
             }
             cell.style.verticalAlign = 'middle';
         } else if (alignSelf === 'end' || justifyContent === 'end' || justifyContent === 'flex-end') {
@@ -1594,8 +1604,12 @@ function _normalizeStyle(style) {
  */
  function _wrap(element, wrapperTag, wrapperClass, wrapperStyle) {
     const wrapper = document.createElement(wrapperTag);
-    wrapper.className = wrapperClass;
-    wrapper.style.cssText = wrapperStyle;
+    if (wrapperClass) {
+        wrapper.className = wrapperClass;
+    }
+    if (wrapperStyle) {
+        wrapper.style.cssText = wrapperStyle;
+    }
     element.parentElement.insertBefore(wrapper, element);
     wrapper.append(element);
     return wrapper;
