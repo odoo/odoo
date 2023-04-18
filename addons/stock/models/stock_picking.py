@@ -89,6 +89,27 @@ class PickingType(models.Model):
     auto_print_delivery_slip = fields.Boolean(
         "Auto Print Delivery Slip",
         help="If this checkbox is ticked, Odoo will automatically print the delivery slip of a picking when it is validated.")
+
+    auto_print_product_labels = fields.Boolean(
+        "Auto Print Product Labels",
+        help="If this checkbox is ticked, Odoo will automatically print the product labels of a picking when it is validated.")
+    product_label_format = fields.Selection([
+        ('dymo', 'Dymo'),
+        ('2x7xprice', '2 x 7 with price'),
+        ('4x7xprice', '4 x 7 with price'),
+        ('4x12', '4 x 12'),
+        ('4x12xprice', '4 x 12 with price'),
+        ('zpl', 'ZPL Labels'),
+        ('zplxprice', 'ZPL Labels with price')], string="Product Label Format to auto-print", default='2x7xprice')
+    auto_print_lot_labels = fields.Boolean(
+        "Auto Print Lot/SN Labels",
+        help="If this checkbox is ticked, Odoo will automatically print the lot/SN labels of a picking when it is validated.")
+    lot_label_format = fields.Selection([
+        ('4x12_lots', '4 x 12 - One per lot/SN'),
+        ('4x12_units', '4 x 12 - One per unit'),
+        ('zpl_lots', 'ZPL Labels - One per lot/SN'),
+        ('zpl_units', 'ZPL Labels - One per unit')],
+        string="Lot Label Format to auto-print", default='4x12_lots')
     auto_print_reception_report_labels = fields.Boolean(
         "Auto Print Reception Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the reception report labels of a picking when it is validated.")
@@ -1747,6 +1768,34 @@ class Picking(models.Model):
                         'quantity': quantities,
                     }
                     action = self.env.ref('stock.label_picking').report_action(moves_to_print, data=data, config=False)
+                    clean_action(action, self.env)
+                    report_actions.append(action)
+        pickings_print_product_label = self.filtered(lambda p: p.picking_type_id.auto_print_product_labels)
+        pickings_by_print_formats = pickings_print_product_label.grouped(lambda p: p.picking_type_id.product_label_format)
+        for print_format in pickings_print_product_label.picking_type_id.mapped("product_label_format"):
+            pickings = pickings_by_print_formats.get(print_format)
+            wizard = self.env['product.label.layout'].create({
+                'product_ids': pickings.move_ids.product_id.ids,
+                'move_ids': pickings.move_ids.ids,
+                'picking_quantity': 'picking',
+                'print_format': pickings.picking_type_id.product_label_format,
+            })
+            action = wizard.process()
+            if action:
+                clean_action(action, self.env)
+                report_actions.append(action)
+        if self.user_has_groups('stock.group_production_lot'):
+            pickings_print_lot_label = self.filtered(lambda p: p.picking_type_id.auto_print_lot_labels and p.move_line_ids.lot_id)
+            pickings_by_print_formats = pickings_print_lot_label.grouped(lambda p: p.picking_type_id.lot_label_format)
+            for print_format in pickings_print_lot_label.picking_type_id.mapped("lot_label_format"):
+                pickings = pickings_by_print_formats.get(print_format)
+                wizard = self.env['lot.label.layout'].create({
+                    'picking_ids': pickings.ids,
+                    'label_quantity': 'lots' if '_lots' in print_format else 'units',
+                    'print_format': '4x12' if '4x12' in print_format else 'zpl',
+                })
+                action = wizard.process()
+                if action:
                     clean_action(action, self.env)
                     report_actions.append(action)
         return report_actions
