@@ -4,7 +4,7 @@
     <t t-name="web.TagsList">
         <t t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
             <span
-                class="o_tag position-relative d-inline-flex align-items-center user-select-none"
+                class="o_tag position-relative d-inline-flex align-items-center user-select-none mw-100"
                 t-att-class="{
                     'o_avatar opacity-trigger-hover' : tag.img,
                     'o_badge badge rounded-pill lh-1': !tag.img,
@@ -31,7 +31,7 @@
 
                 <div
                     t-if="props.displayText"
-                    class="o_tag_badge_text"
+                    class="o_tag_badge_text text-truncate"
                     t-att-class="{'position-relative ms-1' : tag.img}"
                     t-out="tag.text"/>
 
