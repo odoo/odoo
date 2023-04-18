@@ -73,6 +73,8 @@
                                     <field name="group_ids" widget="many2many_tags"
                                         attrs="{'invisible': [('channel_type', '!=', 'channel')]}"
                                         string="Auto Subscribe Groups"/>
+                                    <field name="rtc_connection_type" string="RTC Connection type"/>
+                                    <field name="rtc_server_url" string="RTC server url" attrs="{'invisible': [('rtc_connection_type', '!=', 'server')]}"/>
                                 </group>
                             </page>
                             <page string="Members" name="members">

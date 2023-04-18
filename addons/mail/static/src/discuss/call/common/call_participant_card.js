@@ -60,6 +60,14 @@ export class CallParticipantCard extends Component {
         return this.rtcSession ? this.rtcSession.channelMember : this.props.cardData.member;
     }
 
+    get connectionState() {
+        if (this.rtc.state.connectionType === "server") {
+            return this.rtc.state.rtcServer?.connectionState;
+        } else {
+            return this.rtcSession.connectionState;
+        }
+    }
+
     get isOfActiveCall() {
         return Boolean(this.rtcSession && this.rtcSession.channelId === this.rtc.state.channel?.id);
     }
@@ -68,7 +76,7 @@ export class CallParticipantCard extends Component {
         return Boolean(
             this.isOfActiveCall &&
                 !(this.rtcSession.channelMember?.persona.localId === this.store.self?.localId) &&
-                !HIDDEN_CONNECTION_STATES.has(this.rtcSession.connectionState)
+                !HIDDEN_CONNECTION_STATES.has(this.connectionState)
         );
     }
 
@@ -84,7 +92,7 @@ export class CallParticipantCard extends Component {
     }
 
     get hasVideo() {
-        return Boolean(this.rtcSession?.videoStream);
+        return this.rtcSession?.isSendingVideo;
     }
 
     get isTalking() {

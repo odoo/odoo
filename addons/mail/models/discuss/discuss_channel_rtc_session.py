@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import requests
+import re
+import uuid
+
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
@@ -49,11 +53,25 @@ class MailRtcSession(models.Model):
             'id': channel.id,
             'rtcSessions': [('insert-and-unlink', [{'id': session_data['id']} for session_data in sessions_data])],
         }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()]
+        disconnect_requests = {}
         for rtc_session in self:
+            if rtc_session.channel_id.rtc_server_url:
+                disconnect_requests.setdefault(rtc_session.channel_id.rtc_server_url, []).append(rtc_session.id)
             target = rtc_session.guest_id or rtc_session.partner_id
             notifications.append((target, 'discuss.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
         self.env['bus.bus']._sendmany(notifications)
-        return super().unlink()
+        #  TODO if self.channel_id.rtc_server_url:
+        #  request at `rtc_server_url/disconnect` to delete the session
+        base_url = self.get_base_url()
+        local_url = re.sub(r':\d+', ':' + '8080', base_url)  # TODO remove
+        return_value = super().unlink()
+        try:
+            for url, ids in disconnect_requests.items():
+                # use url instead of local_url when run on different addresses
+                requests.post(local_url + '/disconnect', json={'session_ids': ids}, timeout=30)
+        except:
+            pass
+        return return_value
 
     def _update_and_broadcast(self, values):
         """ Updates the session and notifies all members of the channel
