@@ -53,6 +53,8 @@ class TestImLivechatMessage(TransactionCase):
             },
             'body': message.body,
             'date': message.date,
+            'write_date': message.write_date,
+            'create_date': message.create_date,
             'guestAuthor': [('clear',)],
             'history_partner_ids': [],
             'id': message.id,

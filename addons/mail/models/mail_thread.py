@@ -4062,6 +4062,7 @@ class MailThread(models.AbstractModel):
                 'id': message.id,
                 'body': message.body,
                 'attachment_ids': message.attachment_ids._attachment_format(),
+                'write_date': message.write_date,
             }
         })
 

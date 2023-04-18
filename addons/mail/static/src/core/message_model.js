@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 import { url } from "@web/core/utils/urls";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { createLocalId } from "../utils/misc";
+import { omit } from "@web/core/utils/objects";
 
 const { DateTime } = luxon;
 
@@ -66,6 +67,10 @@ export class Message {
     notificationType;
     /** @type {string} */
     pinned_at;
+    /** @type {string} */
+    create_date;
+    /** @type {string} */
+    write_date;
 
     /**
      * We exclude the milliseconds because datetime string from the server don't
@@ -171,11 +176,12 @@ export class Message {
         return `${url("/web")}#model=${this.resModel}&id=${this.id}`;
     }
 
-    get isBodyEmpty() {
-        return (
-            !this.body ||
-            ["", "<p></p>", "<p><br></p>", "<p><br/></p>"].includes(this.body.replace(/\s/g, ""))
-        );
+    get editDate() {
+        return this.write_date !== this.create_date ? this.write_date : false;
+    }
+
+    get hasTextContent() {
+        return (this.editDate && this.attachments.length) || !this.isBodyEmpty;
     }
 
     get isEmpty() {
@@ -184,6 +190,12 @@ export class Message {
             this.attachments.length === 0 &&
             this.trackingValues.length === 0 &&
             !this.subtypeDescription
+        );
+    }
+    get isBodyEmpty() {
+        return (
+            !this.body ||
+            ["", "<p></p>", "<p><br></p>", "<p><br/></p>"].includes(this.body.replace(/\s/g, ""))
         );
     }
 
@@ -230,5 +242,11 @@ export class Message {
             return null;
         }
         return luxon.DateTime.fromISO(new Date(this.pinned_at).toISOString());
+    }
+
+    get editDatetimeHuge() {
+        return deserializeDateTime(this.editDate).toLocaleString(
+            omit(DateTime.DATETIME_HUGE, "timeZoneName")
+        );
     }
 }

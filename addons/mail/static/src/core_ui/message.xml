@@ -92,8 +92,8 @@
                                    'ps-2': env.inChatWindow and isAlignedRight and state.isEditing,
                                    }"
                         >
-                            <div t-if="!state.isEditing" class="o-mail-Message-content position-relative" t-att-class="{'d-flex': env.inDiscussApp}">
-                                <t t-if="message.type !== 'notification' and !message.isTransient and (!message.isBodyEmpty or message.subtypeDescription)">
+                            <div t-if="!state.isEditing" class="o-mail-Message-content position-relative d-flex">
+                                <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription)">
                                     <t t-if="!message.linkPreviewSquash">
                                         <div class="position-relative">
                                             <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
@@ -107,13 +107,13 @@
                                                         }" t-ref="body">
                                                 <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
                                                 <t t-if="message.body" t-out="message.body"/>
+                                                <small t-if="message.editDate" class="ms-2 fst-italic text-muted" t-att-title="message.editDatetimeHuge">(edited)</small>
                                                 <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
                                             </div>
                                         </div>
                                     </t>
                                     <LinkPreviewList t-else="" linkPreviews="message.linkPreviews" deletable="false"/>
                                 </t>
-
                             </div>
                             <div t-else="" class="position-relative w-100">
                                 <div class="o-mail-Message-bubble border rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
