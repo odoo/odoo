@@ -13,6 +13,13 @@
         <field name="website">www.chexample.com</field>
     </record>
 
+    <record id="partner_demo_company_bank_account" model="res.partner.bank">
+        <field name="acc_type">iban</field>
+        <field name="acc_number">CH4431999123000889012</field>
+        <field name="bank_id" ref="base.bank_ing" />
+        <field name="partner_id" ref="l10n_ch.partner_demo_company_ch"/>
+    </record>
+
     <record id="demo_company_ch" model="res.company">
         <field name="name">CH Company</field>
         <field name="partner_id" ref="partner_demo_company_ch"/>
