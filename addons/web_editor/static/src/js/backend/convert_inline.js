@@ -177,7 +177,7 @@ function bootstrapToTable(editable) {
             // table. This allows Bootstrap's weird negative margin strategy on
             // rows to works.
             const horizontalSpacingProps = ['margin-left', 'margin-right', 'padding-left', 'padding-right'];
-            if (!isMasonry && horizontalSpacingProps.some(prop => tr.style[prop])) {
+            if (!isMasonry && horizontalSpacingProps.some(prop => tr.style[prop]) && !horizontalSpacingProps.some(prop => table.style[prop])) {
                 // Masonry is so nuts we need to handle it separately and this
                 // particular fix somehow breaks it.
                 const div = document.createElement('div');
@@ -185,6 +185,8 @@ function bootstrapToTable(editable) {
                     div.style.setProperty(prop, tr.style[prop]);
                     div.classList.add('o_horizontal_spacing');
                     tr.style.removeProperty(prop);
+                    _hideForOutlook(div, 'opening');
+                    _hideForOutlook(div, 'closing');
                 }
                 table.before(div);
                 div.replaceChildren(table);
