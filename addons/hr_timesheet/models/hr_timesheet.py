@@ -305,7 +305,7 @@ class AccountAnalyticLine(models.Model):
                 task_per_id[task.id] = task
                 if not task.project_id:
                     raise ValidationError(_('Timesheets cannot be created on a private task.'))
-            account_ids = account_ids.union(tasks.analytic_account_id.ids)
+            account_ids = account_ids.union(tasks.analytic_account_id.ids, tasks.project_id.analytic_account_id.ids)
 
         project_per_id = {}
         if project_ids:
@@ -327,11 +327,10 @@ class AccountAnalyticLine(models.Model):
             if not vals.get('project_id'):
                 vals['project_id'] = data.project_id.id
             if not vals.get('account_id'):
-                account_id = data.analytic_account_id.id
-                account = account_per_id[account_id]
+                account = data._get_task_analytic_account_id() if vals.get('task_id') else data.analytic_account_id
                 if not account or not account.active:
                     raise ValidationError(_('Timesheets must be created on a project or a task with an active analytic account.'))
-                vals['account_id'] = account_id
+                vals['account_id'] = account.id
                 vals['company_id'] = account.company_id.id or data.company_id.id
             if not vals.get('partner_id'):
                 vals['partner_id'] = data.partner_id.id
