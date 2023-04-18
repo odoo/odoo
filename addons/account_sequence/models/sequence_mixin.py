@@ -35,6 +35,7 @@ class SequenceMixin(models.AbstractModel):
                 with self.env.cr.savepoint(flush=False), mute_logger('odoo.sql_db'):
                     self[self._sequence_field] = sequence
                     self.flush_recordset([self._sequence_field])
+                    self.modified([self._sequence_field])
                     break
             except DatabaseError as e:
                 # 23P01 ExclusionViolation
