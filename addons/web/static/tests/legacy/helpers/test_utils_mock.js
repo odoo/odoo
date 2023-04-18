@@ -632,7 +632,7 @@ function patch(target, props) {
         ownPatchedProps: [],
     };
     if (target.prototype) {
-        _.each(props, function (value, key) {
+        Object.keys(props).forEach((key) => {
             if (target.prototype.hasOwnProperty(key)) {
                 patches[patchID].ownPatchedProps.push({
                     key: key,
@@ -644,7 +644,7 @@ function patch(target, props) {
         });
         target.include(props);
     } else {
-        _.each(props, function (value, key) {
+        for (const [key, value] of Object.entries(props)) {
             if (key in target) {
                 var oldValue = target[key];
                 patches[patchID].ownPatchedProps.push({
@@ -670,7 +670,7 @@ function patch(target, props) {
                 patches[patchID].otherPatchedProps.push(key);
                 target[key] = value;
             }
-        });
+        }
     }
 }
 
@@ -683,17 +683,17 @@ function unpatch(target) {
     var patchID = target.__patchID;
     var patch = patches[patchID];
     if (target.prototype) {
-        _.each(patch.ownPatchedProps, function (p) {
+        patch.ownPatchedProps.forEach((p) => {
             target.prototype[p.key] = p.initialValue;
         });
-        _.each(patch.otherPatchedProps, function (key) {
+        patch.otherPatchedProps.forEach((key) => {
             delete target.prototype[key];
         });
     } else {
-        _.each(patch.ownPatchedProps, function (p) {
+        patch.ownPatchedProps.forEach((p) => {
             target[p.key] = p.initialValue;
         });
-        _.each(patch.otherPatchedProps, function (key) {
+        patch.otherPatchedProps.forEach((key) => {
             delete target[key];
         });
     }

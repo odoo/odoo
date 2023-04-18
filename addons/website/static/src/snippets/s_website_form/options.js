@@ -818,11 +818,13 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             authorizedFieldsCache[model] = getFields;
         }
 
-        this.existingFields = await getFields.then(fields => {
-            this.fields = _.each(fields, function (field, fieldName) {
+        this.existingFields = await getFields.then((fields) => {
+            this.fields = {};
+            for (const [fieldName, field] of Object.entries(fields)) {
                 field.name = fieldName;
                 field.domain = field.domain || [];
-            });
+                this.fields[fieldName] = field;
+            }
             // Create the buttons for the type we-select
             return Object.keys(fields).map(key => {
                 const field = fields[key];

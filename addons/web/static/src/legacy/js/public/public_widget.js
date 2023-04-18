@@ -197,7 +197,7 @@ var PublicWidget = Widget.extend({
         var originalEvents = this.events;
 
         var events = {};
-        _.each(this.events, function (method, event) {
+        Object.entries(this.events || {}).forEach(([event, method]) => {
             // If the method is a function, use the default Widget system
             if (typeof method !== 'string') {
                 events[event] = method;

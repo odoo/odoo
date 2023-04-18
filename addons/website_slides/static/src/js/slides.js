@@ -13,7 +13,7 @@ publicWidget.registry.websiteSlides = publicWidget.Widget.extend({
     start: function (parent) {
         var defs = [this._super.apply(this, arguments)];
 
-        _.each($("timeago.timeago"), function (el) {
+        $("timeago.timeago").toArray().forEach((el) => {
             var datetime = $(el).attr('datetime');
             var datetimeObj = time.str_to_datetime(datetime);
             // if presentation 7 days, 24 hours, 60 min, 60 second, 1000 millis old(one week)

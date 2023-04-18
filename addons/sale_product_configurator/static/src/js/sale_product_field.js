@@ -188,7 +188,7 @@ patch(SaleOrderLineProductField.prototype, 'sale_product_configurator', {
         var customAttributeValues = mainProduct.product_custom_attribute_values;
         var customValuesCommands = [{ operation: "DELETE_ALL" }];
         if (customAttributeValues && customAttributeValues.length !== 0) {
-            _.each(customAttributeValues, function (customValue) {
+            customAttributeValues.forEach((customValue) => {
                 customValuesCommands.push({
                     operation: "CREATE",
                     context: [

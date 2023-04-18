@@ -760,9 +760,12 @@ options.registry.WebsiteSaleProductPage = options.Class.extend({
             'input.js_variant_change:checked',
             'select.js_variant_change'
         ];
-        _.each($container.find(variantsValuesSelectors.join(', ')), function (el) {
-            values.push(+$(el).val());
-        });
+        $container
+            .find(variantsValuesSelectors.join(", "))
+            .toArray()
+            .forEach((el) => {
+                values.push(+$(el).val());
+            });
 
         return values;
     },

@@ -64,7 +64,7 @@ publicWidget.registry.websiteEventTrackProposalFormTags = publicWidget.Widget.ex
             fill_data: function (query, data) {
                 var that = this,
                     tags = {results: []};
-                _.each(data, function (obj) {
+                data.forEach((obj) => {
                     // select tags matching either category or tag name
                     if (that.matcher(query.term, obj[nameKey]) || that.matcher(query.term, obj.category_id[1])) {
                         if (obj.category_id[1]) {

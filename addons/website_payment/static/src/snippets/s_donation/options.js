@@ -97,7 +97,7 @@ options.registry.Donation = options.Class.extend({
         const valueList = JSON.parse(value);
         const donationAmounts = [];
         delete this.$target[0].dataset.donationAmounts;
-        _.each(valueList, value => {
+        valueList.forEach((value) => {
             donationAmounts.push(value.display_name);
         });
         this.$target[0].dataset.donationAmounts = JSON.stringify(donationAmounts);
@@ -233,7 +233,7 @@ options.registry.Donation = options.Class.extend({
         if (this.$target[0].dataset.descriptions) {
             const $descriptions = this.$target.find('#s_donation_description_inputs > input');
             const $tableEl = this.$el.find('we-list table');
-            _.each($tableEl.find('tr'), (trEl, i) => {
+            $tableEl.find("tr").toArray().forEach((trEl, i) => {
                 const $inputAmount = $(trEl).find('td').first();
                 $inputAmount.addClass('w-25');
                 const tdEl = document.createElement('td');
@@ -256,7 +256,7 @@ options.registry.Donation = options.Class.extend({
         const descriptionInputs = this.$target.find('#s_donation_description_inputs');
         descriptionInputs.empty();
         const descriptions = this.$el.find('we-list input[type=text]');
-        _.each(descriptions, description => {
+        descriptions.toArray().forEach((description) => {
             const inputEl = document.createElement('input');
             inputEl.type = 'hidden';
             inputEl.classList.add('o_translatable_input_hidden', 'd-block', 'mb-1', 'w-100');

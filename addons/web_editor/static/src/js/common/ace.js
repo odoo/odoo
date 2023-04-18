@@ -524,11 +524,11 @@ var ViewEditor = Widget.extend({
             // Initialize a 0 level for each view and assign them an array containing their children.
             var self = this;
             var roots = [];
-            _.each(this.views, function (view) {
+            Object.values(this.views).forEach((view) => {
                 view.level = 0;
                 view.children = [];
             });
-            _.each(this.views, function (view) {
+            Object.values(this.views).forEach((view) => {
                 var parentId = view.inherit_id[0];
                 var parent = parentId && self.views[parentId];
                 if (parent) {
@@ -544,11 +544,11 @@ var ViewEditor = Widget.extend({
             function visit(view, level) {
                 view.level = level;
                 self.sortedViews.push(view);
-                _.each(view.children, function (child) {
+                view.children.forEach((child) => {
                     visit(child, level + 1);
                 });
             }
-            _.each(roots, function (root) {
+            roots.forEach((root) => {
                 visit(root, 0);
             });
         }
@@ -563,8 +563,10 @@ var ViewEditor = Widget.extend({
 
             // Store the URL ungrouped by bundle and use the URL as key (resource ID)
             var resources = type === 'scss' ? this.scss : this.js;
-            _.each(data, function (bundleInfos) {
-                _.each(bundleInfos[1], function (info) { info.bundle = bundleInfos[0]; });
+            data.forEach((bundleInfos) => {
+                bundleInfos[1].forEach((info) => {
+                    info.bundle = bundleInfos[0];
+                });
                 Object.assign(resources, _.indexBy(bundleInfos[1], 'url'));
             });
         }
@@ -629,41 +631,45 @@ var ViewEditor = Widget.extend({
         var self = this;
         var toSave = {};
         var errorFound = false;
-        _.each(this.editingSessions, (function (editingSessions, type) {
-            if (errorFound) return;
+        Object.entries(this.editingSessions || {}).forEach(
+            (([type, editingSessions]) => {
+                if (errorFound) return;
 
-            var dirtySessions = _.pick(editingSessions, function (session) {
-                return session.getUndoManager().hasUndo();
-            });
-            toSave[type] = _.map(dirtySessions, function (session, resID) {
-                return {
-                    id: parseInt(resID, 10) || resID,
-                    text: session.getValue(),
-                };
-            });
+                var dirtySessions = _.pick(editingSessions, function (session) {
+                    return session.getUndoManager().hasUndo();
+                });
+                toSave[type] = _.map(dirtySessions, function (session, resID) {
+                    return {
+                        id: parseInt(resID, 10) || resID,
+                        text: session.getValue(),
+                    };
+                });
 
-            this._showErrorLine();
-            for (var i = 0 ; i < toSave[type].length && !errorFound ; i++) {
-                var check = (type === 'xml' ? checkXML : checkSCSS)(toSave[type][i].text);
-                if (!check.isValid) {
-                    this._showErrorLine(check.error.line, check.error.message, toSave[type][i].id, type);
-                    errorFound = toSave[type][i];
+                this._showErrorLine();
+                for (var i = 0 ; i < toSave[type].length && !errorFound ; i++) {
+                    var check = (type === 'xml' ? checkXML : checkSCSS)(toSave[type][i].text);
+                    if (!check.isValid) {
+                        this._showErrorLine(check.error.line, check.error.message, toSave[type][i].id, type);
+                        errorFound = toSave[type][i];
+                    }
                 }
-            }
-        }).bind(this));
+            }).bind(this)
+        );
         if (errorFound) return Promise.reject(errorFound);
 
         var defs = [];
         var mutex = new concurrency.Mutex();
-        _.each(toSave, (function (_toSave, type) {
-            // Child views first as COW on a parent would delete them
-            _toSave = _.sortBy(_toSave, 'id').reverse();
-            _.each(_toSave, function (session) {
-                defs.push(mutex.exec(function () {
-                    return (type === 'xml' ? self._saveView(session) : self._saveSCSSorJS(session));
-                }));
-            });
-        }).bind(this));
+        Object.entries(toSave || {}).forEach(
+            (([type, _toSave]) => {
+                // Child views first as COW on a parent would delete them
+                _toSave = _.sortBy(_toSave, 'id').reverse();
+                _toSave.forEach((session) => {
+                    defs.push(mutex.exec(function () {
+                        return (type === 'xml' ? self._saveView(session) : self._saveSCSSorJS(session));
+                    }));
+                });
+            }).bind(this)
+        );
 
         var self = this;
         return Promise.all(defs).guardedCatch(function (results) {
@@ -811,7 +817,7 @@ var ViewEditor = Widget.extend({
     _switchType: function (type) {
         this.currentType = type;
         this.$typeSwitcherBtn.html(this.$typeSwitcherChoices.filter('[data-type=' + type + ']').html());
-        _.each(this.$lists, function ($list, _type) { $list.toggleClass('d-none', type !== _type); });
+        Object.entries(this.$lists).forEach(([_type, $list]) => { $list.toggleClass('d-none', type !== _type); });
         this.$lists[type].change();
 
         this.$includeBundlesArea.toggleClass('d-none', this.currentType !== 'xml' || !config.isDebug());
@@ -851,7 +857,7 @@ var ViewEditor = Widget.extend({
 
         var self = this;
         this.$lists.xml.empty();
-        _.each(this.sortedViews, function (view) {
+        this.sortedViews.forEach((view) => {
             self.$lists.xml.append($('<option/>', {
                 value: view.id,
                 text: view.name,
@@ -887,11 +893,11 @@ var ViewEditor = Widget.extend({
         this.$lists.js.data('select2').dropdown.addClass('o_ace_select2_dropdown');
 
         function _populateList(sortedData, $list, lettersToRemove) {
-            _.each(sortedData, function (bundleInfos) {
+            sortedData.forEach((bundleInfos) => {
                 var $optgroup = $('<optgroup/>', {
                     label: bundleInfos[0],
                 }).appendTo($list);
-                _.each(bundleInfos[1], function (dataInfo) {
+                bundleInfos[1].forEach((dataInfo) => {
                     var name = dataInfo.url.substring(dataInfo.url.lastIndexOf('/') + 1, dataInfo.url.length - lettersToRemove);
                     $optgroup.append($('<option/>', {
                         value: dataInfo.url,

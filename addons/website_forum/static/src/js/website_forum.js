@@ -93,7 +93,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 },
                 results: function (data) {
                     var ret = [];
-                    _.each(data, function (x) {
+                    data.forEach((x) => {
                         ret.push({
                             id: x.id,
                             text: x.name,
@@ -107,7 +107,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             // Take default tags from the input value
             initSelection: function (element, callback) {
                 var data = [];
-                _.each(element.data('init-value'), function (x) {
+                element.data("init-value").forEach((x) => {
                     data.push({id: x.id, text: x.name, isNew: false});
                 });
                 element.val('');
@@ -115,7 +115,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             },
         });
 
-        _.each($('textarea.o_wysiwyg_loader'), function (textarea) {
+        $('textarea.o_wysiwyg_loader').toArray().forEach((textarea) => {
             var $textarea = $(textarea);
             var editorKarma = $textarea.data('karma') || 0; // default value for backward compatibility
             var $form = $textarea.closest('form');
@@ -146,7 +146,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             });
         });
 
-        _.each(this.$('.o_wforum_bio_popover'), authorBox => {
+        this.$('.o_wforum_bio_popover').toArray().forEach((authorBox) => {
             $(authorBox).popover({
                 trigger: 'hover',
                 offset: '10',
@@ -216,7 +216,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
             ev.preventDefault();
             setTimeout(function() {
                 var $buttons = $(ev.currentTarget).find('button[type="submit"], a.a-submit');
-                _.each($buttons, function (btn) {
+                $buttons.toArray().forEach((btn) => {
                     let $btn = $(btn);
                     $btn.find('i').remove();
                     $btn.prop('disabled', false);
@@ -443,7 +443,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                     type: "warning",
                 });
             } else {
-                _.each(this.$('.forum_answer'), answer => {
+                this.$('.forum_answer').toArray().forEach((answer) => {
                     var $answer = $(answer);
                     var isCorrect = $answer.is(target) ? data : false;
                     var $toggler = $answer.find('.o_wforum_validate_toggler');
@@ -600,7 +600,7 @@ publicWidget.registry.websiteForumSpam = publicWidget.Widget.extend({
             ],
             kwargs: {}
         }).then(function (o) {
-            _.each(o, function (r) {
+            Object.values(o).forEach((r) => {
                 r.content = $('<p>' + $(r.content).html() + '</p>').text().substring(0, 250);
             });
             self.$('div.post_spam').html(qweb.render('website_forum.spam_search_name', {

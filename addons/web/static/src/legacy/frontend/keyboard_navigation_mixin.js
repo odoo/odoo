@@ -75,8 +75,8 @@ import BrowserDetection from "web.BrowserDetection";
             if (this.options.skipRenderOverlay) {
                 return;
             }
-            var accesskeyElements = $(document).find('[accesskey]').filter(':visible');
-            _.each(accesskeyElements, function (elem) {
+            var accesskeyElements = $(document).find('[accesskey]').filter(':visible').toArray();
+            accesskeyElements.forEach((elem) => {
                 var overlay = $(`<div class='o_web_accesskey_overlay font-sans-serif'>${$(elem).attr('accesskey').toUpperCase()}</div>`);
 
                 var $overlayParent;
@@ -167,7 +167,7 @@ import BrowserDetection from "web.BrowserDetection";
                         .not('[accesskey]')
                         .not('[disabled]')
                         .not('[tabindex="-1"]');
-                    _.each(buttonsWithoutAccessKey, function (elem) {
+                    buttonsWithoutAccessKey.toArray().forEach((elem) => {
                         var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
                         for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
                             var candidateAccessKey = buttonString[letterIndex].toUpperCase();
@@ -182,7 +182,7 @@ import BrowserDetection from "web.BrowserDetection";
                 }
 
                 var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
-                _.each(elementsWithoutAriaKeyshortcut, function (elem) {
+                elementsWithoutAriaKeyshortcut.toArray().forEach((elem) => {
                     elem.setAttribute('aria-keyshortcuts', 'Alt+Shift+' + elem.accessKey);
                 });
                 this._addAccessKeyOverlays();

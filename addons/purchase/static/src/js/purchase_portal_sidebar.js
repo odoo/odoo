@@ -59,35 +59,19 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
             "id",
             ""
         );
-        _.each(this.spyWatched.find("#quote_content h2, #quote_content h3"), function (el) {
-            var id, text;
-            switch (el.tagName.toLowerCase()) {
-                case "h2":
-                    id = self._setElementId("quote_header_", el);
-                    text = self._extractText($(el));
-                    if (!text) {
-                        break;
-                    }
-                    lastLI = $("<li class='nav-item'>")
-                        .append(
-                            $(
-                                '<a class="nav-link" style="max-width: 200px;" href="#' + id + '"/>'
-                            ).text(text)
-                        )
-                        .appendTo($bsSidenav);
-                    lastUL = false;
-                    break;
-                case "h3":
-                    id = self._setElementId("quote_", el);
-                    text = self._extractText($(el));
-                    if (!text) {
-                        break;
-                    }
-                    if (lastLI) {
-                        if (!lastUL) {
-                            lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
+        this.spyWatched
+            .find("#quote_content h2, #quote_content h3")
+            .toArray()
+            .forEach((el) => {
+                var id, text;
+                switch (el.tagName.toLowerCase()) {
+                    case "h2":
+                        id = self._setElementId("quote_header_", el);
+                        text = self._extractText($(el));
+                        if (!text) {
+                            break;
                         }
-                        $("<li class='nav-item'>")
+                        lastLI = $("<li class='nav-item'>")
                             .append(
                                 $(
                                     '<a class="nav-link" style="max-width: 200px;" href="#' +
@@ -95,12 +79,33 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
                                         '"/>'
                                 ).text(text)
                             )
-                            .appendTo(lastUL);
-                    }
-                    break;
-            }
-            el.setAttribute("data-anchor", true);
-        });
+                            .appendTo($bsSidenav);
+                        lastUL = false;
+                        break;
+                    case "h3":
+                        id = self._setElementId("quote_", el);
+                        text = self._extractText($(el));
+                        if (!text) {
+                            break;
+                        }
+                        if (lastLI) {
+                            if (!lastUL) {
+                                lastUL = $("<ul class='nav flex-column'>").appendTo(lastLI);
+                            }
+                            $("<li class='nav-item'>")
+                                .append(
+                                    $(
+                                        '<a class="nav-link" style="max-width: 200px;" href="#' +
+                                            id +
+                                            '"/>'
+                                    ).text(text)
+                                )
+                                .appendTo(lastUL);
+                        }
+                        break;
+                }
+                el.setAttribute("data-anchor", true);
+            });
         this.trigger_up("widgets_start_request", { $target: $bsSidenav });
     },
     /**
@@ -113,19 +118,22 @@ publicWidget.registry.PurchasePortalSidebar = PortalSidebar.extend({
     _extractText: function ($node) {
         var self = this;
         var rawText = [];
-        _.each($node.contents(), function (el) {
-            var current = $(el);
-            if ($.trim(current.text())) {
-                var tagName = current.prop("tagName");
-                if (
-                    _.isUndefined(tagName) ||
-                    (!_.isUndefined(tagName) &&
-                        _.contains(self.authorizedTextTag, tagName.toLowerCase()))
-                ) {
-                    rawText.push($.trim(current.text()));
+        $node
+            .contents()
+            .toArray()
+            .forEach((el) => {
+                var current = $(el);
+                if ($.trim(current.text())) {
+                    var tagName = current.prop("tagName");
+                    if (
+                        _.isUndefined(tagName) ||
+                        (!_.isUndefined(tagName) &&
+                            _.contains(self.authorizedTextTag, tagName.toLowerCase()))
+                    ) {
+                        rawText.push($.trim(current.text()));
+                    }
                 }
-            }
-        });
+            });
         return rawText.join(" ");
     },
 });

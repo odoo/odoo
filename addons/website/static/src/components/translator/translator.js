@@ -17,7 +17,7 @@ export class AttributeTranslateDialog extends Component {
         useEffect(() => {
             this.translation = $(this.props.node).data('translation');
             const $group = $('<div/>', {class: 'mb-3'}).appendTo(this.formEl.el);
-            _.each(this.translation, function (node, attr) {
+            for (const [attr, node] of Object.entries(this.translation)) {
                 const $node = $(node);
                 const $label = $('<label class="col-form-label"></label>').text(attr);
                 const $input = $('<input class="form-control"/>').val($node.html());
@@ -38,7 +38,7 @@ export class AttributeTranslateDialog extends Component {
                     $node.trigger('change');
                 });
                 $group.append($label).append($input);
-            });
+            }
         }, () => [this.props.node]);
     }
 }
@@ -132,7 +132,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         const $editable = this.getEditableArea();
         const translationRegex = /<span [^>]*data-oe-translation-initial-sha="([^"]+)"[^>]*>(.*)<\/span>/;
         let $edited = $();
-        _.each(attrs, function (attr) {
+        attrs.forEach((attr) => {
             const attrEdit = $editable.filter('[' + attr + '*="data-oe-translation-initial-sha="]').filter(':empty, input, select, textarea, img');
             attrEdit.each(function () {
                 var $node = $(this);
@@ -269,7 +269,7 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
         this.$translations.each(function () {
             var $node = $(this);
             var translation = $node.data('translation');
-            _.each(translation, function (node, attr) {
+            Object.values(translation).forEach((node) => {
                 var trans = self.getTranslationObject(node);
                 trans.value = (trans.value ? trans.value : $node.html()).replace(/[ \t\n\r]+/, ' ');
                 $node.attr('data-oe-translation-state', (trans.state || 'to_translate'));

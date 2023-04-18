@@ -5,7 +5,7 @@ const domParser = new DOMParser();
 
 function traverse(tree, f) {
     if (f(tree)) {
-        _.each(tree.children, function (c) {
+        Object.values(tree.children || {}).forEach((c) => {
             traverse(c, f);
         });
     }
@@ -66,7 +66,9 @@ export function processArch(arch, viewType, resModel, models) {
                 const viewFieldsInfo = models[resModel][fieldName];
                 const nodeString = node.getAttribute("string");
                 if (nodeString === null && viewFieldsInfo === undefined) {
-                    throw new Error(`Missing field string information for the field '${fieldName}' from the '${resModel}' model`);
+                    throw new Error(
+                        `Missing field string information for the field '${fieldName}' from the '${resModel}' model`
+                    );
                 }
                 viewFields[fieldName] = {
                     ...viewFieldsInfo,

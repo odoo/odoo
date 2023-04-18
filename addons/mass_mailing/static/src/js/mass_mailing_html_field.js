@@ -485,7 +485,7 @@ export class MassMailingHtmlField extends HtmlField {
         const $layout = this.wysiwyg.$iframeBody.find(".o_layout");
         let selectedTheme = false;
         if ($layout.length !== 0) {
-            _.each(themesParams, function (themeParams) {
+            themesParams.forEach((themeParams) => {
                 if ($layout.hasClass(themeParams.className)) {
                     selectedTheme = themeParams;
                 }

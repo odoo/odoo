@@ -295,7 +295,7 @@ var VariantMixin = {
             'input.js_variant_change:checked',
             'select.js_variant_change'
         ];
-        _.each($container.find(variantsValuesSelectors.join(', ')), function (el) {
+        $container.find(variantsValuesSelectors.join(', ')).toArray().forEach((el) => {
             values.push(+$(el).val());
         });
 
@@ -383,10 +383,10 @@ var VariantMixin = {
         // for each of them, contains array with the other ptav they exclude
         if (combinationData.exclusions) {
             // browse all the currently selected attributes
-            _.each(combination, function (current_ptav) {
+            Object.values(combination).forEach((current_ptav) => {
                 if (combinationData.exclusions.hasOwnProperty(current_ptav)) {
                     // for each exclusion of the current attribute:
-                    _.each(combinationData.exclusions[current_ptav], function (excluded_ptav) {
+                    Object.values(combinationData.exclusions[current_ptav]).forEach((excluded_ptav) => {
                         // disable the excluded input (even when not already selected)
                         // to give a visual feedback before click
                         self._disableInput(
@@ -439,10 +439,11 @@ var VariantMixin = {
         }
 
         // parent exclusions (tell which attributes are excluded from parent)
-        _.each(combinationData.parent_exclusions, function (exclusions, excluded_by){
+        for (const [excluded_by, exclusions] of Object.entries(
+            combinationData.parent_exclusions || {}
+        )) {
             // check that the selected combination is in the parent exclusions
-            _.each(exclusions, function (ptav) {
-
+            exclusions.forEach((ptav) => {
                 // disable the excluded input (even when not already selected)
                 // to give a visual feedback before click
                 self._disableInput(
@@ -453,7 +454,7 @@ var VariantMixin = {
                     combinationData.parent_product_name
                 );
             });
-        });
+        }
     },
     /**
      * Extracted to a method to be extendable by other modules

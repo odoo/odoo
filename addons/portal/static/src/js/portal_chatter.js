@@ -102,7 +102,7 @@ var PortalChatter = publicWidget.Widget.extend({
      * @returns {Array}
      */
     preprocessMessages(messages) {
-        _.each(messages, function (m) {
+        messages.forEach((m) => {
             m['author_avatar_url'] = sprintf('/web/image/%s/%s/author_avatar/50x50', 'mail.message', m.id);
             m['published_date_str'] = sprintf(_t('Published on %s'), moment(time.str_to_datetime(m.date)).format('MMMM Do YYYY, h:mm:ss a'));
             m['body'] = Markup(m.body);

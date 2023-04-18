@@ -164,9 +164,9 @@ function get_file(options) {
     } else {
         xhr.open('POST', options.url);
         data = new FormData();
-        _.each(options.data || {}, function (v, k) {
+        for (const [k, v] of Object.entries(options.data || {})) {
             data.append(k, v);
-        });
+        }
     }
     if (core.csrf_token) {
         data.append('csrf_token', core.csrf_token);

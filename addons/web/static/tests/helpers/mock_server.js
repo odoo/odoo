@@ -357,8 +357,8 @@ export class MockServer {
                     defaultValues[attr] = !!field[attr];
                 });
                 // LPE: what is this ?
-                /*                _.each(field.states || {}, function (modifs, state) {
-                            _.each(modifs, function (modif) {
+                /*    for (const [state, modifs] of Object.entries(field.states || {})) {      
+                            modifs.forEach((modif) => {
                                 if (defaultValues[modif[0]] !== modif[1]) {
                                     stateExceptions[modif[0]].append(state);
                                 }

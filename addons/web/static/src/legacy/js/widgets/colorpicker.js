@@ -135,9 +135,9 @@ var ColorpickerWidget = Widget.extend({
         var self = this;
 
         // Update inputs
-        _.each(this.colorComponents, function (value, color) {
+        for (const [color, value] of Object.entries(this.colorComponents)) {
             self.$(`.o_${color}_input`).val(value);
-        });
+        }
 
         // Update preview
         this.$('.o_color_preview').css('background-color', this.colorComponents.cssColor);

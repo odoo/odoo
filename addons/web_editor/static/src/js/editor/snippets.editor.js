@@ -1539,7 +1539,7 @@ var SnippetEditor = Widget.extend({
         // propagated to parent editor
         if (ev.data.optionNames) {
             ev.stopPropagation();
-            _.each(ev.data.optionNames, function (name) {
+            ev.data.optionNames.forEach((name) => {
                 notifyForEachMatchedOption(name);
             });
         }
@@ -3037,7 +3037,7 @@ var SnippetsMenu = Widget.extend({
                     : $els => $els;
 
             var check = false;
-            _.each(self.templateOptions, function (option, k) {
+            self.templateOptions.forEach((option, k) => {
                 if (check || !($snippetBody.is(option.base_selector) && !$snippetBody.is(option.base_exclude))) {
                     return;
                 }
