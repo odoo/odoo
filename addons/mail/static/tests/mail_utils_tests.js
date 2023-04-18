@@ -18,7 +18,7 @@ QUnit.test("add_link utility function", function (assert) {
         "https://tenor.com/view/chỗgiặt-dog-smile-gif-13860250": true,
         "http://www.boîtenoire.be": true,
     };
-    _.each(testInputs, function (willLinkify, content) {
+    for (const [content, willLinkify] of Object.entries(testInputs)) {
         const output = utils.parseAndTransform(content, utils.addLink);
         if (willLinkify) {
             assert.strictEqual(output.indexOf("<a "), 0);
@@ -26,7 +26,7 @@ QUnit.test("add_link utility function", function (assert) {
         } else {
             assert.strictEqual(output.indexOf("<a "), -1);
         }
-    });
+    }
 });
 
 QUnit.test("addLink: utility function and special entities", function (assert) {
@@ -51,10 +51,11 @@ QUnit.test("addLink: utility function and special entities", function (assert) {
         // special character in smileys should be escaped
         "&lt;3": "&lt;3",
     };
-    _.each(testInputs, function (result, content) {
+
+    for (const [content, result] of Object.entries(testInputs)) {
         const output = utils.parseAndTransform(content, utils.addLink);
         assert.strictEqual(output, result);
-    });
+    }
 });
 
 QUnit.test("addLink: linkify inside text node (1 occurrence)", function (assert) {

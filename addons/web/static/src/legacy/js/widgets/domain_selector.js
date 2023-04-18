@@ -222,7 +222,7 @@ var DomainTree = DomainNode.extend({
     getDomain: function () {
         var childDomains = [];
         var nbChildren = 0;
-        _.each(this.children, function (child) {
+        this.children.forEach((child) => {
             var childDomain = child.getDomain();
             if (childDomain.length) {
                 nbChildren++;
@@ -276,10 +276,12 @@ var DomainTree = DomainNode.extend({
             this.children.push(node);
             return;
         }
-        _.each(node.children, (function (child) {
-            child.setParent(this);
-            this.children.push(child);
-        }).bind(this));
+        node.children.forEach(
+            ((child) => {
+                child.setParent(this);
+                this.children.push(child);
+            }).bind(this)
+        );
         node.destroy();
     },
     /**
@@ -380,7 +382,7 @@ var DomainTree = DomainNode.extend({
         return Promise.all(_.map(children, (function (child) {
             return child.appendTo($div);
         }).bind(this))).then((function () {
-            _.each(children, function (child) {
+            children.forEach((child) => {
                 child.$el.appendTo($to); // Forced to do it this way so that the
                                          // children are not misordered
             });
@@ -570,10 +572,14 @@ var DomainSelector = DomainTree.extend({
             if (_redrawId !== this._redrawId) {
                 return;
             }
-            _.each(oldChildren, function (child) { child.destroy(); });
+            oldChildren.forEach((child) => { child.destroy(); });
             this.renderElement();
             this._postRender();
-            _.each(this.children, (function (child) { child.$el.appendTo(this.$childrenContainer); }).bind(this));
+                this.children.forEach(
+                    ((child) => {
+                        child.$el.appendTo(this.$childrenContainer);
+                    }).bind(this)
+                );
         }).bind(this));
     },
 

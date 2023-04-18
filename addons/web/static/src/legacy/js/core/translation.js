@@ -24,7 +24,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
         if (_.include(modules, "web")) {
             modules = ["web"].concat(_.without(modules, "web"));
         }
-        _.each(modules, function(name) {
+        modules.forEach((name) => {
             self.add_module_translation(translation_bundle.modules[name]);
         });
         if (translation_bundle.lang_parameters) {
@@ -34,7 +34,7 @@ var TranslationDataBase = Class.extend(/** @lends instance.TranslationDataBase# 
     },
     add_module_translation: function(mod) {
         var self = this;
-        _.each(mod.messages, function(message) {
+        mod.messages.forEach((message) => {
             self.db[message.id] = message.string;
         });
     },

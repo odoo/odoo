@@ -303,7 +303,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
 
         // Adapt font variable indexes to the removal
         const style = window.getComputedStyle(this.$target[0].ownerDocument.documentElement);
-        _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
+        FontFamilyPickerUserValueWidget.prototype.fontVariables.forEach((variable) => {
             const value = weUtils.getCSSVariableValue(variable, style);
             if (value.substring(1, value.length - 1) === googleFontName) {
                 // If an element is using the google font being removed, reset
@@ -1753,7 +1753,7 @@ options.registry.Carousel = options.Class.extend({
         const id = 'myCarousel' + Date.now();
         this.$target.attr('id', id);
         this.$target.find('[data-bs-target]').attr('data-bs-target', '#' + id);
-        _.each(this.$target.find('[data-bs-slide], [data-bs-slide-to]'), function (el) {
+        this.$target.find('[data-bs-slide], [data-bs-slide-to]').toArray().forEach((el) => {
             var $el = $(el);
             if ($el.attr('data-bs-target')) {
                 $el.attr('data-bs-target', '#' + id);

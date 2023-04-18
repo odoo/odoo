@@ -145,7 +145,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
         }).then(function (data) {
             self.comparelist_product_ids = JSON.parse(data.cookies);
             delete data.cookies;
-            _.each(data, function (product) {
+            Object.values(data).forEach((product) => {
                 self.product_data[product.product.id] = product;
             });
             if (product_ids.length > Object.keys(data).length) {
@@ -191,7 +191,7 @@ var ProductComparison = publicWidget.Widget.extend(VariantMixin, {
     _updateContent: function (force) {
         var self = this;
         this.$('.o_comparelist_products .o_product_row').remove();
-        _.each(this.comparelist_product_ids, function (res) {
+        this.comparelist_product_ids.forEach((res) => {
             if (self.product_data.hasOwnProperty(res)) {
                 // It is possible that we do not have the required product_data for all IDs in
                 // comparelist_product_ids

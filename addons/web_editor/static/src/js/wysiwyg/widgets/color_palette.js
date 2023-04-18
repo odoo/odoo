@@ -121,11 +121,11 @@ const ColorPaletteWidget = Widget.extend({
         colorpickerEl.querySelectorAll('button').forEach(el => el.classList.add('o_we_color_btn'));
 
         // Populate tabs based on the tabs configuration indicated in this.tabs
-        _.each(this.tabs, (tab, index) => {
+        this.tabs.forEach((tab, index) => {
             // Append pickers to section
             const sectionEl = this.el.querySelector(`.o_colorpicker_sections[data-color-tab="${tab.id}"]`);
             let sectionIsEmpty = true;
-            _.each(tab.pickers, pickerId => {
+            tab.pickers.forEach((pickerId) => {
                 let pickerEl;
                 switch (pickerId) {
                     case 'common_grays':
@@ -215,7 +215,7 @@ const ColorPaletteWidget = Widget.extend({
 
         // Remove excluded palettes (note: only hide them to still be able
         // to remove their related colors on the DOM target)
-        _.each(this.options.excluded, exc => {
+        this.options.excluded.forEach((exc) => {
             this.$('[data-name="' + exc + '"]').addClass('d-none');
         });
         if (this.options.excludeSectionOf) {
@@ -367,7 +367,7 @@ const ColorPaletteWidget = Widget.extend({
                 this._addCustomColor(existingColors, color);
             }
         });
-        _.each(this.options.$editable.find('[style*="color"]'), el => {
+        this.options.$editable.find('[style*="color"]').toArray().forEach((el) => {
             for (const colorProp of ['color', 'backgroundColor']) {
                 this._addCustomColor(existingColors, el.style[colorProp]);
             }

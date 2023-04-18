@@ -97,7 +97,7 @@ options.registry.TableOfContent = options.Class.extend({
         this._disposeScrollSpy();
         const $nav = this.$target.find('.s_table_of_content_navbar');
         $nav.empty();
-        _.each(headingsEls, el => {
+        headingsEls.forEach((el) => {
             const $el = $(el);
             const id = 'table_of_content_heading_' + _.now() + '_' + _.uniqueId();
             $('<a>').attr('href', "#" + id)

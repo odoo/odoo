@@ -165,10 +165,10 @@ var AnimationEffect = Class.extend(mixins.ParentedMixin, {
         }
 
         function _processEvents(events, namespace) {
-            events = events.split(' ');
-            return _.each(events, function (e, index) {
-                events[index] += ('.' + namespace);
-            }).join(' ');
+            return events
+                .split(" ")
+                .map((e) => (e += "." + namespace))
+                .join(" ");
         }
     },
     /**
@@ -375,7 +375,7 @@ var Animation = publicWidget.Widget.extend({
      */
     start: function () {
         this._prepareEffects();
-        _.each(this._animationEffects, function (effect) {
+        this._animationEffects.forEach((effect) => {
             effect.start();
         });
         return this._super.apply(this, arguments);
@@ -397,7 +397,7 @@ var Animation = publicWidget.Widget.extend({
         this._animationEffects = [];
 
         var self = this;
-        _.each(this.effects, function (desc) {
+        this.effects.forEach((desc) => {
             self._addEffect(self[desc.update], desc.startEvents, _findTarget(desc.startTarget), {
                 getStateCallback: desc.getState && self[desc.getState],
                 endEvents: desc.endEvents || undefined,
@@ -462,9 +462,11 @@ registry.slider = publicWidget.Widget.extend({
         this.$('img').off('.slider');
         this.$el.carousel('pause');
         this.$el.removeData('bs.carousel');
-        _.each(this.$('.carousel-item'), function (el) {
-            $(el).css('min-height', '');
-        });
+        this.$(".carousel-item")
+            .toArray()
+            .forEach((el) => {
+                $(el).css("min-height", "");
+            });
         $(window).off('.slider');
     },
 
@@ -479,7 +481,7 @@ registry.slider = publicWidget.Widget.extend({
         var maxHeight = 0;
         var $items = this.$('.carousel-item');
         $items.css('min-height', '');
-        _.each($items, el => {
+        $items.toArray().forEach((el) => {
             var $item = $(el);
             var isActive = $item.hasClass('active');
             this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive('_computeHeights');
@@ -1265,7 +1267,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
 
         // By default, elements are hidden by the css of o_animate.
         // Render elements and trigger the animation then pause it in state 0.
-        _.each(this.$animatedElements, el => {
+        this.$animatedElements.toArray().forEach((el) => {
             if (el.closest('.dropdown')) {
                 el.classList.add('o_animate_in_dropdown');
                 return;
@@ -1389,7 +1391,7 @@ registry.WebsiteAnimate = publicWidget.Widget.extend({
      * @param {Element} el
      */
     _scrollWebsiteAnimate(el) {
-        _.each(this.$('.o_animate:not(.o_animate_in_dropdown)'), el => {
+        this.$('.o_animate:not(.o_animate_in_dropdown)').toArray().forEach((el) => {
             const $el = $(el);
             const elHeight = el.offsetHeight;
             const animateOnScroll = el.classList.contains('o_animate_on_scroll');

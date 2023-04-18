@@ -73,7 +73,7 @@ OdooClass.extend = function() {
     initializing = false;
 
     // Copy the properties over onto the new prototype
-    _.each(prop, function(val, name) {
+    Object.keys(prop).forEach((name) => {
         // Check if we're overwriting an existing function
         prototype[name] = typeof prop[name] == "function" &&
                           fnTest.test(prop[name]) ?
@@ -110,7 +110,7 @@ OdooClass.extend = function() {
         return this;
     }
     Class.include = function (properties) {
-        _.each(properties, function(val, name) {
+        Object.keys(properties).forEach((name) => {
             if (typeof properties[name] !== 'function'
                     || !fnTest.test(properties[name])) {
                 prototype[name] = properties[name];

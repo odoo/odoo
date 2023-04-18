@@ -185,12 +185,12 @@ var Events = Class.extend({
 
     callbackList: function () {
         var lst = [];
-        _.each(this._callbacks || {}, function (el, eventName) {
+        for (const [eventName, el] of Object.entries(this._callbacks || {})) {
             var node = el;
             while ((node = node.next) && node.next) {
                 lst.push([eventName, node.callback, node.context]);
             }
-        });
+        }
         return lst;
     },
 
@@ -291,7 +291,7 @@ var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
             throw new Error("Event handler must be a function.");
         }
         events = events.split(/\s+/);
-        _.each(events, function (eventName) {
+        events.forEach((eventName) => {
             self.__edispatcherEvents.on(eventName, func, dest);
             if (dest && dest.__eventDispatcherMixin) {
                 dest.__edispatcherRegisteredEvents.push({name: eventName, func: func, source: self});
@@ -302,7 +302,7 @@ var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
     off: function (events, dest, func) {
         var self = this;
         events = events.split(/\s+/);
-        _.each(events, function (eventName) {
+        events.forEach((eventName) => {
             self.__edispatcherEvents.off(eventName, func, dest);
             if (dest && dest.__eventDispatcherMixin) {
                 dest.__edispatcherRegisteredEvents = dest.__edispatcherRegisteredEvents.filter(el => {
@@ -342,16 +342,18 @@ var EventDispatcherMixin = Object.assign({}, ParentedMixin, {
     },
     destroy: function () {
         var self = this;
-        _.each(this.__edispatcherRegisteredEvents, function (event) {
+        this.__edispatcherRegisteredEvents.forEach((event) => {
             event.source.__edispatcherEvents.off(event.name, event.func, self);
         });
         this.__edispatcherRegisteredEvents = [];
-        _.each(this.__edispatcherEvents.callbackList(), function (cal) {
-            this.off(cal[0], cal[2], cal[1]);
-        }, this);
+        this.__edispatcherEvents.callbackList().forEach(
+            ((cal) => {
+                this.off(cal[0], cal[2], cal[1]);
+            }).bind(this)
+        );
         this.__edispatcherEvents.off();
         ParentedMixin.destroy.call(this);
-    }
+    },
 });
 
 /**
@@ -376,7 +378,7 @@ var PropertiesMixin = Object.assign({}, EventDispatcherMixin, {
         }
         var self = this;
         var changed = false;
-        _.each(map, function (val, key) {
+        for (const [key, val] of Object.entries(map)) {
             var tmp = self.__getterSetterInternalMap[key];
             if (tmp === val)
                 return;
@@ -399,7 +401,7 @@ var PropertiesMixin = Object.assign({}, EventDispatcherMixin, {
                     oldValue: tmp,
                     newValue: val
                 });
-        });
+        }
         if (changed)
             self.trigger("change", self);
     },

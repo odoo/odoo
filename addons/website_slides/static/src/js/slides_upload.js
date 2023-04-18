@@ -231,7 +231,7 @@ var SlideUploadDialog = Dialog.extend({
         var self = this;
         // tags
         var tagValues = [];
-        _.each(this.$('#tag_ids').select2('data'), function (val) {
+        this.$('#tag_ids').select2('data').forEach((val) => {
             if (val.create) {
                 tagValues.push([0, 0, {'name': val.text}]);
             } else {
@@ -312,7 +312,7 @@ var SlideUploadDialog = Dialog.extend({
             fill_data: function (query, data) {
                 var self = this,
                     tags = {results: []};
-                _.each(data, function (obj) {
+                data.forEach((obj) => {
                     if (self.matcher(query.term, obj[nameKey])) {
                         tags.results.push({id: obj.id, text: obj[nameKey]});
                     }

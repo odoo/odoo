@@ -28,8 +28,8 @@ var PortalSidebar = publicWidget.Widget.extend({
      * @private
      */
     _setDelayLabel: function () {
-        var $sidebarTimeago = this.$el.find('.o_portal_sidebar_timeago');
-        _.each($sidebarTimeago, function (el) {
+        var $sidebarTimeago = this.$el.find('.o_portal_sidebar_timeago').toArray();
+        $sidebarTimeago.forEach((el) => {
             var dateTime = moment(time.auto_str_to_date($(el).attr('datetime'))),
                 today = moment().startOf('day'),
                 diff = dateTime.diff(today, 'days', true),
