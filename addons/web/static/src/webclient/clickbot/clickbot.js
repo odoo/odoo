@@ -253,7 +253,9 @@
         await triggerClick(studioIcon, "entering studio");
         await waitForCondition(() => document.querySelector(".o_in_studio"));
         await triggerClick(document.querySelector(".o_web_studio_leave"), "leaving studio");
-        await waitForCondition(() => document.querySelector(".o_main_navbar:not(.o_studio_navbar) .o_menu_toggle"));
+        await waitForCondition(() =>
+            document.querySelector(".o_main_navbar:not(.o_studio_navbar) .o_menu_toggle")
+        );
         studioCount++;
     }
 
@@ -301,6 +303,15 @@
                     );
                     await waitForCondition(() => currentViewCount !== viewUpdateCount);
                 }
+            } else if (!filter.classList.contains("o_menu_item")) {
+                // Advanced Search item
+                await triggerClick(filter, `Advanced Search}"`);
+                await waitForCondition(() => !!document.querySelector(`.modal button.btn-close`));
+                await triggerClick(
+                    document.querySelector(`.modal button.btn-close`),
+                    "close 'Advanced Search' dialog"
+                );
+                await waitForCondition(() => !document.querySelector(`.modal button.btn-close`));
             } else {
                 await triggerClick(filter, `filter "${filter.innerText.trim()}"`);
                 await waitForCondition(() => currentViewCount !== viewUpdateCount);
