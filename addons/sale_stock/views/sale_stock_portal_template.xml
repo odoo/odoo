@@ -7,7 +7,14 @@
         <xpath expr="//div[@id='so_date']" position="after">
             <div t-if="sale_order.incoterm" class="row">
                 <div class="mb-3 col-6 ms-auto">
-                    <strong>Incoterm: </strong> <span t-field="sale_order.incoterm"/>
+                    <div class="col-auto mw-100 mb-2" t-if="sale_order.incoterm" name="invoice_incoterm_id">
+                        <strong>Incoterm:</strong>
+                        <p t-if="sale_order.incoterm_location">
+                            <span t-field="sale_order.incoterm.code"/> <br/>
+                            <span t-field="sale_order.incoterm_location"/>
+                        </p>
+                        <p t-else="" t-field="sale_order.incoterm.code" class="m-0"/>
+                    </div>
                 </div>
             </div>
         </xpath>

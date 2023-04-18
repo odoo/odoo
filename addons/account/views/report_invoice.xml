@@ -90,6 +90,14 @@
                                 <strong>Reference:</strong>
                                 <p class="m-0" t-field="o.ref"/>
                             </div>
+                            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.invoice_incoterm_id" name="incoterm_id">
+                                <strong>Incoterm:</strong>
+                                <p t-if="o.incoterm_location">
+                                    <span t-field="o.invoice_incoterm_id.code"/> <br/>
+                                    <span t-field="o.incoterm_location"/>
+                                </p>
+                                <p t-else="" t-field="o.invoice_incoterm_id.code" class="m-0"/>
+                            </div>
                         </div>
 
                         <t t-set="display_discount" t-value="any(l.discount for l in o.invoice_line_ids)"/>
@@ -272,9 +280,6 @@
                         <div class="text-muted mb-3" t-attf-style="#{'text-align:justify;text-justify:inter-word;' if o.company_id.terms_type != 'html' else ''}" t-if="not is_html_empty(o.narration)" name="comment">
                             <span t-field="o.narration"/>
                         </div>
-                        <p t-if="o.invoice_incoterm_id" name="incoterm">
-                            <strong>Incoterm: </strong><t t-out="o.invoice_incoterm_id.code"/> - <t t-out="o.invoice_incoterm_id.name"/>
-                        </p>
                     </div>
                 </div>
             </t>

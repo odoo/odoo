@@ -22,8 +22,8 @@
                 <xpath expr="//label[@for='commitment_date']" position="before">
                     <field name="warehouse_id" invisible="1"/>  <!-- needed for js logic -->
                     <field name="warehouse_id" options="{'no_create': True}" groups="stock.group_stock_multi_warehouses" force_save="1"/>
-                    <field name="incoterm" options="{'no_open': True, 'no_create': True}" groups="sale_stock.group_display_incoterm"/>
-                    <field name="incoterm_location" groups="sale_stock.group_display_incoterm"/>
+                    <field name="incoterm" options="{'no_open': True, 'no_create': True}"/>
+                    <field name="incoterm_location"/>
                     <field name="picking_policy" required="True"/>
                 </xpath>
                 <xpath expr="//span[@name='expected_date_span']" position="attributes">
