@@ -369,11 +369,6 @@ class AccountEdiFormat(models.Model):
             else:
                 return 1
 
-        def filter_invl_to_apply(invoice_line):
-            if invoice_line.product_id.type == "service":
-                return False
-            return True
-
         saler_buyer = self._get_l10n_in_edi_saler_buyer_party(invoices)
         seller_details = saler_buyer.get("seller_details")
         dispatch_details = saler_buyer.get("dispatch_details")
@@ -381,7 +376,7 @@ class AccountEdiFormat(models.Model):
         ship_to_details = saler_buyer.get("ship_to_details")
         sign = invoices.is_inbound() and -1 or 1
         extract_digits = self._l10n_in_edi_extract_digits
-        tax_details = self._l10n_in_prepare_edi_tax_details(invoices, filter_invl_to_apply=filter_invl_to_apply)
+        tax_details = self._l10n_in_prepare_edi_tax_details(invoices)
         tax_details_by_code = self._get_l10n_in_tax_details_by_line_code(tax_details.get("tax_details", {}))
         invoice_line_tax_details = tax_details.get("tax_details_per_record")
         json_payload = {
