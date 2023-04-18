@@ -452,6 +452,8 @@ class AccountEdiFormat(models.Model):
         is_overseas = invoice.l10n_in_gst_treatment == "overseas"
         lines = invoice.invoice_line_ids.filtered(lambda line: line.display_type not in ('line_note', 'line_section', 'rounding'))
         tax_details_per_record = tax_details.get("tax_details_per_record")
+        sign = invoice.is_inbound() and -1 or 1
+        rounding_amount = sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding') * sign
         json_payload = {
             "Version": "1.1",
             "TranDtls": {
@@ -484,9 +486,9 @@ class AccountEdiFormat(models.Model):
                     + tax_details_by_code.get("state_cess_non_advol_amount", 0.00)),
                 ),
                 "RndOffAmt": self._l10n_in_round_value(
-                    sum(line.balance for line in invoice.line_ids if line.display_type == 'rounding')),
+                    rounding_amount),
                 "TotInvVal": self._l10n_in_round_value(
-                    (tax_details.get("base_amount") + tax_details.get("tax_amount"))),
+                    (tax_details.get("base_amount") + tax_details.get("tax_amount") + rounding_amount)),
             },
         }
         if invoice.company_currency_id != invoice.currency_id:
