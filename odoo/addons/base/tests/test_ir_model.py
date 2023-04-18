@@ -4,7 +4,7 @@
 from psycopg2 import IntegrityError
 
 from odoo.exceptions import ValidationError
-from odoo.tests.common import TransactionCase, tagged
+from odoo.tests.common import TransactionCase, HttpCase, tagged
 from odoo.tools import mute_logger
 from odoo import Command
 
@@ -342,3 +342,18 @@ class TestEvalContext(TransactionCase):
                         "dateutil.relativedelta.relativedelta(hours=1)")
         })
         self.env['res.partner'].create({'name': 'foo'}).x_foo_bar_baz
+
+@tagged('-at_install', 'post_install')
+class TestIrModelFieldsTranslation(HttpCase):
+    def test_ir_model_fields_translation(self):
+        self.env['res.lang']._activate_lang('fr_FR')
+        field = self.env['ir.model.fields'].search([('model_id.model', '=', 'res.users'), ('name', '=', 'login')])
+        field.update_field_translations('field_description', {'fr_FR': 'Identifiant'})
+        self.assertEqual(field.with_context(lang='fr_FR').field_description, 'Identifiant')
+        admin = self.env['res.users'].search([('login', '=', 'admin')], limit=1)
+        admin.lang = 'fr_FR'
+        # check the name column of res.users is displayed as 'Identifiant'
+        self.start_tour("/web", 'ir_model_fields_translation_tour', login="admin")
+        field.update_field_translations('field_description', {'fr_FR': 'Identifiant2'})
+        # check the name column of res.users is displayed as 'Identifiant2'
+        self.start_tour("/web", 'ir_model_fields_translation_tour2', login="admin")
