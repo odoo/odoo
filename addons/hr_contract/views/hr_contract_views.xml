@@ -112,7 +112,7 @@
                     <field name="name" string="Contract"/>
                     <field name="date_start"/>
                     <field name="date_end"/>
-                    <field name="employee_id"/>
+                    <field name="employee_id" filter_domain="['|', ('employee_id.registration_number', 'ilike', self), ('employee_id.name', 'ilike', self)]"/>
                     <field name="job_id"/>
                     <field name="department_id" operator="child_of"/>
                     <field name="resource_calendar_id"/>
