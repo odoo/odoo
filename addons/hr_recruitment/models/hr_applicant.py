@@ -5,6 +5,7 @@ from markupsafe import Markup
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessError, UserError
+from odoo.osv import expression
 from odoo.tools import Query
 from odoo.tools.translate import _
 
@@ -30,7 +31,7 @@ class Applicant(models.Model):
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, help="Applicant email", compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_email', store=True)
+        inverse='_inverse_partner_email', store=True, index='trigram')
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
     create_date = fields.Datetime("Creation Date", readonly=True)
@@ -58,9 +59,9 @@ class Applicant(models.Model):
     availability = fields.Date("Availability", help="The date at which the applicant will be available to start working", tracking=True)
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_phone', store=True)
+        inverse='_inverse_partner_phone', store=True, index='btree_not_null')
     partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
-        inverse='_inverse_partner_mobile', store=True)
+        inverse='_inverse_partner_mobile', store=True, index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
@@ -127,43 +128,36 @@ class Applicant(models.Model):
 
     @api.depends('email_from', 'partner_phone', 'partner_mobile')
     def _compute_application_count(self):
-        self.flush_model(['email_from'])
-        applicants = self.env['hr.applicant']
+        """
+            The field application_count is only used on the form view.
+            Thus, using ORM rather then querying, should not make much
+            difference in terms of performance, while being more readable and secure.
+        """
         for applicant in self:
-            if applicant.email_from or applicant.partner_phone or applicant.partner_mobile:
-                applicants |= applicant
-        # Done via SQL since read_group does not support grouping by lowercase field
-        if applicants.ids:
-            query = Query(self.env.cr, self._table, self._table_query)
-            query.add_where('hr_applicant.id in %s', [tuple(applicants.ids)])
-            # Count into the companies that are selected from the multi-company widget
-            company_ids = self.env.context.get('allowed_company_ids')
-            if company_ids:
-                query.add_where('other.company_id is null or other.company_id in %s', [tuple(company_ids)])
-            self._apply_ir_rules(query)
-            from_clause, where_clause, where_clause_params = query.get_sql()
-            # In case the applicant phone or mobile is configured in wrong field
-            query_str = """
-            SELECT hr_applicant.id as appl_id,
-                COUNT(other.id) as count
-              FROM hr_applicant
-              JOIN hr_applicant other ON NULLIF(LOWER(other.email_from), '') = NULLIF(LOWER(hr_applicant.email_from), '')
-                OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_phone, '')
-                OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_mobile, '')
-                OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_mobile, '')
-                OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_phone, '')
-            %(where)s
-        GROUP BY hr_applicant.id
-            """ % {
-                'where': ('WHERE %s' % where_clause) if where_clause else '',
-            }
-            self.env.cr.execute(query_str, where_clause_params)
-            application_data_mapped = dict((data['appl_id'], data['count']) for data in self.env.cr.dictfetchall())
-        else:
-            application_data_mapped = dict()
-        for applicant in applicants:
-            applicant.application_count = application_data_mapped.get(applicant.id, 1) - 1
-        (self - applicants).application_count = False
+            domain = applicant._get_similar_applicants_domain()
+            if domain:
+                applicant.application_count = self.env["hr.applicant"].search_count(domain) - 1
+            else:
+                applicant.application_count = 0
+
+    def _get_similar_applicants_domain(self):
+        """
+            This method returns a domain for the applicants whitch match with the
+            current applicant according to email_from, partner_phone or partner_mobile.
+            Thus, search on the domain will return the current applicant as well if any of
+            the following fields are filled.
+        """
+        self.ensure_one()
+        if not self:
+            return None
+        domain = []
+        if self.email_from:
+            domain = expression.OR([domain, [('email_from', '=ilike', self.email_from)]])
+        if self.partner_phone:
+            domain = expression.OR([domain, ['|', ('partner_phone', '=', self.partner_phone), ('partner_mobile', '=', self.partner_phone)]])
+        if self.partner_mobile:
+            domain = expression.OR([domain, ['|', ('partner_mobile', '=', self.partner_mobile), ('partner_phone', '=', self.partner_mobile)]])
+        return domain if domain else None
 
     @api.depends_context('lang')
     @api.depends('meeting_ids', 'meeting_ids.start')
@@ -416,24 +410,16 @@ class Applicant(models.Model):
 
     def action_applications_email(self):
         self.ensure_one()
-        self.env.cr.execute("""
-        SELECT other.id
-          FROM hr_applicant
-          JOIN hr_applicant other ON NULLIF(LOWER(other.email_from), '') = NULLIF(LOWER(hr_applicant.email_from), '')
-            OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_phone, '')
-            OR NULLIF(other.partner_phone, '') = NULLIF(hr_applicant.partner_mobile, '')
-            OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_mobile, '')
-            OR NULLIF(other.partner_mobile, '') = NULLIF(hr_applicant.partner_phone, '')
-         WHERE hr_applicant.id in %s
-        """, (tuple(self.ids),)
-        )
-        ids = [res['id'] for res in self.env.cr.dictfetchall()]
+        other_applicants = self.env['hr.applicant']
+        domain = self._get_similar_applicants_domain()
+        if domain:
+            other_applicants = self.env['hr.applicant'].search(domain)
         return {
             'type': 'ir.actions.act_window',
             'name': _('Job Applications'),
             'res_model': self._name,
             'view_mode': 'tree,kanban,form,pivot,graph,calendar,activity',
-            'domain': [('id', 'in', ids)],
+            'domain': [('id', 'in', other_applicants.ids)],
             'context': {
                 'active_test': False
             },
