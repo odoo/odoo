@@ -21,7 +21,8 @@ class SurveyInvite(models.TransientModel):
     def _send_mail(self, answer):
         mail = super()._send_mail(answer)
         if answer.applicant_id:
-            answer.applicant_id.message_post(body=mail.body_html)
+            answer.applicant_id.message_post(body=Markup(mail.body_html))
+            mail.send()
         return mail
 
     def action_invite(self):
