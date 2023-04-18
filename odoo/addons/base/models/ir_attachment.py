@@ -563,13 +563,13 @@ class IrAttachment(models.Model):
         model_attachments = defaultdict(lambda: defaultdict(set))   # {res_model: {res_id: set(ids)}}
         for id_, res_model, res_id, res_field, public, create_uid in rows:
             all_ids.append(id_)
-            if not res_model or public:
+            if public:
                 allowed_ids.add(id_)
                 continue
-            if res_model and not res_id and create_uid == self.env.uid:
+            if not res_id and (self.env.is_system() or create_uid == self.env.uid):
                 allowed_ids.add(id_)
                 continue
-            if not (res_field and disable_binary_fields_attachments):
+            if not (res_field and disable_binary_fields_attachments) and res_model and res_id:
                 model_attachments[res_model][res_id].add(id_)
 
         # check permissions on records model by model
