@@ -1,9 +1,15 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+import requests
+
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models
+from odoo.addons.mail.tools import discuss, jwt
+
+_logger = logging.getLogger(__name__)
 
 
 class MailRtcSession(models.Model):
@@ -45,6 +51,11 @@ class MailRtcSession(models.Model):
                 # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
                 # done before the delete to be able to know who was invited.
                 channel._rtc_cancel_invitations()
+                # If there is no member left in the RTC call, we remove the SFU channel uuid as the SFU
+                # server will timeout the channel. It is better to obtain a new channel from the SFU server
+                # than to attempt recycling a possibly stale channel uuid.
+                channel.sfu_channel_uuid = False
+                channel.sfu_server_url = False
         notifications = [(channel, 'discuss.channel/rtc_sessions_update', {
             'id': channel.id,
             'rtcSessions': [('DELETE', [{'id': session_data['id']} for session_data in sessions_data])],
@@ -77,6 +88,24 @@ class MailRtcSession(models.Model):
         self.search(self._inactive_rtc_session_domain()).unlink()
 
     def action_disconnect(self):
+        session_ids_by_channel_by_url = defaultdict(lambda: defaultdict(list))
+        for rtc_session in self:
+            sfu_channel_uuid = rtc_session.channel_id.sfu_channel_uuid
+            url = rtc_session.channel_id.sfu_server_url
+            if sfu_channel_uuid and url:
+                session_ids_by_channel_by_url[url][sfu_channel_uuid].append(rtc_session.id)
+        key = discuss.get_sfu_key(self.env)
+        if key:
+            with requests.Session() as requests_session:
+                for url, session_ids_by_channel in session_ids_by_channel_by_url.items():
+                    try:
+                        requests_session.post(
+                            url + '/v1/disconnect',
+                            data=jwt.sign({'sessionIdsByChannel': session_ids_by_channel}, key=key, ttl=20, algorithm=jwt.Algorithm.HS256),
+                            timeout=3
+                        ).raise_for_status()
+                    except requests.exceptions.RequestException as error:
+                        _logger.warning("Could not disconnect sessions at sfu server %s: %s", url, error)
         self.unlink()
 
     def _delete_inactive_rtc_sessions(self):

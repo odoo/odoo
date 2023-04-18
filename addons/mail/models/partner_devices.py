@@ -4,7 +4,7 @@ import json
 import logging as logger
 
 from odoo import api, fields, models
-from ..web_push import generate_web_push_vapid_key
+from ..tools.jwt import generate_vapid_keys
 
 _logger = logger.getLogger(__name__)
 
@@ -37,7 +37,7 @@ class PartnerDevice(models.Model):
         # Regenerate new Keys if public key not present
         if not public_key_value:
             self.sudo().search([]).unlink()  # Reset all devices (ServiceWorker)
-            private_key_value, public_key_value = generate_web_push_vapid_key()
+            private_key_value, public_key_value = generate_vapid_keys()
             ir_params_sudo.set_param('mail.web_push_vapid_private_key', private_key_value)
             ir_params_sudo.set_param(public_key, public_key_value)
             _logger.info("WebPush: missing public key, new VAPID keys generated")

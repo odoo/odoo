@@ -56,6 +56,9 @@
                     <span t-if="showConnectionState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtcSession.connectionState">
                         <i class="fa fa-exclamation-triangle text-warning"/>
                     </span>
+                    <span t-if="showServerState" class="d-flex flex-column justify-content-center me-1 p-2 rounded-circle o-discuss-CallParticipantCard-iconBlackBg" t-att-title="rtc.state.serverState">
+                        <i class="fa fa-exclamation-triangle text-warning"/>
+                    </span>
                     <span t-if="rtcSession.isScreenSharingOn and !props.minimized and !isOfActiveCall" class="user-select-none rounded-pill text-bg-danger d-flex align-items-center me-1 fw-bolder" title="live" aria-label="live">
                         LIVE
                     </span>

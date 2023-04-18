@@ -73,7 +73,7 @@ function _loadScriptProcessor(
     audioContext,
     {
         frequencyRange = HUMAN_VOICE_FREQUENCY_RANGE,
-        minimumActiveCycles = 10,
+        minimumActiveCycles = 30,
         onThreshold,
         onTic,
         volumeThreshold = 0.3,

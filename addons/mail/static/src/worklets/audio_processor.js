@@ -9,7 +9,7 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
             frequencies that we want to monitor in hz.
      * @param {number} [param0.processorOptions.minimumActiveCycles] - how many cycles have to pass since the last time the
             threshold was exceeded to go back to inactive state. It prevents the microphone to shut down
-            when the user's voice drops in volume mid-sentence.
+            when the user's voice drops in volume mid-sentence. Time in ms = minimumActiveCycles * processInterval.
      * @param {boolean} [param0.processorOptions.postAllTics] true if we need to postMessage at each tics, this prevents
             sending events to the main thread on all tics when not necessary.
      * @param {number} [param0.processorOptions.volumeThreshold] the minimum value for audio detection
@@ -17,7 +17,7 @@ class ThresholdProcessor extends globalThis.AudioWorkletProcessor {
     constructor({
         processorOptions: {
             frequencyRange,
-            minimumActiveCycles = 10,
+            minimumActiveCycles = 30,
             postAllTics,
             volumeThreshold = 0.3,
         },
