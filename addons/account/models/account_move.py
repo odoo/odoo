@@ -1894,9 +1894,13 @@ class AccountMove(models.Model):
                 })
 
             # Create or update the cash rounding line.
-            if cash_rounding_line:
+            will_change = any(
+                self._field_will_change(cash_rounding_line, rounding_line_vals, field_name)
+                for field_name in rounding_line_vals
+            )
+            if cash_rounding_line and will_change:
                 cash_rounding_line.write(rounding_line_vals)
-            else:
+            elif not cash_rounding_line:
                 cash_rounding_line = self.env['account.move.line'].create(rounding_line_vals)
 
         existing_cash_rounding_line = self.line_ids.filtered(lambda line: line.display_type == 'rounding')

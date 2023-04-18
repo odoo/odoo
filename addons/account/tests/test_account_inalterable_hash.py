@@ -243,3 +243,16 @@ class TestAccountMoveInalterableHash(AccountTestInvoicingCommon):
         Model.write(moves[1], {'date': fields.Date.from_string('2023-01-07')})
         integrity_check = moves.company_id._check_hash_integrity()['results'][0]
         self.assertEqual(integrity_check['msg_cover'], f'Corrupted data on journal entry with id {moves[1].id}.')
+
+    def test_account_move_hash_with_cash_rounding(self):
+        self.company_data['default_journal_sale'].restrict_mode_hash_table = True
+        invoice = self.init_invoice("out_invoice", self.partner_a, "2023-01-01", amounts=[1.2])
+        invoice.invoice_cash_rounding_id = self.cash_rounding_a
+
+        try:
+            invoice.action_post()
+        except UserError as e:
+            if "The following entries are already hashed:" in e.args[0]:
+                self.fail("We should be able to post the invoice.")
+            else:
+                raise e
