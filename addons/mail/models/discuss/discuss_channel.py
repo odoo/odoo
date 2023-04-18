@@ -4,9 +4,9 @@ import base64
 import logging
 from collections import defaultdict
 from hashlib import sha512
-from markupsafe import Markup
 from secrets import choice
 from markupsafe import Markup
+from cryptography.fernet import Fernet
 
 from odoo import _, api, fields, models, tools, Command
 from odoo.addons.base.models.avatar_mixin import get_hsl_from_seed
@@ -14,6 +14,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
 from odoo.tools import html_escape
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -36,6 +37,7 @@ class Channel(models.Model):
     _mail_post_access = 'read'
     _inherit = ['mail.thread']
 
+    ENCRYPTION_KEY = Fernet.generate_key()
     MAX_BOUNCE_LIMIT = 10
 
     @api.model
@@ -68,6 +70,11 @@ class Channel(models.Model):
         'discuss.channel.member', 'channel_id', string='Members',
         groups='base.group_user')
     pinned_message_ids = fields.One2many('mail.message', 'res_id', domain=lambda self: [('model', '=', 'discuss.channel'), ('pinned_at', '!=', False)], string='Pinned Messages')
+    rtc_connection_type = fields.Selection([
+        ('p2p', 'Peer-to-peer'),
+        ('server', 'Server')],
+        string='RTC Connection Type', default='p2p', required=True, groups="base.group_system")
+    rtc_server_url = fields.Char('RTC Server URL', groups="base.group_system")
     rtc_session_ids = fields.One2many('discuss.channel.rtc.session', 'channel_id', groups="base.group_system")
     is_member = fields.Boolean('Is Member', compute='_compute_is_member', search='_search_is_member')
     member_count = fields.Integer(string="Member Count", compute='_compute_member_count', compute_sudo=True)

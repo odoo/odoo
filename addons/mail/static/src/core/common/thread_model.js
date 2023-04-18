@@ -425,7 +425,7 @@ export class Thread {
     }
 
     get videoCount() {
-        return Object.values(this.rtcSessions).filter((session) => session.videoStream).length;
+        return Object.values(this.rtcSessions).filter((session) => session.isSendingVideo).length;
     }
 
     get lastInterestDateTime() {

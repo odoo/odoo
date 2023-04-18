@@ -1,5 +1,9 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+import base64
+
+from cryptography.fernet import Fernet
 from werkzeug.exceptions import NotFound
 
 from odoo import api, fields, models, _
@@ -179,6 +183,13 @@ class ChannelMember(models.Model):
             ],
             'sessionId': rtc_session.id,
         }
+        if self.channel_id.rtc_connection_type == 'server' and self.channel_id.rtc_server_url:
+            # could use a uuid stored in a separate table, but encryption/decryption may be cheaper than db storage, lookup and access check. to check
+            key = self.env['mail.channel'].ENCRYPTION_KEY
+            fernet = Fernet(key)
+            secret = fernet.encrypt(json.dumps({'session_id': rtc_session.id}).encode())
+            b64_secret = base64.encodebytes(secret)
+            res["serverInfo"] = {"url": self.channel_id.rtc_server_url, "secret": b64_secret}
         if len(self.channel_id.rtc_session_ids) == 1 and self.channel_id.channel_type in {'chat', 'group'}:
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
             invited_members = self._rtc_invite_members()

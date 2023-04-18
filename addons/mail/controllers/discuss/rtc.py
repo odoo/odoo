@@ -1,11 +1,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+import base64
+
 from collections import defaultdict
+from cryptography.fernet import Fernet
 
 from odoo import http
 from odoo.http import request
 from odoo.tools import file_open
 
+from werkzeug.exceptions import NotFound
 
 class RtcController(http.Controller):
     @http.route("/mail/rtc/session/notify_call_members", methods=["POST"], type="json", auth="public")
@@ -31,6 +36,29 @@ class RtcController(http.Controller):
             notifications_by_session[session_sudo].append(([int(sid) for sid in target_session_ids], content))
         for session_sudo, notifications in notifications_by_session.items():
             session_sudo._notify_peers(notifications)
+
+    @http.route('/mail/rtc/session/info', methods=['POST'], type="json", auth="none", cors="*", csrf=False)
+    def session_info(self, secret):
+        """
+        TODO limit cors to specific odoo rtc server domains or raise not found based on request.httprequest.remote_addr?
+        """
+        if not secret:
+            raise NotFound()
+        key = request.env['mail.channel'].ENCRYPTION_KEY
+        fernet = Fernet(key)
+        try:
+            data = json.loads(fernet.decrypt(base64.b64decode(secret)))
+            session_id = data["session_id"]
+        except Exception:
+            raise NotFound()
+        session = request.env['mail.channel.rtc.session'].sudo().browse(session_id)
+        if not session:
+            raise NotFound()
+        return {
+            'session_id': session.id,
+            'channel_id': session.channel_id.id,
+            'ice_servers': request.env['mail.ice.server'].sudo()._get_ice_servers() or False,
+        }
 
     @http.route("/mail/rtc/session/update_and_broadcast", methods=["POST"], type="json", auth="public")
     def session_update_and_broadcast(self, session_id, values):
