@@ -106,12 +106,26 @@ function attachmentThumbnailToLinkImg($editable) {
 function bootstrapToTable(editable) {
     // First give all rows in columns a separate container parent.
     for (const rowInColumn of [...editable.querySelectorAll('.row')].filter(row => RE_COL_MATCH.test(row.parentElement.className))) {
+        const parentColumn = rowInColumn.parentElement;
         const previous = rowInColumn.previousElementSibling;
         if (previous && previous.classList.contains('o_fake_table')) {
             // If a container was already created there, append to it.
             previous.append(rowInColumn);
         } else {
             _wrap(rowInColumn, 'div', 'o_fake_table');
+        }
+        // Bootstrap rows have negative left and right margins, which are not
+        // supported by GMail and Outlook. Add up the padding of the column with
+        // the negative margin of the row to get the correct padding.
+        const rowStyle = getComputedStyle(rowInColumn);
+        const columnStyle = getComputedStyle(parentColumn);
+        for (const side of ['left', 'right']) {
+            const negativeMargin = +rowStyle[`margin-${side}`].replace('px', '');
+            const columnPadding = +columnStyle[`padding-${side}`].replace('px', '');
+            if (negativeMargin < 0 && columnPadding >= Math.abs(negativeMargin)) {
+                parentColumn.style[`padding-${side}`] = `${columnPadding + negativeMargin}px`;
+                rowInColumn.style[`margin-${side}`] = 0;
+            }
         }
     }
 
@@ -139,7 +153,6 @@ function bootstrapToTable(editable) {
     }
     // Now convert all containers with rows to tables.
     for (const container of [...containers].filter(n => [...n.children].some(c => c.classList.contains('row')))) {
-        const isMasonry = container.classList.contains('s_masonry_block') || container.closest('.s_masonry_block');
         // The width of the table was stored in a temporary attribute. Fetch it
         // for use in `_applyColspan` and remove the attribute at the end.
         const containerWidth = parseFloat(container.getAttribute('o-temp-width'));
@@ -172,22 +185,6 @@ function bootstrapToTable(editable) {
             tr.classList.remove('row');
             if (!tr.className) {
                 tr.removeAttribute('class');
-            }
-            // Apply the row's left/right margin/padding to a wrapper around the
-            // table. This allows Bootstrap's weird negative margin strategy on
-            // rows to works.
-            const horizontalSpacingProps = ['margin-left', 'margin-right', 'padding-left', 'padding-right'];
-            if (!isMasonry && horizontalSpacingProps.some(prop => tr.style[prop]) && !horizontalSpacingProps.some(prop => table.style[prop])) {
-                // Masonry is so nuts we need to handle it separately and this
-                // particular fix somehow breaks it.
-                const div = document.createElement('div');
-                for (const prop of horizontalSpacingProps) {
-                    div.style.setProperty(prop, tr.style[prop]);
-                    div.classList.add('o_horizontal_spacing');
-                    tr.style.removeProperty(prop);
-                }
-                table.before(div);
-                div.replaceChildren(table);
             }
             for (const child of [...bootstrapRow.childNodes]) {
                 tr.append(child);
@@ -731,12 +728,6 @@ async function toInline($editable, cssRules, $iframe) {
     // Hide replaced cells on Outlook
     editable.querySelectorAll('.mso-hide').forEach(_hideForOutlook);
 
-    // Hide horizontal spacing wrappers for Outlook
-    for (const div of editable.querySelectorAll('.o_horizontal_spacing')) {
-        _hideForOutlook(div, 'opening');
-        _hideForOutlook(div, 'closing');
-    }
-
     // Styles were applied inline, we don't need a style element anymore.
     $editable.find('style').remove();
 
@@ -937,7 +928,7 @@ function formatTables($editable) {
                 convertedNestedParentTable.parentElement.style.height = '100%'; // div.w100p
                 convertedNestedParentTable.parentElement.parentElement.style.height = 'inherit'; // td
                 // will be ignored but needed for the percentage heights to work:
-                convertedNestedParentTable.parentElement.parentElement.parentElement.style.height = '0px'; // tr
+                convertedNestedParentTable.parentElement.parentElement.parentElement.style.height = 0; // tr
             }
             cell.style.verticalAlign = 'middle';
         } else if (alignSelf === 'end' || justifyContent === 'end' || justifyContent === 'flex-end') {
