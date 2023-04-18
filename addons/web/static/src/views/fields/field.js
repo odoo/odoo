@@ -203,7 +203,7 @@ export class Field extends Component {
 }
 Field.template = "web.Field";
 
-Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
+Field.parseFieldNode = function (node, models, modelName, viewType, jsClass, idEditable = true) {
     const name = node.getAttribute("name");
     const widget = node.getAttribute("widget");
     const fields = models[modelName];
@@ -251,6 +251,10 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
             // all other (non dynamic) attributes
             fieldInfo.attrs[name] = value;
         }
+    }
+
+    if (!idEditable) {
+        fieldInfo.modifiers.readonly = true;
     }
 
     if (X2M_TYPES.includes(fields[name].type)) {

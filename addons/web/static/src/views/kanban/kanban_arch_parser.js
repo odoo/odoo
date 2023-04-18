@@ -105,7 +105,14 @@ export class KanbanArchParser extends XMLParser {
                 if (!widget && models[modelName][node.getAttribute("name")].type === "many2many") {
                     node.setAttribute("widget", "many2many_tags");
                 }
-                const fieldInfo = Field.parseFieldNode(node, models, modelName, "kanban", jsClass);
+                const fieldInfo = Field.parseFieldNode(
+                    node,
+                    models,
+                    modelName,
+                    "kanban",
+                    jsClass,
+                    activeActions.edit
+                );
                 if (!node.hasAttribute("force_save")) {
                     // Force save is true by default on kanban views:
                     // this allows to write on any field regardless of its modifiers.

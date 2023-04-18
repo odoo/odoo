@@ -21,9 +21,10 @@ const userChatter = {
     },
 
     onClickAvatar() {
-        const id = this.props.record.data[this.props.name][0] ?? false
-        if (id !== false)
+        const id = this.props.record.data[this.props.name][0] ?? false;
+        if (id !== false) {
             this.openChat(id);
+        }
     },
 };
 
@@ -72,10 +73,12 @@ export class KanbanMany2OneAvatarUserField extends KanbanMany2OneAvatarField {
     }
 
     get popoverProps() {
-        return {
-            ...this.m2oFieldProps,
+        const props = {
+            ...super.popoverProps,
             readonly: false,
         };
+        delete props.displayAvatarName;
+        return props;
     }
 }
 patch(KanbanMany2OneAvatarUserField.prototype, "mail", userChatter);
