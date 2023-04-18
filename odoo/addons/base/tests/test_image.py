@@ -285,6 +285,31 @@ class TestImage(TransactionCase):
         """Test that image_data_uri is working as expected."""
         self.assertEqual(tools.image_data_uri(self.base64_1x1_png), 'data:image/png;base64,' + self.base64_1x1_png.decode('ascii'))
 
+    def test_21_image_guess_size_from_field_name(self):
+        f = tools.image_guess_size_from_field_name
+        # Test case: empty field_name input
+        self.assertEqual(f(''), (0, 0))
+        # Test case: custom field_name input
+        self.assertEqual(f('custom_field'), (0, 0))
+        # Test case: field_name input that starts with 'x_'
+        self.assertEqual(f('x_field'), (0, 0))
+        # Test case: field_name input that starts with 'x_' and ends with a number less than 16
+        self.assertEqual(f('x_studio_image_1'), (0, 0))
+        # Test case: field_name input that starts with 'x_' and ends with a number greater than 16
+        self.assertEqual(f('x_studio_image_32'), (0, 0))
+        # Test case: field_name input that has a suffix less than 16
+        self.assertEqual(f('image_15'), (0, 0))
+        # Test case: field_name input that has a suffix equal to 16
+        self.assertEqual(f('image_16'), (16, 16))
+        # Test case: field_name input that has a suffix greater than 16
+        self.assertEqual(f('image_32'), (32, 32))
+        # Test case: field_name input that has a suffix with 2 numbers
+        self.assertEqual(f('image_1920_1080'), (1080, 1080))
+        # Test case: field_name input that has a float as suffix
+        self.assertEqual(f('image_32.5'), (0, 0))
+        # Test case: field_name input that has a suffix greater than 16 but no underscore
+        self.assertEqual(f('image32'), (0, 0))
+
     def _assertAlmostEqualSequence(self, rgb1, rgb2, delta=10):
         self.assertEqual(len(rgb1), len(rgb2))
         for index, t in enumerate(zip(rgb1, rgb2)):

@@ -498,19 +498,26 @@ def is_image_size_above(base64_source_1, base64_source_2):
 def image_guess_size_from_field_name(field_name):
     """Attempt to guess the image size based on `field_name`.
 
-    If it can't be guessed, return (0, 0) instead.
+    If it can't be guessed or if it is a custom field: return (0, 0) instead.
 
-    :param field_name: the name of a field
-    :type field_name: string
-
+    :param str field_name: the name of a field
     :return: the guessed size
     :rtype: tuple (width, height)
     """
-    suffix = '1024' if field_name == 'image' else field_name.split('_')[-1]
+    if field_name == 'image':
+        return (1024, 1024)
+    if field_name.startswith('x_'):
+        return (0, 0)
     try:
-        return (int(suffix), int(suffix))
+        suffix = int(field_name.split('_')[-1])
     except ValueError:
         return (0, 0)
+
+    if suffix < 16:
+        # If the suffix is less than 16, it's probably not the size
+        return (0, 0)
+
+    return (suffix, suffix)
 
 
 def image_data_uri(base64_source):
