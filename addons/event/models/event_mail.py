@@ -12,6 +12,8 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, tools
 from odoo.tools import exception_to_unicode
 from odoo.tools.translate import _
+from odoo.exceptions import MissingError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -283,6 +285,7 @@ class EventMailRegistration(models.Model):
             (reg_mail.scheduled_date and reg_mail.scheduled_date <= now) and \
             reg_mail.scheduler_id.notification_type == 'mail'
         )
+        done = self.browse()
         for reg_mail in todo:
             organizer = reg_mail.scheduler_id.event_id.organizer_id
             company = self.env.company
@@ -297,10 +300,21 @@ class EventMailRegistration(models.Model):
             email_values = {
                 'author_id': author.id,
             }
-            if not reg_mail.scheduler_id.template_ref.email_from:
+            template = None
+            try:
+                template = reg_mail.scheduler_id.template_ref.exists()
+            except MissingError:
+                pass
+
+            if not template:
+                _logger.warning("Cannot process ticket %s, because Mail Scheduler %s has reference to non-existent template", reg_mail.registration_id, reg_mail.scheduler_id)
+                continue
+
+            if not template.email_from:
                 email_values['email_from'] = author.email_formatted
-            reg_mail.scheduler_id.template_ref.send_mail(reg_mail.registration_id.id, email_values=email_values)
-        todo.write({'mail_sent': True})
+            template.send_mail(reg_mail.registration_id.id, email_values=email_values)
+            done |= reg_mail
+        done.write({'mail_sent': True})
 
     @api.depends('registration_id', 'scheduler_id.interval_unit', 'scheduler_id.interval_type')
     def _compute_scheduled_date(self):
