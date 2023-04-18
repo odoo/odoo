@@ -538,6 +538,12 @@ class AccountMove(models.Model):
         help='International Commercial Terms are a series of predefined commercial '
              'terms used in international transactions.',
     )
+    incoterm_location = fields.Char(
+        string='Incoterm Location',
+        compute='_compute_incoterm_location',
+        readonly=False,
+        store=True,
+    )
     invoice_cash_rounding_id = fields.Many2one(
         comodel_name='account.cash.rounding',
         string='Cash Rounding Method',
@@ -1544,6 +1550,9 @@ class AccountMove(models.Model):
         move_vals = {att.res_id: att for att in attachments}
         for move in self:
             move[attachment_field] = move_vals.get(move._origin.id, False)
+
+    def _compute_incoterm_location(self):
+        pass
 
     # -------------------------------------------------------------------------
     # INVERSE METHODS

@@ -118,6 +118,15 @@ class AccountMove(models.Model):
             if effective_date_res:
                 move.delivery_date = effective_date_res
 
+    @api.depends('line_ids.sale_line_ids.order_id')
+    def _compute_incoterm_location(self):
+        super()._compute_incoterm_location()
+        for move in self:
+            sale_locations = move.line_ids.sale_line_ids.order_id.mapped('incoterm_location')
+            incoterm_res = next((incoterm for incoterm in sale_locations if incoterm), False)
+            # if multiple purchase order we take an incoterm that is not false
+            if incoterm_res:
+                move.incoterm_location = incoterm_res
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"

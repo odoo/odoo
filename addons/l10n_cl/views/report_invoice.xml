@@ -111,7 +111,11 @@
                 <t t-if="o.invoice_incoterm_id">
                     <br/>
                     <strong>Incoterm:</strong>
-                    <span t-field="o.invoice_incoterm_id.name"/>
+                    <span t-if="o.incoterm_location">
+                        <span t-field="o.invoice_incoterm_id.code"/> -
+                        <span t-field="o.incoterm_location"/>
+                    </span>
+                    <span t-else="" t-field="o.invoice_incoterm_id.name" class="m-0"/>
                 </t>
 
                 <t t-if="o.partner_shipping_id and o.partner_id not in o.partner_shipping_id" >
