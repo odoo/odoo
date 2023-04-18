@@ -985,3 +985,27 @@ QUnit.test("can be marked as read while loading", async function (assert) {
     await afterNextRender(loadDeferred.resolve);
     assert.containsNone($, ".o-mail-DiscussCategoryItem-counter");
 });
+
+QUnit.test(
+    "New message separator not appearing after showing composer on thread",
+    async (assert) => {
+        const pyEnv = await startServer();
+        pyEnv["mail.message"].create([
+            {
+                model: "res.partner",
+                res_id: pyEnv.currentPartnerId,
+                body: "Message on partner",
+            },
+            {
+                model: "res.partner",
+                res_id: pyEnv.currentPartnerId,
+                body: "Message on partner",
+            },
+        ]);
+        const { openFormView } = await start();
+        await openFormView("res.partner", pyEnv.currentPartnerId);
+        assert.containsNone($, ".o-mail-Thread-newMessage");
+        await click("button:contains(Log note)");
+        assert.containsNone($, ".o-mail-Thread-newMessage");
+    }
+);
