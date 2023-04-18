@@ -14,7 +14,7 @@
     </li>
     <li t-elif="show_dropdown" t-attf-class="#{item_class or ''} dropdown #{submenu.is_mega_menu and 'position-static'}">
         <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'} #{submenu._is_active() and 'active'}"
-           data-bs-toggle="dropdown" href="#">
+           data-bs-toggle="dropdown" href="#" t-att-data-bs-display="'static' if submenu.is_mega_menu else None">
             <span t-field="submenu.name"/>
         </a>
         <div t-if="submenu.is_mega_menu"
