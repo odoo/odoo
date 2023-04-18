@@ -284,8 +284,10 @@ class TestPermissions(TransactionCase):
         self.env.flush_all()
         a.invalidate_recordset()
 
-    def test_no_read_permission(self):
+    def test_read_permission(self):
         """If the record can't be read, the attachment can't be read either
+        If the attachment is public, the attachment can be read even if the record can't be read
+        If the attachment has no res_model/res_id, it can be read by its author and admins only
         """
         # check that the information can be read out of the box
         self.attachment.datas
@@ -294,6 +296,31 @@ class TestPermissions(TransactionCase):
         self.attachment.invalidate_recordset()
         with self.assertRaises(AccessError):
             self.attachment.datas
+
+        # Make the attachment public
+        self.attachment.sudo().public = True
+        # Check the information can be read again
+        self.attachment.datas
+        # Remove the public access
+        self.attachment.sudo().public = False
+        # Check the record can no longer be accessed
+        with self.assertRaises(AccessError):
+            self.attachment.datas
+
+        # Create an attachment as user without res_model/res_id
+        attachment_user = self.Attachments.create({'name': 'foo'})
+        # Check the user can access his own attachment
+        attachment_user.datas
+        # Create an attachment as superuser without res_model/res_id
+        attachment_admin = self.Attachments.with_user(odoo.SUPERUSER_ID).create({'name': 'foo'})
+        # Check the record cannot be accessed by a regular user
+        with self.assertRaises(AccessError):
+            attachment_admin.with_user(self.env.user).datas
+        # Check the record can be accessed by an admin (other than superuser)
+        admin_user = self.env.ref('base.user_admin')
+        # Safety assert that base.user_admin is not the superuser, otherwise the test is useless
+        self.assertNotEqual(odoo.SUPERUSER_ID, admin_user.id)
+        attachment_admin.with_user(admin_user).datas
 
     def test_with_write_permissions(self):
         """With write permissions to the linked record, attachment can be
