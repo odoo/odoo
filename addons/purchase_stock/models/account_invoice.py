@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import fields, models, api
 from odoo.tools import float_compare, float_is_zero
 from odoo.tools.misc import groupby
 
@@ -193,3 +193,13 @@ class AccountMove(models.Model):
         for invoice in self.filtered(lambda x: x.move_type == 'in_refund'):
             rslt += invoice.mapped('invoice_line_ids.purchase_line_id.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'supplier')
         return rslt
+
+    @api.depends('purchase_id')
+    def _compute_incoterm_location(self):
+        super()._compute_incoterm_location()
+        for move in self:
+            purchase_locations = move.line_ids.purchase_line_id.order_id.mapped('incoterm_location')
+            incoterm_res = next((incoterm for incoterm in purchase_locations if incoterm), False)
+            # if multiple purchase order we take an incoterm that is not false
+            if incoterm_res:
+                move.incoterm_location = incoterm_res

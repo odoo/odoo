@@ -8,7 +8,6 @@ class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
     security_lead = fields.Float(related='company_id.security_lead', string="Security Lead Time", readonly=False)
-    group_display_incoterm = fields.Boolean("Incoterms", implied_group='sale_stock.group_display_incoterm')
     use_security_lead = fields.Boolean(
         string="Security Lead Time for Sales",
         config_parameter='sale_stock.use_security_lead',
