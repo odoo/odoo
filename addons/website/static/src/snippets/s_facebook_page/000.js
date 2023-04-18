@@ -1,6 +1,7 @@
 odoo.define('website.s_facebook_page', function (require) {
 'use strict';
 
+const { pick } = require("@web/core/utils/objects");
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
 
@@ -16,10 +17,14 @@ const FacebookPageWidget = publicWidget.Widget.extend({
 
         this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive();
 
-        var params = _.pick(this.$el[0].dataset, 'href', 'height', 'tabs', 'small_header', 'hide_cover');
+        const params = pick(this.$el[0].dataset, 'href', 'id', 'height', 'tabs', 'small_header', 'hide_cover');
         if (!params.href) {
             return def;
         }
+        if (params.id) {
+            params.href = `https://www.facebook.com/${params.id}`;
+        }
+        delete params.id;
         params.width = utils.confine(Math.floor(this.$el.width()), 180, 500);
 
         var src = $.param.querystring('https://www.facebook.com/plugins/page.php', params);
