@@ -644,7 +644,7 @@ export class OdooEditor extends EventTarget {
                             excludedClasses.push(klass);
                         }
                     }
-                    if (excludedClasses.every(c => this.options.renderingClasses.includes(c))) {
+                    if (excludedClasses.length && excludedClasses.every(c => this.options.renderingClasses.includes(c))) {
                         continue;
                     }
                 }
