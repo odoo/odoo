@@ -47,6 +47,7 @@ Here is how it works:
     'demo': [
         'demo/account_cash_rounding.xml',
         'demo/demo_company.xml',
+        'demo/res_partner_demo.xml',
     ],
     'post_init_hook': 'post_init',
     'assets': {
