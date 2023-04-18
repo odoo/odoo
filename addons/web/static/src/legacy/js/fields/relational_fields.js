@@ -254,7 +254,7 @@ var FieldMany2One = AbstractField.extend({
         this.$input.autocomplete({
             source: function (req, resp) {
                 self.suggestions = [];
-                _.each(self._autocompleteSources, function (source) {
+                self._autocompleteSources.forEach((source) => {
                     // Resets the results for this source
                     source.results = [];
 
@@ -357,7 +357,7 @@ var FieldMany2One = AbstractField.extend({
      */
     _concatenateAutocompleteResults: function () {
         var results = [];
-        _.each(this._autocompleteSources, function (source) {
+        this._autocompleteSources.forEach((source) => {
             if (source.results && source.results.length) {
                 results = results.concat(source.results);
             } else if (source.loading) {
@@ -1630,7 +1630,7 @@ var FieldRadio = FieldSelection.extend({
         this.$el.empty();
         this.$el.attr('role', 'radiogroup')
             .attr('aria-label', this.string);
-        _.each(this.values, function (value, index) {
+        this.values.forEach((value, index) => {
             self.$el.append(qweb.render('FieldRadio.button', {
                 checked: value[0] === currentValue,
                 id: self.unique_id + '_' + value[0],

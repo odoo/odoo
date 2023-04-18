@@ -21,7 +21,7 @@ options.registry.ProductCatalog = options.Class.extend({
         const $name = $dishes.find('.s_product_catalog_dish_name');
         $name.toggleClass('s_product_catalog_dish_dot_leaders', !widgetValue);
         if (widgetValue) {
-            _.each($dishes, el => {
+            $dishes.toArray().forEach((el) => {
                 const $description = $(el).find('.s_product_catalog_dish_description');
                 if ($description.length) {
                     $description.removeClass('d-none');
@@ -35,7 +35,7 @@ options.registry.ProductCatalog = options.Class.extend({
                 }
             });
         } else {
-            _.each($dishes, el => {
+            $dishes.toArray().forEach((el) => {
                 const $description = $(el).find('.s_product_catalog_dish_description');
                 if ($description.hasClass('o_default_snippet_text') || $description.find('.o_default_snippet_text').length) {
                     $description.remove();

@@ -74,7 +74,7 @@ publicWidget.registry.DonationSnippet = publicWidget.Widget.extend({
             this.currency = result;
             this.$('.s_donation_currency').remove();
             const $prefilledButtons = this.$('.s_donation_btn, .s_range_bubble');
-            _.each($prefilledButtons, button => {
+            $prefilledButtons.toArray().forEach((button) => {
                 const before = result.position === "before";
                 const $currencySymbol = document.createElement('span');
                 $currencySymbol.innerText = result.symbol;

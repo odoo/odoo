@@ -88,7 +88,7 @@ export default {
      */
     computeFonts: _.once(function () {
         var self = this;
-        _.each(this.fontIcons, function (data) {
+        this.fontIcons.forEach((data) => {
             data.cssData = self.getCssSelectors(data.parser);
             data.alias = _.flatten(_.map(data.cssData, _.property('names')));
         });

@@ -65,7 +65,7 @@ PortalChatter.include({
         var self = this;
         messages = this._super.apply(this, arguments);
         if (this.options['display_rating']) {
-            _.each(messages, function (m, i) {
+            messages.forEach((m, i) => {
                 m.rating_value = self.roundToHalf(m['rating_value']);
                 m.rating = self._preprocessCommentData(m.rating, i);
             });
@@ -136,12 +136,14 @@ PortalChatter.include({
             'avg': Math.round(result['rating_stats']['avg'] * 100) / 100,
             'percent': [],
         };
-        _.each(_.sortBy(Object.keys(result['rating_stats']['percent'])).reverse(), function (rating) {
-            ratingData['percent'].push({
-                'num': self.roundToHalf(rating),
-                'percent': utils.round_precision(result['rating_stats']['percent'][rating], 0.01),
+        _.sortBy(Object.keys(result["rating_stats"]["percent"]))
+            .reverse()
+            .forEach((rating) => {
+                ratingData["percent"].push({
+                    num: self.roundToHalf(rating),
+                    percent: utils.round_precision(result["rating_stats"]["percent"][rating], 0.01),
+                });
             });
-        });
         this.set('rating_card_values', ratingData);
     },
     /**

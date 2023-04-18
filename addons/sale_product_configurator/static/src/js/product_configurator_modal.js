@@ -146,8 +146,8 @@ export const OptionalProductsModal = Dialog.extend(ServicesMixin, VariantMixin, 
         this.$el.find('input[name="add_qty"]').val(this.rootProduct.quantity);
 
         // set a unique id to each row for options hierarchy
-        var $products = this.$el.find('tr.js_product');
-        _.each($products, function (el) {
+        var $products = this.$el.find('tr.js_product').toArray();
+        $products.forEach((el) => {
             var $el = $(el);
             var uniqueId = self._getUniqueId(el);
 

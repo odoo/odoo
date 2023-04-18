@@ -77,7 +77,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
             var tweetSlices = [tweets.slice(0, f).join(' '), tweets.slice(f, f * 2).join(' '), tweets.slice(f * 2, tweets.length).join(' ')];
 
             self.$scroller = $(qweb.render('website.Twitter.Scroller')).appendTo($timeline);
-            _.each(self.$scroller.find('div[id^="scroller"]'), function (element, index) {
+            self.$scroller.find('div[id^="scroller"]').toArray().forEach((element, index) => {
                 var $scrollWrapper = $('<div/>', {class: 'scrollWrapper'});
                 var $scrollableArea = $('<div/>', {class: 'scrollableArea'});
                 $scrollWrapper.append($scrollableArea)
@@ -85,7 +85,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                 $scrollableArea.append(tweetSlices[index]);
                 $(element).append($scrollWrapper);
                 var totalWidth = 0;
-                _.each($scrollableArea.children(), function (area) {
+                $scrollableArea.children().forEach((area) => {
                     totalWidth += $(area).outerWidth(true);
                 });
                 $scrollableArea.width(totalWidth);
@@ -115,7 +115,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         if (!this.$scroller) {
             return;
         }
-        _.each(this.$scroller.find('.scrollWrapper'), function (el) {
+        this.$scroller.find('.scrollWrapper').toArray().forEach((el) => {
             var $wrapper = $(el);
             $wrapper.data('getNextElementWidth', true);
             $wrapper.data('autoScrollingInterval', setInterval(function () {
@@ -140,7 +140,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
         if (!this.$scroller) {
             return;
         }
-        _.each(this.$scroller.find('.scrollWrapper'), function (el) {
+        this.$scroller.find('.scrollWrapper').toArray().forEach((el) => {
             var $wrapper = $(el);
             clearInterval($wrapper.data('autoScrollingInterval'));
         });

@@ -1024,7 +1024,7 @@ export class PosGlobalState extends PosModel {
         return orm
             .call("pos.order", "create_from_ui", [orders, options.draft || false])
             .then(function (server_ids) {
-                _.each(order_ids_to_sync, function (order_id) {
+                order_ids_to_sync.forEach((order_id) => {
                     self.db.remove_order(order_id);
                 });
                 self.failed = false;
@@ -3160,7 +3160,7 @@ export class Order extends PosModel {
         this.pricelist = pricelist;
 
         var lines_to_recompute = this.get_orderlines().filter((line) => !line.price_manually_set);
-        _.each(lines_to_recompute, function (line) {
+        lines_to_recompute.forEach((line) => {
             line.set_unit_price(
                 line.product.get_price(self.pricelist, line.get_quantity(), line.get_price_extra())
             );

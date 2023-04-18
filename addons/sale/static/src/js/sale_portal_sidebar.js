@@ -61,7 +61,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
             $bsSidenav = this.$el.find('.bs-sidenav');
 
         $("#quote_content [id^=quote_header_], #quote_content [id^=quote_]", this.spyWatched).attr("id", "");
-        _.each(this.spyWatched.find("#quote_content h2, #quote_content h3"), function (el) {
+        this.spyWatched.find("#quote_content h2, #quote_content h3").toArray().forEach((el) => {
             var id, text;
             switch (el.tagName.toLowerCase()) {
                 case "h2":
@@ -101,7 +101,7 @@ publicWidget.registry.SalePortalSidebar = PortalSidebar.extend({
     _extractText: function ($node) {
         var self = this;
         var rawText = [];
-        _.each($node.contents(), function (el) {
+        $node.contents().toArray().forEach((el) => {
             var current = $(el);
             if ($.trim(current.text())) {
                 var tagName = current.prop("tagName");

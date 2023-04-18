@@ -1077,7 +1077,9 @@ const utils = {
      */
     traverse: function (tree, f) {
         if (f(tree)) {
-            _.each(tree.children, function (c) { utils.traverse(c, f); });
+            Object.values(tree.children || {}).forEach((c) => {
+                utils.traverse(c, f);
+            });
         }
     },
     /**
@@ -1090,7 +1092,7 @@ const utils = {
     traversePath: function (tree, f, path) {
         path = path || [];
         f(tree, path);
-        _.each(tree.children, function (node) {
+        Object.values(tree.children || {}).forEach((node) => {
             utils.traversePath(node, f, path.concat(tree));
         });
     },

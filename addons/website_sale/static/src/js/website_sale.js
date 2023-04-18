@@ -69,7 +69,9 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
 
         this._applyHashFromSearch();
 
-        _.each(this.$('div.js_product'), function (product) {
+        this.$("div.js_product")
+            .toArray()
+            .forEach((product) => {
             $('input.js_product_change', product).first().trigger('change');
         });
 
@@ -159,7 +161,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             if (params['attr']) {
                 var attributeIds = params['attr'].split(',');
                 var $inputs = this.$('input.js_variant_change, select.js_variant_change option');
-                _.each(attributeIds, function (id) {
+                attributeIds.forEach((id) => {
                     var $toSelect = $inputs.filter('[data-value_id="' + id + '"]');
                     if ($toSelect.is('input[type="radio"]')) {
                         $toSelect.prop('checked', true);
@@ -191,17 +193,15 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
      * @param {Array} valueSelectors Selectors
      */
     _changeAttribute: function (valueSelectors) {
-        _.each(valueSelectors, function (selector) {
-            $(selector).removeClass("active")
-                       .filter(':has(input:checked)')
-                       .addClass("active");
+        valueSelectors.forEach((selector) => {
+            $(selector).removeClass("active").filter(":has(input:checked)").addClass("active");
         });
     },
     /**
      * @private
      */
     _changeCartQuantity: function ($input, value, $dom_optional, line_id, productIDs) {
-        _.each($dom_optional, function (elem) {
+        $($dom_optional).toArray().forEach((elem) => {
             $(elem).find('.js_quantity').text(value);
             productIDs.push($(elem).find('span[data-product-id]').data('product-id'));
         });
@@ -259,7 +259,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
             if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
                 if (data.states.length || data.state_required) {
                     selectStates.html('');
-                    _.each(data.states, function (x) {
+                    data.states.forEach((x) => {
                         var opt = $('<option>').text(x[1])
                             .attr('value', x[0])
                             .attr('data-code', x[2]);
@@ -282,7 +282,7 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, car
                     $(".div_zip").after($(".div_city"));
                 }
                 var all_fields = ["street", "zip", "city", "country_name"]; // "state_code"];
-                _.each(all_fields, function (field) {
+                all_fields.forEach((field) => {
                     $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
                 });
             }

@@ -103,9 +103,9 @@ options.registry.facebookPage = options.Class.extend({
             } else {
                 this.fbData.height = 150;
             }
-            _.each(this.fbData, (value, key) => {
+            for (const [key, value] of Object.entries(this.fbData)) {
                 this.$target[0].dataset[key] = value;
-            });
+            }
         });
     },
     /**

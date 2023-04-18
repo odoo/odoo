@@ -163,7 +163,7 @@ options.registry.gallery = options.Class.extend({
         var colClass = 'col-lg-' + (12 / columns);
         var $container = this._replaceContent($row);
 
-        _.each(imgs, function (img, index) {
+        imgs.forEach((img, index) => {
             var $img = $(img);
             var $col = $('<div/>', {class: colClass});
             $col.append($img).appendTo($row);
@@ -199,7 +199,7 @@ options.registry.gallery = options.Class.extend({
         while (imgs.length) {
             var min = Infinity;
             var $lowest;
-            _.each(cols, function (col) {
+            cols.forEach((col) => {
                 var $col = $(col);
                 var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
                 if (height < min) {
@@ -244,7 +244,7 @@ options.registry.gallery = options.Class.extend({
 
         this._replaceContent($row);
 
-        _.each(imgs, function (img) {
+        imgs.forEach((img) => {
             var wrapClass = 'col-lg-3';
             if (img.width >= img.height * 2 || img.width > 600) {
                 wrapClass = 'col-lg-6';
@@ -296,7 +296,7 @@ options.registry.gallery = options.Class.extend({
         },
         $slideshow = $(qweb.render('website.gallery.slideshow', params));
         this._replaceContent($slideshow);
-        _.each(this.$('img'), function (img, index) {
+        this.$("img").toArray().forEach((img, index) => {
             $(img).attr({contenteditable: true, 'data-index': index});
         });
         this.$target.css('height', Math.round(window.innerHeight * 0.7));
@@ -339,7 +339,7 @@ options.registry.gallery = options.Class.extend({
                     break;
             }
             position = imgs.indexOf(data.$image[0]);
-            _.each(imgs, function (img, index) {
+            imgs.forEach((img, index) => {
                 // Note: there might be more efficient ways to do that but it is
                 // more simple this way and allows compatibility with 10.0 where
                 // indexes were not the same as positions.
@@ -377,7 +377,7 @@ options.registry.gallery = options.Class.extend({
     _adaptNavigationIDs: function () {
         var uuid = new Date().getTime();
         this.$target.find('.carousel').attr('id', 'slideshow_' + uuid);
-        _.each(this.$target.find('[data-bs-slide], [data-bs-slide-to]'), function (el) {
+        this.$target.find('[data-bs-slide], [data-bs-slide-to]').toArray().forEach((el) => {
             var $el = $(el);
             if ($el.attr('data-bs-target')) {
                 $el.attr('data-bs-target', '#slideshow_' + uuid);

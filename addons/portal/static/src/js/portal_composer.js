@@ -52,7 +52,7 @@ var PortalComposer = publicWidget.Widget.extend({
         return this._super.apply(this, arguments).then(function () {
             if (self.options.default_attachment_ids) {
                 self.attachments = self.options.default_attachment_ids || [];
-                _.each(self.attachments, function(attachment) {
+                self.attachments.forEach((attachment) => {
                     attachment.state = 'done';
                 });
                 self._updateAttachments();

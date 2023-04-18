@@ -14,12 +14,12 @@ import translation from "web.translation";
  */
 var bus = new Bus();
 
-_.each('click,dblclick,keydown,keypress,keyup'.split(','), function (evtype) {
+["click","dblclick","keydown","keypress","keyup"].forEach((evtype) => {
     $('html').on(evtype, function (ev) {
         bus.trigger(evtype, ev);
     });
 });
-_.each('resize,scroll'.split(','), function (evtype) {
+["resize", "scroll"].forEach((evtype) => {
     $(window).on(evtype, function (ev) {
         bus.trigger(evtype, ev);
     });

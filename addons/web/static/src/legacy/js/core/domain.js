@@ -220,7 +220,7 @@ var Domain = collections.Tree.extend({
             this._children.push(subdomain);
         } else {
             var self = this;
-            _.each(subdomain._children, function (childDomain) {
+            subdomain._children.forEach((childDomain) => {
                 self._children.push(childDomain);
             });
         }
@@ -330,7 +330,7 @@ var Domain = collections.Tree.extend({
         }
 
         var stack = [];
-        _.each(domain, function (dom) {
+        domain.forEach((dom) => {
             if (dom === '|' || dom === '&') {
                 stack.push(dom);
             } else {

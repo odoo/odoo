@@ -61,7 +61,7 @@ const TableOfContent = publicWidget.Widget.extend({
         }
         let position = 0;
         const $fixedElements = $('.o_top_fixed_element');
-        _.each($fixedElements, el => position += $(el).outerHeight());
+        $fixedElements.toArray().forEach((el) => position += $(el).outerHeight());
         const isHorizontalNavbar = this.$el.hasClass('s_table_of_content_horizontal_navbar');
         this.$el.css('top', isHorizontalNavbar ? position : '');
         this.$el.find('.s_table_of_content_navbar').css('top', isHorizontalNavbar ? '' : position + 20);
