@@ -26,7 +26,7 @@
                         </div>
                         <t t-set="currentDay" t-value="msg.dateDay"/>
                     </t>
-                    <Transition visible="props.thread.seen_message_id === (prevMsg?.id ?? false)" name="'o-fade'" t-slot-scope="transition">
+                    <Transition t-if="props.thread.isChannel"  visible="props.thread.seen_message_id === (prevMsg?.id ?? false)" name="'o-fade'" t-slot-scope="transition">
                         <div class="o-mail-Thread-newMessage d-flex align-items-center fw-bolder" t-att-class="{ 'opacity-0': transition.className.includes('o-fade-leave') }">
                             <hr class="flex-grow-1 border opacity-50"/><span class="px-3">New messages</span>
                         </div>
