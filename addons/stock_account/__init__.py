@@ -27,10 +27,10 @@ def _configure_journals(cr, registry):
             ('fields_id', '=', field.id),
             ('company_id', '=', company_id.id)])
 
-        # If not, check if you can find a journal that is already there with the same name, otherwise create one
+        # If not, check if you can find a journal that is already there with the same code, otherwise create one
         if not properties:
             journal_id = env['account.journal'].search([
-                ('name', '=', _('Inventory Valuation')),
+                ('code', '=', 'STJ'),
                 ('company_id', '=', company_id.id),
                 ('type', '=', 'general')], limit=1).id
             if not journal_id:
