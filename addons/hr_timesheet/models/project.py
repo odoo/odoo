@@ -4,6 +4,7 @@
 from collections import defaultdict
 
 from odoo import models, fields, api, _
+from odoo.tools.float_utils import float_compare
 from odoo.exceptions import UserError, ValidationError, RedirectWarning
 from odoo.addons.rating.models.rating_data import OPERATOR_MAPPING
 
@@ -291,7 +292,7 @@ class Task(models.Model):
             if (task.planned_hours > 0.0):
                 task_total_hours = task.effective_hours + task.subtask_effective_hours
                 task.overtime = max(task_total_hours - task.planned_hours, 0)
-                if task_total_hours > task.planned_hours:
+                if float_compare(task_total_hours, task.planned_hours, precision_digits=2) >= 0:
                     task.progress = 100
                 else:
                     task.progress = round(100.0 * task_total_hours / task.planned_hours, 2)
