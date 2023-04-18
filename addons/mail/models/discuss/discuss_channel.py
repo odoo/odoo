@@ -703,7 +703,13 @@ class Channel(models.Model):
         ])
         if not message_to_update:
             return
-        message_to_update.write({'pinned_at': fields.datetime.now() if pinned else False})
+        message_to_update.flush_recordset(['pinned_at'])
+        # Use SQL because by calling write method, write_date is going to be updated, but we don't want pin/unpin
+        # a message changes the write_date
+        self.env.cr.execute("UPDATE mail_message SET pinned_at=%s WHERE id=%s",
+                            (fields.datetime.now() if pinned else None, message_to_update.id))
+        message_to_update.invalidate_recordset(['pinned_at'])
+
         self.env['bus.bus']._sendone(self, 'mail.record/insert', {
             'Message': {
                 'id': message_id,

@@ -38,9 +38,11 @@ class IrAttachment(models.Model):
             with contextlib.suppress(AccessError):
                 related_record.message_main_attachment_id = self
 
-    def _delete_and_notify(self):
+    def _delete_and_notify(self, message=None):
+        if message:
+            message.write({})  # to make sure write_date on the message is updated
         self.env['bus.bus']._sendmany((attachment._bus_notification_target(), 'ir.attachment/delete', {
-            'id': attachment.id,
+            'id': attachment.id, 'message': {'id': message.id, 'write_date': message.write_date} if message else {}
         }) for attachment in self)
         self.unlink()
 
