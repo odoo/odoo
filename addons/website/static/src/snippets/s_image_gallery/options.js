@@ -92,11 +92,6 @@ options.registry.gallery = options.Class.extend({
      * @see this.selectClass for parameters
      */
     addImages: function (previewMode) {
-        // Prevent opening dialog twice.
-        if (this.__imageDialogOpened) {
-            return Promise.resolve();
-        }
-        this.__imageDialogOpened = true;
         const $images = this.$('img');
         var $container = this.$('> .container, > .container-fluid, > .o_container_small');
         var dialog = new weWidgets.MediaDialog(this, {multiImages: true, onlyImages: true, mediaWidth: 1920});
@@ -119,10 +114,7 @@ options.registry.gallery = options.Class.extend({
                     this.trigger_up('cover_update');
                 }
             });
-            dialog.on('closed', this, () => {
-                this.__imageDialogOpened = false;
-                return resolve();
-            });
+            dialog.on('closed', this, () => resolve());
             dialog.open();
         });
     },
