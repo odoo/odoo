@@ -2,8 +2,8 @@
 
 import { useService } from '@web/core/utils/hooks';
 import { KanbanRenderer } from '@web/views/kanban/kanban_renderer';
-import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
 import { ProjectTaskKanbanRecord } from './project_task_kanban_record';
+import { ProjectTaskKanbanHeader } from './project_task_kanban_header';
 
 const { onWillStart } = owl;
 
@@ -72,30 +72,10 @@ export class ProjectTaskKanbanRenderer extends KanbanRenderer {
         }
         super.deleteGroup(group);
     }
-
-    editGroup(group) {
-        const groupBy = this.props.list.groupBy;
-        if (groupBy.length !== 1 || groupBy[0] !== 'personal_stage_type_ids') {
-            super.editGroup(group);
-            return;
-        }
-        const context = Object.assign({}, group.context, {
-            form_view_ref: 'project.personal_task_type_edit',
-        });
-        this.dialog.add(FormViewDialog, {
-            context,
-            resId: group.value,
-            resModel: group.resModel,
-            title: this.env._t('Edit Personal Stage'),
-            onRecordSaved: async () => {
-                await this.props.list.load();
-                this.props.list.model.notify();
-            },
-        });
-    }
 }
 
 ProjectTaskKanbanRenderer.components = {
     ...KanbanRenderer.components,
     KanbanRecord: ProjectTaskKanbanRecord,
+    KanbanHeader: ProjectTaskKanbanHeader,
 };
