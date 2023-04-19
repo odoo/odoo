@@ -21,7 +21,7 @@ let __exports = {};
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function (require) {
+odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
                         return require('@test_assetsbundle/alias')[Symbol.for("default")];
                         });
 """
@@ -39,7 +39,7 @@ let __exports = {};
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function (require) {
+odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
                         return require('@test_assetsbundle/alias');
                         });
 """
@@ -56,7 +56,7 @@ let __exports = {};
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function (require) {
+odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
                         return require('@test_assetsbundle/alias');
                         });
 """
@@ -73,7 +73,7 @@ let __exports = {};
 return __exports;
 });
 
-odoo.define(`test_assetsbundle.Alias`, function (require) {
+odoo.define(`test_assetsbundle.Alias`, ['@test_assetsbundle/alias'], function (require) {
                         return require('@test_assetsbundle/alias');
                         });
 """
