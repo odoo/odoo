@@ -3,6 +3,7 @@
 
 from odoo import Command
 from odoo.exceptions import UserError
+from odoo.fields import Date
 from odoo.tests import Form
 
 from odoo.addons.mrp_subcontracting.tests.common import TestMrpSubcontractingCommon
@@ -234,3 +235,55 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
 
         self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
         self.assertTrue(self.env['stock.warehouse.orderpoint'].search([('product_id', '=', component.id)]))
+
+    def test_subcontracting_resupply_price_diff(self):
+        """Test that the price difference is correctly computed when a subcontracted
+        product is resupplied.
+        """
+        resupply_sub_on_order_route = self.env['stock.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        (self.comp1 + self.comp2).write({'route_ids': [(6, None, [resupply_sub_on_order_route.id])]})
+        product_category_all = self.env.ref('product.product_category_all')
+        product_category_all.property_cost_method = 'standard'
+        product_category_all.property_valuation = 'real_time'
+
+        stock_price_diff_acc_id = self.env['account.account'].create({
+            'name': 'default_account_stock_price_diff',
+            'code': 'STOCKDIFF',
+            'reconcile': True,
+            'account_type': 'asset_current',
+            'company_id': self.env.company.id,
+        })
+        product_category_all.property_account_creditor_price_difference_categ = stock_price_diff_acc_id
+
+        self.comp1.standard_price = 10.0
+        self.comp2.standard_price = 20.0
+        self.finished.standard_price = 100
+
+        # Create a PO for 1 finished product.
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.subcontractor_partner1
+        with po_form.order_line.new() as po_line:
+            po_line.product_id = self.finished
+            po_line.product_qty = 1
+            po_line.price_unit = 50   # should be 70
+        po = po_form.save()
+        po.button_confirm()
+
+        action = po.action_view_subcontracting_resupply()
+        resupply_picking = self.env[action['res_model']].browse(action['res_id'])
+        resupply_picking.move_ids.quantity_done = 1
+        resupply_picking.button_validate()
+
+        action = po.action_view_picking()
+        final_picking = self.env[action['res_model']].browse(action['res_id'])
+        final_picking.move_ids.quantity_done = 1
+        final_picking.button_validate()
+
+        action = po.action_create_invoice()
+        invoice = self.env['account.move'].browse(action['res_id'])
+        invoice.invoice_date = Date.today()
+        invoice.action_post()
+
+        # price diff line should be 100 - 50 - 10 - 20
+        price_diff_line = invoice.line_ids.filtered(lambda m: m.account_id == stock_price_diff_acc_id)
+        self.assertEqual(price_diff_line.credit, 20)
