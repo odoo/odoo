@@ -98,7 +98,7 @@ export class BaseImportModel {
             name_create_enabled_fields: {},
         };
         for (const [name, option] of Object.entries(this.importOptionsValues)) {
-            tempImportOptions[name] = ['date_format', 'datetime_format'].includes(name)
+            tempImportOptions[name] = ['date_format', 'datetime_format'].includes(name) && !option.value.includes('%')
                 ? moment_to_strftime_format(option.value)
                 : option.value;
         }
