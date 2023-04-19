@@ -73,9 +73,9 @@ class TestStaticInheritanceCommon(odoo.tests.TransactionCase):
                 'content': None,
                 'media': None,
             })
-        asset = AssetsBundle('web.test_bundle', files, env=self.env, css=False, js=True)
+        asset = AssetsBundle('web.test_bundle', files, env=self.env, css=False, js=True, debug='assets' if debug else '')
         # to_node return the files descriptions and generate attachments.
-        asset.to_node(css=False, js=False, debug=debug and 'assets' or '')
+        asset.to_node(css=False, js=False)
         content = asset.xml(show_inherit_info=debug)
         return f'<templates xml:space="preserve">\n{content}\n</templates>'
 
