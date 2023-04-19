@@ -17,7 +17,7 @@ const HUMAN_VOICE_FREQUENCY_RANGE = [80, 1000];
  *          last time the threshold was exceeded to go back to inactive state, this prevents
  *          stuttering when the speech volume oscillates around the threshold value.
  * @param {function(boolean):void} [processorOptions.onThreshold] a function to be called when the threshold is passed
- * @param {function(number):void} [processorOptions] a function to be called at each tics
+ * @param {function(number):void} [processorOptions.onTic] a function to be called at each tics
  * @param {number} [processorOptions.volumeThreshold] the normalized minimum value for audio detection
  * @returns {Object} returnValue
  * @returns {function} returnValue.disconnect callback to cleanly end the monitoring
@@ -42,10 +42,11 @@ export async function monitorAudio(track, processorOptions) {
         processor = _loadScriptProcessor(source, audioContext, processorOptions);
     }
 
-    return () => {
+    return async () => {
         processor.disconnect();
         source.disconnect();
         monitoredTrack.stop();
+        await audioContext.close();
     };
 }
 
@@ -77,6 +78,7 @@ function _loadScriptProcessor(
     source.connect(analyser);
     const scriptProcessorNode = audioContext.createScriptProcessor(bitSize, 1, 1);
     analyser.connect(scriptProcessorNode);
+    analyser.connect(audioContext.destination);
     analyser.fftsize = bitSize;
     scriptProcessorNode.connect(audioContext.destination);
 
@@ -155,7 +157,8 @@ async function _loadAudioWorkletProcessor(
             postAllTics: !!onTic,
         },
     });
-    source.connect(thresholdProcessor).connect(audioContext.destination);
+    source.connect(thresholdProcessor);
+    source.connect(audioContext.destination);
     thresholdProcessor.port.onmessage = (event) => {
         const { isAboveThreshold, volume } = event.data;
         if (isAboveThreshold !== undefined) {
