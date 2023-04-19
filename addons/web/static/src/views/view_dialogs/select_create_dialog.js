@@ -41,6 +41,8 @@ export class SelectCreateDialog extends Component {
         };
         if (type === "list") {
             props.allowSelectors = this.props.multiSelect;
+        } else if (type === "kanban" && this.props.kanbanViewId) {
+            props.viewId = this.props.kanbanViewId;
         }
         return props;
     }
@@ -94,6 +96,7 @@ SelectCreateDialog.props = {
     title: { type: String, optional: true },
     noCreate: { type: Boolean, optional: true },
     onUnselect: { type: Function, optional: true },
+    kanbanViewId: { type: [Number, Boolean], optional: true },
 };
 SelectCreateDialog.defaultProps = {
     dynamicFilters: [],
