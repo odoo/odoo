@@ -386,6 +386,10 @@
                     <filter name="done" string="Done" domain="[('state', '=', 'done')]" help="Pickings already processed"/>
                     <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]" help="Cancelled Moves"/>
                     <separator/>
+                    <filter name="reception" string="Receipts" domain="[('picking_type_code', '=', 'incoming')]"/>
+                    <filter name="delivery" string="Deliveries" domain="[('picking_type_code', '=', 'outgoing')]"/>
+                    <filter name="internal" string="Internal" domain="[('picking_type_code', '=', 'internal')]"/>
+                    <separator/>
                     <filter name="late" string="Late" help="Deadline exceed or/and by the scheduled"
                         domain="[('state', 'in', ('assigned', 'waiting', 'confirmed')), '|', '|', ('has_deadline_issue', '=', True), ('date_deadline', '&lt;', current_date), ('scheduled_date', '&lt;', current_date)]"/>
                     <filter string="Planning Issues" name="planning_issues" help="Transfers that are late on scheduled time or one of pickings will be late"
@@ -433,8 +437,8 @@
             <field name="name">Receipts</field>
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain">[('picking_type_code', '=', 'incoming')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'incoming'}</field>
+            <field name="domain"></field>
+            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'incoming', 'search_default_reception': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -449,8 +453,8 @@
             <field name="name">Deliveries</field>
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain">[('picking_type_code', '=', 'outgoing')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing'}</field>
+            <field name="domain"></field>
+            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'outgoing', 'search_default_delivery': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
@@ -465,8 +469,8 @@
             <field name="name">Internal Transfers</field>
             <field name="res_model">stock.picking</field>
             <field name="view_mode">tree,kanban,form,calendar</field>
-            <field name="domain">[('picking_type_code', '=', 'internal')]</field>
-            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'internal'}</field>
+            <field name="domain"></field>
+            <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'internal', 'search_default_internal': 1}</field>
             <field name="search_view_id" ref="view_picking_internal_search"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
