@@ -70,7 +70,7 @@ class MailMail(models.Model):
         if not self.res_id or not self.mailing_id:
             return email_list
 
-        base_url = self.mailing_id.get_base_url()
+        base_url = self.get_base_url()
         for email_values in email_list:
             if not email_values['email_to']:
                 continue
@@ -81,17 +81,18 @@ class MailMail(models.Model):
             view_url = self.mailing_id._get_view_url(email_to, self.res_id)
 
             # replace links in body
-            if not tools.is_html_empty(email_values['body']):
-                if f'{base_url}/unsubscribe_from_list' in email_values['body']:
-                    email_values['body'] = email_values['body'].replace(
-                        f'{base_url}/unsubscribe_from_list',
-                        unsubscribe_url,
-                    )
-                if f'{base_url}/view' in email_values['body']:
-                    email_values['body'] = email_values['body'].replace(
-                        f'{base_url}/view',
-                        view_url,
-                    )
+            for body in ['body', 'body_alternative']:
+                if not tools.is_html_empty(email_values[body]):
+                    if f'{base_url}/unsubscribe_from_list' in email_values[body]:
+                        email_values[body] = email_values[body].replace(
+                            f'{base_url}/unsubscribe_from_list',
+                            unsubscribe_url,
+                        )
+                    if f'{base_url}/view' in email_values[body]:
+                        email_values[body] = email_values[body].replace(
+                            f'{base_url}/view',
+                            view_url,
+                        )
 
             # add headers
             email_values['headers'].update({
