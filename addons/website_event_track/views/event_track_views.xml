@@ -145,11 +145,10 @@
                 <sheet string="Track">
                     <div class="oe_button_box" name="button_box">
                         <field name="website_url" invisible="1"/>
+                        <field name="wishlist_visitor_count" invisible="1"/>
                         <button name="%(website_event_track.website_visitor_action_from_track)d"
-                            type="action"
-                            class="oe_stat_button"
-                            icon="fa-bell"
-                            groups="event.group_event_user">
+                            type="action" class="oe_stat_button" icon="fa-bell"
+                            groups="event.group_event_user" attrs="{'invisible': [('wishlist_visitor_count', '=', 0)]}">
                             <field name="wishlist_visitor_count" string="Wishlisted By" widget="statinfo"/>
                         </button>
                         <field name="is_published" widget="website_redirect_button"/>
@@ -172,17 +171,13 @@
                         <group>
                             <field name="date"/>
                             <field name="location_id"/>
-                            <label for="duration"/>
-                            <div class="o_row">
-                                <field name="duration" widget="float_time"/>
-                                <span>hours</span>
-                            </div>
+                            <field name="duration" widget="float_time"/>
                             <field name="active" invisible="1"/>
                             <field name="wishlisted_by_default"/>
                         </group>
                         <group>
                             <field name="company_id" invisible="1"/>
-                            <field name="user_id" domain="[('share', '=', False)]"/>
+                            <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
                             <field name="event_id"/>
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             <field name="color" widget="color_picker"/>
@@ -230,7 +225,7 @@
                                         attrs="{'invisible': [('website_cta', '=', False)]}"/>
                                     <div attrs="{'invisible': [('website_cta', '=', False)]}">
                                         <field name="website_cta_delay" class="oe_inline"
-                                            attrs="{'required': [('website_cta', '=', True)]}"/> minutes after track starts
+                                            attrs="{'required': [('website_cta', '=', True)]}"/> minutes after Track start
                                     </div>
                                 </group>
                             </group>

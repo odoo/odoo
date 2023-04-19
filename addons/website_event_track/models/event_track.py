@@ -30,7 +30,7 @@ class Track(models.Model):
     company_id = fields.Many2one('res.company', related='event_id.company_id')
     tag_ids = fields.Many2many('event.track.tag', string='Tags')
     description = fields.Html(translate=html_translate, sanitize_attributes=False, sanitize_form=False)
-    color = fields.Integer('Color')
+    color = fields.Integer('Agenda Color')
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
@@ -59,20 +59,17 @@ class Track(models.Model):
     kanban_state_label = fields.Char(
         string='Kanban State Label', compute='_compute_kanban_state_label', store=True,
         tracking=True)
-    partner_id = fields.Many2one('res.partner', 'Contact', help="Contact of the track, may be different from speaker.")
+    partner_id = fields.Many2one('res.partner', 'Contact')
     # speaker information
     partner_name = fields.Char(
         string='Name', compute='_compute_partner_name',
-        readonly=False, store=True, tracking=10,
-        help='Speaker name is used for public display and may vary from contact name')
+        readonly=False, store=True, tracking=10)
     partner_email = fields.Char(
         string='Email', compute='_compute_partner_email',
-        readonly=False, store=True, tracking=20,
-        help='Speaker email is used for public display and may vary from contact email')
+        readonly=False, store=True, tracking=20)
     partner_phone = fields.Char(
         string='Phone', compute='_compute_partner_phone',
-        readonly=False, store=True, tracking=30,
-        help='Speaker phone is used for public display and may vary from contact phone')
+        readonly=False, store=True, tracking=30)
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
         readonly=False, store=True)
@@ -92,17 +89,15 @@ class Track(models.Model):
     # contact information
     contact_email = fields.Char(
         string='Contact Email', compute='_compute_contact_email',
-        readonly=False, store=True, tracking=20,
-        help="Contact email is private and used internally")
+        readonly=False, store=True, tracking=20)
     contact_phone = fields.Char(
         string='Contact Phone', compute='_compute_contact_phone',
-        readonly=False, store=True, tracking=30,
-        help="Contact phone is private and used internally")
+        readonly=False, store=True, tracking=30)
     location_id = fields.Many2one('event.track.location', 'Location')
     # time information
     date = fields.Datetime('Track Date')
     date_end = fields.Datetime('Track End Date', compute='_compute_end_date', store=True)
-    duration = fields.Float('Duration', default=0.5, help="Track duration in hours.")
+    duration = fields.Float('Duration', default=0.5)
     is_track_live = fields.Boolean(
         'Is Track Live', compute='_compute_track_time_data')
     is_track_soon = fields.Boolean(
@@ -146,7 +141,7 @@ class Track(models.Model):
                                  help="Display a Call to Action button to your Attendees while they watch your Track.")
     website_cta_title = fields.Char('Button Title')
     website_cta_url = fields.Char('Button Target URL')
-    website_cta_delay = fields.Integer('Button appears')
+    website_cta_delay = fields.Integer('Show Button')
     # time information for CTA
     is_website_cta_live = fields.Boolean(
         'Is CTA Live', compute='_compute_cta_time_data',

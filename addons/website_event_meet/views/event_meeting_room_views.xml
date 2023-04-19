@@ -44,13 +44,13 @@
                             <field name="is_pinned"/>
                         </group>
                         <group>
-                            <field name="chat_room_id" required="0"/>
-                            <field name="room_participant_count" readonly="1"/>
                             <field name="room_max_capacity" widget="radio" options="{'horizontal': true}"/>
                             <field name="room_lang_id" options="{'no_create': True}"/>
+                            <field name="chat_room_id" required="0" attrs="{'invisible': [('id', '=', False)]}"/>
+                            <field name="room_participant_count" readonly="1" attrs="{'invisible': [('id', '=', False)]}"/>
                         </group>
                     </group>
-                    <notebook>
+                    <notebook attrs="{'invisible': [('id', '=', False)]}">
                         <page name="Reporting" string="Reporting">
                             <group>
                                 <field name="room_last_activity"/>
