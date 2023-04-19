@@ -17,13 +17,14 @@ _logger = logging.getLogger(__name__)
 
 class TestAssetsGenerateTimeCommon(odoo.tests.TransactionCase):
 
-    def generate_bundles(self):
-        self.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink() # delete existing attachement
+    def generate_bundles(self, unlink=True):
+        if unlink:
+            self.env['ir.attachment'].search([('url', '=like', '/web/assets/%')]).unlink()  # delete existing attachement
         installed_module_names = self.env['ir.module.module'].search([('state', '=', 'installed')]).mapped('name')
         bundles = {
             key
             for module in installed_module_names
-            for key in get_manifest(module)['assets']
+            for key in get_manifest(module).get('assets', [])
         }
 
         for bundle in bundles:
@@ -47,9 +48,33 @@ class TestLogsAssetsGenerateTime(TestAssetsGenerateTimeCommon):
         The purpose of this test is to monitor the time of assets bundle generation.
         This is not meant to test the generation failure, hence the try/except and the mute logger.
         """
-        for bundle, duration in self.generate_bundles():
+        for bundle, duration in list(self.generate_bundles()):
             _logger.info('Bundle %r generated in %.2fs', bundle, duration)
 
+    def test_logs_assets_check_time(self):
+        """
+        The purpose of this test is to monitor the time of assets bundle generation.
+        This is not meant to test the generation failure, hence the try/except and the mute logger.
+        """
+        start = time.time()
+        for bundle, duration in self.generate_bundles(False):
+            _logger.info('Bundle %r checked in %.2fs', bundle, duration)
+        duration = time.time() - start
+        _logger.info('All bundle checked in %.2fs', duration)
+
+
+@odoo.tests.tagged('post_install', '-at_install', '-standard', 'test_assets')
+class TestPregenerateTime(HttpCase):
+
+    def test_logs_pregenerate_time(self):
+        self.env['ir.qweb']._pregenerate_assets_bundles()
+        start = time.time()
+        self.env.registry.clear_caches()
+        self.env.cache.invalidate()
+        with self.profile(collectors=['sql', odoo.tools.profiler.PeriodicCollector(interval=0.01)], disable_gc=True):
+            self.env['ir.qweb']._pregenerate_assets_bundles()
+        duration = time.time() - start
+        _logger.info('All bundle checked in %.2fs', duration)
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'assets_bundle')
 class TestAssetsGenerateTime(TestAssetsGenerateTimeCommon):
