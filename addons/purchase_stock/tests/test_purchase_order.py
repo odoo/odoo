@@ -607,3 +607,24 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.env[res_dict['res_model']].with_context(res_dict['context']).process()
         backorder = picking.backorder_ids
         self.assertEqual(backorder.move_line_ids_without_package.location_dest_id.id, sub_loc_01.id)
+
+    def test_inventory_adjustments_with_po(self):
+        """ check that the quant created by a PO can be applied in an inventory adjustment correctly """
+        product = self.env['product.product'].create({
+            'name': 'Product A',
+            'type': 'product',
+        })
+        po_form = Form(self.env['purchase.order'])
+        po_form.partner_id = self.partner_a
+        with po_form.order_line.new() as line:
+            line.product_id = product
+            line.product_qty = 5
+        po = po_form.save()
+        po.button_confirm()
+        po.picking_ids.move_lines.quantity_done = 5
+        po.picking_ids.button_validate()
+        self.assertEqual(po.picking_ids.state, 'done')
+        quant = self.env['stock.quant'].search([('product_id', '=', product.id), ('location_id.usage', '=', 'internal')])
+        wizard = self.env['stock.inventory.adjustment.name'].create({'quant_ids': quant})
+        wizard.action_apply()
+        self.assertEqual(quant.quantity, 5)
