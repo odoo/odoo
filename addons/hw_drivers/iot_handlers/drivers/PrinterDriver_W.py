@@ -13,6 +13,7 @@ from odoo.addons.hw_drivers.driver import Driver
 from odoo.addons.hw_drivers.event_manager import event_manager
 from odoo.addons.hw_drivers.main import iot_devices
 from odoo.addons.hw_drivers.tools import helpers
+from odoo.tools.mimetypes import guess_mimetype
 
 _logger = logging.getLogger(__name__)
 
@@ -150,6 +151,11 @@ class PrinterDriver(Driver):
             self.print_raw(drawer)
 
     def _action_default(self, data):
-        self.print_report(b64decode(data['document']))
+        document = b64decode(data['document'])
+        mimetype = guess_mimetype(document)
+        if mimetype == 'application/pdf':
+            self.print_report(document)
+        else:
+            self.print_raw(document)
 
 proxy_drivers['printer'] = PrinterDriver
