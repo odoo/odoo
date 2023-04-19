@@ -5756,6 +5756,9 @@ registry.ImageTools = ImageHandlerOption.extend({
      * @override
      */
     _relocateWeightEl() {
+        if (!this.$overlay.data('$optionsSection')) {
+            return;
+        }
         const leftPanelEl = this.$overlay.data('$optionsSection')[0];
         const titleTextEl = leftPanelEl.querySelector('we-title > span');
         this.$weight.appendTo(titleTextEl);
