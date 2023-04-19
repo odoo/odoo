@@ -3545,7 +3545,12 @@ class Properties(Field):
 
         for properties_value in properties_list_values:
             if properties_value.get('value') is None:
-                default = properties_value.get('default') or False
+                property_name = properties_value.get('name')
+                context_key = f"default_{self.name}.{property_name}"
+                if property_name and context_key in env.context:
+                    default = env.context[context_key]
+                else:
+                    default = properties_value.get('default') or False
                 properties_value['value'] = default
 
         return properties_list_values
