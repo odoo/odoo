@@ -146,11 +146,11 @@
 
     <record id="action_picking_tree_mrp_operation" model="ir.actions.act_window">
         <field name="name">Manufacturings</field>
-        <field name="res_model">stock.picking</field>
+        <field name="res_model">mrp.production</field>
         <field name="view_mode">tree,kanban,form,calendar</field>
-        <field name="domain">[('picking_type_code', '=', 'mrp_operation')]</field>
-        <field name="context">{'contact_display': 'partner_address', 'default_company_id': allowed_company_ids[0], 'restricted_picking_type_code': 'mrp_operation'}</field>
-        <field name="search_view_id" ref="stock.view_picking_internal_search"/>
+        <field name="domain"></field>
+        <field name="context">{'default_company_id': allowed_company_ids[0]}</field>
+        <field name="search_view_id" ref="mrp.view_mrp_production_filter"/>
     </record>
 
     <menuitem id="mrp_operation_picking" name="Manufacturings" parent="stock.menu_stock_transfers"
