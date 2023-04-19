@@ -24,7 +24,7 @@ export class MassMailingMobilePreviewDialog extends Dialog {
                 modalEl.querySelector('.modal-header').addEventListener('click', () => modalBody.classList.toggle('o_invert_orientation'));
                 modalBody.append(iframe);
             }
-        }, () => [document.querySelector('.o_dialog')]);
+        }, () => [document.querySelector(':not(.o_inactive_modal).o_dialog')]);
     }
 
     _getSourceDocument() {
