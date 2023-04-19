@@ -75,6 +75,7 @@ _ref_vat = {
     'tr': 'TR1234567890 (VERGINO) or TR17291716060 (TCKIMLIKNO)',  # Levent Karakas @ Eska Yazilim A.S.
     've': 'V-12345678-1, V123456781, V-12.345.678-1',
     'xi': 'XI123456782',
+    'sa': '310175397400003 [Fifteen digits, first and last digits should be "3"]'
 }
 
 _region_specific_vat_codes = {
@@ -545,6 +546,16 @@ class ResPartner(models.Model):
             return int(vat[9]) == c1 and int(vat[10]) == c2
 
         return False
+
+    __check_vat_sa_re = re.compile(r"^3[0-9]{13}3$")
+
+    # Saudi Arabia TIN validation
+    def check_vat_sa(self, vat):
+        """
+            Check company VAT TIN according to ZATCA specifications: The VAT number should start and begin with a '3'
+            and be 15 digits long
+        """
+        return self.__check_vat_sa_re.match(vat) or False
 
     def check_vat_ua(self, vat):
         res = []
