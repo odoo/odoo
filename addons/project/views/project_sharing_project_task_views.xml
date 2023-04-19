@@ -188,6 +188,7 @@
                                     <field name="state" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
                                     <field name="name"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="milestone_id"
@@ -203,8 +204,8 @@
                                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
                                     <field name="stage_id" optional="show"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"
-                                            context="{'form_view_ref': 'project.project_sharing_project_task_view_form'}"
-                                            attrs="{'invisible': &quot;[('project_id', '!=', False), ('project_id', '!=', active_id)]&quot;}"/>
+                                            context="{'form_view_ref': 'project.project_sharing_project_task_view_form', 'search_view_ref': 'project.project_sharing_project_task_view_search'}"
+                                            attrs="{'invisible': &quot;['|', ('project_id', '=', False), ('project_id', '!=', active_id)]&quot;}"/>
                                 </tree>
                             </field>
                         </page>
