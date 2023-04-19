@@ -49,6 +49,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
+        if not partner.vat:
+            return []
+
         for vals in vals_list:
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
