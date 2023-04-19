@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
+from typing import Dict, List
+
 import babel.dates
 import pytz
-from lxml import etree
 import base64
 import json
 
 from odoo import _, _lt, api, fields, models
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
-from odoo.tools import date_utils, lazy
-from odoo.tools.misc import get_lang
+from odoo.tools import date_utils
+from odoo.tools.misc import OrderedSet, get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
@@ -51,11 +52,20 @@ class Base(models.AbstractModel):
             'length': number of records matching the domain (result of a call to 'search_count')
         }
         """
-        records = self.search_read(domain, fields, offset=offset, limit=limit, order=order)
+        values_records = self.search_read(domain, fields, offset=offset, limit=limit, order=order)
+        return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
+
+    @api.model
+    def unity_web_search_read(self, domain, specification, offset=0, limit=None, order=None, count_limit=None):
+        records = self.search_fetch(domain, specification.keys(), offset=offset, limit=limit, order=order)
+        values_records = records.web_read(specification)
+        return self._format_web_search_read_results(domain, values_records, offset, limit, count_limit)
+
+    def _format_web_search_read_results(self, domain, records, offset=0, limit=None, count_limit=None):
         if not records:
             return {
                 'length': 0,
-                'records': []
+                'records': [],
             }
         current_length = len(records) + offset
         limit_reached = len(records) == limit
@@ -67,8 +77,83 @@ class Base(models.AbstractModel):
             length = current_length
         return {
             'length': length,
-            'records': records
+            'records': records,
         }
+
+    def web_read(self, specification: Dict[str, Dict]) -> List[Dict]:
+        fields_to_read = list(specification) or ['id']
+
+        if fields_to_read == ['id']:
+            # if we request to read only the ids, we have them already so we can build the return dictionaries immediately
+            # this also avoid a call to read on the co-model that might have different access rules
+            values_list = [{'id': id_} for id_ in self._ids]
+        else:
+            values_list: List[Dict] = self.read(fields_to_read, load=None)
+
+        if not values_list:
+            return values_list
+
+        for field_name, field_spec in specification.items():
+            if not field_spec:
+                continue
+            field = self._fields[field_name]
+
+            if field.type == 'many2one' and 'fields' in field_spec:
+                co_records = self[field_name]
+                if 'context' in field_spec:
+                    co_records = co_records.with_context(**field_spec['context'])
+
+                extra_fields = dict(field_spec['fields'])
+                extra_fields.pop('display_name', None)
+
+                many2one_data = {
+                    vals['id']: vals
+                    for vals in co_records.web_read(extra_fields)
+                }
+
+                if 'display_name' in field_spec['fields']:
+                    for rec in co_records.sudo():
+                        many2one_data[rec.id]['display_name'] = rec.display_name
+
+                for values in values_list:
+                    if not values[field_name]:
+                        continue
+                    values[field_name] = many2one_data[values[field_name]]
+
+            elif field.type in ('one2many', 'many2many'):
+                co_records = self[field_name]
+
+                if 'order' in field_spec and field_spec['order']:
+                    co_records = co_records.search([('id', 'in', co_records.ids)], order=field_spec['order'])
+                    order_key = {
+                        co_record.id: index
+                        for index, co_record in enumerate(co_records)
+                    }
+                    for values in values_list:
+                        values[field_name] = sorted(values[field_name], key=order_key.__getitem__)
+
+                if 'context' in field_spec:
+                    co_records = co_records.with_context(**field_spec['context'])
+
+                if 'fields' in field_spec:
+                    if field_spec.get('limit') is not None:
+                        limit = field_spec['limit']
+                        ids_to_read = OrderedSet(
+                            id_
+                            for values in values_list
+                            for id_ in values[field_name][:limit]
+                        )
+                        co_records = co_records.browse(ids_to_read)
+
+                    x2many_data = {
+                        vals['id']: vals
+                        for vals in co_records.web_read(field_spec['fields'])
+                    }
+
+                    for values in values_list:
+                        values[field_name] = [x2many_data.get(id_) or {'id': id_} for id_ in values[field_name]]
+
+        return values_list
 
     @api.model
     def web_read_group(self, domain, fields, groupby, limit=None, offset=0, orderby=False,
