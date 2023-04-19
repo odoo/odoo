@@ -45,6 +45,14 @@ export class SubtaskKanbanList extends Component {
                 relation: "project.task",
                 relatedFields: {
                     display_name: { type: "char" },
+                    project_id: {
+                        type: "many2one",
+                        relation: "project.project",
+                        field: this.props.record.activeFields.project_id.field,
+                        relatedFields: this.props.record.activeFields.project_id.relatedFields,
+                        attrs: this.props.record.activeFields.project_id.attrs,
+                        options: this.props.record.activeFields.project_id.options,
+                    },
                     state: {
                         selection: [
                             ["01_in_progress", "In Progress"],
