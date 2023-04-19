@@ -871,7 +871,7 @@ class Message(models.Model):
                 })]
             else:
                 vals['author_id'] = author
-            reactions_per_content = defaultdict(lambda: self.env['mail.message.reaction'])
+            reactions_per_content = defaultdict(self.env['mail.message.reaction'].sudo().browse)
             for reaction in message_sudo.reaction_ids:
                 reactions_per_content[reaction.content] |= reaction
             reaction_groups = [('insert-and-replace', [{
@@ -1099,7 +1099,7 @@ class Message(models.Model):
         for record in self:
             model = model or record.model
             res_id = res_id or record.res_id
-            if issubclass(self.pool[model], self.pool['mail.thread']):
+            if model and issubclass(self.pool[model], self.pool['mail.thread']):
                 self.env[model].invalidate_cache(fnames=[
                     'message_ids',
                     'message_unread',

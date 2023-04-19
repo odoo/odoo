@@ -3579,16 +3579,6 @@ var FieldDomain = AbstractField.extend({
         this.lastCountFetchKey = null; // used to prevent from unnecessary fetching the count
         this.debugEdition = false; // true iff the domain was edited with the textarea (in debug only)
     },
-    /**
-     * We use the on_attach_callback hook here when widget is attached to the DOM, so that
-     * the inline 'DomainSelector' widget allows field selector to overflow if widget is
-     * attached within a modal.
-     */
-    on_attach_callback() {
-        if (this.domainSelector && !this.inDialog) {
-            this.domainSelector.on_attach_callback();
-        }
-    },
 
     //--------------------------------------------------------------------------
     // Public

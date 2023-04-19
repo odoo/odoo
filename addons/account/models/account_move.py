@@ -3943,20 +3943,16 @@ class AccountMoveLine(models.Model):
             # Out invoice.
             if self.product_id.taxes_id:
                 tax_ids = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
-            elif self.account_id.tax_ids:
-                tax_ids = self.account_id.tax_ids
             else:
-                tax_ids = self.env['account.tax']
+                tax_ids = self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
             if not tax_ids and not self.exclude_from_invoice_tab:
                 tax_ids = self.move_id.company_id.account_sale_tax_id
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
             if self.product_id.supplier_taxes_id:
                 tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
-            elif self.account_id.tax_ids:
-                tax_ids = self.account_id.tax_ids
             else:
-                tax_ids = self.env['account.tax']
+                tax_ids = self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
             if not tax_ids and not self.exclude_from_invoice_tab:
                 tax_ids = self.move_id.company_id.account_purchase_tax_id
         else:
@@ -4427,7 +4423,7 @@ class AccountMoveLine(models.Model):
         for record in self:
             record.cumulated_balance = result[record.id]
 
-    @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'move_id.state', 'company_id',
+    @api.depends('debit', 'credit', 'amount_currency', 'account_id', 'currency_id', 'parent_state', 'company_id',
                  'matched_debit_ids', 'matched_credit_ids')
     def _compute_amount_residual(self):
         """ Computes the residual amount of a move line from a reconcilable account in the company currency and the line's currency.
@@ -5675,6 +5671,7 @@ class AccountMoveLine(models.Model):
             'move_id': self.id,
             'user_id': self.move_id.invoice_user_id.id or self._uid,
             'company_id': distribution.account_id.company_id.id or self.company_id.id or self.env.company.id,
+            'category': 'invoice' if self.move_id.is_sale_document() else 'vendor_bill' if self.move_id.is_purchase_document() else 'other',
         }
 
     @api.model

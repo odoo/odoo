@@ -26,6 +26,8 @@ const dynamicSnippetOptions = options.Class.extend({
      * @override
      */
     onBuilt: function () {
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_dynamic_snippet';
         this._setOptionsDefaultValues();
         // TODO Remove in master: adapt dropped snippet template.
         const classList = [...this.$target[0].classList];

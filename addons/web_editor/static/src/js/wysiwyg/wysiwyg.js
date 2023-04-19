@@ -888,7 +888,7 @@ const Wysiwyg = Widget.extend({
                 // it was modified previously, as the other modified image may be used
                 // elsewhere if the snippet was duplicated or was saved as a custom one.
                 const newAttachmentSrc = await this._rpc({
-                    route: `/web_editor/modify_image/${el.dataset.originalId}`,
+                    route: `/web_editor/modify_image/${encodeURIComponent(el.dataset.originalId)}`,
                     params: {
                         res_model: resModel,
                         res_id: parseInt(resId),
@@ -1607,7 +1607,7 @@ const Wysiwyg = Widget.extend({
         }
         const fonts = this.odooEditor.execCommand('applyColor', color, eventName === 'foreColor' ? 'color' : 'backgroundColor', this.lastMediaClicked);
 
-        if (!this.lastMediaClicked) {
+        if (!this.lastMediaClicked && fonts && fonts.length) {
             // Ensure the selection in the fonts tags, otherwise an undetermined
             // race condition could generate a wrong selection later.
             const first = fonts[0];

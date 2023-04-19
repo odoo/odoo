@@ -202,11 +202,19 @@ class AccountAnalyticLine(models.Model):
         if self.env.user.has_group('hr_timesheet.group_hr_timesheet_user'):
             # Then, he is internal user, and we take the domain for this current user
             return self.env['ir.rule']._compute_domain(self._name)
-        return ['&',
+        return [
+            '|',
+                '&',
                     '|',
-                    ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                    ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                ('task_id.project_id.privacy_visibility', '=', 'portal')]
+                        ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                        ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                    ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                '&',
+                    ('task_id', '=', False),
+                    '&',
+                        ('project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                        ('project_id.privacy_visibility', '=', 'portal')
+        ]
 
     def _timesheet_preprocess(self, vals):
         """ Deduce other field values from the one given.
@@ -248,7 +256,14 @@ class AccountAnalyticLine(models.Model):
         # set timesheet UoM from the AA company (AA implies uom)
         if not vals.get('product_uom_id') and all(v in vals for v in ['account_id', 'project_id']):  # project_id required to check this is timesheet flow
             analytic_account = self.env['account.analytic.account'].sudo().browse(vals['account_id'])
-            vals['product_uom_id'] = analytic_account.company_id.project_time_mode_id.id
+            uom_id = analytic_account.company_id.project_time_mode_id.id
+            if not uom_id:
+                company_id = vals.get('company_id', False)
+                if not company_id:
+                    project = self.env['project.project'].browse(vals.get('project_id'))
+                    company_id = project.analytic_account_id.company_id.id or project.company_id.id
+                uom_id = self.env['res.company'].browse(company_id).project_time_mode_id.id
+            vals['product_uom_id'] = uom_id
         return vals
 
     def _timesheet_postprocess(self, values):

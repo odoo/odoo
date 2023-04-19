@@ -4576,6 +4576,62 @@ class StockMove(TransactionCase):
         self.assertEqual(receipt2.state, 'done')
         self.assertEqual(receipt3.state, 'done')
 
+    def test_immediate_validate_9_tracked_move_with_0_qty_done(self):
+        """When trying to validate a picking as an immediate transfer, the done
+        quantity of tracked move should be automatically fulfilled if the
+        picking type doesn't use new or existing LN/SN."""
+        picking_type_receipt = self.env.ref('stock.picking_type_in')
+        picking_type_receipt.use_create_lots = False
+        picking_type_receipt.use_existing_lots = False
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = picking_type_receipt
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_serial
+            move.product_uom_qty = 4
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_lot
+            move.product_uom_qty = 20
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        immediate_wizard = receipt.button_validate()
+        immediate_wizard_form = Form(
+            self.env[immediate_wizard['res_model']].with_context(immediate_wizard['context'])
+        ).save()
+        immediate_wizard_form.process()
+        self.assertEqual(receipt.state, 'done')
+
+    def test_immediate_validate_10_tracked_move_without_backorder(self):
+        """
+            Create a picking for a tracked product, validate it as an
+            immediate transfer, and ensure that the backorder wizard is
+            not triggered when the qty is reserved.
+        """
+        picking_type_internal = self.env.ref('stock.picking_type_internal')
+        picking_type_internal.use_create_lots = True
+        picking_type_internal.use_existing_lots = True
+        lot = self.env['stock.production.lot'].create({
+            'name': 'Lot 1',
+            'product_id': self.product_lot.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 10, lot_id=lot)
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = picking_type_internal
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_lot
+            move.product_uom_qty = 4
+        internal_transfer = picking_form.save()
+        internal_transfer.action_confirm()
+
+        immediate_wizard = internal_transfer.button_validate()
+        immediate_wizard_form = Form(
+            self.env[immediate_wizard['res_model']].with_context(immediate_wizard['context'])
+        ).save()
+        immediate_wizard_form.process()
+        self.assertEqual(internal_transfer.state, 'done')
+
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({
             'name': 'test_set_quantity_done_1',

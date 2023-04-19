@@ -15,7 +15,7 @@ odoo.define('pos_coupon.tour.pos_coupon5', function (require) {
     ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
     PosCoupon.do.clickDiscountButton();
     PosCoupon.do.clickConfirmButton();
-    ProductScreen.check.totalAmountIs('94.50');
+    ProductScreen.check.totalAmountIs('93.15');
 
     Tour.register('PosCouponTour5', { test: true, url: '/pos/web' }, getSteps());
 });

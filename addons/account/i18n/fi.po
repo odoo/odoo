@@ -22,8 +22,6 @@
 # Timo Koukkari <ti.ko@netikka.fi>, 2021
 # Eino Mäkitalo <eino.makitalo@netitbe.fi>, 2021
 # Tommi Rintala <tommi.rintala@gmail.com>, 2021
-# Martin Trigaux, 2021
-# Kari Lindgren <kari.lindgren@emsystems.fi>, 2021
 # artol <arto.leskinen@tek.fi>, 2021
 # Miku Laitinen <miku.laitinen@gmail.com>, 2021
 # Sanna Edelman <direct@generare.com>, 2021
@@ -37,12 +35,14 @@
 # Antti Oksman <antti.oksman@web-veistamo.fi>, 2021
 # Miika Nissi <miika.nissi@tawasta.fi>, 2022
 # Joakim Weckman, 2022
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2022
 # Kim Asplund <kim.asplund@gmail.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2023
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Martin Trigaux, 2023
+# Kari Lindgren <kari.lindgren@emsystems.fi>, 2023
 # 
 msgid ""
 msgstr ""
@@ -50,8 +50,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Kari Lindgren <kari.lindgren@emsystems.fi>, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -656,7 +656,7 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Verotuksen lokalisointi</span>\n"
+"<span class=\"o_form_label\">Kirjanpidon lokalisointi</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
@@ -665,8 +665,8 @@ msgid ""
 "<span class=\"o_form_label\">Main Currency</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class =\" \"o_form_label\" \"> Päävaluutta </span>\n"
-"                                     <span class = \"\" fa fa-lg fa-building-o \"\" title = \"Tässä asetetut arvot ovat yrityskohtaisia.\" \"aria-label =\" \"Tässä asetetut arvot ovat yrityskohtaisia.\" \"groups =\" \"base.group_multi_company\" \"role =\" \"img\" \"/>\""
+"<span class=\"o_form_label\">Päävaluutta</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -726,7 +726,7 @@ msgstr "<span class=\"o_stat_text\">Laskutettu</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "<span class=\"o_stat_text\">Journal Entry</span>"
-msgstr "1"
+msgstr "<span class=\"o_stat_text\">Päiväkirjavienti</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1717,7 +1717,7 @@ msgstr "Kirjanpidon merkinnät"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Accounting Import"
-msgstr ""
+msgstr "Kirjanpidon tuonti"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
@@ -3399,7 +3399,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_report_line_form
 msgid "Carryover"
-msgstr ""
+msgstr "Siirto"
 
 #. module: account
 #: code:addons/account/models/account_tax_report.py:0
@@ -4600,8 +4600,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
-"Credit_note_{{ (object.name tai '').replace('/','_') }}{{{ object.state == "
-"'draft' and '_draft' tai '' }}"
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -7415,7 +7415,7 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
-"Invoice_{{ (object.name tai '').replace('/','_') }}{{{ object.state == "
+"Invoice_{{ (object.name or '').replace('/','_') }}{{{ object.state == "
 "'draft' and '_draft' or '' }}"
 
 #. module: account
@@ -10405,7 +10405,7 @@ msgstr "Kirjattu ennen"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Posted Entries only"
-msgstr ""
+msgstr "Vain kirjatut merkinnät"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_filter
@@ -10420,7 +10420,7 @@ msgstr "Kirjatut päiväkirjan tapahtumat"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
 msgid "Posted and Draft Entries"
-msgstr ""
+msgstr "Kirjatut ja luonnosmerkinnät"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10891,6 +10891,7 @@ msgstr "Täsmäytetyt osat"
 #, python-format
 msgid "Record cannot be deleted. Partner used in Accounting"
 msgstr ""
+"Tietuetta ei voida poistaa, koska sitä käytetään Kirjanpito-moduulissa"
 
 #. module: account
 #: code:addons/account/models/account_tax.py:0
@@ -16160,6 +16161,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Et voi muokata seuraavia kenttiä: %s.\n"
+"Seuraavat viennit on jo lukittu:\n"
+"%s"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

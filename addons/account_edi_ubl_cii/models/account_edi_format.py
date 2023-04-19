@@ -17,6 +17,7 @@ FORMAT_CODES = [
     'efff_1',
     'ubl_2_1',
     'ehf_3',
+    'ubl_sg',
 ]
 
 
@@ -33,18 +34,21 @@ class AccountEdiFormat(models.Model):
         customization_id = tree.find('{*}CustomizationID')
         if tree.tag == '{urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100}CrossIndustryInvoice':
             return self.env['account.edi.xml.cii']
-        if customization_id is not None:
-            if 'xrechnung' in customization_id.text:
-                return self.env['account.edi.xml.ubl_de']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0':
-                return self.env['account.edi.xml.ubl_bis3']
-            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
-                return self.env['account.edi.xml.ubl_nl']
         if ubl_version is not None:
             if ubl_version.text == '2.0':
                 return self.env['account.edi.xml.ubl_20']
             if ubl_version.text == '2.1':
                 return self.env['account.edi.xml.ubl_21']
+        if customization_id is not None:
+            if 'xrechnung' in customization_id.text:
+                return self.env['account.edi.xml.ubl_de']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#compliant#urn:fdc:nen.nl:nlcius:v1.0':
+                return self.env['account.edi.xml.ubl_nl']
+            if customization_id.text == 'urn:cen.eu:en16931:2017#conformant#urn:fdc:peppol.eu:2017:poacc:billing:international:sg:3.0':
+                return self.env['account.edi.xml.ubl_sg']
+            # Allow to parse any format derived from the european semantic norm EN16931
+            if 'urn:cen.eu:en16931:2017' in customization_id.text:
+                return self.env['account.edi.xml.ubl_bis3']
         return
 
     def _get_xml_builder(self, company):
@@ -64,6 +68,8 @@ class AccountEdiFormat(models.Model):
         # the EDI option will only appear on the journal of belgian companies
         if self.code == 'efff_1' and company.country_id.code == 'BE':
             return self.env['account.edi.xml.ubl_efff']
+        if self.code == 'ubl_sg' and company.country_id.code == 'SG':
+            return self.env['account.edi.xml.ubl_sg']
 
     def _is_ubl_cii_available(self, company):
         """

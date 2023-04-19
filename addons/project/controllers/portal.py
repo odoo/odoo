@@ -24,7 +24,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([]) \
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
                 if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
@@ -157,7 +157,7 @@ class ProjectCustomerPortal(CustomerPortal):
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-        if project_sudo.with_user(request.env.user)._check_project_sharing_access():
+        if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
             return request.render("project.project_sharing_portal", {'project_id': project_id})
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
@@ -353,7 +353,7 @@ class ProjectCustomerPortal(CustomerPortal):
                                          key=lambda item: item[1]["sequence"]))
 
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         searchbar_inputs = self._task_get_searchbar_inputs()

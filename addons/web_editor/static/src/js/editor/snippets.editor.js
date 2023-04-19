@@ -153,7 +153,15 @@ var SnippetEditor = Widget.extend({
     init: function (parent, target, templateOptions, $editable, options) {
         this._super.apply(this, arguments);
         this.options = options;
-        this.$editable = $editable;
+        // This is possible to have a snippet editor not inside an editable area
+        // (data-no-check="true") and it is possible to not have editable areas
+        // at all (restricted editor), in that case we just suppose this is the
+        // body so related code can still be executed without crash (as we still
+        // need to instantiate instances of editors even if nothing is really
+        // editable (data-no-check="true" / navigation options / ...)).
+        // TODO this should probably be reviewed in master: do we need a
+        // reference to the editable area? There should be workarounds.
+        this.$editable = $editable && $editable.length ? $editable : $(document.body);
         this.ownerDocument = this.$editable[0].ownerDocument;
         this.$body = $(this.ownerDocument.body);
         this.$target = $(target);
@@ -1152,7 +1160,7 @@ var SnippetEditor = Widget.extend({
     _onRemoveClick: function (ev) {
         ev.preventDefault();
         ev.stopPropagation();
-        this.removeSnippet();
+        this.trigger_up('snippet_edition_request', {exec: this.removeSnippet.bind(this)});
     },
     /**
      * @private
@@ -2144,7 +2152,12 @@ var SnippetsMenu = Widget.extend({
     _computeSelectorFunctions: function (selector, exclude, target, noCheck, isChildren, excludeParent) {
         var self = this;
 
-        exclude += `${exclude && ', '}.o_snippet_not_selectable`;
+        // TODO the `:not([contenteditable="true"])` part is designed to make
+        // images with such attribute editable even when they are in an
+        // environment where editing is not normally possible. This should be
+        // reviewed if we are to handle more hierarchy of editable nodes being
+        // editable despite their non editable environment.
+        exclude += `${exclude && ', '}.o_snippet_not_selectable, .o_not_editable :not([contenteditable="true"])`;
 
         let filterFunc = function () {
             return !$(this).is(exclude);
@@ -2607,6 +2620,7 @@ var SnippetsMenu = Widget.extend({
         const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
                 handle: '.oe_snippet_thumbnail:not(.o_we_already_dragging)',
+                cancel: '.oe_snippet.o_disabled',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
                     dragSnip.querySelectorAll('.o_delete_btn, .o_rename_btn').forEach(
@@ -3131,7 +3145,7 @@ var SnippetsMenu = Widget.extend({
             $content: $('<div/>', {text: _.str.sprintf(_t("Do you want to install the %s App?"), name)}).append(
                 $('<a/>', {
                     target: '_blank',
-                    href: '/web#id=' + moduleID + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
+                    href: '/web#id=' + encodeURIComponent(moduleID) + '&view_type=form&model=ir.module.module&action=base.open_module_tree',
                     text: _t("More info about this app."),
                     class: 'ml4',
                 })

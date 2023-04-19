@@ -3,8 +3,8 @@
 # 	* point_of_sale
 # 
 # Translators:
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2022
 # Martin Trigaux, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -3200,7 +3200,7 @@ msgstr "Максимум перевищено"
 #: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
 #, python-format
 msgid "Maximum value reached"
-msgstr ""
+msgstr "Досягнуто максимального значення"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -5883,6 +5883,8 @@ msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
 msgstr ""
+"Сума не може перевищувати належну суму, якщо у вас не налаштовано метод "
+"оплати готівкою."
 
 #. module: point_of_sale
 #. openerp-web
@@ -6998,7 +7000,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You can only have one cash payment method."
-msgstr ""
+msgstr "Ви можете мати лише один спосіб оплати готівкою."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -7336,3 +7338,13 @@ msgstr "були дублікати існуючих замовлень"
 #, python-format
 msgid "You don't have the access rights to set the point of sale cash box."
 msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+"Ви не маєте прав доступу, щоб отримати контрольні дані про закриття точки "
+"продажу."

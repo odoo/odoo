@@ -608,3 +608,45 @@ class TestMultistepManufacturingWarehouse(TestMrpCommon):
         self.assertEqual(mo.mrp_production_child_count, 0, "Children MOs counted as existing where there should be none")
         self.assertEqual(mo.mrp_production_source_count, 0, "Source MOs counted as existing where there should be none")
         self.assertEqual(mo.mrp_production_backorder_count, 2)
+
+    def test_manufacturing_bom_from_reordering_rules(self):
+        """
+            Check that the manufacturing order is created with the BoM set in the reording rule:
+                - Create a product with 2 bill of materials,
+                - Create an orderpoint for this product specifying the 2nd BoM that must be used,
+                - Check that the MO has been created with the 2nd BoM
+        """
+        manufacturing_route = self.env['stock.rule'].search([
+            ('action', '=', 'manufacture')]).route_id
+        with Form(self.warehouse) as warehouse:
+            warehouse.manufacture_steps = 'pbm_sam'
+        finished_product = self.env['product.product'].create({
+            'name': 'Product',
+            'type': 'product',
+            'route_ids': manufacturing_route,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': finished_product.uom_id.id,
+            'type': 'normal',
+        })
+        bom_2 = self.env['mrp.bom'].create({
+            'product_tmpl_id': finished_product.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': finished_product.uom_id.id,
+            'type': 'normal',
+        })
+        self.env['stock.warehouse.orderpoint'].create({
+            'name': 'Orderpoint for P1',
+            'product_id': self.finished_product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'route_id': manufacturing_route.id,
+            'bom_id': bom_2.id,
+        })
+        self.env['procurement.group'].run_scheduler()
+        mo = self.env['mrp.production'].search([('product_id', '=', self.finished_product.id)])
+        self.assertEqual(len(mo), 1)
+        self.assertEqual(mo.product_qty, 1.0)
+        self.assertEqual(mo.bom_id, bom_2)

@@ -120,7 +120,7 @@ class StockMove(models.Model):
              "this second option should be chosen.")
     scrapped = fields.Boolean('Scrapped', related='location_dest_id.scrap_location', readonly=True, store=True)
     scrap_ids = fields.One2many('stock.scrap', 'move_id')
-    group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id)
+    group_id = fields.Many2one('procurement.group', 'Procurement Group', default=_default_group_id, index=True)
     rule_id = fields.Many2one(
         'stock.rule', 'Stock Rule', ondelete='restrict', help='The stock rule that created this stock move',
         check_company=True)
@@ -1929,9 +1929,11 @@ class StockMove(models.Model):
             if move.state not in ('partially_available', 'assigned'):
                 continue
             for move_line in move.move_line_ids:
-                if move.has_tracking != 'none' and not (move_line.lot_id or move_line.lot_name):
-                    continue
-                move_line.qty_done = move_line.product_uom_qty
+                if move.has_tracking == 'none' or\
+                    (move.picking_type_id.use_existing_lots and move_line.lot_id) or\
+                    (move.picking_type_id.use_create_lots and move_line.lot_name) or\
+                    (not move.picking_type_id.use_existing_lots and not move.picking_type_id.use_create_lots):
+                    move_line.qty_done = move_line.product_uom_qty
 
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if

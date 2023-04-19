@@ -139,6 +139,10 @@ export class Powerbox {
                 );
             }
         }
+        // Hide group name if there is only a single group.
+        if (Object.entries(groups).length === 1) {
+            this._mainWrapperElement.querySelector('.oe-commandbar-groupName').style.display = 'none';
+        }
         this._resetPosition();
     }
 
@@ -293,6 +297,8 @@ export class Powerbox {
             document.addEventListener('mousemove', mousemove);
             document.addEventListener('mousedown', this._stop);
         }
+        // Display powerbox immediately when forceShow is set.
+        if (this._currentOpenOptions.forceShow) showOnceOnKeyup();
     }
 
     nextOpenOptions(openOptions) {
@@ -320,23 +326,19 @@ export class Powerbox {
     // -------------------------------------------------------------------------
 
     _filter(term, commands) {
-        const initalCommands = commands.filter(c => !c.isDisabled || !c.isDisabled());
+        const initialCommands = commands.filter(c => !c.isDisabled || !c.isDisabled());
         if (term === '') {
-            return initalCommands;
+            return initialCommands;
         }
-        term = term.toLowerCase();
-        term = term.replaceAll(/\s/g, '\\s');
-        const regex = new RegExp(
-            term
-                .split('')
-                .map(c => c.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&'))
-                .join('.*'),
-            'i'
-        );
+        term = term.replace(/\s/g, '\\s');
+        term = term.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+        const exactRegex = new RegExp(term, 'i');
+        const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
         if (term.length) {
-            commands = initalCommands.filter(command => {
-                const commandText = (command.groupName + ' ' + command.title).toLowerCase();
-                return commandText.match(regex);
+            commands = initialCommands.filter(command => {
+                const commandText = (command.groupName + ' ' + command.title);
+                const commandDescription = command.description.replace(/\s/g, '');
+                return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex);
             });
         }
         return commands;

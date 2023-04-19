@@ -20,7 +20,7 @@ msgstr ""
 "POT-Creation-Date: 2022-01-24 09:03+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -1650,6 +1650,24 @@ msgid ""
 "    but rather the amount of these lines will be deduced from the lines they apply to during tax computation.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestione degli sconti nei calcoli TaxCloud.\n"
+"    Consultare https://taxcloud.com/support/discounts oppure\n"
+"    https://service.taxcloud.net/hc/en-us/articles/360015649791-How-can-discounts-be-applied-\n"
+"\n"
+"    Riepilogo: prima di calcolare le imposte, al prezzo di vendita devono essere applicati tutti gli sconti stabiliti dal venditore.\n"
+"    I venditori devono mostrare ai clienti la metodologia utilizzata con una politica di applicazione degli sconti.\n"
+"\n"
+"    L'algoritmo funziona in questo modo:\n"
+"     - gli sconti specifici per riga vengono applicati per primi, sulle righe a cui dovrebbero essere applicati.\n"
+"       Ciò significa sconti specifici per prodotto o sconti sulla riga più economica.\n"
+"     - vengono quindi applicati gli sconti globali in modo uniforme tra le righe di pagamento, per quanto possibile.\n"
+"       Se è presente un residuo, viene applicato in modo sequenziale in ordine di riga\n"
+"       finché non rimane alcuno sconto o riga scontabile.\n"
+"\n"
+"    Nota: alle righe di sconto (con prezzo negativo) non viene applicata alcuna imposta,\n"
+"    ma il loro importo viene invece dedotto dalla righe a cui vengono applicate durante il calcolo delle imposte.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_coupon_taxcloud_delivery
@@ -1663,6 +1681,14 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
+"\n"
+"    Gestione degli sconti con le consegne nei calcoli TaxCloud.\n"
+"    Questo modulo segue la stessa logica di \"TaxCloud per contabilità - Vendita (buono sconto)\".\n"
+"    Lì possono essere trovate maggiori informazioni su come vengono effettuati i calcoli degli sconti per TaxCloud.\n"
+"\n"
+"    Per lo sconto (spedizione gratuita) sulle consegne è presente un'opzione aggiuntiva.\n"
+"    Con la consegna nei buoni sconto vendita, non viene applicato il calcolo dello sconto nelle righe di consegna.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1910,6 +1936,13 @@ msgid ""
 "\"Python Code\" defines the amount of the tax.\n"
 "        "
 msgstr ""
+"\n"
+"Un'imposta definita come codice Python consiste in due frammenti di codice, eseguiti in un ambiente locale, che contengono dati come prezzo unitario, prodotto o partner.\n"
+"\n"
+"\"Codice applicabile\" definisce l'applicabilità dell'imposta.\n"
+"\n"
+"\"Codice Python\" definisce l'importo dell'imposta.\n"
+"        "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au_aba
@@ -2827,6 +2860,13 @@ msgid ""
 "\n"
 "The `pdfminer.six` Python library has to be installed in order to index PDF files\n"
 msgstr ""
+"\n"
+"Elenco allegati e indicizzazione documenti\n"
+"========================================\n"
+"* Mostra allegati in cima alle schede\n"
+"* Indicizzazione documenti: ODT, PDF, XLSX, DOCX\n"
+"\n"
+"Per indicizzare i file PDF deve essere installata la libreria `pdfminer.six`\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_au
@@ -3505,6 +3545,18 @@ msgid ""
 " * Filter and Tag\n"
 " * Statistics\n"
 msgstr ""
+"\n"
+"Creazione corsi online\n"
+"====================\n"
+"\n"
+"Caratteristiche\n"
+"\n"
+" * Gestione integrata dei corsi e delle lezioni\n"
+" * Navigazione a schermo intero\n"
+" * Supporto per video YouTube, documenti Google, PDF, immagini, pagine web\n"
+" * Test di conoscenza con quiz\n"
+" * Filtri ed etichette\n"
+" * Statistiche\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_industry_fsm_report
@@ -4502,6 +4554,15 @@ msgid ""
 "are found in other modules that must be installed separately.\n"
 "\n"
 msgstr ""
+"\n"
+"Proxy hardware\n"
+"=============\n"
+"\n"
+"Questo modulo consente l'utilizzo remoto di periferiche collegate al server.\n"
+"\n"
+"Contiene solo la struttura di attivazione. I driver effettivi dei dispositivi si trovano\n"
+"in altri moduli, che devono essere installati separatamente.\n"
+"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk
@@ -5353,6 +5414,8 @@ msgid ""
 "\n"
 "Module holding mail improvements for website. It holds the follow widget.\n"
 msgstr ""
+"\n"
+"Modulo che contiene miglioramenti per la posta del sito web. Contiene il widget per seguire.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_followup
@@ -5938,6 +6001,9 @@ msgid ""
 "Please refer to Sale Matrix or Purchase Matrix for the use of this module.\n"
 "    "
 msgstr ""
+"\n"
+"Per l'utilizzo di questo modulo consultare matrice di vendita o matrice di acquisto.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_plm
@@ -6558,6 +6624,12 @@ msgid ""
 "It also enables the \"optional products\" feature.\n"
 "    "
 msgstr ""
+"\n"
+"Modulo tecnico installato quando l'utente seleziona l'impostazione \"module_sale_product_configurator\".\n"
+"Lo scopo principale è di sovrascrivere la vista sale_order per consentire la configurazione dei prodotti nella scheda dell'OdV.\n"
+"\n"
+"Abilita anche la funzionalità \"prodotti opzionali\".\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_mrp_product_expiry
@@ -6651,6 +6723,9 @@ msgid ""
 "The module adds Microsoft user in res user.\n"
 "===========================================\n"
 msgstr ""
+"\n"
+"Module che aggiunge l'utente Microsoft a res.users.\n"
+"==================================================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_account
@@ -7239,6 +7314,15 @@ msgid ""
 "\n"
 "Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC\n"
 msgstr ""
+"\n"
+"Modulo per gestire il piano dei conti per la Mongolia.\n"
+"===============================================================\n"
+"\n"
+"    * Piano dei conti ufficiale mongolo\n"
+"    * Piano dei codici imposta mongolo\n"
+"    * Imposte principali utilizzate in Mongolia\n"
+"\n"
+"Requisiti finanziari forniti da: Baskhuu Lodoikhuu. BumanIT LLC\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -7654,6 +7738,11 @@ msgid ""
 "take them into account in your stock valuation.\n"
 "    "
 msgstr ""
+"\n"
+"Questo modulo consente di aggiungere facilmente costi aggiuntivi a un ordine di produzione. \n"
+"Consente di decidere la suddivisione di questi costi tra i relativi movimenti di magazzino, \n"
+"tenendone conto nella valutazione delle giacenze.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -8593,6 +8682,8 @@ msgstr ""
 msgid ""
 " Adds a stat button on lead form view to access their livechat sessions."
 msgstr ""
+"Aggiunge un pulsante statistiche nella vista scheda dei contatti CRM per "
+"accedere alle sessioni chat dal vivo."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_delivery_mondialrelay
@@ -9971,7 +10062,7 @@ msgstr "Trasferimenti automatici conto"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_generic_auto_transfer_demo
 msgid "Account Automatic Transfers Demo Data"
-msgstr ""
+msgstr "Dati dimostrativi per trasferimenti automatici conto"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_bank_statement_import
@@ -10023,7 +10114,7 @@ msgstr "Estratto fattura contabile"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr ""
+msgstr "Acquisti estrazione fattura contabile"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
@@ -10872,7 +10963,7 @@ msgstr "Permetti alle persone di prenotare riunioni nella tua agenda"
 #. module: base
 #: model:ir.module.module,description:base.module_website_event_crm
 msgid "Allow per-order lead creation mode"
-msgstr ""
+msgstr "Consente la modalità di creazione contatti CRM per ordine"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website_sale_comparison
@@ -11254,7 +11345,7 @@ msgstr "Nome file arch"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_to_compare
 msgid "Arch To Compare To"
-msgstr "Arco da paragonare a"
+msgstr "Architettura da confrontare"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -11264,7 +11355,7 @@ msgstr "Architettura"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_diff
 msgid "Architecture Diff"
-msgstr ""
+msgstr "Diff. architettura"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.edit_menu_access_search
@@ -11884,7 +11975,7 @@ msgstr "Imponibile"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_base_automation
 msgid "Base Automation Tests: Ensure Flow Robustness"
-msgstr ""
+msgstr "Test per automazione di base: garantiscono la robustezza del flusso"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__state__base
@@ -15459,6 +15550,7 @@ msgstr ""
 #: model:ir.module.module,summary:base.module_l10n_be_edi
 msgid "E-Invoicing, Universal Business Language (UBL 2.0), e-fff protocol"
 msgstr ""
+"E-fatturazione, UBL 2.0 (Universal Business Language), protocollo e-FFF"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_edi
@@ -15483,7 +15575,7 @@ msgstr ""
 #. module: base
 #: model:res.country,vat_label:base.us
 msgid "EIN"
-msgstr ""
+msgstr "EIN"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
@@ -15815,7 +15907,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_contacts_enterprise
 msgid "Enterprise features on contacts"
-msgstr ""
+msgstr "Funzionalità Enterprise per i contatti"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_website
@@ -16559,7 +16651,7 @@ msgstr "Assistenza sul campo - Vendita"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_report
 msgid "Field Service Reports"
-msgstr ""
+msgstr "Resoconti per assistenza sul campo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_industry_fsm_sale_report
@@ -18124,7 +18216,7 @@ msgstr "Estratto spese HR"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_expense_predict_product
 msgid "Hr Expense Predict product"
-msgstr ""
+msgstr "Previsione prodotto spese RU"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_recruitment_survey
@@ -20485,7 +20577,7 @@ msgstr "Mail Group"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_mobile
 msgid "Mail Mobile"
-msgstr ""
+msgstr "Posta per dispositivo mobile"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mail_plugin
@@ -21810,7 +21902,7 @@ msgstr "NIT"
 #. module: base
 #: model:res.country,vat_label:base.id
 msgid "NPWP"
-msgstr ""
+msgstr "NPWP"
 
 #. module: base
 #: code:addons/base/models/ir_qweb_fields.py:0
@@ -24346,7 +24438,7 @@ msgstr "P EDUCAZIONE"
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe
 msgid "PCGE Simplified"
-msgstr ""
+msgstr "PCGE semplificato"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_actions_report__report_type__qweb-pdf
@@ -26000,7 +26092,7 @@ msgstr "RFC"
 #. module: base
 #: model:res.country,vat_label:base.do
 msgid "RNC"
-msgstr ""
+msgstr "RNC"
 
 #. module: base
 #: model:res.country,vat_label:base.hn
@@ -26433,12 +26525,12 @@ msgstr "Ripristina vista"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.reset_view_arch_wizard_view
 msgid "Reset View Architecture"
-msgstr ""
+msgstr "Ripristino architettura vista"
 
 #. module: base
 #: model:ir.model,name:base.model_reset_view_arch_wizard
 msgid "Reset View Architecture Wizard"
-msgstr ""
+msgstr "Procedura di ripristino architettura vista"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__reset_view_arch_wizard__reset_mode__other_view
@@ -27322,7 +27414,7 @@ msgstr "Invia messaggi come promemoria di eventi"
 #: model:ir.module.module,description:base.module_stock_sms
 #: model:ir.module.module,summary:base.module_stock_sms
 msgid "Send text messages when final stock move"
-msgstr ""
+msgstr "Invio di SMS con l'ultimo movimento di magazzino"
 
 #. module: base
 #: model:ir.module.module,description:base.module_delivery_easypost
@@ -28585,7 +28677,7 @@ msgstr "Termini e condizioni"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_base_automation
 msgid "Test - Base Automation"
-msgstr ""
+msgstr "Test- Automazione di base"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_new_api
@@ -28595,7 +28687,7 @@ msgstr "Test API"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_action_bindings
 msgid "Test Action Bindings"
-msgstr ""
+msgstr "Test per associazioni alle azioni"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_l10n_be_hr_payroll_account
@@ -28611,7 +28703,7 @@ msgstr "Prova Connessione"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_cleaning
 msgid "Test Data Cleaning"
-msgstr ""
+msgstr "Test per pulizia dati"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_discuss_full
@@ -28626,7 +28718,7 @@ msgstr "Prova il flusso di eventi completo"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website_slides_full
 msgid "Test Full eLearning Flow"
-msgstr ""
+msgstr "Test per flusso e-learning completo"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_main_flows
@@ -28636,7 +28728,7 @@ msgstr "Testare il Flusso Principale"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_payment_test
 msgid "Test Payment Acquirer"
-msgstr ""
+msgstr "Test per sistema di pagamento"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_performance
@@ -28651,12 +28743,12 @@ msgstr "Test RPC"
 #. module: base
 #: model:ir.module.module,summary:base.module_test_marketing_automation
 msgid "Test Suite for Automated Marketing Campaigns"
-msgstr ""
+msgstr "Serie di test per campagne di marketing automatiche"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_test_data_cleaning
 msgid "Test Suite for Data Cleaning"
-msgstr ""
+msgstr "Serie di test per pulizia dati"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_data_module_install
@@ -28678,7 +28770,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_testing_utilities
 msgid "Test testing utilities"
-msgstr ""
+msgstr "Test per utilità di test"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_access_rights
@@ -28695,7 +28787,7 @@ msgstr "Prove"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_apikeys
 msgid "Tests flow of API keys"
-msgstr ""
+msgstr "Flusso di test di chiavi API"
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_read_group
@@ -29525,6 +29617,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models."
 msgstr ""
+"Modulo che contiene test relativi alla automazione di base. Si trovano\n"
+"in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
+"test indipendenti da aspetti funzionali di altri modelli."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail
@@ -29546,6 +29641,10 @@ msgid ""
 "modules build on mail (sms, snailmail, mail_enterprise) are set as dependencies\n"
 "in order to test the whole mail codebase. "
 msgstr ""
+"Modulo che contiene test relativi a mail. Si trovano\n"
+"in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
+"test indipendenti da aspetti funzionali di altri modelli. Inoltre la maggior parte dei\n"
+"moduli costruiti su mail (sms, snailmail, mail_enterprise) vengono impostati come dipendenze, in modo da effettuare test per l'intera base di codice di mail."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mass_mailing
@@ -29576,6 +29675,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Modulo che contiene test relativi al timer. Si trovano\n"
+"in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
+"test indipendenti da aspetti funzionali di altri modelli. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_mail_full
@@ -29585,6 +29687,10 @@ msgid ""
 "contains models used only to perform tests independently to functional aspects of\n"
 "real applications. "
 msgstr ""
+"Modulo che contiene test relativi a varie funzionalità\n"
+"e sottomoduli della posta. Si trovano in un modulo separato in quanto contiene\n"
+"modelli utilizzati solo per eseguire test indipendenti da aspetti funzionali di\n"
+"applicazioni reali. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_social_test_full
@@ -29602,6 +29708,9 @@ msgid ""
 "present in a separate module as it contains models used only to perform\n"
 "tests independently to functional aspects of other models. "
 msgstr ""
+"Modulo che contiene test relativi alla vista coorte. Si trovano\n"
+"in un modulo separato in quanto contiene modelli utilizzati solo per eseguire\n"
+"test indipendenti da aspetti funzionali di altri modelli."
 
 #. module: base
 #: model:ir.module.module,description:base.module_test_website_modules
@@ -29623,6 +29732,11 @@ msgid ""
 "dependencies. Neither we want to add in website module some routes, views and\n"
 "models which only purpose is to run tests."
 msgstr ""
+"Modulo che contiene test relativi al sito web. Si trovano\n"
+"in un modulo separato in quanto vengono effettuati test di installazione/disinstallazione/aggiornamento,\n"
+"per evitare di dover ricaricare ogni volta il modulo sito web incluse le sue possibili dipendenze. \n"
+"Evita anche di dover aggiungere nel modulo sito web alcuni percorsi, viste e modelli che hanno\n"
+"il solo scopo di eseguire test."
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_subscription_timesheet
@@ -30014,7 +30128,7 @@ msgstr "Integrazione di Transifex"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__trans_implied_ids
 msgid "Transitively inherits"
-msgstr ""
+msgstr "Ereditati in modo transitivo"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__translate

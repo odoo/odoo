@@ -877,3 +877,48 @@ class TestReorderingRule(TransactionCase):
             po05 = self.env['purchase.order'].search([], order='id desc', limit=1)
             self.assertNotEqual(po05, po04, 'A new PO should be generated')
             self.assertEqual(po05.order_line.product_id, product_02)
+
+    def test_update_po_line_without_purchase_access_right(self):
+        """ Test that a user without purchase access right can update a PO line from picking."""
+        # create a user with only inventory access right
+        user = self.env['res.users'].create({
+            'name': 'Inventory Manager',
+            'login': 'inv_manager',
+            'groups_id': [(6, 0, [self.env.ref('stock.group_stock_user').id])]
+        })
+        product = self.env['product.product'].create({
+            'name': 'Storable Product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'name': self.partner.id})],
+        })
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        self.env['stock.warehouse.orderpoint'].create({
+            'warehouse_id': warehouse.id,
+            'location_id': warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 5,
+            'product_max_qty': 0,
+        })
+        # run the scheduler
+        self.env['procurement.group'].run_scheduler()
+        # check that the PO line is created
+        po_line = self.env['purchase.order.line'].search([('product_id', '=', product.id)])
+        self.assertEqual(len(po_line), 1, 'There should be only one PO line')
+        self.assertEqual(po_line.product_qty, 5, 'The PO line quantity should be 5')
+        # Update the po line from the picking
+        picking = self.env['stock.picking'].with_user(user).create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_lines': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        })
+        picking.with_user(user).action_assign()
+        # check that the PO line quantity has been updated
+        self.assertEqual(po_line.product_qty, 6, 'The PO line quantity should be 6')

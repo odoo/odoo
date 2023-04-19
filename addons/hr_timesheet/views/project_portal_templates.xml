@@ -25,7 +25,7 @@
     </template>
 
     <template id="portal_tasks_list_inherit" inherit_id="project.portal_tasks_list" name="Portal: My Tasks with Timesheets">
-        <xpath expr="//t[@t-call='portal.portal_table']" position="inside">
+        <xpath expr="//t[@t-foreach='tasks']/tr" position="before">
             <t t-set="timesheet_ids" t-value="task.sudo().timesheet_ids"/>
             <t t-set="is_uom_day" t-value="timesheet_ids._is_timesheet_encode_uom_day()"/>
         </xpath>

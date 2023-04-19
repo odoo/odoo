@@ -37,12 +37,31 @@ class EpsonPrintResultGenerator extends PrintResultGenerator {
         return printRes;
     }
 
-    IoTResultError() {
+    IoTResultError(printerErrorCode) {
+        let message = _t("The printer was successfully reached, but it wasn't able to print.") + '\n';
+        if (printerErrorCode) {
+            message += '\n' + _t("The following error code was given by the printer:") + '\n' + printerErrorCode;
+
+            const extra_messages = {
+                'DeviceNotFound':
+                    _t("Check on the printer configuration for the 'Device ID' setting. " +
+                        "It should be set to: ") + "\nlocal_printer",
+                'EPTR_REC_EMPTY':
+                    _t("No paper was detected by the printer"),
+            };
+            if (printerErrorCode in extra_messages) {
+                message += '\n' + extra_messages[printerErrorCode];
+            }
+            message += "\n" + _t("To find more details on the error reason, please search online for:") + '\n' +
+                " Epson Server Direct Print " + printerErrorCode;
+        } else {
+            message += _t('Please check if the printer has enough paper and is ready to print.');
+        }
         return new PrintResult({
             successful: false,
             message: {
                 title: _t('Printing failed'),
-                body: _t('Please check if the printer has enough paper and is ready to print.'),
+                body: message,
             },
         });
     }
@@ -164,7 +183,8 @@ var EpsonPrinter = core.Class.extend(PrinterMixin, {
             method: 'POST',
             data: img,
         });
-        return $(res).find('response').attr('success') === 'true';
+        const response = $(res).find('response');
+        return {"result": response.attr('success') === 'true', "printerErrorCode": response.attr('code')};
     },
 });
 

@@ -30,7 +30,7 @@ class PortalAccount(CustomerPortal):
         return self._get_page_view_values(invoice, access_token, values, 'my_invoices_history', False, **kwargs)
 
     def _get_invoices_domain(self):
-        return [('state', 'not in', ('cancel', 'draft')), ('is_move_sent', '=', True), ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
+        return [('state', 'not in', ('cancel', 'draft')), ('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):

@@ -170,7 +170,7 @@ var PosDB = core.Class.extend({
         if (product.description_sale) {
             str += '|' + product.description_sale;
         }
-        str  = product.id + ':' + str.replace(/:/g,'') + '\n';
+        str  = product.id + ':' + str.replace(/[\n:]/g,'') + '\n';
         return str;
     },
     add_products: async function(products){

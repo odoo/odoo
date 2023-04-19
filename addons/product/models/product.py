@@ -70,8 +70,8 @@ class ProductCategory(models.Model):
         main_category = self.env.ref('product.product_category_all')
         if main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
-        expense_category = self.env.ref('product.cat_expense')
-        if expense_category in self:
+        expense_category = self.env.ref('product.cat_expense', raise_if_not_found=False)
+        if expense_category and expense_category in self:
             raise UserError(_("You cannot delete the %s product category.", expense_category.name))
 
 
@@ -712,8 +712,9 @@ class ProductProduct(models.Model):
             # Convert from current user company currency to asked one
             # This is right cause a field cannot be in more than one currency
             if currency:
+                company = company or self.env.company
                 prices[product.id] = product.currency_id._convert(
-                    prices[product.id], currency, product.company_id, fields.Date.today())
+                    prices[product.id], currency, company, fields.Date.today())
 
         return prices
 

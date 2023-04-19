@@ -52,7 +52,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         // welcome message action button
         var forumLogin = _.string.sprintf('%s/web?redirect=%s',
             window.location.origin,
-            escape(window.location.href)
+            encodeURIComponent(window.location.href)
         );
         $('.forum_register_url').attr('href', forumLogin);
 
@@ -258,7 +258,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
                 const linkLabel = _t("Read the guidelines to know how to gain karma.");
                 notifOptions.message = Markup`
                     ${notifOptions.message}<br/>
-                    <a class="alert-link" href="/forum/${forumID}/faq">${linkLabel}</a>
+                    <a class="alert-link" href="/forum/${encodeURIComponent(forumID)}/faq">${linkLabel}</a>
                 `;
             }
         }

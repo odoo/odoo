@@ -323,7 +323,7 @@ class PosSession(models.Model):
         bank_payment_method_diffs = bank_payment_method_diffs or {}
         self.ensure_one()
         sudo = self.user_has_groups('point_of_sale.group_pos_user')
-        if self.order_ids or self.statement_ids.line_ids:
+        if self.order_ids or self.sudo().statement_ids.line_ids:
             self.cash_real_transaction = self.cash_register_total_entry_encoding
             self.cash_real_expected = self.cash_register_balance_end
             self.cash_real_difference = self.cash_register_difference
@@ -335,7 +335,8 @@ class PosSession(models.Model):
                 self._create_picking_at_end_of_session()
                 self.order_ids.filtered(lambda o: not o.is_total_cost_computed)._compute_total_cost_at_session_closing(self.picking_ids.move_lines)
             try:
-                data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
+                with self.env.cr.savepoint():
+                    data = self.with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
             except AccessError as e:
                 if sudo:
                     data = self.sudo().with_company(self.company_id)._create_account_move(balancing_account, amount_to_balance, bank_payment_method_diffs)
@@ -533,6 +534,8 @@ class PosSession(models.Model):
                 return {'successful': False, 'message': message, 'redirect': False}
 
     def get_closing_control_data(self):
+        if not self.env.user.has_group('point_of_sale.group_pos_user'):
+            raise AccessError(_("You don't have the access rights to get the point of sale closing control data."))
         self.ensure_one()
         orders = self.order_ids.filtered(lambda o: o.state == 'paid' or o.state == 'invoiced')
         payments = orders.payment_ids.filtered(lambda p: p.payment_method_id.type != "pay_later")
@@ -544,7 +547,7 @@ class PosSession(models.Model):
         cash_in_count = 0
         cash_out_count = 0
         cash_in_out_list = []
-        for cash_move in self.cash_register_id.line_ids.sorted('create_date'):
+        for cash_move in self.sudo().cash_register_id.line_ids.sorted('create_date'):
             if cash_move.amount > 0:
                 cash_in_count += 1
                 name = f'Cash in {cash_in_count}'
@@ -567,7 +570,7 @@ class PosSession(models.Model):
             'default_cash_details': {
                 'name': default_cash_payment_method_id.name,
                 'amount': self.cash_register_id.balance_start + total_default_cash_payment_amount +
-                                             sum(self.cash_register_id.line_ids.mapped('amount')),
+                                             sum(self.sudo().cash_register_id.line_ids.mapped('amount')),
                 'opening': self.cash_register_id.balance_start,
                 'payment_amount': total_default_cash_payment_amount,
                 'moves': cash_in_out_list,
@@ -1147,7 +1150,7 @@ class PosSession(models.Model):
         """
         def get_income_account(order_line):
             product = order_line.product_id
-            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income']
+            income_account = product.with_company(order_line.company_id)._get_product_accounts()['income'] or self.config_id.journal_id.default_account_id
             if not income_account:
                 raise UserError(_('Please define income account for this product: "%s" (id:%d).')
                                 % (product.name, product.id))

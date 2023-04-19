@@ -23,8 +23,8 @@
 # Evgeniia Kotova, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
 # valmasone, 2022
-# Alena Vlasova, 2022
 # Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Alena Vlasova, 2023
 # 
 msgid ""
 msgstr ""
@@ -32,8 +32,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-01-24 08:19+0000\n"
 "PO-Revision-Date: 2021-09-14 12:23+0000\n"
-"Last-Translator: Сергей Шебанин <sergey@shebanin.ru>, 2023\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: Alena Vlasova, 2023\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -717,7 +717,7 @@ msgstr "Расширение с действиями"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_type_view_form
 msgid "Activity Settings"
-msgstr ""
+msgstr "Параметры действия"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_mixin__activity_state
@@ -1418,7 +1418,7 @@ msgstr "Получатели скрытой копии сообщения"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template_preview__email_cc
 msgid "Carbon copy recipients"
-msgstr ""
+msgstr "Получатели копий"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__email_cc
@@ -1446,7 +1446,7 @@ msgstr "Копия"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr ""
+msgstr "Метод последовательности"
 
 #. module: mail
 #. openerp-web
@@ -2027,17 +2027,17 @@ msgstr "Режим дисплея по умолчанию"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_note
 msgid "Default Note"
-msgstr ""
+msgstr "Примечание по умолчанию"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
 msgid "Default Summary"
-msgstr ""
+msgstr "Сводка по умолчанию"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_user_id
 msgid "Default User"
-msgstr ""
+msgstr "Пользователь по умолчанию"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__null_value
@@ -2513,7 +2513,7 @@ msgstr "Черный список электронной почты"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_thread_cc
 msgid "Email CC management"
-msgstr ""
+msgstr "Управление СС электронной почты"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
@@ -2585,6 +2585,8 @@ msgid ""
 "Email address to which replies will be redirected when sending emails in "
 "mass"
 msgstr ""
+"Адрес электронной почты, на который будут перенаправляться ответы при "
+"массовой отправке писем"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__reply_to
@@ -2593,6 +2595,9 @@ msgid ""
 "mass; only used when the reply is not logged in the original discussion "
 "thread."
 msgstr ""
+"Адрес электронной почты, на который будут перенаправляться ответы при "
+"массовой отправке писем; используется только в том случае, если ответ не "
+"относится к исходной беседе."
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_blacklist_action
@@ -3360,6 +3365,9 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Если установлено, письмо будет отправлено после указанной даты. Если не "
+"установлено, письмо будет отправлено как можно скорее. Если не указан "
+"часовой пояс, то время будет рассчитано в часовом поясе UTC."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -6657,12 +6665,12 @@ msgstr "Подтипы"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest"
-msgstr ""
+msgstr "Предлагать"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__suggest
 msgid "Suggest Next Activity"
-msgstr ""
+msgstr "Предлагать следующее действие"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_type__suggested_next_type_ids
@@ -6737,7 +6745,7 @@ msgstr "Просмотр шаблона"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template_preview__lang
 msgid "Template Preview Language"
-msgstr ""
+msgstr "Язык шаблона"
 
 #. module: mail
 #: code:addons/mail/models/mail_render_mixin.py:0
@@ -6999,6 +7007,9 @@ msgid ""
 "including from the Technical menu in the Settings, in order to preserve "
 "storage space of your Odoo database."
 msgstr ""
+"Эта опция навсегда удаляет любые следы электронной почты после ее отправки, "
+"в том числе из Технического меню в Настройках, чтобы сохранить место для "
+"хранения вашей базы данных."
 
 #. module: mail
 #. openerp-web
@@ -7161,7 +7172,7 @@ msgstr "Триггер"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__trigger
 msgid "Trigger Next Activity"
-msgstr ""
+msgstr "Запускать следующее действие"
 
 #. module: mail
 #. openerp-web
@@ -8010,7 +8021,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__current_date
 msgid "after completion date"
-msgstr ""
+msgstr "после даты выполнения действия"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__delay_from__previous_activity

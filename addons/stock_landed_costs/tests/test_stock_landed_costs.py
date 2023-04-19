@@ -4,6 +4,7 @@
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
+from odoo import fields
 
 
 @tagged('post_install', '-at_install')
@@ -159,3 +160,53 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
 
         self.assertEqual(len(picking_landed_cost_1.move_lines.stock_valuation_layer_ids), 5)
         self.assertEqual(len(picking_landed_cost_2.move_lines.stock_valuation_layer_ids), 5)
+
+    def test_aml_account_selection(self):
+        """
+        Process a PO with a landed cost, then create and post the bill. The
+        account of the landed cost AML should be:
+        - Expense if the categ valuation is manual
+        - Stock IN if the categ valuation is real time
+        """
+        self.landed_cost.landed_cost_ok = True
+
+        for valuation, account in [
+            ('manual_periodic', self.company_data['default_account_expense']),
+            ('real_time', self.env.company.property_stock_account_input_categ_id),
+        ]:
+            self.landed_cost.categ_id.property_valuation = valuation
+            po = self.env['purchase.order'].create({
+                'partner_id': self.partner_a.id,
+                'currency_id': self.company_data['currency'].id,
+                'order_line': [
+                    (0, 0, {
+                        'name': self.product_a.name,
+                        'product_id': self.product_a.id,
+                        'product_qty': 1.0,
+                        'product_uom': self.product_a.uom_po_id.id,
+                        'price_unit': 100.0,
+                        'taxes_id': False,
+                    }),
+                    (0, 0, {
+                        'name': self.landed_cost.name,
+                        'product_id': self.landed_cost.id,
+                        'product_qty': 1.0,
+                        'price_unit': 100.0,
+                    }),
+                ],
+            })
+            po.button_confirm()
+
+            receipt = po.picking_ids
+            receipt.move_lines.quantity_done = 1
+            receipt.button_validate()
+            po.order_line[1].qty_received = 1
+
+            po.action_create_invoice()
+            bill = po.invoice_ids
+            bill.invoice_date = fields.Date.today()
+            bill._post()
+
+            landed_cost_aml = bill.invoice_line_ids.filtered(lambda l: l.product_id == self.landed_cost)
+            self.assertEqual(bill.state, 'posted', 'Incorrect value with valuation %s' % valuation)
+            self.assertEqual(landed_cost_aml.account_id, account, 'Incorrect value with valuation %s' % valuation)

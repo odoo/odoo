@@ -77,10 +77,16 @@ var AttributeTranslateDialog = weDialog.extend({
             $input.on('change keyup', function () {
                 var value = $input.val();
                 $node.html(value).trigger('change', node);
-                if ($node.data('attribute')) {
-                    $node.data('$node').attr($node.data('attribute'), value).trigger('translate');
+                const $originalNode = $node.data('$node');
+                const nodeAttribute = $node.data('attribute');
+                if (nodeAttribute) {
+                    $originalNode.attr(nodeAttribute, value);
+                    if (nodeAttribute === 'value') {
+                        $originalNode[0].value = value;
+                    }
+                    $originalNode.trigger('translate');
                 } else {
-                    $node.data('$node').val(value).trigger('translate');
+                    $originalNode.val(value).trigger('translate');
                 }
                 $node.trigger('change');
             });
@@ -223,6 +229,12 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
                         translation[attr] = $trans[0];
                         $node.attr(attr, match[2]);
+                        // Using jQuery attr() to update the "value" will not change what appears in the
+                        // DOM and will not update the value property on inputs. We need to force the
+                        // right value instead of the original translation <span/>.
+                        if (attr === 'value') {
+                            $node[0].value = match[2];
+                        }
 
                         $node.addClass('o_translatable_attribute').data('translation', translation);
                     });
@@ -240,7 +252,8 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     translation['textContent'] = $trans[0];
                     $node.val(match[2]);
 
-                    $node.addClass('o_translatable_text').data('translation', translation);
+                    $node.addClass('o_translatable_text').removeClass('o_text_content_invisible')
+                        .data('translation', translation);
                 });
                 $edited = $edited.add(textEdit);
 

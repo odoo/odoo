@@ -350,6 +350,7 @@ class AccountJournal(models.Model):
             AND NOT EXISTS (SELECT 1 FROM account_account acc
                             JOIN journal_account_type_control_rel rel ON acc.user_type_id = rel.type_id
                             WHERE acc.id = aml.account_id AND rel.journal_id = aml.journal_id)
+            AND aml.display_type IS NULL
         """, tuple(self.ids))
         if self._cr.fetchone():
             raise ValidationError(_('Some journal items already exist in this journal but with accounts from different types than the allowed ones.'))
@@ -597,7 +598,7 @@ class AccountJournal(models.Model):
     @api.model
     def get_next_bank_cash_default_code(self, journal_type, company):
         journal_code_base = (journal_type == 'cash' and 'CSH' or 'BNK')
-        journals = self.env['account.journal'].search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
+        journals = self.env['account.journal'].with_context(active_test=False).search([('code', 'like', journal_code_base + '%'), ('company_id', '=', company.id)])
         for num in range(1, 100):
             # journal_code has a maximal size of 5, hence we can enforce the boundary num < 100
             journal_code = journal_code_base + str(num)

@@ -77,7 +77,7 @@ var PrinterMixin = {
             // IoT box can't find a printer.
             if (!sendPrintResult || sendPrintResult.result === false) {
                 this.receipt_queue.length = 0;
-                return this.printResultGenerator.IoTResultError();
+                return this.printResultGenerator.IoTResultError(sendPrintResult.printerErrorCode);
             }
         }
         return this.printResultGenerator.Successful();

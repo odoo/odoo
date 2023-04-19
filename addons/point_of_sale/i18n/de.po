@@ -12,6 +12,7 @@
 # Robert Förster <hello@suppliot.eu>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -19,8 +20,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-12-10 07:16+0000\n"
 "PO-Revision-Date: 2021-09-14 12:24+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -373,6 +374,8 @@ msgid ""
 "Accounting journal used to post POS session journal entries and POS invoice "
 "payments."
 msgstr ""
+"Buchhaltungsjournal, das verwendet wird, um Journalposten und "
+"Rechnungszahlungen aus dem Kassensystem zu buchen."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_needaction
@@ -1721,7 +1724,7 @@ msgstr "Standard-Account"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__account_default_pos_receivable_account_id
 msgid "Default Account Receivable (PoS)"
-msgstr ""
+msgstr "Standarddebitorenkonto (Kassensystem)"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__default_fiscal_position_id
@@ -2324,7 +2327,7 @@ msgstr "Für ungenaue Industrie-Touchscreens."
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_form_pos_close_session_wizard
 #, python-format
 msgid "Force Close Session"
-msgstr ""
+msgstr "Schließen der Sitzung erzwingen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2338,12 +2341,12 @@ msgstr "Erzwingen Erledigt"
 #: code:addons/point_of_sale/static/src/xml/Screens/PaymentScreen/PaymentScreenElectronicPayment.xml:0
 #, python-format
 msgid "Force done"
-msgstr ""
+msgstr "Erzwingen erledigt"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_account_payment__force_outstanding_account_id
 msgid "Forced Outstanding Account"
-msgstr ""
+msgstr "Erzwungenes Ausstehendes Konto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment_method__split_transactions
@@ -2477,7 +2480,7 @@ msgstr "Kopf- und Fußzeile"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__hide_use_payment_terminal
 msgid "Hide Use Payment Terminal"
-msgstr ""
+msgstr "„Zahlungsterminal verwenden“ verbergen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2573,7 +2576,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Iface Customer Facing Display"
-msgstr ""
+msgstr "Kundesseitiger Iface-Anzeigebildschirm"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -3007,28 +3010,28 @@ msgstr "Briefablage"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_amount
 msgid "Limited Partners Amount"
-msgstr ""
+msgstr "Eingeschränktes Partnerkonto"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_partners_loading
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Limited Partners Loading"
-msgstr ""
+msgstr "Begrenzte Anzahl Partner laden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_products_loading
 msgid "Limited Product Loading"
-msgstr ""
+msgstr "Begrenzte Anzahl Produkte laden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__limited_products_amount
 msgid "Limited Products Amount"
-msgstr ""
+msgstr "Betrag eingeschränkter Produkte"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Limited Products Loading"
-msgstr ""
+msgstr "Begrenzte Anzahl Produkte laden"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__name
@@ -3075,7 +3078,7 @@ msgstr "Fehler beim Laden des Bilds"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display_local
 msgid "Local Customer Facing Display"
-msgstr ""
+msgstr "Lokaler kundesseitiger Anzeigebildschirm"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__login_number
@@ -3218,7 +3221,7 @@ msgstr "Maximum überschritten"
 #: code:addons/point_of_sale/static/src/js/Misc/NumberBuffer.js:0
 #, python-format
 msgid "Maximum value reached"
-msgstr ""
+msgstr "Höchstbetrag erreicht"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_error
@@ -3963,7 +3966,7 @@ msgstr "Partner"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__partner_load_background
 msgid "Partner Load Background"
-msgstr ""
+msgstr "Hintergrund beim Laden von Partnern"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4151,7 +4154,7 @@ msgstr "Anzahl auswählen"
 #: code:addons/point_of_sale/models/stock_warehouse.py:0
 #, python-format
 msgid "Picking POS"
-msgstr ""
+msgstr "Abholung Kassensystem"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -4364,7 +4367,7 @@ msgstr "Kassensystem Journal"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_pos_make_payment
 msgid "Point of Sale Make Payment Wizard"
-msgstr ""
+msgstr "Assistent zum Zahlungen tätigen im Kassensystem"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__group_pos_manager_id
@@ -4685,7 +4688,7 @@ msgstr "Produktkonfigurator"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__product_load_background
 msgid "Product Load Background"
-msgstr ""
+msgstr "Hintergrund beim Laden von Produkten"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -4928,7 +4931,7 @@ msgstr "Erstattete Bestellung"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__refunded_orderline_id
 msgid "Refunded Order Line"
-msgstr ""
+msgstr "Erstatte Auftragszeile"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -5111,7 +5114,7 @@ msgstr "Rundungsfehler in den Zahlungspositionen"
 #: code:addons/point_of_sale/static/src/js/debug_manager.js:0
 #, python-format
 msgid "Run Point of Sale JS Tests"
-msgstr ""
+msgstr "JS-Tests für Kassensystem durchführen"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__message_has_sms_error
@@ -5374,7 +5377,7 @@ msgstr "Sitzungs-ID"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order__session_move_id
 msgid "Session Journal Entry"
-msgstr ""
+msgstr "Journalbuchung der Sitzung"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5583,7 +5586,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ProductScreen.js:0
 #, python-format
 msgid "Some Serial/Lot Numbers are missing"
-msgstr ""
+msgstr "Einige Serien-/Losnummern fehlen"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5738,7 +5741,7 @@ msgstr "Erfolgreich importiert"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "Successfully made a cash %s of %s."
-msgstr ""
+msgstr "Bargeld%s in Höhe von %s war erfolgreich."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
@@ -5900,6 +5903,8 @@ msgid ""
 "The Point of Sale only supports the \"add a rounding line\" rounding "
 "strategy."
 msgstr ""
+"Das Kassensystem unterstützt lediglich die Rundungsstrategie „Eine "
+"Rundungszeile hinzufügen“."
 
 #. module: point_of_sale
 #. openerp-web
@@ -5909,6 +5914,8 @@ msgid ""
 "The amount cannot be higher than the due amount if you don't have a cash "
 "payment method configured."
 msgstr ""
+"Der Betrag kann nicht höher sein als der fällige Betrag, wenn Sie keine "
+"Barzahlungsmethode eingerichtet haben."
 
 #. module: point_of_sale
 #. openerp-web
@@ -7043,7 +7050,7 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_config.py:0
 #, python-format
 msgid "You can only have one cash payment method."
-msgstr ""
+msgstr "Sie können nur eine Barzahlungsmethode haben."
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/account_bank_statement.py:0
@@ -7289,7 +7296,7 @@ msgstr "Für einen Auftrag von"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "forecasted"
-msgstr ""
+msgstr "prognostiziert"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7327,7 +7334,7 @@ msgstr "Auftrag/Aufträge"
 #: code:addons/point_of_sale/static/src/js/ChromeWidgets/CashMoveButton.js:0
 #, python-format
 msgid "out"
-msgstr ""
+msgstr "Einzahlung"
 
 #. module: point_of_sale
 #. openerp-web
@@ -7368,6 +7375,9 @@ msgid ""
 "When the session is open, we keep on loading all remaining products in the background.\n"
 "In the meantime, you can click on the 'database icon' in the searchbar to load products from database."
 msgstr ""
+"Wir laden alle mit Sternchen versehenen Produkte (Favoriten), alle Dienstleistungen, kürzliche Lagerbewegungen von Produkten und die zuletzt aktualisierten Produkte.\n"
+"Wenn die Sitzung offen ist, laden wir alle restlichen Produkte weiterhin im Hintergrund.\n"
+"In der Zwischenzeit können Sie auf das „Datenbanksymbol“ in der Suchleiste klicken, um Produkte aus der Datenbank zu laden."
 
 #. module: point_of_sale
 #. openerp-web
@@ -7380,4 +7390,12 @@ msgstr "Waren Duplikate bestehender Aufträge"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "You don't have the access rights to set the point of sale cash box."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
 msgstr ""

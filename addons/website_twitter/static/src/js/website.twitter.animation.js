@@ -64,7 +64,7 @@ publicWidget.registry.twitter = publicWidget.Widget.extend({
                     .replace(
                         /[#]+[A-Za-z0-9_]+/g,
                         function (hashtag) {
-                            return _makeLink('http://twitter.com/search?q='+hashtag.replace('#',''), hashtag);
+                            return _makeLink('http://twitter.com/search?q=' + encodeURIComponent(hashtag.replace('#', '')), hashtag);
                         }
                     ));
 

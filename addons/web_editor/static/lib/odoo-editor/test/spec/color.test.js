@@ -39,4 +39,24 @@ describe('applyColor', () => {
             contentAfter: '<p>ab<font style="background-color: rgb(255, 0, 0);">[]\u200B</font>cd</p>',
         });
     });
+    it('should apply a color on empty selection', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p>[<br></p><p><br></p><p>]<br></p>',
+            stepFunction: setColor('rgb(255, 0, 0)', 'color'),
+            contentAfterEdit: '<p><font oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">[\u200B</font></p>' +
+                              '<p><font oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">\u200B</font></p>' +
+                              '<p><font oe-zws-empty-inline="" style="color: rgb(255, 0, 0);">]\u200B</font></p>',
+            contentAfter: '<p>[</p><p></p><p>]</p>',
+        });
+    });
+    it('should apply a background color on empty selection', async () => {
+        await testEditor(BasicEditor, {
+            contentBefore: '<p>[<br></p><p><br></p><p>]<br></p>',
+            stepFunction: setColor('rgb(255, 0, 0)', 'background-color'),
+            contentAfterEdit: '<p><font oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">[\u200B</font></p>' +
+                              '<p><font oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">\u200B</font></p>' +
+                              '<p><font oe-zws-empty-inline="" style="background-color: rgb(255, 0, 0);">]\u200B</font></p>',
+            contentAfter: '<p>[</p><p></p><p>]</p>',
+        });
+    });
 });

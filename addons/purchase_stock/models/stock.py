@@ -99,13 +99,6 @@ class StockMove(models.Model):
         vals['purchase_line_id'] = self.purchase_line_id.id
         return vals
 
-    def _prepare_procurement_values(self):
-        proc_values = super()._prepare_procurement_values()
-        if self.restrict_partner_id:
-            proc_values['supplierinfo_name'] = self.restrict_partner_id
-            self.restrict_partner_id = False
-        return proc_values
-
     def _clean_merged(self):
         super(StockMove, self)._clean_merged()
         self.write({'created_purchase_line_id': False})

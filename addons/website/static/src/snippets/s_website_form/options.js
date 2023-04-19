@@ -783,7 +783,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      * @param {string} action
      */
     _redirectToAction: function (action) {
-        window.location.replace(`/web#action=${action}`);
+        window.location.replace(`/web#action=${encodeURIComponent(action)}`);
     },
 
     //--------------------------------------------------------------------------

@@ -552,9 +552,9 @@ class Channel(models.Model):
                 groups[index] = (group_name, lambda partner: False, group_data)
         return groups
 
-    def _notify_thread(self, message, msg_vals=False, **kwargs):
+    def _notify_thread(self, message, msg_vals=False, notify_by_email=True, **kwargs):
         # link message to channel
-        rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, notify_by_email=notify_by_email, **kwargs)
 
         message_format_values = message.message_format()[0]
         bus_notifications = self._channel_message_notifications(message, message_format_values)
@@ -923,7 +923,7 @@ class Channel(models.Model):
             if vals:
                 session_state.write(vals)
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.channel/insert', {
-                'id': session_state.channel_id.channel_info()[0]['id'],
+                'id': session_state.channel_id.id,
                 'serverFoldState': state,
             })
 
@@ -1210,7 +1210,7 @@ class Channel(models.Model):
         else:
             all_channel_partners = self.env['mail.channel.partner'].with_context(active_test=False)
             channel_partners = all_channel_partners.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name) for member in channel_partners) if channel_partners else _('Anonymous'))
+            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name or member.guest_id.name) for member in channel_partners) if channel_partners else _('Anonymous'))
         msg += self._execute_command_help_message_extra()
 
         self._send_transient_message(partner, msg)
@@ -1229,15 +1229,15 @@ class Channel(models.Model):
             self.channel_pin(self.uuid, False)
 
     def execute_command_who(self, **kwargs):
-        partner = self.env.user.partner_id
+        channel_members = self.env['mail.channel.partner'].with_context(active_test=False).search([('partner_id', '!=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         members = [
-            f'<a href="#" data-oe-id={str(p.id)} data-oe-model="res.partner">@{html_escape(p.name)}</a>'
-            for p in self.channel_partner_ids[:30] if p != partner
+            f'<strong><a href="#" data-oe-id={str(m.partner_id.id)} data-oe-model="res.partner">@{html_escape(m.partner_id.name)}</a></strong>' if m.partner_id else f'<strong>@{html_escape(m.guest_id.name)}</strong>'
+            for m in channel_members[:30]
         ]
         if len(members) == 0:
             msg = _("You are alone in this channel.")
         else:
-            dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
+            dots = "..." if len(members) != len(channel_members) else ""
             msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
-        self._send_transient_message(partner, msg)
+        self._send_transient_message(self.env.user.partner_id, msg)

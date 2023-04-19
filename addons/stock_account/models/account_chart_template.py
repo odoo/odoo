@@ -27,9 +27,11 @@ class AccountChartTemplate(models.Model):
             'property_stock_account_output_categ_id',
             'property_stock_valuation_account_id',
         ]
+        categ_values = {category.id: False for category in self.env['product.category'].search([])}
         for field in todo_list:
             account = self[field]
             value = acc_template_ref[account].id if account else False
             PropertyObj._set_default(field, "product.category", value, company)
+            PropertyObj._set_multi(field, "product.category", categ_values, True)
 
         return res
