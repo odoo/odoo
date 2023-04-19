@@ -3076,12 +3076,12 @@ class BaseModel(metaclass=MetaModel):
         return res
 
     @api.model
-    def check_field_access_rights(self, operation, fields):
+    def check_field_access_rights(self, operation, field_names):
         """Check the user access rights on the given fields.
 
         :param str operation: one of ``create``, ``read``, ``write``, ``unlink``
-        :param fields: names of the fields
-        :type fields: list or None
+        :param field_names: names of the fields
+        :type field_names: list or None
         :return: provided fields if fields is truthy (or the fields
           readable by the current user).
         :rtype: list
@@ -3089,7 +3089,7 @@ class BaseModel(metaclass=MetaModel):
           the provided fields.
         """
         if self.env.su:
-            return fields or list(self._fields)
+            return field_names or list(self._fields)
 
         def valid(fname):
             """ determine whether user has access to field ``fname`` """
@@ -3099,10 +3099,10 @@ class BaseModel(metaclass=MetaModel):
             else:
                 return True
 
-        if not fields:
-            fields = [name for name in self._fields if valid(name)]
+        if not field_names:
+            field_names = [name for name in self._fields if valid(name)]
         else:
-            invalid_fields = {name for name in fields if not valid(name)}
+            invalid_fields = {name for name in field_names if not valid(name)}
             if invalid_fields:
                 _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s, fields: %s',
                              operation, self._uid, self._name, ', '.join(invalid_fields))
@@ -3167,7 +3167,7 @@ class BaseModel(metaclass=MetaModel):
                     ),
                 ))
 
-        return fields
+        return field_names
 
     def read(self, fields=None, load='_classic_read'):
         """ read([fields])
@@ -3413,6 +3413,7 @@ class BaseModel(metaclass=MetaModel):
         # determine fields to fetch
         fields_to_verify = OrderedSet()
         field_names = self.check_field_access_rights('read', field_names)
+
         for field_name in field_names:
             if field_name == 'id':
                 continue
@@ -3481,6 +3482,7 @@ class BaseModel(metaclass=MetaModel):
         This method may be overridden to change what fields to actually fetch,
         or to change the values that are put in cache.
         """
+
         # determine columns fields and those with their own read() method
         column_fields = OrderedSet()
         other_fields = OrderedSet()
