@@ -204,6 +204,8 @@ options.registry.gallery = options.Class.extend({
             _.each(cols, function (col) {
                 var $col = $(col);
                 var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
+                // Neutralize invisible sub-pixel height differences.
+                height = Math.round(height);
                 if (height < min) {
                     min = height;
                     $lowest = $col;
