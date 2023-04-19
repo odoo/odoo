@@ -16,7 +16,7 @@
                 <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
                 <field name="product_tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="show"/>
-                <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '>', 1)]}"/>
+                <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '!=', 1)]}"/>
                 <field name="company_id" options="{'no_create': True}"
                     groups="base.group_multi_company" optional="hide"/>
                 <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
@@ -43,7 +43,7 @@
             </xpath>
             <field name="categ_id" position="after">
                 <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
-                <field name="barcode" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
+                <field name="barcode" attrs="{'invisible': ['|', ('product_variant_count', '>', 1), ('product_variant_count', '=', 0)]}"/>
             </field>
 
             <div name="button_box" position="inside">
