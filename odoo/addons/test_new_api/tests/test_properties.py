@@ -604,6 +604,41 @@ class PropertiesCase(TestPropertiesMixin):
         })
         self.assertEqual(self._get_sql_properties(record), {'my_char': 'my char', 'test': self.partner_2.id})
 
+        # use the context to set the default value, the default key in the definition is ignored
+        # (e.g. when you create a new record in a Kanban view grouped by a property)
+        del property_definition[0]['value']
+        self.discussion_1.attributes_definition = property_definition
+        partner = self.env['test_new_api.partner'].create({'name': 'Test Default'})
+        message = self.env['test_new_api.message'] \
+            .with_context({'default_attributes.my_many2one': partner.id}) \
+            .create({
+                'name': 'Test Message',
+                'author': self.user.id,
+                'discussion': self.discussion_1.id,
+                'attributes': property_definition,
+            })
+
+        sql_values = self._get_sql_properties(message)
+        self.assertEqual(sql_values, {'my_many2one': partner.id})
+        properties = message.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], (partner.id, partner.display_name))
+
+        # "None" is a valid default value
+        del property_definition[0]['value']
+        message = self.env['test_new_api.message'] \
+            .with_context({'default_attributes.my_many2one': None}) \
+            .create({
+                'name': 'Test Message',
+                'author': self.user.id,
+                'discussion': self.discussion_1.id,
+                'attributes': property_definition,
+            })
+
+        sql_values = self._get_sql_properties(message)
+        self.assertEqual(sql_values, {'my_many2one': False})
+        properties = message.read(['attributes'])[0]['attributes']
+        self.assertEqual(properties[0]['value'], False)
+
     def test_properties_field_read(self):
         """Test the behavior of the read method.
 
