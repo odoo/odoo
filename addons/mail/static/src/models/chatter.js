@@ -205,6 +205,7 @@ registerModel({
          * @param {string[]} [fieldNames]
          */
         async reloadParentView({ fieldNames } = {}) {
+            await this.saveRecord();
             if (this.webRecord) {
                 await this.webRecord.model.root.load({ resId: this.threadId }, { keepChanges: true });
                 this.webRecord.model.notify();
