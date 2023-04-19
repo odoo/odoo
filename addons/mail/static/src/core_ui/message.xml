@@ -86,7 +86,7 @@
                             class="position-relative d-flex align-items-start"
                             t-att-class="{
                                    'justify-content-end': isAlignedRight,
-                                   'pe-4': !env.inChatWindow and !isAlignedRight and !state.isEditing,
+                                   'pe-4': env.inChatWindow and !isAlignedRight and !state.isEditing,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,
                                    'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    'ps-2': env.inChatWindow and isAlignedRight and state.isEditing,
