@@ -42,7 +42,7 @@ class TestPyLint(TransactionCase):
         'csv',
         'urllib',
         'cgi',
-    ] + list(tools.SUPPORTED_DEBUGGER)
+    ] + list(tools.constants.SUPPORTED_DEBUGGER)
 
     def _skip_test(self, reason):
         _logger.warning(reason)
