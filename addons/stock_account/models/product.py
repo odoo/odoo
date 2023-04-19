@@ -192,20 +192,26 @@ class ProductProduct(models.Model):
             fifo_vals = self._run_fifo(abs(quantity), company)
             vals['remaining_qty'] = fifo_vals.get('remaining_qty')
             # In case of AVCO, fix rounding issue of standard price when needed.
-            if self.product_tmpl_id.cost_method == 'average' and not float_is_zero(self.quantity_svl, precision_rounding=self.uom_id.rounding):
-                rounding_error = currency.round(
-                    (self.standard_price * self.quantity_svl - self.value_svl) * abs(quantity / self.quantity_svl)
-                )
-                if rounding_error:
-                    # If it is bigger than the (smallest number of the currency * quantity) / 2,
-                    # then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
-                    if abs(rounding_error) <= max((abs(quantity) * currency.rounding) / 2, currency.rounding):
-                        vals['value'] += rounding_error
-                        vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
-                            '+' if rounding_error > 0 else '',
-                            float_repr(rounding_error, precision_digits=currency.decimal_places),
-                            currency.symbol
-                        )
+            if self.product_tmpl_id.cost_method == 'average' and float_compare(self.quantity_svl, 0, precision_rounding=self.uom_id.rounding) == 1:
+                quantity_svl = float_round(self.quantity_svl, precision_rounding=self.uom_id.rounding)  # If quantity_svl is not rounded, total_rounding_error may be miscalculated.
+                total_rounding_error = currency.round(self.standard_price * quantity_svl) - self.value_svl
+                # rounding_error adjusted to the out quantity in stock (if quantity in stock == 2, and out quantity == 5, we only adjust for the 2 units in stock).
+                quantity_adjusted = min(abs(quantity), quantity_svl)
+                rounding_error = currency.round(total_rounding_error * quantity_adjusted / quantity_svl)
+                max_allowed_rounding_error = currency.round(currency.rounding * quantity_adjusted / 2 + currency.rounding)
+                if float_compare(quantity_svl + quantity, 0, precision_rounding=self.uom_id.rounding) <= 0:
+                    # When the out move empties the stock, we allow a slightly bigger rounding_error
+                    max_allowed_rounding_error += currency.rounding
+
+                # If it is bigger than the max_allowed_rounding_error
+                #   then it isn't a rounding error but a stock valuation error, we shouldn't fix it under the hood ...
+                if rounding_error and abs(rounding_error) <= max_allowed_rounding_error:
+                    vals['value'] += rounding_error
+                    vals['rounding_adjustment'] = '\nRounding Adjustment: %s%s %s' % (
+                        '+' if rounding_error > 0 else '',
+                        float_repr(rounding_error, precision_digits=currency.decimal_places),
+                        currency.symbol
+                    )
             if self.product_tmpl_id.cost_method == 'fifo':
                 vals.update(fifo_vals)
         return vals

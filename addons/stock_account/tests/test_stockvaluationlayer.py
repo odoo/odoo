@@ -570,6 +570,54 @@ class TestStockValuationAVCO(TestStockValuationCommon):
         self.assertEqual(self.product1.quantity_svl, 0)
         self.assertEqual(self.product1.value_svl, 0)
 
+    def test_rounding_svl_5(self):
+        """
+        This test ensure that the rounding_error is correctly applied when the out qty make the on_hand quantity negative.
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self._make_in_move(self.product1, 2, unit_cost=5.07)
+        self._make_in_move(self.product1, 5, unit_cost=3.02)
+
+        # standard_price: 3,6057 => 3.61
+        self.assertEqual(self.product1.standard_price, 3.61)
+
+        for _ in range(6):
+            self._make_out_move(self.product1, 1)
+
+        self.assertEqual(self.product1.quantity_svl, 1)
+        self.assertEqual(self.product1.value_svl, 3.60)  # Rounding Error == 0.01
+
+        self._make_out_move(self.product1, 2)
+        self.assertEqual(self.product1.quantity_svl, -1)
+        self.assertEqual(self.product1.value_svl, -3.61)
+
+        self._make_in_move(self.product1, 1, unit_cost=4)
+        self.assertEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.value_svl, 0)
+
+    def test_rounding_svl_6(self):
+        """
+        This test ensure that the rounding_error is not impacted by the rounding precision difference
+            between the 'Product Price Decimal Accuracy' and the 'Currency Rounding'
+        """
+        self.product1.categ_id.property_cost_method = 'average'
+        self.env.ref('product.decimal_price').write({'digits': 4})
+
+        self._make_in_move(self.product1, 2, unit_cost=0.87)
+        self._make_in_move(self.product1, 10, unit_cost=0.96)
+        # standard_price: 0.9450
+
+        self.assertEqual(self.product1.value_svl, 11.34)
+        self.assertAlmostEqual(self.product1.standard_price, 0.945)
+
+        self._make_out_move(self.product1, 3)
+        self._make_out_move(self.product1, 3)
+        self._make_out_move(self.product1, 3)
+        self._make_out_move(self.product1, 3)
+
+        self.assertAlmostEqual(self.product1.quantity_svl, 0)
+        self.assertEqual(self.product1.value_svl, 0)
+
     def test_return_delivery_2(self):
         self.product1.write({"standard_price": 1})
         move1 = self._make_out_move(self.product1, 10, create_picking=True, force_assign=True)
