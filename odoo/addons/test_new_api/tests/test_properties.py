@@ -740,6 +740,21 @@ class PropertiesCase(TestPropertiesMixin):
         self.assertEqual(properties[1]['value'], (self.partner_2.id, self.partner_2.display_name))
         self.assertEqual(properties[1]['comodel'], 'test_new_api.partner')
 
+        # should not be able to set a transient model
+        with self.assertRaises(ValueError):
+            self.message_2.attributes = [{
+                "name": "moderator_partner_id",
+                "type": "many2one",
+                "comodel": "test_new_api.transient_model",
+                "definition_changed": True,
+            }]
+        with self.assertRaises(ValueError):
+            self.discussion_1.attributes_definition = [{
+                "name": "moderator_partner_id",
+                "type": "many2one",
+                "comodel": "test_new_api.transient_model",
+            }]
+
     @mute_logger('odoo.models.unlink', 'odoo.fields')
     def test_properties_field_many2one_unlink(self):
         """Test the case where we unlink the many2one record."""
@@ -1231,6 +1246,21 @@ class PropertiesCase(TestPropertiesMixin):
                 'default': [(partners[8].id, partners[8].display_name)],
                 'value': [(partners[9].id, partners[9].display_name)],
             }])
+
+        # should not be able to set a transient model
+        with self.assertRaises(ValueError):
+            self.message_2.attributes = [{
+                "name": "partner_ids",
+                "type": "many2many",
+                "comodel": "test_new_api.transient_model",
+                "definition_changed": True,
+            }]
+        with self.assertRaises(ValueError):
+            self.discussion_1.attributes_definition = [{
+                "name": "partner_ids",
+                "type": "many2many",
+                "comodel": "test_new_api.transient_model",
+            }]
 
     @users('test')
     @mute_logger('odoo.addons.base.models.ir_rule', 'odoo.fields')
