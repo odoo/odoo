@@ -286,6 +286,62 @@
         <value model="account.tax" eval="{'tax_ids': [(4, obj().search([('company_id', '=', ref('company_ri')), ('type_tax_use', '=', 'sale'), ('tax_group_id.l10n_ar_tribute_afip_code', '=', '99')], limit=1).id)]}"/>
     </function>
 
+    <!-- TODO delete once sequences are implemented -->
+    <record id="demo_invoice_1" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000008</field>
+    </record>
+    <record id="demo_invoice_2" model="account.move">
+        <field name="l10n_latam_document_number">0002-00000123</field>
+    </record>
+    <record id="demo_invoice_3" model="account.move">
+        <field name="l10n_latam_document_number">0003-00000312</field>
+    </record>
+    <record id="demo_invoice_4" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000200</field>
+    </record>
+    <record id="demo_invoice_5" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000222</field>
+    </record>
+    <record id="demo_invoice_6" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000333</field>
+    </record>
+    <record id="demo_invoice_7" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000334</field>
+    </record>
+    <record id="demo_invoice_8" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_10" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_11" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_12" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_13" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_14" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_15" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_16" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_17" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_18" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+    <record id="demo_invoice_19" model="account.move">
+        <field name="l10n_latam_document_number">0001-00000335</field>
+    </record>
+
     <function model="account.move" name="action_post">
         <value eval="[ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'), ref('demo_invoice_4'), ref('demo_invoice_5'), ref('demo_invoice_6'), ref('demo_invoice_7'), ref('demo_invoice_8'), ref('demo_invoice_10'), ref('demo_invoice_11'), ref('demo_invoice_12'), ref('demo_invoice_13'), ref('demo_invoice_14'), ref('demo_invoice_15'), ref('demo_invoice_16'), ref('demo_invoice_17'), ref('demo_invoice_18'), ref('demo_invoice_19')]"/>
     </function>

@@ -117,8 +117,8 @@ msgstr "${(object.name or '').replace('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
-msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr "${object.company_id.name} Factura (Ref ${object.number or 'n/a'})"
+msgid "${object.company_id.name} Invoice (Ref ${object.display_name or 'n/a'})"
+msgstr "${object.company_id.name} Factura (Ref ${object.display_name or 'n/a'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -246,8 +246,8 @@ msgid ""
 "        % endif\n"
 "        <br/><br/>\n"
 "        Here is your\n"
-"        % if object.name:\n"
-"            invoice <strong>${object.name}</strong>\n"
+"        % if object.display_name:\n"
+"            invoice <strong>${object.display_name}</strong>\n"
 "        % else:\n"
 "            invoice\n"
 "        %endif\n"
@@ -277,8 +277,8 @@ msgstr ""
 "        % endif\n"
 "        <br/><br/>\n"
 "        Adjunta su\n"
-"        % if object.name:\n"
-"            factura <strong>${object.name}</strong>\n"
+"        % if object.display_name:\n"
+"            factura <strong>${object.display_name}</strong>\n"
 "        % else:\n"
 "            factura\n"
 "       %endif\n"
@@ -6175,10 +6175,10 @@ msgstr "Fecha de Factura/Recibo"
 #. module: account
 #: model:mail.template,report_name:account.email_template_edi_invoice
 msgid ""
-"Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
+"Invoice_${(object.display_name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 msgstr ""
-"Factura_${(object.name or '').replace('/','_')}${object.state == 'draft' and"
+"Factura_${(object.display_name or '').replace('/','_')}${object.state == 'draft' and"
 " '_draft' or ''}"
 
 #. module: account
