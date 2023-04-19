@@ -62,7 +62,7 @@ class UtmMixin(models.AbstractModel):
         """Based on the model name and on the name of the record, retrieve the corresponding record or create it."""
         Model = self.env[model_name]
 
-        record = Model.search([('name', '=', name)], limit=1)
+        record = Model.with_context(active_test=False).search([('name', '=', name)], limit=1)
 
         if not record:
             # No record found, create a new one
