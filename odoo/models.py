@@ -146,8 +146,8 @@ def check_method_name(name):
 
 
 def check_property_field_value_name(property_name):
-    if not regex_alphanumeric.match(property_name):
-        raise ValueError(_("Wrong property field value name %r.", property_name))
+    if not regex_alphanumeric.match(property_name) or len(property_name) > 512:
+        raise ValueError(f"Wrong property field value name {property_name!r}.")
 
 
 def fix_import_export_id_paths(fieldname):

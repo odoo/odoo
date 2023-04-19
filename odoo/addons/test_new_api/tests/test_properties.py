@@ -186,6 +186,34 @@ class PropertiesCase(TestPropertiesMixin):
             'default': 'blue',
         }])
 
+    def test_properties_field_injection(self):
+        for c in '!#"\'- |+/\\':
+            with self.assertRaises(ValueError):
+                self.message_1.attributes = [{
+                    'name': f'discussion_color_code{c}',
+                    'type': 'char',
+                    'definition_changed': True
+                }]
+
+            with self.assertRaises(ValueError):
+                self.discussion_1.attributes_definition = [{
+                    'name': f'discussion_color_code{c}',
+                    'type': 'char',
+                }]
+
+        with self.assertRaises(ValueError):
+            self.message_1.attributes = [{
+                'name': 'a' * 513,
+                'type': 'char',
+                'definition_changed': True
+            }]
+
+        with self.assertRaises(ValueError):
+            self.discussion_1.attributes_definition = [{
+                'name': 'a' * 513,
+                'type': 'char',
+            }]
+
     @mute_logger('odoo.fields')
     def test_properties_field_write_batch(self):
         """Test the behavior of the write called in batch.
