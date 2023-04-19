@@ -7,12 +7,13 @@
         t-att-class="{
                 'w-100 h-100': store.isSmall,
                 'o-folded': props.chatWindow.folded,
-                'position-absolute bottom-0 rounded-top-3 overflow-hidden d-flex flex-column': !props.chatWindow.hidden
+                'position-absolute bottom-0 overflow-hidden d-flex flex-column': !props.chatWindow.hidden,
+                'rounded-top-3': !props.chatWindow.hidden and !store.isSmall,
                 }"
         t-on-keydown.stop="onKeydown"
         tabindex="1"
     >
-        <div class="o-mail-ChatWindow-header d-flex align-items-center cursor-pointer flex-shrink-0" t-on-click="toggleFold">
+        <div class="o-mail-ChatWindow-header d-flex align-items-center flex-shrink-0" t-on-click="toggleFold" t-att-class="{ 'cursor-pointer': !store.isSmall }">
             <div t-if="store.isSmall" class="cursor-pointer d-flex align-items-center h-100 px-3 py-0 me-2" title="Close conversation" t-on-click="() => this.close()">
                 <i class="fa fa-arrow-left"/>
             </div>
