@@ -359,6 +359,11 @@ class Registry(Mapping):
 
     def _discard_fields(self, fields: list):
         """ Discard the given fields from the registry's internal data structures. """
+        for f in fields:
+            # tests usually don't reload the registry, so when they create
+            # custom fields those may not have the entire dependency setup, and
+            # may be missing from these maps
+            self.field_depends.pop(f, None)
 
         # discard fields from field triggers
         self.__dict__.pop('_field_triggers', None)
