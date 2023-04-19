@@ -1017,7 +1017,7 @@ class AccountMoveLine(models.Model):
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
                         'tax_ids': [Command.set(taxes.ids)],
-                        'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
+                        'tax_tag_ids': line.compute_all_tax[frozendict({'id': line.id})]['tax_tag_ids'],
                         'display_type': 'epd',
                     }),
                     {
