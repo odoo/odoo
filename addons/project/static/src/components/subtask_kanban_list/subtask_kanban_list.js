@@ -48,11 +48,12 @@ export class SubtaskKanbanList extends Component {
     }
 
     get fields() {
-        const { display_name, state, user_ids } = this.props.record.fields;
+        const { display_name, state, user_ids, project_id } = this.props.record.fields;
         return {
             display_name,
             state,
             user_ids,
+            project_id,
         };
     }
 
@@ -65,6 +66,9 @@ export class SubtaskKanbanList extends Component {
             },
             user_ids: {
                 field: getFieldFromRegistry(this.fields.user_ids.type, "many2many_avatar_user", "kanban"),
+            },
+            project_id: {
+                field: getFieldFromRegistry(this.fields.project_id.type, "project_private_task", "kanban")
             },
         };
     }
