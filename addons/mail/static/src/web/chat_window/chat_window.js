@@ -80,11 +80,12 @@ export class ChatWindow extends Component {
     }
 
     get style() {
+        const maxHeight = !this.store.isSmall ? "max-height: 95vh;" : "";
         const textDirection = localization.direction;
         const offsetFrom = textDirection === "rtl" ? "left" : "right";
         const visibleOffset = this.store.isSmall ? 0 : this.props.right;
         const oppositeFrom = offsetFrom === "right" ? "left" : "right";
-        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto`;
+        return `${offsetFrom}: ${visibleOffset}px; ${oppositeFrom}: auto; ${maxHeight}`;
     }
 
     onKeydown(ev) {
@@ -114,6 +115,9 @@ export class ChatWindow extends Component {
     }
 
     toggleFold() {
+        if (this.store.isSmall) {
+            return;
+        }
         if (this.props.chatWindow.hidden) {
             this.chatWindowService.makeVisible(this.props.chatWindow);
         } else {
