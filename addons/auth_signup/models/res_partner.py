@@ -52,7 +52,7 @@ class ResPartner(models.Model):
 
     def _compute_token(self):
         for partner in self:
-            self.env.cr.execute('SELECT signup_token FROM res_partner WHERE id=%s', (partner.id,))
+            self.env.cr.execute('SELECT signup_token FROM res_partner WHERE id=%s', (partner._origin.id,))
             partner.signup_token = self.env.cr.fetchone()[0]
 
     def _inverse_token(self):
@@ -160,7 +160,7 @@ class ResPartner(models.Model):
             :param raise_exception: if True, raise exception instead of returning False
             :return: partner (browse record) or False (if raise_exception is False)
         """
-        self.env.cr.execute("SELECT id FROM res_partner WHERE signup_token = %s", (token,))
+        self.env.cr.execute("SELECT id FROM res_partner WHERE signup_token = %s AND active", (token,))
         partner_id = self.env.cr.fetchone()
         partner = self.browse(partner_id[0]) if partner_id else None
         if not partner:
