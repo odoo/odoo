@@ -37,6 +37,7 @@ QUnit.module('Subtask Kanban List tests', {
                 `<kanban js_class="project_task_kanban">
                     <field name="subtask_count"/>
                     <field name="closed_subtask_count"/>
+                    <field name="project_id"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div>
