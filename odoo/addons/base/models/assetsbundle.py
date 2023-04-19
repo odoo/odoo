@@ -410,7 +410,7 @@ class AssetsBundle(object):
                     *  Templates                               *
                     *******************************************/
 
-                    odoo.define('{self.name}.bundle.xml', function(require){{
+                    odoo.define('{self.name}.bundle.xml', ['@web/core/assets'], function(require){{
                         'use strict';
                         const {{ loadXML }} = require('@web/core/assets');
                         const templates = `{templates}`;
