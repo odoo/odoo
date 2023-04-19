@@ -3240,6 +3240,8 @@ class BaseModel(metaclass=MetaModel):
         cache = self.env.cache
         field_names = self.check_field_access_rights('read', field_names)
         for field_name in field_names:
+            if field_name == 'id':
+                continue
             field = self._fields.get(field_name)
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
