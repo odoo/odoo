@@ -9,8 +9,7 @@ from odoo import api, fields, models
 class Track(models.Model):
     _inherit = 'event.track'
 
-    youtube_video_url = fields.Char('YouTube Video Link',
-        help="Configure this URL so that event attendees can see your Track in video!")
+    youtube_video_url = fields.Char('YouTube Video Link')
     youtube_video_id = fields.Char('YouTube video ID', compute='_compute_youtube_video_id',
         help="Extracted from the video URL and used to infer various links (embed/thumbnail/...)")
     is_youtube_replay = fields.Boolean('Is YouTube Replay',
