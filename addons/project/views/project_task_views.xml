@@ -580,7 +580,7 @@
                                         <span t-if="record.partner_id.value" style="display: block; margin-top: 4px;">
                                             <field name="partner_id"/>
                                         </span>
-                                        <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value ? 'text-danger' : ''" style="display: block; margin-top: 4px;">
+                                        <span t-if="record.allow_milestones.raw_value and record.milestone_id.raw_value" t-att-class="record.has_late_and_unreached_milestone.raw_value and !record.state.raw_value.startsWith('1_') ? 'text-danger' : ''" style="display: block; margin-top: 4px;">
                                             <field name="milestone_id" options="{'no_open': True}" />
                                         </span>
                                     </div>
