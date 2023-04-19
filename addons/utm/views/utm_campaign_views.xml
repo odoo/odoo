@@ -9,11 +9,17 @@
                 <field name="tag_ids"/>
                 <field name="user_id"/>
                 <field name="is_auto_campaign"/>
+                <filter string="My Campaigns" name="filter_assigned_to_me" domain="[('user_id', '=', uid)]"
+                    help="Campaigns that are assigned to me"/>
+                <separator/>
+                <filter string="Archived" name="filter_inactive" domain="[('active', '=', False)]"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="group_stage_id"
                         context="{'group_by': 'stage_id'}"/>
                     <filter string="Responsible" name="group_user_id"
                         context="{'group_by': 'user_id'}"/>
+                    <filter string="Tags" name="group_tags_id"
+                        context="{'group_by': 'tag_ids'}"/>
                 </group>
             </search>
         </field>
@@ -30,7 +36,9 @@
                 <sheet>
                     <div class="oe_button_box d-flex justify-content-end" name="button_box">
                     </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group id="top-group">
+                        <field name="active" invisible="1"/>
                         <field class="text-break" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                         <field name="name" invisible="1"/>
                         <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
@@ -48,10 +56,10 @@
         <field name="model">utm.campaign</field>
         <field name="arch" type="xml">
             <tree string="UTM Campaigns" multi_edit="1" sample="1">
-                <field name="title" readonly="1"/>
+                <field name="title" string="Name" readonly="1"/>
                 <field name="name" invisible="1"/>
-                <field name="user_id"/>
-                <field name="stage_id"/>
+                <field name="user_id" widget="many2one_avatar_user"/>
+                <field name="stage_id" decoration-bf="1"/>
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
             </tree>
         </field>
@@ -67,7 +75,7 @@
                     <field name="name" invisible="1"/>
                     <field class="o_text_overflow" name="title" string="Campaign Name" placeholder="e.g. Black Friday"/>
                     <field name="user_id" widget="many2one_avatar_user" domain="[('share', '=', False)]"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
+                    <field name="tag_ids" widget="many2many_tags" class="o_field_highlight" options="{'color_field': 'color', 'no_create_edit': True}"/>
                 </group>
             </form>
         </field>
@@ -81,6 +89,7 @@
                 <field name='color'/>
                 <field name='user_id'/>
                 <field name="stage_id"/>
+                <field name='active'/>
                 <templates>
                     <t t-name="kanban-menu">
                         <t t-if="widget.editable">
@@ -89,6 +98,10 @@
                         <t t-if="widget.deletable">
                             <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
                         </t>
+                        <a role="menuitem" class="dropdown-item o_kanban_mailing_active" name="toggle_active" type="object">
+                            <t t-if="record.active.raw_value">Archive</t>
+                            <t t-else="">Restore</t>
+                        </a>
                         <div role="separator" class="dropdown-divider"/>
                         <ul class="oe_kanban_colorpicker" data-field="color"/>
                     </t>
@@ -105,7 +118,7 @@
                                     <ul id="o_utm_actions" class="list-group list-group-horizontal my-0"/>
                                 </div>
                                 <div class="o_kanban_record_bottom h5 mt-2 mb-0">
-                                    <div id="utm_statistics" class="d-flex flex-grow-1 text-600 mt-1"/>
+                                    <div class="oe_kanban_bottom_left py-auto"/>
                                     <div class="oe_kanban_bottom_right">
                                          <field name="user_id" widget="many2one_avatar_user"/>
                                     </div>
