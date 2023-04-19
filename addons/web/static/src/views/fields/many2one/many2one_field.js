@@ -61,6 +61,7 @@ export class Many2OneField extends Component {
         update: { type: Function, optional: true },
         value: { optional: true },
         decorations: { type: Object, optional: true },
+        kanbanViewId: { type: [Number, Boolean], optional: true },
     };
     static defaultProps = {
         canOpen: true,
@@ -205,6 +206,7 @@ export class Many2OneField extends Component {
             nameCreateField: this.props.nameCreateField,
             setInputFloats: this.setFloating,
             autocomplete_container: this.autocompleteContainerRef,
+            kanbanViewId: this.props.kanbanViewId,
         };
     }
     computeActiveActions(props) {
@@ -325,6 +327,7 @@ export const many2OneField = {
             nameCreateField: options.create_name_field,
             canScanBarcode: !!options.can_scan_barcode,
             string,
+            kanbanViewId: attrs.kanban_view_ref ? JSON.parse(attrs.kanban_view_ref) : false,
         };
     },
 };
