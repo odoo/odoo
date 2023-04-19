@@ -3964,7 +3964,7 @@ class PropertiesDefinition(Field):
                 raise ValueError(f'Wrong property type {property_type!r}.')
 
             model = property_definition.get('comodel')
-            if model and model not in env:
+            if model and (model not in env or env[model].is_transient() or env[model]._abstract):
                 raise ValueError(f'Invalid model name {model!r}')
 
             property_selection = property_definition.get('selection')
