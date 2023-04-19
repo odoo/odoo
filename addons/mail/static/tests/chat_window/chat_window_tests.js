@@ -976,3 +976,18 @@ QUnit.test("folded chat window should hide member-list and settings buttons", as
     assert.containsOnce($, "div[title='Show Member List']");
     assert.containsOnce($, "div[title='Show Call Settings']");
 });
+
+QUnit.test("Chat window in mobile are not foldable", async (assert) => {
+    const pyEnv = await startServer();
+    pyEnv["mail.channel"].create({
+        channel_member_ids: [[0, 0, { fold_state: "open", partner_id: pyEnv.currentPartnerId }]],
+    });
+    patchUiSize({ size: SIZES.SM });
+    await start();
+    await click("button i[aria-label='Messages']");
+    await click(".o-mail-NotificationItem");
+    assert.containsNone($, ".o-mail-ChatWindow-header.cursor-pointer");
+    click(".o-mail-ChatWindow-header").catch(() => {});
+    await nextAnimationFrame();
+    assert.containsOnce($, ".o-mail-ChatWindow-content"); // content => non-folded
+});
