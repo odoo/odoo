@@ -206,6 +206,49 @@ class TestUBLBE(TestUBLCommon):
         )
         self._test_encoding_in_attachment(invoice.ubl_cii_xml_id, 'ubl_bis3.xml')
 
+    def test_sending_to_public_admin(self):
+        """ A public administration has no VAT, but has an arbitrary number (see:
+        https://pch.gouvernement.lu/fr/peppol.html). When a partner has no VAT, the node PartyTaxScheme should
+        not appear. In addition, the `EndpointID` node should be filled with this arbitrary number (use the field
+        `peppol_endpoint`).
+        """
+        # Setup a public admin in Luxembourg
+        self.partner_2.update({
+            'vat': None,
+            'peppol_endpoint': '00005000041',
+            'peppol_eas': '9938',
+        })
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 2,
+                    'price_unit': 100,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                }
+            ],
+        )
+        self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
+            xpaths=f'''
+                <xpath expr="./*[local-name()='PaymentMeans']/*[local-name()='PaymentID']" position="replace">
+                    <PaymentID>___ignore___</PaymentID>
+                </xpath>
+                <xpath expr=".//*[local-name()='InvoiceLine'][1]/*[local-name()='ID']" position="replace">
+                    <ID>___ignore___</ID>
+                </xpath>
+                <xpath expr=".//*[local-name()='AdditionalDocumentReference']/*[local-name()='Attachment']/*[local-name()='EmbeddedDocumentBinaryObject']" position="attributes">
+                    <attribute name="mimeCode">application/pdf</attribute>
+                    <attribute name="filename">{invoice.invoice_pdf_report_id.name}</attribute>
+                </xpath>
+            ''',
+            expected_file='from_odoo/bis3_out_invoice_public_admin.xml',
+        )
+
     ####################################################
     # Test import
     ####################################################
