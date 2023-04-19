@@ -3477,7 +3477,6 @@ class Properties(Field):
             ]
             for definition in value:
                 definition.pop('definition_changed', None)
-                check_property_field_value_name(definition.get('name', ''))
 
             # update the properties definition on the container
             container = records[self.definition_record]
@@ -3945,6 +3944,8 @@ class PropertiesDefinition(Field):
                     'Some key are not allowed for a properties definition [%s].' %
                     ', '.join(invalid_keys),
                 )
+
+            check_property_field_value_name(property_definition['name'])
 
             required_keys = set(cls.REQUIRED_KEYS) - property_definition_keys
             if required_keys:
