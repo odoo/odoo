@@ -23,11 +23,11 @@
                 </t>
             </t>
             <script type="text/javascript">
-                odoo.define('web.session', function () {
+                odoo.define('web.session', [], function () {
                     return window.top.odoo.__DEBUG__.services['web.session'];
                 });
 
-                odoo.define('root.widget', function (require) {
+                odoo.define('root.widget', ['web.Widget'], function (require) {
                     'use strict';
                     var Widget = require('web.Widget');
                     var widget = new Widget();
@@ -35,7 +35,7 @@
                     return widget;
                 });
 
-                odoo.define('web.core.top', function (require) {
+                odoo.define('web.core.top', ['web.core'], function (require) {
                     var core = require('web.core');
                     core.qweb.templates = window.top.odoo.__DEBUG__.services['web.core'].qweb.templates;
                 });
@@ -44,7 +44,7 @@
         <body class="o_in_iframe">
             <div id="iframe_target"/>
             <script type="text/javascript">
-                odoo.define('web_editor.wysiwyg.iniframe', function (require) {
+                odoo.define('web_editor.wysiwyg.iniframe', [], function (require) {
                     'use strict';
                     if (window.top.<t t-esc="updateIframeId"/>) {
                         window.top.<t t-esc="updateIframeId"/>(<t t-esc="avoidDoubleLoad"/>);

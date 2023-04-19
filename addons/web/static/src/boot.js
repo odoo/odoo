@@ -26,8 +26,6 @@
 (function () {
     "use strict";
 
-    var jobUID = Date.now();
-
     var jobs = [];
     var factories = Object.create(null);
     var jobDeps = [];
@@ -36,8 +34,6 @@
 
     var services = Object.create({});
 
-    var commentRegExp = /(\/\*([\s\S]*?)\*\/|([^:]|^)\/\/(.*)$)/gm;
-    var cjsRequireRegExp = /[^.]\s*require\s*\(\s*["']([^'"\s]+)["']\s*\)/g;
     if (!globalThis.odoo) {
         globalThis.odoo = {};
     }
@@ -180,24 +176,8 @@
         factories: factories,
         services: services,
     };
-    odoo.define = function () {
-        var args = Array.prototype.slice.call(arguments);
-        var name = typeof args[0] === "string" ? args.shift() : "__odoo_job" + jobUID++;
-        var factory = args[args.length - 1];
-        var deps;
-        if (args[0] instanceof Array) {
-            deps = args[0];
-        } else {
-            deps = [];
-            factory
-                .toString()
-                .replace(commentRegExp, "")
-                .replace(cjsRequireRegExp, function (match, dep) {
-                    deps.push(dep);
-                });
-        }
-
-        if (!(deps instanceof Array)) {
+    odoo.define = function (name, deps, factory) {
+        if (!Array.isArray(deps)) {
             throw new Error("Dependencies should be defined by an array", deps);
         }
         if (typeof factory !== "function") {

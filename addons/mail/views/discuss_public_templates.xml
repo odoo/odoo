@@ -26,7 +26,7 @@
                     }
                 </style>
                 <script>
-                    odoo.define('mail.discuss_public_template', function() {
+                    odoo.define('mail.discuss_public_template', [], function() {
                         return {
                             data: <t t-out="json.dumps(data)"/>,
                         };

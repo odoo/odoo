@@ -1,4 +1,4 @@
-odoo.define('web.test_utils', async function (require) {
+odoo.define('web.test_utils', ["web.session", "web.test_utils_create", "web.test_utils_control_panel", "web.test_utils_dom", "web.test_utils_fields", "web.test_utils_file", "web.test_utils_form", "web.test_utils_graph", "web.test_utils_kanban", "web.test_utils_mock", "web.test_utils_modal", "web.test_utils_pivot", "web.tools"], async function (require) {
     "use strict";
 
     /**
