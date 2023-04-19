@@ -3633,7 +3633,26 @@ options.registry.sizing.include({
             $body.on('mouseup', documentMouseUp);
         });
         return defs;
-    }
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+        const nonDraggableClasses = [
+            's_table_of_content_navbar_wrap',
+            's_table_of_content_main',
+        ];
+        if (nonDraggableClasses.some(c => this.$target[0].classList.contains(c))) {
+            const moveHandleEl = this.$overlay[0].querySelector('.o_move_handle');
+            moveHandleEl.classList.add('d-none');
+        }
+    },
 });
 
 options.registry.SwitchableViews = options.Class.extend({
