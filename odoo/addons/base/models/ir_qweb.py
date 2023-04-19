@@ -379,18 +379,18 @@ from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
-from odoo.tools import config, safe_eval, pycompat, SUPPORTED_DEBUGGER
+from odoo.tools import config, safe_eval, pycompat
+from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
 from odoo.tools.misc import str2bool
 from odoo.tools.image import image_data_uri
 from odoo.http import request
-from odoo.modules.module import get_resource_path, get_module_path
 from odoo.tools.profiler import QwebTracker
 from odoo.exceptions import UserError, AccessDenied, AccessError, MissingError, ValidationError
 
 from odoo.addons.base.models.assetsbundle import AssetsBundle
-from odoo.addons.base.models.ir_asset import can_aggregate, STYLE_EXTENSIONS, SCRIPT_EXTENSIONS, TEMPLATE_EXTENSIONS
+from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS
 
 _logger = logging.getLogger(__name__)
 
@@ -2472,21 +2472,15 @@ class IrQWeb(models.AbstractModel):
     @tools.ormcache('bundle', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())')
     def _get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):
         asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
-
         files = []
         remains = []
-        for path, *_ in asset_paths:
-            ext = path.split('.')[-1]
+        for path, full_path, _bundle, last_modified in asset_paths:
+            ext = path.rpartition('.')[2]
             is_js = ext in SCRIPT_EXTENSIONS
             is_xml = ext in TEMPLATE_EXTENSIONS
             is_css = ext in STYLE_EXTENSIONS
             if not is_js and not is_xml and not is_css:
                 continue
-
-            if is_xml:
-                base = get_module_path(bundle.split('.')[0]).rsplit('/', 1)[0]
-                if path.startswith(base):
-                    path = path[len(base):]
 
             mimetype = None
             if is_js:
@@ -2496,14 +2490,14 @@ class IrQWeb(models.AbstractModel):
             elif is_xml:
                 mimetype = 'text/xml'
 
-            if can_aggregate(path):
-                segments = [segment for segment in path.split('/') if segment]
+            if full_path is not EXTERNAL_ASSET:
                 files.append({
                     'atype': mimetype,
                     'url': path,
-                    'filename': get_resource_path(*segments) if segments and segments[0] != '_custom' else None,
+                    'filename': full_path,
                     'content': '',
                     'media': media,
+                    'last_modified': last_modified,
                 })
             else:
                 if is_js:
@@ -2536,14 +2530,14 @@ class IrQWeb(models.AbstractModel):
 
         return (files, remains)
 
-    def _get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True):
-        return AssetsBundle(bundle_name, files, env=env, css=css, js=js)
+    def _get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True, debug=False):
+        return AssetsBundle(bundle_name, files, env=env, css=css, js=js, debug=debug)
 
     def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
         files, remains = self._get_asset_content(bundle, defer_load=defer_load, lazy_load=lazy_load, media=css and media or None)
-        asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js)
+        asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js, debug=debug)
         remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
-        return remains + asset.to_node(css=css, js=js, debug=debug, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
+        return remains + asset.to_node(css=css, js=js, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
 
     def _get_asset_link_urls(self, bundle, debug=False):
         asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)

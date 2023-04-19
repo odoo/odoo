@@ -106,8 +106,8 @@ class IrQWeb(models.AbstractModel):
 
         return irQweb
 
-    def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True):
-        return AssetsBundleMultiWebsite(xmlid, files, env=env)
+    def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True, debug=False):
+        return AssetsBundleMultiWebsite(xmlid, files, env=env, css=css, js=js, debug=debug)
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):

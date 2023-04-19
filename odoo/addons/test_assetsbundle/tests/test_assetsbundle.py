@@ -33,50 +33,68 @@ class TestAddonPaths(TransactionCase):
         asset_paths = AssetPaths()
         self.assertFalse(asset_paths.list)
 
-        asset_paths.append(['a', 'c', 'd'], 'module1', 'bundle1')
+        asset_paths.append([
+            ('/home/user/odoo/addons/web/a', '/web/a', 1),
+            ('/home/user/odoo/addons/web/c', '/web/c', 1),
+            ('/home/user/odoo/addons/web/d', '/web/d', 1),
+        ], 'bundle1')
         self.assertEqual(asset_paths.list, [
-            ('a', 'module1', 'bundle1'),
-            ('c', 'module1', 'bundle1'),
-            ('d', 'module1', 'bundle1'),
+            ('/home/user/odoo/addons/web/a', '/web/a', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/c', '/web/c', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/d', '/web/d', 'bundle1', 1),
         ])
 
         # append with a duplicate of 'c'
-        asset_paths.append(['c', 'f'], 'module2', 'bundle2')
+        asset_paths.append([
+            ('/home/user/odoo/addons/web/c', '/web/c', 1),
+            ('/home/user/odoo/addons/web/f', '/web/f', 1),
+        ], 'bundle2')
         self.assertEqual(asset_paths.list, [
-            ('a', 'module1', 'bundle1'),
-            ('c', 'module1', 'bundle1'),
-            ('d', 'module1', 'bundle1'),
-            ('f', 'module2', 'bundle2'),
+            ('/home/user/odoo/addons/web/a', '/web/a', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/c', '/web/c', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/d', '/web/d', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/f', '/web/f', 'bundle2', 1),
         ])
 
         # insert with a duplicate of 'c' after 'c'
-        asset_paths.insert(['c', 'e'], 'module3', 'bundle3', 3)
+        asset_paths.insert([
+            ('/home/user/odoo/addons/web/c', '/web/c', 1),
+            ('/home/user/odoo/addons/web/e', '/web/e', 1),
+        ], 'bundle3', 3)
         self.assertEqual(asset_paths.list, [
-            ('a', 'module1', 'bundle1'),
-            ('c', 'module1', 'bundle1'),
-            ('d', 'module1', 'bundle1'),
-            ('e', 'module3', 'bundle3'),
-            ('f', 'module2', 'bundle2'),
+            ('/home/user/odoo/addons/web/a', '/web/a', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/c', '/web/c', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/d', '/web/d', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/e', '/web/e', 'bundle3', 1),
+            ('/home/user/odoo/addons/web/f', '/web/f', 'bundle2', 1),
         ])
 
         # insert with a duplicate of 'd' before 'd'
-        asset_paths.insert(['b', 'd'], 'module4', 'bundle4', 1)
+        asset_paths.insert([
+            ('/home/user/odoo/addons/web/b', '/web/b', 1),
+            ('/home/user/odoo/addons/web/d', '/web/d', 1)
+        ], 'bundle4', 1)
         self.assertEqual(asset_paths.list, [
-            ('a', 'module1', 'bundle1'),
-            ('b', 'module4', 'bundle4'),
-            ('c', 'module1', 'bundle1'),
-            ('d', 'module1', 'bundle1'),
-            ('e', 'module3', 'bundle3'),
-            ('f', 'module2', 'bundle2'),
+
+            ('/home/user/odoo/addons/web/a', '/web/a', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/b', '/web/b', 'bundle4', 1),
+            ('/home/user/odoo/addons/web/c', '/web/c', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/d', '/web/d', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/e', '/web/e', 'bundle3', 1),
+            ('/home/user/odoo/addons/web/f', '/web/f', 'bundle2', 1),
         ])
 
         # remove
-        asset_paths.remove(['c', 'd', 'g'], 'module5', 'bundle5')
+        asset_paths.remove([
+            ('/home/user/odoo/addons/web/c', '/web/c', 1),
+            ('/home/user/odoo/addons/web/d', '/web/d', 1),
+            ('/home/user/odoo/addons/web/g', '/web/g', 1)
+        ], 'bundle5')
         self.assertEqual(asset_paths.list, [
-            ('a', 'module1', 'bundle1'),
-            ('b', 'module4', 'bundle4'),
-            ('e', 'module3', 'bundle3'),
-            ('f', 'module2', 'bundle2'),
+            ('/home/user/odoo/addons/web/a', '/web/a', 'bundle1', 1),
+            ('/home/user/odoo/addons/web/b', '/web/b', 'bundle4', 1),
+            ('/home/user/odoo/addons/web/e', '/web/e', 'bundle3', 1),
+            ('/home/user/odoo/addons/web/f', '/web/f', 'bundle2', 1),
         ])
 
 
@@ -106,16 +124,22 @@ class FileTouchable(AddonManifestPatched):
 
 
 class TestJavascriptAssetsBundle(FileTouchable):
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        # this is mainly to avoid tests breaking when executed after pre-generate
+        cls.env['ir.attachment'].search([('url', '=like', '/web/assets/%test_assetsbundle%')]).unlink()
+
     def setUp(self):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_name = 'test_assetsbundle.bundle1'
         self.cssbundle_name = 'test_assetsbundle.bundle2'
         self.env['res.lang']._activate_lang('ar_SY')
 
-    def _get_asset(self, bundle, env=None):
+    def _get_asset(self, bundle, env=None, debug=''):
         env = (env or self.env)
         files, _ = env['ir.qweb']._get_asset_content(bundle)
-        return AssetsBundle(bundle, files, env=env)
+        return AssetsBundle(bundle, files, env=env, debug=debug)
 
     def _any_ira_for_bundle(self, extension, lang=None):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
@@ -180,7 +204,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
                          "there should be one minified attachment associated to this bundle")
 
-        version0 = bundle0.version
+        version0 = bundle0.get_version('js')
         ira0 = self._any_ira_for_bundle('min.js')
         date0 = ira0.create_date
 
@@ -190,7 +214,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
                          "there should be one minified attachment associated to this bundle")
 
-        version1 = bundle1.version
+        version1 = bundle1.get_version('js')
         ira1 = self._any_ira_for_bundle('min.js')
         date1 = ira1.create_date
 
@@ -202,18 +226,18 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def test_03_date_invalidation(self):
         """ Checks that a bundle is invalidated when one of its assets' modification date is changed.
         """
-        bundle0 = self._get_asset(self.jsbundle_name)
+        bundle0 = self._get_asset(self.jsbundle_name, debug="assets")
         bundle0.js()
-        last_modified0 = bundle0.last_modified_combined
-        version0 = bundle0.version
+        last_modified0 = bundle0.get_checksum('js')
+        version0 = bundle0.get_version('js')
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
-        bundle1 = self._get_asset(self.jsbundle_name)
+        bundle1 = self._get_asset(self.jsbundle_name, debug="assets")
 
         with self._touch(path):
             bundle1.js()
-            last_modified1 = bundle1.last_modified_combined
-            version1 = bundle1.version
+            last_modified1 = bundle1.get_checksum('js')
+            version1 = bundle1.get_version('js')
             self.assertNotEqual(last_modified0, last_modified1,
                                 "the creation date of the ir.attachment should change because the bundle has changed.")
             self.assertNotEqual(version0, version1,
@@ -230,7 +254,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         bundle0 = self._get_asset(self.jsbundle_name)
         bundle0.js()
         files0 = bundle0.files
-        version0 = bundle0.version
+        version0 = bundle0.get_version('js')
 
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
                          "there should be one minified attachment associated to this bundle")
@@ -244,7 +268,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         bundle1 = self._get_asset(self.jsbundle_name)
         bundle1.js()
         files1 = bundle1.files
-        version1 = bundle1.version
+        version1 = bundle1.get_version('js')
 
         self.assertNotEqual(files0, files1,
                             "the list of files should be different because a file has been added to the bundle")
@@ -277,8 +301,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Checks that a bundle rendered in debug 1 mode outputs non-minified assets
             and create an non-minified ir.attachment.
         """
-        debug_bundle = self._get_asset(self.jsbundle_name)
-        nodes = debug_bundle.to_node(debug='1')
+        debug_bundle = self._get_asset(self.jsbundle_name, debug='1')
+        nodes = debug_bundle.to_node()
         content = self._node_to_list(nodes)
         # there should be a minified file
         self.assertEqual(content[3].count('test_assetsbundle.bundle1.min.js'), 1,
@@ -296,8 +320,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Checks that a bundle rendered in debug assets mode outputs non-minified assets
             and create an non-minified ir.attachment at the .
         """
-        debug_bundle = self._get_asset(self.jsbundle_name)
-        nodes = debug_bundle.to_node(debug='assets')
+        debug_bundle = self._get_asset(self.jsbundle_name, debug='assets')
+        nodes = debug_bundle.to_node()
         content = self._node_to_list(nodes)
         # there should be a non-minified file (not .min.js)
         self.assertEqual(content[3].count('test_assetsbundle.bundle1.js'), 1,
@@ -327,7 +351,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         self.assertEqual(len(self._any_ira_for_bundle('min.css')), 1)
 
-        version0 = bundle0.version
+        version0 = bundle0.get_version('css')
         ira0 = self._any_ira_for_bundle('min.css')
         date0 = ira0.create_date
 
@@ -336,7 +360,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         self.assertEqual(len(self._any_ira_for_bundle('min.css')), 1)
 
-        version1 = bundle1.version
+        version1 = bundle1.get_version('css')
         ira1 = self._any_ira_for_bundle('min.css')
         date1 = ira1.create_date
 
@@ -350,7 +374,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         bundle0 = self._get_asset(self.cssbundle_name)
         bundle0.css()
         files0 = bundle0.files
-        version0 = bundle0.version
+        version0 = bundle0.get_version('css')
 
         self.assertEqual(len(self._any_ira_for_bundle('min.css')), 1)
 
@@ -363,7 +387,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         bundle1 = self._get_asset(self.cssbundle_name)
         bundle1.css()
         files1 = bundle1.files
-        version1 = bundle1.version
+        version1 = bundle1.get_version('css')
 
         self.assertNotEqual(files0, files1)
         self.assertNotEqual(version0, version1)
@@ -374,8 +398,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def test_12_css_debug(self):
         """ Check that a bundle in debug mode outputs non-minified assets.
         """
-        debug_bundle = self._get_asset(self.cssbundle_name)
-        nodes = debug_bundle.to_node(debug='assets')
+        debug_bundle = self._get_asset(self.cssbundle_name, debug='assets')
+        nodes = debug_bundle.to_node()
         content = self._node_to_list(nodes)
         # find back one of the original asset file
         self.assertIn('/web/assets/debug/test_assetsbundle.bundle2.css', content)
@@ -433,7 +457,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         self.assertEqual(len(self._any_ira_for_bundle('min.css')), 1)
 
-        ltr_version0 = ltr_bundle0.version
+        ltr_version0 = ltr_bundle0.get_version('css')
         ltr_ira0 = self._any_ira_for_bundle('min.css')
         ltr_date0 = ltr_ira0.create_date
 
@@ -442,7 +466,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         self.assertEqual(len(self._any_ira_for_bundle('min.css')), 1)
 
-        ltr_version1 = ltr_bundle1.version
+        ltr_version1 = ltr_bundle1.get_version('css')
         ltr_ira1 = self._any_ira_for_bundle('min.css')
         ltr_date1 = ltr_ira1.create_date
 
@@ -455,7 +479,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         self.assertEqual(len(self._any_ira_for_bundle('min.css', lang='ar_SY')), 1)
 
-        rtl_version0 = rtl_bundle0.version
+        rtl_version0 = rtl_bundle0.get_version('css')
         rtl_ira0 = self._any_ira_for_bundle('min.css', lang='ar_SY')
         rtl_date0 = rtl_ira0.create_date
 
@@ -464,7 +488,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
 
         self.assertEqual(len(self._any_ira_for_bundle('min.css', lang='ar_SY')), 1)
 
-        rtl_version1 = rtl_bundle1.version
+        rtl_version1 = rtl_bundle1.get_version('css')
         rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
         rtl_date1 = rtl_ira1.create_date
 
@@ -484,35 +508,35 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Checks that both css bundles are invalidated when one of its assets' modification date is changed
         """
         # Assets access for en_US language
-        ltr_bundle0 = self._get_asset(self.cssbundle_name)
+        ltr_bundle0 = self._get_asset(self.cssbundle_name, debug='assets')
         ltr_bundle0.css()
-        ltr_last_modified0 = ltr_bundle0.last_modified_combined
-        ltr_version0 = ltr_bundle0.version
+        ltr_last_modified0 = ltr_bundle0.get_checksum('css')
+        ltr_version0 = ltr_bundle0.get_version('css')
 
         # Assets access for ar_SY language
-        rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
+        rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}), debug='assets')
         rtl_bundle0.css()
-        rtl_last_modified0 = rtl_bundle0.last_modified_combined
-        rtl_version0 = rtl_bundle0.version
+        rtl_last_modified0 = rtl_bundle0.get_checksum('css')
+        rtl_version0 = rtl_bundle0.get_version('css')
 
         # Touch test_cssfile1.css
         # Note: No lang specific context given while calling _get_asset so it will load assets for en_US
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
-        ltr_bundle1 = self._get_asset(self.cssbundle_name)
+        ltr_bundle1 = self._get_asset(self.cssbundle_name, debug='assets')
 
         with self._touch(path):
             ltr_bundle1.css()
-            ltr_last_modified1 = ltr_bundle1.last_modified_combined
-            ltr_version1 = ltr_bundle1.version
+            ltr_last_modified1 = ltr_bundle1.get_checksum('css')
+            ltr_version1 = ltr_bundle1.get_version('css')
             ltr_ira1 = self._any_ira_for_bundle('min.css')
             self.assertNotEqual(ltr_last_modified0, ltr_last_modified1)
             self.assertNotEqual(ltr_version0, ltr_version1)
 
-            rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
+            rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}), debug='assets')
 
             rtl_bundle1.css()
-            rtl_last_modified1 = rtl_bundle1.last_modified_combined
-            rtl_version1 = rtl_bundle1.version
+            rtl_last_modified1 = rtl_bundle1.get_checksum('css')
+            rtl_version1 = rtl_bundle1.get_version('css')
             rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
             self.assertNotEqual(rtl_last_modified0, rtl_last_modified1)
             self.assertNotEqual(rtl_version0, rtl_version1)
@@ -534,12 +558,12 @@ class TestJavascriptAssetsBundle(FileTouchable):
         ltr_bundle0 = self._get_asset(self.cssbundle_name)
         ltr_bundle0.css()
         ltr_files0 = ltr_bundle0.files
-        ltr_version0 = ltr_bundle0.version
+        ltr_version0 = ltr_bundle0.get_version('css')
 
         rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
         rtl_bundle0.css()
         rtl_files0 = rtl_bundle0.files
-        rtl_version0 = rtl_bundle0.version
+        rtl_version0 = rtl_bundle0.get_version('css')
 
         css_bundles = self.env['ir.attachment'].search([
             ('url', '=like', '/web/assets/%-%/{0}%.{1}'.format(self.cssbundle_name, 'min.css'))
@@ -555,7 +579,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         ltr_bundle1 = self._get_asset(self.cssbundle_name)
         ltr_bundle1.css()
         ltr_files1 = ltr_bundle1.files
-        ltr_version1 = ltr_bundle1.version
+        ltr_version1 = ltr_bundle1.get_version('css')
         ltr_ira1 = self._any_ira_for_bundle('min.css')
 
         self.assertNotEqual(ltr_files0, ltr_files1)
@@ -564,7 +588,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
         rtl_bundle1.css()
         rtl_files1 = rtl_bundle1.files
-        rtl_version1 = rtl_bundle1.version
+        rtl_version1 = rtl_bundle1.get_version('css')
         rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
 
         self.assertNotEqual(rtl_files0, rtl_files1)
@@ -582,8 +606,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def test_19_css_in_debug_assets(self):
         """ Checks that a bundle rendered in debug mode(assets) with right to left language direction stores css files in assets bundle.
         """
-        debug_bundle = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
-        nodes = debug_bundle.to_node(debug='assets')
+        debug_bundle = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}), debug='assets')
+        nodes = debug_bundle.to_node()
         content = self._node_to_list(nodes)
 
         # there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets
@@ -751,24 +775,32 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
         self.patch(AssetsBundle, '_unlink_attachments', unlink)
 
     def _get_asset(self):
-        files, _ = self.env['ir.qweb']._get_asset_content(self.stylebundle_name)
-        return AssetsBundle(self.stylebundle_name, files, env=self.env)
+        with patch.object(type(self.env['ir.asset']), '_get_installed_addons_list', Mock(return_value=self.installed_modules)):
+            files, _ = self.env['ir.qweb']._get_asset_content(self.stylebundle_name)
+        return AssetsBundle(self.stylebundle_name, files, env=self.env, debug='assets')
 
-    def _bundle(self, asset, should_create, should_unlink):
+    def _bundle(self, asset, should_create, should_unlink, reason=''):
         self.counter.clear()
-        asset.to_node(debug='assets')
-        self.assertEqual(self.counter['create'], 2 if should_create else 0)
-        self.assertEqual(self.counter['unlink'], 2 if should_unlink else 0)
+        asset.to_node()
+        if should_create:
+            self.assertEqual(self.counter['create'], 2, f'An attachment should have been created {reason}')
+        else:
+            self.assertEqual(self.counter['create'], 0, f'No attachment should have been created {reason}')
+
+        if should_unlink:
+            self.assertEqual(self.counter['unlink'], 2, f'An attachment should have been unlink {reason}')
+        else:
+            self.assertEqual(self.counter['unlink'], 0, f'No attachment should have been unlink {reason}')
 
     def test_01_debug_mode_assets(self):
         """ Checks that the ir.attachments records created for compiled assets in debug mode
         are correctly invalidated.
         """
         # Compile for the first time
-        self._bundle(self._get_asset(), True, False)
+        self._bundle(self._get_asset(), True, False, '(First access)')
 
         # Compile a second time, without changes
-        self._bundle(self._get_asset(), False, False)
+        self._bundle(self._get_asset(), False, False, '(Second access, no change)')
 
         # Touch the file and compile a third time
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'scss', 'test_file1.scss')
@@ -1065,7 +1097,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'name': 'test_jsfile4',
             'bundle': 'test_assetsbundle.manifest2',
             'directive': 'remove',
-            'path': 'test_assetsbundle/static/src/**/*',
+            'path': 'test_assetsbundle/static/src/*/**',
         })
         self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.manifest2.js')], order='create_date DESC', limit=1)
@@ -1758,10 +1790,10 @@ class TestAssetsManifest(AddonManifestPatched):
         view = self.make_asset_view('test_assetsbundle.irassetsec')
         self.env['ir.qweb']._render(view.id)
         attach = self.env['ir.attachment'].search([('name', 'ilike', 'test_assetsbundle.irassetsec')], order='create_date DESC', limit=1)
-        self.assertFalse(attach.exists())
+        self.assertIn(b"Could not get content for /test_assetsbundle/../../tests/dummy.js", attach.exists().raw)
 
     @mute_logger('odoo.addons.base.models.ir_asset')
-    def test_32(self):
+    def test_32_a_relative_path_in_addon(self):
         path_to_dummy = '../../tests/dummy.xml'
         me = pathlib.Path(__file__).parent.absolute()
         file_path = me.joinpath("..", path_to_dummy)  # assuming me = test_assetsbundle/tests
@@ -1773,8 +1805,25 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
 
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules))
-        self.assertFalse(files)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        self.assertEqual(files, [('/test_assetsbundle/../../tests/dummy.xml', None, 'test_assetsbundle.irassetsec', None)])
+        # TODO, validate this behaviour
+        # the idea is that if the second element is False (not None) it will be added to the assetbundle, but considered in any case as an attachment url)
+
+    @mute_logger('odoo.addons.base.models.ir_asset')
+    def test_32_b_relative_path_outsied_addon(self):
+        path_to_dummy = '../../tests/dummy.xml'
+        me = pathlib.Path(__file__).parent.absolute()
+        file_path = me.joinpath("..", path_to_dummy)  # assuming me = test_assetsbundle/tests
+        self.assertTrue(os.path.isfile(file_path))
+
+        self.env['ir.asset'].create({
+            'name': '1',
+            'bundle': 'test_assetsbundle.irassetsec',
+            'path': '%s' % path_to_dummy,
+        })
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        self.assertEqual(files, [('../../tests/dummy.xml', None, 'test_assetsbundle.irassetsec', None)])
 
     def test_33(self):
         self.manifests['notinstalled_module'] = {
@@ -1822,8 +1871,8 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/data/ir_asset.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules))
-        self.assertFalse(files)
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        self.assertEqual(files, [('/test_assetsbundle/data/ir_asset.xml', None, 'test_assetsbundle.irassetsec', None)])
 
     def test_36(self):
         self.env['ir.asset'].create({
@@ -1831,9 +1880,17 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/static/accessible.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', addons=list(self.installed_modules))
-        self.assertEqual(len(files), 1)
-        self.assertTrue('test_assetsbundle/static/accessible.xml' in files[0][0])
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        modified = files[0][3]
+
+        base_path = __file__.replace('/tests/test_assetsbundle.py', '')
+
+        self.assertEqual(files, [(
+            '/test_assetsbundle/static/accessible.xml',
+            f'{base_path}/static/accessible.xml',
+            'test_assetsbundle.irassetsec',
+            modified
+        )])
 
     def test_37_path_can_be_an_attachment(self):
         scss_code = base64.b64encode(b"""

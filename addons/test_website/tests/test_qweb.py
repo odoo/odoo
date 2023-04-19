@@ -34,35 +34,42 @@ class TestQweb(TransactionCaseWithUserDemo):
         demo_env = self.env(user=demo)
 
         html = demo_env['ir.qweb']._render('test_website.test_template', {"user": demo}, website_id=website.id)
-        asset_data = etree.HTML(html).xpath('//*[@data-asset-bundle]')[0]
-        asset_xmlid = asset_data.attrib.get('data-asset-bundle')
-        asset_version = asset_data.attrib.get('data-asset-version')
+        asset_bundle_xmlid = 'test_website.test_bundle'
+        qweb = self.env['ir.qweb']
+        files, _ = qweb._get_asset_content(asset_bundle_xmlid)
+        bundle = qweb._get_asset_bundle(asset_bundle_xmlid, files, env=self.env, css=True, js=True)
+
+        asset_version_js = bundle.get_version('js')
+        asset_version_css = bundle.get_version('css')
 
         html = html.strip()
         html = re.sub(r'\?unique=[^"]+', '', html).encode('utf8')
 
-        attachments = demo_env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/test_website.test_bundle.%')])
-        self.assertEqual(len(attachments), 2)
+        css_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/%-{asset_version_css}/{website.id}/test_website.test_bundle.%')])
+        js_attachement = demo_env['ir.attachment'].search([('url', '=like', f'/web/assets/%-{asset_version_js}/{website.id}/test_website.test_bundle.%')])
+        self.assertEqual(len(css_attachement), 1)
+        self.assertEqual(len(js_attachement), 1)
 
         format_data = {
-            "js": attachments[0].url,
-            "css": attachments[1].url,
+            "css": css_attachement.url,
+            "js": js_attachement.url,
             "user_id": demo.id,
             "filename": "Marc%20Demo",
             "alt": "Marc Demo",
-            "asset_xmlid": asset_xmlid,
-            "asset_version": asset_version,
+            "asset_xmlid": asset_bundle_xmlid,
+            "asset_version_css": asset_version_css,
+            "asset_version_js": asset_version_js,
         }
         self.assertHTMLEqual(html, ("""<!DOCTYPE html>
 <html>
     <head>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version)s"/>
+        <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version_css)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="http://test.cdn%(js)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version)s" onerror="__odooAssetError=1"></script>
+        <script type="text/javascript" src="http://test.cdn%(js)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version_js)s" onerror="__odooAssetError=1"></script>
     </head>
     <body>
         <img src="http://test.external.link/img.png" loading="lazy"/>
