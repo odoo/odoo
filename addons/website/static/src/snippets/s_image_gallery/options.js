@@ -179,7 +179,7 @@ options.registry.gallery = options.Class.extend({
         var $container = this._replaceContent($row);
 
         imgs.forEach((img, index) => {
-            var $img = $(img);
+            const $img = $(img.cloneNode());
             var $col = $('<div/>', {class: colClass});
             $col.append($img).appendTo($row);
             if ((index + 1) % columns === 0) {
