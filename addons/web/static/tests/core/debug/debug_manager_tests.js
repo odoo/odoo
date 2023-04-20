@@ -30,6 +30,7 @@ import {
 import { createWebClient, doAction, getActionManagerServerData } from "../../webclient/helpers";
 import { openViewItem } from "@web/webclient/debug_items";
 import { editSearchView, editView, setDefaults, viewMetadata } from "@web/views/debug_items";
+import { fieldService } from "@web/core/field_service";
 
 import { Component, xml } from "@odoo/owl";
 const { prepareRegistriesWithCleanup } = utils;
@@ -56,6 +57,7 @@ QUnit.module("DebugMenu", (hooks) => {
             .add("orm", ormService)
             .add("dialog", makeFakeDialogService())
             .add("localization", makeFakeLocalizationService())
+            .add("field", fieldService)
             .add("command", fakeCommandService);
         const mockRPC = async (route, args) => {
             if (args.method === "check_access_rights") {

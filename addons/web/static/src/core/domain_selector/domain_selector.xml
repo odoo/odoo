@@ -9,7 +9,7 @@
                     <span>Match <strong>all records</strong></span>
                     <t t-if="!props.readonly">
                         <button class="btn btn-sm btn-primary o_domain_add_first_node_button ms-1" t-on-click="() => this.insertRootLeaf(node)">
-                            <i class="fa fa-plus"/> Add filter
+                            <i class="fa fa-plus"/> Add condition
                         </button>
                     </t>
                 </t>
@@ -19,7 +19,7 @@
                 </t>
                 <t t-else="">
                     <span>Match records with </span>
-                    <t t-call="web._DomainSelector.branch.operator" />
+                    <t t-call="web._DomainSelector.branch.connector" />
                     <span> of the following rules:</span>
                     <t t-call="web._DomainSelector.branch.children" />
                 </t>
@@ -33,7 +33,7 @@
             <t t-if="props.isDebugMode and (!tree.isSupported or !props.readonly)">
                 <label class="o_domain_debug_container">
                     <span class="small"># Code editor</span>
-                    <textarea type="text" class="o_domain_debug_input" t-att-readonly="props.readonly" spellcheck="false" t-att-value="props.debugValue or props.value" t-on-change="(ev) => this.onDebugValueChange(ev.target.value)" />
+                    <textarea type="text" class="o_domain_debug_input" t-att-readonly="props.readonly" spellcheck="false" t-att-value="props.domain" t-on-change="(ev) => this.onDebugValueChange(ev.target.value)" />
                 </label>
             </t>
         </div>
@@ -80,31 +80,27 @@
                 <t t-if="!props.readonly">
                     <t t-call="web._DomainSelector.controls" />
                 </t>
-                <t t-call="web._DomainSelector.branch.operator" />
+                <t t-call="web._DomainSelector.branch.connector" />
                 <span class="ml4">of:</span>
             </div>
             <t t-call="web._DomainSelector.branch.children" />
         </div>
     </t>
 
-    <t t-name="web._DomainSelector.branch.operator" owl="1">
+    <t t-name="web._DomainSelector.branch.connector" owl="1">
         <t t-if="props.readonly">
             <strong>
-                <t t-if="node.operator === 'AND'">all</t>
-                <t t-elif="node.operator === 'OR'">any</t>
-                <t t-elif="node.operator === 'NOT'">none</t>
+                <t t-esc="node.title"/>
             </strong>
         </t>
         <t t-else="">
-            <div class="d-inline-flex o_domain_tree_operator_selector" aria-atomic="true">
-                <Dropdown togglerClass="'btn btn-link btn-sm btn-primary py-0 px-1 o_domain_tree_operator_caret'">
+            <div class="d-inline-flex o_domain_tree_connector_selector" aria-atomic="true">
+                <Dropdown togglerClass="'btn btn-link btn-sm btn-primary py-0 px-1 o_domain_tree_connector_caret'">
                     <t t-set-slot="toggler">
-                        <t t-if="node.operator === 'AND'">all</t>
-                        <t t-elif="node.operator === 'OR'">any</t>
-                        <t t-elif="node.operator === 'NOT'">none</t>
+                        <t t-esc="node.title"/>
                     </t>
-                    <DropdownItem onSelected="() => this.updateBranchOperator(node, 'AND')">all</DropdownItem>
-                    <DropdownItem onSelected="() => this.updateBranchOperator(node, 'OR')">any</DropdownItem>
+                    <DropdownItem onSelected="() => this.updateBranchConnector(node, 'AND')">all</DropdownItem>
+                    <DropdownItem onSelected="() => this.updateBranchConnector(node, 'OR')">any</DropdownItem>
                 </Dropdown>
             </div>
         </t>
@@ -138,36 +134,37 @@
     </t>
 
     <t t-name="web._DomainSelector.leaf:readonly" owl="1">
-        <ModelFieldSelector path="node.field.name" resModel="props.resModel" readonly="true" />
-        <t t-if="typeof node.value === 'boolean'">
-            is <t t-if="node.value ? ['is_not', 'not_equal'].includes(node.operator.key) : ['is', 'equal'].includes(node.operator.key)"> not </t> set
-        </t>
+        <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="true" />
+        <t t-if="typeof node.value === 'boolean'">is<t t-if="node.value ? ['is_not', 'not_equal'].includes(node.operatorInfo.key) : ['is', 'equal'].includes(node.operatorInfo.key)"> not</t> set</t>
         <t t-else="">
-            <span class="o_domain_leaf_operator"> <t t-esc="node.operator.label" /></span>
+            <span class="o_domain_leaf_operator"> <t t-esc="node.operatorInfo.label" /></span>
             <t t-set="values" t-value="Array.isArray(node.value) ? node.value : [node.value]" />
+            <t t-set="operator" t-value="node.operatorInfo.key" />
+            <t t-set="connector" t-value="node.operatorInfo.key === 'between' ? 'and' : 'or'" />
             <t t-foreach="values" t-as="value" t-key="value_index">
                 <span class="o_domain_leaf_value text-primary">
                     <t t-if="typeof value === 'string'"> "<t t-esc="value"/>"</t>
+                    <t t-elif="isExprValue(value)"> <t t-esc="node.value.expr"/></t>
                     <t t-else=""> <t t-esc="value"/></t>
                 </span>
-                <t t-if="!value_last"> or </t>
+                <t t-if="!value_last"> <t t-esc="connector" /> </t>
             </t>
         </t>
     </t>
 
     <t t-name="web._DomainSelector.leaf:editable" owl="1">
-        <ModelFieldSelector path="node.field.name" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updateField(node, path, fieldInfo)" isDebugMode="props.isDebugMode" />
+        <ModelFieldSelector path="node.pathInfo.path" resModel="props.resModel" readonly="false" update="(path, fieldInfo) => this.updatePath(node, path, fieldInfo)" isDebugMode="props.isDebugMode" />
         <div>
             <select class="o_domain_leaf_operator_select o_input text-truncate pe-3" t-on-change="(ev) => this.updateLeafOperator(node, ev.target.value)">
                 <t t-foreach="getOperatorsInfo(node)" t-as="operator" t-key="operator.key">
-                    <option t-att-value="operator.key" t-att-selected="node.operator.key === operator.key" t-esc="operator_value.label" />
+                    <option t-att-value="operator.key" t-att-selected="node.operatorInfo.key === operator.key" t-esc="operator_value.label" />
                 </t>
             </select>
         </div>
-        <t t-if="node.operator.valueMode !== 'none'">
+
+        <t t-if="node.operatorInfo.valueCount">
             <div class="o_ds_value_cell">
-                <t t-set="editor" t-value="getEditorInfo(node)" />
-                <t t-component="editor.component" t-props="editor.props({ value: node.value, update: (value) => this.updateLeafValue(node, value), field: node.field })" />
+                <Editor info="getEditorInfo(node)" value="node.value" update="(value) => this.updateLeafValue(node, value)" fieldDef="node.pathInfo.fieldDef" onExprRemove="() => this.removeExprValue(node)" />
             </div>
         </t>
     </t>

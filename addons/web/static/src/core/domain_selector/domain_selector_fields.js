@@ -13,10 +13,20 @@ import { evaluateExpr, formatAST } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
 import { registry } from "@web/core/registry";
 import { DateTimeInput } from "../datetime/datetime_input";
+import { DomainValueExpr } from "./domain_selector_nodes";
 
 const { DateTime } = luxon;
 
 // ============================================================================
+
+export class Editor extends Component {
+    static props = ["info", "value", "update", "fieldDef?", "onExprRemove"];
+    static template = "web.DomainSelector.Editor";
+
+    get isExprValue() {
+        return this.props.value instanceof DomainValueExpr;
+    }
+}
 
 class Input extends Component {
     static props = ["value", "update"];
@@ -30,6 +40,7 @@ class Select extends Component {
     deserialize(value) {
         return JSON.parse(value);
     }
+
     serialize(value) {
         return JSON.stringify(value);
     }
@@ -41,6 +52,10 @@ class TagInput extends Component {
 
     setup() {
         this.inputRef = useRef("input");
+    }
+
+    getTagValue(tag) {
+        return tag instanceof DomainValueExpr ? tag.expr : tag;
     }
 
     removeTag(tagIndex) {
@@ -61,6 +76,34 @@ class TagInput extends Component {
     }
 }
 
+class Range extends Component {
+    static props = ["value", "update", "component", "subProps", "getValueOnExprRemove"];
+    static template = "web.DomainSelector.Range";
+    static components = { Editor };
+
+    get editorInfo() {
+        return { component: this.props.component, extractProps: this.props.subProps };
+    }
+
+    update(index, newValue) {
+        const result = [...this.props.value];
+        result[index] = newValue;
+        return this.props.update(result);
+    }
+
+    getValue(index) {
+        return this.props.value[index];
+    }
+
+    getUpdater(index) {
+        return (newValue) => this.update(index, newValue);
+    }
+
+    getExprRemover(index) {
+        return () => this.update(index, this.props.getValueOnExprRemove());
+    }
+}
+
 // ============================================================================
 
 const parsers = registry.category("parsers");
@@ -76,7 +119,7 @@ function parseValue(fieldType, value) {
 function makeEditor(component, props) {
     return {
         component,
-        props: props || (({ value, update }) => ({ value, update })),
+        extractProps: props || (({ value, update }) => ({ value, update })),
     };
 }
 
@@ -138,6 +181,19 @@ const BOOLEAN = {
 
 // ----------------------------------------------------------------------------
 
+const DATETIME_EDITOR_BETWEEN = makeEditor(Range, ({ value, update, fieldDef }) => ({
+    value,
+    update,
+    getValueOnExprRemove: () => genericSerializeDate(fieldDef.type, DateTime.local()),
+    component: DateTimeInput,
+    subProps: ({ value, update }) => ({
+        value: genericDeserializeDate(fieldDef.type, value),
+        type: fieldDef.type,
+        onApply: (value) =>
+            update(value ? genericSerializeDate(fieldDef.type, value) : DateTime.local()),
+    }),
+}));
+
 const DATETIME = {
     operators: [
         "equal",
@@ -146,16 +202,18 @@ const DATETIME = {
         "greater_equal",
         "less_than",
         "less_equal",
+        "between",
         "set",
         "not_set",
     ],
     editors: {
-        default: makeEditor(DateTimeInput, ({ field, value, update }) => ({
-            value: genericDeserializeDate(field.type, value),
-            type: field.type,
+        default: makeEditor(DateTimeInput, ({ value, update, fieldDef }) => ({
+            value: genericDeserializeDate(fieldDef.type, value),
+            type: fieldDef.type,
             onApply: (value) =>
-                update(value ? genericSerializeDate(field.type, value) : DateTime.local()),
+                update(value ? genericSerializeDate(fieldDef.type, value) : DateTime.local()),
         })),
+        between: DATETIME_EDITOR_BETWEEN,
     },
     defaultValue: ({ type }) => genericSerializeDate(type, DateTime.local()),
 };
@@ -163,7 +221,7 @@ const DATETIME = {
 // ----------------------------------------------------------------------------
 
 const TEXT = {
-    operators: ["equal", "not_equal", "ilike", "not_ilike", "set", "not_set", "in", "not_in"],
+    operators: ["equal", "not_equal", "ilike", "not_ilike", "in", "not_in", "set", "not_set"],
     editors: {
         default: makeEditor(Input),
         in: makeEditor(TagInput),
@@ -182,15 +240,26 @@ const NUMBER = {
         "greater_equal",
         "less_than",
         "less_equal",
+        "between",
         "ilike",
         "not_ilike",
         "set",
         "not_set",
     ],
     editors: {
-        default: makeEditor(Input, ({ value, update, field }) => ({
-            value: `${value}`,
-            update: (value) => update(parseValue(field.type, value)),
+        default: makeEditor(Input, ({ value, update, fieldDef }) => ({
+            value: String(value),
+            update: (value) => update(parseValue(fieldDef.type, value)),
+        })),
+        between: makeEditor(Range, ({ value, update, fieldDef }) => ({
+            value,
+            update,
+            getValueOnExprRemove: () => 1,
+            component: Input,
+            subProps: ({ value, update }) => ({
+                value: String(value),
+                update: (newValue) => update(parseValue(fieldDef.type, newValue)),
+            }),
         })),
     },
     defaultValue: () => 1,
@@ -198,10 +267,19 @@ const NUMBER = {
 
 // ----------------------------------------------------------------------------
 
+const RELATIONAL_EDITOR_EQUALITY = makeEditor(Input, ({ value, update }) => ({
+    value: `${value}`,
+    update: (value) => update(parseValue("integer", value)),
+}));
+
 const RELATIONAL = {
     operators: ["equal", "not_equal", "ilike", "not_ilike", "set", "not_set"],
-    editors: { default: makeEditor(Input) },
-    defaultValue: (field) => (field.type === "many2one" ? 1 : []),
+    editors: {
+        default: makeEditor(Input),
+        equal: RELATIONAL_EDITOR_EQUALITY,
+        not_equal: RELATIONAL_EDITOR_EQUALITY,
+    },
+    defaultValue: ({ type }) => (type === "many2one" ? 1 : []),
 };
 
 // ----------------------------------------------------------------------------
@@ -214,15 +292,15 @@ const SELECTION_EDITOR_IN = makeEditor(Input, ({ value, update }) => ({
 const SELECTION = {
     operators: ["equal", "not_equal", "in", "not_in", "set", "not_set"],
     editors: {
-        default: makeEditor(Select, ({ value, update, field }) => ({
+        default: makeEditor(Select, ({ value, update, fieldDef }) => ({
             value,
             update,
-            options: field.selection,
+            options: fieldDef.selection || [],
         })),
         in: SELECTION_EDITOR_IN,
         not_in: SELECTION_EDITOR_IN,
     },
-    defaultValue: (field) => field.selection[0][0] ?? false,
+    defaultValue: (fieldDef) => fieldDef.selection[0][0] ?? false,
 };
 
 // ----------------------------------------------------------------------------
@@ -235,19 +313,19 @@ const PROPERTIES = {
 const PROPERTIES_SELECTION = {
     operators: ["equal", "not_equal", "set", "not_set"],
     editors: {
-        default: makeEditor(Select, ({ value, update, field }) => ({
+        default: makeEditor(Select, ({ value, update, fieldDef }) => ({
             value,
             update,
-            options: field.selection || [],
+            options: fieldDef.selection || [],
         })),
     },
-    defaultValue: (field) => field.selection?.[0]?.[0] ?? false,
+    defaultValue: ({ selection }) => selection?.[0]?.[0] ?? false,
 };
 
 const PROPERTIES_RELATIONAL = {
     operators: ["equal", "not_equal", "set", "not_set"],
     editors: { default: makeEditor(Input) },
-    defaultValue: (field) => (field.type === "many2one" ? 1 : []),
+    defaultValue: (fieldDef) => (fieldDef.type === "many2one" ? 1 : []),
 };
 
 // ============================================================================
@@ -279,25 +357,32 @@ const PROPERTIES_DESCRIPTIONS = {
 };
 
 export function getFieldInfo(fieldDef) {
-    if (fieldDef.is_property && PROPERTIES_DESCRIPTIONS[fieldDef.type]) {
-        return PROPERTIES_DESCRIPTIONS[fieldDef.type];
-    } else if (FIELD_DESCRIPTIONS[fieldDef.type]) {
-        return FIELD_DESCRIPTIONS[fieldDef.type];
+    const { is_property, type } = fieldDef || {};
+    if (is_property && PROPERTIES_DESCRIPTIONS[type]) {
+        return PROPERTIES_DESCRIPTIONS[type];
+    } else if (FIELD_DESCRIPTIONS[type]) {
+        return FIELD_DESCRIPTIONS[type];
     } else {
         return DEFAULT;
     }
 }
 
-export function getEditorInfo(fieldDef, operator) {
-    const fieldInfo = getFieldInfo(fieldDef);
-    return fieldInfo.editors[operator] || fieldInfo.editors.default;
+export function getEditorInfo(fieldDef, operatorKey) {
+    const descr = getFieldInfo(fieldDef);
+    return descr.editors[operatorKey] || descr.editors.default;
 }
 
 export function getOperatorsInfo(fieldDef) {
-    return selectOperators(getFieldInfo(fieldDef).operators);
+    const descr = getFieldInfo(fieldDef);
+    return selectOperators(descr.operators);
 }
 
 export function getDefaultFieldValue(fieldDef) {
-    const desc = getFieldInfo(fieldDef);
-    return desc.defaultValue(fieldDef);
+    const descr = getFieldInfo(fieldDef);
+    return descr.defaultValue(fieldDef);
+}
+
+export function getDefaultOperator(fieldDef) {
+    const [firstOperator] = getOperatorsInfo(fieldDef);
+    return firstOperator.symbol;
 }

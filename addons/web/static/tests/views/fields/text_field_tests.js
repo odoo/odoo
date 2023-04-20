@@ -13,7 +13,6 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
-import { fieldService } from "@web/core/field_service";
 
 const serviceRegistry = registry.category("services");
 
@@ -595,8 +594,6 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test("field text with dynamic placeholder", async (assert) => {
-        registry.category("services").add("field", fieldService);
-
         serverData.models.partner.fields.model_reference_field = {
             string: "Model Reference Field",
             type: "char",

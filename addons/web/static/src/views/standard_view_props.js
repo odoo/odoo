@@ -21,7 +21,6 @@ export const standardViewProps = {
     bannerRoute: { type: String, optional: true },
     className: { type: String, optional: true },
     comparison: { type: [Object, { value: null }], optional: true },
-    // Issue OWL: https://github.com/odoo/owl/issues/910
     context: { type: Object },
     createRecord: { type: Function, optional: true },
     display: { type: Object, optional: true },

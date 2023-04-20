@@ -58,6 +58,7 @@ import { standaloneAdapter } from "web.OwlCompatibility";
 import { overlayService } from "@web/core/overlay/overlay_service";
 
 import { Component, onMounted, xml } from "@odoo/owl";
+import { fieldService } from "@web/core/field_service";
 
 const actionRegistry = registry.category("actions");
 const serviceRegistry = registry.category("services");
@@ -87,6 +88,7 @@ export function setupWebClientRegistries() {
         command: () => commandService,
         dialog: () => dialogService,
         effect: () => effectService,
+        field: () => fieldService,
         hotkey: () => hotkeyService,
         http: () => makeFakeHTTPService(),
         legacy_service_provider: () => legacyServiceProvider,

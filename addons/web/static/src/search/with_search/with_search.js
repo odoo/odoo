@@ -1,10 +1,9 @@
 /** @odoo-module **/
 
-import { useBus, useService } from "@web/core/utils/hooks";
-import { SearchModel } from "@web/search/search_model";
 import { CallbackRecorder, useSetupAction } from "@web/webclient/actions/action_hook";
-
 import { Component, onWillStart, onWillUpdateProps, toRaw, useSubEnv } from "@odoo/owl";
+import { SearchModel } from "@web/search/search_model";
+import { useBus, useService } from "@web/core/utils/hooks";
 
 export const SEARCH_KEYS = ["comparison", "context", "domain", "groupBy", "orderBy"];
 
@@ -24,6 +23,7 @@ export class WithSearch extends Component {
                 user: useService("user"),
                 orm: useService("orm"),
                 view: useService("view"),
+                field: useService("field"),
             },
             this.props.searchModelArgs
         );
@@ -74,7 +74,6 @@ WithSearch.props = {
 
     // search query elements
     comparison: { type: [Object, { value: null }], optional: true },
-    // Issue OWL: https://github.com/odoo/owl/issues/910
     context: { type: Object, optional: true },
     domain: { type: Array, element: [String, Array], optional: true },
     groupBy: { type: Array, element: String, optional: true },

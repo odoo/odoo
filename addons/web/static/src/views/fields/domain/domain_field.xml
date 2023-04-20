@@ -3,20 +3,23 @@
 
     <t t-name="web.DomainField" owl="1">
         <div t-att-class="{ o_inline_mode: !props.editInDialog }">
-            <t t-if="getResModel(props)">
+            <t t-set="resModel" t-value="getResModel()"/>
+            <t t-if="resModel">
                 <DomainSelector
-                    resModel="getResModel(props)"
-                    value="displayedDomain || '[]'"
+                    resModel="resModel"
+                    domain="getDomain()"
                     readonly="props.readonly or props.editInDialog"
                     update.bind="update"
                     isDebugMode="!!env.debug"
-                    debugValue="props.record.data[props.name] || '[]'"
                     className="props.readonly ? 'o_read_mode' : 'o_edit_mode'"
                 />
-                <div class="o_field_domain_panel">
-                    <t t-if="state.recordCount !== null">
-                        <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain" />
-                        <t t-if="state.isValid and isValidDomain">
+                <div class="o_field_domain_panel" style="height:22px;">
+                    <i class="fa fa-arrow-right" role="img" aria-label="Domain" title="Domain" />
+                    <t t-if="state.isValid === null and state.recordCount === null">
+                        <i class="fa fa-circle-o-notch fa-spin ms-2" role="img" aria-label="Loading" title="Loading" />
+                    </t>
+                    <t t-else="">
+                        <t t-if="state.isValid">
                             <button class="btn btn-sm btn-secondary o_domain_show_selection_button" type="button" t-on-click.stop="onButtonClick">
                                 <t t-esc="state.recordCount" /> record(s)
                             </button>
@@ -32,16 +35,13 @@
                                 role="img"
                                 aria-label="Refresh"
                                 title="Refresh"
-                                t-on-click="() => this.loadCount(props)"
+                                t-on-click="() => this.checkProps()"
                             />
                         </t>
-                    </t>
-                    <t t-else="">
-                        <i class="fa fa-circle-o-notch fa-spin" role="img" aria-label="Loading" title="Loading" />
-                    </t>
 
-                    <t t-if="props.editInDialog and !props.readonly">
-                        <button class="btn btn-sm btn-primary o_field_domain_dialog_button" t-on-click.prevent="onEditDialogBtnClick">Edit Domain</button>
+                        <t t-if="props.editInDialog and !props.readonly">
+                            <button class="btn btn-sm btn-primary o_field_domain_dialog_button" t-on-click.prevent="onEditDialogBtnClick">Edit Domain</button>
+                        </t>
                     </t>
                 </div>
             </t>
