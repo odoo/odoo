@@ -44,8 +44,8 @@ _logger_conn = _logger.getChild("connection")
 
 real_time = time.time.__call__  # ensure we have a non patched time for query times when using freezegun
 
-re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$')
-re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$')
+re_from = re.compile('.* from "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
+re_into = re.compile('.* into "?([a-zA-Z_0-9]+)"? .*$', re.MULTILINE | re.IGNORECASE)
 
 sql_counter = 0
 
@@ -337,17 +337,20 @@ class Cursor(BaseCursor):
         if _logger.isEnabledFor(logging.DEBUG):
             delay *= 1E6
 
-            query_lower = self._obj.query.decode().lower()
-            res_from = re_from.match(query_lower)
-            if res_from:
-                self.sql_from_log.setdefault(res_from.group(1), [0, 0])
-                self.sql_from_log[res_from.group(1)][0] += 1
-                self.sql_from_log[res_from.group(1)][1] += delay
-            res_into = re_into.match(query_lower)
+            decoded_query = self._obj.query.decode()
+            res_into = re_into.search(decoded_query)
+            # prioritize `insert` over `select` so `select` subqueries are not
+            # considered when inside a `insert`
             if res_into:
                 self.sql_into_log.setdefault(res_into.group(1), [0, 0])
                 self.sql_into_log[res_into.group(1)][0] += 1
                 self.sql_into_log[res_into.group(1)][1] += delay
+            else:
+                res_from = re_from.search(decoded_query)
+                if res_from:
+                    self.sql_from_log.setdefault(res_from.group(1), [0, 0])
+                    self.sql_from_log[res_from.group(1)][0] += 1
+                    self.sql_from_log[res_from.group(1)][1] += delay
         return res
 
     def split_for_in_conditions(self, ids, size=None):
