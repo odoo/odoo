@@ -1834,7 +1834,7 @@ class MrpProduction(models.Model):
                     backorder_sequence=next_seq
                 ))
 
-        backorders = self.env['mrp.production'].with_context(skip_confirm=True).create(backorder_vals_list)
+        backorders = self.env['mrp.production'].with_context(skip_confirm=True).create(backorder_vals_list)  # FIXME 5.6%
 
         index = 0
         production_to_backorders = {}
@@ -1884,7 +1884,7 @@ class MrpProduction(models.Model):
         for move, backorder_move in zip(moves, backorder_moves):
             move_to_backorder_moves[move] |= backorder_move
 
-        move_lines_vals = []
+        move_lines_vals = []  # TODO : Watch this variable !!! it leads to near 50% of time taken
         assigned_moves = set()
         partially_assigned_moves = set()
         move_lines_to_unlink = set()
@@ -2028,8 +2028,7 @@ class MrpProduction(models.Model):
         backorders = productions_to_backorder and productions_to_backorder._split_productions()
         backorders = backorders - productions_to_backorder
 
-        productions_not_to_backorder._post_inventory(cancel_backorder=True)
-        productions_to_backorder._post_inventory(cancel_backorder=True)
+        (productions_not_to_backorder | productions_to_backorder)._post_inventory(cancel_backorder=True)
 
         # if completed products make other confirmed/partially_available moves available, assign them
         done_move_finished_ids = (productions_to_backorder.move_finished_ids | productions_not_to_backorder.move_finished_ids).filtered(lambda m: m.state == 'done')

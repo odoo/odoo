@@ -176,9 +176,9 @@ class StockMove(models.Model):
         :returns: the common values when creating a `stock.valuation.layer` from a `stock.move`
         :rtype: dict
         """
-        self.ensure_one()
+        self.ensure_one() #FIXME :  batch
         return {
-            'stock_move_id': self.id,
+            'stock_move_id': self.id, #FIXME : move_ids
             'company_id': self.company_id.id,
             'product_id': self.product_id.id,
             'description': self.reference and '%s - %s' % (self.reference, self.product_id.name) or self.product_id.name,
