@@ -14,6 +14,16 @@ const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
+// CSS properties relating to font, which Outlook seem to have trouble inheriting.
+const FONT_PROPERTIES_TO_INHERIT = [
+    'color',
+    'font-size',
+    'font-family',
+    'font-weight',
+    'font-style',
+    'text-decoration',
+    'text-transform',
+];
 // Attributes all tables should have in a mailing.
 const TABLE_ATTRIBUTES = {
     cellspacing: 0,
@@ -471,6 +481,17 @@ function classToStyle($editable, cssRules) {
                     const prop = styleValue.includes('var(') ? styleValue.replace(/var\((.*)\)/, '$1') : styleName;
                     const value = computedStyle.getPropertyValue(prop) || computedStyle.getPropertyValue(styleName);
                     node.style.setProperty(styleName, value);
+                }
+            }
+        });
+
+        // Fix inheritance of font properties on Outlook.
+        writes.push(() => {
+            const propsToConvert = FONT_PROPERTIES_TO_INHERIT.filter(prop => node.style[prop] === 'inherit');
+            if (propsToConvert.length) {
+                const computedStyle = getComputedStyle(node);
+                for (const prop of propsToConvert) {
+                    node.style.setProperty(prop, computedStyle[prop]);
                 }
             }
         });
@@ -1255,7 +1276,7 @@ function _backgroundImageToVml(backgroundImage) {
 
     // Preserve important inherited properties without ancestor context.
     const style = getComputedStyle(backgroundImage);
-    for (const prop of ['color', 'font-size', 'font-family', 'font-weight', 'font-style', 'text-decoration', 'text-transform']) {
+    for (const prop of FONT_PROPERTIES_TO_INHERIT) {
         div.style[prop] = backgroundImage.style[prop] || style[prop];
     }
     [...div.children].forEach(child => child.style.setProperty('font-size', child.style.fontSize || style.fontSize));
