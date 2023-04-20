@@ -6,6 +6,11 @@
                 <strong>Customer Reference:</strong>
                 <p t-field="o.sudo().sale_id.client_order_ref"/>
             </div>
+            <div class="col-auto justify-content-end" t-if="o.sudo().sale_id.incoterm">
+                <strong>Incoterm:</strong>
+                <p t-if="o.sudo().sale_id.incoterm_location" t-out="'%s %s' % (o.sudo().sale_id.incoterm.code, o.sudo().sale_id.incoterm_location)"/>
+                <p t-else="" t-field="o.sudo().sale_id.incoterm.display_name"/>
+            </div>
         </xpath>
     </template>
 </odoo>
