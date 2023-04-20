@@ -39,29 +39,29 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             const { attachment_id } = args;
             return this._mockRouteMailAttachmentRemove(attachment_id);
         }
-        if (route === "/mail/channel/messages") {
+        if (route === "/discuss/channel/messages") {
             const { channel_id, after, around, before, limit } = args;
-            return this._mockRouteMailChannelMessages(channel_id, before, after, around, limit);
+            return this._mockRouteDiscussChannelMessages(channel_id, before, after, around, limit);
         }
-        if (route === "/mail/channel/pinned_messages") {
+        if (route === "/discuss/channel/pinned_messages") {
             const { channel_id } = args;
-            return this._mockRouteMailChannelPins(channel_id);
+            return this._mockRouteDiscussChannelPins(channel_id);
         }
-        if (route === "/mail/channel/notify_typing") {
+        if (route === "/discuss/channel/notify_typing") {
             const id = args.channel_id;
             const is_typing = args.is_typing;
             const context = args.context;
-            return this._mockRouteMailChannelNotifyTyping(id, is_typing, context);
+            return this._mockRouteDiscussChannelNotifyTyping(id, is_typing, context);
         }
-        if (new RegExp("/mail/channel/\\d+/partner/\\d+/avatar_128").test(route)) {
+        if (new RegExp("/discuss/channel/\\d+/partner/\\d+/avatar_128").test(route)) {
             return;
         }
-        if (route === "/mail/channel/ping") {
+        if (route === "/discuss/channel/ping") {
             return;
         }
-        if (route === "/mail/channel/members") {
+        if (route === "/discuss/channel/members") {
             const { channel_id, known_member_ids } = args;
-            return this._mockMailChannelloadOlderMembers([channel_id], known_member_ids);
+            return this._mockDiscussChannelloadOlderMembers([channel_id], known_member_ids);
         }
         if (route === "/mail/history/messages") {
             const { after, before, limit } = args;
@@ -95,8 +95,8 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             return this._mockRouteMailLoadMessageFailures();
         }
         if (route === "/mail/message/post") {
-            if (args.thread_model === "mail.channel") {
-                return this._mockMailChannelMessagePost(
+            if (args.thread_model === "discuss.channel") {
+                return this._mockDiscussChannelMessagePost(
                     args.thread_id,
                     args.post_data,
                     args.context
@@ -170,11 +170,11 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         return this._super(route, args);
     },
     /**
-     * Simulates the `/mail/channel/pinned_messages` route.
+     * Simulates the `/discuss/channel/pinned_messages` route.
      */
-    _mockRouteMailChannelPins(channel_id) {
+    _mockRouteDiscussChannelPins(channel_id) {
         const messageIds = this.pyEnv["mail.message"].search([
-            ["model", "=", "mail.channel"],
+            ["model", "=", "discuss.channel"],
             ["res_id", "=", channel_id],
             ["pinned_at", "!=", false],
         ]);
@@ -202,7 +202,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         return this.pyEnv["ir.attachment"].unlink([attachment_id]);
     },
     /**
-     * Simulates the `/mail/channel/messages` route.
+     * Simulates the `/discuss/channel/messages` route.
      *
      * @private
      * @param {integer} channel_id
@@ -212,7 +212,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      * @param {integer} around
      * @returns {Object} list of messages
      */
-    async _mockRouteMailChannelMessages(
+    async _mockRouteDiscussChannelMessages(
         channel_id,
         before = false,
         after = false,
@@ -221,7 +221,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
     ) {
         const domain = [
             ["res_id", "=", channel_id],
-            ["model", "=", "mail.channel"],
+            ["model", "=", "discuss.channel"],
             ["message_type", "!=", "user_notification"],
         ];
         const messages = this._mockMailMessage_MessageFetch(domain, before, after, around, limit);
@@ -231,23 +231,23 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
     },
     /**
-     * Simulates the `/mail/channel/notify_typing` route.
+     * Simulates the `/discuss/channel/notify_typing` route.
      *
      * @private
      * @param {integer} channel_id
      * @param {integer} limit
      * @param {Object} [context={}]
      */
-    async _mockRouteMailChannelNotifyTyping(channel_id, is_typing, context = {}) {
+    async _mockRouteDiscussChannelNotifyTyping(channel_id, is_typing, context = {}) {
         const partnerId = context.mockedPartnerId || this.currentPartnerId;
-        const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
+        const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel_id],
             ["partner_id", "=", partnerId],
         ]);
         if (!memberOfCurrentUser) {
             return;
         }
-        this._mockMailChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
+        this._mockDiscussChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
     /**
      * Simulates the `/mail/load_message_failures` route.
@@ -280,8 +280,8 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             ]);
             linkPreviews.push(this._mockMailLinkPreviewFormat(linkPreview));
             let target = this.pyEnv.currentPartner;
-            if (message.model === "mail.channel") {
-                target = this.pyEnv["mail.channel"].search([["id", "=", message.res_id]]);
+            if (message.model === "discuss.channel") {
+                target = this.pyEnv["discuss.channel"].search([["id", "=", message.res_id]]);
             }
             this.pyEnv["bus.bus"]._sendmany([
                 [target, "mail.record/insert", { LinkPreview: linkPreviews }],
@@ -404,18 +404,18 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      * @returns {integer[]} [check_rtc_session_ids]
      */
     async _mockRouteMailRtcChannelJoinCall(channel_id, check_rtc_session_ids = []) {
-        const [currentChannelMember] = this.getRecords("mail.channel.member", [
+        const [currentChannelMember] = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel_id],
             ["partner_id", "=", this.currentPartnerId],
         ]);
-        const sessionId = this.pyEnv["mail.channel.rtc.session"].create({
+        const sessionId = this.pyEnv["discuss.channel.rtc.session"].create({
             channel_member_id: currentChannelMember.id,
             channel_id, // on the server, this is a related field from channel_member_id and not explicitly set
         });
-        const channelMembers = this.getRecords("mail.channel.member", [
+        const channelMembers = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel_id],
         ]);
-        const rtcSessions = this.getRecords("mail.channel.rtc.session", [
+        const rtcSessions = this.getRecords("discuss.channel.rtc.session", [
             ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
         ]);
         return {
@@ -424,7 +424,9 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                 [
                     "insert",
                     rtcSessions.map((rtcSession) =>
-                        this._mockMailChannelRtcSession_MailChannelRtcSessionFormat(rtcSession.id)
+                        this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(
+                            rtcSession.id
+                        )
                     ),
                 ],
             ],
@@ -438,23 +440,24 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      * @param {integer} channelId
      */
     async _mockRouteMailRtcChannelLeaveCall(channel_id) {
-        const channelMembers = this.getRecords("mail.channel.member", [
+        const channelMembers = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel_id],
         ]);
-        const rtcSessions = this.getRecords("mail.channel.rtc.session", [
+        const rtcSessions = this.getRecords("discuss.channel.rtc.session", [
             ["channel_member_id", "in", channelMembers.map((channelMember) => channelMember.id)],
         ]);
         const notifications = [];
-        const channelInfo = this._mockMailChannelRtcSession_MailChannelRtcSessionFormatByChannel(
-            rtcSessions.map((rtcSession) => rtcSession.id)
-        );
+        const channelInfo =
+            this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormatByChannel(
+                rtcSessions.map((rtcSession) => rtcSession.id)
+            );
         for (const [channelId, sessionsData] of Object.entries(channelInfo)) {
             const notificationRtcSessions = sessionsData.map((sessionsDataPoint) => {
                 return { id: sessionsDataPoint.id };
             });
             notifications.push([
                 channelId,
-                "mail.channel/rtc_sessions_update",
+                "discuss.channel/rtc_sessions_update",
                 {
                     id: Number(channelId), // JS object keys are strings, but the type from the server is number
                     rtcSessions: [["insert-and-unlink", notificationRtcSessions]],
@@ -465,7 +468,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             const target = rtcSession.guest_id || rtcSession.partner_id;
             notifications.push([
                 target,
-                "mail.channel.rtc.session/ended",
+                "discuss.channel.rtc.session/ended",
                 { sessionId: rtcSession.id },
             ]);
         }
@@ -489,7 +492,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             res["hasReadAccess"] = false;
             return res;
         }
-        res["canPostOnReadonly"] = thread_model === "mail.channel"; // model that have attr _mail_post_access='read'
+        res["canPostOnReadonly"] = thread_model === "discuss.channel"; // model that have attr _mail_post_access='read'
         if (request_list.includes("activities")) {
             const activities = this.pyEnv["mail.activity"].searchRead([
                 ["id", "in", thread.activity_ids || []],

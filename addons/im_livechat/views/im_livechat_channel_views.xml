@@ -79,7 +79,7 @@
                                 attrs="{'invisible': [('chatbot_script_count', '=', 0)]}">
                                 <field string="Chatbots" name="chatbot_script_count" widget="statinfo"/>
                             </button>
-                            <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
+                            <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(discuss_channel_action_from_livechat_channel)d" icon="fa-comments">
                                 <field string="Sessions" name="nbr_channel" widget="statinfo"/>
                             </button>
                             <button name="action_view_rating" attrs="{'invisible':[('rating_count', '=', 0)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
@@ -299,7 +299,7 @@
             id="session_history"
             name="Sessions History"
             parent="menu_reporting_livechat"
-            action="mail_channel_action"
+            action="discuss_channel_action"
             groups="im_livechat_group_user"
             sequence="5"/>
 

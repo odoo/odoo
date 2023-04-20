@@ -8,7 +8,7 @@ QUnit.test("rendering when just one has received the message", async (assert) =>
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -20,14 +20,14 @@ QUnit.test("rendering when just one has received the message", async (assert) =>
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
-    const [memberId_1] = pyEnv["mail.channel.member"].search([
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
         ["partner_id", "=", partnerId_1],
     ]);
-    pyEnv["mail.channel.member"].write([memberId_1], {
+    pyEnv["discuss.channel.member"].write([memberId_1], {
         fetched_message_id: messageId,
         seen_message_id: false,
     });
@@ -42,7 +42,7 @@ QUnit.test("rendering when everyone have received the message", async (assert) =
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -54,11 +54,11 @@ QUnit.test("rendering when everyone have received the message", async (assert) =
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
-    const memberIds = pyEnv["mail.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["mail.channel.member"].write(memberIds, {
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, {
         fetched_message_id: messageId,
         seen_message_id: false,
     });
@@ -73,7 +73,7 @@ QUnit.test("rendering when just one has seen the message", async (assert) => {
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -85,19 +85,19 @@ QUnit.test("rendering when just one has seen the message", async (assert) => {
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
-    const memberIds = pyEnv["mail.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["mail.channel.member"].write(memberIds, {
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, {
         fetched_message_id: messageId,
         seen_message_id: false,
     });
-    const [memberId_1] = pyEnv["mail.channel.member"].search([
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
         ["partner_id", "=", partnerId_1],
     ]);
-    pyEnv["mail.channel.member"].write([memberId_1], {
+    pyEnv["discuss.channel.member"].write([memberId_1], {
         seen_message_id: messageId,
     });
     const { openDiscuss } = await start();
@@ -111,7 +111,7 @@ QUnit.test("rendering when just one has seen & received the message", async (ass
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -123,14 +123,14 @@ QUnit.test("rendering when just one has seen & received the message", async (ass
     const mesageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
-    const [memberId_1] = pyEnv["mail.channel.member"].search([
+    const [memberId_1] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
         ["partner_id", "=", partnerId_1],
     ]);
-    pyEnv["mail.channel.member"].write([memberId_1], {
+    pyEnv["discuss.channel.member"].write([memberId_1], {
         seen_message_id: mesageId,
         fetched_message_id: mesageId,
     });
@@ -145,7 +145,7 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
     const pyEnv = await startServer();
     const partnerId_1 = pyEnv["res.partner"].create({ name: "Demo User" });
     const partnerId_2 = pyEnv["res.partner"].create({ name: "Other User" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -157,11 +157,11 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
     const messageId = pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
-    const memberIds = pyEnv["mail.channel.member"].search([["channel_id", "=", channelId]]);
-    pyEnv["mail.channel.member"].write(memberIds, {
+    const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+    pyEnv["discuss.channel.member"].write(memberIds, {
         fetched_message_id: messageId,
         seen_message_id: messageId,
     });
@@ -175,7 +175,7 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
 QUnit.test("'channel_fetch' notification received is correctly handled", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -186,7 +186,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -194,10 +194,10 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
     assert.containsOnce($, ".o-mail-Message");
     assert.containsNone($, ".o-mail-MessageSeenIndicator i");
 
-    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel fetched notification
     await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(channel, "mail.channel.member/fetched", {
+        pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
             channel_id: channelId,
             last_message_id: 100,
             partner_id: partnerId,
@@ -209,7 +209,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
 QUnit.test("'channel_seen' notification received is correctly handled", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "test" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -220,7 +220,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async (a
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -228,10 +228,10 @@ QUnit.test("'channel_seen' notification received is correctly handled", async (a
     assert.containsOnce($, ".o-mail-Message");
     assert.containsNone($, ".o-mail-MessageSeenIndicator i");
 
-    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // Simulate received channel seen notification
     await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(channel, "mail.channel.member/seen", {
+        pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
             channel_id: channelId,
             last_message_id: 100,
             partner_id: partnerId,
@@ -245,7 +245,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Recipient" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -256,7 +256,7 @@ QUnit.test(
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "<p>Test</p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         const { openDiscuss } = await start();
@@ -264,10 +264,10 @@ QUnit.test(
         assert.containsOnce($, ".o-mail-Message");
         assert.containsNone($, ".o-mail-MessageSeenIndicator i");
 
-        const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+        const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
         // Simulate received channel fetched notification
         await afterNextRender(() => {
-            pyEnv["bus.bus"]._sendone(channel, "mail.channel.member/fetched", {
+            pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
                 channel_id: channelId,
                 last_message_id: 100,
                 partner_id: partnerId,
@@ -277,7 +277,7 @@ QUnit.test(
 
         // Simulate received channel seen notification
         await afterNextRender(() => {
-            pyEnv["bus.bus"]._sendone(channel, "mail.channel.member/seen", {
+            pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/seen", {
                 channel_id: channelId,
                 last_message_id: 100,
                 partner_id: partnerId,
@@ -292,7 +292,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_type: "chat",
             channel_member_ids: [
@@ -303,11 +303,11 @@ QUnit.test(
         const messageId = pyEnv["mail.message"].create({
             author_id: partnerId,
             body: "<p>Test</p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
-        const memberIds = pyEnv["mail.channel.member"].search([["channel_id", "=", channelId]]);
-        pyEnv["mail.channel.member"].write(memberIds, { seen_message_id: messageId });
+        const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+        pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsOnce($, ".o-mail-Message");
@@ -320,7 +320,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_type: "chat",
             channel_member_ids: [
@@ -332,18 +332,18 @@ QUnit.test(
             {
                 author_id: pyEnv.currentPartnerId,
                 body: "<p>Message before last seen</p>",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId,
             },
             {
                 author_id: pyEnv.currentPartnerId,
                 body: "<p>Last seen by everyone</p>",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId,
             },
         ]);
-        const memberIds = pyEnv["mail.channel.member"].search([["channel_id", "=", channelId]]);
-        pyEnv["mail.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
+        const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+        pyEnv["discuss.channel.member"].write(memberIds, { seen_message_id: messageId_2 });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsOnce($, ".o-mail-Message:contains(Message before last seen)");
@@ -363,7 +363,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo User" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_type: "chat",
             channel_member_ids: [
@@ -375,10 +375,10 @@ QUnit.test(
             author_id: pyEnv.currentPartnerId,
             body: "<p>Test</p>",
             res_id: channelId,
-            model: "mail.channel",
+            model: "discuss.channel",
         });
-        const memberIds = pyEnv["mail.channel.member"].search([["channel_id", "=", channelId]]);
-        pyEnv["mail.channel.member"].write(memberIds, {
+        const memberIds = pyEnv["discuss.channel.member"].search([["channel_id", "=", channelId]]);
+        pyEnv["discuss.channel.member"].write(memberIds, {
             fetched_message_id: messageId,
             seen_message_id: messageId - 1,
         });

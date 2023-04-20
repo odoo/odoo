@@ -51,7 +51,7 @@ patch(MockServer.prototype, "mail/models/res_partner", {
                     partners
                         .filter((partner) => {
                             if (channel_id) {
-                                const [member] = this.getRecords("mail.channel.member", [
+                                const [member] = this.getRecords("discuss.channel.member", [
                                     ["channel_id", "=", channel_id],
                                     ["partner_id", "=", partner.id],
                                 ]);
@@ -76,7 +76,7 @@ patch(MockServer.prototype, "mail/models/res_partner", {
                 ).values(),
             ].map((partnerFormat) => {
                 if (channel_id) {
-                    const [member] = this.getRecords("mail.channel.member", [
+                    const [member] = this.getRecords("discuss.channel.member", [
                         ["channel_id", "=", channel_id],
                         ["partner_id", "=", partnerFormat.id],
                     ]);
@@ -84,7 +84,9 @@ patch(MockServer.prototype, "mail/models/res_partner", {
                         channelMembers: [
                             [
                                 "insert",
-                                this._mockMailChannelMember_MailChannelMemberFormat([member.id]),
+                                this._mockDiscussChannelMember_DiscussChannelMemberFormat([
+                                    member.id,
+                                ]),
                             ],
                         ],
                     };
@@ -302,18 +304,18 @@ patch(MockServer.prototype, "mail/models/res_partner", {
      */
     _mockResPartner_GetChannelsAsMember(ids) {
         const partner = this.getRecords("res.partner", [["id", "in", ids]])[0];
-        const channelMembers = this.getRecords("mail.channel.member", [
+        const channelMembers = this.getRecords("discuss.channel.member", [
             ["partner_id", "=", partner.id],
         ]);
-        const channels = this.getRecords("mail.channel", [
+        const channels = this.getRecords("discuss.channel", [
             ["channel_type", "in", ["channel", "group"]],
             ["channel_member_ids", "in", channelMembers.map((member) => member.id)],
         ]);
-        const directMessagesMembers = this.getRecords("mail.channel.member", [
+        const directMessagesMembers = this.getRecords("discuss.channel.member", [
             ["partner_id", "=", partner.id],
             ["is_pinned", "=", true],
         ]);
-        const directMessages = this.getRecords("mail.channel", [
+        const directMessages = this.getRecords("discuss.channel", [
             ["channel_type", "=", "chat"],
             ["channel_member_ids", "in", directMessagesMembers.map((member) => member.id)],
         ]);

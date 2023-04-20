@@ -7,7 +7,7 @@ QUnit.module("composer");
 
 QUnit.test("Can execute lead command", async function (assert) {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start({
         mockRPC(route, args) {
             if (args.method === "execute_command_lead") {

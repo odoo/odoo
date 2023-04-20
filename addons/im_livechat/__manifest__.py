@@ -20,7 +20,7 @@ Help your customers with this chat, and analyse their feedback.
     'data': [
         "security/im_livechat_channel_security.xml",
         "security/ir.model.access.csv",
-        "data/mail_shortcode_data.xml",
+        "data/discuss_shortcode_data.xml",
         "data/mail_templates.xml",
         "data/im_livechat_channel_data.xml",
         "data/im_livechat_chatbot_data.xml",
@@ -29,7 +29,7 @@ Help your customers with this chat, and analyse their feedback.
         'views/chatbot_script_step_views.xml',
         'views/chatbot_script_views.xml',
         "views/rating_rating_views.xml",
-        "views/mail_channel_views.xml",
+        "views/discuss_channel_views.xml",
         "views/im_livechat_channel_views.xml",
         "views/im_livechat_channel_templates.xml",
         "views/im_livechat_chatbot_templates.xml",
@@ -40,7 +40,7 @@ Help your customers with this chat, and analyse their feedback.
     ],
     'demo': [
         "data/im_livechat_channel_demo.xml",
-        'data/mail_shortcode_demo.xml',
+        'data/discuss_shortcode_demo.xml',
     ],
     'depends': ["mail", "rating", "digest", "utm"],
     'installable': True,

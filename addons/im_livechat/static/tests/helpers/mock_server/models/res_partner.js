@@ -11,11 +11,11 @@ patch(MockServer.prototype, "im_livechat/models/res_partner", {
      */
     _mockResPartner_GetChannelsAsMember(ids) {
         const partner = this.getRecords("res.partner", [["id", "in", ids]])[0];
-        const members = this.getRecords("mail.channel.member", [
+        const members = this.getRecords("discuss.channel.member", [
             ["partner_id", "=", partner.id],
             ["is_pinned", "=", true],
         ]);
-        const livechats = this.getRecords("mail.channel", [
+        const livechats = this.getRecords("discuss.channel", [
             ["channel_type", "=", "livechat"],
             ["channel_member_ids", "in", members.map((member) => member.id)],
         ]);

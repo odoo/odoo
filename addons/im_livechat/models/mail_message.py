@@ -20,8 +20,8 @@ class MailMessage(models.Model):
         vals_list = super()._message_format(fnames=fnames, format_reply=format_reply, legacy=legacy)
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
-            mail_channel = self.env['mail.channel'].browse(message_sudo.res_id) if message_sudo.model == 'mail.channel' else self.env['mail.channel']
-            if mail_channel.channel_type == 'livechat':
+            discuss_channel = self.env['discuss.channel'].browse(message_sudo.res_id) if message_sudo.model == 'discuss.channel' else self.env['discuss.channel']
+            if discuss_channel.channel_type == 'livechat':
                 if message_sudo.author_id:
                     vals.pop('email_from')
                 if message_sudo.author_id.user_livechat_username:
@@ -29,8 +29,8 @@ class MailMessage(models.Model):
                         'id': message_sudo.author_id.id,
                         'user_livechat_username': message_sudo.author_id.user_livechat_username,
                     }
-                if mail_channel.chatbot_current_step_id \
-                        and message_sudo.author_id == mail_channel.chatbot_current_step_id.chatbot_script_id.operator_partner_id:
+                if discuss_channel.chatbot_current_step_id \
+                        and message_sudo.author_id == discuss_channel.chatbot_current_step_id.chatbot_script_id.operator_partner_id:
                     chatbot_message_id = self.env['chatbot.message'].sudo().search([
                         ('mail_message_id', '=', message_sudo.id)], limit=1)
                     if chatbot_message_id.script_step_id:

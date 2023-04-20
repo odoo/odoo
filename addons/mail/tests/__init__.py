@@ -2,9 +2,9 @@
 
 from . import test_get_model_definitions
 from . import test_link_preview
-from . import test_mail_channel
-from . import test_mail_channel_as_guest
-from . import test_mail_channel_member
+from . import test_discuss_channel
+from . import test_discuss_channel_as_guest
+from . import test_discuss_channel_member
 from . import test_mail_composer
 from . import test_mail_full_composer
 from . import test_mail_render

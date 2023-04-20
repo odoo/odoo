@@ -2,9 +2,9 @@
 <odoo noupdate="1">
 
         <!-- RULES -->
-        <record id="mail_channel_rule" model="ir.rule">
-            <field name="name">Mail.channel: access only public and joined groups</field>
-            <field name="model_id" ref="model_mail_channel"/>
+        <record id="discuss_channel_rule" model="ir.rule">
+            <field name="name">discuss.channel: access only public and joined groups</field>
+            <field name="model_id" ref="mail.model_discuss_channel"/>
             <field name="groups" eval="[Command.link(ref('base.group_user')), Command.link(ref('base.group_portal')), Command.link(ref('base.group_public'))]"/>
             <field name="domain_force">[
                 '|',
@@ -20,16 +20,16 @@
             <field name="perm_create" eval="False"/>
         </record>
 
-        <record id="mail_channel_admin" model="ir.rule">
-            <field name="name">Mail.channel: admin full access</field>
-            <field name="model_id" ref="model_mail_channel"/>
+        <record id="discuss_channel_admin" model="ir.rule">
+            <field name="name">discuss.channel: admin full access</field>
+            <field name="model_id" ref="mail.model_discuss_channel"/>
             <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>
 
-        <record id="ir_rule_mail_channel_member_group_user" model="ir.rule">
-            <field name="name">mail.channel.member: write its own entries</field>
-            <field name="model_id" ref="model_mail_channel_member"/>
+        <record id="ir_rule_discuss_channel_member_group_user" model="ir.rule">
+            <field name="name">discuss.channel.member: write its own entries</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups" eval="[(4, ref('base.group_user')), (4, ref('base.group_portal'))]"/>
             <field name="domain_force">[
                 '|',
@@ -48,9 +48,9 @@
             <field name="perm_unlink" eval="True"/>
         </record>
 
-        <record id="ir_rule_mail_channel_member_group_system" model="ir.rule">
-            <field name="name">mail.channel.member: admin can manipulate all entries</field>
-            <field name="model_id" ref="model_mail_channel_member"/>
+        <record id="ir_rule_discuss_channel_member_group_system" model="ir.rule">
+            <field name="name">discuss.channel.member: admin can manipulate all entries</field>
+            <field name="model_id" ref="mail.model_discuss_channel_member"/>
             <field name="groups" eval="[Command.link(ref('base.group_system'))]"/>
             <field name="domain_force">[(1, '=', 1)]</field>
         </record>

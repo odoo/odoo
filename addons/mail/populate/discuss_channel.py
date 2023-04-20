@@ -3,7 +3,7 @@ from odoo import models
 from odoo.tools import populate
 
 class Channel(models.Model):
-    _inherit = 'mail.channel'
+    _inherit = 'discuss.channel'
     _populate_dependencies = ["res.partner"]
     _populate_sizes = {'small': 10, 'medium': 100, 'large': 500}
 

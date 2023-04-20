@@ -9,11 +9,11 @@ QUnit.module("im_status");
 QUnit.test("on leave & online", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_online" });
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { advanceTime, afterNextRender, openDiscuss } = await start({
@@ -27,11 +27,11 @@ QUnit.test("on leave & online", async (assert) => {
 QUnit.test("on leave & away", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_away" });
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { advanceTime, afterNextRender, openDiscuss } = await start({
@@ -45,11 +45,11 @@ QUnit.test("on leave & away", async (assert) => {
 QUnit.test("on leave & offline", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "leave_offline" });
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { advanceTime, afterNextRender, openDiscuss } = await start({

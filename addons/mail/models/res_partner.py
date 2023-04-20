@@ -21,7 +21,7 @@ class Partner(models.Model):
     user_id = fields.Many2one(tracking=4)
     vat = fields.Char(tracking=5)
     # channels
-    channel_ids = fields.Many2many('mail.channel', 'mail_channel_member', 'partner_id', 'channel_id', string='Channels', copy=False)
+    channel_ids = fields.Many2many('discuss.channel', 'discuss_channel_member', 'partner_id', 'channel_id', string='Channels', copy=False)
     # tracked field used for chatter logging purposes
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
@@ -267,16 +267,16 @@ class Partner(models.Model):
     def _get_channels_as_member(self):
         """Returns the channels of the partner."""
         self.ensure_one()
-        channels = self.env['mail.channel']
+        channels = self.env['discuss.channel']
         # get the channels and groups
-        channels |= self.env['mail.channel'].search([
+        channels |= self.env['discuss.channel'].search([
             ('channel_type', 'in', ('channel', 'group')),
             ('channel_partner_ids', 'in', [self.id]),
         ])
         # get the pinned direct messages
-        channels |= self.env['mail.channel'].search([
+        channels |= self.env['discuss.channel'].search([
             ('channel_type', '=', 'chat'),
-            ('channel_member_ids', 'in', self.env['mail.channel.member'].sudo()._search([
+            ('channel_member_ids', 'in', self.env['discuss.channel.member'].sudo()._search([
                 ('partner_id', '=', self.id),
                 ('is_pinned', '=', True),
             ])),
@@ -301,7 +301,7 @@ class Partner(models.Model):
             [('user_ids.share', '=', False)],
         ])
         if channel_id:
-            channel = self.env['mail.channel'].search([('id', '=', int(channel_id))])
+            channel = self.env['discuss.channel'].search([('id', '=', int(channel_id))])
             domain = expression.AND([domain, [('channel_ids', 'not in', channel.id)]])
             if channel.group_public_id:
                 domain = expression.AND([domain, [('user_ids.groups_id', 'in', channel.group_public_id.id)]])
@@ -342,10 +342,10 @@ class Partner(models.Model):
             partners |= self.browse(query)
         partners_format = partners.mail_partner_format()
         if channel_id:
-            member_by_partner = {member.partner_id: member for member in self.env['mail.channel.member'].search([('channel_id', '=', channel_id), ('partner_id', 'in', partners.ids)])}
+            member_by_partner = {member.partner_id: member for member in self.env['discuss.channel.member'].search([('channel_id', '=', channel_id), ('partner_id', 'in', partners.ids)])}
             for partner in partners:
                 partners_format.get(partner)['persona'] = {
-                    'channelMembers': [('insert', member_by_partner.get(partner)._mail_channel_member_format(fields={'id': True, 'channel': {'id'}, 'persona': {'partner': {'id'}}}).get(member_by_partner.get(partner)))],
+                    'channelMembers': [('insert', member_by_partner.get(partner)._discuss_channel_member_format(fields={'id': True, 'channel': {'id'}, 'persona': {'partner': {'id'}}}).get(member_by_partner.get(partner)))],
                 }
         return list(partners_format.values())
 

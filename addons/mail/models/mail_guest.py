@@ -28,7 +28,7 @@ class MailGuest(models.Model):
     country_id = fields.Many2one(string="Country", comodel_name='res.country')
     lang = fields.Selection(string="Language", selection=_lang_get)
     timezone = fields.Selection(string="Timezone", selection=_tz_get)
-    channel_ids = fields.Many2many(string="Channels", comodel_name='mail.channel', relation='mail_channel_member', column1='guest_id', column2='channel_id', copy=False)
+    channel_ids = fields.Many2many(string="Channels", comodel_name='discuss.channel', relation='discuss_channel_member', column1='guest_id', column2='channel_id', copy=False)
     im_status = fields.Char('IM Status', compute='_compute_im_status')
 
     def _compute_im_status(self):

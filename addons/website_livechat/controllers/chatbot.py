@@ -10,10 +10,10 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
         type="http", auth="user", website=True)
     def chatbot_test_script(self, chatbot_script):
         """ Custom route allowing to test a chatbot script.
-        As we don't have a im_livechat.channel linked to it, we pre-emptively create a mail.channel
+        As we don't have a im_livechat.channel linked to it, we pre-emptively create a discuss.channel
         that will hold the conversation between the bot and the user testing the script. """
 
-        mail_channel_values = {
+        discuss_channel_values = {
             'channel_member_ids': [(0, 0, {
                 'partner_id': chatbot_script.operator_partner_id.id,
                 'is_pinned': False
@@ -30,12 +30,12 @@ class WebsiteLivechatChatbotScriptController(http.Controller):
 
         visitor_sudo = request.env['website.visitor']._get_visitor_from_request()
         if visitor_sudo:
-            mail_channel_values['livechat_visitor_id'] = visitor_sudo.id
+            discuss_channel_values['livechat_visitor_id'] = visitor_sudo.id
 
-        mail_channel = request.env['mail.channel'].create(mail_channel_values)
+        discuss_channel = request.env['discuss.channel'].create(discuss_channel_values)
 
         return request.render("im_livechat.chatbot_test_script_page", {
             'server_url': chatbot_script.get_base_url(),
-            'channel_data': mail_channel.channel_info()[0],
+            'channel_data': discuss_channel.channel_info()[0],
             'chatbot_data': chatbot_script._format_for_frontend()
         })

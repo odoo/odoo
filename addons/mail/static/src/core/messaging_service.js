@@ -29,7 +29,7 @@ export class Messaging {
         this.rpc = services.rpc;
         this.orm = services.orm;
         /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["mail.channel.member"];
+        this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
         this.notificationService = services.notification;
@@ -164,7 +164,7 @@ export class Messaging {
     handleNotification(notifications) {
         const channelsLeft = new Set(
             notifications.reduce((channelIds, notification) => {
-                if (notification.type === "mail.channel/leave") {
+                if (notification.type === "discuss.channel/leave") {
                     channelIds.push(notification.payload.id);
                 }
                 return channelIds;
@@ -180,22 +180,22 @@ export class Messaging {
                         this.store.activityCounter--;
                     }
                     break;
-                case "mail.channel/new_message":
+                case "discuss.channel/new_message":
                     if (channelsLeft.has(notif.payload.id)) {
                         // Do not handle new message notification if the channel
                         // was just left. This issue occurs because the
-                        // "mail.channel/leave" and the
-                        // "mail.channel/new_message" notifications come from
+                        // "discuss.channel/leave" and the
+                        // "discuss.channel/new_message" notifications come from
                         // the bus as a batch.
                         return;
                     }
                     this._handleNotificationNewMessage(notif);
                     break;
-                case "mail.channel/leave":
+                case "discuss.channel/leave":
                     {
                         const thread = this.threadService.insert({
                             ...notif.payload,
-                            model: "mail.channel",
+                            model: "discuss.channel",
                         });
                         this.threadService.remove(thread);
                         if (thread.localId === this.store.discuss.threadLocalId) {
@@ -207,7 +207,7 @@ export class Messaging {
                         );
                     }
                     break;
-                case "mail.channel/rtc_sessions_update":
+                case "discuss.channel/rtc_sessions_update":
                     {
                         const { id, rtcSessions } = notif.payload;
                         const sessionsData = rtcSessions[0][1];
@@ -218,11 +218,11 @@ export class Messaging {
                 case "mail.record/insert":
                     this._handleNotificationRecordInsert(notif);
                     break;
-                case "mail.channel/joined": {
+                case "discuss.channel/joined": {
                     const { channel, invited_by_user_id: invitedByUserId } = notif.payload;
                     const thread = this.threadService.insert({
                         ...channel,
-                        model: "mail.channel",
+                        model: "discuss.channel",
                         rtcSessions: undefined,
                         serverData: {
                             channel: channel.channel,
@@ -242,17 +242,17 @@ export class Messaging {
                     }
                     break;
                 }
-                case "mail.channel/legacy_insert":
+                case "discuss.channel/legacy_insert":
                     this.threadService.insert({
                         id: notif.payload.channel.id,
-                        model: "mail.channel",
+                        model: "discuss.channel",
                         serverData: notif.payload,
                         type: notif.payload.channel.channel_type,
                     });
                     break;
-                case "mail.channel/transient_message": {
+                case "discuss.channel/transient_message": {
                     const channel =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.res_id)];
+                        this.store.threads[createLocalId("discuss.channel", notif.payload.res_id)];
                     const message = this.messageService.createTransient(
                         Object.assign(notif.payload, { body: markup(notif.payload.body) })
                     );
@@ -368,9 +368,10 @@ export class Messaging {
                     }
                     break;
                 }
-                case "mail.channel.member/seen": {
+                case "discuss.channel.member/seen": {
                     const { channel_id, last_message_id, partner_id } = notif.payload;
-                    const channel = this.store.threads[createLocalId("mail.channel", channel_id)];
+                    const channel =
+                        this.store.threads[createLocalId("discuss.channel", channel_id)];
                     if (!channel) {
                         // for example seen from another browser, the current one has no
                         // knowledge of the channel
@@ -388,9 +389,10 @@ export class Messaging {
                     break;
                 }
 
-                case "mail.channel.member/fetched": {
+                case "discuss.channel.member/fetched": {
                     const { channel_id, last_message_id, partner_id } = notif.payload;
-                    const channel = this.store.threads[createLocalId("mail.channel", channel_id)];
+                    const channel =
+                        this.store.threads[createLocalId("discuss.channel", channel_id)];
                     if (!channel) {
                         return;
                     }
@@ -402,10 +404,12 @@ export class Messaging {
                     }
                     break;
                 }
-                case "mail.channel.member/typing_status": {
+                case "discuss.channel.member/typing_status": {
                     const isTyping = notif.payload.isTyping;
                     const channel =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.channel.id)];
+                        this.store.threads[
+                            createLocalId("discuss.channel", notif.payload.channel.id)
+                        ];
                     if (!channel) {
                         return;
                     }
@@ -428,9 +432,9 @@ export class Messaging {
                     }
                     break;
                 }
-                case "mail.channel/unpin": {
+                case "discuss.channel/unpin": {
                     const thread =
-                        this.store.threads[createLocalId("mail.channel", notif.payload.id)];
+                        this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
                     if (!thread) {
                         return;
                     }
@@ -455,7 +459,7 @@ export class Messaging {
                         });
                     }
                     break;
-                case "mail.channel/last_interest_dt_changed":
+                case "discuss.channel/last_interest_dt_changed":
                     this._handleNotificationLastInterestDtChanged(notif);
                     break;
                 case "ir.attachment/delete":
@@ -473,7 +477,7 @@ export class Messaging {
 
     _handleNotificationLastInterestDtChanged(notif) {
         const { id, last_interest_dt } = notif.payload;
-        const channel = this.store.threads[createLocalId("mail.channel", id)];
+        const channel = this.store.threads[createLocalId("discuss.channel", id)];
         if (channel) {
             this.threadService.update(channel, { serverData: { last_interest_dt } });
         }
@@ -484,12 +488,12 @@ export class Messaging {
 
     async _handleNotificationNewMessage(notif) {
         const { id, message: messageData } = notif.payload;
-        let channel = this.store.threads[createLocalId("mail.channel", id)];
+        let channel = this.store.threads[createLocalId("discuss.channel", id)];
         if (!channel) {
-            const [channelData] = await this.orm.call("mail.channel", "channel_info", [id]);
+            const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
             channel = this.threadService.insert({
                 id: channelData.id,
-                model: "mail.channel",
+                model: "discuss.channel",
                 type: channelData.channel.channel_type,
                 serverData: channelData,
             });
@@ -570,7 +574,7 @@ export class Messaging {
         if (notif.payload.Channel) {
             this.threadService.insert({
                 id: notif.payload.Channel.id,
-                model: "mail.channel",
+                model: "discuss.channel",
                 serverData: {
                     channel: {
                         avatarCacheKey: notif.payload.Channel.avatarCacheKey,
@@ -648,7 +652,7 @@ export class Messaging {
     }
 
     _updateRtcSessions(channelId, sessionsData, command) {
-        const channel = this.store.threads[createLocalId("mail.channel", channelId)];
+        const channel = this.store.threads[createLocalId("discuss.channel", channelId)];
         if (!channel) {
             return;
         }
@@ -734,7 +738,7 @@ export class Messaging {
 export const messagingService = {
     dependencies: [
         "mail.store",
-        "mail.channel.member",
+        "discuss.channel.member",
         "rpc",
         "orm",
         "user",
@@ -758,13 +762,17 @@ export const messagingService = {
             let threadLocalId = createLocalId("mail.box", "inbox");
             const activeId = services.router.current.hash.active_id;
             if (typeof activeId === "number") {
-                threadLocalId = createLocalId("mail.channel", activeId);
+                threadLocalId = createLocalId("discuss.channel", activeId);
             }
             if (typeof activeId === "string" && activeId.startsWith("mail.box_")) {
                 threadLocalId = createLocalId("mail.box", activeId.slice(9));
             }
+            // legacy format (sent in old emails, shared links, ...)
             if (typeof activeId === "string" && activeId.startsWith("mail.channel_")) {
-                threadLocalId = createLocalId("mail.channel", parseInt(activeId.slice(13), 10));
+                threadLocalId = createLocalId("discuss.channel", parseInt(activeId.slice(13), 10));
+            }
+            if (typeof activeId === "string" && activeId.startsWith("discuss.channel_")) {
+                threadLocalId = createLocalId("discuss.channel", parseInt(activeId.slice(13), 10));
             }
             services["mail.store"].discuss.threadLocalId = threadLocalId;
         }

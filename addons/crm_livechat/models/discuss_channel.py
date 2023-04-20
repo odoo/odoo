@@ -6,8 +6,8 @@ from odoo import models, _
 from odoo.tools import html2plaintext
 
 
-class MailChannel(models.Model):
-    _inherit = 'mail.channel'
+class DiscussChannel(models.Model):
+    _inherit = 'discuss.channel'
 
     def execute_command_lead(self, **kwargs):
         partner = self.env.user.partner_id

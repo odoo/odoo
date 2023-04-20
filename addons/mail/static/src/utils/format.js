@@ -166,7 +166,7 @@ function generateMentionsLinks(body, { partners = [], threads = [] }) {
         mentions.push({
             class: "o_channel_redirect",
             id: thread.id,
-            model: "mail.channel",
+            model: "discuss.channel",
             placeholder,
             text,
         });

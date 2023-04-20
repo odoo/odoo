@@ -135,7 +135,7 @@ class ChatbotScript(models.Model):
         end user.
 
         This is important because we need to display those welcoming steps in a special fashion on
-        the frontend, since those are not inserted into the mail.channel as actual mail.messages,
+        the frontend, since those are not inserted into the discuss.channel as actual mail.messages,
         to avoid bloating the channels with bot messages if the end-user never interacts with it. """
         self.ensure_one()
 
@@ -147,21 +147,21 @@ class ChatbotScript(models.Model):
 
         return welcome_steps
 
-    def _post_welcome_steps(self, mail_channel):
+    def _post_welcome_steps(self, discuss_channel):
         """ Welcome messages are only posted after the visitor's first interaction with the chatbot.
         See 'chatbot.script#_get_welcome_steps()' for more details.
 
         Side note: it is important to set the 'chatbot_current_step_id' on each iteration so that
-        it's correctly set when going into 'mail_channel#_message_post_after_hook()'. """
+        it's correctly set when going into 'discuss_channel#_message_post_after_hook()'. """
 
         self.ensure_one()
         posted_messages = self.env['mail.message']
 
         for welcome_step in self._get_welcome_steps():
-            mail_channel.chatbot_current_step_id = welcome_step.id
+            discuss_channel.chatbot_current_step_id = welcome_step.id
 
             if not is_html_empty(welcome_step.message):
-                posted_messages += mail_channel.with_context(mail_create_nosubscribe=True).message_post(
+                posted_messages += discuss_channel.with_context(mail_create_nosubscribe=True).message_post(
                     author_id=self.operator_partner_id.id,
                     body=plaintext2html(welcome_step.message),
                     message_type='comment',
@@ -194,7 +194,7 @@ class ChatbotScript(models.Model):
             ]
         }
 
-    def _validate_email(self, email_address, mail_channel):
+    def _validate_email(self, email_address, discuss_channel):
         email_address = html2plaintext(email_address)
         email_normalized = email_normalize(email_address)
 
@@ -205,7 +205,7 @@ class ChatbotScript(models.Model):
                 "'%(input_email)s' does not look like a valid email. Can you please try again?",
                 input_email=email_address
             )
-            posted_message = mail_channel._chatbot_post_message(self, plaintext2html(error_message))
+            posted_message = discuss_channel._chatbot_post_message(self, plaintext2html(error_message))
 
         return {
             'success': bool(email_normalized),

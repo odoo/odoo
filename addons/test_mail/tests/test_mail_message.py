@@ -333,12 +333,12 @@ class TestMessageAccess(MailCommon):
         cls.user_public = mail_new_test_user(cls.env, login='bert', groups='base.group_public', name='Bert Tartignole')
         cls.user_portal = mail_new_test_user(cls.env, login='chell', groups='base.group_portal', name='Chell Gladys')
 
-        cls.group_restricted_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)['id'])
-        cls.public_channel = cls.env['mail.channel'].browse(cls.env['mail.channel'].channel_create(name='Public Channel', group_id=None)['id'])
-        cls.private_group = cls.env['mail.channel'].browse(cls.env['mail.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")['id'])
+        cls.group_restricted_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_create(name='Channel for Groups', group_id=cls.env.ref('base.group_user').id)['id'])
+        cls.public_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].channel_create(name='Public Channel', group_id=None)['id'])
+        cls.private_group = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].create_group(partners_to=cls.user_employee_1.partner_id.ids, name="Group")['id'])
         cls.message = cls.env['mail.message'].create({
             'body': 'My Body',
-            'model': 'mail.channel',
+            'model': 'discuss.channel',
             'res_id': cls.private_group.id,
         })
 
@@ -352,18 +352,18 @@ class TestMessageAccess(MailCommon):
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg3 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A Pigs', 'subtype_id': False,
-            'model': 'mail.channel', 'res_id': self.group_restricted_channel.id})
+            'model': 'discuss.channel', 'res_id': self.group_restricted_channel.id})
         msg4 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A+P Pigs', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.channel', 'res_id': self.group_restricted_channel.id,
+            'model': 'discuss.channel', 'res_id': self.group_restricted_channel.id,
             'partner_ids': [(6, 0, [self.user_public.partner_id.id])]})
         msg5 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A+E Pigs', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.channel', 'res_id': self.group_restricted_channel.id,
+            'model': 'discuss.channel', 'res_id': self.group_restricted_channel.id,
             'partner_ids': [(6, 0, [self.user_employee.partner_id.id])]})
         msg6 = self.env['mail.message'].create({
             'subject': '_ZTest', 'body': 'A Birds', 'subtype_id': self.ref('mail.mt_comment'),
-            'model': 'mail.channel', 'res_id': self.private_group.id})
+            'model': 'discuss.channel', 'res_id': self.private_group.id})
         msg7 = self.env['mail.message'].with_user(self.user_employee).create({
             'subject': '_ZTest', 'body': 'B', 'subtype_id': self.ref('mail.mt_comment')})
         msg8 = self.env['mail.message'].with_user(self.user_employee).create({
@@ -431,7 +431,7 @@ class TestMessageAccess(MailCommon):
         self.message.with_user(self.user_employee).read()
 
     def test_mail_message_access_read_doc(self):
-        self.message.write({'model': 'mail.channel', 'res_id': self.public_channel.id})
+        self.message.write({'model': 'discuss.channel', 'res_id': self.public_channel.id})
         # Test: Employee reads the message, ok because linked to a doc they are allowed to read
         self.message.with_user(self.user_employee).read()
 
@@ -443,26 +443,26 @@ class TestMessageAccess(MailCommon):
     def test_mail_message_access_create_crash_public(self):
         # Public creates a message on Channel for groups -> ko, no enter rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].with_user(self.user_public).create({'model': 'mail.channel', 'res_id': self.group_restricted_channel.id, 'body': 'Test'})
+            self.env['mail.message'].with_user(self.user_public).create({'model': 'discuss.channel', 'res_id': self.group_restricted_channel.id, 'body': 'Test'})
 
         # Public create a message on Public Channel -> ko, no creation rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].with_user(self.user_public).create({'model': 'mail.channel', 'res_id': self.public_channel.id, 'body': 'Test'})
+            self.env['mail.message'].with_user(self.user_public).create({'model': 'discuss.channel', 'res_id': self.public_channel.id, 'body': 'Test'})
 
     @mute_logger('odoo.models')
     def test_mail_message_access_create_crash(self):
         # Do: Employee create a private message -> ko, no creation rights
         with self.assertRaises(AccessError):
-            self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.private_group.id, 'body': 'Test'})
+            self.env['mail.message'].with_user(self.user_employee).create({'model': 'discuss.channel', 'res_id': self.private_group.id, 'body': 'Test'})
 
     @mute_logger('odoo.models')
     def test_mail_message_access_create_doc(self):
         Message = self.env['mail.message'].with_user(self.user_employee)
         # Do: Employee creates a message on Public Channel -> ok, write access to the related document
-        Message.create({'model': 'mail.channel', 'res_id': self.public_channel.id, 'body': 'Test'})
+        Message.create({'model': 'discuss.channel', 'res_id': self.public_channel.id, 'body': 'Test'})
         # Do: Employee creates a message on Group -> ko, no write access to the related document
         with self.assertRaises(AccessError):
-            Message.create({'model': 'mail.channel', 'res_id': self.private_group.id, 'body': 'Test'})
+            Message.create({'model': 'discuss.channel', 'res_id': self.private_group.id, 'body': 'Test'})
 
     def test_mail_message_access_create_private(self):
         self.env['mail.message'].with_user(self.user_employee).create({'body': 'Test'})
@@ -471,7 +471,7 @@ class TestMessageAccess(MailCommon):
         # TDE FIXME: should it really work ? not sure - catchall makes crash (aka, post will crash also)
         self.env['ir.config_parameter'].set_param('mail.catchall.domain', False)
         self.message.write({'partner_ids': [(4, self.user_employee.partner_id.id)]})
-        self.env['mail.message'].with_user(self.user_employee).create({'model': 'mail.channel', 'res_id': self.private_group.id, 'body': 'Test', 'parent_id': self.message.id})
+        self.env['mail.message'].with_user(self.user_employee).create({'model': 'discuss.channel', 'res_id': self.private_group.id, 'body': 'Test', 'parent_id': self.message.id})
 
     def test_mail_message_access_create_wo_parent_access(self):
         """ Purpose is to test posting a message on a record whose first message / parent

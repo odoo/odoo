@@ -7,38 +7,38 @@ import { datetime_to_str } from "web.time";
 import { assignDefined } from "@mail/utils/misc";
 import { formatDate } from "@web/core/l10n/dates";
 
-patch(MockServer.prototype, "mail/models/mail_channel", {
+patch(MockServer.prototype, "mail/models/discuss_channel", {
     async _performRPC(route, args) {
-        if (args.model === "mail.channel" && args.method === "action_unfollow") {
+        if (args.model === "discuss.channel" && args.method === "action_unfollow") {
             const ids = args.args[0];
-            return this._mockMailChannelActionUnfollow(ids, args.kwargs.context);
+            return this._mockDiscussChannelActionUnfollow(ids, args.kwargs.context);
         }
-        if (args.model === "mail.channel" && args.method === "channel_fetched") {
+        if (args.model === "discuss.channel" && args.method === "channel_fetched") {
             const ids = args.args[0];
-            return this._mockMailChannelChannelFetched(ids);
+            return this._mockDiscussChannelChannelFetched(ids);
         }
-        if (args.model === "mail.channel" && args.method === "channel_fetch_preview") {
+        if (args.model === "discuss.channel" && args.method === "channel_fetch_preview") {
             const ids = args.args[0];
-            return this._mockMailChannelChannelFetchPreview(ids);
+            return this._mockDiscussChannelChannelFetchPreview(ids);
         }
-        if (args.model === "mail.channel" && args.method === "channel_fold") {
+        if (args.model === "discuss.channel" && args.method === "channel_fold") {
             const ids = args.args[0];
             const state = args.args[1] || args.kwargs.state;
-            return this._mockMailChannelChannelFold(ids, state);
+            return this._mockDiscussChannelChannelFold(ids, state);
         }
-        if (args.model === "mail.channel" && args.method === "channel_create") {
+        if (args.model === "discuss.channel" && args.method === "channel_create") {
             const name = args.args[0];
             const groupId = args.args[1];
-            return this._mockMailChannelChannelCreate(name, groupId);
+            return this._mockDiscussChannelChannelCreate(name, groupId);
         }
-        if (args.model === "mail.channel" && args.method === "set_message_pin") {
-            return this._mockMailChannelSetMessagePin(
+        if (args.model === "discuss.channel" && args.method === "set_message_pin") {
+            return this._mockDiscussChannelSetMessagePin(
                 args.args[0],
                 args.kwargs.message_id,
                 args.kwargs.pinned
             );
         }
-        if (args.model === "mail.channel" && args.method === "channel_get") {
+        if (args.model === "discuss.channel" && args.method === "channel_get") {
             const partners_to = args.args[0] || args.kwargs.partners_to;
             const pin =
                 args.args[1] !== undefined
@@ -46,72 +46,72 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                     : args.kwargs.pin !== undefined
                     ? args.kwargs.pin
                     : undefined;
-            return this._mockMailChannelChannelGet(partners_to, pin);
+            return this._mockDiscussChannelChannelGet(partners_to, pin);
         }
-        if (args.model === "mail.channel" && args.method === "channel_info") {
+        if (args.model === "discuss.channel" && args.method === "channel_info") {
             const ids = args.args[0];
-            return this._mockMailChannelChannelInfo(ids);
+            return this._mockDiscussChannelChannelInfo(ids);
         }
-        if (args.model === "mail.channel" && args.method === "add_members") {
+        if (args.model === "discuss.channel" && args.method === "add_members") {
             const ids = args.args[0];
             const partner_ids = args.args[1] || args.kwargs.partner_ids;
-            return this._mockMailChannelAddMembers(ids, partner_ids, args.kwargs.context);
+            return this._mockDiscussChannelAddMembers(ids, partner_ids, args.kwargs.context);
         }
-        if (args.model === "mail.channel" && args.method === "channel_pin") {
+        if (args.model === "discuss.channel" && args.method === "channel_pin") {
             const ids = args.args[0];
             const pinned = args.args[1] || args.kwargs.pinned;
-            return this._mockMailChannelChannelPin(ids, pinned);
+            return this._mockDiscussChannelChannelPin(ids, pinned);
         }
-        if (args.model === "mail.channel" && args.method === "channel_rename") {
+        if (args.model === "discuss.channel" && args.method === "channel_rename") {
             const ids = args.args[0];
             const name = args.args[1] || args.kwargs.name;
-            return this._mockMailChannelChannelRename(ids, name);
+            return this._mockDiscussChannelChannelRename(ids, name);
         }
-        if (args.model === "mail.channel" && args.method === "channel_change_description") {
+        if (args.model === "discuss.channel" && args.method === "channel_change_description") {
             const ids = args.args[0];
             const description = args.args[1] || args.kwargs.description;
-            return this._mockMailChannelChannelChangeDescription(ids, description);
+            return this._mockDiscussChannelChannelChangeDescription(ids, description);
         }
-        if (route === "/mail/channel/set_last_seen_message") {
+        if (route === "/discuss/channel/set_last_seen_message") {
             const id = args.channel_id;
             const last_message_id = args.last_message_id;
-            return this._mockMailChannel_ChannelSeen([id], last_message_id);
+            return this._mockDiscussChannel_ChannelSeen([id], last_message_id);
         }
-        if (args.model === "mail.channel" && args.method === "channel_set_custom_name") {
+        if (args.model === "discuss.channel" && args.method === "channel_set_custom_name") {
             const ids = args.args[0];
             const name = args.args[1] || args.kwargs.name;
-            return this._mockMailChannelChannelSetCustomName(ids, name);
+            return this._mockDiscussChannelChannelSetCustomName(ids, name);
         }
-        if (args.model === "mail.channel" && args.method === "create_group") {
+        if (args.model === "discuss.channel" && args.method === "create_group") {
             const partners_to = args.args[0] || args.kwargs.partners_to;
-            return this._mockMailChannelCreateGroup(partners_to);
+            return this._mockDiscussChannelCreateGroup(partners_to);
         }
-        if (args.model === "mail.channel" && args.method === "execute_command_leave") {
-            return this._mockMailChannelExecuteCommandLeave(args);
+        if (args.model === "discuss.channel" && args.method === "execute_command_leave") {
+            return this._mockDiscussChannelExecuteCommandLeave(args);
         }
-        if (args.model === "mail.channel" && args.method === "execute_command_who") {
-            return this._mockMailChannelExecuteCommandWho(args);
+        if (args.model === "discuss.channel" && args.method === "execute_command_who") {
+            return this._mockDiscussChannelExecuteCommandWho(args);
         }
         if (
-            args.model === "mail.channel" &&
+            args.model === "discuss.channel" &&
             args.method === "write" &&
             "image_128" in args.args[1]
         ) {
             const ids = args.args[0];
-            return this._mockMailChannelWriteImage128(ids[0]);
+            return this._mockDiscussChannelWriteImage128(ids[0]);
         }
-        if (args.model === "mail.channel" && args.method === "load_more_members") {
+        if (args.model === "discuss.channel" && args.method === "load_more_members") {
             const [channel_ids] = args.args;
             const { known_member_ids } = args.kwargs;
-            return this._mockMailChannelloadOlderMembers(channel_ids, known_member_ids);
+            return this._mockDiscussChannelloadOlderMembers(channel_ids, known_member_ids);
         }
-        if (args.model === "mail.channel" && args.method === "get_mention_suggestions") {
-            return this._mockMailChannelGetMentionSuggestions(args);
+        if (args.model === "discuss.channel" && args.method === "get_mention_suggestions") {
+            return this._mockDiscussChannelGetMentionSuggestions(args);
         }
         return this._super(route, args);
     },
     /**
-     * Simulates `message_post` on `mail.channel`.
+     * Simulates `message_post` on `discuss.channel`.
      *
      * @private
      * @param {integer} id
@@ -119,21 +119,21 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
      * @param {Object} [context]
      * @returns {integer|false}
      */
-    _mockMailChannelMessagePost(id, kwargs, context) {
+    _mockDiscussChannelMessagePost(id, kwargs, context) {
         const message_type = kwargs.message_type || "notification";
-        const channel = this.getRecords("mail.channel", [["id", "=", id]])[0];
+        const channel = this.getRecords("discuss.channel", [["id", "=", id]])[0];
         if (channel.channel_type !== "channel") {
-            const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
+            const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
                 ["channel_id", "=", channel.id],
                 ["partner_id", "=", this.currentPartnerId],
             ]);
-            this.pyEnv["mail.channel.member"].write([memberOfCurrentUser.id], {
+            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
                 last_interest_dt: datetime_to_str(new Date()),
                 is_pinned: true,
             });
         }
         const messageData = this._mockMailThreadMessagePost(
-            "mail.channel",
+            "discuss.channel",
             [id],
             Object.assign(kwargs, {
                 message_type,
@@ -141,52 +141,52 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             context
         );
         if (kwargs.author_id === this.currentPartnerId) {
-            this._mockMailChannel_SetLastSeenMessage([channel.id], messageData.id);
+            this._mockDiscussChannel_SetLastSeenMessage([channel.id], messageData.id);
         }
         // simulate compute of message_unread_counter
-        const otherMembers = this.getRecords("mail.channel.member", [
+        const otherMembers = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel.id],
             ["partner_id", "!=", this.currentPartnerId],
         ]);
         for (const member of otherMembers) {
-            this.pyEnv["mail.channel.member"].write([member.id], {
+            this.pyEnv["discuss.channel.member"].write([member.id], {
                 message_unread_counter: member.message_unread_counter + 1,
             });
         }
         return messageData;
     },
     /**
-     * Simulates `action_unfollow` on `mail.channel`.
+     * Simulates `action_unfollow` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      */
-    _mockMailChannelActionUnfollow(ids, { mockedUserId } = {}) {
+    _mockDiscussChannelActionUnfollow(ids, { mockedUserId } = {}) {
         let partnerId = this.currentPartnerId;
         if (mockedUserId) {
             partnerId = this.pyEnv["res.partner"].search([["user_ids", "in", [mockedUserId]]])[0];
         }
-        const channel = this.getRecords("mail.channel", [["id", "in", ids]])[0];
-        const [channelMember] = this.getRecords("mail.channel.member", [
+        const channel = this.getRecords("discuss.channel", [["id", "in", ids]])[0];
+        const [channelMember] = this.getRecords("discuss.channel.member", [
             ["channel_id", "in", ids],
             ["partner_id", "=", partnerId],
         ]);
-        const formattedChannelMember = this._mockMailChannelMember_MailChannelMemberFormat([
+        const formattedChannelMember = this._mockDiscussChannelMember_DiscussChannelMemberFormat([
             channelMember.id,
         ])[0];
         if (!channelMember) {
             return true;
         }
-        this.pyEnv["mail.channel"].write([channel.id], {
+        this.pyEnv["discuss.channel"].write([channel.id], {
             channel_member_ids: [[2, channelMember.id]],
         });
         if (partnerId === this.currentPartnerId) {
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.channel/leave", {
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.channel/leave", {
                 id: channel.id,
             });
         }
         const isSelfMember =
-            this.pyEnv["mail.channel.member"].searchCount([
+            this.pyEnv["discuss.channel.member"].searchCount([
                 ["partner_id", "=", this.pyEnv.currentPartnerId],
                 ["channel_id", "=", channel.id],
             ]) > 0;
@@ -195,7 +195,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 Channel: {
                     id: channel.id,
                     channelMembers: [["insert-and-unlink", formattedChannelMember]],
-                    memberCount: this.pyEnv["mail.channel.member"].searchCount([
+                    memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                         ["channel_id", "=", channel.id],
                     ]),
                 },
@@ -209,7 +209,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
          * for unsubscribe is weak and is relying on both of them to be sent
          * together on the bus).
          */
-        // this._mockMailChannelMessagePost(channel.id, {
+        // this._mockDiscussChannelMessagePost(channel.id, {
         //     author_id: this.currentPartnerId,
         //     body: '<div class="o_mail_notification">left the channel</div>',
         //     subtype_xmlid: "mail.mt_comment",
@@ -217,38 +217,38 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         return true;
     },
     /**
-     * Simulates `add_members` on `mail.channel`.
+     * Simulates `add_members` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      * @param {integer[]} partner_ids
      */
-    _mockMailChannelAddMembers(ids, partner_ids, context = {}) {
-        const [channel] = this.getRecords("mail.channel", [["id", "in", ids]]);
+    _mockDiscussChannelAddMembers(ids, partner_ids, context = {}) {
+        const [channel] = this.getRecords("discuss.channel", [["id", "in", ids]]);
         const partners = this.getRecords("res.partner", [["id", "in", partner_ids]]);
         for (const partner of partners) {
             const body = `<div class="o_mail_notification">invited ${partner.name} to the channel</div>`;
             const message_type = "notification";
             const subtype_xmlid = "mail.mt_comment";
-            this._mockMailChannelMessagePost(channel.id, { body, message_type, subtype_xmlid });
+            this._mockDiscussChannelMessagePost(channel.id, { body, message_type, subtype_xmlid });
         }
         const insertedChannelMembers = [];
         for (const partner of partners) {
             insertedChannelMembers.push(
-                this.pyEnv["mail.channel.member"].create({
+                this.pyEnv["discuss.channel.member"].create({
                     channel_id: channel.id,
                     partner_id: partner.id,
                 })
             );
         }
         if (partner_ids.includes(this.pyEnv.currentPartnerId)) {
-            this.pyEnv["bus.bus"]._sendone(channel, "mail.channel/joined", {
-                channel: this._mockMailChannelChannelInfo([channel.id])[0],
+            this.pyEnv["bus.bus"]._sendone(channel, "discuss.channel/joined", {
+                channel: this._mockDiscussChannelChannelInfo([channel.id])[0],
                 invited_by_user_id: context.mockedUserId ?? this.currentUserId,
             });
         }
         const isSelfMember =
-            this.pyEnv["mail.channel.member"].searchCount([
+            this.pyEnv["discuss.channel.member"].searchCount([
                 ["partner_id", "=", this.pyEnv.currentPartnerId],
                 ["channel_id", "=", channel.id],
             ]) > 0;
@@ -259,12 +259,12 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                     channelMembers: [
                         [
                             "insert",
-                            this._mockMailChannelMember_MailChannelMemberFormat(
+                            this._mockDiscussChannelMember_DiscussChannelMemberFormat(
                                 insertedChannelMembers
                             ),
                         ],
                     ],
-                    memberCount: this.pyEnv["mail.channel.member"].searchCount([
+                    memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                         ["channel_id", "=", channel.id],
                     ]),
                 },
@@ -272,13 +272,13 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         }
     },
     /**
-     * Simulates `set_message_pin` on `mail.channel`.
+     * Simulates `set_message_pin` on `discuss.channel`.
      *
      * @param {number} ids
      * @param {number} message_id
      * @param {boolean} pinned
      */
-    _mockMailChannelSetMessagePin(id, message_id, pinned) {
+    _mockDiscussChannelSetMessagePin(id, message_id, pinned) {
         const pinnedAt = pinned ? formatDate(luxon.DateTime.now()) : false;
         this.pyEnv["mail.message"].write([message_id], {
             pinned_at: pinnedAt,
@@ -288,7 +288,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 <a href="#" data-oe-type="highlight" data-oe-id='${message_id}'>message</a> to this channel.
                 <a href="#" data-oe-type="pin-menu">See all pinned messages</a>
             </div>`;
-        this._mockMailChannelMessagePost(id, {
+        this._mockDiscussChannelMessagePost(id, {
             body: notification,
             message_type: "notification",
             subtype_xmlid: "mail.mt_comment",
@@ -301,26 +301,29 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         });
     },
     /**
-     * Simulates `_broadcast` on `mail.channel`.
+     * Simulates `_broadcast` on `discuss.channel`.
      *
      * @private
      * @param {integer} id
      * @param {integer[]} partner_ids
      * @returns {Object}
      */
-    _mockMailChannel_broadcast(ids, partner_ids) {
-        const notifications = this._mockMailChannel_channelChannelNotifications(ids, partner_ids);
+    _mockDiscussChannel_broadcast(ids, partner_ids) {
+        const notifications = this._mockDiscussChannel_channelChannelNotifications(
+            ids,
+            partner_ids
+        );
         this.pyEnv["bus.bus"]._sendmany(notifications);
     },
     /**
-     * Simulates `_channel_channel_notifications` on `mail.channel`.
+     * Simulates `_channel_channel_notifications` on `discuss.channel`.
      *
      * @private
      * @param {integer} id
      * @param {integer[]} partner_ids
      * @returns {Object}
      */
-    _mockMailChannel_channelChannelNotifications(ids, partner_ids) {
+    _mockDiscussChannel_channelChannelNotifications(ids, partner_ids) {
         const notifications = [];
         for (const partner_id of partner_ids) {
             const user = this.getRecords("res.users", [["partner_id", "in", partner_id]])[0];
@@ -329,28 +332,28 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             }
             // Note: `channel_info` on the server is supposed to be called with
             // the proper user context but this is not done here for simplicity.
-            const channelInfos = this._mockMailChannelChannelInfo(ids);
+            const channelInfos = this._mockDiscussChannelChannelInfo(ids);
             const [relatedPartner] = this.pyEnv["res.partner"].searchRead([
                 ["id", "=", partner_id],
             ]);
             for (const channelInfo of channelInfos) {
-                notifications.push([relatedPartner, "mail.channel/legacy_insert", channelInfo]);
+                notifications.push([relatedPartner, "discuss.channel/legacy_insert", channelInfo]);
             }
         }
         return notifications;
     },
     /**
-     * Simulates `channel_fetched` on `mail.channel`.
+     * Simulates `channel_fetched` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      * @param {string} extra_info
      */
-    _mockMailChannelChannelFetched(ids) {
-        const channels = this.getRecords("mail.channel", [["id", "in", ids]]);
+    _mockDiscussChannelChannelFetched(ids) {
+        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
             const channelMessages = this.getRecords("mail.message", [
-                ["model", "=", "mail.channel"],
+                ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
             ]);
             const lastMessage = channelMessages.reduce((lastMessage, message) => {
@@ -362,14 +365,14 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             if (!lastMessage) {
                 continue;
             }
-            const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
+            const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
                 ["channel_id", "=", channel.id],
                 ["partner_id", "=", this.currentPartnerId],
             ]);
-            this.pyEnv["mail.channel.member"].write([memberOfCurrentUser.id], {
+            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
                 fetched_message_id: lastMessage.id,
             });
-            this.pyEnv["bus.bus"]._sendone(channel, "mail.channel.member/fetched", {
+            this.pyEnv["bus.bus"]._sendone(channel, "discuss.channel.member/fetched", {
                 channel_id: channel.id,
                 id: memberOfCurrentUser.id,
                 last_message_id: lastMessage.id,
@@ -378,18 +381,18 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         }
     },
     /**
-     * Simulates `channel_fetch_preview` on `mail.channel`.
+     * Simulates `channel_fetch_preview` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      * @returns {Object[]} list of channels previews
      */
-    _mockMailChannelChannelFetchPreview(ids) {
-        const channels = this.getRecords("mail.channel", [["id", "in", ids]]);
+    _mockDiscussChannelChannelFetchPreview(ids) {
+        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         return channels
             .map((channel) => {
                 const channelMessages = this.getRecords("mail.message", [
-                    ["model", "=", "mail.channel"],
+                    ["model", "=", "discuss.channel"],
                     ["res_id", "=", channel.id],
                 ]);
                 const lastMessage = channelMessages.reduce((lastMessage, message) => {
@@ -408,17 +411,17 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             .filter((preview) => preview.last_message);
     },
     /**
-     * Simulates the 'channel_fold' route on `mail.channel`.
+     * Simulates the 'channel_fold' route on `discuss.channel`.
      * In particular sends a notification on the bus.
      *
      * @private
      * @param {number} ids
      * @param {state} [state]
      */
-    _mockMailChannelChannelFold(ids, state) {
-        const channels = this.getRecords("mail.channel", [["id", "in", ids]]);
+    _mockDiscussChannelChannelFold(ids, state) {
+        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
-            const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
+            const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
                 ["channel_id", "=", channel.id],
                 ["partner_id", "=", this.currentPartnerId],
             ]);
@@ -431,26 +434,26 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 fold_state: foldState,
                 is_minimized: foldState !== "closed",
             };
-            this.pyEnv["mail.channel.member"].write([memberOfCurrentUser.id], vals);
+            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], vals);
             this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
                 Thread: {
                     id: channel.id,
-                    model: "mail.channel",
+                    model: "discuss.channel",
                     serverFoldState: memberOfCurrentUser.fold_state,
                 },
             });
         }
     },
     /**
-     * Simulates 'channel_create' on 'mail.channel'.
+     * Simulates 'channel_create' on 'discuss.channel'.
      *
      * @private
      * @param {string} name
      * @param {string} [group_id]
      * @returns {Object}
      */
-    _mockMailChannelChannelCreate(name, group_id) {
-        const id = this.pyEnv["mail.channel"].create({
+    _mockDiscussChannelChannelCreate(name, group_id) {
+        const id = this.pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [
                     0,
@@ -464,25 +467,25 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             name,
             group_public_id: group_id,
         });
-        this.pyEnv["mail.channel"].write([id], {
+        this.pyEnv["discuss.channel"].write([id], {
             group_public_id: group_id,
         });
-        this._mockMailChannelMessagePost(id, {
+        this._mockDiscussChannelMessagePost(id, {
             body: `<div class="o_mail_notification">created <a href="#" class="o_channel_redirect" data-oe-id="${id}">#${name}</a></div>`,
             message_type: "notification",
         });
-        this._mockMailChannel_broadcast(id, [this.pyEnv.currentPartner]);
-        return this._mockMailChannelChannelInfo([id])[0];
+        this._mockDiscussChannel_broadcast(id, [this.pyEnv.currentPartner]);
+        return this._mockDiscussChannelChannelInfo([id])[0];
     },
     /**
-     * Simulates 'channel_get' on 'mail.channel'.
+     * Simulates 'channel_get' on 'discuss.channel'.
      *
      * @private
      * @param {integer[]} [partners_to=[]]
      * @param {boolean} [pin=true]
      * @returns {Object}
      */
-    _mockMailChannelChannelGet(partners_to = [], pin = true) {
+    _mockDiscussChannelChannelGet(partners_to = [], pin = true) {
         if (partners_to.length === 0) {
             return false;
         }
@@ -490,9 +493,9 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             partners_to.push(this.currentPartnerId);
         }
         const partners = this.getRecords("res.partner", [["id", "in", partners_to]]);
-        const channels = this.pyEnv["mail.channel"].searchRead([["channel_type", "=", "chat"]]);
+        const channels = this.pyEnv["discuss.channel"].searchRead([["channel_type", "=", "chat"]]);
         for (const channel of channels) {
-            const channelMemberIds = this.pyEnv["mail.channel.member"].search([
+            const channelMemberIds = this.pyEnv["discuss.channel.member"].search([
                 ["channel_id", "=", channel.id],
                 ["partner_id", "in", partners_to],
             ]);
@@ -500,10 +503,10 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 channelMemberIds.length === partners.length &&
                 channel.channel_member_ids.length === partners.length
             ) {
-                return this._mockMailChannelChannelInfo([channel.id])[0];
+                return this._mockDiscussChannelChannelInfo([channel.id])[0];
             }
         }
-        const id = this.pyEnv["mail.channel"].create({
+        const id = this.pyEnv["discuss.channel"].create({
             channel_member_ids: partners.map((partner) => [
                 0,
                 0,
@@ -514,27 +517,27 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             channel_type: "chat",
             name: partners.map((partner) => partner.name).join(", "),
         });
-        this._mockMailChannel_broadcast(
+        this._mockDiscussChannel_broadcast(
             id,
             partners.map(({ id }) => id)
         );
-        return this._mockMailChannelChannelInfo([id])[0];
+        return this._mockDiscussChannelChannelInfo([id])[0];
     },
     /**
-     * Simulates `channel_info` on `mail.channel`.
+     * Simulates `channel_info` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      * @returns {Object[]}
      */
-    _mockMailChannelChannelInfo(ids) {
-        const channels = this.getRecords("mail.channel", [["id", "in", ids]]);
+    _mockDiscussChannelChannelInfo(ids) {
+        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         return channels.map((channel) => {
-            const members = this.getRecords("mail.channel.member", [
+            const members = this.getRecords("discuss.channel.member", [
                 ["id", "in", channel.channel_member_ids],
             ]);
             const messages = this.getRecords("mail.message", [
-                ["model", "=", "mail.channel"],
+                ["model", "=", "discuss.channel"],
                 ["res_id", "=", channel.id],
             ]);
             const [group_public_id] = this.getRecords("res.groups", [
@@ -555,7 +558,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 avatarCacheKey: channel.avatarCacheKey,
                 channel_type: channel.channel_type,
                 id: channel.id,
-                memberCount: this.pyEnv["mail.channel.member"].searchCount([
+                memberCount: this.pyEnv["discuss.channel.member"].searchCount([
                     ["channel_id", "=", channel.id],
                 ]),
             };
@@ -574,7 +577,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 message_needaction_counter: messageNeedactionCounter,
                 authorizedGroupFullName: group_public_id ? group_public_id.name : false,
             });
-            const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
+            const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
                 ["channel_id", "=", channel.id],
                 ["partner_id", "=", this.currentPartnerId],
             ]);
@@ -599,7 +602,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 channelData["channelMembers"] = [
                     [
                         "insert",
-                        this._mockMailChannelMember_MailChannelMemberFormat([
+                        this._mockDiscussChannelMember_DiscussChannelMemberFormat([
                             memberOfCurrentUser.id,
                         ]),
                     ],
@@ -618,7 +621,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 channelData["channelMembers"] = [
                     [
                         "insert",
-                        this._mockMailChannelMember_MailChannelMemberFormat(
+                        this._mockDiscussChannelMember_DiscussChannelMemberFormat(
                             members.map((member) => member.id)
                         ),
                     ],
@@ -628,7 +631,9 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
                 [
                     "insert",
                     (channel.rtc_session_ids || []).map((rtcSessionId) =>
-                        this._mockMailChannelRtcSession_MailChannelRtcSessionFormat(rtcSessionId)
+                        this._mockDiscussChannelRtcSession_DiscussChannelRtcSessionFormat(
+                            rtcSessionId
+                        )
                     ),
                 ],
             ];
@@ -637,52 +642,52 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         });
     },
     /**
-     * Simulates the `channel_pin` method of `mail.channel`.
+     * Simulates the `channel_pin` method of `discuss.channel`.
      *
      * @private
      * @param {number[]} ids
      * @param {boolean} [pinned=false]
      */
-    async _mockMailChannelChannelPin(ids, pinned = false) {
-        const [channel] = this.getRecords("mail.channel", [["id", "in", ids]]);
-        const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
+    async _mockDiscussChannelChannelPin(ids, pinned = false) {
+        const [channel] = this.getRecords("discuss.channel", [["id", "in", ids]]);
+        const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
             ["channel_id", "=", channel.id],
             ["partner_id", "=", this.currentPartnerId],
             ["is_pinned", "!=", pinned],
         ]);
         if (memberOfCurrentUser) {
-            this.pyEnv["mail.channel.member"].write([memberOfCurrentUser.id], {
+            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
                 is_pinned: pinned,
             });
         }
         if (!pinned) {
-            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.channel/unpin", {
+            this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "discuss.channel/unpin", {
                 id: channel.id,
             });
         } else {
             this.pyEnv["bus.bus"]._sendone(
                 this.pyEnv.currentPartner,
-                "mail.channel/legacy_insert",
-                this._mockMailChannelChannelInfo([channel.id])[0]
+                "discuss.channel/legacy_insert",
+                this._mockDiscussChannelChannelInfo([channel.id])[0]
             );
         }
     },
     /**
-     * Simulates the `_channel_seen` method of `mail.channel`.
+     * Simulates the `_channel_seen` method of `discuss.channel`.
      *
      * @private
      * @param integer[] ids
      * @param {integer} last_message_id
      */
-    async _mockMailChannel_ChannelSeen(ids, last_message_id) {
+    async _mockDiscussChannel_ChannelSeen(ids, last_message_id) {
         // Update record
         const channel_id = ids[0];
         if (!channel_id) {
             throw new Error("Should only be one channel in channel_seen mock params");
         }
-        const channel = this.getRecords("mail.channel", [["id", "=", channel_id]])[0];
+        const channel = this.getRecords("discuss.channel", [["id", "=", channel_id]])[0];
         const messages = this.getRecords("mail.message", [
-            ["model", "=", "mail.channel"],
+            ["model", "=", "discuss.channel"],
             ["res_id", "=", channel.id],
         ]);
         if (!messages || messages.length === 0) {
@@ -691,10 +696,10 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         if (!channel) {
             return;
         }
-        this._mockMailChannel_SetLastSeenMessage([channel.id], last_message_id);
+        this._mockDiscussChannel_SetLastSeenMessage([channel.id], last_message_id);
         this.pyEnv["bus.bus"]._sendone(
             channel.channel_type === "chat" ? channel : this.pyEnv.currentPartner,
-            "mail.channel.member/seen",
+            "discuss.channel.member/seen",
             {
                 channel_id: channel.id,
                 last_message_id: last_message_id,
@@ -703,46 +708,46 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         );
     },
     /**
-     * Simulates `channel_rename` on `mail.channel`.
+     * Simulates `channel_rename` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      */
-    _mockMailChannelChannelRename(ids, name) {
-        const channel = this.getRecords("mail.channel", [["id", "in", ids]])[0];
-        this.pyEnv["mail.channel"].write([channel.id], { name });
+    _mockDiscussChannelChannelRename(ids, name) {
+        const channel = this.getRecords("discuss.channel", [["id", "in", ids]])[0];
+        this.pyEnv["discuss.channel"].write([channel.id], { name });
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Thread: {
                 id: channel.id,
-                model: "mail.channel",
+                model: "discuss.channel",
                 name: name,
             },
         });
     },
-    _mockMailChannelChannelChangeDescription(ids, description) {
-        const channel = this.getRecords("mail.channel", [["id", "in", ids]])[0];
-        this.pyEnv["mail.channel"].write([channel.id], { description });
+    _mockDiscussChannelChannelChangeDescription(ids, description) {
+        const channel = this.getRecords("discuss.channel", [["id", "in", ids]])[0];
+        this.pyEnv["discuss.channel"].write([channel.id], { description });
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Thread: {
                 id: channel.id,
-                model: "mail.channel",
+                model: "discuss.channel",
                 description: description,
             },
         });
     },
     /**
-     * Simulates `channel_set_custom_name` on `mail.channel`.
+     * Simulates `channel_set_custom_name` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      */
-    _mockMailChannelChannelSetCustomName(ids, name) {
+    _mockDiscussChannelChannelSetCustomName(ids, name) {
         const channelId = ids[0]; // simulate ensure_one.
-        const [memberIdOfCurrentUser] = this.pyEnv["mail.channel.member"].search([
+        const [memberIdOfCurrentUser] = this.pyEnv["discuss.channel.member"].search([
             ["partner_id", "=", this.currentPartnerId],
             ["channel_id", "=", channelId],
         ]);
-        this.pyEnv["mail.channel.member"].write([memberIdOfCurrentUser], {
+        this.pyEnv["discuss.channel.member"].write([memberIdOfCurrentUser], {
             custom_channel_name: name,
         });
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartner, "mail.record/insert", {
@@ -753,48 +758,48 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         });
     },
     /**
-     * Simulates the `create_group` on `mail.channel`.
+     * Simulates the `create_group` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} partners_to
      * @returns {Object}
      */
-    async _mockMailChannelCreateGroup(partners_to) {
+    async _mockDiscussChannelCreateGroup(partners_to) {
         const partners = this.getRecords("res.partner", [["id", "in", partners_to]]);
-        const id = this.pyEnv["mail.channel"].create({
+        const id = this.pyEnv["discuss.channel"].create({
             channel_type: "group",
             channel_member_ids: partners.map((partner) => [0, 0, { partner_id: partner.id }]),
             name: "",
         });
-        this._mockMailChannel_broadcast(
+        this._mockDiscussChannel_broadcast(
             id,
             partners.map((partner) => partner.id)
         );
-        return this._mockMailChannelChannelInfo([id])[0];
+        return this._mockDiscussChannelChannelInfo([id])[0];
     },
     /**
-     * Simulates `execute_command_leave` on `mail.channel`.
+     * Simulates `execute_command_leave` on `discuss.channel`.
      *
      * @private
      */
-    _mockMailChannelExecuteCommandLeave(args) {
-        const channel = this.getRecords("mail.channel", [["id", "in", args.args[0]]])[0];
+    _mockDiscussChannelExecuteCommandLeave(args) {
+        const channel = this.getRecords("discuss.channel", [["id", "in", args.args[0]]])[0];
         if (channel.channel_type === "channel") {
-            this._mockMailChannelActionUnfollow([channel.id]);
+            this._mockDiscussChannelActionUnfollow([channel.id]);
         } else {
-            this._mockMailChannelChannelPin([channel.id], false);
+            this._mockDiscussChannelChannelPin([channel.id], false);
         }
     },
     /**
-     * Simulates `execute_command_who` on `mail.channel`.
+     * Simulates `execute_command_who` on `discuss.channel`.
      *
      * @private
      */
-    _mockMailChannelExecuteCommandWho(args) {
+    _mockDiscussChannelExecuteCommandWho(args) {
         const ids = args.args[0];
-        const channels = this.getRecords("mail.channel", [["id", "in", ids]]);
+        const channels = this.getRecords("discuss.channel", [["id", "in", ids]]);
         for (const channel of channels) {
-            const members = this.getRecords("mail.channel.member", [
+            const members = this.getRecords("discuss.channel.member", [
                 ["id", "in", channel.channel_member_ids],
             ]);
             const otherPartnerIds = members
@@ -811,22 +816,22 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
             }
             this.pyEnv["bus.bus"]._sendone(
                 this.pyEnv.currentPartner,
-                "mail.channel/transient_message",
+                "discuss.channel/transient_message",
                 {
                     body: `<span class="o_mail_notification">${message}</span>`,
-                    model: "mail.channel",
+                    model: "discuss.channel",
                     res_id: channel.id,
                 }
             );
         }
     },
     /**
-     * Simulates `get_mention_suggestions` on `mail.channel`.
+     * Simulates `get_mention_suggestions` on `discuss.channel`.
      *
      * @private
      * @returns {Array[]}
      */
-    _mockMailChannelGetMentionSuggestions(args) {
+    _mockDiscussChannelGetMentionSuggestions(args) {
         const search = args.kwargs.search || "";
         const limit = args.kwargs.limit || 8;
 
@@ -874,7 +879,7 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         };
 
         const mentionSuggestions = mentionSuggestionsFilter(
-            this.models["mail.channel"].records,
+            this.models["discuss.channel"].records,
             search,
             limit
         );
@@ -882,15 +887,15 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         return mentionSuggestions;
     },
     /**
-     * Simulates `write` on `mail.channel` when `image_128` changes.
+     * Simulates `write` on `discuss.channel` when `image_128` changes.
      *
      * @param {integer} id
      */
-    _mockMailChannelWriteImage128(id) {
-        this.pyEnv["mail.channel"].write([id], {
+    _mockDiscussChannelWriteImage128(id) {
+        this.pyEnv["discuss.channel"].write([id], {
             avatarCacheKey: moment.utc().format("YYYYMMDDHHmmss"),
         });
-        const channel = this.pyEnv["mail.channel"].searchRead([["id", "=", id]])[0];
+        const channel = this.pyEnv["discuss.channel"].searchRead([["id", "=", id]])[0];
         this.pyEnv["bus.bus"]._sendone(channel, "mail.record/insert", {
             Channel: {
                 avatarCacheKey: channel.avatarCacheKey,
@@ -899,21 +904,21 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         });
     },
     /**
-     * Simulates `load_more_members` on `mail.channel`.
+     * Simulates `load_more_members` on `discuss.channel`.
      *
      * @private
      * @param {integer[]} channel_ids
      * @param {integer[]} known_member_ids
      */
-    _mockMailChannelloadOlderMembers(channel_ids, known_member_ids) {
-        const members = this.pyEnv["mail.channel.member"].searchRead(
+    _mockDiscussChannelloadOlderMembers(channel_ids, known_member_ids) {
+        const members = this.pyEnv["discuss.channel.member"].searchRead(
             [
                 ["id", "not in", known_member_ids],
                 ["channel_id", "in", channel_ids],
             ],
             { limit: 100 }
         );
-        const memberCount = this.pyEnv["mail.channel.member"].searchCount([
+        const memberCount = this.pyEnv["discuss.channel.member"].searchCount([
             ["channel_id", "in", channel_ids],
         ]);
         const membersData = [];
@@ -955,19 +960,19 @@ patch(MockServer.prototype, "mail/models/mail_channel", {
         };
     },
     /**
-     * Simulates the `_set_last_seen_message` method of `mail.channel`.
+     * Simulates the `_set_last_seen_message` method of `discuss.channel`.
      *
      * @private
      * @param {integer[]} ids
      * @param {integer} message_id
      */
-    _mockMailChannel_SetLastSeenMessage(ids, message_id) {
-        const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
+    _mockDiscussChannel_SetLastSeenMessage(ids, message_id) {
+        const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
             ["channel_id", "in", ids],
             ["partner_id", "=", this.currentPartnerId],
         ]);
         if (memberOfCurrentUser) {
-            this.pyEnv["mail.channel.member"].write([memberOfCurrentUser.id], {
+            this.pyEnv["discuss.channel.member"].write([memberOfCurrentUser.id], {
                 fetched_message_id: message_id,
                 seen_message_id: message_id,
             });

@@ -15,7 +15,7 @@ QUnit.module("emoji");
 
 QUnit.test("search emoji from keywords", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -25,7 +25,7 @@ QUnit.test("search emoji from keywords", async (assert) => {
 
 QUnit.test("search emoji from keywords with special regex character", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -35,7 +35,7 @@ QUnit.test("search emoji from keywords with special regex character", async (ass
 
 QUnit.test("Press Escape in emoji picker closes the emoji picker", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -45,7 +45,7 @@ QUnit.test("Press Escape in emoji picker closes the emoji picker", async (assert
 
 QUnit.test("Basic keyboard navigation", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -73,7 +73,7 @@ QUnit.test("Basic keyboard navigation", async (assert) => {
 
 QUnit.test("recent category (basic)", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -89,7 +89,7 @@ QUnit.test("recent category (basic)", async (assert) => {
 
 QUnit.test("emoji usage amount orders frequent emojis", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -115,7 +115,7 @@ QUnit.test("emoji usage amount orders frequent emojis", async (assert) => {
 
 QUnit.test("posting :wink: in message should impact recent", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":wink:");
@@ -130,7 +130,7 @@ QUnit.test("posting :wink: in message should impact recent", async (assert) => {
 QUnit.test("posting :snowman: in message should impact recent", async (assert) => {
     // the snowman emoji is composed of two codepoints, making it a corner case
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", ":snowman:");
@@ -144,7 +144,7 @@ QUnit.test("posting :snowman: in message should impact recent", async (assert) =
 
 QUnit.test("first category should be highlight by default", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");

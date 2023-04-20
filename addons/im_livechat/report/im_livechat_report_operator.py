@@ -15,7 +15,7 @@ class ImLivechatReportOperator(models.Model):
     partner_id = fields.Many2one('res.partner', 'Operator', readonly=True)
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
     nbr_channel = fields.Integer('# of Sessions', readonly=True, group_operator="sum")
-    channel_id = fields.Many2one('mail.channel', 'Conversation', readonly=True)
+    channel_id = fields.Many2one('discuss.channel', 'Conversation', readonly=True)
     start_date = fields.Datetime('Start Date of session', readonly=True)
     time_to_answer = fields.Float('Time to answer', digits=(16, 2), readonly=True, group_operator="avg", help="Average time to give the first answer to the visitor")
     duration = fields.Float('Average duration', digits=(16, 2), readonly=True, group_operator="avg", help="Duration of the conversation (in seconds)")
@@ -34,9 +34,9 @@ class ImLivechatReportOperator(models.Model):
                     C.create_date AS start_date,
                     EXTRACT('epoch' FROM MAX(M.create_date) - MIN(M.create_date)) AS duration,
                     EXTRACT('epoch' FROM MIN(MO.create_date) - MIN(M.create_date)) AS time_to_answer
-                FROM mail_channel C
-                    JOIN mail_message M ON M.res_id = C.id AND M.model = 'mail.channel'
-                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'mail.channel' AND MO.author_id = C.livechat_operator_id)
+                FROM discuss_channel C
+                    JOIN mail_message M ON M.res_id = C.id AND M.model = 'discuss.channel'
+                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'discuss.channel' AND MO.author_id = C.livechat_operator_id)
                 WHERE C.livechat_channel_id IS NOT NULL
                 GROUP BY C.id, C.livechat_operator_id
             )

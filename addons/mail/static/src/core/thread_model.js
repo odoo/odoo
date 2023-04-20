@@ -138,7 +138,7 @@ export class Thread {
         } else if (this.type === "chat" || this.type === "group") {
             this._store.discuss.chats.threads.push(this.localId);
         }
-        if (!this.type && !["mail.box", "mail.channel"].includes(this.model)) {
+        if (!this.type && !["mail.box", "discuss.channel"].includes(this.model)) {
             this.type = "chatter";
         }
         store.threads[this.localId] = this;
@@ -258,7 +258,7 @@ export class Thread {
     get imgUrl() {
         const avatarCacheKey = this.channel.avatarCacheKey;
         if (this.type === "channel" || this.type === "group") {
-            return `/web/image/mail.channel/${this.id}/avatar_128?unique=${avatarCacheKey}`;
+            return `/web/image/discuss.channel/${this.id}/avatar_128?unique=${avatarCacheKey}`;
         }
         if (this.type === "chat") {
             return `/web/image/res.partner/${this.chatPartnerId}/avatar_128?unique=${avatarCacheKey}`;

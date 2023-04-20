@@ -6,7 +6,7 @@ QUnit.module("chat window (patch)");
 
 QUnit.test("No call buttons", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -27,7 +27,7 @@ QUnit.test("closing a chat window with no message from admin side unpins it", as
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [
                 0,
@@ -46,7 +46,7 @@ QUnit.test("closing a chat window with no message from admin side unpins it", as
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     await click(".o-mail-ChatWindow-header .o-mail-ChatWindow-command[title='Close chat window']");
-    const channels = await env.services.orm.silent.call("mail.channel", "channel_info", [
+    const channels = await env.services.orm.silent.call("discuss.channel", "channel_info", [
         channelId,
     ]);
     assert.strictEqual(channels[0].is_pinned, false, "Livechat channel should not be pinned");

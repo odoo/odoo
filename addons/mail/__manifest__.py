@@ -2,7 +2,7 @@
 
 {
     'name': 'Discuss',
-    'version': '1.12',
+    'version': '1.13',
     'category': 'Productivity/Discuss',
     'sequence': 145,
     'summary': 'Chat, mail gateway and private channels',
@@ -78,10 +78,10 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_mail_views.xml',
         'views/mail_followers_views.xml',
         'views/mail_ice_server_views.xml',
-        'views/mail_channel_member_views.xml',
-        'views/mail_channel_rtc_session_views.xml',
+        'views/discuss_channel_member_views.xml',
+        'views/discuss_channel_rtc_session_views.xml',
         'views/mail_link_preview_views.xml',
-        'views/mail_channel_views.xml',
+        'views/discuss_channel_views.xml',
         'views/mail_shortcode_views.xml',
         'views/mail_activity_views.xml',
         'views/res_config_settings_views.xml',
@@ -90,7 +90,7 @@ For more specific needs, you may also assign custom-defined actions
         'data/mail_templates_chatter.xml',
         'data/mail_templates_email_layouts.xml',
         'data/mail_templates_mailgateway.xml',
-        'data/mail_channel_data.xml',
+        'data/discuss_channel_data.xml',
         'data/mail_activity_data.xml',
         'data/security_notifications_templates.xml',
         'data/ir_cron_data.xml',
@@ -111,7 +111,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_menus.xml',
     ],
     'demo': [
-        'data/mail_channel_demo.xml',
+        'data/discuss_channel_demo.xml',
     ],
     'installable': True,
     'application': True,
@@ -137,7 +137,7 @@ For more specific needs, you may also assign custom-defined actions
         'mail.assets_discuss_public_test_tours': [
             'web/static/tests/legacy/helpers/test_utils_file.js',
             'mail/static/tests/tours/discuss_public_tour.js',
-            'mail/static/tests/tours/mail_channel_as_guest_tour.js',
+            'mail/static/tests/tours/discuss_channel_as_guest_tour.js',
         ],
         'web.assets_tests': [
             'mail/static/tests/tours/**/*',

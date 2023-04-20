@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 export class ChannelInvitation extends Component {
     static components = { ImStatus };
     static props = ["thread", "close?", "chatState?"];
-    static template = "mail.ChannelInvitation";
+    static template = "discuss.ChannelInvitation";
 
     setup() {
         this.messaging = useMessaging();
@@ -97,9 +97,14 @@ export class ChannelInvitation extends Component {
             ];
             await this.threadService.createGroupChat({ partners_to });
         } else if (["channel", "group"].includes(this.props.thread.type)) {
-            await this.messaging.orm.call("mail.channel", "add_members", [[this.props.thread.id]], {
-                partner_ids: this.state.selectedPartners.map((partner) => partner.id),
-            });
+            await this.messaging.orm.call(
+                "discuss.channel",
+                "add_members",
+                [[this.props.thread.id]],
+                {
+                    partner_ids: this.state.selectedPartners.map((partner) => partner.id),
+                }
+            );
         }
         if (this.env.isSmall) {
             this.props.chatState.activeMode = "";

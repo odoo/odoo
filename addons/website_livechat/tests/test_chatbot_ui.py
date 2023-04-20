@@ -29,16 +29,16 @@ class TestLivechatChatbotUI(tests.HttpCase, TestLivechatCommon, ChatbotCase):
         self.start_tour('/', 'website_livechat_chatbot_flow_tour', step_delay=100)
 
         operator = self.chatbot_script.operator_partner_id
-        livechat_mail_channel = self.env['mail.channel'].search([
+        livechat_discuss_channel = self.env['discuss.channel'].search([
             ('livechat_channel_id', '=', self.livechat_channel.id),
             ('livechat_operator_id', '=', operator.id),
             ('message_ids', '!=', False),
         ])
 
-        self.assertTrue(bool(livechat_mail_channel))
-        self.assertEqual(len(livechat_mail_channel), 1)
+        self.assertTrue(bool(livechat_discuss_channel))
+        self.assertEqual(len(livechat_discuss_channel), 1)
 
-        conversation_messages = livechat_mail_channel.message_ids.sorted('id')
+        conversation_messages = livechat_discuss_channel.message_ids.sorted('id')
 
         expected_messages = [
             ("Hello! I'm a bot!", operator, False),

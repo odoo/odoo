@@ -20,7 +20,7 @@ QUnit.test(
     "Livechat button is present when there is at least one livechat thread",
     async (assert) => {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create({
+        pyEnv["discuss.channel"].create({
             anonymous_name: "Visitor 11",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],

@@ -27,7 +27,7 @@ Patch({
          * Overridden to avoid calling the "get_session" endpoint as it requires
          * a im_livechat.channel linked to work properly.
          *
-         * Here, we already have a mail.channel created (see
+         * Here, we already have a discuss.channel created (see
          * 'website_livechat_chatbot_test_script') so we use its configuration
          * to create the 'WebsiteLivechat' Widget.
          *

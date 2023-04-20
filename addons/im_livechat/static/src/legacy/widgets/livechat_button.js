@@ -64,7 +64,7 @@ const LivechatButton = Widget.extend({
                     },
                     body: this.messaging.publicLivechatGlobal.livechatButtonView.defaultMessage,
                     date: time.datetime_to_str(new Date()),
-                    model: "mail.channel",
+                    model: "discuss.channel",
                     res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
                 },
                 { prepend: true }

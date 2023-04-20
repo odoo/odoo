@@ -12,7 +12,7 @@ class Users(models.Model):
         - make a new user follow itself
         - add a welcome message
         - add suggestion preference
-        - if adding groups to a user, check mail.channels linked to this user
+        - if adding groups to a user, check discuss.channels linked to this user
           group, and the user. This is done by overriding the write method.
     """
     _name = 'res.users'
@@ -107,8 +107,8 @@ class Users(models.Model):
                         subtype_xmlid='mail.mt_note'
                     )
         # Auto-subscribe to channels unless skip explicitly requested
-        if not self.env.context.get('mail_channel_nosubscribe'):
-            self.env['mail.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users_automatically()
+        if not self.env.context.get('discuss_channel_nosubscribe'):
+            self.env['discuss.channel'].search([('group_ids', 'in', users.groups_id.ids)])._subscribe_users_automatically()
         return users
 
     def write(self, vals):
@@ -172,9 +172,9 @@ class Users(models.Model):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
             user_group_ids += [id for command in vals['groups_id'] if command[0] == 6 for id in command[2]]
-            self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users_automatically()
+            self.env['discuss.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users_automatically()
         elif sel_groups:
-            self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users_automatically()
+            self.env['discuss.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users_automatically()
         return write_res
 
     def unlink(self):
@@ -251,7 +251,7 @@ class Users(models.Model):
             public channels are mailing list (e-mail based) and so users should always receive
             updates from public channels until they manually un-subscribe themselves.
         """
-        current_cm = self.env['mail.channel.member'].sudo().search([
+        current_cm = self.env['discuss.channel.member'].sudo().search([
             ('partner_id', 'in', self.partner_id.ids),
         ])
         current_cm.filtered(

@@ -7,7 +7,7 @@ QUnit.module("attachment list");
 
 QUnit.test("simplest layout", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -18,7 +18,7 @@ QUnit.test("simplest layout", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -36,7 +36,7 @@ QUnit.test("simplest layout", async (assert) => {
 
 QUnit.test("layout with card details and filename and extension", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -47,7 +47,7 @@ QUnit.test("layout with card details and filename and extension", async (assert)
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -61,7 +61,7 @@ QUnit.test(
     "clicking on the delete attachment button multiple times should do the rpc only once",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "channel1",
         });
@@ -72,7 +72,7 @@ QUnit.test(
         pyEnv["mail.message"].create({
             attachment_ids: [attachmentId],
             body: "<p>Test</p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             message_type: "comment",
         });
@@ -96,7 +96,7 @@ QUnit.test(
 
 QUnit.test("view attachment", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -107,7 +107,7 @@ QUnit.test("view attachment", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -120,7 +120,7 @@ QUnit.test("view attachment", async (assert) => {
 
 QUnit.test("close attachment viewer", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -131,7 +131,7 @@ QUnit.test("close attachment viewer", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -159,7 +159,7 @@ QUnit.test(
          * loaded from being viewed for 1st time, but viewer being closed while image is loading.
          */
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "channel1",
         });
@@ -170,7 +170,7 @@ QUnit.test(
         pyEnv["mail.message"].create({
             attachment_ids: [attachmentId],
             body: "<p>Test</p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             message_type: "comment",
         });
@@ -194,7 +194,7 @@ QUnit.test(
 
 QUnit.test("plain text file is viewable", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -205,7 +205,7 @@ QUnit.test("plain text file is viewable", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -216,7 +216,7 @@ QUnit.test("plain text file is viewable", async (assert) => {
 
 QUnit.test("HTML file is viewable", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -227,7 +227,7 @@ QUnit.test("HTML file is viewable", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -238,7 +238,7 @@ QUnit.test("HTML file is viewable", async (assert) => {
 
 QUnit.test("ODT file is not viewable", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -249,7 +249,7 @@ QUnit.test("ODT file is not viewable", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -260,7 +260,7 @@ QUnit.test("ODT file is not viewable", async (assert) => {
 
 QUnit.test("DOCX file is not viewable", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -271,7 +271,7 @@ QUnit.test("DOCX file is not viewable", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -284,7 +284,7 @@ QUnit.test(
     "should not view attachment from click on non-viewable attachment in list containing a viewable attachment",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "channel1",
         });
@@ -301,7 +301,7 @@ QUnit.test(
         pyEnv["mail.message"].create({
             attachment_ids: [attachmentId_1, attachmentId_2],
             body: "<p>Test</p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             message_type: "comment",
         });
@@ -321,9 +321,9 @@ QUnit.test(
     }
 );
 
-QUnit.test("img file has proper src in mail.channel", async (assert) => {
+QUnit.test("img file has proper src in discuss.channel", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -331,12 +331,12 @@ QUnit.test("img file has proper src in mail.channel", async (assert) => {
         name: "test.png",
         mimetype: "image/png",
         res_id: channelId,
-        res_model: "mail.channel",
+        res_model: "discuss.channel",
     });
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -345,6 +345,6 @@ QUnit.test("img file has proper src in mail.channel", async (assert) => {
     assert.ok(
         $(".o-mail-AttachmentImage[title='test.png'] img")
             .data("src")
-            .includes(`/mail/channel/${channelId}/image`)
+            .includes(`/discuss/channel/${channelId}/image`)
     );
 });

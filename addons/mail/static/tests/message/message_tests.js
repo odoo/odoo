@@ -24,14 +24,14 @@ QUnit.module("message");
 
 QUnit.test("Start edition on click edit", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -45,14 +45,14 @@ QUnit.test("Start edition on click edit", async (assert) => {
 
 QUnit.test("Cursor is at end of composer input on edit", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "",
     });
     pyEnv["mail.message"].create({
         body: "sattva",
         res_id: channelId,
-        model: "mail.channel",
+        model: "discuss.channel",
         message_type: "comment",
     });
     const { openDiscuss } = await start();
@@ -67,14 +67,14 @@ QUnit.test("Cursor is at end of composer input on edit", async (assert) => {
 
 QUnit.test("Stop edition on click cancel", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -88,14 +88,14 @@ QUnit.test("Stop edition on click cancel", async (assert) => {
 
 QUnit.test("Stop edition on press escape", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -109,14 +109,14 @@ QUnit.test("Stop edition on press escape", async (assert) => {
 
 QUnit.test("Stop edition on click save", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -130,14 +130,14 @@ QUnit.test("Stop edition on click save", async (assert) => {
 
 QUnit.test("Stop edition on press enter", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -151,14 +151,14 @@ QUnit.test("Stop edition on press enter", async (assert) => {
 
 QUnit.test("Stop edition on click away", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -172,14 +172,14 @@ QUnit.test("Stop edition on click away", async (assert) => {
 
 QUnit.test("Do not stop edition on click away when clicking on emoji", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -194,14 +194,14 @@ QUnit.test("Do not stop edition on click away when clicking on emoji", async (as
 
 QUnit.test("Edit and click save", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -216,14 +216,14 @@ QUnit.test("Edit and click save", async (assert) => {
 
 QUnit.test("Do not call server on save if no changes", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -243,14 +243,14 @@ QUnit.test("Do not call server on save if no changes", async (assert) => {
 
 QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world!".repeat(1000),
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -265,14 +265,14 @@ QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
 
 QUnit.test("mentions are kept when editing message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello @Mitchell Admin",
-        model: "mail.channel",
+        model: "discuss.channel",
         partner_ids: [pyEnv.currentPartnerId],
         res_id: channelId,
         message_type: "comment",
@@ -289,13 +289,13 @@ QUnit.test("mentions are kept when editing message", async (assert) => {
 
 QUnit.test("Other messages are grayed out when replying to another one", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
     pyEnv["mail.message"].create([
-        { body: "Hello world", res_id: channelId, model: "mail.channel" },
-        { body: "Goodbye world", res_id: channelId, model: "mail.channel" },
+        { body: "Hello world", res_id: channelId, model: "discuss.channel" },
+        { body: "Goodbye world", res_id: channelId, model: "discuss.channel" },
     ]);
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -307,14 +307,14 @@ QUnit.test("Other messages are grayed out when replying to another one", async (
 
 QUnit.test("Parent message body is displayed on replies", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
     pyEnv["mail.message"].create({
         body: "Hello world",
         res_id: channelId,
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -329,7 +329,7 @@ QUnit.test(
     "Updating the parent message of a reply also updates the visual of the reply",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "channel1",
         });
@@ -337,7 +337,7 @@ QUnit.test(
             body: "Hello world",
             res_id: channelId,
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
@@ -355,7 +355,7 @@ QUnit.test(
 
 QUnit.test("Deleting parent message of a reply should adapt reply visual", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -363,7 +363,7 @@ QUnit.test("Deleting parent message of a reply should adapt reply visual", async
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -378,7 +378,7 @@ QUnit.test("Deleting parent message of a reply should adapt reply visual", async
 
 QUnit.test("Can open emoji picker after edit mode", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -386,7 +386,7 @@ QUnit.test("Can open emoji picker after edit mode", async (assert) => {
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -399,7 +399,7 @@ QUnit.test("Can open emoji picker after edit mode", async (assert) => {
 
 QUnit.test("Can add a reaction", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -407,7 +407,7 @@ QUnit.test("Can add a reaction", async (assert) => {
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -418,7 +418,7 @@ QUnit.test("Can add a reaction", async (assert) => {
 
 QUnit.test("Can remove a reaction", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -426,7 +426,7 @@ QUnit.test("Can remove a reaction", async (assert) => {
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -439,7 +439,7 @@ QUnit.test("Can remove a reaction", async (assert) => {
 QUnit.test("Two users reacting with the same emoji", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -447,7 +447,7 @@ QUnit.test("Two users reacting with the same emoji", async (assert) => {
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     pyEnv["mail.message.reaction"].create([
         {
@@ -472,7 +472,7 @@ QUnit.test("Two users reacting with the same emoji", async (assert) => {
 
 QUnit.test("Reaction summary", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -480,7 +480,7 @@ QUnit.test("Reaction summary", async (assert) => {
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -502,7 +502,7 @@ QUnit.test("Reaction summary", async (assert) => {
 
 QUnit.test("Add the same reaction twice from the emoji picker", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "channel1",
     });
@@ -510,7 +510,7 @@ QUnit.test("Add the same reaction twice from the emoji picker", async (assert) =
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -523,13 +523,13 @@ QUnit.test("Add the same reaction twice from the emoji picker", async (assert) =
 
 QUnit.test("basic rendering of message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "<p>body</p>",
         date: "2019-04-20 10:00:00",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -541,7 +541,7 @@ QUnit.test("basic rendering of message", async (assert) => {
     assert.hasAttrValue(
         $message.find(".o-mail-Message-sidebar .o-mail-Message-avatarContainer img"),
         "data-src",
-        url(`/mail/channel/${channelId}/partner/${partnerId}/avatar_128`)
+        url(`/discuss/channel/${channelId}/partner/${partnerId}/avatar_128`)
     );
     assert.containsOnce($message, ".o-mail-Message-header");
     assert.containsOnce($message, ".o-mail-Message-header .o-mail-Message-author:contains(Demo)");
@@ -557,7 +557,7 @@ QUnit.test("basic rendering of message", async (assert) => {
 
 QUnit.test("should not be able to reply to temporary/transient messages", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     // these user interactions is to forge a transient message response from channel command "/who"
@@ -571,7 +571,7 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
     // from messages of same author and same thread. Note that this should
     // be working in non-mailboxes
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["mail.message"].create([
         {
@@ -579,7 +579,7 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
             body: "<p>body1</p>",
             date: "2019-04-20 10:00:00",
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
@@ -587,7 +587,7 @@ QUnit.test("message comment of same author within 1min. should be squashed", asy
             body: "<p>body2</p>",
             date: "2019-04-20 10:00:30",
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
     ]);
@@ -610,7 +610,7 @@ QUnit.test("redirect to author (open chat)", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const [channelId_1] = pyEnv["mail.channel"].create([
+    const [channelId_1] = pyEnv["discuss.channel"].create([
         { name: "General" },
         {
             channel_member_ids: [
@@ -623,7 +623,7 @@ QUnit.test("redirect to author (open chat)", async (assert) => {
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId_1,
     });
     const { openDiscuss } = await start();
@@ -637,10 +637,10 @@ QUnit.test("redirect to author (open chat)", async (assert) => {
 
 QUnit.test("toggle_star message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start({
@@ -674,18 +674,18 @@ QUnit.test(
     "Name of message author is only displayed in chat window for partners others than the current user",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ channel_type: "channel" });
+        const channelId = pyEnv["discuss.channel"].create({ channel_type: "channel" });
         const partnerId = pyEnv["res.partner"].create({ name: "Not the current user" });
         pyEnv["mail.message"].create([
             {
                 body: "not empty",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId,
             },
             {
                 author_id: partnerId,
                 body: "not empty",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId,
             },
         ]);
@@ -701,18 +701,18 @@ QUnit.test(
     "Name of message author is not displayed in chat window for channel of type chat",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ channel_type: "chat" });
+        const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
         const partnerId = pyEnv["res.partner"].create({ name: "A" });
         pyEnv["mail.message"].create([
             {
                 body: "not empty",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId,
             },
             {
                 author_id: partnerId,
                 body: "not empty",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId,
             },
         ]);
@@ -725,11 +725,11 @@ QUnit.test(
 
 QUnit.test("click on message edit button should open edit composer", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "not empty",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -821,21 +821,21 @@ QUnit.test(
     'Quick edit (edit from Composer with ArrowUp) ignores empty ("deleted") messages.',
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "general",
             channel_type: "channel",
         });
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             message_type: "comment",
         });
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "", // empty body
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             message_type: "comment",
         });
@@ -851,14 +851,14 @@ QUnit.test(
     "Editing a message to clear its composer opens message delete dialog.",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "general",
             channel_type: "channel",
         });
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             message_type: "comment",
         });
@@ -879,14 +879,14 @@ QUnit.test(
     "Clear message body should not open message delete dialog if it has attachments",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "general",
             channel_type: "channel",
         });
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             message_type: "comment",
             attachment_ids: [
@@ -912,14 +912,14 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ display_name: "Test Partner" });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "General",
         });
         pyEnv["mail.message"].create({
             author_id: partnerId,
             body: "hello @Admin",
-            model: "mail.channel",
+            model: "discuss.channel",
             partner_ids: [pyEnv.currentPartnerId],
             res_id: channelId,
         });
@@ -938,14 +938,14 @@ QUnit.test(
             email: "testPartner@odoo.com",
         });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "General",
         });
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "hello @testPartner",
-            model: "mail.channel",
+            model: "discuss.channel",
             partner_ids: [partnerId],
             res_id: channelId,
         });
@@ -957,7 +957,7 @@ QUnit.test(
 
 QUnit.test("allow attachment delete on authored message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["mail.message"].create({
         attachment_ids: [
             [
@@ -967,13 +967,13 @@ QUnit.test("allow attachment delete on authored message", async (assert) => {
                     mimetype: "image/jpeg",
                     name: "BLAH",
                     res_id: channelId,
-                    res_model: "mail.channel",
+                    res_model: "discuss.channel",
                 },
             ],
         ],
         author_id: pyEnv.currentPartnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -993,7 +993,7 @@ QUnit.test("allow attachment delete on authored message", async (assert) => {
 QUnit.test("prevent attachment delete on non-authored message in channels", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["mail.message"].create({
         attachment_ids: [
             [
@@ -1003,13 +1003,13 @@ QUnit.test("prevent attachment delete on non-authored message in channels", asyn
                     mimetype: "image/jpeg",
                     name: "BLAH",
                     res_id: channelId,
-                    res_model: "mail.channel",
+                    res_model: "discuss.channel",
                 },
             ],
         ],
         author_id: partnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -1020,14 +1020,14 @@ QUnit.test("prevent attachment delete on non-authored message in channels", asyn
 
 QUnit.test("Toggle star should update starred counter on all tabs", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Hello world",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -1041,7 +1041,7 @@ QUnit.test("Toggle star should update starred counter on all tabs", async (asser
 
 QUnit.test("allow attachment image download on message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const attachmentId = pyEnv["ir.attachment"].create({
         name: "Blah.jpg",
         mimetype: "image/jpeg",
@@ -1049,7 +1049,7 @@ QUnit.test("allow attachment image download on message", async (assert) => {
     pyEnv["mail.message"].create({
         attachment_ids: [attachmentId],
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -1215,7 +1215,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "test" });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -1226,7 +1226,7 @@ QUnit.test(
         pyEnv["mail.message"].create({
             author_id: partnerId,
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         const { openDiscuss } = await start();
@@ -1243,7 +1243,7 @@ QUnit.test(
 QUnit.test("Channel should be opened after clicking on its mention", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    pyEnv["mail.channel"].create({ name: "my-channel" });
+    pyEnv["discuss.channel"].create({ name: "my-channel" });
     const { openFormView } = await start();
     await openFormView("res.partner", partnerId);
     await click("button:contains(Send message)");
@@ -1263,11 +1263,11 @@ QUnit.test(
             mimetype: "text/plain",
             name: "Blah.txt",
         });
-        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         pyEnv["mail.message"].create({
             attachment_ids: [attachmentId],
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         const { openDiscuss } = await start();
@@ -1288,12 +1288,12 @@ QUnit.test(
             mimetype: "text/plain",
             name: "Blah.txt",
         });
-        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         pyEnv["mail.message"].create({
             attachment_ids: [attachmentId],
             body: "Some content",
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         const { openDiscuss } = await start();
@@ -1310,10 +1310,10 @@ QUnit.test(
     "message with subtype should be displayed (and not considered as empty)",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         const subtypeId = pyEnv["mail.message.subtype"].create({ description: "Task created" });
         pyEnv["mail.message"].create({
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             subtype_id: subtypeId,
         });
@@ -1326,45 +1326,45 @@ QUnit.test(
 
 QUnit.test("message considered empty", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create([
         {
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
             body: "",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
             body: "<p></p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
             body: "<p><br/></p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
             body: "<p><br></p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
             body: "<p>\n</p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
             body: "<p>\r\n\r\n</p>",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
         {
             body: "<p>   </p>  ",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         },
     ]);
@@ -1375,10 +1375,10 @@ QUnit.test("message considered empty", async (assert) => {
 
 QUnit.test("message with html not to be considered empty", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "<img src=''>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -1388,10 +1388,10 @@ QUnit.test("message with html not to be considered empty", async (assert) => {
 
 QUnit.test("message with body 'test' should not be considered empty", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "test",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -1420,20 +1420,20 @@ QUnit.test("Can reply to chatter messages from history", async (assert) => {
 
 QUnit.test("Mark as unread", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
         name: "General",
     });
     const messageId = pyEnv["mail.message"].create({
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         body: "Hello World!",
     });
-    const [memberId] = pyEnv["mail.channel.member"].search([
+    const [memberId] = pyEnv["discuss.channel.member"].search([
         ["channel_id", "=", channelId],
         ["partner_id", "=", pyEnv.currentPartnerId],
     ]);
-    pyEnv["mail.channel.member"].write([memberId], {
+    pyEnv["discuss.channel.member"].write([memberId], {
         seen_message_id: messageId,
     });
     const { openDiscuss } = await start();

@@ -10,11 +10,11 @@ QUnit.module("im status");
 QUnit.test("initially online", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "online" });
-    const channelId = pyEnv["mail.channel"].create({ name: "TestChanel" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "TestChanel" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
@@ -26,11 +26,11 @@ QUnit.test("initially online", async (assert) => {
 QUnit.test("initially offline", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "offline" });
-    const channelId = pyEnv["mail.channel"].create({ name: "TestChannel" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "TestChannel" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
@@ -42,11 +42,11 @@ QUnit.test("initially offline", async (assert) => {
 QUnit.test("initially away", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "away" });
-    const channelId = pyEnv["mail.channel"].create({ name: "TestChanel" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "TestChanel" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
@@ -58,11 +58,11 @@ QUnit.test("initially away", async (assert) => {
 QUnit.test("change icon on change partner im_status", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ im_status: "online" });
-    const channelId = pyEnv["mail.channel"].create({ name: "TestChannel" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "TestChannel" });
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { advanceTime, openDiscuss } = await start({ hasTimeControl: true });
@@ -98,7 +98,7 @@ QUnit.test("Can handle im_status of unknown partner", async (assert) => {
 QUnit.test("show im status in messaging menu preview of chat", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],

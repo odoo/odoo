@@ -53,9 +53,9 @@ export class AttachmentList extends Component {
             !this.env.inComposer &&
             !this.env.inChatter &&
             !attachment.accessToken &&
-            attachment.originThread?.model === "mail.channel"
+            attachment.originThread?.model === "discuss.channel"
         ) {
-            return `/mail/channel/${attachment.originThread?.id}/image/${attachment.id}/${this.imagesWidth}x${imagesHeight}`;
+            return `/discuss/channel/${attachment.originThread?.id}/image/${attachment.id}/${this.imagesWidth}x${imagesHeight}`;
         }
         const accessToken = attachment.accessToken ? `?access_token=${attachment.accessToken}` : "";
         return `/web/image/${attachment.id}/${this.imagesWidth}x${imagesHeight}${accessToken}`;

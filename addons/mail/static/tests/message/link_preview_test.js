@@ -14,12 +14,12 @@ QUnit.test("auto layout with link preview list", async (assert) => {
         og_type: "video.other",
         source_url: "https://tenor.com/view/yay-minions-happiness-happy-excited-gif-15324023",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -37,12 +37,12 @@ QUnit.test("auto layout with link preview as gif", async (assert) => {
         og_type: "video.other",
         source_url: "https://tenor.com/view/yay-minions-happiness-happy-excited-gif-15324023",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -58,12 +58,12 @@ QUnit.test("simplest card layout", async (assert) => {
         og_type: "article",
         source_url: "https://www.odoo.com",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -82,12 +82,12 @@ QUnit.test("simplest card layout with image", async (assert) => {
         og_type: "article",
         source_url: "https://www.odoo.com",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -107,12 +107,12 @@ QUnit.test("Link preview video layout", async (assert) => {
         og_type: "video.other",
         source_url: "https://www.odoo.com",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -130,12 +130,12 @@ QUnit.test("Link preview image layout", async (assert) => {
         source_url:
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -153,12 +153,12 @@ QUnit.test("Remove link preview Gif", async (assert) => {
         og_type: "video.other",
         source_url: "https://tenor.com/view/yay-minions-happiness-happy-excited-gif-15324023",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -177,12 +177,12 @@ QUnit.test("Remove link preview card", async (assert) => {
         og_type: "article",
         source_url: "https://www.odoo.com",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -202,12 +202,12 @@ QUnit.test("Remove link preview video", async (assert) => {
         og_type: "video.other",
         source_url: "https://www.odoo.com",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -225,12 +225,12 @@ QUnit.test("Remove link preview image", async (assert) => {
         source_url:
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     pyEnv["mail.message"].create({
         body: "not empty",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -248,12 +248,12 @@ QUnit.test("No crash on receiving link preview of non-known message", async (ass
         source_url:
             "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
     });
-    const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
     const messageId = pyEnv["mail.message"].create({
         body: "https://make-link-preview.com",
         link_preview_ids: [linkPreviewId],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { env, openDiscuss } = await start();
@@ -272,12 +272,12 @@ QUnit.test(
             source_url:
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
         });
-        const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
         pyEnv["mail.message"].create({
             body: "<a href='linkPreviewLink'>http://linkPreview</a>",
             link_preview_ids: [linkPreviewId],
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         const { openDiscuss } = await start();
@@ -296,12 +296,12 @@ QUnit.test(
             og_type: "article",
             source_url: "https://www.odoo.com",
         });
-        const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
         pyEnv["mail.message"].create({
             body: "<a href='linkPreviewLink'>http://linkPreview</a>",
             link_preview_ids: [linkPreviewId],
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         const { openDiscuss } = await start();
@@ -319,12 +319,12 @@ QUnit.test(
             source_url:
                 "https://upload.wikimedia.org/wikipedia/commons/thumb/4/41/Siberischer_tiger_de_edit02.jpg/290px-Siberischer_tiger_de_edit02.jpg",
         });
-        const channelId = pyEnv["mail.channel"].create({ name: "wololo" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "wololo" });
         pyEnv["mail.message"].create({
             body: "<a href='linkPreviewLink'>http://linkPreview</a> not empty",
             link_preview_ids: [linkPreviewId],
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         const { openDiscuss } = await start();

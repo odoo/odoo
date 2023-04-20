@@ -14,7 +14,7 @@ QUnit.test("Spaces in notifications are not encoded", async (assert) => {
             presence: makeFakePresenceService({ isOdooFocused: () => false }),
         },
     });
-    const channelId = pyEnv["mail.channel"].create({ channel_type: "chat" });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     await openDiscuss();
     await env.services.rpc("/mail/message/post", {
         post_data: {
@@ -22,7 +22,7 @@ QUnit.test("Spaces in notifications are not encoded", async (assert) => {
             attachment_ids: [],
         },
         thread_id: channelId,
-        thread_model: "mail.channel",
+        thread_model: "discuss.channel",
     });
     await nextTick();
     assert.verifySteps(["Hello world!"]);

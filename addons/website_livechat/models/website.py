@@ -37,7 +37,7 @@ class Website(models.Model):
         visitor = self.env['website.visitor']._get_visitor_from_request()
         if visitor:
             # get active chat_request linked to visitor
-            chat_request_channel = self.env['mail.channel'].sudo().search([
+            chat_request_channel = self.env['discuss.channel'].sudo().search([
                 ('livechat_visitor_id', '=', visitor.id),
                 ('livechat_channel_id', '=', self.channel_id.id),
                 ('livechat_active', '=', True),
