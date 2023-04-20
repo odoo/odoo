@@ -1303,7 +1303,10 @@ class AccountTaxRepartitionLine(models.Model):
     company_id = fields.Many2one(string="Company", comodel_name='res.company', related="tax_id.company_id", store=True, help="The company this distribution line belongs to.")
     sequence = fields.Integer(string="Sequence", default=1,
         help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
-    use_in_tax_closing = fields.Boolean(string="Tax Closing Entry", default=True)
+    use_in_tax_closing = fields.Boolean(
+        string="Tax Closing Entry",
+        compute='_compute_use_in_tax_closing', store=True, readonly=False, precompute=True,
+    )
 
     tag_ids_domain = fields.Binary(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
 
@@ -1313,12 +1316,14 @@ class AccountTaxRepartitionLine(models.Model):
             allowed_country_ids = (False, rep_line.company_id.account_fiscal_country_id.id, *rep_line.company_id.multi_vat_foreign_country_ids.ids,)
             rep_line.tag_ids_domain = [('applicability', '=', 'taxes'), ('country_id', 'in', allowed_country_ids)]
 
-    @api.onchange('account_id', 'repartition_type')
-    def _on_change_account_id(self):
-        if not self.account_id or self.repartition_type == 'base':
-            self.use_in_tax_closing = False
-        else:
-            self.use_in_tax_closing = self.account_id.internal_group not in ('income', 'expense')
+    @api.depends('account_id', 'repartition_type')
+    def _compute_use_in_tax_closing(self):
+        for rep_line in self:
+            rep_line.use_in_tax_closing = (
+                rep_line.repartition_type == 'tax'
+                and rep_line.account_id
+                and rep_line.account_id.internal_group not in ('income', 'expense')
+            )
 
     @api.depends('factor_percent')
     def _compute_factor(self):
