@@ -99,6 +99,11 @@ class SaleOrder(models.Model):
             for line in sale_order_template.sale_order_template_line_ids
         ]
 
+        # set first line to sequence -99, so a resequence on first page doesn't cause following page
+        # lines (that all have sequence 10 by default) to get mixed in the first page
+        if len(order_lines_data) >= 2:
+            order_lines_data[1][2]['sequence'] = -99
+
         self.order_line = order_lines_data
 
         option_lines_data = [fields.Command.clear()]
@@ -115,7 +120,6 @@ class SaleOrder(models.Model):
 
     def _compute_line_data_for_template_change(self, line):
         return {
-            'sequence': line.sequence,
             'display_type': line.display_type,
             'name': line.name,
             'product_id': line.product_id.id,
