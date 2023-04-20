@@ -1395,12 +1395,12 @@
                                         </a>
                                         <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value">
                                             <div t-attf-class="{{record.subtask_count.value &gt; record.closed_subtask_count.value}}"></div>
-                                            <a t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value" class="text-muted">
-                                                <span title="See Subtasks" class="subtask_list_button fa fa-check-square-o me-1"/>
+                                            <a t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.raw_value &gt; record.closed_subtask_count.raw_value" class="text-muted">
+                                                <span title="See Sub-tasks" class="subtask_list_button fa fa-check-square-o me-1"/>
                                                 <t t-out="record.closed_subtask_count.value"/>/<t t-out="record.subtask_count.value"/>
                                             </a>
                                             <div t-else="" class="text-muted">
-                                                <span title="e" class="fa fa-check-square-o me-1"/>
+                                                <span title="All Sub-tasks Are Closed" class="fa fa-check-square-o me-1"/>
                                                 <t t-out="record.closed_subtask_count.value"/>/<t t-out="record.subtask_count.value"/>
                                             </div>
                                         </t>
@@ -1412,7 +1412,7 @@
                                         <field name="state" widget="project_task_state_selection" options="{'hide_label': 1, 'is_toggle_mode': false}"/>
                                     </div>
                                 </div>
-                                <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value">
+                                <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.raw_value &gt; record.closed_subtask_count.raw_value">
                                     <div class="kanban_bottom_subtasks_section"/>
                                 </t>
                             </div>
