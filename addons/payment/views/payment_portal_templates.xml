@@ -103,9 +103,9 @@
                     <!-- Portal breadcrumb -->
                     <t t-call="payment.portal_breadcrumb"/>
                     <!-- Status page -->
-                    <div name="o_payment_status">
+                    <div name="o_payment_status" class="row justify-content-center my-3">
                         <div name="o_payment_status_content"
-                             class="col-sm-6 offset-sm-3">
+                             class="col-12 col-lg-8">
                             <!-- The content is generated in JavaScript -->
                         </div>
                     </div>
@@ -126,53 +126,49 @@
                 <div class="container">
                     <!-- Portal breadcrumb -->
                     <t t-call="payment.portal_breadcrumb"/>
-                    <!-- Confirmation page -->
-                    <div class="row">
-                        <div class="col-lg-6">
-                            <div>
+                    <div class="row justify-content-center my-3">
+                    <div class="col-12 col-lg-8">
+                        <!-- Confirmation page -->
+                        <div class="row">
+                            <div class="col">
                                 <t t-call="payment.transaction_status"/>
-                                <div class="mb-3 row">
-                                    <label for="form_partner_name" class="col-md-3 col-form-label">
-                                        From
-                                    </label>
-                                    <span name="form_partner_name"
-                                          class="col-md-9 col-form-label"
-                                          t-esc="tx.partner_name"/>
-                                </div>
-                                <hr/>
-                                <div class="mb-3 row">
-                                    <label for="form_reference" class="col-md-3 col-form-label">
-                                        Reference
-                                    </label>
-                                    <span name="form_reference"
-                                          class="col-md-9 col-form-label"
-                                          t-esc="tx.reference"/>
-                                </div>
-                                <hr/>
-                                <div class="mb-3 row">
-                                    <label for="form_amount" class="col-md-3 col-form-label">
-                                        Amount
-                                    </label>
-                                    <span name="form_amount"
-                                          class="col-md-9 col-form-label"
-                                          t-esc="tx.amount"
-                                          t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
-                                </div>
-                                <hr/>
-                                <div class="row">
-                                    <div class="col-md-5 text-muted">
-                                        Processed by <t t-esc="tx.provider_id.sudo().name"/>
-                                    </div>
-                                    <div class="col-md-4 offset-md-3 mt-2 ps-0">
-                                        <a role="button"
-                                           t-attf-class="btn btn-primary float-end"
-                                           href="/my/home">
-                                            <i class="fa fa-arrow-circle-right"/> Back to My Account
-                                        </a>
-                                    </div>
-                                </div>
                             </div>
                         </div>
+                        <div class="o_payment_details o_cc2 row row-cols-1 row-cols-md-3 mx-0 mb-3 py-2 rounded">
+                            <div class="col py-3">
+                                <label for="form_reference" class="d-block small text-muted">
+                                    Reference
+                                </label>
+                                <span name="form_reference"
+                                      t-esc="tx.reference"/>
+                            </div>
+                            <div class="col py-3">
+                                <label for="form_amount" class="d-block small text-muted">
+                                    Amount
+                                </label>
+                                <span name="form_amount"
+                                      t-esc="tx.amount"
+                                      t-options="{'widget': 'monetary', 'display_currency': tx.currency_id}"/>
+                            </div>
+                            <div class="col py-3">
+                                <label for="form_provider" class="d-block small text-muted">
+                                    Powered by
+                                </label>
+                                <span name="form_provider"
+                                      t-esc="tx.provider_id.sudo().name"/>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col offset-md-3 ps-0">
+                                <a role="button"
+                                   class="btn btn-primary float-end"
+                                   href="/my/home">
+                                    Go to My Account<i class="oi oi-arrow-right ms-2"/>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -186,7 +182,7 @@
         -->
         <div class="row">
             <div class="col-md-6">
-                <ol class="breadcrumb mt8">
+                <ol class="breadcrumb px-0 mt16">
                     <li class="breadcrumb-item">
                         <a href="/my/home">
                             <i class="fa fa-home"

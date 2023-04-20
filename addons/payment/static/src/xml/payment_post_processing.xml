@@ -1,150 +1,72 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="payment" xml:space="preserve">
-    <!-- The templates here as rendered by 'post_processing.js', you can also take
-            a look at payment_portal_templates.xml (xmlid: payment_status) for more infos-->
-    <t t-name="payment.display_tx_list">
-        <div>
-            <!-- Error transactions -->
-            <div t-if="tx_error.length > 0">
-                <h1>Failed operations</h1>
-                <ul class="list-group">
-                    <t t-foreach="tx_error" t-as="tx" t-key="tx_index">
-                        <a t-att-href="tx['landing_route']" class="list-group-item">
-                            <h4 class="list-group-item-heading mb5">
-                                <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
-                            </h4>
-                            <small class="list-group-item-text">
-                                An error occurred during the processing of this payment.<br/>
-                                <strong>Reason:</strong> <t t-esc="tx['state_message']"/>
-                            </small>
-                        </a>
-                    </t>
-                </ul>
-            </div>
-            <!-- Pending/Authorized/Confirmed transactions -->
-            <div t-if="tx_done.length > 0 || tx_authorized.length > 0 || tx_pending.length > 0">
-                <h1>Operations in progress</h1>
-                <div class="list-group">
-                    <!-- Done transactions -->
-                    <t t-foreach="tx_done" t-as="tx" t-key="tx_index">
-                        <a t-att-href="tx['landing_route']" class="list-group-item">
-                            <h4 class="list-group-item-heading mb5">
-                                <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
-                            </h4>
-                            <small class="list-group-item-text">
-                                <t t-if="!tx['is_post_processed']">
-                                    <t t-if="tx['operation'] != 'validation'">
-                                        Your payment is being processed, please wait... <i class="fa fa-cog fa-spin"/>
-                                    </t>
-                                    <t t-else="">
-                                        Saving your payment method, please wait... <i class="fa fa-cog fa-spin"/>
-                                    </t>
-                                </t>
-                                <t t-else="">
-                                    <t t-if="tx['operation'] != 'validation'">
-                                        Your payment has been processed.<br/>
-                                        Click here to be redirected to the confirmation page.
-                                    </t>
-                                    <t t-else="">
-                                        Your payment method has been saved.<br/>
-                                        Click here to be redirected to the confirmation page.
-                                    </t>
-                                </t>
-                            </small>
-                        </a>
-                    </t>
-                    <!-- Pending transactions -->
-                    <t t-foreach="tx_pending" t-as="tx" t-key="tx_index">
-                        <a t-att-href="tx['landing_route']" class="list-group-item">
-                            <h4 class="list-group-item-heading mb5">
-                                <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
-                            </h4>
-                            <small class="list-group-item-text">
-                                <t t-if="tx['display_message']">
-                                    <!-- display_message is the content of the HTML field associated
-                                    with the current transaction state, set on the provider. -->
-                                    <t t-out="tx['display_message']"/>
-                                </t>
-                                <t t-else="">
-                                    Your payment is in pending state.<br/>
-                                    You will be notified when the payment is fully confirmed.<br/>
-                                    Click here to be redirected to the confirmation page.
-                                </t>
-                            </small>
-                        </a>
-                    </t>
-                    <!-- Authorized transactions -->
-                    <t t-foreach="tx_authorized" t-as="tx" t-key="tx_index">
-                        <a t-att-href="tx['landing_route']" class="list-group-item">
-                            <h4 class="list-group-item-heading mb5">
-                                <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
-                            </h4>
-                            <small class="list-group-item-text">
-                                <t t-if="tx['display_message']">
-                                    <!-- display_message is the content of the HTML field associated
-                                    with the current transaction state, set on the provider. -->
-                                    <t t-out="tx['display_message']"/>
-                                </t>
-                                <t t-else="">
-                                    Your payment has been received but need to be confirmed manually.<br/>
-                                    You will be notified when the payment is confirmed.
-                                </t>
-                            </small>
-                        </a>
-                    </t>
+
+    <t t-name="payment.transactionDetails">
+        <div>  <!-- Single parent element to allow using renderToElement. -->
+            <t t-set="alert_style" t-value="'info'"/>
+            <t t-set="alert_header" t-value="'Please wait...'"/>
+            <t t-if="state == 'draft'">
+                <t t-set="alert_message"
+                   t-value="display_message ? display_message
+                   : 'Your payment has not been processed yet.'"
+                />
+            </t>
+            <t t-elif="state == 'pending'">
+                <t t-set="alert_style" t-value="'warning'"/>
+                <t t-set="alert_message" t-value="display_message"/>
+            </t>
+            <t t-elif="state == 'authorized'">
+                <t t-set="alert_style" t-value="'success'"/>
+                <t t-set="alert_message" t-value="display_message"/>
+            </t>
+            <t t-elif="state == 'done'">
+                <t t-set="alert_style" t-value="'success'"/>
+                <t t-set="alert_header"
+                   t-value="operation !== 'validation' ? 'Your payment has been processed' :
+                            'Your payment method has been saved'"
+                />
+            </t>
+            <t t-elif="state == 'cancel'">
+                <t t-set="alert_style" t-value="'danger'"/>
+                <t t-set="alert_header" t-value="'This payment has been canceled'"/>
+                <t t-set="alert_message" t-value="'No payment has been processed.'"/>
+            </t>
+            <t t-elif="state == 'error'">
+                <t t-set="alert_style" t-value="'danger'"/>
+                <t t-set="alert_header" t-value="'Error'"/>
+                <t t-set="alert_message" t-value="state_message"/>
+            </t>
+
+            <div name="o_payment_status_alert"
+                 t-attf-class="alert alert-{{alert_style}} d-flex gap-3"
+            >
+                <div>
+                    <i t-attf-class="fa fa-{{alert_style === 'danger' ? 'exclamation-triangle'
+                                     : 'cog fa-spin'}}"
+                    />
                 </div>
+                <div>
+                    <h5 class="alert-heading mb-0" t-out="alert_header"/>
+                    <t t-if="alert_message" t-out="alert_message"/>
+                </div>
+                <a t-att-href="landing_route" class="alert-link ms-auto text-nowrap">
+                    Skip <i class="oi oi-arrow-right ms-1 small"/>
+                </a>
             </div>
-            <!-- Draft transactions -->
-            <div t-if="tx_draft.length > 0">
-                <h1>Waiting for operations to process</h1>
-                <ul class="list-group">
-                    <t t-foreach="tx_draft" t-as="tx" t-key="tx_index">
-                        <a t-att-href="tx['landing_route']" class="list-group-item">
-                            <h4 class="list-group-item-heading mb5">
-                                <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
-                            </h4>
-                            <small class="list-group-item-text">
-                                <t t-if="tx['display_message']">
-                                    <!-- display_message is the content of the HTML field associated
-                                    with the current transaction state, set on the provider. -->
-                                    <t t-out="tx['display_message']"/>
-                                </t>
-                                <t t-else="">
-                                    We are waiting for the payment provider to confirm the payment.
-                                </t>
-                            </small>
-                        </a>
-                    </t>
-                </ul>
-            </div>
-            <!-- Cancel transactions -->
-            <div t-if="tx_cancel.length > 0">
-                <h1>Canceled operations</h1>
-                <ul class="list-group">
-                    <t t-foreach="tx_cancel" t-as="tx" t-key="tx_index">
-                        <a t-att-href="tx['landing_route']" class="list-group-item">
-                            <h4 class="list-group-item-heading mb5">
-                                <t t-esc="tx['reference']"/>
-                                <span class="badge float-end"><t t-esc="tx['amount']"/> <t t-esc="tx['currency_code']"/></span>
-                            </h4>
-                            <small class="list-group-item-text">
-                                This payment has been canceled.<br/>
-                                No payment has been processed.
-                            </small>
-                        </a>
-                    </t>
-                </ul>
+
+            <div class="o_payment_details o_cc2 row row-cols-1 row-cols-md-3 mx-0 mb-3 py-2 rounded">
+                <div class="col py-3">
+                    <label for="o_payment_summary_reference" class="d-block small text-muted">
+                        Reference
+                    </label>
+                    <span id="o_payment_summary_reference" t-out="reference"/>
+                </div>
             </div>
         </div>
     </t>
 
-    <t t-name="payment.no_tx_found">
-        <div class="text-center">
+    <t t-name="payment.tx_not_found">
+        <div class="text-center">  <!-- Single parent element to allow using renderToElement. -->
             <p>We are not able to find your payment, but don't worry.</p>
             <p>You should receive an email confirming your payment in a few minutes.</p>
             <p>If the payment hasn't been confirmed you can contact us.</p>
@@ -152,16 +74,15 @@
     </t>
 
     <t t-name="payment.rpc_error">
-        <div class="text-center">
-            <p><strong>Server error:</strong> Unable to contact the Odoo server.</p>
-            <p>Please wait ... <i class="fa fa-refresh fa-spin"></i></p>
+        <div class="text-center">  <!-- Single parent element to allow using renderToElement. -->
+            <p>Unable to contact the server. Please wait. <i class="fa fa-refresh fa-spin"/></p>
         </div>
     </t>
 
     <t t-name="payment.exception">
-        <div class="text-center">
+        <div class="text-center">  <!-- Single parent element to allow using renderToElement. -->
             <h2>Internal server error</h2>
-            <pre><t t-esc="exception_msg"/></pre>
+            <pre><t t-out="error_message"/></pre>
         </div>
     </t>
 

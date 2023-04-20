@@ -6,7 +6,6 @@ from werkzeug.urls import url_encode
 from odoo import _, http, tools
 from odoo.http import request
 from odoo.exceptions import AccessError, ValidationError, UserError
-from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.payment.controllers import portal as payment_portal
 
 
@@ -266,9 +265,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
             provider_name=tx_sudo.provider_id.name,
             tx=tx_sudo, # for the payment.transaction_status template
         )
-
-        # Stop monitoring the transaction now that it reached a final state.
-        PaymentPostProcessing.remove_transactions(tx_sudo)
 
         if tx_sudo.state not in ('authorized', 'done'):
             rendering_context['state'] = 'tx_error'
