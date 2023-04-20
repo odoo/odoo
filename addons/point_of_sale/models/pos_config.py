@@ -573,7 +573,14 @@ class PosConfig(models.Model):
         if not companies:
             companies = self.env['res.company'].search([])
         for company in companies.filtered('chart_template'):
-            pos_configs = self.search([('company_id', '=', company.id)])
+            pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', False)])
+            if not pos_configs:
+                self = self.with_company(company)
+                pos_configs = self.env['pos.config'].create({
+                'name': 'Shop',
+                'company_id': company.id,
+                'module_pos_restaurant': False,
+            })
             pos_configs.setup_defaults(company)
 
     def setup_defaults(self, company):
@@ -594,13 +601,10 @@ class PosConfig(models.Model):
             cash_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'cash')], limit=1)
             bank_journal = self.env['account.journal'].search([('company_id', '=', company.id), ('type', '=', 'bank')], limit=1)
             payment_methods = self.env['pos.payment.method']
-            if cash_journal:
+            if cash_journal and len(cash_journal.pos_payment_method_ids.ids) == 0:
                 payment_methods |= payment_methods.create({
                     'name': _('Cash'),
-                    'journal_id': self.env['account.journal'].create({
-                                    'name': "Cash",
-                                    'type': 'cash',
-                                }).id,
+                    'journal_id': cash_journal.id,
                     'company_id': company.id,
                 })
             if bank_journal:

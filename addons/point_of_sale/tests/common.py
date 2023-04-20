@@ -57,6 +57,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
             'available_in_pos': True,
             'list_price': 1.28,
         })
+        cls.company_data['default_journal_cash'].pos_payment_method_ids.unlink()
         cls.cash_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Cash',
             'receivable_account_id': cls.company_data['default_account_receivable'].id,
@@ -153,13 +154,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
 
         # Set basic defaults
         cls.company = cls.company_data['company']
-        cls.pos_sale_journal = cls.env['account.journal'].create({
-            'type': 'general',
-            'name': 'Point of Sale Test',
-            'code': 'POSS',
-            'company_id': cls.company.id,
-            'sequence': 20
-        })
+        cls.pos_sale_journal = cls.env['account.journal'].search([('company_id', '=', cls.company.id), ('code', '=', 'POSS')])
         cls.sales_account = cls.company_data['default_account_revenue']
         cls.invoice_journal = cls.company_data['default_journal_sale']
         cls.receivable_account = cls.company_data['default_account_receivable']
@@ -247,6 +242,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             'available_pricelist_ids': cls.currency_pricelist.ids,
             'pricelist_id': cls.currency_pricelist.id,
         })
+        cls.company_data['default_journal_cash'].pos_payment_method_ids.unlink()
         cls.cash_pm1 = cls.env['pos.payment.method'].create({
             'name': 'Cash',
             'journal_id': cls.company_data['default_journal_cash'].id,
