@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="calendar.Many2ManyAttendeeExpandable" t-inherit="web.Many2ManyTagsAvatarField" t-inherit-mode="primary" owl="1">
-        <div id="many2many_tags_avatar_field_container" position="attributes">
-            <attribute name="class">o_field_tags d-inline-flex flex-wrap w-100</attribute>
+        <xpath expr="//div[hasclass('many2many_tags_avatar_field_container')]" position="attributes">
+            <attribute name="class" remove="mw-100" add="w-100" separator=" "/>
         </xpath>
         <xpath expr="//TagsList" position="attributes">
             <attribute name="itemsVisible">state.expanded ? tags.length : 5</attribute>
