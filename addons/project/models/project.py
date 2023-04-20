@@ -774,6 +774,7 @@ class Project(models.Model):
         action = self.env['ir.actions.act_window']._for_xml_id('project.project_sharing_project_task_action')
         action['context'] = {
             'default_project_id': self.id,
+            'search_default_open_tasks': True,
             'delete': False,
             'active_id_chatter': self.id,
         }
