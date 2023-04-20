@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Cache } from "@web/core/utils/cache";
+import { Domain } from "@web/core/domain";
 import { registry } from "@web/core/registry";
 
 /**
@@ -40,16 +41,70 @@ export const fieldService = {
         }
 
         /**
-         * @param {string} resModel valid model name
          * @param {Object} fieldDefs
+         * @param {string} name
+         * @param {import("@web/core/domain").DomainListRepr} [domain=[]]
+         * @returns {Promise<Object>}
+         */
+        async function _loadPropertyDefinitions(fieldDefs, name, domain = []) {
+            const {
+                definition_record: definitionRecord,
+                definition_record_field: definitionRecordField,
+            } = fieldDefs[name];
+            const definitionRecordModel = fieldDefs[definitionRecord].relation;
+
+            domain = Domain.and([[[definitionRecordField, "!=", false]], domain]).toList();
+
+            const records = await orm.searchRead(definitionRecordModel, domain, [
+                "display_name",
+                definitionRecordField,
+            ]);
+
+            const definitions = {};
+            for (const record of records) {
+                for (const definition of record[definitionRecordField]) {
+                    definitions[definition.name] = {
+                        is_property: true,
+                        // for now, all properties are searchable but their definitions don't contain that info
+                        searchable: true,
+                        // differentiate definitions with same name but on different parent
+                        record_name: record.display_name,
+                        ...definition,
+                    };
+                }
+            }
+            return definitions;
+        }
+
+        /**
+         * @param {string} resModel
+         * @param {string} fieldName
+         * @param {import("@web/core/domain").DomainListRepr} [domain]
+         * @returns {Promise<object[]>}
+         */
+        async function loadPropertyDefinitions(resModel, fieldName, domain) {
+            const fieldDefs = await loadFields(resModel);
+            return _loadPropertyDefinitions(fieldDefs, fieldName, domain);
+        }
+
+        /**
+         * @param {string|null} resModel valid model name or null (case virtual)
+         * @param {Object|null} fieldDefs
          * @param {string[]} names
          */
         async function _loadPath(resModel, fieldDefs, names) {
+            if (!fieldDefs) {
+                return { isInvalid: "path", names, modelsInfo: [] };
+            }
+
             const [name, ...remainingNames] = names;
             const modelsInfo = [{ resModel, fieldDefs }];
+            if (resModel === "*" && remainingNames.length) {
+                return { isInvalid: "path", names, modelsInfo };
+            }
 
             const fieldDef = fieldDefs[name];
-            if (name !== "*" && !fieldDef) {
+            if ((name !== "*" && !fieldDef) || (name === "*" && remainingNames.length)) {
                 return { isInvalid: "path", names, modelsInfo };
             }
 
@@ -57,16 +112,22 @@ export const fieldService = {
                 return { names, modelsInfo };
             }
 
-            if (name === "*") {
-                return { isInvalid: "path", names, modelsInfo };
-            }
-
+            let subResult;
             if (fieldDef.relation) {
-                const subResult = await _loadPath(
+                subResult = await _loadPath(
                     fieldDef.relation,
                     await loadFields(fieldDef.relation),
                     remainingNames
                 );
+            } else if (fieldDef.type === "properties") {
+                subResult = await _loadPath(
+                    "*",
+                    await _loadPropertyDefinitions(fieldDefs, name),
+                    remainingNames
+                );
+            }
+
+            if (subResult) {
                 const result = {
                     names,
                     modelsInfo: [...modelsInfo, ...subResult.modelsInfo],
@@ -95,7 +156,7 @@ export const fieldService = {
             return _loadPath(resModel, fieldDefs, path.split("."));
         }
 
-        return { loadFields, loadPath };
+        return { loadFields, loadPath, loadPropertyDefinitions };
     },
 };
 
