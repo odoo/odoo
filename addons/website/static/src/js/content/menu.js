@@ -566,6 +566,29 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
             Dropdown.getOrCreateInstance(toggleEl).hide();
         }
     },
+    /**
+     * @private
+     * @param {Event} ev
+     * @param {boolean} [doShow=true] true to show, false to hide
+     */
+    _updateDropdownVisibility(ev, doShow = true) {
+        if (config.device.size_class <= config.device.SIZES.SM) {
+            return;
+        }
+        if (ev.currentTarget.closest('.o_extra_menu_items')) {
+            return;
+        }
+        const dropdownToggleEl = ev.currentTarget.querySelector('.dropdown-toggle');
+        if (!dropdownToggleEl) {
+            return;
+        }
+        const dropdown = Dropdown.getOrCreateInstance(dropdownToggleEl);
+        if (doShow) {
+            dropdown.show();
+        } else {
+            dropdown.hide();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -584,11 +607,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         }
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the (or in the) extra menu ('+').
-        if (config.device.size_class <= config.device.SIZES.SM ||
-            ev.currentTarget.closest('.o_extra_menu_items')) {
-            return;
-        }
-        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).show();
+        this._updateDropdownVisibility(ev, true);
     },
     /**
      * @private
@@ -599,11 +618,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
             // Cancel handling from view mode.
             return;
         }
-        if (config.device.size_class <= config.device.SIZES.SM ||
-            ev.currentTarget.closest('.o_extra_menu_items')) {
-            return;
-        }
-        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).hide();
+        this._updateDropdownVisibility(ev, false);
     },
     /**
      * Called when the page is clicked anywhere.
