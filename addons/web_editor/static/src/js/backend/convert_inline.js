@@ -755,6 +755,12 @@ async function toInline($editable, cssRules, $iframe) {
             }
         };
     };
+    // Fix mx-auto on images in table cells.
+    for (const centeredImage of editable.querySelectorAll('td > img.mx-auto')) {
+        if (centeredImage.parentElement.children.length === 1) {
+            centeredImage.parentElement.style.setProperty('text-align', 'center');
+        }
+    }
 
     // Remove contenteditable attributes
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
