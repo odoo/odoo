@@ -3,7 +3,7 @@
     'name': 'Japan - Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['jp'],
-    'version': '2.2',
+    'version': '2.3',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
