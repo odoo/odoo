@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
 
@@ -125,3 +126,91 @@ class TestCarrierPropagation(TransactionCase):
                 self.normal_delivery,
                 move_pack.picking_id.carrier_id,
         )
+
+    def test_route_based_on_carrier_delivery(self):
+        """
+            Check that the route on the sale order line is selected as per the first priority even if route on shipping mehod is present
+            Also, Check that the route on the shipping method is selected if there is no route selected on sale order line
+        """
+        route1 = self.env['stock.route'].create({
+            'name': 'Route1',
+            'sale_selectable' : True,
+            'shipping_selectable': True,
+            'warehouse_ids': [Command.link(self.env.ref("stock.warehouse0").id)],
+            'rule_ids': [Command.create({
+                'name': 'rule1',
+                'location_src_id': self.warehouse.lot_stock_id.id,
+                'location_dest_id': self.customer_location.id,
+                'company_id': self.env.company.id,
+                'action': 'pull',
+                'auto': 'transparent',
+                'picking_type_id': self.ref('stock.picking_type_out'),
+            })],
+        })
+        shelf1_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': self.env.ref('stock.stock_location_stock').id,
+        })
+        route2 = self.env['stock.route'].create({
+            'name': 'Route2',
+            'sale_selectable' : True,
+            'shipping_selectable':True,
+            'warehouse_ids': [Command.link(self.env.ref("stock.warehouse0").id)],
+            'rule_ids': [Command.create({
+                'name': 'rule2',
+                'location_src_id': shelf1_location.id,
+                'location_dest_id': self.customer_location.id,
+                'company_id': self.env.company.id,
+                'action': 'pull',
+                'auto': 'transparent',
+                'picking_type_id': self.ref('stock.picking_type_out'),
+            })],
+        })
+        self.normal_delivery.write({
+            "route_ids": [Command.link(route2.id)]
+        })
+
+        sale_order1 = self.SaleOrder.create({
+            'partner_id': self.partner_propagation.id,
+            'order_line': [Command.create({
+                'name': 'Cable Management Box',
+                'product_id': self.super_product.id,
+                'product_uom_qty': 2,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+                'route_id' : route1.id,
+            })],
+        })
+
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_order1.id,
+            'default_carrier_id': self.normal_delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        sale_order1.action_confirm()
+        self.assertEqual(sale_order1.picking_ids.location_id, route1.rule_ids.location_src_id)
+
+        # check route without add in sale order line
+        sale_order2 = self.SaleOrder.create({
+            'partner_id': self.partner_propagation.id,
+            'order_line': [Command.create({
+                'name': 'Cable Management Box',
+                'product_id': self.super_product.id,
+                'product_uom_qty': 2,
+                'product_uom': self.product_uom_unit.id,
+                'price_unit': 750.00,
+            })],
+        })
+
+        delivery_wizard = Form(self.env['choose.delivery.carrier'].with_context({
+            'default_order_id': sale_order2.id,
+            'default_carrier_id': self.normal_delivery.id,
+        }))
+        choose_delivery_carrier = delivery_wizard.save()
+        choose_delivery_carrier.button_confirm()
+
+        sale_order2.action_confirm()
+        self.assertEqual(sale_order2.picking_ids.location_id, route2.rule_ids.location_src_id)
