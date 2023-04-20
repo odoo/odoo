@@ -18590,4 +18590,50 @@ QUnit.module("Views", (hooks) => {
             "order:amount ASC, foo ASC", // go back to the list view, it should still be ordered by amount
         ]);
     });
+
+    QUnit.test("x2many onchange, check result", async function (assert) {
+        serverData.models.foo.onchanges = {
+            m2m: function () {},
+        };
+
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `<tree editable="bottom">
+                    <field name="m2m" widget="many2many_tags"/>
+                    <field name="m2o"/>
+                </tree>`,
+            async mockRPC(route, args) {
+                if (args.method === "onchange") {
+                    assert.step("onchange");
+                    await nextTick();
+                    return { value: { m2o: [3, "Value 3"] } };
+                }
+            },
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_data_cell.o_many2many_tags_cell").textContent,
+            "Value 1Value 2"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_data_cell.o_list_many2one").textContent,
+            "Value 1"
+        );
+        await click(target.querySelector(".o_data_cell.o_many2many_tags_cell"));
+        await selectDropdownItem(target, "m2m", "Value 3");
+
+        assert.verifySteps(["onchange"]);
+        await click(target.querySelector(".o_list_button_save:not(.btn-link)"));
+        assert.strictEqual(
+            target.querySelector(".o_data_cell.o_many2many_tags_cell").textContent,
+            "Value 1Value 2Value 3"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_data_cell.o_list_many2one").textContent,
+            "Value 3",
+            "onchange result should be applied"
+        );
+    });
 });
