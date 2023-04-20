@@ -37,6 +37,6 @@ class ProductLabelLayout(models.TransientModel):
             docids = []
             for lot_id, qty in quantity_by_lot.items():
                 docids.append([lot_id] * qty)
-        report_action = self.env.ref(xml_id).report_action(docids)
+        report_action = self.env.ref(xml_id).report_action(docids, config=False)
         report_action.update({'close_on_report_download': True})
         return report_action
