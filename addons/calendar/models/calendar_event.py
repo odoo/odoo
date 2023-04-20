@@ -1216,7 +1216,7 @@ class Meeting(models.Model):
             event.add('dtstart').value = ics_datetime(meeting.start, meeting.allday)
             event.add('dtend').value = ics_datetime(meeting.stop, meeting.allday)
             event.add('summary').value = meeting._get_customer_summary()
-            description = meeting._get_customer_description()
+            description = html2plaintext(meeting._get_customer_description())
             if description:
                 event.add('description').value = description
             if meeting.location:
@@ -1256,7 +1256,10 @@ class Meeting(models.Model):
 
     def _get_customer_description(self):
         """:return (str): The description to include in calendar exports"""
-        return html2plaintext(self.description) if self.description else ''
+        discuss_url = self.videocall_location
+        if hasattr(self, 'appointment_type_id') and self.appointment_type_id:
+            return discuss_url
+        return self.description if self.description else ''
 
     def _get_customer_summary(self):
         """:return (str): The summary to include in calendar exports"""

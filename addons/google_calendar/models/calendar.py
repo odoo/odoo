@@ -248,7 +248,7 @@ class Meeting(models.Model):
             'start': start,
             'end': end,
             'summary': self.name,
-            'description': tools.html_sanitize(self.description) if not tools.is_html_empty(self.description) else '',
+            'description': tools.html_sanitize(self._get_customer_description()) if not tools.is_html_empty(self._get_customer_description()) else '',
             'location': self.location or '',
             'guestsCanModify': not self.guests_readonly,
             'organizer': {'email': self.user_id.email, 'self': self.user_id == self.env.user},
