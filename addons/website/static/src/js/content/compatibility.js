@@ -5,8 +5,6 @@
  * content too.
  */
 
-import "web.dom_ready";
-
 // Check the browser and its version and add the info as an attribute of the
 // HTML element so that css selectors can match it
 var browser = _.findKey($.browser, function (v) { return v === true; });
