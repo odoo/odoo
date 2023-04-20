@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates xml:space="preserve">
 
+    <t t-name="web.DomainSelector.Editor" owl="1">
+        <t t-if="isExprValue">
+            <div class="o_ds_expr_value o_input d-flex align-items-center p-0" data-tooltip="Expressions can not be edited">
+                <span class="ms-2" t-esc="props.value.expr" />
+                <i role="alert" class="ms-auto fa fa-exclamation-triangle text-warning" title="Expression" />
+                <button class="btn btn-link p-1" title="Clear" t-on-click="() => this.props.onExprRemove()">
+                    <i class="fa fa-times" />
+                </button>
+            </div>
+        </t>
+        <t t-else="">
+            <t t-component="props.info.component" t-props="props.info.extractProps({ value: props.value, update: props.update, fieldDef: props.fieldDef })" />
+        </t>
+    </t>
+
     <t t-name="web.DomainSelector.Input" owl="1">
         <input type="text" class="o_input o_domain_leaf_value_input" t-att-value="props.value" t-on-change="(ev) => props.update(ev.target.value)" />
     </t>
@@ -17,7 +32,7 @@
         <div class="o_domain_leaf_value_input">
             <t t-foreach="props.value" t-as="tag" t-key="tag_index">
                 <span class="badge rounded-pill">
-                    <t t-esc="tag" />
+                    <t t-esc="getTagValue(tag)" />
                     <i class="o_domain_leaf_value_remove_tag_button fa fa-times" role="img" aria-label="Remove tag" title="Remove tag" t-on-click="() => this.removeTag(tag_index)" />
                 </span>
             </t>
@@ -25,6 +40,14 @@
         <div class="o_domain_leaf_value_tags">
             <input type="text" class="o_input" placeholder="Add new value" t-ref="input" />
             <button class="btn btn-sm btn-primary fa fa-plus o_domain_leaf_value_add_tag_button" aria-label="Add tag" title="Add tag" t-on-click="onBtnClick" />
+        </div>
+    </t>
+
+    <t t-name="web.DomainSelector.Range" owl="1">
+        <div class="d-flex h-100 align-items-center">
+            <Editor info="editorInfo" value="getValue(0)" update="getUpdater(0)" onExprRemove="getExprRemover(0)" />
+            <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow" />
+            <Editor info="editorInfo" value="getValue(1)" update="getUpdater(1)" onExprRemove="getExprRemover(1)" />
         </div>
     </t>
 

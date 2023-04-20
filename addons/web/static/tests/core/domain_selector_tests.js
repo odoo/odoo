@@ -1,19 +1,29 @@
 /** @odoo-module **/
 
-import { Component, xml } from "@odoo/owl";
+import {
+    click,
+    editInput,
+    editSelect,
+    getFixture,
+    mount,
+    nextTick,
+    patchDate,
+    patchTimeZone,
+    triggerEvent,
+} from "../helpers/utils";
+import { Component, useState, xml } from "@odoo/owl";
 import { DomainSelector } from "@web/core/domain_selector/domain_selector";
-import { OPERATOR_DESCRIPTIONS } from "@web/core/domain_selector/domain_selector_operators";
 import { fieldService } from "@web/core/field_service";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { makeFakeLocalizationService } from "../helpers/mock_services";
+import { makeTestEnv } from "../helpers/mock_env";
 import { ormService } from "@web/core/orm_service";
+import { OPERATOR_DESCRIPTIONS } from "@web/core/domain_selector/domain_selector_operators";
 import { popoverService } from "@web/core/popover/popover_service";
+import { registerCleanup } from "../helpers/cleanup";
 import { registry } from "@web/core/registry";
 import { uiService } from "@web/core/ui/ui_service";
-import { registerCleanup } from "../helpers/cleanup";
-import { makeTestEnv } from "../helpers/mock_env";
-import { makeFakeLocalizationService } from "../helpers/mock_services";
-import { click, editInput, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
 import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
 import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 
@@ -24,6 +34,36 @@ async function mountComponent(Component, params = {}) {
     const env = await makeTestEnv({ serverData, mockRPC: params.mockRPC });
     await mount(MainComponentsContainer, target, { env });
     return mount(Component, target, { env, props: params.props || {} });
+}
+
+async function makeDomainSelector(params = {}) {
+    const props = { ...params };
+    const mockRPC = props.mockRPC;
+    delete props.mockRPC;
+
+    class Parent extends Component {
+        setup() {
+            this.domainSelectorProps = {
+                resModel: "partner",
+                readonly: false,
+                domain: "[]",
+                ...props,
+                update: (domain, fromDebug) => {
+                    if (props.update) {
+                        props.update(domain, fromDebug);
+                    }
+                    this.domainSelectorProps.domain = domain;
+                    this.render();
+                },
+            };
+        }
+    }
+    Parent.components = { DomainSelector };
+    Parent.template = xml`<DomainSelector t-props="domainSelectorProps"/>`;
+
+    const env = await makeTestEnv({ serverData, mockRPC });
+    await mount(MainComponentsContainer, target, { env });
+    return mount(Parent, target, { env, props });
 }
 
 QUnit.module("Components", (hooks) => {
@@ -41,6 +81,7 @@ QUnit.module("Components", (hooks) => {
                             searchable: true,
                         },
                         datetime: { string: "Date Time", type: "datetime", searchable: true },
+                        int: { string: "Integer", type: "integer", searchable: true },
                     },
                     records: [
                         { id: 1, foo: "yop", bar: true, product_id: 37 },
@@ -74,30 +115,9 @@ QUnit.module("Components", (hooks) => {
     QUnit.module("DomainSelector");
 
     QUnit.test("creating a domain from scratch", async (assert) => {
-        assert.expect(12);
-
-        class Parent extends Component {
-            setup() {
-                this.value = "[]";
-            }
-            onUpdate(newValue) {
-                this.value = newValue;
-                this.render();
-            }
-        }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector
-                resModel="'partner'"
-                value="value"
-                readonly="false"
-                isDebugMode="true"
-                update="(newValue) => this.onUpdate(newValue)"
-            />
-        `;
-
-        // Create the domain selector and its mock environment
-        await mountComponent(Parent);
+        await makeDomainSelector({
+            isDebugMode: true,
+        });
 
         // As we gave an empty domain, there should be a visible button to add
         // the first domain part
@@ -151,11 +171,11 @@ QUnit.module("Components", (hooks) => {
         await click(target, ".fa.fa-plus");
         assert.strictEqual(
             target.querySelector(".o_domain_debug_input").value,
-            `["&", ("bar", "=", True), ("id", "=", 1)]`,
+            `["&", ("bar", "=", True), ("bar", "=", True)]`,
             "the domain input should contain a domain with 'bar' and 'id'"
         );
 
-        // There should be two "..." buttons to add a domain group; clicking on
+        // There should be two "add group" buttons to add a domain group; clicking on
         // the first one, should add this group with defaults "['id', '=', 1]"
         // domains and the "|" operator
         assert.containsN(target, ".fa.fa-sitemap", 2, "there should be two '...' buttons");
@@ -163,7 +183,7 @@ QUnit.module("Components", (hooks) => {
         await click(target.querySelector(".fa.fa-sitemap"));
         assert.strictEqual(
             target.querySelector(".o_domain_debug_input").value,
-            `["&", ("bar", "=", True), "&", "|", ("id", "=", 1), ("id", "=", 1), ("id", "=", 1)]`,
+            `["&", "&", ("bar", "=", True), "|", ("id", "=", 1), ("id", "=", 1), ("bar", "=", True)]`,
             "the domain input should contain a domain with 'bar', 'id' and a subgroup"
         );
 
@@ -189,34 +209,17 @@ QUnit.module("Components", (hooks) => {
 
     QUnit.test("building a domain with a datetime", async (assert) => {
         assert.expect(4);
-
-        class Parent extends Component {
-            setup() {
-                this.value = `[("datetime", "=", "2017-03-27 15:42:00")]`;
-            }
-            onUpdate(newValue) {
+        await makeDomainSelector({
+            domain: `[("datetime", "=", "2017-03-27 15:42:00")]`,
+            isDebugMode: true,
+            update(domain) {
                 assert.strictEqual(
-                    newValue,
+                    domain,
                     `[("datetime", "=", "2017-02-26 15:42:00")]`,
                     "datepicker value should have changed"
                 );
-                this.value = newValue;
-                this.render();
-            }
-        }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector
-                resModel="'partner'"
-                value="value"
-                readonly="false"
-                isDebugMode="true"
-                update="(newValue) => this.onUpdate(newValue)"
-            />
-        `;
-
-        // Create the domain selector and its mock environment
-        await mountComponent(Parent);
+            },
+        });
 
         // Check that there is a datepicker to choose the date
         assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
@@ -232,51 +235,121 @@ QUnit.module("Components", (hooks) => {
         assert.equal(target.querySelector(".o_datetime_input").value, "02/26/2017 16:42:00");
     });
 
-    QUnit.test("building a domain with a datetime: context_today()", async (assert) => {
-        // Create the domain selector and its mock environment
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "partner",
-                value: `[("datetime", "=", context_today())]`,
-                readonly: false,
-                update: () => {
-                    assert.step("SHOULD NEVER BE CALLED");
-                },
+    QUnit.test("building a domain with an invalid path", async (assert) => {
+        await makeDomainSelector({
+            domain: `[("fooooooo", "=", "abc")]`,
+            update(domain) {
+                assert.strictEqual(domain, `[("bar", "=", True)]`);
             },
         });
 
-        // Check that there is a datepicker to choose the date
-        assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
-        // The input field should display that the date is invalid
-        assert.equal(target.querySelector(".o_datetime_input").value, "Invalid DateTime");
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "fooooooo");
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_warning").title,
+            "Invalid field chain"
+        );
+        assert.containsN(target, ".o_domain_leaf_operator_select option", 18);
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "abc");
 
-        // Open and close the datepicker
-        await click(target, ".o_datetime_input");
-        await click(target);
+        await click(target, ".o_model_field_selector");
+        await click(target.querySelector(".o_model_field_selector_popover_item_name"));
 
-        // The input field should continue displaying 'Invalid DateTime'.
-        // The value is still invalid.
-        assert.equal(target.querySelector(".o_datetime_input").value, "Invalid DateTime");
-        assert.verifySteps([]);
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Bar");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "is");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "true");
+    });
+
+    QUnit.test("building a domain with an invalid operator", async (assert) => {
+        await makeDomainSelector({
+            domain: `[("foo", "!!!!=!!!!", "abc")]`,
+            update(domain) {
+                assert.strictEqual(domain, `[("foo", "=", "")]`);
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Foo");
+        assert.containsNone(target, ".o_model_field_selector_warning");
+        assert.containsN(target, ".o_domain_leaf_operator_select option", 8 + 1);
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf_operator_select").value,
+            "!!!!=!!!!"
+        );
+        assert.containsNone(
+            target,
+            ".o_domain_leaf_value_input",
+            "do not show editor if operator is invalid"
+        );
+
+        await editSelect(target, ".o_domain_leaf_operator_select", "equal");
+
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Foo");
+        assert.containsNone(target, ".o_model_field_selector_warning");
+        assert.containsN(target, ".o_domain_leaf_operator_select option", 8);
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "");
+    });
+
+    QUnit.test("building a domain with an expression for value", async (assert) => {
+        patchDate(2023, 3, 20, 17, 0, 0);
+        await makeDomainSelector({
+            domain: `[("datetime", ">=", context_today())]`,
+            update(domain) {
+                assert.strictEqual(domain, `[("datetime", ">=", "2023-04-20 16:00:00")]`);
+            },
+        });
+
+        assert.containsNone(target, ".o_ds_value_cell input");
+        assert.containsOnce(target, ".o_ds_expr_value");
+        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "context_today()");
+
+        await click(target, ".o_ds_expr_value button");
+        assert.containsOnce(target, ".o_ds_value_cell input");
+        assert.containsNone(target, ".o_ds_expr_value");
+        assert.strictEqual(
+            target.querySelector(".o_ds_value_cell input").value,
+            "04/20/2023 17:00:00"
+        );
+    });
+
+    QUnit.test("building a domain with an expression in value", async (assert) => {
+        await makeDomainSelector({
+            domain: `[("int", "=", id)]`,
+            update(domain) {
+                assert.strictEqual(domain, `[("int", "<", id)]`);
+            },
+        });
+
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Integer");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.containsNone(target, ".o_ds_value_cell input");
+        assert.containsOnce(target, ".o_ds_expr_value");
+        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "id");
+
+        await editSelect(target, ".o_domain_leaf_operator_select", "less_than");
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "Integer");
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf_operator_select").value,
+            "less_than"
+        );
+        assert.containsNone(target, ".o_ds_value_cell input");
+        assert.containsOnce(target, ".o_ds_expr_value");
+        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "id");
     });
 
     QUnit.test("building a domain with a m2o without following the relation", async (assert) => {
         assert.expect(1);
 
-        // Create the domain selector and its mock environment
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "partner",
-                value: `[("product_id", "ilike", 1)]`,
-                readonly: false,
-                isDebugMode: true,
-                update: (newValue) => {
-                    assert.strictEqual(
-                        newValue,
-                        `[("product_id", "ilike", "pad")]`,
-                        "string should have been allowed as m2o value"
-                    );
-                },
+        await makeDomainSelector({
+            domain: `[("product_id", "ilike", 1)]`,
+            isDebugMode: true,
+            update: (domain) => {
+                assert.strictEqual(
+                    domain,
+                    `[("product_id", "ilike", "pad")]`,
+                    "string should have been allowed as m2o value"
+                );
             },
         });
 
@@ -286,41 +359,29 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test("editing a domain with `parent` key", async (assert) => {
-        // Create the domain selector and its mock environment
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "product",
-                value: `[("name", "=", parent.foo)]`,
-                readonly: false,
-            },
+        await makeDomainSelector({
+            resModel: "product",
+            domain: `[("name", "=", parent.foo)]`,
+            isDebugMode: true,
         });
-        assert.strictEqual(
-            target.lastElementChild.innerText,
-            `This domain is not supported. RESET DOMAIN`
-        );
+        assert.containsOnce(target, ".o_ds_expr_value");
+        assert.strictEqual(target.querySelector(".o_ds_expr_value").textContent, "parent.foo");
     });
 
     QUnit.test("creating a domain with a default option", async (assert) => {
         assert.expect(1);
-
         // Create the domain selector and its mock environment
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "partner",
-                value: "[]",
-                readonly: false,
-                isDebugMode: true,
-                defaultLeafValue: ["foo", "=", "kikou"],
-                update: (newValue) => {
-                    assert.strictEqual(
-                        newValue,
-                        `[("foo", "=", "kikou")]`,
-                        "the domain input should contain the default domain"
-                    );
-                },
+        await makeDomainSelector({
+            isDebugMode: true,
+            defaultLeafValue: ["foo", "=", "kikou"],
+            update: (domain) => {
+                assert.strictEqual(
+                    domain,
+                    `[("foo", "=", "kikou")]`,
+                    "the domain input should contain the default domain"
+                );
             },
         });
-
         // Clicking on the button should add a visible field selector in the
         // widget so that the user can change the field chain
         await click(target, ".o_domain_add_first_node_button");
@@ -329,53 +390,34 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("edit a domain with the debug textarea", async (assert) => {
         assert.expect(5);
 
-        let newValue;
-
-        class Parent extends Component {
-            setup() {
-                this.value = `[("product_id", "ilike", 1)]`;
-            }
-            onUpdate(value, fromDebug) {
-                assert.strictEqual(value, newValue);
+        let newDomain;
+        await makeDomainSelector({
+            domain: `[("product_id", "ilike", 1)]`,
+            isDebugMode: true,
+            update(domain, fromDebug) {
+                assert.strictEqual(domain, newDomain);
                 assert.ok(fromDebug);
-            }
-        }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector
-                value="value"
-                resModel="'partner'"
-                readonly="false"
-                isDebugMode="true"
-                update="(...args) => this.onUpdate(...args)"
-            />
-        `;
-        // Create the domain selector and its mock environment
-        await mountComponent(Parent);
-
+            },
+        });
         assert.containsOnce(
             target,
             ".o_domain_node.o_domain_leaf",
             "should have a single domain node"
         );
-        newValue = `
-[
-    ['product_id', 'ilike', 1],
-    ['id', '=', 0]
-]`;
-        const input = target.querySelector(".o_domain_debug_input");
-        input.value = newValue;
-        await triggerEvent(input, null, "change");
+
+        newDomain = `
+            [
+                ['product_id', 'ilike', 1],
+                ['id', '=', 0]
+            ]
+        `;
+        await editInput(target, ".o_domain_debug_input", newDomain);
         assert.strictEqual(
             target.querySelector(".o_domain_debug_input").value,
-            newValue,
+            newDomain,
             "the domain should not have been formatted"
         );
-        assert.containsOnce(
-            target,
-            ".o_domain_node.o_domain_leaf",
-            "should still have a single domain node"
-        );
+        assert.containsN(target, ".o_domain_node.o_domain_leaf", 2);
     });
 
     QUnit.test(
@@ -383,44 +425,27 @@ QUnit.module("Components", (hooks) => {
         async (assert) => {
             assert.expect(15);
 
-            let newValue;
-
-            class Parent extends Component {
-                setup() {
-                    this.value = `[("product_id", "ilike", 1)]`;
-                }
-                onUpdate(value, fromDebug) {
-                    this.value = value;
-                    assert.strictEqual(value, newValue);
+            let newDomain;
+            await makeDomainSelector({
+                domain: `[("product_id", "ilike", 1)]`,
+                isDebugMode: true,
+                update(domain, fromDebug) {
+                    assert.strictEqual(domain, newDomain);
                     assert.ok(fromDebug);
-                    this.render();
-                }
-            }
-            Parent.components = { DomainSelector };
-            Parent.template = xml`
-            <DomainSelector
-                value="value"
-                resModel="'partner'"
-                readonly="false"
-                isDebugMode="true"
-                update="(...args) => this.onUpdate(...args)"
-            />
-        `;
-            // Create the domain selector and its mock environment
-            await mountComponent(Parent);
-
+                },
+            });
             assert.containsOnce(
                 target,
                 ".o_domain_node.o_domain_leaf",
                 "should have a single domain node"
             );
-            newValue = `[(1, "=", 1)]`;
+            newDomain = `[(1, "=", 1)]`;
             let input = target.querySelector(".o_domain_debug_input");
-            input.value = newValue;
+            input.value = newDomain;
             await triggerEvent(input, null, "change");
             assert.strictEqual(
                 target.querySelector(".o_domain_debug_input").value,
-                newValue,
+                newDomain,
                 "the domain should not have been formatted"
             );
             assert.containsOnce(
@@ -439,13 +464,13 @@ QUnit.module("Components", (hooks) => {
             ); // option "="
             assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "1");
 
-            newValue = `[(0, "=", 1)]`;
+            newDomain = `[(0, "=", 1)]`;
             input = target.querySelector(".o_domain_debug_input");
-            input.value = newValue;
+            input.value = newDomain;
             await triggerEvent(input, null, "change");
             assert.strictEqual(
                 target.querySelector(".o_domain_debug_input").value,
-                newValue,
+                newDomain,
                 "the domain should not have been formatted"
             );
             assert.containsOnce(
@@ -466,18 +491,15 @@ QUnit.module("Components", (hooks) => {
         }
     );
 
-    QUnit.test("operator fallback", async (assert) => {
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "partner",
-                value: "[['foo', 'like', 'kikou']]",
-            },
+    QUnit.test("operator fallback (readonly mode)", async (assert) => {
+        await makeDomainSelector({
+            domain: `[['foo', 'like', 'kikou']]`,
+            readonly: true,
         });
-
         assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, `Foo like "kikou"`);
     });
 
-    QUnit.test("operator fallback in edit mode", async (assert) => {
+    QUnit.test("operator fallback (edit mode)", async (assert) => {
         OPERATOR_DESCRIPTIONS.push({
             key: "test",
             label: "test",
@@ -488,30 +510,19 @@ QUnit.module("Components", (hooks) => {
             OPERATOR_DESCRIPTIONS.pop();
         });
 
-        await mountComponent(DomainSelector, {
-            props: {
-                readonly: false,
-                resModel: "partner",
-                value: "[['foo', 'test', 'kikou']]",
-            },
-        });
-
+        await makeDomainSelector({ domain: "[['foo', 'test', 'kikou']]" });
         // check that the DomainSelector does not crash
         assert.containsOnce(target, ".o_domain_selector");
         assert.containsN(target, ".o_domain_leaf_edition > div", 2, "value should be hidden");
     });
 
     QUnit.test("cache fields_get", async (assert) => {
-        await mountComponent(DomainSelector, {
-            mockRPC(route, { method }) {
+        await makeDomainSelector({
+            domain: "['&', ['foo', '=', 'kikou'], ['bar', '=', 'true']]",
+            mockRPC(_, { method }) {
                 if (method === "fields_get") {
                     assert.step("fields_get");
                 }
-            },
-            props: {
-                readonly: false,
-                resModel: "partner",
-                value: "['&', ['foo', '=', 'kikou'], ['bar', '=', 'true']]",
             },
         });
 
@@ -529,36 +540,13 @@ QUnit.module("Components", (hooks) => {
             ],
         };
 
-        class Parent extends Component {
-            setup() {
-                this.value = `[['state', '!=', false]]`;
-            }
-            onUpdate(newValue) {
-                this.value = newValue;
-                this.render();
-            }
-        }
-        Parent.components = { DomainSelector };
-        Parent.template = xml`
-            <DomainSelector
-                resModel="'partner'"
-                value="value"
-                readonly="false"
-                update="(newValue) => this.onUpdate(newValue)"
-            />
-        `;
-
-        // Create the domain selector and its mock environment
-        await mountComponent(Parent);
+        await makeDomainSelector({ domain: `[['state', '!=', False]]` });
 
         assert.strictEqual(
             target.querySelector(".o_model_field_selector_chain_part").innerText,
             "State"
         );
-        assert.strictEqual(
-            target.querySelector(".o_domain_leaf_operator_select").value,
-            "not_equal"
-        ); // option "!="
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "set"); // option "!="
 
         await editSelect(target, ".o_domain_leaf_operator_select", "equal");
 
@@ -580,15 +568,7 @@ QUnit.module("Components", (hooks) => {
                 ["ghi", "GHI"],
             ],
         };
-
-        await mountComponent(DomainSelector, {
-            props: {
-                resModel: "partner",
-                value: `[['state', 'in', ['abc']]]`,
-                readonly: false,
-            },
-        });
-
+        await makeDomainSelector({ domain: `[['state', 'in', ['abc']]]` });
         const select = target.querySelector(".o_domain_leaf_operator_select");
         assert.strictEqual(select.options[select.options.selectedIndex].text, "in");
     });
@@ -606,10 +586,10 @@ QUnit.module("Components", (hooks) => {
 
         class Parent extends Component {
             setup() {
-                this.value = `[("state", "in", ["a", "b", "c"])]`;
+                this.domain = `[("state", "in", ["a", "b", "c"])]`;
             }
-            onUpdate(newValue) {
-                this.value = newValue;
+            onUpdate(domain) {
+                this.domain = domain;
                 this.render();
             }
         }
@@ -617,9 +597,9 @@ QUnit.module("Components", (hooks) => {
         Parent.template = xml`
             <DomainSelector
                 resModel="'partner'"
-                value="value"
+                domain="domain"
                 readonly="false"
-                update="(newValue) => this.onUpdate(newValue)"
+                update="(domain) => this.onUpdate(domain)"
             />
         `;
 
@@ -627,28 +607,28 @@ QUnit.module("Components", (hooks) => {
         const comp = await mountComponent(Parent);
 
         assert.containsOnce(target, ".o_domain_leaf_value_input");
-        assert.strictEqual(comp.value, `[("state", "in", ["a", "b", "c"])]`);
+        assert.strictEqual(comp.domain, `[("state", "in", ["a", "b", "c"])]`);
         assert.strictEqual(
             target.querySelector(".o_domain_leaf_value_input").value,
             `["a", "b", "c"]`
         );
 
         await editInput(target, ".o_domain_leaf_value_input", `[]`);
-        assert.strictEqual(comp.value, `[("state", "in", [])]`);
+        assert.strictEqual(comp.domain, `[("state", "in", [])]`);
 
         await editInput(target, ".o_domain_leaf_value_input", `["b"]`);
-        assert.strictEqual(comp.value, `[("state", "in", ["b"])]`);
+        assert.strictEqual(comp.domain, `[("state", "in", ["b"])]`);
     });
 
     QUnit.test("parse -1", async (assert) => {
         class Parent extends Component {
             setup() {
-                this.value = `[("id", "=", -1)]`;
+                this.domain = `[("id", "=", -1)]`;
             }
         }
         Parent.components = { DomainSelector };
         Parent.template = xml`
-            <DomainSelector resModel="'partner'" value="value" readonly="false"/>
+            <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
         `;
         await mountComponent(Parent);
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "-1");
@@ -657,22 +637,22 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("parse 3-1", async (assert) => {
         class Parent extends Component {
             setup() {
-                this.value = `[("id", "=", 3-1)]`;
+                this.domain = `[("id", "=", 3-1)]`;
             }
         }
         Parent.components = { DomainSelector };
         Parent.template = xml`
-            <DomainSelector resModel="'partner'" value="value" readonly="false"/>
+            <DomainSelector resModel="'partner'" domain="domain" readonly="false"/>
         `;
         await mountComponent(Parent);
-        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "undefined");
+        assert.strictEqual(target.querySelector(".o_ds_expr_value").innerText, "3 - 1");
     });
 
     QUnit.test("domain not supported (mode readonly)", async (assert) => {
         await mountComponent(DomainSelector, {
             props: {
                 resModel: "partner",
-                value: `[`,
+                domain: `[`,
                 readonly: true,
                 isDebugMode: false,
             },
@@ -685,7 +665,7 @@ QUnit.module("Components", (hooks) => {
         await mountComponent(DomainSelector, {
             props: {
                 resModel: "partner",
-                value: `[`,
+                domain: `[`,
                 readonly: true,
                 isDebugMode: true,
             },
@@ -699,7 +679,7 @@ QUnit.module("Components", (hooks) => {
         await mountComponent(DomainSelector, {
             props: {
                 resModel: "partner",
-                value: `[`,
+                domain: `[`,
                 readonly: false,
                 isDebugMode: false,
             },
@@ -712,7 +692,7 @@ QUnit.module("Components", (hooks) => {
         await mountComponent(DomainSelector, {
             props: {
                 resModel: "partner",
-                value: `[`,
+                domain: `[`,
                 readonly: false,
                 isDebugMode: true,
             },
@@ -725,11 +705,11 @@ QUnit.module("Components", (hooks) => {
     QUnit.test("reset domain", async (assert) => {
         class Parent extends Component {
             setup() {
-                this.value = `[`;
+                this.domain = `[`;
             }
             onUpdate(domain) {
                 assert.step(domain);
-                this.value = domain;
+                this.domain = domain;
                 this.render();
             }
         }
@@ -737,7 +717,7 @@ QUnit.module("Components", (hooks) => {
         Parent.template = xml`
             <DomainSelector
                 resModel="'partner'"
-                value="value"
+                domain="domain"
                 readonly="false"
                 update="(domain) => this.onUpdate(domain)"
             />
@@ -753,21 +733,21 @@ QUnit.module("Components", (hooks) => {
         await click(target, ".o_reset_domain_button");
         assert.strictEqual(
             target.querySelector(".o_domain_selector").innerText.toLowerCase(),
-            "match all records add filter"
+            "match all records add condition"
         );
         assert.containsNone(target, ".o_reset_domain_button");
         assert.containsOnce(target, ".o_domain_add_first_node_button");
         assert.verifySteps(["[]"]);
     });
 
-    QUnit.test("incorrect path in debug input in model field selector popover", async (assert) => {
+    QUnit.test("debug input in model field selector popover", async (assert) => {
         class Parent extends Component {
             setup() {
-                this.value = `[("id", "=", 1)]`;
+                this.domain = `[("id", "=", 1)]`;
             }
             onUpdate(domain) {
                 assert.step(domain);
-                this.value = domain;
+                this.domain = domain;
                 this.render();
             }
         }
@@ -775,7 +755,7 @@ QUnit.module("Components", (hooks) => {
         Parent.template = xml`
             <DomainSelector
                 resModel="'partner'"
-                value="value"
+                domain="domain"
                 readonly="false"
                 isDebugMode="true"
                 update="(domain) => this.onUpdate(domain)"
@@ -785,12 +765,380 @@ QUnit.module("Components", (hooks) => {
         await openModelFieldSelectorPopover(target);
         await editInput(target, ".o_model_field_selector_debug", "a");
         await click(target, ".o_model_field_selector_popover_close");
-        assert.verifySteps([`[("", "=", 1)]`]);
-        assert.strictEqual(
-            target.querySelector(".o_model_field_selector_chain_part").innerText,
-            "-"
-        );
+        assert.verifySteps([`[("a", "=", "")]`]);
+
+        assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "a");
         assert.containsOnce(target, ".o_model_field_selector_warning");
+        assert.containsN(target, ".o_domain_leaf_operator_select option", 18);
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "");
+        assert.strictEqual(target.querySelector(".o_domain_debug_input").value, `[("a", "=", "")]`);
+    });
+
+    QUnit.test("between operator", async (assert) => {
+        patchTimeZone(0);
+        await makeDomainSelector({
+            domain: `["&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+            isDebugMode: true,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "between");
+        assert.containsN(target, ".o_datetime_input", 2);
+
+        await editInput(
+            target.querySelectorAll(".o_datetime_input")[0],
+            null,
+            "2023-01-02 00:00:00"
+        );
+        assert.verifySteps([
+            `["&", ("datetime", ">=", "2023-01-02 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+        ]);
+
+        await editInput(
+            target.querySelectorAll(".o_datetime_input")[1],
+            null,
+            "2023-01-08 00:00:00"
+        );
+        assert.verifySteps([
+            `["&", ("datetime", ">=", "2023-01-02 00:00:00"), ("datetime", "<=", "2023-01-08 00:00:00")]`,
+        ]);
+    });
+
+    QUnit.test("between operator (2)", async (assert) => {
+        patchTimeZone(0);
+        await makeDomainSelector({
+            domain: `["&", "&", ("foo", "=", "abc"), ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf .o_domain_leaf_operator_select ").value,
+            "equal"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
+                .value,
+            "between"
+        );
+        assert.containsN(target, ".o_datetime_input", 2);
+    });
+
+    QUnit.test("between operator (3)", async (assert) => {
+        patchTimeZone(0);
+        await makeDomainSelector({
+            domain: `["&", "&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00"), ("foo", "=", "abc")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf .o_domain_leaf_operator_select ").value,
+            "between"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
+                .value,
+            "equal"
+        );
+        assert.containsN(target, ".o_datetime_input", 2);
+    });
+
+    QUnit.test("between operator (4)", async (assert) => {
+        patchTimeZone(0);
+        await makeDomainSelector({
+            domain: `["&", ("datetime", ">=", "2023-01-01 00:00:00"), "&", ("datetime", "<=", "2023-01-10 00:00:00"), ("foo", "=", "abc")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.containsN(target, ".o_domain_leaf", 2);
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf .o_domain_leaf_operator_select ").value,
+            "between"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select ")
+                .value,
+            "equal"
+        );
+        assert.containsN(target, ".o_datetime_input", 2);
+    });
+
+    QUnit.test("between operator (5)", async (assert) => {
+        patchTimeZone(0);
+        await makeDomainSelector({
+            domain: `["|", "&", ("create_date", ">=", "2023-04-01 00:00:00"), ("create_date", "<=", "2023-04-30 23:59:59"), (0, "=", 1)]`,
+            readonly: true,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+        assert.strictEqual(
+            target.querySelector(".o_domain_selector").innerText,
+            `Match records with any of the following rules:\ncreate_date\nis between "2023-04-01 00:00:00" and "2023-04-30 23:59:59"\n0\n= 1`
+        );
+    });
+
+    QUnit.test("expressions in between operator", async (assert) => {
+        patchTimeZone(0);
+        patchDate(2023, 0, 1, 0, 0, 0);
+        await makeDomainSelector({
+            domain: `["&", ("datetime", ">=", context_today()), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+            update(domain) {
+                assert.step(domain);
+            },
+        });
+
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "between");
+        assert.containsOnce(target, ".o_ds_expr_value");
+        assert.containsOnce(target, ".o_datetime_input");
+
+        await click(target, ".o_ds_expr_value button");
+        assert.verifySteps([
+            `["&", ("datetime", ">=", "2023-01-01 00:00:00"), ("datetime", "<=", "2023-01-10 00:00:00")]`,
+        ]);
+    });
+
+    QUnit.test("support of connector '!' (readonly mode)", async (assert) => {
+        const toTest = [
+            {
+                domain: `["!", ("foo", "=", "abc")]`,
+                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+            },
+            {
+                domain: `["!", "!", ("foo", "=", "abc")]`,
+                result: `Match records with the following rule:\nFoo\n= "abc"`,
+            },
+            {
+                domain: `["!", "!", "!", ("foo", "=", "abc")]`,
+                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+            },
+            {
+                domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"`,
+            },
+            {
+                domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"`,
+            },
+            {
+                domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+            },
+            {
+                domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+            },
+            {
+                domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+            },
+            {
+                domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+            },
+            {
+                domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with any of the following rules:\nall\nof:\nFoo\n!= "abc"\nFoo\n= "def"\nFoo\n!= "ghi"`,
+            },
+            {
+                domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with all of the following rules:\nany\nof:\nFoo\n!= "abc"\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+            },
+            {
+                domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nall\nof:\nFoo\n!= "def"\nFoo\n!= "ghi"`,
+            },
+            {
+                domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "!=", "ghi")]`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nany\nof:\nFoo\n!= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "!=", "def"), "!", ("foo", "=", "ghi")]`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nany\nof:\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+        ];
+
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ domain: `[]` });
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`<DomainSelector resModel="'partner'" domain="state.domain"/>`;
+
+        const parent = await mountComponent(Parent);
+
+        for (const { domain, result } of toTest) {
+            parent.state.domain = domain;
+            await nextTick();
+            assert.strictEqual(target.querySelector(".o_domain_selector").innerText, result);
+        }
+    });
+
+    QUnit.test("support of connector '!' (debug mode)", async (assert) => {
+        const toTest = [
+            {
+                domain: `["!", ("foo", "=", "abc")]`,
+                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+            },
+            {
+                domain: `["!", "!", ("foo", "=", "abc")]`,
+                result: `Match records with the following rule:\nFoo\n= "abc"`,
+            },
+            {
+                domain: `["!", "!", "!", ("foo", "=", "abc")]`,
+                result: `Match records with the following rule:\nFoo\n!= "abc"`,
+            },
+            {
+                domain: `["!", "&", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with not all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["!", "|", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with none of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["&", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["&", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["&", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+            },
+            {
+                domain: `["&", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
+                result: `Match records with all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["|", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n!= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["|", "!", "!", ("foo", "=", "abc"), ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["|", ("foo", "=", "abc"), "!", ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n!= "def"`,
+            },
+            {
+                domain: `["|", ("foo", "=", "abc"), "!", "!", ("foo", "=", "def")]`,
+                result: `Match records with any of the following rules:\nFoo\n= "abc"\nFoo\n= "def"`,
+            },
+            {
+                domain: `["&", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with all of the following rules:\nnot all\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["&", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with all of the following rules:\nnone\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["|", "!", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with any of the following rules:\nnot all\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["|", "!", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with any of the following rules:\nnone\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "&", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with not all of the following rules:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "|", "|", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with none of the following rules:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "&", "|", ("foo", "=", "abc"), "!", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with not all of the following rules:\nany\nof:\nFoo\n= "abc"\nFoo\n!= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "|", "&", ("foo", "=", "abc"), ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with none of the following rules:\nall\nof:\nFoo\n= "abc"\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "&", ("foo", "=", "abc"), "|", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with not all of the following rules:\nFoo\n= "abc"\nany\nof:\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), ("foo", "=", "ghi")]`,
+                result: `Match records with none of the following rules:\nFoo\n= "abc"\nall\nof:\nFoo\n= "def"\nFoo\n= "ghi"`,
+            },
+            {
+                domain: `["!", "|", ("foo", "=", "abc"), "&", ("foo", "=", "def"), "!", ("foo", "=", "ghi")]`,
+                result: `Match records with none of the following rules:\nFoo\n= "abc"\nall\nof:\nFoo\n= "def"\nFoo\n!= "ghi"`,
+            },
+        ];
+
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ domain: `[]` });
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`<DomainSelector resModel="'partner'" isDebugMode="true" domain="state.domain"/>`;
+
+        const parent = await mountComponent(Parent);
+
+        for (const { domain, result } of toTest) {
+            parent.state.domain = domain;
+            await nextTick();
+            assert.strictEqual(target.querySelector(".o_domain_selector").innerText, result);
+        }
     });
 
     QUnit.test("support properties", async (assert) => {
@@ -821,7 +1169,7 @@ QUnit.module("Components", (hooks) => {
             static template = xml`
                 <DomainSelector
                     resModel="'partner'"
-                    value="value"
+                    domain="domain"
                     readonly="false"
                     isDebugMode="true"
                     update="(domain) => this.onUpdate(domain)"
@@ -829,11 +1177,11 @@ QUnit.module("Components", (hooks) => {
             `;
             static components = { DomainSelector };
             setup() {
-                this.value = expectedDomain;
+                this.domain = expectedDomain;
             }
             onUpdate(domain) {
                 assert.strictEqual(domain, expectedDomain);
-                this.value = domain;
+                this.domain = domain;
                 this.render();
             }
         }

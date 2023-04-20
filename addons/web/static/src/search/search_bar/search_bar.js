@@ -5,7 +5,9 @@ import { serializeDate, serializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { useAutofocus, useBus, useService } from "@web/core/utils/hooks";
+import { DomainSelectorDialog } from "@web/core/domain_selector_dialog/domain_selector_dialog";
 import { fuzzyTest } from "@web/core/utils/search";
+import { _t } from "@web/core/l10n/translation";
 
 import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 const parsers = registry.category("parsers");
@@ -17,6 +19,7 @@ let nextItemId = 1;
 
 export class SearchBar extends Component {
     setup() {
+        this.dialogService = useService("dialog");
         this.fields = this.env.searchModel.searchViewFields;
         this.searchItemsFields = this.env.searchModel.getSearchItems((f) => f.type === "field");
         this.root = useRef("root");
@@ -359,6 +362,23 @@ export class SearchBar extends Component {
     //---------------------------------------------------------------------
     // Handlers
     //---------------------------------------------------------------------
+
+    onFacetClick(target, facet) {
+        const { domain, groupId } = facet;
+        if (!target.classList.contains("o_searchview_facet_label") || !domain) {
+            return;
+        }
+        const { resModel } = this.env.searchModel;
+        this.dialogService.add(DomainSelectorDialog, {
+            resModel,
+            domain,
+            context: this.env.searchModel.domainEvalContext,
+            onConfirm: (domain) => this.env.searchModel.splitAndAddDomain(domain, groupId),
+            disableConfirmButton: (domain) => domain === `[]`,
+            title: _t("Modify Condition"),
+            isDebugMode: !!this.env.debug,
+        });
+    }
 
     /**
      * @param {Object} facet

@@ -133,11 +133,11 @@
                     <td>
                         <DomainSelector
                             resModel="state.propertyDefinition.comodel"
-                            value="state.propertyDefinition.domain || '[]'"
+                            domain="state.propertyDefinition.domain || '[]'"
                             readonly="props.readonly"
                             update.bind="onDomainChange"
                             isDebugMode="!!env.debug"
-                            className="props.readonly ? 'o_read_mode d-inline-block me-2' : 'o_edit_mode d-inline-block me-2'"
+                            className="'d-inline-block me-2'"
                         />
                         <div t-if="state.matchingRecordsCount !== undefined" class="d-inline-block">
                             <i class="fa fa-arrow-right" role="img" title="Domain"/>

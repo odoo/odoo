@@ -3,8 +3,6 @@
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import * as testUtils from "@web/../tests/helpers/utils";
 import weTestUtils from "web_editor.test_utils";
-import { fieldService } from "@web/core/field_service";
-import { registry } from "@web/core/registry";
 
 let fixture;
 let serverData;
@@ -109,7 +107,6 @@ QUnit.module('favorite filter widget', (hooks) => {
         });
         serverData = { models };
         setupViewRegistries();
-        registry.category("services").add("field", fieldService);
     });
 
     QUnit.test('create favorite filter', async (assert) => {

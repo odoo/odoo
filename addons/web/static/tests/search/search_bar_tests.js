@@ -4,8 +4,10 @@ import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     click,
     getFixture,
+    getNodesTextContent,
     makeDeferred,
     nextTick,
+    patchDate,
     patchTimeZone,
     patchWithCleanup,
     triggerEvent,
@@ -16,8 +18,15 @@ import {
     makeWithSearch,
     removeFacet,
     setupControlPanelServiceRegistry,
+    toggleComparisonMenu,
+    toggleGroupByMenu,
+    toggleMenuItem,
     validateSearch,
 } from "./helpers";
+
+function getContext(controlPanel) {
+    return controlPanel.env.searchModel.context;
+}
 
 function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
@@ -1412,5 +1421,272 @@ QUnit.module("Search", (hooks) => {
         const items = target.querySelectorAll(".o_searchview_input_container li");
         assert.strictEqual(items.length, 2, "Should show the search result");
         assert.strictEqual(items[1].innerText, "My Text (Bar 2) for: a");
+    });
+
+    QUnit.test("edit a filter", async function (assert) {
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
+            searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <filter name="filter" string="Filter" domain="[('birthday', '>=', context_today())]"/>
+                    <filter name="bool" string="Bool" domain="[]" context="{'group_by': 'bool'}"/>
+                </search>
+            `,
+            context: {
+                search_default_filter: true,
+                search_default_bool: true,
+            },
+        });
+        assert.deepEqual(getFacetTexts(target), ["Filter", "Bool"]);
+        assert.containsN(target, ".o_searchview_facet .o_searchview_facet_label", 2);
+        assert.containsOnce(
+            target,
+            ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
+        );
+        assert.containsNone(target, ".modal");
+
+        await click(target, ".o_facet_with_domain .o_searchview_facet_label");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal header").innerText, "Modify Condition");
+        assert.containsOnce(target, ".modal .o_domain_selector");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal footer button")), [
+            "Confirm",
+            "Discard",
+        ]);
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_value").innerText,
+            "Birthday"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf_operator_select").value,
+            "greater_equal"
+        );
+        assert.strictEqual(target.querySelector(".o_ds_expr_value").innerText, "context_today()");
+        assert.notOk(target.querySelector(".modal footer button").disabled);
+
+        await click(target, ".o_domain_delete_node_button");
+        assert.containsNone(target, ".o_domain_leaf");
+        assert.ok(target.querySelector(".modal footer button").disabled);
+
+        await click(target, ".modal .o_domain_add_first_node_button");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.strictEqual(target.querySelector(".o_model_field_selector_value").innerText, "ID");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "equal");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "1");
+
+        await click(target.querySelector(".modal footer button"));
+        assert.containsNone(target, ".modal");
+        assert.deepEqual(getFacetTexts(target), ["Bool", "ID = 1"]);
+    });
+
+    QUnit.test(
+        "edit a filter with context: context is kept after edition",
+        async function (assert) {
+            const controlPanel = await makeWithSearch({
+                serverData,
+                resModel: "partner",
+                Component: ControlPanel,
+                searchViewId: false,
+                searchViewArch: `
+                <search>
+                    <filter name="filter" string="Filter"  context="{'specialKey': 'abc'}" domain="[('foo', '=', 'abc')]"/>
+                </search>
+            `,
+                context: {
+                    search_default_filter: true,
+                },
+            });
+            assert.deepEqual(getFacetTexts(target), ["Filter"]);
+            assert.deepEqual(getContext(controlPanel).specialKey, "abc");
+
+            await click(target, ".o_facet_with_domain .o_searchview_facet_label");
+            await click(target.querySelector(".modal footer button"));
+
+            assert.deepEqual(getFacetTexts(target), [`Foo = "abc"`]);
+            assert.deepEqual(getContext(controlPanel).specialKey, "abc");
+        }
+    );
+
+    QUnit.test("edit a favorite", async function (assert) {
+        const irFilters = [
+            {
+                context: "{ 'some_key': 'some_value', 'group_by': ['bool'] }",
+                domain: "[('foo', 'ilike', 'abc')]",
+                id: 1,
+                is_default: true,
+                name: "My favorite",
+                sort: "[]",
+                user_id: [2, "Mitchell Admin"],
+            },
+        ];
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
+            searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <filter name="company" string="Company" domain="[]" context="{'group_by': 'company'}"/>
+                </search>
+            `,
+            irFilters,
+        });
+        assert.deepEqual(getFacetTexts(target), ["My favorite"]);
+        assert.containsOnce(
+            target,
+            ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
+        );
+
+        await toggleGroupByMenu(target);
+        await toggleMenuItem(target, "Company");
+
+        assert.deepEqual(getFacetTexts(target), ["My favorite", "Company"]);
+
+        assert.containsN(target, ".o_searchview_facet .o_searchview_facet_label", 2);
+        assert.containsOnce(
+            target,
+            ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
+        );
+
+        await click(target, ".o_facet_with_domain .o_searchview_facet_label");
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".o_model_field_selector_value").innerText, "Foo");
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "ilike");
+        assert.strictEqual(target.querySelector(".o_ds_value_cell .o_input").value, "abc");
+
+        await click(target.querySelector(".modal footer button"));
+        assert.containsNone(target, ".modal");
+        assert.deepEqual(getFacetTexts(target), ["Bool>Company", 'Foo contains "abc"']);
+    });
+
+    QUnit.test("edit a date filter with comparison active", async function (assert) {
+        patchDate(2023, 3, 28, 13, 40, 0);
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchMenuTypes: ["filter", "comparison"],
+            searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <filter name="birthday" string="Birthday" date="birthday"/>
+                </search>
+            `,
+            context: {
+                search_default_birthday: true,
+            },
+        });
+        assert.deepEqual(getFacetTexts(target), ["Birthday: April 2023"]);
+        assert.containsOnce(
+            target,
+            ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
+        );
+
+        await toggleComparisonMenu(target);
+        await toggleMenuItem(target);
+
+        assert.deepEqual(getFacetTexts(target), [
+            "Birthday: April 2023",
+            "Birthday: Previous Period",
+        ]);
+        assert.containsOnce(
+            target,
+            ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
+        );
+
+        await click(target, ".o_facet_with_domain .o_searchview_facet_label");
+        assert.containsOnce(target, ".modal");
+        assert.containsOnce(target, ".o_domain_leaf");
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_value").innerText,
+            "Birthday"
+        );
+        assert.strictEqual(target.querySelector(".o_domain_leaf_operator_select").value, "between");
+        assert.strictEqual(
+            target.querySelector(".o_ds_value_cell .o_datetime_input:nth-child(1)").value,
+            "04/01/2023"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_ds_value_cell .o_datetime_input:nth-child(3)").value,
+            "04/30/2023"
+        );
+
+        await click(target.querySelector(".modal footer button"));
+        assert.containsNone(target, ".modal");
+        assert.deepEqual(getFacetTexts(target), [
+            `Birthday is between "2023-04-01" and "2023-04-30"`,
+        ]);
+    });
+
+    QUnit.test("edit a field", async function (assert) {
+        await makeWithSearch({
+            serverData,
+            resModel: "partner",
+            Component: ControlPanel,
+            searchViewId: false,
+            searchViewArch: `
+                <search>
+                    <field name="foo"/>
+                </search>
+            `,
+            context: {
+                search_default_foo: "abc",
+            },
+        });
+        assert.deepEqual(getFacetTexts(target), ["Foo\nabc"]);
+        assert.containsOnce(
+            target,
+            ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
+        );
+
+        await editSearch(target, "def");
+        const searchInput = target.querySelector(".o_searchview input");
+        await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
+        await triggerEvent(searchInput, null, "keydown", { key: "Enter" }); // select
+
+        assert.deepEqual(getFacetTexts(target), ["Foo\nabcordef"]);
+
+        await click(target, ".o_facet_with_domain .o_searchview_facet_label");
+        assert.containsN(target, ".o_domain_leaf", 2);
+
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(1) .o_model_field_selector_value")
+                .innerText,
+            "Foo"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(1) .o_domain_leaf_operator_select")
+                .value,
+            "ilike"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(1) .o_domain_leaf_value_input").value,
+            "abc"
+        );
+
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(2) .o_model_field_selector_value")
+                .innerText,
+            "Foo"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_operator_select")
+                .value,
+            "ilike"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf:nth-child(2) .o_domain_leaf_value_input").value,
+            "def"
+        );
+
+        await click(target.querySelector(".modal footer button"));
+
+        assert.deepEqual(getFacetTexts(target), [`Foo contains "abc" or Foo contains "def"`]);
     });
 });
