@@ -178,6 +178,23 @@ class TestMailAlias(TestMailCommon):
         with self.assertRaises(exceptions.ValidationError):
             record.write({'alias_defaults': "{'custom_field': brokendict"})
 
+    def test_alias_domain_allowed_validation(self):
+        """ Check the validation of `mail.catchall.domain.allowed` system parameter"""
+        for value in [',', ',,', ', ,']:
+            with self.assertRaises(exceptions.ValidationError,
+                 msg="The value '%s' should not be allowed" % value):
+                self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
+
+        for value, expected in [
+            ('', False),
+            ('hello.com', 'hello.com'),
+            ('hello.com,,', 'hello.com'),
+            ('hello.com,bonjour.com', 'hello.com,bonjour.com'),
+            ('hello.COM, BONJOUR.com', 'hello.com,bonjour.com'),
+        ]:
+            self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', value)
+            self.assertEqual(self.env['ir.config_parameter'].get_param('mail.catchall.domain.allowed'), expected)
+
     def test_alias_sanitize(self):
         alias = self.env['mail.alias'].create({
             'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
@@ -917,6 +934,66 @@ class TestMailgateway(TestMailCommon):
         self.assertEqual(new_rec._name, new_alias_2.alias_model_id.model)
         new_simple = self.env['mail.test.gateway'].search([('name', '=', 'Test Subject')])
         self.assertEqual(len(new_simple), 1, 'message_process: a new mail.test should have been created')
+
+    @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models')
+    def test_message_route_alias_with_allowed_domains(self):
+        """ Incoming email: check that if domains are set in the
+        optional system parameter `mail.catchall.domain.allowed`,
+        only incoming emails from these domains will generate records."""
+
+        MailTestGatewayModel = self.env['mail.test.gateway']
+        MailTestContainerModel = self.env['mail.test.container']
+
+        allowed_domain = 'hello.com'
+        not_allowed_domain = 'bonjour.com'
+
+        # test@.. will cause the creation of new mail.test
+        new_alias_2 = self.env['mail.alias'].create({
+            'alias_name': 'test',
+            'alias_user_id': False,
+            'alias_model_id': self.env['ir.model']._get('mail.test.container').id,
+            'alias_contact': 'everyone',
+        })
+
+        for subject, gateway_created, container_created, alias2_domain, sys_param in [
+            # Test with 'mail.catchall.domain.allowed' not set in system parameters
+            # and with a domain not allowed
+            ('Test Subject 1', True, True, not_allowed_domain, ""),
+            # Test with 'mail.catchall.domain.allowed' set in system parameters
+            # and with a domain not allowed
+            ('Test Subject 2', True, False, not_allowed_domain, allowed_domain),
+            # Test with 'mail.catchall.domain.allowed' set in system parameters
+            # and with a domain allowed
+            ('Test Subject 3', True, True, allowed_domain, allowed_domain),
+        ]:
+            with self.subTest(subject=subject, gateway_created=gateway_created,
+                              container_created=container_created, alias2_domain=alias2_domain,
+                              sys_param=sys_param):
+                self.env['ir.config_parameter'].set_param('mail.catchall.domain.allowed', sys_param)
+
+                email_to = '%s@%s, %s@%s' % (
+                    self.alias.alias_name, self.alias_domain,
+                    new_alias_2.alias_name, alias2_domain,
+                )
+
+                self.format_and_process(
+                    MAIL_TEMPLATE, self.partner_1.email_formatted, email_to,
+                    subject=subject,
+                    target_model=self.alias.alias_model_id.model
+                )
+
+                res_alias_1 = MailTestGatewayModel.search([('name', '=', subject)])
+                res_alias_2 = MailTestContainerModel.search([('name', '=', subject)])
+                self.assertEqual(
+                    bool(res_alias_1), gateway_created,
+                    'message_process (%s): a new mail.test.gateway %s have been created' %
+                        (subject, 'should' if gateway_created else "should not")
+                )
+                self.assertEqual(
+                    bool(res_alias_2), container_created,
+                    'message_process (%s): a new mail.test.container %s have been created' %
+                        (subject, 'should' if container_created else "should not")
+                )
 
     # --------------------------------------------------
     # Email Management
