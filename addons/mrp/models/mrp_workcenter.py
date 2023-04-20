@@ -299,12 +299,10 @@ class MrpWorkcenter(models.Model):
 
     def _get_expected_duration(self, product_id):
         """Compute the expected duration when using this work-center
-        Always include workcenter startup time and clean-up time.
-        In case there are specific capacities defined in the workcenter
-        that matches the product we are producing. Add the extra-time.
+        Always use the startup / clean-up time from specific capacity if defined.
         """
         capacity = self.capacity_ids.filtered(lambda p: p.product_id == product_id)
-        return self.time_start + self.time_stop + (capacity.time_start + capacity.time_stop if capacity else 0.0)
+        return capacity.time_start + capacity.time_stop if capacity else self.time_start + self.time_stop
 
 
 class WorkcenterTag(models.Model):
@@ -478,12 +476,20 @@ class MrpWorkCenterCapacity(models.Model):
     _description = 'Work Center Capacity'
     _check_company_auto = True
 
+    def _default_time_start(self):
+        workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
+        return self.env['mrp.workcenter'].browse(workcenter_id).time_start if workcenter_id else 0.0
+
+    def _default_time_stop(self):
+        workcenter_id = self.workcenter_id.id or self.env.context.get('default_workcenter_id')
+        return self.env['mrp.workcenter'].browse(workcenter_id).time_stop if workcenter_id else 0.0
+
     workcenter_id = fields.Many2one('mrp.workcenter', string='Work Center', required=True)
     product_id = fields.Many2one('product.product', string='Product', required=True)
     product_uom_id = fields.Many2one('uom.uom', string='Product UoM', related='product_id.uom_id')
     capacity = fields.Float('Capacity', default=1.0, help="Number of pieces that can be produced in parallel for this product.")
-    time_start = fields.Float('Setup Time (minutes)', help="Time in minutes for the setup.")
-    time_stop = fields.Float('Cleanup Time (minutes)', help="Time in minutes for the cleaning.")
+    time_start = fields.Float('Setup Time (minutes)', default=_default_time_start, help="Time in minutes for the setup.")
+    time_stop = fields.Float('Cleanup Time (minutes)', default=_default_time_stop, help="Time in minutes for the cleaning.")
 
     _sql_constraints = [
         ('positive_capacity', 'CHECK(capacity > 0)', 'Capacity should be a positive number.'),

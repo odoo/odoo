@@ -3239,3 +3239,41 @@ class TestMrpOrder(TestMrpCommon):
         mo_form.picking_type_id = warehouse02.manu_type_id
         mo_form.bom_id = bom_wh02
         self.assertEqual(mo_form.picking_type_id, warehouse01.manu_type_id, 'Should be adapted because of the default value')
+
+    def test_workcenter_specific_capacities(self):
+        """ Test that the duraction expected is correctly computed when specific capacities are defined on the workcenter.
+        """
+        # Required for `workorder_ids` to be visible in the view
+        self.env.user.groups_id += self.env.ref('mrp.group_mrp_routings')
+        self.workcenter_2.update({
+            'time_start': 10,
+            'time_stop': 20,
+        })
+        self.env['mrp.workcenter.capacity'].create({
+            'product_id': self.product_4.id,
+            'workcenter_id': self.workcenter_2.id,
+            'time_start': 5,
+            'time_stop': 10,
+        })
+
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_5
+        production = production_form.save()
+
+        with Form(production) as mo_form:
+            with mo_form.workorder_ids.new() as wo:
+                wo.name = "OP1"
+                wo.workcenter_id = self.workcenter_2
+
+        # Since no duration was given, only duration from the workcenter setup/cleanup time should be added in : 10 + 20 = 30
+        self.assertEqual(production.workorder_ids[0].duration_expected, 30.0, "Workcenter setup time (10) + workcenter cleanup time (20)")
+
+        # Change the product so that it uses a specific capacity of that workcenter
+        with Form(production) as mo_form:
+            mo_form.product_id = self.product_4
+            with mo_form.workorder_ids.new() as wo:
+                wo.name = "OP1"
+                wo.workcenter_id = self.workcenter_2
+
+        # Only duration from the workcenter specific capacity setup/cleanup times since there is one defined for this product.
+        self.assertEqual(production.workorder_ids[0].duration_expected, 15.0, "Capacity setup time (5) + capacity cleanup time (10)")
