@@ -127,7 +127,7 @@ Model({
         },
         /**
          * Called when the visitor leaves the livechat chatter the first time (first click on X button)
-         * this will deactivate the mail_channel, notify operator that visitor has left the channel.
+         * this will deactivate the discuss_channel, notify operator that visitor has left the channel.
          */
         leaveSession() {
             const cookie = getCookie("im_livechat_session");

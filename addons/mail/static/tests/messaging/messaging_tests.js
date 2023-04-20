@@ -10,14 +10,14 @@ QUnit.test(
         const { env, pyEnv } = await start();
         const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
         });
-        const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
+        const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         await afterNextRender(() =>
             env.services.rpc("/mail/chat_post", {
                 context: { mockedUserId: userId },
@@ -36,14 +36,14 @@ QUnit.test(
         await openDiscuss();
         const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
         });
-        const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
+        const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         env.services.rpc("/mail/chat_post", {
             context: { mockedUserId: userId },
             message_content: "new message",

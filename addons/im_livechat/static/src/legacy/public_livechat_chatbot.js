@@ -62,9 +62,9 @@ LivechatButton.include({
      * (See chatbot.script#_get_welcome_steps() for more details).
      *
      * It is important that those messages are sent as "welcome messages", meaning manually added
-     * within the template, without creating actual mail.messages in the mail.channel.
+     * within the template, without creating actual mail.messages in the discuss.channel.
      *
-     * Indeed, if the end-user never interacts with the bot, those empty mail.channels are deleted
+     * Indeed, if the end-user never interacts with the bot, those empty discuss.channels are deleted
      * by a garbage collector mechanism.
      *
      * About "welcomeMessageDelay":
@@ -72,7 +72,7 @@ LivechatButton.include({
      * The first time we open the chat, we want to bot to slowly input those messages in one at a
      * time, with pauses during which the end-user sees ("The bot is typing...").
      *
-     * However, if the user navigates within the website (meaning he has an opened mail.channel),
+     * However, if the user navigates within the website (meaning he has an opened discuss.channel),
      * then we input all the welcome messages at once without pauses, to avoid having that annoying
      * slow effect on every page / refresh.
      *
@@ -96,7 +96,7 @@ LivechatButton.include({
                 chatbot_script_step_id: chatbotStep.chatbot_script_step_id,
                 chatbot_step_answers: chatbotStep.chatbot_step_answers,
                 date: time.datetime_to_str(new Date()),
-                model: "mail.channel",
+                model: "discuss.channel",
                 message_type: "comment",
                 res_id: this.messaging.publicLivechatGlobal.publicLivechat.id,
             });

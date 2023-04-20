@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
 
-const commandRegistry = registry.category("mail.channel_commands");
+const commandRegistry = registry.category("discuss.channel_commands");
 
 commandRegistry
     .add("help", {

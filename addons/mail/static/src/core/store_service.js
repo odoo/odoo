@@ -23,7 +23,7 @@ export class Store {
         const ids = Object.keys(this.threads).sort(); // Ensure channels processed in same order.
         for (const id of ids) {
             const thread = this.threads[id];
-            if (thread.model === "mail.channel" && thread.hasSelfAsMember) {
+            if (thread.model === "discuss.channel" && thread.hasSelfAsMember) {
                 channelIds.push(id);
             }
         }

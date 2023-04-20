@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <odoo>
     <data>
-        <!-- mail.channel -->
-        <record id="mail_channel_view_kanban" model="ir.ui.view">
-            <field name="name">mail.channel.kanban</field>
-            <field name="model">mail.channel</field>
+        <!-- discuss.channel -->
+        <record id="mail.discuss_channel_view_kanban" model="ir.ui.view">
+            <field name="name">discuss.channel.kanban</field>
+            <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <kanban>
@@ -20,11 +20,11 @@
                             </div>
                         </t>
                         <t t-name="kanban-box">
-                            <div class="o_mail_channel_kanban oe_module_vignette oe_kanban_global_click d-flex align-items-center">
+                            <div class="o_discuss_channel_kanban oe_module_vignette oe_kanban_global_click d-flex align-items-center">
                                 <div class="ribbon ribbon-top-right o_small" attrs="{'invisible': [('active', '=', True)]}">
                                     <span class="bg-danger">Archived</span>
                                 </div>
-                                <img t-att-src="kanban_image('mail.channel', 'avatar_128', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
+                                <img t-att-src="kanban_image('discuss.channel', 'avatar_128', record.id.raw_value)" class="oe_module_icon" alt="Channel"/>
                                 <div class="oe_module_desc">
                                     <h4 class="o_kanban_record_title">#<field name="name"/></h4>
                                     <p class="oe_module_name" t-att-class="!record.active.raw_value ? 'o_module_desc_short': ''">
@@ -40,9 +40,9 @@
             </field>
         </record>
 
-        <record id="mail_channel_view_form" model="ir.ui.view">
-            <field name="name">mail.channel.form</field>
-            <field name="model">mail.channel</field>
+        <record id="mail.discuss_channel_view_form" model="ir.ui.view">
+            <field name="name">discuss.channel.form</field>
+            <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <form string="Mail Channel Form">
@@ -81,16 +81,16 @@
                                     </tree>
                                 </field>
                             </page>
-                            <page string="Integrations" invisible="1" name="mail_channel_integrations"></page>
+                            <page string="Integrations" invisible="1" name="discuss_channel_integrations"></page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
 
-        <record id="mail_channel_view_tree" model="ir.ui.view">
-            <field name="name">mail.channel.tree</field>
-            <field name="model">mail.channel</field>
+        <record id="mail.discuss_channel_view_tree" model="ir.ui.view">
+            <field name="name">discuss.channel.tree</field>
+            <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <tree string="Groups">
@@ -99,9 +99,9 @@
             </field>
         </record>
 
-        <record id="mail_channel_view_search" model="ir.ui.view">
-            <field name="name">mail.channel.search</field>
-            <field name="model">mail.channel</field>
+        <record id="mail.discuss_channel_view_search" model="ir.ui.view">
+            <field name="name">discuss.channel.search</field>
+            <field name="model">discuss.channel</field>
             <field name="priority" eval="10"/>
             <field name="arch" type="xml">
                 <search string="Search Groups">
@@ -111,14 +111,14 @@
             </field>
         </record>
 
-        <record id="mail_channel_action_view" model="ir.actions.act_window">
+        <record id="mail.discuss_channel_action_view" model="ir.actions.act_window">
             <field name="name">Join a group</field>
-            <field name="res_model">mail.channel</field>
+            <field name="res_model">discuss.channel</field>
             <field name="view_mode">kanban,tree,form</field>
-            <field name="search_view_id" ref="mail_channel_view_search"/>
+            <field name="search_view_id" ref="discuss_channel_view_search"/>
         </record>
 
-    <record id="action_discuss" model="ir.actions.client">
+    <record id="mail.action_discuss" model="ir.actions.client">
         <field name="name">Discuss</field>
         <field name="tag">mail.action_discuss</field>
         <field name="params" eval="&quot;{ 'default_active_id': 'mail.box_inbox' }&quot;"/>

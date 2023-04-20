@@ -8,10 +8,10 @@ QUnit.module("notification");
 
 QUnit.test("basic layout", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({});
+    const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
         message_type: "email",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         res_model_name: "Channel",
     });
@@ -43,10 +43,10 @@ QUnit.test("basic layout", async (assert) => {
 
 QUnit.test("mark as read", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({});
+    const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create({
         message_type: "email",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         res_model_name: "Channel",
     });
@@ -129,22 +129,22 @@ QUnit.test("open non-channel failure", async (assert) => {
     assert.verifySteps(["do_action"]);
 });
 
-QUnit.test("different mail.channel are not grouped", async (assert) => {
+QUnit.test("different discuss.channel are not grouped", async (assert) => {
     const pyEnv = await startServer();
-    const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
+    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel_1" },
         { name: "Channel_2" },
     ]);
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             message_type: "email",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId_1,
             res_model_name: "Channel",
         },
         {
             message_type: "email",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId_2,
             res_model_name: "Channel",
         },
@@ -246,19 +246,19 @@ QUnit.test(
     "marked as read thread notifications are ordered by last message date",
     async (assert) => {
         const pyEnv = await startServer();
-        const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
+        const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
             { name: "Channel 2019" },
             { name: "Channel 2020" },
         ]);
         pyEnv["mail.message"].create([
             {
                 date: "2019-01-01 00:00:00",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId_1,
             },
             {
                 date: "2020-01-01 00:00:00",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId_2,
             },
         ]);
@@ -272,19 +272,19 @@ QUnit.test(
 
 QUnit.test("thread notifications are re-ordered on receiving a new message", async (assert) => {
     const pyEnv = await startServer();
-    const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
+    const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
         { name: "Channel 2019" },
         { name: "Channel 2020" },
     ]);
     pyEnv["mail.message"].create([
         {
             date: "2019-01-01 00:00:00",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId_1,
         },
         {
             date: "2020-01-01 00:00:00",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId_2,
         },
     ]);
@@ -292,9 +292,9 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
     await click(".o_menu_systray i[aria-label='Messages']");
     assert.containsN($, ".o-mail-NotificationItem", 2);
 
-    const channel_1 = pyEnv["mail.channel"].searchRead([["id", "=", channelId_1]])[0];
+    const channel_1 = pyEnv["discuss.channel"].searchRead([["id", "=", channelId_1]])[0];
     await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(channel_1, "mail.channel/new_message", {
+        pyEnv["bus.bus"]._sendone(channel_1, "discuss.channel/new_message", {
             id: channelId_1,
             message: {
                 author: { id: 7, name: "Demo User" },
@@ -302,7 +302,7 @@ QUnit.test("thread notifications are re-ordered on receiving a new message", asy
                 date: "2020-03-23 10:00:00",
                 id: 44,
                 message_type: "comment",
-                model: "mail.channel",
+                model: "discuss.channel",
                 record_name: "Channel 2019",
                 res_id: channelId_1,
             },

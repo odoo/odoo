@@ -59,10 +59,15 @@ export class ChatWindowService {
         if (this.env.isSmall) {
             return;
         }
-        if (chatWindow.thread?.model === "mail.channel") {
-            return this.orm.silent.call("mail.channel", "channel_fold", [[chatWindow.thread.id]], {
-                state: chatWindow.thread.state,
-            });
+        if (chatWindow.thread?.model === "discuss.channel") {
+            return this.orm.silent.call(
+                "discuss.channel",
+                "channel_fold",
+                [[chatWindow.thread.id]],
+                {
+                    state: chatWindow.thread.state,
+                }
+            );
         }
     }
 

@@ -10,7 +10,7 @@ class TestChannel(TestHrCommon):
     def setUpClass(cls):
         super(TestChannel, cls).setUpClass()
 
-        cls.channel = cls.env['mail.channel'].create({'name': 'Test'})
+        cls.channel = cls.env['discuss.channel'].create({'name': 'Test'})
 
         emp0 = cls.env['hr.employee'].create({
             'user_id': cls.res_users_hr_officer.id,

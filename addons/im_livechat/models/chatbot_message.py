@@ -13,10 +13,10 @@ class ChatbotMailMessage(models.Model):
     _name = 'chatbot.message'
     _description = 'Chatbot Message'
     _order = 'create_date desc, id desc'
-    _rec_name = 'mail_channel_id'
+    _rec_name = 'discuss_channel_id'
 
     mail_message_id = fields.Many2one('mail.message', string='Related Mail Message', required=True, ondelete="cascade")
-    mail_channel_id = fields.Many2one('mail.channel', string='Discussion Channel', required=True, ondelete="cascade")
+    discuss_channel_id = fields.Many2one('discuss.channel', string='Discussion Channel', required=True, ondelete="cascade")
     script_step_id = fields.Many2one(
         'chatbot.script.step', string='Chatbot Step', required=True, ondelete='cascade')
     user_script_answer_id = fields.Many2one('chatbot.script.answer', string="User's answer", ondelete="set null")

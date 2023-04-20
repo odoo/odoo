@@ -40,7 +40,7 @@ Model({
                     });
                     return;
                 }
-                case "mail.channel.member/typing_status": {
+                case "discuss.channel.member/typing_status": {
                     if (
                         !this.messaging.publicLivechatGlobal.chatWindow ||
                         !this.messaging.publicLivechatGlobal.chatWindow.exists()
@@ -75,7 +75,7 @@ Model({
                     }
                     return;
                 }
-                case "mail.channel/new_message": {
+                case "discuss.channel/new_message": {
                     if (
                         !this.messaging.publicLivechatGlobal.chatWindow ||
                         !this.messaging.publicLivechatGlobal.chatWindow.exists()

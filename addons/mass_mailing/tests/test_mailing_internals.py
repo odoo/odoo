@@ -104,10 +104,10 @@ class TestMassMailValues(MassMailCommon):
 
         # reset mailing model -> reset domain and reply to mode
         mailing.write({
-            'mailing_model_id': self.env['ir.model']._get('mail.channel').id,
+            'mailing_model_id': self.env['ir.model']._get('discuss.channel').id,
         })
-        self.assertEqual(mailing.mailing_model_name, 'mail.channel')
-        self.assertEqual(mailing.mailing_model_real, 'mail.channel')
+        self.assertEqual(mailing.mailing_model_name, 'discuss.channel')
+        self.assertEqual(mailing.mailing_model_real, 'discuss.channel')
         self.assertEqual(mailing.reply_to_mode, 'update')
         self.assertFalse(mailing.reply_to)
 
@@ -129,7 +129,7 @@ class TestMassMailValues(MassMailCommon):
         filter_1, filter_2, filter_3 = self.env['mailing.filter'].create([
             {'name': 'General channel',
              'mailing_domain' : [('name', '=', 'general')],
-             'mailing_model_id': self.env['ir.model']._get('mail.channel').id,
+             'mailing_model_id': self.env['ir.model']._get('discuss.channel').id,
             },
             {'name': 'LLN City',
              'mailing_domain' : [('city', 'ilike', 'LLN')],
@@ -150,7 +150,7 @@ class TestMassMailValues(MassMailCommon):
             mailing.mailing_filter_id = filter_1
 
         # resetting model should reset domain, even if filter was chosen previously
-        mailing.mailing_model_id = self.env['ir.model']._get('mail.channel').id
+        mailing.mailing_model_id = self.env['ir.model']._get('discuss.channel').id
         self.assertEqual(literal_eval(mailing.mailing_domain), [])
 
         # changing the filter should update the mailing domain correctly

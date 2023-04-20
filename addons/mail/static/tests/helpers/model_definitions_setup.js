@@ -15,9 +15,9 @@ import {
 addModelNamesToFetch([
     "mail.activity",
     "mail.activity.type",
-    "mail.channel",
-    "mail.channel.member",
-    "mail.channel.rtc.session",
+    "discuss.channel",
+    "discuss.channel.member",
+    "discuss.channel.rtc.session",
     "mail.followers",
     "mail.guest",
     "mail.link.preview",
@@ -52,7 +52,7 @@ addFakeModel("m2x.avatar.user", {
 insertModelFields("mail.activity", {
     chaining_type: { default: "suggest" },
 });
-insertModelFields("mail.channel", {
+insertModelFields("discuss.channel", {
     author_id: {
         default() {
             return this.currentPartnerId;
@@ -71,9 +71,9 @@ insertModelFields("mail.channel", {
             return TEST_GROUP_IDS.groupUserId;
         },
     },
-    uuid: { default: () => _.uniqueId("mail.channel_uuid-") },
+    uuid: { default: () => _.uniqueId("discuss.channel_uuid-") },
 });
-insertModelFields("mail.channel.member", {
+insertModelFields("discuss.channel.member", {
     fold_state: { default: "open" },
     is_pinned: { default: true },
     message_unread_counter: { default: 0 },

@@ -15,21 +15,21 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTests):
             self._prepare_main_visitor_data(),
             self._prepare_linked_visitor_data()
         ])
-        all_mail_channels = (main_visitor + linked_visitor).mail_channel_ids
+        all_discuss_channels = (main_visitor + linked_visitor).discuss_channel_ids
         linked_visitor._merge_visitor(main_visitor)
 
         self.assertVisitorDeactivated(linked_visitor, main_visitor)
 
         # conversations of both visitors should be merged into main one
-        self.assertEqual(len(main_visitor.mail_channel_ids), 2)
-        self.assertEqual(main_visitor.mail_channel_ids, all_mail_channels)
+        self.assertEqual(len(main_visitor.discuss_channel_ids), 2)
+        self.assertEqual(main_visitor.discuss_channel_ids, all_discuss_channels)
 
     def _prepare_main_visitor_data(self):
         values = super()._prepare_main_visitor_data()
         test_partner = self.env['res.partner'].create({'name': 'John Doe'})
         values.update({
             'partner_id': test_partner.id,
-            'mail_channel_ids': [(0, 0, {
+            'discuss_channel_ids': [(0, 0, {
                 'name': 'Conversation 1'
             })]
         })
@@ -38,7 +38,7 @@ class WebsiteVisitorTestsLivechat(WebsiteVisitorTests):
     def _prepare_linked_visitor_data(self):
         values = super()._prepare_linked_visitor_data()
         values.update({
-            'mail_channel_ids': [(0, 0, {
+            'discuss_channel_ids': [(0, 0, {
                 'name': 'Conversation 2'
             })]
         })

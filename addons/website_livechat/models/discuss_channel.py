@@ -5,8 +5,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError
 
 
-class MailChannel(models.Model):
-    _inherit = 'mail.channel'
+class DiscussChannel(models.Model):
+    _inherit = 'discuss.channel'
 
     livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor')
 
@@ -16,7 +16,7 @@ class MailChannel(models.Model):
          but don't speak to them and closes the chatter.
          This allows operators to send the visitor a new chat request.
          If active empty livechat channel,
-         delete mail_channel as not useful to keep empty chat
+         delete discuss_channel as not useful to keep empty chat
          """
         super().channel_pin(pinned=pinned)
         if self.livechat_active and not self.message_ids:
@@ -72,7 +72,7 @@ class MailChannel(models.Model):
         """Override to mark the visitor as still connected.
         If the message sent is not from the operator (so if it's the visitor or
         odoobot sending closing chat notification, the visitor last action date is updated."""
-        message = super(MailChannel, self).message_post(**kwargs)
+        message = super().message_post(**kwargs)
         message_author_id = message.author_id
         visitor = self.livechat_visitor_id
         if len(self) == 1 and visitor and message_author_id != self.livechat_operator_id:

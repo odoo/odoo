@@ -11,7 +11,7 @@ import { LinkPreview } from "./link_preview_model";
 import { NotificationGroup } from "./notification_group_model";
 import { assignDefined, createLocalId } from "../utils/misc";
 
-const commandRegistry = registry.category("mail.channel_commands");
+const commandRegistry = registry.category("discuss.channel_commands");
 
 const { DateTime } = luxon;
 
@@ -103,7 +103,7 @@ export class MessageService {
             partners.push(partner);
         }
         for (const threadId of rawMentionedThreadIds) {
-            const thread = this.store.threads[createLocalId("mail.channel", threadId)];
+            const thread = this.store.threads[createLocalId("discuss.channel", threadId)];
             const index = body.indexOf(`#${thread.displayName}`);
             if (index === -1) {
                 continue;
@@ -145,7 +145,7 @@ export class MessageService {
     }
 
     setPin(message, pinned) {
-        return this.orm.call("mail.channel", "set_message_pin", [message.originThread.id], {
+        return this.orm.call("discuss.channel", "set_message_pin", [message.originThread.id], {
             message_id: message.id,
             pinned,
         });
@@ -425,7 +425,7 @@ export class MessageService {
             return (
                 group.resModel === data.resModel &&
                 group.type === data.type &&
-                (group.resModel !== "mail.channel" || group.resIds.has(data.resId))
+                (group.resModel !== "discuss.channel" || group.resIds.has(data.resId))
             );
         });
         if (!group) {

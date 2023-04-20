@@ -85,7 +85,7 @@ export class Message {
         if (this.type !== "comment") {
             return false;
         }
-        return this.isNote || this.resModel === "mail.channel";
+        return this.isNote || this.resModel === "discuss.channel";
     }
 
     get dateDay() {
@@ -118,7 +118,7 @@ export class Message {
     }
 
     get isHighlightedFromMention() {
-        return this.isSelfMentioned && this.resModel === "mail.channel";
+        return this.isSelfMentioned && this.resModel === "discuss.channel";
     }
 
     get isSelfAuthored() {
@@ -143,7 +143,7 @@ export class Message {
      * @returns {boolean}
      */
     get isNotification() {
-        return this.type === "notification" && this.resModel === "mail.channel";
+        return this.type === "notification" && this.resModel === "discuss.channel";
     }
 
     get isSubjectSimilarToOriginThreadName() {

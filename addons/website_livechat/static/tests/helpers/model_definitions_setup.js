@@ -3,7 +3,7 @@
 import { addModelNamesToFetch, insertModelFields } from '@bus/../tests/helpers/model_definitions_helpers';
 
 addModelNamesToFetch(['website.visitor']);
-insertModelFields('mail.channel', {
+insertModelFields('discuss.channel', {
     history: { string: 'History', type: 'string' },
 });
 insertModelFields('website.visitor', {

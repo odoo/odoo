@@ -14,7 +14,7 @@ from . import hr_plan_activity_type
 from . import hr_plan_employee_activity
 from . import hr_work_location
 from . import mail_alias
-from . import mail_channel
+from . import discuss_channel
 from . import models
 from . import res_config_settings
 from . import res_partner

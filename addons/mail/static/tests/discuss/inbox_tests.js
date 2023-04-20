@@ -204,7 +204,7 @@ QUnit.test("show subject of message in Inbox", async (assert) => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         needaction: true,
         needaction_partner_ids: [pyEnv.currentPartnerId], // not needed, for consistency
         subject: "Salutations, voyageur",
@@ -226,7 +226,7 @@ QUnit.test("show subject of message in history", async (assert) => {
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
         history_partner_ids: [3], // not needed, for consistency
-        model: "mail.channel",
+        model: "discuss.channel",
         subject: "Salutations, voyageur",
     });
     pyEnv["mail.notification"].create({
@@ -246,10 +246,10 @@ QUnit.test(
     "subject should not be shown when subject is the same as the thread name",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             needaction: true,
             subject: "Salutations, voyageur",
@@ -270,10 +270,10 @@ QUnit.test(
     "subject should not be shown when subject is the same as the thread name and both have the same prefix",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Re: Salutations, voyageur" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Re: Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             needaction: true,
             subject: "Re: Salutations, voyageur",
@@ -294,10 +294,10 @@ QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "Re:" prefix',
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             needaction: true,
             subject: "Re: Salutations, voyageur",
@@ -318,10 +318,10 @@ QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "Fw:" and "Re:" prefix',
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             needaction: true,
             subject: "Fw: Re: Salutations, voyageur",
@@ -342,10 +342,10 @@ QUnit.test(
     "subject should be shown when the thread name has an extra prefix compared to subject",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Re: Salutations, voyageur" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Re: Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             needaction: true,
             subject: "Salutations, voyageur",
@@ -366,10 +366,10 @@ QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "fw:" prefix and both contain another common prefix',
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Re: Salutations, voyageur" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Re: Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             needaction: true,
             subject: "fw: re: Salutations, voyageur",
@@ -390,10 +390,10 @@ QUnit.test(
     'subject should not be shown when subject differs from thread name only by the "Re: Re:" prefix',
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "Salutations, voyageur" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "Salutations, voyageur" });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
             needaction: true,
             subject: "Re: Re: Salutations, voyageur",
@@ -412,17 +412,17 @@ QUnit.test(
 
 QUnit.test("inbox: mark all messages as read", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             needaction: true,
             res_id: channelId,
         },
         {
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             needaction: true,
             res_id: channelId,
         },
@@ -497,14 +497,14 @@ QUnit.test(
 QUnit.test("inbox messages are never squashed", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
         {
             author_id: partnerId,
             body: "<p>body1</p>",
             date: "2019-04-20 10:00:00",
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             needaction: true,
             needaction_partner_ids: [pyEnv.currentPartnerId],
             res_id: channelId,
@@ -514,7 +514,7 @@ QUnit.test("inbox messages are never squashed", async (assert) => {
             body: "<p>body2</p>",
             date: "2019-04-20 10:00:30",
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             needaction: true,
             needaction_partner_ids: [pyEnv.currentPartnerId],
             res_id: channelId,
@@ -596,11 +596,11 @@ QUnit.test("error notifications should not be shown in Inbox", async (assert) =>
 
 QUnit.test("emptying inbox displays rainbow man in inbox", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId1 = pyEnv["mail.message"].create([
         {
             body: "not empty",
-            model: "mail.channel",
+            model: "discuss.channel",
             needaction: true,
             res_id: channelId,
         },
@@ -620,7 +620,7 @@ QUnit.test("emptying inbox displays rainbow man in inbox", async (assert) => {
 
 QUnit.test("emptying inbox doesn't display rainbow man in another thread", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({});
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",

@@ -31,7 +31,7 @@ class TestLivechatLead(TestCrmCommon):
     def test_crm_lead_creation_guest(self):
         """ Test customer set on lead: not if public, guest if not public """
         # public: should not be set as customer
-        channel = self.env['mail.channel'].create({
+        channel = self.env['discuss.channel'].create({
             'name': 'Chat with Visitor',
             'channel_partner_ids': [(4, self.user_anonymous.partner_id.id)]
         })
@@ -48,7 +48,7 @@ class TestLivechatLead(TestCrmCommon):
         # 'base.public_user' is archived by default
         self.assertFalse(self.env.ref('base.public_user').active)
 
-        channel = self.env['mail.channel'].create({
+        channel = self.env['discuss.channel'].create({
             'name': 'Chat with Visitor',
             'channel_partner_ids': [(4, self.env.ref('base.public_partner').id)]
         })
@@ -69,7 +69,7 @@ class TestLivechatLead(TestCrmCommon):
         self.assertEqual(lead.partner_id, self.env['res.partner'])
 
         # portal: should be set as customer
-        channel = self.env['mail.channel'].create({
+        channel = self.env['discuss.channel'].create({
             'name': 'Chat with Visitor',
             'channel_partner_ids': [(4, self.user_portal.partner_id.id)]
         })

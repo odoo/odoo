@@ -7,7 +7,7 @@ from odoo.addons.mail.tests.common import MailCommon
 from unittest.mock import patch
 import requests
 
-mail_channel_new_test_user = partial(mail_new_test_user, context={'mail_channel_nosubscribe': False})
+discuss_channel_new_test_user = partial(mail_new_test_user, context={'discuss_channel_nosubscribe': False})
 
 
 def _patched_get_html(*args, **kwargs):
@@ -36,12 +36,12 @@ class TestLinkPreview(MailCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.user_1 = mail_channel_new_test_user(
+        cls.user_1 = discuss_channel_new_test_user(
             cls.env, login='user_1',
             name='User 1',
             groups='base.group_user')
 
-        cls.public_channel = cls.env['mail.channel'].create({
+        cls.public_channel = cls.env['discuss.channel'].create({
             'name': 'Public channel of user 1',
             'channel_type': 'channel',
         })
@@ -55,7 +55,7 @@ class TestLinkPreview(MailCommon):
                 link_previews.append({'source_url': 'https://thisdomainedoentexist.nothing', 'message_id': 1})
             self.env['mail.link.preview'].create(link_previews)
             message = self.env['mail.message'].create({
-                'model': 'mail.channel',
+                'model': 'discuss.channel',
                 'res_id': self.public_channel.id,
                 'body': '<a href="https://thisdomainedoentexist.nothing">Nothing link</a>',
             })
@@ -66,13 +66,13 @@ class TestLinkPreview(MailCommon):
     def test_02_link_preview_create(self):
         with patch.object(requests.Session, 'get', _patched_get_html), patch.object(requests.Session, 'head', _patch_head_html):
             message = self.env['mail.message'].create({
-                'model': 'mail.channel',
+                'model': 'discuss.channel',
                 'res_id': self.public_channel.id,
                 'body': '<a href="https://thisdomainedoentexist.nothing">Nothing link</a>',
             })
             self.env['mail.link.preview']._create_link_previews(message)
             self.assertBusNotifications(
-                [(self.cr.dbname, 'mail.channel', self.public_channel.id)],
+                [(self.cr.dbname, 'discuss.channel', self.public_channel.id)],
                 message_items=[{
                     'type': 'mail.record/insert',
                     'payload': {

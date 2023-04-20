@@ -14,7 +14,7 @@ QUnit.module("composer (patch)");
 
 QUnit.test("No add attachments button", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "Livechat 1",
         channel_type: "livechat",
     });
@@ -28,7 +28,7 @@ QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
     assert.expect(2);
 
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "Livechat 1",
         channel_type: "livechat",
     });
@@ -42,7 +42,7 @@ QUnit.test("Attachment upload via drag and drop disabled", async (assert) => {
 
 QUnit.test("Can execute help command on livechat channels", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -70,7 +70,7 @@ QUnit.test("Can execute help command on livechat channels", async (assert) => {
 
 QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -82,7 +82,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.strictEqual($(".o-mail-Typing").text(), "");
-    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
         env.services.rpc("/im_livechat/notify_typing", {
@@ -96,7 +96,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
 
 QUnit.test('display canned response suggestions on typing ":"', async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -118,7 +118,7 @@ QUnit.test('display canned response suggestions on typing ":"', async (assert) =
 
 QUnit.test("use a canned response", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -147,7 +147,7 @@ QUnit.test("use a canned response", async (assert) => {
 
 QUnit.test("use a canned response some text", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Mario",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -178,7 +178,7 @@ QUnit.test("use a canned response some text", async (assert) => {
 
 QUnit.test("add an emoji after a canned response", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor 20",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],

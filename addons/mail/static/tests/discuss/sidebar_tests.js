@@ -16,7 +16,7 @@ QUnit.module("discuss sidebar");
 
 QUnit.test("toggling category button hide category items", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         name: "general",
         channel_type: "channel",
     });
@@ -31,7 +31,7 @@ QUnit.test("toggling category button hide category items", async (assert) => {
 
 QUnit.test("toggling category button does not hide active category items", async (assert) => {
     const pyEnv = await startServer();
-    const [channelId] = pyEnv["mail.channel"].create([
+    const [channelId] = pyEnv["discuss.channel"].create([
         { name: "abc", channel_type: "channel" },
         { name: "def", channel_type: "channel" },
     ]);
@@ -133,7 +133,7 @@ QUnit.test(
 
 QUnit.test("channel - states: close manually by clicking the title", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "general" });
+    pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
@@ -147,7 +147,7 @@ QUnit.test("channel - states: close manually by clicking the title", async (asse
 
 QUnit.test("channel - states: open manually by clicking the title", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "general" });
+    pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -172,7 +172,7 @@ QUnit.test("sidebar: inbox with counter", async (assert) => {
 
 QUnit.test("default thread rendering", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($, "button:contains(Inbox)");
@@ -207,7 +207,7 @@ QUnit.test("default thread rendering", async (assert) => {
 QUnit.test("sidebar quick search at 20 or more pinned channels", async (assert) => {
     const pyEnv = await startServer();
     for (let id = 1; id <= 20; id++) {
-        pyEnv["mail.channel"].create({ name: `channel${id}` });
+        pyEnv["discuss.channel"].create({ name: `channel${id}` });
     }
     const { openDiscuss } = await start();
     await openDiscuss();
@@ -240,7 +240,7 @@ QUnit.test("sidebar quick search at 20 or more pinned channels", async (assert) 
 QUnit.test("sidebar: basic chat rendering", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -263,7 +263,7 @@ QUnit.test("sidebar: basic chat rendering", async (assert) => {
 
 QUnit.test("sidebar: show pinned channel", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(General)");
@@ -271,7 +271,7 @@ QUnit.test("sidebar: show pinned channel", async (assert) => {
 
 QUnit.test("sidebar: open pinned channel", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
     await click(".o-mail-DiscussCategoryItem:contains(General)");
@@ -281,7 +281,7 @@ QUnit.test("sidebar: open pinned channel", async (assert) => {
 
 QUnit.test("sidebar: open channel and leave it", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
             [0, 0, { fold_state: "open", is_minimized: true, partner_id: pyEnv.currentPartnerId }],
@@ -307,7 +307,7 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
 
 QUnit.test("sidebar: unpin channel from bus", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(General)");
@@ -318,7 +318,7 @@ QUnit.test("sidebar: unpin channel from bus", async (assert) => {
     // Simulate receiving a leave channel notification
     // (e.g. from user interaction from another device or browser tab)
     await afterNextRender(() => {
-        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.channel/unpin", { id: channelId });
+        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "discuss.channel/unpin", { id: channelId });
     });
     assert.containsNone($, ".o-mail-DiscussCategoryItem:contains(General)");
     assert.notOk($(".o-mail-Discuss-threadName")?.val() === "General");
@@ -330,7 +330,7 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
         name: "Demo",
         im_status: "offline",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -340,7 +340,7 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
     pyEnv["mail.message"].create({
         author_id: partnerId,
         body: "<p>Test</p>",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -354,7 +354,7 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
 
 QUnit.test("mark channel as seen on last message visible [REQUIRE FOCUS]", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
             [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
@@ -362,7 +362,7 @@ QUnit.test("mark channel as seen on last message visible [REQUIRE FOCUS]", async
     });
     pyEnv["mail.message"].create({
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -382,7 +382,7 @@ QUnit.test(
             user_id: pyEnv.currentUserId,
             is_discuss_sidebar_category_channel_open: true,
         });
-        pyEnv["mail.channel"].create({ name: "general" });
+        pyEnv["discuss.channel"].create({ name: "general" });
         const { openDiscuss } = await start();
         await openDiscuss();
         assert.containsNone($, ".o-mail-DiscussCategory:contains(Channels) .badge");
@@ -397,19 +397,19 @@ QUnit.test(
             user_id: pyEnv.currentUserId,
             is_discuss_sidebar_category_channel_open: true,
         });
-        const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
+        const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
             { name: "channel1" },
             { name: "channel2" },
         ]);
         const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
             {
                 body: "message 1",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId_1,
             },
             {
                 body: "message_2",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId_2,
             },
         ]);
@@ -435,7 +435,7 @@ QUnit.test(
     "channel - counter: should not have a counter if category is folded and without needaction messages",
     async (assert) => {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create({});
+        pyEnv["discuss.channel"].create({});
         pyEnv["res.users.settings"].create({
             user_id: pyEnv.currentUserId,
             is_discuss_sidebar_category_channel_open: false,
@@ -450,19 +450,19 @@ QUnit.test(
     "channel - counter: should have correct value of needaction threads if category is folded and with needaction messages",
     async (assert) => {
         const pyEnv = await startServer();
-        const [channelId_1, channelId_2] = pyEnv["mail.channel"].create([
+        const [channelId_1, channelId_2] = pyEnv["discuss.channel"].create([
             { name: "Channel_1" },
             { name: "Channel_2" },
         ]);
         const [messageId_1, messageId_2] = pyEnv["mail.message"].create([
             {
                 body: "message 1",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId_1,
             },
             {
                 body: "message_2",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId_2,
             },
         ]);
@@ -496,7 +496,7 @@ QUnit.test(
             user_id: pyEnv.currentUserId,
             is_discuss_sidebar_category_chat_open: true,
         });
-        pyEnv["mail.channel"].create({
+        pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
             ],
@@ -516,7 +516,7 @@ QUnit.test(
             user_id: pyEnv.currentUserId,
             is_discuss_sidebar_category_chat_open: true,
         });
-        pyEnv["mail.channel"].create({
+        pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [0, 0, { message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }],
             ],
@@ -536,7 +536,7 @@ QUnit.test(
             user_id: pyEnv.currentUserId,
             is_discuss_sidebar_category_chat_open: false,
         });
-        pyEnv["mail.channel"].create({
+        pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
             ],
@@ -556,7 +556,7 @@ QUnit.test(
             user_id: pyEnv.currentUserId,
             is_discuss_sidebar_category_chat_open: false,
         });
-        pyEnv["mail.channel"].create([
+        pyEnv["discuss.channel"].create([
             {
                 channel_member_ids: [
                     [0, 0, { message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }],
@@ -607,7 +607,7 @@ QUnit.test(
 
 QUnit.test("chat - states: close manually by clicking the title", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel"].create({ channel_type: "chat" });
     pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
@@ -621,7 +621,7 @@ QUnit.test("chat - states: close manually by clicking the title", async (assert)
 
 QUnit.test("sidebar find shows channels matching search term", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [],
         channel_type: "channel",
         group_public_id: false,
@@ -651,7 +651,7 @@ QUnit.test(
     "sidebar find shows channels matching search term even when user is member",
     async (assert) => {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create({
+        pyEnv["discuss.channel"].create({
             channel_member_ids: [[0, 0, { partner_id: pyEnv.currentPartnerId }]],
             channel_type: "channel",
             group_public_id: false,
@@ -680,7 +680,7 @@ QUnit.test(
 
 QUnit.test("sidebar channels should be ordered case insensitive alphabetically", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create([
+    pyEnv["discuss.channel"].create([
         { name: "Xyz" },
         { name: "abc" },
         { name: "Abc" },
@@ -701,7 +701,7 @@ QUnit.test("sidebar channels should be ordered case insensitive alphabetically",
 
 QUnit.test("sidebar: public channel rendering", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         name: "channel1",
         channel_type: "channel",
         group_public_id: false,
@@ -714,7 +714,7 @@ QUnit.test("sidebar: public channel rendering", async (assert) => {
 
 QUnit.test("channel - avatar: should have correct avatar", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         avatarCacheKey: "100111",
     });
@@ -723,36 +723,36 @@ QUnit.test("channel - avatar: should have correct avatar", async (assert) => {
     assert.containsOnce($, ".o-mail-DiscussCategoryItem img");
     assert.containsOnce(
         $,
-        `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=100111']`
+        `img[data-src='/web/image/discuss.channel/${channelId}/avatar_128?unique=100111']`
     );
 });
 
 QUnit.test("channel - avatar: should update avatar url from bus", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ avatarCacheKey: "101010" });
+    const channelId = pyEnv["discuss.channel"].create({ avatarCacheKey: "101010" });
     const { env, openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce(
         $,
-        `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=101010']`
+        `img[data-src='/web/image/discuss.channel/${channelId}/avatar_128?unique=101010']`
     );
     await afterNextRender(() => {
-        env.services.orm.call("mail.channel", "write", [
+        env.services.orm.call("discuss.channel", "write", [
             [channelId],
             { image_128: "This field does not matter" },
         ]);
     });
-    const result = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
+    const result = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     const newCacheKey = result[0]["avatarCacheKey"];
     assert.containsOnce(
         $,
-        `img[data-src='/web/image/mail.channel/${channelId}/avatar_128?unique=${newCacheKey}']`
+        `img[data-src='/web/image/discuss.channel/${channelId}/avatar_128?unique=${newCacheKey}']`
     );
 });
 
 QUnit.test("channel - states: close should update the value on the server", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
@@ -777,7 +777,7 @@ QUnit.test("channel - states: close should update the value on the server", asyn
 
 QUnit.test("channel - states: open should update the value on the server", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -803,7 +803,7 @@ QUnit.test("channel - states: open should update the value on the server", async
 
 QUnit.test("channel - states: close from the bus", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: true,
@@ -824,7 +824,7 @@ QUnit.test("channel - states: close from the bus", async (assert) => {
 
 QUnit.test("channel - states: open from the bus", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_channel_open: false,
@@ -847,7 +847,7 @@ QUnit.test(
     "channel - states: the active category item should be visible even if the category is closed",
     async (assert) => {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create({ name: "test" });
+        pyEnv["discuss.channel"].create({ name: "test" });
         const { openDiscuss } = await start();
         await openDiscuss();
         await click(".o-mail-DiscussCategoryItem:contains(test)");
@@ -864,7 +864,7 @@ QUnit.test(
 
 QUnit.test("chat - states: open manually by clicking the title", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_type: "chat",
     });
     pyEnv["res.users.settings"].create({
@@ -879,7 +879,7 @@ QUnit.test("chat - states: open manually by clicking the title", async (assert) 
 
 QUnit.test("chat - states: close should call update server data", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
@@ -905,7 +905,7 @@ QUnit.test("chat - states: close should call update server data", async (assert)
 
 QUnit.test("chat - states: open should call update server data", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "test" });
+    pyEnv["discuss.channel"].create({ name: "test" });
     pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
@@ -931,7 +931,7 @@ QUnit.test("chat - states: open should call update server data", async (assert) 
 
 QUnit.test("chat - states: close from the bus", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: true,
@@ -952,7 +952,7 @@ QUnit.test("chat - states: close from the bus", async (assert) => {
 
 QUnit.test("chat - states: open from the bus", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const userSettingsId = pyEnv["res.users.settings"].create({
         user_id: pyEnv.currentUserId,
         is_discuss_sidebar_category_chat_open: false,
@@ -975,7 +975,7 @@ QUnit.test(
     "chat - states: the active category item should be visible even if the category is closed",
     async (assert) => {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create({ channel_type: "chat" });
+        pyEnv["discuss.channel"].create({ channel_type: "chat" });
         const { openDiscuss } = await start();
         await openDiscuss();
         assert.containsOnce($, ".o-mail-DiscussCategory-chat .fa-chevron-down");
@@ -1000,14 +1000,14 @@ QUnit.test("chat - avatar: should have correct avatar", async (assert) => {
         name: "Demo",
         im_status: "offline",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
         ],
         channel_type: "chat",
     });
-    const channel = pyEnv["mail.channel"].searchRead([["id", "=", channelId]])[0];
+    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     const { openDiscuss } = await start();
     await openDiscuss();
 
@@ -1022,7 +1022,7 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
     const pyEnv = await startServer();
     const [demo_id, yoshi_id] = pyEnv["res.partner"].create([{ name: "Demo" }, { name: "Yoshi" }]);
     pyEnv["res.users"].create([{ partner_id: demo_id }, { partner_id: yoshi_id }]);
-    pyEnv["mail.channel"].create([
+    pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
                 [
@@ -1071,7 +1071,7 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
 
 QUnit.test("Can unpin chat channel", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
     await openDiscuss();
     assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(Mitchell Admin)");
@@ -1081,7 +1081,7 @@ QUnit.test("Can unpin chat channel", async (assert) => {
 
 QUnit.test("Unpinning chat should display notification", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ channel_type: "chat" });
+    pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start({
         services: {
             notification: makeFakeNotificationService((message) => assert.step(message)),
@@ -1094,21 +1094,21 @@ QUnit.test("Unpinning chat should display notification", async (assert) => {
 
 QUnit.test("Can leave channel", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsOnce($, ".o-mail-DiscussCategoryItem:contains(General)");
     const messageId = pyEnv["mail.message"].create({
         body: '<div class="o_mail_notification">Mitchell Admin left the channel</div>',
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
     const [message] = await env.services.orm.call("mail.message", "message_format", [[messageId]]);
     await afterNextRender(() => {
         pyEnv["bus.bus"]._sendmany([
-            [channelId, "mail.channel/leave", { id: channelId }],
-            [channelId, "mail.channel/new_message", { id: channelId, message }],
+            [channelId, "discuss.channel/leave", { id: channelId }],
+            [channelId, "discuss.channel/new_message", { id: channelId, message }],
         ]);
     });
     assert.containsNone($, ".o-mail-DiscussCategoryItem:contains(General)");
@@ -1116,7 +1116,7 @@ QUnit.test("Can leave channel", async (assert) => {
 
 QUnit.test("Do no channel_info after unpin", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General", channel_type: "chat" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General", channel_type: "chat" });
     const { env, openDiscuss } = await start({
         mockRPC(route, args, originalRPC) {
             if (args.method === "channel_info") {
@@ -1130,7 +1130,7 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
     await afterNextRender(() => {
         env.services.rpc("/mail/message/post", {
             thread_id: channelId,
-            thread_model: "mail.channel",
+            thread_model: "discuss.channel",
             post_data: {
                 body: "Hello world",
                 message_type: "comment",
@@ -1144,7 +1144,7 @@ QUnit.test("Do no channel_info after unpin", async (assert) => {
 QUnit.test("Group unread counter up to date after mention is marked as seen", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -1153,7 +1153,7 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
     });
     const messageId = pyEnv["mail.message"].create({
         author_id: partnerId,
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         body: "@Mitchell Admin",
         needaction: true,

@@ -31,7 +31,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async (assert) =
         name: "TestPartner2",
     });
     pyEnv["res.users"].create({ partner_id: partnerId_1 });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -60,7 +60,7 @@ QUnit.test(
             name: "TestPartner2",
         });
         pyEnv["res.users"].create({ partner_id: partnerId_1 });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "general",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -96,7 +96,7 @@ QUnit.test("show other channel member in @ mention", async (assert) => {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -115,7 +115,7 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -131,7 +131,7 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
 
 QUnit.test('display command suggestions on typing "/"', async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
@@ -144,7 +144,7 @@ QUnit.test('display command suggestions on typing "/"', async (assert) => {
 
 QUnit.test("use a command for a specific channel type", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ channel_type: "chat" });
+    const channelId = pyEnv["discuss.channel"].create({ channel_type: "chat" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Composer-suggestionList .o-open");
@@ -162,7 +162,7 @@ QUnit.test(
     "command suggestion should only open if command is the first character",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "General",
             channel_type: "channel",
         });
@@ -179,7 +179,7 @@ QUnit.test(
 
 QUnit.test('display channel mention suggestions on typing "#"', async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
@@ -192,7 +192,7 @@ QUnit.test('display channel mention suggestions on typing "#"', async (assert) =
 
 QUnit.test("mention a channel", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
@@ -212,7 +212,7 @@ QUnit.test("mention a channel", async (assert) => {
 
 QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const deferred = makeDeferred();
     const { openDiscuss } = await start({
         async mockRPC(args, params, originalFn) {
@@ -226,7 +226,7 @@ QUnit.test("Channel suggestions do not crash after rpc returns", async (assert) 
         },
     });
     await openDiscuss(channelId);
-    pyEnv["mail.channel"].create({ name: "foo" });
+    pyEnv["discuss.channel"].create({ name: "foo" });
     insertText(".o-mail-Composer-input", "#");
     await nextTick();
     insertText(".o-mail-Composer-input", "f");

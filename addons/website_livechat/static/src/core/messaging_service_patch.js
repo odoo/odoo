@@ -11,7 +11,7 @@ patch(Messaging.prototype, "website_livechat", {
                 const channel = this.threadService.insert({
                     ...notification.payload,
                     id: notification.payload.id,
-                    model: "mail.channel",
+                    model: "discuss.channel",
                     serverData: notification.payload,
                     type: notification.payload.channel.channel_type,
                 });

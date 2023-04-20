@@ -26,8 +26,8 @@ patch(MockServer.prototype, "mail/controllers/bus", {
      * @returns {Object} one key for list of followers and one for subtypes
      */
     async _mockRouteMailChatPost(uuid, message_content, context = {}) {
-        const mailChannel = this.getRecords("mail.channel", [["uuid", "=", uuid]])[0];
-        if (!mailChannel) {
+        const channel = this.getRecords("discuss.channel", [["uuid", "=", uuid]])[0];
+        if (!channel) {
             return false;
         }
 
@@ -48,13 +48,13 @@ patch(MockServer.prototype, "mail/controllers/bus", {
         } else {
             author_id = false;
             // simpler fallback than catchall_formatted
-            email_from = mailChannel.anonymous_name || "catchall@example.com";
+            email_from = channel.anonymous_name || "catchall@example.com";
         }
         // supposedly should convert plain text to html
         const body = message_content;
         // ideally should be posted with mail_create_nosubscribe=True
-        return this._mockMailChannelMessagePost(
-            mailChannel.id,
+        return this._mockDiscussChannelMessagePost(
+            channel.id,
             {
                 author_id,
                 email_from,

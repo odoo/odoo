@@ -15,7 +15,7 @@ QUnit.module("call");
 QUnit.test("basic rendering", async (assert) => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const { openDiscuss } = await start();
@@ -37,7 +37,7 @@ QUnit.test("basic rendering", async (assert) => {
 
 QUnit.test("no call with odoobot", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.odoobotId }],
@@ -51,7 +51,7 @@ QUnit.test("no call with odoobot", async (assert) => {
 
 QUnit.test("should not display call UI when no more members (self disconnect)", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Start a Call']");
@@ -64,7 +64,7 @@ QUnit.test("should not display call UI when no more members (self disconnect)", 
 QUnit.test("show call UI in chat window when in call", async (assert) => {
     mockGetMedia();
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "General" });
+    pyEnv["discuss.channel"].create({ name: "General" });
     await start();
     await click(".o_menu_systray i[aria-label='Messages']");
     await click(".o-mail-NotificationItem:contains(General)");
@@ -86,7 +86,7 @@ QUnit.test("show call UI in chat window when in call", async (assert) => {
 QUnit.test("should disconnect when closing page while in call", async (assert) => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     patchWithCleanup(browser, {
@@ -169,13 +169,13 @@ QUnit.test("should display invitations", async (assert) => {
         { pure: true }
     );
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const partnerId = pyEnv["res.partner"].create({ name: "InvitationSender" });
-    const memberId = pyEnv["mail.channel.member"].create({
+    const memberId = pyEnv["discuss.channel.member"].create({
         channel_id: channelId,
         partner_id: partnerId,
     });
-    const sessionId = pyEnv["mail.channel.rtc.session"].create({
+    const sessionId = pyEnv["discuss.channel.rtc.session"].create({
         channel_member_id: memberId,
         channel_id: channelId,
     });
@@ -185,7 +185,7 @@ QUnit.test("should display invitations", async (assert) => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
             Thread: {
                 id: channelId,
-                model: "mail.channel",
+                model: "discuss.channel",
                 rtcInvitingSession: { id: sessionId, channelMember: { id: memberId } },
             },
         });
@@ -197,7 +197,7 @@ QUnit.test("should display invitations", async (assert) => {
         pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.record/insert", {
             Thread: {
                 id: channelId,
-                model: "mail.channel",
+                model: "discuss.channel",
                 rtcInvitingSession: [["unlink"]],
             },
         });
@@ -209,7 +209,7 @@ QUnit.test("should display invitations", async (assert) => {
 QUnit.test("can share screen", async (assert) => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const { openDiscuss } = await start();
@@ -224,7 +224,7 @@ QUnit.test("can share screen", async (assert) => {
 QUnit.test("can share user camera", async (assert) => {
     mockGetMedia();
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const { openDiscuss } = await start();

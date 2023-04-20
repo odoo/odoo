@@ -43,8 +43,8 @@ class LinkPreview(models.Model):
         if not link_previews:
             return
         guest = self.env['mail.guest']._get_guest_from_context()
-        if message.model == 'mail.channel' and message.res_id:
-            target = self.env['mail.channel'].browse(message.res_id)
+        if message.model == 'discuss.channel' and message.res_id:
+            target = self.env['discuss.channel'].browse(message.res_id)
         elif self.env.user._is_public() and guest:
             target = guest
         else:
@@ -67,8 +67,8 @@ class LinkPreview(models.Model):
         notifications = []
         guest = self.env['mail.guest']._get_guest_from_context()
         for link_preview in self:
-            if link_preview.message_id.model == 'mail.channel' and link_preview.message_id.res_id:
-                target = self.env['mail.channel'].browse(link_preview.message_id.res_id)
+            if link_preview.message_id.model == 'discuss.channel' and link_preview.message_id.res_id:
+                target = self.env['discuss.channel'].browse(link_preview.message_id.res_id)
             elif self.env.user._is_public() and guest:
                 target = guest
             else:

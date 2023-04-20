@@ -26,14 +26,14 @@ registry.category("web_tour.tours").add("mail/static/tests/tours/discuss_public_
                             JSON.stringify({ missing, failed, unloaded })
                         );
                     }
-                    document.body.classList.add("o_mail_channel_public_modules_loaded");
+                    document.body.classList.add("o_discuss_channel_public_modules_loaded");
                 });
             },
-            extraTrigger: ".o_mail_channel_public_modules_loaded",
+            extraTrigger: ".o_discuss_channel_public_modules_loaded",
         },
         {
             content: "Wait for all modules loaded check in previous step",
-            trigger: ".o_mail_channel_public_modules_loaded",
+            trigger: ".o_discuss_channel_public_modules_loaded",
         },
         {
             content: "Write something in composer",

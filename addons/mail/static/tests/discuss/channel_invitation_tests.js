@@ -13,7 +13,7 @@ QUnit.test(
             name: "TestPartner",
         });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -42,7 +42,7 @@ QUnit.test(
         });
         pyEnv["res.users"].create({ partner_id: partnerId_1 });
         pyEnv["res.users"].create({ partner_id: partnerId_2 });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -68,7 +68,7 @@ QUnit.test("Invitation form should display channel group restriction", async (as
     const groupId = pyEnv["res.groups"].create({
         name: "testGroup",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [[0, 0, { partner_id: pyEnv.currentPartnerId }]],
         channel_type: "channel",
@@ -95,7 +95,7 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     });
     pyEnv["res.users"].create({ partner_id: partnerId_1 });
     pyEnv["res.users"].create({ partner_id: partnerId_2 });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],

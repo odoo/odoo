@@ -15,7 +15,7 @@ QUnit.test("Rendering of visitor banner", async (assert) => {
         lang_name: "English",
         website_name: "General website",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Website Visitor 11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -51,7 +51,7 @@ QUnit.test("Livechat with non-logged visitor should show visitor banner", async 
         lang_name: "English",
         website_name: "General website",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -79,7 +79,7 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async (ass
         partner_id: partnerId,
         website_name: "General website",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -97,7 +97,7 @@ QUnit.test("Livechat with logged visitor should show visitor banner", async (ass
 QUnit.test("Livechat without visitor should not show visitor banner", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Harry" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         anonymous_name: "Visitor #11",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -114,7 +114,7 @@ QUnit.test("Livechat without visitor should not show visitor banner", async (ass
 
 QUnit.test("Non-livechat channel should not show visitor banner", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsOnce($, ".o-mail-Thread");

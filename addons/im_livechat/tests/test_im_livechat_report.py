@@ -10,12 +10,12 @@ class TestImLivechatReport(TestImLivechatCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.env['mail.channel'].search([('livechat_channel_id', '!=', False)]).unlink()
+        cls.env['discuss.channel'].search([('livechat_channel_id', '!=', False)]).unlink()
 
         with patch.object(type(cls.env['im_livechat.channel']), '_get_available_users', lambda _: cls.operators):
-            channel_id = cls.livechat_channel._open_livechat_mail_channel('Anonymous')['id']
+            channel_id = cls.livechat_channel._open_livechat_discuss_channel('Anonymous')['id']
 
-        channel = cls.env['mail.channel'].browse(channel_id)
+        channel = cls.env['discuss.channel'].browse(channel_id)
         cls.operator = channel.livechat_operator_id
 
         cls._create_message(channel, cls.visitor_user.partner_id, '2023-03-17 06:05:54')

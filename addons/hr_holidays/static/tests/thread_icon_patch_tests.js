@@ -10,7 +10,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & online", asyn
         im_status: "leave_online",
         name: "Demo",
     });
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -31,7 +31,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & away", async 
         im_status: "leave_away",
         name: "Demo",
     });
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -52,7 +52,7 @@ QUnit.test("thread icon of a chat when correspondent is on leave & offline", asy
         im_status: "leave_offline",
         name: "Demo",
     });
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],

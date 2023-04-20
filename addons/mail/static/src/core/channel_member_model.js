@@ -30,6 +30,6 @@ export class ChannelMember {
     }
 
     get thread() {
-        return this._store.threads[createLocalId("mail.channel", this.threadId)];
+        return this._store.threads[createLocalId("discuss.channel", this.threadId)];
     }
 }

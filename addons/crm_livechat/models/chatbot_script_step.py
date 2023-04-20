@@ -14,9 +14,9 @@ class ChatbotScriptStep(models.Model):
         help="Used in combination with 'create_lead' step type in order to automatically "
              "assign the created lead/opportunity to the defined team")
 
-    def _chatbot_crm_prepare_lead_values(self, mail_channel, description):
+    def _chatbot_crm_prepare_lead_values(self, discuss_channel, description):
         return {
-            'description': description + mail_channel._get_channel_history(),
+            'description': description + discuss_channel._get_channel_history(),
             'name': _("%s's New Lead", self.chatbot_script_id.title),
             'source_id': self.chatbot_script_id.source_id.id,
             'team_id': self.crm_team_id.id,
@@ -24,17 +24,17 @@ class ChatbotScriptStep(models.Model):
             'user_id': False,
         }
 
-    def _process_step(self, mail_channel):
+    def _process_step(self, discuss_channel):
         self.ensure_one()
 
-        posted_message = super()._process_step(mail_channel)
+        posted_message = super()._process_step(discuss_channel)
 
         if self.step_type == 'create_lead':
-            self._process_step_create_lead(mail_channel)
+            self._process_step_create_lead(discuss_channel)
 
         return posted_message
 
-    def _process_step_create_lead(self, mail_channel):
+    def _process_step_create_lead(self, discuss_channel):
         """ When reaching a 'create_lead' step, we extract the relevant information: visitor's
         email, phone and conversation history to create a crm.lead.
 
@@ -46,7 +46,7 @@ class ChatbotScriptStep(models.Model):
         their interest / needs before creating the lead. """
 
         customer_values = self._chatbot_prepare_customer_values(
-            mail_channel, create_partner=False, update_partner=True)
+            discuss_channel, create_partner=False, update_partner=True)
         if self.env.user._is_public():
             create_values = {
                 'email_from': customer_values['email'],
@@ -60,6 +60,6 @@ class ChatbotScriptStep(models.Model):
             }
 
         create_values.update(self._chatbot_crm_prepare_lead_values(
-            mail_channel, customer_values['description']))
+            discuss_channel, customer_values['description']))
 
         self.env['crm.lead'].create(create_values)

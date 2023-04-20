@@ -1,17 +1,17 @@
 /** @odoo-module **/
 
-import "@mail/../tests/helpers/mock_server/models/mail_channel_member"; // ensure mail overrides are applied first
+import "@mail/../tests/helpers/mock_server/models/discuss_channel_member"; // ensure mail overrides are applied first
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "im_livechat/models/mail_channel_member", {
+patch(MockServer.prototype, "im_livechat/models/discuss_channel_member", {
     /**
      * @override
      */
-    _mockMailChannelMember_GetPartnerData(ids) {
-        const [member] = this.getRecords("mail.channel.member", [["id", "in", ids]]);
-        const [channel] = this.getRecords("mail.channel", [["id", "=", member.channel_id]]);
+    _mockDiscussChannelMember_GetPartnerData(ids) {
+        const [member] = this.getRecords("discuss.channel.member", [["id", "in", ids]]);
+        const [channel] = this.getRecords("discuss.channel", [["id", "=", member.channel_id]]);
         const [partner] = this.getRecords("res.partner", [["id", "=", member.partner_id]], {
             active_test: false,
         });

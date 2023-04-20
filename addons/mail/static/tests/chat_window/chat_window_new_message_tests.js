@@ -77,7 +77,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        pyEnv["mail.channel"].create([
+        pyEnv["discuss.channel"].create([
             {
                 name: "channel-1",
                 channel_member_ids: [
@@ -152,7 +152,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Partner 131" });
         pyEnv["res.users"].create({ partner_id: partnerId });
-        pyEnv["mail.channel"].create({
+        pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [
                     0,

@@ -432,7 +432,7 @@ const PublicLivechatView = Widget.extend({
             ev.preventDefault();
             const model = $(ev.target).data("oe-model");
             let options;
-            if (model && model !== "mail.channel") {
+            if (model && model !== "discuss.channel") {
                 options = {
                     model,
                     id,

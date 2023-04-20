@@ -14,7 +14,7 @@ patch(Messaging.prototype, "im_livechat", {
 
     _handleNotificationLastInterestDtChanged(notif) {
         this._super(notif);
-        const channel = this.store.threads[createLocalId("mail.channel", notif.payload.id)];
+        const channel = this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
         if (channel?.type === "livechat") {
             this.threadService.sortChannels();
         }

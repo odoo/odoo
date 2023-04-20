@@ -11,9 +11,9 @@ class Partners(models.Model):
 
     def _get_channels_as_member(self):
         channels = super()._get_channels_as_member()
-        channels |= self.env['mail.channel'].search([
+        channels |= self.env['discuss.channel'].search([
             ('channel_type', '=', 'livechat'),
-            ('channel_member_ids', 'in', self.env['mail.channel.member'].sudo()._search([
+            ('channel_member_ids', 'in', self.env['discuss.channel.member'].sudo()._search([
                 ('partner_id', '=', self.id),
                 ('is_pinned', '=', True),
             ])),

@@ -21,7 +21,7 @@ patch(MockServer.prototype, 'website_livechat/models/website_visitor', {
             } else {
                 membersToAdd.push([0, 0, { partner_id: this.publicPartnerId }]);
             }
-            const livechatId = this.pyEnv['mail.channel'].create({
+            const livechatId = this.pyEnv['discuss.channel'].create({
                 anonymous_name: visitor_name,
                 channel_member_ids: membersToAdd,
                 channel_type: 'livechat',
@@ -29,7 +29,7 @@ patch(MockServer.prototype, 'website_livechat/models/website_visitor', {
             });
             // notify operator
             this.pyEnv['bus.bus']._sendone(this.pyEnv.currentPartner, 'website_livechat.send_chat_request',
-                this._mockMailChannelChannelInfo([livechatId])[0]
+                this._mockDiscussChannelChannelInfo([livechatId])[0]
             );
         }
     },

@@ -17,20 +17,20 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
         return users.filter((user) => user.im_status === "online");
     },
     /**
-     * Simulates `_get_livechat_mail_channel_vals` on `im_livechat.channel`.
+     * Simulates `_get_livechat_discuss_channel_vals` on `im_livechat.channel`.
      *
      * @private
      * @param {integer} id
      * @returns {Object}
      */
-    _mockImLivechatChannel_getLivechatMailChannelVals(
+    _mockImLivechatChannel_getLivechatDiscussChannelVals(
         id,
         anonymous_name,
         operator,
         user_id,
         country_id
     ) {
-        // partner to add to the mail.channel
+        // partner to add to the discuss.channel
         const operator_partner_id = operator.partner_id;
         const membersToAdd = [
             [
@@ -80,7 +80,7 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
         return availableUsers[0];
     },
     /**
-     * Simulates `_open_livechat_mail_channel` on `im_livechat.channel`.
+     * Simulates `_open_livechat_discuss_channel` on `im_livechat.channel`.
      *
      * @private
      * @param {integer} id
@@ -90,7 +90,7 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
      * @param {integer} [country_id]
      * @returns {Object}
      */
-    _mockImLivechatChannel_openLivechatMailChannel(
+    _mockImLivechatChannel_openLivechatDiscussChannel(
         id,
         anonymous_name,
         previous_operator_id,
@@ -110,15 +110,15 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
             return false;
         }
         // create the session, and add the link with the given channel
-        const mailChannelVals = this._mockImLivechatChannel_getLivechatMailChannelVals(
+        const discussChannelVals = this._mockImLivechatChannel_getLivechatDiscussChannelVals(
             id,
             anonymous_name,
             operator,
             user_id,
             country_id
         );
-        const mailChannelId = this.pyEnv["mail.channel"].create(mailChannelVals);
-        this._mockMailChannel_broadcast([mailChannelId], [operator.partner_id]);
-        return this._mockMailChannelChannelInfo([mailChannelId])[0];
+        const discussChannelId = this.pyEnv["discuss.channel"].create(discussChannelVals);
+        this._mockDiscussChannel_broadcast([discussChannelId], [operator.partner_id]);
+        return this._mockDiscussChannelChannelInfo([discussChannelId])[0];
     },
 });

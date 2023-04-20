@@ -890,7 +890,7 @@ class Message(models.Model):
                 'message': {'id': message_sudo.id},
                 'partners': [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id],
             } for content, reactions in reactions_per_content.items()]
-            if format_reply and message_sudo.model == 'mail.channel' and message_sudo.parent_id:
+            if format_reply and message_sudo.model == 'discuss.channel' and message_sudo.parent_id:
                 vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
             vals.update({

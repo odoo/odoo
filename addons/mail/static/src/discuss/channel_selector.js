@@ -14,7 +14,7 @@ export class ChannelSelector extends Component {
     static components = { TagsList, NavigableList };
     static props = ["category", "onValidate?", "autofocus?", "multiple?"];
     static defaultProps = { multiple: true };
-    static template = "mail.ChannelSelector";
+    static template = "discuss.ChannelSelector";
 
     setup() {
         this.store = useStore();
@@ -42,7 +42,7 @@ export class ChannelSelector extends Component {
                     ["name", "ilike", cleanedTerm],
                 ];
                 const fields = ["name"];
-                const results = await this.orm.searchRead("mail.channel", domain, fields, {
+                const results = await this.orm.searchRead("discuss.channel", domain, fields, {
                     limit: 10,
                 });
                 const choices = results.map((channel) => {
@@ -190,8 +190,8 @@ export class ChannelSelector extends Component {
             placeholder: _t("Loading"),
             optionTemplate:
                 this.props.category.id === "channels"
-                    ? "mail.ChannelSelector.channel"
-                    : "mail.ChannelSelector.chat",
+                    ? "discuss.ChannelSelector.channel"
+                    : "discuss.ChannelSelector.chat",
             options: this.fetchSuggestions(),
         };
     }

@@ -8,10 +8,10 @@ from odoo.addons.web.controllers.home import Home as WebHome
 def _admin_password_warn(uid):
     """ Admin still has `admin` password, flash a message via chatter.
 
-    Uses a private mail.channel from the system (/ odoobot) to the user, as
+    Uses a private discuss.channel from the system (/ odoobot) to the user, as
     using a more generic mail.thread could send an email which is undesirable
 
-    Uses mail.channel directly because using mail.thread might send an email instead.
+    Uses discuss.channel directly because using mail.thread might send an email instead.
     """
     if request.params['password'] != 'admin':
         return
@@ -26,8 +26,8 @@ def _admin_password_warn(uid):
         return
 
     user = request.env(user=uid)['res.users']
-    MailChannel = env(context=user.context_get())['mail.channel']
-    MailChannel.browse(MailChannel.channel_get([admin.id])['id'])\
+    DiscussChannel = env(context=user.context_get())['discuss.channel']
+    DiscussChannel.browse(DiscussChannel.channel_get([admin.id])['id'])\
         .message_post(
             body=_("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
             message_type='comment',

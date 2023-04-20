@@ -44,24 +44,24 @@ class ChatbotCase(chatbot_common.ChatbotCase):
                          "Only step 'step_no_one_available' should be flagged as forward operator child.")
 
     def test_chatbot_steps(self):
-        channel_info = self.livechat_channel._open_livechat_mail_channel(
+        channel_info = self.livechat_channel._open_livechat_discuss_channel(
             anonymous_name='Test Visitor', chatbot_script=self.chatbot_script)
-        mail_channel = self.env['mail.channel'].browse(channel_info['id'])
+        discuss_channel = self.env['discuss.channel'].browse(channel_info['id'])
 
-        self.assertEqual(mail_channel.chatbot_current_step_id, self.step_dispatch)
+        self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_dispatch)
 
         self._post_answer_and_trigger_next_step(
-            mail_channel,
+            discuss_channel,
             self.step_dispatch_buy_software.name,
             chatbot_script_answer=self.step_dispatch_buy_software
         )
-        self.assertEqual(mail_channel.chatbot_current_step_id, self.step_email)
+        self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_email)
 
         with self.assertRaises(ValidationError, msg="Should raise an error since it's not a valid email"):
-            self._post_answer_and_trigger_next_step(mail_channel, 'test')
+            self._post_answer_and_trigger_next_step(discuss_channel, 'test')
 
-        self._post_answer_and_trigger_next_step(mail_channel, 'test@example.com')
-        self.assertEqual(mail_channel.chatbot_current_step_id, self.step_email_validated)
+        self._post_answer_and_trigger_next_step(discuss_channel, 'test@example.com')
+        self.assertEqual(discuss_channel.chatbot_current_step_id, self.step_email_validated)
 
     def test_chatbot_steps_sequence(self):
         """ Ensure sequence is correct when creating chatbots and adding steps to an existing one.

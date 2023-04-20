@@ -65,7 +65,7 @@ export class Sidebar extends Component {
             this.actionService.doAction({
                 name: _t("Public Channels"),
                 type: "ir.actions.act_window",
-                res_model: "mail.channel",
+                res_model: "discuss.channel",
                 views: [
                     [false, "kanban"],
                     [false, "form"],
@@ -79,7 +79,7 @@ export class Sidebar extends Component {
         if (thread.type === "channel") {
             this.actionService.doAction({
                 type: "ir.actions.act_window",
-                res_model: "mail.channel",
+                res_model: "discuss.channel",
                 res_id: thread.id,
                 views: [[false, "form"]],
                 target: "current",
@@ -124,7 +124,7 @@ export class Sidebar extends Component {
     get hasQuickSearch() {
         return (
             Object.values(this.store.threads).filter(
-                (thread) => thread.is_pinned && thread.model === "mail.channel"
+                (thread) => thread.is_pinned && thread.model === "discuss.channel"
             ).length > 19
         );
     }

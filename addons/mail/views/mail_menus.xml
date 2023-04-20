@@ -33,16 +33,16 @@
         action="action_view_mail_alias"
         sequence="11"
         groups="base.group_no_one"/>
-    <menuitem id="mail_channel_menu_settings"
+    <menuitem id="mail.discuss_channel_menu_settings"
         name="Channels"
         parent="base.menu_email"
-        action="mail_channel_action_view"
+        action="mail.discuss_channel_action_view"
         sequence="20"
         groups="base.group_no_one"/>
     <menuitem name="Channels/Partner"
-        id="mail_channel_member_menu"
+        id="mail.discuss_channel_member_menu"
         parent="base.menu_email"
-        action="mail_channel_member_action"
+        action="mail.discuss_channel_member_action"
         sequence="21"
         groups="base.group_no_one"/>
     <menuitem id="mail_gateway_allowed_menu"
@@ -119,12 +119,12 @@
         action="mail_guest_action"
         parent="mail.mail_menu_technical"
         sequence="51"/>
-    <menuitem id="mail_channel_rtc_session_menu"
+    <menuitem id="mail.discuss_channel_rtc_session_menu"
         name="RTC sessions"
-        action="mail_channel_rtc_session_action"
+        action="mail.discuss_channel_rtc_session_action"
         parent="mail.mail_menu_technical"
         sequence="52"/>
-    <menuitem id="mail_channel_ice_servers_menu"
+    <menuitem id="mail.ice_servers_menu"
         name="ICE servers"
         action="action_ice_servers"
         parent="mail.mail_menu_technical"
@@ -144,7 +144,7 @@
         This menuitem will be activated by integrations modules (like github, twitter, ...). It
         is a hook to ease other modules to plug into mail.
     -->
-    <record id="mail.mail_channel_integrations_menu" model="ir.ui.menu">
+    <record id="mail.discuss_channel_integrations_menu" model="ir.ui.menu">
         <field name="name">Integrations</field>
         <field name="parent_id" ref="mail.menu_root_discuss"></field>
         <field name="active" eval="False"></field>

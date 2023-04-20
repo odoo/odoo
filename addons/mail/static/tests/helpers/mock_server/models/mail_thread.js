@@ -249,16 +249,16 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
         const message = this.getRecords("mail.message", [["id", "=", messageId]])[0];
         const messageFormat = this._mockMailMessageMessageFormat([messageId])[0];
         const notifications = [];
-        if (model === "mail.channel") {
+        if (model === "discuss.channel") {
             // members
-            const channels = this.getRecords("mail.channel", [["id", "=", message.res_id]]);
+            const channels = this.getRecords("discuss.channel", [["id", "=", message.res_id]]);
             for (const channel of channels) {
                 // notify update of last_interest_dt
                 const now = datetime_to_str(new Date());
-                const members = this.getRecords("mail.channel.member", [
+                const members = this.getRecords("discuss.channel.member", [
                     ["id", "in", channel.channel_member_ids],
                 ]);
-                this.pyEnv["mail.channel.member"].write(
+                this.pyEnv["discuss.channel.member"].write(
                     members.map((member) => member.id),
                     { last_interest_dt: now }
                 );
@@ -266,7 +266,7 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                     // simplification, send everything on the current user "test" bus, but it should send to each member instead
                     notifications.push([
                         member,
-                        "mail.channel/last_interest_dt_changed",
+                        "discuss.channel/last_interest_dt_changed",
                         {
                             id: channel.id,
                             isServerPinned: member.is_pinned,
@@ -276,18 +276,18 @@ patch(MockServer.prototype, "mail/models/mail_thread", {
                 }
                 notifications.push([
                     channel,
-                    "mail.channel/new_message",
+                    "discuss.channel/new_message",
                     {
                         id: channel.id,
                         message: Object.assign(messageFormat, { temporary_id }),
                     },
                 ]);
                 if (message.author_id === this.currentPartnerId) {
-                    this._mockMailChannel_ChannelSeen(ids, message.id);
+                    this._mockDiscussChannel_ChannelSeen(ids, message.id);
                 }
             }
         }
-        const channelMemberOfCurrentUser = this.pyEnv["mail.channel.member"].search([
+        const channelMemberOfCurrentUser = this.pyEnv["discuss.channel.member"].search([
             ["channel_id", "=", message.res_id],
             ["partner_id", "=", this.currentPartnerId],
         ]);

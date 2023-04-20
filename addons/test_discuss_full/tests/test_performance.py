@@ -60,31 +60,31 @@ class TestDiscussFullPerformance(TransactionCase):
     def test_init_messaging(self):
         """Test performance of `_init_messaging`."""
         self.channel_general = self.env.ref('mail.channel_all_employees')  # Unfortunately #general cannot be deleted. Assertions below assume data from a fresh db with demo.
-        self.env['mail.channel'].sudo().search([('id', '!=', self.channel_general.id)]).unlink()
+        self.env['discuss.channel'].sudo().search([('id', '!=', self.channel_general.id)]).unlink()
         self.user_root = self.env.ref('base.user_root')
         # create public channels
-        self.channel_channel_public_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public channel 1', group_id=None)['id'])
+        self.channel_channel_public_1 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='public channel 1', group_id=None)['id'])
         self.channel_channel_public_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[4] + self.users[8]).partner_id.ids)
-        self.channel_channel_public_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='public channel 2', group_id=None)['id'])
+        self.channel_channel_public_2 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='public channel 2', group_id=None)['id'])
         self.channel_channel_public_2.add_members((self.users[0] + self.users[2] + self.users[4] + self.users[7] + self.users[9]).partner_id.ids)
         # create group-restricted channels
-        self.channel_channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group restricted channel 1', group_id=self.env.ref('base.group_user').id)['id'])
+        self.channel_channel_group_1 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='group restricted channel 1', group_id=self.env.ref('base.group_user').id)['id'])
         self.channel_channel_group_1.add_members((self.users[0] + self.users[2] + self.users[3] + self.users[6] + self.users[12]).partner_id.ids)
-        self.channel_channel_group_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_create(name='group restricted channel 2', group_id=self.env.ref('base.group_user').id)['id'])
+        self.channel_channel_group_2 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_create(name='group restricted channel 2', group_id=self.env.ref('base.group_user').id)['id'])
         self.channel_channel_group_2.add_members((self.users[0] + self.users[2] + self.users[6] + self.users[7] + self.users[13]).partner_id.ids)
         # create chats
-        self.channel_chat_1 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[14]).partner_id.ids)['id'])
-        self.channel_chat_2 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[15]).partner_id.ids)['id'])
-        self.channel_chat_3 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[2]).partner_id.ids)['id'])
-        self.channel_chat_4 = self.env['mail.channel'].browse(self.env['mail.channel'].channel_get((self.users[0] + self.users[3]).partner_id.ids)['id'])
+        self.channel_chat_1 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_get((self.users[0] + self.users[14]).partner_id.ids)['id'])
+        self.channel_chat_2 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_get((self.users[0] + self.users[15]).partner_id.ids)['id'])
+        self.channel_chat_3 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_get((self.users[0] + self.users[2]).partner_id.ids)['id'])
+        self.channel_chat_4 = self.env['discuss.channel'].browse(self.env['discuss.channel'].channel_get((self.users[0] + self.users[3]).partner_id.ids)['id'])
         # create groups
-        self.channel_group_1 = self.env['mail.channel'].browse(self.env['mail.channel'].create_group((self.users[0] + self.users[12]).partner_id.ids)['id'])
+        self.channel_group_1 = self.env['discuss.channel'].browse(self.env['discuss.channel'].create_group((self.users[0] + self.users[12]).partner_id.ids)['id'])
         # create livechats
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.users[0].im_status = 'online'  # make available for livechat (ignore leave)
-        self.channel_livechat_1 = self.env['mail.channel'].browse(im_livechat_channel._open_livechat_mail_channel(anonymous_name='anon 1', previous_operator_id=self.users[0].partner_id.id, user_id=self.users[1].id, country_id=self.env.ref('base.in').id)['id'])
+        self.channel_livechat_1 = self.env['discuss.channel'].browse(im_livechat_channel._open_livechat_discuss_channel(anonymous_name='anon 1', previous_operator_id=self.users[0].partner_id.id, user_id=self.users[1].id, country_id=self.env.ref('base.in').id)['id'])
         self.channel_livechat_1.with_user(self.users[1]).message_post(body="test")
-        self.channel_livechat_2 = self.env['mail.channel'].browse(im_livechat_channel.with_user(self.env.ref('base.public_user'))._open_livechat_mail_channel(anonymous_name='anon 2', previous_operator_id=self.users[0].partner_id.id, country_id=self.env.ref('base.be').id)['id'])
+        self.channel_livechat_2 = self.env['discuss.channel'].browse(im_livechat_channel.with_user(self.env.ref('base.public_user'))._open_livechat_discuss_channel(anonymous_name='anon 2', previous_operator_id=self.users[0].partner_id.id, country_id=self.env.ref('base.be').id)['id'])
         self.channel_livechat_2.with_user(self.env.ref('base.public_user')).sudo().message_post(body="test")
         # add needaction
         self.users[0].notification_type = 'inbox'

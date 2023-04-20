@@ -13,7 +13,7 @@ class ImLivechatReportChannel(models.Model):
     _auto = False
 
     uuid = fields.Char('UUID', readonly=True)
-    channel_id = fields.Many2one('mail.channel', 'Conversation', readonly=True)
+    channel_id = fields.Many2one('discuss.channel', 'Conversation', readonly=True)
     channel_name = fields.Char('Channel Name', readonly=True)
     technical_name = fields.Char('Code', readonly=True)
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel', readonly=True)
@@ -62,7 +62,7 @@ class ImLivechatReportChannel(models.Model):
                         WHEN EXISTS (select distinct M.author_id FROM mail_message M
                                         WHERE M.author_id=C.livechat_operator_id
                                         AND M.res_id = C.id
-                                        AND M.model = 'mail.channel'
+                                        AND M.model = 'discuss.channel'
                                         AND C.livechat_operator_id = M.author_id)
                         THEN 0
                         ELSE 1
@@ -89,11 +89,11 @@ class ImLivechatReportChannel(models.Model):
                         ELSE 1
                     END as is_unrated,
                     C.livechat_operator_id as partner_id
-                FROM mail_channel C
-                    JOIN mail_message M ON (M.res_id = C.id AND M.model = 'mail.channel')
+                FROM discuss_channel C
+                    JOIN mail_message M ON (M.res_id = C.id AND M.model = 'discuss.channel')
                     JOIN im_livechat_channel L ON (L.id = C.livechat_channel_id)
-                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'mail.channel' AND MO.author_id = C.livechat_operator_id)
-                    LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'mail.channel' and Rate.parent_res_model = 'im_livechat.channel')
+                    LEFT JOIN mail_message MO ON (MO.res_id = C.id AND MO.model = 'discuss.channel' AND MO.author_id = C.livechat_operator_id)
+                    LEFT JOIN rating_rating Rate ON (Rate.res_id = C.id and Rate.res_model = 'discuss.channel' and Rate.parent_res_model = 'im_livechat.channel')
                     WHERE C.livechat_operator_id is not null
                 GROUP BY C.livechat_operator_id, C.id, C.name, C.livechat_channel_id, L.name, C.create_date, C.uuid, Rate.rating
             )

@@ -12,7 +12,7 @@ QUnit.module("chat window manager");
 
 QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create([
+    pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
                 [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
@@ -39,7 +39,7 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     );
     await start({
         mockRPC(route, args) {
-            if (route === "/mail/channel/messages") {
+            if (route === "/discuss/channel/messages") {
                 assert.step("fetch_messages");
             }
         },
@@ -51,7 +51,7 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
 
 QUnit.test("click on hidden chat window should fetch its messages", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create([
+    pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
                 [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
@@ -78,7 +78,7 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
     );
     await start({
         mockRPC(route, args) {
-            if (route === "/mail/channel/messages") {
+            if (route === "/discuss/channel/messages") {
                 assert.step("fetch_messages");
             }
         },
@@ -95,7 +95,7 @@ QUnit.test(
     "closing the last visible chat window should unhide the first hidden one",
     async (assert) => {
         const pyEnv = await startServer();
-        pyEnv["mail.channel"].create([
+        pyEnv["discuss.channel"].create([
             { name: "channel-A" },
             { name: "channel-B" },
             { name: "channel-C" },

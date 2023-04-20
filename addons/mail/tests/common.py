@@ -27,7 +27,7 @@ mail_new_test_user = partial(new_test_user, context={'mail_create_nolog': True,
                                                      'mail_create_nosubscribe': True,
                                                      'mail_notrack': True,
                                                      'no_reset_password': True,
-                                                     'mail_channel_nosubscribe': True})
+                                                     'discuss_channel_nosubscribe': True})
 
 
 class MockEmail(common.BaseCase, MockSmtplibCase):
@@ -626,7 +626,7 @@ class MailCase(MockEmail):
                             ("UNKNOWN", "Unknown error")
     """
     _test_context = {
-        'mail_channel_nosubscribe': True,
+        'discuss_channel_nosubscribe': True,
         'mail_create_nolog': True,
         'mail_create_nosubscribe': True,
         'mail_notrack': True,
@@ -960,7 +960,7 @@ class MailCase(MockEmail):
 
         EXPECTED
         :param channels: list of expected bus channels, like [
-          (self.cr.dbname, 'mail.channel', self.channel_1.id),
+          (self.cr.dbname, 'discuss.channel', self.channel_1.id),
           (self.cr.dbname, 'res.partner', self.partner_employee_2.id)
         ]
         :param message_items: if given, list of expected message making a valid

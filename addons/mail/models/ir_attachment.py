@@ -40,8 +40,8 @@ class IrAttachment(models.Model):
 
     def _delete_and_notify(self):
         for attachment in self:
-            if attachment.res_model == 'mail.channel' and attachment.res_id:
-                target = self.env['mail.channel'].browse(attachment.res_id)
+            if attachment.res_model == 'discuss.channel' and attachment.res_id:
+                target = self.env['discuss.channel'].browse(attachment.res_id)
             else:
                 target = self.env.user.partner_id
             self.env['bus.bus']._sendone(target, 'ir.attachment/delete', {

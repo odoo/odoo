@@ -97,7 +97,7 @@ export class Rtc {
         this.notification = services.notification;
         this.rpc = services.rpc;
         /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["mail.channel.member"];
+        this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/core/sound_effects_service").SoundEffects} */
         this.soundEffectsService = services["mail.sound_effects"];
         /** @type {import("@mail/core/user_settings_service").UserSettings} */
@@ -847,7 +847,7 @@ export class Rtc {
 
     async ping() {
         const { rtcSessions } = await this.rpc(
-            "/mail/channel/ping",
+            "/discuss/channel/ping",
             {
                 channel_id: this.state.channel.id,
                 check_rtc_session_ids: Object.values(this.state.channel.rtcSessions).map(
@@ -1406,7 +1406,7 @@ export class Rtc {
             if (this.state.selfSession && session.id === this.state.selfSession.id) {
                 this.endCall();
             }
-            delete this.store.threads[createLocalId("mail.channel", session.channelId)]
+            delete this.store.threads[createLocalId("discuss.channel", session.channelId)]
                 ?.rtcSessions[id];
             this.disconnect(session);
         }
@@ -1474,7 +1474,7 @@ export class Rtc {
 
 export const rtcService = {
     dependencies: [
-        "mail.channel.member",
+        "discuss.channel.member",
         "mail.store",
         "notification",
         "rpc",
@@ -1489,7 +1489,7 @@ export const rtcService = {
         services["bus_service"].addEventListener("notification", (notifEvent) => {
             for (const notif of notifEvent.detail) {
                 switch (notif.type) {
-                    case "mail.channel.rtc.session/peer_notification":
+                    case "discuss.channel.rtc.session/peer_notification":
                         {
                             const { sender, notifications } = notif.payload;
                             for (const content of notifications) {
@@ -1497,7 +1497,7 @@ export const rtcService = {
                             }
                         }
                         break;
-                    case "mail.channel.rtc.session/ended":
+                    case "discuss.channel.rtc.session/ended":
                         {
                             const { sessionId } = notif.payload;
                             if (rtc.state.selfSession?.id === sessionId) {

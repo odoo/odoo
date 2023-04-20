@@ -128,7 +128,7 @@ class Challenge(models.Model):
             ('yearly', "Yearly")
         ], default='never',
         string="Report Frequency", required=True)
-    report_message_group_id = fields.Many2one('mail.channel', string="Send a copy to", help="Group that will receive a copy of the report in addition to the user")
+    report_message_group_id = fields.Many2one('discuss.channel', string="Send a copy to", help="Group that will receive a copy of the report in addition to the user")
     report_template_id = fields.Many2one('mail.template', default=lambda self: self._get_report_template(), string="Report Template", required=True)
     remind_update_delay = fields.Integer("Non-updated manual goals will be reminded after", help="Never reminded if no value or zero is specified.")
     last_report_date = fields.Date("Last Report Date", default=fields.Date.today)

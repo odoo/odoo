@@ -1121,19 +1121,19 @@ class TestMailgateway(MailCommon):
 
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink')
     def test_message_process_bounce_records_channel(self):
-        """ Test blacklist allow to multi-bounce and auto update of mail.channel """
+        """ Test blacklist allow to multi-bounce and auto update of discuss.channel """
         other_record = self.env['mail.test.gateway'].create({
             'email_from': 'Another name <%s>' % self.partner_1.email
         })
         yet_other_record = self.env['mail.test.gateway'].create({
             'email_from': 'Yet Another name <%s>' % self.partner_1.email.upper()
         })
-        test_channel = self.env['mail.channel'].create({
+        test_channel = self.env['discuss.channel'].create({
             'name': 'Test',
             'channel_partner_ids': [(4, self.partner_1.id)],
         })
         self.fake_email.write({
-            'model': 'mail.channel',
+            'model': 'discuss.channel',
             'res_id': test_channel.id,
         })
         self.assertIn(self.partner_1, test_channel.channel_partner_ids)
@@ -1254,7 +1254,7 @@ class TestMailgateway(MailCommon):
     @mute_logger('odoo.addons.mail.models.mail_thread', 'odoo.models.unlink', 'odoo.addons.mail.models.mail_mail', 'odoo.tests')
     def test_message_process_references_multi_parent_notflat(self):
         """ Incoming email with multiple references with ``_mail_flat_thread``
-        being False (mail.group/mail.channel behavior like). """
+        being False (mail.group/discuss.channel behavior like). """
         test_record = self.env['mail.test.gateway.groups'].create({
             'alias_name': 'test.gateway',
             'name': 'Test',

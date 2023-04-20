@@ -7,10 +7,10 @@ QUnit.module("pinned messages");
 
 QUnit.test("Pin message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -28,10 +28,10 @@ QUnit.test("Pin message", async (assert) => {
 
 QUnit.test("Unpin message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         pinned_at: "2023-03-30 11:27:11",
     });
@@ -47,11 +47,11 @@ QUnit.test("Unpin message", async (assert) => {
 
 QUnit.test("Deleted messages are not pinned", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "Hello world!",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         pinned_at: "2023-03-30 11:27:11",
     });
@@ -67,10 +67,10 @@ QUnit.test("Deleted messages are not pinned", async (assert) => {
 
 QUnit.test("Open pinned panel from notification", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -91,10 +91,10 @@ QUnit.test("Jump to message", async (assert) => {
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         pinned_at: "2023-04-03 08:15:04",
     });
@@ -102,7 +102,7 @@ QUnit.test("Jump to message", async (assert) => {
         pyEnv["mail.message"].create({
             body: "Non Empty Body ".repeat(25),
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
     }
@@ -122,17 +122,17 @@ QUnit.test("Jump to message from notification", async (assert) => {
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     for (let i = 0; i < 20; i++) {
         pyEnv["mail.message"].create({
             body: "Non Empty Body ".repeat(25),
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
     }

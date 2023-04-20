@@ -15,7 +15,7 @@ class Digest(models.Model):
     kpi_livechat_response_value = fields.Float(digits=(16, 2), compute='_compute_kpi_livechat_response_value')
 
     def _compute_kpi_livechat_rating_value(self):
-        channels = self.env['mail.channel'].search([('channel_type', '=', 'livechat')])
+        channels = self.env['discuss.channel'].search([('channel_type', '=', 'livechat')])
         start, end, __ = self._get_kpi_compute_parameters()
         domain = [
             ('create_date', '>=', start),
@@ -29,7 +29,7 @@ class Digest(models.Model):
 
     def _compute_kpi_livechat_conversations_value(self):
         start, end, __ = self._get_kpi_compute_parameters()
-        self.kpi_livechat_conversations_value = self.env['mail.channel'].search_count([
+        self.kpi_livechat_conversations_value = self.env['discuss.channel'].search_count([
             ('channel_type', '=', 'livechat'),
             ('create_date', '>=', start), ('create_date', '<', end),
         ])

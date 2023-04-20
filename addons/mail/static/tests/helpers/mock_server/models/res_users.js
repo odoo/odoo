@@ -23,7 +23,7 @@ patch(MockServer.prototype, "mail/models/res_users", {
         const user = this.getRecords("res.users", [["id", "in", ids]])[0];
         const userSettings = this._mockResUsersSettings_FindOrCreateForUser(user.id);
         return {
-            channels: this._mockMailChannelChannelInfo(
+            channels: this._mockDiscussChannelChannelInfo(
                 this._mockResPartner_GetChannelsAsMember(user.partner_id).map(
                     (channel) => channel.id
                 )

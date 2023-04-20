@@ -48,7 +48,7 @@ export class RtcSession {
     }
 
     get channel() {
-        return this._store.threads[createLocalId("mail.channel", this.channelId)];
+        return this._store.threads[createLocalId("discuss.channel", this.channelId)];
     }
 
     get isMute() {

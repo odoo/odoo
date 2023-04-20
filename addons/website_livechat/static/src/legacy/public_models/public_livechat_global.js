@@ -23,7 +23,7 @@ Patch({
                  * Override of the LivechatButton to create a testing environment for the chatbot script.
                  *
                  * The biggest difference here is that we don't have a 'im_livechat.channel' to work with.
-                 * The 'mail.channel' holding the conversation between the bot and the testing user has been created
+                 * The 'discuss.channel' holding the conversation between the bot and the testing user has been created
                  * by the 'chatbot/<model("chatbot.script"):chatbot>/test' endpoint.
                  */
                 deleteCookie('im_livechat_session');
