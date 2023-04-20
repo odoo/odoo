@@ -6,6 +6,7 @@ import json
 
 from markupsafe import Markup
 from psycopg2 import IntegrityError
+import re
 from werkzeug.exceptions import BadRequest
 
 from odoo import http, SUPERUSER_ID, _, _lt
@@ -127,6 +128,13 @@ class WebsiteForm(http.Controller):
     def many2many(self, field_label, field_input, *args):
         return [(args[0] if args else (6, 0)) + (self.one2many(field_label, field_input),)]
 
+    def tags(self, field_label, field_input):
+        # Unescape ',' and '\'
+        return [
+            tag.replace('\\,', ',').replace('\\/', '\\')
+            for tag in re.split(r'(?<!\\),', field_input)
+        ]
+
     _input_filters = {
         'char': identity,
         'text': identity,
@@ -142,6 +150,8 @@ class WebsiteForm(http.Controller):
         'float': floating,
         'binary': binary,
         'monetary': floating,
+        # Properties
+        'tags': tags,
     }
 
     # Extract all data sent by the form and sort its on several properties
@@ -155,7 +165,7 @@ class WebsiteForm(http.Controller):
             'meta': '',         # Add metadata if enabled
         }
 
-        authorized_fields = model.with_user(SUPERUSER_ID)._get_form_writable_fields()
+        authorized_fields = model.with_user(SUPERUSER_ID)._get_form_writable_fields(values)
         error_fields = []
         custom_fields = []
 
@@ -179,8 +189,23 @@ class WebsiteForm(http.Controller):
             # If it's a known field
             elif field_name in authorized_fields:
                 try:
-                    input_filter = self._input_filters[authorized_fields[field_name]['type']]
-                    data['record'][field_name] = input_filter(self, field_name, field_value)
+                    if '_property' in authorized_fields[field_name]:
+                        # Collect all properties for a given property field in
+                        # a list.
+                        field_data = authorized_fields[field_name]
+                        properties_field_name = field_data['_property']['field']
+                        del field_data['_property']
+                        properties = data['record'].setdefault(properties_field_name, [])
+                        property_type = authorized_fields[field_name]['type']
+                        # For properties, many2many is stored as an array of
+                        # integers like one2many
+                        filter_type = 'one2many' if property_type == 'many2many' else property_type
+                        input_filter = self._input_filters[filter_type]
+                        field_data['value'] = input_filter(self, field_name, field_value)
+                        properties.append(field_data)
+                    else:
+                        input_filter = self._input_filters[authorized_fields[field_name]['type']]
+                        data['record'][field_name] = input_filter(self, field_name, field_value)
                 except ValueError:
                     error_fields.append(field_name)
 
