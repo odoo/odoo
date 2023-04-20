@@ -275,8 +275,9 @@ class Base(models.AbstractModel):
         :return a dictionnary mapping group_by values to dictionnaries mapping
                 progress bar field values to the related number of records
         """
-        group_by_fname = group_by.partition(':')[0]
-        field_type = self._fields[group_by_fname].type
+        group_by_fullname = group_by.partition(':')[0]
+        group_by_fieldname = group_by_fullname.split(".")[0]  # split on "." in case we group on a property
+        field_type = self._fields[group_by_fieldname].type
         if field_type == 'selection':
             selection_labels = dict(self.fields_get()[group_by]['selection'])
 
@@ -311,14 +312,22 @@ class Base(models.AbstractModel):
 
         # Workaround to match read_group's infrastructure
         # TO DO in master: harmonize this function and readgroup to allow factorization
-        group_by_name = group_by.partition(':')[0]
+        group_by_fullname = group_by.partition(':')[0]
+        group_by_fieldname = group_by_fullname.split(".")[0]  # split on "." in case we group on a property
         group_by_modifier = group_by.partition(':')[2] or 'month'
 
-        records_values = self.search_read(domain or [], [progress_bar['field'], group_by_name])
-        field_type = self._fields[group_by_name].type
+        records_values = self.search_read(domain or [], [progress_bar['field'], group_by_fieldname])
+        field_type = self._fields[group_by_fieldname].type
 
         for record_values in records_values:
-            group_by_value = record_values.pop(group_by_name)
+            group_by_value = record_values.pop(group_by_fieldname)
+            property_name = group_by_fullname.partition('.')[2]
+            if field_type == "properties" and group_by_value:
+                group_by_value = next(
+                    (definition['value'] for definition in group_by_value
+                     if definition['name'] == property_name),
+                    False,
+                )
 
             # Again, imitating what _read_group_format_result and _read_group_prepare_data do
             if group_by_value and field_type in ['date', 'datetime']:

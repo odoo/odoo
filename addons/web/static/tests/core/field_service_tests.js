@@ -22,6 +22,7 @@ function getDefinitions() {
                 is_property: true,
                 searchable: true,
                 record_name: record.display_name,
+                record_id: record.id,
                 ...definition,
             };
         }

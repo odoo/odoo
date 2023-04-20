@@ -52,6 +52,7 @@ QUnit.module("Search", (hooks) => {
                             definition_record: "bar",
                             definition_record_field: "child_properties",
                         },
+                        child_properties: { type: "properties_definition" },
                     },
                     records: [
                         {
@@ -1381,7 +1382,7 @@ QUnit.module("Search", (hooks) => {
             ) {
                 assert.deepEqual(
                     kwargs.domain,
-                    [["id", "=", 2]],
+                    ["&", ["child_properties", "!=", false], ["id", "=", 2]],
                     "Should search only the active parent properties"
                 );
 

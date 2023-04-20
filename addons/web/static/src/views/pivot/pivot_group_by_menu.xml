@@ -15,7 +15,10 @@
                 <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                     <div class="dropdown-divider" role="separator"/>
                 </t>
-                <t t-if="item.options">
+                <t t-if="item.fieldType === 'properties'">
+                    <PropertiesGroupByItem item="item" onGroup.bind="onGroupBySelected"/>
+                </t>
+                <t t-elif="item.options">
                     <Dropdown togglerClass="'o_menu_item' + (item.isActive ? ' selected' : '')">
                         <t t-set-slot="toggler">
                             <t t-esc="item.description"/>

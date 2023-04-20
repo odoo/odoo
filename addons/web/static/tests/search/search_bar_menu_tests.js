@@ -8,6 +8,7 @@ import {
     getNodesTextContent,
     patchDate,
     patchWithCleanup,
+    nextTick,
 } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import {
@@ -64,6 +65,24 @@ QUnit.module("Search", (hooks) => {
                             store: true,
                             sortable: true,
                         },
+                        properties: {
+                            string: "Properties",
+                            type: "properties",
+                            definition_record: "parent_id",
+                            definition_record_field: "properties_definition",
+                            name: "properties",
+                        },
+                        parent_id: {
+                            string: "Parent",
+                            type: "many2one",
+                            relation: "parentModel",
+                            name: "parent_id",
+                        },
+                    },
+                },
+                parentModel: {
+                    fields: {
+                        properties_definition: { type: "properties_definition" },
                     },
                 },
             },
@@ -1904,6 +1923,123 @@ QUnit.module("Search", (hooks) => {
                 ["bar", "!=", false],
                 ["id", "=", 2],
             ]);
+        });
+
+        QUnit.test("group by properties", async function (assert) {
+            assert.expect(11);
+
+            async function mockRPC(route, { method, model, args, kwargs }) {
+                if (method === "web_search_read" && model === "parentModel") {
+                    assert.step("definitionFetched");
+                    const records = [
+                        {
+                            id: 1337,
+                            display_name: "First Parent",
+                            properties_definition: [
+                                {
+                                    name: "my_text",
+                                    type: "text",
+                                    string: "My Text",
+                                },
+                                {
+                                    name: "my_partner",
+                                    type: "many2one",
+                                    string: "My Partner",
+                                    comodel: "res.partner",
+                                },
+                                {
+                                    name: "my_datetime",
+                                    type: "datetime",
+                                    string: "My Datetime",
+                                },
+                            ],
+                        },
+                        {
+                            id: 1338,
+                            display_name: "Second Parent",
+                            properties_definition: [
+                                {
+                                    name: "my_integer",
+                                    type: "integer",
+                                    string: "My Integer",
+                                },
+                            ],
+                        },
+                    ];
+                    return { records };
+                }
+            }
+
+            patchWithCleanup(browser, { setTimeout: (fn) => fn() });
+
+            const searchBar = await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: SearchBar,
+                searchViewId: false,
+                searchViewArch: `
+                    <search>
+                        <filter string="Properties" name="properties" context="{'group_by': 'properties'}"/>
+                    </search>
+                `,
+                hideCustomGroupBy: true,
+                searchMenuTypes: ["groupBy"],
+                mockRPC,
+            });
+
+            // definition is fetched only when we open the properties menu
+            assert.verifySteps([]);
+
+            await click(target, ".o_searchview_dropdown_toggler");
+
+            // definition is fetched only when we open the properties menu
+            assert.verifySteps([]);
+            const items = [...target.querySelectorAll(".o_menu_item")];
+            assert.deepEqual(
+                items.map((item) => item.innerText),
+                ["Properties"]
+            );
+
+            await click(target, ".o_accordion_toggle");
+            await nextTick();
+
+            // now that we open the properties we fetch the definition
+            assert.verifySteps(["definitionFetched"]);
+
+            const propertiesItems = [
+                ...target.querySelectorAll(".o_accordion_values .dropdown-item"),
+            ];
+            assert.deepEqual(
+                propertiesItems.map((item) => item.innerText),
+                [
+                    "My Text (First Parent)",
+                    "My Partner (First Parent)",
+                    "My Datetime (First Parent)",
+                    "My Integer (Second Parent)",
+                ]
+            );
+
+            // open the datetime item
+            await click(propertiesItems[2]);
+
+            const optionsItems = [
+                ...target.querySelectorAll(
+                    ".o_accordion_values .o_accordion_values .dropdown-item"
+                ),
+            ];
+            assert.deepEqual(
+                optionsItems.map((item) => item.innerText),
+                ["Year", "Quarter", "Month", "Week", "Day"]
+            );
+
+            assert.deepEqual(searchBar.env.searchModel.groupBy, []);
+            assert.deepEqual(getFacetTexts(target), []);
+
+            await optionsItems[1].click();
+            await nextTick();
+
+            assert.deepEqual(searchBar.env.searchModel.groupBy, ["properties.my_datetime:quarter"]);
+            assert.deepEqual(getFacetTexts(target), ["My Datetime: Quarter"]);
         });
     });
 });
