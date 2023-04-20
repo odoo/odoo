@@ -480,17 +480,6 @@
         </we-button-group>
     </div>
 
-    <div data-selector="img" data-exclude="[data-oe-type='image'] > img, [data-oe-xpath]">
-        <we-input string="Description" class="o_we_large"
-            data-select-attribute="" data-attribute-name="alt"
-            placeholder="Alt tag"
-            title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."/>
-        <we-input string="Tooltip" class="o_we_large"
-            data-select-attribute="" data-attribute-name="title"
-            placeholder="Title tag"
-            title="'Title tag' is shown as a tooltip when you hover the picture."/>
-    </div>
-
     <t t-set="no_animations" t-value="False"/>
     <div data-js="ImageTools"
          data-selector="img">
@@ -518,7 +507,7 @@
                         <div class="o_scroll_shapes_basic">
                             <we-title class="">Geometrics</we-title>
                             <we-select-page string="Geometrics">
-                                <we-button data-set-img-shape="web_editor/geometric/geo_square" data-select-label="Square" data-no-transform="true"/>
+                                <we-button data-set-img-shape="web_editor/geometric/geo_square" data-no-transform="true" data-name="shape_img_square_opt"/> <!-- hidden and only used for hover effects -->
                                 <we-button data-set-img-shape="web_editor/geometric/geo_shuriken" data-select-label="Shuriken" data-no-transform="true"/>
                                 <we-button data-set-img-shape="web_editor/geometric/geo_diamond" data-select-label="Diamond" data-no-transform="true"/>
                                 <we-button data-set-img-shape="web_editor/geometric/geo_triangle" data-select-label="Triangle"/>
@@ -710,7 +699,8 @@
                         </div>
                     </div>
                 </we-select-pager>
-                <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape_img_opt" class="o_we_image_shape_remove o_we_bg_danger fa fa-fw fa-times"/>
+                <we-button data-set-img-shape="" data-no-preview="true" data-label="None" data-dependencies="shape_img_opt"
+                    class="o_we_image_shape_remove o_we_bg_danger fa fa-fw fa-times" data-name="remove_img_shape_opt"/>
             </we-row>
             <we-row string="Colors" class="o_we_sublevel_1">
                 <we-colorpicker data-set-img-shape-color="true" data-dependencies="shape_img_opt" data-name="img-shape-color-0" data-color-id="0"/>
@@ -730,7 +720,14 @@
                     data-no-preview="true" data-dependencies="shape_img_opt" title="Rotate right"/>
             </we-row>
         </div>
-
+        <we-input string="Description" class="o_we_large"
+            data-select-attribute="" data-attribute-name="alt"
+            placeholder="Alt tag"
+            title="'Alt tag' specifies an alternate text for an image, if the image cannot be displayed (slow connection, missing image, screen reader ...)."/>
+        <we-input string="Tooltip" class="o_we_large"
+            data-select-attribute="" data-attribute-name="title"
+            placeholder="Title tag"
+            title="'Title tag' is shown as a tooltip when you hover the picture."/>
         <we-row string="Transform">
             <we-button class="fa fa-fw fa-crop" data-crop="true" data-no-preview="true" title="Crop Image"/>
             <we-button class="o_we_bg_danger ms-0 border-start-0" data-reset-crop="" data-no-preview="true" title="Reset crop">
@@ -744,7 +741,7 @@
 
         <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
 
-        <we-button-group string="Width" data-css-property="width">
+        <we-button-group string="Size" data-css-property="width">
             <we-button data-select-style="" title="Resize Default">Default</we-button>
             <we-button data-select-style="25%" title="Resize Quarter">25%</we-button>
             <we-button data-select-style="50%" title="Resize Half">50%</we-button>
