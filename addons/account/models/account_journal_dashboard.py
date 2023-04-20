@@ -61,13 +61,14 @@ class account_journal(models.Model):
         today = fields.Date.context_today(self)
         activities = defaultdict(list)
         # search activity on move on the journal
+        lang = self.env.user.lang or get_lang(self.env).code
         sql_query = """
             SELECT activity.id,
                    activity.res_id,
                    activity.res_model,
                    activity.summary,
                    CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
-                   act_type.name as act_type_name,
+                   COALESCE(act_type.name->> %(lang)s, act_type.name->>'en_US') as act_type_name,
                    act_type.category as activity_category,
                    activity.date_deadline,
                    move.date,
@@ -79,7 +80,7 @@ class account_journal(models.Model):
              WHERE move.journal_id = ANY(%(ids)s)
                AND (act_type.category != 'tax_report' OR (act_type.category = 'tax_report' AND activity.date_deadline <= %(today)s))
         """
-        self.env.cr.execute(sql_query, {'ids': self.ids, 'today': today})
+        self.env.cr.execute(sql_query, {'ids': self.ids, 'today': today, 'lang': lang})
         for activity in self.env.cr.dictfetchall():
             act = {
                 'id': activity['id'],
