@@ -298,6 +298,8 @@ class StockMoveLine(models.Model):
                 vals['company_id'] = self.env['stock.picking'].browse(vals['picking_id']).company_id.id
             if vals.get('quant_id'):
                 vals.update(self._copy_quant_info(vals))
+            if self.env.context.get('import_file') and vals.get('product_uom_qty') != 0:
+                raise UserError(_("It is not allow to import reserved quantity, you have to use the quantity directly."))
 
         mls = super().create(vals_list)
 
