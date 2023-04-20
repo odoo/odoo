@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Japan - Accounting',
-    'version': '2.2',
+    'version': '2.3',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
