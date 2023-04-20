@@ -318,12 +318,19 @@ class TestExpenses(TestExpenseCommon):
             'name': 'Expense for Dick Tracy',
             'employee_id': self.expense_employee.id,
         })
+        tax_account = self.env['account.account'].search([('account_type', '=', 'liability_current')], limit=1)
         tax = self.env['account.tax'].create({
             'name': 'Tax Expense 10%',
             'amount': 10,
             'amount_type': 'percent',
             'type_tax_use': 'purchase',
             'price_include': True,
+            'repartition_line_ids': [
+                Command.create({'document_type': 'invoice', 'repartition_type': 'base'}),
+                Command.create({'document_type': 'invoice', 'repartition_type': 'tax', 'account_id': tax_account.id}),
+                Command.create({'document_type': 'refund', 'repartition_type': 'base'}),
+                Command.create({'document_type': 'refund', 'repartition_type': 'tax', 'account_id': tax_account.id}),
+            ]
         })
         self.env['hr.expense'].create({
             'name': 'Choucroute Saucisse',
