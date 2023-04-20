@@ -23,7 +23,7 @@ class Contract(models.Model):
 
     name = fields.Char('Contract Reference', required=True)
     active = fields.Boolean(default=True)
-    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type")
+    structure_type_id = fields.Many2one('hr.payroll.structure.type', string="Salary Structure Type", compute="_compute_structure_type_id", readonly=False, store=True)
     employee_id = fields.Many2one('hr.employee', string='Employee', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     department_id = fields.Many2one('hr.department', compute='_compute_employee_contract', store=True, readonly=False,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", string="Department")
@@ -95,23 +95,19 @@ class Contract(models.Model):
             contract.resource_calendar_id = contract.employee_id.resource_calendar_id
             contract.company_id = contract.employee_id.company_id
 
-    @api.onchange('company_id')
-    def _onchange_company_id(self):
-        if self.company_id:
-            structure_types = self.env['hr.payroll.structure.type'].search([
-                '|',
-                ('country_id', '=', self.company_id.country_id.id),
-                ('country_id', '=', False)])
-            if structure_types:
-                self.structure_type_id = structure_types[0]
-            elif self.structure_type_id not in structure_types:
-                self.structure_type_id = False
+    @api.depends('company_id')
+    def _compute_structure_type_id(self):
+        structure_type_id = self.env['hr.payroll.structure.type'].search([('country_id', '=', self.company_id.country_id.id)], limit=1)
+        if not structure_type_id:
+            structure_type_id = self.env['hr.payroll.structure.type'].search([('country_id', '=', False)], limit=1)
+        for contract in self:
+            contract.structure_type_id = structure_type_id
 
     @api.onchange('structure_type_id')
     def _onchange_structure_type_id(self):
         default_calendar = self.structure_type_id.default_resource_calendar_id
         if default_calendar and default_calendar.company_id == self.company_id:
-            self.resource_calendar_id = self.structure_type_id.default_resource_calendar_id
+            self.resource_calendar_id = default_calendar
 
     @api.constrains('employee_id', 'state', 'kanban_state', 'date_start', 'date_end')
     def _check_current_contract(self):
