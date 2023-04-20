@@ -239,3 +239,7 @@ class StockMove(models.Model):
                         'mo_id': production.id,
                         'product_qty': production.product_uom_qty - quantity_to_remove
                     }).change_prod_qty()
+
+    def _is_subcontract_return(self):
+        self.ensure_one()
+        return not self.is_subcontract and all(self.move_orig_ids.mapped('is_subcontract'))
