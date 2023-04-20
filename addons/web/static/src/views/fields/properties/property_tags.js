@@ -193,10 +193,11 @@ export class PropertyTags extends Component {
             return;
         }
 
-        if (!await this.props.checkDefinitionWriteAccess()) {
-            this.notification.add(_lt("You need to be able to edit parent first to add property tags"), {
-                type: "warning",
-            });
+        if (!(await this.props.checkDefinitionWriteAccess())) {
+            this.notification.add(
+                _lt("You need to be able to edit parent first to add property tags"),
+                { type: "warning" }
+            );
             return;
         }
 

@@ -236,10 +236,11 @@ export class PropertiesField extends Component {
     async onPropertyEdit(event, propertyName) {
         event.stopPropagation();
         event.preventDefault();
-        if (!await this.checkDefinitionWriteAccess()) {
-            this.notification.add(_lt("You need to be able to edit parent first to configure property fields"), {
-                type: "warning",
-            });
+        if (!(await this.checkDefinitionWriteAccess())) {
+            this.notification.add(
+                _lt("You need to be able to edit parent first to configure property fields"),
+                { type: "warning" }
+            );
             return;
         }
         if (event.target.classList.contains("disabled")) {
@@ -300,10 +301,11 @@ export class PropertiesField extends Component {
     }
 
     async onPropertyCreate() {
-        if (!await this.checkDefinitionWriteAccess()) {
-            this.notification.add(_lt("You need to be able to edit parent first to configure property fields"), {
-                type: "warning",
-            });
+        if (!(await this.checkDefinitionWriteAccess())) {
+            this.notification.add(
+                _lt("You need to be able to edit parent first to configure property fields"),
+                { type: "warning" }
+            );
             return;
         }
         const propertiesDefinitions = this.propertiesList || [];
@@ -348,11 +350,9 @@ export class PropertiesField extends Component {
                 this.definitionRecordModel,
                 "check_access_rule",
                 [this.definitionRecordId],
-                {
-                    operation: "write",
-                }
+                { operation: "write" }
             );
-        } catch (_e) { // eslint-disable-line no-unused-vars
+        } catch {
             return false;
         }
         return true;
