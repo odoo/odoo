@@ -605,7 +605,7 @@ class IrMailServer(models.Model):
 
         x_forge_to = message['X-Forge-To']
         if x_forge_to:
-            # `To:` header forged, e.g. for posting on mail.channels, to avoid confusion
+            # `To:` header forged, e.g. for posting on discuss.channels, to avoid confusion
             del message['X-Forge-To']
             del message['To']           # avoid multiple To: headers!
             message['To'] = x_forge_to

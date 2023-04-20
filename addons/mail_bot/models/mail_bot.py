@@ -16,7 +16,7 @@ class MailBot(models.AbstractModel):
         The logic will only be applied if odoobot is in a chat with a user or
         if someone pinged odoobot.
 
-         :param record: the mail_thread (or mail_channel) where the user
+         :param record: the mail_thread (or discuss_channel) where the user
             message was posted/odoobot will answer.
          :param values: msg_values of the message_post or other values needed by logic
          :param command: the name of the called command if the logic is not triggered by a message_post
@@ -227,7 +227,7 @@ class MailBot(models.AbstractModel):
 
     def _is_bot_in_private_channel(self, record):
         odoobot_id = self.env['ir.model.data']._xmlid_to_res_id("base.partner_root")
-        if record._name == 'mail.channel' and record.channel_type == 'chat':
+        if record._name == 'discuss.channel' and record.channel_type == 'chat':
             return odoobot_id in record.with_context(active_test=False).channel_partner_ids.ids
         return False
 

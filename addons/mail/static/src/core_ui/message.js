@@ -357,7 +357,7 @@ export class Message extends Component {
         if (this.props.thread.seen_message_id === previousMessageId) {
             return;
         }
-        return this.rpc("/mail/channel/set_last_seen_message", {
+        return this.rpc("/discuss/channel/set_last_seen_message", {
             channel_id: this.message.originThread.id,
             last_message_id: previousMessageId,
             allow_older: true,

@@ -161,8 +161,8 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
         const activeId =
             pActiveId ?? context.active_id ?? params.default_active_id ?? "mail.box_inbox";
         let [threadModel, threadId] =
-            typeof activeId === "number" ? ["mail.channel", activeId] : activeId.split("_");
-        if (threadModel === "mail.channel") {
+            typeof activeId === "number" ? ["discuss.channel", activeId] : activeId.split("_");
+        if (threadModel === "discuss.channel") {
             threadId = parseInt(threadId, 10);
         }
         // TODO-DISCUSS-REFACTORING: remove when activeId will be handled.
@@ -181,7 +181,7 @@ function getOpenDiscuss(webClient, { context = {}, params = {}, ...props } = {})
             }
             let loadMessageRoute = `/mail/${threadId}/messages`;
             if (Number.isInteger(threadId)) {
-                loadMessageRoute = "/mail/channel/messages";
+                loadMessageRoute = "/discuss/channel/messages";
             }
             registry.category("mock_server_callbacks").add(
                 loadMessageRoute,

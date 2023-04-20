@@ -23,16 +23,16 @@ class IrWebsocket(models.AbstractModel):
         req = request or wsrequest
         channels = list(channels)  # do not alter original list
         guest_sudo = self.env['mail.guest']._get_guest_from_request(req).sudo()
-        mail_channels = self.env['mail.channel']
+        discuss_channels = self.env['discuss.channel']
         if req.session.uid:
             partner = self.env.user.partner_id
-            mail_channels = partner.channel_ids
+            discuss_channels = partner.channel_ids
             channels.append(partner)
         elif guest_sudo:
-            mail_channels = guest_sudo.channel_ids
+            discuss_channels = guest_sudo.channel_ids
             channels.append(guest_sudo)
-        for mail_channel in mail_channels:
-            channels.append(mail_channel)
+        for discuss_channel in discuss_channels:
+            channels.append(discuss_channel)
         return super()._build_bus_channel_list(channels)
 
     def _update_bus_presence(self, inactivity_period, im_status_ids_by_model):

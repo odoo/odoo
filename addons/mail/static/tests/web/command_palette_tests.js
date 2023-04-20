@@ -29,8 +29,8 @@ QUnit.test("open the chatWindow of a user from the command palette", async (asse
 
 QUnit.test("open the chatWindow of a channel from the command palette", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "general" });
-    pyEnv["mail.channel"].create({ name: "project" });
+    pyEnv["discuss.channel"].create({ name: "general" });
+    pyEnv["discuss.channel"].create({ name: "project" });
     const { advanceTime } = await start({ hasTimeControl: true });
     triggerHotkey("control+k");
     await nextTick();

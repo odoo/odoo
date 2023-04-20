@@ -8,9 +8,8 @@ from odoo.osv import expression
 
 
 class ChannelMember(models.Model):
-    _name = 'mail.channel.member'
+    _name = 'discuss.channel.member'
     _description = 'Listeners of a Channel'
-    _table = 'mail_channel_member'
     _rec_names_search = ['partner_id', 'guest_id']
     _bypass_create_check = {}
 
@@ -19,7 +18,7 @@ class ChannelMember(models.Model):
     guest_id = fields.Many2one(string="Guest", comodel_name='mail.guest', ondelete='cascade', readonly=True, index=True)
     partner_email = fields.Char('Email', related='partner_id.email', readonly=False)
     # channel
-    channel_id = fields.Many2one('mail.channel', string='Channel', ondelete='cascade', readonly=True, required=True)
+    channel_id = fields.Many2one('discuss.channel', string='Channel', ondelete='cascade', readonly=True, required=True)
     # state
     custom_channel_name = fields.Char('Custom channel name')
     fetched_message_id = fields.Many2one('mail.message', string='Last Fetched')
@@ -31,8 +30,8 @@ class ChannelMember(models.Model):
     last_interest_dt = fields.Datetime("Last Interest", default=fields.Datetime.now, help="Contains the date and time of the last interesting event that happened in this channel for this partner. This includes: creating, joining, pinning, and new message posted.")
     last_seen_dt = fields.Datetime("Last seen date")
     # RTC
-    rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='mail.channel.rtc.session', inverse_name='channel_member_id')
-    rtc_inviting_session_id = fields.Many2one('mail.channel.rtc.session', string='Ringing session')
+    rtc_session_ids = fields.One2many(string="RTC Sessions", comodel_name='discuss.channel.rtc.session', inverse_name='channel_member_id')
+    rtc_inviting_session_id = fields.Many2one('discuss.channel.rtc.session', string='Ringing session')
 
     @api.depends('channel_id.message_ids', 'seen_message_id')
     def _compute_message_unread(self):
@@ -41,18 +40,18 @@ class ChannelMember(models.Model):
             self.flush_recordset(['channel_id', 'seen_message_id'])
             self.env.cr.execute("""
                      SELECT count(mail_message.id) AS count,
-                            mail_channel_member.id
+                            discuss_channel_member.id
                        FROM mail_message
-                 INNER JOIN mail_channel_member
-                         ON mail_channel_member.channel_id = mail_message.res_id
-                      WHERE mail_message.model = 'mail.channel'
+                 INNER JOIN discuss_channel_member
+                         ON discuss_channel_member.channel_id = mail_message.res_id
+                      WHERE mail_message.model = 'discuss.channel'
                         AND mail_message.message_type NOT IN ('notification', 'user_notification')
                         AND (
-                            mail_message.id > mail_channel_member.seen_message_id
-                         OR mail_channel_member.seen_message_id IS NULL
+                            mail_message.id > discuss_channel_member.seen_message_id
+                         OR discuss_channel_member.seen_message_id IS NULL
                         )
-                        AND mail_channel_member.id IN %(ids)s
-                   GROUP BY mail_channel_member.id
+                        AND discuss_channel_member.id IN %(ids)s
+                   GROUP BY discuss_channel_member.id
             """, {'ids': tuple(self.ids)})
             unread_counter_by_member = {res['id']: res['count'] for res in self.env.cr.dictfetchall()}
             for member in self:
@@ -64,8 +63,8 @@ class ChannelMember(models.Model):
         return [(record.id, record.partner_id.name or record.guest_id.name) for record in self]
 
     def init(self):
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_member_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)
-        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS mail_channel_member_guest_unique ON %s (channel_id, guest_id) WHERE guest_id IS NOT NULL" % self._table)
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS discuss_channel_member_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)
+        self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS discuss_channel_member_guest_unique ON %s (channel_id, guest_id) WHERE guest_id IS NOT NULL" % self._table)
 
     _sql_constraints = [
         ("partner_or_guest_exists", "CHECK((partner_id IS NOT NULL AND guest_id IS NULL) OR (partner_id IS NULL AND guest_id IS NOT NULL))", "A channel member must be a partner or a guest."),
@@ -82,7 +81,7 @@ class ChannelMember(models.Model):
         if not self.env.is_admin() and not self.env.context.get('mail_create_bypass_create_check') is self._bypass_create_check:
             for vals in vals_list:
                 if 'channel_id' in vals:
-                    channel_id = self.env['mail.channel'].browse(vals['channel_id'])
+                    channel_id = self.env['discuss.channel'].browse(vals['channel_id'])
                     if not channel_id._can_invite(vals.get('partner_id')):
                         raise AccessError(_('This user can not be added in this channel'))
         return super().create(vals_list)
@@ -116,14 +115,14 @@ class ChannelMember(models.Model):
         :return: A record set containing the channel member if found, or an
             empty record set otherwise. In case of guest, the record is returned
             with the 'guest' record in the context.
-        :rtype: mail.channel.member
+        :rtype: discuss.channel.member
         """
         if request.session.uid:
-            return self.env['mail.channel.member'].sudo().search([('channel_id', '=', channel_id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
+            return self.env['discuss.channel.member'].sudo().search([('channel_id', '=', channel_id), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
         guest = self.env['mail.guest']._get_guest_from_request(request)
         if guest:
-            return guest.env['mail.channel.member'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
-        return self.env['mail.channel.member'].sudo()
+            return guest.env['discuss.channel.member'].sudo().search([('channel_id', '=', channel_id), ('guest_id', '=', guest.id)], limit=1)
+        return self.env['discuss.channel.member'].sudo()
 
     def _notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
@@ -131,13 +130,13 @@ class ChannelMember(models.Model):
         """
         notifications = []
         for member in self:
-            formatted_member = member._mail_channel_member_format().get(member)
+            formatted_member = member._discuss_channel_member_format().get(member)
             formatted_member['isTyping'] = is_typing
-            notifications.append([member.channel_id, 'mail.channel.member/typing_status', formatted_member])
-            notifications.append([member.channel_id.uuid, 'mail.channel.member/typing_status', formatted_member])  # notify livechat users
+            notifications.append([member.channel_id, 'discuss.channel.member/typing_status', formatted_member])
+            notifications.append([member.channel_id.uuid, 'discuss.channel.member/typing_status', formatted_member])  # notify livechat users
         self.env['bus.bus']._sendmany(notifications)
 
-    def _mail_channel_member_format(self, fields=None):
+    def _discuss_channel_member_format(self, fields=None):
         if not fields:
             fields = {'id': True, 'channel': {}, 'persona': {}}
         members_formatted_data = {}
@@ -169,7 +168,7 @@ class ChannelMember(models.Model):
         check_rtc_session_ids = (check_rtc_session_ids or []) + self.rtc_session_ids.ids
         self.channel_id._rtc_cancel_invitations(member_ids=self.ids)
         self.rtc_session_ids.unlink()
-        rtc_session = self.env['mail.channel.rtc.session'].create({'channel_member_id': self.id})
+        rtc_session = self.env['discuss.channel.rtc.session'].create({'channel_member_id': self.id})
         current_rtc_sessions, outdated_rtc_sessions = self._rtc_sync_sessions(check_rtc_session_ids=check_rtc_session_ids)
         res = {
             'iceServers': self.env['mail.ice.server']._get_ice_servers() or False,
@@ -183,7 +182,7 @@ class ChannelMember(models.Model):
             self.channel_id.message_post(body=_("%s started a live conference", self.partner_id.name or self.guest_id.name), message_type='notification')
             invited_members = self._rtc_invite_members()
             if invited_members:
-                res['invitedMembers'] = [('insert', list(invited_members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
+                res['invitedMembers'] = [('insert', list(invited_members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
         return res
 
     def _rtc_leave_call(self):
@@ -204,7 +203,7 @@ class ChannelMember(models.Model):
         """
         self.ensure_one()
         self.channel_id.rtc_session_ids._delete_inactive_rtc_sessions()
-        check_rtc_sessions = self.env['mail.channel.rtc.session'].browse([int(check_rtc_session_id) for check_rtc_session_id in (check_rtc_session_ids or [])])
+        check_rtc_sessions = self.env['discuss.channel.rtc.session'].browse([int(check_rtc_session_id) for check_rtc_session_id in (check_rtc_session_ids or [])])
         return self.channel_id.rtc_session_ids, check_rtc_sessions - self.channel_id.rtc_session_ids
 
     def _rtc_invite_members(self, member_ids=None):
@@ -222,7 +221,7 @@ class ChannelMember(models.Model):
         if member_ids:
             channel_member_domain = expression.AND([channel_member_domain, [('id', 'in', member_ids)]])
         invitation_notifications = []
-        members = self.env['mail.channel.member'].search(channel_member_domain)
+        members = self.env['discuss.channel.member'].search(channel_member_domain)
         for member in members:
             member.rtc_inviting_session_id = self.rtc_session_ids.id
             if member.partner_id:
@@ -232,13 +231,13 @@ class ChannelMember(models.Model):
             invitation_notifications.append((target, 'mail.record/insert', {
                 'Thread': {
                     'id': self.channel_id.id,
-                    'model': 'mail.channel',
+                    'model': 'discuss.channel',
                     'rtcInvitingSession': self.rtc_session_ids._mail_rtc_session_format(),
                 }
             }))
         self.env['bus.bus']._sendmany(invitation_notifications)
         if members:
-            channel_data = {'id': self.channel_id.id, 'model': 'mail.channel'}
-            channel_data['invitedMembers'] = [('insert', list(members._mail_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
+            channel_data = {'id': self.channel_id.id, 'model': 'discuss.channel'}
+            channel_data['invitedMembers'] = [('insert', list(members._discuss_channel_member_format(fields={'id': True, 'channel': {}, 'persona': {'partner': {'id', 'name', 'im_status'}, 'guest': {'id', 'name', 'im_status'}}}).values()))]
             self.env['bus.bus']._sendone(self.channel_id, 'mail.record/insert', {'Thread': channel_data})
         return members

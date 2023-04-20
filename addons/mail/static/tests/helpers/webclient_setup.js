@@ -119,7 +119,7 @@ export const setupManager = {
             "bus.parameters": busParametersService,
             im_status: imStatusService,
             effect: effectService,
-            "mail.channel.member": channelMemberService,
+            "discuss.channel.member": channelMemberService,
             "mail.context": contextService,
             "mail.notification.permission": notificationPermissionService,
             "mail.suggestion": suggestionService,

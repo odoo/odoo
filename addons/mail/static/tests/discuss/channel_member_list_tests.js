@@ -11,7 +11,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -30,7 +30,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -48,7 +48,7 @@ QUnit.test(
 QUnit.test("should have correct members in member list", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -69,7 +69,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -88,7 +88,7 @@ QUnit.test("chat with member should be opened after clicking on channel member",
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -113,13 +113,13 @@ QUnit.test(
             const partnerId = pyEnv["res.partner"].create({ name: "name" + i });
             channel_member_ids.push([0, 0, { partner_id: partnerId }]);
         }
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_type: "channel",
         });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
-        pyEnv["mail.channel"].write([channelId], { channel_member_ids });
+        pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
         await click("button[title='Show Member List']");
         assert.containsOnce($, "button:contains(Load more)");
     }
@@ -133,13 +133,13 @@ QUnit.test("Load more button should load more members", async (assert) => {
         const partnerId = pyEnv["res.partner"].create({ name: "name" + i });
         channel_member_ids.push([0, 0, { partner_id: partnerId }]);
     }
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_type: "channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
-    pyEnv["mail.channel"].write([channelId], { channel_member_ids });
+    pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("button[title='Show Member List']");
     await click("button[title='Load more']");
     assert.containsN($, ".o-mail-ChannelMember", 102);
@@ -147,12 +147,12 @@ QUnit.test("Load more button should load more members", async (assert) => {
 
 QUnit.test("Channel member count update after user joined", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    const thread = env.services["mail.store"].threads[createLocalId("mail.channel", channelId)];
+    const thread = env.services["mail.store"].threads[createLocalId("discuss.channel", channelId)];
     assert.strictEqual(thread.memberCount, 1);
     await click("button[title='Show Member List']");
     await click("button[title='Add Users']");
@@ -165,7 +165,7 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ name: "Dobby" });
     const partnerId = pyEnv["res.partner"].create({ name: "Dobby", user_ids: [userId] });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -174,9 +174,9 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    const thread = env.services["mail.store"].threads[createLocalId("mail.channel", channelId)];
+    const thread = env.services["mail.store"].threads[createLocalId("discuss.channel", channelId)];
     assert.strictEqual(thread.memberCount, 2);
-    await env.services.orm.call("mail.channel", "action_unfollow", [channelId], {
+    await env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },
     });
     await nextTick();

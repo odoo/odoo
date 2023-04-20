@@ -3,7 +3,7 @@
 import { cleanTerm } from "@mail/utils/format";
 import { registry } from "@web/core/registry";
 
-const commandRegistry = registry.category("mail.channel_commands");
+const commandRegistry = registry.category("discuss.channel_commands");
 
 export class SuggestionService {
     constructor(env, services) {
@@ -15,7 +15,7 @@ export class SuggestionService {
         /** @type {import("@mail/core/persona_service").PersonaService} */
         this.personaService = services["mail.persona"];
         /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["mail.channel.member"];
+        this.channelMemberService = services["discuss.channel.member"];
     }
 
     getSupportedDelimiters(thread) {
@@ -63,14 +63,14 @@ export class SuggestionService {
 
     async fetchThreads(term) {
         const suggestedThreads = await this.orm.call(
-            "mail.channel",
+            "discuss.channel",
             "get_mention_suggestions",
             [],
             { search: term }
         );
         suggestedThreads.map((data) => {
             this.threadService.insert({
-                model: "mail.channel",
+                model: "discuss.channel",
                 ...data,
             });
         });
@@ -352,7 +352,7 @@ export class SuggestionService {
 }
 
 export const suggestionService = {
-    dependencies: ["orm", "mail.store", "mail.thread", "mail.persona", "mail.channel.member"],
+    dependencies: ["orm", "mail.store", "mail.thread", "mail.persona", "discuss.channel.member"],
     start(env, services) {
         return new SuggestionService(env, services);
     },

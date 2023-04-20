@@ -11,11 +11,11 @@ QUnit.module("messaging service (patch)");
 QUnit.test("Notify message received out of focus", async (assert) => {
     const pyEnv = await startServer();
     const senderId = pyEnv["res.users"].create({ name: "Bob" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "Livechat 1",
         channel_type: "livechat",
     });
-    const [channel] = pyEnv["mail.channel"].searchRead([["id", "=", channelId]]);
+    const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     const { env } = await start({
         services: {
             notification: makeFakeNotificationService((message, { title }) => {

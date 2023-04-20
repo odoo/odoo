@@ -64,10 +64,10 @@ QUnit.test("composer text input: basic rendering when logging note", async (asse
 });
 
 QUnit.test(
-    "composer text input: basic rendering when linked thread is a mail.channel",
+    "composer text input: basic rendering when linked thread is a discuss.channel",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "dofus-disco" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "dofus-disco" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsOnce($, ".o-mail-Composer");
@@ -79,7 +79,7 @@ QUnit.test(
     "composer text input placeholder should contain channel name when thread does not have specific correspondent",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_type: "channel",
             name: "General",
         });
@@ -91,7 +91,7 @@ QUnit.test(
 
 QUnit.test("add an emoji", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "swamp-safari" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "swamp-safari" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -103,7 +103,7 @@ QUnit.test(
     "Exiting emoji picker brings the focus back to the Composer textarea",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
@@ -114,7 +114,7 @@ QUnit.test(
 
 QUnit.test("add an emoji after some text", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "beyblade-room" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "beyblade-room" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Blabla");
@@ -127,7 +127,7 @@ QUnit.test("add an emoji after some text", async (assert) => {
 
 QUnit.test("add emoji replaces (keyboard) text selection", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "pétanque-tournament-14" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const textarea = $(".o-mail-Composer-input")[0];
@@ -143,7 +143,7 @@ QUnit.test("add emoji replaces (keyboard) text selection", async (assert) => {
 
 QUnit.test("Cursor is positioned after emoji after adding it", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "pétanque-tournament-14" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const textarea = $(".o-mail-Composer-input")[0];
@@ -158,7 +158,7 @@ QUnit.test("Cursor is positioned after emoji after adding it", async (assert) =>
 
 QUnit.test("selected text is not replaced after cancelling the selection", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "pétanque-tournament-14" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "pétanque-tournament-14" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const textarea = $(".o-mail-Composer-input")[0];
@@ -178,7 +178,7 @@ QUnit.test(
     "Selection is kept when changing channel and going back to original channel",
     async (assert) => {
         const pyEnv = await startServer();
-        const [channelId] = pyEnv["mail.channel"].create([
+        const [channelId] = pyEnv["discuss.channel"].create([
             { name: "channel1" },
             { name: "channel2" },
         ]);
@@ -199,7 +199,7 @@ QUnit.test(
     "click on emoji button, select emoji, then re-click on button should show emoji picker",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "roblox-skateboarding" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "roblox-skateboarding" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
@@ -211,7 +211,7 @@ QUnit.test(
 
 QUnit.test("keep emoji picker scroll value when re-opening it", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "roblox-carsurfing" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "roblox-carsurfing" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -223,7 +223,7 @@ QUnit.test("keep emoji picker scroll value when re-opening it", async (assert) =
 
 QUnit.test("reset emoji picker scroll value after an emoji is picked", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "roblox-fingerskating" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "roblox-fingerskating" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
@@ -237,14 +237,14 @@ QUnit.test(
     "keep emoji picker scroll value independent if two or more different emoji pickers are used",
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "roblox-jaywalking" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "roblox-jaywalking" });
         const { openDiscuss } = await start();
         pyEnv["mail.message"].create({
             author_id: pyEnv.currentPartnerId,
             body: "This is a message",
             attachment_ids: [],
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
         await openDiscuss(channelId);
@@ -269,10 +269,10 @@ QUnit.test(
 
 QUnit.test('do not send typing notification on typing "/" command', async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "channel" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
     const { openDiscuss } = await start({
         async mockRPC(route, args) {
-            if (route === "/mail/channel/notify_typing") {
+            if (route === "/discuss/channel/notify_typing") {
                 assert.step(`notify_typing:${args.is_typing}`);
             }
         },
@@ -284,7 +284,7 @@ QUnit.test('do not send typing notification on typing "/" command', async (asser
 
 QUnit.test("composer text input cleared on message post", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "au-secours-aidez-moi" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "au-secours-aidez-moi" });
     const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === "/mail/message/post") {
@@ -303,7 +303,7 @@ QUnit.test("composer text input cleared on message post", async (assert) => {
 
 QUnit.test("send message only once when button send is clicked twice quickly", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "nether-picnic" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "nether-picnic" });
     const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === "/mail/message/post") {
@@ -320,9 +320,9 @@ QUnit.test("send message only once when button send is clicked twice quickly", a
     assert.verifySteps(["message_post"]);
 });
 
-QUnit.test('send button on mail.channel should have "Send" as label', async (assert) => {
+QUnit.test('send button on discuss.channel should have "Send" as label', async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "minecraft-wii-u" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.strictEqual($(".o-mail-Composer-send").text().trim(), "Send");
@@ -331,7 +331,7 @@ QUnit.test('send button on mail.channel should have "Send" as label', async (ass
 QUnit.test("Show send button in mobile", async (assert) => {
     const pyEnv = await startServer();
     patchUiSize({ size: SIZES.SM });
-    pyEnv["mail.channel"].create({ name: "minecraft-wii-u" });
+    pyEnv["discuss.channel"].create({ name: "minecraft-wii-u" });
     const { openDiscuss } = await start();
     await openDiscuss();
     await click("button:contains(Channel)");
@@ -344,7 +344,7 @@ QUnit.test(
     "composer textarea content is retained when changing channel then going back",
     async (assert) => {
         const pyEnv = await startServer();
-        const [channelId] = pyEnv["mail.channel"].create([
+        const [channelId] = pyEnv["discuss.channel"].create([
             { name: "minigolf-galaxy-iv" },
             { name: "epic-shrek-lovers" },
         ]);
@@ -364,10 +364,10 @@ QUnit.test(
     'do not send typing notification on typing after selecting suggestion from "/" command',
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "channel" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "channel" });
         const { openDiscuss } = await start({
             async mockRPC(route, args) {
-                if (route === "/mail/channel/notify_typing") {
+                if (route === "/discuss/channel/notify_typing") {
                     assert.step(`notify_typing:${args.is_typing}`);
                 }
             },
@@ -382,7 +382,7 @@ QUnit.test(
 
 QUnit.test("add an emoji after a command", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
@@ -409,7 +409,7 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
         email: "testpartner@odoo.com",
         name: "TestPartner",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "Mario Party",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -433,7 +433,7 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
 
 QUnit.test("mention a channel after some text", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
@@ -459,7 +459,7 @@ QUnit.test("mention a channel after some text", async (assert) => {
 
 QUnit.test("add an emoji after a channel mention", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_type: "channel",
     });
@@ -499,7 +499,7 @@ QUnit.test(
     'do not post message on channel with "SHIFT-Enter" keyboard shortcut',
     async (assert) => {
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "general" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "general" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         assert.containsNone($, ".o-mail-Message");
@@ -513,7 +513,7 @@ QUnit.test(
 
 QUnit.test('post message on channel with "Enter" keyboard shortcut', async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     assert.containsNone($, ".o-mail-Message");
@@ -526,7 +526,7 @@ QUnit.test('post message on channel with "Enter" keyboard shortcut', async (asse
 
 QUnit.test("leave command on channel", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start({
         services: {
             notification: makeFakeNotificationService((message) => {
@@ -546,7 +546,7 @@ QUnit.test("leave command on channel", async (assert) => {
 QUnit.test("leave command on chat", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck Norris" });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
@@ -571,7 +571,7 @@ QUnit.test("leave command on chat", async (assert) => {
 
 QUnit.test("Can post suggestions", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     insertText(".o-mail-Composer-input", "#");
@@ -589,7 +589,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
-        const channelId = pyEnv["mail.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: partnerId }],
@@ -604,7 +604,7 @@ QUnit.test(
 
 QUnit.test("send message only once when enter is pressed twice quickly", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const { openDiscuss } = await start({
         async mockRPC(route, args) {
             if (route === "/mail/message/post") {
@@ -623,13 +623,13 @@ QUnit.test("send message only once when enter is pressed twice quickly", async (
 
 QUnit.test("quick edit last self-message from UP arrow", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     pyEnv["mail.message"].create({
         author_id: pyEnv.currentPartnerId,
         body: "Test",
         attachment_ids: [],
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openDiscuss } = await start();
@@ -648,7 +648,7 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
         name: "Shrek",
     });
     pyEnv["res.users"].create({ partner_id: partnerId });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -672,7 +672,7 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
 
 QUnit.test("composer: drop attachments", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const files = [
@@ -713,7 +713,7 @@ QUnit.test("composer: drop attachments", async (assert) => {
 
 QUnit.test("composer: add an attachment", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const file = await createFile({
@@ -730,10 +730,10 @@ QUnit.test("composer: add an attachment", async (assert) => {
 
 QUnit.test("composer: add an attachment in reply to message in history", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const messageId = pyEnv["mail.message"].create({
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         history_partner_ids: [pyEnv.currentPartnerId],
         res_id: channelId,
     });
@@ -763,7 +763,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         const attachmentUploadedPromise = makeDeferred();
-        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         const { openDiscuss } = await start({
             async mockRPC(route) {
                 if (route === "/mail/attachment/upload") {
@@ -793,7 +793,7 @@ QUnit.test(
 
 QUnit.test("remove an attachment from composer does not need any confirmation", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const file = await createFile({
@@ -812,7 +812,7 @@ QUnit.test("remove an attachment from composer does not need any confirmation", 
 
 QUnit.test("composer: paste attachments", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     const files = [
@@ -830,7 +830,7 @@ QUnit.test("composer: paste attachments", async (assert) => {
 
 QUnit.test("Replying on a channel should focus composer initially", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_type: "channel",
         name: "general",
     });
@@ -838,7 +838,7 @@ QUnit.test("Replying on a channel should focus composer initially", async (asser
         body: "Hello world",
         res_id: channelId,
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
     });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
@@ -848,7 +848,7 @@ QUnit.test("Replying on a channel should focus composer initially", async (asser
 
 QUnit.test("remove an uploading attachment", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const { openDiscuss } = await start({
         async mockRPC(route) {
             if (route === "/mail/attachment/upload") {
@@ -898,7 +898,7 @@ QUnit.test(
         const pyEnv = await startServer();
         // Promise to block attachment uploading
         const uploadPromise = makeDeferred();
-        const channelId = pyEnv["mail.channel"].create({ name: "test" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "test" });
         const { openDiscuss } = await start({
             async mockRPC(route, args) {
                 if (route === "/mail/attachment/upload") {
@@ -933,7 +933,7 @@ QUnit.test(
         const pyEnv = await startServer();
         // Promise to block attachment uploading
         const uploadPromise = makeDeferred();
-        const channelId = pyEnv["mail.channel"].create({ name: "test" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "test" });
         const { openDiscuss } = await start({
             async mockRPC(route, args) {
                 if (route === "/mail/attachment/upload") {
@@ -965,7 +965,7 @@ QUnit.test(
 
 QUnit.test("Message is sent only once when pressing enter twice in a row", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "Hello World!");

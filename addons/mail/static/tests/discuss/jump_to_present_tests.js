@@ -20,17 +20,17 @@ QUnit.test("Basic jump to present when scrolling to outdated messages", async (a
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     for (let i = 0; i < 20; i++) {
         pyEnv["mail.message"].create({
             body: "Non Empty Body ".repeat(100),
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
     }
@@ -59,23 +59,23 @@ QUnit.test("Jump to old reply should prompt jump to presence", async (assert) =>
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const oldestMessageId = pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     for (let i = 0; i < 100; i++) {
         pyEnv["mail.message"].create({
             body: "Non Empty Body ".repeat(100),
             message_type: "comment",
-            model: "mail.channel",
+            model: "discuss.channel",
             res_id: channelId,
         });
     }
     pyEnv["mail.message"].create({
         body: "Most Recent!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         parent_id: oldestMessageId,
     });

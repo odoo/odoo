@@ -28,9 +28,9 @@ class TestImLivechatMessage(TransactionCase):
     def test_message_format(self):
         im_livechat_channel = self.env['im_livechat.channel'].sudo().create({'name': 'support', 'user_ids': [Command.link(self.users[0].id)]})
         self.users[0].im_status = 'online'  # make available for livechat (ignore leave)
-        channel_livechat_1 = self.env['mail.channel'].browse(im_livechat_channel._open_livechat_mail_channel(anonymous_name='anon 1', previous_operator_id=self.users[0].partner_id.id, user_id=self.users[1].id, country_id=self.env.ref('base.in').id)['id'])
+        channel_livechat_1 = self.env['discuss.channel'].browse(im_livechat_channel._open_livechat_discuss_channel(anonymous_name='anon 1', previous_operator_id=self.users[0].partner_id.id, user_id=self.users[1].id, country_id=self.env.ref('base.in').id)['id'])
         record_rating = self.env['rating.rating'].create({
-            'res_model_id': self.env['ir.model']._get('mail.channel').id,
+            'res_model_id': self.env['ir.model']._get('discuss.channel').id,
             'res_id': channel_livechat_1.id,
             'parent_res_model_id': self.env['ir.model']._get('im_livechat.channel').id,
             'parent_res_id': im_livechat_channel.id,
@@ -62,7 +62,7 @@ class TestImLivechatMessage(TransactionCase):
             'linkPreviews': [],
             'message_type': 'notification',
             'messageReactionGroups': [],
-            'model': 'mail.channel',
+            'model': 'discuss.channel',
             'module_icon': '/mail/static/description/icon.png',
             'needaction_partner_ids': [],
             'notifications': [],

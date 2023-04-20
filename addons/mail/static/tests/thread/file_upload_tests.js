@@ -11,10 +11,10 @@ QUnit.module("file upload");
 QUnit.test("no conflicts between file uploads", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const channelId = pyEnv["mail.channel"].create({});
+    const channelId = pyEnv["discuss.channel"].create({});
     pyEnv["mail.message"].create({
         body: "not empty",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const { openView } = await start();
@@ -33,7 +33,7 @@ QUnit.test("no conflicts between file uploads", async (assert) => {
     await afterNextRender(() =>
         editInput(document.body, ".o-mail-Chatter .o-mail-Composer input[type=file]", file1)
     );
-    // Uploading file in the second thread: mail.channel in chatWindow.
+    // Uploading file in the second thread: discuss.channel in chatWindow.
     await click("i[aria-label='Messages']");
     await click(".o-mail-NotificationItem");
     const file2 = await createFile({
@@ -50,7 +50,7 @@ QUnit.test("no conflicts between file uploads", async (assert) => {
 
 QUnit.test("Attachment shows spinner during upload", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "channel_1" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "channel_1" });
     const { openDiscuss } = await start({
         async mockRPC(route) {
             if (route === "/mail/attachment/upload") {

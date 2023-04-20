@@ -15,7 +15,7 @@ QUnit.module("crosstab");
 
 QUnit.test("Messages are received cross-tab", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const tab1 = await start({ asTab: true });
@@ -30,12 +30,12 @@ QUnit.test("Messages are received cross-tab", async (assert) => {
 
 QUnit.test("Delete starred message updates counter", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
     });
     const messageId = pyEnv["mail.message"].create({
         body: "Hello World!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         starred_partner_ids: [pyEnv.currentPartnerId],
     });
@@ -56,7 +56,7 @@ QUnit.test("Delete starred message updates counter", async (assert) => {
 
 QUnit.test("Thread rename", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
@@ -69,7 +69,7 @@ QUnit.test("Thread rename", async (assert) => {
 
 QUnit.test("Thread description update", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const tab1 = await start({ asTab: true });
     const tab2 = await start({ asTab: true });
     await tab1.openDiscuss(channelId);
@@ -86,7 +86,7 @@ QUnit.test("Thread description update", async (assert) => {
 
 QUnit.test("Channel subscription is renewed when channel is manually added", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "General", channel_member_ids: [] });
+    pyEnv["discuss.channel"].create({ name: "General", channel_member_ids: [] });
     const { env, openDiscuss } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
@@ -102,7 +102,7 @@ QUnit.test("Channel subscription is renewed when channel is manually added", asy
 
 QUnit.test("Channel subscription is renewed when channel is added from invite", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "Sales", channel_member_ids: [] });
+    const channelId = pyEnv["discuss.channel"].create({ name: "Sales", channel_member_ids: [] });
     const { env, openDiscuss } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
@@ -112,7 +112,7 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
     await openDiscuss();
     // simulate receiving invite
     await afterNextRender(() => {
-        env.services.orm.call("mail.channel", "add_members", [[channelId]], {
+        env.services.orm.call("discuss.channel", "add_members", [[channelId]], {
             partner_ids: [pyEnv.currentPartnerId],
         });
     });
@@ -121,7 +121,7 @@ QUnit.test("Channel subscription is renewed when channel is added from invite", 
 
 QUnit.test("Channel subscription is renewed when channel is left", async (assert) => {
     const pyEnv = await startServer();
-    pyEnv["mail.channel"].create({ name: "Sales" });
+    pyEnv["discuss.channel"].create({ name: "Sales" });
     const { env, openDiscuss } = await start();
     patchWithCleanup(env.services["bus_service"], {
         forceUpdateChannels() {
@@ -135,10 +135,10 @@ QUnit.test("Channel subscription is renewed when channel is left", async (assert
 
 QUnit.test("Adding attachments", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "Hogwarts Legacy" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "Hogwarts Legacy" });
     const messageId = pyEnv["mail.message"].create({
         body: "Hello world!",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
         message_type: "comment",
     });
@@ -162,7 +162,7 @@ QUnit.test("Adding attachments", async (assert) => {
 
 QUnit.test("Remove attachment from message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const attachmentId = pyEnv["ir.attachment"].create({
         name: "test.txt",
         mimetype: "text/plain",
@@ -171,7 +171,7 @@ QUnit.test("Remove attachment from message", async (assert) => {
         attachment_ids: [attachmentId],
         body: "Hello World!",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const tab1 = await start({ asTab: true });
@@ -186,7 +186,7 @@ QUnit.test("Remove attachment from message", async (assert) => {
 
 QUnit.test("Add member to channel", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "General" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
     const userId = pyEnv["res.users"].create({ name: "Harry" });
     pyEnv["res.partner"].create({ name: "Harry", user_ids: [userId] });
     const { openDiscuss } = await start();
@@ -206,7 +206,7 @@ QUnit.test("Remove member from channel", async (assert) => {
         name: "Harry",
         user_ids: [userId],
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
@@ -217,7 +217,7 @@ QUnit.test("Remove member from channel", async (assert) => {
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
     assert.containsOnce($, ".o-mail-ChannelMember:contains(Harry)");
-    env.services.orm.call("mail.channel", "action_unfollow", [channelId], {
+    env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },
     });
 });
@@ -226,7 +226,7 @@ QUnit.test("Message delete notification", async (assert) => {
     const pyEnv = await startServer();
     const messageId = pyEnv["mail.message"].create({
         body: "Needaction message",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: pyEnv.currentPartnerId,
         needaction: true,
         needaction_partner_ids: [pyEnv.currentPartnerId], // not needed, for consistency

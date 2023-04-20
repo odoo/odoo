@@ -11,7 +11,7 @@ QUnit.test("out of office message on direct chat with out of office partner", as
         im_status: "leave_online",
         out_of_office_date_end: "2023-01-01",
     });
-    const channelId = pyEnv["mail.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],

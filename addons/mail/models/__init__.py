@@ -34,9 +34,9 @@ from . import mail_tracking_value
 from . import mail_template
 
 # discuss
-from . import mail_channel_member
-from . import mail_channel_rtc_session
-from . import mail_channel
+from . import discuss_channel_member
+from . import discuss_channel_rtc_session
+from . import discuss_channel
 from . import mail_guest
 from . import mail_ice_server
 from . import mail_shortcode

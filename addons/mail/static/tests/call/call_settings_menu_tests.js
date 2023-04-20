@@ -28,7 +28,7 @@ QUnit.test("Renders the call settings", async (assert) => {
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
@@ -52,7 +52,7 @@ QUnit.test("activate push to talk", async (assert) => {
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
@@ -72,7 +72,7 @@ QUnit.test("activate blur", async (assert) => {
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "test" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "test" });
     const { click, openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
@@ -100,7 +100,7 @@ QUnit.test(
             },
         });
         const pyEnv = await startServer();
-        const channelId = pyEnv["mail.channel"].create({ name: "General" });
+        const channelId = pyEnv["discuss.channel"].create({ name: "General" });
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[title='Show Call Settings']");

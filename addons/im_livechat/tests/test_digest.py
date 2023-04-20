@@ -16,7 +16,7 @@ class TestLiveChatDigest(TestDigestCommon):
 
         other_partner = cls.env['res.partner'].create({'name': 'Other Partner'})
 
-        cls.channels = cls.env['mail.channel'].create([{
+        cls.channels = cls.env['discuss.channel'].create([{
             'name': 'Channel 1',
             'livechat_operator_id': cls.env.user.partner_id.id,
             'channel_type': 'livechat',
@@ -35,25 +35,25 @@ class TestLiveChatDigest(TestDigestCommon):
         cls.env['rating.rating'].create([{
             'rated_partner_id': cls.env.user.partner_id.id,
             'res_id': cls.channels[0].id,
-            'res_model_id': cls.env['ir.model']._get('mail.channel').id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
             'consumed': True,
             'rating': 5,
         }, {
             'rated_partner_id': cls.env.user.partner_id.id,
             'res_id': cls.channels[0].id,
-            'res_model_id': cls.env['ir.model']._get('mail.channel').id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
             'consumed': True,
             'rating': 0,
         }, {
             'rated_partner_id': cls.env.user.partner_id.id,
             'res_id': cls.channels[0].id,
-            'res_model_id': cls.env['ir.model']._get('mail.channel').id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
             'consumed': True,
             'rating': 3,
         }, {
             'rated_partner_id': cls.env.user.partner_id.id,
             'res_id': cls.channels[0].id,
-            'res_model_id': cls.env['ir.model']._get('mail.channel').id,
+            'res_model_id': cls.env['ir.model']._get('discuss.channel').id,
             'consumed': True,
             'rating': 3,
         }])

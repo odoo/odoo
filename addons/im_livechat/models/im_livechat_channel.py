@@ -56,7 +56,7 @@ class ImLivechatChannel(models.Model):
 
     # relationnal fields
     user_ids = fields.Many2many('res.users', 'im_livechat_channel_im_user', 'channel_id', 'user_id', string='Operators', default=_default_user_ids)
-    channel_ids = fields.One2many('mail.channel', 'livechat_channel_id', 'Sessions')
+    channel_ids = fields.One2many('discuss.channel', 'livechat_channel_id', 'Sessions')
     chatbot_script_count = fields.Integer(string='Number of Chatbot', compute='_compute_chatbot_script_count')
     rule_ids = fields.One2many('im_livechat.channel.rule', 'channel_id', 'Rules')
 
@@ -87,7 +87,7 @@ class ImLivechatChannel(models.Model):
 
     @api.depends('channel_ids')
     def _compute_nbr_channel(self):
-        data = self.env['mail.channel']._read_group([
+        data = self.env['discuss.channel']._read_group([
             ('livechat_channel_id', 'in', self._ids),
             ('has_message', '=', True)], ['livechat_channel_id'], ['__count'])
         channel_count = {livechat_channel.id: count for livechat_channel, count in data}
@@ -137,8 +137,8 @@ class ImLivechatChannel(models.Model):
         self.ensure_one()
         return self.user_ids.filtered(lambda user: user.im_status == 'online')
 
-    def _get_livechat_mail_channel_vals(self, anonymous_name, operator=None, chatbot_script=None, user_id=None, country_id=None):
-        # partner to add to the mail.channel
+    def _get_livechat_discuss_channel_vals(self, anonymous_name, operator=None, chatbot_script=None, user_id=None, country_id=None):
+        # partner to add to the discuss.channel
         operator_partner_id = operator.partner_id.id if operator else chatbot_script.operator_partner_id.id
         members_to_add = [Command.create({'partner_id': operator_partner_id, 'is_pinned': False})]
         visitor_user = False
@@ -167,8 +167,8 @@ class ImLivechatChannel(models.Model):
             'name': name,
         }
 
-    def _open_livechat_mail_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, persisted=True):
-        """ Return a livechat session. If the session is persisted, creates a mail.channel record with a connected operator or with Odoobot as
+    def _open_livechat_discuss_channel(self, anonymous_name, previous_operator_id=None, chatbot_script=None, user_id=None, country_id=None, persisted=True):
+        """ Return a livechat session. If the session is persisted, creates a discuss.channel record with a connected operator or with Odoobot as
             an operator if a chatbot has been configured, or return false otherwise
             :param anonymous_name : the name of the anonymous person of the session
             :param previous_operator_id : partner_id.id of the previous operator that this visitor had in the past
@@ -199,19 +199,19 @@ class ImLivechatChannel(models.Model):
         if not user_operator and not chatbot_script:
             # no one available
             return False
-        mail_channel_vals = self._get_livechat_mail_channel_vals(anonymous_name, user_operator, chatbot_script, user_id=user_id, country_id=country_id)
+        discuss_channel_vals = self._get_livechat_discuss_channel_vals(anonymous_name, user_operator, chatbot_script, user_id=user_id, country_id=country_id)
         if persisted:
             # create the session, and add the link with the given channel
-            mail_channel = self.env["mail.channel"].with_context(mail_create_nosubscribe=False).sudo().create(mail_channel_vals)
+            discuss_channel = self.env["discuss.channel"].with_context(mail_create_nosubscribe=False).sudo().create(discuss_channel_vals)
             if user_operator:
-                mail_channel._broadcast([user_operator.partner_id.id])
-            return mail_channel.sudo().channel_info()[0]
+                discuss_channel._broadcast([user_operator.partner_id.id])
+            return discuss_channel.sudo().channel_info()[0]
         else:
             operator_partner_id = user_operator.partner_id if user_operator else chatbot_script.operator_partner_id
             display_name = operator_partner_id.user_livechat_username or operator_partner_id.display_name
             return {
-                'name': mail_channel_vals['name'],
-                'chatbot_current_step_id': mail_channel_vals['chatbot_current_step_id'],
+                'name': discuss_channel_vals['name'],
+                'chatbot_current_step_id': discuss_channel_vals['chatbot_current_step_id'],
                 'state': 'open',
                 'operator_pid': (operator_partner_id.id, display_name.replace(',', '')),
                 'chatbot_script_id': chatbot_script.id if chatbot_script else None
@@ -222,7 +222,7 @@ class ImLivechatChannel(models.Model):
         A livechat is considered 'active' if it has at least one message within the 30 minutes.
 
         (Some annoying conversions have to be made on the fly because this model holds 'res.users' as available operators
-        and the mail_channel model stores the partner_id of the randomly selected operator)
+        and the discuss_channel model stores the partner_id of the randomly selected operator)
 
         :return : user
         :rtype : res.users
@@ -232,8 +232,8 @@ class ImLivechatChannel(models.Model):
             return False
 
         self.env.cr.execute("""SELECT COUNT(DISTINCT c.id), c.livechat_operator_id
-            FROM mail_channel c
-            LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'mail.channel'
+            FROM discuss_channel c
+            LEFT OUTER JOIN mail_message m ON c.id = m.res_id AND m.model = 'discuss.channel'
             WHERE c.channel_type = 'livechat'
             AND c.livechat_operator_id in %s
             AND m.create_date > ((now() at time zone 'UTC') - interval '30 minutes')

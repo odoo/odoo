@@ -1,18 +1,18 @@
 /** @odoo-module **/
 
-import "@mail/../tests/helpers/mock_server/models/mail_channel"; // ensure mail overrides are applied first
+import "@mail/../tests/helpers/mock_server/models/discuss_channel"; // ensure mail overrides are applied first
 
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, "im_livechat/models/mail_channel", {
+patch(MockServer.prototype, "im_livechat/models/discuss_channel", {
     /**
      * @override
      */
-    _mockMailChannelChannelInfo(ids) {
+    _mockDiscussChannelChannelInfo(ids) {
         const channelInfos = this._super(...arguments);
         for (const channelInfo of channelInfos) {
-            const channel = this.getRecords("mail.channel", [["id", "=", channelInfo.id]])[0];
+            const channel = this.getRecords("discuss.channel", [["id", "=", channelInfo.id]])[0];
             channelInfo["channel"]["anonymous_name"] = channel.anonymous_name;
             // add the last message date
             if (channel.channel_type === "livechat") {

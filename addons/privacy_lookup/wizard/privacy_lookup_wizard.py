@@ -38,7 +38,7 @@ class PrivacyLookupWizard(models.TransientModel):
             # Ondelete Cascade
             'mail.notification',
             'mail.followers',
-            'mail.channel.member',
+            'discuss.channel.member',
             # Special case for direct messages
             'mail.message',
         ]

@@ -8,17 +8,17 @@ QUnit.module("message reply");
 
 QUnit.test("click on message in reply to highlight the parent message", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
         body: "Hey lol",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     pyEnv["mail.message"].create({
         body: "Reply to Hey",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         parent_id: messageId,
         res_id: channelId,
     });
@@ -36,21 +36,21 @@ QUnit.test("click on message in reply to scroll to the parent message", async (a
         },
     });
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const [oldestMessageId] = pyEnv["mail.message"].create(
         Array(20)
             .fill(0)
             .map(() => ({
                 body: "Non Empty Body ".repeat(25),
                 message_type: "comment",
-                model: "mail.channel",
+                model: "discuss.channel",
                 res_id: channelId,
             }))
     );
     pyEnv["mail.message"].create({
         body: "Response to first message",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         parent_id: oldestMessageId,
         res_id: channelId,
     });
@@ -65,18 +65,18 @@ QUnit.test("click on message in reply to scroll to the parent message", async (a
 
 QUnit.test("reply shows correct author avatar", async (assert) => {
     const pyEnv = await startServer();
-    const channelId = pyEnv["mail.channel"].create({ name: "general" });
+    const channelId = pyEnv["discuss.channel"].create({ name: "general" });
     const messageId = pyEnv["mail.message"].create({
         body: "Hey there",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         res_id: channelId,
     });
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });
     pyEnv["mail.message"].create({
         body: "Howdy",
         message_type: "comment",
-        model: "mail.channel",
+        model: "discuss.channel",
         author_id: partnerId,
         parent_id: messageId,
         res_id: channelId,
@@ -86,7 +86,7 @@ QUnit.test("reply shows correct author avatar", async (assert) => {
     const replyAvatar = document.querySelector(".o-mail-MessageInReply-avatar");
     assert.ok(
         replyAvatar.dataset["src"].includes(
-            `/mail/channel/${channelId}/partner/${pyEnv.currentPartnerId}/avatar_128`
+            `/discuss/channel/${channelId}/partner/${pyEnv.currentPartnerId}/avatar_128`
         )
     );
 });

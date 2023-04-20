@@ -21,7 +21,9 @@ patch(ThreadService.prototype, "website_livechat", {
     avatarUrl(persona, thread) {
         if (persona?.type === "visitor" && thread?.id) {
             return persona.partner
-                ? `/mail/channel/${encodeURIComponent(thread.id)}/partner/${encodeURIComponent(persona.id)}/avatar_128`
+                ? `/discuss/channel/${encodeURIComponent(thread.id)}/partner/${encodeURIComponent(
+                      persona.id
+                  )}/avatar_128`
                 : DEFAULT_AVATAR;
         }
         return this._super(persona, thread);

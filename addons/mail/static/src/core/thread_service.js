@@ -30,7 +30,7 @@ export class ThreadService {
     setup(env, services) {
         this.env = env;
         /** @type {import("@mail/core/channel_member_service").ChannelMemberService} */
-        this.channelMemberService = services["mail.channel.member"];
+        this.channelMemberService = services["discuss.channel.member"];
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentsService = services["mail.attachment"];
         /** @type {import("@mail/core/store_service").Store} */
@@ -65,7 +65,7 @@ export class ThreadService {
             channelType !== "group" && serverData.create_uid === this.store.user?.user?.id;
         const thread = this.insert({
             id,
-            model: "mail.channel",
+            model: "discuss.channel",
             name,
             type,
             description,
@@ -79,7 +79,7 @@ export class ThreadService {
 
     async fetchChannelMembers(thread) {
         const known_member_ids = thread.channelMembers.map((channelMember) => channelMember.id);
-        const results = await this.rpc("/mail/channel/members", {
+        const results = await this.rpc("/discuss/channel/members", {
             channel_id: thread.id,
             known_member_ids: known_member_ids,
         });
@@ -114,7 +114,7 @@ export class ThreadService {
             thread.allowSetLastSeenMessage &&
             newestPersistentMessage
         ) {
-            this.rpc("/mail/channel/set_last_seen_message", {
+            this.rpc("/discuss/channel/set_last_seen_message", {
                 channel_id: thread.id,
                 last_message_id: newestPersistentMessage.id,
             }).then(() => {
@@ -164,19 +164,19 @@ export class ThreadService {
      * @param {Thread} thread
      */
     async markAsFetched(thread) {
-        await this.orm.silent.call("mail.channel", "channel_fetched", [[thread.id]]);
+        await this.orm.silent.call("discuss.channel", "channel_fetched", [[thread.id]]);
     }
 
     async fetchPinnedMessages(thread) {
         if (
-            thread.model !== "mail.channel" ||
+            thread.model !== "discuss.channel" ||
             ["loaded", "loading"].includes(thread.pinLoadState)
         ) {
             return;
         }
         thread.pinLoadState = "loading";
         try {
-            const messages = await this.rpc("/mail/channel/pinned_messages", {
+            const messages = await this.rpc("/discuss/channel/pinned_messages", {
                 channel_id: thread.id,
             });
             const pinnedMessages = messages.map((message) => {
@@ -193,8 +193,8 @@ export class ThreadService {
     }
 
     getFetchRoute(thread) {
-        if (thread.model === "mail.channel") {
-            return "/mail/channel/messages";
+        if (thread.model === "discuss.channel") {
+            return "/discuss/channel/messages";
         }
         switch (thread.type) {
             case "chatter":
@@ -207,7 +207,7 @@ export class ThreadService {
     }
 
     getFetchParams(thread) {
-        if (thread.model === "mail.channel") {
+        if (thread.model === "discuss.channel") {
             return { channel_id: thread.id };
         }
         if (thread.type === "chatter") {
@@ -262,7 +262,7 @@ export class ThreadService {
     async fetchNewMessages(thread) {
         if (
             thread.status === "loading" ||
-            (thread.isLoaded && ["mail.channel", "mail.box"].includes(thread.model))
+            (thread.isLoaded && ["discuss.channel", "mail.box"].includes(thread.model))
         ) {
             return;
         }
@@ -374,9 +374,9 @@ export class ThreadService {
             }
         }
         if (ids.length) {
-            const previews = await this.orm.call("mail.channel", "channel_fetch_preview", [ids]);
+            const previews = await this.orm.call("discuss.channel", "channel_fetch_preview", [ids]);
             for (const preview of previews) {
-                const thread = this.store.threads[createLocalId("mail.channel", preview.id)];
+                const thread = this.store.threads[createLocalId("discuss.channel", preview.id)];
                 const data = Object.assign(preview.last_message, {
                     body: markup(preview.last_message.body),
                 });
@@ -452,7 +452,7 @@ export class ThreadService {
     }
 
     async createChannel(name) {
-        const data = await this.orm.call("mail.channel", "channel_create", [
+        const data = await this.orm.call("discuss.channel", "channel_create", [
             name,
             this.store.internalUserGroupId,
         ]);
@@ -462,18 +462,22 @@ export class ThreadService {
     }
 
     unpin(thread) {
-        if (thread.model !== "mail.channel") {
+        if (thread.model !== "discuss.channel") {
             return;
         }
-        return this.orm.silent.call("mail.channel", "channel_pin", [thread.id], { pinned: false });
+        return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
+            pinned: false,
+        });
     }
 
     pin(thread) {
-        if (thread.model !== "mail.channel" || this.store.guest) {
+        if (thread.model !== "discuss.channel" || this.store.guest) {
             return;
         }
         thread.is_pinned = true;
-        return this.orm.silent.call("mail.channel", "channel_pin", [thread.id], { pinned: true });
+        return this.orm.silent.call("discuss.channel", "channel_pin", [thread.id], {
+            pinned: true,
+        });
     }
 
     sortChannels() {
@@ -570,12 +574,12 @@ export class ThreadService {
     }
 
     async joinChannel(id, name) {
-        await this.orm.call("mail.channel", "add_members", [[id]], {
+        await this.orm.call("discuss.channel", "add_members", [[id]], {
             partner_ids: [this.store.user.id],
         });
         const thread = this.insert({
             id,
-            model: "mail.channel",
+            model: "discuss.channel",
             name,
             type: "channel",
             serverData: { channel: { avatarCacheKey: "hello" } },
@@ -586,12 +590,12 @@ export class ThreadService {
     }
 
     async joinChat(id) {
-        const data = await this.orm.call("mail.channel", "channel_get", [], {
+        const data = await this.orm.call("discuss.channel", "channel_get", [], {
             partners_to: [id],
         });
         return this.insert({
             id: data.id,
-            model: "mail.channel",
+            model: "discuss.channel",
             name: undefined,
             type: "chat",
             serverData: data,
@@ -599,7 +603,7 @@ export class ThreadService {
     }
 
     executeCommand(thread, command, body = "") {
-        return this.orm.call("mail.channel", command.methodName, [[thread.id]], {
+        return this.orm.call("discuss.channel", command.methodName, [[thread.id]], {
             body,
         });
     }
@@ -607,22 +611,24 @@ export class ThreadService {
     async notifyThreadNameToServer(thread, name) {
         if (thread.type === "channel" || thread.type === "group") {
             thread.name = name;
-            await this.orm.call("mail.channel", "channel_rename", [[thread.id]], { name });
+            await this.orm.call("discuss.channel", "channel_rename", [[thread.id]], { name });
         } else if (thread.type === "chat") {
             thread.customName = name;
-            await this.orm.call("mail.channel", "channel_set_custom_name", [[thread.id]], { name });
+            await this.orm.call("discuss.channel", "channel_set_custom_name", [[thread.id]], {
+                name,
+            });
         }
     }
 
     async notifyThreadDescriptionToServer(thread, description) {
         thread.description = description;
-        return this.orm.call("mail.channel", "channel_change_description", [[thread.id]], {
+        return this.orm.call("discuss.channel", "channel_change_description", [[thread.id]], {
             description,
         });
     }
 
     async leaveChannel(channel) {
-        await this.orm.call("mail.channel", "action_unfollow", [channel.id]);
+        await this.orm.call("discuss.channel", "action_unfollow", [channel.id]);
         this.remove(channel);
         this.setDiscussThread(
             this.store.discuss.channels.threads[0]
@@ -638,7 +644,9 @@ export class ThreadService {
     setDiscussThread(thread, pushState = true) {
         this.store.discuss.threadLocalId = thread.localId;
         const activeId =
-            typeof thread.id === "string" ? `mail.box_${thread.id}` : `mail.channel_${thread.id}`;
+            typeof thread.id === "string"
+                ? `mail.box_${thread.id}`
+                : `discuss.channel_${thread.id}`;
         this.store.discuss.activeTab = !this.store.isSmall
             ? "all"
             : thread.model === "mail.box"
@@ -652,7 +660,7 @@ export class ThreadService {
     }
 
     async createGroupChat({ default_display_mode, partners_to }) {
-        const data = await this.orm.call("mail.channel", "create_group", [], {
+        const data = await this.orm.call("discuss.channel", "create_group", [], {
             default_display_mode,
             partners_to,
         });
@@ -702,7 +710,7 @@ export class ThreadService {
                 thread.message_unread_counter = serverData.channel.message_unread_counter;
             }
             thread.lastServerMessageId = serverData.last_message_id ?? thread.lastServerMessageId;
-            if (thread.model === "mail.channel" && serverData.channel) {
+            if (thread.model === "discuss.channel" && serverData.channel) {
                 thread.channel = assignDefined(thread.channel ?? {}, serverData.channel);
             }
 
@@ -918,7 +926,7 @@ export class ThreadService {
                 id: tmpId,
                 attachments: attachments,
                 res_id: thread.id,
-                model: "mail.channel",
+                model: "discuss.channel",
             };
             if (this.store.user) {
                 tmpData.author = this.store.self;
@@ -1052,12 +1060,12 @@ export class ThreadService {
         if (!persona) {
             return DEFAULT_AVATAR;
         }
-        if (thread?.model === "mail.channel") {
+        if (thread?.model === "discuss.channel") {
             if (persona.type === "partner") {
-                return url(`/mail/channel/${thread.id}/partner/${persona.id}/avatar_128`);
+                return url(`/discuss/channel/${thread.id}/partner/${persona.id}/avatar_128`);
             }
             if (persona.type === "guest") {
-                return url(`/mail/channel/${thread.id}/guest/${persona.id}/avatar_128`);
+                return url(`/discuss/channel/${thread.id}/guest/${persona.id}/avatar_128`);
             }
         }
         if (persona.type === "partner" && persona?.id) {
@@ -1082,7 +1090,7 @@ export class ThreadService {
 
 export const threadService = {
     dependencies: [
-        "mail.channel.member",
+        "discuss.channel.member",
         "mail.attachment",
         "mail.store",
         "orm",

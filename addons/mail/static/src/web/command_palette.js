@@ -57,7 +57,7 @@ commandSetupRegistry.add("#", {
     placeholder: _lt("Search for a channel..."),
 });
 
-commandProviderRegistry.add("mail.channel", {
+commandProviderRegistry.add("discuss.channel", {
     namespace: "#",
     async provide(env, options) {
         /** @type {import("@mail/core/messaging_service").Messaging} */
@@ -68,7 +68,7 @@ commandProviderRegistry.add("mail.channel", {
             ["name", "ilike", cleanTerm(options.searchValue)],
         ];
         const channelsData = await messaging.orm.searchRead(
-            "mail.channel",
+            "discuss.channel",
             domain,
             ["channel_type", "name"],
             { limit: 10 }

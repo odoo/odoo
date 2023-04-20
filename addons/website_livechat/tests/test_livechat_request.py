@@ -33,13 +33,13 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
 
         # Open Chat Request
         self.visitor.with_user(self.operator_b).action_send_chat_request()
-        chat_request = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
+        chat_request = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
         self.assertEqual(chat_request.livechat_operator_id, self.operator_b.partner_id, "Operator for active livechat session must be Operator Marc")
 
         # Click on livechatbutton at client side
         res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
-        channel = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id),
+        channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id),
                                                    ('livechat_active', '=', True)])
 
         # Check that the chat request has been canceled.
@@ -50,7 +50,7 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
 
     def _common_chat_request_flow(self):
         self.visitor.with_user(self.operator).action_send_chat_request()
-        channel = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
+        channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
         self.assertEqual(len(channel), 1)
         self.assertEqual(channel.livechat_operator_id, self.operator.partner_id, "Michel Operator should be the operator of this channel.")
         self.assertEqual(len(channel.message_ids), 0)
@@ -74,6 +74,6 @@ class TestLivechatRequestHttpCase(tests.HttpCase, TestLivechatCommon):
 
     def _clean_livechat_sessions(self):
         # clean every possible mail channel linked to the visitor
-        active_channels = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
+        active_channels = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)])
         for active_channel in active_channels:
             active_channel._close_livechat_session()

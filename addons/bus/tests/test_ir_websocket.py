@@ -9,5 +9,5 @@ class TestIrWebsocket(common.HttpCase):
             self.env['ir.websocket']._subscribe({
                 'inactivity_period': 1000,
                 'last': 0,
-                'channels': [('odoo', 'mail.channel', 5)],
+                'channels': [('odoo', 'discuss.channel', 5)],
             })

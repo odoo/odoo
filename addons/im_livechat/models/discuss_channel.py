@@ -7,14 +7,14 @@ from odoo.tools import email_normalize, html_escape, html2plaintext, plaintext2h
 from markupsafe import Markup
 
 
-class MailChannel(models.Model):
+class DiscussChannel(models.Model):
     """ Chat Session
         Reprensenting a conversation between users.
         It extends the base method for anonymous usage.
     """
 
-    _name = 'mail.channel'
-    _inherit = ['rating.mixin', 'mail.channel']
+    _name = 'discuss.channel'
+    _inherit = ['rating.mixin', 'discuss.channel']
 
     anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')], ondelete={'livechat': 'cascade'})
@@ -22,20 +22,20 @@ class MailChannel(models.Model):
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')
     livechat_operator_id = fields.Many2one('res.partner', string='Operator')
     chatbot_current_step_id = fields.Many2one('chatbot.script.step', string='Chatbot Current Step')
-    chatbot_message_ids = fields.One2many('chatbot.message', 'mail_channel_id', string='Chatbot Messages')
+    chatbot_message_ids = fields.One2many('chatbot.message', 'discuss_channel_id', string='Chatbot Messages')
     country_id = fields.Many2one('res.country', string="Country", help="Country of the visitor of the channel")
 
     _sql_constraints = [('livechat_operator_id', "CHECK((channel_type = 'livechat' and livechat_operator_id is not null) or (channel_type != 'livechat'))",
                          'Livechat Operator ID is required for a channel of type livechat.')]
 
     def _compute_is_chat(self):
-        super(MailChannel, self)._compute_is_chat()
+        super()._compute_is_chat()
         for record in self:
             if record.channel_type == 'livechat':
                 record.is_chat = True
 
     def _channel_message_notifications(self, message, message_format=False):
-        """ When a anonymous user create a mail.channel, the operator is not notify (to avoid massive polling when
+        """ When a anonymous user create a discuss.channel, the operator is not notify (to avoid massive polling when
             clicking on livechat button). So when the anonymous person is sending its FIRST message, the channel header
             should be added to the notification, since the user cannot be listining to the channel.
         """
@@ -43,7 +43,7 @@ class MailChannel(models.Model):
         for channel in self:
             # add uuid to allow anonymous to listen
             if channel.channel_type == 'livechat':
-                notifications.append([channel.uuid, 'mail.channel/new_message', notifications[0][2]])
+                notifications.append([channel.uuid, 'discuss.channel/new_message', notifications[0][2]])
         if not message.author_id:
             unpinned_members = self.channel_member_ids.filtered(lambda member: not member.is_pinned)
             if unpinned_members:
@@ -74,11 +74,11 @@ class MailChannel(models.Model):
         hours = 1  # never remove empty session created within the last hour
         self.env.cr.execute("""
             SELECT id as id
-            FROM mail_channel C
+            FROM discuss_channel C
             WHERE NOT EXISTS (
                 SELECT 1
                 FROM mail_message M
-                WHERE M.res_id = C.id AND m.model = 'mail.channel'
+                WHERE M.res_id = C.id AND m.model = 'discuss.channel'
             ) AND C.channel_type = 'livechat' AND livechat_channel_id IS NOT NULL AND
                 COALESCE(write_date, create_date, (now() at time zone 'UTC'))::timestamp
                 < ((now() at time zone 'UTC') - interval %s)""", ("%s hours" % hours,))
@@ -86,7 +86,7 @@ class MailChannel(models.Model):
         self.browse(empty_channel_ids).unlink()
 
     def _execute_command_help_message_extra(self):
-        msg = super(MailChannel, self)._execute_command_help_message_extra()
+        msg = super()._execute_command_help_message_extra()
         if self.channel_type == 'livechat':
             return msg + _("Type <b>:shortcut</b> to insert a canned response in your message.<br>")
         return msg
@@ -222,10 +222,10 @@ class MailChannel(models.Model):
         if self.chatbot_current_step_id:
             self.env['chatbot.message'].sudo().create({
                 'mail_message_id': message.id,
-                'mail_channel_id': self.id,
+                'discuss_channel_id': self.id,
                 'script_step_id': self.chatbot_current_step_id.id,
             })
-        return super(MailChannel, self)._message_post_after_hook(message, msg_vals)
+        return super()._message_post_after_hook(message, msg_vals)
 
     def _chatbot_restart(self, chatbot_script):
         self.write({

@@ -58,4 +58,4 @@ export const channelMemberService = {
         return new ChannelMemberService(env, services);
     },
 };
-registry.category("services").add("mail.channel.member", channelMemberService);
+registry.category("services").add("discuss.channel.member", channelMemberService);

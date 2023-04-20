@@ -8,12 +8,12 @@ from odoo import api, fields, models
 
 
 class MailRtcSession(models.Model):
-    _name = 'mail.channel.rtc.session'
+    _name = 'discuss.channel.rtc.session'
     _description = 'Mail RTC session'
     _rec_name = 'channel_member_id'
 
-    channel_member_id = fields.Many2one('mail.channel.member', required=True, ondelete='cascade')
-    channel_id = fields.Many2one('mail.channel', related='channel_member_id.channel_id', store=True, readonly=True)
+    channel_member_id = fields.Many2one('discuss.channel.member', required=True, ondelete='cascade')
+    channel_id = fields.Many2one('discuss.channel', related='channel_member_id.channel_id', store=True, readonly=True)
     partner_id = fields.Many2one('res.partner', related='channel_member_id.partner_id', string="Partner")
     guest_id = fields.Many2one('mail.guest', related='channel_member_id.guest_id')
 
@@ -32,7 +32,7 @@ class MailRtcSession(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         rtc_sessions = super().create(vals_list)
-        self.env['bus.bus']._sendmany([(channel, 'mail.channel/rtc_sessions_update', {
+        self.env['bus.bus']._sendmany([(channel, 'discuss.channel/rtc_sessions_update', {
             'id': channel.id,
             'rtcSessions': [('insert', sessions_data)],
         }) for channel, sessions_data in rtc_sessions._mail_rtc_session_format_by_channel().items()])
@@ -46,13 +46,13 @@ class MailRtcSession(models.Model):
                 # Note: invitation depends on field `rtc_inviting_session_id` so the cancel must be
                 # done before the delete to be able to know who was invited.
                 channel._rtc_cancel_invitations()
-        notifications = [(channel, 'mail.channel/rtc_sessions_update', {
+        notifications = [(channel, 'discuss.channel/rtc_sessions_update', {
             'id': channel.id,
             'rtcSessions': [('insert-and-unlink', [{'id': session_data['id']} for session_data in sessions_data])],
         }) for channel, sessions_data in self._mail_rtc_session_format_by_channel().items()]
         for rtc_session in self:
             target = rtc_session.guest_id or rtc_session.partner_id
-            notifications.append((target, 'mail.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
+            notifications.append((target, 'discuss.channel.rtc.session/ended', {'sessionId': rtc_session.id}))
         self.env['bus.bus']._sendmany(notifications)
         return super().unlink()
 
@@ -85,16 +85,16 @@ class MailRtcSession(models.Model):
             guarantees that the sender is the current guest or partner.
 
             :param notifications: list of tuple with the following elements:
-                - target_session_ids: a list of mail.channel.rtc.session ids
+                - target_session_ids: a list of discuss.channel.rtc.session ids
                 - content: a string with the content to be sent to the targets
         """
         self.ensure_one()
         payload_by_target = defaultdict(lambda: {'sender': self.id, 'notifications': []})
         for target_session_ids, content in notifications:
-            for target_session in self.env['mail.channel.rtc.session'].browse(target_session_ids).exists():
+            for target_session in self.env['discuss.channel.rtc.session'].browse(target_session_ids).exists():
                 target = target_session.guest_id or target_session.partner_id
                 payload_by_target[target]['notifications'].append(content)
-        return self.env['bus.bus']._sendmany([(target, 'mail.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
+        return self.env['bus.bus']._sendmany([(target, 'discuss.channel.rtc.session/peer_notification', payload) for target, payload in payload_by_target.items()])
 
     def _mail_rtc_session_format(self, fields=None):
         self.ensure_one()
@@ -104,7 +104,7 @@ class MailRtcSession(models.Model):
         if 'id' in fields:
             vals['id'] = self.id
         if 'channelMember' in fields:
-            vals['channelMember'] = self.channel_member_id._mail_channel_member_format(fields=fields.get('channelMember')).get(self.channel_member_id)
+            vals['channelMember'] = self.channel_member_id._discuss_channel_member_format(fields=fields.get('channelMember')).get(self.channel_member_id)
         if 'isCameraOn' in fields:
             vals['isCameraOn'] = self.is_camera_on
         if 'isDeaf' in fields:

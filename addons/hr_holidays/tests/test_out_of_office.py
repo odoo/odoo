@@ -41,7 +41,7 @@ class TestOutOfOffice(TestHrHolidaysCommon):
         partner = self.employee_hruser.user_id.partner_id
         partner2 = self.user_employee.partner_id
 
-        channel = self.env['mail.channel'].with_user(self.user_employee).with_context({
+        channel = self.env['discuss.channel'].with_user(self.user_employee).with_context({
             'mail_create_nolog': True,
             'mail_create_nosubscribe': True,
         }).create({

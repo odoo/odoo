@@ -60,7 +60,7 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
                 anonymous_name = anonymous_name + " (" + country.name + ")";
             }
         }
-        return this._mockImLivechatChannel_openLivechatMailChannel(
+        return this._mockImLivechatChannel_openLivechatDiscussChannel(
             channel_id,
             anonymous_name,
             previous_operator_id,
@@ -77,12 +77,12 @@ patch(MockServer.prototype, "im_livechat/controllers/main", {
      * @param {Object} [context={}]
      */
     _mockRouteImLivechatNotifyTyping(uuid, is_typing, context = {}) {
-        const [mailChannel] = this.getRecords("mail.channel", [["uuid", "=", uuid]]);
+        const [discussChannel] = this.getRecords("discuss.channel", [["uuid", "=", uuid]]);
         const partnerId = context.mockedPartnerId || this.currentPartnerId;
-        const [memberOfCurrentUser] = this.getRecords("mail.channel.member", [
-            ["channel_id", "=", mailChannel.id],
+        const [memberOfCurrentUser] = this.getRecords("discuss.channel.member", [
+            ["channel_id", "=", discussChannel.id],
             ["partner_id", "=", partnerId],
         ]);
-        this._mockMailChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
+        this._mockDiscussChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
 });

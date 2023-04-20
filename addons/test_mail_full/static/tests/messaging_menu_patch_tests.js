@@ -8,9 +8,9 @@ QUnit.module("messaging menu (patch)");
 QUnit.test("rating value displayed on the preview", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
-    const channelId = pyEnv["mail.channel"].create({});
+    const channelId = pyEnv["discuss.channel"].create({});
     const messageId = pyEnv["mail.message"].create([
-        { author_id: partnerId, model: "mail.channel", res_id: channelId },
+        { author_id: partnerId, model: "discuss.channel", res_id: channelId },
     ]);
     pyEnv["rating.rating"].create({
         consumed: true,

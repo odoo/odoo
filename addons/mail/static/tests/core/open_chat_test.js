@@ -55,7 +55,7 @@ QUnit.test("openChat: open existing chat for user", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     pyEnv["res.users"].create({ partner_id: partnerId });
-    pyEnv["mail.channel"].create({
+    pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { partner_id: pyEnv.currentPartnerId, fold_state: "open", is_minimized: true }],
             [0, 0, { partner_id: partnerId }],

@@ -27,7 +27,7 @@ export class Attachment {
     }
 
     get isDeletable() {
-        if (this.message && this.originThread?.model === "mail.channel") {
+        if (this.message && this.originThread?.model === "discuss.channel") {
             return this.message.editable;
         }
         return true;
@@ -89,8 +89,8 @@ export class Attachment {
         if (!this.isImage) {
             return "";
         }
-        if (!this.accessToken && this.originThread?.model === "mail.channel") {
-            return `/mail/channel/${this.originThread.id}/image/${this.id}`;
+        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
+            return `/discuss/channel/${this.originThread.id}/image/${this.id}`;
         }
         const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : "";
         return `/web/image/${this.id}${accessToken}`;
@@ -102,8 +102,8 @@ export class Attachment {
         }
         if (this.isPdf) {
             const pdf_lib = "/web/static/lib/pdfjs/web/viewer.html?file=";
-            if (!this.accessToken && this.originThread?.model === "mail.channel") {
-                return `${pdf_lib}/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+            if (!this.accessToken && this.originThread?.model === "discuss.channel") {
+                return `${pdf_lib}/discuss/channel/${this.originThread.id}/attachment/${this.id}`;
             }
             const accessToken = this.accessToken ? `?access_token%3D${this.accessToken}` : "";
             return `${pdf_lib}/web/content/${this.id}${accessToken}`;
@@ -120,16 +120,16 @@ export class Attachment {
             }
             return `https://www.youtube.com/embed/${token}`;
         }
-        if (!this.accessToken && this.originThread?.model === "mail.channel") {
-            return `/mail/channel/${this.originThread.id}/attachment/${this.id}`;
+        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
+            return `/discuss/channel/${this.originThread.id}/attachment/${this.id}`;
         }
         const accessToken = this.accessToken ? `?access_token=${this.accessToken}` : "";
         return `/web/content/${this.id}${accessToken}`;
     }
 
     get downloadUrl() {
-        if (!this.accessToken && this.originThread?.model === "mail.channel") {
-            return `/mail/channel/${this.originThread.id}/attachment/${this.id}?download=true`;
+        if (!this.accessToken && this.originThread?.model === "discuss.channel") {
+            return `/discuss/channel/${this.originThread.id}/attachment/${this.id}?download=true`;
         }
         const accessToken = this.accessToken ? `access_token=${this.accessToken}&` : "";
         return `/web/content/ir.attachment/${this.id}/datas?${accessToken}download=true`;

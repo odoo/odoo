@@ -11,10 +11,10 @@ from odoo.addons.website_livechat.tests.common import TestLivechatCommon
 class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
     def test_channel_created_on_user_interaction(self):
         self.start_tour('/', 'im_livechat_request_chat', login=None)
-        channel = self.env['mail.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
+        channel = self.env['discuss.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
         self.assertFalse(channel, 'Channel should not be created until user sends a message')
         self.start_tour('/', 'im_livechat_request_chat_and_send_message', login=None)
-        channel = self.env['mail.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
+        channel = self.env['discuss.channel'].search([['livechat_active', '=', True], ['livechat_visitor_id', '=', self.visitor.id]])
         self.assertTrue(channel, 'Channel should be created after sending the first message')
 
     def test_visitor_banner_history(self):
@@ -38,7 +38,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
             self.env.ref('website.contactus_page').name,
             self.env.ref('website.homepage_page').name,
         )
-        history = self.env['mail.channel']._get_visitor_history(self.visitor)
+        history = self.env['discuss.channel']._get_visitor_history(self.visitor)
 
         self.assertEqual(history, handmade_history)
 
@@ -46,7 +46,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         # Open a new live chat
         res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
-        channel_1 = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
+        channel_1 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
         # Check Channel naming
         self.assertEqual(channel_1.name, "%s %s" % (self.visitor.display_name, self.operator.livechat_username))
@@ -64,7 +64,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         # Open a new live chat
         res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
-        channel_2 = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
+        channel_2 = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
         # Check Channel naming
         self.assertEqual(channel_2.name, "%s %s" % (self.visitor.display_name, self.operator.name))
@@ -115,7 +115,7 @@ class TestLivechatBasicFlowHttpCase(tests.HttpCase, TestLivechatCommon):
         res = self.opener.post(url=self.open_chat_url, json=self.open_chat_params)
         self.assertEqual(res.status_code, 200)
 
-        channel = self.env['mail.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
+        channel = self.env['discuss.channel'].search([('livechat_visitor_id', '=', self.visitor.id), ('livechat_active', '=', True)], limit=1)
 
         # Check Channel and Visitor naming
         self.assertEqual(self.visitor.display_name, "%s #%s" % (_("Website Visitor"), self.visitor.id))

@@ -20,8 +20,8 @@ class MailChatController(BusController):
     # --------------------------
     @route('/mail/chat_post', type="json", auth="public", cors="*")
     def mail_chat_post(self, uuid, message_content, **kwargs):
-        mail_channel = request.env["mail.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
-        if not mail_channel:
+        channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
+        if not channel:
             return False
 
         # find the author from the user session
@@ -31,10 +31,10 @@ class MailChatController(BusController):
             email_from = author.email_formatted
         else:  # If Public User, use catchall email from company
             author_id = False
-            email_from = mail_channel.anonymous_name or mail_channel.create_uid.company_id.catchall_formatted
+            email_from = channel.anonymous_name or channel.create_uid.company_id.catchall_formatted
         # post a message without adding followers to the channel. email_from=False avoid to get author from email data
         body = tools.plaintext2html(message_content)
-        message = mail_channel.with_context(mail_create_nosubscribe=True).message_post(
+        message = channel.with_context(mail_create_nosubscribe=True).message_post(
             author_id=author_id,
             email_from=email_from,
             body=body,
@@ -45,7 +45,7 @@ class MailChatController(BusController):
 
     @route(['/mail/chat_history'], type="json", auth="public", cors="*")
     def mail_chat_history(self, uuid, last_id=False, limit=20):
-        channel = request.env["mail.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
+        channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
         if not channel:
             return []
         else:

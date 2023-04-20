@@ -35,7 +35,7 @@ patch(Message.prototype, "mail/web", {
     },
 
     openRecord() {
-        if (this.message.resModel === "mail.channel") {
+        if (this.message.resModel === "discuss.channel") {
             this.threadService.open(this.message.originThread);
         } else {
             this.action.doAction({
