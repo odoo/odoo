@@ -631,6 +631,24 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
             Dropdown.getOrCreateInstance(toggleEl).hide();
         }
     },
+    /**
+     * @private
+     * @param {Event} ev
+     * @param {String} method bootstrap dropdowns method name
+     */
+    _updateDropdownVisibility: function (ev, method) {
+        const { currentTarget } = ev;
+        if (config.device.size_class <= config.device.SIZES.SM) {
+            return;
+        }
+        if (currentTarget.classList.contains('o_extra_menu_items')) {
+            return;
+        }
+        const dropdownToggle = currentTarget.querySelector('.dropdown-toggle');
+        if (dropdownToggle) {
+            Dropdown.getOrCreateInstance(dropdownToggle)[method]();
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -649,11 +667,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         }
         // The user must click on the dropdown if he is on mobile (no way to
         // hover) or if the dropdown is the extra menu ('+').
-        if (config.device.size_class <= config.device.SIZES.SM ||
-            ev.currentTarget.classList.contains('o_extra_menu_items')) {
-            return;
-        }
-        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).show();
+        this._updateDropdownVisibility(ev, 'show');
     },
     /**
      * @private
@@ -664,11 +678,7 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
             // Cancel handling from view mode.
             return;
         }
-        if (config.device.size_class <= config.device.SIZES.SM ||
-            ev.currentTarget.classList.contains('o_extra_menu_items')) {
-            return;
-        }
-        Dropdown.getOrCreateInstance(ev.currentTarget.querySelector('.dropdown-toggle')).hide();
+        this._updateDropdownVisibility(ev, 'hide');
     },
     /**
      * Called when the page is clicked anywhere.
