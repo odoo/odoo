@@ -15,7 +15,6 @@ from odoo.addons.base.models.ir_qweb_fields import nl2br_enclose
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment.controllers import portal as payment_portal
-from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import AccessError, MissingError, ValidationError
@@ -1691,7 +1690,6 @@ class WebsiteSale(http.Controller):
         if tx_sudo and tx_sudo.state == 'draft':
             return request.redirect('/shop')
 
-        PaymentPostProcessing.remove_transactions(tx_sudo)
         return request.redirect('/shop/confirmation')
 
     @http.route(['/shop/confirmation'], type='http', auth="public", website=True, sitemap=False)
@@ -1895,10 +1893,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         # Store the new transaction into the transaction list and if there's an old one, we remove
         # it until the day the ecommerce supports multiple orders at the same time.
-        last_tx_id = request.session.get('__website_sale_last_tx_id')
-        last_tx = request.env['payment.transaction'].browse(last_tx_id).sudo().exists()
-        if last_tx:
-            PaymentPostProcessing.remove_transactions(last_tx)
         request.session['__website_sale_last_tx_id'] = tx_sudo.id
 
         self._validate_transaction_for_order(tx_sudo, order_id)

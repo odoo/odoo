@@ -142,7 +142,7 @@ class PaymentProvider(models.Model):
     done_msg = fields.Html(
         string="Done Message",
         help="The message displayed if the order is successfully done after the payment process",
-        default=lambda self: _("Your payment has been successfully processed. Thank you!"),
+        default=lambda self: _("Your payment has been successfully processed."),
         translate=True)
     cancel_msg = fields.Html(
         string="Canceled Message",
