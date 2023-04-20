@@ -8154,13 +8154,16 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                '<field name="product_id"/>' +
-                '<templates><t t-name="kanban-box">' +
-                '<div><field name="id"/></div>' +
-                "</t></templates>" +
-                "</kanban>",
+            arch: `
+                <kanban>
+                    <field name="bar" />
+                    <field name="product_id" attrs="{'readonly': [('bar', '!=', True)]}"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="id"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
             groupBy: ["product_id"],
         });
 
