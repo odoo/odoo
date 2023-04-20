@@ -32,8 +32,9 @@ async function mountComponent(Component, params = {}) {
     return mount(Component, target, { env, props: params.props || {} });
 }
 
-export async function openModelFieldSelectorPopover(target) {
-    await click(target, ".o_model_field_selector");
+export async function openModelFieldSelectorPopover(target, index = 0) {
+    const el = target.querySelectorAll(".o_model_field_selector")[index];
+    await click(el);
 }
 
 function getDisplayedFieldNames(target) {
@@ -154,7 +155,7 @@ QUnit.module("Components", (hooks) => {
                 resModel="'partner'"
                 path="path"
                 isDebugMode="false"
-                update="(pathInfo) => this.onUpdate(pathInfo)"
+                update="(path) => this.onUpdate(path)"
             />
         `;
 
@@ -392,7 +393,7 @@ QUnit.module("Components", (hooks) => {
                 readonly="false"
                 resModel="'partner'"
                 path="path"
-                update="(pathInfo) => this.onUpdate(pathInfo)"
+                update="(path) => this.onUpdate(path)"
             />
         `;
 

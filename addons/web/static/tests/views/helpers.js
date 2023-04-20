@@ -5,7 +5,6 @@ import { getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
 import { createDebugContext } from "@web/core/debug/debug_context";
 import { Dialog } from "@web/core/dialog/dialog";
 import { MainComponentsContainer } from "@web/core/main_components_container";
-import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
 import { View, getDefaultConfig } from "@web/views/view";
 import {
@@ -145,8 +144,7 @@ export function setupViewRegistries() {
         { force: true }
     );
     serviceRegistry.add("router", makeFakeRouterService(), { force: true });
-    serviceRegistry.add("localization", makeFakeLocalizationService()), { force: true };
-    serviceRegistry.add("popover", popoverService, { force: true });
+    serviceRegistry.add("localization", makeFakeLocalizationService());
     serviceRegistry.add("company", fakeCompanyService);
 }
 

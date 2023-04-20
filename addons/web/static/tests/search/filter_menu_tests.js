@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import {
+    click,
+    editInput,
     getFixture,
     getNodesTextContent,
     patchDate,
@@ -13,14 +15,12 @@ import {
     isItemSelected,
     isOptionSelected,
     makeWithSearch,
-    openAdvancedSearchDialog,
+    openAddCustomFilterDialog,
     setupControlPanelServiceRegistry,
     toggleFilterMenu,
     toggleMenuItem,
     toggleMenuItemOption,
 } from "./helpers";
-import { registry } from "@web/core/registry";
-import { AdvancedSearchDialog } from "@web/search/filter_menu/advanced_search_dialog";
 
 function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
@@ -47,7 +47,7 @@ QUnit.module("Search", (hooks) => {
                         },
                         foo: { string: "Foo", type: "char", store: true, sortable: true },
                     },
-                    records: {},
+                    records: [],
                 },
             },
             views: {
@@ -76,7 +76,7 @@ QUnit.module("Search", (hooks) => {
         assert.containsNone(target, ".o_menu_item");
         assert.containsNone(target, ".dropdown-divider");
         assert.containsOnce(target, ".dropdown-item");
-        assert.strictEqual(target.querySelector(".dropdown-item").innerText, "Advanced Search");
+        assert.strictEqual(target.querySelector(".dropdown-item").innerText, "Add Custom Filter");
     });
 
     QUnit.test("simple rendering with a single filter", async function (assert) {
@@ -101,7 +101,7 @@ QUnit.module("Search", (hooks) => {
         assert.containsOnce(target, ".dropdown-item:not(.o_menu_item)");
         assert.strictEqual(
             target.querySelector(".dropdown-item:not(.o_menu_item)").innerText,
-            "Advanced Search"
+            "Add Custom Filter"
         );
     });
 
@@ -596,27 +596,77 @@ QUnit.module("Search", (hooks) => {
         });
     });
 
-    QUnit.test("Open 'Advanced Search' dialog", async function (assert) {
-        assert.expect(3);
-        registry.category("services").add(
-            "dialog",
-            {
-                start() {
-                    return {
-                        add: (dialogClass, props) => {
-                            assert.strictEqual(dialogClass, AdvancedSearchDialog);
-                            assert.deepEqual(Object.keys(props), [
-                                "domain",
-                                "onConfirm",
-                                "resModel",
-                                "isDebugMode",
-                            ]);
-                        },
-                    };
-                },
-            },
-            { force: true }
+    QUnit.test("Open 'Add Custom Filter' dialog", async function (assert) {
+        await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchMenuTypes: ["filter"],
+        });
+
+        await toggleFilterMenu(target);
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_filter_menu .dropdown-item")),
+            ["Add Custom Filter"]
         );
+        assert.containsNone(target, ".modal");
+
+        await openAddCustomFilterDialog(target);
+        assert.containsOnce(target, ".modal");
+        assert.strictEqual(target.querySelector(".modal header").innerText, "Add Custom Filter");
+        assert.containsOnce(target, ".modal .o_domain_selector");
+        assert.containsOnce(target, ".modal .o_domain_selector .o_domain_leaf");
+        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".modal footer button")), [
+            "Add",
+            "Cancel",
+        ]);
+    });
+
+    QUnit.test(
+        "Default leaf in 'Add Custom Filter' dialog is based on ID (if no special fields on model)",
+        async function (assert) {
+            await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: ControlPanel,
+                searchMenuTypes: ["filter"],
+            });
+            await toggleFilterMenu(target);
+            await openAddCustomFilterDialog(target);
+            assert.containsOnce(target, ".modal .o_domain_selector .o_domain_leaf");
+            assert.containsOnce(target, ".o_domain_leaf .o_model_field_selector_chain_part");
+            assert.strictEqual(
+                target.querySelector(".o_domain_leaf .o_model_field_selector_chain_part").innerText,
+                "ID"
+            );
+        }
+    );
+
+    QUnit.test(
+        "Default leaf in 'Add Custom Filter' dialog is based on first special field (if any special fields on model)",
+        async function (assert) {
+            serverData.models.foo.fields.country_id = {
+                string: "Country",
+                type: "many2one",
+            };
+            await makeWithSearch({
+                serverData,
+                resModel: "foo",
+                Component: ControlPanel,
+                searchMenuTypes: ["filter"],
+            });
+            await toggleFilterMenu(target);
+            await openAddCustomFilterDialog(target);
+            assert.containsOnce(target, ".modal .o_domain_selector .o_domain_leaf");
+            assert.containsOnce(target, ".o_domain_leaf .o_model_field_selector_chain_part");
+            assert.strictEqual(
+                target.querySelector(".o_domain_leaf .o_model_field_selector_chain_part").innerText,
+                "Country"
+            );
+        }
+    );
+
+    QUnit.test("Default connector is '|' (any)", async function (assert) {
         await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -624,10 +674,127 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: ["filter"],
         });
         await toggleFilterMenu(target);
-        assert.deepEqual(
-            getNodesTextContent(target.querySelectorAll(".o_filter_menu .dropdown-item")),
-            ["Advanced Search"]
+        await openAddCustomFilterDialog(target);
+        assert.containsOnce(target, ".modal .o_domain_selector .o_domain_leaf");
+        assert.containsOnce(target, ".o_domain_leaf .o_model_field_selector_chain_part");
+        assert.strictEqual(
+            target.querySelector(".o_domain_leaf .o_model_field_selector_chain_part").innerText,
+            "ID"
         );
-        await openAdvancedSearchDialog(target);
+        assert.containsNone(target, "button.o_domain_tree_connector_caret");
+
+        await click(target, ".o_domain_add_node_button .fa-plus");
+        assert.containsOnce(target, "button.o_domain_tree_connector_caret");
+        assert.strictEqual(
+            target.querySelector("button.o_domain_tree_connector_caret").innerText,
+            "any"
+        );
+        assert.containsN(target, ".modal .o_domain_selector .o_domain_leaf", 2);
+    });
+
+    QUnit.test("Add a custom filter", async function (assert) {
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchMenuTypes: ["filter"],
+            searchViewId: false,
+            searchViewArch: `
+                    <search>
+                        <filter string="Filter" name="filter" domain="[('foo', '=', 'abc')]"/>
+                    </search>
+                `,
+            context: {
+                search_default_filter: true,
+            },
+        });
+        assert.deepEqual(getFacetTexts(target), ["Filter"]);
+        assert.deepEqual(getDomain(controlPanel), [["foo", "=", "abc"]]);
+
+        await toggleFilterMenu(target);
+        await openAddCustomFilterDialog(target);
+        await click(target, ".o_domain_add_node_button .fa-plus");
+
+        const connectorEl = target.querySelector(".o_domain_tree_connector_selector");
+        await click(connectorEl.querySelector("button.o_domain_tree_connector_caret"));
+        await click(
+            [...target.querySelectorAll(".o_domain_tree_connector_selector .dropdown-item")].find(
+                (el) => el.innerText === "all"
+            )
+        );
+
+        await click([...target.querySelectorAll(".o_domain_add_node_button .fa-sitemap")].at(-1));
+        await click([...target.querySelectorAll(".o_domain_add_node_button .fa-sitemap")].at(-1));
+        await click(target.querySelector(".modal footer button"));
+
+        assert.deepEqual(getFacetTexts(target), [
+            "Filter",
+            "ID = 1",
+            "ID = 1",
+            "ID = 1 or ID = 1 or ( ID = 1 and ID = 1 )",
+        ]);
+        assert.deepEqual(getDomain(controlPanel), [
+            "&",
+            ["foo", "=", "abc"],
+            "&",
+            ["id", "=", 1],
+            "&",
+            ["id", "=", 1],
+            "|",
+            "|",
+            ["id", "=", 1],
+            ["id", "=", 1],
+            "&",
+            ["id", "=", 1],
+            ["id", "=", 1],
+        ]);
+    });
+
+    QUnit.test("Add a custom filter containing an expression", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchMenuTypes: ["filter"],
+            searchViewId: false,
+            searchViewArch: `<search />`,
+        });
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        await toggleFilterMenu(target);
+        await openAddCustomFilterDialog(target);
+        await editInput(target, ".o_domain_debug_input", `[("foo", "in", [uid, 1, "a"])]`);
+        await click(target.querySelector(".modal footer button"));
+
+        assert.deepEqual(getFacetTexts(target), [`Foo in uid or 1 or "a"`]);
+        assert.deepEqual(getDomain(controlPanel), [
+            ["foo", "in", [7, 1, "a"]], // uid = 7
+        ]);
+    });
+
+    QUnit.test("Add a custom filter containing a between operator", async function (assert) {
+        patchWithCleanup(odoo, { debug: true });
+
+        const controlPanel = await makeWithSearch({
+            serverData,
+            resModel: "foo",
+            Component: ControlPanel,
+            searchMenuTypes: ["filter"],
+            searchViewId: false,
+            searchViewArch: `<search />`,
+        });
+        assert.deepEqual(getFacetTexts(target), []);
+        assert.deepEqual(getDomain(controlPanel), []);
+
+        await toggleFilterMenu(target);
+        await openAddCustomFilterDialog(target);
+        await editInput(target, ".o_domain_debug_input", `[("id", "between", [0, 10])]`);
+        await click(target.querySelector(".modal footer button"));
+
+        assert.deepEqual(getFacetTexts(target), [`ID is between 0 and 10`]);
+        assert.deepEqual(getDomain(controlPanel), ["&", ["id", ">=", 0], ["id", "<=", 10]]);
     });
 });

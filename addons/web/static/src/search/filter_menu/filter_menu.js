@@ -1,19 +1,20 @@
 /** @odoo-module **/
 
-import { AdvancedSearchDialog } from "./advanced_search_dialog";
 import { Component } from "@odoo/owl";
-import { Domain } from "@web/core/domain";
+import { DomainSelectorDialog } from "../../core/domain_selector_dialog/domain_selector_dialog";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 import { FACET_ICONS } from "../utils/misc";
 import { useBus, useService } from "@web/core/utils/hooks";
+import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
+import { _t } from "@web/core/l10n/translation";
 
 export class FilterMenu extends Component {
     setup() {
         this.icon = FACET_ICONS.filter;
         this.dialogService = useService("dialog");
-        this.notification = useService("notification");
+        this.getDefaultLeafDomain = useGetDefaultLeafDomain();
         useBus(this.env.searchModel, "update", this.render);
     }
 
@@ -26,17 +27,19 @@ export class FilterMenu extends Component {
         );
     }
 
-    onAdvancedSearchClick() {
-        const domains = [this.env.searchModel._getDomain({ withGlobal: false })];
-        if (this.env.searchModel.comparison && !this.env.searchModel.globalComparison) {
-            const { range } = this.env.searchModel.getFullComparison();
-            domains.push(range);
-        }
-        const domain = Domain.and(domains).toString();
-        this.dialogService.add(AdvancedSearchDialog, {
+    async onAddCustomFilterClick() {
+        const { domainEvalContext: context, resModel } = this.env.searchModel;
+        const domain = await this.getDefaultLeafDomain(resModel);
+        this.dialogService.add(DomainSelectorDialog, {
+            resModel,
+            defaultConnector: "|",
             domain,
-            onConfirm: (domain) => this.onConfirm(domain),
-            resModel: this.env.searchModel.resModel,
+            context,
+            onConfirm: (domain) => this.env.searchModel.splitAndAddDomain(domain),
+            disableConfirmButton: (domain) => domain === `[]`,
+            title: _t("Add Custom Filter"),
+            confirmButtonText: _t("Add"),
+            discardButtonText: _t("Cancel"),
             isDebugMode: !!this.env.debug,
         });
     }
@@ -52,18 +55,6 @@ export class FilterMenu extends Component {
         } else {
             this.env.searchModel.toggleSearchItem(itemId);
         }
-    }
-
-    async onConfirm(domain) {
-        const isValid = await this.env.searchModel.isValidDomain(domain);
-        if (!isValid) {
-            this.notification.add(this.env._t("Domain is invalid. Please correct it"), {
-                type: "danger",
-            });
-            return false;
-        }
-        this.env.searchModel.createAdvancedDomain(domain);
-        return true;
     }
 }
 

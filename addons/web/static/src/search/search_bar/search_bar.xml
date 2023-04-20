@@ -4,10 +4,12 @@
     <t t-name="web.SearchBar.Facets" owl="1">
         <t t-foreach="env.searchModel.facets" t-as="facet" t-key="facet_index">
             <div class="o_searchview_facet"
+                t-att-class="{o_facet_with_domain: facet.domain }"
                 role="img"
                 aria-label="search"
                 tabindex="0"
                 t-on-keydown="ev => this.onFacetKeydown(facet, facet_index, ev)"
+                t-on-click="(ev) => this.onFacetClick(ev.target, facet)"
                 >
                 <t t-if="facet.icon">
                     <span t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>

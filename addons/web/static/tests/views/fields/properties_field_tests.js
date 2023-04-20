@@ -15,8 +15,6 @@ import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
 import { browser } from "@web/core/browser/browser";
-import { fieldService } from "@web/core/field_service";
-import { registry } from "@web/core/registry";
 import {
     getPickerApplyButton,
     getPickerCell,
@@ -230,7 +228,6 @@ QUnit.module("Fields", (hooks) => {
         };
 
         setupViewRegistries();
-        registry.category("services").add("field", fieldService);
 
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),

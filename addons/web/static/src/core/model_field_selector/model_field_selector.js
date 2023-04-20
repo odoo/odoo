@@ -3,25 +3,8 @@
 import { Component, onWillStart, onWillUpdateProps, useState } from "@odoo/owl";
 import { KeepLast } from "@web/core/utils/concurrency";
 import { ModelFieldSelectorPopover } from "./model_field_selector_popover";
+import { useLoadFieldInfo, useLoadPathDescription } from "./utils";
 import { usePopover } from "@web/core/popover/popover_hook";
-import { useService } from "@web/core/utils/hooks";
-
-export async function loadFieldInfo(fieldService, resModel, path) {
-    if (typeof path !== "string" || !path) {
-        return { resModel, fieldDef: null };
-    }
-    const { isInvalid, names, modelsInfo } = await fieldService.loadPath(resModel, path);
-    if (isInvalid) {
-        return { resModel, fieldDef: null };
-    }
-    const name = names.at(-1);
-    const modelInfo = modelsInfo.at(-1);
-    return { resModel: modelInfo.resModel, fieldDef: modelInfo.fieldDefs[name] };
-}
-
-function makeString(value) {
-    return String(value ?? "-");
-}
 
 export class ModelFieldSelector extends Component {
     static template = "web._ModelFieldSelector";
@@ -47,61 +30,21 @@ export class ModelFieldSelector extends Component {
     };
 
     setup() {
+        this.loadPathDescription = useLoadPathDescription();
+        const loadFieldInfo = useLoadFieldInfo();
         this.popover = usePopover(this.constructor.components.Popover, {
             popoverClass: "o_popover_field_selector",
             onClose: async () => {
                 if (this.newPath) {
-                    const fieldInfo = await loadFieldInfo(
-                        this.fieldService,
-                        this.props.resModel,
-                        this.newPath
-                    );
+                    const fieldInfo = await loadFieldInfo(this.props.resModel, this.newPath);
                     this.props.update(this.newPath, fieldInfo);
                 }
             },
         });
         this.keepLast = new KeepLast();
-        this.fieldService = useService("field");
-        this.state = useState({
-            isInvalid: false,
-            displayNames: [],
-        });
-        onWillStart(() => this.updatePath(this.props.resModel, this.props.path));
-        onWillUpdateProps((nextProps) => this.updatePath(nextProps.resModel, nextProps.path));
-    }
-
-    async updatePath(resModel, path, isConcurrent) {
-        let prom = this.loadPath(resModel, path);
-        if (isConcurrent) {
-            prom = this.keepLast.add(prom);
-        }
-        const state = await prom;
-        Object.assign(this.state, state);
-    }
-
-    async loadPath(resModel, path) {
-        // the model should be checked maybe
-        if ([0, 1].includes(path)) {
-            return { isInvalid: false, displayNames: [makeString(path)] };
-        }
-        if (typeof path !== "string" || !path) {
-            return { isInvalid: true, displayNames: [makeString()] };
-        }
-        const { isInvalid, modelsInfo, names } = await this.fieldService.loadPath(resModel, path);
-        const result = { isInvalid: !!isInvalid, displayNames: [] };
-        if (!isInvalid) {
-            const lastFieldDef = modelsInfo.at(-1).fieldDefs[names.at(-1)];
-            if (["properties", "properties_definition"].includes(lastFieldDef.type)) {
-                // there is no known case where we want to select a 'properties' field directly
-                result.isInvalid = true;
-            }
-        }
-        for (let index = 0; index < names.length; index++) {
-            const name = names[index];
-            const fieldDef = modelsInfo[index]?.fieldDefs[name];
-            result.displayNames.push(fieldDef?.string || makeString(name));
-        }
-        return result;
+        this.state = useState({ isInvalid: false, displayNames: [] });
+        onWillStart(() => this.updateState(this.props.resModel, this.props.path));
+        onWillUpdateProps((nextProps) => this.updateState(nextProps.resModel, nextProps.path));
     }
 
     openPopover(currentTarget) {
@@ -114,12 +57,21 @@ export class ModelFieldSelector extends Component {
             path: this.props.path,
             update: (path) => {
                 this.newPath = path;
-                this.updatePath(this.props.resModel, path, true);
+                this.updateState(this.props.resModel, path, true);
             },
             showSearchInput: this.props.showSearchInput,
             isDebugMode: this.props.isDebugMode,
             filter: this.props.filter,
             followRelations: this.props.followRelations,
         });
+    }
+
+    async updateState(resModel, path, isConcurrent) {
+        let prom = this.loadPathDescription(resModel, path);
+        if (isConcurrent) {
+            prom = this.keepLast.add(prom);
+        }
+        const state = await prom;
+        Object.assign(this.state, state);
     }
 }

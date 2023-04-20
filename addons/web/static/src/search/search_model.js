@@ -16,8 +16,17 @@ import {
     yearSelected,
 } from "./utils/dates";
 import { FACET_ICONS } from "./utils/misc";
-
 import { EventBus, toRaw } from "@odoo/owl";
+import { toDomain, toTree } from "@web/core/domain_tree";
+import { extractPathsFromDomain } from "@web/core/domain_selector/utils";
+import { useLoadFieldInfo, useLoadPathDescription } from "@web/core/model_field_selector/utils";
+import {
+    DomainValueExpr,
+    getLeafOperatorInfo,
+    getValue,
+} from "@web/core/domain_selector/domain_selector_nodes";
+import { _t } from "@web/core/l10n/translation";
+
 const { DateTime } = luxon;
 
 /** @typedef {import("@web/core/domain").DomainRepr} DomainRepr */
@@ -146,6 +155,94 @@ function execute(op, source, target) {
     }
 }
 
+/**
+ * @param {Tree} tree
+ * @param {Object} pathsInfo
+ * @returns {string}
+ */
+export function getDomainTreeDescription(
+    tree,
+    pathFieldDefs,
+    pathDescriptions,
+    isSubExpression = true
+) {
+    if (tree.type === "connector") {
+        // we assume that the domain tree is normalized (--> there is at least two children)
+        const childDescriptions = tree.children.map((c) =>
+            getDomainTreeDescription(c, pathFieldDefs, pathDescriptions)
+        );
+        const separator = tree.value === "&" ? _t("and") : _t("or");
+        let description = childDescriptions.join(` ${separator} `);
+        if (isSubExpression || tree.negate) {
+            description = `( ${description} )`;
+        }
+        if (tree.negate) {
+            description = `! ${description}`;
+        }
+        return description;
+    }
+
+    const { path, valueAST } = tree;
+    const fieldDef = pathFieldDefs[path];
+    const operatorInfo = getLeafOperatorInfo(tree, fieldDef);
+
+    let description = pathDescriptions[path];
+    if (valueAST.type === 2 /** boolean */) {
+        const value = valueAST.value;
+        description += ` is`;
+        if (
+            value
+                ? ["is_not", "not_equal"].includes(operatorInfo.key)
+                : ["is", "equal"].includes(operatorInfo.key)
+        ) {
+            description += ` not`;
+        }
+        description += ` set`;
+    } else {
+        const value = getValue(valueAST);
+        description += ` ${operatorInfo.label} `;
+        const values = Array.isArray(value) ? value : [value];
+        const formatValue = (value) => {
+            if (typeof value === "string") {
+                return `"${value}"`;
+            } else if (value instanceof DomainValueExpr) {
+                return value.expr;
+            } else if (Array.isArray(value)) {
+                return `[${value.map((v) => formatValue(v)).join(", ")}]`;
+            } else {
+                return value;
+            }
+        };
+        const join = operatorInfo.key === "between" ? _t("and") : _t("or");
+        description += values.map((val) => formatValue(val)).join(` ${join} `);
+    }
+    return description;
+}
+
+export function useGetDomainTreeDescription(fieldService) {
+    const loadFieldInfo = useLoadFieldInfo(fieldService);
+    const loadPathDescription = useLoadPathDescription(fieldService);
+    return async (resModel, tree) => {
+        const domain = toDomain(tree);
+        const paths = extractPathsFromDomain(domain);
+        const promises = [];
+        const pathFieldDefs = {};
+        const pathDescriptions = {};
+        for (const path of paths) {
+            promises.push(
+                loadPathDescription(resModel, path).then(({ displayNames }) => {
+                    pathDescriptions[path] = displayNames.join(" 🠒 ");
+                }),
+                loadFieldInfo(resModel, path).then(({ fieldDef }) => {
+                    pathFieldDefs[path] = fieldDef;
+                })
+            );
+        }
+        await Promise.all(promises);
+        return getDomainTreeDescription(tree, pathFieldDefs, pathDescriptions, false);
+    };
+}
+
 //--------------------------------------------------------------------------
 // Global constants/variables
 //--------------------------------------------------------------------------
@@ -164,10 +261,12 @@ export class SearchModel extends EventBus {
      */
     setup(services) {
         // services
-        const { orm, user, view } = services;
+        const { field: fieldService, orm, user, view } = services;
         this.orm = orm;
         this.userService = user;
         this.viewService = view;
+
+        this.getDomainTreeDescription = useGetDomainTreeDescription(fieldService);
 
         // used to manage search items related to date/datetime fields
         this.referenceMoment = DateTime.local();
@@ -539,51 +638,6 @@ export class SearchModel extends EventBus {
         this._notify();
     }
 
-    createAdvancedDomain(domain) {
-        this.blockNotification = true;
-
-        const groups = this._getGroups();
-        const context = this._getContext();
-        for (const group of groups) {
-            const firstSearchItem = this.searchItems[group.activeItems[0].searchItemId];
-            const { type } = firstSearchItem;
-            for (const activeItem of group.activeItems) {
-                if (type === "favorite") {
-                    const activeItemGroupBys = this._getSearchItemGroupBys(activeItem);
-                    for (const activeItemGroupBy of activeItemGroupBys) {
-                        const [fieldName, interval] = activeItemGroupBy.split(":");
-                        this.createNewGroupBy(fieldName, { interval, invisible: true });
-                    }
-                    const index = this.query.length - activeItemGroupBys.length;
-                    this.query = [...this.query.slice(index), ...this.query.slice(0, index)];
-                }
-            }
-            if (
-                [
-                    "comparison",
-                    "field",
-                    "field_property",
-                    "filter",
-                    "dateFilter",
-                    "favorite",
-                ].includes(type)
-            ) {
-                this.deactivateGroup(group.id);
-            }
-        }
-
-        this.blockNotification = false;
-        this.createNewFilters([
-            {
-                description: `${this.env._t("Advanced Search")}`,
-                domain,
-                invisible: true,
-                type: "filter",
-                context,
-            },
-        ]);
-    }
-
     /**
      * Create a new filter of type 'favorite' and activate it.
      * A new group containing only that filter is created.
@@ -834,24 +888,67 @@ export class SearchModel extends EventBus {
         return sections.sort((s1, s2) => s1.index - s2.index);
     }
 
-    /**
-     * @param {DomainRepr} domain
-     * @returns {boolean}
-     */
-    async isValidDomain(domain) {
-        try {
-            domain = new Domain(domain);
-            domain = domain.toList(this.domainEvalContext);
-            await this.orm.silent.searchRead(this.resModel, domain, ["id"], { limit: 1 });
-            // TODO: invent a python method that check domain
-        } catch {
-            return false;
-        }
-        return true;
-    }
-
     search() {
         this.trigger("update");
+    }
+
+    async splitAndAddDomain(domain, groupId) {
+        const group = groupId ? this._getGroups().find((g) => g.id === groupId) : null;
+        let context;
+        if (group) {
+            const contexts = [];
+            for (const activeItem of group.activeItems) {
+                const context = this._getSearchItemContext(activeItem);
+                if (context) {
+                    contexts.push(context);
+                }
+            }
+            context = makeContext(contexts);
+        }
+
+        const tree = toTree(domain);
+        const trees = !tree.negate && tree.value === "&" ? tree.children : [tree];
+        const promises = trees.map(async (tree) => {
+            const description = await this.getDomainTreeDescription(this.resModel, tree);
+            const preFilter = {
+                description,
+                domain: toDomain(tree),
+                invisible: true,
+                type: "filter",
+            };
+            if (context) {
+                preFilter.context = context;
+            }
+            return preFilter;
+        });
+
+        const preFilters = await Promise.all(promises);
+
+        this.blockNotification = true;
+
+        if (group) {
+            const firstActiveItem = group.activeItems[0];
+            const firstSearchItem = this.searchItems[firstActiveItem.searchItemId];
+            const { type } = firstSearchItem;
+            if (type === "favorite") {
+                const activeItemGroupBys = this._getSearchItemGroupBys(firstActiveItem);
+                for (const activeItemGroupBy of activeItemGroupBys) {
+                    const [fieldName, interval] = activeItemGroupBy.split(":");
+                    this.createNewGroupBy(fieldName, { interval, invisible: true });
+                }
+                const index = this.query.length - activeItemGroupBys.length;
+                this.query = [...this.query.slice(index), ...this.query.slice(0, index)];
+            }
+            this.deactivateGroup(groupId);
+        }
+
+        for (const preFilter of preFilters) {
+            this.createNewFilters([preFilter]);
+        }
+
+        this.blockNotification = false;
+
+        this._notify();
     }
 
     /**
@@ -1589,10 +1686,17 @@ export class SearchModel extends EventBus {
         const facets = [];
         const groups = this._getGroups();
         for (const group of groups) {
+            const groupActiveItemDomains = [];
             const values = [];
             let title;
             let type;
             for (const activeItem of group.activeItems) {
+                const domain = this._getSearchItemDomain(activeItem, {
+                    withDateFilterDomain: true,
+                });
+                if (domain) {
+                    groupActiveItemDomains.push(domain);
+                }
                 const searchItem = this.searchItems[activeItem.searchItemId];
                 switch (searchItem.type) {
                     case "field_property":
@@ -1635,7 +1739,7 @@ export class SearchModel extends EventBus {
             }
             const facet = {
                 groupId: group.id,
-                type: type,
+                type,
                 values,
                 separator: type === "groupBy" ? ">" : this.env._t("or"),
             };
@@ -1643,6 +1747,9 @@ export class SearchModel extends EventBus {
                 facet.title = title;
             } else {
                 facet.icon = FACET_ICONS[type];
+            }
+            if (groupActiveItemDomains.length) {
+                facet.domain = Domain.or(groupActiveItemDomains).toString();
             }
             facets.push(facet);
         }
@@ -1999,8 +2106,10 @@ export class SearchModel extends EventBus {
 
     /**
      * Return the domain of the provided filter.
+     * @param {Object} [options={}]
+     * @param {boolean} [options.withDateFilterDomain]
      */
-    _getSearchItemDomain(activeItem) {
+    _getSearchItemDomain(activeItem, options = {}) {
         const { searchItemId } = activeItem;
         const searchItem = this.searchItems[searchItemId];
         switch (searchItem.type) {
@@ -2010,10 +2119,13 @@ export class SearchModel extends EventBus {
             }
             case "dateFilter": {
                 const { dateFilterId } = this._getActiveComparison() || {};
-                if (this.searchMenuTypes.has("comparison") && dateFilterId === searchItemId) {
-                    return new Domain([]);
+                if (
+                    options.withDateFilterDomain ||
+                    !(this.searchMenuTypes.has("comparison") && dateFilterId === searchItemId)
+                ) {
+                    return this._getDateFilterDomain(searchItem, activeItem.generatorIds);
                 }
-                return this._getDateFilterDomain(searchItem, activeItem.generatorIds);
+                return new Domain([]);
             }
             case "filter":
             case "favorite": {

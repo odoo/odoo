@@ -9,12 +9,11 @@ import {
     getFixture,
     makeDeferred,
     nextTick,
+    patchDate,
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { fieldService } from "@web/core/field_service";
-import { registry } from "@web/core/registry";
 import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 
 let serverData;
@@ -92,9 +91,7 @@ QUnit.module("Fields", (hooks) => {
                 },
             },
         };
-
         setupViewRegistries();
-        registry.category("services").add("field", fieldService);
     });
 
     QUnit.module("DomainField");
@@ -103,7 +100,7 @@ QUnit.module("Fields", (hooks) => {
         "The domain editor should not crash the view when given a dynamic filter",
         async function (assert) {
             // dynamic filters (containing variables, such as uid, parent or today)
-            // are not handled by the domain editor, but it shouldn't crash the view
+            // are handled by the domain editor
             serverData.models.partner.records[0].foo = `[("int_field", "=", uid)]`;
 
             await makeView({
@@ -119,9 +116,9 @@ QUnit.module("Fields", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".o_edit_mode").textContent,
-                " This domain is not supported. Reset domain",
-                "The widget should not crash the view, but gracefully admit its failure."
+                target.querySelector(".o_ds_value_cell").textContent,
+                "uid",
+                "The widget should show the dynamic filter."
             );
         }
     );
@@ -129,10 +126,8 @@ QUnit.module("Fields", (hooks) => {
     QUnit.test(
         "The domain editor should not crash the view when given a dynamic filter ( datetime )",
         async function (assert) {
-            // dynamic filters (containing variables, such as uid, parent or today)
-            // are not handled by the domain editor, but it shouldn't crash the view
-            serverData.models.partner.records[0].foo = `[("datetime", "=", context_today())]`;
             serverData.models.partner.fields.datetime = { string: "A date", type: "datetime" };
+            serverData.models.partner.records[0].foo = `[("datetime", "=", context_today())]`;
 
             await makeView({
                 type: "form",
@@ -145,8 +140,12 @@ QUnit.module("Fields", (hooks) => {
                     </form>`,
             });
 
-            // The input field should display that the date is invalid
-            assert.equal(target.querySelector(".o_datetime_input").value, "Invalid DateTime");
+            assert.equal(
+                target.querySelector(".o_ds_value_cell .o_ds_expr_value").innerText,
+                "context_today()"
+            );
+
+            await click(target, ".o_ds_value_cell .fa.fa-times");
 
             // Change the date in the datepicker
             await click(target, ".o_datetime_input");
@@ -157,7 +156,10 @@ QUnit.module("Fields", (hooks) => {
             await clickDiscard(target);
 
             // Open the datepicker again
-            await click(target, ".o_datetime_input");
+            assert.equal(
+                target.querySelector(".o_ds_value_cell .o_ds_expr_value").innerText,
+                "context_today()"
+            );
         }
     );
 
@@ -181,11 +183,7 @@ QUnit.module("Fields", (hooks) => {
 
         // As the domain is empty, there should be a button to add the first
         // domain part
-        assert.containsOnce(
-            target,
-            ".o_domain_add_first_node_button",
-            "there should be a button to create first domain element"
-        );
+        assert.containsOnce(target, ".o_domain_add_first_node_button");
 
         // Clicking on the button should add the [["id", "=", "1"]] domain, so
         // there should be a field selector in the DOM
@@ -195,23 +193,14 @@ QUnit.module("Fields", (hooks) => {
         // Focusing the field selector input should open the field selector
         // popover
         await click(target, ".o_model_field_selector");
-        assert.containsOnce(
-            document.body,
-            ".o_model_field_selector_popover",
-            "field selector popover should be visible"
-        );
-        assert.containsOnce(
-            document.body,
-            ".o_model_field_selector_popover_search input",
-            "field selector popover should contain a search input"
-        );
+        assert.containsOnce(document.body, ".o_model_field_selector_popover");
+        assert.containsOnce(document.body, ".o_model_field_selector_popover_search input");
 
         // The popover should contain the list of partner_type fields and so
         // there should be the "Color index" field
         assert.strictEqual(
-            document.body.querySelector(".o_model_field_selector_popover_item").textContent,
-            "Color index",
-            "field selector popover should contain 'Color index' field"
+            document.body.querySelector(".o_model_field_selector_popover_item_name").textContent,
+            "Color index"
         );
 
         // Clicking on this field should close the popover, then changing the
@@ -231,10 +220,7 @@ QUnit.module("Fields", (hooks) => {
         // Saving the form view should show a readonly domain containing the
         // "color" field
         await clickSave(target);
-        assert.ok(
-            target.querySelector(".o_field_domain").textContent.includes("Color index"),
-            "field selector readonly value should now contain 'Color index'"
-        );
+        assert.ok(target.querySelector(".o_field_domain").textContent.includes("Color index"));
     });
 
     QUnit.test("using binary field in domain widget", async function (assert) {
@@ -405,16 +391,8 @@ QUnit.module("Fields", (hooks) => {
                 }
             },
         });
-        assert.containsOnce(
-            target,
-            ".o_field_widget[name='foo']:not(.o_field_empty)",
-            "there should be a domain field, not considered empty"
-        );
-        assert.containsNone(
-            target,
-            ".o_field_widget[name='foo'] .text-warning",
-            "should not display that the domain is invalid"
-        );
+        assert.containsOnce(target, ".o_field_widget[name='foo']:not(.o_field_empty)");
+        assert.containsNone(target, ".o_field_widget[name='foo'] .text-warning");
     });
 
     QUnit.test("basic domain field: show the selection", async function (assert) {
@@ -726,11 +704,7 @@ QUnit.module("Fields", (hooks) => {
 
         patchWithCleanup(odoo, { debug: true });
 
-        let rawDomain = `
-            [
-                ["date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -365), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")]
-            ]
-        `;
+        let rawDomain = `[("date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -365), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`;
         serverData.models.partner.records[0].foo = rawDomain;
         serverData.models.partner.fields.bar.type = "char";
         serverData.models.partner.records[0].bar = "partner";
@@ -767,11 +741,7 @@ QUnit.module("Fields", (hooks) => {
         await doAction(webClient, 1);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 
-        rawDomain = `
-            [
-                ["date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S")]
-            ]
-        `;
+        rawDomain = `[("date", ">=", datetime.datetime.combine(context_today() + relativedelta(days = -1), datetime.time(0, 0, 0)).to_utc().strftime("%Y-%m-%d %H:%M:%S"))]`;
         await editInput(target, ".o_domain_debug_input", rawDomain);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 
@@ -780,6 +750,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.test("domain field: edit through selector (dynamic content)", async function (assert) {
         patchWithCleanup(odoo, { debug: true });
+        patchDate(2020, 8, 5, 0, 0, 0);
 
         let rawDomain = `[("date", ">=", context_today())]`;
         serverData.models.partner.records[0].foo = rawDomain;
@@ -818,7 +789,12 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["/web/action/load", "get_views", "read", "search_count", "fields_get"]);
 
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
-        assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker input");
+        assert.containsOnce(target, ".o_ds_expr_value", "there should be an expression");
+
+        await click(target, ".o_ds_expr_value button");
+        rawDomain = `[("date", ">=", "2020-09-05")]`;
+        assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
+        assert.verifySteps(["search_count"]);
 
         // Open and close the datepicker
         await click(target, ".o_datetime_input");
@@ -865,13 +841,15 @@ QUnit.module("Fields", (hooks) => {
             "should contain an error message saying the model is missing"
         );
         assert.verifySteps([]);
-        await editInput(target, ".o_field_widget[name=model_name] input", "test");
-        assert.notStrictEqual(
-            target.querySelector('.o_field_widget[name="display_name"]').innerText,
-            "Select a model to add a filter.",
-            "should not contain an error message anymore"
+
+        await editInput(target, ".o_field_widget[name=model_name] input", "partner");
+        assert.strictEqual(
+            target
+                .querySelector('.o_field_widget[name="display_name"] .o_field_domain_panel')
+                .innerText.toLowerCase(),
+            "5 record(s)"
         );
-        assert.verifySteps(["test"]);
+        assert.verifySteps(["partner"]);
     });
 
     QUnit.test("domain field in kanban view", async function (assert) {
@@ -968,11 +946,6 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".modal .o_domain_add_first_node_button");
         await editInput(target, ".o_domain_leaf_value_input", "01/01/2002");
         await click(target, ".modal-footer .btn-primary");
-        assert.containsOnce(target, ".o_domain_leaf");
-        assert.strictEqual(target.querySelector(".o_domain_leaf").textContent, 'ID = "01/01/2002"');
-        assert.strictEqual(
-            target.querySelector(".o_field_domain .text-warning").textContent.trim(),
-            "Invalid domain"
-        );
+        assert.containsOnce(target, ".modal", "the domain is invalid: the dialog is not closed");
     });
 });
