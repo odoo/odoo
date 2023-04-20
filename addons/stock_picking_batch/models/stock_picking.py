@@ -183,7 +183,7 @@ class StockPicking(models.Model):
     def _is_auto_batchable(self, picking=None):
         """ Verifies if a picking can be put in a batch with another picking without violating auto_batch constrains.
         """
-        if self.state not in ('waiting', 'confirmed', 'assigned'):
+        if self.state != 'assigned':
             return False
         res = True
         if not picking:
@@ -201,7 +201,7 @@ class StockPicking(models.Model):
             ('id', '!=', self.id),
             ('company_id', '=', self.company_id.id if self.company_id else False),
             ('immediate_transfer', '=', False),
-            ('state', 'in', ('waiting', 'confirmed', 'assigned')),
+            ('state', '=', 'assigned'),
             ('picking_type_id', '=', self.picking_type_id.id),
             ('batch_id', '=', False),
         ]
