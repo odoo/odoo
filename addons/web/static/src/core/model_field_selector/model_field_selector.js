@@ -89,6 +89,13 @@ export class ModelFieldSelector extends Component {
         }
         const { isInvalid, modelsInfo, names } = await this.fieldService.loadPath(resModel, path);
         const result = { isInvalid: !!isInvalid, displayNames: [] };
+        if (!isInvalid) {
+            const lastFieldDef = modelsInfo.at(-1).fieldDefs[names.at(-1)];
+            if (["properties", "properties_definition"].includes(lastFieldDef.type)) {
+                // there is no known case where we want to select a 'properties' field directly
+                result.isInvalid = true;
+            }
+        }
         for (let index = 0; index < names.length; index++) {
             const name = names[index];
             const fieldDef = modelsInfo[index]?.fieldDefs[name];

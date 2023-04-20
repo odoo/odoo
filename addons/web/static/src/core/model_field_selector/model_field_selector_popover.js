@@ -105,9 +105,7 @@ export class ModelFieldSelectorPopover extends Component {
     setup() {
         this.fieldService = useService("field");
         this.state = useState({ page: null });
-
         this.keepLast = new KeepLast();
-
         this.debouncedSearchFields = debounce(this.searchFields.bind(this), 250);
 
         onWillStart(async () => {
@@ -201,6 +199,9 @@ export class ModelFieldSelectorPopover extends Component {
     }
 
     selectField(field) {
+        if (field.type === "properties") {
+            return this.followRelation(field);
+        }
         this.keepLast.add(Promise.resolve());
         this.state.page.selectedName = field.name;
         this.props.update(this.state.page.path);
@@ -245,7 +246,7 @@ export class ModelFieldSelectorPopover extends Component {
                     const focusedFieldName = this.state.page.focusedFieldName;
                     if (focusedFieldName) {
                         const fieldDef = this.state.page.fieldDefs[focusedFieldName];
-                        if (fieldDef.relation) {
+                        if (fieldDef.relation || fieldDef.type === "properties") {
                             this.followRelation(fieldDef);
                         }
                     }

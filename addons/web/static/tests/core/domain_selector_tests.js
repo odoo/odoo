@@ -799,4 +799,96 @@ QUnit.module("Components", (hooks) => {
         );
         assert.containsOnce(target, ".o_model_field_selector_warning");
     });
+
+    QUnit.test("support properties", async (assert) => {
+        assert.expect(7);
+
+        serverData.models.partner.fields.properties = {
+            string: "Properties",
+            type: "properties",
+            definition_record: "product_id",
+            definition_record_field: "definitions",
+            searchable: true,
+        };
+        serverData.models.product.fields.definitions = {
+            string: "Definitions",
+            type: "properties_definition",
+        };
+        serverData.models.product.records[0].definitions = [
+            { name: "xphone_prop_1", string: "P1", type: "boolean" },
+            { name: "xphone_prop_2", string: "P2", type: "selection", selection: [] },
+        ];
+        serverData.models.product.records[1].definitions = [
+            { name: "xpad_prop_1", string: "P3", type: "many2one", relation: "partner" },
+        ];
+
+        let expectedDomain = `[("id", "=", 1)]`;
+
+        class Parent extends Component {
+            static template = xml`
+                <DomainSelector
+                    resModel="'partner'"
+                    value="value"
+                    readonly="false"
+                    isDebugMode="true"
+                    update="(domain) => this.onUpdate(domain)"
+                />
+            `;
+            static components = { DomainSelector };
+            setup() {
+                this.value = expectedDomain;
+            }
+            onUpdate(domain) {
+                assert.strictEqual(domain, expectedDomain);
+                this.value = domain;
+                this.render();
+            }
+        }
+
+        await mountComponent(Parent);
+        await openModelFieldSelectorPopover(target);
+        await click(
+            target,
+            ".o_model_field_selector_popover_item[data-name='properties'] .o_model_field_selector_popover_relation_icon"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_value").textContent,
+            "Properties"
+        );
+
+        expectedDomain = `[("properties.xphone_prop_2", "=", False)]`;
+        await click(
+            target.querySelector(
+                ".o_model_field_selector_popover_item[data-name='xphone_prop_2'] button"
+            )
+        );
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_value").textContent,
+            "PropertiesP2"
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_domain_leaf_operator_select option")].map(
+                (e) => e.value
+            ),
+            ["equal", "not_equal", "set", "not_set"]
+        );
+
+        await openModelFieldSelectorPopover(target);
+        expectedDomain = `[("properties.xpad_prop_1", "=", 1)]`;
+        await click(
+            target.querySelector(
+                ".o_model_field_selector_popover_item[data-name='xpad_prop_1'] button"
+            )
+        );
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_value").textContent,
+            "PropertiesP3"
+        );
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_domain_leaf_operator_select option")].map(
+                (e) => e.value
+            ),
+            ["equal", "not_equal", "set", "not_set"]
+        );
+    });
 });
