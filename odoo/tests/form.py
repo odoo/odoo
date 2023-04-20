@@ -3,6 +3,7 @@
 The module :mod:`odoo.tests.form` provides an implementation of a client form
 view for server-side unit tests.
 """
+import ast
 import collections
 import json
 import logging
@@ -174,6 +175,7 @@ class Form:
         }
         # retrieve <field> nodes at the current level
         flevel = tree.xpath('count(ancestor::field)')
+        daterange_field_names = {}
         for node in tree.xpath(f'.//field[count(ancestor::field) = {flevel}]'):
             field_name = node.get('name')
 
@@ -229,11 +231,17 @@ class Form:
             # NOTE: selection breaks because of m2o widget=selection
             if node.get('widget') in ['many2many']:
                 field_info['type'] = node.get('widget')
+            elif node.get('widget') == 'daterange':
+                options = ast.literal_eval(node.get('options', '{}'))
+                daterange_field_names[options.get('end_date_field')] = field_name
 
             # determine subview to use for edition
             if level and field_info['type'] == 'one2many':
                 field_info['invisible'] = field_modifiers.get('invisible') == [TRUE_LEAF]
                 field_info['edition_view'] = self._get_one2many_edition_view(field_info, node, level)
+
+        for end_field, start_field in daterange_field_names.items():
+            modifiers[end_field]['invisible'] = modifiers[start_field].get('invisible', False)
 
         view['onchange'] = model._onchange_spec({'arch': etree.tostring(tree)})
 
