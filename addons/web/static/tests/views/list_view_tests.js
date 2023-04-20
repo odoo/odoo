@@ -10940,7 +10940,7 @@ QUnit.module("Views", (hooks) => {
             assert.containsOnce(target, ".o_selected_row", "row should be selected");
             await editInput(target, ".o_selected_row [name=int_field] input", 123);
             await click(target, ".o_list_view");
-            assert.containsOnce(target, ".o_selected_row", "row should still be selected");
+            assert.containsOnce(target, ".o_selected_row", "row should still be in edition");
         }
     );
 
@@ -11402,6 +11402,111 @@ QUnit.module("Views", (hooks) => {
     );
 
     QUnit.test(
+        'editable list view: mousedown on "Discard", mouseup somewhere else (no multi-edit)',
+        async function (assert) {
+            await makeView({
+                type: "list",
+                arch: `
+                    <tree editable="top">
+                        <field name="foo"/>
+                    </tree>`,
+                mockRPC(route, args) {
+                    assert.step(args.method);
+                },
+                serverData,
+                resModel: "foo",
+            });
+
+            // select two records
+            const rows = target.querySelectorAll(".o_data_row");
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
+            await click(rows[0].querySelector(".o_data_cell"));
+            target.querySelector(".o_data_row .o_data_cell input").value = "oof";
+
+            await triggerEvents(target, ".o_list_button_discard", ["mousedown"]);
+            await triggerEvents(target, ".o_data_row .o_data_cell input", [
+                "change",
+                "blur",
+                "focusout",
+            ]);
+            await triggerEvents(target, null, ["focus"]);
+            await triggerEvents(target, null, ["mouseup"]);
+            await click(target);
+
+            assert.containsNone(document.body, ".modal", "should not open modal");
+            assert.deepEqual(getNodesTextContent(target.querySelectorAll(".o_data_cell")), [
+                "oof",
+                "blip",
+                "gnap",
+                "blip",
+            ]);
+            assert.verifySteps(["get_views", "web_search_read", "write", "read"]);
+        }
+    );
+
+    QUnit.test(
+        'multi edit list view: mousedown on "Discard" with invalid field',
+        async function (assert) {
+            await makeView({
+                type: "list",
+                arch: `
+                    <tree multi_edit="1">
+                        <field name="int_field"/>
+                    </tree>`,
+                serverData,
+                resModel: "foo",
+            });
+
+            assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").innerText, "10");
+
+            // select two records
+            const rows = target.querySelectorAll(".o_data_row");
+            await click(rows[0], ".o_list_record_selector input");
+            await click(rows[1], ".o_list_record_selector input");
+
+            // edit the numeric field with an invalid value
+            await click(rows[0].querySelector(".o_data_cell"));
+            target.querySelector(".o_data_row .o_data_cell input").value = "oof";
+            await triggerEvents(target, ".o_data_row .o_data_cell input", ["input"]);
+
+            // mousedown on Discard and then mouseup also on Discard
+            await triggerEvents(target, ".o_list_button_discard", ["mousedown"]);
+            await triggerEvents(target, ".o_data_row .o_data_cell input", [
+                "change",
+                "blur",
+                "focusout",
+            ]);
+            await triggerEvents(target, ".o_list_button_discard", ["focus"]);
+            assert.containsNone(target, ".o_dialog", "should not display an invalid field dialog");
+            await triggerEvents(target, ".o_list_button_discard", ["mouseup"]);
+            await click(target.querySelector(".o_list_button_discard"));
+            assert.containsNone(target, ".o_dialog", "should not display an invalid field dialog");
+            assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").innerText, "10");
+
+             // edit again with an invalid value
+            await click(rows[0].querySelector(".o_data_cell"));
+            target.querySelector(".o_data_row .o_data_cell input").value = "oof2";
+            await triggerEvents(target, ".o_data_row .o_data_cell input", ["input"]);
+
+            // mousedown on Discard (simulate a mousemove) and mouseup somewhere else
+            await triggerEvents(target, ".o_list_button_discard", ["mousedown"]);
+            await triggerEvents(target, ".o_data_row .o_data_cell input", [
+                "change",
+                "blur",
+                "focusout",
+            ]);
+            await triggerEvents(target, null, ["focus"]);
+            assert.containsNone(target, ".o_dialog", "should not display an invalid field dialog");
+            await triggerEvents(target, null, ["mouseup"]);
+            await click(target);
+            assert.containsOnce(target, ".o_dialog", "should display an invalid field dialog");
+            await click(target, ".o_dialog .modal-footer .btn-primary"); // click OK
+            assert.strictEqual(target.querySelector(".o_data_row .o_data_cell").innerText, "10");
+        }
+    );
+
+    QUnit.test(
         'editable list view (multi edition): mousedown on "Discard", but mouseup somewhere else',
         async function (assert) {
             await makeView({
@@ -11430,7 +11535,8 @@ QUnit.module("Views", (hooks) => {
                 "focusout",
             ]);
             await triggerEvents(discardButton, null, ["focus"]);
-            await triggerEvents(document, null, ["mouseup"]);
+            await triggerEvents(document.body, null, ["mouseup"]);
+            await triggerEvents(document.body, null, ["click"]);
 
             assert.ok(
                 $(".modal").text().includes("Confirmation"),
@@ -11961,7 +12067,6 @@ QUnit.module("Views", (hooks) => {
 
         await click(rows[0].querySelectorAll(".o_data_cell")[1]);
         await editInput(target, ".o_data_row [name=int_field] input", 666);
-        await click(rows[1].querySelectorAll(".o_data_cell")[0]);
         assert.containsOnce(target, ".modal", "there should be an opened modal");
         assert.ok(
             $(".modal").text().includes("those 2 records"),

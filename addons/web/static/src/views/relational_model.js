@@ -20,7 +20,6 @@ import { pick } from "@web/core/utils/objects";
 import { escape } from "@web/core/utils/strings";
 import { session } from "@web/session";
 import { getFieldFromRegistry } from "@web/views/fields/field";
-import { ListConfirmationDialog } from "@web/views/list/list_confirmation_dialog";
 import { Model } from "@web/views/model";
 import { evalDomain, isNumeric, isRelational, isX2Many, orderByToString } from "@web/views/utils";
 
@@ -247,6 +246,9 @@ class DataPoint {
 
         this.onWillSaveRecord = params.onWillSaveRecord || (() => {});
         this.onRecordSaved = params.onRecordSaved || (() => {});
+        this.onWillSaveMultiRecords = params.onWillSaveMultiRecords || (() => {});
+        this.onSavedMultiRecords = params.onSavedMultiRecords || (() => {});
+        this.onWillSetInvalidField = params.onWillSetInvalidField || (() => {});
 
         this.rawContext = params.rawContext;
         this.defaultContext = params.defaultContext;
@@ -891,18 +893,23 @@ export class Record extends DataPoint {
     }
 
     async setInvalidField(fieldName) {
-        if (this.selected && this.model.multiEdit) {
-            const dialogProps = {
-                body: this.model.env._t("No valid record to save"),
-                confirm: () => {
-                    this.discard();
-                },
-            };
-            await this.model.dialogService.add(AlertDialog, dialogProps);
-        } else {
-            this._invalidFields.add(fieldName);
-            this.model.notify();
+        const canProceed = this.onWillSetInvalidField(this, fieldName);
+        if (canProceed === false) {
+            return;
         }
+        if (this.selected && this.model.multiEdit) {
+            if (!this._invalidFields.has(fieldName)) {
+                const dialogProps = {
+                    body: this.model.env._t("No valid record to save"),
+                    confirm: () => {
+                        this.discard();
+                    },
+                };
+                await this.model.dialogService.add(AlertDialog, dialogProps);
+            }
+        }
+        this._invalidFields.add(fieldName);
+        this.model.notify();
     }
 
     /**
@@ -1635,8 +1642,10 @@ class DynamicList extends DataPoint {
         return resIds;
     }
 
-    async multiSave(record) {
-        return this.model.mutex.exec(() => this._multiSave(record));
+    // Note: changes is only there for documents and won't be necessary with the new model,
+    // so don't use it (we use record.getChanges() instead)
+    async multiSave(record, changes) {
+        return this.model.mutex.exec(() => this._multiSave(record, changes));
     }
 
     selectDomain(value) {
@@ -1674,15 +1683,11 @@ class DynamicList extends DataPoint {
     // Protected
     // -------------------------------------------------------------------------
 
-    async _multiSave(record) {
-        if (this.blockUpdate) {
-            return;
-        }
-        const selection = this.selection;
-        const changes = record.getChanges();
+    async _multiSave(record, changes = record.getChanges()) {
         if (!changes) {
             return;
         }
+        const selection = this.selection;
         const validSelection = selection.reduce((result, record) => {
             if (
                 !Object.keys(changes).filter(
@@ -1695,63 +1700,32 @@ class DynamicList extends DataPoint {
             }
             return result;
         }, []);
-
-        if (validSelection.length === 0) {
-            const dialogProps = {
-                body: this.model.env._t("No valid record to save"),
-                confirm: () => {
-                    record.discard();
-                },
-            };
-            await this.model.dialogService.add(AlertDialog, dialogProps);
-        } else if (validSelection.length > 1) {
-            this.editedRecord = null;
-            const dialogProps = {
-                confirm: async () => {
-                    const resIds = validSelection.map((r) => r.resId);
-                    try {
-                        const context = this.context;
-                        await this.model.orm.write(this.resModel, resIds, changes, { context });
-                        validSelection.forEach((record) => {
-                            record.selected = false;
-                        });
-                        await Promise.all(validSelection.map((record) => record.load()));
-                        record.switchMode("readonly");
-                        this.model.notify();
-                    } catch {
+        const canProceed = await this.onWillSaveMultiRecords(record, validSelection);
+        if (canProceed !== false) {
+            if (validSelection.length === 0) {
+                const dialogProps = {
+                    body: this.model.env._t("No valid record to save"),
+                    confirm: () => {
                         record.discard();
-                    }
-                    validSelection.forEach((record) => {
-                        record.selected = false;
-                    });
-                },
-                cancel: () => {
-                    record.discard();
-                },
-                isDomainSelected: this.isDomainSelected,
-                fields: Object.keys(changes).map((fieldName) => {
-                    const label =
-                        record.activeFields[fieldName].string || record.fields[fieldName].string;
-                    const widget = record.activeFields[fieldName].widget;
-                    return { name: fieldName, label, widget };
-                }),
-                nbRecords: selection.length,
-                nbValidRecords: validSelection.length,
-                record,
-                fieldNodes: this.model.fieldNodes,
-            };
-            this.model.bus.trigger("list-confirmation-dialog-will-open");
-            await new Promise((resolve) => {
-                this.model.dialogService.add(ListConfirmationDialog, dialogProps, {
-                    onClose: () => {
-                        this.model.bus.trigger("list-confirmation-dialog-closed");
-                        resolve();
                     },
-                });
-            });
-        } else {
-            await record._save();
-            record.selected = false;
+                };
+                return this.model.dialogService.add(AlertDialog, dialogProps);
+            } else if (validSelection.length > 1) {
+                this.editedRecord = null;
+                const resIds = validSelection.map((r) => r.resId);
+                try {
+                    const context = this.context;
+                    await this.model.orm.write(this.resModel, resIds, changes, { context });
+                    await Promise.all(validSelection.map((record) => record.load()));
+                    record.switchMode("readonly");
+                } catch {
+                    record.discard();
+                }
+            } else {
+                await record._save();
+            }
+            this.onSavedMultiRecords(validSelection);
+            this.model.notify();
         }
     }
 
@@ -1894,6 +1868,9 @@ export class DynamicRecordList extends DynamicList {
             onRecordSaved: this.onRecordSaved,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             onWillSaveRecord: this.onWillSaveRecord,
+            onWillSaveMultiRecords: this.onWillSaveMultiRecords,
+            onSavedMultiRecords: this.onSavedMultiRecords,
+            onWillSetInvalidField: this.onWillSetInvalidField,
             defaultContext: this.defaultContext,
             rawContext: {
                 parent: this.rawContext,
@@ -2203,6 +2180,9 @@ export class DynamicGroupList extends DynamicList {
             onRecordSaved: this.onRecordSaved,
             onRecordWillSwitchMode: this.onRecordWillSwitchMode,
             onWillSaveRecord: this.onWillSaveRecord,
+            onWillSaveMultiRecords: this.onWillSaveMultiRecords,
+            onSavedMultiRecords: this.onSavedMultiRecords,
+            onWillSetInvalidField: this.onWillSetInvalidField,
         };
     }
 
@@ -2576,6 +2556,9 @@ export class Group extends DataPoint {
             onRecordSaved: this.onRecordSaved,
             onRecordWillSwitchMode: params.onRecordWillSwitchMode,
             onWillSaveRecord: this.onWillSaveRecord,
+            onWillSaveMultiRecords: this.onWillSaveMultiRecords,
+            onSavedMultiRecords: this.onSavedMultiRecords,
+            onWillSetInvalidField: this.onWillSetInvalidField,
             defaultContext: {
                 ...params.defaultContext,
                 [`default_${this.groupByField.name}`]: this.getServerValue(),
@@ -2700,6 +2683,9 @@ export class Group extends DataPoint {
             rawContext: this.rawContext,
             onRecordSaved: this.onRecordSaved,
             onWillSaveRecord: this.onWillSaveRecord,
+            onWillSaveMultiRecords: this.onWillSaveMultiRecords,
+            onSavedMultiRecords: this.onSavedMultiRecords,
+            onWillSetInvalidField: this.onWillSetInvalidField,
             ...params,
         });
     }
@@ -3065,7 +3051,7 @@ export class StaticList extends DataPoint {
 
             for (const command of this._commands) {
                 const code = command[0];
-                if ([DELETE].includes(code)) {
+                if ([DELETE, FORGET].includes(code)) {
                     commands.push(command);
                 }
             }
@@ -3430,8 +3416,10 @@ export class RelationalModel extends Model {
             groupByInfo: params.groupByInfo,
             onRecordSaved: params.onRecordSaved,
             onWillSaveRecord: params.onWillSaveRecord,
+            onWillSaveMultiRecords: params.onWillSaveMultiRecords,
+            onSavedMultiRecords: params.onSavedMultiRecords,
+            onWillSetInvalidField: params.onWillSetInvalidField,
         };
-        this.fieldNodes = params.fieldNodes; // used by the ListConfirmationDialog
         if (this.rootType === "record") {
             this.rootParams.resId = params.resId;
             this.rootParams.resIds = params.resIds;

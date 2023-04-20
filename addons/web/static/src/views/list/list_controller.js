@@ -19,6 +19,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { ExportDataDialog } from "@web/views/view_dialogs/export_data_dialog";
 import { useSetupView } from "@web/views/view_hook";
+import { ListConfirmationDialog } from "./list_confirmation_dialog";
 
 import { Component, onMounted, onWillStart, useEffect, useRef, useSubEnv } from "@odoo/owl";
 
@@ -37,29 +38,17 @@ export class ListController extends Component {
         this.activeActions = this.archInfo.activeActions;
         this.editable =
             this.activeActions.edit && this.props.editable ? this.archInfo.editable : false;
-        this.multiEdit = this.archInfo.multiEdit;
-        const fields = { ...this.props.fields };
-        const { rootState } = this.props.state || {};
-        const { defaultGroupBy, rawExpand } = this.archInfo;
-        this.model = useModel(this.props.Model, {
-            resModel: this.props.resModel,
-            fields,
-            activeFields: this.archInfo.activeFields,
-            fieldNodes: this.archInfo.fieldNodes,
-            handleField: this.archInfo.handleField,
-            viewMode: "list",
-            groupByInfo: this.archInfo.groupBy.fields,
-            limit: this.archInfo.limit || this.props.limit,
-            countLimit: this.archInfo.countLimit,
-            defaultOrder: this.archInfo.defaultOrder,
-            defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") ? defaultGroupBy : false,
-            expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
-            groupsLimit: this.archInfo.groupsLimit,
-            multiEdit: this.multiEdit,
-            rootState,
-            onRecordSaved: this.onRecordSaved.bind(this),
-            onWillSaveRecord: this.onWillSaveRecord.bind(this),
-        });
+        this.model = useModel(this.props.Model, this.modelParams);
+
+        // In multi edition, we save or notify invalidity directly when a field is updated, which
+        // occurs on the change event for input fields. But we don't want to do it when clicking on
+        // "Discard". So we set a flag on mousedown (which triggers the update) to block the multi
+        // save or invalid notification.
+        // However, if the mouseup (and click) is done outside "Discard", we finally want to do it.
+        // We use `nextActionAfterMouseup` for this purpose: it registers a callback to execute if
+        // the mouseup following a mousedown on "Discard" isn't done on "Discard".
+        this.hasMousedownDiscard = false;
+        this.nextActionAfterMouseup = null;
 
         onWillStart(async () => {
             this.isExportEnable = await this.userService.hasGroup("base.group_allow_export");
@@ -75,10 +64,10 @@ export class ListController extends Component {
         });
 
         this.archiveEnabled =
-            "active" in fields
-                ? !fields.active.readonly
-                : "x_active" in fields
-                ? !fields.x_active.readonly
+            "active" in this.props.fields
+                ? !this.props.fields.active.readonly
+                : "x_active" in this.props.fields
+                ? !this.props.fields.x_active.readonly
                 : false;
         useSubEnv({ model: this.model }); // do this in useModel?
         useViewButtons(this.model, this.rootRef, {
@@ -150,6 +139,32 @@ export class ListController extends Component {
             },
             () => [this.model.root.selection.length]
         );
+    }
+
+    get modelParams() {
+        const { rootState } = this.props.state || {};
+        const { defaultGroupBy, rawExpand } = this.archInfo;
+        return {
+            resModel: this.props.resModel,
+            fields: { ...this.props.fields },
+            activeFields: this.archInfo.activeFields,
+            handleField: this.archInfo.handleField,
+            viewMode: "list",
+            groupByInfo: this.archInfo.groupBy.fields,
+            limit: this.archInfo.limit || this.props.limit,
+            countLimit: this.archInfo.countLimit,
+            defaultOrder: this.archInfo.defaultOrder,
+            defaultGroupBy: this.props.searchMenuTypes.includes("groupBy") ? defaultGroupBy : false,
+            expand: rawExpand ? evaluateExpr(rawExpand, this.props.context) : false,
+            groupsLimit: this.archInfo.groupsLimit,
+            multiEdit: this.archInfo.multiEdit,
+            rootState,
+            onRecordSaved: this.onRecordSaved.bind(this),
+            onWillSaveRecord: this.onWillSaveRecord.bind(this),
+            onWillSaveMultiRecords: this.onWillSaveMultiRecords.bind(this),
+            onSavedMultiRecords: this.onSavedMultiRecords.bind(this),
+            onWillSetInvalidField: this.onWillSetInvalidField.bind(this),
+        };
     }
 
     /**
@@ -224,15 +239,17 @@ export class ListController extends Component {
     }
 
     onMouseDownDiscard(mouseDownEvent) {
-        const list = this.model.root;
-        list.blockUpdate = true;
+        this.hasMousedownDiscard = true;
         document.addEventListener(
             "mouseup",
             (mouseUpEvent) => {
+                this.hasMousedownDiscard = false;
                 if (mouseUpEvent.target !== mouseDownEvent.target) {
-                    list.blockUpdate = false;
-                    list.multiSave(list.editedRecord);
+                    if (this.nextActionAfterMouseup) {
+                        this.nextActionAfterMouseup();
+                    }
                 }
+                this.nextActionAfterMouseup = null;
             },
             { capture: true, once: true }
         );
@@ -510,6 +527,64 @@ export class ListController extends Component {
     }
 
     async afterExecuteActionButton(clickParams) {}
+
+    onWillSaveMultiRecords(editedRecord, validSelectedRecords) {
+        if (this.hasMousedownDiscard) {
+            this.nextActionAfterMouseup = () => this.model.root.multiSave(editedRecord);
+            return false;
+        }
+        if (validSelectedRecords.length > 1) {
+            const { isDomainSelected, selection } = this.model.root;
+            return new Promise((resolve) => {
+                const dialogProps = {
+                    confirm: () => resolve(true),
+                    cancel: () => {
+                        editedRecord.discard();
+                        resolve(false);
+                    },
+                    isDomainSelected,
+                    fields: Object.keys(editedRecord.getChanges()).map((fieldName) => {
+                        const activeField = editedRecord.activeFields[fieldName];
+                        return {
+                            name: fieldName,
+                            label: activeField.string || editedRecord.fields[fieldName].string,
+                            widget: activeField.widget,
+                        };
+                    }),
+                    nbRecords: selection.length,
+                    nbValidRecords: validSelectedRecords.length,
+                    record: editedRecord,
+                    fieldNodes: this.archInfo.fieldNodes,
+                };
+
+                const focusedCellBeforeDialog = document.activeElement.closest(".o_data_cell");
+                this.dialogService.add(ListConfirmationDialog, dialogProps, {
+                    onClose: () => {
+                        if (focusedCellBeforeDialog) {
+                            focusedCellBeforeDialog.focus();
+                        }
+                        editedRecord.discard();
+                        resolve(false);
+                    },
+                });
+            });
+        }
+        return true;
+    }
+
+    onWillSetInvalidField(record, fieldName) {
+        if (this.hasMousedownDiscard) {
+            this.nextActionAfterMouseup = () => record.setInvalidField(fieldName);
+            return false;
+        }
+        return true;
+    }
+
+    onSavedMultiRecords(records) {
+        records.forEach((record) => {
+            record.selected = false;
+        });
+    }
 }
 
 ListController.template = `web.ListView`;

@@ -19,22 +19,8 @@ const QUICK_CREATE_FIELD_TYPES = ["char", "boolean", "many2one", "selection", "m
 export class KanbanController extends Component {
     setup() {
         this.actionService = useService("action");
-        const { Model, resModel, fields, archInfo, limit, defaultGroupBy, state } = this.props;
-        const { rootState } = state || {};
-        this.model = useModel(Model, {
-            activeFields: archInfo.activeFields,
-            progressAttributes: archInfo.progressAttributes,
-            fields,
-            resModel,
-            handleField: archInfo.handleField,
-            limit: archInfo.limit || limit,
-            countLimit: archInfo.countLimit,
-            defaultGroupBy,
-            defaultOrder: archInfo.defaultOrder,
-            viewMode: "kanban",
-            openGroupsByDefault: true,
-            rootState,
-        });
+        const { Model, archInfo } = this.props;
+        this.model = useModel(Model, this.modelParams);
         this.headerButtons = archInfo.headerButtons;
 
         const self = this;
@@ -90,6 +76,25 @@ export class KanbanController extends Component {
                 };
             }
         });
+    }
+
+    get modelParams() {
+        const { resModel, fields, archInfo, limit, defaultGroupBy, state } = this.props;
+        const { rootState } = state || {};
+        return {
+            activeFields: archInfo.activeFields,
+            progressAttributes: archInfo.progressAttributes,
+            fields,
+            resModel,
+            handleField: archInfo.handleField,
+            limit: archInfo.limit || limit,
+            countLimit: archInfo.countLimit,
+            defaultGroupBy,
+            defaultOrder: archInfo.defaultOrder,
+            viewMode: "kanban",
+            openGroupsByDefault: true,
+            rootState,
+        };
     }
 
     get className() {

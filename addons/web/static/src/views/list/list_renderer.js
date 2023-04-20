@@ -156,20 +156,6 @@ export class ListRenderer extends Component {
             });
         }
 
-        // not very beautiful but works: refactor at some point
-        let lastCellBeforeDialogOpening;
-        useBus(this.props.list.model.bus, "list-confirmation-dialog-will-open", () => {
-            if (this.tableRef.el.contains(document.activeElement)) {
-                lastCellBeforeDialogOpening = document.activeElement.closest("td");
-            }
-        });
-
-        useBus(this.props.list.model.bus, "list-confirmation-dialog-closed", () => {
-            if (lastCellBeforeDialogOpening) {
-                this.focus(lastCellBeforeDialogOpening);
-            }
-        });
-
         useBus(this.props.list.model.bus, "FIELD_IS_DIRTY", (ev) => (this.lastIsDirty = ev.detail));
 
         useBounceButton(this.rootRef, () => {
