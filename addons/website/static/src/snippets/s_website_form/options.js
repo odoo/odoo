@@ -37,6 +37,41 @@ function _getDomain(formEl, name, type, relation) {
     return field && field.domain;
 }
 
+const authorizedFieldsCache = {
+    data: {},
+    /**
+     * Returns the fields definitions for a form
+     *
+     * @param {HTMLElement} formEl
+     * @param {Object} orm
+     * @returns {Promise}
+     */
+    get(formEl, orm) {
+        // Combine model and fields into cache key.
+        const model = formEl.dataset.model_name;
+        const propertyOrigins = {};
+        const parts = [model];
+        for (const hiddenInputEl of [...formEl.querySelectorAll("input[type=hidden]")].sort(
+            (firstEl, secondEl) => firstEl.name.localeCompare(secondEl.name)
+        )) {
+            // Pushing using the name order to avoid being impacted by the
+            // order of hidden fields within the DOM.
+            parts.push(hiddenInputEl.name);
+            parts.push(hiddenInputEl.value);
+            propertyOrigins[hiddenInputEl.name] = hiddenInputEl.value;
+        }
+        const cacheKey = parts.join("/");
+        if (!(cacheKey in this.data)) {
+            this.data[cacheKey] = orm.call("ir.model", "get_authorized_fields", [
+                model,
+                propertyOrigins,
+            ]);
+        }
+        return this.data[cacheKey];
+    },
+};
+
+
 const FormEditor = options.Class.extend({
     init() {
         this._super(...arguments);
@@ -63,8 +98,18 @@ const FormEditor = options.Class.extend({
         if (field.records) {
             return field.records;
         }
-        // Set selection as records to avoid added conplexity
-        if (field.type === 'selection') {
+        if (field._property && field.type === "tags") {
+            // Convert tags to records to avoid added complexity.
+            // Tag ids need to escape "," to be able to recover their value on
+            // the server side if they contain ",".
+            field.records = field.tags.map(tag => ({
+                id: tag[0].replaceAll("\\", "\\/").replaceAll(",", "\\,"),
+                display_name: tag[1],
+            }));
+        } else if (field._property && field.comodel) {
+            field.records = await this.orm.searchRead(field.comodel, field.domain || [], ["display_name"]);
+        } else if (field.type === "selection") {
+            // Set selection as records to avoid added complexity.
             field.records = field.selection.map(el => ({
                 id: el[0],
                 display_name: el[1],
@@ -183,7 +228,8 @@ const FormEditor = options.Class.extend({
             }
         }
         const template = document.createElement('template');
-        template.content.append(renderToElement("website.form_field_" + field.type, params));
+        const renderType = field.type === "tags" ? "many2many" : field.type;
+        template.content.append(renderToElement("website.form_field_" + renderType, params));
         if (field.description && field.description !== true) {
             $(template.content.querySelector('.s_website_form_field_description')).replaceWith(field.description);
         }
@@ -495,11 +541,34 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      * ie: The Job you apply for if the form is on that job's page.
      */
     addActionField: function (previewMode, value, params) {
+        // Remove old property fields.
+        authorizedFieldsCache.get(this.$target[0], this.orm).then((fields) => {
+            for (const [fieldName, field] of Object.entries(fields)) {
+                if (field._property) {
+                    for (const inputEl of this.$target[0].querySelectorAll(`[name="${fieldName}"]`)) {
+                        inputEl.closest(".s_website_form_field").remove();
+                    }
+                }
+            }
+        });
         const fieldName = params.fieldName;
         if (params.isSelect === 'true') {
             value = parseInt(value);
         }
         this._addHiddenField(value, fieldName);
+        // Existing field editors need to be rebuilt with the correct list of
+        // available fields.
+        this.trigger_up("snippet_edition_request", {exec: () => {
+            for (const snippetEditor of [...this.options.wysiwyg.snippetsMenu.snippetEditors]) {
+                const snippetEditorEl = snippetEditor.$optionsSection[0];
+                if (snippetEditorEl.querySelector(".snippet-option-WebsiteFieldEditor")) {
+                    snippetEditor.destroy();
+                }
+            }
+        }});
+        this.trigger_up('activate_snippet', {
+            $snippet: this.$target,
+        });
     },
     /**
      * Prompts the user to save changes before being redirected
@@ -847,8 +916,6 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
     },
 });
 
-const authorizedFieldsCache = {};
-
 options.registry.WebsiteFieldEditor = FieldEditor.extend({
     /**
      * @override
@@ -863,16 +930,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
     willStart: async function () {
         const _super = this._super.bind(this);
         // Get the authorized existing fields for the form model
-        const model = this.formEl.dataset.model_name;
-        let getFields;
-        if (model in authorizedFieldsCache) {
-            getFields = authorizedFieldsCache[model];
-        } else {
-            getFields = this.orm.call("ir.model", "get_authorized_fields", [model]);
-            authorizedFieldsCache[model] = getFields;
-        }
-
-        this.existingFields = await getFields.then((fields) => {
+        this.existingFields = await authorizedFieldsCache.get(this.formEl, this.orm).then((fields) => {
             this.fields = {};
             for (const [fieldName, field] of Object.entries(fields)) {
                 field.name = fieldName;
@@ -887,7 +945,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 button.textContent = field.string;
                 button.dataset.existingField = field.name;
                 return button;
-            }).sort((a, b) => (a.textContent > b.textContent) ? 1 : (a.textContent < b.textContent) ? -1 : 0);
+            }).sort((a, b) => a.textContent.localeCompare(b.textContent, undefined, { numeric: true, sensitivity: "base" }));
         });
         return _super(...arguments);
     },
