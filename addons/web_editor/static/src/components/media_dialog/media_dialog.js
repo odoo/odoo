@@ -180,6 +180,18 @@ export class MediaDialog extends Component {
                         if (this.props.media.dataset.shapeRotate) {
                             element.dataset.shapeRotate = this.props.media.dataset.shapeRotate;
                         }
+                        if (this.props.media.dataset.hoverEffect) {
+                            element.dataset.hoverEffect = this.props.media.dataset.hoverEffect;
+                        }
+                        if (this.props.media.dataset.hoverEffectColor) {
+                            element.dataset.hoverEffectColor = this.props.media.dataset.hoverEffectColor;
+                        }
+                        if (this.props.media.dataset.hoverEffectStrokeWidth) {
+                            element.dataset.hoverEffectStrokeWidth = this.props.media.dataset.hoverEffectStrokeWidth;
+                        }
+                        if (this.props.media.dataset.hoverEffectIntensity) {
+                            element.dataset.hoverEffectIntensity = this.props.media.dataset.hoverEffectIntensity;
+                        }
                     }
                 }
                 for (const otherTab of Object.keys(TABS).filter(key => key !== this.state.activeTab)) {
