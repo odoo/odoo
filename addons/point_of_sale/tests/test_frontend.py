@@ -43,6 +43,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
             'name': 'Bank',
             'journal_id': cls.bank_journal.id,
         })
+        env['pos.config'].search([]).unlink()
         cls.main_pos_config = env['pos.config'].create({
             'name': 'Shop',
             'module_pos_restaurant': False,
