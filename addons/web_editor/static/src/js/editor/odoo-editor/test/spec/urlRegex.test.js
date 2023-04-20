@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import { URL_REGEX, URL_REGEX_WITH_INFOS } from '../../src/OdooEditor.js';
 
 describe('urlRegex', () => {

@@ -29,6 +29,7 @@ const QWeb = core.qweb;
 const OdooEditor = OdooEditorLib.OdooEditor;
 const getDeepRange = OdooEditorLib.getDeepRange;
 const getInSelection = OdooEditorLib.getInSelection;
+const isProtected = OdooEditorLib.isProtected;
 const isBlock = OdooEditorLib.isBlock;
 const rgbToHex = OdooEditorLib.rgbToHex;
 const preserveCursor = OdooEditorLib.preserveCursor;
@@ -74,6 +75,7 @@ const Wysiwyg = Widget.extend({
         allowCommandImage: true,
         allowCommandLink: true,
         insertParagraphAfterColumns: true,
+        onHistoryResetFromSteps: () => {},
         autostart: true,
     },
     init: function (parent, options) {
@@ -141,8 +143,12 @@ const Wysiwyg = Widget.extend({
             this.getSession()['notification_type']
         ) {
             editorCollaborationOptions = this.setupCollaboration(options.collaborationChannel);
-            // Wait until editor is focused to join the peer to peer network.
-            this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+            if (this.options.collaborativeTrigger === 'start') {
+                this._joinPeerToPeer();
+            } else if (this.options.collaborativeTrigger === 'focus') {
+                // Wait until editor is focused to join the peer to peer network.
+                this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+            }
         }
 
         const getYoutubeVideoElement = async (url) => {
@@ -303,7 +309,7 @@ const Wysiwyg = Widget.extend({
 
                 const selection = self.odooEditor.document.getSelection();
                 const anchorNode = selection.anchorNode;
-                if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+                if (isProtected(anchorNode)) {
                     return;
                 }
 
@@ -558,6 +564,7 @@ const Wysiwyg = Widget.extend({
                                     if (remoteSelection) {
                                         this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
                                     }
+                                    this.options.onHistoryResetFromSteps();
                                 }
                                 // In case there are steps received in the meantime, process them.
                                 if (historyStepsBuffer.length) {
@@ -566,10 +573,12 @@ const Wysiwyg = Widget.extend({
                                 }
                                 historySyncFinished = true;
                             } else {
+                                const currentStep = this.odooEditor._historySteps[this.odooEditor._historySteps.length - 1];
                                 const remoteSelection = await this.ptp.requestClient(fromClientId, 'get_collaborative_selection', undefined, { transport: 'rtc' });
                                 if (remoteSelection) {
                                     this.odooEditor.onExternalMultiselectionUpdate(remoteSelection);
                                 }
+                                this.ptp.notifyClient(fromClientId, 'oe_history_step', currentStep, { transport: 'rtc' });
                             }
                             break;
                         }
@@ -685,6 +694,9 @@ const Wysiwyg = Widget.extend({
                 this.ptp && this.odooEditor.onExternalHistorySteps(missingSteps.concat([step]));
             },
         };
+        if (this.options.postProcessExternalSteps) {
+            editorCollaborationOptions.postProcessExternalSteps = this.options.postProcessExternalSteps;
+        }
         return editorCollaborationOptions;
     },
     /**
@@ -1850,7 +1862,7 @@ const Wysiwyg = Widget.extend({
     _updateEditorUI: function (e) {
         let selection = this.odooEditor.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+        if (isProtected(anchorNode)) {
             return;
         }
 
@@ -2605,8 +2617,12 @@ const Wysiwyg = Widget.extend({
         this.setValue(value);
         this.odooEditor.historyReset();
         this.setupCollaboration(collaborationChannel);
-        // Wait until editor is focused to join the peer to peer network.
-        this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+        if (this.options.collaborativeTrigger === 'start') {
+            this._joinPeerToPeer();
+        } else if (this.options.collaborativeTrigger === 'focus') {
+            // Wait until editor is focused to join the peer to peer network.
+            this.$editable[0].addEventListener('focus', this._joinPeerToPeer);
+        }
         const initialHistoryId = value && this._getInitialHistoryId(value);
         if (initialHistoryId) {
             this.odooEditor.historySetInitialId(initialHistoryId);

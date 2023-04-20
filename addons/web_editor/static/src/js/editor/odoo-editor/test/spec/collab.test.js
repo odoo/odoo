@@ -1,4 +1,6 @@
-import { OdooEditor } from '../../src/OdooEditor.js';
+/** @odoo-module */
+
+import { OdooEditor, parseHTML, setSelection } from '../../src/OdooEditor.js';
 import {
     insertCharsAt,
     parseMultipleTextualSelection,
@@ -6,7 +8,9 @@ import {
     setTestSelection,
     targetDeepest,
     undo,
+    unformat,
 } from '../utils.js';
+import { Deferred } from "@web/core/utils/concurrency";
 
 const overridenDomClass = [
     'HTMLBRElement',
@@ -70,7 +74,7 @@ const testSameHistory = clientInfos => {
     }
 };
 
-const testMultiEditor = spec => {
+const testMultiEditor = async spec => {
     const clientInfos = {};
     const concurentActions = spec.concurentActions || [];
     const clientIds = spec.clientIds || Object.keys(concurentActions);
@@ -121,7 +125,7 @@ const testMultiEditor = spec => {
         let nextId = 1;
         OdooEditor.prototype._generateId = () => 'fake_id_' + nextId++;
 
-        clientInfo.editor = new OdooEditor(clientInfo.editable, {
+        clientInfo.editor = new OdooEditor(clientInfo.editable, Object.assign({
             toSanitize: false,
             document: iframeDocument,
             collaborationClientId: clientInfo.clientId,
@@ -140,7 +144,7 @@ const testMultiEditor = spec => {
                 }
                 clientInfo.editor.onExternalHistorySteps(missingSteps.concat([step]));
             },
-        });
+        }, spec.options || {}));
         clientInfo.editor.keyboardType = 'PHYSICAL';
         const selection = selections[clientInfo.clientId];
         if (selection) {
@@ -160,7 +164,7 @@ const testMultiEditor = spec => {
     OdooEditor.prototype._generateId = () => 'fake_concurent_id_' + concurentNextId++;
 
     if (spec.afterCreate) {
-        spec.afterCreate(clientInfos);
+        await spec.afterCreate(clientInfos);
     }
 
     shouldListenSteps = false;
@@ -220,7 +224,7 @@ const testMultiEditor = spec => {
         }
     }
     if (spec.afterCursorInserted) {
-        spec.afterCursorInserted(clientInfos);
+        await spec.afterCursorInserted(clientInfos);
     }
     for (const clientInfo of clientInfosList) {
         clientInfo.editor.destroy();
@@ -230,8 +234,8 @@ const testMultiEditor = spec => {
 
 describe('Collaboration', () => {
     describe('Conflict resolution', () => {
-        it('all client steps should be on the same order', () => {
-            testMultiEditor({
+        it('all client steps should be on the same order', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2', 'c3'],
                 contentBefore: '<p><x>a[c1}{c1]</x><y>e[c2}{c2]</y><z>i[c3}{c3]</z></p>',
                 afterCreate: clientInfos => {
@@ -258,8 +262,8 @@ describe('Collaboration', () => {
                 contentAfter: '<p><x>abcd[c1}{c1]</x><y>efgh[c2}{c2]</y><z>ijkl[c3}{c3]</z></p>',
             });
         });
-        it('should 2 client insertText in 2 different paragraph', () => {
-            testMultiEditor({
+        it('should 2 client insertText in 2 different paragraph', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>ab[c1}{c1]</p><p>cd[c2}{c2]</p>',
                 afterCreate: clientInfos => {
@@ -277,8 +281,8 @@ describe('Collaboration', () => {
                 contentAfter: '<p>abe[c1}{c1]</p><p>cdf[c2}{c2]</p>',
             });
         });
-        it('should 2 client insertText twice in 2 different paragraph', () => {
-            testMultiEditor({
+        it('should 2 client insertText twice in 2 different paragraph', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>ab[c1}{c1]</p><p>cd[c2}{c2]</p>',
                 afterCreate: clientInfos => {
@@ -298,8 +302,8 @@ describe('Collaboration', () => {
                 contentAfter: '<p>abef[c1}{c1]</p><p>cdgh[c2}{c2]</p>',
             });
         });
-        it('should insertText with client 1 and deleteBackward with client 2', () => {
-            testMultiEditor({
+        it('should insertText with client 1 and deleteBackward with client 2', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>ab[c1}{c1][c2}{c2]c</p>',
                 afterCreate: clientInfos => {
@@ -317,8 +321,8 @@ describe('Collaboration', () => {
                 contentAfter: '<p>a[c2}{c2]c[c1}{c1]dc</p>',
             });
         });
-        it('should insertText twice with client 1 and deleteBackward twice with client 2', () => {
-            testMultiEditor({
+        it('should insertText twice with client 1 and deleteBackward twice with client 2', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>ab[c1}{c1][c2}{c2]c</p>',
                 afterCreate: clientInfos => {
@@ -339,8 +343,8 @@ describe('Collaboration', () => {
             });
         });
     });
-    it('should reset from snapshot', () => {
-        testMultiEditor({
+    it('should reset from snapshot', async () => {
+        await testMultiEditor({
             clientIds: ['c1', 'c2'],
             contentBefore: '<p>a[c1}{c1]</p>',
             afterCreate: clientInfos => {
@@ -362,8 +366,8 @@ describe('Collaboration', () => {
         });
     });
     describe('steps whith no parent in history', () => {
-        it('should be able to retreive steps when disconnected from clients that has send step', () => {
-            testMultiEditor({
+        it('should be able to retreive steps when disconnected from clients that has send step', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2', 'c3'],
                 contentBefore: '<p><x>a[c1}{c1]</x><y>b[c2}{c2]</y><z>c[c3}{c3]</z></p>',
                 afterCreate: clientInfos => {
@@ -387,8 +391,8 @@ describe('Collaboration', () => {
                 contentAfter: '<p><x>ad[c1}{c1]</x><y>be[c2}{c2]</y><z>c[c3}{c3]</z></p>',
             });
         });
-        it('should receive steps where parent was not received', () => {
-            testMultiEditor({
+        it('should receive steps where parent was not received', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2', 'c3'],
                 contentBefore: '<p><i>a[c1}{c1]</i><b>b[c2}{c2]</b></p>',
                 afterCreate: clientInfos => {
@@ -430,8 +434,8 @@ describe('Collaboration', () => {
         });
     });
     describe('sanitize', () => {
-        it('should sanitize when adding a node', () => {
-            testMultiEditor({
+        it('should sanitize when adding a node', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p><x>a</x></p>',
                 afterCreate: clientInfos => {
@@ -450,7 +454,7 @@ describe('Collaboration', () => {
             });
         });
         it('should sanitize when adding a script as descendant', async () => {
-            testMultiEditor({
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>a[c1}{c1][c2}{c2]</p>',
                 afterCreate: clientInfos => {
@@ -469,8 +473,8 @@ describe('Collaboration', () => {
                 },
             });
         });
-        it('should sanitize when changing an attribute', () => {
-            testMultiEditor({
+        it('should sanitize when changing an attribute', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>a<img></p>',
                 afterCreate: clientInfos => {
@@ -491,8 +495,8 @@ describe('Collaboration', () => {
             });
         });
 
-        it('should sanitize when undo is adding a script node', () => {
-            testMultiEditor({
+        it('should sanitize when undo is adding a script node', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>a</p>',
                 afterCreate: clientInfos => {
@@ -517,8 +521,8 @@ describe('Collaboration', () => {
                 },
             });
         });
-        it('should sanitize when undo is adding a descendant script node', () => {
-            testMultiEditor({
+        it('should sanitize when undo is adding a descendant script node', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>a</p>',
                 afterCreate: clientInfos => {
@@ -543,8 +547,8 @@ describe('Collaboration', () => {
                 },
             });
         });
-        it('should sanitize when undo is changing an attribute', () => {
-            testMultiEditor({
+        it('should sanitize when undo is changing an attribute', async () => {
+            await testMultiEditor({
                 clientIds: ['c1', 'c2'],
                 contentBefore: '<p>a<img></p>',
                 afterCreate: clientInfos => {
@@ -570,8 +574,8 @@ describe('Collaboration', () => {
                 },
             });
         });
-        it('should not sanitize contenteditable attribute (check DOMPurify DEFAULT_ALLOWED_ATTR)', () => {
-            testMultiEditor({
+        it('should not sanitize contenteditable attribute (check DOMPurify DEFAULT_ALLOWED_ATTR)', async () => {
+            await testMultiEditor({
                 clientIds: ['c1'],
                 contentBefore: '<div class="remove-me" contenteditable="true">[c1}{c1]<br></div>',
                 afterCreate: clientInfos => {
@@ -586,4 +590,141 @@ describe('Collaboration', () => {
             });
         });
     });
+    describe('data-oe-protected', () => {
+        it('should not share protected mutations and share unprotected ones', async () => {
+            await testMultiEditor({
+                clientIds: ['c1', 'c2'],
+                contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
+                afterCreate: clientInfos => {
+                    clientInfos.c1.editor.editable.prepend(...parseHTML(unformat(`
+                        <div data-oe-protected="true">
+                            <p id="true"><br></p>
+                            <div data-oe-protected="false">
+                                <p id="false"><br></p>
+                            </div>
+                        </div>
+                    `)).children);
+                    clientInfos.c1.editor.historyStep();
+                    const pTrue = clientInfos.c1.editor.editable.querySelector('#true');
+                    setSelection(pTrue, 0);
+                    clientInfos.c1.editor.execCommand('insert', 'a');
+                    const pFalse = clientInfos.c1.editor.editable.querySelector('#false');
+                    setSelection(pFalse, 0);
+                    clientInfos.c1.editor.execCommand('insert', 'a');
+                    clientInfos.c2.editor.onExternalHistorySteps(clientInfos.c1.editor._historySteps);
+                    testSameHistory(clientInfos);
+                },
+                afterCursorInserted:  clientInfos => {
+                    chai.expect(clientInfos.c1.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-protected="true">
+                            <p id="true">a<br></p>
+                            <div data-oe-protected="false">
+                                <p id="false">a[c1}{c1]<br></p>
+                            </div>
+                        </div>
+                        <p>[c2}{c2]</p>
+                    `));
+                    chai.expect(clientInfos.c2.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-protected="true">
+                            <p id="true"><br></p>
+                            <div data-oe-protected="false">
+                                <p id="false">a[c1}{c1]<br></p>
+                            </div>
+                        </div>
+                        <p>[c2}{c2]</p>
+                    `));
+                },
+            });
+        });
+    });
+    describe('data-oe-transient-content', () => {
+        it('should send an empty transient-content element', async () => {
+            await testMultiEditor({
+                clientIds: ['c1', 'c2'],
+                contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
+                afterCreate: clientInfos => {
+                    clientInfos.c1.editor.editable.prepend(...parseHTML(unformat(`
+                        <div data-oe-transient-content="true">
+                            <p>secret</p>
+                        </div>
+                    `)).children);
+                    clientInfos.c1.editor.historyStep();
+                    clientInfos.c2.editor.onExternalHistorySteps(
+                        clientInfos.c1.editor._historySteps
+                    );
+                    testSameHistory(clientInfos);
+                },
+                afterCursorInserted:  clientInfos => {
+                    chai.expect(clientInfos.c1.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-transient-content="true">
+                            <p>secret</p>
+                        </div>
+                        <p>[c1}{c1][c2}{c2]</p>
+                    `));
+                    chai.expect(clientInfos.c2.editable.innerHTML).to.equal(unformat(`
+                        <div data-oe-transient-content="true"></div>
+                        <p>[c1}{c1][c2}{c2]</p>
+                    `));
+                },
+            });
+        });
+    });
+    describe('post process external steps', () => {
+        it('should properly await a processing promise before accepting new external steps.', async () => {
+            const deferredPromise = new Deferred();
+            const postProcessExternalSteps = (element) => {
+                if (element.querySelector('.process')) {
+                    setTimeout(() => {
+                        deferredPromise.resolve();
+                    });
+                    return deferredPromise;
+                }
+                return null;
+            };
+            await testMultiEditor({
+                options: {
+                    postProcessExternalSteps: postProcessExternalSteps,
+                },
+                clientIds: ['c1', 'c2'],
+                contentBefore: '<p>[c1}{c1][c2}{c2]</p>',
+                afterCreate: async clientInfos => {
+                    clientInfos.c1.editor.editable.append(...parseHTML(unformat(`
+                        <div class="process">
+                            <p>secret</p>
+                        </div>
+                    `)).children);
+                    clientInfos.c1.editor.historyStep();
+                    clientInfos.c1.editor.editable.append(...parseHTML(unformat(`
+                        <p>post-process</p>
+                    `)).children);
+                    clientInfos.c1.editor.historyStep();
+                    clientInfos.c2.editor.onExternalHistorySteps(
+                        clientInfos.c1.editor._historySteps
+                    );
+                    chai.expect(clientInfos.c1.editable.innerHTML).to.equal(unformat(`
+                        <p></p>
+                        <div class="process">
+                            <p>secret</p>
+                        </div>
+                        <p>post-process</p>
+                    `));
+                    chai.expect(clientInfos.c2.editable.innerHTML).to.equal(unformat(`
+                        <p></p>
+                        <div class="process">
+                            <p>secret</p>
+                        </div>
+                    `));
+                    await deferredPromise;
+                    chai.expect(clientInfos.c2.editable.innerHTML).to.equal(unformat(`
+                        <p></p>
+                        <div class="process">
+                            <p>secret</p>
+                        </div>
+                        <p>post-process</p>
+                    `));
+                    testSameHistory(clientInfos);
+                },
+            });
+        });
+    })
 });

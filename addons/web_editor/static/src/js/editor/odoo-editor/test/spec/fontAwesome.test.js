@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import { BasicEditor, insertText, testEditor, deleteForward, deleteBackward } from '../utils.js';
 
 describe('FontAwesome', () => {

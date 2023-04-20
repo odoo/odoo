@@ -187,7 +187,7 @@
             <script src="/web_editor/static/src/js/editor/odoo-editor/test/lib/mocha.js"></script>
             <script src="/web_editor/static/src/js/editor/odoo-editor/test/lib/chai.js"></script>
             <script>mocha.setup('bdd').fullTrace()</script>
-            <script src="/web_editor/static/src/js/editor/odoo-editor/test/editor-test.js" type="module"></script>
+            <t t-call-assets="web_editor.mocha_tests"/>
         </t>
         <div id="mocha"></div>
         <div id="editor-test-container"></div>
