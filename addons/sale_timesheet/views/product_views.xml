@@ -13,8 +13,8 @@
                 <field name="service_policy" string="Invoicing Policy" attrs="{'invisible': [('type', '!=', 'service')], 'required': [('type', '=', 'service')]}"/>
             </xpath>
             <field name="product_tooltip" position="after">
-                <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}"/>
-                <div attrs="{'invisible': ['|', ('type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}" class="font-italic text-muted">
+                <label for="product_tooltip" string="" attrs="{'invisible': ['|', ('detailed_type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}"/>
+                <div attrs="{'invisible': ['|', ('detailed_type', '!=', 'service'), ('service_policy', '!=', 'ordered_timesheet')]}" class="font-italic text-muted">
                     Warn the salesperson for an upsell when work done exceeds
                     <field name="service_upsell_threshold" widget="percentage" class="oe_inline"/>
                     of hours sold. (<field name="service_upsell_threshold_ratio" class="oe_inline"/>)
