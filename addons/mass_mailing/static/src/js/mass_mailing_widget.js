@@ -55,6 +55,10 @@ var MassMailingFieldHtml = FieldHtml.extend({
         }
         var fieldName = this.nodeOptions['inline-field'];
 
+        if (this._$codeview && !this._$codeview.hasClass('d-none')) {
+            $editable.html(self.value);
+        }
+
         if (this.$content.find('.o_basic_theme').length) {
             this.$content.find('*').css('font-family', '');
         }
