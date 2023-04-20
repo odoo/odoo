@@ -911,22 +911,6 @@ function formatTables($editable) {
         table.prepend(tbody);
         tbody.append(...contents);
     }
-    // Children will only take 100% height if the parent has a height property.
-    for (const node of [...editable.querySelectorAll('*')].filter(n => (
-        n.style && n.style.getPropertyValue('height') === '100%' && (
-            !n.parentElement.style.getPropertyValue('height') ||
-            n.parentElement.style.getPropertyValue('height').includes('%'))
-    ))) {
-        let parent = node.parentElement;
-        let height = parent.style.getPropertyValue('height');
-        while (parent && height && height.includes('%')) {
-            parent = parent.parentElement;
-            height = parent.style.getPropertyValue('height');
-        }
-        if (parent) {
-            parent.style.setProperty('height', $(parent).height());
-        }
-    }
     // Align self and justify content don't work on table cells.
     for (const cell of editable.querySelectorAll('td')) {
         const alignSelf = cell.style.alignSelf;
@@ -934,14 +918,10 @@ function formatTables($editable) {
         if (alignSelf === 'start' || justifyContent === 'start' || justifyContent === 'flex-start') {
             cell.style.verticalAlign = 'top';
         } else if (alignSelf === 'center' || justifyContent === 'center') {
-            const convertedNestedParentTable = cell.closest('tr > td > div.w100p > table');
-            if (convertedNestedParentTable) {
-                convertedNestedParentTable.style.height = '100%'; // table
-                convertedNestedParentTable.parentElement.style.height = '100%'; // div.w100p
-                convertedNestedParentTable.parentElement.parentElement.style.height = 'inherit'; // td
-                const tr = convertedNestedParentTable.parentElement.parentElement.parentElement;
-                tr.style.height = getComputedStyle(tr).height;
-                tr.classList.toggle('o_forced_height', true);
+            const parentCell = cell.parentElement.closest('td');
+            const parentTable = cell.closest('table');
+            if (parentCell) {
+                parentTable.style.height = _getHeight(parentCell) + 'px';
             }
             cell.style.verticalAlign = 'middle';
         } else if (alignSelf === 'end' || justifyContent === 'end' || justifyContent === 'flex-end') {
@@ -976,6 +956,22 @@ function formatTables($editable) {
             if (ancestor) {
                 table.style.setProperty('text-align', ancestor.style.textAlign);
             }
+        }
+    }
+    // Children will only take 100% height if the parent has a height property.
+    for (const node of [...editable.querySelectorAll('*')].filter(n => (
+        n.style && n.style.getPropertyValue('height') === '100%' && (
+            !n.parentElement.style.getPropertyValue('height') ||
+            n.parentElement.style.getPropertyValue('height').includes('%'))
+    ))) {
+        let parent = node.parentElement;
+        let height = parent.style.getPropertyValue('height');
+        while (parent && height && height.includes('%')) {
+            parent = parent.parentElement;
+            height = parent.style.getPropertyValue('height');
+        }
+        if (parent) {
+            parent.style.setProperty('height', $(parent).height());
         }
     }
 }
