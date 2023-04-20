@@ -12,6 +12,7 @@ class TestSaleOrderDownPayment(TestSaleCommon):
 
         SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
 
+        cls.tax_account = cls.env['account.account'].search([('account_type', '=', 'liability_current')], limit=1)
         cls.tax_10 = cls.create_tax(10)
         cls.tax_15 = cls.create_tax(15)
 
@@ -69,6 +70,12 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             'amount_type': 'percent',
             'amount': amount,
             'type_tax_use': 'sale',
+            'repartition_line_ids': [
+                Command.create({'document_type': 'invoice', 'repartition_type': 'base'}),
+                Command.create({'document_type': 'invoice', 'repartition_type': 'tax', 'account_id': cls.tax_account.id}),
+                Command.create({'document_type': 'refund', 'repartition_type': 'base'}),
+                Command.create({'document_type': 'refund', 'repartition_type': 'tax', 'account_id': cls.tax_account.id}),
+            ]
         }
         if values:
             vals.update(values)
@@ -111,8 +118,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_10.ids,                 -200,         220          ],
             [self.revenue_account.id,    self.env['account.tax'],         -100,         100          ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'],         -30,          0            ],
-            [self.revenue_account.id,    self.env['account.tax'],         -15,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -30,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -15,          0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
         ]
@@ -135,8 +142,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_10.ids,                 -100,               220          ],
             [self.revenue_account.id,    self.env['account.tax'],         -50,                100          ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'],         -15,                0            ],
-            [self.revenue_account.id,    self.env['account.tax'],         -7.5,               0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -15,                0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -7.5,               0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt / 2.0, 0            ],
         ]
@@ -158,8 +165,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_10.ids,                 -100,         110          ],
             [self.revenue_account.id,    self.env['account.tax'],         -50,          50           ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'],         -15,          0            ],
-            [self.revenue_account.id,    self.env['account.tax'],         -7.5,         0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -15,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -7.5,         0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
         ]
@@ -181,8 +188,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_15.ids,         -50,          57.5         ],
             [self.revenue_account.id,    self.tax_10.ids,         -150,         165          ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'], -7.5,         0            ],
-            [self.revenue_account.id,    self.env['account.tax'], -15,          0            ],
+            [self.tax_account.id,        self.env['account.tax'], -7.5,         0            ],
+            [self.tax_account.id,        self.env['account.tax'], -15,          0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'], down_pay_amt, 0            ],
         ]
@@ -205,8 +212,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_10.ids,                 -200,         220          ],
             [self.revenue_account.id,    self.env['account.tax'],         -100,         100          ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'],         -29.09,       0            ],
-            [self.revenue_account.id,    self.env['account.tax'],         -9.09,        0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -29.09,       0            ],
+            [self.tax_account.id,        self.env['account.tax'],         -9.09,        0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0            ],
         ]
@@ -230,8 +237,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_10.ids,                  -200,         220          ],
             [self.revenue_account.id,    self.env['account.tax'],          -100,         100          ],
             # taxes
-            [self.revenue_account.id,    self.tax_10.ids,                  -9.09,        0            ],
-            [self.revenue_account.id,    self.env['account.tax'],          -30,          0            ],
+            [self.tax_account.id,        self.tax_10.ids,                  -9.09,        0            ],
+            [self.tax_account.id,        self.env['account.tax'],          -30,          0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],          down_pay_amt, 0            ],
         ]
@@ -254,8 +261,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_15.ids,         -100,         115           ],
             [self.revenue_account.id,    self.env['account.tax'], -100,         100           ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'], -17.5,        0             ],
-            [self.revenue_account.id,    self.env['account.tax'], -15,          0             ],
+            [self.tax_account.id,        self.env['account.tax'], -17.5,        0             ],
+            [self.tax_account.id,        self.env['account.tax'], -15,          0             ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'], down_pay_amt, 0             ],
         ]
@@ -280,8 +287,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_10.ids,                  -200,         220          ],
             [self.revenue_account.id,    self.env['account.tax'],          -100,         100          ],
             # taxes
-            [self.revenue_account.id,    self.tax_10.ids,                  -6.82,        0            ],
-            [self.revenue_account.id,    self.env['account.tax'],          -27.5,        0            ],
+            [self.tax_account.id,        self.tax_10.ids,                  -6.82,        0            ],
+            [self.tax_account.id,        self.env['account.tax'],          -27.5,        0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],          down_pay_amt, 0            ],
         ]
@@ -321,8 +328,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    tax_10_a.ids,              -200,         220          ],
             [self.revenue_account.id,    self.env['account.tax'],   -110,         110          ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'],   -31,          0            ],
-            [self.revenue_account.id,    self.env['account.tax'],   -12,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],   -31,          0            ],
+            [self.tax_account.id,        self.env['account.tax'],   -12,          0            ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],   down_pay_amt, 0            ],
         ]
@@ -351,8 +358,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    self.tax_10.ids,                 -100,         110,           {an_acc_01: 100}],
             [self.revenue_account.id,    self.env['account.tax'],         -100,         100 ,          False                         ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'],         -30,          0,             False                         ],
-            [self.revenue_account.id,    self.env['account.tax'],         -15,          0,             False                         ],
+            [self.tax_account.id,        self.env['account.tax'],         -30,          0,             False                         ],
+            [self.tax_account.id,        self.env['account.tax'],         -15,          0,             False                         ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],         down_pay_amt, 0,             False                         ],
         ]
@@ -397,8 +404,8 @@ class TestSaleOrderDownPayment(TestSaleCommon):
             [self.revenue_account.id,    tax_10_a.ids,              -200,         220,            False                         ],
             [self.revenue_account.id,    self.env['account.tax'],   -110,         110,            False                         ],
             # taxes
-            [self.revenue_account.id,    self.env['account.tax'],   -31,          0,              False                         ],
-            [self.revenue_account.id,    self.env['account.tax'],   -12,          0,              False                         ],
+            [self.tax_account.id,        self.env['account.tax'],   -31,          0,              False                         ],
+            [self.tax_account.id,        self.env['account.tax'],   -12,          0,              False                         ],
             # receivable
             [self.receivable_account.id, self.env['account.tax'],   down_pay_amt, 0,              False                         ],
         ]
