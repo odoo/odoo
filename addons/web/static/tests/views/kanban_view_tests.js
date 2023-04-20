@@ -1849,6 +1849,49 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group:first-child .o_kanban_quick_create");
     });
 
+    QUnit.test("quick create record flickering (load more)", async (assert) => {
+        let def;
+        serverData.views["partner,some_view_ref,form"] = `
+            <form>
+                <field name="foo"/>
+            </form>`;
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban on_create="quick_create" quick_create_view="some_view_ref">
+                    <field name="bar"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["bar"],
+            async mockRPC(route, args) {
+                if (args.method === "read") {
+                    await def;
+                }
+            },
+        });
+
+        // click on 'Create' -> should open the quick create in the first column
+        await createRecord();
+
+        // fill the quick create and validate
+        await editQuickCreateInput("foo", "new partner");
+        def = makeDeferred();
+        await validateRecord();
+        assert.containsNone(target, ".o_kanban_load_more");
+        def.resolve();
+        await nextTick();
+        assert.containsNone(target, ".o_kanban_load_more");
+    });
+
     QUnit.test(
         "quick create record should focus default field [REQUIRE FOCUS]",
         async function (assert) {

@@ -2406,7 +2406,10 @@ export class DynamicGroupList extends DynamicList {
     async _loadGroups() {
         const firstGroupByName = this.firstGroupBy.split(":")[0];
         const _orderBy = this.orderBy.filter(
-            (o) => o.name === firstGroupByName || (this.fieldNames.includes(o.name) && this.fields[o.name].group_operator !== undefined)
+            (o) =>
+                o.name === firstGroupByName ||
+                (this.fieldNames.includes(o.name) &&
+                    this.fields[o.name].group_operator !== undefined)
         );
         const orderby = orderByToString(_orderBy);
         const { groups, length } = await this.model.orm.webReadGroup(
@@ -2597,9 +2600,10 @@ export class Group extends DataPoint {
         return this.list.addRecord(record, index);
     }
 
-    addExistingRecord(resId, atFirstPosition = false) {
+    async addExistingRecord(resId, atFirstPosition = false) {
+        const record = await this.list.addExistingRecord(resId, atFirstPosition);
         this.count++;
-        return this.list.addExistingRecord(resId, atFirstPosition);
+        return record;
     }
 
     createRecord(params = {}, atFirstPosition = false) {
