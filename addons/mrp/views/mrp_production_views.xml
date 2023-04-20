@@ -211,7 +211,7 @@
                                 <field name="product_qty" class="oe_inline text-start" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('state', 'not in', ('draft', 'done'))]}"/>
                                 <button type="action" name="%(mrp.action_change_production_qty)d"
                                     context="{'default_mo_id': id}" class="oe_link oe_inline py-0" style="margin: 0px; padding: 0px;" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done','cancel')), ('id', '=', False)]}">
-                                    <field name="product_qty" class="oe_inline" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                    <field name="product_qty" class="oe_inline o_field_float text-truncate" attrs="{'readonly': [('state', '!=', 'draft')]}" widget="product_qty"/>
                                 </button>
                                 <label for="product_uom_id" string="" class="oe_inline flex-grow-1"/>
                                 <field name="product_uom_category_id" invisible="1"/>
