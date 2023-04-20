@@ -45,7 +45,7 @@ class WebSuite(odoo.tests.HttpCase):
 
         for asset in assets:
             filename = asset['filename']
-            if not filename or asset['atype'] != 'text/javascript':
+            if not filename or not filename.endswith('.js'):
                 continue
             with open(filename, 'rb') as fp:
                 if RE_ONLY.search(fp.read().decode('utf-8')):

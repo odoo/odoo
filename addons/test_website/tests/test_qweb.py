@@ -65,11 +65,11 @@ class TestQweb(TransactionCaseWithUserDemo):
     <head>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version_css)s"/>
+        <link type="text/css" rel="stylesheet" href="http://test.cdn%(css)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="http://test.cdn%(js)s" data-asset-bundle="%(asset_xmlid)s" data-asset-version="%(asset_version_js)s" onerror="__odooAssetError=1"></script>
+        <script type="text/javascript" src="http://test.cdn%(js)s" onerror="__odooAssetError=1"></script>
     </head>
     <body>
         <img src="http://test.external.link/img.png" loading="lazy"/>
