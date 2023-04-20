@@ -26,7 +26,6 @@ var DateWidget = Widget.extend({
         this._super.apply(this, arguments);
 
         this.name = parent.name;
-        this.autocomplete = 'off';
         this.options = _.extend({
             locale: moment.locale(),
             format : this.type_of_date === 'datetime' ? time.getLangDatetimeFormat() : time.getLangDateFormat(),
