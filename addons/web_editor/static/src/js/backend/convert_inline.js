@@ -299,7 +299,7 @@ function bootstrapToTable(editable) {
         table.removeAttribute('o-temp-width');
     }
     // Merge tables in tds into one common table, each in its own row.
-    const tds = [...editable.querySelectorAll('td:has(table)')]
+    const tds = [...editable.querySelectorAll('td')]
         .filter(td => td.children.length > 1 && [...td.children].every(child => child.nodeName === 'TABLE'))
         .reverse();
     for (const td of tds) {
