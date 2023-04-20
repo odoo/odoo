@@ -756,7 +756,29 @@ QUnit.module("test_mail", {}, function () {
     );
 
     QUnit.test("Activity view: apply progressbar filter", async function (assert) {
-        assert.expect(9);
+        assert.expect(10);
+
+        const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
+        const mailTemplateIds = pyEnv["mail.template"].search([]);
+        const [resUsersId1] = pyEnv["res.users"].search([]);
+        pyEnv["mail.activity"].create([
+            {
+                display_name: "An activity",
+                date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                can_write: true,
+                state: "planned",
+                activity_type_id: mailActivityTypeIds[2],
+                mail_template_ids: mailTemplateIds,
+                user_id: resUsersId1,
+            }
+        ]);
+        const mailActivityIds = pyEnv["mail.activity"].search([]);
+        const [mailTestActivityId1] = pyEnv["mail.test.activity"].search([
+            ["name", "=", "Meeting Room Furnitures"],
+        ]);
+        pyEnv["mail.test.activity"].write([mailTestActivityId1], {
+            activity_ids: [mailActivityIds[0], mailActivityIds[3]],
+        });
 
         serverData.actions = {
             1: {
@@ -787,9 +809,10 @@ QUnit.module("test_mail", {}, function () {
             "Office planning",
             "'Office planning' should be first record"
         );
-        assert.containsOnce(
+        assert.containsN(
             document.querySelector(".o_activity_view tbody"),
             ".planned",
+            2,
             "other records should be available"
         );
 
@@ -804,6 +827,11 @@ QUnit.module("test_mail", {}, function () {
             ".o_activity_filter_planned",
             5,
             "planned should be active filter"
+        );
+        assert.containsNone(
+            document.querySelector(".o_activity_view thead tr :nth-child(4)"),
+            ".progress-bar-animated",
+            "the progress bar of the Call for Demo activity type should not be animated"
         );
         assert.strictEqual(
             document.querySelector(".o_activity_view tbody .o_activity_record").textContent,
