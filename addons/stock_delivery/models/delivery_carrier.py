@@ -24,6 +24,10 @@ class DeliveryCarrier(models.Model):
         "shipping will be updated on the SO after the delivery."
     )
 
+    route_ids = fields.Many2many(
+        'stock.route', 'stock_route_shipping', 'shipping_id', 'route_id', 'Routes',
+        domain=[('shipping_selectable', '=', True)])
+
     # -------------------------- #
     # API for external providers #
     # -------------------------- #

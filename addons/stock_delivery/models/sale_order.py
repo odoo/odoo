@@ -42,3 +42,13 @@ class SaleOrder(models.Model):
         else:
             post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=self.currency_id.symbol or '')
         return u' {pre}{0}{post}'.format(amount, pre=pre, post=post)
+
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    def _prepare_procurement_values(self, group_id):
+        values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
+        if not values.get("route_ids") and self.order_id.carrier_id.route_ids:
+            values['route_ids'] = self.order_id.carrier_id.route_ids
+        return values
