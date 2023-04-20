@@ -3136,7 +3136,7 @@ export class StaticList extends DataPoint {
     async replaceWith(resIds) {
         this.applyCommand(x2ManyCommands.replaceWith(resIds));
         await this.load();
-        this.onChanges();
+        await this.onChanges();
         this.model.notify();
     }
 
