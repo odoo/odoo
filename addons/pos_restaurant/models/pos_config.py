@@ -63,3 +63,24 @@ class PosConfig(models.Model):
                     'company_id': company.id,
                 })
                 pos_config.write({'payment_method_ids': [(6, 0, payment_methods.ids)]})
+
+    @api.model
+    def post_install_pos_localisation(self, companies=False):
+        self = self.sudo()
+        if not companies:
+            companies = self.env['res.company'].search([])
+        for company in companies.filtered('chart_template'):
+            pos_configs = self.search([('company_id', '=', company.id), ('module_pos_restaurant', '=', True)])
+            if not pos_configs:
+                self = self.with_company(company)
+                pos_configs = self.env['pos.config'].create({
+                'name': 'Bar',
+                'company_id': company.id,
+                'module_pos_restaurant': True,
+                'iface_splitbill': True,
+                'iface_printbill': True,
+                'iface_orderline_notes': True,
+
+            })
+            pos_configs.setup_defaults(company)
+            super(PosConfig, self).post_install_pos_localisation(companies)
