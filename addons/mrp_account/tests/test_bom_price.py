@@ -124,8 +124,8 @@ class TestBomPrice(TestBomPriceCommon):
         self.env['mrp.workcenter.capacity'].create({
             'product_id': self.dining_table.id,
             'workcenter_id': workcenter_1.id,
-            'time_start': 2,
-            'time_stop': 1,
+            'time_start': 17,
+            'time_stop': 16,
         })
 
         self.bom_1.write({

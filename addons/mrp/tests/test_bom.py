@@ -602,8 +602,8 @@ class TestBoM(TestMrpCommon):
         self.env['mrp.workcenter.capacity'].create({
             'product_id': cheese_cake.id,
             'workcenter_id': workcenter_2.id,
-            'time_start': 2,
-            'time_stop': 1,
+            'time_start': 12,
+            'time_stop': 16,
         })
 
         with Form(bom_cheese_cake) as bom:
@@ -628,7 +628,7 @@ class TestBoM(TestMrpCommon):
 
         # TEST CHEESE BOM STRUCTURE VALUE WITH BOM QUANTITY
         report_values = self.env['report.mrp.report_bom_structure']._get_report_data(bom_id=bom_cheese_cake.id, searchQty=60, searchVariant=False)
-        #Operation time = 15 min * 60 + time_start + time_stop + capacity_time_start + capacity_time_stop= 928
+        # Operation time = 15 min * 60 + capacity_time_start + capacity_time_stop = 928
         self.assertEqual(report_values['lines']['operations_time'], 928.0, 'Operation time should be the same for 1 unit or for the batch')
         # Operation cost is the sum of operation line : (60 * 10)/60 * 10€ + (10 + 15 + 60 * 5)/60 * 20€ + (1 + 2)/60 * 20€ = 209,33€
         self.assertEqual(float_compare(report_values['lines']['operations_cost'], 209.33, precision_digits=2), 0)
