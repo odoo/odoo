@@ -248,6 +248,7 @@ class Cursor(BaseCursor):
         # default log level determined at cursor creation, could be
         # overridden later for debugging purposes
         self.sql_log_count = 0
+        self._sql_table_tracking = False
 
         # avoid the call of close() (by __del__) if an exception
         # is raised by any of the following initializations
@@ -333,8 +334,8 @@ class Cursor(BaseCursor):
         for hook in getattr(current_thread, 'query_hooks', ()):
             hook(self, query, params, start, delay)
 
-        # advanced stats only if logging.DEBUG is enabled
-        if _logger.isEnabledFor(logging.DEBUG):
+        # advanced stats
+        if _logger.isEnabledFor(logging.DEBUG) or self._sql_table_tracking:
             delay *= 1E6
 
             decoded_query = self._obj.query.decode()
@@ -393,6 +394,15 @@ class Cursor(BaseCursor):
             yield
         finally:
             _logger.setLevel(level)
+
+    @contextmanager
+    def _enable_table_tracking(self):
+        try:
+            old = self._sql_table_tracking
+            self._sql_table_tracking = True
+            yield
+        finally:
+            self._sql_table_tracking = old
 
     def close(self):
         if not self.closed:
