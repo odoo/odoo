@@ -317,8 +317,8 @@ class PaymentPortal(portal.CustomerPortal):
         else:
             tx_sudo._log_sent_message()
 
-        # Monitor the transaction to make it available in the portal
-        PaymentPostProcessing.monitor_transactions(tx_sudo)
+        # Monitor the transaction to make it available in the portal.
+        PaymentPostProcessing.monitor_transaction(tx_sudo)
 
         return tx_sudo
 
@@ -360,9 +360,6 @@ class PaymentPortal(portal.CustomerPortal):
                 access_token, tx_sudo.partner_id.id, tx_sudo.amount, tx_sudo.currency_id.id
             ):
                 raise werkzeug.exceptions.NotFound()  # Don't leak information about ids.
-
-            # Stop monitoring the transaction now that it reached a final state.
-            PaymentPostProcessing.remove_transactions(tx_sudo)
 
             # Display the payment confirmation page to the user
             return request.render('payment.confirm', qcontext={'tx': tx_sudo})

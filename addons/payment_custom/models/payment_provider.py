@@ -54,13 +54,13 @@ class PaymentProvider(models.Model):
                     *self.env['account.journal']._check_company_domain(company_id),
                     ('type', '=', 'bank'),
                 ]).bank_account_id
-                account_names = "".join(f"<li>{account.display_name}</li>" for account in accounts)
+                account_names = "".join(f"<li><pre>{account.display_name}</pre></li>" for account in accounts)
                 provider.pending_msg = f'<div>' \
-                    f'<h3>{_("Please use the following transfer details")}</h3>' \
-                    f'<h4>{_("Bank Account") if len(accounts) == 1 else _("Bank Accounts")}</h4>' \
-                    f'<ul>{account_names}</ul>' \
-                    f'<h4>{_("Communication")}</h4>' \
-                    f'<p>{_("Please use the order name as communication reference.")}</p>' \
+                    f'<h5>{_("Please use the following transfer details")}</h5>' \
+                    f'<p><br></p>' \
+                    f'<h6>{_("Bank Account") if len(accounts) == 1 else _("Bank Accounts")}</h6>' \
+                    f'<ul>{account_names}</ul>'\
+                    f'<p><br></p>' \
                     f'</div>'
 
     def _get_removal_values(self):
