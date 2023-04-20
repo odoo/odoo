@@ -653,6 +653,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
             when normalizing both archs. Takes either "xml" or "html"
         :type parser: str
         """
+        self.maxDiff = 10000
         if original:
             original = _normalize_arch_for_assert(original, parser)
         if expected:

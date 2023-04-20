@@ -222,7 +222,9 @@ class TestUi(odoo.tests.HttpCase):
         self.start_tour("/", 'website_navbar_menu')
 
     def test_05_specific_website_editor(self):
+        asset_bundle_xmlid = 'website.assets_wysiwyg'
         website_default = self.env['website'].search([], limit=1)
+
         new_website = self.env['website'].create({'name': 'New Website'})
 
         code = b"document.body.dataset.hello = 'world';"
@@ -231,7 +233,7 @@ class TestUi(odoo.tests.HttpCase):
             'mimetype': 'text/javascript',
             'datas': base64.b64encode(code),
         })
-        custom_url = '/web/content/%s/%s' % (attach.id, attach.name)
+        custom_url = '/_custom/web/content/%s/%s' % (attach.id, attach.name)
         attach.url = custom_url
 
         self.env['ir.asset'].create({
@@ -240,6 +242,19 @@ class TestUi(odoo.tests.HttpCase):
             'path': custom_url,
             'website_id': new_website.id,
         })
+
+        files, _ = self.env['ir.qweb']._get_asset_content(asset_bundle_xmlid, assets_params={'website_id': website_default.id})
+        self.assertNotIn(custom_url, [f['url'] for f in files])
+        base_website_bundle = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid, files, env=self.env, assets_params={'website_id': website_default.id})
+        base_website_css_version = base_website_bundle.get_version('css')
+        base_website_js_version = base_website_bundle.get_version('js')
+
+        files, _ = self.env['ir.qweb']._get_asset_content('website.assets_wysiwyg', assets_params={'website_id': new_website.id})
+        self.assertIn(custom_url, [f['url'] for f in files])
+        new_website_bundle_modified = self.env['ir.qweb']._get_asset_bundle(asset_bundle_xmlid, files, env=self.env, assets_params={'website_id': new_website.id})
+        self.assertEqual(new_website_bundle_modified.get_version('css'), base_website_css_version)
+        self.assertNotEqual(new_website_bundle_modified.get_version('js'), base_website_js_version, "js version for new website should now have been changed")
+
         url_params = url_encode({'path': '/@/'})
         self.start_tour(f'/website/force/{website_default.id}?{url_params}', "generic_website_editor", login='admin')
         self.start_tour(f'/website/force/{new_website.id}?{url_params}', "specific_website_editor", login='admin')

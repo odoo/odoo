@@ -20,14 +20,14 @@ re_background_image = re.compile(r"(background-image\s*:\s*url\(\s*['\"]?\s*)([^
 
 class AssetsBundleMultiWebsite(AssetsBundle):
     def _get_asset_url_values(self, id, unique, extra, name, sep, extension):
-        website_id = self.env.context.get('website_id')
+        website_id = self.assets_params.get('website_id')
         website_id_path = website_id and ('%s/' % website_id) or ''
         extra = website_id_path + extra
         res = super(AssetsBundleMultiWebsite, self)._get_asset_url_values(id, unique, extra, name, sep, extension)
         return res
 
     def get_debug_asset_url(self, extra='', name='%', extension='%'):
-        website_id = self.env.context.get('website_id')
+        website_id = self.assets_params.get('website_id')
         website_id_path = website_id and ('%s/' % website_id) or ''
         extra = website_id_path + extra
         return super(AssetsBundleMultiWebsite, self).get_debug_asset_url(extra, name, extension)
@@ -106,8 +106,8 @@ class IrQWeb(models.AbstractModel):
 
         return irQweb
 
-    def _get_asset_bundle(self, xmlid, files, env=None, css=True, js=True, debug=False):
-        return AssetsBundleMultiWebsite(xmlid, files, env=env, css=css, js=js, debug=debug)
+    def _get_asset_bundle(self, xmlid, files=None, env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
+        return AssetsBundleMultiWebsite(xmlid, files, env=env, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)
 
     def _post_processing_att(self, tagName, atts):
         if atts.get('data-no-post-process'):
@@ -161,14 +161,13 @@ class IrQWeb(models.AbstractModel):
         # version part combine with the initial extra (rtl) should be enough to ensure they are identical.
         # we dont expect to have any pregenerated rtl/website attachment so we don't manage assets with extra
 
-        nodes = super()._pregenerate_assets_bundles()
+        links = super()._pregenerate_assets_bundles()
         website = self.env['website'].search([], order='id', limit=1)
         if not website:
-            return nodes
+            return links
         nb_created = 0
-        for node in nodes:
-            bundle_info = node[1]
-            bundle_url = bundle_info.get('src', '') or bundle_info.get('href', '')
+        for link in links:
+            bundle_url = link[0]
             if bundle_url.startswith('/web/assets/'):
                 # example: "/web/assets/2152-ee56665/web.assets_frontend_lazy.min.js"
                 _, _, _, id_unique, name = bundle_url.split('/')
@@ -189,4 +188,4 @@ class IrQWeb(models.AbstractModel):
         if nb_created:
             _logger.runbot('%s bundle(s) were copied for website %s', nb_created, website.id)
 
-        return nodes
+        return links

@@ -448,9 +448,9 @@ class Web_Editor(http.Controller):
         AssetsUtils = request.env['web_editor.assets']
 
         files_data_by_bundle = []
-        resources_type_info = {'t_call_assets_attribute': 't-js', 'mimetype': 'text/javascript'}
+        t_call_assets_attribute = 't-js'
         if file_type == 'scss':
-            resources_type_info = {'t_call_assets_attribute': 't-css', 'mimetype': 'text/scss'}
+            t_call_assets_attribute = 't-css'
 
         # Compile regex outside of the loop
         # This will used to exclude library scss files from the result
@@ -460,7 +460,7 @@ class Web_Editor(http.Controller):
         url_infos = dict()
         for v in views:
             for asset_call_node in etree.fromstring(v["arch"]).xpath("//t[@t-call-assets]"):
-                attr = asset_call_node.get(resources_type_info['t_call_assets_attribute'])
+                attr = asset_call_node.get(t_call_assets_attribute)
                 if attr and not json.loads(attr.lower()):
                     continue
                 asset_name = asset_call_node.get("t-call-assets")
@@ -468,7 +468,7 @@ class Web_Editor(http.Controller):
                 # Loop through bundle files to search for file info
                 files_data = []
                 for file_info in request.env["ir.qweb"]._get_asset_content(asset_name)[0]:
-                    if file_info["atype"] != resources_type_info['mimetype']:
+                    if file_info["url"].rpartition('.')[2] != file_type:
                         continue
                     url = file_info["url"]
 
@@ -608,7 +608,8 @@ class Web_Editor(http.Controller):
                         if not bundle_css:
                             bundle = 'web.assets_frontend'
                             files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
-                            asset = AssetsBundle(bundle, files)
+                            assets_params = request.env["ir.asset"]._get_assets_params()
+                            asset = AssetsBundle(bundle, files, assets_params=assets_params)
                             bundle_css = asset.css().index_content
                         color_search = re.search(r'(?i)--%s:\s+(%s|%s)' % (css_color_value, regex_hex, regex_rgba), bundle_css)
                         if not color_search:

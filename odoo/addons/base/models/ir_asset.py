@@ -8,8 +8,7 @@ import odoo
 import odoo.modules.module  # get_manifest, don't from-import it
 from odoo import api, fields, models, tools
 from odoo.tools import misc
-from odoo.tools.constants import SCRIPT_EXTENSIONS, STYLE_EXTENSIONS, TEMPLATE_EXTENSIONS, ASSET_EXTENSIONS, EXTERNAL_ASSET
-
+from odoo.tools.constants import ASSET_EXTENSIONS, EXTERNAL_ASSET
 
 _logger = getLogger(__name__)
 
@@ -91,7 +90,18 @@ class IrAsset(models.Model):
     active = fields.Boolean(string='active', default=True)
     sequence = fields.Integer(string="Sequence", default=DEFAULT_SEQUENCE, required=True)
 
-    def _get_asset_paths(self, bundle, css=False, js=False):
+    def _get_assets_params(self):
+        """
+        This method can be overriden to add param _get_asset_paths call.
+        Those params will be part of the orm cache key
+        """
+        return {}
+
+    @tools.conditional(
+        'xml' not in tools.config['dev_mode'],
+        tools.ormcache('bundle', 'tuple(sorted(assets_params.items()))'),
+    )
+    def _get_asset_paths(self, bundle, assets_params):
         """
         Fetches all asset file paths from a given list of addons matching a
         certain bundle. The returned list is composed of tuples containing the
@@ -109,27 +119,21 @@ class IrAsset(models.Model):
         records matching the bundle are also applied to the current list.
 
         :param bundle: name of the bundle from which to fetch the file paths
-        :param css: boolean: whether or not to include style files
-        :param js: boolean: whether or not to include script files and template
-            files
+        :param assets_params: parameters needed by overrides, mainly website_id
+            see _get_assets_params
         :returns: the list of tuples (path, addon, bundle)
         """
         installed = self._get_installed_addons_list()
-        addons = self._get_active_addons_list()
+        addons = self._get_active_addons_list(**assets_params)
 
         asset_paths = AssetPaths()
-        exts = []
-        if js:
-            exts += SCRIPT_EXTENSIONS
-            exts += TEMPLATE_EXTENSIONS
-        if css:
-            exts += STYLE_EXTENSIONS
 
         addons = self._topological_sort(tuple(addons))
-        self._fill_asset_paths(bundle, addons, installed, exts, asset_paths, [])
+
+        self._fill_asset_paths(bundle, asset_paths, [], addons, installed, **assets_params)
         return asset_paths.list
 
-    def _fill_asset_paths(self, bundle, addons, installed, exts, asset_paths, seen):
+    def _fill_asset_paths(self, bundle, asset_paths, seen, addons, installed, **assets_params):
         """
         Fills the given AssetPaths instance by applying the operations found in
         the matching bundle of the given addons manifests.
@@ -150,22 +154,22 @@ class IrAsset(models.Model):
         # of the CURRENT bundle.
         bundle_start_index = len(asset_paths.list)
 
-        assets = self._get_related_assets([('bundle', '=', bundle)]).filtered('active')
+        assets = self._get_related_assets([('bundle', '=', bundle)], **assets_params).filtered('active')
         # 1. Process the first sequence of 'ir.asset' records
         for asset in assets.filtered(lambda a: a.sequence < DEFAULT_SEQUENCE):
-            self._process_path(bundle, asset.directive, asset.target, asset.path, addons, installed, exts, asset_paths, seen, bundle_start_index)
+            self._process_path(bundle, asset.directive, asset.target, asset.path, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
         # 2. Process all addons' manifests.
         for addon in addons:
             for command in odoo.modules.module.get_manifest(addon)['assets'].get(bundle, ()):
                 directive, target, path_def = self._process_command(command)
-                self._process_path(bundle, directive, target, path_def, addons, installed, exts, asset_paths, seen, bundle_start_index)
+                self._process_path(bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
         # 3. Process the rest of 'ir.asset' records
         for asset in assets.filtered(lambda a: a.sequence >= DEFAULT_SEQUENCE):
-            self._process_path(bundle, asset.directive, asset.target, asset.path, addons, installed, exts, asset_paths, seen, bundle_start_index)
+            self._process_path(bundle, asset.directive, asset.target, asset.path, asset_paths, seen, addons, installed, bundle_start_index, **assets_params)
 
-    def _process_path(self, bundle, directive, target, path_def, addons, installed, exts, asset_paths, seen, bundle_start_index):
+    def _process_path(self, bundle, directive, target, path_def, asset_paths, seen, addons, installed, bundle_start_index, **assets_params):
         """
         This sub function is meant to take a directive and a set of
         arguments and apply them to the current asset_paths list
@@ -180,18 +184,17 @@ class IrAsset(models.Model):
         """
         if directive == INCLUDE_DIRECTIVE:
             # recursively call this function for each INCLUDE_DIRECTIVE directive.
-            self._fill_asset_paths(path_def, addons, installed, exts, asset_paths, seen + [bundle])
+            self._fill_asset_paths(path_def, asset_paths, seen + [bundle], addons, installed, **assets_params)
             return
-
         if can_aggregate(path_def):
-            paths = self._get_paths(path_def, installed, exts)
+            paths = self._get_paths(path_def, installed)
         else:
             paths = [(path_def, EXTERNAL_ASSET, -1)]  # external urls
 
         # retrieve target index when it applies
         if directive in DIRECTIVES_WITH_TARGET:
-            target_paths = self._get_paths(target, installed, exts)
-            if not target_paths and target.rpartition('.')[2] not in exts:
+            target_paths = self._get_paths(target, installed)
+            if not target_paths and target.rpartition('.')[2] not in ASSET_EXTENSIONS:
                 # nothing to do: the extension of the target is wrong
                 return
             if target_paths:
@@ -237,14 +240,10 @@ class IrAsset(models.Model):
         :root_bundle: string: bundle from which to initiate the search.
         :returns: the first matching bundle or None
         """
-        ext = target_path_def.split('.')[-1]
         installed = self._get_installed_addons_list()
         target_path, _full_path, _modified = self._get_paths(target_path_def, installed)[0]
-
-        css = ext in STYLE_EXTENSIONS
-        js = ext in SCRIPT_EXTENSIONS or ext in TEMPLATE_EXTENSIONS
-
-        asset_paths = self._get_asset_paths(root_bundle, css=css, js=js)
+        assets_params = self._get_assets_params()
+        asset_paths = self._get_asset_paths(root_bundle, assets_params)
 
         for path, _full_path, bundle, _modified in asset_paths:
             if path == target_path:
@@ -280,7 +279,7 @@ class IrAsset(models.Model):
         return misc.topological_sort({manif['name']: manif['depends'] for manif in manifs})
 
     @api.model
-    @tools.ormcache_context(keys='install_module')
+    @tools.ormcache()
     def _get_installed_addons_list(self):
         """
         Returns the list of all installed addons.
@@ -288,10 +287,9 @@ class IrAsset(models.Model):
         """
         # Main source: the current registry list
         # Second source of modules: server wide modules
-        # Third source: the currently loading module from the context (similar to ir_ui_view)
-        return self.env.registry._init_modules.union(odoo.conf.server_wide_modules or []).union(self.env.context.get('install_module', []))
+        return self.env.registry._init_modules.union(odoo.conf.server_wide_modules or [])
 
-    def _get_paths(self, path_def, installed, extensions=None):
+    def _get_paths(self, path_def, installed):
         """
         Returns a list of tuple (path, full_path, modified) matching a given glob (path_def).
         The glob can only occur in the static direcory of an installed addon.
@@ -352,11 +350,7 @@ class IrAsset(models.Model):
                 msg += " It may be due to security reasons."
             _logger.warning(msg)
         # Paths are filtered on the extensions (if any).
-        return [
-            path
-            for path in paths
-            if not extensions or path[0].rsplit('.', maxsplit=1)[-1] in extensions
-        ]
+        return paths
 
     def _process_command(self, command):
         """Parses a given command to return its directive, target and path definition."""

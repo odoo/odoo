@@ -63,19 +63,13 @@ class TestStaticInheritanceCommon(odoo.tests.TransactionCase):
     def renderBundle(self, debug=False):
         files = []
         for url in self.template_files:
-            atype = 'text/xml'
-            if '.js' in url:
-                atype = 'text/javascript'
             files.append({
-                'atype': atype,
                 'url': url,
                 'filename': url,
                 'content': None,
                 'media': None,
             })
-        asset = AssetsBundle('web.test_bundle', files, env=self.env, css=False, js=True, debug='assets' if debug else '')
-        # to_node return the files descriptions and generate attachments.
-        asset.to_node(css=False, js=False)
+        asset = AssetsBundle('web.test_bundle', files, env=self.env, css=False, js=True, debug_assets=debug)
         content = asset.xml(show_inherit_info=debug)
         return f'<templates xml:space="preserve">\n{content}\n</templates>'
 

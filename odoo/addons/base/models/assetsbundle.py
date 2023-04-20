@@ -57,7 +57,7 @@ class AssetsBundle(object):
 
     TRACKED_BUNDLES = ['web.assets_common', 'web.assets_backend']
 
-    def __init__(self, name, files, env=None, css=True, js=True, debug=None):
+    def __init__(self, name, files, env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
         """
         :param name: bundle name
         :param files: files to be added to the bundle
@@ -71,16 +71,16 @@ class AssetsBundle(object):
         self.stylesheets = []
         self.css_errors = []
         self.files = files
-        self.user_direction = self.env['res.lang']._lang_get(
-            self.env.context.get('lang') or self.env.user.lang
-        ).direction
+        self.rtl = rtl
+        self.assets_params = assets_params or {}
         self.has_css = css
         self.has_js = js
         self._checksum_cache = {}
-        self.is_debug_assets = debug and 'assets' in debug
+        self.is_debug_assets = debug_assets
 
         # asset-wide html "media" attribute
         for f in files:
+            extension = f['url'].rpartition('.')[2]
             params = {
                 'url': f['url'],
                 'filename': f['filename'],
@@ -89,45 +89,37 @@ class AssetsBundle(object):
             }
             if css:
                 css_params = {
-                    'media': f['media'],
-                    'direction': self.user_direction,
+                    'rtl': self.rtl,
                 }
-                if f['atype'] == 'text/sass':
+                if extension == 'sass':
                     self.stylesheets.append(SassStylesheetAsset(self, **params, **css_params))
-                elif f['atype'] == 'text/scss':
+                elif extension == 'scss':
                     self.stylesheets.append(ScssStylesheetAsset(self, **params, **css_params))
-                elif f['atype'] == 'text/less':
+                elif extension == 'less':
                     self.stylesheets.append(LessStylesheetAsset(self, **params, **css_params))
-                elif f['atype'] == 'text/css':
+                elif extension == 'css':
                     self.stylesheets.append(StylesheetAsset(self, **params, **css_params))
             if js:
-                if f['atype'] == 'text/javascript':
+                if extension == 'js':
                     self.javascripts.append(JavascriptAsset(self, **params))
-                elif f['atype'] == 'text/xml':
+                elif extension == 'xml':
                     self.templates.append(XMLAsset(self, **params))
 
-    def to_node(self, css=True, js=True, async_load=False, defer_load=False, lazy_load=False):
+    def get_links(self):
         """
-        :returns [(tagName, attributes, content)] if the tag is auto close
+        :returns a list of tuple. a tuple can be (url, None) or (None, inlineContent)
         """
         response = []
-        if css and self.stylesheets:
+        if self.has_css and self.stylesheets:
             css_attachments = self.css(is_minified=not self.is_debug_assets) or []
             for attachment in css_attachments:
                 if self.is_debug_assets:
-                    href = self.get_debug_asset_url(extra='rtl/' if self.user_direction == 'rtl' else '',
+                    href = self.get_debug_asset_url(extra='rtl/' if self.rtl else '',
                                                     name=css_attachments.name,
                                                     extension='')
                 else:
                     href = attachment.url
-                attr = dict([
-                    ["type", "text/css"],
-                    ["rel", "stylesheet"],
-                    ["href", href],
-                    ['data-asset-bundle', self.name],
-                    ['data-asset-version', self.get_version('css')],
-                ])
-                response.append(("link", attr, None))
+                response.append((href, None))
             if self.css_errors:
                 msg = '\n'.join(self.css_errors).replace('"', '\\"').replace('\n', '\\n')
                 js_error = """
@@ -139,24 +131,13 @@ class AssetsBundle(object):
                         }
                     });
                 """ % msg
-                response.append(JavascriptAsset(self, inline=js_error).to_node())
-                response.append(StylesheetAsset(self, url="/web/static/lib/bootstrap/dist/css/bootstrap.css").to_node())
+                response.append((None, js_error))
+                response.append(('/web/static/lib/bootstrap/dist/css/bootstrap.css', None))
 
-        if js and self.javascripts:
+        if self.has_js and self.javascripts:
             js_attachment = self.js(is_minified=not self.is_debug_assets)
             src = self.get_debug_asset_url(name=js_attachment.name, extension='') if self.is_debug_assets else js_attachment[0].url
-            attr = dict([
-                ["async", "async" if async_load else None],
-                # lazy_load will add defer in JS otherwise this is not W3C valid
-                # (defer is probably not needed there anyways)
-                ["defer", "defer" if defer_load else None],
-                ["type", "text/javascript"],
-                ["data-src" if lazy_load else "src", src],
-                ['data-asset-bundle', self.name],
-                ['data-asset-version', self.get_version('js')],
-                ['onerror', '__odooAssetError=1']
-            ])
-            response.append(("script", attr, None))
+            response.append((src, None))
 
         return response
 
@@ -192,6 +173,7 @@ class AssetsBundle(object):
             'name': name,
             'sep': sep,
             'extension': extension,
+            'params': self.assets_params,
         }
 
     def get_asset_url(self, id='%', unique='%', extra='', name='%', sep="%", extension='%'):
@@ -229,10 +211,10 @@ class AssetsBundle(object):
         ira = self.env['ir.attachment']
         is_css = extension in ['css', 'min.css', 'css.map']
         url = self.get_asset_url(
-            extra='%s' % ('rtl/' if is_css and self.user_direction == 'rtl' else ''),
+            extra='%s' % ('rtl/' if is_css and self.rtl else ''),
             name=self.name,
-            sep='',
-            extension='.%s' % extension
+            sep='.',
+            extension=extension,
         )
 
         domain = [
@@ -244,8 +226,7 @@ class AssetsBundle(object):
 
         if attachments:
             self._unlink_attachments(attachments)
-            # force bundle invalidation on other workers
-            self.env['ir.qweb'].clear_caches()
+            # clear_cache was removed
 
         return True
 
@@ -268,10 +249,10 @@ class AssetsBundle(object):
 
         url_pattern = self.get_asset_url(
             unique=unique,
-            extra='%s' % ('rtl/' if is_css and self.user_direction == 'rtl' else ''),  # not sure about css.map
+            extra='%s' % ('rtl/' if is_css and self.rtl else ''),  # not sure about css.map
             name=self.name,
-            sep='',
-            extension='.%s' % extension
+            sep='.',
+            extension=extension,
         )
         self.env.cr.execute("""
              SELECT max(id)
@@ -284,6 +265,14 @@ class AssetsBundle(object):
 
         attachment_ids = [r[0] for r in self.env.cr.fetchall()]
         return self.env['ir.attachment'].sudo().browse(attachment_ids)
+
+    def add_post_rollback(self):
+        """
+            In some rare cases it is possible that an attachment is created during a transaction, added to the ormcache
+            but the transaction is rollbacked, leading to 404 when getting the attachments.
+            This postrollback hook will help fix this issue by clearing the cache if it isn't commited.
+        """
+        self.env.cr.postrollback.add(self.env.registry._Registry__cache.clear)
 
     def save_attachment(self, extension, content):
         """Record the given bundle in an ir.attachment and delete
@@ -318,19 +307,17 @@ class AssetsBundle(object):
             'public': True,
             'raw': content.encode('utf8'),
         }
+        self.add_post_rollback()
         attachment = ira.with_user(SUPERUSER_ID).create(values)
         url = self.get_asset_url(
             id=attachment.id,
             unique=self.get_version('css' if is_css else 'js'),
-            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.user_direction == 'rtl' else ''),
-            name=fname,
-            sep='',  # included in fname
-            extension=''
+            extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.rtl else ''),
+            name=self.name,
+            sep='.',  # included in fname
+            extension=extension,
         )
-        values = {
-            'url': url,
-        }
-        attachment.write(values)
+        attachment.url = url
 
         if self.env.context.get('commit_assetsbundle') is True:
             self.env.cr.commit()
@@ -588,7 +575,7 @@ class AssetsBundle(object):
         sourcemap_attachment = self.get_attachments('css.map') \
                                 or self.save_attachment('css.map', '')
         debug_asset_url = self.get_debug_asset_url(name=self.name,
-                                                   extra='rtl/' if self.user_direction == 'rtl' else '')
+                                                   extra='rtl/' if self.rtl else '')
         generator = SourceMapGenerator(
             source_root="/".join(
                 [".." for i in range(0, len(debug_asset_url.split("/")) - 2)]
@@ -634,7 +621,7 @@ class AssetsBundle(object):
                     compiled += self.compile_css(assets[0].compile, source)
 
             # We want to run rtlcss on normal css, so merge it in compiled
-            if self.user_direction == 'rtl':
+            if self.rtl:
                 stylesheet_assets = [asset for asset in self.stylesheets if not isinstance(asset, (SassStylesheetAsset, ScssStylesheetAsset, LessStylesheetAsset))]
                 compiled += '\n'.join([asset.get_source() for asset in stylesheet_assets])
                 compiled = self.run_rtlcss(compiled)
@@ -798,9 +785,6 @@ class WebAsset(object):
             except ValueError:
                 raise AssetNotFound("Could not find %s" % self.name)
 
-    def to_node(self):
-        raise NotImplementedError()
-
     @property
     def last_modified(self):
         if self._last_modified is None:
@@ -882,21 +866,6 @@ class JavascriptAsset(WebAsset):
         except AssetError as e:
             return u"console.error(%s);" % json.dumps(to_text(e))
 
-    def to_node(self):
-        if self.url:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["src", self.html_url],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle_version],
-            ]), None)
-        else:
-            return ("script", dict([
-                ["type", "text/javascript"],
-                ["charset", "utf-8"],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle_version],
-            ]), self.with_header())
 
     def with_header(self, content=None, minimal=True):
         if minimal:
@@ -927,7 +896,7 @@ class XMLAsset(WebAsset):
         try:
             content = super()._fetch_content()
         except AssetError as e:
-            return f'<error data-asset-bundle={self.bundle.name!r} data-asset-version={self.bundle_version!r}>{json.dumps(to_text(e))}</error>'
+            return u"console.error(%s);" % json.dumps(to_text(e))
 
         parser = etree.XMLParser(ns_clean=True, recover=True, remove_comments=True)
         root = etree.parse(io.BytesIO(content.encode('utf-8')), parser=parser).getroot()
@@ -938,17 +907,6 @@ class XMLAsset(WebAsset):
     @property
     def bundle_version(self):
         return self.bundle.get_version('js')
-
-    def to_node(self):
-        attributes = {
-            'async': 'async',
-            'defer': 'defer',
-            'type': 'text/xml',
-            'data-src': self.html_url,
-            'data-asset-bundle': self.bundle.name,
-            'data-asset-version': self.bundle_version,
-        }
-        return ("script", attributes, None)
 
     def with_header(self, content=None):
         if content is None:
@@ -981,21 +939,13 @@ class StylesheetAsset(WebAsset):
     rx_sourceMap = re.compile(r'(/\*# sourceMappingURL=.*)', re.U)
     rx_charset = re.compile(r'(@charset "[^"]+";)', re.U)
 
-    def __init__(self, *args, media=None, direction=None, **kw):
-        self.media = media
-        self.direction = direction
+    def __init__(self, *args, rtl=False, **kw):
+        self.rtl = rtl
         super().__init__(*args, **kw)
-        if self.direction == 'rtl' and self.url:
+        if self.rtl and self.url:
             self.html_url_args = self.url.rsplit('.', 1)
             self.html_url_format = '%%s/%s/%s.%%s' % ('rtl', self.bundle.name)
             self.html_url_args = tuple(self.html_url_args)
-
-    @property
-    def content(self):
-        content = super().content
-        if self.media:
-            content = '@media %s { %s }' % (self.media, content)  # this is not good!
-        return content
 
     @property
     def bundle_version(self):
@@ -1003,9 +953,8 @@ class StylesheetAsset(WebAsset):
 
     @func.lazy_property
     def unique_descriptor(self):
-        direction = self.direction or ''
-        media = self.media or ''
-        return f'{self.url or self.inline},{self.last_modified},{direction},{media}'  # note that media shouldn't be used in unique since it isn't in extra
+        direction = (self.rtl and 'rtl') or 'ltr'
+        return f'{self.url or self.inline},{self.last_modified},{direction}'
 
     def _fetch_content(self):
         try:
@@ -1047,26 +996,6 @@ class StylesheetAsset(WebAsset):
         content = re.sub(r' *([{}]) *', r'\1', content)
         return self.with_header(content)
 
-    def to_node(self):
-        if self.url:
-            attr = dict([
-                ["type", "text/css"],
-                ["rel", "stylesheet"],
-                ["href", self.html_url],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle_version],
-            ])
-            return ("link", attr, None)
-        else:
-            attr = dict([
-                ["type", "text/css"],
-                ["media", escape(to_text(self.media)) if self.media else None],
-                ['data-asset-bundle', self.bundle.name],
-                ['data-asset-version', self.bundle_version],
-            ])
-            return ("style", attr, self.with_header())
-
 
 class PreprocessedCSS(StylesheetAsset):
     rx_import = None
@@ -1074,7 +1003,7 @@ class PreprocessedCSS(StylesheetAsset):
     def __init__(self, *args, **kw):
         super().__init__(*args, **kw)
         self.html_url_args = tuple(self.url.rsplit('/', 1))
-        self.html_url_format = '%%s/%s%s/%%s.css' % ('rtl/' if self.direction == 'rtl' else '', self.bundle.name)
+        self.html_url_format = '%%s/%s%s/%%s.css' % ('rtl/' if self.rtl else '', self.bundle.name)
 
     def get_command(self):
         raise NotImplementedError
