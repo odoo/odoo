@@ -769,7 +769,6 @@ class AccountMove(models.Model):
                AND this.sequence_number != 1
                AND this.name != '/'
                AND this.id = ANY(%(move_ids)s)
-               AND (company.fiscalyear_lock_date IS NULL OR this.date >= company.fiscalyear_lock_date)
         """, {
             'move_ids': self.ids,
         })
