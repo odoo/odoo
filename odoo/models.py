@@ -3236,8 +3236,7 @@ class BaseModel(metaclass=MetaModel):
             return
 
         # determine fields to fetch
-        fields_to_fetch = OrderedSet()
-        cache = self.env.cache
+        fields_to_verify = OrderedSet()
         field_names = self.check_field_access_rights('read', field_names)
         for field_name in field_names:
             if field_name == 'id':
@@ -3245,16 +3244,21 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields.get(field_name)
             if not field:
                 raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            if not any(cache.get_missing_ids(self, field)):
-                continue
             if field.store:
-                fields_to_fetch.add(field)
+                fields_to_verify.add(field)
             elif field.compute:
                 # optimization: fetch direct field dependencies
                 for dotname in self.pool.field_depends[field]:
                     dep = self._fields[dotname.split('.', 1)[0]]
                     if dep.prefetch is True and (not dep.groups or self.user_has_groups(dep.groups)):
-                        fields_to_fetch.add(dep)
+                        fields_to_verify.add(dep)
+
+        # verifies only once for each stored field or dependency if they are already in cache
+        cache = self.env.cache
+        fields_to_fetch = [
+            field for field in fields_to_verify
+            if any(cache.get_missing_ids(self, field))
+        ]
 
         if not fields_to_fetch:
             # there is nothing to fetch, but we expect an error anyway in case
