@@ -34,6 +34,7 @@ class PickingType(models.Model):
         'ir.sequence', 'Reference Sequence',
         check_company=True, copy=False)
     sequence_code = fields.Char('Sequence Prefix', required=True)
+    no_default_immediate_transfer = fields.Boolean()
     default_location_src_id = fields.Many2one(
         'stock.location', 'Default Source Location',
         check_company=True,
@@ -233,14 +234,14 @@ class PickingType(models.Model):
         if self:
             action['display_name'] = self.display_name
 
-        default_immediate_tranfer = True
-        if self.env['ir.config_parameter'].sudo().get_param('stock.no_default_immediate_tranfer'):
-            default_immediate_tranfer = False
+        default_immediate_transfer = True
+        if self.env['ir.config_parameter'].sudo().get_param('stock.no_default_immediate_tranfer') or self.no_default_immediate_transfer:
+            default_immediate_transfer = False
 
         context = {
             'search_default_picking_type_id': [self.id],
             'default_picking_type_id': self.id,
-            'default_immediate_transfer': default_immediate_tranfer,
+            'default_immediate_transfer': default_immediate_transfer,
             'default_company_id': self.company_id.id,
         }
 
