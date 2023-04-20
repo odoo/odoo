@@ -74,8 +74,8 @@ export class ActivityRenderer extends Component {
             },
         };
         const typeId = group[0];
-        const progressValue = this.activeFilter.progressValue;
         const isColumnFiltered = this.activeFilter.activityTypeId === group[0];
+        const progressValue = isColumnFiltered ? this.activeFilter.progressValue : {active: null};
 
         let totalCount = 0;
         for (const activities of Object.values(this.props.groupedActivities)) {
