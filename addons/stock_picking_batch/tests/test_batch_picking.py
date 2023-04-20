@@ -431,6 +431,9 @@ class TestBatchPicking(TransactionCase):
         partner_2 = self.env['res.partner'].create({
             'name': 'Partner 2'
         })
+        # Pickings need to be in 'ready' state to be auto-batchable
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 20)
 
         # Create the pickings that will be confirmed and batched afterwards
         picking_out_1 = self.env['stock.picking'].create({
@@ -511,9 +514,13 @@ class TestBatchPicking(TransactionCase):
                 - Product A - Location: WH2 - Route: WH2/supply from WH1 - procurement: P1 - min_qty: 1
                 - Product B - Location: WH2 - Route: WH2/supply from >H1 - procurement: P2 - min_qty: 1
 
-            * Result: 6 pickings and 3 batchs
+            * Result: 8 pickings and 4 batchs
         """
-        warehouse_1 = self.env['stock.warehouse'].search([], limit=1)
+        warehouse_1 = self.env['stock.warehouse'].create({
+            'name': 'WH 1',
+            'code': 'WH1',
+            'company_id': self.env.company.id,
+        })
         warehouse_2 = self.env['stock.warehouse'].create({
             'name': 'WH 2',
             'code': 'WH2',
@@ -521,7 +528,8 @@ class TestBatchPicking(TransactionCase):
             'resupply_wh_ids': [(6, 0, [warehouse_1.id])],
             'reception_steps': 'three_steps',
         })
-        warehouse_1.int_type_id.write({
+        warehouse_1.out_type_id.write({
+            'reservation_method': 'at_confirm',
             'auto_batch': True,
             'batch_group_by_src_loc': True,
         })
@@ -532,13 +540,13 @@ class TestBatchPicking(TransactionCase):
         self.env['stock.quant']._update_available_quantity(self.productA, warehouse_1.lot_stock_id, 10)
         self.env['stock.quant']._update_available_quantity(self.productB, warehouse_1.lot_stock_id, 10)
         procurement_1 = self.env['procurement.group'].create({
-                'move_type': 'direct',
-                'partner_id': self.client_1.id
-            })
+            'move_type': 'direct',
+            'partner_id': self.client_1.id
+        })
         procurement_2 = self.env['procurement.group'].create({
-                'move_type': 'direct',
-                'partner_id': self.client_1.id
-            })
+            'move_type': 'direct',
+            'partner_id': self.client_1.id
+        })
         op1 = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Product A',
             'location_id': warehouse_2.lot_stock_id.id,
@@ -546,7 +554,7 @@ class TestBatchPicking(TransactionCase):
             'product_min_qty': 1,
             'product_max_qty': 1,
             'group_id': procurement_1.id,
-            'route_id': warehouse_2.route_ids[0].id,
+            'route_id': warehouse_2.resupply_route_ids[0].id,
         })
         op2 = self.env['stock.warehouse.orderpoint'].create({
             'name': 'Product B',
@@ -555,15 +563,42 @@ class TestBatchPicking(TransactionCase):
             'product_min_qty': 1,
             'product_max_qty': 1,
             'group_id': procurement_2.id,
-            'route_id': warehouse_2.route_ids[0].id,
+            'route_id': warehouse_2.resupply_route_ids[0].id,
         })
         self.productA.route_ids = warehouse_2.resupply_route_ids
         self.productB.route_ids = warehouse_2.resupply_route_ids
         (op1 | op2)._procure_orderpoint_confirm()
+        # Only delivery pickings from WH1/Stock -> Inter-warehouse should be 'ready', so only one batch
+        current_batch = procurement_1.stock_move_ids.picking_id.batch_id
+        self.assertNotEqual(current_batch.id, False)
+        self.assertEqual(len(procurement_1.stock_move_ids.picking_id.batch_id), 1)
+        self.assertEqual(procurement_1.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'outgoing').batch_id,
+                         procurement_2.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'outgoing').batch_id)
+
+        # Validate the batch so the next round of pickings become 'ready' -> Incoming pickings to Inter-warehouse -> WH2/Input
+        current_batch.move_ids.write({'quantity_done': 1})
+        current_batch.action_done()
+        done_batches = current_batch
+        self.assertEqual(len(procurement_1.stock_move_ids.picking_id.batch_id), 2)
+        self.assertEqual(procurement_1.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'incoming').batch_id,
+                         procurement_2.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'incoming').batch_id)
+
+        # Validate the batch so the next round of pickings become 'ready' -> Internal pickings : WH2/Input -> WH2/Quality Control
+        current_batch = procurement_1.stock_move_ids.picking_id.batch_id - done_batches
+        current_batch.move_ids.write({'quantity_done': 1})
+        current_batch.action_done()
+        done_batches += current_batch
         self.assertEqual(len(procurement_1.stock_move_ids.picking_id.batch_id), 3)
-        self.assertEqual(procurement_1.stock_move_ids.picking_id[0].batch_id, procurement_2.stock_move_ids.picking_id[0].batch_id)
-        self.assertEqual(procurement_1.stock_move_ids.picking_id[1].batch_id, procurement_2.stock_move_ids.picking_id[1].batch_id)
-        self.assertEqual(procurement_1.stock_move_ids.picking_id[2].batch_id, procurement_2.stock_move_ids.picking_id[2].batch_id)
+        self.assertEqual(procurement_1.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'internal' and p.location_id == warehouse_2.in_type_id).batch_id,
+                         procurement_2.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'internal' and p.location_id == warehouse_2.in_type_id).batch_id)
+
+        # Validate the batch so the next round of pickings become 'ready' -> Internal pickings : WH2/Input -> WH2/Quality Control
+        current_batch = procurement_1.stock_move_ids.picking_id.batch_id - done_batches
+        current_batch.move_ids.write({'quantity_done': 1})
+        current_batch.action_done()
+        self.assertEqual(len(procurement_1.stock_move_ids.picking_id.batch_id), 4)
+        self.assertEqual(procurement_1.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'internal' and p.location_dest_id == warehouse_2.lot_stock_id).batch_id,
+                         procurement_2.stock_move_ids.picking_id.filtered(lambda p: p.picking_type_code == 'internal' and p.location_dest_id == warehouse_2.lot_stock_id).batch_id)
 
     def test_remove_all_transfers_from_confirmed_batch(self):
         """
