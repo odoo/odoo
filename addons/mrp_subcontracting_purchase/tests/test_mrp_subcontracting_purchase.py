@@ -240,6 +240,54 @@ class MrpSubcontractingPurchaseTest(TestMrpSubcontractingCommon):
         self.assertTrue(orderpoint)
         self.assertEqual(orderpoint.warehouse_id, self.warehouse)
 
+    def test_purchase_and_return03(self):
+        """
+        With 2 steps receipt and an input location child of Physical Location (instead of WH)
+        The user buys 10 x a subcontracted product P. He receives the 10
+        products and then does a return with 3 x P. The test ensures that the
+        final received quantity is correctly computed
+        """
+        # Set 2 steps receipt
+        self.warehouse.write({"reception_steps": "two_steps"})
+        # Set 'Input' parent location to 'Physical locations'
+        physical_locations = self.env.ref("stock.stock_location_locations")
+        input_location = self.warehouse.wh_input_stock_loc_id
+        input_location.write({"location_id": physical_locations.id})
+
+        # Create Purchase
+        po = self.env['purchase.order'].create({
+            'partner_id': self.subcontractor_partner1.id,
+            'order_line': [(0, 0, {
+                'name': self.finished2.name,
+                'product_id': self.finished2.id,
+                'product_uom_qty': 10,
+                'product_uom': self.finished2.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        po.button_confirm()
+
+        # Receive Products
+        receipt = po.picking_ids
+        receipt.move_lines.quantity_done = 10
+        receipt.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 10.0)
+
+        # Return Products
+        return_form = Form(self.env['stock.return.picking'].with_context(active_id=receipt.id, active_model='stock.picking'))
+        with return_form.product_return_moves.edit(0) as line:
+            line.quantity = 3
+            line.to_refund = True
+        return_wizard = return_form.save()
+        return_id, _ = return_wizard._create_returns()
+
+        return_picking = self.env['stock.picking'].browse(return_id)
+        return_picking.move_lines.quantity_done = 3
+        return_picking.button_validate()
+
+        self.assertEqual(po.order_line.qty_received, 7.0)
+
     def test_return_and_decrease_pol_qty(self):
         """
         Buy and receive 10 subcontracted products. Return one. Then adapt the
