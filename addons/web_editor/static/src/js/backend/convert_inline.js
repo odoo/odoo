@@ -939,6 +939,7 @@ function formatTables($editable) {
                 convertedNestedParentTable.parentElement.parentElement.style.height = 'inherit'; // td
                 const tr = convertedNestedParentTable.parentElement.parentElement.parentElement;
                 tr.style.height = getComputedStyle(tr).height;
+                tr.classList.toggle('o_forced_height', true);
             }
             cell.style.verticalAlign = 'middle';
         } else if (alignSelf === 'end' || justifyContent === 'end' || justifyContent === 'flex-end') {
