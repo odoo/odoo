@@ -13,6 +13,22 @@ function getModelInfo(resModel) {
     };
 }
 
+function getDefinitions() {
+    const records = serverData.models.species.records;
+    const fieldDefs = {};
+    for (const record of records) {
+        for (const definition of record.definitions) {
+            fieldDefs[definition.name] = {
+                is_property: true,
+                searchable: true,
+                record_name: record.display_name,
+                ...definition,
+            };
+        }
+    }
+    return { resModel: "*", fieldDefs };
+}
+
 let serverData;
 QUnit.module("Field Service", {
     async beforeEach() {
@@ -26,6 +42,13 @@ QUnit.module("Field Service", {
                         write_date: { string: "Last Modified on", type: "datetime" },
                         age: { type: "integer", string: "Age" },
                         location_id: { type: "many2one", string: "Location", relation: "location" },
+                        species: { type: "many2one", string: "Species", relation: "species" },
+                        property_field: {
+                            string: "Properties",
+                            type: "properties",
+                            definition_record: "species",
+                            definition_record_field: "definitions",
+                        },
                     },
                 },
                 location: {
@@ -36,6 +59,42 @@ QUnit.module("Field Service", {
                         write_date: { string: "Last Modified on", type: "datetime" },
                         tortoise_ids: { type: "one2many", string: "Turtles", relation: "tortoise" },
                     },
+                },
+                species: {
+                    fields: {
+                        id: { string: "ID", type: "integer" },
+                        display_name: { string: "Display Name", type: "char" },
+                        name: { string: "Name", type: "char", default: "name" },
+                        write_date: { string: "Last Modified on", type: "datetime" },
+                        definitions: { string: "Definitions", type: "properties_definition" },
+                    },
+                    records: [
+                        {
+                            id: 1,
+                            display_name: "Galápagos tortoise",
+                            definitions: [
+                                {
+                                    name: "galapagos_lifespans",
+                                    string: "Lifespans",
+                                    type: "integer",
+                                },
+                                {
+                                    name: "location_ids",
+                                    string: "Locations",
+                                    type: "many2many",
+                                    relation: "location",
+                                },
+                            ],
+                        },
+                        {
+                            id: 2,
+                            display_name: "Aldabra giant tortoise",
+                            definitions: [
+                                { name: "aldabra_lifespans", string: "Lifespans", type: "integer" },
+                                { name: "color", string: "Color", type: "char" },
+                            ],
+                        },
+                    ],
                 },
             },
         };
@@ -116,6 +175,31 @@ QUnit.test("loadPath", async (assert) => {
                     getModelInfo("location"),
                     getModelInfo("tortoise"),
                 ],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field",
+            expectedResult: {
+                names: ["property_field"],
+                modelsInfo: [getModelInfo("tortoise")],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field.galapagos_lifespans",
+            expectedResult: {
+                names: ["property_field", "galapagos_lifespans"],
+                modelsInfo: [getModelInfo("tortoise"), getDefinitions()],
+            },
+        },
+        {
+            resModel: "tortoise",
+            path: "property_field.location_ids.tortoise_ids",
+            expectedResult: {
+                isInvalid: "path",
+                names: ["property_field", "location_ids", "tortoise_ids"],
+                modelsInfo: [getModelInfo("tortoise"), getDefinitions()],
             },
         },
     ];

@@ -236,7 +236,32 @@ const SELECTION = {
         in: SELECTION_EDITOR_IN,
         not_in: SELECTION_EDITOR_IN,
     },
-    defaultValue: (field) => field.selection[0][0],
+    defaultValue: (field) => field.selection[0][0] ?? false,
+};
+
+// ----------------------------------------------------------------------------
+
+const PROPERTIES = {
+    operators: ["set", "not_set"],
+    defaultValue: () => false,
+};
+
+const PROPERTIES_SELECTION = {
+    operators: ["equal", "not_equal", "set", "not_set"],
+    editors: {
+        default: makeEditor(Select, ({ value, update, field }) => ({
+            value,
+            update,
+            options: field.selection || [],
+        })),
+    },
+    defaultValue: (field) => field.selection?.[0]?.[0] ?? false,
+};
+
+const PROPERTIES_RELATIONAL = {
+    operators: ["equal", "not_equal", "set", "not_set"],
+    editors: { default: makeEditor(Input) },
+    defaultValue: (field) => (field.type === "many2one" ? 1 : []),
 };
 
 // ============================================================================
@@ -253,24 +278,40 @@ export const FIELD_DESCRIPTIONS = {
     many2one: RELATIONAL,
     monetary: NUMBER,
     one2many: RELATIONAL,
+    properties: PROPERTIES,
+    properties_definition: PROPERTIES,
     selection: SELECTION,
     text: TEXT,
 };
 
-export function getFieldInfo(fieldType) {
-    return FIELD_DESCRIPTIONS[fieldType] || DEFAULT;
+const PROPERTIES_DESCRIPTIONS = {
+    selection: PROPERTIES_SELECTION,
+    many2many: PROPERTIES_RELATIONAL,
+    many2one: PROPERTIES_RELATIONAL,
+    one2many: PROPERTIES_RELATIONAL,
+    tags: PROPERTIES_RELATIONAL,
+};
+
+export function getFieldInfo(fieldDef) {
+    if (fieldDef.is_property && PROPERTIES_DESCRIPTIONS[fieldDef.type]) {
+        return PROPERTIES_DESCRIPTIONS[fieldDef.type];
+    } else if (FIELD_DESCRIPTIONS[fieldDef.type]) {
+        return FIELD_DESCRIPTIONS[fieldDef.type];
+    } else {
+        return DEFAULT;
+    }
 }
 
-export function getEditorInfo(fieldType, operator) {
-    const fieldInfo = getFieldInfo(fieldType);
+export function getEditorInfo(fieldDef, operator) {
+    const fieldInfo = getFieldInfo(fieldDef);
     return fieldInfo.editors[operator] || fieldInfo.editors.default;
 }
 
-export function getOperatorsInfo(fieldType) {
-    return selectOperators(getFieldInfo(fieldType).operators);
+export function getOperatorsInfo(fieldDef) {
+    return selectOperators(getFieldInfo(fieldDef).operators);
 }
 
-export function getDefaultFieldValue(field) {
-    const desc = getFieldInfo(field.type);
-    return desc.defaultValue(field);
+export function getDefaultFieldValue(fieldDef) {
+    const desc = getFieldInfo(fieldDef);
+    return desc.defaultValue(fieldDef);
 }

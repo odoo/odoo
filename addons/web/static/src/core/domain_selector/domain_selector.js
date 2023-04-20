@@ -164,7 +164,7 @@ export class DomainSelector extends Component {
             fieldDef = { type: "integer" };
         }
         node.field = { ...fieldDef, name: field };
-        node.operator = getOperatorsInfo(fieldDef.type)[0];
+        node.operator = getOperatorsInfo(fieldDef)[0];
         node.value = getDefaultFieldValue(fieldDef);
         this.notifyChanges();
     }
@@ -205,11 +205,11 @@ export class DomainSelector extends Component {
     }
 
     getEditorInfo(node) {
-        return getEditorInfo(node.field.type, node.operator.key);
+        return getEditorInfo(node.field, node.operator.key);
     }
 
     getOperatorsInfo(node) {
-        const operators = getOperatorsInfo(node.field.type);
+        const operators = getOperatorsInfo(node.field);
         if (!operators.some((op) => op.key === node.operator.key)) {
             operators.push(node.operator);
         }

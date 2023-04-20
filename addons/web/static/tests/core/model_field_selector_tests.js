@@ -63,6 +63,27 @@ function getFocusedFieldName(target) {
     return target.querySelector(".o_model_field_selector_popover_item.active").innerText;
 }
 
+function addProperties() {
+    serverData.models.partner.fields.properties = {
+        string: "Properties",
+        type: "properties",
+        definition_record: "product_id",
+        definition_record_field: "definitions",
+        searchable: true,
+    };
+    serverData.models.product.fields.definitions = {
+        string: "Definitions",
+        type: "properties_definition",
+    };
+    serverData.models.product.records[0].definitions = [
+        { name: "xphone_prop_1", string: "P1", type: "boolean" },
+        { name: "xphone_prop_2", string: "P2", type: "char" },
+    ];
+    serverData.models.product.records[1].definitions = [
+        { name: "xpad_prop_1", string: "P1", type: "date" },
+    ];
+}
+
 QUnit.module("Components", (hooks) => {
     hooks.beforeEach(async () => {
         serverData = {
@@ -719,5 +740,92 @@ QUnit.module("Components", (hooks) => {
             document.activeElement,
             target.querySelector(".o_model_field_selector_popover_search .o_input")
         );
+    });
+
+    QUnit.test("support properties", async (assert) => {
+        addProperties();
+
+        class Parent extends Component {
+            static components = { ModelFieldSelector };
+            static template = xml`
+                <ModelFieldSelector
+                    readonly="false"
+                    resModel="'partner'"
+                    path="path"
+                    isDebugMode="true"
+                    update="(path, fieldInfo) => this.onUpdate(path)"
+                />
+            `;
+            setup() {
+                this.path = "foo";
+            }
+            onUpdate(path) {
+                this.path = path;
+                assert.step(path);
+                this.render();
+            }
+        }
+
+        await mountComponent(Parent);
+        await openModelFieldSelectorPopover(target);
+        assert.strictEqual(getTitle(target), "");
+        assert.containsOnce(target, ".o_model_field_selector_popover_item[data-name='properties']");
+        assert.containsOnce(
+            target,
+            ".o_model_field_selector_popover_item[data-name='properties'] .o_model_field_selector_popover_relation_icon"
+        );
+        assert.deepEqual(getModelFieldSelectorValues(target), ["Foo"]);
+        assert.containsNone(target, ".o_model_field_selector_warning");
+
+        await click(
+            target,
+            ".o_model_field_selector_popover_item[data-name='properties'] .o_model_field_selector_popover_relation_icon",
+            "click on the relation icon should open the properties page"
+        );
+        assert.deepEqual(getModelFieldSelectorValues(target), ["Properties"]);
+        assert.containsOnce(target, ".o_model_field_selector_warning");
+        assert.verifySteps([]);
+
+        await clickPrev(target);
+        assert.strictEqual(getTitle(target), "");
+        await click(
+            target,
+            ".o_model_field_selector_popover_item[data-name='properties'] .o_model_field_selector_popover_item_name",
+            "click on the name should open the properties page"
+        );
+        assert.strictEqual(getTitle(target), "Properties");
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_value").textContent,
+            "Properties"
+        );
+        assert.containsN(target, ".o_model_field_selector_popover_item", 3);
+        assert.containsOnce(
+            target,
+            ".o_model_field_selector_popover_item[data-name='xphone_prop_1']"
+        );
+        assert.containsOnce(
+            target,
+            ".o_model_field_selector_popover_item[data-name='xphone_prop_2']"
+        );
+        assert.containsOnce(
+            target,
+            ".o_model_field_selector_popover_item[data-name='xpad_prop_1']"
+        );
+        assert.deepEqual(getDisplayedFieldNames(target), [
+            "P1 (xphone)xphone_prop_1 (boolean)",
+            "P1 (xpad)xpad_prop_1 (date)",
+            "P2 (xphone)xphone_prop_2 (char)",
+        ]);
+
+        await click(
+            target,
+            ".o_model_field_selector_popover_item[data-name='xphone_prop_2'] .o_model_field_selector_popover_item_name"
+        );
+        assert.verifySteps(["properties.xphone_prop_2"]);
+        assert.strictEqual(
+            target.querySelector(".o_model_field_selector_value").textContent,
+            "PropertiesP2"
+        );
+        assert.containsNone(target, ".o_model_field_selector_warning");
     });
 });
