@@ -491,6 +491,7 @@ function enforceTablesResponsivity(editable) {
         .reverse();
     for (const tr of trs) {
         const commonTable = _createTable();
+        commonTable.style.height = '100%';
         const commonTr = document.createElement('tr');
         const commonTd = document.createElement('td');
         commonTr.appendChild(commonTd);
