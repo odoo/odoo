@@ -122,47 +122,57 @@ class FileTouchable(AddonManifestPatched):
         self.touches[filepath] = touch_time or time.time()
         return patch('os.path.getmtime', lambda filename: self.touches.get(filename) or GETMTINE(filename))
 
+@tagged('-at_install', 'post_install')
+class Test404(HttpCase):
+    def get_assets_node_cache(self):
+        return [e for e in self.env.registry._Registry__cache.d if e[0] == 'ir.qweb' and '_generate_' in str(e[1])]  #_generate_asset_nodes_cache
+
+    def test_rollback(self):
+        """
+        In some rare case, attachments can be generatted, added to the cache but the transaction is rollbacked leading to 404
+        this actually tests the add_post_rollback behaviour
+        """
+        self.env['ir.attachment'].search([('url', '=like', '/web/assets/%web.assets_frontend%')]).unlink()
+        self.env.registry._clear_cache()
+        self.url_open('/some_404_routes')
+        self.assertFalse(self.get_assets_node_cache(), 'orm_cache should be emptied by rollback')
+        self.assertFalse(self.env['ir.attachment'].search([('url', '=like', '/web/assets/%web.assets_frontend%%')]), "attachments should have been rollbacked")
+        self.url_open('/')
+        self.assertTrue(self.env['ir.attachment'].search([('url', '=like', '/web/assets/%web.assets_frontend%%')]), "attachments should have been generated as expected")
+        self.assertTrue(self.get_assets_node_cache(), 'orm_cache should remain populated')
+        self.env.registry._clear_cache()
 
 class TestJavascriptAssetsBundle(FileTouchable):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
         # this is mainly to avoid tests breaking when executed after pre-generate
+        cls.maxDiff = 10000
         cls.env['ir.attachment'].search([('url', '=like', '/web/assets/%test_assetsbundle%')]).unlink()
 
     def setUp(self):
         super(TestJavascriptAssetsBundle, self).setUp()
         self.jsbundle_name = 'test_assetsbundle.bundle1'
         self.cssbundle_name = 'test_assetsbundle.bundle2'
-        self.env['res.lang']._activate_lang('ar_SY')
 
-    def _get_asset(self, bundle, env=None, debug=''):
-        env = (env or self.env)
-        files, _ = env['ir.qweb']._get_asset_content(bundle)
-        return AssetsBundle(bundle, files, env=env, debug=debug)
+    def _get_asset(self, bundle, rtl=False, debug_assets=False):
+        files, _ = self.env['ir.qweb']._get_asset_content(bundle)
+        return AssetsBundle(bundle, files, env=self.env, debug_assets=debug_assets, rtl=rtl)
 
-    def _any_ira_for_bundle(self, extension, lang=None):
+    def _any_ira_for_bundle(self, extension, rtl=False):
         """ Returns all ir.attachments associated to a bundle, regardless of the verion.
         """
-        user_direction = self.env['res.lang']._lang_get(lang or self.env.user.lang).direction
         bundle = self.jsbundle_name if extension in ['js', 'min.js'] else self.cssbundle_name
-        rtl = 'rtl/' if extension in ['css', 'min.css'] and user_direction == 'rtl' else ''
+        rtl = 'rtl/' if rtl and extension in ['css', 'min.css'] else ''
         url = f'/web/assets/%-%/{rtl}{bundle}.{extension}'
         domain = [('url', '=like', url)]
         return self.env['ir.attachment'].search(domain)
-
-    def _node_to_list(self, nodes):
-        res = []
-        for index, (tagName, t_attrs, content) in enumerate(nodes):
-            for name, value in t_attrs.items():
-                res.append(value)
-        return res
 
     def test_01_generation(self):
         """ Checks that a bundle creates an ir.attachment record when its `js` method is called
         for the first time and this ir.attachment is different depending on `is_minified` param.
         """
-        self.bundle = self._get_asset(self.jsbundle_name, env=self.env)
+        self.bundle = self._get_asset(self.jsbundle_name)
 
         # there shouldn't be any minified attachment associated to this bundle
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 0,
@@ -226,13 +236,13 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def test_03_date_invalidation(self):
         """ Checks that a bundle is invalidated when one of its assets' modification date is changed.
         """
-        bundle0 = self._get_asset(self.jsbundle_name, debug="assets")
+        bundle0 = self._get_asset(self.jsbundle_name, debug_assets=True)
         bundle0.js()
         last_modified0 = bundle0.get_checksum('js')
         version0 = bundle0.get_version('js')
 
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'js', 'test_jsfile1.js')
-        bundle1 = self._get_asset(self.jsbundle_name, debug="assets")
+        bundle1 = self._get_asset(self.jsbundle_name, debug_assets=True)
 
         with self._touch(path):
             bundle1.js()
@@ -284,10 +294,9 @@ class TestJavascriptAssetsBundle(FileTouchable):
             and create a minified ir.attachment.
         """
         debug_bundle = self._get_asset(self.jsbundle_name)
-        nodes = debug_bundle.to_node()
-        content = self._node_to_list(nodes)
+        content = debug_bundle.get_links()
         # there should be a minified file
-        self.assertEqual(content[3].count('test_assetsbundle.bundle1.min.js'), 1)
+        self.assertIn('test_assetsbundle.bundle1.min.js', content[0][0])
 
         # there should be one minified assets created in normal mode
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
@@ -297,35 +306,14 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(len(self._any_ira_for_bundle('js')), 0,
                          "there shouldn't be any non-minified assets created in normal mode")
 
-    def test_06_debug(self):
-        """ Checks that a bundle rendered in debug 1 mode outputs non-minified assets
-            and create an non-minified ir.attachment.
-        """
-        debug_bundle = self._get_asset(self.jsbundle_name, debug='1')
-        nodes = debug_bundle.to_node()
-        content = self._node_to_list(nodes)
-        # there should be a minified file
-        self.assertEqual(content[3].count('test_assetsbundle.bundle1.min.js'), 1,
-                         "there should be one minified assets created in debug mode")
-
-        # there should be one minified assets created in debug mode
-        self.assertEqual(len(self._any_ira_for_bundle('min.js')), 1,
-                         "there should be one minified assets created in debug mode")
-
-        # there shouldn't be any non-minified assets created in debug mode
-        self.assertEqual(len(self._any_ira_for_bundle('js')), 0,
-                         "there shouldn't be any non-minified assets created in debug mode")
-
     def test_07_debug_assets(self):
         """ Checks that a bundle rendered in debug assets mode outputs non-minified assets
             and create an non-minified ir.attachment at the .
         """
-        debug_bundle = self._get_asset(self.jsbundle_name, debug='assets')
-        nodes = debug_bundle.to_node()
-        content = self._node_to_list(nodes)
-        # there should be a non-minified file (not .min.js)
-        self.assertEqual(content[3].count('test_assetsbundle.bundle1.js'), 1,
-                         "there should be one non-minified assets created in debug assets mode")
+        debug_bundle = self._get_asset(self.jsbundle_name, debug_assets=True)
+        content = debug_bundle.get_links()
+        # there should be a minified file
+        self.assertIn('test_assetsbundle.bundle1.js', content[0][0], "there should be one non-minified assets created in debug assets mode")
 
         # there shouldn't be any minified assets created in debug mode
         self.assertEqual(len(self._any_ira_for_bundle('min.js')), 0,
@@ -398,11 +386,10 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def test_12_css_debug(self):
         """ Check that a bundle in debug mode outputs non-minified assets.
         """
-        debug_bundle = self._get_asset(self.cssbundle_name, debug='assets')
-        nodes = debug_bundle.to_node()
-        content = self._node_to_list(nodes)
-        # find back one of the original asset file
-        self.assertIn('/web/assets/debug/test_assetsbundle.bundle2.css', content)
+        debug_bundle = self._get_asset(self.cssbundle_name, debug_assets=True)
+        content = debug_bundle.get_links()
+        # there should be a minified file
+        self.assertEqual(content[0][0], '/web/assets/debug/test_assetsbundle.bundle2.css')
 
         # there should be one css asset created in debug mode
         self.assertEqual(len(self._any_ira_for_bundle('css')), 1,
@@ -423,9 +410,8 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(ira0.store_fname, ira1.store_fname)
 
         # the ir.attachment records should be deduplicated in the bundle's content
-        nodes = bundle0.to_node()
-        content = self._node_to_list(nodes)
-        self.assertEqual(content[2].count('test_assetsbundle.bundle2.min.css'), 1)
+        content = bundle0.get_links()
+        self.assertIn('test_assetsbundle.bundle2.min.css', content[0][0])
 
     # Language direction specific tests
 
@@ -433,17 +419,17 @@ class TestJavascriptAssetsBundle(FileTouchable):
         """ Checks that a bundle creates an ir.attachment record when its `css` method is called
         for the first time for language with different direction and separate bundle is created for rtl direction.
         """
-        self.bundle = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
+        self.bundle = self._get_asset(self.cssbundle_name, rtl=True)
 
         # there shouldn't be any attachment associated to this bundle
-        self.assertEqual(len(self._any_ira_for_bundle('min.css', lang='ar_SY')), 0)
+        self.assertEqual(len(self._any_ira_for_bundle('min.css', rtl=True)), 0)
         self.assertEqual(len(self.bundle.get_attachments('min.css')), 0)
 
         # trigger the first generation and, thus, the first save in database
         self.bundle.css()
 
         # there should be one attachment associated to this bundle
-        self.assertEqual(len(self._any_ira_for_bundle('min.css', lang='ar_SY')), 1)
+        self.assertEqual(len(self._any_ira_for_bundle('min.css', rtl=True)), 1)
         self.assertEqual(len(self.bundle.get_attachments('min.css')), 1)
 
     def test_16_ltr_and_rtl_css_access(self):
@@ -473,23 +459,22 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertEqual(ltr_version0, ltr_version1)
         self.assertEqual(ltr_date0, ltr_date1)
 
-        # Assets access for ar_SY language
-        rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
+        rtl_bundle0 = self._get_asset(self.cssbundle_name, rtl=True)
         rtl_bundle0.css()
 
-        self.assertEqual(len(self._any_ira_for_bundle('min.css', lang='ar_SY')), 1)
+        self.assertEqual(len(self._any_ira_for_bundle('min.css', rtl=True)), 1)
 
         rtl_version0 = rtl_bundle0.get_version('css')
-        rtl_ira0 = self._any_ira_for_bundle('min.css', lang='ar_SY')
+        rtl_ira0 = self._any_ira_for_bundle('min.css', rtl=True)
         rtl_date0 = rtl_ira0.create_date
 
-        rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
+        rtl_bundle1 = self._get_asset(self.cssbundle_name, rtl=True)
         rtl_bundle1.css()
 
-        self.assertEqual(len(self._any_ira_for_bundle('min.css', lang='ar_SY')), 1)
+        self.assertEqual(len(self._any_ira_for_bundle('min.css', rtl=True)), 1)
 
         rtl_version1 = rtl_bundle1.get_version('css')
-        rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
+        rtl_ira1 = self._any_ira_for_bundle('min.css', rtl=True)
         rtl_date1 = rtl_ira1.create_date
 
         self.assertEqual(rtl_version0, rtl_version1)
@@ -507,14 +492,12 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def test_17_css_bundle_date_invalidation(self):
         """ Checks that both css bundles are invalidated when one of its assets' modification date is changed
         """
-        # Assets access for en_US language
-        ltr_bundle0 = self._get_asset(self.cssbundle_name, debug='assets')
+        ltr_bundle0 = self._get_asset(self.cssbundle_name, debug_assets=True)
         ltr_bundle0.css()
         ltr_last_modified0 = ltr_bundle0.get_checksum('css')
         ltr_version0 = ltr_bundle0.get_version('css')
 
-        # Assets access for ar_SY language
-        rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}), debug='assets')
+        rtl_bundle0 = self._get_asset(self.cssbundle_name, rtl=True, debug_assets=True)
         rtl_bundle0.css()
         rtl_last_modified0 = rtl_bundle0.get_checksum('css')
         rtl_version0 = rtl_bundle0.get_version('css')
@@ -522,7 +505,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         # Touch test_cssfile1.css
         # Note: No lang specific context given while calling _get_asset so it will load assets for en_US
         path = get_resource_path('test_assetsbundle', 'static', 'src', 'css', 'test_cssfile1.css')
-        ltr_bundle1 = self._get_asset(self.cssbundle_name, debug='assets')
+        ltr_bundle1 = self._get_asset(self.cssbundle_name, debug_assets=True)
 
         with self._touch(path):
             ltr_bundle1.css()
@@ -532,12 +515,12 @@ class TestJavascriptAssetsBundle(FileTouchable):
             self.assertNotEqual(ltr_last_modified0, ltr_last_modified1)
             self.assertNotEqual(ltr_version0, ltr_version1)
 
-            rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}), debug='assets')
+            rtl_bundle1 = self._get_asset(self.cssbundle_name, rtl=True, debug_assets=True)
 
             rtl_bundle1.css()
             rtl_last_modified1 = rtl_bundle1.get_checksum('css')
             rtl_version1 = rtl_bundle1.get_version('css')
-            rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
+            rtl_ira1 = self._any_ira_for_bundle('min.css', rtl=True)
             self.assertNotEqual(rtl_last_modified0, rtl_last_modified1)
             self.assertNotEqual(rtl_version0, rtl_version1)
 
@@ -560,7 +543,7 @@ class TestJavascriptAssetsBundle(FileTouchable):
         ltr_files0 = ltr_bundle0.files
         ltr_version0 = ltr_bundle0.get_version('css')
 
-        rtl_bundle0 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
+        rtl_bundle0 = self._get_asset(self.cssbundle_name, rtl=True)
         rtl_bundle0.css()
         rtl_files0 = rtl_bundle0.files
         rtl_version0 = rtl_bundle0.get_version('css')
@@ -585,11 +568,11 @@ class TestJavascriptAssetsBundle(FileTouchable):
         self.assertNotEqual(ltr_files0, ltr_files1)
         self.assertNotEqual(ltr_version0, ltr_version1)
 
-        rtl_bundle1 = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}))
+        rtl_bundle1 = self._get_asset(self.cssbundle_name, rtl=True)
         rtl_bundle1.css()
         rtl_files1 = rtl_bundle1.files
         rtl_version1 = rtl_bundle1.get_version('css')
-        rtl_ira1 = self._any_ira_for_bundle('min.css', lang='ar_SY')
+        rtl_ira1 = self._any_ira_for_bundle('min.css', rtl=True)
 
         self.assertNotEqual(rtl_files0, rtl_files1)
         self.assertNotEqual(rtl_version0, rtl_version1)
@@ -606,12 +589,11 @@ class TestJavascriptAssetsBundle(FileTouchable):
     def test_19_css_in_debug_assets(self):
         """ Checks that a bundle rendered in debug mode(assets) with right to left language direction stores css files in assets bundle.
         """
-        debug_bundle = self._get_asset(self.cssbundle_name, env=self.env(context={'lang': 'ar_SY'}), debug='assets')
-        nodes = debug_bundle.to_node()
-        content = self._node_to_list(nodes)
+        debug_bundle = self._get_asset(self.cssbundle_name, rtl=True, debug_assets=True)
+        content = debug_bundle.get_links()
 
         # there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets
-        self.assertIn('/web/assets/debug/rtl/{0}.css'.format(self.cssbundle_name), content,
+        self.assertEqual('/web/assets/debug/rtl/{0}.css'.format(self.cssbundle_name), content[0][0],
                       "there should be an css assets bundle in /debug/rtl if user's lang direction is rtl and debug=assets")
 
         # there should be an css assets bundle created in /rtl if user's lang direction is rtl and debug=assets
@@ -626,29 +608,20 @@ class TestJavascriptAssetsBundle(FileTouchable):
         attachments = self.env['ir.attachment'].search([('url', '=like', '/web/assets/%-%/test_assetsbundle.bundle4.%')])
         self.assertEqual(len(attachments), 2)
 
-        asset_data_css = etree.HTML(html).xpath('//*[@data-asset-bundle]')[0]
-        asset_data_js = etree.HTML(html).xpath('//*[@data-asset-bundle]')[1]
-
         format_data = {
             "js": attachments[0].url,
             "css": attachments[1].url,
-            "asset_bundle_css": asset_data_css.attrib.get('data-asset-bundle'),
-            "asset_version_css": asset_data_css.attrib.get('data-asset-version'),
-            "asset_bundle_js": asset_data_js.attrib.get('data-asset-bundle'),
-            "asset_version_js": asset_data_js.attrib.get('data-asset-version'),
-
         }
-
-        self.assertEqual(html.strip(), ("""<!DOCTYPE html>
+        self.assertEqual(str(html.strip()), ("""<!DOCTYPE html>
 <html>
     <head>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="%(css)s" data-asset-bundle="%(asset_bundle_css)s" data-asset-version="%(asset_version_css)s"/>
+        <link type="text/css" rel="stylesheet" href="%(css)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="%(js)s" data-asset-bundle="%(asset_bundle_js)s" data-asset-version="%(asset_version_js)s" onerror="__odooAssetError=1"></script>
+        <script type="text/javascript" src="%(js)s" onerror="__odooAssetError=1"></script>
     </head>
     <body>
     </body>
@@ -659,27 +632,20 @@ class TestJavascriptAssetsBundle(FileTouchable):
         attachments = self.env['ir.attachment'].search([('url', '=like', '%/test_assetsbundle.bundle4.js')])
         self.assertEqual(len(attachments), 1)
 
-        asset_data_css = etree.HTML(html).xpath('//*[@data-asset-bundle]')[0]
-        asset_data_js = etree.HTML(html).xpath('//*[@data-asset-bundle]')[1]
-
         format_data = {
-            "asset_bundle_css": asset_data_css.attrib.get('data-asset-bundle'),
-            "asset_version_css": asset_data_css.attrib.get('data-asset-version'),
-            "asset_bundle_js": asset_data_js.attrib.get('data-asset-bundle'),
-            "asset_version_js": asset_data_js.attrib.get('data-asset-version'),
             "css": '/web/assets/debug/test_assetsbundle.bundle4.css',
             "js": '/web/assets/debug/test_assetsbundle.bundle4.js',
         }
-        self.assertEqual(html.strip(), ("""<!DOCTYPE html>
+        self.assertEqual(str(html.strip()), ("""<!DOCTYPE html>
 <html>
     <head>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style1.css"/>
         <link type="text/css" rel="stylesheet" href="http://test.external.link/style2.css"/>
-        <link type="text/css" rel="stylesheet" href="%(css)s" data-asset-bundle="%(asset_bundle_css)s" data-asset-version="%(asset_version_css)s"/>
+        <link type="text/css" rel="stylesheet" href="%(css)s"/>
         <meta/>
         <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
         <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
-        <script type="text/javascript" src="%(js)s" data-asset-bundle="%(asset_bundle_js)s" data-asset-version="%(asset_version_js)s" onerror="__odooAssetError=1"></script>
+        <script type="text/javascript" src="%(js)s" onerror="__odooAssetError=1"></script>
     </head>
     <body>
     </body>
@@ -777,11 +743,11 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
     def _get_asset(self):
         with patch.object(type(self.env['ir.asset']), '_get_installed_addons_list', Mock(return_value=self.installed_modules)):
             files, _ = self.env['ir.qweb']._get_asset_content(self.stylebundle_name)
-        return AssetsBundle(self.stylebundle_name, files, env=self.env, debug='assets')
+        return AssetsBundle(self.stylebundle_name, files, env=self.env, debug_assets=True)
 
     def _bundle(self, asset, should_create, should_unlink, reason=''):
         self.counter.clear()
-        asset.to_node()
+        asset.get_links()
         if should_create:
             self.assertEqual(self.counter['create'], 2, f'An attachment should have been created {reason}')
         else:
@@ -1805,7 +1771,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'path': '/test_assetsbundle/%s' % path_to_dummy,
         })
 
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', {})
         self.assertEqual(files, [('/test_assetsbundle/../../tests/dummy.xml', None, 'test_assetsbundle.irassetsec', None)])
         # TODO, validate this behaviour
         # the idea is that if the second element is False (not None) it will be added to the assetbundle, but considered in any case as an attachment url)
@@ -1822,7 +1788,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '%s' % path_to_dummy,
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', {})
         self.assertEqual(files, [('../../tests/dummy.xml', None, 'test_assetsbundle.irassetsec', None)])
 
     def test_33(self):
@@ -1871,7 +1837,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/data/ir_asset.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', {})
         self.assertEqual(files, [('/test_assetsbundle/data/ir_asset.xml', None, 'test_assetsbundle.irassetsec', None)])
 
     def test_36(self):
@@ -1880,7 +1846,7 @@ class TestAssetsManifest(AddonManifestPatched):
             'bundle': 'test_assetsbundle.irassetsec',
             'path': '/test_assetsbundle/static/accessible.xml',
         })
-        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec')
+        files = self.env['ir.asset']._get_asset_paths('test_assetsbundle.irassetsec', {})
         modified = files[0][3]
 
         base_path = __file__.replace('/tests/test_assetsbundle.py', '')
@@ -1925,3 +1891,136 @@ class TestAssetsManifest(AddonManifestPatched):
              .my_div.subdiv{color: blue;}
             """
         )
+
+@tagged('-at_install', 'post_install')
+class AssetsNodeOrmCacheUsage(TransactionCase):
+
+    def cache_keys(self):
+        keys = self.env.registry._Registry__cache.d
+        asset_keys = [key for key in keys if key[0] == 'ir.asset' and '_get_asset_paths' in str(key[1])] # ignore topological sort entry
+        qweb_keys = [key for key in keys if key[0] == 'ir.qweb']
+        return asset_keys, qweb_keys
+
+    def test_assets_node_orm_cache_usage_debug(self):
+        self.env.registry._clear_cache()
+
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 0)
+        self.assertEqual(len(qweb_keys), 0)
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='tests')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='1')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        # in debug=assets, the ormcache is not used for _generate_asset_links_cache
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', debug='assets')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+    def test_assets_node_orm_cache_usage_file_type(self):
+        self.env.registry._clear_cache()
+
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 0)
+        self.assertEqual(len(qweb_keys), 0)
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=True, css=False)
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=False, css=True)
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 2)
+
+        # NOTE: this result is not really desired but this is the current behaviour. In practice, we usually only generate one of them.
+        # This could be enforced or avoided
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', js=True, css=True)
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 3)
+
+
+    def test_assets_node_orm_cache_usage_lang(self):
+        self.env.registry._clear_cache()
+        self.env['res.lang']._activate_lang('ar_SY')
+        self.env['res.lang']._activate_lang('fr_FR')
+        self.env['res.lang']._activate_lang('en_US')
+
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 0)
+        self.assertEqual(len(qweb_keys), 0)
+
+        self.env['ir.qweb'].with_context(lang='fr_FR')._get_asset_nodes('web.assets_backend')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        self.env['ir.qweb'].with_context(lang='en_US')._get_asset_nodes('web.assets_backend')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        self.env['ir.qweb'].with_context(lang='ar_SY')._get_asset_nodes('web.assets_backend')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 2)  # a second cache entry is created for rtl
+
+    def test_assets_node_orm_cache_usage_website(self):
+        if self.env['ir.module.module'].search([('name', '=', 'website'), ('state', '=', 'uninstalled')]):
+            return  # only makes sence if website is installed
+        self.env.registry._clear_cache()
+
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 0)
+        self.assertEqual(len(qweb_keys), 0)
+
+        self.env['ir.qweb'].with_context(website_id=None)._get_asset_nodes('web.assets_backend')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        self.env['ir.qweb'].with_context(website_id=1)._get_asset_nodes('web.assets_backend')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 2)  # the content may be different for different websites, even if it is not always the case
+        self.assertEqual(len(qweb_keys), 2)
+
+    def test_assets_node_orm_cache_usage_node_flags(self):
+        self.env.registry._clear_cache()
+
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 0)
+        self.assertEqual(len(qweb_keys), 0)
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1)
+        self.assertEqual(len(qweb_keys), 1)
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', media='print')
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1, "media shouldn't create another entry")
+        self.assertEqual(len(qweb_keys), 1, "media shouldn't create another entry")
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', defer_load=True)
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1, "defer_load shouldn't create another entry")
+        self.assertEqual(len(qweb_keys), 1, "defer_load shouldn't create another entry")
+
+        self.env['ir.qweb']._get_asset_nodes('web.assets_backend', lazy_load=True)
+        asset_keys, qweb_keys = self.cache_keys()
+        self.assertEqual(len(asset_keys), 1, "lazy_load shouldn't create another entry")
+        self.assertEqual(len(qweb_keys), 1, "lazy_load shouldn't create another entry")

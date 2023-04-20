@@ -2154,7 +2154,7 @@ class IrQWeb(models.AbstractModel):
         xmlid = el.attrib.pop('t-call-assets')
         css = self._compile_bool(el.attrib.pop('t-css', True))
         js = self._compile_bool(el.attrib.pop('t-js', True))
-        async_load = self._compile_bool(el.attrib.pop('async_load', False))
+        # async_load support was removed
         defer_load = self._compile_bool(el.attrib.pop('defer_load', False))
         lazy_load = self._compile_bool(el.attrib.pop('lazy_load', False))
         media = el.attrib.pop('media', False)
@@ -2164,7 +2164,6 @@ class IrQWeb(models.AbstractModel):
                 css={css},
                 js={js},
                 debug=values.get("debug"),
-                async_load={async_load},
                 defer_load={defer_load},
                 lazy_load={lazy_load},
                 media={media!r},
@@ -2412,15 +2411,28 @@ class IrQWeb(models.AbstractModel):
 
         return (attributes, content, inherit_branding)
 
-    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
+    def _get_asset_nodes(self, bundle, css=True, js=True, debug=False, defer_load=False, lazy_load=False, media=None):
         """Generates asset nodes.
         If debug=assets, the assets will be regenerated when a file which composes them has been modified.
         Else, the assets will be generated only once and then stored in cache.
         """
-        if debug and 'assets' in debug:
-            return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
+        media = css and media or None
+        links = self._get_asset_links(bundle, css=css, js=js, debug=debug)
+        return self._links_to_nodes(links, defer_load=defer_load, lazy_load=lazy_load, media=media)
+
+    def _get_asset_links(self, bundle, css=True, js=True, debug=None):
+        """Generates asset nodes.
+        If debug=assets, the assets will be regenerated when a file which composes them has been modified.
+        Else, the assets will be generated only once and then stored in cache.
+        """
+        rtl = self.env['res.lang']._lang_get_direction(self.env.context.get('lang') or self.env.user.lang) == 'rtl'
+        assets_params = self.env['ir.asset']._get_assets_params() # website_id
+        debug_assets = debug and 'assets' in debug
+
+        if debug_assets:
+            return self._generate_asset_links(bundle, css=css, js=js, debug_assets=True, assets_params=assets_params, rtl=rtl)
         else:
-            return self._generate_asset_nodes_cache(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
+            return self._generate_asset_links_cache(bundle, css=css, js=js, assets_params=assets_params, rtl=rtl)
 
     # qweb cache feature
 
@@ -2472,80 +2484,91 @@ class IrQWeb(models.AbstractModel):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'css', 'js', 'debug', 'async_load', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())'),
+        tools.ormcache('bundle', 'css', 'js', 'tuple(sorted(assets_params.items()))', 'rtl'),
     )
-    def _generate_asset_nodes_cache(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        return self._generate_asset_nodes(bundle, css, js, debug, async_load, defer_load, lazy_load, media)
+    def _generate_asset_links_cache(self, bundle, css=True, js=True, assets_params=None, rtl=False):
+        return self._generate_asset_links(bundle, css, js, False, assets_params, rtl)
 
-    @tools.ormcache('bundle', 'defer_load', 'lazy_load', 'media', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())')
-    def _get_asset_content(self, bundle, defer_load=False, lazy_load=False, media=None):
-        asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, css=True, js=True)
+    def _get_asset_content(self, bundle, assets_params=None):
+        if assets_params is None:
+            assets_params = self.env['ir.asset']._get_assets_params()  # website_id
+        asset_paths = self.env['ir.asset']._get_asset_paths(bundle=bundle, assets_params=assets_params)
         files = []
-        remains = []
+        external_asset = []
         for path, full_path, _bundle, last_modified in asset_paths:
-            ext = path.rpartition('.')[2]
-            is_js = ext in SCRIPT_EXTENSIONS
-            is_xml = ext in TEMPLATE_EXTENSIONS
-            is_css = ext in STYLE_EXTENSIONS
-            if not is_js and not is_xml and not is_css:
-                continue
-
-            mimetype = None
-            if is_js:
-                mimetype = 'text/javascript'
-            elif is_css:
-                mimetype = f'text/{ext}'
-            elif is_xml:
-                mimetype = 'text/xml'
-
             if full_path is not EXTERNAL_ASSET:
                 files.append({
-                    'atype': mimetype,
                     'url': path,
                     'filename': full_path,
                     'content': '',
-                    'media': media,
                     'last_modified': last_modified,
                 })
             else:
-                if is_js:
-                    tag = 'script'
-                    attributes = {
-                        "type": mimetype,
-                    }
-                    attributes["data-src" if lazy_load else "src"] = path
-                    if defer_load:
-                        # lazy_load will add defer in JS otherwise this is not
-                        # W3C valid (defer is probably not needed there anyways)
-                        attributes["defer"] = "defer"
-                elif is_css:
-                    tag = 'link'
-                    attributes = {
-                        "type": mimetype,
-                        "rel": "stylesheet",
-                        "href": path,
-                        'media': media,
-                    }
-                elif is_xml:
-                    tag = 'script'
-                    attributes = {
-                        "type": mimetype,
-                        "async": "async",
-                        "rel": "prefetch",
-                        "data-src": path,
-                    }
-                remains.append((tag, attributes, None))
+                external_asset.append((path, None))
+        return (files, external_asset)
 
-        return (files, remains)
+    def _get_asset_bundle(self, bundle_name, files=None, env=None, css=True, js=True, debug_assets=False, rtl=False, assets_params=None):
+        return AssetsBundle(bundle_name, files, env=env, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)
 
-    def _get_asset_bundle(self, bundle_name, files, env=None, css=True, js=True, debug=False):
-        return AssetsBundle(bundle_name, files, env=env, css=css, js=js, debug=debug)
+    def _links_to_nodes(self, paths, defer_load=False, lazy_load=False, media=None):
+        return [self._link_to_node(path, defer_load=defer_load, lazy_load=lazy_load, media=media) for path in paths]
 
-    def _generate_asset_nodes(self, bundle, css=True, js=True, debug=False, async_load=False, defer_load=False, lazy_load=False, media=None):
-        files, remains = self._get_asset_content(bundle, defer_load=defer_load, lazy_load=lazy_load, media=css and media or None)
-        asset = self._get_asset_bundle(bundle, files, env=self.env, css=css, js=js, debug=debug)
-        remains = [node for node in remains if (css and node[0] == 'link') or (js and node[0] == 'script')]
-        return remains + asset.to_node(css=css, js=js, async_load=async_load, defer_load=defer_load, lazy_load=lazy_load)
+    def _link_to_node(self, descriptor, defer_load=False, lazy_load=False, media=None):
+        path, js_content = descriptor # small hack to manage css compilation error, to transform into a full css solution or saved js error
+        ext = path.rsplit('.', maxsplit=1)[-1] if path else 'js'
+        is_js = ext in SCRIPT_EXTENSIONS
+        is_xml = ext in TEMPLATE_EXTENSIONS
+        is_css = ext in STYLE_EXTENSIONS
+        if not is_js and not is_xml and not is_css:
+            return
+
+        if is_js:
+            is_asset_bundle = path and path.startswith('/web/assets/')
+            attributes = {
+                'type': 'text/javascript',
+            }
+
+            if (defer_load or lazy_load):
+                attributes['defer'] = 'defer'
+            if path:
+                if lazy_load:
+                    attributes['data-src'] = path
+                else:
+                    attributes['src'] = path
+
+            if is_asset_bundle:
+                attributes['onerror'] = "__odooAssetError=1"
+
+            if js_content:
+                attributes['charset'] = 'utf-8'
+
+            return ('script', attributes, js_content)
+
+
+        if is_css:
+            attributes = {
+                'type': f'text/{ext}',  # we don't really expect to have anything else than pure css here
+                'rel': 'stylesheet',
+                'href': path,
+                'media': media,
+            }
+            return ('link', attributes, None)
+
+        if is_xml:
+            attributes = {
+                'type': 'text/xml',
+                'async': 'async',
+                'rel': 'prefetch',
+                'data-src': path,
+                }
+            return ('script', attributes, None)
+
+    def _generate_asset_links(self, bundle, css=True, js=True, debug_assets=False, assets_params=None, rtl=False):
+        aggregable_files, external_assets = self._get_asset_content(bundle, assets_params=assets_params)
+        external_assets = [node for node in external_assets if (css and node[0].rpartition('.')[2] in STYLE_EXTENSIONS) or (js and node[0].rpartition('.')[2] in SCRIPT_EXTENSIONS)]
+        asset_bundle = self._get_asset_bundle(bundle, aggregable_files, env=self.env, css=css, js=js, debug_assets=debug_assets, rtl=rtl, assets_params=assets_params)
+        bundle_links = asset_bundle.get_links()
+        return external_assets + bundle_links
 
     def _get_asset_link_urls(self, bundle, debug=False):
         asset_nodes = self._get_asset_nodes(bundle, js=False, debug=debug)
@@ -2575,16 +2598,16 @@ class IrQWeb(models.AbstractModel):
                     js_bundles.add(asset)
                 if css:
                     css_bundles.add(asset)
-        nodes = []
+        links = []
         start = time.time()
         for bundle in sorted(js_bundles):
-            nodes += self._generate_asset_nodes(bundle, css=False, js=True)
+            links += self._generate_asset_links(bundle, css=False, js=True)
         _logger.info('JS Assets bundles generated in %s seconds', time.time()-start)
         start = time.time()
         for bundle in sorted(css_bundles):
-            nodes += self._generate_asset_nodes(bundle, css=True, js=False)
+            links += self._generate_asset_links(bundle, css=True, js=False)
         _logger.info('CSS Assets bundles generated in %s seconds', time.time()-start)
-        return nodes
+        return links
 
 
 def render(template_name, values, load, **options):
