@@ -14,6 +14,7 @@ import {
     getDeepRange,
     isUnbreakable,
     isEditorTab,
+    isProtected,
     isZWS,
     getUrlsInfosInString,
     isVoidElement,
@@ -124,9 +125,12 @@ class Sanitize {
 
     _parse(node) {
         while (node) {
-            const closestProtected = closestElement(node, '[data-oe-protected="true"]');
-            if (closestProtected && node !== closestProtected) {
-                return;
+            if (isProtected(node)) {
+                for (const unprotected of node.querySelectorAll('[data-oe-protected="false"]')) {
+                    this._parse(unprotected.firstChild);
+                }
+                node = node.nextSibling;
+                continue;
             }
             // Merge identical elements together.
             while (

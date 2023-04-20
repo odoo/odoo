@@ -178,27 +178,30 @@ export const editorCommands = {
         }
 
         startNode = startNode || editor.document.getSelection().anchorNode;
-
-        // In case the html inserted is all contained in a single root <p> or <li>
-        // tag, we take the all content of the <p> or <li> and avoid inserting the
-        // <p> or <li>. The same is true for a <pre> inside a <pre>.
-        if (container.childElementCount === 1 && (
-            container.firstChild.nodeName === 'P' ||
-            container.firstChild.nodeName === 'LI' ||
-            container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
-        )) {
-            const p = container.firstElementChild;
-            container.replaceChildren(...p.childNodes);
-        } else if (container.childElementCount > 1) {
-            // Grab the content of the first child block and isolate it.
-            if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
-                containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
-                container.firstElementChild.remove();
-            }
-            // Grab the content of the last child block and isolate it.
-            if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
-                containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
-                container.lastElementChild.remove();
+        // If the selection anchorNode is the editable itself, the content
+        // should not be unwrapped.
+        if (selection.anchorNode.oid !== 'root') {
+            // In case the html inserted is all contained in a single root <p> or <li>
+            // tag, we take the all content of the <p> or <li> and avoid inserting the
+            // <p> or <li>. The same is true for a <pre> inside a <pre>.
+            if (container.childElementCount === 1 && (
+                container.firstChild.nodeName === 'P' ||
+                container.firstChild.nodeName === 'LI' ||
+                container.firstChild.nodeName === 'PRE' && closestElement(startNode, 'pre')
+            )) {
+                const p = container.firstElementChild;
+                container.replaceChildren(...p.childNodes);
+            } else if (container.childElementCount > 1) {
+                // Grab the content of the first child block and isolate it.
+                if (isBlock(container.firstChild) && !['TABLE', 'UL', 'OL'].includes(container.firstChild.nodeName)) {
+                    containerFirstChild.replaceChildren(...container.firstElementChild.childNodes);
+                    container.firstElementChild.remove();
+                }
+                // Grab the content of the last child block and isolate it.
+                if (isBlock(container.lastChild) && !['TABLE', 'UL', 'OL'].includes(container.lastChild.nodeName)) {
+                    containerLastChild.replaceChildren(...container.lastElementChild.childNodes);
+                    container.lastElementChild.remove();
+                }
             }
         }
 

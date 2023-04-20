@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import { parseHTML } from '../../src/utils/utils.js';
 import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '../utils.js';
 
@@ -88,6 +90,24 @@ describe('insert HTML', () => {
                     await editor.execCommand('insert', parseHTML('<pre>def</pre>'));
                 },
                 contentAfter: '<pre>abcdef[]<br>ghi</pre>',
+            });
+        });
+        it('should not unwrap single node if the selection anchorNode is the editable', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content</p>[]',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<p>def</p>'));
+                },
+                contentAfter: '<p>content</p><p>def[]</p>',
+            });
+        });
+        it('should not unwrap nodes if the selection anchorNode is the editable', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content</p>[]',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<div>abc</div><p>def</p>'));
+                },
+                contentAfter: '<p>content</p><div>abc</div><p>def[]</p>',
             });
         });
     });

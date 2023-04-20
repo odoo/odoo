@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import { BasicEditor, testEditor } from '../utils.js';
 
 const justifyLeft = async function (editor) {

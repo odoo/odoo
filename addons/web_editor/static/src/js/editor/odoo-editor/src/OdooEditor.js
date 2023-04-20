@@ -69,6 +69,7 @@ import {
     splitTextNode,
     isEditorTab,
     isMacOS,
+    isProtected,
     isVoidElement,
     cleanZWS,
     isZWS,
@@ -238,6 +239,23 @@ export class OdooEditor extends EventTarget {
                 preHistoryUndo: () => {},
                 isHintBlacklisted: () => false,
                 filterMutationRecords: (records) => records,
+                /**
+                 * In case an external asynchronous post processing has to be
+                 * applied on some nodes after an external step (i.e. render
+                 * an OWL Component), the owner of the post-processing will
+                 * return a Promise through this hook resolved when it is done.
+                 * Further collaborative external steps will be buffered as
+                 * long as that promise is not resolved, to avoid a situation
+                 * where the editor tries to apply mutations inside a node that
+                 * is currently being rendered (not ready).
+                 *
+                 * @param {Element} editable
+                 * @returns {Promise|null} Promise that will be resolved when
+                 *          the rendering is done, or null if there is no
+                 *          rendering to do. The editor will buffer new external
+                 *          steps (collaborative) until the promise is resolved.
+                 */
+                postProcessExternalSteps: () => null,
                 onPostSanitize: () => {},
                 direction: 'ltr',
                 _t: string => string,
@@ -323,6 +341,11 @@ export class OdooEditor extends EventTarget {
         this._collabSelectionsContainer = this.document.createElement('div');
         this._collabSelectionsContainer.classList.add('oe-collaboration-selections-container');
         this.editable.before(this._collabSelectionsContainer);
+
+        // Promise for extra rendering, collaborative external steps will be
+        // buffered (delayed) until it is resolved.
+        this._postProcessExternalStepsPromise = null;
+        this._externalStepsBuffer = [];
 
         this.idSet(editable);
         this._historyStepsActive = true;
@@ -794,7 +817,9 @@ export class OdooEditor extends EventTarget {
         }
     }
     observerFlush() {
-        this.observerApply(this.filterMutationRecords(this.observer.takeRecords()));
+        const records = this.observer.takeRecords();
+        this.observerIdSet(records);
+        this.observerApply(this.filterMutationRecords(records));
     }
     observerActive(label) {
         this._observerUnactiveLabels.delete(label);
@@ -802,6 +827,7 @@ export class OdooEditor extends EventTarget {
 
         if (!this.observer) {
             this.observer = new MutationObserver(records => {
+                this.observerIdSet(records);
                 records = this.filterMutationRecords(records);
                 if (!records.length) return;
                 this.dispatchEvent(new Event('contentChanged'));
@@ -824,6 +850,14 @@ export class OdooEditor extends EventTarget {
             characterDataOldValue: true,
         });
         this.dispatchEvent(new Event('observerActive'));
+    }
+
+    observerIdSet(records) {
+        for (const record of records) {
+            if (record.type === 'childList') {
+                this.idSet(record.target);
+            }
+        }
     }
 
     observerApply(records) {
@@ -956,11 +990,29 @@ export class OdooEditor extends EventTarget {
                     continue;
                 }
             }
-            if (record.target && [Node.TEXT_NODE, Node.ELEMENT_NODE].includes(record.target.nodeType)) {
-                const closestProtected = closestElement(record.target, '[data-oe-protected="true"]');
-                if (closestProtected && closestProtected.nodeType === Node.ELEMENT_NODE &&
-                    record.target !== closestProtected) {
-                    continue;
+            const closestProtectedCandidate = closestElement(record.target, '[data-oe-protected]');
+            if (closestProtectedCandidate) {
+                const protectedValue = closestProtectedCandidate.dataset.oeProtected;
+                switch (protectedValue) {
+                    case "true":
+                    case "":
+                        if (
+                            record.type !== "attributes" ||
+                            record.target !== closestProtectedCandidate ||
+                            isProtected(closestProtectedCandidate.parentElement)
+                        ) {
+                            continue;
+                        }
+                        break;
+                    case "false":
+                        if (
+                            record.type === "attributes" &&
+                            record.target === closestProtectedCandidate &&
+                            isProtected(closestProtectedCandidate.parentElement)
+                        ) {
+                            continue;
+                        }
+                        break;
                 }
             }
             filteredRecords.push(record);
@@ -1041,10 +1093,11 @@ export class OdooEditor extends EventTarget {
         this._historySnapshots = [{ step: steps[0] }];
         this._historySteps = steps;
 
+        this._postProcessExternalStepsPromise = this.options.postProcessExternalSteps(this.editable);
+
         this._handleCommandHint();
         this.multiselectionRefresh();
         this.observerActive();
-        this.dispatchEvent(new Event('historyResetFromSteps'));
     }
     historyGetMissingSteps({fromStepId, toStepId}) {
         const fromIndex = this._historySteps.findIndex(x => x.id === fromStepId);
@@ -1505,19 +1558,40 @@ export class OdooEditor extends EventTarget {
         this._collabClientId = id;
     }
 
+    /**
+     * Apply external steps coming from the collaboration. Buffer them if
+     * _postProcessExternalStepsPromise is not null until it is resolved (since
+     * steps could potentially concern elements currently being rendered
+     * asynchronously).
+     *
+     * @param {Object} newSteps External steps to be applied
+     */
     onExternalHistorySteps(newSteps) {
+        if (this._postProcessExternalStepsPromise) {
+            this._externalStepsBuffer.push(...newSteps);
+        }
         this.observerUnactive();
         this._computeHistorySelection();
 
+        let stepIndex = 0;
         for (const newStep of newSteps) {
             this._historyAddExternalStep(newStep);
+            stepIndex++;
+            this._postProcessExternalStepsPromise = this.options.postProcessExternalSteps(this.editable);
+            if (this._postProcessExternalStepsPromise) {
+                this._postProcessExternalStepsPromise.then(() => {
+                    this._postProcessExternalStepsPromise = undefined;
+                    this.onExternalHistorySteps(this._externalStepsBuffer);
+                });
+                this._externalStepsBuffer = newSteps.slice(stepIndex);
+                break;
+            }
         }
 
         this.observerActive();
         this.historyResetLatestComputedSelection();
         this._handleCommandHint();
         this.multiselectionRefresh();
-        this.dispatchEvent(new Event('onExternalHistorySteps'));
     }
 
     // Multi selection
@@ -2271,7 +2345,7 @@ export class OdooEditor extends EventTarget {
         const selection = this.document.getSelection();
         // Selection could be gone if the document comes from an iframe that has been removed.
         const anchorNode = selection && selection.rangeCount && selection.getRangeAt(0) && selection.anchorNode;
-        if (anchorNode && (closestElement(anchorNode, '[data-oe-protected="true"]') || !ancestors(anchorNode).includes(this.editable))) {
+        if (isProtected(anchorNode) || !ancestors(anchorNode).includes(this.editable)) {
             return false;
         }
         this.deselectTable();
@@ -3642,7 +3716,7 @@ export class OdooEditor extends EventTarget {
             return;
         }
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+        if (isProtected(anchorNode)) {
             return;
         }
 
@@ -3838,8 +3912,8 @@ export class OdooEditor extends EventTarget {
             }
         }
 
-        // Clean all protected nodes because they are not sanitized
-        const protectedNodes = element.querySelectorAll('[data-oe-protected="true"]');
+        // Clean all transient nodes
+        const protectedNodes = element.querySelectorAll('[data-oe-transient-content="true"], [data-oe-transient-content=""]');
         for (const node of protectedNodes) {
             node.replaceChildren();
         }
@@ -3875,7 +3949,7 @@ export class OdooEditor extends EventTarget {
     _handleCommandHint() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+        if (isProtected(anchorNode)) {
             return;
         }
 
@@ -3950,7 +4024,7 @@ export class OdooEditor extends EventTarget {
     _fixSelectionOnContenteditableFalse() {
         const selection = this.document.getSelection();
         const anchorNode = selection.anchorNode;
-        if (anchorNode && closestElement(anchorNode, '[data-oe-protected="true"]')) {
+        if (isProtected(anchorNode)) {
             return;
         }
         // When the browser set the selection inside a node that is

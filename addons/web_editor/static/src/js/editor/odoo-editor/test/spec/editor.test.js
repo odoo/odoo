@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import { OdooEditor } from '../../src/OdooEditor.js';
 import {
     getTraversedNodes,
@@ -5881,56 +5883,200 @@ X[]
         });
     });
 
-    describe('oe-protected', () => {
-        it('should ignore protected elements children mutations', async () => {
+    describe('data-oe-protected', () => {
+        describe('true', () => {
+            it('should ignore protected elements children mutations', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <div><p>a[]</p></div>
+                    <div data-oe-protected="true"><p>a</p></div>
+                    `),
+                    stepFunction: async editor => {
+                        await insertText(editor, 'bc');
+                        const protectedParagraph = editor.editable.querySelector('[data-oe-protected="true"] > p');
+                        setSelection(protectedParagraph, 1);
+                        await insertText(editor, 'b');
+                        editor.historyUndo();
+                    },
+                    contentAfterEdit: unformat(`
+                    <div><p>ab[]</p></div>
+                    <div data-oe-protected="true"><p>ab</p></div>
+                    `),
+                });
+            });
+            it('should not sanitize (sanitize.js) protected elements children', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <div>
+                        <p><i class="fa"></i></p>
+                        <ul><li><p><br></p></li></ul>
+                    </div>
+                    <div data-oe-protected="true">
+                        <p><i class="fa"></i></p>
+                        <ul><li><p><br></p></li></ul>
+                    </div>
+                    `),
+                    stepFunction: async editor => editor.sanitize(),
+                    contentAfterEdit: unformat(`
+                    <div>
+                        <p><i class="fa" contenteditable="false">\u200B</i></p>
+                        <ul><li><br></li></ul>
+                    </div>
+                    <div data-oe-protected="true">
+                        <p><i class="fa"></i></p>
+                        <ul><li><p><br></p></li></ul>
+                    </div>
+                    `),
+                });
+            });
+            it('should not fix selection in contenteditable="false" protected elements children', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        <h1>[very important text that needs to be selected]</h1>
+                    </div>
+                    <p><br></p>
+                    `),
+                    stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                    contentAfter: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        <h1>[very important text that needs to be selected]</h1>
+                    </div>
+                    <p><br></p>
+                    `),
+                });
+            });
+            it('should not handle table selection in protected elements children', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <div data-oe-protected="true">
+                        <p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>
+                    </div>
+                    `),
+                    contentAfterEdit: unformat(`
+                    <div data-oe-protected="true">
+                        <p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>
+                    </div>
+                    `),
+                });
+            });
+        });
+        describe('false', () => {
+            it('should not ignore unprotected elements children mutations', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <div><p>a[]</p></div>
+                    <div data-oe-protected="true"><div data-oe-protected="false"><p>a</p></div></div>
+                    `),
+                    stepFunction: async editor => {
+                        await insertText(editor, 'bc');
+                        const unProtectedParagraph = editor.editable.querySelector('[data-oe-protected="false"] > p');
+                        setSelection(unProtectedParagraph, 1);
+                        await insertText(editor, 'bc');
+                        editor.historyUndo();
+                    },
+                    contentAfterEdit: unformat(`
+                    <div><p>abc</p></div>
+                    <div data-oe-protected="true"><div data-oe-protected="false"><p>ab[]</p></div></div>
+                    `),
+                });
+            });
+            it('should sanitize (sanitize.js) unprotected elements children', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <div data-oe-protected="true">
+                        <p><i class="fa"></i></p>
+                        <ul><li><p><br></p></li></ul>
+                        <div data-oe-protected="false">
+                            <p><i class="fa"></i></p>
+                            <ul><li><p><br></p></li></ul>
+                        </div>
+                    </div>
+                    `),
+                    stepFunction: async editor => editor.sanitize(),
+                    contentAfterEdit: unformat(`
+                    <div data-oe-protected="true">
+                        <p><i class="fa"></i></p>
+                        <ul><li><p><br></p></li></ul>
+                        <div data-oe-protected="false">
+                            <p><i class="fa" contenteditable="false">\u200B</i></p>
+                            <ul><li><br></li></ul>
+                        </div>
+                    </div>
+                    `),
+                });
+            });
+            it('should fix selection in contenteditable="false" unprotected elements children', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <p><br></p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        <div data-oe-protected="false">
+                            <h1>[editable text which edition is temporarily disabled]</h1>
+                        </div>
+                    </div>
+                    <p><br></p>
+                    `),
+                    stepFunction: async editor => editor._fixSelectionOnContenteditableFalse(),
+                    contentAfter: unformat(`
+                    <p>[]<br></p>
+                    <div contenteditable="false" data-oe-protected="true">
+                        <div data-oe-protected="false">
+                            <h1>editable text which edition is temporarily disabled</h1>
+                        </div>
+                    </div>
+                    <p><br></p>
+                    `),
+                });
+            });
+            it('should handle table selection in unprotected elements children', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: unformat(`
+                    <div data-oe-protected="true">
+                        <div data-oe-protected="false">
+                            <p>a[bc</p><table><tbody><tr><td>a]b</td><td>cd</td><td>ef</td></tr></tbody></table>
+                        </div>
+                    </div>
+                    `),
+                    contentAfterEdit: unformat(`
+                    <div data-oe-protected="true">
+                        <div data-oe-protected="false">
+                            <p>a[bc</p>
+                            <table class="o_selected_table"><tbody><tr>
+                                <td class="o_selected_td">a]b</td>
+                                <td class="o_selected_td">cd</td>
+                                <td class="o_selected_td">ef</td>
+                            </tr></tbody></table>
+                        </div>
+                    </div>
+                    `),
+                });
+            });
+        });
+    });
+    describe('data-oe-transient-content', () => {
+        it('should remove transient elements children during cleaning', async () => {
             await testEditor(BasicEditor, {
-                contentBefore: unformat(`
-                <div><p>a[]</p></div>
-                <div data-oe-protected="true"><p>a</p></div>
-                `),
+                contentBefore: '<div><p>a</p></div><div data-oe-transient-content="true"><p>a</p></div>',
+                contentAfter: '<div><p>a</p></div><div data-oe-transient-content="true"></div>',
+            });
+        });
+        it('should ignore transient elements children during serialization', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<div><p>a</p></div><div data-oe-transient-content="true"><p>a</p></div>',
                 stepFunction: async editor => {
-                    await insertText(editor, 'bc');
-                    const protectedParagraph = editor.editable.querySelector('[data-oe-protected="true"] > p');
-                    setSelection(protectedParagraph, 1);
-                    await insertText(editor, 'b');
-                    editor.historyUndo();
+                    const elements = [];
+                    for (const element of [...editor.editable.children]) {
+                        elements.push(editor.unserializeNode(editor.serializeNode(element)));
+                    }
+                    const container = document.createElement('DIV');
+                    container.append(...elements);
+                    editor.resetContent(container.innerHTML)
                 },
-                contentAfterEdit: unformat(`
-                <div><p>ab[]</p></div>
-                <div data-oe-protected="true"><p>ab</p></div>
-                `),
+                contentAfter: '<div><p>a</p></div><div data-oe-transient-content="true"></div>',
             });
-        });
-        it('should not sanitize protected elements children', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: unformat(`
-                <div>
-                    <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
-                </div>
-                <div data-oe-protected="true">
-                    <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
-                </div>
-                `),
-                stepFunction: async editor => editor.sanitize(),
-                contentAfterEdit: unformat(`
-                <div>
-                    <p><i class="fa" contenteditable="false">\u200B</i></p>
-                    <ul><li><br></li></ul>
-                </div>
-                <div data-oe-protected="true">
-                    <p><i class="fa"></i></p>
-                    <ul><li><p><br></p></li></ul>
-                </div>
-                `),
-            });
-        });
-        it('should remove protected elements children during cleaning', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<div><p>a[]</p></div><div data-oe-protected="true"><p>a</p></div>',
-                contentAfter: '<div><p>a[]</p></div><div data-oe-protected="true"></div>',
-            });
-        });
+        })
     });
 });

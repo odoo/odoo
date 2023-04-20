@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 import {
     BasicEditor,
     testEditor,

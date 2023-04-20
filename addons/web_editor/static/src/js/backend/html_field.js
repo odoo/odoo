@@ -668,6 +668,10 @@ export const htmlField = {
         };
         if ('collaborative' in options) {
             wysiwygOptions.collaborative = options.collaborative;
+            // Two supported triggers:
+            // 'start': Join the peerToPeer connection immediately
+            // 'focus': Join when the editable has focus
+            wysiwygOptions.collaborativeTrigger = options.collaborative_trigger || 'focus';
         }
         if ('allowCommandImage' in options) {
             // Set the option only if it is explicitly set in the view so a default
