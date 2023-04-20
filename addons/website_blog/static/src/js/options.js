@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import "web.dom_ready";
 import {_t} from "web.core";
 import options from "web_editor.snippets.options";
 import "website.editor.snippets.options";
