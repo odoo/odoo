@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+      <record id="view_delivery_carrier_form_inherit_stock_delivery" model="ir.ui.view">
+            <field name="name">delivery.carrier.form</field>
+            <field name="model">delivery.carrier</field>
+            <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='provider_details']" position="inside">
+                    <field name="route_ids" string="Routes" options="{'no_create': True}" groups="stock.group_adv_location" widget="many2many_tags"/>
+                </xpath>
+            </field>
+       </record>
 
         <record id="view_picking_withcarrier_out_form" model="ir.ui.view">
             <field name="name">delivery.stock.picking_withcarrier.form.view</field>
