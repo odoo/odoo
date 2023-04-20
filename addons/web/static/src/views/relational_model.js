@@ -287,20 +287,6 @@ class DataPoint {
     setup() {}
 
     /**
-     * FIXME: memoize this at some point?
-     * @param {string} fieldName
-     * @returns {boolean}
-     */
-    isFieldReadonly(fieldName) {
-        const activeField = this.activeFields[fieldName];
-        const { readonly } =
-            activeField && activeField.modifiers && "readonly" in activeField.modifiers
-                ? activeField.modifiers
-                : this.fields[fieldName];
-        return evalDomain(readonly, this.evalContext);
-    }
-
-    /**
      * @param {Object} [activeFields={}]
      */
     setActiveFields(activeFields) {
@@ -732,6 +718,20 @@ export class Record extends DataPoint {
 
     isFieldDirty(fieldName) {
         return this.isDirty && !!this._changes[fieldName];
+    }
+
+    /**
+     * FIXME: memoize this at some point?
+     * @param {string} fieldName
+     * @returns {boolean}
+     */
+    isFieldReadonly(fieldName) {
+        const activeField = this.activeFields[fieldName];
+        const { readonly } =
+            activeField && activeField.modifiers && "readonly" in activeField.modifiers
+                ? activeField.modifiers
+                : this.fields[fieldName];
+        return evalDomain(readonly, this.evalContext);
     }
 
     isInvalid(fieldName) {

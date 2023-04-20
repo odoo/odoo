@@ -213,26 +213,25 @@ export class KanbanRenderer extends Component {
         if (!this.canResequenceRecords) {
             return false;
         }
-        const { groupByField } = this.props.list;
+        const { fields, groupByField } = this.props.list;
         if (!groupByField) {
             return true;
         }
-        return (
-            !this.props.list.isFieldReadonly(groupByField.name) && this.isMovableField(groupByField)
-        );
+        const { name, modifiers } = groupByField;
+        const isReadonly =
+            modifiers && "readonly" in modifiers
+                ? modifiers.readonly === true
+                : fields[name].readonly;
+        return !isReadonly && this.isMovableField(groupByField);
     }
 
     get canResequenceGroups() {
         if (!this.props.list.isGrouped) {
             return false;
         }
-        const { name, type } = this.props.list.groupByField;
+        const { type } = this.props.list.groupByField;
         const { groupsDraggable } = this.props.archInfo;
-        return (
-            groupsDraggable &&
-            !this.props.list.isFieldReadonly(name) &&
-            DRAGGABLE_GROUP_TYPES.includes(type)
-        );
+        return groupsDraggable && DRAGGABLE_GROUP_TYPES.includes(type);
     }
 
     get canResequenceRecords() {
