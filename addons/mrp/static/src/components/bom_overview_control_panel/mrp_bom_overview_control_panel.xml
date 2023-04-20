@@ -19,13 +19,13 @@
             <div class="d-flex flex-column gap-1">
                 <form class="d-flex w-100 gap-2">
                         <label class="visually-hidden" for="bom_quantity">Quantity</label>
-                        <div class="input-group">
+                        <div class="input-group col-xl-4">
                             <div class="input-group-text">Quantity</div>
                             <input id="bom_quantity" type="number" step="any" t-on-change="ev => this.updateQuantity(ev)" t-on-keypress="ev => this.onKeyPress(ev)" t-att-value="props.bomQuantity" min="1" class="o_input form-control text-end"/>
                             <div t-if="props.showOptions.uom" t-esc="props.uomName" class="input-group-text">Quantity</div>
                         </div>
                     <t t-if="props.showVariants" >
-                        <label class="col-xl-2 col-lg-3 col-sm-4">Variant:</label>
+                        <div class="input-group-text">Variant:</div>
                         <div class="col-xl-10 col-lg-9 col-sm-8">
                             <Many2XAutocomplete
                                 value="props.data.name"
