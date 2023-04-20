@@ -3,7 +3,7 @@
 import { makeContext } from "@web/core/context";
 import { Domain } from "@web/core/domain";
 import { evaluateExpr } from "@web/core/py_js/py";
-import { sortBy } from "@web/core/utils/arrays";
+import { sortBy, groupBy } from "@web/core/utils/arrays";
 import { deepCopy } from "@web/core/utils/objects";
 import { SearchArchParser } from "./search_arch_parser";
 import {
@@ -170,6 +170,7 @@ export class SearchModel extends EventBus {
         // services
         const { field: fieldService, name: nameService, orm, user, view } = services;
         this.orm = orm;
+        this.fieldService = fieldService;
         this.userService = user;
         this.viewService = view;
 
@@ -996,13 +997,7 @@ export class SearchModel extends EventBus {
         }
         const field = this.searchViewFields[searchItem.fieldName];
         const definitionRecord = field.definition_record;
-        const definitionRecordModel = this.searchViewFields[definitionRecord].relation;
-        const definitionRecordField = field.definition_record_field;
-
-        const result = await this._fetchPropertiesDefinition(
-            definitionRecordModel,
-            definitionRecordField
-        );
+        const result = await this._fetchPropertiesDefinition(this.resModel, searchItem.fieldName);
 
         const searchItemIds = new Set();
         const existingFieldProperties = {};
@@ -1053,6 +1048,87 @@ export class SearchModel extends EventBus {
     //--------------------------------------------------------------------------
 
     /**
+     * Because it require a RPC to get the properties search views items,
+     * it's done lazily, only when we need them.
+     */
+    async fillSearchViewItemsProperty() {
+        if (!this.searchViewFields) {
+            return;
+        }
+
+        const fields = Object.values(this.searchViewFields);
+
+        for (const field of fields) {
+            if (field.type !== "properties") {
+                continue;
+            }
+
+            const result = await this._fetchPropertiesDefinition(this.resModel, field.name);
+
+            const searchItemsNames = Object.values(this.searchItems)
+                .filter((item) => item.isProperty && ["groupBy", "dateGroupBy"].includes(item.type))
+                .map((item) => item.fieldName);
+
+            for (const { definitionRecordId, definitionRecordName, definitions } of result) {
+                // some properties might have been deleted
+                const groupNames = definitions.map(
+                    (definition) => `group_by_${field.name}.${definition.name}`
+                );
+                Object.values(this.searchItems).forEach((searchItem) => {
+                    if (
+                        searchItem.isProperty &&
+                        searchItem.definitionRecordId === definitionRecordId &&
+                        ["groupBy", "dateGroupBy"].includes(searchItem.type) &&
+                        !groupNames.includes(searchItem.name)
+                    ) {
+                        // we can not just remove the element from the list because index are used as id
+                        // so we use a different type to hide it everywhere (until the user refresh his
+                        // browser and the item won't be created again)
+                        searchItem.type = "group_by_property_deleted";
+                    }
+                });
+
+                for (const definition of definitions) {
+                    // we need the definition of the "field" (fake field, property) to be
+                    // in searchViewFields to be able to have the type, it's description, etc
+                    // the name of the property is stored as "<properties field name>.<property name>"
+                    const fullName = `${field.name}.${definition.name}`;
+                    this.searchViewFields[fullName] = {
+                        name: fullName,
+                        readonly: false,
+                        relation: definition.comodel,
+                        required: false,
+                        searchable: false,
+                        selection: definition.selection,
+                        sortable: true,
+                        store: true,
+                        string: `${definition.string} (${definitionRecordName})`,
+                        type: definition.type,
+                        relatedPropertyField: field,
+                    };
+
+                    if (!searchItemsNames.includes(fullName)) {
+                        const groupByItem = {
+                            description: definition.string,
+                            definitionRecordId,
+                            definitionRecordName,
+                            fieldName: fullName,
+                            fieldType: definition.type,
+                            isProperty: true,
+                            name: `group_by_${field.name}.${definition.name}`,
+                            propertyFieldName: field.name,
+                            type: ["datetime", "date"].includes(definition.type)
+                                ? "dateGroupBy"
+                                : "groupBy",
+                        };
+                        this._createGroupOfSearchItems([groupByItem]);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Fetch the properties definitions.
      *
      * @param {string} definitionRecordModel
@@ -1064,7 +1140,7 @@ export class SearchModel extends EventBus {
      *          definitions: <list of properties definitions>
      *      }
      */
-    async _fetchPropertiesDefinition(definitionRecordModel, definitionRecordField) {
+    async _fetchPropertiesDefinition(resModel, fieldName) {
         const domain = [];
         if (this.context.active_id) {
             // assume the active id is the definition record
@@ -1072,18 +1148,17 @@ export class SearchModel extends EventBus {
             domain.push(["id", "=", this.context.active_id]);
         }
 
-        const result = await this.orm.webSearchRead(definitionRecordModel, domain, {
-            specification: {
-                display_name: {},
-                [definitionRecordField]: {},
-            },
-        });
-
-        return result.records.map((values) => {
+        const definitions = await this.fieldService.loadPropertyDefinitions(
+            resModel,
+            fieldName,
+            domain
+        );
+        const result = groupBy(Object.values(definitions), (definition) => definition.record_id);
+        return Object.entries(result).map(([recordId, definitions]) => {
             return {
-                definitionRecordId: values.id,
-                definitionRecordName: values.display_name,
-                definitions: values[definitionRecordField],
+                definitionRecordId: parseInt(recordId),
+                definitionRecordName: definitions[0]?.record_name,
+                definitions,
             };
         });
     }

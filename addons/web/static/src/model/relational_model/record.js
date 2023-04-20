@@ -981,10 +981,22 @@ export class Record extends DataPoint {
         for (const [fieldName, value] of Object.entries(changes)) {
             const field = this.fields[fieldName];
             if (field && field.relatedPropertyField) {
-                const propertyFieldName = field.relatedPropertyField.fieldName;
-                changes[propertyFieldName] = this.data[propertyFieldName].map((property) =>
-                    property.name === field.propertyName ? { ...property, value } : property
+                const [propertyFieldName, propertyName] = field.name.split(".");
+                const propertiesData = this.data[propertyFieldName] || [];
+                if (!propertiesData.find((property) => property.name === propertyName)) {
+                    // try to change the value of a properties that has a different parent
+                    this.model.notification.add(
+                        _t(
+                            "This record belongs to a different parent so you can not change this property."
+                        ),
+                        { type: "warning" }
+                    );
+                    return;
+                }
+                changes[propertyFieldName] = propertiesData.map((property) =>
+                    property.name === propertyName ? { ...property, value } : property
                 );
+                delete changes[field.name];
             }
         }
         const onChangeFields = Object.keys(changes).filter(

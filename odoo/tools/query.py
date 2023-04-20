@@ -57,6 +57,7 @@ class Query(object):
 
         # joins {alias: (kind, table, condition, condition_params)}
         self._joins = {}
+        self._raw_joins = {}  # {query: params}
 
         # holds the list of WHERE clause elements (to be joined with 'AND'), and
         # the list of parameters
@@ -205,6 +206,10 @@ class Query(object):
         for alias, (kind, table, condition, condition_params) in self._joins.items():
             joins.append(f'{kind} {_from_table(table, alias)} ON ({condition})')
             params.extend(condition_params)
+
+        for join_query, query_params in self._raw_joins.items():
+            joins.append(join_query)
+            params.extend(query_params)
 
         from_clause = " ".join([", ".join(tables)] + joins)
         where_clause = " AND ".join(self._where_clauses)
