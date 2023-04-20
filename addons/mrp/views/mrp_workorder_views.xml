@@ -159,9 +159,9 @@
                         <label for="date_start" string="Start Date" attrs="{'invisible': [('state', 'not in', ['progress', 'done', 'cancel'])]}"/>
                         <div class="oe_inline">
                             <field name="is_planned" invisible="1"/>
-                            <field name="date_start" class="mr8 oe_inline" attrs="{'required': [('is_planned', '=', True)]}"/>
+                            <field name="date_start" class="mr8 oe_inline"/>
                             <strong class="mr8 oe_inline">to</strong>
-                            <field name="date_finished" class="oe_inline" attrs="{'required': [('is_planned', '=', True)]}"/>
+                            <field name="date_finished" class="oe_inline"/>
                             <field name="show_json_popover" invisible="1"/>
                             <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                         </div>
