@@ -17,13 +17,17 @@ class ResConfigSettings(models.TransientModel):
     @api.model
     def get_values(self):
         res = super().get_values()
-        authorize = self.env.ref('payment.payment_provider_authorize').sudo()
-        res['authorize_capture_method'] = 'manual' if authorize.capture_manually else 'auto'
+        authorize = self.env.ref('payment.payment_provider_authorize', raise_if_not_found=False)
+        if not authorize:
+            return res
+        res['authorize_capture_method'] = 'manual' if authorize.sudo().capture_manually else 'auto'
         return res
 
     def set_values(self):
         super().set_values()
-        authorize = self.env.ref('payment.payment_provider_authorize').sudo()
+        authorize = self.env.ref('payment.payment_provider_authorize', raise_if_not_found=False)
+        if not authorize:
+            return
         capture_manually = self.authorize_capture_method == 'manual'
-        if authorize.capture_manually != capture_manually:
-            authorize.capture_manually = capture_manually
+        if authorize.sudo().capture_manually != capture_manually:
+            authorize.sudo().capture_manually = capture_manually
