@@ -1681,6 +1681,139 @@ registry.ZoomedBackgroundShape = publicWidget.Widget.extend({
     },
 });
 
+registry.ImageShapeHoverEffet = publicWidget.Widget.extend({
+    selector: "img[data-hover-effect]",
+    disabledInEditableMode: false,
+    events: {
+        "mouseenter": "_onMouseEnter",
+        "mouseleave": "_onMouseLeave",
+    },
+
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this.lastMouseEvent = Promise.resolve();
+    },
+    /**
+     * @override
+     */
+    start() {
+        this._super(...arguments);
+        this.originalImgSrc = this.el.src;
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        if (this.originalImgSrc && (this.lastImgSrc === this.el.src)) {
+            this.el.src = this.originalImgSrc;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     */
+    _onMouseEnter() {
+        if (!this.originalImgSrc) {
+            return;
+        }
+        this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
+            if (!this.svgInEl) {
+                fetch(this.el.src)
+                    .then(response => response.text())
+                    .then(text => {
+                        const parser = new DOMParser();
+                        const result = parser.parseFromString(text, "text/xml");
+                        const svg = result.getElementsByTagName("svg")[0];
+                        this.svgInEl = svg;
+                        if (!this.svgInEl) {
+                            resolve();
+                            return;
+                        }
+                        // Start animations.
+                        const animateEls = this.svgInEl.querySelectorAll("#hoverEffects animateTransform, #hoverEffects animate");
+                        animateEls.forEach(animateTransformEl => {
+                            animateTransformEl.removeAttribute("begin");
+                        });
+                        this._setImgSrc(this.svgInEl, resolve);
+                });
+            } else {
+                this._setImgSrc(this.svgInEl, resolve);
+            }
+        }));
+    },
+    /**
+     * @private
+     */
+    _onMouseLeave() {
+        this.lastMouseEvent = this.lastMouseEvent.then(() => new Promise((resolve) => {
+            if (!this.originalImgSrc || !this.svgInEl) {
+                resolve();
+                return;
+            }
+            if (!this.svgOutEl) {
+                // Reverse animations.
+                this.svgOutEl = this.svgInEl.cloneNode(true);
+                const animateTransformEls = this.svgOutEl.querySelectorAll("#hoverEffects animateTransform, #hoverEffects animate");
+                animateTransformEls.forEach(animateTransformEl => {
+                    let valuesValue = animateTransformEl.getAttribute("values");
+                    valuesValue = valuesValue.split(";").reverse().join(";");
+                    animateTransformEl.setAttribute("values", valuesValue);
+                });
+            }
+            this._setImgSrc(this.svgOutEl, resolve);
+        }));
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Converts the SVG to a data URI and set it as the image source.
+     *
+￼    * @private
+     * @param {HTMLElement} svg
+￼    */
+    _setImgSrc(svg, resolve) {
+        // Add random class to prevent browser from caching image. Otherwise the
+        // animations do not trigger more than once.
+        const previousRandomClass = [...svg.classList].find(cl => cl.startsWith("o_shape_anim_random_"));
+        svg.classList.remove(previousRandomClass);
+        svg.classList.add("o_shape_anim_random_" + Date.now());
+        // Convert the SVG element to a data URI.
+        const svg64 = btoa(new XMLSerializer().serializeToString(svg));
+        // The image is preloaded to avoid a flickering when it is added to the
+        // DOM.
+        const preloadedImg = new Image();
+        preloadedImg.src = `data:image/svg+xml;base64,${svg64}`;
+        preloadedImg.onload = () => {
+            if (this.isDestroyed()) {
+                // In some cases, it is possible for the "preloadedImg" to
+                // finish loading while the widget has already been destroyed.
+                // So, we do not set the image source because that can cause
+                // unexpected reverse of the animation.
+                resolve();
+                return;
+            }
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerUnactive("setImgHoverEffectSrc");
+            this.el.src = preloadedImg.src;
+            this.options.wysiwyg && this.options.wysiwyg.odooEditor.observerActive("setImgHoverEffectSrc");
+            this.lastImgSrc = preloadedImg.src;
+            this.el.onload = () => {
+                resolve();
+            };
+        };
+    },
+});
+
 export default {
     Widget: publicWidget.Widget,
     Animation: Animation,

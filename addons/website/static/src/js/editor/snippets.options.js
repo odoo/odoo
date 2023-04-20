@@ -3566,7 +3566,7 @@ options.registry.WebsiteAnimate = options.Class.extend({
             this._forceAnimation();
         }
         if (params.isAnimationTypeSelection) {
-            this.$target[0].classList.toggle('o_animate_preview', !!widgetValue);
+            this.$target[0].classList.toggle("o_animate_preview", this.$target[0].classList.contains("o_animate"));
         }
     },
     /**
@@ -3598,13 +3598,20 @@ options.registry.WebsiteAnimate = options.Class.extend({
             delete this.$target[0].dataset.scrollZoneStart;
             delete this.$target[0].dataset.scrollZoneEnd;
         }
-        if (!params.activeValue && widgetValue) {
-            // If "Animation" was on "None" and it is no longer, it is set to
-            // "fade_in" by default.
+        if (params.activeValue === "o_animate_on_hover") {
+            this.trigger_up("option_update", {
+                optionName: "ImageTools",
+                name: "disable_hover_effect",
+            });
+        }
+        if ((!params.activeValue || params.activeValue === "o_animate_on_hover")
+                && widgetValue && widgetValue !== "onHover") {
+            // If "Animation" was on "None" or "o_animate_on_hover" and it is no
+            // longer, it is set to "fade_in" by default.
             targetClassList.add('o_anim_fade_in');
             this._toggleImagesLazyLoading(false);
         }
-        if (!widgetValue) {
+        if (!widgetValue || widgetValue === "onHover") {
             const possibleEffects = this._requestUserValueWidgets('animation_effect_opt')[0].getMethodsParams('selectClass').possibleValues;
             const possibleDirections = this._requestUserValueWidgets('animation_direction_opt')[0].getMethodsParams('selectClass').possibleValues;
             const possibleEffectsAndDirections = possibleEffects.concat(possibleDirections);
@@ -3618,6 +3625,12 @@ options.registry.WebsiteAnimate = options.Class.extend({
             this.$target[0].style.setProperty('--wanim-intensity', '');
             this.$target[0].style.animationDuration = '';
             this._toggleImagesLazyLoading(true);
+        }
+        if (widgetValue === "onHover") {
+            this.trigger_up("option_update", {
+                optionName: "ImageTools",
+                name: "enable_hover_effect",
+            });
         }
     },
     /**
@@ -3665,18 +3678,28 @@ options.registry.WebsiteAnimate = options.Class.extend({
      * @override
      */
     _computeWidgetVisibility(widgetName, params) {
+        const hasAnimateClass = this.$target[0].classList.contains("o_animate");
         switch (widgetName) {
             case 'no_animation_opt': {
                 return !this.isAnimatedText;
+            }
+            case 'animation_effect_opt': {
+                return hasAnimateClass;
             }
             case 'animation_trigger_opt': {
                 return !this.$target[0].closest('.dropdown');
             }
             case 'animation_on_scroll_opt':
             case 'animation_direction_opt': {
+                if (widgetName === "animation_direction_opt" && !hasAnimateClass) {
+                    return false;
+                }
                 return !this.limitedAnimations.some(className => this.$target[0].classList.contains(className));
             }
             case 'animation_intensity_opt': {
+                if (!hasAnimateClass) {
+                    return false;
+                }
                 const possibleDirections = this._requestUserValueWidgets('animation_direction_opt')[0].getMethodsParams('selectClass').possibleValues;
                 if (this.$target[0].classList.contains('o_anim_fade_in')) {
                     for (const targetClass of this.$target[0].classList) {
@@ -3690,6 +3713,15 @@ options.registry.WebsiteAnimate = options.Class.extend({
                     return false;
                 }
                 return true;
+            }
+            case 'animation_on_hover_opt': {
+                const [hoverEffectOverlayWidget] = this._requestUserValueWidgets("hover_effect_overlay_opt");
+                if (hoverEffectOverlayWidget) {
+                    const hoverEffectWidget = hoverEffectOverlayWidget.getParent();
+                    const imageToolsOpt = hoverEffectWidget.getParent();
+                    return !imageToolsOpt._isDeviceShape() && !imageToolsOpt._isAnimatedShape();
+                }
+                return false;
             }
         }
         return this._super(...arguments);
