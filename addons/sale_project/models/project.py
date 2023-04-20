@@ -25,7 +25,7 @@ class Project(models.Model):
     has_any_so_to_invoice = fields.Boolean('Has SO to Invoice', compute='_compute_has_any_so_to_invoice')
     sale_order_count = fields.Integer(compute='_compute_sale_order_count', groups='sales_team.group_sale_salesman')
     has_any_so_with_nothing_to_invoice = fields.Boolean('Has a SO with an invoice status of No', compute='_compute_has_any_so_with_nothing_to_invoice')
-    invoice_count = fields.Integer(related='analytic_account_id.invoice_count', groups='account.group_account_readonly')
+    invoice_count = fields.Integer(compute='_compute_invoice_count', groups='account.group_account_readonly')
     vendor_bill_count = fields.Integer(related='analytic_account_id.vendor_bill_count', groups='account.group_account_readonly')
     partner_id = fields.Many2one(compute="_compute_partner_id", store=True, readonly=False)
 
@@ -88,6 +88,21 @@ class Project(models.Model):
         sale_order_items_per_project_id = self._fetch_sale_order_items_per_project_id({'project.task': [('is_closed', '=', False)]})
         for project in self:
             project.sale_order_count = len(sale_order_items_per_project_id.get(project.id, self.env['sale.order.line']).order_id)
+
+    def _compute_invoice_count(self):
+        query = self.env['account.move.line']._search([('move_id.move_type', 'in', ['out_invoice', 'out_refund'])])
+        query.add_where('analytic_distribution ?| %s', [[str(project.analytic_account_id.id) for project in self]])
+        query.order = None
+        query_string, query_param = query.select(
+            'jsonb_object_keys(account_move_line.analytic_distribution) as account_id',
+            'COUNT(DISTINCT move_id) as move_count',
+        )
+        query_string = f"{query_string} GROUP BY jsonb_object_keys(account_move_line.analytic_distribution)"
+        self._cr.execute(query_string, query_param)
+        data = {int(row.get('account_id')): row.get('move_count') for row in self._cr.dictfetchall()}
+        for project in self:
+            project.invoice_count = data.get(project.analytic_account_id.id, 0)
+
 
     def action_view_sos(self):
         self.ensure_one()
