@@ -337,3 +337,12 @@ class StockMove(models.Model):
         if self.env.user.has_group('base.group_portal') and not self.env.su:
             if vals.get('state') == 'done':
                 raise AccessError(_("Portal users cannot create a stock move with a state 'Done' or change the current state to 'Done'."))
+
+    def _is_subcontract_return(self):
+        self.ensure_one()
+        subcontracting_location = self.picking_id.partner_id.with_company(self.company_id).property_stock_subcontractor
+        return (
+                not self.is_subcontract
+                and self.origin_returned_move_id.is_subcontract
+                and self.location_dest_id.id == subcontracting_location.id
+        )
