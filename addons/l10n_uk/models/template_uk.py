@@ -29,6 +29,23 @@ class AccountChartTemplate(models.AbstractModel):
                 'income_currency_exchange_account_id': '7700',
                 'expense_currency_exchange_account_id': '7700',
                 'account_sale_tax_id': 'ST11',
-                'account_purchase_tax_id': 'PT11',
+                'account_purchase_tax_id': 'PT_20_G',
             },
         }
+
+    def _post_load_data(self, template_code, company, template_data):
+        """If the company is located in Northern Ireland, activate the relevant taxes and fiscal postions."""
+        result = super()._post_load_data(template_code, company, template_data)
+
+        is_ni = {
+            'base.state_uk18', 'base.state_uk19', 'base.state_uk20', 'base.state_uk21',
+            'base.state_uk22', 'base.state_uk23', 'base.state_uk24',
+        }.intersection(
+            company.state_id._get_external_ids().get(company.state_id.id, [])
+        )
+
+        if is_ni:
+            for xmlid in ['PT8', 'ST4', 'PT7', 'account_fiscal_position_ni_to_eu_b2b']:
+                self.ref(xmlid).active = True
+
+        return result
