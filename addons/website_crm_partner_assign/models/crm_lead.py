@@ -60,6 +60,7 @@ class CrmLead(models.Model):
         leads_without_country = self - leads_with_country
         if leads_without_country:
             self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
+                'type': 'danger',
                 'title': _("Warning"),
                 'message': _('There is no country set in addresses for %(lead_names)s.', lead_names=', '.join(leads_without_country.mapped('name'))),
             })
