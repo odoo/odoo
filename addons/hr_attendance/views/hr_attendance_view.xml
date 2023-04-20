@@ -67,7 +67,7 @@
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
             <search string="Hr Attendance Search">
-                <field name="employee_id" filter_domain="['|', ('employee_id.registration_number', 'ilike', self), ('employee_id.name', 'ilike', self)]"/>
+                <field name="employee_id"/>
                 <field name="department_id" operator="child_of"/>
                 <filter string="My Attendances" name="myattendances" domain="[('employee_id.user_id', '=', uid)]" />
                 <separator/>

@@ -6,7 +6,7 @@
         <field name="model">hr.leave.allocation</field>
         <field name="arch" type="xml">
             <search string="Search allocations">
-                <field name="employee_id" filter_domain="['|', ('employee_id.registration_number', 'ilike', self), ('employee_id.name', 'ilike', self)]"/>
+                <field name="employee_id"/>
                 <field name="name"/>
                 <field name="allocation_type"/>
                 <filter domain="[('state', '=', 'confirm')]" string="To Approve" name="second_approval"/>
