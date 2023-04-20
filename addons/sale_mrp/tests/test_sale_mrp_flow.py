@@ -2070,7 +2070,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
             with so_form.order_line.edit(0) as line:
                 line.product_uom_qty = 8
 
-        self.assertRecordValues(so.picking_ids.move_ids, [
+        self.assertRecordValues(so.picking_ids.sorted('id').move_ids, [
             {'product_id': self.component_f.id, 'location_dest_id': custo_location.id, 'quantity_done': 100, 'state': 'done'},
             {'product_id': self.component_g.id, 'location_dest_id': custo_location.id, 'quantity_done': 200, 'state': 'done'},
             {'product_id': self.component_f.id, 'location_dest_id': stock_location.id, 'quantity_done': 20, 'state': 'done'},
