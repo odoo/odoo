@@ -28,7 +28,7 @@ const TABLE_STYLES = {
     'border-collapse': 'collapse',
     'text-align': 'inherit',
     'font-size': 'unset',
-    'line-height': 'unset',
+    'line-height': 'inherit',
 };
 
 //--------------------------------------------------------------------------
@@ -464,11 +464,13 @@ function classToStyle($editable, cssRules) {
         // Compute dynamic styles (var, calc).
         writes.push(() => {
             let computedStyle;
-            for (let styleName of node.style) {
+            for (const styleName of node.style) {
                 const styleValue = node.style.getPropertyValue(styleName);
                 if (styleValue.includes('var(') || styleValue.includes('calc(')) {
                     computedStyle = computedStyle || getComputedStyle(node);
-                    node.style.setProperty(styleName, computedStyle[styleName]);
+                    const prop = styleValue.includes('var(') ? styleValue.replace(/var\((.*)\)/, '$1') : styleName;
+                    const value = computedStyle.getPropertyValue(prop) || computedStyle.getPropertyValue(styleName);
+                    node.style.setProperty(styleName, value);
                 }
             }
         });
