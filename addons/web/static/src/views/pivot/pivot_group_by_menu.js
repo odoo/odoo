@@ -4,6 +4,7 @@ import { Dropdown } from "@web/core/dropdown/dropdown";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus } from "@web/core/utils/hooks";
 import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
+import { PropertiesGroupByItem } from "@web/search/properties_group_by_item/properties_group_by_item";
 import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 import { getIntervalOptions } from "@web/search/utils/dates";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
@@ -105,7 +106,12 @@ export class PivotGroupByMenu extends Component {
         this.props.onAddCustomGroupBy(fieldName);
     }
 }
-PivotGroupByMenu.components = { CustomGroupByItem, Dropdown, SearchDropdownItem };
+PivotGroupByMenu.components = {
+    CustomGroupByItem,
+    Dropdown,
+    SearchDropdownItem,
+    PropertiesGroupByItem,
+};
 PivotGroupByMenu.template = "web.PivotGroupByMenu";
 PivotGroupByMenu.defaultProps = {
     showCaretDown: false,

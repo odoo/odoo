@@ -66,7 +66,10 @@
                         <t t-if="currentGroup !== null and currentGroup !== item.groupNumber">
                             <div class="dropdown-divider" role="separator"/>
                         </t>
-                        <t t-if="item.options">
+                        <t t-if="item.fieldType === 'properties'">
+                            <PropertiesGroupByItem item="item" onGroup.bind="onGroupBySelected"/>
+                        </t>
+                        <t t-elif="item.options">
                             <AccordionItem class="'text-truncate'" description="item.description" selected="item.isActive">
                                 <t t-set="subGroup" t-value="null"/>
                                 <t t-foreach="item.options" t-as="option" t-key="option.id">

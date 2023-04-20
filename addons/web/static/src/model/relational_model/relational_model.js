@@ -22,6 +22,7 @@ import {
     getBasicEvalContext,
     getFieldsSpec,
     isRelational,
+    makeActiveField,
 } from "./utils";
 
 /**
@@ -186,6 +187,30 @@ export class RelationalModel extends Model {
     // Protected
     // -------------------------------------------------------------------------
 
+    /**
+     * If we group by default based on a property, the property might not be loaded in `fields`.
+     */
+    async _getPropertyDefinition(config, propertyFullName) {
+        // dynamically load the property and add the definition in the fields attribute
+        const result = await this.orm.call(
+            config.resModel,
+            "get_property_definition",
+            [propertyFullName],
+            { context: config.context }
+        );
+        if (!result) {
+            // the property might have been removed
+            config.groupBy = null;
+        } else {
+            result.propertyName = result.name;
+            result.name = propertyFullName; // "xxxxx" -> "property.xxxxx"
+            // needed for _applyChanges
+            result.relatedPropertyField = { fieldName: propertyFullName.split(".")[0] };
+            result.relation = result.comodel; // match name on field
+            config.fields[propertyFullName] = result;
+        }
+    }
+
     _askChanges() {
         const proms = [];
         this.bus.trigger("NEED_LOCAL_CHANGES", { proms });
@@ -330,6 +355,17 @@ export class RelationalModel extends Model {
         }
         config.groups = config.groups || {};
         const firstGroupByName = config.groupBy[0].split(":")[0];
+        if (firstGroupByName.includes(".")) {
+            if (!config.fields[firstGroupByName]) {
+                await this._getPropertyDefinition(config, firstGroupByName);
+            }
+            const propertiesFieldName = firstGroupByName.split(".")[0];
+            if (!config.activeFields[propertiesFieldName]) {
+                // add the properties field so we load its data when reading the records
+                // so when we drag and drop we don't need to fetch the value of the record
+                config.activeFields[propertiesFieldName] = makeActiveField();
+            }
+        }
         const orderBy = config.orderBy.filter(
             (o) =>
                 o.name === firstGroupByName ||
