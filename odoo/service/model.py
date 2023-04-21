@@ -109,7 +109,7 @@ def _as_validation_error(env, exc):
     if exc.diag.constraint_name in env.registry._sql_constraints:
         return ValidationError(_(
             "The operation cannot be completed: %s",
-            translate_sql_constraint(env.cr, exc.diag.constraint_name, env.context['lang'])
+            translate_sql_constraint(env.cr, exc.diag.constraint_name, env.context.get('lang', 'en_US'))
         ))
 
     return ValidationError(_("The operation cannot be completed: %s", exc.args[0]))
