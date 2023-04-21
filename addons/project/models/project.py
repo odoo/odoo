@@ -2072,6 +2072,16 @@ class Task(models.Model):
                         task.state = '04_waiting_normal'
             if vals['state'] in CLOSED_STATES:
                 task.date_last_stage_update = now
+            if "stage_id" not in vals:
+                if len(self) > 1:
+                    task_ids_per_stage = defaultdict(list)
+                    for task in self:
+                        task_ids_per_stage[task.stage_id].append(task.id)
+                    for stage, task_ids in task_ids_per_stage.items():
+                        tasks = self.browse(task_ids)
+                        tasks._track_set_log_message(_lt("Current Stage: %s", stage.name))
+                else:
+                    self._track_set_log_message(_("Current Stage: %s", self.stage_id.name))
 
         self._task_message_auto_subscribe_notify({task: task.user_ids - old_user_ids[task] - self.env.user for task in self})
         return result
