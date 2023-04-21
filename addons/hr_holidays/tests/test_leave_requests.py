@@ -7,7 +7,7 @@ from dateutil.relativedelta import relativedelta
 from freezegun import freeze_time
 from pytz import timezone, UTC
 
-from odoo import fields
+from odoo import fields, Command
 from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests.common import Form
@@ -1069,6 +1069,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'name': leave_validation_type.capitalize(),
                 'leave_validation_type': leave_validation_type,
                 'requires_allocation': 'no',
+                'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)],
             })
             current_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Holiday Request',
