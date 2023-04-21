@@ -3531,6 +3531,11 @@ class BaseModel(metaclass=MetaModel):
         ir_model_data_unlink = Data
         ir_attachment_unlink = Attachment
 
+        # mark fields that depend on 'self' to recompute them after 'self' has
+        # been deleted (like updating a sum of lines after deleting one line)
+        with self.env.protecting(self._fields.values(), self):
+            self.modified(self._fields, before=True)
+
         for sub_ids in cr.split_for_in_conditions(self.ids):
             records = self.browse(sub_ids)
 
@@ -3541,11 +3546,6 @@ class BaseModel(metaclass=MetaModel):
 
             # Delete the records' properties.
             ir_property_unlink |= Property.search([('res_id', 'in', refs)])
-
-            # mark fields that depend on 'self' to recompute them after 'self' has
-            # been deleted (like updating a sum of lines after deleting one line)
-            with self.env.protecting(self._fields.values(), records):
-                records.modified(self._fields, before=True)
 
             query = f'DELETE FROM "{self._table}" WHERE id IN %s'
             cr.execute(query, (sub_ids,))
