@@ -872,9 +872,12 @@ function fontToImg($editable) {
             font.before(wrapper);
             font.remove();
             wrapper.style.setProperty('padding', padding);
-            wrapper.style.setProperty('width', width + 'px');
+            const wrapperWidth = width + ['left', 'right'].reduce((sum, side) => (
+                sum + (+_getStylePropertyValue(image, `margin-${side}`).replace('px', '') || 0)
+            ), 0);
+            wrapper.style.setProperty('width', wrapperWidth + 'px');
             wrapper.style.setProperty('height', height + 'px');
-            wrapper.style.setProperty('vertical-align', 'middle');
+            wrapper.style.setProperty('vertical-align', 'text-bottom');
             wrapper.style.setProperty('background-color', image.style.backgroundColor);
             wrapper.setAttribute('class',
                 'oe_unbreakable ' + // prevent sanitize from grouping image wrappers
