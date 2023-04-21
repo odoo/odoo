@@ -78,7 +78,6 @@ class account_journal(models.Model):
               JOIN mail_activity activity ON activity.res_id = move.id AND activity.res_model = 'account.move'
          LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
              WHERE move.journal_id = ANY(%(ids)s)
-               AND (act_type.category != 'tax_report' OR (act_type.category = 'tax_report' AND activity.date_deadline <= %(today)s))
         """
         self.env.cr.execute(sql_query, {'ids': self.ids, 'today': today, 'lang': lang})
         for activity in self.env.cr.dictfetchall():
