@@ -27,6 +27,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             client: this._barcodePartnerAction,
             discount: this._barcodeDiscountAction,
             error: this._barcodeErrorAction,
+            gs1: this._barcodeGS1Action,
         });
         NumberBuffer.use({
             nonKeyboardInputEvent: "numpad-click-input",
@@ -59,7 +60,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
     get currentOrder() {
         return this.env.pos.get_order();
     }
-    async _getAddProductOptions(product, base_code) {
+    async _getAddProductOptions(product, code) {
         let price_extra = 0.0;
         let draftPackLotLines, weight, description, packLotLinesToEdit;
 
@@ -101,25 +102,37 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
                     packLotLinesToEdit = [];
                 }
             }
-            const { confirmed, payload } = await this.showPopup("EditListPopup", {
-                title: this.env._t("Lot/Serial Number(s) Required"),
-                name: product.display_name,
-                isSingleItem: isAllowOnlyOneLot,
-                array: packLotLinesToEdit,
-            });
-            if (confirmed) {
-                // Segregate the old and new packlot lines
+            // if the lot information exists in the barcode, we don't need to ask it from the user.
+            if (code && code.type === 'lot') {
+                // consider the old and new packlot lines
                 const modifiedPackLotLines = Object.fromEntries(
-                    payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+                    packLotLinesToEdit.filter(item => item.id).map(item => [item.id, item.text])
                 );
-                const newPackLotLines = payload.newArray
-                    .filter((item) => !item.id)
-                    .map((item) => ({ lot_name: item.text }));
-
+                const newPackLotLines = [
+                    { lot_name: code.code },
+                ];
                 draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
             } else {
-                // We don't proceed on adding product.
-                return;
+                const { confirmed, payload } = await this.showPopup("EditListPopup", {
+                    title: this.env._t("Lot/Serial Number(s) Required"),
+                    name: product.display_name,
+                    isSingleItem: isAllowOnlyOneLot,
+                    array: packLotLinesToEdit,
+                });
+                if (confirmed) {
+                    // Segregate the old and new packlot lines
+                    const modifiedPackLotLines = Object.fromEntries(
+                        payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+                    );
+                    const newPackLotLines = payload.newArray
+                        .filter((item) => !item.id)
+                        .map((item) => ({ lot_name: item.text }));
+
+                    draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
+                } else {
+                    // We don't proceed on adding product.
+                    return;
+                }
             }
         }
 
@@ -141,10 +154,9 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             }
         }
 
-        if (base_code && this.env.pos.db.product_packaging_by_barcode[base_code.code]) {
-            weight = this.env.pos.db.product_packaging_by_barcode[base_code.code].qty;
+        if (code && this.env.pos.db.product_packaging_by_barcode[code.code]) {
+            weight = this.env.pos.db.product_packaging_by_barcode[code.code].qty;
         }
-
         return { draftPackLotLines, quantity: weight, description, price_extra };
     }
     async _addProduct(product, options) {
@@ -228,7 +240,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             }
         }
     }
-    async _barcodeProductAction(code) {
+    async _getProductByBarcode(code) {
         let product = this.env.pos.db.get_product_by_barcode(code.base_code);
         if (!product) {
             // find the barcode in the backend
@@ -246,6 +258,13 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
             } else {
                 return this._barcodeErrorAction(code);
             }
+        }
+        return product;
+    }
+    async _barcodeProductAction(code) {
+        const product = await this._getProductByBarcode(code);
+        if (!product) {
+            return;
         }
         const options = await this._getAddProductOptions(product, code);
         // Do not proceed on adding the product when no options is returned.
@@ -293,6 +312,22 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
         if (last_orderline) {
             last_orderline.set_discount(code.value);
         }
+    }
+    /**
+     * Add a product to the current order using the product identifier and lot number from parsed results.
+     * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
+     * It then uses these values to retrieve the product and add it to the current order.
+     */
+    async _barcodeGS1Action(parsed_results) {
+        const productBarcode = parsed_results.find(element => element.type === 'product');
+        const lotBarcode = parsed_results.find(element => element.type === 'lot');
+        const product = await this._getProductByBarcode(productBarcode);
+        if (!product) {
+            return;
+        }
+        const options = await this._getAddProductOptions(product, lotBarcode);
+        await this.currentOrder.add_product(product, options);
+        NumberBuffer.reset();
     }
     // IMPROVEMENT: The following two methods should be in PosScreenComponent?
     // Why? Because once we start declaring barcode actions in different
