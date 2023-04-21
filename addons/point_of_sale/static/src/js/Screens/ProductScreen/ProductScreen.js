@@ -50,6 +50,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             client: this._barcodePartnerAction,
             discount: this._barcodeDiscountAction,
             error: this._barcodeErrorAction,
+            gs1: this._barcodeGS1Action,
         });
 
         this.state = useState({
@@ -133,7 +134,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             }
         }
     }
-    async _barcodeProductAction(code) {
+    async _getProductByBarcode(code) {
         let product = this.env.pos.db.get_product_by_barcode(code.base_code);
         if (!product) {
             // find the barcode in the backend
@@ -148,6 +149,13 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             } else {
                 return this._barcodeErrorAction(code);
             }
+        }
+        return product;
+    }
+    async _barcodeProductAction(code) {
+        const product = await this._getProductByBarcode(code);
+        if (!product) {
+            return;
         }
         const options = await product.getAddProductOptions(code);
         // Do not proceed on adding the product when no options is returned.
@@ -195,6 +203,22 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         if (last_orderline) {
             last_orderline.set_discount(code.value);
         }
+    }
+    /**
+     * Add a product to the current order using the product identifier and lot number from parsed results.
+     * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
+     * It then uses these values to retrieve the product and add it to the current order.
+     */
+    async _barcodeGS1Action(parsed_results) {
+        const productBarcode = parsed_results.find(element => element.type === 'product');
+        const lotBarcode = parsed_results.find(element => element.type === 'lot');
+        const product = await this._getProductByBarcode(productBarcode);
+        if (!product) {
+            return;
+        }
+        const options = await product.getAddProductOptions(lotBarcode);
+        await this.currentOrder.add_product(product, options);
+        this.numberBuffer.reset();
     }
     // IMPROVEMENT: The following two methods should be in PosScreenComponent?
     // Why? Because once we start declaring barcode actions in different
