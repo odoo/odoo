@@ -46,7 +46,14 @@ export async function monitorAudio(track, processorOptions) {
         processor.disconnect();
         source.disconnect();
         monitoredTrack.stop();
-        await audioContext.close();
+        try {
+            await audioContext.close();
+        } catch (e) {
+            if (e.name === "InvalidStateError") {
+                return; // the audio context is already closed
+            }
+            throw e;
+        }
     };
 }
 
@@ -78,7 +85,6 @@ function _loadScriptProcessor(
     source.connect(analyser);
     const scriptProcessorNode = audioContext.createScriptProcessor(bitSize, 1, 1);
     analyser.connect(scriptProcessorNode);
-    analyser.connect(audioContext.destination);
     analyser.fftsize = bitSize;
     scriptProcessorNode.connect(audioContext.destination);
 
@@ -158,7 +164,6 @@ async function _loadAudioWorkletProcessor(
         },
     });
     source.connect(thresholdProcessor);
-    source.connect(audioContext.destination);
     thresholdProcessor.port.onmessage = (event) => {
         const { isAboveThreshold, volume } = event.data;
         onThreshold && isAboveThreshold !== undefined && onThreshold(isAboveThreshold);
