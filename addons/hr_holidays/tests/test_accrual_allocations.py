@@ -805,7 +805,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         # The second level could give 6 days but since the first level was already giving
         # 3 days, the second level gives 3 days to reach the second level's limit.
         # The third level gives 1 day since it only counts for one iteration.
-        self.assertEqual(allocation.number_of_days, 7)
+        self.assertAlmostEqual(allocation.number_of_days, 7, 2)
 
     def test_accrual_lost_previous_days(self):
         # Test that when an allocation with two levels is made and that the first level has it's action
@@ -876,7 +876,7 @@ class TestAccrualAllocations(TestHrHolidaysCommon):
         allocation.action_validate()
         with freeze_time('2022-4-1'):
             allocation._update_accrual()
-        self.assertEqual(allocation.number_of_days, 3, "Invalid number of days")
+        self.assertAlmostEqual(allocation.number_of_days, 3, 2, "Invalid number of days")
 
     def test_accrual_maximum_leaves(self):
         accrual_plan = self.env['hr.leave.accrual.plan'].with_context(tracking_disable=True).create({

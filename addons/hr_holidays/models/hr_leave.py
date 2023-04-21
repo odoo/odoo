@@ -1588,8 +1588,7 @@ class HolidaysRequest(models.Model):
         elif self.validation_type == 'hr' or (self.validation_type == 'both' and self.state == 'validate1'):
             if self.holiday_status_id.responsible_ids:
                 responsible = self.holiday_status_id.responsible_ids
-            else:
-                responsible = self.env.ref('hr_holidays.group_hr_holidays_user').users.filtered(lambda u: self.holiday_status_id.company_id in u.company_ids)
+
         return responsible
 
     def activity_update(self):
@@ -1604,16 +1603,17 @@ class HolidaysRequest(models.Model):
             if holiday.state == 'draft':
                 to_clean |= holiday
             elif holiday.state == 'confirm':
-                user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
-                for user_id in user_ids:
-                    activity_vals.append({
-                        'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
-                        'automated': True,
-                        'note': note,
-                        'user_id': user_id,
-                        'res_id': holiday.id,
-                        'res_model_id': self.env.ref('hr_holidays.model_hr_leave').id,
-                    })
+                if holiday.holiday_status_id.responsible_ids:
+                    user_ids = holiday.sudo()._get_responsible_for_approval().ids or self.env.user.ids
+                    for user_id in user_ids:
+                        activity_vals.append({
+                            'activity_type_id': self.env.ref('hr_holidays.mail_act_leave_approval').id,
+                            'automated': True,
+                            'note': note,
+                            'user_id': user_id,
+                            'res_id': holiday.id,
+                            'res_model_id': self.env.ref('hr_holidays.model_hr_leave').id,
+                        })
             elif holiday.state == 'validate':
                 to_do |= holiday
             elif holiday.state == 'refuse':
