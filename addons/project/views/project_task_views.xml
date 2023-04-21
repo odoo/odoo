@@ -606,14 +606,15 @@
                                             <i title="Private Task" class="fa fa-lock"/>
                                         </a>
                                         <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value">
-                                            <div t-attf-class="{{record.subtask_count.value &gt; record.closed_subtask_count.value}}"></div>
-                                            <a t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value" class="text-muted">
-                                                <span t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}" class="subtask_list_button fa fa-check-square-o me-1"/>
-                                                <t t-out="record.closed_subtask_count.value"/>/<t t-out="record.subtask_count.value"/>
+                                            <a t-if="!record.is_private.raw_value and record.subtask_count.raw_value and record.subtask_count.value &gt; record.closed_subtask_count.value"
+                                               t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}"
+                                               class="subtask_list_button text-muted">
+                                                <span class="fa fa-check-square-o me-1"/>
+                                                <t t-out="record.closed_subtask_count.value + '/' + record.subtask_count.value"/>
                                             </a>
-                                            <div t-else="" class="text-muted">
-                                                <span t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}" class="fa fa-check-square-o me-1"/>
-                                                <t t-out="record.closed_subtask_count.value"/>/<t t-out="record.subtask_count.value"/>
+                                            <div t-else="" t-attf-title="{{ record.closed_subtask_count.value }} sub-tasks closed out of {{ record.subtask_count.value }}" class="text-muted">
+                                                <span class="fa fa-check-square-o me-1"/>
+                                                <t t-out="record.closed_subtask_count.value + '/' + record.subtask_count.value"/>
                                             </div>
                                         </t>
                                     </div>

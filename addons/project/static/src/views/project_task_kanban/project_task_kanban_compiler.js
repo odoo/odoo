@@ -28,6 +28,10 @@ export class ProjectTaskKanbanCompiler extends KanbanCompiler {
             compiled.setAttribute(name, value);
         }
 
+        for (const child of el.childNodes) {
+            append(compiled, this.compileNode(child));
+        }
+
         return compiled;
     }
 
