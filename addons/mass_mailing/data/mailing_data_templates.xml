@@ -15,6 +15,19 @@
                 <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
 
                 <t t-call="mass_mailing.mass_mailing_mail_style"/>
+
+                <!--
+                    Prevent Outlook from distorting images with DPI scaling (see
+                    https://www.htmlemailcheck.com/knowledge-base/dpi-scaling-in-outlook-2007-2013/):
+                -->
+                <!--[if mso]>
+                    <xml>
+                        <o:OfficeDocumentSettings>
+                            <o:AllowPNG/>
+                            <o:PixelsPerInch>96</o:PixelsPerInch>
+                        </o:OfficeDocumentSettings>
+                    </xml>
+                <![endif]-->
             </head>
             <body>
                 <t t-out="body"/>
