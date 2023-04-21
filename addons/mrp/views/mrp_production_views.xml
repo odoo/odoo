@@ -242,11 +242,25 @@
                             <label for="date_start" string="Scheduled Date" attrs="{'invisible': [('state', 'in', ['progress', 'to_close', 'done', 'cancel'])]}"/>
                             <label for="date_start" string="Start Date" attrs="{'invisible': [('state', 'not in', ['progress', 'to_close', 'done', 'cancel'])]}"/>
                             <div class="o_row">
+<<<<<<< HEAD
                                 <field name="date_start"
                                     attrs="{'readonly': [('state', 'in', ['done', 'to_close', 'cancel'])]}"
                                     decoration-warning="state not in ('done', 'cancel') and date_start &lt; now"
                                     decoration-danger="state not in ('done', 'cancel') and date_start &lt; current_date"
                                     decoration-bf="state not in ('done', 'cancel') and (date_start &lt; current_date or date_start &lt; now)"/>
+||||||| parent of 5e85d0fe347 (temp)
+                                <field name="date_planned_start"
+                                    attrs="{'readonly': [('state', 'in', ['close', 'cancel'])]}"
+                                    decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
+                                    decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
+                                    decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
+=======
+                                <field name="date_planned_start"
+                                    attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}"
+                                    decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
+                                    decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
+                                    decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
+>>>>>>> 5e85d0fe347 (temp)
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field nolabel="1" name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('json_popover', '=', False)]}"/>
                             </div>
