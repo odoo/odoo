@@ -1207,7 +1207,7 @@
                                     <field name="is_closed" invisible="1"/>
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" options="{'autosave': False}"/>
                                     <field name="id" optional="hide"/>
                                     <field name="child_text" invisible="1"/>
                                     <field name="allow_subtasks" invisible="1"/>
@@ -1229,7 +1229,7 @@
                                         decoration-warning="rating_last_text == 'ok'" decoration-success="rating_last_text == 'top'"
                                         attrs="{'invisible': [('rating_last_text', '=', 'none')]}"
                                         class="fw-bold" widget="badge" optional="hide"/>
-                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
+                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True, 'autosave': False}" nolabel="1"/>
                                     <field name="stage_id" optional="show" context="{'default_project_id': project_id}"/>
                                     <button name="action_open_task" type="object" title="View Task" string="View Task" class="btn btn-link float-end"/>
                                 </tree>
@@ -1242,7 +1242,7 @@
                                     <field name="parent_id" invisible="1" />
                                     <field name="display_project_id" invisible="1" />
                                     <field name="is_closed" invisible="1" />
-                                    <field name="priority" widget="priority" optional="show" nolabel="1"/>
+                                    <field name="priority" widget="priority" optional="show" nolabel="1" options="{'autosave': False}"/>
                                     <field name="child_text" invisible="1"/>
                                     <field name="allow_subtasks" invisible="1"/>
                                     <field name="name" widget="name_with_subtask_count"/>
@@ -1268,7 +1268,7 @@
                                     <field name="legend_normal" invisible="1"/>
                                     <field name="legend_done" invisible="1"/>
                                     <field name="legend_blocked" invisible="1"/>
-                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True}" nolabel="1"/>
+                                    <field name="kanban_state" widget="state_selection" optional="show" options="{'hide_label': True, 'autosave': False}" nolabel="1"/>
                                     <field name="stage_id" optional="show" />
                                     <button class="oe_link float-end" string="View Task" name="action_open_task" type="object"/>
                                 </tree>
