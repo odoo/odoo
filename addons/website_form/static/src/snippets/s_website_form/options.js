@@ -165,6 +165,7 @@ const FieldEditor = FormEditor.extend({
         } else {
             field = Object.assign({}, this.fields[this._getFieldName()]);
             field.string = labelText;
+            field.type = this._getFieldType();
         }
         field.records = this._getListItems();
         this._setActiveProperties(field);
