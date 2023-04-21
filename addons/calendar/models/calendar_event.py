@@ -635,7 +635,7 @@ class Meeting(models.Model):
         if not self.env.su and private_fields:
             # display public and confidential events
             domain = AND([domain, ['|', ('privacy', '!=', 'private'), ('user_id', '=', self.env.user.id)]])
-            self.env['bus.bus']._sendone(self.env.user.partner_id, 'mail.simple_notification', {
+            self.env['bus.bus']._sendone(self.env.user.partner_id, 'simple_notification', {
                 'title': _('Private Event Excluded'),
                 'message': _('Grouping by %s is not allowed on private events.', ', '.join([self._fields[field_name].string for field_name in private_fields]))
             })
