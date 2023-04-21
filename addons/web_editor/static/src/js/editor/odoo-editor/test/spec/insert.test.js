@@ -110,6 +110,15 @@ describe('insert HTML', () => {
                 contentAfter: '<p>content</p><div>abc</div><p>def[]</p>',
             });
         });
+        it('should keep an "empty" block which contains fontawesome nodes when inserting multiple nodes', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content</p>[]',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<div><i class="fa fa-circle-o-notch"></i></div><p>after</p>'));
+                },
+                contentAfter: '<p>content</p><div><i class="fa fa-circle-o-notch"></i></div><p>after[]</p>',
+            });
+        });
     });
     describe('not collapsed selection', () => {
         it('should delete selection and insert html in its place', async () => {
