@@ -361,4 +361,110 @@ class DeliveryCarrier(models.Model):
         if not criteria_found:
             raise UserError(_("Not available for current order"))
 
+<<<<<<< HEAD
         return price
+||||||| parent of 8d5b20bd1bd (temp)
+        # Create all packages.
+        for package in picking.package_ids:
+            move_lines = picking.move_line_ids.filtered(lambda ml: ml.result_package_id == package)
+            commodities = self._get_commodities_from_stock_move_lines(move_lines)
+            package_total_cost = 0.0
+            for quant in package.quant_ids:
+                package_total_cost += self._product_price_to_company_currency(quant.quantity, quant.product_id, picking.company_id)
+            packages.append(DeliveryPackage(commodities, package.shipping_weight or package.weight, package.package_type_id, name=package.name, total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+
+        # Create one package: either everything is in pack or nothing is.
+        if picking.weight_bulk:
+            commodities = self._get_commodities_from_stock_move_lines(picking.move_line_ids)
+            package_total_cost = 0.0
+            for move_line in picking.move_line_ids:
+                package_total_cost += self._product_price_to_company_currency(move_line.qty_done, move_line.product_id, picking.company_id)
+            packages.append(DeliveryPackage(commodities, picking.weight_bulk, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+        elif not packages:
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (picking.weight_uom_name))
+
+        return packages
+
+    def _get_commodities_from_order(self, order):
+        commodities = []
+
+        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
+            unit_quantity = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
+            country_of_origin = line.product_id.country_of_origin.code or order.warehouse_id.partner_id.country_id.code
+            commodities.append(DeliveryCommodity(line.product_id, amount=rounded_qty, monetary_value=line.price_reduce_taxinc, country_of_origin=country_of_origin))
+
+        return commodities
+
+    def _get_commodities_from_stock_move_lines(self, move_lines):
+        commodities = []
+
+        product_lines = move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu'])
+        for product, lines in groupby(product_lines, lambda x: x.product_id):
+            unit_quantity = sum(
+                line.product_uom_id._compute_quantity(
+                    line.qty_done if line.state == 'done' else line.reserved_uom_qty,
+                    product.uom_id)
+                for line in lines)
+            rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
+            country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
+            unit_price = sum(line.sale_price for line in lines) / rounded_qty
+            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
+
+        return commodities
+
+    def _product_price_to_company_currency(self, quantity, product, company):
+        return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company, fields.Date.today())
+=======
+        # Create all packages.
+        for package in picking.package_ids:
+            move_lines = picking.move_line_ids.filtered(lambda ml: ml.result_package_id == package)
+            commodities = self._get_commodities_from_stock_move_lines(move_lines)
+            package_total_cost = 0.0
+            for quant in package.quant_ids:
+                package_total_cost += self._product_price_to_company_currency(quant.quantity, quant.product_id, picking.company_id)
+            packages.append(DeliveryPackage(commodities, package.shipping_weight or package.weight, package.package_type_id, name=package.name, total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+
+        # Create one package: either everything is in pack or nothing is.
+        if picking.weight_bulk:
+            commodities = self._get_commodities_from_stock_move_lines(picking.move_line_ids)
+            package_total_cost = 0.0
+            for move_line in picking.move_line_ids:
+                package_total_cost += self._product_price_to_company_currency(move_line.qty_done, move_line.product_id, picking.company_id)
+            packages.append(DeliveryPackage(commodities, picking.weight_bulk, default_package_type, name='Bulk Content', total_cost=package_total_cost, currency=picking.company_id.currency_id, picking=picking))
+        elif not packages:
+            raise UserError(_("The package cannot be created because the total weight of the products in the picking is 0.0 %s") % (picking.weight_uom_name))
+
+        return packages
+
+    def _get_commodities_from_order(self, order):
+        commodities = []
+
+        for line in order.order_line.filtered(lambda line: not line.is_delivery and not line.display_type):
+            unit_quantity = line.product_uom._compute_quantity(line.product_uom_qty, line.product_id.uom_id)
+            rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
+            country_of_origin = line.product_id.country_of_origin.code or order.warehouse_id.partner_id.country_id.code
+            commodities.append(DeliveryCommodity(line.product_id, amount=rounded_qty, monetary_value=line.price_reduce_taxinc, country_of_origin=country_of_origin))
+
+        return commodities
+
+    def _get_commodities_from_stock_move_lines(self, move_lines):
+        commodities = []
+
+        product_lines = move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu'])
+        for product, lines in groupby(product_lines, lambda x: x.product_id):
+            unit_quantity = sum(
+                line.product_uom_id._compute_quantity(
+                    line.qty_done if line.state == 'done' else line.reserved_uom_qty,
+                    product.uom_id)
+                for line in lines)
+            rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
+            country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
+            unit_price = float_round(sum(line.sale_price for line in lines) / rounded_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Price'))
+            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
+
+        return commodities
+
+    def _product_price_to_company_currency(self, quantity, product, company):
+        return company.currency_id._convert(quantity * product.standard_price, product.currency_id, company, fields.Date.today())
+>>>>>>> 8d5b20bd1bd (temp)
