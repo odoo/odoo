@@ -202,6 +202,99 @@ class TestHrAttendanceOvertime(TransactionCase):
         self.assertTrue(overtime, 'Overtime entry should exist since the threshold has been lowered.')
         self.assertAlmostEqual(overtime.duration, 10 / 60, msg='Overtime should be equal to 10 minutes.')
 
+    def test_overtime_company_threshold_benefit(self):
+        # Initial setup: tolerance = 0 and no attendance or overtime for employee
+        self.company.write({
+            'hr_attendance_overtime': False,
+            'overtime_start_date': None,
+            'overtime_company_threshold': 0,
+        })
+        self.assertFalse(
+            self.env['hr.attendance'].search([('employee_id', '=', self.employee.id)]),
+            'Attendance already exist for this employee'
+        )
+        self.assertFalse(
+            self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)]),
+            'Attendance Overtime already exist for this employee'
+        )
+
+        # Check extra hours are not counted
+        self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 4, 7, 58),
+                'check_out': datetime(2023, 1, 4, 12, 2),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 4, 12, 58),
+                'check_out': datetime(2023, 1, 4, 17, 2),
+            }
+        ])
+        overtime = self.env['hr.attendance.overtime'].search([('employee_id', '=', self.employee.id)])
+        self.assertFalse(overtime, 'No overtime should be counted because NO threshold.')
+
+        # Check extra hours are not counted if < tolerance
+        self.company.write({
+            'hr_attendance_overtime': True,
+            'overtime_start_date': date(2023, 1, 1),
+            'overtime_company_threshold': 20,
+        })
+
+        overtime = self.env['hr.attendance.overtime'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', '2023-01-04')
+        ])
+        self.assertFalse(
+            overtime,
+            'No overtime should be counted because threshold is not reach but we have an overtime: ' + str(overtime.duration)
+        )
+
+        # Check extra hours are not counted if < tolerance even if total > tolerance
+        # cf Odoo UI "Allow a period of time (around working hours) "
+        self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 5, 7, 45),
+                'check_out': datetime(2023, 1, 5, 12, 15),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 5, 12, 45),
+                'check_out': datetime(2023, 1, 5, 17, 15),
+            }
+        ])
+
+        overtime = self.env['hr.attendance.overtime'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', '2023-01-05')
+        ])
+        self.assertFalse(
+            overtime,
+            'No overtime should be counted because threshold is not reach but we have an overtime: ' + str(overtime.duration)
+        )
+
+        # Check extra hours are counted if > tolerance
+        self.env['hr.attendance'].create([
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 6, 7, 35),
+                'check_out': datetime(2023, 1, 6, 12, 25),
+            },
+            {
+                'employee_id': self.employee.id,
+                'check_in': datetime(2023, 1, 6, 12, 35),
+                'check_out': datetime(2023, 1, 6, 17, 25),
+            }
+        ])
+
+        overtime = self.env['hr.attendance.overtime'].search([
+            ('employee_id', '=', self.employee.id),
+            ('date', '=', '2023-01-06')
+        ])
+        self.assertTrue(overtime, 'Overtime entry should exist since the threshold has been reach 4 times.')
+        self.assertAlmostEqual(overtime.duration, 140 / 60, msg='Overtime should be equal to 140 (4*35) minutes.')
+
     def test_overtime_employee_threshold(self):
         self.env['hr.attendance'].create([
             {
