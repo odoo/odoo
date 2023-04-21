@@ -8,7 +8,15 @@ class SaleOrder(models.Model):
     _inherit = "sale.order"
 
     margin = fields.Monetary("Margin", compute='_compute_margin', store=True)
+<<<<<<< HEAD
     margin_percent = fields.Float("Margin (%)", compute='_compute_margin', store=True, group_operator="avg")
+||||||| parent of 09f583c67cf (temp)
+    margin_percent = fields.Float("Margin (%)", compute='_compute_margin', store=True)
+=======
+    margin_percent = fields.Float(
+        "Margin (%)", compute='_compute_margin', store=True, group_operator='avg'
+    )
+>>>>>>> 09f583c67cf (temp)
 
     @api.depends('order_line.margin', 'amount_untaxed')
     def _compute_margin(self):
