@@ -51,12 +51,10 @@ export class BarcodeReader {
 
         const cbMaps = this.exclusiveCbMap ? [this.exclusiveCbMap] : [...this.cbMaps];
 
-        let parsedResult = this.parser.parse_barcode(code);
-        if (!Array.isArray(parsedResult)) {
-            parsedResult = [parsedResult];
-        }
-
-        for (const parseBarcode of parsedResult) {
+        let parseBarcode = this.parser.parse_barcode(code);
+        if (Array.isArray(parseBarcode)) {
+            cbMaps.map((cb) => cb.gs1?.(parseBarcode));
+        } else {
             const cbs = cbMaps.map((cbMap) => cbMap[parseBarcode.type]).filter(Boolean);
             if (cbs.length === 0) {
                 this.popup.add(ErrorBarcodePopup, { code: this.codeRepr(parseBarcode) });
