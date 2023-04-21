@@ -46,7 +46,10 @@ BarcodeParser.include({
         const result = {
             rule: Object.assign({}, rule),
             ai: match[1],
-            string_value: match[2]
+            string_value: match[2],
+            code: match[2],
+            base_code: match[2],
+            type: rule.type
         };
         if (rule.gs1_content_type === 'measure'){
             let decimalPosition = 0; // Decimal position begin at the end, 0 means no decimal
