@@ -104,14 +104,11 @@ class CrmLeadForwardToPartner(models.TransientModel):
         return True
 
     def get_lead_portal_url(self, lead):
-        action = lead.type == 'opportunity' and 'action_portal_opportunities' or 'action_portal_leads'
-        action_ref = self.env.ref('website_crm_partner_assign.%s' % (action,), False)
-        portal_link = "%s/?db=%s#id=%s&action=%s&view_type=form" % (
+        return "%s/my/%s/%s" % (
             lead.get_base_url(),
-            self.env.cr.dbname,
+            lead.type,
             lead.id,
-            action_ref and action_ref.id or False)
-        return portal_link
+        )
 
     forward_type = fields.Selection([
         ('single', 'a single partner: manual selection of partner'),
