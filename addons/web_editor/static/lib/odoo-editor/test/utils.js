@@ -618,4 +618,11 @@ export function triggerEvent(
     return ev;
 }
 
+export async function readFromFile(url) {
+    const response = await fetch(url);
+    const reader = response.body.getReader();
+    const {value: chunk} = await reader.read();
+    return new TextDecoder().decode(chunk);
+}
+
 export class BasicEditor extends OdooEditor {}
