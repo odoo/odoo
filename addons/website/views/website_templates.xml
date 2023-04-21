@@ -297,6 +297,122 @@
 
 <!-- Header templates -->
 
+<!-- "mobile" template -->
+<template id="template_header_mobile" name="Template Header Mobile">
+    <t t-call="website.navbar">
+        <t t-set="_navbar_classes" t-valuef="o_header_mobile d-block d-lg-none shadow-sm"/>
+        <t t-set="_navbar_expand_class" t-valuef="None"/>
+        <t t-set="_navbar_name" t-valuef="Mobile"/>
+
+        <div id="top_menu_container" class="container flex-wrap justify-content-between">
+            <!-- Brand -->
+            <t t-call="website.placeholder_header_brand"/>
+            <ul class="o_header_mobile_buttons_wrap navbar-nav flex-row align-items-center gap-2 mb-0">
+                <li>
+                    <button
+                        class="nav-link btn me-auto p-2 o_not_editable"
+                        type="button"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#top_menu_collapse_mobile"
+                        aria-controls="top_menu_collapse_mobile"
+                        aria-expanded="false"
+                        aria-label="Toggle navigation"
+                        >
+                        <span class="navbar-toggler-icon"/>
+                    </button>
+                </li>
+            </ul>
+            <div t-attf-class="offcanvas #{_side if _side else 'offcanvas-end'} o_navbar_mobile vh-100" id="top_menu_collapse_mobile">
+                <div class="offcanvas-header justify-content-end">
+                    <button type="button" class="nav-link btn-close" data-bs-dismiss="offcanvas" aria-label="Close"/>
+                </div>
+                <div class="offcanvas-body d-flex flex-column justify-content-between h-100 w-100">
+                    <ul class="navbar-nav">
+                        <!-- Search bar -->
+                        <t t-call="website.placeholder_header_search_box">
+                            <t t-set="_classes" t-valuef="mb-3"/>
+                            <t t-set="_input_classes" t-valuef="rounded-start-pill text-bg-light ps-3"/>
+                            <t t-set="_submit_classes" t-valuef="rounded-end-pill bg-o-color-3 pe-3"/>
+                            <t t-set="limit" t-valuef="0"/>
+                        </t>
+                        <!-- Navbar -->
+                        <t t-call="website.navbar_nav">
+                            <t t-set="_no_autohide_menu_mobile" t-valuef="True"/>
+
+                            <!-- Menu -->
+                            <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                                <t t-call="website.submenu">
+                                    <t t-set="item_class" t-valuef="nav-item"/>
+                                    <t t-set="link_class" t-valuef="nav-link"/>
+                                </t>
+                            </t>
+                        </t>
+                        <!-- Text element -->
+                        <t t-call="website.placeholder_header_text_element">
+                            <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
+                            <t t-set="_link_class" t-valuef="nav-link d-block p-1"/>
+                        </t>
+                        <!-- Social -->
+                        <t t-call="website.header_social_links_no_color">
+                            <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 o_border_contrast"/>
+                        </t>
+                    </ul>
+                    <ul class="navbar-nav gap-2 mt-3 w-100">
+                        <!-- Sign In -->
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_link_class" t-valuef="btn btn-outline-secondary w-100"/>
+                        </t>
+                        <!-- User Dropdown -->
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_icon" t-value="true"/>
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_user_name_class" t-valuef="me-auto small"/>
+                            <t t-set="_link_class" t-valuef="btn-outline-secondary d-flex align-items-center border-0 px-2"/>
+                            <t t-set="_icon_class" t-valuef="me-2"/>
+                            <t t-set="_item_class" t-valuef="dropdown dropup"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
+                        </t>
+                        <!-- Language Selector -->
+                        <t t-call="website.placeholder_header_language_selector">
+                            <t t-set="_btn_class" t-valuef="btn-outline-secondary d-flex align-items-center w-100 px-2"/>
+                            <t t-set="_txt_class" t-valuef="me-auto small"/>
+                            <t t-set="_flag_class" t-valuef="me-2"/>
+                            <t t-set="_div_classes" t-valuef="dropup"/>
+                            <t t-set="_dropdown_menu_class" t-valuef="w-100"/>
+                        </t>
+                        <!-- Call To Action -->
+                        <t t-call="website.header_call_to_action_large"/>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="template_header_mobile_align_center" inherit_id="website.template_header_mobile" active="False">
+    <xpath expr="//t[@t-call='website.navbar_nav']" position="inside">
+        <t t-set="_nav_class" t-valuef="text-center"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
+        <t t-set="_div_class" t-valuef="align-items-center mt-2 border-top pt-2 text-center o_border_contrast"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+        <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-center o_border_contrast"/>
+    </xpath>
+</template>
+
+<template id="template_header_mobile_align_right" inherit_id="website.template_header_mobile" active="False">
+    <xpath expr="//t[@t-call='website.navbar_nav']" position="inside">
+        <t t-set="_nav_class" t-valuef="text-end"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.placeholder_header_text_element']" position="inside">
+        <t t-set="_div_class" t-valuef="align-items-end mt-2 border-top pt-2 text-end o_border_contrast"/>
+    </xpath>
+    <xpath expr="//t[@t-call='website.header_social_links_no_color']" position="inside">
+        <t t-set="_div_class" t-valuef="mt-2 border-top pt-2 text-end o_border_contrast"/>
+    </xpath>
+</template>
+
 <!-- "Default" template -->
 <template id="template_header_default" inherit_id="website.layout" name="Template Header Default" active="True">
     <xpath expr="//header//nav" position="replace">
@@ -1325,57 +1441,6 @@
                 </div>
             </section>
         </div>
-    </xpath>
-</template>
-
-<!-- Navbar Hamburger Options -->
-<template id="option_header_off_canvas" inherit_id="website.navbar_nav" name="Off-Canvas Header" active="False">
-    <xpath expr="//ul[@id='top_menu']" position="attributes">
-        <attribute name="class" separator=" " add="position-relative"/>
-    </xpath>
-    <xpath expr="//ul[@id='top_menu']" position="before">
-        <div class="o_offcanvas_menu_backdrop" data-bs-toggle="collapse" data-bs-target="#top_menu_collapse" aria-label="Toggle navigation"/>
-    </xpath>
-    <xpath expr="//ul[@id='top_menu']/t" position="before">
-        <li class="o_offcanvas_menu_toggler order-first navbar-toggler text-end border-0 o_not_editable">
-            <a href="#top_menu_collapse" class="nav-link px-3" data-bs-toggle="collapse">
-                <span class="fa-2x">&#215;</span>
-            </a>
-        </li>
-    </xpath>
-    <xpath expr="//ul[@id='top_menu']/t" position="after">
-        <li class="o_offcanvas_logo_container order-last navbar-toggler py-4 order-1 mt-auto text-center border-0">
-            <a href="/" class="o_offcanvas_logo text-center">My Website</a>
-        </li>
-    </xpath>
-</template>
-
-<template id="option_header_off_canvas_logo_show" inherit_id="website.option_header_off_canvas" name="Show Logo (Off-Canvas)">
-    <xpath expr="//a[hasclass('o_offcanvas_logo')]" position="replace">
-        <a href="/" class="o_offcanvas_logo logo">
-            <span t-field="website.logo" t-options="{'widget': 'image', 'style': 'max-width: 200px'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name" />
-        </a>
-    </xpath>
-</template>
-
-<template id="option_header_off_canvas_template_header_hamburger" inherit_id="website.template_header_hamburger" active="False" priority="32">
-    <xpath expr="//div[@id='oe_structure_header_hamburger_2']" position="replace"/>
-    <xpath expr="//div[@id='oe_structure_header_hamburger_3']" position="replace"/>
-</template>
-
-<template id="option_header_off_canvas_template_header_sidebar" inherit_id="website.template_header_sidebar" active="False" priority="32">
-    <xpath expr="//div[@id='oe_structure_header_sidebar_1']" position="attributes">
-        <attribute name="class" add="d-none d-lg-block" separator=" "/>
-    </xpath>
-</template>
-
-<template id="option_header_off_canvas_template_header_hamburger_full" inherit_id="website.template_header_hamburger_full" active="False" priority="32">
-    <xpath expr="//div[@id='oe_structure_header_hamburger_full_1']" position="replace"/>
-</template>
-
-<template id="option_header_no_mobile_hamburger" inherit_id="website.navbar" active="False">
-    <xpath expr="//t[@t-set='_navbar_expand_class']" position="after">
-        <t t-set="_navbar_expand_class" t-value="_navbar_expand_class and 'navbar-expand' or ''"/>
     </xpath>
 </template>
 

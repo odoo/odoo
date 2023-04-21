@@ -2264,58 +2264,11 @@ options.registry.HeaderNavbar = options.Class.extend({
     /**
      * @override
      */
-    async updateUIVisibility() {
-        await this._super(...arguments);
-
-        // TODO improve this: this is a big hack so that the "no mobile
-        // hamburger" option is disabled if it is ever hidden (because of the
-        // selection of an hamburger template which is a foreign option). This
-        // should be done another way in another place somehow...
-        const noHamburgerWidget = this.findWidget('no_hamburger_opt');
-        const noHamburgerHidden = noHamburgerWidget.$el.hasClass('d-none');
-        if (noHamburgerHidden && noHamburgerWidget.isActive()) {
-            this.findWidget('default_hamburger_opt').enable();
-        }
-
-        // TODO improve this: this is a big hack so that the label of the
-        // hamburger option changes if the 'no_hamburger_opt' one is available
-        // (= in that case the option controls only the *mobile* hamburger).
-        const hamburgerTypeWidget = this.findWidget('header_hamburger_type_opt');
-        const labelEl = hamburgerTypeWidget.el.querySelector('we-title');
-        if (!this._originalHamburgerTypeLabel) {
-            this._originalHamburgerTypeLabel = labelEl.textContent;
-        }
-        labelEl.textContent = noHamburgerHidden
-            ? this._originalHamburgerTypeLabel
-            : _t("Mobile menu");
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
     async start() {
         await this._super(...arguments);
         // TODO Remove in master.
         const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
         signInOptionEl.dataset.noPreview = 'true';
-    },
-    /**
-     * @private
-     */
-    async updateUI() {
-        await this._super(...arguments);
-        // For all header templates except those in the following array, change
-        // the title of the option to "Mobile Alignment" (instead of
-        // "Alignment") because it only impacts the mobile view.
-        if (!["'default'", "'hamburger'", "'sidebar'", "'magazine'", "'hamburger-full'", "'slogan'"]
-                .includes(weUtils.getCSSVariableValue("header-template"))) {
-            this.el.querySelector("[data-name='header_alignment_opt']").title =
-                _t("Mobile Alignment");
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -2334,17 +2287,6 @@ options.registry.HeaderNavbar = options.Class.extend({
             case 'option_logo_height_scrolled': {
                 return !!this.$('.navbar-brand').length;
             }
-            case 'no_hamburger_opt': {
-                return !weUtils.getCSSVariableValue('header-template').includes('hamburger');
-            }
-        }
-        if (widgetName === 'header_alignment_opt') {
-            if (!this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
-                // If mobile menu is "Default", hides the alignment option for
-                // "hamburger full" and "magazine" header templates.
-                return !["'hamburger-full'", "'magazine'"].includes(weUtils.getCSSVariableValue('header-template'));
-            }
-            return true;
         }
         return this._super(...arguments);
     },

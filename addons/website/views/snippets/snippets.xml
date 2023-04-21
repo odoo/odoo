@@ -940,25 +940,15 @@
          data-no-check="true"
          groups="website.group_website_designer">
 
-        <!-- Generic Hamburger Options (mobile or not) -->
-        <we-select string="Hamburger Type"
-                   data-name="header_hamburger_type_opt"
-                   data-variable="hamburger-type"
+        <we-select string="Mobile Alignment"
+                   data-name="header_mobile_alignment_opt"
+                   data-variable="hamburger-position-mobile"
                    data-reload="/">
-            <we-button data-name="default_hamburger_opt"
-                       data-customize-website-variable="'default'"
-                       data-customize-website-views="">Default</we-button>
-            <we-button data-name="off_canvas_menu_opt"
-                       data-customize-website-variable="'off-canvas'"
-                       data-customize-website-views="website.option_header_off_canvas, website.option_header_off_canvas_template_header_hamburger, website.option_header_off_canvas_template_header_sidebar, website.option_header_off_canvas_template_header_hamburger_full">Off-Canvas</we-button>
-            <we-button data-name="no_hamburger_opt"
-                       data-customize-website-variable="'no-hamburger'"
-                       data-customize-website-views="website.option_header_no_mobile_hamburger">Same as desktop</we-button>
-        </we-select>
-
-        <we-select string="Off-Canvas Logo" class="o_we_sublevel_1" data-dependencies="off_canvas_menu_opt" data-reload="/">
-            <we-button data-customize-website-views="">Text</we-button>
-            <we-button data-customize-website-views="website.option_header_off_canvas_logo_show">Image</we-button>
+            <we-button data-customize-website-views="" data-customize-website-variable="'left'">Left</we-button>
+            <we-button data-customize-website-views="website.template_header_mobile_align_center, website.template_header_hamburger_mobile_align_center"
+                       data-customize-website-variable="'center'">Center</we-button>
+            <we-button data-customize-website-views="website.template_header_mobile_align_right, website.template_header_hamburger_mobile_align_right"
+                       data-customize-website-variable="'right'">Right</we-button>
         </we-select>
 
         <we-fontfamilypicker string="Font" data-variable="navbar-font"/>
