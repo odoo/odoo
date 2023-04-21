@@ -308,21 +308,21 @@ QUnit.module('convert_inline', {}, function () {
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: unset;\"><tr>` +
+                        `font-size: unset; line-height: inherit;\"><tr>` +
                             `<td class="card-header"><span>HEADER</span></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(1, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: unset;\"><tr>` +
+                        `font-size: unset; line-height: inherit;\"><tr>` +
                             `<td class="card-body"><h2 class="card-title">TITLE</h2><small>BODY <img></small></td>` +
                         `</tr></table></td>`)
                 .replace(/<td[^>]*>\(2, 0\)<\/td>/,
                     `<td>` +
                         `<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" width=\"100%\" align=\"center\" ` +
                         `role=\"presentation\" style=\"width: 100% !important; border-collapse: collapse; text-align: inherit; ` +
-                        `font-size: unset; line-height: unset;\"><tr>` +
+                        `font-size: unset; line-height: inherit;\"><tr>` +
                             `<td class="card-footer"><a href="#" class="btn">FOOTER</a></td>` +
                         `</tr></table></td>`),
         });
@@ -603,7 +603,7 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             getRegularTableHtml(1, 1, 12, 100)
                 .split('style=').join('class="o_layout" style=')
-                .replace(' font-size: unset; line-height: unset;', '') // o_layout keeps those default values
+                .replace(' font-size: unset; line-height: inherit;', '') // o_layout keeps those default values
                 .replace(/<td[^>]*>\(0, 0\)/, '<td>' + getRegularTableHtml(1, 1, 12, 100).replace(/<td[^>]*>\(0, 0\)/, '<td><div>Mailing</div>')),
             "should have converted .o_layout to a special table structure with a table in it"
         );
@@ -617,7 +617,7 @@ QUnit.module('convert_inline', {}, function () {
         assert.strictEqual($editable.html(),
             getRegularTableHtml(1, 1, 12, 100)
                 .split('style=').join('class="o_layout" style=')
-                .replace(' font-size: unset; line-height: unset;', '') // o_layout keeps those default values
+                .replace(' font-size: unset; line-height: inherit;', '') // o_layout keeps those default values
                 .replace(/<td[^>]*>\(0, 0\)/, '<td><table><tbody><tr><td>Mailing</td></tr></tbody></table>'),
             "should have converted .o_layout to a special table structure, keeping the table in it"
         );

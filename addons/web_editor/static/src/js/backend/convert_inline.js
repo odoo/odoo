@@ -23,9 +23,10 @@ const FONT_PROPERTIES_TO_INHERIT = [
     'font-style',
     'text-decoration',
     'text-transform',
+    'text-align',
 ];
 // Attributes all tables should have in a mailing.
-const TABLE_ATTRIBUTES = {
+export const TABLE_ATTRIBUTES = {
     cellspacing: 0,
     cellpadding: 0,
     border: 0,
@@ -34,11 +35,11 @@ const TABLE_ATTRIBUTES = {
     role: 'presentation',
 };
 // Cancel tables default styles.
-const TABLE_STYLES = {
+export const TABLE_STYLES = {
     'border-collapse': 'collapse',
     'text-align': 'inherit',
     'font-size': 'unset',
-    'line-height': 'unset',
+    'line-height': 'inherit',
 };
 
 //--------------------------------------------------------------------------
@@ -450,11 +451,24 @@ function classToStyle($editable, cssRules) {
         // Compute dynamic styles (var, calc).
         writes.push(() => {
             let computedStyle;
-            for (let styleName of node.style) {
+            for (const styleName of node.style) {
                 const styleValue = node.style.getPropertyValue(styleName);
                 if (styleValue.includes('var(') || styleValue.includes('calc(')) {
                     computedStyle = computedStyle || getComputedStyle(node);
-                    node.style.setProperty(styleName, computedStyle[styleName]);
+                    const prop = styleValue.includes('var(') ? styleValue.replace(/var\((.*)\)/, '$1') : styleName;
+                    const value = computedStyle.getPropertyValue(prop) || computedStyle.getPropertyValue(styleName);
+                    node.style.setProperty(styleName, value);
+                }
+            }
+        });
+
+        // Fix inheritance of font properties on Outlook.
+        writes.push(() => {
+            const propsToConvert = FONT_PROPERTIES_TO_INHERIT.filter(prop => node.style[prop] === 'inherit');
+            if (propsToConvert.length) {
+                const computedStyle = getComputedStyle(node);
+                for (const prop of propsToConvert) {
+                    node.style.setProperty(prop, computedStyle[prop]);
                 }
             }
         });
@@ -668,7 +682,6 @@ async function toInline($editable, cssRules, $iframe) {
     listGroupToTable(editable);
     addTables($editable);
     handleMasonry(editable);
-    normalizeColors($editable);
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
@@ -676,6 +689,7 @@ async function toInline($editable, cssRules, $iframe) {
     enforceTablesResponsivity(editable);
     flattenBackgroundImages(editable);
     formatTables($editable);
+    normalizeColors($editable);
     responsiveToStaticForOutlook(editable);
     // Fix Outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
@@ -936,15 +950,18 @@ function formatTables($editable) {
             }
         }
     }
-    // Tables don't properly inherit alignments from their ancestors in Outlook.
+    // Tables don't properly inherit certain styles from their ancestors in Outlook.
     for (const table of editable.querySelectorAll('table')) {
-        if (table.style.textAlign === 'inherit') {
-            let ancestor = table;
-            while (ancestor && (!ancestor.style.textAlign || ancestor.style.textAlign === 'inherit')) {
-                ancestor = ancestor.parentElement;
-            }
-            if (ancestor) {
-                table.style.setProperty('text-align', ancestor.style.textAlign);
+        const propsToConvert = FONT_PROPERTIES_TO_INHERIT.filter(prop => table.style[prop] === 'inherit' || !table.style[prop]);
+        if (propsToConvert.length) {
+            for (const prop of propsToConvert) {
+                let ancestor = table;
+                while (ancestor && (!ancestor.style[prop] || ancestor.style[prop] === 'inherit')) {
+                    ancestor = ancestor.parentElement;
+                }
+                if (ancestor) {
+                    table.style.setProperty(prop, ancestor.style[prop]);
+                }
             }
         }
     }
