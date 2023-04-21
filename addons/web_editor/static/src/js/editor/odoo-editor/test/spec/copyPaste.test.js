@@ -8,27 +8,11 @@ import {
     setTestSelection,
     Direction,
     nextTick,
+    pasteText,
+    pasteHtml,
+    pasteOdooEditorHtml,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
-
-// Mock an paste event and send it to the editor.
-const pasteData = async function (editor, text, type) {
-    var mockEvent = {
-        dataType: 'text/plain',
-        data: text,
-        clipboardData: {
-            getData: (datatype) => type === datatype ? text : null,
-            files: [],
-            items: [],
-        },
-        preventDefault: () => {},
-    };
-    await editor._onPaste(mockEvent);
-};
-
-const pasteText = async (editor, text) => pasteData(editor, text, 'text/plain');
-const pasteHtml = async (editor, html) => pasteData(editor, html, 'text/html');
-const pasteOdooEditorHtml = async (editor, html) => pasteData(editor, html, 'text/odoo-editor');
 
 describe('Copy', () => {
     describe('range collapsed', async () => {
