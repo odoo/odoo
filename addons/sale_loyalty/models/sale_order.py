@@ -200,7 +200,8 @@ class SaleOrder(models.Model):
 
         discountable_lines = self.env['sale.order.line']
         for line in (self.order_line - self._get_no_effect_on_threshold_lines()):
-            if not line.reward_id and line.product_id in reward.all_discount_product_ids:
+            domain = reward._get_discount_product_domain()
+            if not line.reward_id and line.product_id.filtered_domain(domain):
                 discountable_lines |= line
         return discountable_lines
 
@@ -223,7 +224,8 @@ class SaleOrder(models.Model):
             if not line.product_uom_qty or not line.price_unit:
                 continue
             remaining_amount_per_line[line] = line.price_total
-            if not line.reward_id and line.product_id in reward.all_discount_product_ids:
+            domain = reward._get_discount_product_domain()
+            if not line.reward_id and line.product_id.filtered_domain(domain):
                 lines_to_discount |= line
             elif line.reward_id.reward_type == 'discount':
                 discount_lines[line.reward_identifier_code] |= line
