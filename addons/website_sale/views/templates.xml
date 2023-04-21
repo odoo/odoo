@@ -1672,13 +1672,13 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="order.get_portal_last_transaction().acquirer_id.name" />
+                                                <t t-set="last_transaction" t-value="order.get_portal_last_transaction()"/>
+                                                <t t-esc="last_transaction.acquirer_id.display_as or last_transaction.acquirer_id.name" />
                                             </td>
                                             <td class="text-right" width="100">
                                                 <strong>Total:</strong>
                                             </td>
                                             <td class="text-right" width="100">
-                                                <t t-set="last_transaction" t-value="order.get_portal_last_transaction()"/>
                                                 <strong t-field="last_transaction.amount" t-options="{'widget': 'monetary', 'display_currency': last_transaction.currency_id}" />
                                             </td>
                                         </tr>
