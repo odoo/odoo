@@ -80,7 +80,8 @@
                 td {
                     max-width: inherit !important;
                 }
-                td > img:only-child {
+                img:only-child:not(.img-fluid) {
+                    object-fit: cover;
                     min-width: 100% !important;
                 }
                 .o_desktop_h100 {

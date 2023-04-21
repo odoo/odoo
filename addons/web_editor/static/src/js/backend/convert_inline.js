@@ -654,20 +654,10 @@ async function toInline($editable, cssRules, $iframe) {
             }
         }
     }
-
-    // Fix outlook image rendering bug (this change will be kept in both
-    // fields).
-    for (const attributeName of ['width', 'height']) {
-        const images = editable.querySelectorAll('img');
-        for (const image of images) {
-            let value = image.getAttribute(attributeName) || (attributeName === 'height' && image.offsetHeight);
-            if (!value) {
-                value = attributeName === 'width' ? _getWidth(image) : _getHeight(image);;
-            }
-            image.setAttribute(attributeName, value);
-            image.style.setProperty(attributeName, value + 'px');
-        };
-    };
+    // Fix card-img-top heights (must happen before we transform everything).
+    for (const imgTop of editable.querySelectorAll('.card-img-top')) {
+        imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
+    }
 
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
@@ -687,6 +677,27 @@ async function toInline($editable, cssRules, $iframe) {
     flattenBackgroundImages(editable);
     formatTables($editable);
     responsiveToStaticForOutlook(editable);
+    // Fix Outlook image rendering bug.
+    for (const attributeName of ['width', 'height']) {
+        const images = editable.querySelectorAll('img');
+        for (const image of images) {
+            if (image.style[attributeName] !== 'auto') {
+                const value = image.getAttribute(attributeName) ||
+                    (attributeName === 'height' && image.offsetHeight);
+                    (attributeName === 'width' ? _getWidth(image) : _getHeight(image));
+                if (value) {
+                    image.setAttribute(attributeName, value);
+                    image.style.setProperty(attributeName, value + 'px');
+                }
+            }
+        };
+    };
+    // Fix mx-auto on images in table cells.
+    for (const centeredImage of editable.querySelectorAll('td > img.mx-auto')) {
+        if (centeredImage.parentElement.children.length === 1) {
+            centeredImage.parentElement.style.setProperty('text-align', 'center');
+        }
+    }
 
     // Remove contenteditable attributes
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
@@ -799,6 +810,9 @@ function fontToImg($editable) {
             wrapper.style.setProperty('display', 'inline-block');
             wrapper.append(image);
             font.before(wrapper);
+            if (font.classList.contains('mx-auto')) {
+                wrapper.parentElement.style.textAlign = 'center';
+            }
             font.remove();
             wrapper.style.setProperty('padding', padding);
             wrapper.style.setProperty('width', width + 'px');
@@ -1100,6 +1114,21 @@ function normalizeRem($editable, rootFontSize=16) {
         }
         if (td.closest('.s_masonry_block')) {
             outlookTd.style.padding = 0; // Not sure why this is needed.
+        }
+        // Outlook doesn't support left/right padding on images. When the image
+        // is the only child of its parent, apply said padding to the parent.
+        if (td.children.length === 1 && td.firstElementChild.nodeName === 'IMG') {
+            const tdComputedStyle = getComputedStyle(td);
+            for (const side of ['left', 'right']) {
+                if (td.firstElementChild.style.width === '100%') {
+                    const prop = `padding-${side}`;
+                    const imagePadding = +td.firstElementChild.style[prop].replace('px', '');
+                    if (imagePadding > 0) {
+                        const tdPadding = +tdComputedStyle[prop].replace('px', '') || 0;
+                        outlookTd.style[prop] = tdPadding + imagePadding + 'px';
+                    }
+                }
+            }
         }
         // The opening tag of `outlookTd` is for Outlook.
         td.before(_createMso(outlookTd.outerHTML.replace('</td>', '')));
