@@ -22,9 +22,9 @@ DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
-    l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
-    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment", ondelete="restrict")
-    l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
+    l10n_it_edi_transaction = fields.Char(copy=False, string="It Edi Transaction")
+    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="It Edi Attachment", ondelete="restrict")
+    l10n_it_stamp_duty = fields.Float(default=0, string="Stamp Duty", readonly=True, states={'draft': [('readonly', False)]})
     l10n_it_ddt_id = fields.Many2one('l10n_it.ddt', string='DDT', readonly=True, states={'draft': [('readonly', False)]}, copy=False)
     l10n_it_einvoice_name = fields.Char(compute='_compute_l10n_it_einvoice')
     l10n_it_einvoice_id = fields.Many2one('ir.attachment', string="Electronic invoice", compute='_compute_l10n_it_einvoice')
@@ -64,8 +64,7 @@ class AccountMove(models.Model):
         return {'attachment': attachment}
 
     def _is_commercial_partner_pa(self):
-        """
-            Returns True if the destination of the FatturaPA belongs to the Public Administration.
+        """ Returns True if the destination code of the partner is part of the Public Administration.
         """
         return len(self.commercial_partner_id.l10n_it_pa_index or '') == 6
 
@@ -413,7 +412,7 @@ class AccountTax(models.Model):
                 if not tax.l10n_it_kind_exoneration or not tax.l10n_it_law_reference or tax.amount != 0:
                     raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
                 if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
-                    raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
+                    raise UserError(_("Split Payment is not compatible with exoneration of kind 'N6'"))
 
     def _l10n_it_filter_kind(self, kind):
         """ This can be overridden by l10n_it_edi_withholding for different kind of taxes (withholding, pension_fund)."""

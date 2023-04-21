@@ -4,7 +4,6 @@
 from odoo import api, models, fields, _, _lt
 from odoo.exceptions import UserError
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyError
-from odoo.addons.l10n_it_edi.tools.remove_signature import remove_signature
 from odoo.osv.expression import OR, AND
 
 from lxml import etree
@@ -15,8 +14,6 @@ import base64
 
 
 _logger = logging.getLogger(__name__)
-
-DEFAULT_FACTUR_ITALIAN_DATE_FORMAT = '%Y-%m-%d'
 
 
 class AccountEdiFormat(models.Model):
@@ -58,6 +55,17 @@ class AccountEdiFormat(models.Model):
             'progressive_number': progressive_number.zfill(5),
         }
 
+    def _l10n_it_edi_get_message(self, code):
+        return {
+            "awaiting_outcome": _(
+                "We are waiting for validation from the SdI.<br/>"
+                "Click the link above to check for an update."),
+            "require_edi_setting": _(
+                "To send e-invoices to the SdI you must allow the e-invoices"
+                " processing in the Settings."
+            )
+        }.get(code)
+
     def _l10n_it_edi_check_invoice_configuration(self, invoice):
         errors = self._l10n_it_edi_check_ordinary_invoice_configuration(invoice)
 
@@ -93,17 +101,17 @@ class AccountEdiFormat(models.Model):
 
         # <1.1.1.1>
         if not seller.country_id:
-            errors.append(_("%s must have a country", seller.display_name))
+            errors.append(_("%s must have a country.", seller.display_name))
 
         # <1.1.1.2>
         if not invoice.company_id.vat:
-            errors.append(_("%s must have a VAT number", invoice.company_id.name))
+            errors.append(_("%s must have a VAT number.", invoice.company_id.name))
         if seller.vat and len(seller.vat) > 30:
             errors.append(_("The maximum length for VAT number is 30. %s have a VAT number too long: %s.", seller.display_name, seller.vat))
 
         # <1.2.1.2>
         if not is_self_invoice and not seller.l10n_it_codice_fiscale:
-            errors.append(_("%s must have a codice fiscale number", seller.display_name))
+            errors.append(_("%s must have a tax code (Codice Fiscale).", seller.display_name))
 
         # <1.2.1.8>
         if not is_self_invoice and not seller.l10n_it_tax_system:
@@ -136,7 +144,7 @@ class AccountEdiFormat(models.Model):
 
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
-                errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
+                errors.append(_("'%s' has an amount of 0.0, you must set the kind of exoneration.", tax_line.name))
 
         errors += self._l10n_it_edi_check_taxes_configuration(invoice)
 
@@ -149,7 +157,7 @@ class AccountEdiFormat(models.Model):
         errors = []
         for invoice_line in invoice.invoice_line_ids.filtered(lambda x: not x.display_type):
             if len(invoice_line.tax_ids) != 1:
-                errors.append(_("In line %s, you must select one and only one tax.", invoice_line.name))
+                errors.append(_("You must select one and only one tax for line '%s'.", invoice_line.name))
         return errors
 
     def _l10n_it_edi_is_simplified(self, invoice):
@@ -211,7 +219,7 @@ class AccountEdiFormat(models.Model):
 
         for tax_line in invoice.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_kind_exoneration and tax_line.tax_line_id.amount == 0:
-                errors.append(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
+                errors.append(_("'%s' has an amount of 0.0, you must set the kind of exoneration.", tax_line.name))
 
         return errors
 
@@ -303,7 +311,7 @@ class AccountEdiFormat(models.Model):
                 params={'recipient_codice_fiscale': proxy_user.company_id.l10n_it_codice_fiscale})
         except AccountEdiProxyError as e:
             res = {}
-            _logger.error('Error while receiving file from SdiCoop: %s', e)
+            _logger.error('Error while receiving file from the SdI: %s', e)
 
         retrigger = False
         proxy_acks = []
@@ -324,10 +332,10 @@ class AccountEdiFormat(models.Model):
                     proxy_user._get_server_url() + '/api/l10n_it_edi/1/ack',
                     params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
-                _logger.error('Error while receiving file from SdiCoop: %s', e)
+                _logger.error('Error while receiving file from the SdI: %s', e)
 
         if retrigger:
-            _logger.info('Retriggering "Receive invoices from the exchange system"...')
+            _logger.info('Retriggering "Receive invoices from the SdI"...')
             self.env.ref('l10n_it_edi.ir_cron_receive_fattura_pa_invoice')._trigger()
 
     def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, content, key):
@@ -345,7 +353,7 @@ class AccountEdiFormat(models.Model):
 
         if self.env['ir.attachment'].search([('name', '=', filename), ('res_model', '=', 'account.move')], limit=1):
             # name should be unique, the invoice already exists
-            _logger.info('E-invoice already exists: %s', filename)
+            _logger.info("E-invoice '%s' is duplicated.", filename)
             return True
 
         decrypted_content = proxy_user._decrypt_data(content, key)
@@ -407,7 +415,7 @@ class AccountEdiFormat(models.Model):
         xsdate_pattern = r"^-?(?P<date>-?\d{4}-\d{2}-\d{2})(?P<tz>[zZ]|[+-]\d{2}:\d{2})?$"
         try:
             match = re.match(xsdate_pattern, xsdate_str)
-            converted_date = datetime.strptime(match.group("date"), DEFAULT_FACTUR_ITALIAN_DATE_FORMAT).date()
+            converted_date = datetime.strptime(match.group("date"), '%Y-%m-%d').date()
         except Exception:
             converted_date = False
         return converted_date
@@ -813,10 +821,8 @@ class AccountEdiFormat(models.Model):
             content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_FatturaPA_export', template_values)
         else:
             content = self.env['ir.qweb']._render('l10n_it_edi.account_invoice_it_simplified_FatturaPA_export', template_values)
-            invoice.message_post(body=_(
-                "A simplified invoice was created instead of an ordinary one. This is because the invoice \
-                is a domestic invoice with a total amount of less than or equal to 400€ and the customer's address is incomplete."
-            ))
+            invoice.message_post(body=_("This invoice was sent to the SdI as a Simplified invoice"
+                                        " because the customer's address is incomplete and the invoice's amount is under 400€."))
         return content
 
     def _check_move_configuration(self, move):
@@ -828,7 +834,7 @@ class AccountEdiFormat(models.Model):
         res.extend(self._l10n_it_edi_check_invoice_configuration(move))
 
         if not self.env['account_edi_proxy_client.user']._get_proxy_users(move.company_id, 'l10n_it_edi'):
-            res.append(_("You must accept the terms and conditions in the settings to use FatturaPA."))
+            res.append(self._l10n_it_edi_get_message('require_edi_setting'))
 
         return res
 
@@ -857,8 +863,9 @@ class AccountEdiFormat(models.Model):
 
             if invoice._is_commercial_partner_pa():
                 invoice.message_post(
-                    body=(_("Invoices for PA are not managed by Odoo, you can download the document and send it on your own."))
-                )
+                    body=(_("Odoo doesn't manage invoices involving Public Administration partners."
+                            " You can download the XML attachment and send it through the Tax Agency's"
+                            " 'Fatture e Corrispettivi' portal.")))
                 to_return[invoice] = {'attachment': attachment, 'success': True}
             else:
                 to_send[filename] = {
@@ -868,9 +875,11 @@ class AccountEdiFormat(models.Model):
         company = invoices.company_id
         proxy_user = self.env['account_edi_proxy_client.user']._get_proxy_users(company, 'l10n_it_edi')
         if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
-            return {invoice: {
-                'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
-                'blocking_level': 'error'} for invoice in invoices}
+            return {
+                invoice: {
+                    'error': self._l10n_it_edi_get_message('require_edi_setting'),
+                    'blocking_level': 'error'
+                } for invoice in invoices}
 
         responses = {}
         if proxy_user.edi_mode == 'demo':
@@ -887,7 +896,7 @@ class AccountEdiFormat(models.Model):
             if 'id_transaction' in response:
                 invoice.l10n_it_edi_transaction = response['id_transaction']
                 to_return[invoice].update({
-                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
+                    'error': self._l10n_it_edi_get_message('awaiting_outcome'),
                     'blocking_level': 'info'})
         return to_return
 
@@ -899,9 +908,10 @@ class AccountEdiFormat(models.Model):
         company = invoices.company_id
 
         proxy_user = self.env['account_edi_proxy_client.user']._get_proxy_users(company, 'l10n_it_edi')
-        if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
+        if not proxy_user:
+            # proxy user should exist, because there is a check in _check_move_configuration
             return {invoice: {
-                'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
+                'error': self._l10n_it_edi_get_message('require_edi_setting'),
                 'blocking_level': 'error'} for invoice in invoices}
 
         if proxy_user.edi_mode == 'demo':
@@ -923,18 +933,16 @@ class AccountEdiFormat(models.Model):
 
             state = response['state']
             if state == 'awaiting_outcome':
-                to_return[invoice] = {
-                    'error': _('The invoice was sent to FatturaPA, but we are still awaiting a response. Click the link above to check for an update.'),
-                    'blocking_level': 'info'}
+                to_return[invoice] = {'error': self._l10n_it_edi_get_message('awaiting_outcome'), 'blocking_level': 'info'}
 
             elif state == 'not_found':
-                # Invoice does not exist on proxy. Either it does not belong to this proxy_user or it was not created correctly when
-                # it was sent to the proxy.
+                # Invoice does not exist on proxy. Either it does not belong to this proxy_user
+                # or it was not created correctly when it was sent to the proxy.
                 to_return[invoice] = {'error': _('You are not allowed to check the status of this invoice.'), 'blocking_level': 'error'}
 
             elif state == 'ricevutaConsegna':
                 if invoice._is_commercial_partner_pa():
-                    to_return[invoice] = {'error': _('The invoice has been succesfully transmitted. The addressee has 15 days to accept or reject it.')}
+                    to_return[invoice] = {'error': _('The invoice is sent to the SdI. The Public Administration partner has 15 days to accept or reject it.')}
                 else:
                     to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 proxy_acks.append(id_transaction)
@@ -942,31 +950,23 @@ class AccountEdiFormat(models.Model):
             elif state == 'notificaMancataConsegna':
                 if invoice._is_commercial_partner_pa():
                     to_return[invoice] = {'error': _(
-                        'The invoice has been issued, but the delivery to the Public Administration'
-                        ' has failed. The Exchange System will contact them to report the problem'
-                        ' and request that they provide a solution.'
-                        ' During the following 10 days, the Exchange System will try to forward the'
-                        ' FatturaPA file to the Public Administration in question again.'
-                        ' Should this also fail, the System will notify Odoo of the failed delivery,'
-                        ' and you will be required to send the invoice to the Administration'
-                        ' through another channel, outside of the Exchange System.')}
+                        "This invoice is successfully sent to the SdI."
+                        " The SdI wasn't able to deliver it to the Public Administration partner's inbox"
+                        " at the moment. The system will retry for up to 10 days."
+                        " Shouldn't it be able to reach them, please send it to them by email or post.")}
                 else:
                     to_return[invoice] = {'success': True, 'attachment': invoice.l10n_it_edi_attachment_id}
                     invoice._message_log(body=_(
-                        'The invoice has been issued, but the delivery to the Addressee has'
-                        ' failed. You will be required to send a courtesy copy of the invoice'
-                        ' to your customer through another channel, outside of the Exchange'
-                        ' System, and promptly notify him that the original is deposited'
-                        ' in his personal area on the portal "Invoices and Fees" of the'
-                        ' Revenue Agency.'))
+                        "This invoice is successfully sent to the SdI."
+                        " The partner has not signed up to the SdI to receive documents"
+                        " digitally so please remember to send this also by e-mail or post."))
                 proxy_acks.append(id_transaction)
 
             elif state == 'NotificaDecorrenzaTermini':
                 # This condition is part of the Public Administration flow
                 invoice._message_log(body=_(
-                    'The invoice has been correctly issued. The Public Administration recipient'
-                    ' had 15 days to either accept or refused this document, but they did not reply,'
-                    ' so from now on we consider it accepted.'))
+                    "The invoice is successfully sent to the SdI."
+                    " The Public Administration partner hasn't replied for 15 days so it's accepted."))
                 to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                 proxy_acks.append(id_transaction)
 
@@ -991,11 +991,10 @@ class AccountEdiFormat(models.Model):
                     if '00404' in error_codes:
                         idx = error_codes.index('00404')
                         invoice.message_post(body=_(
-                            'This invoice number had already been submitted to the SdI, so it is'
-                            ' set as Sent. Please verify that the system is correctly configured,'
-                            ' because the correct flow does not need to send the same invoice'
-                            ' twice for any reason.\n'
-                            ' Original message from the SDI: %s', errors[idx]))
+                            'This invoice number looks duplicate to the SdI.'
+                            ' We set the state as Sent, but please verify the system is correctly configured,'
+                            ' because the correct flow does not allow sending the same invoice twice.\n'
+                            ' Original message from the SdI: %s', errors[idx]))
                         to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                     else:
                         # Add helpful text if duplicated filename error
@@ -1003,9 +1002,9 @@ class AccountEdiFormat(models.Model):
                             idx = error_codes.index('00002')
                             errors[idx] = _(
                                 'The filename is duplicated. Try again (or adjust the FatturaPA Filename sequence).'
-                                ' Original message from the SDI: %s', [errors[idx]]
+                                ' Original message from the SdI: %s', [errors[idx]]
                             )
-                        to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the Exchange System'), errors), 'blocking_level': 'error'}
+                        to_return[invoice] = {'error': self._format_error_message(_('The invoice has been refused by the SdI'), errors), 'blocking_level': 'error'}
                         invoice.l10n_it_edi_transaction = False
                     proxy_acks.append(id_transaction)
 
@@ -1014,7 +1013,7 @@ class AccountEdiFormat(models.Model):
                     if outcome == 'EC01':
                         to_return[invoice] = {'attachment': invoice.l10n_it_edi_attachment_id, 'success': True}
                     else:  # ECO2
-                        to_return[invoice] = {'error': _('The invoice was refused by the addressee.'), 'blocking_level': 'error'}
+                        to_return[invoice] = {'error': _('The invoice was refused by the Public Administration partner.'), 'blocking_level': 'error'}
                     proxy_acks.append(id_transaction)
 
         if proxy_acks:
@@ -1023,7 +1022,7 @@ class AccountEdiFormat(models.Model):
                                         params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
                 # Will be ignored and acked again next time.
-                _logger.error('Error while acking file to SdiCoop: %s', e)
+                _logger.error('Error while acking file to SdI: %s', e)
 
         return to_return
 
@@ -1047,7 +1046,7 @@ class AccountEdiFormat(models.Model):
     # -------------------------------------------------------------------------
     def _get_proxy_identification(self, company):
         if not company.l10n_it_codice_fiscale:
-            raise UserError(_('Please fill your codice fiscale to be able to receive invoices from FatturaPA'))
+            raise UserError(_('Please fill your tax code (Codice Fiscale) to be able to receive invoices from the SdI'))
 
         return self.env['res.partner']._l10n_it_edi_normalized_codice_fiscale(company.l10n_it_codice_fiscale)
 

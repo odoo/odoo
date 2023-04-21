@@ -13,13 +13,12 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     l10n_it_pec_email = fields.Char(string="PEC e-mail")
-    l10n_it_codice_fiscale = fields.Char(string="Codice Fiscale", size=16)
+    l10n_it_codice_fiscale = fields.Char(string="Tax Code", size=16)
     l10n_it_pa_index = fields.Char(string="Destination Code",
         size=7,
-        help="Must contain the 6-character (or 7) code, present in the PA\
-              Index in the information relative to the electronic invoicing service,\
-              associated with the office which, within the addressee administration, deals\
-              with receiving (and processing) the invoice.")
+        help="Destination address of the partner in the SdI system."
+             " It is 6 digits long if the partner is a Public Administration business"
+             " (Codice Unico Ufficio) or 7 digits long if it's a private business.")
 
     _sql_constraints = [
         ('l10n_it_codice_fiscale',
@@ -140,4 +139,8 @@ class ResPartner(models.Model):
     def validate_codice_fiscale(self):
         for record in self:
             if record.l10n_it_codice_fiscale and (not codicefiscale.is_valid(record.l10n_it_codice_fiscale) and not iva.is_valid(record.l10n_it_codice_fiscale)):
-                raise UserError(_("Invalid Codice Fiscale '%s': should be like 'MRTMTT91D08F205J' for physical person and '12345670546' for businesses.", record.l10n_it_codice_fiscale))
+                raise UserError(_(
+                    "Invalid tax code (Codice Fiscale) '%s': should be like 'MRTMTT91D08F205J'"
+                    " for individual business and '12345670546' for companies.",
+                    record.l10n_it_codice_fiscale
+                ))
