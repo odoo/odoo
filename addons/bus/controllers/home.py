@@ -5,14 +5,8 @@ from odoo import _, SUPERUSER_ID
 from odoo.http import request
 from odoo.addons.web.controllers.home import Home as WebHome
 
+
 def _admin_password_warn(uid):
-    """ Admin still has `admin` password, flash a message via chatter.
-
-    Uses a private discuss.channel from the system (/ odoobot) to the user, as
-    using a more generic mail.thread could send an email which is undesirable
-
-    Uses discuss.channel directly because using mail.thread might send an email instead.
-    """
     if request.params['password'] != 'admin':
         return
     if ipaddress.ip_address(request.httprequest.remote_addr).is_private:
@@ -24,19 +18,16 @@ def _admin_password_warn(uid):
     has_demo = bool(env['ir.module.module'].search_count([('demo', '=', True)]))
     if has_demo:
         return
-
     user = request.env(user=uid)['res.users']
-    DiscussChannel = env(context=user.context_get())['discuss.channel']
-    DiscussChannel.browse(DiscussChannel.channel_get([admin.id])['id'])\
-        .message_post(
-            body=_("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
-            message_type='comment',
-            subtype_xmlid='mail.mt_comment'
-        )
+    env(context=user.context_get())['bus.bus']._sendone(admin, 'simple_notification', {
+        'type': 'danger',
+        'message': _("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),
+        'sticky': True,
+    })
+
 
 class Home(WebHome):
     def _login_redirect(self, uid, redirect=None):
         if request.params.get('login_success'):
             _admin_password_warn(uid)
-
         return super()._login_redirect(uid, redirect)

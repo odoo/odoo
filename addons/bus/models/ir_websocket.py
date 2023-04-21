@@ -1,5 +1,5 @@
 from odoo import models
-from odoo.http import SessionExpiredException
+from odoo.http import request, SessionExpiredException
 from odoo.service import security
 from ..models.bus import dispatch
 from ..websocket import wsrequest
@@ -26,7 +26,10 @@ class IrWebsocket(models.AbstractModel):
 
             :param channels: The channel list sent by the client.
         """
+        req = request or wsrequest
         channels.append('broadcast')
+        if req.session.uid:
+            channels.append(self.env.user.partner_id)
         return channels
 
     def _subscribe(self, data):
