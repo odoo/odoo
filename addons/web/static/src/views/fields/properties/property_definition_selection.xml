@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
     <t t-name="web.PropertyDefinitionSelection" owl="1">
-        <div class="d-flex flex-column o_field_property_selection"
+        <div class="o_field_property_selection d-flex"
             t-ref="propertyDefinitionSelection">
             <div class="w-100">
                 <div
                     t-foreach="optionsVisible" t-as="option" t-key="option[0]"
-                    class="w-100 card d-flex flex-row align-items-center justify-content-between my-2 px-3 rounded o_field_property_selection_option">
+                    class="o_field_property_selection_option d-flex flex-row align-items-center justify-content-between mb-2 rounded">
                     <span t-if="props.readonly" t-out="option[1]"/>
                     <input
                         t-else=""
-                        class="o_input"
+                        class="o_input me-3"
                         type="text"
                         placeholder="Option Name"
                         t-att-value="option[1]"
@@ -19,17 +19,17 @@
                         t-on-keydown="(event) => this.onOptionKeyDown(event, option_index)"
                     />
                     <button
-                        class="btn btn-link text-secondary p-0 m-0"
+                        class="btn btn-link m-0 p-0 text-muted fs-5"
                         title="Select Default"
                         t-on-click="() => this.onOptionSetDefault(option_index)">
-                        <i t-att-class="option[0] === props.default ? 'fa fa-star' : 'fa fa-star-o'"/>
+                        <i t-att-class="option[0] === props.default ? 'fa fa-star align-bottom' : 'fa fa-star-o align-bottom'"/>
                     </button>
                     <button
                         t-if="!props.readonly"
-                        class="btn btn-link p-0 m-0 ms-2"
+                        class="btn btn-link link-danger ms-2 p-0 fs-5"
                         title="Remove Property"
                         t-on-click="() => this.onOptionDelete(option_index)">
-                        <i class="text-danger fa fa-times"/>
+                        <i class="fa fa-trash-o align-bottom"/>
                     </button>
                 </div>
                 <button

@@ -325,14 +325,14 @@ QUnit.module("Fields", (hooks) => {
         const popover = target.querySelector(".o_property_field_popover");
         assert.ok(popover, "Should have opened the definition popover");
 
-        const label = popover.querySelector(".o_field_property_definition_header input");
+        const label = popover.querySelector(".o_field_property_definition_header");
         assert.strictEqual(label.value, "My Char");
 
         const type = popover.querySelector(".o_field_property_definition_type input");
         assert.strictEqual(type.value, "Text");
 
         // Change the property type to "Date & Time"
-        await editInput(target, ".o_field_property_definition_header input", "My Datetime");
+        await editInput(target, ".o_field_property_definition_header", "My Datetime");
         await changeType(target, "datetime");
         assert.strictEqual(type.value, "Date & Time", "Should have changed the property type");
 
@@ -353,7 +353,7 @@ QUnit.module("Fields", (hooks) => {
         await closePopover(target);
 
         // Check that the type change have been propagated
-        const datetimeLabel = field.querySelector(".o_field_property_label b");
+        const datetimeLabel = field.querySelector(".o_field_property_label");
         assert.strictEqual(
             datetimeLabel.innerText,
             "My Datetime",
@@ -419,7 +419,7 @@ QUnit.module("Fields", (hooks) => {
         const popover = target.querySelector(".o_property_field_popover");
         assert.ok(popover, "Should have opened the definition popover");
 
-        const label = popover.querySelector(".o_field_property_definition_header input");
+        const label = popover.querySelector(".o_field_property_definition_header");
         assert.strictEqual(label.value, "Property 3", "Should have added a default label");
 
         const type = popover.querySelector(".o_field_property_definition_type input");
@@ -562,7 +562,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(options.length, 4, "Should not remove any options");
 
         // Remove the second option
-        await click(target, ".o_field_property_selection_option:nth-child(2) .fa-times");
+        await click(target, ".o_field_property_selection_option:nth-child(2) .fa-trash-o");
         options = popover.querySelectorAll(".o_field_property_selection_option");
         assert.strictEqual(options.length, 3, "Should have removed the second option");
         const optionValues = [...options].map((option) => option.querySelector("input").value);

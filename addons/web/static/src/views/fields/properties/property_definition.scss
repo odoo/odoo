@@ -1,36 +1,16 @@
-.o_field_property_definition_delete {
-    min-width: fit-content;
-}
-
 .o_field_property_definition {
     max-height: 70vh;
     overflow-y: auto;
 
-    table {
-        width: 500px;
-    }
-
-    .o_td_label {
-        width: 120px;
-    }
-
-    .o_field_property_definition_header {
-        max-width: 500px;
-
-        input {
-            font-size: 1.2rem;
-            border-width: 1px;
-        }
+    .o_modal_container {
+        min-width: calc(#{$o-form-view-sheet-max-width} / 3);
+        max-width: calc(#{$o-form-view-sheet-max-width} / 2);
     }
 
     .o_field_property_definition_type {
         img {
             width: 20px;
             height: 20px;
-        }
-
-        .o_field_property_dropdown > img {
-            margin-right: -18px;
         }
 
         .o_input_dropdown {
@@ -45,13 +25,10 @@
         }
     }
 
-    td {
-        padding-bottom: 15px;
-    }
     .o_field_property_definition_kanban,
     .o_field_property_definition_value {
         .form-check-input {
-            margin-left: 3px;
+            margin-left: map-get($spacers, 1);
         }
     }
 

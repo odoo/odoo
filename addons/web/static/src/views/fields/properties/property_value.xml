@@ -113,7 +113,7 @@
                 </t>
             </div>
             <t t-elif="props.type === 'many2many'">
-                <div t-if="props.comodel" class="o_field_property_many2many_value d-flex flex-row ms-0 pe-1 w-100 flex-wrap"
+                <div t-if="props.comodel" class="o_field_property_many2many_value d-flex flex-wrap flex-row gap-1 ms-0 pe-1 w-100 "
                     t-attf-class="o_field_widget o_field_many2many_tags {{showAvatar ? 'avatar' : ''}} {{props.readonly ? 'readonly' : ''}}">
                     <!-- Copy many2many tags style without duplicating all CSS -->
                     <TagsList tags="propertyValue"/>
