@@ -8,6 +8,7 @@ import Widget from "web.Widget";
 import Wysiwyg from "web_editor.wysiwyg";
 import options from "web_editor.snippets.options";
 import { range } from "@web/core/utils/numbers";
+import { TABLE_ATTRIBUTES, TABLE_STYLES } from '@web_editor/js/backend/convert_inline';
 
 const COLOR_PICKER_TEMPLATE = `
     <colorpicker>
@@ -727,22 +728,8 @@ var textInput = function (target, char) {
 // Convert Inline
 //--------------------------------------------------------------------------
 
-const tableAttributes = {
-    cellspacing: 0,
-    cellpadding: 0,
-    border: 0,
-    width: '100%',
-    align: 'center',
-    role: 'presentation',
-};
-const tableAttributesString = Object.keys(tableAttributes).map(key => `${key}="${tableAttributes[key]}"`).join(' ');
-const tableStyles = {
-    'border-collapse': 'collapse',
-    'text-align': 'inherit',
-    'font-size': 'unset',
-    'line-height': 'unset',
-};
-const tableStylesString = Object.keys(tableStyles).map(key => `${key}: ${tableStyles[key]};`).join(' ');
+const tableAttributesString = Object.keys(TABLE_ATTRIBUTES).map(key => `${key}="${TABLE_ATTRIBUTES[key]}"`).join(' ');
+const tableStylesString = Object.keys(TABLE_STYLES).map(key => `${key}: ${TABLE_STYLES[key]};`).join(' ');
 /**
  * Take a matrix representing a grid and return an HTML string of the Bootstrap
  * grid. The matrix is an array of rows, with each row being an array of cells.
