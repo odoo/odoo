@@ -737,8 +737,8 @@ async function toInline($editable, cssRules, $iframe) {
     enforceImagesResponsivity(editable);
     enforceTablesResponsivity(editable);
     flattenBackgroundImages(editable);
-    responsiveToStaticForOutlook(editable);
     formatTables($editable);
+    responsiveToStaticForOutlook(editable);
     // Fix outlook image rendering bug.
     for (const attributeName of ['width', 'height']) {
         const images = editable.querySelectorAll('img');
