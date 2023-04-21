@@ -2313,6 +2313,23 @@ export class OdooEditor extends EventTarget {
             tableElement.classList.add('table', 'table-bordered');
         }
 
+        const progId = container.querySelector('meta[name="ProgId"]')
+        if (progId && progId.content === 'Excel.Sheet') {
+            // Microsoft Excel keeps table style in a <style> tag with custom
+            // classes. The following lines parse that style and apply it to the
+            // style attribute of <td> tags with matching classes.
+            const xlStylesheet = container.querySelector('style');
+            const xlNodes = container.querySelectorAll("[class*=xl],[class*=font]");
+            for (const xlNode of xlNodes) {
+                for (const xlClass of xlNode.classList) {
+                    // Regex captures a CSS rule definition for that xlClass.
+                    const xlStyle = xlStylesheet.textContent.match(`.${xlClass}[^\{]*\{(?<xlStyle>[^\}]*)\}`)
+                        .groups.xlStyle.replace('background:', 'background-color:');
+                    xlNode.setAttribute('style', xlNode.style.cssText + ';' + xlStyle)
+                }
+            }
+        }
+
         for (const child of [...container.childNodes]) {
             this._cleanForPaste(child);
         }
@@ -2360,6 +2377,46 @@ export class OdooEditor extends EventTarget {
                 }
             }
         } else if (node.nodeType !== Node.TEXT_NODE) {
+            if (node.nodeName === 'TD' && node.hasAttribute('style')) {
+                // TD tags do not support style in v15, move style to children
+                // or new SPAN.
+                const span = node.childNodes.length === 1 && node.firstChild.nodeName === 'SPAN'
+                    ? node.firstChild
+                    : this.document.createElement('SPAN');
+                // Background-color on TD (cell) != on span (text).
+                // Prevent it from being copied from cell to text.
+                node.style.backgroundColor = null;
+                for (const styleText of node.getAttribute('style').split(';')) {
+                    // Give parent's style to child, unless already set.
+                    const [styleName, styleValue] = styleText.split(':').map(x => x.trim());
+                    if (!span.style[styleName]) {
+                        span.style[styleName] = styleValue;
+                    }
+                }
+                if (span.parentNode !== node) {
+                    // A new span was needed to apply the styles. 
+                    // Use it to wrap the nodes in the cell.
+                    span.append(...node.childNodes);
+                    node.append(span);
+                }
+            } else if (node.nodeName === 'FONT') {
+                // FONT tags have some style information in custom attributes,
+                // this maps them to the style attribute.
+                if (node.hasAttribute('color') && !node.style['color']) {
+                    node.style['color'] = node.getAttribute('color');
+                }
+                if (node.hasAttribute('size') && !node.style['font-size']) {
+                    // FONT size uses non-standard numeric values.
+                    node.style['font-size'] = +node.getAttribute('size') + 10 + 'pt';
+                }
+            } else if (['S', 'U'].includes(node.nodeName) && node.childNodes.length === 1 && node.firstChild.nodeName === 'FONT') {
+                // S and U tags sometimes contain FONT tags. We prefer the
+                // strike to adopt the style of the text, so we invert them.
+                const fontNode = node.firstChild;
+                node.before(fontNode);
+                node.replaceChildren(...fontNode.childNodes);
+                fontNode.appendChild(node);
+            }
             // Remove all illegal attributes and classes from the node, then
             // clean its children.
             for (const attribute of [...node.attributes]) {
