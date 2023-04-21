@@ -126,7 +126,7 @@ function bootstrapToTable(editable) {
     for (const masonryGrid of editable.querySelectorAll('.o_masonry_grid_container')) {
         masonryGrid.style.setProperty('padding', 0);
         for (const fakeTable of [...masonryGrid.children].filter(c => c.classList.contains('o_fake_table'))) {
-            fakeTable.style.setProperty('height', _getHeight(fakeTable));
+            fakeTable.style.setProperty('height', _getHeight(fakeTable) + 'px');
         }
     }
     for (const masonryRow of editable.querySelectorAll('.o_masonry_grid_container > .o_fake_table > .row.h-100')) {
@@ -487,27 +487,56 @@ function enforceTablesResponsivity(editable) {
         }
     }
     // Masonry has crazy nested tables that require some extra treatment.
-    for (const td of editable.querySelectorAll('.s_masonry_block td')) {
-        td.classList.toggle('o_desktop_h100', true);
-        td.style.setProperty('height', '100%');
-        const childrenNames = [...td.children].map(child => child.nodeName);
-        if (childrenNames.includes('TABLE')) {
-            td.style.setProperty('height', _getHeight(td.parentElement) + 'px');
-        } else {
-            // Hack that makes vertical-align possible within an inline-block.
-            const wrapper = document.createElement('div');
-            wrapper.style.setProperty('display', 'inline-block');
-            for (const child of [...td.childNodes]) {
-                wrapper.append(child);
+    const masonryTrs = editable.querySelectorAll('.s_masonry_block tr');
+    for (const tr of masonryTrs) {
+        const height = _getHeight(tr);
+        const tds = [...tr.children].filter(child => child.nodeName === 'TD');
+        const tdsWithTable = tds.filter(td => [...td.children].some(child => child.nodeName === 'TABLE'));
+        if (tdsWithTable.length) {
+            // Set the cells' heights to fill their parents.
+            for (const tdWithTable of tdsWithTable) {
+                tdWithTable.classList.toggle('o_desktop_h100', true);
+                tdWithTable.style.setProperty('height', '100%');
             }
-            td.append(wrapper);
-            const centeringSpan = document.createElement('span');
-            centeringSpan.style.setProperty('height', '100%');
-            centeringSpan.style.setProperty('display', 'inline-block');
-            centeringSpan.style.setProperty('vertical-align', 'middle');
-            td.prepend(centeringSpan);
+            // We also have to set the same height on the cells' sibling TDs.
+            tds.forEach(td => td.style.setProperty('height', height + 'px'));
+        }
+        // Sometimes Masonry declares rows with a height of 100% but with
+        // columns that overfit the grid. In these cases, we split the rows into
+        // multiple rows so we need to adapt their heights for them to be
+        // divided equally.
+        const trSiblings = [...tr.parentElement.children].filter(child => child.nodeName === 'TR');
+        if (trSiblings.length > 1 && (tr.classList.contains('h-100') || tr.style.getPropertyValue('height') === '100%')) {
+            tr.style.setProperty('height', `${_getHeight(tr.parentElement) / trSiblings.length}px`);
         }
     }
+    for (const tr of masonryTrs) {
+        const height = tr.style.height.includes('px') ? parseFloat(tr.style.height.replace('px', '').trim()) : _getHeight(tr);
+        tr.classList.toggle('o_desktop_h100', true);
+        for (const td of [...tr.children].filter(child => child.nodeName === 'TD')) {
+            td.classList.toggle('o_desktop_h100', true);
+            td.style.setProperty('height', '100%');
+            const childrenNames = [...td.children].map(child => child.nodeName);
+            if (!childrenNames.includes('TABLE')) {
+                // Hack that makes vertical-align possible within an inline-block.
+                const wrapper = document.createElement('div');
+                wrapper.style.setProperty('display', 'inline-block');
+                for (const child of [...td.childNodes]) {
+                    wrapper.append(child);
+                }
+                td.append(wrapper);
+                const centeringSpan = document.createElement('span');
+                centeringSpan.style.setProperty('height', '100%');
+                centeringSpan.style.setProperty('display', 'inline-block');
+                centeringSpan.style.setProperty('vertical-align', 'middle');
+                td.prepend(centeringSpan);
+                // Height on cells should be applied in pixels.
+                if (td.style.height.includes('%')) {
+                    const newHeight = height * parseFloat(td.style.height.replace('%').trim()) / 100;
+                    td.style.setProperty('height', newHeight + 'px');
+                }
+            }
+        }
 }
 /**
  * Modify the styles of images so they are responsive.
@@ -655,6 +684,7 @@ async function flattenBackgroundImages(editable) {
             backgroundImage.style.setProperty('padding', 0);
             backgroundImage.style.removeProperty('background-image');
             backgroundImage.prepend(image); // Add the image to the original element.
+            backgroundImage.className = backgroundImage.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
             iframe.remove();
         }
     }
@@ -889,7 +919,7 @@ function getCSSRules(doc) {
             const conditionText = rule.conditionText;
             const minWidthMatch = conditionText && conditionText.match(/\(min-width *: *(\d+)/);
             const minWidth = minWidthMatch && +(minWidthMatch[1] || '0');
-            if (minWidth && minWidth >= 1200) {
+            if (minWidth && minWidth >= 992) {
                 // Large min-width media queries should be included.
                 // eg., .container has a default max-width for all screens.
                 let mediaRules;
