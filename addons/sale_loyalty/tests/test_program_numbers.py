@@ -200,6 +200,7 @@ class TestSaleCouponProgramNumbers(TestSaleCouponNumbersCommon):
 
     def test_program_numbers_one_discount_line_per_tax(self):
         order = self.empty_order
+        self.env['ir.config_parameter'].set_param('loyalty.compute_all_discount_product_ids', 'enabled')
         # Create taxes
         self.tax_15pc_excl = self.env['account.tax'].create({
             'name': "15% Tax excl",

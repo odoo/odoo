@@ -15,4 +15,11 @@
         <field name="detailed_type">service</field>
         <field name="purchase_ok" eval="False"/>
     </record>
+
+    <data noupdate="1">
+        <record forcecreate="0" id="config_online_sync_proxy_mode" model="ir.config_parameter">
+            <field name="key">loyalty.compute_all_discount_product_ids</field>
+            <field name="value">False</field>
+        </record>
+    </data>
 </odoo>
