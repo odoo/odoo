@@ -12,6 +12,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools import mute_logger
 from odoo.tests.common import Form
 from odoo.tests import tagged
+from odoo import Command
 
 from odoo.exceptions import UserError
 
@@ -1068,6 +1069,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'name': leave_validation_type.capitalize(),
                 'leave_validation_type': leave_validation_type,
                 'requires_allocation': 'no',
+                'responsible_ids': [Command.link(self.env.ref('base.user_admin').id)]
             })
             current_leave = self.env['hr.leave'].with_user(self.user_employee_id).create({
                 'name': 'Holiday Request',

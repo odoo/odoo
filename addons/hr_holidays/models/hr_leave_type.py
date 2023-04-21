@@ -59,12 +59,12 @@ class HolidaysType(models.Model):
         compute='_compute_group_days_leave', string='Group Time Off')
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
     responsible_ids = fields.Many2many(
-        'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Responsible Time Off Officer',
+        'res.users', 'hr_leave_type_res_users_rel', 'hr_leave_type_id', 'res_users_id', string='Notified Time Off Officer',
         domain=lambda self: [('groups_id', 'in', self.env.ref('hr_holidays.group_hr_holidays_user').id),
                              ('share', '=', False),
                              ('company_ids', 'in', self.env.company.id)],
                              auto_join=True,
-        help="Choose the Time Off Officer who will be notified to approve allocation or Time Off request")
+        help="Choose the Time Off Officers who will be notified to approve allocation or Time Off Request. If empty, nobody will be notified")
     leave_validation_type = fields.Selection([
         ('no_validation', 'No Validation'),
         ('hr', 'By Time Off Officer'),
