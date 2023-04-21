@@ -14316,6 +14316,51 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement, getDataRow(3).querySelector("[name=foo] input"));
     });
 
+    QUnit.test("multi-edit records with ENTER does not crash", async (assert) => {
+        serviceRegistry.add("error", errorService);
+
+        const def = makeDeferred();
+        await makeView({
+            type: "list",
+            resModel: "foo",
+            serverData,
+            arch: `
+                <tree multi_edit="1">
+                    <field name="foo"/>
+                    <field name="int_field"/>
+                </tree>
+            `,
+            async mockRPC(route, args) {
+                if (args.method === "write") {
+                    await def;
+                }
+            },
+        });
+
+        await click(getDataRow(2).querySelector(".o_data_row .o_list_record_selector input"));
+        await click(getDataRow(3).querySelector(".o_data_row .o_list_record_selector input"));
+        await click(getDataRow(2).querySelector(".o_data_row .o_data_cell[name=int_field]"));
+
+        assert.containsOnce(target, ".o_selected_row");
+        const input = getDataRow(2).querySelector("[name=int_field] input");
+        assert.strictEqual(document.activeElement, input);
+        input.value = "234";
+        await triggerEvent(input, null, "input");
+        triggerHotkey("Enter");
+        await triggerEvent(input, null, "change");
+
+        assert.containsOnce(target, ".o_dialog"); // confirmation dialog
+        await click(target.querySelector(".o_dialog .modal-footer .btn-primary"));
+        await new Promise((r) => setTimeout(r, 20)); // delay a bit the save s.t. there's a rendering
+        def.resolve();
+        await nextTick();
+        assert.deepEqual(
+            getNodesTextContent(target.querySelectorAll(".o_data_cell.o_list_number")),
+            ["10", "234", "234", "-4"]
+        );
+        assert.containsNone(target, ".o_dialog"); // no more confirmation dialog, no error dialog
+    });
+
     QUnit.test(
         "editable grouped list: adding a second record pass the first in readonly",
         async (assert) => {
