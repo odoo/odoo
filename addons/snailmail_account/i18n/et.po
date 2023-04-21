@@ -7,6 +7,8 @@
 # Triine Aavik <triine@avalah.ee>, 2022
 # Martin Trigaux, 2022
 # Eneli Õigus <enelioigus@gmail.com>, 2022
+# Anna, 2023
+# Leaanika Randmets, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2022\n"
+"Last-Translator: Leaanika Randmets, 2023\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,7 +28,7 @@ msgstr ""
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "%s of the selected invoice(s) had an invalid address and were not sent"
-msgstr ""
+msgstr "%s valitud arve(te)l oli vigane aadress ja neid ei saadetud."
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -34,6 +36,8 @@ msgid ""
 "<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
 "                                )"
 msgstr ""
+"<i class=\"fa fa-info-circle\" role=\"img\" aria-label=\"Warning\" title=\"Make sure you have enough Stamps on your account.\"/>\n"
+"                                )"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.res_config_settings_view_form
@@ -51,6 +55,9 @@ msgid ""
 "                                    Some customer addresses are incomplete.\n"
 "                                </span>"
 msgstr ""
+"<span class=\"text-danger\">\n"
+"                                    Mõne kliendi aadressid on puudulikud.\n"
+"                                </span>"
 
 #. module: snailmail_account
 #: model_terms:ir.ui.view,arch_db:snailmail_account.account_invoice_send_inherit_account_wizard_form
@@ -58,6 +65,8 @@ msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
 "                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> The customer's address is incomplete: </span>"
 msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('invalid_addresses', '!=', 0)]}\"> to: </span>\n"
+"                                <span class=\"text-danger\" attrs=\"{'invisible': [('invalid_addresses', '=', 0)]}\"> Kliendi aadress on puudulik: </span>"
 
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_account_invoice_send
@@ -105,17 +114,17 @@ msgstr "ID"
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_partner_ids
 #, python-format
 msgid "Invalid Addresses"
-msgstr ""
+msgstr "Kehtetud aadressid"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_addresses
 msgid "Invalid Addresses Count"
-msgstr ""
+msgstr "Kehtetute aadresside arv"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__invalid_invoices
 msgid "Invalid Invoices Count"
-msgstr ""
+msgstr "Kehtetu arvete arv"
 
 #. module: snailmail_account
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
@@ -126,7 +135,7 @@ msgstr "Arve"
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice__invoice_send_id
 msgid "Invoice Send"
-msgstr ""
+msgstr "Saada arve"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_snailmail_confirm_invoice____last_update
@@ -156,7 +165,7 @@ msgstr "Partner"
 #. module: snailmail_account
 #: model:ir.model.fields,help:snailmail_account.field_account_invoice_send__snailmail_is_letter
 msgid "Print and post the invoice by snailmail"
-msgstr ""
+msgstr "Printige ja postitage arve Snailmail'iga"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_is_letter
@@ -168,15 +177,15 @@ msgstr "Saada postiga"
 #. module: snailmail_account
 #: model:ir.model,name:snailmail_account.model_snailmail_confirm_invoice
 msgid "Snailmail Confirm Invoice"
-msgstr ""
+msgstr "Snailmail kinnitab arvet"
 
 #. module: snailmail_account
 #: model:ir.model.fields,field_description:snailmail_account.field_account_invoice_send__snailmail_cost
 msgid "Stamp(s)"
-msgstr ""
+msgstr "Tempel(id)"
 
 #. module: snailmail_account
 #: code:addons/snailmail_account/wizard/account_invoice_send.py:0
 #, python-format
 msgid "You cannot send an invoice which has no partner assigned."
-msgstr ""
+msgstr "Te ei saa saata müügiarvet, millele pole partnerit määratud."

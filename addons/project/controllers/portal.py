@@ -21,7 +21,7 @@ class ProjectCustomerPortal(CustomerPortal):
             values['project_count'] = request.env['project.project'].search_count([]) \
                 if request.env['project.project'].check_access_rights('read', raise_exception=False) else 0
         if 'task_count' in counters:
-            values['task_count'] = request.env['project.task'].search_count([]) \
+            values['task_count'] = request.env['project.task'].search_count([('project_id', '!=', False)]) \
                 if request.env['project.task'].check_access_rights('read', raise_exception=False) else 0
         return values
 
@@ -120,7 +120,7 @@ class ProjectCustomerPortal(CustomerPortal):
             project_sudo = self._document_check_access('project.project', project_id, access_token)
         except (AccessError, MissingError):
             return request.redirect('/my')
-        if project_sudo.with_user(request.env.user)._check_project_sharing_access():
+        if project_sudo.collaborator_count and project_sudo.with_user(request.env.user)._check_project_sharing_access():
             values = {'project_id': project_id}
             if task_id:
                 values['task_id'] = task_id
@@ -455,7 +455,7 @@ class ProjectCustomerPortal(CustomerPortal):
 
     def _get_my_tasks_searchbar_filters(self, project_domain=None, task_domain=None):
         searchbar_filters = {
-            'all': {'label': _('All'), 'domain': []},
+            'all': {'label': _('All'), 'domain': [('project_id', '!=', False)]},
         }
 
         # extends filterby criteria with project the customer has access to

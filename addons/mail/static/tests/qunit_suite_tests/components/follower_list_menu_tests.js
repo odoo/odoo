@@ -5,52 +5,11 @@ import {
     startServer,
 } from '@mail/../tests/helpers/test_utils';
 
-import { nextTick } from 'web.test_utils';
 import { patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
 QUnit.module('follower_list_menu_tests.js');
-
-QUnit.test('base rendering not editable', async function (assert) {
-    assert.expect(5);
-
-    const { openView } = await start();
-    await openView(
-        {
-            res_model: 'res.partner',
-            views: [[false, 'form']],
-        },
-        { mode: 'edit' },
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu',
-        "should have followers menu component"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_FollowerListMenu_buttonFollowers',
-        "should have followers button"
-    );
-    assert.ok(
-        document.querySelector('.o_FollowerListMenu_buttonFollowers').disabled,
-        "followers button should be disabled"
-    );
-    assert.containsNone(
-        document.body,
-        '.o_FollowerListMenu_dropdown',
-        "followers dropdown should not be opened"
-    );
-
-    document.querySelector('.o_FollowerListMenu_buttonFollowers').click();
-    await nextTick();
-    assert.containsNone(
-        document.body,
-        '.o_FollowerListMenu_dropdown',
-        "followers dropdown should still be closed as button is disabled"
-    );
-});
 
 QUnit.test('base rendering editable', async function (assert) {
     assert.expect(5);

@@ -4,6 +4,7 @@ import {Field} from '@web/views/fields/field';
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { usePopover } from "@web/core/popover/popover_hook";
+import { onEmployeeSubRedirect } from './hooks';
 
 const { Component, onWillStart, onWillRender, useState } = owl;
 
@@ -31,25 +32,7 @@ class HrOrgChartPopover extends Component {
         this.rpc = useService('rpc');
         this.orm = useService('orm');
         this.actionService = useService("action");
-    }
-
-    /**
-     * Get subordonates of an employee through a rpc call.
-     *
-     * @private
-     * @param {integer} employee_id
-     * @returns {Promise}
-     */
-    async _getSubordinatesData(employee_id, type) {
-        const subData = await this.rpc(
-            '/hr/get_subordinates',
-            {
-                employee_id: employee_id,
-                subordinates_type: type,
-                context: Component.env.session.user_context,
-            }
-        );
-        return subData;
+        this._onEmployeeSubRedirect = onEmployeeSubRedirect();
     }
 
     /**
@@ -62,35 +45,6 @@ class HrOrgChartPopover extends Component {
     async _onEmployeeRedirect(employeeId) {
         const action = await this.orm.call('hr.employee', 'get_formview_action', [employeeId]);
         this.actionService.doAction(action); 
-    }
-
-    /**
-     * Redirect to the sub employee form view.
-     *
-     * @private
-     * @param {MouseEvent} event
-     * @returns {Promise} action loaded
-     */
-    async _onEmployeeSubRedirect(event) {
-        const employee_id = parseInt(event.currentTarget.dataset.employeeId);
-        const type = event.currentTarget.dataset.type || 'direct';
-        if (!employee_id) {
-            return {};
-        }
-        const subData = await this._getSubordinatesData(employee_id, type);
-        const domain = [['id', 'in', subData]];
-        var action = await this.orm.call('hr.employee', 'get_formview_action', [employee_id]);
-        action = Object.assign(action, {
-            'name': this.env._t('Team'),
-            'view_mode': 'kanban,list,form',
-            'views':  [[false, 'kanban'], [false, 'list'], [false, 'form']],
-            'domain': domain,
-            'context': {
-                'default_parent_id': employee_id,
-            }
-        });
-        delete action['res_id'];
-        this.actionService.doAction(action);
     }
 }
 HrOrgChartPopover.template = 'hr_org_chart.hr_orgchart_emp_popover';
@@ -107,6 +61,7 @@ export class HrOrgChart extends Field {
         this.jsonStringify = JSON.stringify;
 
         this.state = useState({'employee_id': null});
+        this._onEmployeeSubRedirect = onEmployeeSubRedirect();
 
         onWillStart(this.handleComponentUpdate.bind(this));
         onWillRender(this.handleComponentUpdate.bind(this));

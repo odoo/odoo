@@ -85,7 +85,34 @@ $o-we-sidebar-color: $o-we-color !default;
 $o-we-sidebar-font-size: 12px !default;
 $o-we-sidebar-border-width: $o-we-border-width !default;
 $o-we-sidebar-border-color: $o-we-border-color !default;
-$o-we-sidebar-width: $o-we-sidebar-border-width + 290px !default;
+
+// This sidebar width cannot be increased at the moment, it is at the maximum
+// value it can have, given our current specs, which is 1920px / 150% - 992px.
+// - 1920px: the usual size of user screens, supposedly the browser one if the
+//       OS task bar is not anchored to the right/left.
+// - 150%: this is actually the recommended Windows zoom (virtually decreasing
+//       the amount of available pixels to fit our UI).
+// - 992px: the current minimum width the screen must have for our websites to
+//       be in "desktop" mode (below, columns break over multiple lines).
+//
+// If the sidebar is 1px larger, entering edit mode on such Full HD + 150% zoom
+// will display the website in "mobile" mode (note it is the same with browser
+// zoom or OS zoom).
+//
+// Notice that 1920px / 150% = 1280px which gives the minimum size of the screen
+// that will display the website in "desktop" mode in the editor if no zoom is
+// used, which seems like an acceptable value.
+//
+// Note: reducing the sidebar width even further to support more devices or
+// more zoom / OS task bar configuration would be problematic as the sidebar
+// would become too small. It is currently kinda at both its maximum and minimum
+// authorized value.
+//
+// We tried solutions to virtually "de-zoom" the website iframe to display the
+// website in "desktop" mode no matter what but this did not give great results.
+// On problematic devices, the user still has the possibility to de-zoom its
+// browser by himself.
+$o-we-sidebar-width: 288px !default; // This includes $o-we-sidebar-border-width
 
 $o-we-sidebar-top-height: 46px !default;
 

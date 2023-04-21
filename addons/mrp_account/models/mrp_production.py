@@ -73,7 +73,7 @@ class MrpProduction(models.Model):
             "res_model": "account.analytic.account",
             'res_id': self.analytic_account_id.id,
             "context": {"create": False},
-            "name": "Analytic Account",
+            "name": _("Analytic Account"),
             'view_mode': 'form',
         }
 
@@ -87,16 +87,13 @@ class MrpProduction(models.Model):
         if finished_move:
             finished_move.ensure_one()
             for work_order in self.workorder_ids:
-                time_lines = work_order.time_ids.filtered(
-                    lambda x: x.date_end and not x.cost_already_recorded)
-                duration = sum(time_lines.mapped('duration'))
+                time_lines = work_order.time_ids.filtered(lambda t: t.date_end and not t.cost_already_recorded)
+                work_center_cost += work_order._cal_cost(times=time_lines)
                 time_lines.write({'cost_already_recorded': True})
-                work_center_cost += (duration / 60.0) * \
-                    work_order.workcenter_id.costs_hour
             qty_done = finished_move.product_uom._compute_quantity(
                 finished_move.quantity_done, finished_move.product_id.uom_id)
             extra_cost = self.extra_cost * qty_done
-            total_cost = (sum(-m.stock_valuation_layer_ids.value for m in consumed_moves.sudo()) + work_center_cost + extra_cost)
+            total_cost = - sum(consumed_moves.sudo().stock_valuation_layer_ids.mapped('value')) + work_center_cost + extra_cost
             byproduct_moves = self.move_byproduct_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.quantity_done > 0)
             byproduct_cost_share = 0
             for byproduct in byproduct_moves:

@@ -70,22 +70,8 @@
                                             </t>
                                         </tbody>
                                     </table>
-                                    <div t-if="!partners.length" class="no-results-message">
-                                        <p t-if="env.pos.isEveryPartnerLoaded and state.query">
-                                            No customer found for <b>"<t t-esc="state.query"/>"</b>.
-                                        </p>
-                                        <p t-elif="env.pos.isEveryPartnerLoaded and !state.query">
-                                            There are no customers.
-                                        </p>
-                                        <p t-elif="!env.pos.isEveryPartnerLoaded and !state.query">
-                                            There are no loaded customers.
-                                        </p>
-                                        <t t-elif="!env.pos.isEveryPartnerLoaded and state.query">
-                                            <p> No customer found for <b>"<t t-esc="state.query"/>"</b>. </p>
-                                            <div class="button highlight" t-on-click="_onPressEnterKey">
-                                                <i class="fa fa-search"/> Search database
-                                            </div>
-                                        </t>
+                                    <div t-if="state.query" class="search-more-button">
+                                        <div class="button" t-on-click="_onPressEnterKey">Search more</div>
                                     </div>
                                 </div>
                             </div>

@@ -623,6 +623,19 @@ class IrModelFields(models.Model):
             self.relation = field.relation
             self.readonly = True
 
+    @api.onchange('relation')
+    def _onchange_relation(self):
+        try:
+            self._check_relation()
+        except ValidationError as e:
+            return {'warning': {'title': _("Model %s does not exist", self.relation), 'message': e}}
+
+    @api.constrains('relation')
+    def _check_relation(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.relation and not rec.env['ir.model']._get_id(rec.relation):
+                raise ValidationError(_("Unknown model name '%s' in Related Model", rec.relation))
+
     @api.constrains('depends')
     def _check_depends(self):
         """ Check whether all fields in dependencies are valid. """
@@ -669,12 +682,7 @@ class IrModelFields(models.Model):
     def _onchange_ttype(self):
         if self.ttype == 'many2many' and self.model_id and self.relation:
             if self.relation not in self.env:
-                return {
-                    'warning': {
-                        'title': _('Model %s does not exist', self.relation),
-                        'message': _('Please specify a valid model for the object relation'),
-                    }
-                }
+                return
             names = self._custom_many2many_names(self.model_id.model, self.relation)
             self.relation_table, self.column1, self.column2 = names
         else:
@@ -769,7 +777,7 @@ class IrModelFields(models.Model):
                 else:
                     # field hasn't been loaded (yet?)
                     continue
-                for dep in model._dependent_fields(field):
+                for dep in self.pool.get_dependent_fields(field):
                     if dep.manual:
                         failed_dependencies.append((field, dep))
                 for inverse in model.pool.field_inverses[field]:
@@ -840,23 +848,7 @@ class IrModelFields(models.Model):
 
         # clean the registry from the fields to remove
         self.pool.registry_invalidated = True
-
-        # discard the removed fields from field triggers
-        def discard_fields(tree):
-            # discard fields from the tree's root node
-            tree.get(None, set()).difference_update(fields)
-            # discard subtrees labelled with any of the fields
-            for field in fields:
-                tree.pop(field, None)
-            # discard fields from remaining subtrees
-            for field, subtree in tree.items():
-                if field is not None:
-                    discard_fields(subtree)
-
-        discard_fields(self.pool.field_triggers)
-
-        # discard the removed fields from field inverses
-        self.pool.field_inverses.discard_keys_and_values(fields)
+        self.pool._discard_fields(fields)
 
         # discard the removed fields from fields to compute
         for field in fields:

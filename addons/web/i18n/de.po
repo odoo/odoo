@@ -8,17 +8,19 @@
 # e2f <projects@e2f.com>, 2022
 # Friederike Fasterling-Nesselbosch, 2022
 # Andreas Schmidt <schmigo@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Michael Hofer, 2022
+# Jordan D. (Joda), 2023
+# Martin Trigaux, 2023
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Michael Hofer, 2022\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -201,7 +203,7 @@ msgstr "(zähler)"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "(create)"
-msgstr ""
+msgstr "(erstellen)"
 
 #. module: web
 #. odoo-javascript
@@ -280,7 +282,7 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       22,137.50</span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">€ <span class=\"oe_currency_value\">\n"
+"<span class=\"text-nowrap\">$ <span class=\"oe_currency_value\">\n"
 "                                                       22.137,50</span></span>"
 
 #. module: web
@@ -289,7 +291,7 @@ msgid ""
 "<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">11,750.00</span></span>"
 msgstr ""
-"<span class=\"text-nowrap\">EUR <span "
+"<span class=\"text-nowrap\">$ <span "
 "class=\"oe_currency_value\">11.750,00</span></span>"
 
 #. module: web
@@ -338,7 +340,7 @@ msgstr "<span itemprop=\"name\">Deko-Süchtiger</span>"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
 msgid "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
-msgstr "<span>EUR <span class=\"oe_currency_value\">19.250,00</span></span>"
+msgstr "<span>$ <span class=\"oe_currency_value\">19,250.00</span></span>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.report_invoice_wizard_preview
@@ -427,14 +429,14 @@ msgstr "<strong>Gesamt</strong>"
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=ilike"
-msgstr ""
+msgstr "=ilike"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/core/domain_selector/domain_selector_operators.js:0
 #, python-format
 msgid "=like"
-msgstr ""
+msgstr "=like"
 
 #. module: web
 #. odoo-javascript
@@ -479,13 +481,6 @@ msgstr ""
 #, python-format
 msgid "ALL"
 msgstr "ALLEN"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "ALT"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -618,14 +613,14 @@ msgstr "Benutzerdefinierte Gruppe hinzufügen"
 #: code:addons/web/static/src/views/fields/properties/properties_field.xml:0
 #, python-format
 msgid "Add a Property"
-msgstr ""
+msgstr "Eine Eigenschaft hinzufügen"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Add a Value"
-msgstr ""
+msgstr "Einen Wert hinzufügen"
 
 #. module: web
 #. odoo-javascript
@@ -728,7 +723,7 @@ msgstr "Hinzufügen: "
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Add: %s"
-msgstr ""
+msgstr "Hinzufügen: %s"
 
 #. module: web
 #. odoo-javascript
@@ -886,10 +881,11 @@ msgstr "Sind Sie sich sicher, alle ausgewählten Daten archivieren zu wollen?"
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive all this record?"
-msgstr ""
+msgstr "Sind Sie sich sicher, all diese Datensätze archivieren zu wollen?"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
@@ -930,7 +926,7 @@ msgstr "Wollen Sie diese Datensätze wirklich löschen?"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Are you sure you want to delete this column?"
-msgstr ""
+msgstr "Sind Sie sicher, dass Sie diese Spalte löschen möchten?"
 
 #. module: web
 #. odoo-javascript
@@ -940,6 +936,8 @@ msgid ""
 "Are you sure you want to delete this property field? It will be removed for "
 "everyone using the \"%s\" %s."
 msgstr ""
+"Sind Sie sicher, dass Sie dieses Eigenschaftsfeld löschen möchten? Es wird "
+"für alle entfernt, die den „%s“-%s nutzen."
 
 #. module: web
 #. odoo-javascript
@@ -973,7 +971,7 @@ msgstr ""
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "As a default text when no value are set"
-msgstr ""
+msgstr "Als Standardtext, wenn kein Wert eingestellt ist"
 
 #. module: web
 #. odoo-javascript
@@ -1006,7 +1004,7 @@ msgstr "Dateianhang"
 #: code:addons/web/static/src/views/fields/attachment_image/attachment_image_field.js:0
 #, python-format
 msgid "Attachment Image"
-msgstr ""
+msgstr "Anhangbild"
 
 #. module: web
 #. odoo-javascript
@@ -1146,7 +1144,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/formatters.js:0
 #, python-format
 msgid "Bytes"
-msgstr ""
+msgstr "Bytes"
 
 #. module: web
 #. odoo-javascript
@@ -1174,7 +1172,7 @@ msgstr ""
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "CTRL"
-msgstr ""
+msgstr "STRG"
 
 #. module: web
 #. odoo-javascript
@@ -1293,6 +1291,7 @@ msgstr "Wählen Sie einen Debug-Befehl..."
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Clear"
 msgstr "Löschen"
@@ -1492,21 +1491,21 @@ msgstr "Kopieren"
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Multiline Text to Clipboard"
-msgstr ""
+msgstr "Mehrzeiligen Text in Zwischenablage kopieren"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy Text to Clipboard"
-msgstr ""
+msgstr "Text in Zwischenablage kopieren"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/copy_clipboard/copy_clipboard_field.js:0
 #, python-format
 msgid "Copy URL to Clipboard"
-msgstr ""
+msgstr "URL in Zwischenablage kopieren"
 
 #. module: web
 #. odoo-javascript
@@ -1560,7 +1559,7 @@ msgstr "Konnte das ausgewählte Bild nicht anzeigen"
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.js:0
 #, python-format
 msgid "Could not display the selected pdf"
-msgstr ""
+msgstr "Konnte das ausgewählte PDF nicht anzeigen"
 
 #. module: web
 #. odoo-javascript
@@ -1675,7 +1674,7 @@ msgstr "Anlegen und Bearbeiten"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create and edit..."
-msgstr ""
+msgstr "Erstellen und bearbeiten ..."
 
 #. module: web
 #. odoo-javascript
@@ -1831,7 +1830,7 @@ msgstr "Standard"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Default State"
-msgstr ""
+msgstr "Standardstatus"
 
 #. module: web
 #. odoo-javascript
@@ -1846,7 +1845,7 @@ msgstr "Standardwert"
 #: code:addons/web/static/src/legacy/js/widgets/model_field_selector_popover.js:0
 #, python-format
 msgid "Default text is used when no values are set"
-msgstr ""
+msgstr "Wenn keine Werte eingestellt sind, wird Standardtext verwendet"
 
 #. module: web
 #. odoo-javascript
@@ -1896,7 +1895,7 @@ msgstr "Löschen"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Delete Property Field"
-msgstr ""
+msgstr "Eigenschaftsfeld löschen"
 
 #. module: web
 #. odoo-javascript
@@ -1921,7 +1920,7 @@ msgstr "Knoten Löschen"
 #: code:addons/web/static/src/views/list/list_renderer.xml:0
 #, python-format
 msgid "Delete row"
-msgstr ""
+msgstr "Zeile löschen"
 
 #. module: web
 #. odoo-javascript
@@ -1968,7 +1967,7 @@ msgstr "Verwerfen"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
-msgstr ""
+msgstr "Verworfene Änderungen"
 
 #. module: web
 #. odoo-javascript
@@ -2188,7 +2187,7 @@ msgstr "Datensatz bearbeiten"
 #: code:addons/web/static/src/views/kanban/kanban_renderer.js:0
 #, python-format
 msgid "Edit: %s"
-msgstr ""
+msgstr "Bearbeiten: %s"
 
 #. module: web
 #. odoo-javascript
@@ -2205,7 +2204,7 @@ msgstr "E-Mail"
 #: code:addons/web/static/src/webclient/settings_form_view/widgets/res_config_invite_users.js:0
 #, python-format
 msgid "Empty email address"
-msgstr ""
+msgstr "Leere E-Mail-Adresse"
 
 #. module: web
 #. odoo-javascript
@@ -2226,7 +2225,7 @@ msgstr "E-Mail-Adresse eingeben"
 #: code:addons/web/static/src/webclient/settings_form_view/highlight_text/form_label_highlight_text.xml:0
 #, python-format
 msgid "Enterprise"
-msgstr ""
+msgstr "Enterprise"
 
 #. module: web
 #. odoo-javascript
@@ -2469,7 +2468,7 @@ msgstr "Schriftart"
 #: code:addons/web/static/src/views/fields/font_selection/font_selection_field.js:0
 #, python-format
 msgid "Font Selection"
-msgstr ""
+msgstr "Schriftauswahl"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
@@ -2566,7 +2565,7 @@ msgstr "Erhalten Sie diese Funktion und viel mehr mit Odoo Enterprise!"
 #: code:addons/web/static/src/views/fields/url/url_field.xml:0
 #, python-format
 msgid "Go to URL"
-msgstr ""
+msgstr "Zur URL gehen"
 
 #. module: web
 #. odoo-javascript
@@ -2622,7 +2621,7 @@ msgstr "In Kanban-Ansicht verstecken"
 #: code:addons/web/static/src/views/fields/many2many_tags/many2many_tags_field.xml:0
 #, python-format
 msgid "Hide in kanban"
-msgstr ""
+msgstr "In Kanban verbergen"
 
 #. module: web
 #. odoo-javascript
@@ -2740,7 +2739,7 @@ msgstr "Ganzzahl"
 #: code:addons/web/static/src/views/fields/properties/property_value.xml:0
 #, python-format
 msgid "Internal link"
-msgstr ""
+msgstr "Interner Link"
 
 #. module: web
 #. odoo-javascript
@@ -3813,7 +3812,7 @@ msgstr "Öffnen: %s"
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Option Name"
-msgstr ""
+msgstr "Optionsname"
 
 #. module: web
 #. odoo-javascript
@@ -4084,7 +4083,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/many2one/many2one_field.js:0
 #, python-format
 msgid "Please, scan again !"
-msgstr ""
+msgstr "Bitte erneut scannen!"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.brand_promotion_message
@@ -4225,14 +4224,14 @@ msgstr "Eigenschaften"
 #: code:addons/web/static/src/views/fields/properties/properties_field.js:0
 #, python-format
 msgid "Property %s"
-msgstr ""
+msgstr "Eigenschaft %s"
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "Property Name"
-msgstr ""
+msgstr "Eigenschaftsname"
 
 #. module: web
 #. odoo-javascript
@@ -4428,7 +4427,7 @@ msgstr "Relation:"
 #: code:addons/web/static/src/views/fields/x2many/x2many_field.js:0
 #, python-format
 msgid "Relational table"
-msgstr ""
+msgstr "Beziehungstabelle"
 
 #. module: web
 #. odoo-javascript
@@ -4466,7 +4465,7 @@ msgstr "Entferne das Titelbild"
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Remove Property"
-msgstr ""
+msgstr "Eigenschaft entfernen"
 
 #. module: web
 #. odoo-javascript
@@ -4663,7 +4662,7 @@ msgstr "Standardwert speichern"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
-msgstr ""
+msgstr "Manuelle speichern"
 
 #. module: web
 #. odoo-javascript
@@ -4708,14 +4707,14 @@ msgstr "Weitere suchen..."
 #: code:addons/web/static/src/core/model_selector/model_selector.js:0
 #, python-format
 msgid "Search a Model..."
-msgstr ""
+msgstr "Ein Modell suchen ..."
 
 #. module: web
 #. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Search a field..."
-msgstr ""
+msgstr "Ein Feld suchen ..."
 
 #. module: web
 #. odoo-javascript
@@ -4729,7 +4728,7 @@ msgstr "Suche nach einem Befehl..."
 #: code:addons/web/static/src/webclient/menus/menu_providers.js:0
 #, python-format
 msgid "Search for a menu..."
-msgstr ""
+msgstr "Nach einem Menü suchen ..."
 
 #. module: web
 #. odoo-javascript
@@ -4814,7 +4813,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition_selection.xml:0
 #, python-format
 msgid "Select Default"
-msgstr ""
+msgstr "Standardwert auswählen"
 
 #. module: web
 #. odoo-javascript
@@ -4969,9 +4968,16 @@ msgstr "Mit allen Benutzern teilen"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+#, python-format
+msgid "Shortcuts"
+msgstr "Kurzbefehle"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
@@ -5078,7 +5084,7 @@ msgstr "Hier bleiben"
 #: code:addons/web/static/src/views/form/form_error_dialog/form_error_dialog.xml:0
 #, python-format
 msgid "Stay here"
-msgstr ""
+msgstr "Hier bleiben"
 
 #. module: web
 #. odoo-javascript
@@ -5137,7 +5143,7 @@ msgstr "Sytax fehler "
 #: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
 #, python-format
 msgid "TIP"
-msgstr ""
+msgstr "TIPP"
 
 #. module: web
 #. odoo-javascript
@@ -5188,11 +5194,13 @@ msgstr "Text"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Die Steuernummer. Füllen Sie es aus, wenn der Kontakt staatlichen Steuern "
-"unterliegt. In einigen rechtlichen Berichten verwendet."
+"Die Steueridentifikationsnummer. Die Werte hier werden auf der Grundlage des"
+" Länderformats validiert. Sie können „/“ verwenden, um anzuzeigen, dass der "
+"Partner nicht steuerpflichtig ist."
 
 #. module: web
 #. odoo-python
@@ -5274,7 +5282,7 @@ msgstr "Beim Hochladen Ihrer Datei gab es ein Problem"
 #: code:addons/web/static/src/views/fields/file_handler.js:0
 #, python-format
 msgid "There was a problem while uploading your file."
-msgstr ""
+msgstr "Beim Hochladen Ihrer Datei gab es ein Problem"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.neutralize_banner
@@ -5484,7 +5492,7 @@ msgstr "Di"
 #: code:addons/web/static/src/core/model_field_selector/model_field_selector_popover.xml:0
 #, python-format
 msgid "Type a default text or press ENTER"
-msgstr ""
+msgstr "Einen Standardtext eingeben oder EINGABE drücken"
 
 #. module: web
 #. odoo-javascript
@@ -5525,7 +5533,7 @@ msgstr ""
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Unable to save"
-msgstr ""
+msgstr "Unmöglich zu speichern"
 
 #. module: web
 #. odoo-javascript
@@ -5827,7 +5835,7 @@ msgstr "Felder anzeigen"
 #: code:addons/web/static/src/views/fields/properties/property_definition.xml:0
 #, python-format
 msgid "View In Kanban"
-msgstr ""
+msgstr "Kanban-Ansicht"
 
 #. module: web
 #. odoo-javascript
@@ -6001,7 +6009,7 @@ msgstr "Gestern"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.login_successful
 msgid "You are logged in."
-msgstr ""
+msgstr "Sie sind angemeldet."
 
 #. module: web
 #. odoo-python
@@ -6023,7 +6031,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/properties/property_definition.js:0
 #, python-format
 msgid "You do not have access to the model \"%s\"."
-msgstr ""
+msgstr "Sie haben keinen Zugriff auf das Modell „%s“."
 
 #. module: web
 #. odoo-javascript
@@ -6040,6 +6048,21 @@ msgid ""
 "You may not believe it,<br />but the application is actually loading..."
 msgstr ""
 "Sie werden es kaum glauben,<br />aber die Anwendung wird gerade geladen."
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_tags.js:0
+#, python-format
+msgid "You need to be able to edit parent first to add property tags"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#, python-format
+msgid "You need to be able to edit parent first to configure property fields"
+msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6274,13 +6297,6 @@ msgstr "Download läuft..."
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Global Business Solutions"
 msgstr "z.B. Global Business Solutions"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "expandText"
-msgstr ""
 
 #. module: web
 #. odoo-javascript

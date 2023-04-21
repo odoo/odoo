@@ -16,6 +16,15 @@ const utils = {
             var cookie = parts.join('=');
 
             if (cookieName && cookieName === name) {
+                if (cookie.startsWith('"')) {
+                    if (cookie.includes('\\')){
+                        // see werkzeug _cookie_quote
+                        throw new Error(
+                            `Cookie value contains unknown characters ${cookie}`
+                        )
+                    }
+                    cookie = cookie.slice(1, -1);
+                }
                 return cookie;
             }
         }

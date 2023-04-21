@@ -42,8 +42,11 @@
             }
 
             .o_field_widget {
-                width: 100%;
                 margin-bottom: $o-form-spacing-unit * 2;
+
+                &:not(.o_field_boolean){
+                    width: 100%;
+                }
 
                 > .o_field_widget {
                     margin-bottom: 0;
@@ -173,8 +176,6 @@
         }
 
         .oe_title {
-            max-width: 75%;
-
             .o_field_char {
                 width: 100%;
             }
@@ -287,17 +288,19 @@
 
     // Statusbar
     .o_form_statusbar {
-        padding-left: $o-horizontal-padding;
+        @include media-breakpoint-up(md) {
+            padding-left: $o-horizontal-padding;
+        }
         background-color: $o-view-background-color;
 
         > .o_statusbar_status {
             display: flex;
             align-items: center;
             align-content: space-around;
-            
+
             > .o_arrow_button {
                 font-weight: $font-weight-bold;
-    
+
                 // Last element at the right should respect overall padding
                 &:first-of-type {
                     padding-right: $o-horizontal-padding;
@@ -306,7 +309,7 @@
         }
 
         > .o_field_widget {
-            align-self: center;
+            align-self: flex-start;
             margin-bottom: 0px;
         }
 
@@ -366,9 +369,11 @@
     // Title
     .oe_title {
         color: $headings-color;
-        @include media-breakpoint-up(vsm, $o-extra-grid-breakpoints) {
-            padding-right: $o-innergroup-rpadding;
+
+        @include media-breakpoint-up(sm) {
+            max-width: 75%;
         }
+
         > h1, > h2, > h3 {
             width: 100%; // Needed because inline-block when is a hx.o_row
             margin-top: 0;
@@ -388,9 +393,6 @@
         > h2 {
             min-height: 42px;
         }
-        .oe_avatar + & {
-            padding-right: $o-avatar-size + 10;
-        }
     }
 
     // Avatar
@@ -398,11 +400,17 @@
         float: right;
         margin-bottom: 10px;
 
-        > div > img {
+        .img {
             max-width: $o-avatar-size;
             max-height: $o-avatar-size;
             vertical-align: top;
             border: 1px solid $o-gray-300;
+        }
+
+        @include media-breakpoint-down(sm) {
+            + .oe_title {
+                max-width: calc(100% - #{$o-avatar-size} - #{map-get($spacers, 2)});
+            }
         }
     }
 
@@ -482,9 +490,14 @@
     .o_checkbox_optional_field {
         display: flex;
 
-        @include media-breakpoint-down(md) {
+        @include media-breakpoint-down(sm) {
             flex-wrap: wrap;
-            justify-content: space-between;
+            .o_field_boolean {
+                order: -1;
+            }
+            .o_field_boolean + div {
+                width: 100%;
+            }
         }
 
         > .o_form_label {
@@ -584,6 +597,10 @@
                         }
                     }
                 }
+                // Prevent table overflow when having long chars in x2many list
+                .o_field_widget:has(.o_field_x2many.o_field_x2many_list) {
+                    width: 100%;
+                }
             }
         }
 
@@ -664,19 +681,25 @@
     }
 
     .oe_no_translation_content {
-        :not(.btn) {
-            display: none;
-        }
+        // hide content but show the translate button
+        height: 0px;
 
-        .btn {
-            width: 100% !important;
-            margin-left: 0px;
-            visibility: hidden;
-        }
+        div{
+            :not(.btn) {
+                display: none;
+            }
 
-        .btn:after {
-            content: 'EN';
-            visibility: visible;
+            .btn {
+                width: 100% !important;
+                margin-left: 0px;
+                visibility: hidden;
+            }
+
+            .btn:after {
+                // force the the translate button to EN
+                content: 'EN';
+                visibility: visible;
+            }
         }
     }
 
@@ -701,9 +724,11 @@
         }
     }
 
-    .o_field_float_time.oe_inline {
-        &, input {
-            max-width: 7ch;
+    .o_field_float_time, .o_field_percentage {
+        &.oe_inline {
+            &, input {
+                max-width: 7ch;
+            }
         }
     }
 
@@ -848,11 +873,9 @@
         }
     }
 
-    // Boolean
-    .o_field_boolean {
-        margin-right: $o-form-spacing-unit;
-        max-width: 40px !important;
-        padding-right: 0 !important;
+    // Boolean 
+    .o_field_boolean + .o_form_label {
+        margin-right: $o-form-spacing-unit * 3;
     }
 
     // Timezone widget warning
@@ -932,14 +955,6 @@
         }
     }
     @include media-breakpoint-down(md) {
-        .o_control_panel {
-            padding-right: 16px;
-
-            > div.o_cp_top {
-                flex-flow: column;
-            }
-        }
-
         .o_cp_buttons {
             width: 100%;
             div, .o-kanban-button-new {

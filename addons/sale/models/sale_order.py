@@ -269,8 +269,7 @@ class SaleOrder(models.Model):
         help="Delivery date you can promise to the customer, computed from the minimum lead time of the order lines.")
     is_expired = fields.Boolean(string="Is Expired", compute='_compute_is_expired')
     partner_credit_warning = fields.Text(
-        compute='_compute_partner_credit_warning',
-        groups='account.group_account_invoice,account.group_account_readonly')
+        compute='_compute_partner_credit_warning')
     tax_country_id = fields.Many2one(
         comodel_name='res.country',
         compute='_compute_tax_country_id',
@@ -401,8 +400,15 @@ class SaleOrder(models.Model):
     @api.depends('partner_id')
     def _compute_user_id(self):
         for order in self:
-            if not order.user_id:
-                order.user_id = order.partner_id.user_id or order.partner_id.commercial_partner_id.user_id or self.env.user
+            if order.partner_id and not (order._origin.id and order.user_id):
+                # Recompute the salesman on partner change
+                #   * if partner is set (is required anyway, so it will be set sooner or later)
+                #   * if the order is not saved or has no salesman already
+                order.user_id = (
+                    order.partner_id.user_id
+                    or order.partner_id.commercial_partner_id.user_id
+                    or (self.user_has_groups('sales_team.group_sale_salesman') and self.env.user)
+                )
 
     @api.depends('partner_id', 'user_id')
     def _compute_team_id(self):
@@ -425,8 +431,8 @@ class SaleOrder(models.Model):
         for order in self:
             order_lines = order.order_line.filtered(lambda x: not x.display_type)
             order.amount_untaxed = sum(order_lines.mapped('price_subtotal'))
-            order.amount_total = sum(order_lines.mapped('price_total'))
             order.amount_tax = sum(order_lines.mapped('price_tax'))
+            order.amount_total = order.amount_untaxed + order.amount_tax
 
     @api.depends('order_line.invoice_lines')
     def _get_invoiced(self):
@@ -944,7 +950,7 @@ class SaleOrder(models.Model):
             ))
 
     def _recompute_prices(self):
-        lines_to_recompute = self.order_line.filtered(lambda line: not line.display_type)
+        lines_to_recompute = self._get_update_prices_lines()
         lines_to_recompute.invalidate_recordset(['pricelist_item_id'])
         lines_to_recompute._compute_price_unit()
         # Special case: we want to overwrite the existing discount on _recompute_prices call
@@ -1021,13 +1027,16 @@ class SaleOrder(models.Model):
         return _(
             "There is nothing to invoice!\n\n"
             "Reason(s) of this behavior could be:\n"
-            "- You should deliver your products before invoicing them: Click on the \"truck\" icon "
-            "(top-right of your screen) and follow instructions.\n"
+            "- You should deliver your products before invoicing them.\n"
             "- You should modify the invoicing policy of your product: Open the product, go to the "
             "\"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered "
             "quantities\". For Services, you should modify the Service Invoicing Policy to "
             "'Prepaid'."
         )
+
+    def _get_update_prices_lines(self):
+        """ Hook to exclude specific lines which should not be updated based on price list recomputation """
+        return self.order_line.filtered(lambda line: not line.display_type)
 
     def _get_invoiceable_lines(self, final=False):
         """Return the invoiceable lines for order `self`."""
@@ -1078,7 +1087,7 @@ class SaleOrder(models.Model):
         invoice_vals_list = []
         invoice_item_sequence = 0 # Incremental sequencing to keep the lines order on the invoice.
         for order in self:
-            order = order.with_company(order.company_id)
+            order = order.with_company(order.company_id).with_context(lang=order.partner_invoice_id.lang)
 
             invoice_vals = order._prepare_invoice()
             invoiceable_lines = order._get_invoiceable_lines(final)
@@ -1247,14 +1256,14 @@ class SaleOrder(models.Model):
             message, msg_vals, model_description=model_description,
             force_email_company=force_email_company, force_email_lang=force_email_lang
         )
-        subtitles = [render_context['record'].name]
-        if self.validity_date:
-            subtitles.append(_(u'%(amount)s due\N{NO-BREAK SPACE}%(date)s',
-                           amount=format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')),
-                           date=format_date(self.env, self.validity_date, date_format='short', lang_code=render_context.get('lang'))
-                          ))
-        else:
-            subtitles.append(format_amount(self.env, self.amount_total, self.currency_id, lang_code=render_context.get('lang')))
+        lang_code = render_context.get('lang')
+        subtitles = [
+            render_context['record'].name,
+            format_amount(self.env, self.amount_total, self.currency_id, lang_code=lang_code),
+        ]
+        if self.validity_date and self.state in ['draft', 'sent']:
+            formatted_date = format_date(self.env, self.validity_date, lang_code=lang_code)
+            subtitles.append(_("Expires on %(date)s", date=formatted_date))
         render_context['subtitles'] = subtitles
         return render_context
 
@@ -1405,11 +1414,11 @@ class SaleOrder(models.Model):
         name = self.name
         if prefix:
             name = prefix + ": " + self.name
-        plan = self.env['account.analytic.plan'].search([
+        plan = self.env['account.analytic.plan'].sudo().search([
             '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False)
         ], limit=1)
         if not plan:
-            plan = self.env['account.analytic.plan'].create({
+            plan = self.env['account.analytic.plan'].sudo().create({
                 'name': 'Default',
                 'company_id': self.company_id.id,
             })

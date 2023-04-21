@@ -11,7 +11,7 @@
 
                         <t t-foreach="getSortedFilters(section)" t-as="filter" t-key="filter.value">
                             <span t-if="filter.active" class="d-flex align-items-center text-nowrap ms-1 me-2">
-                                <span t-attf-class="o_color_{{filter.colorIndex}}">⬤</span>
+                                <span t-att-class="getFilterColor(filter)">⬤</span>
                                 <span class="ms-1 fw-bold text-nowrap" t-esc="filter.label" />
                             </span>
                         </t>

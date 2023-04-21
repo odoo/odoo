@@ -253,7 +253,7 @@ class LoyaltyProgram(models.Model):
                 'rule_ids': [(5, 0, 0), (0, 0, {
                     'reward_point_amount': '1',
                     'reward_point_mode': 'money',
-                    'product_ids': self.env.ref('loyalty.ewallet_product_50'),
+                    'product_ids': self.env.ref('loyalty.ewallet_product_50', raise_if_not_found=False),
                 })],
                 'reward_ids': [(5, 0, 0), (0, 0, {
                     'reward_type': 'discount',
@@ -386,7 +386,19 @@ class LoyaltyProgram(models.Model):
         # However we can check that the result of reward_ids would actually be empty or not, and if not, skip the constraint.
         if 'reward_ids' in vals and self._fields['reward_ids'].convert_to_cache(vals['reward_ids'], self):
             self = self.with_context(loyalty_skip_reward_check=True)
-        return super().write(vals)
+            # We need add the program type to the context to avoid getting the default value
+            # ('discount') for reward type when calling the `default_get` method of
+            #`loyalty.reward`.
+            if 'program_type' in vals:
+                self = self.with_context(program_type=vals['program_type'])
+                return super().write(vals)
+            else:
+                for program in self:
+                    program = program.with_context(program_type=program.program_type)
+                    super(LoyaltyProgram, program).write(vals)
+                return True
+        else:
+            return super().write(vals)
 
     @api.model
     def get_program_templates(self):

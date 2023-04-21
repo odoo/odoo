@@ -8,6 +8,7 @@ import itertools
 from psycopg2 import OperationalError
 
 from odoo import api, fields, models, tools, _
+from odoo.osv import expression
 
 
 class HrWorkEntry(models.Model):
@@ -20,8 +21,8 @@ class HrWorkEntry(models.Model):
     employee_id = fields.Many2one('hr.employee', required=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", index=True)
     date_start = fields.Datetime(required=True, string='From')
     date_stop = fields.Datetime(compute='_compute_date_stop', store=True, readonly=False, string='To')
-    duration = fields.Float(compute='_compute_duration', store=True, string="Period", readonly=False)
-    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True)
+    duration = fields.Float(compute='_compute_duration', store=True, string="Duration", readonly=False)
+    work_entry_type_id = fields.Many2one('hr.work.entry.type', index=True, default=lambda self: self.env['hr.work.entry.type'].search([], limit=1))
     color = fields.Integer(related='work_entry_type_id.color', readonly=True)
     state = fields.Selection([
         ('draft', 'Draft'),
@@ -182,18 +183,22 @@ class HrWorkEntry(models.Model):
         if 'active' in vals:
             vals['state'] = 'draft' if vals['active'] else 'cancelled'
 
-        with self._error_checking(skip=skip_check):
+        employee_ids = self.employee_id.ids
+        if 'employee_id' in vals and vals['employee_id']:
+            employee_ids += [vals['employee_id']]
+        with self._error_checking(skip=skip_check, employee_ids=employee_ids):
             return super(HrWorkEntry, self).write(vals)
 
     def unlink(self):
-        with self._error_checking():
+        employee_ids = self.employee_id.ids
+        with self._error_checking(employee_ids=employee_ids):
             return super().unlink()
 
     def _reset_conflicting_state(self):
         self.filtered(lambda w: w.state == 'conflict').write({'state': 'draft'})
 
     @contextmanager
-    def _error_checking(self, start=None, stop=None, skip=False):
+    def _error_checking(self, start=None, stop=None, skip=False, employee_ids=False):
         """
         Context manager used for conflicts checking.
         When exiting the context manager, conflicts are checked
@@ -209,11 +214,14 @@ class HrWorkEntry(models.Model):
             start = start or min(self.mapped('date_start'), default=False)
             stop = stop or max(self.mapped('date_stop'), default=False)
             if not skip and start and stop:
-                work_entries = self.sudo().with_context(hr_work_entry_no_check=True).search([
+                domain = [
                     ('date_start', '<', stop),
                     ('date_stop', '>', start),
                     ('state', 'not in', ('validated', 'cancelled')),
-                ])
+                ]
+                if employee_ids:
+                    domain = expression.AND([domain, [('employee_id', 'in', list(employee_ids))]])
+                work_entries = self.sudo().with_context(hr_work_entry_no_check=True).search(domain)
                 work_entries._reset_conflicting_state()
             yield
         except OperationalError:

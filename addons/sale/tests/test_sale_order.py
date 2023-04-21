@@ -349,6 +349,64 @@ class TestSaleOrder(SaleCommon):
         self.assertEqual(sale_order.order_line.price_subtotal, 49.44, "Subtotal should be equal to 192 * (1 - 0.7425)")
         self.assertEqual(sale_order.order_line.discount, 74.25)
 
+    def test_tax_amount_rounding(self):
+        """ Check order amounts are rounded according to settings """
+
+        tax_a = self.env['account.tax'].create({
+            'name': 'Test tax',
+            'type_tax_use': 'sale',
+            'price_include': False,
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+
+        # Test Round per Line (default)
+        self.env.company.tax_calculation_rounding_method = 'round_per_line'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 6.7,
+                    'discount': 0,
+                    'tax_id': tax_a.ids,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 6.7,
+                    'discount': 0,
+                    'tax_id': tax_a.ids,
+                }),
+            ],
+        })
+        self.assertEqual(sale_order.amount_total, 15.42, "")
+
+        # Test Round Globally
+        self.env.company.tax_calculation_rounding_method = 'round_globally'
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'order_line': [
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 6.7,
+                    'discount': 0,
+                    'tax_id': tax_a.ids,
+                }),
+                Command.create({
+                    'product_id': self.product.id,
+                    'product_uom_qty': 1,
+                    'price_unit': 6.7,
+                    'discount': 0,
+                    'tax_id': tax_a.ids,
+                }),
+            ],
+        })
+        self.assertEqual(sale_order.amount_total, 15.41, "")
+
+
 @tagged('post_install', '-at_install')
 class TestSalesTeam(SaleCommon):
 
@@ -458,3 +516,36 @@ class TestSalesTeam(SaleCommon):
         })
         so_no_analytic_account.action_confirm()
         self.assertFalse(sol_no_analytic_account.analytic_distribution, "The compute should not overwrite what the user has set.")
+
+    def test_cannot_assign_tax_of_mismatch_company(self):
+        """ Test that sol cannot have assigned tax belonging to a different company from that of the sale order. """
+        company_a = self.env['res.company'].create({'name': 'A'})
+        company_b = self.env['res.company'].create({'name': 'B'})
+
+        tax_a = self.env['account.tax'].create({
+            'name': 'A',
+            'amount': 10,
+            'company_id': company_a.id,
+        })
+        tax_b = self.env['account.tax'].create({
+            'name': 'B',
+            'amount': 10,
+            'company_id': company_b.id,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.partner.id,
+            'company_id': company_a.id
+        })
+        product = self.env['product.product'].create({'name': 'Product'})
+
+        # In sudo to simulate an user that have access to both companies.
+        sol = self.env['sale.order.line'].sudo().create({
+            'name': product.name,
+            'product_id': product.id,
+            'order_id': sale_order.id,
+            'tax_id': tax_a,
+        })
+
+        with self.assertRaises(UserError):
+            sol.tax_id = tax_b

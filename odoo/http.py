@@ -169,6 +169,7 @@ from .tools import (config, consteq, date_utils, file_path, parse_version,
 from .tools.geoipresolver import GeoIPResolver
 from .tools.func import filter_kwargs, lazy_property
 from .tools.mimetypes import guess_mimetype
+from .tools.misc import pickle
 from .tools._vendor import sessions
 from .tools._vendor.useragents import UserAgent
 
@@ -216,10 +217,6 @@ def get_default_session():
         'login': None,
         'uid': None,
         'session_token': None,
-        # profiling
-        'profile_session': None,
-        'profile_collectors': None,
-        'profile_params': None,
     }
 
 # The request mimetypes that transport JSON in their body.
@@ -401,6 +398,7 @@ def send_file(filepath_or_fp, mimetype=None, as_attachment=False, filename=None,
         last_modified=mtime,
         etag=add_etags,
         max_age=cache_timeout,
+        response_class=Response,
         conditional=conditional
     )
 
@@ -871,12 +869,13 @@ class FilesystemSessionStore(sessions.FilesystemSessionStore):
 
 class Session(collections.abc.MutableMapping):
     """ Structure containing data persisted across requests. """
-    __slots__ = ('can_save', 'data', 'is_dirty', 'is_explicit', 'is_new',
+    __slots__ = ('can_save', '_Session__data', 'is_dirty', 'is_explicit', 'is_new',
                  'should_rotate', 'sid')
 
     def __init__(self, data, sid, new=False):
         self.can_save = True
-        self.data = data
+        self.__data = {}
+        self.update(data)
         self.is_dirty = False
         self.is_explicit = False
         self.is_new = new
@@ -890,22 +889,23 @@ class Session(collections.abc.MutableMapping):
         if item == 'geoip':
             warnings.warn('request.session.geoip have been moved to request.geoip', DeprecationWarning)
             return request.geoip if request else {}
-        return self.data[item]
+        return self.__data[item]
 
     def __setitem__(self, item, value):
-        if item not in self.data or self.data[item] != value:
+        value = pickle.loads(pickle.dumps(value))
+        if item not in self.__data or self.__data[item] != value:
             self.is_dirty = True
-        self.data[item] = value
+        self.__data[item] = value
 
     def __delitem__(self, item):
-        del self.data[item]
+        del self.__data[item]
         self.is_dirty = True
 
     def __len__(self):
-        return len(self.data)
+        return len(self.__data)
 
     def __iter__(self):
-        return iter(self.data)
+        return iter(self.__data)
 
     def __getattr__(self, attr):
         return self.get(attr, None)
@@ -917,7 +917,7 @@ class Session(collections.abc.MutableMapping):
             self[key] = val
 
     def clear(self):
-        self.data.clear()
+        self.__data.clear()
         self.is_dirty = True
 
     #
@@ -1259,6 +1259,22 @@ class Request:
             self.session.is_dirty = was_dirty
         return self.session._geoip
 
+    @lazy_property
+    def best_lang(self):
+        lang = self.httprequest.accept_languages.best
+        if not lang:
+            return None
+
+        try:
+            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
+            if territory:
+                lang = f'{code}_{territory}'
+            else:
+                lang = babel.core.LOCALE_ALIASES[code]
+            return lang
+        except (ValueError, KeyError):
+            return None
+
     # =====================================================
     # Helpers
     # =====================================================
@@ -1321,19 +1337,7 @@ class Request:
         :returns: Preferred language if specified or 'en_US'
         :rtype: str
         """
-        lang = self.httprequest.accept_languages.best
-        if not lang:
-            return DEFAULT_LANG
-
-        try:
-            code, territory, _, _ = babel.core.parse_locale(lang, sep='-')
-            if territory:
-                lang = f'{code}_{territory}'
-            else:
-                lang = babel.core.LOCALE_ALIASES[code]
-            return lang
-        except (ValueError, KeyError):
-            return DEFAULT_LANG
+        return self.best_lang or DEFAULT_LANG
 
     def _geoip_resolve(self):
         if not (root.geoip_resolver and self.httprequest.remote_addr):
@@ -1580,8 +1584,6 @@ class Request:
             except Exception as exc:
                 if isinstance(exc, HTTPException) and exc.code is None:
                     raise  # bubble up to odoo.http.Application.__call__
-                if 'werkzeug' in config['dev_mode'] and self.dispatcher.routing_type != 'json':
-                    raise  # bubble up to werkzeug.debug.DebuggedApplication
                 exc.error_response = self.registry['ir.http']._handle_error(exc)
                 raise
 
@@ -1679,7 +1681,7 @@ class Dispatcher(ABC):
         root.set_csp(response)
 
     @abstractmethod
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Transform the exception into a valid HTTP response. Called upon
         any exception while serving a request.
@@ -1722,7 +1724,7 @@ class HttpDispatcher(Dispatcher):
         else:
             return endpoint(**self.request.params)
 
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Handle any exception that occurred while dispatching a request
         to a `type='http'` route. Also handle exceptions that occurred
@@ -1731,14 +1733,14 @@ class HttpDispatcher(Dispatcher):
         json.
 
         :param Exception exc: the exception that occurred.
-        :returns: an HTTP error response
-        :rtype: :class:`werkzeug.wrapper.Response`
+        :returns: a WSGI application
         """
         if isinstance(exc, SessionExpiredException):
             session = self.request.session
+            was_connected = session.uid is not None
             session.logout(keep_db=True)
             response = self.request.redirect_query('/web/login', {'redirect': self.request.httprequest.full_path})
-            if not session.is_explicit:
+            if not session.is_explicit and was_connected:
                 root.session_store.rotate(session, self.request.env)
                 response.set_cookie('session_id', session.sid, max_age=SESSION_LIFETIME, httponly=True)
             return response
@@ -1807,16 +1809,15 @@ class JsonRPCDispatcher(Dispatcher):
             result = endpoint(**self.request.params)
         return self._response(result)
 
-    def handle_error(self, exc):
+    def handle_error(self, exc: Exception) -> collections.abc.Callable:
         """
         Handle any exception that occurred while dispatching a request to
         a `type='json'` route. Also handle exceptions that occurred when
         no route matched the request path, that no fallback page could
         be delivered and that the request ``Content-Type`` was json.
 
-        :param exc Exception: the exception that occurred.
-        :returns: an HTTP error response
-        :rtype: Response
+        :param exc: the exception that occurred.
+        :returns: a WSGI application
         """
         error = {
             'code': 200,  # this code is the JSON-RPC level code, it is
@@ -2007,12 +2008,7 @@ class Application:
             else:
                 _logger.error("Exception during request handling.", exc_info=True)
 
-            # Server is running with --dev=werkzeug, bubble the error up
-            # to werkzeug so he can fire up a debugger.
-            if 'werkzeug' in config['dev_mode'] and request.dispatcher.routing_type != 'json':
-                raise
-
-            # Ensure there is always a Response attached to the exception.
+            # Ensure there is always a WSGI handler attached to the exception.
             if not hasattr(exc, 'error_response'):
                 exc.error_response = request.dispatcher.handle_error(exc)
 

@@ -104,7 +104,16 @@ function getAfterEvent({ messagingBus }) {
 
 function getClick({ afterNextRender }) {
     return async function click(selector) {
-        await afterNextRender(() => document.querySelector(selector).click());
+        await afterNextRender(() => {
+            if (typeof selector === "string") {
+                $(selector)[0].click();
+            } else if (selector instanceof HTMLElement) {
+                selector.click();
+            } else {
+                // jquery
+                selector[0].click();
+            }
+        });
     };
 }
 
@@ -379,6 +388,7 @@ export {
     afterNextRender,
     dragenterFiles,
     dropFiles,
+    insertText,
     isScrolledToBottom,
     nextAnimationFrame,
     nextTick,

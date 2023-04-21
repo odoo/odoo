@@ -481,3 +481,6 @@ class View(models.Model):
         if website_id:
             res['website_id'] = website_id
         return res
+
+    def _update_field_translations(self, fname, translations, digest=None):
+        return super(View, self.with_context(no_cow=True))._update_field_translations(fname, translations, digest)

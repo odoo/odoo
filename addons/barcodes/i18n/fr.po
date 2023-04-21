@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Cécile Collart <cco@odoo.com>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -35,9 +36,9 @@ msgid ""
 "                                pattern. The pattern syntax is that of regular expression, and a barcode is matched\n"
 "                                if the regular expression matches a prefix of the barcode."
 msgstr ""
-"<i>La nomenclature des codes-barres</i> défini comment les codes-barres sont reconnus et catégorisés.\n"
+"<i>La nomenclature des codes-barres</i> définit comment les codes-barres sont reconnus et catégorisés.\n"
 "                                Lorsqu'un code-barre est scanné, il est associé à la <i>première</i> règle avec un modèle \n"
-"correspondant. La syntaxe du modèle est celui de l'expression régulière, et un code-barre est associé\n"
+"correspondant. La syntaxe du modèle est celui de l'expression régulière et un code-barre est associé\n"
 "                                si l'expression régulière correspond à un préfixe du code-barre."
 
 #. module: barcodes
@@ -46,13 +47,13 @@ msgid ""
 "A barcode nomenclature defines how the point of sale identify and interprets"
 " barcodes"
 msgstr ""
-"Une nomenclature de code barre définit la façon dont le point de vente "
+"Une nomenclature des codes-barres définit la façon dont le point de vente "
 "identifie et interprète le code barre."
 
 #. module: barcodes
 #: model_terms:ir.actions.act_window,help:barcodes.action_barcode_nomenclature_form
 msgid "Add a new barcode nomenclature"
-msgstr "Ajouter une nouvelle nomenclature de code-barre"
+msgstr "Ajouter une nouvelle nomenclature des codes-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__alias
@@ -69,12 +70,12 @@ msgstr "Toujours"
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__name
 msgid "An internal identification for this barcode nomenclature rule"
 msgstr ""
-"Une identification interne pour cette règle de nomenclature du code-barre"
+"Une identification interne pour cette règle de nomenclature des codes-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__name
 msgid "An internal identification of the barcode nomenclature"
-msgstr "Un identifiant interne de la nomenclature de code-barres"
+msgstr "Un identifiant interne de la nomenclature des codes-barres"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__any
@@ -84,7 +85,7 @@ msgstr "Au moins un"
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcodes_barcode_events_mixin
 msgid "Barcode Event Mixin"
-msgstr "Barcode Event Mixin"
+msgstr "Code-barre Événement Mixin"
 
 #. module: barcodes
 #: model:ir.model,name:barcodes.model_barcode_nomenclature
@@ -92,13 +93,13 @@ msgstr "Barcode Event Mixin"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__barcode_nomenclature_id
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_form
 msgid "Barcode Nomenclature"
-msgstr "Nomenclature de code-barres"
+msgstr "Nomenclature des codes-barres"
 
 #. module: barcodes
 #: model:ir.actions.act_window,name:barcodes.action_barcode_nomenclature_form
 #: model_terms:ir.ui.view,arch_db:barcodes.view_barcode_nomenclature_tree
 msgid "Barcode Nomenclatures"
-msgstr "Nomenclatures de code-barre"
+msgstr "Nomenclatures des codes-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__pattern
@@ -144,7 +145,7 @@ msgstr "Créé le"
 #: model:ir.model.fields,field_description:barcodes.field_barcode_nomenclature__display_name
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__display_name
 msgid "Display Name"
-msgstr "Nom affiché"
+msgstr "Afficher le nom"
 
 #. module: barcodes
 #: model:ir.model.fields.selection,name:barcodes.selection__barcode_rule__encoding__ean13
@@ -217,10 +218,10 @@ msgid ""
 msgstr ""
 "Les modèles peuvent aussi définir comment les valeurs numériques telles que le poids ou le prix, peuvent être\n"
 "                                encodées dans le code-barres. Ils sont indiqués par le <code>{NNN}</code> où les N's\n"
-"                                définissent où les chiffres du numéro sont encodés. Les flotteurs sont également pris en charge avec les\n"
+"                                définissent où les chiffres du numéro sont encodés. Les nombres flottants sont également pris en charge avec les\n"
 "                                décimales indiquées avec les D's, tel que <code>{NNNDD}</code>. Dans ces cas-là, \n"
-"                                le champ du code-barres sur les enregistrements associés <i>doivent</i> montrer ces chiffres commes \n"
-"                                zéros."
+"                                le champ du code-barres sur les enregistrements associés <i>doivent</i> montrer ces chiffres comme \n"
+"                                des zéros."
 
 #. module: barcodes
 #: model:ir.model.fields,field_description:barcodes.field_barcode_rule__name
@@ -250,7 +251,7 @@ msgstr "Le code-barres correspondant au modèle"
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_nomenclature__rule_ids
 msgid "The list of barcode rules"
-msgstr "Liste des règles des codes barres"
+msgstr "Liste des règles des codes-barres"
 
 #. module: barcodes
 #: model:ir.model.fields,help:barcodes.field_barcode_rule__alias

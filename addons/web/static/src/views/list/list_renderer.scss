@@ -364,18 +364,6 @@
         }
     }
 
-    // ------- Force progress bars to respect table's layout -------
-    .o_progressbar_cell {
-        .o_progressbar {
-            display: table-row;
-
-            .o_progressbar_value {
-                width: 45px;
-                min-width: 45px;
-            }
-        }
-    }
-
     .o_data_row.o_selected_row > .o_data_cell.o_required_modifier:not(.o_readonly_modifier) {
         border-bottom: 1px solid $o-input-border-required;
     }
@@ -417,6 +405,14 @@
         border-bottom-width: 1px;
     }
 
+    .o_data_row.o_dragged {
+        display: flex;
+
+        > td {
+            flex-grow: 0;
+            flex-shrink: 0;
+        }
+    }
 }
 
 @include media-breakpoint-down(md) {
@@ -444,6 +440,7 @@
 
     .o_data_row,
     .o_list_footer,
+    .o_group_header,
     thead .o_list_record_selector {
         @include o-sample-data-disabled;
     }

@@ -30,6 +30,9 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                 this.render();
             });
         }
+        get disallow() {
+            return false;
+        }
         get currentOrder() {
             return this.env.pos.get_order();
         }
@@ -159,7 +162,7 @@ odoo.define('pos_restaurant.SplitBillScreen', function(require) {
                 var split = this.splitlines[id];
                 var line = this.currentOrder.get_orderline(parseInt(id));
 
-                if(!this.props.disallow) {
+                if(!this.disallow) {
                     line.set_quantity(
                         line.get_quantity() - split.quantity,
                         'do not recompute unit price'

@@ -272,7 +272,7 @@
         <field name="name">fleet.vehicle.model.category.view.tree</field>
         <field name="model">fleet.vehicle.model.category</field>
         <field name="arch" type="xml">
-            <tree string="Model Category" editable="bottom">
+            <tree string="Model Category" editable="bottom" default_order="sequence, id">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
             </tree>

@@ -80,6 +80,60 @@ function useFRLocale() {
     return "fr";
 }
 
+var symbolMap = {
+    '1': '૧',
+    '2': '૨',
+    '3': '૩',
+    '4': '૪',
+    '5': '૫',
+    '6': '૬',
+    '7': '૭',
+    '8': '૮',
+    '9': '૯',
+    '0': '૦'
+};
+var numberMap = {
+    '૧': '1',
+    '૨': '2',
+    '૩': '3',
+    '૪': '4',
+    '૫': '5',
+    '૬': '6',
+    '૭': '7',
+    '૮': '8',
+    '૯': '9',
+    '૦': '0'
+};
+
+function useGULocale() {
+    if (!window.moment.locales().includes("gu")) {
+        const originalLocale = window.moment.locale();
+        window.moment.defineLocale("gu", {
+            months: 'જાન્યુઆરી_ફેબ્રુઆરી_માર્ચ_એપ્રિલ_મે_જૂન_જુલાઈ_ઑગસ્ટ_સપ્ટેમ્બર_ઑક્ટ્બર_નવેમ્બર_ડિસેમ્બર'.split('_'),
+            monthsShort: 'જાન્યુ._ફેબ્રુ._માર્ચ_એપ્રિ._મે_જૂન_જુલા._ઑગ._સપ્ટે._ઑક્ટ્._નવે._ડિસે.'.split('_'),
+            monthsParseExact: true,
+            week: {
+                dow: 0, // Sunday is the first day of the week.
+                doy: 6 // The week that contains Jan 1st is the first week of the year.
+            },
+            preparse: function (string) {
+                return string.replace(/[૧૨૩૪૫૬૭૮૯૦]/g, function (match) {
+                    return numberMap[match];
+                });
+            },
+            postformat: function (string) {
+                return string.replace(/\d/g, function (match) {
+                    return symbolMap[match];
+                });
+            },
+        });
+        // Moment automatically assigns newly defined locales.
+        window.moment.locale(originalLocale);
+        registerCleanup(() => window.moment.updateLocale("gu", null));
+    }
+    return "gu";
+}
+
 function useNOLocale() {
     if (!window.moment.locales().includes("nb")) {
         const originalLocale = window.moment.locale();
@@ -222,6 +276,38 @@ QUnit.module("Components", ({ beforeEach }) => {
         await click(document.querySelector(".datepicker .day")); // first day
 
         assert.strictEqual(input.value, "01 sept., 1997");
+        assert.verifySteps(["datetime-changed"]);
+    });
+
+    QUnit.test("pick a date with locale (locale with different symbols)", async function (assert) {
+        assert.expect(6);
+
+        await mountPicker(DatePicker, {
+            date: DateTime.fromFormat("09/01/1997", "dd/MM/yyyy", {
+                zone: "utc" ,
+                locale: useGULocale(),
+                }),
+            format: "dd MMM, yyyy",
+            onDateTimeChanged: (date) => {
+                assert.step("datetime-changed");
+                assert.strictEqual(
+                    date.toFormat("dd/MM/yyyy"),
+                    "01/09/1997",
+                    "Event should transmit the correct date"
+                );
+            },
+        });
+        const input = target.querySelector(".o_datepicker_input");
+
+        assert.strictEqual(input.value, "09 જાન્યુ, 1997");
+
+        await click(input);
+        assert.strictEqual(input.value, "૧૯૯૭/૦૧/૦૯");
+        await click(document.querySelector(".datepicker .picker-switch")); // month picker
+        await click(document.querySelectorAll(".datepicker .month")[8]); // september
+        await click(document.querySelectorAll(".datepicker .day")[1]); // first day of september
+
+        assert.strictEqual(input.value, "01 સપ્ટે, 1997");
         assert.verifySteps(["datetime-changed"]);
     });
 
@@ -398,6 +484,41 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.verifySteps(["datetime-changed"]);
     });
 
+    QUnit.test("pick a time with 12 hour format locale", async function (assert) {
+        assert.expect(6);
+
+        await mountPicker(DateTimePicker, {
+            date: DateTime.fromFormat("09/01/1997 08:30:01", "dd/MM/yyyy hh:mm:ss"),
+            format: "dd/MM/yyyy hh:mm:ss",
+            locale: useFRLocale(),
+            onDateTimeChanged: (date) => {
+                assert.step("datetime-changed");
+                assert.strictEqual(
+                    date.toFormat("dd/MM/yyyy HH:mm:ss"),
+                    "09/01/1997 20:30:02",
+                    "The new time should be in the afternoon"
+                );
+            },
+        });
+
+        const input = target.querySelector("input.o_input.o_datepicker_input");
+
+        assert.strictEqual(input.value, "09/01/1997 08:30:01");
+
+        await click(input);
+
+        await click(document.querySelector('a[title="Select Time"]'));
+        await click(document.querySelector('a[title="Increment Second"]'));
+        await click(document.querySelector('button[title="Toggle Period"]'));
+
+        assert.verifySteps([]);
+
+        await click(document.querySelector('a[title="Close the picker"]'));
+
+        assert.strictEqual(input.value, "09/01/1997 08:30:02");
+        assert.verifySteps(["datetime-changed"]);
+    });
+
     QUnit.test("enter a datetime value", async function (assert) {
         assert.expect(9);
 
@@ -493,6 +614,22 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         assert.strictEqual(input.value, "01 apr., 1997");
         assert.verifySteps(["datetime-changed"]);
+    });
+
+    QUnit.test("Datepicker works with dots and commas in format", async (assert) => {
+        assert.expect(2);
+
+        await mountPicker(DateTimePicker, {
+            date: DateTime.fromFormat("10/03/2023 13:14:27", "dd/MM/yyyy HH:mm:ss"),
+            format: "dd.MM,yyyy",
+        });
+        let input = target.querySelector(".o_datepicker_input");
+
+        assert.strictEqual(input.value, "10.03,2023");
+
+        await click(input);
+
+        assert.strictEqual(input.value, "10.03,2023");
     });
 
     QUnit.test("custom filter date", async function (assert) {

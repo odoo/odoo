@@ -4,6 +4,7 @@
 import datetime
 
 from odoo import api, fields, models
+from odoo.tools.sql import column_exists, create_column
 
 
 class StockMoveLine(models.Model):
@@ -16,6 +17,16 @@ class StockMoveLine(models.Model):
     is_expired = fields.Boolean(related='lot_id.product_expiry_alert')
     use_expiration_date = fields.Boolean(
         string='Use Expiration Date', related='product_id.use_expiration_date')
+
+    def _auto_init(self):
+        """ Create column for 'expiration_date' here to avoid MemoryError when letting
+        the ORM compute it after module installation. Since both 'lot_id.expiration_date'
+        and 'product_id.use_expiration_date' are new fields introduced in this module,
+        there is no need for an UPDATE statement here.
+        """
+        if not column_exists(self._cr, "stock_move_line", "expiration_date"):
+            create_column(self._cr, "stock_move_line", "expiration_date", "timestamp")
+        return super()._auto_init()
 
     @api.depends('product_id', 'picking_type_use_create_lots', 'lot_id.expiration_date')
     def _compute_expiration_date(self):
@@ -57,8 +68,8 @@ class StockMoveLine(models.Model):
         if self.expiration_date:
             res.update({
                 'expiration_date': self.expiration_date,
-                'use_date': self.expiration_date - datetime.timedelta(days=(self.product_id.use_time)) if self.product_id.use_time else False,
-                'removal_date': self.expiration_date - datetime.timedelta(days=(self.product_id.removal_time)) if self.product_id.removal_time else False,
-                'alert_date': self.expiration_date - datetime.timedelta(days=(self.product_id.alert_time)) if self.product_id.alert_time else False
+                'use_date': self.expiration_date - datetime.timedelta(days=self.product_id.use_time),
+                'removal_date': self.expiration_date - datetime.timedelta(days=self.product_id.removal_time),
+                'alert_date': self.expiration_date - datetime.timedelta(days=self.product_id.alert_time),
             })
         return res

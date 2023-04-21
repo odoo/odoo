@@ -3,7 +3,6 @@
 # 	* sale
 # 
 # Translators:
-# hed shefer <hed@laylinetech.com>, 2022
 # Lilach Gilliam <lilach@apprcase.com>, 2022
 # Ofir Blum <ofir.blum@gmail.com>, 2022
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2022
@@ -17,20 +16,21 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2022
 # Jonathan Spier, 2022
 # ExcaliberX <excaliberx@gmail.com>, 2022
-# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2022
 # Roy Sayag, 2022
 # Lilach Gilliam <lilach.gilliam@gmail.com>, 2022
 # Ha Ketem <haketem@gmail.com>, 2022
 # NoaFarkash, 2022
+# hed shefer <hed@laylinetech.com>, 2023
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:51+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: NoaFarkash, 2022\n"
-"Language-Team: Hebrew (https://www.transifex.com/odoo/teams/41243/he/)\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2023\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -56,13 +56,6 @@ msgstr "מס' שורות"
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
 msgstr "מס' הזמנות לקוח"
-
-#. module: sale
-#. odoo-python
-#: code:addons/sale/models/sale_order.py:0
-#, python-format
-msgid "%(amount)s due %(date)s"
-msgstr "%(amount)sלתשלום  עד %(date)s"
 
 #. module: sale
 #. odoo-python
@@ -442,7 +435,7 @@ msgstr "<small><b class=\"text-muted\">תוקף ההצעה הזה יפוג בת�
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<small><b class=\"text-muted\">Your advantage</b></small>"
-msgstr "<small><b class=\"text-muted\">היתרון שלך</b></small>"
+msgstr "<small><b class=\"text-muted\">המחיר שלך</b></small>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
@@ -509,10 +502,10 @@ msgstr "<span class=\"o_stat_text\">נמכר</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">סכום</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">מחיר כולל</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">מחיר כולל</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1692,6 +1685,13 @@ msgid "Expiration"
 msgstr "תוקף הצעת מחיר"
 
 #. module: sale
+#. odoo-python
+#: code:addons/sale/models/sale_order.py:0
+#, python-format
+msgid "Expires on %(date)s"
+msgstr ""
+
+#. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
 msgstr "מסננים מורחבים"
@@ -2643,6 +2643,11 @@ msgid "Order Date:"
 msgstr ""
 
 #. module: sale
+#: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
+msgid "Order Date: Last 365 Days"
+msgstr ""
+
+#. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__order_line
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Order Lines"
@@ -3075,8 +3080,10 @@ msgid "Quotation Sent"
 msgstr "הצעת המחיר נשלחה"
 
 #. module: sale
+#. odoo-python
 #: code:addons/sale/models/res_config_settings.py:0
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
+#, python-format
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr "נדרש תוקף הצעת מחיר ועליו להיות גדול מ- 0."
 
@@ -4063,15 +4070,9 @@ msgid ""
 "There is nothing to invoice!\n"
 "\n"
 "Reason(s) of this behavior could be:\n"
-"- You should deliver your products before invoicing them: Click on the \"truck\" icon (top-right of your screen) and follow instructions.\n"
+"- You should deliver your products before invoicing them.\n"
 "- You should modify the invoicing policy of your product: Open the product, go to the \"Sales\" tab and modify invoicing policy from \"delivered quantities\" to \"ordered quantities\". For Services, you should modify the Service Invoicing Policy to 'Prepaid'."
 msgstr ""
-"לא ניתן לייצר חשבונית!\n"
-"\n"
-"הסיבות להתנהגות זו יכולות להיות:\n"
-"- אתה צריך לספק את המוצרים שלך לפני שאתה נותן להם חשבונית: לחץ על סמל \"משאית\" (בפינה השמאלית העליונה של המסך שלך) ופעל לפי ההוראות.\n"
-"- עליך לשנות את מדיניות החשבוניות של המוצר שלך: פתח את המוצר, עבור ללשונית \"מכירות\" ושנה את מדיניות החשבוניות מ\"כמויות שנמסרו\" ל\"כמויות שהוזמנו\". \n"
-"עבור שירותים, עליך לשנות את מדיניות חשבוניות השירות ל'תשלום מראש'."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -4640,8 +4641,8 @@ msgid ""
 " }})"
 msgstr ""
 "{{ object.company_id.name }} {{ (object.get_portal_last_transaction().state "
-"== 'ממתין') ו-'הזמנה בהמתנה' או 'הזמנה' }} (ע\"פ {{ object.name or 'n/a' } "
-"})"
+"== 'pending') and 'הזמנה ממתינה' or 'הזמנה' }} (מספר {{ object.name or 'לא "
+"קיים' } })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -4650,9 +4651,9 @@ msgid ""
 "(ctx.get('proforma') and 'Proforma' or 'Quotation') or 'Order' }} (Ref {{ "
 "object.name or 'n/a' }})"
 msgstr ""
-"{{ object.company_id.name }} {{ object.state in ('טיוטה, 'שלח') "
-"ו-(ctx.get('proforma') and 'Proforma' או 'Quotation') or 'Order' }} ( Ref {{"
-" object.name or 'n/a' }})"
+"{{ object.company_id.name }} {{ object.state in ('draft', 'sent') and "
+"(ctx.get('proforma') and 'פרו-פורמה' or 'הצעת מחיר') or 'הזמנה' }} ( מספר {{"
+" object.name or 'לא קיים' }})"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_cancellation

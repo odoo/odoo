@@ -16,7 +16,13 @@ class ProductConfiguratorController(http.Controller):
         attribute_value_ids = set(kw.get('product_template_attribute_value_ids', []))
         attribute_value_ids |= set(kw.get('product_no_variant_attribute_value_ids', []))
         if attribute_value_ids:
-            product_combination = request.env['product.template.attribute.value'].browse(attribute_value_ids)
+            product_combination = request.env['product.template.attribute.value'].browse(
+                attribute_value_ids
+            ).filtered(
+                lambda ptav: ptav.product_tmpl_id == product_template
+            )  # Filter out ptavs not belonging to the given template
+            # It happens when you change the template on an already configured line
+            # receiving the configured attributes data from the previous template configuration.
 
         if pricelist:
             product_template = product_template.with_context(pricelist=pricelist.id, partner=request.env.user.partner_id)
@@ -80,7 +86,9 @@ class ProductConfiguratorController(http.Controller):
             'handle_stock': handle_stock,
             'already_configured': kw.get("already_configured", False),
             'mode': kw.get('mode', 'add'),
-            'product_custom_attribute_values': kw.get('product_custom_attribute_values', None)
+            'product_custom_attribute_values': kw.get('product_custom_attribute_values', None),
+            'no_attribute': kw.get('no_attribute', False),
+            'custom_attribute': kw.get('custom_attribute', False)
         })
 
     def _get_pricelist(self, pricelist_id, pricelist_fallback=False):

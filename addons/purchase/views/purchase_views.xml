@@ -177,7 +177,7 @@
                             <field name="currency_id" groups="base.group_multi_currency" force_save="1"/>
                             <field name="id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
-                            <field name="currency_id" invisible="1"/>
+                            <field name="currency_id" invisible="1" groups="!base.group_multi_currency"/>
                         </group>
                         <group>
                             <field name="date_order" attrs="{'invisible': [('state','in',('purchase','done'))]}"/>
@@ -193,7 +193,7 @@
                                 <field name="mail_reminder_confirmed" invisible="1"/>
                                 <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
                             </div>
-                            <label for="receipt_reminder_email" class="d-none"/>
+                            <label for="receipt_reminder_email" class="d-none" groups="purchase.group_send_reminder"/>
                             <div name="reminder" class="o_row" groups='purchase.group_send_reminder' title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
                                 <field name="receipt_reminder_email"/>
                                 <span>Ask confirmation</span>
@@ -580,6 +580,7 @@
                     <field name="partner_id" readonly="1"/>
                     <field name="company_id" readonly="1" options="{'no_create': True}"
                         groups="base.group_multi_company" optional="show"/>
+                    <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                     <field name="date_planned" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="user_id" optional="show" widget="many2one_avatar_user"/>
                     <field name="date_order" attrs="{'invisible': ['|', '|', ('state', '=', 'purchase'), ('state', '=', 'done'), ('state', '=', 'cancel')]}"
@@ -614,6 +615,7 @@
                     <field name="date_approve" widget="date" invisible="context.get('quotation_only', False)" optional="show"/>
                     <field name="partner_id"/>
                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" optional="show"/>
+                    <field name="company_id" groups="!base.group_multi_company" invisible="1"/>
                     <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                     <field name="date_order" invisible="not context.get('quotation_only', False)" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>

@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Tony Ng, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Last-Translator: Tony Ng, 2023\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -20,30 +21,35 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
 msgstr " 電子應收憑單(發票)錯誤"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
 msgstr " 電子應收憑單(發票)訊息"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
 msgstr " 電子應收憑單(發票)警示"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
 msgstr "已請求取消 EDI."
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
@@ -85,6 +91,7 @@ msgid "Cancelled"
 msgstr "已取消"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -121,6 +128,7 @@ msgid "Display Name"
 msgstr "顯示名稱"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Display the currency"
@@ -135,7 +143,6 @@ msgstr "下載"
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
-#: model:ir.cron,name:account_edi.ir_cron_edi_network
 msgid "EDI : Perform web services operations"
 msgstr "EDI : 執行 Web 服務操作"
 
@@ -236,6 +243,11 @@ msgstr "EDI憑單"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing processing needed"
+msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
 msgid "Electronic invoicing state"
 msgstr "電子應收憑單(發票)狀態"
 
@@ -276,6 +288,7 @@ msgid "Info"
 msgstr "資訊"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid ""
@@ -290,7 +303,7 @@ msgstr ""
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_journal
 msgid "Journal"
-msgstr "日記帳"
+msgstr "日記賬"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_account_move
@@ -392,6 +405,7 @@ msgid "The aggregated state of all the EDIs with web-service of this move"
 msgstr "此過帳憑證的所有 EDI 的聚合狀態"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -433,6 +447,7 @@ msgid "This code already exists"
 msgstr "此代碼已存在"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "This document is being sent by another process already. "
@@ -457,6 +472,7 @@ msgid "Warning"
 msgstr "警告"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid ""
@@ -466,6 +482,7 @@ msgid ""
 msgstr "您無法編輯以下分錄 %s ,因為已傳送EDI文件。請改為使用\"請求取消EDI\"按鈕。"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/ir_attachment.py:0
 #, python-format
 msgid ""

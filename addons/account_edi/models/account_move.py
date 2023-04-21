@@ -312,7 +312,7 @@ class AccountMove(models.Model):
 
                     existing_edi_document = move.edi_document_ids.filtered(lambda x: x.edi_format_id == edi_format)
                     if existing_edi_document:
-                        existing_edi_document.write({
+                        existing_edi_document.sudo().write({
                             'state': 'to_send',
                             'attachment_id': False,
                         })
@@ -395,7 +395,7 @@ class AccountMove(models.Model):
         return self.edi_document_ids.filtered(lambda d: d.edi_format_id == edi_format)
 
     def _get_edi_attachment(self, edi_format):
-        return self._get_edi_document(edi_format).attachment_id
+        return self._get_edi_document(edi_format).sudo().attachment_id
 
     ####################################################
     # Import Electronic Document
@@ -412,6 +412,12 @@ class AccountMove(models.Model):
         res = super()._get_update_invoice_from_attachment_decoders(invoice)
         res.append((10, self.env['account.edi.format'].search([])._update_invoice_from_attachment))
         return res
+
+    # this override is to make sure that the main attachment is not the edi xml otherwise the attachment viewer will not work correctly
+    def _message_set_main_attachment_id(self, attachment_ids):
+        if self.message_main_attachment_id and len(attachment_ids) > 1 and self.message_main_attachment_id in self.edi_document_ids.attachment_id:
+            self.message_main_attachment_id = self.env['ir.attachment']
+        super()._message_set_main_attachment_id(attachment_ids)
 
     ####################################################
     # Business operations

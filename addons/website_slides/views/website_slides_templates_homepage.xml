@@ -118,7 +118,7 @@
                                 </div>
                                 <div class="row mx-n2 mt8">
                                     <t t-foreach="channels_my[:3]" t-as="channel">
-                                        <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+                                        <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex">
                                             <t t-call="website_slides.course_card"/>
                                         </div>
                                     </t>
@@ -136,7 +136,7 @@
                             </div>
                             <div class="row mx-n2 mt8">
                                 <t t-foreach="channels_popular[:3]" t-as="channel">
-                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex">
                                         <t t-call="website_slides.course_card"/>
                                     </div>
                                 </t>
@@ -153,7 +153,7 @@
                             </div>
                             <div class="row mx-n2 mt8">
                                 <t t-foreach="channels_newest[:3]" t-as="channel">
-                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+                                    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex">
                                         <t t-call="website_slides.course_card"/>
                                     </div>
                                 </t>
@@ -324,7 +324,7 @@
 
 <template id='courses_footer'>
     <section class="s_banner">
-        <div class="oe_structure oe_empty"/>
+        <div class="oe_structure oe_empty" id="oe_structure_website_slides_course_footer_1"/>
     </section>
 </template>
 
@@ -339,7 +339,7 @@
                 <img t-att-src="channel.website_background_image_url" class=" img img-fluid"/>
             </div>
         </a>
-        <div class="card-body d-flex flex-column p-3">
+        <div class="card-body p-3">
             <a class="card-title h5 mb-2 o_wslides_desc_truncate_2" t-attf-href="/slides/#{slug(channel)}" t-esc="channel.name"/>
             <span t-if="not channel.is_published" class="badge text-bg-danger p-1">Unpublished</span>
             <div class="card-text d-flex flex-column flex-grow-1 mt-1">

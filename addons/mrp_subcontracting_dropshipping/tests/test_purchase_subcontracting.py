@@ -119,21 +119,15 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
 
         # Change the purchased quantity to 2
         po.order_line.write({'product_qty': 2})
-        # Check that two deliveries with 1 component for the subcontractor have been created
+        # Check that a single delivery with the two components for the subcontractor have been created
         picking_deliveries = self.env['stock.picking'].search([('origin', '=', origin)])
-        self.assertEqual(len(picking_deliveries), 2)
-        self.assertEqual(picking_deliveries[0].picking_type_id, wh.subcontracting_resupply_type_id)
-        self.assertEqual(picking_deliveries[0].partner_id, self.subcontractor_partner1)
-        self.assertTrue(picking_deliveries[0].state != 'cancel')
-        move1 = picking_deliveries[0].move_ids_without_package
-        self.assertEqual(picking_deliveries[1].picking_type_id, wh.subcontracting_resupply_type_id)
-        self.assertEqual(picking_deliveries[1].partner_id, self.subcontractor_partner1)
-        self.assertTrue(picking_deliveries[1].state != 'cancel')
-        move2 = picking_deliveries[1].move_ids_without_package
+        self.assertEqual(len(picking_deliveries), 1)
+        self.assertEqual(picking_deliveries.picking_type_id, wh.subcontracting_resupply_type_id)
+        self.assertEqual(picking_deliveries.partner_id, self.subcontractor_partner1)
+        self.assertTrue(picking_deliveries.state != 'cancel')
+        move1 = picking_deliveries.move_ids_without_package
         self.assertEqual(move1.product_id, self.comp1)
-        self.assertEqual(move1.product_uom_qty, 1)
-        self.assertEqual(move2.product_id, self.comp1)
-        self.assertEqual(move2.product_uom_qty, 1)
+        self.assertEqual(move1.product_uom_qty, 2)
 
     def test_dropshipped_component_and_sub_location(self):
         """
@@ -330,15 +324,9 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
             ],
         }])
 
-        dropship_picking_type = self.env['stock.picking.type'].search([
-            ('company_id', '=', self.env.company.id),
-            ('default_location_src_id.usage', '=', 'supplier'),
-            ('default_location_dest_id.usage', '=', 'customer'),
-        ], limit=1, order='sequence')
-
         po = self.env['purchase.order'].create({
             "partner_id": subcontractor.id,
-            "picking_type_id": dropship_picking_type.id,
+            "picking_type_id": self.env.company.dropship_subcontractor_pick_type_id.id,
             "dest_address_id": super_subcontractor.id,
             "order_line": [(0, 0, {
                 'product_id': product.id,

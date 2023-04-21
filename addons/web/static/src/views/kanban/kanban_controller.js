@@ -25,6 +25,7 @@ export class KanbanController extends Component {
             resModel,
             handleField: archInfo.handleField,
             limit: archInfo.limit || limit,
+            countLimit: archInfo.countLimit,
             onCreate: archInfo.onCreate,
             quickCreateView: archInfo.quickCreateView,
             defaultGroupBy,
@@ -98,6 +99,7 @@ export class KanbanController extends Component {
                 additionalContext: root.context,
                 onClose: async () => {
                     await this.model.root.load();
+                    this.model.useSampleModel = false;
                     this.render(true); // FIXME WOWL reactivity
                 },
             };

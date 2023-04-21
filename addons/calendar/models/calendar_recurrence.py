@@ -217,7 +217,7 @@ class RecurrenceRule(models.Model):
             specific_values_creation = {}
 
         for recurrence in self.filtered('base_event_id'):
-            self.calendar_event_ids |= recurrence.base_event_id
+            recurrence.calendar_event_ids |= recurrence.base_event_id
             event = recurrence.base_event_id or recurrence._get_first_event(include_outliers=False)
             duration = event.stop - event.start
             if specific_values_creation:
@@ -381,6 +381,16 @@ class RecurrenceRule(models.Model):
             start = dt + relativedelta(day=1)
         else:
             start = dt
+        # Comparaison of DST (to manage the case of going too far back in time).
+        # If we detect a change in the DST between the creation date of an event
+        # and the date used for the occurrence period, we use the creation date of the event.
+        # This is a hack to avoid duplication of events (for example on google calendar).
+        if isinstance(dt, datetime):
+            timezone = self._get_timezone()
+            dst_dt = timezone.localize(dt).dst()
+            dst_start = timezone.localize(start).dst()
+            if dst_dt != dst_start:
+                start = dt
         return start
 
     def _get_first_event(self, include_outliers=False):

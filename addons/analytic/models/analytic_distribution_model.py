@@ -102,3 +102,14 @@ class AccountAnalyticDistributionModel(models.Model):
             return [(fname, 'in', value)]
         else:
             return [(fname, 'in', [value, False])]
+
+    def action_read_distribution_model(self):
+        self.ensure_one()
+        return {
+            'name': self.display_name,
+            'type': 'ir.actions.act_window',
+            'view_type': 'form',
+            'view_mode': 'form',
+            'res_model': 'account.analytic.distribution.model',
+            'res_id': self.id,
+        }

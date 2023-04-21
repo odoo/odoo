@@ -1,0 +1,15 @@
+<odoo>
+    <data>
+        <template id="egyptian_invoice" inherit_id="account.report_invoice_document">
+            <xpath expr="//t[@t-set='address']" position="after">
+                <t t-set="information_block">
+                    <p>
+                        <img t-if="o.l10n_eg_qr_code"
+                             style="display:block;"
+                             t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s'%('QR', o.l10n_eg_qr_code, 130, 130)"/>
+                    </p>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -3,7 +3,7 @@
 import { _lt } from "@web/core/l10n/translation";
 import { Dialog } from "@web/core/dialog/dialog";
 import { editModelDebug } from "@web/core/debug/debug_utils";
-import { formatDateTime, parseDateTime } from "@web/core/l10n/dates";
+import { formatDateTime, deserializeDateTime } from "@web/core/l10n/dates";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { formatMany2one } from "@web/views/fields/formatters";
@@ -159,8 +159,8 @@ class GetMetadataDialog extends Component {
         this.state.noupdate = metadata.noupdate;
         this.state.creator = formatMany2one(metadata.create_uid);
         this.state.lastModifiedBy = formatMany2one(metadata.write_uid);
-        this.state.createDate = formatDateTime(parseDateTime(metadata.create_date));
-        this.state.writeDate = formatDateTime(parseDateTime(metadata.write_date));
+        this.state.createDate = formatDateTime(deserializeDateTime(metadata.create_date));
+        this.state.writeDate = formatDateTime(deserializeDateTime(metadata.write_date));
     }
 }
 GetMetadataDialog.template = "web.DebugMenu.GetMetadataDialog";

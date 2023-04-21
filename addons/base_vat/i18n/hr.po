@@ -3,18 +3,18 @@
 # 	* base_vat
 # 
 # Translators:
-# Martin Trigaux, 2022
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2022
-# Bole <bole@dajmi5.com>, 2022
+# Bole <bole@dajmi5.com>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:01+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2022\n"
-"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Croatian (https://app.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -62,39 +62,43 @@ msgstr ""
 "njegov porezni broj nije potvrđen od strane EU-VIES servisa."
 
 #. module: base_vat
+#: model:ir.model.fields,field_description:base_vat.field_res_partner__vies_failed_message
+#: model:ir.model.fields,field_description:base_vat.field_res_users__vies_failed_message
+msgid "Technical field display a message to the user if the VIES check fails."
+msgstr ""
+"Tehničko polje prikazuje poruku korisniku ako je VIES provjera neuspješna."
+
+#. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] does not seem to be valid. \n"
+"The %(vat_label)s number [%(wrong_vat)s] does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"%(vat_label)s broj [%(wrong_vat)s] se čini neispravan. \n"
+"Napomena: Očekivani format je %(expected_format)s"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid ""
-"The VAT number [%(wrong_vat)s] either failed the VIES VAT validation check "
-"or did not respect the expected format %(expected_format)s."
-msgstr ""
-
-#. module: base_vat
-#: code:addons/base_vat/models/res_partner.py:0
-#, python-format
-msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
+"The %(vat_label)s number [%(wrong_vat)s] for %(record_label)s does not seem to be valid. \n"
 "Note: the expected format is %(expected_format)s"
 msgstr ""
+"%(vat_label)s broj [%(wrong_vat)s] za %(record_label)s se ne čini ispravnim. \n"
+"Napomena: očekivani format je %(expected_format)s"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
-msgid ""
-"The VAT number [%(wrong_vat)s] for %(record_label)s either failed the VIES "
-"VAT validation check or did not respect the expected format "
-"%(expected_format)s."
-msgstr ""
+msgid "The VAT number %s failed the VIES VAT validation check."
+msgstr "Porezni broj %s nije prošao validaciju u VIES bazi."
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid ""
@@ -103,6 +107,13 @@ msgid ""
 msgstr ""
 "Detektirana država za ovaj strani porezni broj ne odgovara onoj postavljenoj"
 " na fiskalnoj poziciji."
+
+#. module: base_vat
+#. odoo-python
+#: code:addons/base_vat/models/res_partner.py:0
+#, python-format
+msgid "VAT"
+msgstr "PDV"
 
 #. module: base_vat
 #: model:ir.model.fields,field_description:base_vat.field_res_company__vat_check_vies
@@ -116,12 +127,14 @@ msgid "Verify VAT numbers using the European VIES service"
 msgstr "Validiraj brojeve korištenjem VIES servisa"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/account_fiscal_position.py:0
 #, python-format
 msgid "fiscal position [%s]"
 msgstr "fiskalna pozicija [%s]"
 
 #. module: base_vat
+#. odoo-python
 #: code:addons/base_vat/models/res_partner.py:0
 #, python-format
 msgid "partner [%s]"

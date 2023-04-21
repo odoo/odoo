@@ -179,7 +179,8 @@ registerModel({
         isEditable: attr({
             compute() {
                 const hasWriteAccess = this.followedThread ? this.followedThread.hasWriteAccess : false;
-                return this.messaging.currentPartner === this.partner ? this.followedThread.hasReadAccess : hasWriteAccess;
+                const hasReadAccess = this.followedThread ? this.followedThread.hasReadAccess : false;
+                return this.messaging.currentPartner === this.partner ? hasReadAccess : hasWriteAccess;
             },
         }),
         partner: one('Partner', {

@@ -86,7 +86,7 @@ export class AttendeeCalendarModel extends CalendarModel {
             let duplicatedRecordIdx = -1;
             for (const event of Object.values(data.records)) {
                 const eventData = event.rawRecord;
-                const attendees = eventData.partner_ids && eventData.partner_ids.length ? eventData.partner_ids : eventData.partner_id[0];
+                const attendees = eventData.partner_ids && eventData.partner_ids.length ? eventData.partner_ids : [eventData.partner_id[0]];
                 let duplicatedRecords = 0;
                 for (const attendee of attendees) {
                     if (!activeAttendeeIds.has(attendee)) {
@@ -134,7 +134,7 @@ export class AttendeeCalendarModel extends CalendarModel {
     async archiveRecord(record) {
         let recurrenceUpdate = false;
         if (record.rawRecord.recurrency) {
-            recurrenceUpdate = await this.askRecurrenceUpdatePolicy(this.dialog);
+            recurrenceUpdate = await askRecurrenceUpdatePolicy(this.dialog);
             if (!recurrenceUpdate) {
                 return;
             }
@@ -168,7 +168,7 @@ export class AttendeeCalendarModel extends CalendarModel {
                 [[id], recurrenceUpdate],
             );
         }
-        await this.model.load();
+        await this.load();
     }
 }
 AttendeeCalendarModel.services = [...CalendarModel.services, "dialog", "orm"];

@@ -3,7 +3,7 @@
 
     <t t-name="analytic.AnalyticDistribution" owl="1">
         <div class="o_field_tags d-inline-flex flex-wrap mw-100" t-att-class="{'o_tags_input o_input': !props.readonly}" t-ref="analyticDistribution" t-on-keydown="onWidgetKeydown">
-            <TagsList tags="tags"/>
+            <TagsList tags="this.tags"/>
             <div t-if="!props.readonly" class="o_input_dropdown d-inline-flex w-100" tabindex="0" t-ref="mainElement" t-on-focus="onMainElementFocus" t-on-click="onMainElementFocus">
                 <span class="analytic_distribution_placeholder"/>
                 <a role="button" class="o_dropdown_button" draggable="false"/>
@@ -43,9 +43,9 @@
                                         value="dist_tag.analytic_account_name"
                                         sources="sourcesAnalyticAccount"
                                         autoSelect="true"
-                                        onSelect.bind="(option, params) => this.onSelect(option, params, dist_tag)"
-                                        onFocus.bind="() => this.groupAutocompleteFocus(plan.id)"
-                                        onInput.bind="(inputVal) => this.autoCompleteInput(dist_tag, inputVal)"/>
+                                        onSelect.alike="(option, params) => this.onSelect(option, params, dist_tag)"
+                                        onFocus.alike="() => this.groupAutocompleteFocus(plan.id)"
+                                        onInput.alike="(inputVal) => this.autoCompleteInput(dist_tag, inputVal)"/>
                                 </td>
                                 <td class="o_analytic_percentage">
                                     <input

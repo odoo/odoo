@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+_logger = logging.getLogger('precompute_setter')
 
 from odoo import models, fields, api, _, Command
 from odoo.exceptions import AccessError, ValidationError
@@ -1374,6 +1375,24 @@ class ComputeMember(models.Model):
             member.container_id = container.search([('name', '=', member.name)], limit=1)
 
 
+class User(models.Model):
+    _name = _description = 'test_new_api.user'
+
+    group_ids = fields.Many2many('test_new_api.group')
+    group_count = fields.Integer(compute='_compute_group_count', store=True)
+
+    @api.depends('group_ids')
+    def _compute_group_count(self):
+        for user in self:
+            user.group_count = len(user.group_ids)
+
+
+class Group(models.Model):
+    _name = _description = 'test_new_api.group'
+
+    user_ids = fields.Many2many('test_new_api.user')
+
+
 class ComputeEditable(models.Model):
     _name = _description = 'test_new_api.compute_editable'
 
@@ -1554,8 +1573,6 @@ class PrecomputeCombo(models.Model):
     _name = 'test_new_api.precompute.combo'
     _description = 'yet another model with precomputed fields'
 
-    _logger = logging.getLogger('precompute_setter')
-
     name = fields.Char()
     reader = fields.Char(compute='_compute_reader', precompute=True, store=True)
     editer = fields.Char(compute='_compute_editer', precompute=True, store=True, readonly=False)
@@ -1577,7 +1594,7 @@ class PrecomputeCombo(models.Model):
             record.setter = record.name
 
     def _inverse_setter(self):
-        self._logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
+        _logger.warning("Unexpected inverse of %s.setter", self._name, stack_info=True)
 
 
 class PrecomputeEditable(models.Model):

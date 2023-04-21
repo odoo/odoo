@@ -228,7 +228,7 @@ wTourUtils.registerWebsitePreviewTour('rte_translator', {
     content: "Check that the editor is not showing translated content (1)",
     trigger: '.ace_text-layer .ace_line:contains("an HTML")',
     run: function (actions) {
-        var lineEscapedText = $(this.$anchor.text()).text();
+        var lineEscapedText = $(this.$anchor.text()).last().text();
         if (lineEscapedText !== "&lt;b&gt;&lt;/b&gt; is an HTML&nbsp;tag &amp; is empty") {
             console.error('The HTML editor should display the correct untranslated content');
             $('iframe:not(.o_ignore_in_tour)').contents().find('body').addClass('rte_translator_error');

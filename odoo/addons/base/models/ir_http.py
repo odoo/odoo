@@ -18,13 +18,18 @@ import werkzeug.exceptions
 import werkzeug.routing
 import werkzeug.utils
 
+try:
+    from werkzeug.routing import NumberConverter
+except ImportError:
+    from werkzeug.routing.converters import NumberConverter  # moved in werkzeug 2.2.2
+
 import odoo
 from odoo import api, http, models, tools, SUPERUSER_ID
 from odoo.exceptions import AccessDenied, AccessError, MissingError
 from odoo.http import request, Response, ROUTING_KEYS, Stream
 from odoo.modules.registry import Registry
 from odoo.service import security
-from odoo.tools import consteq, submap
+from odoo.tools import get_lang, submap
 from odoo.tools.translate import code_translations
 from odoo.modules.module import get_resource_path, get_module_path
 
@@ -69,7 +74,7 @@ class ModelsConverter(werkzeug.routing.BaseConverter):
         return ",".join(value.ids)
 
 
-class SignedIntConverter(werkzeug.routing.NumberConverter):
+class SignedIntConverter(NumberConverter):
     regex = r'-?\d+'
     num_convert = int
 
@@ -138,6 +143,11 @@ class IrHttp(models.AbstractModel):
         for key, val in list(args.items()):
             if isinstance(val, models.BaseModel) and isinstance(val._uid, RequestUID):
                 args[key] = val.with_user(request.env.uid)
+
+        # verify the default language set in the context is valid,
+        # otherwise fallback on the company lang, english or the first
+        # lang installed
+        request.update_context(lang=get_lang(request.env)._get_cached('code'))
 
     @classmethod
     def _dispatch(cls, endpoint):

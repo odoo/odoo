@@ -617,3 +617,62 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             }],
             'subtotals_order': ["Tax exemption", "Tax application", "Reapply amount"],
         })
+
+    def test_invoice_grouped_taxes_with_tax_group(self):
+        """ A tax of type group with a tax_group_id being the same as one of the children tax shouldn't affect the
+        result of the _prepare_tax_totals.
+        """
+        tax_10_withheld = self.env['account.tax'].create({
+            'name': "tax_10_withheld",
+            'amount_type': 'group',
+            'tax_group_id': self.tax_group1.id,
+            'children_tax_ids': [
+                Command.create({
+                    'name': "tax_withheld",
+                    'amount_type': 'percent',
+                    'amount': -47,
+                    'tax_group_id': self.tax_group_sub1.id,
+                    'sequence': 1,
+                }),
+                Command.create({
+                    'name': "tax_10",
+                    'amount_type': 'percent',
+                    'amount': 10,
+                    'tax_group_id': self.tax_group1.id,
+                    'sequence': 2,
+                }),
+            ]
+        })
+        self.tax_group_sub1.preceding_subtotal = "Tax withholding"
+
+        document = self._create_document_for_tax_totals_test([
+            (100, tax_10_withheld),
+        ])
+
+        self.assertTaxTotals(document, {
+            'amount_total': 63,
+            'amount_untaxed': 100,
+            'display_tax_base': True,
+            'groups_by_subtotal': {
+                'Untaxed Amount': [{
+                    'tax_group_name': self.tax_group1.name,
+                    'tax_group_amount': 10,
+                    'tax_group_base_amount': 100,
+                    'tax_group_id': self.tax_group1.id,
+                }],
+                "Tax withholding": [{
+                    'tax_group_name': self.tax_group_sub1.name,
+                    'tax_group_amount': -47,
+                    'tax_group_base_amount': 100,
+                    'tax_group_id': self.tax_group_sub1.id,
+                }],
+            },
+            'subtotals': [{
+                'name': "Untaxed Amount",
+                'amount': 100,
+            }, {
+                'name': "Tax withholding",
+                'amount': 110,
+            }],
+            'subtotals_order': ["Untaxed Amount", "Tax withholding"],
+        })

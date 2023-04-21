@@ -4,15 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Sergio Zanchetta <primes2h@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2023\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,7 +31,7 @@ msgid "Adyen API key"
 msgstr "Chiave API Adyen"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
@@ -57,7 +58,7 @@ msgid "Adyen Test Mode"
 msgstr "Modalità test Adyen"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occurred. Message from Adyen: %s"
@@ -69,14 +70,14 @@ msgid "Ask Customers For Tip"
 msgstr "Chiedere la mancia ai clienti"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr "Autenticazione non riuscita. Controllare le credenziali Adyen."
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -87,7 +88,7 @@ msgstr ""
 "manualmente sul terminale di pagamento."
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Cannot process transactions with negative amount."
@@ -99,7 +100,7 @@ msgid "Config Settings"
 msgstr "Impostazioni di configurazione"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -110,13 +111,14 @@ msgstr ""
 "internet e riprova."
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
 msgstr "Messaggio da Adyen: %s"
 
 #. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -150,6 +152,15 @@ msgid "Run transactions in the test environment."
 msgstr "Esegue le transazioni nell'ambiente di prova."
 
 #. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr ""
+"Il terminale %s è già in uso nell'azienda %s nel metodo di pagamento %s."
+
+#. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."

@@ -22,6 +22,8 @@ QUnit.module("Analytic", (hooks) => {
                         plan_id: { string: "Plan", type: "many2one", relation: "plan" },
                         root_plan_id: { string: "Root Plan", type: "many2one", relation: "plan" },
                         color: { string: "Color", type: "integer" },
+                        code: { string: "Ref", type: "string"},
+                        partner_id: { string: "Partner", type: "many2one", relation: "partner" },
                     },
                     records: [
                         {id: 1, color: 1, root_plan_id: 2, plan_id: 2, name: "RD" },
@@ -71,6 +73,14 @@ QUnit.module("Analytic", (hooks) => {
                         { id: 2, label: "Coke", amount: 100.00, analytic_distribution: '{}'},
                         { id: 3, label: "Sprite", amount: 100.00, analytic_distribution: '{}'},
                         { id: 4, label: "", amount: 100.00, analytic_distribution: '{}'},
+                    ],
+                },
+                partner: {
+                    fields: {
+                        name: { string: "Name", type: "char" },
+                    },
+                    records: [
+                        { id: 1, name: "Great Partner" },
                     ],
                 },
                 move: {

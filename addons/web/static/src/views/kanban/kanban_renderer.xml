@@ -84,30 +84,28 @@
                             </div>
                         </div>
                         <t t-if="!group.isFolded">
+                            <t t-if="props.list.quickCreateInfo and group.quickCreateRecord">
+                                <KanbanRecordQuickCreate
+                                    record="group.quickCreateRecord"
+                                    archInfo="props.list.quickCreateInfo"
+                                    onCancel="force => group.cancelQuickCreate(force)"
+                                    onValidate="mode => this.validateQuickCreate(mode, group)"
+                                    listIsGrouped="props.list.isGrouped"
+                                />
+                            </t>
                             <t t-foreach="group.list.records" t-as="record" t-key="record.id">
-                                <t t-if="record.isInQuickCreation and props.list.quickCreateInfo">
-                                    <KanbanRecordQuickCreate
-                                        record="record"
-                                        archInfo="props.list.quickCreateInfo"
-                                        onCancel="force => group.list.cancelQuickCreate(force)"
-                                        onValidate="mode => this.validateQuickCreate(mode, group)"
-                                        listIsGrouped="props.list.isGrouped"
-                                    />
-                                </t>
-                                <t t-else="">
-                                    <KanbanRecord
-                                        archInfo="props.archInfo"
-                                        Compiler="props.Compiler"
-                                        canResequence="canResequenceRecords"
-                                        forceGlobalClick="props.forceGlobalClick"
-                                        group="group"
-                                        list="props.list"
-                                        openRecord="props.openRecord"
-                                        readonly="props.readonly"
-                                        record="record"
-                                        templates="props.archInfo.templateDocs"
-                                    />
-                                </t>
+                                <KanbanRecord
+                                    archInfo="props.archInfo"
+                                    Compiler="props.Compiler"
+                                    canResequence="canResequenceRecords"
+                                    forceGlobalClick="props.forceGlobalClick"
+                                    group="group"
+                                    list="props.list"
+                                    openRecord="props.openRecord"
+                                    readonly="props.readonly"
+                                    record="record"
+                                    templates="props.archInfo.templateDocs"
+                                />
                             </t>
                             <t t-set="unloadedCount" t-value="getGroupUnloadedCount(group)" />
                             <div t-if="unloadedCount > 0" class="o_kanban_load_more">
@@ -143,7 +141,7 @@
                         onFoldChange="folded => state.columnQuickCreateIsFolded = props.list.groups.length > 0 and folded"
                         onValidate="name => props.list.createGroup(name)"
                         exampleData="exampleData"
-                        groupByFieldString="props.list.groupByField.string"
+                        groupByField="props.list.groupByField"
                     />
                     <!-- Kanban Example Background -->
                     <div t-if="props.list.groups.length === 0" class="o_kanban_example_background_container d-flex opacity-50">

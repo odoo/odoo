@@ -3,16 +3,17 @@
 # 	* event_booth_sale
 # 
 # Translators:
-# Martin Trigaux, 2022
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: Ukrainian (https://www.transifex.com/odoo/teams/41243/uk/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,48 +29,48 @@ msgid ""
 "A service is a non-material product you provide."
 msgstr ""
 "Товар, що зберігається, - це товар, яким ви керуєте на складі. Необхідно встановити додаток Склад.\n"
-"Витратний товар - це товар, для якого склад не керується.\n"
+"Витратний товар - це товар, на якому немає складських проводок.\n"
 "Послуга - це нематеріальний товар, який ви надаєте."
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_ids
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_registration__event_booth_id
 msgid "Booth"
-msgstr "Кабінка"
+msgstr "Стенд"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_id
 msgid "Booth Category"
-msgstr "Категорія кабінки"
+msgstr "Категорія стенду"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
 msgid "Booth Category for which booths are still available. Used in frontend"
 msgstr ""
-"Категорія кабінок, для яких є досі вільні кабінки. Використовується на "
+"Категорія стендів, для яких є досі вільні стенди. Використовується на "
 "фронтенді"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_count
 msgid "Booth Count"
-msgstr "Підрахунок кабінок"
+msgstr "Підрахунок стендів"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_category_view_form
 msgid "Booth Details"
-msgstr "Деталі кабінок"
+msgstr "Деталі стенду"
 
 #. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_form
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_registration_view_tree
 msgid "Booth Registration"
-msgstr "Реєстрація кабінки"
+msgstr "Реєстрація стенду"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order__event_booth_ids
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.sale_order_view_form
 msgid "Booths"
-msgstr "Кабінки"
+msgstr "Стенди"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_line__event_booth_category_id
@@ -159,19 +160,18 @@ msgstr "Подія"
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth
 #: model:ir.model.fields.selection,name:event_booth_sale.selection__product_template__detailed_type__event_booth
-#: model:product.product,name:event_booth_sale.product_product_event_booth
 msgid "Event Booth"
-msgstr "Кабінка події"
+msgstr "Стенд події"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth_category
 msgid "Event Booth Category"
-msgstr "Категорія кабінок події"
+msgstr "Категорія стенду події"
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__event_booth_category_available_ids
 msgid "Event Booth Category Available"
-msgstr "Доступні категорії кабінок події"
+msgstr "Доступні категорії стендів події"
 
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth_configurator
@@ -187,7 +187,7 @@ msgstr "Реєстрація стенду події"
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_type_booth
 msgid "Event Booth Template"
-msgstr "Шаблон кабінки події "
+msgstr "Шаблон стенду події "
 
 #. module: event_booth_sale
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth__sale_order_line_id
@@ -282,6 +282,7 @@ msgstr "Ціна зниження податку вкл"
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_line__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_option__product_id
 msgid "Product"
 msgstr "Товар"
 
@@ -302,11 +303,17 @@ msgid "Quotation Template Line"
 msgstr "Рядок шаблону комерційної пропозиції"
 
 #. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_template_option
+msgid "Quotation Template Option"
+msgstr "Функція шаблону комерційної пропозиції"
+
+#. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
 msgid "Registrations"
 msgstr "Реєстрації"
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Registrations from the same Order Line must belong to a single event."
@@ -344,6 +351,7 @@ msgid "Select an event booth"
 msgstr "Оберати стенд події"
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -365,11 +373,6 @@ msgid "Total"
 msgstr "Разом"
 
 #. module: event_booth_sale
-#: model:product.product,uom_name:event_booth_sale.product_product_event_booth
-msgid "Units"
-msgstr "Одиниці"
-
-#. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Used to create registration when providing the desired event booth."
 msgstr ""
@@ -377,6 +380,7 @@ msgstr ""
 "події."
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/event_booth.py:0
 #, python-format
 msgid ""
@@ -387,12 +391,14 @@ msgstr ""
 "замовленнями на продаж: %(booths)s"
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
 #, python-format
 msgid "You have to select at least one booth."
 msgstr "Потрібна обрати принаймні один стенд."
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/event_booth_registration.py:0
 #, python-format
 msgid ""

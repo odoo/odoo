@@ -987,8 +987,14 @@ class JavascriptAsset(WebAsset):
 
     def __init__(self, bundle, inline=None, url=None, filename=None):
         super().__init__(bundle, inline, url, filename)
-        self.is_transpiled = is_odoo_module(super().content)
+        self._is_transpiled = None
         self._converted_content = None
+
+    @property
+    def is_transpiled(self):
+        if self._is_transpiled is None:
+            self._is_transpiled = bool(is_odoo_module(super().content))
+        return self._is_transpiled
 
     @property
     def content(self):

@@ -5,8 +5,9 @@ import { OdooChart } from "@spreadsheet/chart/odoo_chart/odoo_chart";
 import { OdooLineChart } from "@spreadsheet/chart/odoo_chart/odoo_line_chart";
 import { nextTick } from "@web/../tests/helpers/utils";
 import { createSpreadsheetWithChart, insertChartInSpreadsheet } from "../../utils/chart";
-import { createModelWithDataSource } from "../../utils/model";
+import { createModelWithDataSource, waitForDataSourcesLoaded } from "../../utils/model";
 import spreadsheet from "@spreadsheet/o_spreadsheet/o_spreadsheet_extended";
+import { RPCError } from "@web/core/network/rpc_service";
 
 const { toZone } = spreadsheet.helpers;
 
@@ -133,7 +134,7 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
         assert.deepEqual(model.getters.getChartRuntime(chartId).chartJsConfig.data, {
             datasets: [
                 {
-                    backgroundColor: "#1f77b466",
+                    backgroundColor: "#1F77B466",
                     borderColor: "rgb(31,119,180)",
                     data: [1, 3],
                     label: "Count",
@@ -398,4 +399,35 @@ QUnit.module("spreadsheet > odoo chart plugin", {}, () => {
             model.getters.getChartRuntime(chartId).chartJsConfig.options.scales.yAxes[0].stacked
         );
     });
+
+    QUnit.test(
+        "Load odoo chart spreadsheet with models that cannot be accessed",
+        async function (assert) {
+            let hasAccessRights = true;
+            const { model } = await createSpreadsheetWithChart({
+                mockRPC: async function (route, args) {
+                    if (
+                        args.model === "partner" &&
+                        args.method === "web_read_group" &&
+                        !hasAccessRights
+                    ) {
+                        const error = new RPCError();
+                        error.data = { message: "ya done!" };
+                        throw error;
+                    }
+                },
+            });
+            const chartId = model.getters.getFigures(model.getters.getActiveSheetId())[0].id;
+            const chartDataSource = model.getters.getChartDataSource(chartId);
+            await waitForDataSourcesLoaded(model);
+            const data = chartDataSource.getData();
+            assert.equal(data.datasets.length, 1);
+            assert.equal(data.labels.length, 2);
+
+            hasAccessRights = false;
+            chartDataSource.load({ reload: true });
+            await waitForDataSourcesLoaded(model);
+            assert.deepEqual(chartDataSource.getData(), { datasets: [], labels: [] });
+        }
+    );
 });

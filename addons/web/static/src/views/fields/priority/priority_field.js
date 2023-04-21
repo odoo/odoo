@@ -58,9 +58,9 @@ export class PriorityField extends Component {
     onStarClicked(value) {
         if (this.props.value === value) {
             this.state.index = -1;
-            this.props.update(this.options[0][0]);
+            this.props.update(this.options[0][0], { save: true });
         } else {
-            this.props.update(value);
+            this.props.update(value, { save: true });
         }
     }
 }

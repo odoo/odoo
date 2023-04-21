@@ -115,7 +115,7 @@ class PricelistItem(models.Model):
     price_surcharge = fields.Float(
         string="Price Surcharge",
         digits='Product Price',
-        help="Specify the fixed amount to add or substract(if negative) to the amount calculated with the discount.")
+        help="Specify the fixed amount to add or subtract (if negative) to the amount calculated with the discount.")
 
     price_min_margin = fields.Float(
         string="Min. Price Margin",

@@ -41,7 +41,7 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         dogs = pigs.copy()
         self.assertEqual(len(dogs.tasks), 2, 'project: duplicating a project must duplicate its tasks')
 
-    @mute_logger('odoo.addons.mail.mail_thread')
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_task_process_without_stage(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Frogs'
         task = self.format_and_process(
@@ -57,18 +57,18 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         # Test: messages
         self.assertEqual(len(task.message_ids), 1,
                          'project: message_process: newly created task should have 1 message: email')
-        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
+        self.assertEqual(task.message_ids.subtype_id, self.env.ref('project.mt_task_new'),
                          'project: message_process: first message of new task should have Task Created subtype')
-        self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
+        self.assertEqual(task.message_ids.author_id, self.user_projectuser.partner_id,
                          'project: message_process: second message should be the one from Agrolait (partner failed)')
-        self.assertEqual(task.message_ids[0].subject, 'Frogs',
+        self.assertEqual(task.message_ids.subject, 'Frogs',
                          'project: message_process: second message should be the one from Agrolait (subject failed)')
         # Test: task content
         self.assertEqual(task.name, 'Frogs', 'project_task: name should be the email subject')
-        self.assertEqual(task.project_id.id, self.project_pigs.id, 'project_task: incorrect project')
+        self.assertEqual(task.project_id, self.project_pigs, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, False, "project_task: shouldn't have a stage, i.e. sequence=False")
 
-    @mute_logger('odoo.addons.mail.mail_thread')
+    @mute_logger('odoo.addons.mail.models.mail_thread')
     def test_task_process_with_stages(self):
         # Do: incoming mail from an unknown partner on an alias creates a new task 'Cats'
         task = self.format_and_process(
@@ -84,15 +84,44 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
         # Test: messages
         self.assertEqual(len(task.message_ids), 1,
                          'project: message_process: newly created task should have 1 messages: email')
-        self.assertEqual(task.message_ids[0].subtype_id, self.env.ref('project.mt_task_new'),
+        self.assertEqual(task.message_ids.subtype_id, self.env.ref('project.mt_task_new'),
                          'project: message_process: first message of new task should have Task Created subtype')
-        self.assertEqual(task.message_ids[0].author_id, self.user_projectuser.partner_id,
+        self.assertEqual(task.message_ids.author_id, self.user_projectuser.partner_id,
                          'project: message_process: first message should be the one from Agrolait (partner failed)')
-        self.assertEqual(task.message_ids[0].subject, 'Cats',
+        self.assertEqual(task.message_ids.subject, 'Cats',
                          'project: message_process: first message should be the one from Agrolait (subject failed)')
         # Test: task content
         self.assertEqual(task.name, 'Cats', 'project_task: name should be the email subject')
-        self.assertEqual(task.project_id.id, self.project_goats.id, 'project_task: incorrect project')
+        self.assertEqual(task.project_id, self.project_goats, 'project_task: incorrect project')
+        self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
+
+    @mute_logger('odoo.addons.mail.models.mail_thread')
+    def test_task_from_email_alias(self):
+        # Do: incoming mail from a known partner email on an alias creates a new task 'Super Frog'
+        task = self.format_and_process(
+            EMAIL_TPL, to='project+goats@mydomain.com, valid.lelitre@agrolait.com', cc='valid.other@gmail.com',
+            email_from='%s' % self.user_portal.email,
+            subject='Super Frog', msg_id='<1198923581.41972151344608186760.JavaMail@agrolait.com>',
+            target_model='project.task')
+
+        # Test: one task created by mailgateway administrator
+        self.assertEqual(len(task), 1, 'project: message_process: a new project.task should have been created')
+        # Test: check partner in message followers
+        self.assertIn(self.partner_2, task.message_partner_ids, "Partner in message cc is not added as a task followers.")
+        # Test: check partner has not been assgined
+        self.assertFalse(task.user_ids, "Partner is not added as an assignees")
+        # Test: messages
+        self.assertEqual(len(task.message_ids), 1,
+                         'project: message_process: newly created task should have 1 messages: email')
+        self.assertEqual(task.message_ids.subtype_id, self.env.ref('project.mt_task_new'),
+                         'project: message_process: first message of new task should have Task Created subtype')
+        self.assertEqual(task.message_ids.author_id, self.user_portal.partner_id,
+                         'project: message_process: first message should be the one from Agrolait (partner failed)')
+        self.assertEqual(task.message_ids.subject, 'Super Frog',
+                         'project: message_process: first message should be the one from Agrolait (subject failed)')
+        # Test: task content
+        self.assertEqual(task.name, 'Super Frog', 'project_task: name should be the email subject')
+        self.assertEqual(task.project_id, self.project_goats, 'project_task: incorrect project')
         self.assertEqual(task.stage_id.sequence, 1, "project_task: should have a stage with sequence=1")
 
     def test_subtask_process(self):
@@ -388,3 +417,11 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         self.assertEqual(len(project_A.message_ids), init_nb_log + 2,
             "should have 2 new messages: one for tracking, one for template")
+
+    def test_private_task_search_tag(self):
+        task = self.env['project.task'].create({
+            'name': 'Test Private Task',
+        })
+        # Tag name_search should not raise Error if project_id is False
+        task.tag_ids.with_context(project_id=task.project_id.id).name_search(
+            args=["!", ["id", "in", []]])

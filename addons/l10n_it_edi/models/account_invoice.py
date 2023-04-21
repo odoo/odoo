@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
+from functools import reduce
 import logging
 import re
 
@@ -21,7 +22,7 @@ class AccountMove(models.Model):
     _inherit = 'account.move'
 
     l10n_it_edi_transaction = fields.Char(copy=False, string="FatturaPA Transaction")
-    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment")
+    l10n_it_edi_attachment_id = fields.Many2one('ir.attachment', copy=False, string="FatturaPA Attachment", ondelete="restrict")
 
     l10n_it_stamp_duty = fields.Float(default=0, string="Dati Bollo", readonly=True, states={'draft': [('readonly', False)]})
 
@@ -35,9 +36,15 @@ class AccountMove(models.Model):
     def _compute_l10n_it_einvoice(self):
         fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
         for invoice in self:
-            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa)
+            einvoice = invoice.edi_document_ids.filtered(lambda d: d.edi_format_id == fattura_pa).sudo()
             invoice.l10n_it_einvoice_id = einvoice.attachment_id
             invoice.l10n_it_einvoice_name = einvoice.attachment_id.name
+
+    @api.depends('l10n_it_edi_transaction')
+    def _compute_show_reset_to_draft_button(self):
+        super(AccountMove, self)._compute_show_reset_to_draft_button()
+        for move in self.filtered(lambda m: m.l10n_it_edi_transaction):
+            move.show_reset_to_draft_button = False
 
     def invoice_generate_xml(self):
         self.ensure_one()
@@ -85,20 +92,27 @@ class AccountMove(models.Model):
                 price_unit = line.price_unit
 
             description = line.name
-            if not is_downpayment:
-                if line.price_subtotal < 0:
-                    moves = line._get_downpayment_lines().move_id
-                    if moves:
-                        description += ', '.join([move.name for move in moves])
 
-            line_dict = {
+            # Down payment lines:
+            # If there was a down paid amount that has been deducted from this move,
+            # we need to put a reference to the down payment invoice in the DatiFattureCollegate tag
+            downpayment_moves = self.env['account.move']
+            if not is_downpayment and line.price_subtotal < 0:
+                downpayment_moves = line._get_downpayment_lines().mapped("move_id")
+                if downpayment_moves:
+                    downpayment_moves_description = ', '.join([m.name for m in downpayment_moves])
+                    sep = ', ' if description else ''
+                    description = f"{description}{sep}{downpayment_moves_description}"
+
+            invoice_lines.append({
                 'line': line,
                 'line_number': num + 1,
                 'description': description or 'NO NAME',
                 'unit_price': price_unit,
                 'subtotal_price': price_subtotal,
-            }
-            invoice_lines.append(line_dict)
+                'vat_tax': line.tax_ids._l10n_it_filter_kind('vat'),
+                'downpayment_moves': downpayment_moves,
+            })
         return invoice_lines
 
     def _l10n_it_edi_prepare_fatturapa_tax_details(self, tax_details, reverse_charge_refund=False):
@@ -132,6 +146,11 @@ class AccountMove(models.Model):
             }
             tax_lines.append(tax_line_dict)
         return tax_lines
+
+    def _l10n_it_edi_filter_fatturapa_tax_details(self, line, tax_values):
+        """Filters tax details to only include the positive amounted lines regarding VAT taxes."""
+        repartition_line = tax_values['tax_repartition_line']
+        return (repartition_line.factor_percent >= 0 and repartition_line.tax_id.amount >= 0)
 
     def _prepare_fatturapa_export_values(self):
         self.ensure_one()
@@ -205,9 +224,7 @@ class AccountMove(models.Model):
         pdf = base64.b64encode(pdf).decode()
         pdf_name = re.sub(r'\W+', '', self.name) + '.pdf'
 
-        tax_details = self._prepare_edi_tax_details(
-            filter_to_apply=lambda base_line, tax_values: tax_values['tax_repartition_line'].factor_percent >= 0
-        )
+        tax_details = self._prepare_edi_tax_details(filter_to_apply=self._l10n_it_edi_filter_fatturapa_tax_details)
 
         company = self.company_id
         partner = self.commercial_partner_id
@@ -235,6 +252,10 @@ class AccountMove(models.Model):
 
         invoice_lines = self._l10n_it_edi_prepare_fatturapa_line_details(reverse_charge_refund, is_downpayment, convert_to_euros)
         tax_lines = self._l10n_it_edi_prepare_fatturapa_tax_details(tax_details, reverse_charge_refund)
+
+        # Reduce downpayment views to a single recordset
+        downpayment_moves = [l.get('downpayment_moves', self.env['account.move']) for l in invoice_lines]
+        downpayment_moves = reduce(lambda x, y: x | y, downpayment_moves)
 
         # Create file content.
         template_values = {
@@ -268,6 +289,7 @@ class AccountMove(models.Model):
             'pdf': pdf,
             'pdf_name': pdf_name,
             'tax_details': tax_details,
+            'downpayment_moves': downpayment_moves,
             'abs': abs,
             'normalize_codice_fiscale': partner._l10n_it_normalize_codice_fiscale,
             'get_vat_number': get_vat_number,
@@ -363,3 +385,7 @@ class AccountTax(models.Model):
                     raise ValidationError(_("If the tax has exoneration, you must enter a kind of exoneration, a law reference and the amount of the tax must be 0.0."))
                 if tax.l10n_it_kind_exoneration == 'N6' and tax.l10n_it_vat_due_date == 'S':
                     raise UserError(_("'Scissione dei pagamenti' is not compatible with exoneration of kind 'N6'"))
+
+    def _l10n_it_filter_kind(self, kind):
+        """ This can be overridden by l10n_it_edi_withholding for different kind of taxes (withholding, pension_fund)."""
+        return self if kind == 'vat' else self.env['account.tax']

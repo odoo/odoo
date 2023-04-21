@@ -160,7 +160,8 @@ export class Field extends Component {
 
         return {
             ...fieldInfo.props,
-            update: async (value) => {
+            update: async (value, options = {}) => {
+                const { save } = Object.assign({ save: false }, options);
                 await record.update({ [this.props.name]: value });
                 if (record.selected && record.model.multiEdit) {
                     return;
@@ -168,8 +169,7 @@ export class Field extends Component {
                 const rootRecord =
                     record.model.root instanceof record.constructor && record.model.root;
                 const isInEdition = rootRecord ? rootRecord.isInEdition : record.isInEdition;
-                // We save only if we're on view mode readonly and no readonly field modifier
-                if (!isInEdition && !readonlyFromModifiers) {
+                if ((!isInEdition && !readonlyFromModifiers) || save) {
                     // TODO: maybe move this in the model
                     return record.save();
                 }
@@ -298,4 +298,4 @@ Field.parseFieldNode = function (node, models, modelName, viewType, jsClass) {
 Field.forbiddenAttributeNames = {
     decorations: `You cannot use the "decorations" attribute name as it is used as generated prop name for the composite decoration-<something> attributes.`,
 };
-Field.defaultProps = { fieldInfo: {} };
+Field.defaultProps = { fieldInfo: {}, setDirty: () => {} };

@@ -183,7 +183,7 @@
                             </t>
                             <div class="o_wslides_js_course_join ps-4" t-if="aside_slide._has_additional_resources()">
                                 <li t-foreach="aside_slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file'">
-                                    <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" class="text-decoration-none small">
+                                    <a t-att-href="resource._get_download_url()" class="text-decoration-none small">
                                         <i class="fa fa-download me-1"/><span t-field="resource.name"/>
                                     </a>
                                 </li>
@@ -215,7 +215,7 @@
 
 <!-- Slide: all its content, not fullscreen mode -->
 <template id="slide_content_detailed" name="Slide: Detailed Content">
-    <div class="d-flex align-items-start my-3 w-100">
+    <div class="d-flex flex-wrap align-items-start my-3 w-100">
         <t t-set="slide_completed" t-value="channel_progress[slide.id].get('completed')"/>
         <div class="col-12 col-md order-2 order-md-1 d-flex">
             <div class="d-flex align-items-start">
@@ -227,11 +227,11 @@
                 </h1>
             </div>
         </div>
-        <div class="col-12 col-md order-1 order-md-2 text-nowrap flex-grow-0 d-flex justify-content-end align-items-center mb-3 mb-md-0">
+        <div class="col-12 col-md order-1 order-md-2 text-nowrap flex-grow-0 d-flex flex-wrap flex-md-nowrap justify-content-center justify-content-md-end align-items-center mb-3 mb-md-0">
             <t t-set="quiz_karma_won" t-value="channel_progress[slide.id].get('quiz_karma_won', 0)"/>
             <t t-set="quiz_karma_gain" t-value="channel_progress[slide.id].get('quiz_karma_gain', 0)"/>
-            <span t-if="slide.question_ids and (slide_completed or quiz_karma_gain)"
-                t-attf-class="mx-2 badge #{'text-bg-success' if slide_completed else 'text-bg-info'}">
+            <span t-if="slide.question_ids and (slide_completed or quiz_karma_gain)" style="flex-basis: 100%"
+                t-attf-class="mx-2 my-1 badge #{'text-bg-success' if slide_completed else 'text-bg-info'}">
                 <span t-if="slide_completed">
                     <i class="fa fa-check-circle"/>
                     <t t-if="quiz_karma_won">
@@ -244,7 +244,7 @@
                     <span>XP</span>
                 </t>
             </span>
-            <div class="btn-group flex-grow-1 flex-sm-0" role="group" aria-label="Lesson Nav">
+            <div class="btn-group flex-grow-1 flex-sm-0 my-1" role="group" aria-label="Lesson Nav">
                 <a t-attf-class="o_wslides_nav_button btn btn-light border #{'disabled' if not previous_slide else ''} me-2"
                     role="button" t-att-aria-disabled="'disabled' if not previous_slide else None"
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
@@ -279,11 +279,11 @@
                     <span class="d-none d-sm-inline-block">Next</span> <i class="fa fa-chevron-right ms-2"></i>
                 </a>
             </div>
-            <a class="btn btn-light border ms-2" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
+            <a class="btn btn-light border ms-2 my-1" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">
                 <i class="fa fa-desktop me-2"/>
                 <span class="d-none d-sm-inline-block">Fullscreen</span>
             </a>
-             <a class="btn btn-light border ms-2" role="button" data-bs-toggle="modal"
+             <a class="btn btn-light border ms-2 my-1" role="button" data-bs-toggle="modal"
                 t-att-data-bs-target="'#slideShareModal_%s' % slide.id">
                 <i class="fa fa-share-alt me-2"/>
                 <span class="d-none d-sm-inline-block">Share</span>
@@ -295,7 +295,8 @@
             <a t-att-href="'/slides/%s/tag/%s' % (slug(slide.channel_id), slug(tag))" class="badge text-bg-info py-1 px-2" t-esc="tag.name"/>
         </t>
     </div>
-    <div class="oe_structure oe_empty"/>
+    <div class="oe_structure oe_empty" id="oe_structure_website_slides_lesson_top_1"
+         data-editor-message="BUILDING BLOCKS DROPPED HERE WILL BE SHOWN ACROSS ALL LESSONS"/>
     <div t-if="slide.slide_category == 'infographic'" class="o_wslides_lesson_content_type" t-field='slide.image_1920' t-options="{'widget': 'image', 'style': 'width: 100%;'}"/>
     <div t-else="" class="o_wslides_lesson_content_type">
         <div t-if="slide.slide_category == 'document'" class="ratio ratio-4x3 embed-responsive-item mb8" style="height: 600px;">
@@ -373,7 +374,7 @@
                 </t>
                 <t t-else="">
                     <t t-set="enable_slide_comments" t-value="1"/>
-                    <t t-if="not slide.channel_id.can_comment and slide.channel_id.can_access_channel"><p>Earn more Karma to leave a comment.</p></t>
+                    <t t-if="not slide.channel_id.can_comment and can_access_channel"><p>Earn more Karma to leave a comment.</p></t>
                 </t>
                 <t t-if="enable_slide_comments" t-call="portal.message_thread">
                     <t t-set="object" t-value="slide"/>
@@ -439,7 +440,7 @@
                         </span>
                         <div class="text-muted me-auto border-start ps-3">
                             <t t-foreach="slide.slide_resource_ids" t-as="resource" t-if="resource.resource_type == 'file' and resource.data">
-                                <a t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true" t-esc="resource.name"/><br />
+                                <a t-att-href="resource._get_download_url()" t-esc="resource.name"/><br />
                             </t>
                         </div>
                     </div>

@@ -191,7 +191,8 @@ class ProjectTaskRecurrence(models.Model):
                 return dates
         elif repeat_unit == 'year':
             rrule_kwargs['freq'] = YEARLY
-            month = list(MONTHS.keys()).index(repeat_month) + 1
+            month = list(MONTHS.keys()).index(repeat_month) + 1 if repeat_month else date_start.month
+            repeat_month = repeat_month or list(MONTHS.keys())[month - 1]
             rrule_kwargs['bymonth'] = month
             if repeat_on_year == 'date':
                 rrule_kwargs['bymonthday'] = min(repeat_day, MONTHS.get(repeat_month))

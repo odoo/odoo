@@ -113,7 +113,7 @@ class AccountMoveLine(models.Model):
 
     def _sale_can_be_reinvoice(self):
         self.ensure_one()
-        return self.display_type != 'cogs' and super(AccountMoveLine, self)._sale_can_be_reinvoice()
+        return self.move_type != 'entry' and self.display_type != 'cogs' and super(AccountMoveLine, self)._sale_can_be_reinvoice()
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
@@ -121,12 +121,19 @@ class AccountMoveLine(models.Model):
 
         so_line = self.sale_line_ids and self.sale_line_ids[-1] or False
         if so_line:
-            is_line_reversing = bool(self.move_id.reversed_entry_id)
+            is_line_reversing = self.move_id.move_type == 'out_refund'
             qty_to_invoice = self.product_uom_id._compute_quantity(self.quantity, self.product_id.uom_id)
-            posted_invoice_lines = so_line.invoice_lines.filtered(lambda l: l.move_id.state == 'posted' and bool(l.move_id.reversed_entry_id) == is_line_reversing)
-            qty_invoiced = sum([x.product_uom_id._compute_quantity(x.quantity, x.product_id.uom_id) for x in posted_invoice_lines])
+            account_moves = so_line.invoice_lines.move_id.filtered(lambda m: m.state == 'posted' and bool(m.reversed_entry_id) == is_line_reversing)
 
-            product = self.product_id.with_company(self.company_id)
+            posted_cogs = account_moves.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
+            qty_invoiced = sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in posted_cogs])
+            value_invoiced = sum(posted_cogs.mapped('balance'))
+
+            reversal_cogs = posted_cogs.move_id.reversal_move_id.line_ids.filtered(lambda l: l.display_type == 'cogs' and l.product_id == self.product_id and l.balance > 0)
+            qty_invoiced -= sum([line.product_uom_id._compute_quantity(line.quantity, line.product_id.uom_id) for line in reversal_cogs])
+            value_invoiced -= sum(reversal_cogs.mapped('balance'))
+
+            product = self.product_id.with_company(self.company_id).with_context(value_invoiced=value_invoiced)
             average_price_unit = product._compute_average_price(qty_invoiced, qty_to_invoice, so_line.move_ids, is_returned=is_line_reversing)
             price_unit = self.product_id.uom_id.with_company(self.company_id)._compute_price(average_price_unit, self.product_uom_id)
         return price_unit

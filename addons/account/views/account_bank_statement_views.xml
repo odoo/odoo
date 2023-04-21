@@ -7,7 +7,8 @@
             <field name="name">account.bank.statement.tree</field>
             <field name="model">account.bank.statement</field>
             <field name="arch" type="xml">
-                <tree decoration-danger="not is_complete or not is_valid"
+                <tree decoration-danger="journal_id and not is_complete or not is_valid"
+                      decoration-muted="not journal_id"
                       create="false"
                       string="Statements">
                     <field name="name"/>
@@ -31,7 +32,7 @@
                 <search string="Search Bank Statements">
                     <field name="name" string="Bank Statement"/>
                     <field name="date"/>
-                    <filter string="Empty" name="empty" domain="[('line_ids','=',[])]"/>
+                    <filter string="Empty" name="empty" domain="[('line_ids','=',False)]"/>
                     <filter name="invalid" string="Invalid"
                             domain="['|', ('is_valid', '=', False),('is_complete', '=', False)]"/>
                     <separator/>

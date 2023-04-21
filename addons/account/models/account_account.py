@@ -305,6 +305,7 @@ class AccountAccount(models.Model):
               FROM account_journal journal
               JOIN account_account account ON journal.default_account_id = account.id
              WHERE account.account_type IN ('asset_receivable', 'liability_payable')
+               AND account.id IN %s
              LIMIT 1;
         ''', [tuple(self.ids)])
 
@@ -573,7 +574,10 @@ class AccountAccount(models.Model):
         args = args or []
         domain = []
         if name:
-            domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
+            if operator in ('=', '!='):
+                domain = ['|', ('code', '=', name.split(' ')[0]), ('name', operator, name)]
+            else:
+                domain = ['|', ('code', '=ilike', name.split(' ')[0] + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&', '!'] + domain[1:]
         return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
@@ -582,10 +586,6 @@ class AccountAccount(models.Model):
     def _onchange_account_type(self):
         if self.internal_group == 'off_balance':
             self.tax_ids = False
-        elif self.internal_group == 'income' and not self.tax_ids:
-            self.tax_ids = self.company_id.account_sale_tax_id
-        elif self.internal_group == 'expense' and not self.tax_ids:
-            self.tax_ids = self.company_id.account_purchase_tax_id
 
     def _split_code_name(self, code_name):
         # We only want to split the name on the first word if there is a digit in it
@@ -595,7 +595,7 @@ class AccountAccount(models.Model):
     @api.onchange('name')
     def _onchange_name(self):
         code, name = self._split_code_name(self.name)
-        if code:
+        if code and not self.code:
             self.name = name
             self.code = code
 
@@ -631,9 +631,14 @@ class AccountAccount(models.Model):
         """
         rslt = super(AccountAccount, self).load(fields, data)
 
-        if 'import_file' in self.env.context:
+        if 'import_file' in self.env.context and 'opening_balance' in fields:
             companies = self.search([('id', 'in', rslt['ids'])]).mapped('company_id')
             for company in companies:
+                if company.account_opening_move_id.filtered(lambda m: m.state == "posted"):
+                    raise UserError(
+                        _('You cannot import the "openning_balance" if the opening move (%s) is already posted. \
+                        If you are absolutely sure you want to modify the opening balance of your accounts, reset the move to draft.',
+                          company.account_opening_move_id.name))
                 company._auto_balance_opening_move()
                 # the current_balance of the account only includes posted moves and
                 # would always amount to 0 after the import if we didn't post the opening move
@@ -690,7 +695,7 @@ class AccountAccount(models.Model):
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise UserError(_("Please create new accounts from the Chart of Accounts menu."))
+        raise ValidationError(_("Please create new accounts from the Chart of Accounts menu."))
 
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist

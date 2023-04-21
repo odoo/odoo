@@ -19,7 +19,7 @@ class DeliveryCarrier(models.Model):
     @api.constrains('warehouse_id', 'company_id')
     def _check_warehouse_company(self):
         for carrier in self:
-            if carrier.warehouse_id.company_id and carrier.company_id != carrier.warehouse_id.company_id:
+            if carrier.warehouse_id.company_id and carrier.company_id and carrier.company_id != carrier.warehouse_id.company_id:
                 raise ValidationError(_("The picking site and warehouse must share the same company"))
 
     def onsite_rate_shipment(self, order):

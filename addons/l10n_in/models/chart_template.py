@@ -13,14 +13,15 @@ class AccountChartTemplate(models.Model):
             for journal in res:
                 if journal.get('type') in ('sale','purchase'):
                     journal['l10n_in_gstin_partner_id'] = company.partner_id.id
-                if journal['code'] == 'INV':
-                    journal['name'] = _('Tax Invoices')
         return res
 
     def _load(self, company):
         res = super(AccountChartTemplate, self)._load(company)
         if self == self.env.ref("l10n_in.indian_chart_template_standard"):
-            company.write({'fiscalyear_last_month': '3'})
+            company.write({
+                'account_opening_date': fields.Date.context_today(self).replace(month=4, day=1),
+                'fiscalyear_last_month': '3',
+            })
         return res
 
 

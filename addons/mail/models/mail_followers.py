@@ -158,7 +158,7 @@ class Followers(models.Model):
            sub_followers.is_follower as _insert_followerslower
       FROM res_partner partner
       JOIN sub_followers ON sub_followers.pid = partner.id
-                        AND (NOT sub_followers.internal OR NOT partner.partner_share)
+                        AND (sub_followers.internal IS NOT TRUE OR partner.partner_share IS NOT TRUE)
  LEFT JOIN LATERAL (
         SELECT users.id AS uid,
                users.share AS share,

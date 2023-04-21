@@ -14,9 +14,8 @@ export class UpgradeDialog extends Component {
         const usersCount = await this.orm.call("res.users", "search_count", [
             [["share", "=", false]],
         ]);
-        this.router.redirect(
-            "https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + usersCount
-        );
+        window.open("https://www.odoo.com/odoo-enterprise/upgrade?num_users=" + usersCount, "_blank");
+        this.props.close();
     }
 }
 UpgradeDialog.template = "web.UpgradeDialog";

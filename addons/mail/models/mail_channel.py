@@ -748,7 +748,7 @@ class Channel(models.Model):
             [('guest_id', '=', current_guest.id) if current_guest else expression.FALSE_LEAF],
         ])
         all_needed_members = self.env['mail.channel.member'].search(expression.AND([[('channel_id', 'in', self.ids)], all_needed_members_domain]), order='id')
-        all_needed_members.partner_id.mail_partner_format()  # prefetch in batch
+        all_needed_members.partner_id.sudo().mail_partner_format()  # prefetch in batch
         members_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
         invited_members_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
         member_of_current_user_by_channel = defaultdict(lambda: self.env['mail.channel.member'])
@@ -1171,7 +1171,7 @@ class Channel(models.Model):
         else:
             all_channel_members = self.env['mail.channel.member'].with_context(active_test=False)
             channel_members = all_channel_members.search([('partner_id', '!=', partner.id), ('channel_id', '=', self.id)])
-            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name) for member in channel_members) if channel_members else _("Anonymous"))
+            msg = _("You are in a private conversation with <b>@%s</b>.", _(" @").join(html_escape(member.partner_id.name or member.guest_id.name) for member in channel_members) if channel_members else _("Anonymous"))
         msg += self._execute_command_help_message_extra()
 
         self._send_transient_message(partner, msg)
@@ -1190,15 +1190,15 @@ class Channel(models.Model):
             self.channel_pin(False)
 
     def execute_command_who(self, **kwargs):
-        partner = self.env.user.partner_id
+        channel_members = self.env['mail.channel.member'].with_context(active_test=False).search([('partner_id', '!=', self.env.user.partner_id.id), ('channel_id', '=', self.id)])
         members = [
-            p._get_html_link(title=f"@{p.name}")
-            for p in self.channel_partner_ids[:30] if p != partner
+            m.partner_id._get_html_link(title=f"@{m.partner_id.name}") if m.partner_id else f'<strong>@{html_escape(m.guest_id.name)}</strong>'
+            for m in channel_members[:30]
         ]
         if len(members) == 0:
             msg = _("You are alone in this channel.")
         else:
-            dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
+            dots = "..." if len(members) != len(channel_members) else ""
             msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
-        self._send_transient_message(partner, msg)
+        self._send_transient_message(self.env.user.partner_id, msg)

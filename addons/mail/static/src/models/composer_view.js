@@ -223,7 +223,16 @@ registerModel({
         /**
          * Called when clicking on "expand" button.
          */
-        onClickFullComposer() {
+        async onClickFullComposer() {
+            if (this.chatter && this.chatter.isTemporary) {
+                const chatter = this.chatter;
+                const saved = await this.chatter.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+                chatter.composerView.openFullComposer();
+                return;
+            }
             this.openFullComposer();
         },
         /**
@@ -513,6 +522,7 @@ registerModel({
 
             const action = {
                 type: 'ir.actions.act_window',
+                name: this.composer.isLog ? this.env._t('Log note') : this.env._t('Compose Email'),
                 res_model: 'mail.compose.message',
                 view_mode: 'form',
                 views: [[false, 'form']],
@@ -589,7 +599,7 @@ registerModel({
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                     threadView.addComponentHint('message-posted', { message });
                 }
-                if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted) {
+                if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted && messageData.recipients.length) {
                     chatter.reloadParentView();
                 }
                 if (chatterThread) {
@@ -642,6 +652,15 @@ registerModel({
          * currently uploading or if there is no text content and no attachments.
          */
         async sendMessage() {
+            if (this.chatter && this.chatter.isTemporary) {
+                const chatter = this.chatter;
+                const saved = await this.chatter.doSaveRecord();
+                if (!saved) {
+                    return;
+                }
+                chatter.composerView.sendMessage();
+                return;
+            }
             if (!this.composer.canPostMessage) {
                 if (this.composer.hasUploadingAttachment) {
                     this.messaging.notify({

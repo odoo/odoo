@@ -271,7 +271,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
      * @returns {Object}
      */
     _getWysiwygOptions: function () {
-        return Object.assign({}, this.nodeOptions, {
+        const wysiwygOptions = {
             recordInfo: {
                 context: this.record.getContext(this.recordParams),
                 res_model: this.model,
@@ -288,7 +288,6 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
             iframeCssAssets: this.nodeOptions.cssEdit,
             snippets: this.nodeOptions.snippets,
             value: this.value,
-            allowCommandVideo: Boolean(this.nodeOptions.allowCommandVideo) && (!this.field.sanitize || !this.field.sanitize_tags),
             mediaModalParams: {
                 noVideos: 'noVideos' in this.nodeOptions ? this.nodeOptions.noVideos : true,
                 res_model: this.model,
@@ -302,7 +301,20 @@ var FieldHtml = basic_fields.DebouncedField.extend(DynamicPlaceholderFieldMixin)
             maxHeight: this.nodeOptions.maxHeight,
             resizable: 'resizable' in this.nodeOptions ? this.nodeOptions.resizable : false,
             editorPlugins: [QWebPlugin],
-        });
+        };
+        if ('allowCommandImage' in this.nodeOptions) {
+            // Set the option only if it is explicitly set in the view so a
+            // default can be set elsewhere otherwise.
+            wysiwygOptions.allowCommandImage = Boolean(this.nodeOptions.allowCommandImage);
+        }
+        if (this.field.sanitize_tags || (this.field.sanitize_tags === undefined && this.field.sanitize)) {
+            wysiwygOptions.allowCommandVideo = false; // Tag-sanitized fields remove videos.
+        } else if ('allowCommandVideo' in this.nodeOptions) {
+            // Set the option only if it is explicitly set in the view so a
+            // default can be set elsewhere otherwise.
+            wysiwygOptions.allowCommandVideo = Boolean(this.nodeOptions.allowCommandVideo);
+        }
+        return Object.assign({}, this.nodeOptions, wysiwygOptions);
     },
     /**
      * Toggle the code view and update the UI.

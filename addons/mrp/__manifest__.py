@@ -60,6 +60,9 @@
         'web.assets_backend': [
             'mrp/static/src/**/*',
         ],
+        'web.assets_tests': [
+            'mrp/static/tests/tours/**/*',
+        ],
         'web.qunit_suite_tests': [
             'mrp/static/tests/**/*',
         ],

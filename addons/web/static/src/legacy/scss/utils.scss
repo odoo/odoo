@@ -147,14 +147,12 @@
 
 @mixin o-field-pointer() {
     // Force `pointer`cursor on  inputs and labels
-    &:not(:disabled):not(.disabled) {
-        &, input, label {
-            cursor: pointer;
-        }
+    .form-check-input:not(:disabled), .form-check-input:not(:disabled) + label {
+        cursor: pointer;
+    }
 
-        &:hover, &:hover .form-check-input {
-            border-color: $form-check-input-checked-border-color;
-        }
+    &:hover, &:hover .form-check-input:not(:disabled) {
+        border-color: $form-check-input-checked-border-color;
     }
 }
 

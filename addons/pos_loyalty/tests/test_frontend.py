@@ -741,3 +741,76 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyTour5",
             login="accountman",
         )
+
+    def test_loyalty_program_using_same_product(self):
+        """
+        - Create a loyalty program giving free product A for 30 points
+        - Trigger the condition of the program using the same product A
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "type": "product",
+            "list_price": 10,
+            "available_in_pos": True,
+        })
+
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'pos_ok': True,
+            'pos_config_ids': [Command.link(self.main_pos_config.id)],
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'order',
+                'reward_point_amount': 10,
+                'minimum_amount': 5,
+                'minimum_qty': 1,
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'product',
+                'required_points': 30,
+                'reward_product_id': self.product_a.id,
+                'reward_product_qty': 1,
+            })],
+        })
+
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': self.loyalty_program.id,
+            'points': 30,
+        })
+
+        self.main_pos_config.open_ui()
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyFreeProductTour2",
+            login="accountman",
+        )
+
+    def test_gift_card_value_with_discount(self):
+        """When selling a gift card with a discount, the value of the gift card
+        should be the amount before the discount."""
+        LoyaltyProgram = self.env['loyalty.program']
+        # Deactivate all other programs to avoid interference
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        # But activate the gift_card_product_50 and ewallet_product_50 because they're shared among new programs.
+        self.env.ref('loyalty.gift_card_product_50').write({'active': True})
+        self.env.ref('loyalty.ewallet_product_50').write({'active': True})
+        # Create programs
+        programs = self.create_programs([
+            ('gift_card_1', 'gift_card'),
+        ])
+        # Run the tour to topup ewallets.
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "GiftCardWithDiscountTour",
+            login="accountman",
+        )
+        # Check the created gift cards.
+        self.assertEqual(len(programs['gift_card_1'].coupon_ids), 1)
+        self.assertEqual(programs['gift_card_1'].coupon_ids.points, 50)

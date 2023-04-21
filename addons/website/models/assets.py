@@ -123,6 +123,13 @@ class Assets(models.AbstractModel):
         updatedFileContent = self._get_content_from_url(custom_url) or self._get_content_from_url(url)
         updatedFileContent = updatedFileContent.decode('utf-8')
         for name, value in values.items():
+            # Protect variable names so they cannot be computed as numbers
+            # on SCSS compilation (e.g. var(--700) => var(700)).
+            if isinstance(value, str):
+                value = re.sub(
+                    r"var\(--([0-9]+)\)",
+                    lambda matchobj: "var(--#{" + matchobj.group(1) + "})",
+                    value)
             pattern = "'%s': %%s,\n" % name
             regex = re.compile(pattern % ".+")
             replacement = pattern % value
@@ -143,6 +150,15 @@ class Assets(models.AbstractModel):
             self = self.sudo()
         website = self.env['website'].get_current_website()
         res = super()._get_custom_attachment(custom_url, op=op)
+        # FIXME (?) In website, those attachments should always have been
+        # created with a website_id. The "not website_id" part in the following
+        # condition might therefore be useless (especially since the attachments
+        # do not seem ordered). It was developed in the spirit of served
+        # attachments which follow this rule of "serve what belongs to the
+        # current website or all the websites" but it probably does not make
+        # sense here. It however allowed to discover a bug where attachments
+        # were left without website_id. This will be kept untouched in stable
+        # but will be reviewed and made more robust in master.
         return res.with_context(website_id=website.id).filtered(lambda x: not x.website_id or x.website_id == website)
 
     @api.model

@@ -10,7 +10,7 @@ from .test_static import TestHttpStatic, TestHttpStaticCache
 WEB_SERVER_URL = getenv('WEB_SERVER_URL', 'http://localhost:80')
 
 
-@tagged('webserver', '-standard', '-at-install')
+@tagged('webserver', '-standard', '-at_install')
 class TestHttpStaticWebServer(TestHttpStatic, TestHttpStaticCache):
     @classmethod
     def base_url(cls):

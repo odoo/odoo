@@ -11,7 +11,7 @@ import pytz
 def ctx_tz(record, field):
     res_lang = None
     ctx = record._context
-    tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz)
+    tz_name = pytz.timezone(ctx.get('tz') or record.env.user.tz or 'UTC')
     timestamp = Datetime.from_string(record[field])
     if ctx.get('lang'):
         res_lang = record.env['res.lang']._lang_get(ctx['lang'])
@@ -65,6 +65,7 @@ class ResCompany(models.Model):
 
             if not orders:
                 msg_alert = (_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS', self.env.company.name))
+                raise UserError(msg_alert)
 
             previous_hash = u''
             corrupted_orders = []
@@ -73,6 +74,7 @@ class ResCompany(models.Model):
                     corrupted_orders.append(order.name)
                     msg_alert = (_('Corrupted data on point of sale order with id %s.', order.id))
                 previous_hash = order.l10n_fr_hash
+            orders.invalidate_recordset()
 
             orders_sorted_date = orders.sorted(lambda o: o.date_order)
             start_order_info = build_order_info(orders_sorted_date[0])

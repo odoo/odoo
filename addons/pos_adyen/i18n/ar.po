@@ -4,16 +4,16 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -31,7 +31,7 @@ msgid "Adyen API key"
 msgstr "مفتاح الواجهة البرمجية لـ Adyen "
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
@@ -58,7 +58,7 @@ msgid "Adyen Test Mode"
 msgstr "وضع الاختبار لـ Adyen "
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occurred. Message from Adyen: %s"
@@ -70,14 +70,14 @@ msgid "Ask Customers For Tip"
 msgstr "اطلب البقشيش من العملاء "
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr "فشلت عملية المصادقة. يرجى التحقق من بيانات اعتماد Adyen. "
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -87,7 +87,7 @@ msgstr ""
 "لقد فشلت عملية إلغاء الدفع. يرجى إلغاؤها يدوياً في جهاز الدفع بالبطاقة. "
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Cannot process transactions with negative amount."
@@ -99,7 +99,7 @@ msgid "Config Settings"
 msgstr "تهيئة الإعدادات "
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -110,13 +110,14 @@ msgstr ""
 "جديد. "
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
 msgstr "رسالة من Adyen: %s "
 
 #. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -141,7 +142,7 @@ msgstr "جلسة نقطة البيع"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_res_config_settings__pos_adyen_ask_customer_for_tip
 msgid "Pos Adyen Ask Customer For Tip"
-msgstr ""
+msgstr "نقطة بيع Adyen طلب بقشيش من العميل "
 
 #. module: pos_adyen
 #: model:ir.model.fields,help:pos_adyen.field_pos_payment_method__adyen_test_mode
@@ -149,6 +150,14 @@ msgid "Run transactions in the test environment."
 msgstr "تشغيل المعاملات في بيئة الاختبار. "
 
 #. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr "جهاز الدفع بالبطاقة %s مستخدم بالفعل في الشركة %s لطريقة الدفع %s. "
+
+#. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."

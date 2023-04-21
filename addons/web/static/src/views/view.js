@@ -67,6 +67,8 @@ export function getDefaultConfig() {
     return config;
 }
 
+/** @typedef {import("./relational_model").OrderTerm} OrderTerm */
+
 /** @typedef {Object} ViewProps
  *  @property {string} resModel
  *  @property {string} type
@@ -87,7 +89,7 @@ export function getDefaultConfig() {
  *  @property {Object} [context={}]
  *  @property {DomainRepr} [domain]
  *  @property {string[]} [groupBy]
- *  @property {string[]} [orderBy]
+ *  @property {OrderTerm[]} [orderBy]
  *
  *  @property {boolean} [useSampleModel]
  *  @property {string} [noContentHelp]

@@ -3,7 +3,7 @@
 # 	* google_gmail
 # 
 # Translators:
-# Josep Anton Belchi, 2022
+# jabelchi, 2022
 # Carles Antoli <carlesantoli@hotmail.com>, 2022
 # Eric Antones <eantones@users.noreply.github.com>, 2022
 # Martin Trigaux, 2022
@@ -11,6 +11,7 @@
 # Marc Tormo i Bochaca <mtbochaca@gmail.com>, 2022
 # marcescu, 2022
 # Ivan Espinola, 2022
+# Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -18,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:46+0000\n"
-"Last-Translator: Ivan Espinola, 2022\n"
-"Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
+"Last-Translator: Óscar Fonseca <tecnico@extreme-micro.com>, 2023\n"
+"Language-Team: Catalan (https://app.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -49,8 +50,8 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', ('servertype', '!=', 'gmail'), ('googlegmailrefreshtoken', '=', False)]}\" class=\"badge text-bg-success\">\n"
-"                        Testimoni Gmail vàlid\n"
+"<span attrs=\"{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Gmail vàlid\n"
 "                    </span>"
 
 #. module: google_gmail
@@ -60,8 +61,8 @@ msgid ""
 "                        Gmail Token Valid\n"
 "                    </span>"
 msgstr ""
-"<span attrs=\"{'invisible': ['|', ('smtpauthentication', '!=', 'gmail'), ('googlegmailrefreshtoken', '=', False)]}\" class=\"badge text-bg-success\">\n"
-"                        Testimoni Gmail vàlid\n"
+"<span attrs=\"{'invisible': ['|', ('smtp_authentication', '!=', 'gmail'), ('google_gmail_refresh_token', '=', False)]}\" class=\"badge text-bg-success\">\n"
+"                        Token Gmail vàlid\n"
 "                    </span>"
 
 #. module: google_gmail
@@ -82,8 +83,8 @@ msgstr "Data de caducitat del token d'accés"
 #: code:addons/google_gmail/controllers/main.py:0
 #: code:addons/google_gmail/controllers/main.py:0
 #, python-format
-msgid "An error occur during the authentication process: %s."
-msgstr "S'ha produït un error durant el procés d'autenticació: %s."
+msgid "An error occur during the authentication process."
+msgstr ""
 
 #. module: google_gmail
 #: code:addons/google_gmail/models/google_gmail_mixin.py:0
@@ -252,8 +253,8 @@ msgid ""
 "This server %r can only be used for your personal email address. Please fill"
 " the \"from_filter\" field with %r."
 msgstr ""
-"Aquest servidor %r només es pot utilitzar per a la vostra adreça de correu "
-"electrònic personal. Ompliu el camp «fromfilter» amb %r."
+"Aquest servidor %r només es pot utilitzar per a la vostra adreça d'interès "
+"personal. Si us plau, completeu el camp 'from_filter' amb %r."
 
 #. module: google_gmail
 #: model:ir.model.fields,field_description:google_gmail.field_fetchmail_server__google_gmail_uri

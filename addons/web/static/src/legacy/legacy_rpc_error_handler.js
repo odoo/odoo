@@ -44,4 +44,4 @@ function legacyRPCErrorHandler(env, error, originalError) {
     }
     return false;
 }
-errorHandlerRegistry.add("legacyRPCErrorHandler", legacyRPCErrorHandler, { sequence: 2 });
+errorHandlerRegistry.add("legacyRPCErrorHandler", legacyRPCErrorHandler, { sequence: 97 });

@@ -12,11 +12,11 @@ class AccountMoveLine(models.Model):
 
     @api.constrains('account_id', 'display_type')
     def _check_payable_receivable(self):
-        super(AccountMoveLine, self.filtered(lambda line: not line.expense_id or line.expense_id.payment_mode != 'company_account'))._check_payable_receivable()
+        super(AccountMoveLine, self.filtered(lambda line: line.move_id.expense_sheet_id.payment_mode != 'company_account'))._check_payable_receivable()
 
     def reconcile(self):
         # OVERRIDE
-        not_paid_expenses = self.expense_id.filtered(lambda expense: expense.state != 'done')
+        not_paid_expenses = self.move_id.expense_sheet_id.expense_line_ids.filtered(lambda expense: expense.state != 'done')
         res = super().reconcile()
         # Do not update expense or expense sheet states when reversing journal entries
         not_paid_expense_sheets = not_paid_expenses.sheet_id.filtered(lambda sheet: sheet.account_move_id.payment_state != 'reversed')
@@ -51,15 +51,9 @@ class AccountMoveLine(models.Model):
         super(AccountMoveLine, expenses.with_context(force_price_include=True))._compute_totals()
         super(AccountMoveLine, self - expenses)._compute_totals()
 
-    def _compute_term_key(self):
-        super()._compute_term_key()
-        for line in self:
-            if line.expense_id:
-                line.term_key = line.term_key and frozendict(**line.term_key, expense_id=line.expense_id.id)
-
     def _convert_to_tax_base_line_dict(self):
         result = super()._convert_to_tax_base_line_dict()
-        if self.move_id.expense_sheet_id:
+        if self.expense_id:
             result.setdefault('extra_context', {})
             result['extra_context']['force_price_include'] = True
         return result

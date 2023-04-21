@@ -22,9 +22,10 @@ export class MonetaryField extends Component {
     }
 
     get currencyId() {
-        const currencyField = this.props.currencyField ||
-                              this.props.record.fields[this.props.name].currency_field ||
-                              "currency_id";
+        const currencyField =
+            this.props.currencyField ||
+            this.props.record.fields[this.props.name].currency_field ||
+            "currency_id";
         const currency = this.props.record.data[currencyField];
         return currency && currency[0];
     }
@@ -40,8 +41,8 @@ export class MonetaryField extends Component {
     }
 
     get currencyDigits() {
-        if (this.props.digits) {
-            return this.props.digits;
+        if (this.props.useFieldDigits) {
+            return this.props.record.fields[this.props.name].digits;
         }
         if (!this.currency) {
             return null;
@@ -66,7 +67,7 @@ MonetaryField.props = {
     ...standardFieldProps,
     currencyField: { type: String, optional: true },
     inputType: { type: String, optional: true },
-    digits: { type: Array, optional: true },
+    useFieldDigits: { type: Boolean, optional: true },
     hideSymbol: { type: Boolean, optional: true },
     placeholder: { type: String, optional: true },
 };
@@ -82,7 +83,7 @@ MonetaryField.extractProps = ({ attrs }) => {
     return {
         currencyField: attrs.options.currency_field,
         inputType: attrs.type,
-        digits: [16, 2], // FIXME WOWL
+        useFieldDigits: attrs.options.field_digits,
         hideSymbol: attrs.options.no_symbol,
         placeholder: attrs.placeholder,
     };

@@ -54,6 +54,11 @@ const Link = Widget.extend({
             // all btn-* classes anyway.
         ];
 
+        // The classes in the following array should not be in editable areas
+        // but as there are still some (e.g. in the "newsletter block" snippet)
+        // we make sure the options system works with them.
+        this.toleratedClasses = ['btn-link', 'btn-success'];
+
         this.editable = editable;
         this.$editable = $(editable);
 
@@ -105,17 +110,25 @@ const Link = Widget.extend({
             this.data.isNewWindow = this.data.isNewWindow || this.linkEl.target === '_blank';
         }
 
+        const classesToKeep = [
+            'text-wrap', 'text-nowrap', 'text-start', 'text-center', 'text-end',
+            'text-truncate',
+        ];
+        const keptClasses = this.data.iniClassName.split(' ').filter(className => classesToKeep.includes(className));
         const allBtnColorPrefixes = /(^|\s+)(bg|text|border)(-[a-z0-9_-]*)?/gi;
-        const allBtnClassSuffixes = /(^|\s+)btn(?!-block)(-[a-z0-9_-]*)?/gi;
+        const allBtnClassSuffixes = /(^|\s+)btn(-[a-z0-9_-]*)?/gi;
         const allBtnShapes = /\s*(rounded-circle|flat)\s*/gi;
         this.data.className = this.data.iniClassName
             .replace(allBtnColorPrefixes, ' ')
             .replace(allBtnClassSuffixes, ' ')
             .replace(allBtnShapes, ' ');
+        this.data.className += ' ' + keptClasses.join(' ');
         // 'o_submit' class will force anchor to be handled as a button in linkdialog.
         if (/(?:s_website_form_send|o_submit)/.test(this.data.className)) {
             this.isButton = true;
         }
+
+        this.renderingPromise = new Promise(resolve => this._renderingResolver = resolve);
     },
     /**
      * @override
@@ -123,8 +136,8 @@ const Link = Widget.extend({
     start: async function () {
         for (const option of this._getLinkOptions()) {
             const $option = $(option);
-            const value = $option.is('input') ? $option.val() : $option.data('value');
-            let active = true;
+            const value = $option.is('input') ? $option.val() : $option.data('value') || option.getAttribute('value');
+            let active = false;
             if (value) {
                 const subValues = value.split(',');
                 let subActive = true;
@@ -133,13 +146,17 @@ const Link = Widget.extend({
                     subActive = subActive && classPrefix.test(this.data.iniClassName);
                 }
                 active = subActive;
+            } else {
+                active = !this.data.iniClassName
+                         || this.toleratedClasses.some(val => this.data.iniClassName.split(' ').includes(val))
+                         || !this.data.iniClassName.includes('btn-');
             }
             this._setSelectOption($option, active);
         }
 
         const _super = this._super.bind(this);
 
-        await this._updateOptionsUI();
+        this._updateOptionsUI();
 
         if (this.data.url) {
             var match = /mailto:(.+)/.exec(this.data.url);
@@ -153,6 +170,20 @@ const Link = Widget.extend({
         }
 
         return _super(...arguments);
+    },
+    /**
+     * @private
+     */
+    async _widgetRenderAndInsert() {
+        const res = await this._super(...arguments);
+
+        // TODO find a better solution than this during the upcoming refactoring
+        // of the link tools / link dialog.
+        if (this._renderingResolver) {
+            this._renderingResolver();
+        }
+
+        return res;
     },
     /**
      * @override
@@ -176,8 +207,15 @@ const Link = Widget.extend({
     applyLinkToDom: function (data) {
         // Some mass mailing template use <a class="btn btn-link"> instead of just a simple <a>.
         // And we need to keep the classes because the a.btn.btn-link have some special css rules.
-        if (!data.classes.includes('btn') && this.data.iniClassName.includes("btn-link")) {
-            data.classes += " btn btn-link";
+        // Same thing for the "btn-success" class, this class cannot be added
+        // by the options but we still have to ensure that it is not removed if
+        // it exists in a template (e.g. "Newsletter Block" snippet).
+        if (!data.classes.split(' ').includes('btn')) {
+            for (const linkClass of this.toleratedClasses) {
+                if (this.data.iniClassName && this.data.iniClassName.split(' ').includes(linkClass)) {
+                    data.classes += " btn " + linkClass;
+                }
+            }
         }
         if (['btn-custom', 'btn-outline-custom', 'btn-fill-custom'].some(className =>
             data.classes.includes(className)
@@ -188,6 +226,13 @@ const Link = Widget.extend({
             this.$link.css('border-width', data.customBorderWidth);
             this.$link.css('border-style', data.customBorderStyle);
             this.$link.css('border-color', data.customBorder);
+        } else {
+            this.$link.css('color', '');
+            this.$link.css('background-color', '');
+            this.$link.css('background-image', '');
+            this.$link.css('border-width', '');
+            this.$link.css('border-style', '');
+            this.$link.css('border-color', '');
         }
         const attrs = Object.assign({}, this.data.oldAttributes, {
             href: data.url,

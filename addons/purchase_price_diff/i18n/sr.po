@@ -1,0 +1,64 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* purchase_price_diff
+# 
+# Translators:
+# Martin Trigaux, 2023
+# Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 16.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"PO-Revision-Date: 2023-02-02 12:25+0000\n"
+"Last-Translator: Dragan Vukosavljevic <dragan.vukosavljevic@gmail.com>, 2023\n"
+"Language-Team: Serbian (https://www.transifex.com/odoo/teams/41243/sr/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: sr\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#. module: purchase_price_diff
+#: model:ir.model,name:purchase_price_diff.model_account_move_line
+msgid "Journal Item"
+msgstr "Stavka izveštaja"
+
+#. module: purchase_price_diff
+#: model:ir.model.fields,field_description:purchase_price_diff.field_product_category__property_account_creditor_price_difference_categ
+#: model:ir.model.fields,field_description:purchase_price_diff.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,field_description:purchase_price_diff.field_product_template__property_account_creditor_price_difference
+msgid "Price Difference Account"
+msgstr "Račun/konto razlike u ceni"
+
+#. module: purchase_price_diff
+#: model:ir.model,name:purchase_price_diff.model_product_template
+msgid "Product"
+msgstr "Proizvod"
+
+#. module: purchase_price_diff
+#: model:ir.model,name:purchase_price_diff.model_product_category
+msgid "Product Category"
+msgstr "Kategorija proizvoda"
+
+#. module: purchase_price_diff
+#: model:ir.model.fields,help:purchase_price_diff.field_product_product__property_account_creditor_price_difference
+#: model:ir.model.fields,help:purchase_price_diff.field_product_template__property_account_creditor_price_difference
+msgid ""
+"This account is used in automated inventory valuation to record the price "
+"difference between a purchase order and its related vendor bill when "
+"validating this vendor bill."
+msgstr ""
+"Ovaj račun/konto se koristi kod automatske procene zaliha za evidentiranje "
+"razlike u ceni između naloga za kupovinu i njegovog povezanog računa "
+"dobavljača prilikom validacije ovog računa dabavljača."
+
+#. module: purchase_price_diff
+#: model:ir.model.fields,help:purchase_price_diff.field_product_category__property_account_creditor_price_difference_categ
+msgid ""
+"This account will be used to value price difference between purchase price "
+"and accounting cost."
+msgstr ""
+"Ovaj račun/konto će se koristiti za vrednovanje razlike u ceni između "
+"nabavne cene i računovodstvenih troškova."

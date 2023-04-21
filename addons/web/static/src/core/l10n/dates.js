@@ -174,9 +174,13 @@ export const luxonToMomentFormat = memoize(function luxonToMomentFormat(format) 
  * @returns {moment} a moment.js object in the browser's timezone
  */
 export function luxonToMoment(dt) {
-    const o = dt.toObject();
-    // Note: the month is 0-based in moment.js, but 1-based in luxon.js
-    return moment({ ...o, month: o.month - 1 });
+    if (dt.isValid) {
+        const o = dt.toObject();
+        // Note: the month is 0-based in moment.js, but 1-based in luxon.js
+        return moment({ ...o, month: o.month - 1 });
+    } else {
+        return moment.invalid();
+    }
 }
 
 /**
@@ -274,7 +278,7 @@ export function parseDate(value, options = {}) {
     if (!value) {
         return false;
     }
-    return parseDateTime(value, options).startOf("day");
+    return parseDateTime(value, { format: localization.dateFormat, ...options }).startOf("day");
 }
 
 /**
@@ -409,20 +413,31 @@ export function deserializeDateTime(value) {
     return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" }).setZone("default");
 }
 
+const dateCache = new WeakMap();
 /**
  * Returns a serialized string representing the given date.
  * @param {DateTime} value DateTime object, its timezone does not matter
  * @returns {string} serialized date, ready to be sent to the server
  */
 export function serializeDate(value) {
-    return value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" });
+    if (!dateCache.has(value)) {
+        dateCache.set(value, value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" }));
+    }
+    return dateCache.get(value);
 }
 
+const dateTimeCache = new WeakMap();
 /**
  * Returns a serialized string representing the given datetime.
  * @param {DateTime} value DateTime object, its timezone does not matter
  * @returns {string} serialized datetime, ready to be sent to the server
  */
 export function serializeDateTime(value) {
-    return value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" });
+    if (!dateTimeCache.has(value)) {
+        dateTimeCache.set(
+            value,
+            value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" })
+        );
+    }
+    return dateTimeCache.get(value);
 }

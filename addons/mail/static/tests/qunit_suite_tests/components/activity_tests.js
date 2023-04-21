@@ -3,7 +3,7 @@
 import { afterNextRender, start, startServer } from '@mail/../tests/helpers/test_utils';
 
 import { date_to_str } from 'web.time';
-import { patchWithCleanup } from '@web/../tests/helpers/utils';
+import { patchDate, patchWithCleanup } from '@web/../tests/helpers/utils';
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -122,6 +122,7 @@ QUnit.test('activity with note layout', async function (assert) {
 QUnit.test('activity info layout when planned after tomorrow', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const fiveDaysFromNow = new Date();
     fiveDaysFromNow.setDate(today.getDate() + 5);
@@ -163,6 +164,7 @@ QUnit.test('activity info layout when planned after tomorrow', async function (a
 QUnit.test('activity info layout when planned tomorrow', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const tomorrow = new Date();
     tomorrow.setDate(today.getDate() + 1);
@@ -204,6 +206,7 @@ QUnit.test('activity info layout when planned tomorrow', async function (assert)
 QUnit.test('activity info layout when planned today', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const pyEnv = await startServer();
     const resPartnerId1 = pyEnv['res.partner'].create({});
     pyEnv['mail.activity'].create({
@@ -242,6 +245,7 @@ QUnit.test('activity info layout when planned today', async function (assert) {
 QUnit.test('activity info layout when planned yesterday', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
@@ -283,6 +287,7 @@ QUnit.test('activity info layout when planned yesterday', async function (assert
 QUnit.test('activity info layout when planned before yesterday', async function (assert) {
     assert.expect(4);
 
+    patchDate(2023, 0, 11, 12, 0, 0);
     const today = new Date();
     const fiveDaysBeforeNow = new Date();
     fiveDaysBeforeNow.setDate(today.getDate() - 5);

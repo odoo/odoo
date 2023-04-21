@@ -17,6 +17,48 @@ class AccountMove(models.Model):
         # The name should be unique by partner for those documents.
         if not index_exists(self.env.cr, "account_move_unique_name_latam"):
             drop_index(self.env.cr, "account_move_unique_name", self._table)
+
+            # Fixup the account.move names like "sequence (N)" removing the "(N)" part
+            self.env.cr.execute("""
+            UPDATE account_move SET name = SUBSTRING(account_move.name, 1, strpos(account_move.name::varchar, ' ('::varchar) -1 )
+             WHERE l10n_latam_document_type_id IS NOT NULL AND account_move.name LIKE '% (%)'
+               AND move_type IN ('in_invoice', 'in_refund', 'in_receipt');""")
+
+            # Make all values of `name` different (naming them `name (1)`, `name (2)`...) so that we can add the following UNIQUE INDEX
+            self.env.cr.execute("""
+                WITH duplicated_sequence AS (
+                    SELECT name, commercial_partner_id, l10n_latam_document_type_id, state
+                      FROM account_move
+                     WHERE state = 'posted'
+                       AND name != '/'
+                       AND (l10n_latam_document_type_id IS NOT NULL AND move_type IN ('in_invoice', 'in_refund', 'in_receipt'))
+                  GROUP BY commercial_partner_id, l10n_latam_document_type_id, name, state
+                    HAVING COUNT(*) > 1
+                ),
+                to_update AS (
+                    SELECT move.id,
+                           move.name,
+                           move.state,
+                           move.date,
+                           row_number() OVER(PARTITION BY move.name, move.commercial_partner_id, move.l10n_latam_document_type_id ORDER BY move.name, move.commercial_partner_id, move.l10n_latam_document_type_id, move.date) AS row_seq
+                      FROM duplicated_sequence
+                      JOIN account_move move ON move.name = duplicated_sequence.name
+                                            AND move.commercial_partner_id = duplicated_sequence.commercial_partner_id
+                                            AND move.l10n_latam_document_type_id = duplicated_sequence.l10n_latam_document_type_id
+                                            AND move.state = duplicated_sequence.state
+                ),
+                new_vals AS (
+                    SELECT id,
+                           name || ' (' || (row_seq-1)::text || ')' AS name
+                      FROM to_update
+                     WHERE row_seq > 1
+                )
+                UPDATE account_move
+                   SET name = new_vals.name
+                  FROM new_vals
+                 WHERE account_move.id = new_vals.id;
+            """)
+
             self.env.cr.execute("""
                 CREATE UNIQUE INDEX account_move_unique_name
                                  ON account_move(name, journal_id)

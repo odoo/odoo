@@ -68,15 +68,12 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
 
         useEffect(() => {
             const initWysiwyg = async () => {
-                this.$editable.on('click.odoo-website-editor', '*', this, this._preventDefault);
                 // Disable OdooEditor observer's while setting up classes
                 this.widget.odooEditor.observerUnactive();
                 this._addEditorMessages();
                 if (this.props.beforeEditorActive) {
                     await this.props.beforeEditorActive(this.$editable);
                 }
-                this._setObserver();
-
                 // The jquery instance inside the iframe needs to be aware of the wysiwyg.
                 this.websiteService.contentWindow.$('#wrapwrap').data('wysiwyg', this.widget);
                 await new Promise((resolve, reject) => this._websiteRootEvent('widgets_start_request', {
@@ -92,14 +89,14 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                     }
                 }
                 this.props.wysiwygReady();
+                // Wait for widgets to be destroyed and restarted before setting
+                // the dirty observer (not to be confused with odooEditor
+                // observer) as the widgets might trigger DOM mutations.
+                this._setObserver();
                 this.widget.odooEditor.observerActive();
             };
 
             initWysiwyg();
-
-            return () => {
-                this.$editable.off('click.odoo-website-editor', '*');
-            };
         }, () => []);
 
         useEffect(() => {
@@ -346,8 +343,11 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
      * @private
      */
     _addEditorMessages() {
-        const $wrap = this.$editable.find('.oe_structure.oe_empty, [data-oe-type="html"]');
+        const $wrap = this.$editable
+            .find('.oe_structure.oe_empty, [data-oe-type="html"]')
+            .filter(':o_editable');
         this.$editorMessageElement = $wrap.not('[data-editor-message]')
+                .attr('data-editor-message-default', true)
                 .attr('data-editor-message', this.env._t('DRAG BUILDING BLOCKS HERE'));
         $wrap.filter(':empty').attr('contenteditable', false);
     }
@@ -370,15 +370,34 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         // this badly relies on the contenteditable="true" attribute being on
         // those images but it is rightfully lost after the first save.
         // grep: COMPANY_TEAM_CONTENTEDITABLE
-        const $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+        let $extraEditableZones = $editableSavableZones.find('.s_company_team .o_not_editable img');
+
+        // To make sure the selection remains bounded to the active tab,
+        // each tab is made non editable while keeping its nested
+        // oe_structure editable. This avoids having a selection range span
+        // over all further inactive tabs when using Chrome.
+        // grep: .s_tabs
+        $extraEditableZones = $extraEditableZones.add($editableSavableZones.find('.tab-pane > .oe_structure'));
 
         return $editableSavableZones.add($extraEditableZones).toArray();
     }
     _getReadOnlyAreas() {
-        return [];
+        // To make sure the selection remains bounded to the active tab,
+        // each tab is made non editable while keeping its nested
+        // oe_structure editable. This avoids having a selection range span
+        // over all further inactive tabs when using Chrome.
+        // grep: .s_tabs
+        const doc = this.websiteService.pageDocument;
+        return [...doc.querySelectorAll('.tab-pane > .oe_structure')].map(el => el.parentNode);
     }
     _getUnremovableElements () {
-        return this.$editable[0].querySelectorAll("#top_menu a:not(.oe_unremovable)");
+        // TODO adapt in master: this was added as a fix to target some elements
+        // to be unremovable. This fix had to be reverted but to keep things
+        // stable, this still had to return the same thing: a NodeList. This
+        // code here seems the only (?) way to create a static empty NodeList.
+        // In master, this should return an array as it seems intended by the
+        // library caller anyway.
+        return document.querySelectorAll('.a:not(.a)');
     }
     /**
      * This method provides support for the legacy event system.
@@ -415,6 +434,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
                 return event.data.onSuccess();
             case 'edit_menu':
                 return this.dialogs.add(EditMenuDialog, {
+                    rootID: params[0],
                     save: () => {
                         const snippetsMenu = this.widget.snippetsMenu;
                         snippetsMenu.trigger_up('request_save', {reload: true, _toMutex: true});
@@ -458,6 +478,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         return websiteRootInstance.trigger_up(type, {...eventData});
     }
     _preventDefault(e) {
+        // TODO: Remove this method in master.
         e.preventDefault();
     }
     /**
@@ -685,7 +706,7 @@ export class WysiwygAdapterComponent extends ComponentAdapter {
         } else if (event.data.reloadWebClient) {
             const currentPath = encodeURIComponent(window.location.pathname);
             const websiteId = this.websiteService.currentWebsite.id;
-            callback = () => window.location = `/web#action=website.website_preview&website_id=${websiteId}&path=${currentPath}&enable_editor=1`;
+            callback = () => window.location = `/web#action=website.website_preview&website_id=${encodeURIComponent(websiteId)}&path=${currentPath}&enable_editor=1`;
         } else if (event.data.action) {
             callback = () => {
                 this.leaveEditMode({

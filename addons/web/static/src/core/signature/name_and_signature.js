@@ -203,7 +203,11 @@ export class NameAndSignature extends Component {
                 let height = 0;
                 const ratio = image.width / image.height;
 
-                const canvas = this.signatureRef.el.querySelector("canvas");
+                const signatureEl = this.signatureRef.el;
+                if (!signatureEl) {
+                    return;
+                }
+                const canvas = signatureEl.querySelector("canvas");
                 const context = canvas.getContext("2d");
 
                 if (image.width / canvas.width > image.height / canvas.height) {

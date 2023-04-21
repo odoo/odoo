@@ -101,7 +101,7 @@ kbd {
   box-shadow: $o-dropdown-box-shadow;
 }
 
-.dropdown-item {
+:not(.dropstart) > .dropdown-item {
   &.active, &.selected {
     position: relative;
     font-weight: $font-weight-bold;
@@ -125,6 +125,26 @@ kbd {
     }
   }
 }
+
+/*!rtl:begin:ignore*/
+.o-dropdown.dropstart > .dropdown-item.dropdown-toggle:not(.dropdown-item_active_noarrow) {
+  &.active, &.selected {
+    &::after {
+      @include o-position-absolute(0, $left: 90%);
+      transform: translate(0, 90%);
+      font: .7em/1em FontAwesome;
+      color: $link-color;
+      display: inline-block;
+      content: "\f00c";
+      border: 0;
+    }
+
+    &.disabled:after {
+      color: $dropdown-link-disabled-color;
+    }
+  }
+}
+/*!rtl:end:ignore*/
 
 .dropdown-header {
   font-weight: $font-weight-bold;
@@ -197,6 +217,10 @@ select {
   border-radius: 0; // webkit OSX browsers have a border-radius on select
 
   color: $o-main-text-color;
+
+  > option {
+    background: $light;
+  }
 
   // This is a hack to remove the outline in FF
   &:-moz-focusring {

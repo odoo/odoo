@@ -52,6 +52,7 @@ def format_partner_address(partner):
         'country': partner.country_id.code or 'ZZ',  # 'ZZ' if the country is not known.
         'stateOrProvince': partner.state_id.code,
         'postalCode': partner.zip,
-        'street': street_data['street_name'],
-        'houseNumberOrName': street_data['street_number'],
+        # Fill in the address fields if the format is supported, or fallback to the raw address.
+        'street': street_data.get('street_name', partner.street),
+        'houseNumberOrName': street_data.get('street_number'),
     }

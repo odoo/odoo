@@ -7,3 +7,4 @@ from . import event_ticket
 from . import sale_order
 from . import product
 from . import sale_order_template_line
+from . import sale_order_template_option

@@ -1,5 +1,5 @@
 import { parseHTML } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor, unformat } from '../utils.js';
+import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '../utils.js';
 
 const span = text => {
     const span = document.createElement('span');
@@ -260,6 +260,25 @@ describe('insert HTML', () => {
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
                 contentAfter: `<p><span>TEST</span>[]<br></p>`,
+            });
+        });
+    });
+});
+describe('insert text', () => {
+    describe('not collapsed selection', () => {
+        it('should insert a character in a fully selected font in a heading, preserving its style', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1><font style="background-color: red;">[abc</font><br></h1><p>]def</p>',
+                stepFunction: async editor => insertText(editor, 'g'),
+                contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1><font style="background-color: red;">[abc</font><br></h1><p>]def</p>',
+                stepFunction: async editor => {
+                    await deleteBackward(editor);
+                    await insertText(editor, 'g');
+                },
+                contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
             });
         });
     });

@@ -64,10 +64,20 @@ class website_form_model(models.Model):
         for field in list(fields_get):
             if 'domain' in fields_get[field] and isinstance(fields_get[field]['domain'], str):
                 del fields_get[field]['domain']
-            if fields_get[field].get('readonly') or field in MAGIC_FIELDS or fields_get[field]['type'] == 'many2one_reference':
+            if fields_get[field].get('readonly') or field in MAGIC_FIELDS or \
+                    fields_get[field]['type'] in ['many2one_reference', 'properties']:
                 del fields_get[field]
 
         return fields_get
+
+    @api.model
+    def get_compatible_form_models(self):
+        if not self.env.user.has_group('website.group_website_restricted_editor'):
+            return []
+        return self.sudo().search_read(
+            [('website_form_access', '=', True)],
+            ['id', 'model', 'name', 'website_form_label', 'website_form_key'],
+        )
 
 
 class website_form_model_fields(models.Model):

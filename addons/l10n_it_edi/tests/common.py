@@ -9,14 +9,6 @@ from odoo.tests import tagged
 from odoo.addons.account_edi.tests.common import AccountEdiTestCommon
 from odoo.addons.account_edi_proxy_client.models.account_edi_proxy_user import AccountEdiProxyClientUser
 
-def patch_proxy_user(func):
-    @patch.object(AccountEdiProxyClientUser, '_make_request', MagicMock(spec=AccountEdiProxyClientUser._make_request))
-    @patch.object(AccountEdiProxyClientUser, '_decrypt_data', MagicMock(spec=AccountEdiProxyClientUser._decrypt_data))
-    @patch.object(AccountEdiProxyClientUser, '_get_demo_state', MagicMock(spec=AccountEdiProxyClientUser._get_demo_state))
-    def patched(self, *args, **kwargs):
-        return func(self, *args, **kwargs)
-    return patched
-
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdi(AccountEdiTestCommon):
 
@@ -31,10 +23,10 @@ class TestItEdi(AccountEdiTestCommon):
         cls.company.vat = 'IT01234560157'
 
         cls.test_bank = cls.env['res.partner.bank'].with_company(cls.company).create({
-                'partner_id': cls.company.partner_id.id,
-                'acc_number': 'IT1212341234123412341234123',
-                'bank_name': 'BIG BANK',
-                'bank_bic': 'BIGGBANQ',
+            'partner_id': cls.company.partner_id.id,
+            'acc_number': 'IT1212341234123412341234123',
+            'bank_name': 'BIG BANK',
+            'bank_bic': 'BIGGBANQ',
         })
 
         cls.company.l10n_it_tax_system = "RF01"
@@ -47,7 +39,7 @@ class TestItEdi(AccountEdiTestCommon):
         cls.italian_partner_a = cls.env['res.partner'].create({
             'name': 'Alessi',
             'vat': 'IT00465840031',
-            'l10n_it_codice_fiscale': '00465840031',
+            'l10n_it_codice_fiscale': '93026890017',
             'country_id': cls.env.ref('base.it').id,
             'street': 'Via Privata Alessi 6',
             'zip': '28887',
@@ -102,6 +94,9 @@ class TestItEdi(AccountEdiTestCommon):
             'price_unit': 800.40,
             'tax_ids': [(6, 0, [cls.company.account_sale_tax_id.id])]
         }
+
+        cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
+        cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
 
     @classmethod
     def _get_test_file_content(cls, filename):

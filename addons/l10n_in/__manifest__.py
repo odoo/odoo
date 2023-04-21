@@ -44,13 +44,13 @@ Sheet, now only Vertical format has been permitted Which is Supported By Odoo.
         'views/account_tax_views.xml',
         'views/uom_uom_views.xml',
         'views/report_template.xml',
-        'data/account_chart_template_data.xml'
+        'data/account_chart_template_data.xml',
+        'report/audit_trail_report_views.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
         'demo/res_partner_demo.xml',
         'demo/product_demo.xml',
-        'demo/account_payment_demo.xml',
         'demo/account_invoice_demo.xml',
     ],
     'license': 'LGPL-3',

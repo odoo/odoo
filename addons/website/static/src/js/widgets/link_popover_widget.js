@@ -29,14 +29,28 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
      *
      * @override
      */
-    start() {
+    async start() {
+        const _super = this._super.bind(this);
+
+        this.isWebsiteDesigner = await this._rpc({
+            'model': 'res.users',
+            'method': 'has_group',
+            'args': ['website.group_website_designer'],
+        });
+        const $removeLink = this.$('.o_we_remove_link');
         // remove link has no sense on navbar menu links, instead show edit menu
-        const $anchor = $('<a/>', {
-            href: '#', class: 'ms-2 js_edit_menu', title: _t('Edit Menu'),
-            'data-bs-placement': 'top', 'data-bs-toggle': 'tooltip',
-        }).append($('<i/>', {class: 'fa fa-sitemap'}));
-        this.$('.o_we_remove_link').replaceWith($anchor);
-        return this._super(...arguments);
+        if (this.isWebsiteDesigner) {
+            const $anchor = $('<a/>', {
+                href: '#', class: 'ms-2 js_edit_menu', title: _t('Edit Menu'),
+                'data-bs-placement': 'top', 'data-bs-toggle': 'tooltip',
+            }).append($('<i/>', {class: 'fa fa-sitemap'}));
+            $removeLink.replaceWith($anchor);
+        } else {
+            this.$('.o_we_edit_link').remove();
+            $removeLink.remove();
+        }
+
+        return _super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -77,6 +91,7 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
                 });
             },
         });
+        this.popover.hide();
     },
     /**
      * Opens the menu tree editor. On menu editor save, current page changes
@@ -86,19 +101,11 @@ const NavbarLinkPopoverWidget = weWidgets.LinkPopoverWidget.extend({
      * @param {Event} ev
      */
      _onEditMenuClick(ev) {
+        const contentMenu = this.target.closest('[data-content_menu_id]');
+        const rootID = contentMenu ? parseInt(contentMenu.dataset.content_menu_id, 10) : undefined;
         this.trigger_up('action_demand', {
             actionName: 'edit_menu',
-            params: [
-                () => {
-                    const prom = new Promise((resolve, reject) => {
-                        this.trigger_up('request_save', {
-                            onSuccess: resolve,
-                            onFailure: reject,
-                        });
-                    });
-                    return prom;
-                },
-            ],
+            params: [rootID],
         });
     },
 });

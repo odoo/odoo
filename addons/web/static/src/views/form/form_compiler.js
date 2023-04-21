@@ -18,7 +18,6 @@ import {
     makeSeparator,
 } from "@web/views/view_compiler";
 import { ViewCompiler } from "../view_compiler";
-import { localization } from "@web/core/l10n/localization";
 
 const compilersRegistry = registry.category("form_compilers");
 
@@ -206,6 +205,7 @@ export class FormCompiler extends ViewCompiler {
             dynamicLabel(label);
         }
         this.encounteredFields[fieldName] = dynamicLabel;
+        field.setAttribute("setDirty.alike", `props.setFieldAsDirty`);
         return field;
     }
 
@@ -243,20 +243,6 @@ export class FormCompiler extends ViewCompiler {
                 }
             }
             append(form, compiledList);
-        }
-        if (localization.multiLang) {
-            const statusBar = form.querySelector(".o_form_statusbar");
-            const translateAlert = createElement("t", {
-                "t-if": "props.translateAlert",
-                "t-call": "web.TranslateAlert",
-            });
-            if (statusBar) {
-                statusBar.parentElement.insertBefore(translateAlert, statusBar.nextSibling);
-            } else if (form.querySelector(".o_form_sheet_bg")) {
-                form.querySelector(".o_form_sheet_bg").prepend(translateAlert);
-            } else {
-                form.prepend(translateAlert);
-            }
         }
         return form;
     }
@@ -608,7 +594,7 @@ export class FormCompiler extends ViewCompiler {
         sheetBG.className = "o_form_sheet_bg";
 
         const sheetFG = createElement("div");
-        sheetFG.className = "o_form_sheet position-relative";
+        sheetFG.className = "o_form_sheet position-relative clearfix";
 
         append(sheetBG, sheetFG);
         for (const child of el.childNodes) {

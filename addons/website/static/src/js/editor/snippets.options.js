@@ -128,7 +128,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         }
         for (const font of this.googleLocalFonts) {
             const attachmentId = font.split(/\s*:\s*/)[1];
-            const fontURL = `/web/content/${attachmentId}`;
+            const fontURL = `/web/content/${encodeURIComponent(attachmentId)}`;
             fontsToLoad.push(fontURL);
         }
         // TODO ideally, remove the <link> elements created once this widget
@@ -243,7 +243,9 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         let isValidFamily = false;
 
                         try {
-                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1]+':300,300i,400,400i,700,700i', {method: 'HEAD'});
+                            // Font family is an encoded query parameter:
+                            // "Open+Sans" needs to remain "Open+Sans".
+                            const result = await fetch("https://fonts.googleapis.com/css?family=" + m[1] + ':300,300i,400,400i,700,700i', {method: 'HEAD'});
                             // Google fonts server returns a 400 status code if family is not valid.
                             if (result.ok) {
                                 isValidFamily = true;
@@ -1646,7 +1648,7 @@ options.registry.company_data = options.Class.extend({
                     args: [session.uid, ['company_id']],
                 });
             }).then(function (res) {
-                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + (res && res[0] && res[0].company_id[0] || 1);
+                proto.__link = '/web#action=base.action_res_company_form&view_type=form&id=' + encodeURIComponent(res && res[0] && res[0].company_id[0] || 1);
             });
         }
         return Promise.all([this._super.apply(this, arguments), prom]);
@@ -2246,6 +2248,33 @@ options.registry.HeaderNavbar = options.Class.extend({
     },
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        // TODO Remove in master.
+        const signInOptionEl = this.el.querySelector('[data-customize-website-views="portal.user_sign_in"]');
+        signInOptionEl.dataset.noPreview = 'true';
+    },
+    /**
+     * @private
+     */
+    async updateUI() {
+        await this._super(...arguments);
+        // For all header templates except those in the following array, change
+        // the label of the option to "Mobile Alignment" (instead of
+        // "Alignment") because it only impacts the mobile view.
+        if (!["'default'", "'hamburger'", "'sidebar'"].includes(weUtils.getCSSVariableValue('header-template'))) {
+            const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
+            alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
+        }
+    },
+
+    //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
@@ -2264,6 +2293,14 @@ options.registry.HeaderNavbar = options.Class.extend({
             case 'no_hamburger_opt': {
                 return !weUtils.getCSSVariableValue('header-template').includes('hamburger');
             }
+        }
+        if (widgetName === 'header_alignment_opt') {
+            if (!this.$target[0].querySelector('.o_offcanvas_menu_toggler')) {
+                // If mobile menu is "Default", hides the alignment option for
+                // "hamburger full" and "magazine" header templates.
+                return !["'hamburger-full'", "'magazine'"].includes(weUtils.getCSSVariableValue('header-template'));
+            }
+            return true;
         }
         return this._super(...arguments);
     },
@@ -2489,16 +2526,16 @@ options.registry.DeviceVisibility = options.Class.extend({
      * @see this.selectClass for parameters
      */
     async toggleDeviceVisibility(previewMode, widgetValue, params) {
-        this.$target[0].classList.remove('d-none', 'd-md-none',
+        this.$target[0].classList.remove('d-none', 'd-md-none', 'd-lg-none',
             'o_snippet_mobile_invisible', 'o_snippet_desktop_invisible',
             'o_snippet_override_invisible',
         );
         const style = getComputedStyle(this.$target[0]);
-        this.$target[0].classList.remove(`d-md-${style['display']}`);
+        this.$target[0].classList.remove(`d-md-${style['display']}`, `d-lg-${style['display']}`);
         if (widgetValue === 'no_desktop') {
-            this.$target[0].classList.add('d-md-none', 'o_snippet_desktop_invisible');
+            this.$target[0].classList.add('d-lg-none', 'o_snippet_desktop_invisible');
         } else if (widgetValue === 'no_mobile') {
-            this.$target[0].classList.add(`d-md-${style['display']}`, 'd-none', 'o_snippet_mobile_invisible');
+            this.$target[0].classList.add(`d-lg-${style['display']}`, 'd-none', 'o_snippet_mobile_invisible');
         }
 
         // Update invisible elements.
@@ -2543,16 +2580,25 @@ options.registry.DeviceVisibility = options.Class.extend({
         if (methodName === 'toggleDeviceVisibility') {
             const classList = [...this.$target[0].classList];
             if (classList.includes('d-none') &&
-                    classList.some(className => className.startsWith('d-md-'))) {
+                    classList.some(className => className.match(/^d-(md|lg)-/))) {
                 return 'no_mobile';
             }
-            if (classList.includes('d-md-none')) {
+            if (classList.some(className => className.match(/d-(md|lg)-none/))) {
                 return 'no_desktop';
             }
             return '';
         }
         return await this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (this.$target[0].classList.contains('s_table_of_content_main')) {
+            return false;
+        }
+        return this._super(...arguments);
+    }
 });
 
 /**
@@ -3732,6 +3778,23 @@ options.registry.GridImage = options.Class.extend({
                 : 'cover';
         }
         return this._super(...arguments);
+    },
+});
+
+options.registry.layout_column.include({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * TODO adapt in master: used to hide the "Layout" options on "Images Wall"
+     * (which has its own options to handle the layout).
+     *
+     * @override
+     */
+    _computeVisibility() {
+        return !this.$target[0].closest('[data-snippet="s_images_wall"]');
     },
 });
 

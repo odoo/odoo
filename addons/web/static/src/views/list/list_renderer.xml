@@ -3,8 +3,7 @@
 
     <t t-name="web.ListRenderer" owl="1">
         <div
-            class="o_list_renderer o_renderer"
-            t-att-class="{'table-responsive': showTable}"
+            class="o_list_renderer o_renderer table-responsive"
             t-attf-class="{{ props.archInfo.className or '' }}"
             tabindex="-1"
             t-ref="root"
@@ -12,7 +11,7 @@
             <t t-if="showNoContentHelper" t-call="web.ActionHelper">
                 <t t-set="noContentHelp" t-value="props.noContentHelp"/>
             </t>
-            <table t-if="showTable" t-attf-class="o_list_table table table-sm table-hover position-relative mb-0  {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
+            <table t-attf-class="o_list_table table table-sm table-hover position-relative mb-0 {{props.list.isGrouped ? 'o_list_table_grouped' : 'o_list_table_ungrouped table-striped'}}" t-ref="table">
                 <thead>
                     <tr>
                         <th t-if="hasSelectors" class="o_list_record_selector o_list_controller align-middle pe-1 cursor-pointer" tabindex="-1" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-on-click.stop="toggleSelection">
@@ -24,20 +23,22 @@
                                 t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
                                 t-on-mouseenter="ev => this.onHoverSortColumn(ev, column)"
                                 t-on-mouseleave="ev => this.onHoverSortColumn(ev, column)"
+                                t-on-mouseup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
-                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"  t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false" t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
+                                t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
+                                t-att-data-tooltip-info="isDebugMode ? makeTooltip(column) : false"
+                                data-tooltip-delay="1000"
                                 tabindex="-1">
                                 <t t-if="column.hasLabel and column.widget !== 'handle'">
                                 <t t-set="isNumeric" t-value="isNumericColumn(column)"/>
                                     <div t-att-class="{'d-flex': true, 'flex-row-reverse': isNumeric}">
                                         <span class="d-block min-w-0 text-truncate flex-grow-1" t-att-class="isNumeric ? 'text-end' : ''"
                                               t-esc="column.label"/>
-                                        <i t-if="!props.list.isGrouped"
-                                           t-att-class="getSortableIconClass(column)"/>
+                                        <i t-att-class="getSortableIconClass(column)"/>
                                     </div>
                                     <span t-if="!isEmpty"
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-index-1"
-                                          t-on-click.stop.prevent=""
                                           t-on-mousedown.stop.prevent="onStartResize"/>
                                 </t>
                             </th>
@@ -218,37 +219,39 @@
             t-on-touchmove="() => this.onRowTouchMove(record)"
         >
             <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" t-if="hasSelectors" class="o_list_record_selector" t-on-click.stop="() => this.toggleRecordSelection(record)" tabindex="-1">
-                <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="record.selected" onChange.bind="() => this.toggleRecordSelection(record)" />
+                <CheckBox disabled="!!props.list.editedRecord or props.list.model.useSampleModel" value="record.selected" onChange.alike="() => this.toggleRecordSelection(record)" />
             </td>
             <t t-foreach="getColumns(record)" t-as="column" t-key="column.id">
                 <t t-if="column.type === 'field'">
+                    <t t-set="isInvisible" t-value="evalModifier(column.modifiers.invisible, record)"/>
                     <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)"
                         class="o_data_cell cursor-pointer"
                         t-att-class="getCellClass(column, record)"
                         t-att-name="column.name"
                         t-att-colspan="column.colspan"
-                        t-att-data-tooltip="getCellTitle(column, record)"
+                        t-att-data-tooltip="!isInvisible ? getCellTitle(column, record) : false"
                         data-tooltip-delay="1000"
                         t-on-click="(ev) => this.onCellClicked(record, column, ev)" tabindex="-1">
-                        <t t-if="!evalModifier(column.modifiers.invisible, record)">
+                        <t t-if="!isInvisible">
                             <t t-if="canUseFormatter(column, record)" t-out="getFormattedValue(column, record)"/>
                             <Field t-else="" name="column.name" record="record" type="column.widget" class="getFieldClass(column)" fieldInfo="props.archInfo.fieldNodes[column.name]" setDirty="(isDirty) => this.setDirty(isDirty)"/>
                         </t>
                     </td>
                 </t>
                 <t t-if="column.type === 'button_group'">
-                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
+                    <td t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev, group, record)" class="o_data_cell cursor-pointer" t-att-class="getCellClass(column, record)" t-on-click="(ev) => this.onButtonCellClicked(record, column, ev)" tabindex="-1">
                         <t t-foreach="column.buttons" t-as="button" t-key="button.id">
                             <ViewButton t-if="!evalModifier(button.modifiers.invisible, record)"
                                 className="button.className"
                                 clickParams="button.clickParams"
                                 defaultRank="button.defaultRank"
-                                disabled="record.isVirtual"
+                                disabled="button.disabled"
                                 icon="button.icon"
                                 record="record"
                                 string="button.string"
                                 title="button.title"
                                 tabindex="props.list.editedRecord ? '-1' : '0'"
+                                onClick="isX2Many and record.isVirtual ? displaySaveNotification.bind(this) : ''"
                             />
                         </t>
                     </td>

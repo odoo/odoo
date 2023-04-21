@@ -31,29 +31,18 @@ class ResCompany(models.Model):
         """
         self.env.company.get_chart_of_accounts_or_fail()
 
-        self._install_modules(['payment_paypal', 'payment_stripe', 'account_payment'])
+        self._install_modules(['payment_stripe', 'account_payment'])
 
         # Create a new env including the freshly installed module(s)
         new_env = api.Environment(self.env.cr, self.env.uid, self.env.context)
 
+        # Configure Stripe
         default_journal = new_env['account.journal'].search(
             [('type', '=', 'bank'), ('company_id', '=', new_env.company.id)], limit=1
         )
 
-        # Configure Stripe
         stripe_provider = new_env.ref('payment.payment_provider_stripe')
         stripe_provider.journal_id = stripe_provider.journal_id or default_journal
-        if stripe_provider.state == 'disabled':  # The onboarding step has never been run
-            # Configure PayPal
-            paypal_provider = new_env.ref(
-                'payment.payment_provider_paypal', raise_if_not_found=False
-            )
-            if paypal_provider:
-                if not paypal_provider.paypal_email_account:
-                    paypal_provider.paypal_email_account = new_env.user.email or new_env.company.email
-                if paypal_provider.state == 'disabled' and paypal_provider.paypal_email_account:
-                    paypal_provider.state = 'enabled'
-                paypal_provider.journal_id = paypal_provider.journal_id or default_journal
 
         return stripe_provider.action_stripe_connect_account(menu_id=menu_id)
 

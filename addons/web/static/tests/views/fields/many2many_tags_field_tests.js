@@ -5,6 +5,7 @@ import { browser } from "@web/core/browser/browser";
 import { Many2ManyTagsField } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import {
     click,
+    clickDiscard,
     clickDropdown,
     clickOpenedDropdownItem,
     clickSave,
@@ -18,6 +19,7 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
+import { RPCError } from "@web/core/network/rpc_service";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
 let serverData;
@@ -959,6 +961,55 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        "input and remove text without selecting any tag or option",
+        async function (assert) {
+            serverData.models.partner_type.records.push({ id: 13, display_name: "red", color: 8 });
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
+            });
+
+            assert.containsNone(target, ".o_field_many2many_tags .badge");
+            const input = target.querySelector(".o_field_many2many_tags input");
+
+            // enter some text
+            await triggerEvent(input, null, "focus");
+            await click(input);
+            await editInput(input, null, "go");
+            // ensure no selection
+            for (const item of [
+                ...target.querySelectorAll(
+                    ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item"
+                ),
+            ]) {
+                triggerEvent(item, null, "mouseleave");
+            }
+            await triggerEvent(input, null, "blur");
+            // ensure we're not adding any value
+            assert.containsNone(document.body, ".modal");
+            assert.containsNone(target, ".o_field_many2many_tags .badge");
+
+            // remove the added text to test behaviour with falsy value
+            await triggerEvent(input, null, "focus");
+            await click(input);
+            await editInput(input, null, "");
+            for (const item of [
+                ...target.querySelectorAll(
+                    ".o-autocomplete--dropdown-menu .o-autocomplete--dropdown-item"
+                ),
+            ]) {
+                triggerEvent(item, null, "mouseleave");
+            }
+            await triggerEvent(input, null, "blur");
+            assert.containsNone(document.body, ".modal");
+            assert.containsNone(target, ".o_field_many2many_tags .badge");
+        }
+    );
+
     QUnit.test("Many2ManyTagsField in one2many with display_name", async function (assert) {
         serverData.models.turtle.records[0].partner_ids = [2];
         serverData.views = {
@@ -1429,7 +1480,9 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="timmy" widget="many2many_tags"/></form>',
             mockRPC(route, args) {
                 if (args.method === "name_create") {
-                    return Promise.reject();
+                    const error = new RPCError("Something went wrong");
+                    error.exceptionName = "odoo.exceptions.ValidationError";
+                    throw error;
                 }
                 if (args.method === "create") {
                     assert.deepEqual(args.args[0], {
@@ -1650,6 +1703,34 @@ QUnit.module("Fields", (hooks) => {
         assert.containsOnce(target, ".o_tag");
         assert.strictEqual(target.querySelector(".o_tag").innerText, "new tag");
     });
+
+    QUnit.test(
+        "Many2ManyTagsField keep the linked records after discard of the quick create dialog",
+        async (assert) => {
+            serverData.views = {
+                "partner_type,false,form": `<form><field name="name"/><field name="color"/></form>`,
+            };
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="timmy" widget="many2many_tags" options="{'no_quick_create': 1}"/>
+                </form>`,
+            });
+
+            assert.containsNone(target, ".o_tag");
+            await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "new tag");
+            await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+            await click(target.querySelector(".modal .o_form_button_save"));
+            assert.containsOnce(target, ".o_tag");
+            await editInput(target, ".o_field_many2many_tags .o-autocomplete--input", "tago");
+            await clickOpenedDropdownItem(target, "timmy", "Create and edit...");
+            await clickDiscard(target.querySelector(".modal"));
+            assert.containsOnce(target, ".o_tag");
+        }
+    );
 
     QUnit.test("Many2ManyTagsField with option 'no_create' set to true", async (assert) => {
         await makeView({

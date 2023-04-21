@@ -329,7 +329,7 @@ class MrpWorkorder(models.Model):
             order.duration = sum(order.time_ids.mapped('duration'))
             order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
             if order.duration_expected:
-                order.duration_percent = 100 * (order.duration_expected - order.duration) / order.duration_expected
+                order.duration_percent = max(-2147483648, min(2147483647, 100 * (order.duration_expected - order.duration) / order.duration_expected))
             else:
                 order.duration_percent = 0
 
@@ -440,9 +440,10 @@ class MrpWorkorder(models.Model):
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
-        res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
-        if res is not True:
-            return res
+        if self.production_id:
+            res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
+            if res is not True:
+                return res
 
     def write(self, values):
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):
@@ -505,6 +506,8 @@ class MrpWorkorder(models.Model):
         # Plan workorder after its predecessors
         start_date = max(self.production_id.date_planned_start, datetime.now())
         for workorder in self.blocked_by_workorder_ids:
+            if workorder.state in ['done', 'cancel']:
+                continue
             workorder._plan_workorder(replan)
             start_date = max(start_date, workorder.date_planned_finished)
         # Plan only suitable workorders
@@ -552,6 +555,12 @@ class MrpWorkorder(models.Model):
         })
         vals['leave_id'] = leave.id
         self.write(vals)
+
+    def _cal_cost(self, times=None):
+        self.ensure_one()
+        times = times or self.time_ids
+        duration = sum(times.mapped('duration'))
+        return (duration / 60.0) * self.workcenter_id.costs_hour
 
     @api.model
     def gantt_unavailability(self, start_date, end_date, scale, group_bys=None, rows=None):
@@ -601,11 +610,14 @@ class MrpWorkorder(models.Model):
 
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
+        elif self.qty_producing == 0:
+            self.qty_producing = self.qty_remaining
 
         if self._should_start_timer():
             self.env['mrp.workcenter.productivity'].create(
                 self._prepare_timeline_vals(self.duration, datetime.now())
             )
+
         if self.production_id.state != 'progress':
             self.production_id.write({
                 'date_start': datetime.now(),
@@ -629,10 +641,9 @@ class MrpWorkorder(models.Model):
             vals['leave_id'] = leave.id
             return self.write(vals)
         else:
-            if self.date_planned_start > start_date:
+            if not self.date_planned_start or self.date_planned_start > start_date:
                 vals['date_planned_start'] = start_date
-                if self.duration_expected:
-                    vals['date_planned_finished'] = self._calculate_date_planned_finished(start_date)
+                vals['date_planned_finished'] = self._calculate_date_planned_finished(start_date)
             if self.date_planned_finished and self.date_planned_finished < start_date:
                 vals['date_planned_finished'] = start_date
             return self.with_context(bypass_duration_calculation=True).write(vals)

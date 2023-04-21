@@ -209,6 +209,10 @@ export class Powerbox {
                 );
             }
         }
+        // Hide category name if there is only a single one.
+        if (this._mainWrapperElement.childElementCount === 1) {
+            this._mainWrapperElement.querySelector('.oe-powerbox-category').style.display = 'none';
+        }
         this._resetPosition();
     }
     /**
@@ -330,12 +334,18 @@ export class Powerbox {
             if (this._context.lastText.match(/\s/)) {
                 this.close();
             } else {
-                const term = this._context.lastText.toLowerCase().replaceAll(/\s/g, '\\s').replaceAll('\u200B', '');
+                const term = this._context.lastText.toLowerCase()
+                    .replaceAll(/\s/g, '\\s')
+                    .replaceAll('\u200B', '')
+                    .replace(REGEX_RESERVED_CHARS, '\\$&');
                 if (term.length) {
-                    const regex = new RegExp(term.split('').map(char => char.replace(REGEX_RESERVED_CHARS, '\\$&')).join('.*'), 'i');
-                    this._context.filteredCommands = this._context.commands.filter(command => (
-                        `${command.category} ${command.name}`.toLowerCase().match(regex)
-                    ));
+                    const exactRegex = new RegExp(term, 'i');
+                    const fuzzyRegex = new RegExp(term.match(/\\.|./g).join('.*'), 'i');
+                    this._context.filteredCommands = this._context.commands.filter(command => {
+                        const commandText = (command.category + ' ' + command.name);
+                        const commandDescription = command.description.replace(/\s/g, '');
+                        return commandText.match(fuzzyRegex) || commandDescription.match(exactRegex);
+                    });
                 } else {
                     this._context.filteredCommands = this._context.commands;
                 }
@@ -375,7 +385,10 @@ export class Powerbox {
                 this._context.selectedCommand = undefined;
             }
             this._render(this._context.filteredCommands, this._context.categories);
-            this.el.querySelector('.oe-powerbox-commandWrapper.active').scrollIntoView({block: 'nearest', inline: 'nearest'});
+            const activeCommand = this.el.querySelector('.oe-powerbox-commandWrapper.active');
+            if (activeCommand) {
+                activeCommand.scrollIntoView({block: 'nearest', inline: 'nearest'});
+            }
         }
     }
 }

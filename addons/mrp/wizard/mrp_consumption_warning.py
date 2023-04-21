@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models, api
+from odoo import _, fields, models, api
+from odoo.exceptions import UserError
+from odoo.tools import float_compare, float_round
 
 
 class MrpConsumptionWarning(models.TransientModel):
@@ -31,12 +33,22 @@ class MrpConsumptionWarning(models.TransientModel):
     def action_confirm(self):
         ctx = dict(self.env.context)
         ctx.pop('default_mrp_production_ids', None)
-        action_from_do_finish = False
-        if self.env.context.get('from_workorder'):
-            if self.env.context.get('active_model') == 'mrp.workorder':
-                action_from_do_finish = self.env['mrp.workorder'].browse(self.env.context.get('active_id')).do_finish()
-        action_from_mark_done = self.mrp_production_ids.with_context(ctx, skip_consumption=True).button_mark_done()
-        return action_from_do_finish or action_from_mark_done
+        return self.mrp_production_ids.with_context(ctx, skip_consumption=True).button_mark_done()
+
+    def action_set_qty(self):
+        self.mrp_production_ids.action_assign()
+        for production in self.mrp_production_ids:
+            for move in production.move_raw_ids:
+                rounding = move.product_uom.rounding
+                if float_compare(move.quantity_done, move.should_consume_qty, precision_rounding=rounding) == 0:
+                    continue
+                new_qty = float_round((production.qty_producing - production.qty_produced) * move.unit_factor, precision_rounding=move.product_uom.rounding)
+                if move.has_tracking in ('lot', 'serial'):
+                    if not (production.use_auto_consume_components_lots and
+                            float_compare(move.reserved_availability, new_qty, precision_rounding=move.product_uom.rounding) >= 0):
+                        raise UserError(_('You need to supply Lot/Serial Number'))
+                move.quantity_done = new_qty
+        return self.action_confirm()
 
     def action_cancel(self):
         if self.env.context.get('from_workorder') and len(self.mrp_production_ids) == 1:

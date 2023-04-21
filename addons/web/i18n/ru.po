@@ -23,20 +23,20 @@
 # Collex100, 2022
 # Илья Владимирович Кучаев <kuchaev.iv@gmail.com>, 2022
 # Ivan Kropotkin <yelizariev@itpp.dev>, 2022
-# Martin Trigaux, 2022
 # Андрей Гусев <gaussgss@gmail.com>, 2022
 # Sergey Vilizhanin, 2022
-# Сергей Шебанин <sergey@shebanin.ru>, 2022
-# Alena Vlasova, 2022
+# Сергей Шебанин <sergey@shebanin.ru>, 2023
+# Alena Vlasova, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:44+0000\n"
+"POT-Creation-Date: 2023-02-02 10:35+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Alena Vlasova, 2022\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -217,7 +217,7 @@ msgstr "(Подсчет)"
 #: code:addons/web/static/src/core/debug/debug_menu_items.xml:0
 #, python-format
 msgid "(create)"
-msgstr ""
+msgstr "(создание)"
 
 #. module: web
 #. odoo-javascript
@@ -480,13 +480,6 @@ msgstr ""
 #, python-format
 msgid "ALL"
 msgstr "ВСЕ"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/webclient/user_menu/user_menu_items.xml:0
-#, python-format
-msgid "ALT"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -891,6 +884,7 @@ msgstr ""
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/form/form_controller.js:0
 #: code:addons/web/static/src/legacy/js/views/form/form_controller.js:0
 #, python-format
 msgid "Are you sure that you want to archive this record?"
@@ -1291,6 +1285,7 @@ msgstr ""
 #: code:addons/web/static/src/views/fields/binary/binary_field.xml:0
 #: code:addons/web/static/src/views/fields/image/image_field.xml:0
 #: code:addons/web/static/src/views/fields/pdf_viewer/pdf_viewer_field.xml:0
+#: code:addons/web/static/src/views/view_dialogs/select_create_dialog.xml:0
 #, python-format
 msgid "Clear"
 msgstr "Очистить"
@@ -1644,7 +1639,7 @@ msgstr "Создать"
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create \"%s\""
-msgstr ""
+msgstr "Создать \"%s\""
 
 #. module: web
 #. odoo-javascript
@@ -1673,7 +1668,7 @@ msgstr "Создать и изменить..."
 #: code:addons/web/static/src/views/fields/relational_utils.js:0
 #, python-format
 msgid "Create and edit..."
-msgstr ""
+msgstr "Создать и изменить..."
 
 #. module: web
 #. odoo-javascript
@@ -1966,7 +1961,7 @@ msgstr "Отменить"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Discard changes"
-msgstr ""
+msgstr "Отменить изменения"
 
 #. module: web
 #. odoo-javascript
@@ -2641,7 +2636,7 @@ msgstr "Нажмите ENTER, чтобы"
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #, python-format
 msgid "Hit ENTER to CREATE"
-msgstr "Нажмите ENTER для СОЗДАНИЯ"
+msgstr "Нажмите ENTER, чтобы СОЗДАТЬ"
 
 #. module: web
 #. odoo-javascript
@@ -3323,7 +3318,7 @@ msgstr "НИ ОДНО ИЗ"
 #: code:addons/web/static/src/views/form/form_controller.js:0
 #, python-format
 msgid "New"
-msgstr "Новое"
+msgstr "Новая"
 
 #. module: web
 #. odoo-javascript
@@ -4657,7 +4652,7 @@ msgstr "Сохранить значения по умолчанию"
 #: code:addons/web/static/src/views/form/form_status_indicator/form_status_indicator.xml:0
 #, python-format
 msgid "Save manually"
-msgstr ""
+msgstr "Сохранить"
 
 #. module: web
 #. odoo-javascript
@@ -4963,9 +4958,16 @@ msgstr "Совместно со всеми пользователями"
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/webclient/user_menu/user_menu_items.js:0
+#, python-format
+msgid "Shortcuts"
+msgstr "Горячие клавиши"
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/xml/base.xml:0
 #: code:addons/web/static/src/legacy/xml/base.xml:0
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.js:0
+#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
 #, python-format
 msgid "Show sub-fields"
@@ -5180,11 +5182,10 @@ msgstr "Текст"
 #. module: web
 #: model:ir.model.fields,help:web.field_base_document_layout__vat
 msgid ""
-"The Tax Identification Number. Complete it if the contact is subjected to "
-"government taxes. Used in some legal statements."
+"The Tax Identification Number. Values here will be validated based on the "
+"country format. You can use '/' to indicate that the partner is not subject "
+"to tax."
 msgstr ""
-"Идентификационный номер налогоплательщика. Заполните его, если контакт "
-"подлежит налогообложению. Используется в некоторых официальных отчетах."
 
 #. module: web
 #. odoo-python
@@ -6020,6 +6021,21 @@ msgstr "Вы можете не верить,<br />но приложение на
 
 #. module: web
 #. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/property_tags.js:0
+#, python-format
+msgid "You need to be able to edit parent first to add property tags"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#: code:addons/web/static/src/views/fields/properties/properties_field.js:0
+#, python-format
+msgid "You need to be able to edit parent first to configure property fields"
+msgstr ""
+
+#. module: web
+#. odoo-javascript
 #: code:addons/web/static/src/legacy/js/views/basic/basic_controller.js:0
 #: code:addons/web/static/src/views/fields/translation_button.js:0
 #, python-format
@@ -6248,13 +6264,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:web.view_base_document_layout
 msgid "e.g. Global Business Solutions"
 msgstr "например, Global Business Solutions"
-
-#. module: web
-#. odoo-javascript
-#: code:addons/web/static/src/views/view_dialogs/export_data_dialog.xml:0
-#, python-format
-msgid "expandText"
-msgstr ""
 
 #. module: web
 #. odoo-javascript
@@ -6727,7 +6736,7 @@ msgstr "установлено (истинно)"
 #: code:addons/web/static/src/core/commands/command_palette.xml:0
 #, python-format
 msgid "to open in new tab"
-msgstr ""
+msgstr "чтобы открыть в новой вкладке"
 
 #. module: web
 #. odoo-javascript

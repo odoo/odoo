@@ -107,7 +107,8 @@ class AccountAnalyticAccount(models.Model):
             FROM account_analytic_line line
             JOIN account_analytic_account account ON line.account_id = account.id
             WHERE line.company_id != account.company_id and account.company_id IS NOT NULL
-        ''')
+            AND account.id IN %s
+        ''', [tuple(self.ids)])
 
         if self._cr.fetchone():
             raise UserError(_("You can't set a different company on your analytic account since there are some analytic items linked to it."))
@@ -122,6 +123,11 @@ class AccountAnalyticAccount(models.Model):
                 name = f'{name} - {analytic.partner_id.commercial_partner_id.name}'
             res.append((analytic.id, name))
         return res
+
+    def copy_data(self, default=None):
+        default = dict(default or {})
+        default.setdefault('name', _("%s (copy)", self.name))
+        return super().copy_data(default)
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):

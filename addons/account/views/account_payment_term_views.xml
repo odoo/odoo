@@ -55,7 +55,7 @@
                         <field name="line_ids">
                             <tree string="Payment Terms" editable="top" no_open="True">
                                 <field name="value" string="Due Type"/>
-                                <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" digits="[2, 2]"/>
+                                <field name="value_amount" attrs="{'invisible': [('value', '=', 'balance')]}" />
                                 <field name="months"/>
                                 <field name="days"/>
                                 <field name="end_month" widget="boolean_toggle"/>

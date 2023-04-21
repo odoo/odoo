@@ -31,7 +31,7 @@ class AccountEdiXmlUBL21(models.AbstractModel):
 
         vals['vals'].update({
             'ubl_version_id': 2.1,
-            'buyer_reference': vals['customer'].commercial_partner_id.name,
+            'buyer_reference': invoice.commercial_partner_id.ref,
         })
 
         return vals

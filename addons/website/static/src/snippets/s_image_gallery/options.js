@@ -208,7 +208,10 @@ options.registry.gallery = options.Class.extend({
                     $lowest = $col;
                 }
             });
-            $lowest.append(imgs.shift());
+            // Only on Chrome: appended images are sometimes invisible and not
+            // correctly loaded from cache, we use a clone of the image to force
+            // the loading.
+            $lowest.append(imgs.shift().cloneNode());
         }
     },
     /**
@@ -222,6 +225,13 @@ options.registry.gallery = options.Class.extend({
         this.$target
             .removeClass('o_nomode o_masonry o_grid o_slideshow')
             .addClass('o_' + widgetValue);
+        // Used to prevent the editor's "unbreakable protection mechanism" from
+        // restoring Image Wall adaptations (images removed > new images added
+        // to the container & layout updates) when adding new images to the
+        // snippet.
+        if (this.options.wysiwyg) {
+            this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
+        }
         this[widgetValue]();
         this.trigger_up('cover_update');
         this._refreshPublicWidgets();
@@ -275,7 +285,7 @@ options.registry.gallery = options.Class.extend({
             src: img.getAttribute('src'),
             alt: img.getAttribute('alt'),
         }));
-        var currentInterval = this.$target.find('.carousel:first').attr('data-interval');
+        var currentInterval = this.$target.find('.carousel:first').attr('data-bs-interval');
         var params = {
             images: images,
             index: 0,

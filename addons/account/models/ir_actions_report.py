@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
-import io
-import textwrap
 from collections import OrderedDict
+
+try:
+    from PyPDF2.errors import PdfStreamError, PdfReadError
+except ImportError:
+    from PyPDF2.utils import PdfStreamError, PdfReadError
 
 from odoo import models, _
 from odoo.exceptions import UserError
@@ -17,26 +20,26 @@ class IrActionsReport(models.Model):
             return super()._render_qweb_pdf_prepare_streams(report_ref, data, res_ids=res_ids)
 
         invoices = self.env['account.move'].browse(res_ids)
-        if any(x.move_type not in ('in_invoice', 'in_receipt') for x in invoices):
-            raise UserError(_("You can only print the original document for vendor bills."))
+        if any(not x.is_purchase_document(include_receipts=True) for x in invoices):
+            raise UserError(_("You can only print the original document for purchase documents."))
 
         original_attachments = invoices.message_main_attachment_id
         if not original_attachments:
-            raise UserError(_("No original vendor bills could be found for any of the selected vendor bills."))
+            raise UserError(_("No original purchase document could be found for any of the selected purchase documents."))
 
         collected_streams = OrderedDict()
         for invoice in invoices:
             attachment = invoice.message_main_attachment_id
             if attachment:
-                stream = io.BytesIO(attachment.raw)
-                if attachment.mimetype == 'application/pdf':
+                stream = pdf.to_pdf_stream(attachment)
+                if stream:
                     record = self.env[attachment.res_model].browse(attachment.res_id)
                     try:
                         stream = pdf.add_banner(stream, record.name, logo=True)
-                    except ValueError:
-                        raise UserError(_(
-                            "Error when reading the original PDF for: %r.\nPlease make sure the file is valid.",
-                            textwrap.shorten(record.name, width=100)
+                    except (ValueError, PdfStreamError, PdfReadError, TypeError):
+                        record._message_log(body=_(
+                            "There was an error when trying to add the banner to the original PDF.\n"
+                            "Please make sure the source file is valid."
                         ))
                 collected_streams[invoice.id] = {
                     'stream': stream,

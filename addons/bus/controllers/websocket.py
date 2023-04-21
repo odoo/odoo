@@ -66,5 +66,7 @@ class WebsocketController(Controller):
         bundle = 'bus.websocket_worker_assets'
         files, _ = request.env["ir.qweb"]._get_asset_content(bundle)
         asset = AssetsBundle(bundle, files)
-        stream = request.env['ir.binary']._get_stream_from(asset.js())
+        stream = request.env['ir.binary']._get_stream_from(asset.js(
+            is_minified="assets" not in request.session.debug
+        ))
         return stream.get_response()

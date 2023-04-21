@@ -4,70 +4,23 @@
 # 
 # Translators:
 # Hongu Cosmin <cosmin513@gmail.com>, 2022
-# Dorin Hongu <dhongu@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ro\n"
 "Plural-Forms: nplurals=3; plural=(n==1?0:(((n%100>19)||((n%100==0)&&(n!=0)))?2:1));\n"
-
-#. module: hr_recruitment_survey
-#: model:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
-msgid ""
-"<p>\n"
-"    Please answer those questions to help recruitment officers to preprocess your application.\n"
-"</p>"
-msgstr ""
-"<p>\n"
-"    Vă rugăm să răspundeți la aceste întrebări pentru a ajuta ofițerii de recrutare să pre-proceseze cererea dvs.\n"
-"</p>"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
-msgid ""
-"<p>Please fill information about you: who you are, what are your education, experience, and activities.\n"
-"    It will help us managing your application.</p>"
-msgstr ""
-"<p>Vă rugăm să completați informații despre dvs.: cine sunteți, care este educația, experiența și activitățile dvs..\n"
-"   Ne va ajuta să gestionăm aplicația dvs.</p>"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
-msgid ""
-"<p>Please summarize your education history: schools, location, diplomas, "
-"...</p>"
-msgstr ""
-"<p>Vă rugăm să rezumați istoricul educației: școli, locație, diplome, "
-"...</p>"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
-msgid ""
-"<p>Please tell us a bit more about yourself: what are your main activities, "
-"...</p>"
-msgstr ""
-"<p>Vă rugăm să ne spuneți mai multe despre dvs.: care sunt principalele dvs."
-" activități, ...</p>"
-
-#. module: hr_recruitment_survey
-#: model:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
-msgid ""
-"<p>What are your main knowledge regarding the job you are applying to ?</p>"
-msgstr ""
-"<p>Care sunt principalele tale cunoștințe în ceea ce privește postul la care"
-" aplici?</p>"
 
 #. module: hr_recruitment_survey
 #: model_terms:ir.ui.view,arch_db:hr_recruitment_survey.hr_applicant_view_form_inherit
@@ -159,6 +112,7 @@ msgid "Interview Form"
 msgstr "Formular de interviu"
 
 #. module: hr_recruitment_survey
+#. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #, python-format
 msgid "Interview Form : %s"
@@ -205,6 +159,33 @@ msgid "Past work experiences"
 msgstr "Experiență de muncă anterioară"
 
 #. module: hr_recruitment_survey
+#: model_terms:survey.survey,description:hr_recruitment_survey.survey_recruitment_form
+msgid ""
+"Please answer those questions to help recruitment officers to preprocess "
+"your application."
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1
+msgid ""
+"Please fill information about you: who you are, what are your education, experience, and activities.\n"
+"    It will help us managing your application."
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q4
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q5
+msgid ""
+"Please summarize your education history: schools, location, diplomas, ..."
+msgstr ""
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q7
+msgid ""
+"Please tell us a bit more about yourself: what are your main activities, ..."
+msgstr ""
+
+#. module: hr_recruitment_survey
 #: model:survey.survey,title:hr_recruitment_survey.survey_recruitment_form
 msgid "Recruitment Form"
 msgstr "Formulare Recrutare"
@@ -230,6 +211,7 @@ msgid "Status"
 msgstr "Stare"
 
 #. module: hr_recruitment_survey
+#. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment_survey.field_hr_applicant__survey_id
 #, python-format
@@ -244,7 +226,7 @@ msgstr "Asistent Invitație Sondaj"
 #. module: hr_recruitment_survey
 #: model:ir.model,name:hr_recruitment_survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr ""
+msgstr "Răspuns Utilizator Sondaj"
 
 #. module: hr_recruitment_survey
 #: model_terms:survey.survey,description_done:hr_recruitment_survey.survey_recruitment_form
@@ -253,12 +235,14 @@ msgstr ""
 "Vă mulțumim că ați răspuns la acest sondaj. Ne vom întoarce în curând."
 
 #. module: hr_recruitment_survey
+#. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
 #, python-format
 msgid "The applicant \"%s\" has finished the survey."
 msgstr ""
 
 #. module: hr_recruitment_survey
+#. odoo-python
 #: code:addons/hr_recruitment_survey/models/survey_invite.py:0
 #, python-format
 msgid "The survey %(survey_link)s has been sent to %(partner_link)s"
@@ -273,6 +257,11 @@ msgstr "Foarte important"
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q3
 msgid "Were you referred by an employee?"
 msgstr "Ai fost trimis de un angajat?"
+
+#. module: hr_recruitment_survey
+#: model_terms:survey.question,description:hr_recruitment_survey.survey_recruitment_form_p1_q6
+msgid "What are your main knowledge regarding the job you are applying to ?"
+msgstr ""
 
 #. module: hr_recruitment_survey
 #: model:survey.question,title:hr_recruitment_survey.survey_recruitment_form_p1_q8
@@ -290,6 +279,7 @@ msgid "Working with state of the art technology"
 msgstr "Lucru cu tehnologie de ultimă oră"
 
 #. module: hr_recruitment_survey
+#. odoo-python
 #: code:addons/hr_recruitment_survey/models/hr_applicant.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."

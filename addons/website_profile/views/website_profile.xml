@@ -25,6 +25,7 @@
                                     <i class="fa fa-search border-1"></i>
                                 </button>
                                 <input type="text" class="form-control border-0 rounded-0 bg-transparent text-white ms-auto" name="search" placeholder="Search users"/>
+                                <input type="hidden" name="group_by" t-att-value="group_by"/>
                             </div>
                         </form>
                     </div>
@@ -268,7 +269,7 @@
                 </div>
 
                 <!-- ========== PROFILE CONTENT ========== -->
-                <div class="col-12 col-md-8 col-lg-9">
+                <div class="col-12 col-md-8 col-lg-9 position-relative">
                     <ul class="nav nav-tabs o_wprofile_nav_tabs flex-nowrap" role="tablist" id="profile_extra_info_tablist">
                         <li class="nav-item">
                             <a role="tab" aria-controls="about" href="#profile_tab_content_about" t-attf-class="nav-link #{'active' if not active_tab or active_tab == 'about' else ''}" data-bs-toggle="tab">About</a>
@@ -570,7 +571,9 @@
                 <span class="badge text-bg-danger fw-normal px-2" t-if="not user['website_published']">Unpublished</span>
                 <strong class="text-muted" t-esc="user['rank']"/>
                 <div class="h3 my-2" t-if="user['karma_gain']">
-                    <span class="badge rounded-pill text-bg-success px-3 py-2" >+ <t t-esc="user['karma_gain']"/> XP</span>
+                    <span class="badge rounded-pill text-bg-success px-3 py-2" >
+                        <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
+                    </span>
                 </div>
             </div>
             <div class="row mx-0 o_wprofile_top3_card_footer text-nowrap">
@@ -593,7 +596,9 @@
         </td>
         <td class="align-middle text-nowrap">
             <t t-if="user['karma_gain']">
-                <span class="badge rounded-pill text-bg-success d-inline">+ <t t-esc="user['karma_gain']"/> XP</span>
+                <span class="badge rounded-pill text-bg-success d-inline">
+                    <t t-if="user['karma_gain'] > 0">+ </t><t t-esc="user['karma_gain']"/> XP
+                </span>
                 <span class="text-muted ps-2 pe-3">
                     <t t-if="group_by == 'week'">this week</t>
                     <t t-elif="group_by == 'month'">this month</t>
@@ -643,7 +648,7 @@
             Your account does not have an email set up. Please set it up on <a class="alert-link" t-att-href="my_account_redirect">your account settings</a>.
         </div>
         <div t-elif="not validation_email_sent and not is_public_user and user.karma == 0" t-att-class="send_alert_classes" role="alert">
-            <button type="button" class="close validation_email_close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            <button type="button" class="btn-close validation_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             Your Account has not yet been verified.<br/>
             Click <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>here</u></a> to receive a verification email<t t-esc="additional_validation_email_message"/>!
         </div>
@@ -654,7 +659,7 @@
             or <a class="send_validation_email alert-link" href="#" t-att-data-redirect_url="redirect_url"><u>Send Again</u></a>.
         </div>
         <div t-if="validation_email_done" t-att-class="done_alert_classes" role="status">
-            <button type="button" class="close validated_email_close" data-bs-dismiss="alert" aria-label="Close">×</button>
+            <button type="button" class="btn-close validated_email_close" data-bs-dismiss="alert" aria-label="Close"/>
             <span id="email_validated_message">Congratulations! Your email has just been validated.</span>
             <span t-esc="additional_validated_email_message"/>
         </div>

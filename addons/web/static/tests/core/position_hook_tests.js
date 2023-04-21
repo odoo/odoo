@@ -12,6 +12,7 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
+import { localization } from "@web/core/l10n/localization";
 
 import { Component, xml } from "@odoo/owl";
 let container;
@@ -169,6 +170,15 @@ function getPositionTest(position, positionToCheck) {
     };
 }
 
+function getPositionTestRTL(position, positionToCheck) {
+    return async (assert) => {
+        patchWithCleanup(localization, {
+            direction: "rtl",
+        });
+        await getPositionTest(position, positionToCheck)(assert);
+    };
+}
+
 QUnit.test("position top", getPositionTest("top"));
 QUnit.test("position left", getPositionTest("left"));
 QUnit.test("position bottom", getPositionTest("bottom"));
@@ -189,6 +199,19 @@ QUnit.test("position top === top-middle", getPositionTest("top", "top-middle"));
 QUnit.test("position left === left-middle", getPositionTest("left", "left-middle"));
 QUnit.test("position bottom === bottom-middle", getPositionTest("bottom", "bottom-middle"));
 QUnit.test("position right === right-middle", getPositionTest("right", "right-middle"));
+// RTL
+QUnit.test("position RTL top-start", getPositionTestRTL("top-start", "top-end"));
+QUnit.test("position RTL top-middle", getPositionTestRTL("top-middle"));
+QUnit.test("position RTL top-end", getPositionTestRTL("top-end", "top-start"));
+QUnit.test("position RTL bottom-start", getPositionTestRTL("bottom-start", "bottom-end"));
+QUnit.test("position RTL bottom-middle", getPositionTestRTL("bottom-middle"));
+QUnit.test("position RTL bottom-end", getPositionTestRTL("bottom-end", "bottom-start"));
+QUnit.test("position RTL right-start", getPositionTestRTL("right-start", "left-start"));
+QUnit.test("position RTL right-middle", getPositionTestRTL("right-middle", "left-middle"));
+QUnit.test("position RTL right-end", getPositionTestRTL("right-end", "left-end"));
+QUnit.test("position RTL left-start", getPositionTestRTL("left-start", "right-start"));
+QUnit.test("position RTL left-middle", getPositionTestRTL("left-middle", "right-middle"));
+QUnit.test("position RTL left-end", getPositionTestRTL("left-end", "right-end"));
 
 const CONTAINER_STYLE_MAP = {
     top: { alignItems: "flex-start" },

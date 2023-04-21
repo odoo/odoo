@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
+from odoo.tests.common import Form
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools import mute_logger
+import psycopg2
 
 
 @tagged('post_install', '-at_install')
@@ -161,6 +164,9 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         """
         with self.assertRaises(UserError):
             self.env['account.account'].name_create('550003 Existing Account')
+        # account code is mandatory and providing a name without a code should raise an error
+        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
+            self.env['account.account'].with_context(import_file=True).name_create('Existing Account')
         account_id = self.env['account.account'].with_context(import_file=True).name_create('550003 Existing Account')[0]
         account = self.env['account.account'].browse(account_id)
         self.assertEqual(account.code, "550003")
@@ -228,3 +234,111 @@ class TestAccountAccount(AccountTestInvoicingCommon):
         self.env['account.move'].create(payable_credit_move)
         account_payable._compute_current_balance()
         self.assertEqual(account_payable.current_balance, -100, 'Draft invoices/bills should not be used when computing the balance')
+
+    def test_name_create_account_code_only(self):
+        """
+        Test account creation with only a code, with and without space
+        """
+        account_id = self.env['account.account'].with_context(import_file=True).name_create('550003')[0]
+        account = self.env['account.account'].browse(account_id)
+        self.assertEqual(account.code, "550003")
+        self.assertEqual(account.name, "")
+
+        account_id = self.env['account.account'].with_context(import_file=True).name_create('550004 ')[0]
+        account = self.env['account.account'].browse(account_id)
+        self.assertEqual(account.code, "550004")
+        self.assertEqual(account.name, "")
+
+    def test_name_create_account_name_with_number(self):
+        """
+        Test the case when a code is provided and the account name contains a number in the first word
+        """
+        account_id = self.env['account.account'].with_context(import_file=True).name_create('550005 CO2')[0]
+        account = self.env['account.account'].browse(account_id)
+        self.assertEqual(account.code, "550005")
+        self.assertEqual(account.name, "CO2")
+
+        account_id = self.env['account.account'].with_context(import_file=True, default_account_type='expense').name_create('CO2')[0]
+        account = self.env['account.account'].browse(account_id)
+        self.assertEqual(account.code, "CO2")
+        self.assertEqual(account.name, "")
+
+    def test_create_account(self):
+        """
+        Test creating an account with code and name without name_create
+        """
+        account = self.env['account.account'].create({
+            'code': '314159',
+            'name': 'A new account',
+            'account_type': 'expense',
+        })
+        self.assertEqual(account.code, "314159")
+        self.assertEqual(account.name, "A new account")
+
+        # name split is only possible through name_create, so an error should be raised
+        with self.assertRaises(psycopg2.DatabaseError), mute_logger('odoo.sql_db'):
+            account = self.env['account.account'].create({
+                'name': '314159 A new account',
+                'account_type': 'expense',
+            })
+
+        # it doesn't matter whether the account name contains numbers or not
+        account = self.env['account.account'].create({
+            'code': '31415',
+            'name': 'CO2-contributions',
+            'account_type': 'expense'
+        })
+        self.assertEqual(account.code, "31415")
+        self.assertEqual(account.name, "CO2-contributions")
+
+    def test_account_name_onchange(self):
+        """
+        Test various scenarios when creating an account via a form
+        """
+        account_form = Form(self.env['account.account'])
+        account_form.name = "A New Account 1"
+
+        # code should not be set
+        self.assertEqual(account_form.code, False)
+        self.assertEqual(account_form.name, "A New Account 1")
+
+        account_form.name = "314159 A New Account"
+        # the name should be split into code and name
+        self.assertEqual(account_form.code, "314159")
+        self.assertEqual(account_form.name, "A New Account")
+
+        account_form.code = False
+        account_form.name = "314159 "
+        # the name should be moved to code
+        self.assertEqual(account_form.code, "314159")
+        self.assertEqual(account_form.name, "")
+
+        account_form.code = "314159"
+        account_form.name = "CO2-contributions"
+        # the name should not overwrite the code
+        self.assertEqual(account_form.code, "314159")
+        self.assertEqual(account_form.name, "CO2-contributions")
+
+        account_form.code = False
+        account_form.name = "CO2-contributions"
+        # the name should overwrite the code
+        self.assertEqual(account_form.code, "CO2-contributions")
+        self.assertEqual(account_form.name, "")
+
+        # should save the account correctly
+        account_form.code = False
+        account_form.name = "314159"
+        account = account_form.save()
+        self.assertEqual(account.code, "314159")
+        self.assertEqual(account.name, "")
+
+        # can change the name of an existing account without overwriting the code
+        account_form.name = "123213 Test"
+        self.assertEqual(account_form.code, "314159")
+        self.assertEqual(account_form.name, "123213 Test")
+
+        account_form.code = False
+        account_form.name = "Only letters"
+        # saving a form without a code should not be possible
+        with self.assertRaises(AssertionError):
+            account_form.save()

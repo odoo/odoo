@@ -3,6 +3,7 @@
 import { useService } from '@web/core/utils/hooks';
 import { getCSSVariableValue, DEFAULT_PALETTE } from 'web_editor.utils';
 import { Attachment, FileSelector, IMAGE_MIMETYPES, IMAGE_EXTENSIONS } from './file_selector';
+import { KeepLast } from "@web/core/utils/concurrency";
 
 import { useRef, useState, useEffect } from "@odoo/owl";
 
@@ -24,8 +25,17 @@ export class AutoResizeImage extends Attachment {
     }
 
     async onImageLoaded() {
+        if (!this.image.el) {
+            // Do not fail if already removed.
+            return;
+        }
         if (this.props.onLoaded) {
             await this.props.onLoaded(this.image.el);
+            if (!this.image.el) {
+                // If replaced by colored version, aspect ratio will be
+                // computed on it instead.
+                return;
+            }
         }
         const aspectRatio = this.image.el.offsetWidth / this.image.el.offsetHeight;
         const width = aspectRatio * this.props.minRowHeight;
@@ -41,12 +51,14 @@ export class ImageSelector extends FileSelector {
         super.setup();
 
         this.rpc = useService('rpc');
+        this.keepLastLibraryMedia = new KeepLast();
 
         this.state.libraryMedia = [];
         this.state.libraryResults = null;
         this.state.isFetchingLibrary = false;
         this.state.searchService = 'all';
         this.state.showOptimized = false;
+        this.NUMBER_OF_MEDIA_TO_DISPLAY = 10;
 
         this.uploadText = this.env._t("Upload an image");
         this.urlPlaceholder = "https://www.odoo.com/logo.png";
@@ -61,9 +73,8 @@ export class ImageSelector extends FileSelector {
     }
 
     get canLoadMore() {
-        if (this.state.searchService === 'all') {
-            return super.canLoadMore || (this.state.libraryResults && this.state.libraryMedia.length < this.state.libraryResults);
-        } else if (this.state.searchService === 'media-library') {
+        // The user can load more library media only when the filter is set.
+        if (this.state.searchService === 'media-library') {
             return this.state.libraryResults && this.state.libraryMedia.length < this.state.libraryResults;
         }
         return super.canLoadMore;
@@ -163,7 +174,9 @@ export class ImageSelector extends FileSelector {
                 }
             );
             this.state.isFetchingLibrary = false;
-            return { media: response.media || [], results: response.results };
+            const media = (response.media || []).slice(0, this.NUMBER_OF_MEDIA_TO_DISPLAY);
+            media.forEach(record => record.mediaType = 'libraryMedia');
+            return { media, results: response.results };
         } catch {
             // Either API endpoint doesn't exist or is misconfigured.
             console.error(`Couldn't reach API endpoint.`);
@@ -174,11 +187,16 @@ export class ImageSelector extends FileSelector {
 
     async loadMore(...args) {
         await super.loadMore(...args);
-        if (!this.props.useMediaLibrary) {
+        if (!this.props.useMediaLibrary
+            // The user can load more library media only when the filter is set.
+            || this.state.searchService !== 'media-library'
+        ) {
             return;
         }
-        const { media } = await this.fetchLibraryMedia(this.state.libraryMedia.length);
-        this.state.libraryMedia.push(...media);
+        return this.keepLastLibraryMedia.add(this.fetchLibraryMedia(this.state.libraryMedia.length)).then(({ media }) => {
+            // This is never reached if another search or loadMore occurred.
+            this.state.libraryMedia.push(...media);
+        });
     }
 
     async search(...args) {
@@ -189,9 +207,13 @@ export class ImageSelector extends FileSelector {
         if (!this.state.needle) {
             this.state.searchService = 'all';
         }
-        const { media, results } = await this.fetchLibraryMedia(0);
-        this.state.libraryMedia = media;
-        this.state.libraryResults = results;
+        this.state.libraryMedia = [];
+        this.state.libraryResults = 0;
+        return this.keepLastLibraryMedia.add(this.fetchLibraryMedia(0)).then(({ media, results }) => {
+            // This is never reached if a new search occurred.
+            this.state.libraryMedia = media;
+            this.state.libraryResults = results;
+        });
     }
 
     async onClickAttachment(attachment) {
@@ -250,12 +272,24 @@ export class ImageSelector extends FileSelector {
                         [attachment.id],
                     );
                 }
-                src += `?access_token=${accessToken}`;
+                src += `?access_token=${encodeURIComponent(accessToken)}`;
             }
             imageEl.src = src;
             imageEl.alt = attachment.description || '';
             return imageEl;
         }));
+    }
+
+    async onImageLoaded(imgEl, attachment) {
+        this.debouncedScroll();
+        if (attachment.mediaType === 'libraryMedia' && !imgEl.src.startsWith('blob')) {
+            // This call applies the theme's color palette to the
+            // loaded illustration. Upon replacement of the image,
+            // `onImageLoad` is called again, but the replacement image
+            // has an URL that starts with 'blob'. The condition above
+            // uses this to avoid an infinite loop.
+            await this.onLibraryImageLoaded(imgEl, attachment);
+        }
     }
 
     /**
@@ -271,14 +305,20 @@ export class ImageSelector extends FileSelector {
         try {
             const response = await fetch(mediaUrl);
             if (response.headers.get('content-type') === 'image/svg+xml') {
-                const svg = await response.text();
+                let svg = await response.text();
                 const dynamicColors = {};
                 const combinedColorsRegex = new RegExp(Object.values(DEFAULT_PALETTE).join('|'), 'gi');
-                svg.replace(combinedColorsRegex, match => {
+                svg = svg.replace(combinedColorsRegex, match => {
                     const colorId = Object.keys(DEFAULT_PALETTE).find(key => DEFAULT_PALETTE[key] === match.toUpperCase());
                     const colorKey = 'c' + colorId
                     dynamicColors[colorKey] = getCSSVariableValue('o-color-' + colorId);
+                    return dynamicColors[colorKey];
                 });
+                const fileName = mediaUrl.split('/').pop();
+                const file = new File([svg], fileName, {
+                    type: "image/svg+xml",
+                });
+                imgEl.src = URL.createObjectURL(file);
                 if (Object.keys(dynamicColors).length) {
                     media.isDynamicSVG = true;
                     media.dynamicColors = dynamicColors;

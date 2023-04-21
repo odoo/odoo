@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api,fields, models
+from odoo import api, fields, models, _
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools import float_is_zero, float_compare
 
@@ -11,8 +11,8 @@ from collections import defaultdict
 class StockPicking(models.Model):
     _inherit='stock.picking'
 
-    pos_session_id = fields.Many2one('pos.session')
-    pos_order_id = fields.Many2one('pos.order')
+    pos_session_id = fields.Many2one('pos.session', index=True)
+    pos_order_id = fields.Many2one('pos.order', index=True)
 
     def _prepare_picking_vals(self, partner, picking_type, location_id, location_dest_id):
         return {
@@ -94,12 +94,54 @@ class StockPicking(models.Model):
         moves = self.env['stock.move'].create(move_vals)
         confirmed_moves = moves._action_confirm()
         confirmed_moves._add_mls_related_to_order(lines, are_qties_done=True)
+        self._link_owner_on_return_picking(lines)
+
+    def _link_owner_on_return_picking(self, lines):
+        """This method tries to retrieve the owner of the returned product"""
+        if lines[0].order_id.refunded_order_ids.picking_ids:
+            returned_lines_picking = lines[0].order_id.refunded_order_ids.picking_ids
+            returnable_qty_by_product = {}
+            for move_line in returned_lines_picking.move_line_ids:
+                returnable_qty_by_product[(move_line.product_id.id, move_line.owner_id.id or 0)] = move_line.qty_done
+            for move in self.move_line_ids:
+                for keys in returnable_qty_by_product:
+                    if move.product_id.id == keys[0] and keys[1] and returnable_qty_by_product[keys] > 0:
+                        move.write({'owner_id': keys[1]})
+                        returnable_qty_by_product[keys] -= move.qty_done
+
 
     def _send_confirmation_email(self):
         # Avoid sending Mail/SMS for POS deliveries
         pickings = self.filtered(lambda p: p.picking_type_id != p.picking_type_id.warehouse_id.pos_type_id)
         return super(StockPicking, pickings)._send_confirmation_email()
 
+    def _action_done(self):
+        res = super()._action_done()
+        if self.pos_order_id.to_ship and not self.pos_order_id.to_invoice:
+            order_cost = sum(line.total_cost for line in self.pos_order_id.lines)
+            move_vals = {
+                'journal_id': self.pos_order_id.sale_journal.id,
+                'date': self.pos_order_id.date_order,
+                'ref': self.pos_order_id.name,
+                'line_ids': [
+                    (0, 0, {
+                        'name': self.pos_order_id.name,
+                        'account_id': self.product_id.categ_id.property_account_income_categ_id.id,
+                        'debit': order_cost,
+                        'credit': 0.0,
+                    }),
+                    (0, 0, {
+                        'name': self.pos_order_id.name,
+                        'account_id': self.product_id.categ_id.property_account_expense_categ_id.id,
+                        'debit': 0.0,
+                        'credit': order_cost,
+                    })
+                ]
+            }
+            move = self.env['account.move'].create(move_vals)
+            self.pos_order_id.write({'account_move': move.id})
+            move.action_post()
+        return res
 
 class StockPickingType(models.Model):
     _inherit = 'stock.picking.type'
@@ -111,6 +153,12 @@ class StockPickingType(models.Model):
             if picking_type == picking_type.warehouse_id.pos_type_id:
                 picking_type.hide_reservation_method = True
 
+    @api.constrains('active')
+    def _check_active(self):
+        for picking_type in self:
+            pos_config = self.env['pos.config'].search([('picking_type_id', '=', picking_type.id)], limit=1)
+            if pos_config:
+                raise ValidationError(_("You cannot archive '%s' as it is used by a POS configuration '%s'.", picking_type.name, pos_config.name))
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'
@@ -220,7 +268,8 @@ class StockMove(models.Model):
                                 )
                             ml_vals.update({
                                 'lot_id': existing_lot.id,
-                                'location_id': quant.location_id.id or move.location_id.id
+                                'location_id': quant.location_id.id or move.location_id.id,
+                                'owner_id': quant.owner_id.id or False,
                             })
                         else:
                             ml_vals.update({'lot_name': lot.lot_name})

@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
+from enum import Enum
 from importlib import util
 import platform
 import io
@@ -17,6 +18,7 @@ import zipfile
 from threading import Thread
 import time
 import contextlib
+import requests
 
 from odoo import _, http, service
 from odoo.tools.func import lazy_property
@@ -27,6 +29,13 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Helper
 #----------------------------------------------------------
+
+
+class CertificateStatus(Enum):
+    OK = 1
+    NEED_REFRESH = 2
+    ERROR = 3
+
 
 class IoTRestart(Thread):
     """
@@ -72,27 +81,42 @@ def start_nginx_server():
 def check_certificate():
     """
     Check if the current certificate is up to date or not authenticated
+    :return CheckCertificateStatus
     """
     server = get_odoo_server_url()
-    if server:
-        if platform.system() == 'Windows':
-            path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
-        elif platform.system() == 'Linux':
-            path = Path('/etc/ssl/certs/nginx-cert.crt')
-        if path.exists():
-            with path.open('r') as f:
-                cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
-                cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
-                for key in cert.get_subject().get_components():
-                    if key[0] == b'CN':
-                        cn = key[1].decode('utf-8')
-                if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
-                    _logger.info(_('Your certificate %s must be updated') % (cn))
-                    load_certificate()
-                else:
-                    _logger.info(_('Your certificate %s is valid until %s') % (cn, cert_end_date))
-        else:
-            load_certificate()
+
+    if not server:
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_NO_SERVER"}
+
+    if platform.system() == 'Windows':
+        path = Path(get_path_nginx()).joinpath('conf/nginx-cert.crt')
+    elif platform.system() == 'Linux':
+        path = Path('/etc/ssl/certs/nginx-cert.crt')
+
+    if not path.exists():
+        return {"status": CertificateStatus.NEED_REFRESH}
+
+    try:
+        with path.open('r') as f:
+            cert = crypto.load_certificate(crypto.FILETYPE_PEM, f.read())
+    except EnvironmentError:
+        _logger.exception("Unable to read certificate file")
+        return {"status": CertificateStatus.ERROR,
+                "error_code": "ERR_IOT_HTTPS_CHECK_CERT_READ_EXCEPTION"}
+
+    cert_end_date = datetime.datetime.strptime(cert.get_notAfter().decode('utf-8'), "%Y%m%d%H%M%SZ") - datetime.timedelta(days=10)
+    for key in cert.get_subject().get_components():
+        if key[0] == b'CN':
+            cn = key[1].decode('utf-8')
+    if cn == 'OdooTempIoTBoxCertificate' or datetime.datetime.now() > cert_end_date:
+        message = _('Your certificate %s must be updated') % (cn)
+        _logger.info(message)
+        return {"status": CertificateStatus.NEED_REFRESH}
+    else:
+        message = _('Your certificate %s is valid until %s') % (cn, cert_end_date)
+        _logger.info(message)
+        return {"status": CertificateStatus.OK, "message": message}
 
 def check_git_branch():
     """
@@ -164,6 +188,27 @@ def save_conf_server(url, token, db_uuid, enterprise_code):
     write_file('odoo-db-uuid.conf', db_uuid or '')
     write_file('odoo-enterprise-code.conf', enterprise_code or '')
 
+def get_certificate_status(is_first=True):
+    """
+    Will get the HTTPS certificate details if present. Will load the certificate if missing.
+
+    :param is_first: Use to make sure that the recursion happens only once
+    :return: (bool, str)
+    """
+    check_certificate_result = check_certificate()
+    certificateStatus = check_certificate_result["status"]
+
+    if certificateStatus == CertificateStatus.ERROR:
+        return False, check_certificate_result["error_code"]
+
+    if certificateStatus == CertificateStatus.NEED_REFRESH and is_first:
+        certificate_process = load_certificate()
+        if certificate_process is not True:
+            return False, certificate_process
+        return get_certificate_status(is_first=False)  # recursive call to attempt certificate read
+    return True, check_certificate_result.get("message",
+                                              "The HTTPS certificate was generated correctly")
+
 def get_img_name():
     major, minor = get_version().split('.')
     return 'iotboxv%s_%s.zip' % (major, minor)
@@ -227,36 +272,52 @@ def load_certificate():
     """
     db_uuid = read_file_first_line('odoo-db-uuid.conf')
     enterprise_code = read_file_first_line('odoo-enterprise-code.conf')
-    if db_uuid and enterprise_code:
-        url = 'https://www.odoo.com/odoo-enterprise/iot/x509'
-        data = {
-            'params': {
-                'db_uuid': db_uuid,
-                'enterprise_code': enterprise_code
-            }
+    if not (db_uuid and enterprise_code):
+        return "ERR_IOT_HTTPS_LOAD_NO_CREDENTIAL"
+
+    url = 'https://www.odoo.com/odoo-enterprise/iot/x509'
+    data = {
+        'params': {
+            'db_uuid': db_uuid,
+            'enterprise_code': enterprise_code
         }
-        urllib3.disable_warnings()
-        http = urllib3.PoolManager(cert_reqs='CERT_NONE')
+    }
+    urllib3.disable_warnings()
+    http = urllib3.PoolManager(cert_reqs='CERT_NONE', retries=urllib3.Retry(4))
+    try:
         response = http.request(
             'POST',
             url,
             body = json.dumps(data).encode('utf8'),
             headers = {'Content-type': 'application/json', 'Accept': 'text/plain'}
         )
-        result = json.loads(response.data.decode('utf8'))['result']
-        if result:
-            write_file('odoo-subject.conf', result['subject_cn'])
-            if platform.system() == 'Linux':
-                with writable():
-                    Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
-                    Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
-                    Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
-                    Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
-            elif platform.system() == 'Windows':
-                Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
-                Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
-            time.sleep(3)
-            start_nginx_server()
+    except Exception as e:
+        _logger.exception("An error occurred while trying to reach odoo.com servers.")
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_EXCEPTION\n\n%s" % e
+
+    if response.status != 200:
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_STATUS %s\n\n%s" % (response.status, response.reason)
+
+    result = json.loads(response.data.decode('utf8'))['result']
+    if not result:
+        return "ERR_IOT_HTTPS_LOAD_REQUEST_NO_RESULT"
+
+    write_file('odoo-subject.conf', result['subject_cn'])
+    if platform.system() == 'Linux':
+        with writable():
+            Path('/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/certs/nginx-cert.crt').write_text(result['x509_pem'])
+            Path('/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+            Path('/root_bypass_ramdisks/etc/ssl/private/nginx-cert.key').write_text(result['private_key_pem'])
+    elif platform.system() == 'Windows':
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.crt').write_text(result['x509_pem'])
+        Path(get_path_nginx()).joinpath('conf/nginx-cert.key').write_text(result['private_key_pem'])
+    time.sleep(3)
+    if platform.system() == 'Windows':
+        odoo_restart(0)
+    elif platform.system() == 'Linux':
+        start_nginx_server()
+    return True
 
 def download_iot_handlers(auto=True):
     """
@@ -292,7 +353,11 @@ def load_iot_handlers():
             spec = util.spec_from_file_location(file, str(Path(path).joinpath(file)))
             if spec:
                 module = util.module_from_spec(spec)
-                spec.loader.exec_module(module)
+                try:
+                    spec.loader.exec_module(module)
+                except Exception as e:
+                    _logger.error('Unable to load file: %s ', file)
+                    _logger.error('An error encountered : %s ', e)
     lazy_property.reset_all(http.root)
 
 def list_file_by_os(file_list):
@@ -330,3 +395,36 @@ def write_file(filename, text, mode='w'):
         path = path_file(filename)
         with open(path, mode) as f:
             f.write(text)
+
+def download_from_url(download_url, path_to_filename):
+    """
+    This function downloads from its 'download_url' argument and
+    saves the result in 'path_to_filename' file
+    The 'path_to_filename' needs to be a valid path + file name
+    (Example: 'C:\\Program Files\\Odoo\\downloaded_file.zip')
+    """
+    try:
+        request_response = requests.get(download_url, timeout=60)
+        request_response.raise_for_status()
+        write_file(path_to_filename, request_response.content, 'wb')
+        _logger.info('Downloaded %s from %s', path_to_filename, download_url)
+    except Exception as e:
+        _logger.error('Failed to download from %s: %s', download_url, e)
+
+def unzip_file(path_to_filename, path_to_extract):
+    """
+    This function unzips 'path_to_filename' argument to
+    the path specified by 'path_to_extract' argument
+    and deletes the originally used .zip file
+    Example: unzip_file('C:\\Program Files\\Odoo\\downloaded_file.zip', 'C:\\Program Files\\Odoo\\new_folder'))
+    Will extract all the contents of 'downloaded_file.zip' to the 'new_folder' location)
+    """
+    try:
+        with writable():
+            path = path_file(path_to_filename)
+            with zipfile.ZipFile(path) as zip_file:
+                zip_file.extractall(path_file(path_to_extract))
+            Path(path).unlink()
+        _logger.info('Unzipped %s to %s', path_to_filename, path_to_extract)
+    except Exception as e:
+        _logger.error('Failed to unzip %s: %s', path_to_filename, e)

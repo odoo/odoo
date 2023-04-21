@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+from odoo import api, fields, models, _
 
 
 class MailTestSimple(models.Model):
@@ -49,6 +49,9 @@ class MailTestGatewayGroups(models.Model):
             values['alias_force_thread_id'] = self.id
             values['alias_parent_thread_id'] = self.id
         return values
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _message_get_default_recipients(self):
         return dict(
@@ -105,6 +108,7 @@ class MailTestTicket(models.Model):
     _description = 'Ticket-like model'
     _name = 'mail.test.ticket'
     _inherit = ['mail.thread']
+    _primary_email = 'email_from'
 
     name = fields.Char()
     email_from = fields.Char(tracking=True)
@@ -114,6 +118,9 @@ class MailTestTicket(models.Model):
     customer_id = fields.Many2one('res.partner', 'Customer', tracking=2)
     user_id = fields.Many2one('res.users', 'Responsible', tracking=1)
     container_id = fields.Many2one('mail.test.container', tracking=True)
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _message_get_default_recipients(self):
         return dict(
@@ -128,10 +135,22 @@ class MailTestTicket(models.Model):
     def _notify_get_recipients_groups(self, msg_vals=None):
         """ Activate more groups to test query counters notably (and be backward
         compatible for tests). """
-        groups = super(MailTestTicket, self)._notify_get_recipients_groups(msg_vals=msg_vals)
+        local_msg_vals = dict(msg_vals or {})
+        groups = super()._notify_get_recipients_groups(msg_vals=msg_vals)
         for group_name, _group_method, group_data in groups:
             if group_name == 'portal':
                 group_data['active'] = True
+            elif group_name == 'customer':
+                group_data['active'] = True
+                group_data['has_button_access'] = True
+                group_data['actions'] = [{
+                    'url': self._notify_get_action_link(
+                        'controller',
+                        controller='/test_mail/do_stuff',
+                        **local_msg_vals
+                    ),
+                    'title': _('NotificationButtonTitle')
+                }]
 
         return groups
 
@@ -156,6 +175,29 @@ class MailTestTicket(models.Model):
         return super(MailTestTicket, self)._track_subtype(init_values)
 
 
+
+class MailTestTicketEL(models.Model):
+    """ Just mail.test.ticket, but exclusion-list enabled. Kept as different
+    model to avoid messing with existing tests, notably performance, and ease
+    backward comparison. """
+    _description = 'Ticket-like model with exclusion list'
+    _name = 'mail.test.ticket.el'
+    _inherit = [
+        'mail.test.ticket',
+        'mail.thread.blacklist',
+    ]
+    _primary_email = 'email_from'
+
+    email_from = fields.Char(
+        'Email',
+        compute='_compute_email_from', readonly=False, store=True)
+
+    @api.depends('customer_id')
+    def _compute_email_from(self):
+        for ticket in self.filtered(lambda r: r.customer_id and not r.email_from):
+            ticket.email_from = ticket.customer_id.email_formatted
+
+
 class MailTestTicketMC(models.Model):
     """ Just mail.test.ticket, but multi company. Kept as different model to
     avoid messing with existing tests, notably performance, and ease backward
@@ -163,6 +205,7 @@ class MailTestTicketMC(models.Model):
     _description = 'Ticket-like model'
     _name = 'mail.test.ticket.mc'
     _inherit = ['mail.test.ticket']
+    _primary_email = 'email_from'
 
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     container_id = fields.Many2one('mail.test.container.mc', tracking=True)
@@ -182,6 +225,9 @@ class MailTestContainer(models.Model):
     alias_id = fields.Many2one(
         'mail.alias', 'Alias',
         delegate=True)
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']
 
     def _message_get_default_recipients(self):
         return dict(
@@ -254,6 +300,10 @@ class MailTestComposerSource(models.Model):
         'Email',
         compute='_compute_email_from', readonly=False, store=True)
 
+    @api.depends('customer_id')
     def _compute_email_from(self):
         for source in self.filtered(lambda r: r.customer_id and not r.email_from):
             source.email_from = source.customer_id.email_formatted
+
+    def _mail_get_partner_fields(self):
+        return ['customer_id']

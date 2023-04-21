@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2022
 # Foldi Robert <foldirobert@nexterp.ro>, 2022
+# Dorin Hongu <dhongu@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2022\n"
-"Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
+"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2023\n"
+"Language-Team: Romanian (https://app.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -27,6 +28,8 @@ msgid ""
 "Any new All Users Lock Date must be posterior (or equal) to the previous "
 "one."
 msgstr ""
+"Orice nouă dată de blocare a tuturor utilizatorilor trebuie să fie "
+"posterioară (sau egală) cu cea precedentă."
 
 #. module: account_lock
 #: model:ir.model,name:account_lock.model_res_company
@@ -38,6 +41,7 @@ msgstr "Companii"
 #, python-format
 msgid "The lock date for accountants is irreversible and can't be removed."
 msgstr ""
+"Data de blocare pentru contabili este ireversibilă și nu poate fi eliminată."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -61,6 +65,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the All Users "
 "Lock Date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Nu puteți bloca o perioadă care nu s-a încheiat încă. Deci, data de blocare "
+"a tuturor utilizatorilor trebuie să fie anterioară (sau egală) cu ultima zi "
+"a lunii anterioare."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -69,6 +76,9 @@ msgid ""
 "You cannot lock a period that has not yet ended. Therefore, the tax lock "
 "date must be anterior (or equal) to the last day of the previous month."
 msgstr ""
+"Nu puteți bloca o perioadă care nu s-a încheiat încă. Deci, data de blocare "
+"a impozitului trebuie să fie anterioară (sau egală) cu ultima zi a lunii "
+"anterioare."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -78,3 +88,6 @@ msgid ""
 "Therefore, the All Users Lock Date must be anterior (or equal) to the "
 "Invoice/Bills Lock Date."
 msgstr ""
+"Nu puteți stabili restricții mai stricte pentru contabili decât pentru "
+"utilizatori. Deci, data de blocare a tuturor utilizatorilor trebuie să fie "
+"anterioară (sau egală) cu data de blocare a facturilor / chitanțelor."

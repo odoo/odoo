@@ -200,11 +200,14 @@ export class ListArchParser extends XMLParser {
                 const limitAttr = node.getAttribute("limit");
                 treeAttr.limit = limitAttr && parseInt(limitAttr, 10);
 
+                const countLimitAttr = node.getAttribute("count_limit");
+                treeAttr.countLimit = countLimitAttr && parseInt(countLimitAttr, 10);
+
                 const groupsLimitAttr = node.getAttribute("groups_limit");
                 treeAttr.groupsLimit = groupsLimitAttr && parseInt(groupsLimitAttr, 10);
 
                 treeAttr.noOpen = archParseBoolean(node.getAttribute("no_open") || "");
-                treeAttr.expand = archParseBoolean(xmlDoc.getAttribute("expand") || "");
+                treeAttr.rawExpand = xmlDoc.getAttribute("expand");
                 treeAttr.decorations = getDecoration(xmlDoc);
 
                 // custom open action when clicking on record row

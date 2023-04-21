@@ -54,9 +54,9 @@ class PayuLatamController(http.Controller):
 
         try:
             # Check the origin and integrity of the notification
-            tx_sudo = request.env['payment.transaction'].sudo()._get_tx_from_notification_data(
-                'payulatam', data
-            )
+            tx_sudo = request.env['payment.transaction'].sudo().with_context(
+                payulatam_is_confirmation_page=True
+            )._get_tx_from_notification_data('payulatam', data)
             self._verify_notification_signature(data, tx_sudo)  # Use the normalized data.
 
             # Handle the notification data

@@ -16,6 +16,8 @@
             <field name="arch" type="xml">
                 <field name="state" position="before">
                     <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -27,6 +29,21 @@
             <field name="arch" type="xml">
                 <field name="state" position="before">
                     <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_in_invoice_refund_tree_inherit" model="ir.ui.view">
+            <field name="name">account.move.tree.inherit</field>
+            <field name="model">account.move</field>
+            <field name="inherit_id" ref="account.view_in_invoice_refund_tree" />
+            <field name="arch" type="xml">
+                <field name="state" position="before">
+                    <field name="edi_state" optional="hide"/>
+                    <field name="edi_blocking_level" optional="hide"/>
+                    <field name="edi_error_message" optional="hide"/>
                 </field>
             </field>
         </record>
@@ -37,7 +54,11 @@
             <field name="inherit_id" ref="account.view_account_invoice_filter"/>
             <field name="arch" type="xml">
                 <xpath expr="//search/group/filter[@name='status']" position="after">
-                    <filter string="Electronic invoicing state" name="edi_state" context="{'group_by': 'edi_state'}" />
+                    <filter string="Electronic invoicing state" name="edi_state" groups="base.group_no_one"
+                            context="{'group_by': 'edi_state'}"/>
+                    <separator/>
+                    <filter string="Electronic invoicing processing needed" name="edi_to_process" groups="base.group_no_one" 
+                            domain="[('edi_state', 'in', [('to_send'), ('to_cancel')])]"/>
                 </xpath>
             </field>
         </record>
@@ -102,8 +123,8 @@
                           string="EDI Documents"
                           groups="base.group_no_one"
                           attrs="{'invisible': [('edi_document_ids', '=', [])]}">
-                        <field name="edi_document_ids" options="{'no_open': '1'}">
-                            <tree create="false" delete="false" edit="false" decoration-danger="error">
+                        <field name="edi_document_ids">
+                            <tree create="false" delete="false" edit="false" decoration-danger="error" no_open="1">
                                 <field name="name"/>
                                 <field name="edi_format_name"/>
                                 <field name="state"/>

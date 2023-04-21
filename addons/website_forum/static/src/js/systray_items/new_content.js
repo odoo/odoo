@@ -10,5 +10,6 @@ patch(NewContentModal.prototype, 'website_forum_new_content', {
         const newForumElement = this.state.newContentElements.find(element => element.moduleXmlId === 'base.module_website_forum');
         newForumElement.createNewContent = () => this.onAddContent('website_forum.forum_forum_action_add');
         newForumElement.status = MODULE_STATUS.INSTALLED;
+        newForumElement.model = 'forum.forum';
     },
 });

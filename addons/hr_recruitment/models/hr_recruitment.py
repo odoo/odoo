@@ -360,15 +360,15 @@ class Applicant(models.Model):
             applicant.email_from = applicant.partner_id.email
 
     def _inverse_partner_email(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.email_from):
+        for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
             applicant.partner_id.email = applicant.email_from
 
     def _inverse_partner_phone(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_phone and not a.partner_id.phone):
             applicant.partner_id.phone = applicant.partner_phone
 
     def _inverse_partner_mobile(self):
-        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile):
+        for applicant in self.filtered(lambda a: a.partner_id and a.partner_mobile and not a.partner_id.mobile):
             applicant.partner_id.mobile = applicant.partner_mobile
 
     @api.depends('stage_id.hired_stage')
@@ -668,7 +668,7 @@ class Applicant(models.Model):
             'default_address_home_id': address_id,
             'default_department_id': self.department_id.id,
             'default_address_id': self.company_id.partner_id.id,
-            'default_work_email': self.department_id.company_id.email,
+            'default_work_email': self.department_id.company_id.email or self.email_from, # To have a valid email address by default
             'default_work_phone': self.department_id.company_id.phone,
             'form_view_initial_mode': 'edit',
             'default_applicant_id': self.ids,

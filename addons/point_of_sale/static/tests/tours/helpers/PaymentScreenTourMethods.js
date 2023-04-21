@@ -188,6 +188,24 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
                 },
             ];
         }
+        totalIs(amount) {
+            return [
+                {
+                    content: `total is ${amount}`,
+                    trigger: `.total:contains("${amount}")`,
+                    run: () => {},
+                },
+            ];
+        }
+        totalDueIs(amount) {
+            return [
+                {
+                    content: `total due is ${amount}`,
+                    trigger: `.payment-status-total-due:contains("${amount}")`,
+                    run: () => {},
+                },
+            ];
+        }
     }
 
     class Execute {

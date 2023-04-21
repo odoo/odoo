@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, RedirectWarning, UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -19,13 +23,14 @@ class AccountMove(models.Model):
             ('deemed_export', 'Deemed Export'),
             ('uin_holders', 'UIN Holders'),
         ], string="GST Treatment", compute="_compute_l10n_in_gst_treatment", store=True, readonly=False, copy=True)
-    l10n_in_state_id = fields.Many2one('res.country.state', string="Location of supply")
+    l10n_in_state_id = fields.Many2one('res.country.state', string="Place of supply", compute="_compute_l10n_in_state_id", store=True, readonly=False)
     l10n_in_gstin = fields.Char(string="GSTIN")
     # For Export invoice this data is need in GSTR report
     l10n_in_shipping_bill_number = fields.Char('Shipping bill number', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_shipping_bill_date = fields.Date('Shipping bill date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', readonly=True, states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
+    l10n_in_journal_type = fields.Selection(string="Journal Type", related='journal_id.type')
 
     @api.depends('amount_total')
     def _compute_amount_total_words(self):
@@ -34,20 +39,33 @@ class AccountMove(models.Model):
 
     @api.depends('partner_id')
     def _compute_l10n_in_gst_treatment(self):
-        for record in self:
-            record.l10n_in_gst_treatment = record.partner_id.l10n_in_gst_treatment
+        indian_invoice = self.filtered(lambda m: m.country_code == 'IN')
+        for record in indian_invoice:
+            gst_treatment = record.partner_id.l10n_in_gst_treatment
+            if not gst_treatment:
+                gst_treatment = 'unregistered'
+                if record.partner_id.country_id.code == 'IN' and record.partner_id.vat:
+                    gst_treatment = 'regular'
+                elif record.partner_id.country_id and record.partner_id.country_id.code != 'IN':
+                    gst_treatment = 'overseas'
+            record.l10n_in_gst_treatment = gst_treatment
+        (self - indian_invoice).l10n_in_gst_treatment = False
 
-    @api.model
-    def _l10n_in_get_indian_state(self, partner):
-        """In tax return filing, If customer is not Indian in that case place of supply is must set to Other Territory.
-        So we set Other Territory in l10n_in_state_id when customer(partner) is not Indian
-        Also we raise if state is not set in Indian customer.
-        State is big role under GST because tax type is depend on.for more information check this https://www.cbic.gov.in/resources//htdocs-cbec/gst/Integrated%20goods%20&%20Services.pdf"""
-        if partner.country_id and partner.country_id.code == 'IN' and not partner.state_id:
-            raise ValidationError(_("State is missing from address in '%s'. First set state after post this invoice again.", partner.name))
-        elif partner.country_id and partner.country_id.code != 'IN':
-            return self.env.ref('l10n_in.state_in_ot')
-        return partner.state_id
+    @api.depends('partner_id', 'company_id')
+    def _compute_l10n_in_state_id(self):
+        for move in self:
+            if move.country_code == 'IN' and move.journal_id.type == 'sale':
+                country_code = move.partner_id.country_id.code
+                if country_code == 'IN':
+                    move.l10n_in_state_id = move.partner_id.state_id
+                elif country_code:
+                    move.l10n_in_state_id = self.env.ref('l10n_in.state_in_oc', raise_if_not_found=False)
+                else:
+                    move.l10n_in_state_id = move.company_id.state_id
+            elif move.country_code == 'IN' and move.journal_id.type == 'purchase':
+                move.l10n_in_state_id = move.company_id.state_id
+            else:
+                move.l10n_in_state_id = False
 
     def _post(self, soft=True):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
@@ -58,13 +76,16 @@ class AccountMove(models.Model):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
             if not company_unit_partner.state_id:
-                raise ValidationError(_(
-                    "State is missing from your company/unit %(company_name)s (%(company_id)s).\nFirst set state in your company/unit.",
-                    company_name=company_unit_partner.name,
-                    company_id=company_unit_partner.id
-                ))
-            elif move.journal_id.type == 'purchase':
-                move.l10n_in_state_id = company_unit_partner.state_id
+                msg = _("Your company %s needs to have a correct address in order to validate this invoice.\n"
+                "Set the address of your company (Don't forget the State field)") % (company_unit_partner.name)
+                action = {
+                    "view_mode": "form",
+                    "res_model": "res.company",
+                    "type": "ir.actions.act_window",
+                    "res_id" : move.company_id.id,
+                    "views": [[self.env.ref("base.view_company_form").id, "form"]],
+                }
+                raise RedirectWarning(msg, action, _('Go to Company configuration'))
 
             move.l10n_in_gstin = move.partner_id.vat
             if not move.l10n_in_gstin and move.l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']:
@@ -74,13 +95,6 @@ class AccountMove(models.Model):
                     partner_id=move.partner_id.id,
                     name=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment)
                 ))
-            if move.journal_id.type == 'sale':
-                move.l10n_in_state_id = self._l10n_in_get_indian_state(move.partner_id)
-                if not move.l10n_in_state_id:
-                    move.l10n_in_state_id = self._l10n_in_get_indian_state(move.partner_id)
-                #still state is not set then assumed that transaction is local like PoS so set state of company unit
-                if not move.l10n_in_state_id:
-                    move.l10n_in_state_id = company_unit_partner.state_id
         return posted
 
     def _l10n_in_get_warehouse_address(self):
@@ -88,3 +102,27 @@ class AccountMove(models.Model):
         # TO OVERRIDE
         self.ensure_one()
         return False
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_l10n_in_except_once_post(self):
+        # Prevent deleting entries once it's posted for Indian Company only
+        if any(m.country_code == 'IN' and m.posted_before for m in self) and not self._context.get('force_delete'):
+            raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted"))
+
+    def unlink(self):
+        # Add logger here becouse in api ondelete account.move.line is deleted and we can't get total amount
+        logger_msg = False
+        if any(m.country_code == 'IN' and m.posted_before for m in self):
+            if self._context.get('force_delete'):
+                moves_details = ", ".join("{entry_number} ({move_id}) amount {amount_total} {currency} and partner {partner_name}".format(
+                    entry_number=m.name,
+                    move_id=m.id,
+                    amount_total=m.amount_total,
+                    currency=m.currency_id.name,
+                    partner_name=m.partner_id.display_name)
+                    for m in self)
+                logger_msg = 'Force deleted Journal Entries %s by %s (%s)' % (moves_details, self.env.user.name, self.env.user.id)
+        res = super().unlink()
+        if logger_msg:
+            _logger.info(logger_msg)
+        return res

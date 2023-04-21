@@ -8,7 +8,8 @@ var _t = core._t;
 var timeout;
 
 publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
-    selector: '#top_menu a[href$="/shop/cart"]',
+    // TODO in master: remove the second selector.
+    selector: '#top a[href$="/shop/cart"], #top_menu a[href$="/shop/cart"]',
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
@@ -1197,7 +1198,10 @@ publicWidget.registry.multirangePriceSelector = publicWidget.Widget.extend({
         if (parseFloat(range.max) !== range.valueHigh) {
             search['max_price'] = range.valueHigh;
         }
-        this.el.querySelector('.o_wsale_products_grid_table_wrapper').classList.add('opacity-50');
+        let product_list_div = this.el.querySelector('.o_wsale_products_grid_table_wrapper');
+        if (product_list_div) {
+            product_list_div.classList.add('opacity-50');
+        }
         window.location.search = $.param(search);
     },
 });

@@ -64,9 +64,9 @@ export class WebsitePreview extends Component {
                 // URL (event if it wasn't, it wouldn't be an issue as those are
                 // really considered as the same domain, the user will share the
                 // same session and CORS errors won't be a thing in such a case)
-                window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
+                window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
             } else {
-                this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
+                this.initialUrl = `/website/force/${encodeURIComponent(this.websiteId)}?path=${encodedPath}`;
             }
         });
 
@@ -145,7 +145,7 @@ export class WebsitePreview extends Component {
             // content of the previous URL before reaching the client action,
             // which was lost after being replaced for the frontend's URL.
             const handleBackNavigation = () => {
-                if (!window.location.pathname.startsWith('/@')) {
+                if (window.location.pathname === '/web') {
                     window.dispatchEvent(new HashChangeEvent('hashchange', {
                         newURL: window.location.href.toString()
                     }));
@@ -232,6 +232,7 @@ export class WebsitePreview extends Component {
 
     reloadIframe(url) {
         return new Promise((resolve, reject) => {
+            this.websiteService.websiteRootInstance = undefined;
             this.iframe.el.addEventListener('OdooFrameContentLoaded', resolve, { once: true });
             if (url) {
                 this.iframe.el.contentWindow.location = url;
@@ -300,17 +301,16 @@ export class WebsitePreview extends Component {
         if (!this.backendUrl) {
             this.backendUrl = routeToUrl(this.router.current);
         }
-        const currentUrl = new URL(this.iframe.el.contentDocument.location.href);
-        currentUrl.pathname = `/@${currentUrl.pathname}`;
-        this.currentTitle = this.iframe.el.contentDocument.title;
-        history.replaceState({}, this.currentTitle, currentUrl.href);
-        this.title.setParts({ action: this.currentTitle });
+        const currentTitle = this.iframe.el.contentDocument.title;
+        history.replaceState({}, currentTitle, this.iframe.el.contentDocument.location.href);
+        this.title.setParts({ action: currentTitle });
     }
 
     _onPageLoaded() {
         this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
         this._replaceBrowserUrl();
         this.iframe.el.contentWindow.addEventListener('hashchange', this._replaceBrowserUrl.bind(this));
+        this.iframe.el.contentWindow.addEventListener('pagehide', this._onPageHide.bind(this));
 
         this.websiteService.pageDocument = this.iframe.el.contentDocument;
 
@@ -338,6 +338,14 @@ export class WebsitePreview extends Component {
                 // Forward clicks to close backend client action's navbar
                 // dropdowns.
                 this.iframe.el.dispatchEvent(new MouseEvent('click', ev));
+            } else {
+                // When in edit mode, prevent the default behaviours of clicks
+                // as to avoid DOM changes not handled by the editor.
+                // (Such as clicking on a link that triggers navigating to
+                // another page.)
+                if (!ev.target.closest('#oe_manipulators')) {
+                    ev.preventDefault();
+                }
             }
 
             const linkEl = ev.target.closest('[href]');
@@ -373,9 +381,14 @@ export class WebsitePreview extends Component {
                     },
                     reloadIframe: false,
                 });
-            } else if (href && target !== '_blank' && !isEditing && this._isTopWindowURL(linkEl)) {
-                ev.preventDefault();
-                this.router.redirect(href);
+            } else if (href && target !== '_blank' && !isEditing) {
+                if (this._isTopWindowURL(linkEl)) {
+                    ev.preventDefault();
+                    this.router.redirect(href);
+                } else if (this.iframe.el.contentWindow.location.pathname !== new URL(href).pathname) {
+                    // This scenario triggers a navigation inside the iframe.
+                    this.websiteService.websiteRootInstance = undefined;
+                }
             }
         });
         this.iframe.el.contentDocument.addEventListener('keydown', ev => {
@@ -392,7 +405,6 @@ export class WebsitePreview extends Component {
     }
 
     _onPageUnload() {
-        this.websiteService.websiteRootInstance = undefined;
         this.iframe.el.setAttribute('is-ready', 'false');
         // Before leaving the iframe, its content is replicated on an
         // underlying iframe, to avoid for white flashes (visible on
@@ -405,6 +417,14 @@ export class WebsitePreview extends Component {
             this.iframefallback.el.classList.remove('d-none');
             $().getScrollingElement(this.iframefallback.el.contentDocument)[0].scrollTop = $().getScrollingElement(this.iframe.el.contentDocument)[0].scrollTop;
         }
+    }
+    _onPageHide() {
+        // Normally, at this point, the websiteRootInstance is already set to
+        // `undefined`, as we want to do that as early as possible to prevent
+        // the editor to be in an unstable state. But some events not managed
+        // by the websitePreview could trigger a `pagehide`, so for safety,
+        // it is set to undefined again.
+        this.websiteService.websiteRootInstance = undefined;
     }
 }
 WebsitePreview.template = 'website.WebsitePreview';

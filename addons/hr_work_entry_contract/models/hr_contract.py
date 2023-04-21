@@ -199,6 +199,7 @@ class HrContract(models.Model):
                 if interval[0] == interval[1]:  # if start == stop
                     continue
                 leave_entry_type = contract._get_interval_leave_work_entry_type(interval, leaves, bypassing_work_entry_type_codes)
+                interval_leaves = [leave for leave in leaves if leave[2].work_entry_type_id.id == leave_entry_type.id]
                 interval_start = interval[0].astimezone(pytz.utc).replace(tzinfo=None)
                 interval_stop = interval[1].astimezone(pytz.utc).replace(tzinfo=None)
                 contract_vals += [dict([
@@ -210,7 +211,7 @@ class HrContract(models.Model):
                     ('company_id', contract.company_id.id),
                     ('state', 'draft'),
                     ('contract_id', contract.id),
-                ] + contract._get_more_vals_leave_interval(interval, leaves))]
+                ] + contract._get_more_vals_leave_interval(interval, interval_leaves))]
         return contract_vals
 
     def _get_work_entries_values(self, date_start, date_stop):
@@ -355,8 +356,8 @@ class HrContract(models.Model):
         dependendant_fields = self._get_fields_that_recompute_we()
         if any(key in dependendant_fields for key in vals.keys()):
             for contract in self:
-                date_from = max(self.date_start, self.date_generated_from.date())
-                date_to = min(self.date_end or date.max, self.date_generated_to.date())
+                date_from = max(contract.date_start, contract.date_generated_from.date())
+                date_to = min(contract.date_end or date.max, contract.date_generated_to.date())
                 if date_from != date_to:
                     contract._recompute_work_entries(date_from, date_to)
         return result

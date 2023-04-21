@@ -83,9 +83,11 @@ export class DisplayNameRepository {
         if (!this._displayNames[model]) {
             this._displayNames[model] = {};
         }
+        const deferred = new Deferred();
+        deferred.resolve(displayName);
         this._displayNames[model][id] = {
             state: "COMPLETED",
-            deferred: new Deferred().resolve(displayName),
+            deferred,
             value: displayName,
         };
     }

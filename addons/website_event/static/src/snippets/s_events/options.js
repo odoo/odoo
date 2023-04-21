@@ -12,6 +12,14 @@ const dynamicSnippetEventOptions = dynamicSnippetOptions.extend({
         this.modelNameFilter = 'event.event';
         this.tagIDs = [];
     },
+    /**
+     * @override
+     */
+    onBuilt() {
+        this._super.apply(this, arguments);
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_events';
+    },
 
     async willStart() {
         const _super = this._super.bind(this);

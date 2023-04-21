@@ -4,16 +4,17 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -28,14 +29,14 @@ msgstr "Fooi toevoegen via betaalterminal (Adyen)."
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_api_key
 msgid "Adyen API key"
-msgstr "Adyen API sleutel"
+msgstr "Adyen API key"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Adyen Error"
-msgstr "Adyen fout"
+msgstr "Adyen foutmelding"
 
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_payment_method__adyen_latest_diagnosis
@@ -58,7 +59,7 @@ msgid "Adyen Test Mode"
 msgstr "Adyen test modus"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "An unexpected error occurred. Message from Adyen: %s"
@@ -67,17 +68,17 @@ msgstr "Er is een onverwachte fout opgetreden. Bericht van Adyen: %s"
 #. module: pos_adyen
 #: model:ir.model.fields,field_description:pos_adyen.field_pos_config__adyen_ask_customer_for_tip
 msgid "Ask Customers For Tip"
-msgstr "Vraag klanten voor fooi"
+msgstr "Fooi vragen aan klanten"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Authentication failed. Please check your Adyen credentials."
 msgstr "Authenticatie mislukt. Controleer je Adyen logingegevens."
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -85,10 +86,10 @@ msgid ""
 "terminal."
 msgstr ""
 "Het annuleren van de betaling is mislukt. Annuleer deze handmatig op de "
-"betaalautomaat."
+"betaalterminal."
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Cannot process transactions with negative amount."
@@ -100,7 +101,7 @@ msgid "Config Settings"
 msgstr "Configuratie instellingen"
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid ""
@@ -111,13 +112,14 @@ msgstr ""
 "internetverbinding en probeer het opnieuw."
 
 #. module: pos_adyen
-#. openerp-web
+#. odoo-javascript
 #: code:addons/pos_adyen/static/src/js/payment_adyen.js:0
 #, python-format
 msgid "Message from Adyen: %s"
 msgstr "Bericht van Adyen: %s"
 
 #. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_config.py:0
 #, python-format
 msgid ""
@@ -151,6 +153,14 @@ msgid "Run transactions in the test environment."
 msgstr "Transacties uitvoeren in de testomgeving."
 
 #. module: pos_adyen
+#. odoo-python
+#: code:addons/pos_adyen/models/pos_payment_method.py:0
+#, python-format
+msgid "Terminal %s is already used in company %s on payment method %s."
+msgstr "Terminal %s wordt al gebruikt in bedrijf %s op betaalmethode %s."
+
+#. module: pos_adyen
+#. odoo-python
 #: code:addons/pos_adyen/models/pos_payment_method.py:0
 #, python-format
 msgid "Terminal %s is already used on payment method %s."

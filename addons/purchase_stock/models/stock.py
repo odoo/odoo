@@ -188,17 +188,11 @@ class Orderpoint(models.Model):
     def _set_default_route_id(self):
         route_id = self.env['stock.rule'].search([
             ('action', '=', 'buy')
-        ]).route_id
+        ], limit=1).route_id
         orderpoint_wh_supplier = self.filtered(lambda o: o.product_id.seller_ids)
-        if route_id and orderpoint_wh_supplier:
+        if route_id and orderpoint_wh_supplier and (not self.product_id.route_ids or route_id in self.product_id.route_ids):
             orderpoint_wh_supplier.route_id = route_id[0].id
         return super()._set_default_route_id()
-
-    def _get_orderpoint_procurement_date(self):
-        date = super()._get_orderpoint_procurement_date()
-        if any(rule.action == 'buy' for rule in self.rule_ids):
-            date -= relativedelta(days=self.company_id.po_lead)
-        return date
 
 
 class StockLot(models.Model):
@@ -225,3 +219,20 @@ class StockLot(models.Model):
         action['domain'] = [('id', 'in', self.mapped('purchase_order_ids.id'))]
         action['context'] = dict(self._context, create=False)
         return action
+
+
+class ProcurementGroup(models.Model):
+    _inherit = 'procurement.group'
+
+    @api.model
+    def run(self, procurements, raise_user_error=True):
+        wh_by_comp = dict()
+        for procurement in procurements:
+            routes = procurement.values.get('route_ids')
+            if routes and any(r.action == 'buy' for r in routes.rule_ids):
+                company = procurement.company_id
+                if company not in wh_by_comp:
+                    wh_by_comp[company] = self.env['stock.warehouse'].search([('company_id', '=', company.id)])
+                wh = wh_by_comp[company]
+                procurement.values['route_ids'] |= wh.reception_route_id
+        return super().run(procurements, raise_user_error=raise_user_error)

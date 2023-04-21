@@ -113,12 +113,9 @@
                         <field name="has_recommended_activities"/>
                     </group>
                     <group attrs="{'invisible': [('has_recommended_activities','=',False)]}">
-                        <div class="o_row">
-                            <strong>Recommended Activities</strong>
-                            <field name="recommended_activity_type_id" widget="selection_badge"
-                                domain="[('previous_type_ids', '=', previous_activity_type_id)]"
-                                nolabel="1"/>
-                        </div>
+                        <field name="recommended_activity_type_id" widget="selection_badge"
+                            domain="[('previous_type_ids', '=', previous_activity_type_id)]"
+                            string="Recommended Activities"/>
                     </group>
                     <group>
                         <group>

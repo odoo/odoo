@@ -305,12 +305,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
 
         // Get list of website_form compatible models.
         this.models = await this._rpc({
-            model: "ir.model",
-            method: "search_read",
-            args: [
-                [['website_form_access', '=', true]],
-                ['id', 'model', 'name', 'website_form_label', 'website_form_key']
-            ],
+            model: 'ir.model',
+            method: 'get_compatible_form_models',
         });
 
         const targetModelName = this.$target[0].dataset.model_name || 'mail.mail';
@@ -774,7 +770,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
      * @param {string} action
      */
     _redirectToAction: function (action) {
-        window.location.replace(`/web#action=${action}`);
+        window.location.replace(`/web#action=${encodeURIComponent(action)}`);
     },
 
     //--------------------------------------------------------------------------

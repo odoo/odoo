@@ -8,6 +8,7 @@ from odoo.exceptions import ValidationError, AccessError
 from odoo.osv import expression
 from odoo.tools import Query
 
+from datetime import date
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -403,6 +404,17 @@ class Project(models.Model):
             'total': {'to_invoice': total_to_invoice, 'invoiced': total_invoiced},
         }
 
+    def _get_revenues_items_from_invoices_domain(self, domain=None):
+        if domain is None:
+            domain = []
+        return expression.AND([
+            domain,
+            [('move_id.move_type', 'in', self.env['account.move'].get_sale_types()),
+            ('parent_state', 'in', ['draft', 'posted']),
+            ('price_subtotal', '>', 0),
+            ('is_downpayment', '=', False)],
+        ])
+
     def _get_revenues_items_from_invoices(self, excluded_move_line_ids=None):
         """
         Get all revenues items from invoices, and put them into their own
@@ -416,32 +428,37 @@ class Project(models.Model):
         """
         if excluded_move_line_ids is None:
             excluded_move_line_ids = []
-        query = self.env['account.move.line'].sudo()._search([
-            ('move_id.move_type', 'in', ['out_invoice', 'out_refund']),
-            ('parent_state', 'in', ['draft', 'posted']),
-            ('price_subtotal', '>', 0),
-            ('id', 'not in', excluded_move_line_ids),
-        ])
+        query = self.env['account.move.line'].sudo()._search(
+            self._get_revenues_items_from_invoices_domain([('id', 'not in', excluded_move_line_ids)]),
+        )
         query.add_where('account_move_line.analytic_distribution ? %s', [str(self.analytic_account_id.id)])
         # account_move_line__move_id is the alias of the joined table account_move in the query
         # we can use it, because of the "move_id.move_type" clause in the domain of the query, which generates the join
         # this is faster than a search_read followed by a browse on the move_id to retrieve the move_type of each account.move.line
-        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line__move_id.move_type')
+        query_string, query_param = query.select('price_subtotal', 'parent_state', 'account_move_line.currency_id', 'account_move_line.analytic_distribution', 'account_move_line__move_id.move_type')
         self._cr.execute(query_string, query_param)
         invoices_move_line_read = self._cr.dictfetchall()
         if invoices_move_line_read:
+
+            # Get conversion rate from currencies to currency of analytic account
+            currency_ids = {iml['currency_id'] for iml in invoices_move_line_read + [{'currency_id': self.analytic_account_id.currency_id.id}]}
+            rates = self.env['res.currency'].browse(list(currency_ids))._get_rates(self.company_id, date.today())
+            conversion_rates = {cid: rates[self.analytic_account_id.currency_id.id] / rate_from for cid, rate_from in rates.items()}
+
             amount_invoiced = amount_to_invoice = 0.0
             for moves_read in invoices_move_line_read:
+                price_subtotal = self.analytic_account_id.currency_id.round(moves_read['price_subtotal'] * conversion_rates[moves_read['currency_id']])
+                analytic_contribution = moves_read['analytic_distribution'][str(self.analytic_account_id.id)] / 100.
                 if moves_read['parent_state'] == 'draft':
                     if moves_read['move_type'] == 'out_invoice':
-                        amount_to_invoice += moves_read['price_subtotal']
+                        amount_to_invoice += price_subtotal * analytic_contribution
                     else:  # moves_read['move_type'] == 'out_refund'
-                        amount_to_invoice -= moves_read['price_subtotal']
+                        amount_to_invoice -= price_subtotal * analytic_contribution
                 else:  # moves_read['parent_state'] == 'posted'
                     if moves_read['move_type'] == 'out_invoice':
-                        amount_invoiced += moves_read['price_subtotal']
+                        amount_invoiced += price_subtotal * analytic_contribution
                     else:  # moves_read['move_type'] == 'out_refund'
-                        amount_invoiced -= moves_read['price_subtotal']
+                        amount_invoiced -= price_subtotal * analytic_contribution
             # don't display the section if the final values are both 0 (invoice -> credit note)
             if amount_invoiced != 0 or amount_to_invoice != 0:
                 section_id = 'other_invoice_revenues'

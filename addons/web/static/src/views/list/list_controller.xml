@@ -44,7 +44,7 @@
                 </t>
                 <t t-elif="activeActions.create and (!model.root.isGrouped or !editable)">
                     <button type="button" class="btn btn-primary o_list_button_add" data-hotkey="c" t-on-click="onClickCreate" data-bounce-button="">
-                        Create
+                        New
                     </button>
                 </t>
                 <t t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable and !env.isSmall">

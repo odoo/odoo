@@ -27,11 +27,11 @@
                         <i class="fa fa-chevron-right"/>
                     </li>
                 </ul>
-                <a class="carousel-control-prev o_we_no_overlay" href="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
+                <a class="carousel-control-prev o_we_no_overlay o_not_editable" href="#slideshow_sample" data-bs-slide="prev" aria-label="Previous" title="Previous">
                     <span class="fa fa-chevron-left fa-2x text-white"/>
                     <span class="visually-hidden">Previous</span>
                 </a>
-                <a class="carousel-control-next o_we_no_overlay" href="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
+                <a class="carousel-control-next o_we_no_overlay o_not_editable" href="#slideshow_sample" data-bs-slide="next" aria-label="Next" title="Next">
                     <span class="fa fa-chevron-right fa-2x text-white"/>
                     <span class="visually-hidden">Next</span>
                 </a>
@@ -80,6 +80,11 @@
                 <!-- Hidden option -->
                 <we-button data-mode="slideshow" data-name="slideshow_mode_opt">Slideshow</we-button>
             </we-select>
+            <!--
+            TODO adapt in master: this was patched in JS to replace
+            data-attribute-name="interval" by data-attribute-name="bsInterval"
+            in order to be consistent with Bootstrap 5.
+            -->
             <we-input string="Speed"
                 data-dependencies="slideshow_mode_opt"
                 data-apply-to=".carousel:first"

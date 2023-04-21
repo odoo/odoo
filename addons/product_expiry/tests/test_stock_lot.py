@@ -310,11 +310,11 @@ class TestStockLot(TestStockCommon):
         self.assertAlmostEqual(
             apple_lot.expiration_date, expiration_date, delta=time_gap)
         self.assertAlmostEqual(
-            apple_lot.use_date, expiration_date - timedelta(days=5), delta=time_gap)
+            apple_lot.use_date, expiration_date - timedelta(days=self.apple_product.use_time), delta=time_gap)
         self.assertAlmostEqual(
-            apple_lot.removal_date, expiration_date - timedelta(days=2), delta=time_gap)
+            apple_lot.removal_date, expiration_date - timedelta(days=self.apple_product.removal_time), delta=time_gap)
         self.assertAlmostEqual(
-            apple_lot.alert_date, expiration_date - timedelta(days=6), delta=time_gap)
+            apple_lot.alert_date, expiration_date - timedelta(days=self.apple_product.alert_time), delta=time_gap)
 
     def test_04_2_expiration_date_on_receipt(self):
         """ Test we can set an expiration date on receipt even if all expiration
@@ -361,8 +361,8 @@ class TestStockLot(TestStockCommon):
         self.assertAlmostEqual(
             apple_lot.use_date, expiration_date - timedelta(days=self.apple_product.use_time), delta=time_gap)
         self.assertEqual(
-            apple_lot.removal_date, False,
-            "Must be false as the `removal_time` isn't set on product.")
+            apple_lot.removal_date, expiration_date,
+            "Must same as expiration_date as the `removal_time` isn't set on product.")
         self.assertAlmostEqual(
             apple_lot.alert_date, expiration_date - timedelta(days=self.apple_product.alert_time), delta=time_gap)
 
@@ -565,3 +565,25 @@ class TestStockLot(TestStockCommon):
             lot.removal_date, exp_date - timedelta(days=self.apple_product.removal_time), delta=time_gap)
         self.assertAlmostEqual(
             lot.alert_date, exp_date - timedelta(days=self.apple_product.alert_time), delta=time_gap)
+
+    def test_apply_same_date_on_expiry_fields(self):
+        expiration_time = 10
+        self.apple_product.write({
+            'expiration_time': expiration_time,
+            'use_time': 0,
+            'removal_time': 0,
+            'alert_time': 0,
+        })
+
+        lot = self.env['stock.lot'].create({
+            'product_id': self.apple_product.id,
+            'company_id': self.env.company.id,
+        })
+
+        delta = timedelta(seconds=10)
+        expiration_date = datetime.today() + timedelta(days=expiration_time)
+        err_msg = "The time on the product is set to 0, it means that the corresponding date should be the same as the expiration one"
+        self.assertAlmostEqual(lot.expiration_date, expiration_date, delta=delta)
+        self.assertAlmostEqual(lot.use_date, expiration_date, delta=delta, msg=err_msg)
+        self.assertAlmostEqual(lot.removal_date, expiration_date, delta=delta, msg=err_msg)
+        self.assertAlmostEqual(lot.alert_date, expiration_date, delta=delta, msg=err_msg)

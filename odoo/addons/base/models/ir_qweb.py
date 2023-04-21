@@ -406,13 +406,24 @@ _SAFE_QWEB_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'CALL_METHOD', 'LOAD_METHOD',
 
     'GET_ITER', 'FOR_ITER', 'YIELD_VALUE',
-    'JUMP_FORWARD', 'JUMP_ABSOLUTE',
+    'JUMP_FORWARD', 'JUMP_ABSOLUTE', 'JUMP_BACKWARD',
     'JUMP_IF_FALSE_OR_POP', 'JUMP_IF_TRUE_OR_POP', 'POP_JUMP_IF_FALSE', 'POP_JUMP_IF_TRUE',
 
     'LOAD_NAME', 'LOAD_ATTR',
     'LOAD_FAST', 'STORE_FAST', 'UNPACK_SEQUENCE',
     'STORE_SUBSCR',
     'LOAD_GLOBAL',
+    # Following opcodes were added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
+    'RESUME',
+    'CALL',
+    'PRECALL',
+    'POP_JUMP_FORWARD_IF_FALSE',
+    'PUSH_NULL',
+    'POP_JUMP_FORWARD_IF_TRUE', 'KW_NAMES',
+    'FORMAT_VALUE', 'BUILD_STRING',
+    'RETURN_GENERATOR',
+    'POP_JUMP_BACKWARD_IF_FALSE',
+    'SWAP',
 ])) - _BLACKLIST
 
 
@@ -428,6 +439,7 @@ ALLOWED_KEYWORD = frozenset(['False', 'None', 'True', 'and', 'as', 'elif', 'else
 # regexpr for string formatting and extract ( ruby-style )|( jinja-style  ) used in `_compile_format`
 FORMAT_REGEX = re.compile(r'(?:#\{(.+?)\})|(?:\{\{(.+?)\}\})')
 RSTRIP_REGEXP = re.compile(r'\n[ \t]*$')
+LSTRIP_REGEXP = re.compile(r'^[ \t]*\n')
 FIRST_RSTRIP_REGEXP = re.compile(r'^(\n[ \t]*)+(\n[ \t])')
 VARNAME_REGEXP = re.compile(r'^[A-Za-z_][A-Za-z0-9_]*$')
 TO_VARNAME_REGEXP = re.compile(r'[^A-Za-z0-9_]+')
@@ -601,11 +613,15 @@ class IrQWeb(models.AbstractModel):
         # generate the template functions and the root function name
         def generate_functions():
             code, options, def_name = self._generate_code(template)
+            profile_options = {
+                'ref': options.get('ref') and int(options['ref']) or None,
+                'ref_xml': options.get('ref_xml') and str(options['ref_xml']) or None,
+            } if self.env.context.get('profile') else None
             code = '\n'.join([
                 "def generate_functions():",
                 "    template_functions = {}",
                 indent_code(code, 1),
-                f"    template_functions['options'] = {options if self.env.context.get('profile') else None!r}",
+                f"    template_functions['options'] = {profile_options!r}",
                 "    return template_functions",
             ])
 
@@ -1682,12 +1698,14 @@ class IrQWeb(models.AbstractModel):
 
         assert not expr.isspace(), 't-if or t-elif expression should not be empty.'
 
-        strip = self._rstrip_text(compile_context)
+        strip = self._rstrip_text(compile_context)  # the withspaces is visible only when display a content
+        if el.tag.lower() == 't' and el.text and LSTRIP_REGEXP.search(el.text):
+            strip = ''  # remove technical spaces
         code = self._flush_text(compile_context, level)
 
         code.append(indent_code(f"if {self._compile_expr(expr)}:", level))
         body = []
-        if strip and el.tag.lower() != 't':
+        if strip:
             self._append_text(strip, compile_context)
         body.extend(
             self._compile_directives(el, compile_context, level + 1) +
@@ -1727,7 +1745,7 @@ class IrQWeb(models.AbstractModel):
 
             code.append(indent_code("else:", level))
             body = []
-            if strip and next_el.tag.lower() != 't':
+            if strip:
                 self._append_text(strip, compile_context)
             body.extend(
                 self._compile_node(next_el, compile_context, level + 1)+

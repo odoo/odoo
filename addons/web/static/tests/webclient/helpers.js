@@ -210,6 +210,7 @@ export async function addLegacyMockEnvironment(env, legacyParams = {}) {
 
     if (legacyParams.withLegacyMockServer) {
         const adapter = standaloneAdapter({ Component });
+        registerCleanup(() => adapter.__owl__.app.destroy());
         adapter.env = legacyEnv;
         const W = Widget.extend({ do_push_state() {} });
         const widget = new W(adapter);

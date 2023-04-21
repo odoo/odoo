@@ -243,6 +243,8 @@ class Forum(models.Model):
         return post_tags
 
     def _compute_website_url(self):
+        if not self.id:
+            return False
         return '/forum/%s' % (slug(self))
 
     def get_tags_first_char(self):
@@ -252,7 +254,10 @@ class Forum(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
-        return self.env['website'].get_client_action(self._compute_website_url())
+        website_url = self._compute_website_url
+        if not website_url:
+            return False
+        return self.env['website'].get_client_action(website_url)
 
     @api.model
     def _update_website_count(self):
@@ -337,7 +342,7 @@ class Post(models.Model):
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
     parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', '=', self.forum_id.id)])
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', 'in', self.forum_id.ids)])
     child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
@@ -482,6 +487,7 @@ class Post(models.Model):
             post.karma_unlink = post.forum_id.karma_unlink_own if is_creator else post.forum_id.karma_unlink_all
             post.karma_comment = post.forum_id.karma_comment_own if is_creator else post.forum_id.karma_comment_all
             post.karma_comment_convert = post.forum_id.karma_comment_convert_own if is_creator else post.forum_id.karma_comment_convert_all
+            post.karma_flag = post.forum_id.karma_flag
 
             post.can_ask = is_admin or user.karma >= post.forum_id.karma_ask
             post.can_answer = is_admin or user.karma >= post.forum_id.karma_answer
@@ -966,7 +972,8 @@ class Post(models.Model):
         return super(Post, self)._notify_thread_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     def _compute_website_url(self):
-        for post in self:
+        self.website_url = False
+        for post in self.filtered(lambda post: post.id):
             forum_slug = slug(post.forum_id)
             post_slug = slug(post)
             anchor = post.parent_id and '#answer_%d' % post.id or ''
@@ -974,6 +981,8 @@ class Post(models.Model):
 
     def go_to_website(self):
         self.ensure_one()
+        if not self.website_url:
+            return False
         return self.env['website'].get_client_action(self.website_url)
 
     @api.model

@@ -141,6 +141,27 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        enterOpeningAmount(amount) {
+            return [
+                {
+                    content: 'enter opening amount',
+                    trigger: '.cash-input-sub-section > .pos-input',
+                    run: 'text ' + amount,
+                },
+            ];
+        }
+        changeFiscalPosition(name) {
+            return [
+                {
+                    content: 'click fiscal position button',
+                    trigger: '.o_fiscal_position_button',
+                },
+                {
+                    content: 'fiscal position screen is shown',
+                    trigger: `.selection-item:contains("${name}")`,
+                },
+            ];
+        }
     }
 
     class Check {
@@ -233,6 +254,41 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     run: function () {}, // it's a check
                 },
             ]
+        }
+        checkSecondCashClosingDetailsLineAmount(amount, sign) {
+            return [
+                {
+                    content: 'Click close session button',
+                    trigger: '.fa-sign-out',
+                },
+                {
+                    content: 'Check closing details',
+                    trigger: `.cash-overview tr:nth-child(2) td:contains("${amount}")`,
+                    run: () => {}, // it's a check
+                },
+                {
+                    content: 'Check closing details',
+                    trigger: `.cash-overview tr:nth-child(2) .cash-sign:contains("${sign}")`,
+                    run: () => {}, // it's a check
+                },
+            ];
+        }
+        noDiscountApplied(originalPrice) {
+            return [
+                {
+                    content: 'no discount is applied',
+                    trigger: `.info:not(:contains(${originalPrice}))`,
+                },
+            ];
+        }
+        discountOriginalPriceIs(original_price) {
+            return [
+                {
+                    content: `discount original price is shown`,
+                    trigger: `s:contains('${original_price}')`,
+                    run: function () {},
+                },
+            ];
         }
     }
 

@@ -516,3 +516,101 @@ class TestPurchaseMrpFlow(TransactionCase):
         self.assertEqual(self.po.picking_ids.move_ids_without_package[0].product_uom_qty, 4, "The amount of the kit components must be updated when changing the quantity of the kit.")
         self.assertEqual(self.po.picking_ids.move_ids_without_package[1].product_uom_qty, 2, "The amount of the kit components must be updated when changing the quantity of the kit.")
         self.assertEqual(self.po.picking_ids.move_ids_without_package[2].product_uom_qty, 6, "The amount of the kit components must be updated when changing the quantity of the kit.")
+
+    def test_procurement_with_preferred_route(self):
+        """
+        3-steps receipts. Suppose a product that has both buy and manufacture
+        routes. The user runs an orderpoint with the preferred route defined to
+        "Buy". A purchase order should be generated.
+        """
+        self.warehouse.reception_steps = 'three_steps'
+
+        manu_route = self.warehouse.manufacture_pull_id.route_id
+        buy_route = self.warehouse.buy_pull_id.route_id
+
+        # un-prioritize the buy rules
+        self.env['stock.rule'].search([]).sequence = 1
+        buy_route.rule_ids.sequence = 2
+
+        vendor = self.env['res.partner'].create({'name': 'super vendor'})
+
+        product = self.env['product.product'].create({
+            'name': 'super product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id})],
+            'route_ids': [(4, manu_route.id), (4, buy_route.id)],
+        })
+
+        rr = self.env['stock.warehouse.orderpoint'].create({
+            'name': product.name,
+            'location_id': self.warehouse.lot_stock_id.id,
+            'product_id': product.id,
+            'product_min_qty': 1,
+            'product_max_qty': 1,
+            'route_id': buy_route.id,
+        })
+        rr.action_replenish()
+
+        move_stock, move_check = self.env['stock.move'].search([('product_id', '=', product.id)])
+
+        self.assertRecordValues(move_check | move_stock, [
+            {'location_id': self.warehouse.wh_input_stock_loc_id.id, 'location_dest_id': self.warehouse.wh_qc_stock_loc_id.id, 'state': 'waiting', 'move_dest_ids': move_stock.ids},
+            {'location_id': self.warehouse.wh_qc_stock_loc_id.id, 'location_dest_id': self.warehouse.lot_stock_id.id, 'state': 'waiting', 'move_dest_ids': []},
+        ])
+
+        po = self.env['purchase.order'].search([('partner_id', '=', vendor.id)])
+        self.assertTrue(po)
+
+        po.button_confirm()
+        move_in = po.picking_ids.move_ids
+        self.assertEqual(move_in.move_dest_ids.ids, move_check.ids)
+
+    def test_procurement_with_preferred_route_2(self):
+        """
+        Check that the route set in the product is taken into account
+        when the product have a supplier and bom.
+        """
+        manu_route = self.warehouse.manufacture_pull_id.route_id
+        buy_route = self.warehouse.buy_pull_id.route_id
+
+        vendor = self.env['res.partner'].create({'name': 'super vendor'})
+
+        product = self.env['product.product'].create({
+            'name': 'super product',
+            'type': 'product',
+            'seller_ids': [(0, 0, {'partner_id': vendor.id})],
+            'route_ids': buy_route,
+        })
+        self.env['mrp.bom'].create({
+            'product_tmpl_id': product.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'product_uom_id': product.uom_id.id,
+        })
+        # create a need of the product with a picking
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        picking = self.env['stock.picking'].create({
+            'location_id': warehouse.lot_stock_id.id,
+            'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            'picking_type_id': warehouse.out_type_id.id,
+            'move_ids': [(0, 0, {
+                'name': product.name,
+                'product_id': product.id,
+                'product_uom': product.uom_id.id,
+                'product_uom_qty': 1,
+                'location_id': warehouse.lot_stock_id.id,
+                'location_dest_id': self.env.ref('stock.stock_location_customers').id,
+            })]
+        })
+        picking.action_assign()
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        self.assertEqual(orderpoint_product.route_id, buy_route, "The route buy should be set on the orderpoint")
+        # Delete the orderpoint to generate a new one with the manufacture route
+        orderpoint_product.unlink()
+        # switch the product route to manufacture
+        product.write({'route_ids': [(3, buy_route.id), (4, manu_route.id)]})
+        self.env['stock.warehouse.orderpoint']._get_orderpoint_action()
+        orderpoint_product = self.env['stock.warehouse.orderpoint'].search(
+            [('product_id', '=', product.id)])
+        self.assertEqual(orderpoint_product.route_id, manu_route, "The route manufacture should be set on the orderpoint")

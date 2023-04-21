@@ -63,7 +63,7 @@ class GoogleSync(models.AbstractModel):
     def write(self, vals):
         google_service = GoogleCalendarService(self.env['google.service'])
         if 'google_id' in vals:
-            self._from_google_ids.clear_cache(self)
+            self._event_ids_from_google_ids.clear_cache(self)
         synced_fields = self._get_google_synced_fields()
         if 'need_sync' not in vals and vals.keys() & synced_fields and not self.env.user.google_synchronization_stopped:
             vals['need_sync'] = True
@@ -78,7 +78,7 @@ class GoogleSync(models.AbstractModel):
     @api.model_create_multi
     def create(self, vals_list):
         if any(vals.get('google_id') for vals in vals_list):
-            self._from_google_ids.clear_cache(self)
+            self._event_ids_from_google_ids.clear_cache(self)
         if self.env.user.google_synchronization_stopped:
             for vals in vals_list:
                 vals.update({'need_sync': False})
@@ -107,12 +107,15 @@ class GoogleSync(models.AbstractModel):
             return True
         return super().unlink()
 
-    @api.model
-    @ormcache_context('google_ids', keys=('active_test',))
     def _from_google_ids(self, google_ids):
         if not google_ids:
             return self.browse()
-        return self.search([('google_id', 'in', google_ids)])
+        return self.browse(self._event_ids_from_google_ids(google_ids))
+
+    @api.model
+    @ormcache_context('google_ids', keys=('active_test',))
+    def _event_ids_from_google_ids(self, google_ids):
+        return self.search([('google_id', 'in', google_ids)]).ids
 
     def _sync_odoo2google(self, google_service: GoogleCalendarService):
         if not self:
@@ -295,7 +298,11 @@ class GoogleSync(models.AbstractModel):
                      email not in [partner.email_normalized for partner in partners]]
         if remaining:
             partners += self.env['mail.thread']._mail_find_partner_from_emails(remaining, records=self, force_create=True, extra_domain=[('type', '!=', 'private')])
-        return partners
+        unsorted_partners = self.env['res.partner'].browse([p.id for p in partners])
+        # partners needs to be sorted according to the emails order provided by google
+        k = {value: idx for idx, value in enumerate(emails)}
+        result = unsorted_partners.sorted(key=lambda p: k.get(p.email_normalized, -1))
+        return result
 
     @api.model
     def _odoo_values(self, google_event: GoogleEvent, default_reminders=()):

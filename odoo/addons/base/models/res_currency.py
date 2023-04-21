@@ -95,6 +95,18 @@ class Currency(models.Model):
         if group_user and group_mc:
             group_user.sudo()._remove_group(group_mc.sudo())
 
+    @api.constrains('active')
+    def _check_company_currency_stays_active(self):
+        if self._context.get('install_mode') or self._context.get('force_deactivate'):
+            # install_mode : At install, when this check is run, the "active" field of a currency added to a company will
+            #                still be evaluated as False, despite it's automatically set at True when added to the company.
+            # force_deactivate : Allows deactivation of a currency in tests to enable non multi_currency behaviors
+            return
+
+        currencies = self.filtered(lambda c: not c.active)
+        if self.env['res.company'].search([('currency_id', 'in', currencies.ids)]):
+            raise UserError(_("This currency is set on a company and therefore cannot be deactivated."))
+
     def _get_rates(self, company, date):
         if not self.ids:
             return {}
@@ -175,6 +187,17 @@ class Currency(models.Model):
                         amt_word=self.currency_subunit_label,
                         )
         return amount_words
+
+    def format(self, amount):
+        """Return ``amount`` formatted according to ``self``'s rounding rules, symbols and positions.
+
+           Also take care of removing the minus sign when 0.0 is negative
+
+           :param float amount: the amount to round
+           :return: formatted str
+        """
+        self.ensure_one()
+        return tools.format_amount(self.env, amount + 0.0, self)
 
     def round(self, amount):
         """Return ``amount`` rounded  according to ``self``'s rounding rules.
@@ -358,7 +381,7 @@ class CurrencyRate(models.Model):
     def _get_latest_rate(self):
         # Make sure 'name' is defined when creating a new rate.
         if not self.name:
-            raise UserError(_("The date for the current rate is empty.\nPlease set it."))
+            raise UserError(_("The name for the current rate is empty.\nPlease set it."))
         return self.currency_id.rate_ids.sudo().filtered(lambda x: (
             x.rate
             and x.company_id == (self.company_id or self.env.company)
@@ -377,7 +400,7 @@ class CurrencyRate(models.Model):
     @api.depends('currency_id', 'company_id', 'name')
     def _compute_rate(self):
         for currency_rate in self:
-            currency_rate.rate = currency_rate.rate or self._get_latest_rate().rate or 1.0
+            currency_rate.rate = currency_rate.rate or currency_rate._get_latest_rate().rate or 1.0
 
     @api.depends('rate', 'name', 'currency_id', 'company_id', 'currency_id.rate_ids.rate')
     @api.depends_context('company')
@@ -385,7 +408,7 @@ class CurrencyRate(models.Model):
         last_rate = self.env['res.currency.rate']._get_last_rates_for_companies(self.company_id | self.env.company)
         for currency_rate in self:
             company = currency_rate.company_id or self.env.company
-            currency_rate.company_rate = (currency_rate.rate or self._get_latest_rate().rate or 1.0) / last_rate[company]
+            currency_rate.company_rate = (currency_rate.rate or currency_rate._get_latest_rate().rate or 1.0) / last_rate[company]
 
     @api.onchange('company_rate')
     def _inverse_company_rate(self):
@@ -397,11 +420,15 @@ class CurrencyRate(models.Model):
     @api.depends('company_rate')
     def _compute_inverse_company_rate(self):
         for currency_rate in self:
+            if not currency_rate.company_rate:
+                currency_rate.company_rate = 1.0
             currency_rate.inverse_company_rate = 1.0 / currency_rate.company_rate
 
     @api.onchange('inverse_company_rate')
     def _inverse_inverse_company_rate(self):
         for currency_rate in self:
+            if not currency_rate.inverse_company_rate:
+                currency_rate.inverse_company_rate = 1.0
             currency_rate.company_rate = 1.0 / currency_rate.inverse_company_rate
 
     @api.onchange('company_rate')

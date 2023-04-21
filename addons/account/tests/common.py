@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import fields
+from odoo import fields, Command
 from odoo.tests.common import TransactionCase, HttpCase, tagged, Form
 
 import json
@@ -62,7 +62,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
 
         user.write({
-            'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
+            'company_ids': [Command.set((cls.company_data['company'] + cls.company_data_2['company']).ids)],
             'company_id': cls.company_data['company'].id,
         })
 
@@ -83,8 +83,8 @@ class AccountTestInvoicingCommon(TransactionCase):
             'standard_price': 800.0,
             'property_account_income_id': cls.company_data['default_account_revenue'].id,
             'property_account_expense_id': cls.company_data['default_account_expense'].id,
-            'taxes_id': [(6, 0, cls.tax_sale_a.ids)],
-            'supplier_taxes_id': [(6, 0, cls.tax_purchase_a.ids)],
+            'taxes_id': [Command.set(cls.tax_sale_a.ids)],
+            'supplier_taxes_id': [Command.set(cls.tax_purchase_a.ids)],
         })
         cls.product_b = cls.env['product.product'].create({
             'name': 'product_b',
@@ -93,8 +93,8 @@ class AccountTestInvoicingCommon(TransactionCase):
             'standard_price': 160.0,
             'property_account_income_id': cls.copy_account(cls.company_data['default_account_revenue']).id,
             'property_account_expense_id': cls.copy_account(cls.company_data['default_account_expense']).id,
-            'taxes_id': [(6, 0, (cls.tax_sale_a + cls.tax_sale_b).ids)],
-            'supplier_taxes_id': [(6, 0, (cls.tax_purchase_a + cls.tax_purchase_b).ids)],
+            'taxes_id': [Command.set((cls.tax_sale_a + cls.tax_sale_b).ids)],
+            'supplier_taxes_id': [Command.set((cls.tax_purchase_a + cls.tax_purchase_b).ids)],
         })
 
         # ==== Fiscal positions ====
@@ -390,7 +390,7 @@ class AccountTestInvoicingCommon(TransactionCase):
         for product in (products or []):
             with move_form.invoice_line_ids.new() as line_form:
                 line_form.product_id = product
-                if taxes:
+                if taxes is not None:
                     line_form.tax_ids.clear()
                     for tax in taxes:
                         line_form.tax_ids.add(tax)
@@ -401,7 +401,7 @@ class AccountTestInvoicingCommon(TransactionCase):
                 # We use account_predictive_bills_disable_prediction context key so that
                 # this doesn't trigger prediction in case enterprise (hence account_predictive_bills) is installed
                 line_form.price_unit = amount
-                if taxes:
+                if taxes is not None:
                     line_form.tax_ids.clear()
                     for tax in taxes:
                         line_form.tax_ids.add(tax)
@@ -679,7 +679,7 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
                 'name': 'product that cost %s' % invoice_amount,
                 'quantity': 1,
                 'price_unit': invoice_amount,
-                'tax_ids': [(6, 0, [])],
+                'tax_ids': [Command.set([])],
             })]
         }
 

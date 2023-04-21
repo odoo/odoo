@@ -48,4 +48,5 @@ class AccountChartTemplate(models.Model):
             'code': self.env['account.account']._search_new_account_code(company, code_digits, company.bank_account_code_prefix or ''),
             'account_type': 'asset_current',
             'company_id': company.id,
+            'tag_ids': self.env.ref('l10n_mx.tag_credit_balance_account')
         })

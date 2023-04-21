@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 import { OdooEditor } from '../src/OdooEditor.js';
 import { sanitize } from '../src/utils/sanitize.js';
 import { closestElement } from '../src/utils/utils.js';
@@ -570,6 +572,7 @@ function getEventConstructor(win, type) {
         'dragend': win.DragEvent,
         'drop': win.DragEvent,
         'beforecut': win.ClipboardEvent,
+        'copy': win.ClipboardEvent,
         'cut': win.ClipboardEvent,
         'paste': win.ClipboardEvent,
         'touchstart': win.TouchEvent,

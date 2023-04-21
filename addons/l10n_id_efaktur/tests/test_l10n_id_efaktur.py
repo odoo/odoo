@@ -14,6 +14,7 @@ class TestIndonesianEfaktur(common.TransactionCase):
         self.maxDiff = 1500
         # change company info for csv detai later
         self.env.company.country_id = self.env.ref('base.id')
+        self.env.company.account_fiscal_country_id = self.env.company.country_id
         self.env.company.street = "test"
         self.env.company.phone = "12345"
 

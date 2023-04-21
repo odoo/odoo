@@ -64,11 +64,6 @@ class IrMailServer(models.Model):
                     'Incorrect Connection Security for Gmail mail server %r. '
                     'Please set it to "TLS (STARTTLS)".', server.name))
 
-            if server.from_filter != server.smtp_user:
-                raise UserError(_(
-                    'This server %r can only be used for your personal email address. '
-                    'Please fill the "from_filter" field with %r.', server.name, server.smtp_user))
-
     def _smtp_login(self, connection, smtp_user, smtp_password):
         if len(self) == 1 and self.smtp_authentication == 'gmail':
             auth_string = self._generate_oauth2_string(smtp_user, self.google_gmail_refresh_token)

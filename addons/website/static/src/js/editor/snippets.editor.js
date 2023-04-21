@@ -117,6 +117,8 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
                 </we-select>
             </div>
         `, _t("Position"), _t("Cover"), _t("Contain"))));
+        // TODO remove me in master
+        $html.find('[data-attribute-name="interval"]')[0].dataset.attributeName = "bsInterval";
     },
     /**
      * Depending of the demand, reconfigure they gmap key or configure it
@@ -207,7 +209,7 @@ const wSnippetMenu = weSnippetEditor.SnippetsMenu.extend({
      */
     async _validateGMapAPIKey(key) {
         try {
-            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${key}`);
+            const response = await fetch(`https://maps.googleapis.com/maps/api/staticmap?center=belgium&size=10x10&key=${encodeURIComponent(key)}`);
             const isValid = (response.status === 200);
             return {
                 isValid: isValid,

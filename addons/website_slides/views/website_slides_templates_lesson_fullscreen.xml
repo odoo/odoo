@@ -151,7 +151,7 @@
                                 <div class="o_wslides_js_course_join ps-0" t-if="slide._has_additional_resources('file')">
                                     <t t-set="resources" t-value="slide.slide_resource_ids.filtered(lambda res: res.resource_type == 'file')"/>
                                     <li t-foreach="resources" t-as="resource" class="mb-1">
-                                        <a class="o_wslides_fs_slide_link" t-attf-href="/web/content/slide.slide.resource/#{resource.id}/data?download=true">
+                                        <a class="o_wslides_fs_slide_link" t-att-href="resource._get_download_url()">
                                             <i class="fa fa-download me-2"/><span t-esc="resource.name"/>
                                         </a>
                                     </li>

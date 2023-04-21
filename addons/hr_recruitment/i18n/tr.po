@@ -15,22 +15,22 @@
 # Martin Trigaux, 2022
 # Halil, 2022
 # Erdem Keskin <erdemkeskines@gmail.com>, 2022
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Murat Durmuş <muratd@projetgrup.com>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-10 10:22+0000\n"
+"POT-Creation-Date: 2022-12-15 12:49+0000\n"
 "PO-Revision-Date: 2022-09-22 05:52+0000\n"
-"Last-Translator: Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -38,20 +38,21 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "1 Meeting"
 msgstr "1 Toplantı"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Click to view</b> the application."
 msgstr "<b>Uygulamayı görüntülemek için tıklayınız</b> ."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
@@ -60,14 +61,14 @@ msgstr ""
 "uygulamaları kontrol ediniz."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Drag this card</b>, to qualify him for a first interview."
 msgstr "İlk görüşmeye hak kazanmak için <b>bu kartı sürükleyin</b>."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -79,7 +80,7 @@ msgstr ""
 "geçmişe kaydedilir</i></div>"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -92,7 +93,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Company\" title=\"Company\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -120,6 +121,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
 "class=\"oe_read_only\">Remote</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('address_id', '!=', False)]}\" "
+"class=\"oe_read_only\">Uzak</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -132,6 +135,11 @@ msgid ""
 "                            </span>\n"
 "                        </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('is_warning_visible', '=', False)]}\">\n"
+"                            <span class=\"fa fa-exclamation-triangle text-danger ps-3\">\n"
+"                            </span>\n"
+"                            <span class=\"text-danger\">Tüm başvurular işe alınma tarihlerini ve işe alınma durumlarını kaybeder.                            </span>\n"
+"                        </span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -158,6 +166,9 @@ msgid ""
 "attrs=\"{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=',"
 " False)]}\">Refused</span>"
 msgstr ""
+"<span class=\"badge rounded-pill text-bg-danger float-end me-4\" "
+"attrs=\"{'invisible': ['|', ('active', '=', True), ('refuse_reason_id', '=',"
+" False)]}\">Reddedildi</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
@@ -181,7 +192,7 @@ msgstr "<span class=\"o_stat_text\">Kaynaklar</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "<span class=\"o_stat_value\">Employee</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_value\">Personel</span>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
@@ -274,6 +285,65 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"background-color: white; border-collapse: collapse; margin-left: "
+"20px;\"><tr><td valign=\"top\" style=\"padding: 0px 10px;\"><div "
+"style=\"font-size: 13px; margin: 0px; padding: 0px;\">Merhaba,<br/><br/> "
+"<strong t-out=\"object.company_id.name or ''\">Şirketinizde</strong> \" <a "
+"t-att-href=\"hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url or ''\" style=\"color:#9A6C8E;\"><strong "
+"t-out=\"object.job_id.name or ''\">Deneyimli Geliştirici</strong></a> \" işi"
+" için yaptığınız başvuruyu başarıyla aldığımızı onaylıyoruz.<br/><br/> Kısa "
+"süre sonra size geri döneceğiz.<div t-if=\"'website_url' in object.job_id "
+"and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\"> <a "
+"t-att-href=\"object.job_id.website_url\" style=\"background-color: #875a7b; "
+"text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-"
+"radius: 5px;\">İş tanımı</a></div><hr width=\"97%\" style=\"background-"
+"color: rgb(204,204,204); border: medium none; clear: both; display: block; "
+"font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px "
+"0px;\"/><t t-if=\"object.user_id\"><h3 style=\"color:#9A6C8E;\"> "
+"<strong>İletişim Bilgileriniz:</strong></h3><p> <strong "
+"t-out=\"object.user_id.name or ''\">Mitchell Yöneticisi</strong><br/> "
+"<span>E-posta:</span><t t-out=\"object.user_id.email or ''\"> "
+"<span>admin@sirketiniz.example.com</span></t><br/> <span>Telefon:</span><t "
+"t-out=\"object.user_id.phone or ''\"> <span>+1 "
+"650-123-4567</span></t></p><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px "
+"0px;\"/></t><h3 style=\"color:#9A6C8E;\"> <strong>Bir sonraki adım "
+"nedir?</strong></h3> <strong>Başvuruları genellikle birkaç gün içinde "
+"yanıtlıyoruz.</strong><br/><br/> <strong>Daha hızlı geri bildirim "
+"istiyorsanız veya bizden yeterince hızlı haber alamadıysanız bizimle "
+"iletişime geçmekten</strong> çekinmeyin (sadece bu e-postayı yanıtlayın).<hr"
+" width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium "
+"none; clear: both; display: block; font-size: 0px; min-height: 1px; line-"
+"height: 0; margin: 17px 0px 16px 0px;\"/><t t-set=\"location\" "
+"t-value=\"''\"/><t t-if=\"object.job_id.address_id.name\"> <strong "
+"t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/></t><t "
+"t-if=\"object.job_id.address_id.street\"><t "
+"t-out=\"object.job_id.address_id.street or ''\"> Porto Madero "
+"9710</t><br/><t t-set=\"location\" "
+"t-value=\"object.job_id.address_id.street\"/></t><t "
+"t-if=\"object.job_id.address_id.street2\"><t "
+"t-out=\"object.job_id.address_id.street2 or ''\"> A15, Santiago "
+"(RM)</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/></t><t "
+"t-if=\"object.job_id.address_id.city\"><t "
+"t-out=\"object.job_id.address_id.city or ''\"> Pudahuel</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/></t><t "
+"t-if=\"object.job_id.address_id.state_id.name\"><t "
+"t-out=\"object.job_id.address_id.state_id.name or ''\"> C1</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/></t><t "
+"t-if=\"object.job_id.address_id.zip\"><t "
+"t-out=\"object.job_id.address_id.zip or ''\"> 98450</t><t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/></t><br/><t "
+"t-if=\"object.job_id.address_id.country_id.name\"><t "
+"t-out=\"object.job_id.address_id.country_id.name or ''\"> "
+"Arjantin</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/></t><br/></div></td></tr></table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -358,6 +428,68 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" "
+"style=\"background-color: white; border-collapse: collapse; margin-left: "
+"20px;\"><tr><td valign=\"top\" style=\"padding: 0px 10px;\"><div "
+"style=\"text-align: center\"><h2>Tebrikler!</h2><div style=\"color:grey;\"> "
+"Özgeçmişiniz olumlu bir şekilde incelendi.</div></div><div style=\"font-"
+"size: 13px; margin: 0px; padding: 0px;\"> Az önce özgeçmişinizi inceledik ve"
+" dikkatimizi çekti. Pozisyon için harika olabileceğinizi düşündüğümüz için, "
+"başvurunuz bir arama veya görüşme için kısa listeye alındı.<br/><br/><div "
+"t-if=\"'website_url' in object.job_id and object.job_id.website_url\" "
+"style=\"padding: 16px 8px 16px 8px;\"> <a t-att-"
+"href=\"object.job_id.website_url\" style=\"background-color: #875a7b; text-"
+"decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: "
+"5px;\">İş tanımı</a></div><t t-if=\"object.user_id\"> Yakında sizinle "
+"iletişime geçilecek:<br/> <strong t-out=\"object.user_id.name or "
+"''\">Mitchell Yöneticisi</strong><br/> <span>E-posta:</span><t "
+"t-out=\"object.user_id.email or ''\"> "
+"<span>admin@sirketiniz.example.com</span></t><br/> <span>Telefon:</span><t "
+"t-out=\"object.user_id.phone or ''\"> <span>+1 "
+"650-123-4567</span></t><br/><br/></t> Yakında görüşürüz,<div style=\"font-"
+"size: 11px; color: grey;\"> --<br/> İK Ekibi<t t-if=\"'website_url' in "
+"object.job_id and hasattr(object.job_id, 'website_url') and "
+"object.job_id.website_url\"> <a href=\"/jobs\" style=\"text-"
+"decoration:none;color:#717188;\">Tüm işlerimizi</a> "
+"keşfedin.<br/></t></div><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px "
+"0px;\"/><h3 style=\"color:#9A6C8E;\"> <strong>Bir sonraki adım "
+"nedir?</strong></h3> <strong>Başvuruları genellikle birkaç gün içinde "
+"yanıtlıyoruz</strong> .<br/><br/> Bir sonraki adım, ya bir telefon görüşmesi"
+" ya da ofislerimizde bir toplantıdır.<br/> <strong>Daha hızlı geri bildirim "
+"istiyorsanız veya bizden yeterince hızlı haber alamadıysanız bizimle "
+"iletişime geçmekten</strong> çekinmeyin (sadece bu e-postayı "
+"yanıtlayın).<br/><hr width=\"97%\" style=\"background-color: "
+"rgb(204,204,204); border: medium none; clear: both; display: block; font-"
+"size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/><t"
+" t-set=\"location\" t-value=\"''\"/><t "
+"t-if=\"object.job_id.address_id.name\"> <strong "
+"t-out=\"object.job_id.address_id.name or ''\">Teksa SpA</strong><br/></t><t "
+"t-if=\"object.job_id.address_id.street\"><t "
+"t-out=\"object.job_id.address_id.street or ''\"> Porto Madero "
+"9710</t><br/><t t-set=\"location\" "
+"t-value=\"object.job_id.address_id.street\"/></t><t "
+"t-if=\"object.job_id.address_id.street2\"><t "
+"t-out=\"object.job_id.address_id.street2 or ''\"> A15, Santiago "
+"(RM)</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.street2)\"/></t><t "
+"t-if=\"object.job_id.address_id.city\"><t "
+"t-out=\"object.job_id.address_id.city or ''\"> Pudahuel</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.city)\"/></t><t "
+"t-if=\"object.job_id.address_id.state_id.name\"><t "
+"t-out=\"object.job_id.address_id.state_id.name or ''\"> C1</t> ,<t "
+"t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.state_id.name)\"/></t><t "
+"t-if=\"object.job_id.address_id.zip\"><t "
+"t-out=\"object.job_id.address_id.zip or ''\"> 98450</t><t t-set=\"location\""
+" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.zip)\"/></t><br/><t "
+"t-if=\"object.job_id.address_id.country_id.name\"><t "
+"t-out=\"object.job_id.address_id.country_id.name or ''\"> "
+"Arjantin</t><br/><t t-set=\"location\" t-value=\"'%s, %s' % (location, "
+"object.job_id.address_id.country_id.name)\"/></t><br/></div></td></tr></table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_not_interested
@@ -512,13 +644,13 @@ msgstr "Aktiviteler"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_overdue
 msgid "Activities Overdue"
-msgstr ""
+msgstr "Gecikmiş Aktiviteler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr ""
+msgstr "Bugünkü Aktiviteler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -674,7 +806,7 @@ msgstr "Adaylar"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__applicant_hired
 msgid "Applicants Hired"
-msgstr ""
+msgstr "İşe Alınan Adaylar"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -721,7 +853,7 @@ msgstr "Başvuru Sayısı"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_status
 msgid "Application Status"
-msgstr ""
+msgstr "Başvuru Durumu"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -747,7 +879,7 @@ msgstr "Başvurular"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email or phone or mobile"
-msgstr ""
+msgstr "Aynı e-postaya, telefona veya cep telefonuna sahip uygulamalar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -787,6 +919,7 @@ msgid "Attachments"
 msgstr "Ekler"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Attachments, like resumes, get indexed automatically."
@@ -808,24 +941,8 @@ msgid "Bachelor Degree"
 msgstr "Lisans Derecesi"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_blocked:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_blocked:hr_recruitment.stage_job3
@@ -858,12 +975,12 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "CV Digitization (OCR)"
-msgstr ""
+msgstr "CV Dijitalleştirme (OCR)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "CV Display"
-msgstr ""
+msgstr "CV Görüntüleme"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
@@ -897,7 +1014,7 @@ msgid "Category of applicant"
 msgstr "Aday Kategorisi"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Choose an application email."
@@ -930,9 +1047,10 @@ msgstr "Yapılandırma"
 #. module: hr_recruitment
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Confirmation email sent to all new job applications"
-msgstr ""
+msgstr "Tüm yeni iş başvurularına gönderilen onay e-postası"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_id
 #, python-format
@@ -940,6 +1058,7 @@ msgid "Contact"
 msgstr "Kontak"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Contact Email"
@@ -971,7 +1090,7 @@ msgid "Contract Signed"
 msgstr "Sözleşme İmzaladı"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Copy this email address, to paste it in your email composer, to apply."
@@ -996,7 +1115,7 @@ msgid "Create a Job Position"
 msgstr "İş Pozisyonu Oluştur"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Create your first Job Position."
@@ -1138,6 +1257,7 @@ msgstr "Özet"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Digitize your CV to extract name and email automatically."
 msgstr ""
+"Adı ve e-postayı otomatik olarak çıkarmak için CV'nizi dijitalleştirin."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -1148,7 +1268,7 @@ msgstr "Vazgeç"
 #: model:res.groups,name:hr_recruitment.group_applicant_cv_display
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Display CV on application form"
-msgstr ""
+msgstr "CV'yi başvuru formunda göster"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__display_name
@@ -1163,6 +1283,7 @@ msgid "Display Name"
 msgstr "Görünüm Adı"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/digest.py:0
 #, python-format
 msgid "Do not have access, skip this data for user's digest email"
@@ -1184,6 +1305,7 @@ msgid "Documentation"
 msgstr "Belgeleme"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__document_ids
@@ -1247,6 +1369,7 @@ msgid "Email cc"
 msgstr "E-posta cc"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email of the applicant is not set, email won't be sent."
@@ -1258,12 +1381,14 @@ msgid "Email subject for applications sent via email"
 msgstr "Email subject for applications sent via email"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid "Email template must be selected to send a mail"
 msgstr "Posta göndermek için e-posta şablonu seçilmelidir"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model,name:hr_recruitment.model_hr_employee
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__emp_id
@@ -1294,7 +1419,7 @@ msgstr "Personel"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_contract_type
 msgid "Employment Types"
-msgstr ""
+msgstr "İstihdam Türleri"
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__3
@@ -1324,7 +1449,7 @@ msgstr "Genişletilmiş Filtreler"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__extended_interviewer_ids
 msgid "Extended Interviewer"
-msgstr ""
+msgstr "Genişletilmiş Görüşmeci"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1415,7 +1540,7 @@ msgstr "Gri Kanban Etiketi"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__group_applicant_cv_display
 msgid "Group Applicant Cv Display"
-msgstr ""
+msgstr "Grup Başvuru Sahibi Cv Gösterimi"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1431,7 +1556,7 @@ msgstr "İK Sorumlusu"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__has_domain
 msgid "Has Domain"
-msgstr ""
+msgstr "Etki Alanına Sahip"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__has_message
@@ -1501,7 +1626,7 @@ msgid ""
 "If checked, this stage is used to determine the hire date of an applicant"
 msgstr ""
 "Kontrol edilirse, bu aşama bir başvuru sahibinin işe alım tarihini "
-"belirlemek için kullanılır."
+"belirlemek için kullanılır"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -1531,24 +1656,8 @@ msgstr ""
 "sağlayabilirsiniz."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_normal:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_normal:hr_recruitment.stage_job3
@@ -1572,7 +1681,7 @@ msgstr "Aday Değerlendirme Formları"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__interviewer_ids
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__interviewer_ids
 msgid "Interviewers"
-msgstr ""
+msgstr "Görüşmeciler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__is_mail_template_editor
@@ -1595,6 +1704,7 @@ msgid "Is Warning Visible"
 msgstr "Uyarı Görünür mü"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_job.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__job_id
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1604,6 +1714,7 @@ msgid "Job"
 msgstr "İş"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_ids
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_pivot_view_job
@@ -1702,6 +1813,7 @@ msgid "Language"
 msgstr "Dil"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Last Meeting"
@@ -1761,6 +1873,7 @@ msgid "Late Activities"
 msgstr "Geciken Aktiviteler"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Let people apply by email to save time."
@@ -1773,7 +1886,7 @@ msgid "Let's create a job position."
 msgstr "Yeni bir iş pozisyonu oluşturalım."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid ""
@@ -1785,7 +1898,7 @@ msgstr ""
 "oluşturulacak."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
@@ -1794,21 +1907,21 @@ msgstr ""
 "Hadi <b>İşe alım sürecini </b>nasıl <b>geliştirebileceğine</b> bakalım."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
 msgstr "Başvurular hunisine bakalım."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s create this new employee now."
 msgstr "Bu yeni personeli şimdi oluşturalım."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let’s go back to the dashboard."
@@ -1817,7 +1930,7 @@ msgstr "Panoya geri dönelim."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__linkedin_profile
 msgid "LinkedIn Profile"
-msgstr ""
+msgstr "LinkedIn Profili"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__template_id
@@ -1990,24 +2103,28 @@ msgid "Next Activity Type"
 msgstr "Sonraki Aktivite Türü"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "Next Meeting"
 msgstr "Sonraki Toplantı"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Meeting"
 msgstr "Toplantı Yok"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No Subject"
 msgstr "Konu Yok"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No application yet"
@@ -2090,7 +2207,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_user
 msgid "Officer : Manage all applicants"
-msgstr ""
+msgstr "Görevli : Tüm başvuru sahiplerini yönetin"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__old_application_count
@@ -2134,7 +2251,7 @@ msgstr ""
 " }}."
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Or talk about this applicant privately with your colleagues."
@@ -2216,24 +2333,8 @@ msgid "Publish available jobs on your website"
 msgstr "Açık iş pozisyonlarını web sitenizde yayınlayın"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_advertisement
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev2
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_dev3
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_financejob1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_fresher0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_marketingjob0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_mkt1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_programmer
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_salesman1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca0
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_traineemca1
-#: model:hr.applicant,legend_done:hr_recruitment.hr_case_yrsexperienceinphp0
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job1
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job2
 #: model:hr.recruitment.stage,legend_done:hr_recruitment.stage_job3
@@ -2287,7 +2388,7 @@ msgstr "İşe Alım Analizi"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_interviewer
 msgid "Recruitment Interviewer"
-msgstr ""
+msgstr "İşe Alım Görüşmecisi"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2302,22 +2403,22 @@ msgstr "İşe Alım Aşamaları"
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_congratulations
 msgid "Recruitment: Application Acknowledgement"
-msgstr ""
+msgstr "İşe Alım: Başvuru Onayı"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_interest
 msgid "Recruitment: Interest"
-msgstr ""
+msgstr "İşe Alım: İlgi"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_not_interested
 msgid "Recruitment: Not interested anymore"
-msgstr ""
+msgstr "İşe alım: Artık ilgilenmiyorum"
 
 #. module: hr_recruitment
 #: model:mail.template,name:hr_recruitment.email_template_data_applicant_refuse
 msgid "Recruitment: Refuse"
-msgstr ""
+msgstr "İşe Alım: Reddet"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
@@ -2340,6 +2441,7 @@ msgid "Refuse"
 msgstr "Reddet"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.act_window,name:hr_recruitment.applicant_get_refuse_reason_action
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__refuse_reason_id
@@ -2374,7 +2476,7 @@ msgstr "Reddedildi"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Remote"
-msgstr ""
+msgstr "Uzak"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_send_mail__render_model
@@ -2417,7 +2519,7 @@ msgstr "Geriyükle"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Running Applicants"
-msgstr ""
+msgstr "Çalışan Adaylar"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
@@ -2445,7 +2547,7 @@ msgid "Salary Proposed by the Organisation, extra advantages"
 msgstr "İşletme Tarafından Önerilen Ücret Yan Hakları"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Save it !"
@@ -2479,9 +2581,10 @@ msgstr "Para Gönderme"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_res_config_settings__module_hr_recruitment_extract
 msgid "Send CV to OCR to fill applications"
-msgstr ""
+msgstr "Başvuruları doldurmak için CV'yi OCR'ye gönderin"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #: model:ir.actions.server,name:hr_recruitment.action_applicant_send_mail
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__send_mail
@@ -2511,7 +2614,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_applicant_send_mail
 msgid "Send mails to applicants"
-msgstr ""
+msgstr "Başvuru sahiplerine posta gönder"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2519,7 +2622,7 @@ msgid "Send texts to your contacts"
 msgstr "Kontaklarınıza metin gönderin"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Send your email. Followers will get a copy of the communication."
@@ -2537,6 +2640,8 @@ msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
 msgstr ""
+"Başvurular o aşamaya ulaştığında göndermek için bu şablonu bir işe alım "
+"aşamasına ayarlayın"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -2554,6 +2659,11 @@ msgstr "Bir sonraki eylem tarihi bugünden önce olan tüm kayıtları göster"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__source_id
 msgid "Source"
 msgstr "Kaynak"
+
+#. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_source_menu
+msgid "Source Analysis"
+msgstr "Kaynak Analizi"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
@@ -2642,7 +2752,7 @@ msgstr "Konu"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__name
 msgid "Subject / Application"
-msgstr ""
+msgstr "Konu / Başvuru Adı"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_get_refuse_reason_view_form
@@ -2672,12 +2782,18 @@ msgid "Tags"
 msgstr "Etiketler"
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_report_team_menu
+msgid "Team Performance"
+msgstr "Takım Performansı"
+
+#. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_campaign.py:0
 #, python-format
 msgid ""
 "The UTM campaign '%s' cannot be deleted as it is used in the recruitment "
 "process."
-msgstr ""
+msgstr "UTM kampanyası '%s' işe alım sürecinde kullanıldığı için silinemez."
 
 #. module: hr_recruitment
 #: model:hr.applicant.refuse.reason,name:hr_recruitment.refuse_reason_3
@@ -2695,6 +2811,7 @@ msgid "The date at which the applicant will be available to start working"
 msgstr "Adayın çalışmaya başlayabileceği tarih"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_refuse_reason.py:0
 #, python-format
 msgid ""
@@ -2705,10 +2822,11 @@ msgstr ""
 "gönderilmeyecektir."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/wizard/applicant_send_mail.py:0
 #, python-format
 msgid "The following applicants are missing an email address: %s."
-msgstr ""
+msgstr "Aşağıdaki başvuru sahiplerinin bir e-posta adresi eksik: %s."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__alias_model_id
@@ -2779,6 +2897,11 @@ msgstr ""
 "aşamadır."
 
 #. module: hr_recruitment
+#: model:ir.ui.menu,name:hr_recruitment.hr_applicant_stage_report_menu
+msgid "Time In Stage Analysis"
+msgstr "Durumda Geçirilen Zaman Analizi"
+
+#. module: hr_recruitment
 #: model:digest.tip,name:hr_recruitment.digest_tip_hr_recruitment_0
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Tip: Let candidates apply by email"
@@ -2802,7 +2925,7 @@ msgstr "Araç ipuçları"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Trackers"
-msgstr ""
+msgstr "UTM İzleyici"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -2849,11 +2972,13 @@ msgstr "Okunmamış Mesajlar"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Use OCR to fill data from a picture of the CV or the file itself"
 msgstr ""
+"CV'nin bir resminden veya dosyanın kendisinden veri doldurmak için OCR'yi "
+"kullanma"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
 msgid "Use emails and links trackers"
-msgstr "Use emails and links trackers"
+msgstr "E-posta ve bağlantı izleyicileri kullanın"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
@@ -2897,7 +3022,7 @@ msgid "Website communication history"
 msgstr "Websitesi iletişim geçmişi"
 
 #. module: hr_recruitment
-#. openerp-web
+#. odoo-javascript
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "What do you want to recruit today? Choose a job title..."
@@ -2907,18 +3032,19 @@ msgstr "Bugün işe ne almak istersin? Bir iş ünvanı seçiniz..."
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_not_interested
 #: model:mail.template,description:hr_recruitment.email_template_data_applicant_refuse
 msgid "When you refuse an application, you can choose this template"
-msgstr ""
+msgstr "Bir başvuruyu reddettiğinizde bu şablonu seçebilirsiniz"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_send_mail_view_form
 msgid "Write your message here..."
-msgstr ""
+msgstr "Mesajını buraya yaz..."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You are not allowed to perform this action."
-msgstr ""
+msgstr "Bu işlemi gerçekleştirmek için izin verilmez."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2930,14 +3056,18 @@ msgstr ""
 "                           varsayılan etiketlerin."
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/utm_source.py:0
 #, python-format
 msgid ""
 "You cannot delete these UTM Sources as they are linked to the following recruitment sources in Recruitment:\n"
 "%(recruitment_sources)s"
 msgstr ""
+"Bu UTM Kaynaklarını, İşe Alım'da aşağıdaki işe alım kaynaklarına bağlı oldukları için silemezsiniz:\n"
+"%(recruitment_sources)s"
 
 #. module: hr_recruitment
+#. odoo-python
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."

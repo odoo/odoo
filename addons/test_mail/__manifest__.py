@@ -24,6 +24,9 @@ tests independently to functional aspects of other models. """,
         'web.qunit_suite_tests': [
             'test_mail/static/tests/*',
         ],
+        'web.qunit_mobile_suite_tests': [
+            'test_mail/static/tests/mobile/activity_tests.js',
+        ],
         'web.tests_assets': [
             'test_mail/static/tests/helpers/*',
         ],

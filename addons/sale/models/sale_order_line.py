@@ -83,7 +83,13 @@ class SaleOrderLine(models.Model):
         domain="[('sale_ok', '=', True), '|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     product_template_id = fields.Many2one(
         string="Product Template",
-        related='product_id.product_tmpl_id',
+        comodel_name='product.template',
+        compute='_compute_product_template_id',
+        readonly=False,
+        search='_search_product_template_id',
+        # previously related='product_id.product_tmpl_id'
+        # not anymore since the field must be considered editable for product configurator logic
+        # without modifying the related product_id when updated.
         domain=[('sale_ok', '=', True)])
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id', depends=['product_id'])
 
@@ -123,7 +129,8 @@ class SaleOrderLine(models.Model):
         string="Taxes",
         compute='_compute_tax_id',
         store=True, readonly=False, precompute=True,
-        context={'active_test': False})
+        context={'active_test': False},
+        check_company=True)
 
     # Tech field caching pricelist rule used for price & discount computation
     pricelist_item_id = fields.Many2one(
@@ -260,6 +267,14 @@ class SaleOrderLine(models.Model):
     #=== COMPUTE METHODS ===#
 
     @api.depends('product_id')
+    def _compute_product_template_id(self):
+        for line in self:
+            line.product_template_id = line.product_id.product_tmpl_id
+
+    def _search_product_template_id(self, operator, value):
+        return [('product_id.product_tmpl_id', operator, value)]
+
+    @api.depends('product_id')
     def _compute_custom_attribute_values(self):
         for line in self:
             if not line.product_id:
@@ -292,8 +307,9 @@ class SaleOrderLine(models.Model):
         for line in self:
             if not line.product_id:
                 continue
-
-            name = line.with_context(lang=line.order_partner_id.lang)._get_sale_order_line_multiline_description_sale()
+            if not line.order_partner_id.is_public:
+                line = line.with_context(lang=line.order_partner_id.lang)
+            name = line._get_sale_order_line_multiline_description_sale()
             if line.is_downpayment and not line.display_type:
                 context = {'lang': line.order_partner_id.lang}
                 dp_state = line._get_downpayment_state()
@@ -605,8 +621,6 @@ class SaleOrderLine(models.Model):
                 'price_tax': amount_tax,
                 'price_total': amount_untaxed + amount_tax,
             })
-            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
-                line.tax_id.invalidate_recordset(['invoice_repartition_line_ids'])
 
     @api.depends('price_subtotal', 'product_uom_qty')
     def _compute_price_reduce_taxexcl(self):
@@ -944,16 +958,16 @@ class SaleOrderLine(models.Model):
 
     #=== CRUD METHODS ===#
     def _add_precomputed_values(self, vals_list):
-        """ In the specific case where the discount is provided in the create values
+        """ In case an editable precomputed field is provided in the create values
         without being rounded, we have to 'manually' round it otherwise it won't be,
-        because editable precomputed field values are kept 'as is'.
+        because those field values are kept 'as is'.
 
         This is a temporary fix until the problem is fixed in the ORM.
         """
-        precision = self.env['decimal.precision'].precision_get('Discount')
         for vals in vals_list:
-            if vals.get('discount'):
-                vals['discount'] = float_round(vals['discount'], precision_digits=precision)
+            for fname in ('discount', 'product_uom_qty'):
+                if fname in vals:
+                    vals[fname] = self._fields[fname].convert_to_cache(vals[fname], self)
         return super()._add_precomputed_values(vals_list)
 
     @api.model_create_multi
@@ -985,13 +999,18 @@ class SaleOrderLine(models.Model):
         protected_fields = self._get_protected_fields()
         if 'done' in self.mapped('state') and any(f in values.keys() for f in protected_fields):
             protected_fields_modified = list(set(protected_fields) & set(values.keys()))
-            fields = self.env['ir.model.fields'].search([
+
+            if 'name' in protected_fields_modified and all(self.mapped('is_downpayment')):
+                protected_fields_modified.remove('name')
+
+            fields = self.env['ir.model.fields'].sudo().search([
                 ('name', 'in', protected_fields_modified), ('model', '=', self._name)
             ])
-            raise UserError(
-                _('It is forbidden to modify the following fields in a locked order:\n%s')
-                % '\n'.join(fields.mapped('field_description'))
-            )
+            if fields:
+                raise UserError(
+                    _('It is forbidden to modify the following fields in a locked order:\n%s')
+                    % '\n'.join(fields.mapped('field_description'))
+                )
 
         result = super().write(values)
 
@@ -1062,6 +1081,9 @@ class SaleOrderLine(models.Model):
             order_date = fields.Datetime.now()
         return order_date + timedelta(days=self.customer_lead or 0.0)
 
+    def compute_uom_qty(self, new_qty, stock_move, rounding=True):
+        return self.product_uom._compute_quantity(new_qty, stock_move.product_uom, rounding)
+
     def _get_invoice_line_sequence(self, new=0, old=0):
         """
         Method intended to be overridden in third-party module if we want to prevent the resequencing
@@ -1091,17 +1113,18 @@ class SaleOrderLine(models.Model):
             'discount': self.discount,
             'price_unit': self.price_unit,
             'tax_ids': [Command.set(self.tax_id.ids)],
-            'analytic_distribution': self.analytic_distribution,
             'sale_line_ids': [Command.link(self.id)],
             'is_downpayment': self.is_downpayment,
         }
         analytic_account_id = self.order_id.analytic_account_id.id
+        if self.analytic_distribution and not self.display_type:
+            res['analytic_distribution'] = self.analytic_distribution
         if analytic_account_id and not self.display_type:
-            res['analytic_distribution'] = res['analytic_distribution'] or {}
-            if self.analytic_distribution:
-                res['analytic_distribution'][analytic_account_id] = self.analytic_distribution.get(analytic_account_id, 0) + 100
+            analytic_account_id = str(analytic_account_id)
+            if 'analytic_distribution' in res:
+                res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
             else:
-                res['analytic_distribution'][analytic_account_id] = 100
+                res['analytic_distribution'] = {analytic_account_id: 100}
         if optional_values:
             res.update(optional_values)
         if self.display_type:

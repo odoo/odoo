@@ -144,6 +144,12 @@ class Country(models.Model):
                 except (ValueError, KeyError):
                     raise UserError(_('The layout contains an invalid format key'))
 
+    @api.constrains('code')
+    def _check_country_code(self):
+        for record in self:
+            if not record.code:
+                raise UserError(_('Country code cannot be empty'))
+
 class CountryGroup(models.Model):
     _description = "Country Group"
     _name = 'res.country.group'

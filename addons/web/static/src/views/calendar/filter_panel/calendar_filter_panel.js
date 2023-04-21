@@ -7,7 +7,7 @@ import { Transition } from "@web/core/transition";
 import { useOwnedDialogs, useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
-
+import { getColor } from "../colors";
 import { Component, useState } from "@odoo/owl";
 
 class CalendarFilterTooltip extends Component {}
@@ -25,6 +25,10 @@ export class CalendarFilterPanel extends Component {
         this.orm = useService("orm");
         this.popover = usePopover();
         this.removePopover = null;
+    }
+
+    getFilterColor(filter) {
+        return filter.colorIndex !== null ? "o_cw_filter_color_" + getColor(filter.colorIndex) : "";
     }
 
     getAutoCompleteProps(section) {

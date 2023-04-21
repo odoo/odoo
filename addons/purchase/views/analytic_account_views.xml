@@ -8,7 +8,8 @@
         <field name="arch" type="xml">
             <div name="button_box" position="inside">
                 <button class="oe_stat_button" type="object" name="action_view_purchase_orders"
-                    icon="fa-credit-card" attrs="{'invisible': [('purchase_order_count', '=', 0)]}">
+                    icon="fa-credit-card" attrs="{'invisible': [('purchase_order_count', '=', 0)]}"
+                    groups="purchase.group_purchase_user">
                     <field string="Purchase Orders" name="purchase_order_count" widget="statinfo"/>
                 </button>
             </div>

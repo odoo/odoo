@@ -39,6 +39,9 @@ patch(MockServer.prototype, 'mail/controllers/discuss', {
     async _mockRouteMailChannelNotifyTyping(channel_id, is_typing, context = {}) {
         const partnerId = context.mockedPartnerId || this.currentPartnerId;
         const [memberOfCurrentUser] = this.getRecords('mail.channel.member', [['channel_id', '=', channel_id], ['partner_id', '=', partnerId]]);
+        if (!memberOfCurrentUser) {
+            return;
+        }
         this._mockMailChannelMember_NotifyTyping([memberOfCurrentUser.id], is_typing);
     },
     /**

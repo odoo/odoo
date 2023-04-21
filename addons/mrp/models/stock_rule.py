@@ -37,6 +37,9 @@ class StockRule(models.Model):
                 remaining |= rule
         super(StockRule, remaining)._compute_picking_type_code_domain()
 
+    def _should_auto_confirm_procurement_mo(self, p):
+        return (not p.orderpoint_id and p.move_raw_ids) or (p.move_dest_ids.procure_method != 'make_to_order' and not p.move_raw_ids and not p.workorder_ids)
+
     @api.model
     def _run_manufacture(self, procurements):
         productions_values_by_company = defaultdict(list)
@@ -51,8 +54,7 @@ class StockRule(models.Model):
         for company_id, productions_values in productions_values_by_company.items():
             # create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
             productions = self.env['mrp.production'].with_user(SUPERUSER_ID).sudo().with_company(company_id).create(productions_values)
-            productions.filtered(lambda p: (not p.orderpoint_id and p.move_raw_ids) or\
-                (p.move_dest_ids.procure_method != 'make_to_order' and not p.move_raw_ids and not p.workorder_ids)).action_confirm()
+            productions.filtered(self._should_auto_confirm_procurement_mo).action_confirm()
 
             for production in productions:
                 origin_production = production.move_dest_ids and production.move_dest_ids[0].raw_material_production_id or False
@@ -110,6 +112,8 @@ class StockRule(models.Model):
     def _get_matching_bom(self, product_id, company_id, values):
         if values.get('bom_id', False):
             return values['bom_id']
+        if values.get('orderpoint_id', False) and values['orderpoint_id'].bom_id:
+            return values['orderpoint_id'].bom_id
         return self.env['mrp.bom']._bom_find(product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)[product_id]
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_dest_id, name, origin, company_id, values, bom):

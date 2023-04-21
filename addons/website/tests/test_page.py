@@ -483,3 +483,10 @@ class WithContext(HttpCase):
         # Check that is is rendered as a website page.
         self.assertEqual(403, r.status_code, "Must fail with 403")
         self.assertTrue('id="wrap"' in r.text, "Must be rendered as a website page")
+
+    def test_page_url_case_insensitive_match(self):
+        r = self.url_open('/page_1')
+        self.assertEqual(r.status_code, 200, "Reaching page URL, common case")
+        r2 = self.url_open('/Page_1', allow_redirects=False)
+        self.assertEqual(r2.status_code, 303, "URL exists only in different casing, should redirect to it")
+        self.assertTrue(r2.headers.get('Location').endswith('/page_1'), "Should redirect /Page_1 to /page_1")

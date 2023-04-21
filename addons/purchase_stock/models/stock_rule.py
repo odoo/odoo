@@ -22,7 +22,10 @@ class StockRule(models.Model):
         message_dict = super(StockRule, self)._get_message_dict()
         dummy, destination, dummy = self._get_message_values()
         message_dict.update({
-            'buy': _('When products are needed in <b>%s</b>, <br/> a request for quotation is created to fulfill the need.') % (destination)
+            'buy': _('When products are needed in <b>%s</b>, <br/> '
+                     'a request for quotation is created to fulfill the need.<br/>'
+                     'Note: This rule will be used in combination with the rules<br/>'
+                     'of the reception route(s)') % (destination)
         })
         return message_dict
 
@@ -53,6 +56,8 @@ class StockRule(models.Model):
             supplier = False
             if procurement.values.get('supplierinfo_id'):
                 supplier = procurement.values['supplierinfo_id']
+            elif procurement.values.get('orderpoint_id') and procurement.values['orderpoint_id'].supplier_id:
+                supplier = procurement.values['orderpoint_id'].supplier_id
             else:
                 supplier = procurement.product_id.with_company(procurement.company_id.id)._select_seller(
                     partner_id=procurement.values.get("supplierinfo_name"),
@@ -233,7 +238,7 @@ class StockRule(models.Model):
 
     def _update_purchase_order_line(self, product_id, product_qty, product_uom, company_id, values, line):
         partner = values['supplier'].partner_id
-        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id)
+        procurement_uom_po_qty = product_uom._compute_quantity(product_qty, product_id.uom_po_id, rounding_method='HALF-UP')
         seller = product_id.with_company(company_id)._select_seller(
             partner_id=partner,
             quantity=line.product_qty + procurement_uom_po_qty,
@@ -261,10 +266,7 @@ class StockRule(models.Model):
         params values: values of procurements
         params origins: procuremets origins to write on the PO
         """
-        dates = [fields.Datetime.from_string(value['date_planned']) for value in values]
-
-        procurement_date_planned = min(dates)
-        supplier_delay = max([int(value['supplier'].delay) for value in values])
+        purchase_date = min([fields.Datetime.from_string(value['date_planned']) - relativedelta(days=int(value['supplier'].delay)) for value in values])
 
         # Since the procurements are grouped if they share the same domain for
         # PO but the PO does not exist. In this case it will create the PO from
@@ -272,7 +274,6 @@ class StockRule(models.Model):
         # arbitrary procurement. In this case the first.
         values = values[0]
         partner = values['supplier'].partner_id
-        purchase_date = procurement_date_planned - relativedelta(days=supplier_delay)
 
         fpos = self.env['account.fiscal.position'].with_company(company_id)._get_fiscal_position(partner)
 
@@ -306,9 +307,10 @@ class StockRule(models.Model):
             ('company_id', '=', company_id.id),
             ('user_id', '=', False),
         )
-        if values.get('orderpoint_id'):
+        delta_days = self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge')
+        if values.get('orderpoint_id') and delta_days is not False:
             procurement_date = fields.Date.to_date(values['date_planned']) - relativedelta(days=int(values['supplier'].delay))
-            delta_days = int(self.env['ir.config_parameter'].sudo().get_param('purchase_stock.delta_days_merge') or 0)
+            delta_days = int(delta_days)
             domain += (
                 ('date_order', '<=', datetime.combine(procurement_date + relativedelta(days=delta_days), datetime.max.time())),
                 ('date_order', '>=', datetime.combine(procurement_date - relativedelta(days=delta_days), datetime.min.time()))
@@ -321,12 +323,3 @@ class StockRule(models.Model):
         res = super(StockRule, self)._push_prepare_move_copy_values(move_to_copy, new_date)
         res['purchase_line_id'] = None
         return res
-
-    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
-        move_values = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, company_id, values)
-        if values.get('supplierinfo_name'):
-            move_values['restrict_partner_id'] = values['supplierinfo_name'].id
-        elif values.get('supplierinfo_id'):
-            partner = values['supplierinfo_id'].partner_id
-            move_values['restrict_partner_id'] = partner.id
-        return move_values

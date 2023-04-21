@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="fiscal_position_template_dom" model="account.fiscal.position.template">
+            <field name="name">Domestic regime</field>
+            <field name="chart_template_id" ref="l10n_mz_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+            <field name="country_id" ref="base.mz"/>
+        </record>
+
+        <record id="fiscal_position_import_export" model="account.fiscal.position.template">
+            <field name="sequence">1</field>
+            <field name="name">Import/Export</field>
+            <field name="chart_template_id" ref="l10n_mz_chart_template"/>
+            <field name="auto_apply" eval="True"/>
+        </record>
+
+        <record id="fiscal_position_sale_16_vat" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import_export"/>
+            <field name="tax_src_id" ref="vat_sale_16"/>
+            <field name="tax_dest_id" ref="vat_export"/>
+        </record>
+
+        <record id="fiscal_position_purchase_inventories_16_vat" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import_export"/>
+            <field name="tax_src_id" ref="vat_purch_16_inventories"/>
+            <field name="tax_dest_id" ref="vat_exempt_import"/>
+        </record>
+
+        <record id="fiscal_position_purchase_fixed_16_vat" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import_export"/>
+            <field name="tax_src_id" ref="vat_purch_16_fixed"/>
+            <field name="tax_dest_id" ref="vat_exempt_import"/>
+        </record>
+
+        <record id="fiscal_position_purchase_other_16_vat" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import_export"/>
+            <field name="tax_src_id" ref="vat_purch_16_other"/>
+            <field name="tax_dest_id" ref="vat_exempt_import"/>
+        </record>
+
+        <record id="fiscal_position_sale_5_vat" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import_export"/>
+            <field name="tax_src_id" ref="vat_sale_5"/>
+            <field name="tax_dest_id" ref="vat_export"/>
+        </record>
+
+        <record id="fiscal_position_purchase_5_vat" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fiscal_position_import_export"/>
+            <field name="tax_src_id" ref="vat_purchase_5"/>
+            <field name="tax_dest_id" ref="vat_exempt_import"/>
+        </record>
+    </data>
+</odoo>

@@ -61,3 +61,7 @@ class TestUtm(TestUTMCommon):
 
             utm_8 = utm_7.copy()
             self.assertEqual(utm_8.name, 'UTM d [2]', msg='Must add a counter as suffix to ensure uniqueness')
+
+        # Test name uniqueness when creating a campaign using a title (quick creation)
+        utm_9 = self.env['utm.campaign'].create({'title': 'UTM dup'})
+        self.assertEqual(utm_9.name, 'UTM dup [6]', msg='Even if the record has been created using a title, the name must be unique')

@@ -307,8 +307,6 @@ class Cursor(BaseCursor):
             # psycopg2's TypeError is not clear if you mess up the params
             raise ValueError("SQL query parameters should be a tuple, list or dict; got %r" % (params,))
 
-        _logger.debug("query: %s", self._format(query, params))
-
         start = real_time()
         try:
             params = params or None
@@ -317,7 +315,10 @@ class Cursor(BaseCursor):
             if log_exceptions:
                 _logger.error("bad query: %s\nERROR: %s", tools.ustr(self._obj.query or query), e)
             raise
-        delay = real_time() - start
+        finally:
+            delay = real_time() - start
+            if _logger.isEnabledFor(logging.DEBUG):
+                _logger.debug("[%.3f ms] query: %s", 1000 * delay, self._format(query, params))
 
         # simple query count is always computed
         self.sql_log_count += 1
@@ -564,6 +565,15 @@ class PsycoConnection(psycopg2.extensions.connection):
     def lobject(*args, **kwargs):
         pass
 
+    if hasattr(psycopg2.extensions, 'ConnectionInfo'):
+        @property
+        def info(self):
+            class PsycoConnectionInfo(psycopg2.extensions.ConnectionInfo):
+                @property
+                def password(self):
+                    pass
+            return PsycoConnectionInfo(self)
+
 
 class ConnectionPool(object):
     """ The pool of connections to database(s)
@@ -606,7 +616,7 @@ class ConnectionPool(object):
                 _logger.info('%r: Free leaked connection to %r', self, cnx.dsn)
 
         for i, (cnx, used) in enumerate(self._connections):
-            if not used and cnx._original_dsn == connection_info:
+            if not used and self._dsn_equals(cnx.dsn, connection_info):
                 try:
                     cnx.reset()
                 except psycopg2.OperationalError:
@@ -641,7 +651,6 @@ class ConnectionPool(object):
         except psycopg2.Error:
             _logger.info('Connection to the database failed')
             raise
-        result._original_dsn = connection_info
         self._connections.append((result, True))
         self._debug('Create new connection backend PID %d', result.get_backend_pid())
         return result
@@ -667,28 +676,51 @@ class ConnectionPool(object):
         count = 0
         last = None
         for i, (cnx, used) in tools.reverse_enumerate(self._connections):
-            if dsn is None or cnx._original_dsn == dsn:
+            if dsn is None or self._dsn_equals(cnx.dsn, dsn):
                 cnx.close()
                 last = self._connections.pop(i)[0]
                 count += 1
         _logger.info('%r: Closed %d connections %s', self, count,
                     (dsn and last and 'to %r' % last.dsn) or '')
 
+    def _dsn_equals(self, dsn1, dsn2):
+        alias_keys = {'dbname': 'database'}
+        ignore_keys = ['password']
+        dsn1, dsn2 = ({
+            alias_keys.get(key, key): str(value)
+            for key, value in (isinstance(dsn, str) and self._dsn_to_dict(dsn) or dsn).items()
+            if key not in ignore_keys
+        } for dsn in (dsn1, dsn2))
+        return dsn1 == dsn2
+
+    def _dsn_to_dict(self, dsn):
+        return dict(value.split('=', 1) for value in dsn.strip().split())
+
 
 class Connection(object):
     """ A lightweight instance of a connection to postgres
     """
     def __init__(self, pool, dbname, dsn):
-        self.dbname = dbname
-        self.dsn = dsn
+        self.__dbname = dbname
+        self.__dsn = dsn
         self.__pool = pool
+
+    @property
+    def dsn(self):
+        dsn = dict(self.__dsn)
+        dsn.pop('password', None)
+        return dsn
+
+    @property
+    def dbname(self):
+        return self.__dbname
 
     def cursor(self, **kwargs):
         if 'serialized' in kwargs:
             warnings.warn("Since 16.0, 'serialized' parameter is deprecated", DeprecationWarning, 2)
         cursor_type = kwargs.pop('serialized', True) and 'serialized ' or ''
         _logger.debug('create %scursor to %r', cursor_type, self.dsn)
-        return Cursor(self.__pool, self.dbname, self.dsn)
+        return Cursor(self.__pool, self.__dbname, self.__dsn)
 
     def serialized_cursor(self, **kwargs):
         warnings.warn("Since 16.0, 'serialized_cursor' is deprecated, use `cursor` instead", DeprecationWarning, 2)
@@ -709,7 +741,11 @@ def connection_info_for(db_or_uri):
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
     """
-    app_name = "odoo-%d" % os.getpid()
+    if 'ODOO_PGAPPNAME' in os.environ:
+        # Using manual string interpolation for security reason and trimming at default NAMEDATALEN=63
+        app_name = os.environ['ODOO_PGAPPNAME'].replace('{pid}', str(os.getpid()))[0:63]
+    else:
+        app_name = "odoo-%d" % os.getpid()
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urls.url_parse(db_or_uri)

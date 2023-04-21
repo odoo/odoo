@@ -257,7 +257,7 @@ class MailThread(models.AbstractModel):
 
         threads = super(MailThread, self).create(vals_list)
         # subscribe uid unless asked not to
-        if not self._context.get('mail_create_nosubscribe') and threads:
+        if not self._context.get('mail_create_nosubscribe') and threads and self.env.user.active:
             self.env['mail.followers']._insert_followers(
                 threads._name, threads.ids,
                 self.env.user.partner_id.ids, subtypes=None,
@@ -1392,25 +1392,27 @@ class MailThread(models.AbstractModel):
                 filename = part.get_filename()  # I may not properly handle all charsets
                 encoding = part.get_content_charset()  # None if attachment
 
+                content = part.get_content()
+                info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
-                    inner_cid = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, part.get_content(), {'cid': inner_cid}))
+                    info['cid'] = part.get('content-id').strip('><')
+                    attachments.append(self._Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = tools.append_content_to_html(body, tools.ustr(part.get_content(),
+                    body = tools.append_content_to_html(body, tools.ustr(content,
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     # mutlipart/alternative have one text and a html part, keep only the second
                     # mixed allows several html parts, append html content
                     append_content = not alternative or (html and mixed)
-                    html = tools.ustr(part.get_content(), encoding, errors='replace')
+                    html = tools.ustr(content, encoding, errors='replace')
                     if not append_content:
                         body = html
                     else:
@@ -1419,7 +1421,7 @@ class MailThread(models.AbstractModel):
                     body = tools.html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', content, info))
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
@@ -1461,7 +1463,7 @@ class MailThread(models.AbstractModel):
         if email_part:
             if email_part.get_content_type() == 'text/rfc822-headers':
                 # Convert the message body into a message itself
-                email_payload = message_from_string(email_part.get_payload(), policy=email.policy.SMTP)
+                email_payload = message_from_string(email_part.get_content(), policy=email.policy.SMTP)
             else:
                 email_payload = email_part.get_payload()[0]
             bounced_msg_id = tools.mail_header_msgid_re.findall(tools.decode_message_header(email_payload, 'Message-Id'))
@@ -1794,6 +1796,13 @@ class MailThread(models.AbstractModel):
           * create attachments from ``attachments``. If those are linked to the
             content (body) through CIDs body is updated accordingly;
 
+        Note that attachments are created/written in sudo as we consider at this
+        point access is granted on related record and/or to post the linked
+        message. The caller must verify the access rights accordingly. Indeed
+        attachments rights are stricter than message rights which may lead to
+        ACLs issues e.g. when posting on a readonly document or replying to
+        a notification on a private document.
+
         :param list(tuple(str,str), tuple(str,str, dict)) attachments : list of attachment
             tuples in the form ``(name,content)`` or ``(name,content, info)`` where content
             is NOT base64 encoded;
@@ -1844,13 +1853,15 @@ class MailThread(models.AbstractModel):
                 cid = False
                 if len(attachment) == 2:
                     name, content = attachment
+                    info = {}
                 elif len(attachment) == 3:
                     name, content, info = attachment
                     cid = info and info.get('cid')
                 else:
                     continue
                 if isinstance(content, str):
-                    content = content.encode('utf-8')
+                    encoding = info and info.get('encoding')
+                    content = content.encode(encoding or 'utf-8')
                 elif isinstance(content, EmailMessage):
                     content = content.as_bytes()
                 elif content is None:
@@ -1869,7 +1880,7 @@ class MailThread(models.AbstractModel):
                 # keep cid and name list synced with attachement_values_list length to match ids latter
                 cid_list.append(cid)
                 name_list.append(name)
-            new_attachments = self.env['ir.attachment'].create(attachement_values_list)
+            new_attachments = self.env['ir.attachment'].sudo().create(attachement_values_list)
             cid_mapping = {}
             name_mapping = {}
             for counter, new_attachment in enumerate(new_attachments):
@@ -1978,7 +1989,9 @@ class MailThread(models.AbstractModel):
         if 'email_add_signature' not in msg_values:
             msg_values['email_add_signature'] = True
         if not msg_values.get('record_name'):
-            msg_values['record_name'] = self.display_name
+            # use sudo as record access is not always granted (notably when replying
+            # a notification) -> final check is done at message creation level
+            msg_values['record_name'] = self.sudo().display_name
         msg_values.update({
             'author_id': author_id,
             'author_guest_id': author_guest_id,
@@ -2002,8 +2015,10 @@ class MailThread(models.AbstractModel):
 
         new_message = self._message_create(msg_values)
 
-        # Set main attachment field if necessary
-        self._message_set_main_attachment_id(msg_values['attachment_ids'])
+        # Set main attachment field if necessary. Call as sudo as people may post
+        # without read access on the document, notably when replying on a
+        # notification, which makes attachments check crash.
+        self.sudo()._message_set_main_attachment_id(msg_values['attachment_ids'])
 
         if msg_values['author_id'] and msg_values['message_type'] != 'notification' and not self._context.get('mail_create_nosubscribe'):
             if self.env['res.partner'].browse(msg_values['author_id']).active:  # we dont want to add odoobot/inactive as a follower
@@ -2013,13 +2028,22 @@ class MailThread(models.AbstractModel):
         self._notify_thread(new_message, msg_values, **notif_kwargs)
         return new_message
 
-    def _message_set_main_attachment_id(self, attachment_ids):  # todo move this out of mail.thread
+    def _message_set_main_attachment_id(self, attachment_ids):
+        """ Update record's main attachment. If not set, take first interesting
+        attachment and link it on record.
+
+        TODO: move this out of mail.thread. """
         if not self._abstract and attachment_ids and not self.message_main_attachment_id:
-            all_attachments = self.env['ir.attachment'].browse([attachment_tuple[1] for attachment_tuple in attachment_ids])
+            all_attachments = self.env['ir.attachment'].browse([
+                attachment_tuple[1]
+                for attachment_tuple in attachment_ids
+                if attachment_tuple[0] == 4
+            ])
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.sudo().with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
+                                     or all_attachments.filtered(lambda x: not x.mimetype.endswith('xml'))
+            if prioritary_attachments:
+                self.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
 
     def _message_post_after_hook(self, message, msg_vals):
         """ Hook to add custom behavior after having posted the message. Both
@@ -3305,6 +3329,7 @@ class MailThread(models.AbstractModel):
         if not self:
             res['hasReadAccess'] = False
             return res
+        res['canPostOnReadonly'] = self._mail_post_access == 'read'
 
         self.ensure_one()
         try:

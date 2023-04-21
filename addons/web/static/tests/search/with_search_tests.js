@@ -111,7 +111,7 @@ QUnit.module("Search", (hooks) => {
                     });
                     assert.deepEqual(domain, [[0, "=", 1]]);
                     assert.deepEqual(groupBy, ["birthday"]);
-                    assert.deepEqual(orderBy, ["bar"]);
+                    assert.deepEqual(orderBy, [{name: "bar", asc: true}]);
                 }
             }
             TestComponent.template = xml`<div class="o_test_component">Test component content</div>`;
@@ -123,7 +123,7 @@ QUnit.module("Search", (hooks) => {
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { key: "val" },
-                orderBy: ["bar"],
+                orderBy: [{name: "bar", asc: true}],
             });
         }
     );

@@ -119,6 +119,7 @@
             'mass_mailing/static/src/js/snippets.editor.js',
             'mass_mailing/static/src/js/wysiwyg.js',
             'mass_mailing/static/src/xml/mass_mailing.editor.xml',
+            'mass_mailing/static/src/scss/mass_mailing.wysiwyg.scss',
         ],
         'web.assets_common': [
             'mass_mailing/static/src/js/tours/**/*',
@@ -133,6 +134,7 @@
             'mass_mailing/static/src/snippets/s_showcase/options.js',
             'mass_mailing/static/src/snippets/s_rating/options.js',
             'mass_mailing/static/tests/mass_mailing_html_tests.js',
+            'mass_mailing/static/tests/mailing_mailing_view_form_tests.js',
         ],
     },
     'license': 'LGPL-3',

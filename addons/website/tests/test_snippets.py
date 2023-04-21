@@ -6,6 +6,8 @@ from werkzeug.urls import url_encode
 
 from odoo.tests import HttpCase, tagged
 from odoo.addons.website.tools import MockRequest
+from odoo.tests.common import HOST
+from odoo.tools import config
 
 
 @tagged('post_install', '-at_install', 'website_snippets')
@@ -52,3 +54,20 @@ class TestSnippets(HttpCase):
 
     def test_08_table_of_content(self):
         self.start_tour(self.env['website'].get_client_action_url('/'), 'snippet_table_of_content', login='admin')
+
+    def test_09_snippet_image_gallery(self):
+        IrAttachment = self.env['ir.attachment']
+        base = "http://%s:%s" % (HOST, config['http_port'])
+        IrAttachment.create({
+            'public': True,
+            'name': 's_default_image.jpg',
+            'type': 'url',
+            'url': base + '/web/image/website.s_banner_default_image.jpg',
+        })
+        IrAttachment.create({
+            'public': True,
+            'name': 's_default_image2.jpg',
+            'type': 'url',
+            'url': base + '/web/image/website.s_banner_default_image.jpg',
+        })
+        self.start_tour("/", "snippet_image_gallery_remove", login='admin')

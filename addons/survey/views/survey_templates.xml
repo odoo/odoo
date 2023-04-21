@@ -38,7 +38,12 @@
                             <t t-set="page_number" t-value="page_ids.index(page.id) + (1 if survey.progression_mode == 'number' else 0)"/>
                         </t>
                         <t t-else="">
-                            <t t-set="page_ids" t-value="survey.question_ids.ids"/>
+                            <t t-if="not answer.is_session_answer">
+                                <t t-set="page_ids" t-value="answer.predefined_question_ids.ids"/>
+                            </t>
+                            <t t-else="">
+                                <t t-set="page_ids" t-value="survey.question_ids.ids"/>
+                            </t>
                             <t t-set="page_number" t-value="page_ids.index(question.id)"/>
                         </t>
                     </t>
@@ -61,7 +66,6 @@
             <t t-if="answer.test_entry" t-call="survey.survey_button_form_view" />
             <div class="wrap o_survey_wrap d-flex">
                 <div class="container o_survey_form d-flex flex-column mb-5">
-
                     <t t-call="survey.survey_fill_header" />
                     <t t-call="survey.survey_fill_form" />
                 </div>
@@ -311,6 +315,7 @@
     <template id="question_container" name="Survey: question container">
         <t t-set="display_question"
            t-value="survey.questions_layout == 'page_per_question'
+                    or survey.questions_selection == 'random'
                     or (survey.questions_layout == 'one_page' and not question.is_conditional)
                     or (survey.questions_layout == 'page_per_section' and (not question.is_conditional or triggering_answer_by_question[question.id] in selected_answers))"/>
 

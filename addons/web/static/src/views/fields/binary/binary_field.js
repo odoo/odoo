@@ -16,9 +16,7 @@ export class BinaryField extends Component {
             fileName: this.props.record.data[this.props.fileNameField] || "",
         });
         onWillUpdateProps((nextProps) => {
-            if (nextProps.readonly) {
-                this.state.fileName = nextProps.record.data[nextProps.fileNameField] || "";
-            }
+            this.state.fileName = nextProps.record.data[nextProps.fileNameField] || "";
         });
     }
 

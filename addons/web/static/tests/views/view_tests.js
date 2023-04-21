@@ -1425,7 +1425,7 @@ QUnit.module("Views", (hooks) => {
                     });
                     assert.deepEqual(domain, [[0, "=", 1]]);
                     assert.deepEqual(groupBy, ["birthday"]);
-                    assert.deepEqual(orderBy, ["bar"]);
+                    assert.deepEqual(orderBy, [{name: "bar", asc: true}]);
                 }
             }
             ToyController.template = xml`<div/>`;
@@ -1439,7 +1439,7 @@ QUnit.module("Views", (hooks) => {
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { key: "val" },
-                orderBy: ["bar"],
+                orderBy: [{name: "bar", asc: true}],
             };
             await mount(View, target, { env, props });
         }
@@ -1593,7 +1593,7 @@ QUnit.module("Views", (hooks) => {
                     });
                     assert.deepEqual(domain, ["&", [0, "=", 1], [1, "=", 1]]);
                     assert.deepEqual(groupBy, ["name"]);
-                    assert.deepEqual(orderBy, ["bar"]);
+                    assert.deepEqual(orderBy, [{name: "bar", asc: true}]);
                 }
             }
             ToyController.template = xml`<div/>`;
@@ -1607,7 +1607,7 @@ QUnit.module("Views", (hooks) => {
                 domain: [[0, "=", 1]],
                 groupBy: ["birthday"],
                 context: { search_default_filter: 1, search_default_group_by: 1 },
-                orderBy: ["bar"],
+                orderBy: [{name: "bar", asc: true}],
             };
             await mount(View, target, { env, props });
         }

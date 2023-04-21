@@ -394,6 +394,73 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_many2one input");
     });
 
+    QUnit.test("resequence a x2m in a form view dialog from another x2m", async function (assert) {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            resId: 1,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="partner_ids">
+                                <tree editable="top">
+                                    <field name="int_field" widget="handle"/>
+                                    <field name="display_name"/>
+                                </tree>
+                            </field>
+                        </form>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(args.method);
+                if (args.method === "write") {
+                    assert.deepEqual(Object.keys(args.args[1]), ["turtles"]);
+                    assert.strictEqual(args.args[1].turtles.length, 1);
+                    assert.deepEqual(args.args[1].turtles[0], [
+                        1,
+                        2,
+                        {
+                            partner_ids: [
+                                [6, false, [2, 4]],
+                                [1, 2, { int_field: 0 }],
+                                [1, 4, { int_field: 1 }],
+                            ],
+                        },
+                    ]);
+                }
+            },
+        });
+        assert.verifySteps(["get_views", "read", "read"]);
+
+        await click(target, ".o_data_cell");
+        assert.containsOnce(target, ".modal");
+        assert.deepEqual(
+            [...target.querySelectorAll(".modal [name='display_name']")].map(
+                (el) => el.textContent
+            ),
+            ["aaa", "second record"]
+        );
+        assert.verifySteps(["read", "read"]);
+
+        await dragAndDrop(".modal tr:nth-child(2) .o_handle_cell", "tbody tr", "top");
+        assert.deepEqual(
+            [...target.querySelectorAll(".modal [name='display_name']")].map(
+                (el) => el.textContent
+            ),
+            ["second record", "aaa"]
+        );
+        assert.verifySteps([]);
+
+        await clickSave(target.querySelector(".modal"));
+        await clickSave(target);
+        assert.verifySteps(["write", "read", "read"]);
+    });
+
     QUnit.test("one2many list editable with cell readonly modifier", async function (assert) {
         assert.expect(3);
 
@@ -8848,6 +8915,58 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test(
+        'add a line with a context depending on the parent record, created a second record with "Save & New"',
+        async function (assert) {
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="p" context="{'default_display_name': display_name}" >
+                        <tree>
+                            <field name="display_name"/>
+                        </tree>
+                        <form>
+                            <field name="display_name"/>
+                        </form>
+                    </field>
+                </form>`,
+            });
+
+            assert.containsNone(target, ".o_data_row");
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                []
+            );
+            await editInput(target, "[name='display_name'] input", "Jack");
+
+            await addRow(target);
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "Jack"
+            );
+
+            await click(target, ".modal .o_form_button_save_new");
+            assert.strictEqual(
+                target.querySelector(".modal [name='display_name'] input").value,
+                "Jack"
+            );
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                ["Jack"]
+            );
+
+            await clickSave(target.querySelector(".modal"));
+            assert.deepEqual(
+                [...target.querySelectorAll("[name='p'] .o_data_row")].map((el) => el.textContent),
+                ["Jack", "Jack"]
+            );
+        }
+    );
+
     QUnit.test("o2m add a line custom control create editable", async function (assert) {
         await makeView({
             type: "form",
@@ -11513,8 +11632,10 @@ QUnit.module("Fields", (hooks) => {
 
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(target.querySelector("[name=qux] input"), document.activeElement);
-
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_field_x2many_list_row_add a"),
@@ -11559,7 +11680,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(document.activeElement, target.querySelector("[name=qux] input"));
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
 
             assert.strictEqual(
@@ -11621,7 +11745,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(document.activeElement, target.querySelector("[name=qux] input"));
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
 
             assert.strictEqual(
@@ -11701,7 +11828,10 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector("[name=qux] input").focus();
             assert.strictEqual(target.querySelector("[name=qux] input"), document.activeElement);
 
-            getNextTabableElement(target).focus(); // go inside one2many
+            // next tabable element is notebook tab
+            getNextTabableElement(target).focus();
+            // go inside one2many
+            getNextTabableElement(target).focus();
             await nextTick();
             assert.strictEqual(
                 target.querySelector(".o_field_x2many_list_row_add a"),
@@ -12189,7 +12319,7 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["get_views partner", "read partner", "read turtle"]);
 
         await click(target, ".o_boolean_toggle");
-        assert.verifySteps(["onchange turtle", "onchange partner"]);
+        assert.verifySteps(["onchange turtle", "onchange partner", "write turtle", "read turtle"]);
     });
 
     QUnit.test("create a new record with an x2m invisible", async function (assert) {
@@ -12507,5 +12637,102 @@ QUnit.module("Fields", (hooks) => {
         await nextTick();
 
         assert.containsOnce(target, ".modal .o_data_row td[name=display_name]");
+    });
+
+    QUnit.test("field in list but not in fetched form", async function (assert) {
+        serverData.models.partner.fields.o2m = {
+            type: "one2many",
+            relation: "partner_type",
+            relation_field: "p_id",
+        };
+        serverData.models.partner_type.onchanges = {
+            display_name: (rec) => {
+                if (rec.display_name === "changed") {
+                    rec.color = 5;
+                }
+            },
+        };
+
+        serverData.models.partner_type.fields.p_id = { type: "many2one", relation: "partner" };
+        serverData.views = {
+            "partner_type,false,form": `<form><field name="display_name" /></form>`,
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="o2m">
+                        <tree>
+                            <field name="display_name"/>
+                            <field name="color" />
+                        </tree>
+                    </field>
+                </form>`,
+            mockRPC(route, args) {
+                assert.step(`${args.method}: ${args.model}`);
+            },
+        });
+
+        assert.verifySteps(["get_views: partner", "onchange: partner"]);
+        await click(target, ".o_field_x2many_list_row_add a");
+        assert.verifySteps(["get_views: partner_type", "onchange: partner_type"]);
+        await editInput(
+            target.querySelector(".modal"),
+            ".o_field_widget[name='display_name'] input",
+            "changed"
+        );
+        assert.verifySteps(["onchange: partner_type"]);
+        await click(target.querySelector(".modal .o_form_button_save"));
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "changed5");
+        await click(target, ".o_form_button_save");
+        assert.verifySteps(["create: partner", "read: partner", "read: partner_type"]);
+        assert.strictEqual(target.querySelector(".o_data_row").textContent, "changed5");
+    });
+
+    QUnit.test("pressing tab before an onchange is resolved", async (assert) => {
+        const onchangeGetPromise = makeDeferred();
+
+        serverData.models.partner.onchanges = {
+            display_name: (obj) => {
+                obj.display_name = "test";
+            },
+        };
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree editable="bottom" >
+                            <field name="display_name"/>
+                        </tree>
+                    </field>
+                </form>`,
+            resId: 1,
+            async mockRPC(route, args, performRPC) {
+                if (
+                    args.method === "onchange" &&
+                    args.model === "product" &&
+                    args.args[2] === "display_name"
+                ) {
+                    await onchangeGetPromise;
+                }
+            },
+        });
+
+        await click(target.querySelector(".o_field_x2many_list_row_add a"));
+
+        await editInput(target, ".o_field_widget[name='display_name'] input", "gold");
+        triggerHotkey("Tab");
+        triggerHotkey("Tab");
+        onchangeGetPromise.resolve();
+        await nextTick();
+
+        assert.containsN(target, ".o_data_row", 2);
     });
 });

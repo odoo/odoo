@@ -2,22 +2,19 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import datetime
-import logging
 from lxml import etree
 
 from odoo.tests import tagged
 from odoo.addons.l10n_it_edi.tests.common import TestItEdi
 from odoo.exceptions import UserError
 
-_logger = logging.getLogger(__name__)
 
 @tagged('post_install_l10n', 'post_install', '-at_install')
 class TestItEdiExport(TestItEdi):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass(chart_template_ref='l10n_it.l10n_it_chart_template_generic',
-                           edi_format_ref='l10n_it_edi.edi_fatturaPA')
+        super().setUpClass()
 
         cls.price_included_tax = cls.env['account.tax'].create({
             'name': '22% price included tax',
@@ -56,6 +53,37 @@ class TestItEdiExport(TestItEdi):
                 (0, 0, {'factor_percent': 100, 'repartition_type': 'base'}),
                 (0, 0, {'factor_percent': 0, 'repartition_type': 'tax'}),
             ],
+        })
+
+        cls.italian_partner_b = cls.env['res.partner'].create({
+            'name': 'pa partner',
+            'vat': 'IT06655971007',
+            'l10n_it_codice_fiscale': '06655971007',
+            'l10n_it_pa_index': '123456',
+            'country_id': cls.env.ref('base.it').id,
+            'street': 'Via Test PA',
+            'zip': '32121',
+            'city': 'PA Town',
+            'is_company': True
+        })
+
+        cls.italian_partner_no_address_codice = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'l10n_it_codice_fiscale': '00465840031',
+            'is_company': True,
+        })
+
+        cls.italian_partner_no_address_VAT = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'vat': 'IT00465840031',
+            'is_company': True,
+        })
+
+        cls.american_partner = cls.env['res.partner'].create({
+            'name': 'Alessi',
+            'vat': '00465840031',
+            'country_id': cls.env.ref('base.us').id,
+            'is_company': True,
         })
 
         cls.standard_line_below_400 = {
@@ -270,9 +298,6 @@ class TestItEdiExport(TestItEdi):
         cls.pa_partner_invoice._post()
         cls.zero_tax_invoice._post()
         cls.negative_price_invoice._post()
-
-        cls.edi_basis_xml = cls._get_test_file_content('IT00470550013_basis.xml')
-        cls.edi_simplified_basis_xml = cls._get_test_file_content('IT00470550013_simpl.xml')
 
     def test_price_included_taxes(self):
         """ When the tax is price included, there should be a rounding value added to the xml, if the sum(subtotals) * tax_rate is not

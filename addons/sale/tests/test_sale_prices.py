@@ -7,7 +7,7 @@ from datetime import timedelta
 from odoo import fields
 from odoo.fields import Command
 from odoo.tests import Form, tagged
-from odoo.tools import float_compare, mute_logger
+from odoo.tools import float_compare, mute_logger, float_round
 
 from odoo.addons.sale.tests.common import SaleCommon
 
@@ -217,24 +217,25 @@ class TestSalePrices(SaleCommon):
             'name': 'Test Pricelist (EUR)',
             'currency_id': other_currency.id,
         })
-        self.env['res.currency.rate'].create({
-            'name': fields.Date.today(),
-            'rate': 1.0,
-            'currency_id': self.env.company.currency_id.id,
-            'company_id': self.env.company.id,
-        })
-        order_in_other_currency = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'pricelist_id': pricelist_in_other_curr.id,
-            'order_line': [
-                Command.create({
-                    'product_id': self.product.id,
-                    'product_uom': self.uom_dozen.id,
-                    'product_uom_qty': 2.0,
-                }),
-            ]
-        })
-        self.assertEqual(order_in_other_currency.amount_total, 480.0)
+        with freeze_time('2022-08-19'):
+            self.env['res.currency.rate'].create({
+                'name': fields.Date.today(),
+                'rate': 1.0,
+                'currency_id': self.env.company.currency_id.id,
+                'company_id': self.env.company.id,
+            })
+            order_in_other_currency = self.env['sale.order'].create({
+                'partner_id': self.partner.id,
+                'pricelist_id': pricelist_in_other_curr.id,
+                'order_line': [
+                    Command.create({
+                        'product_id': self.product.id,
+                        'product_uom': self.uom_dozen.id,
+                        'product_uom_qty': 2.0,
+                    }),
+                ]
+            })
+            self.assertEqual(order_in_other_currency.amount_total, 480.0)
 
     def test_negative_discounts(self):
         """aka surcharges"""
@@ -964,3 +965,21 @@ class TestSalePrices(SaleCommon):
         # 136.36 price tax excluded with discount applied
         self.assertEqual(order.amount_undiscounted, 272.72)
         self.assertEqual(line.price_subtotal, 136.36)
+
+    def test_product_quantity_rounding(self):
+        """When adding a sale order line, product quantity should be rounded
+        according to decimal precision"""
+        order = self.empty_order
+
+        product_uom_qty = 0.333333
+        order.order_line = [Command.create({
+            'product_id': self.product.id,
+            'product_uom_qty': product_uom_qty,
+            'price_unit': 75.0,
+        })]
+        order.action_confirm()
+        line = order.order_line
+        quantity_precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        expected_price_subtotal = line.price_unit * float_round(product_uom_qty, precision_digits=quantity_precision)
+        self.assertAlmostEqual(line.price_subtotal, expected_price_subtotal)
+        self.assertEqual(order.amount_total, order.tax_totals.get('amount_total'))

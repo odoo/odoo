@@ -2,7 +2,7 @@
 
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { registry } from "@web/core/registry";
-import { click, getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
+import { getFixture, nextTick, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { localization } from "@web/core/l10n/localization";
 import { useNumpadDecimal } from "@web/views/fields/numpad_decimal_hook";
@@ -106,7 +106,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="monetary"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="percentage"/>
-                        <field name="progressbar" widget="progressbar" options="{'editable': true, 'max_value': 'qux', 'edit_max_value': true, 'edit_current_value': true}"/>
+                        <field name="progressbar" widget="progressbar" options="{'editable': true, 'max_value': 'qux', 'edit_max_value': true}"/>
                     </form>`,
                 resId: 1,
             });
@@ -117,6 +117,7 @@ QUnit.module("Fields", (hooks) => {
             const integerInput = target.querySelector(".o_field_integer input");
             const monetaryInput = target.querySelector(".o_field_monetary input");
             const percentageInput = target.querySelector(".o_field_percentage input");
+            const progressbarInput = target.querySelector(".o_field_progressbar input");
 
             // Dispatch numpad "dot" and numpad "comma" keydown events to all inputs and check
             // Numpad "comma" is specific to some countries (Brazil...)
@@ -165,33 +166,23 @@ QUnit.module("Fields", (hooks) => {
             await nextTick();
             assert.strictEqual(percentageInput.value, "99🇧🇪🇧🇪");
 
-            await click(target.querySelector(".o_progress"));
-            const progressbarInputs = target.querySelectorAll(".o_field_progressbar input");
-
-            // After clicking the progressbar, focus is on the first input
-            // and the value is highlighted. We get the length of each input value to
-            // be able to set the cursor position at the end of the value.
-            const [len1, len2] = [...progressbarInputs].map((input) => input.value.length);
-            progressbarInputs[0].setSelectionRange(len1, len1);
-            progressbarInputs[0].dispatchEvent(
-                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
-            );
-            progressbarInputs[0].dispatchEvent(
-                new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
-            );
+            progressbarInput.focus();
             await nextTick();
-            assert.strictEqual(progressbarInputs[0].value, "69🇧🇪🇧🇪");
+
+            // When the input is focused, we get the length of the input value to be
+            // able to set the cursor position at the end of the value.
+            const length = progressbarInput.value.length;
 
             // Make sure that the cursor position is at the end of the value.
-            progressbarInputs[1].setSelectionRange(len2, len2);
-            progressbarInputs[1].dispatchEvent(
+            progressbarInput.setSelectionRange(length, length);
+            progressbarInput.dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "." })
             );
-            progressbarInputs[1].dispatchEvent(
+            progressbarInput.dispatchEvent(
                 new KeyboardEvent("keydown", { code: "NumpadDecimal", key: "," })
             );
             await nextTick();
-            assert.strictEqual(progressbarInputs[1].value, "0🇧🇪44🇧🇪🇧🇪");
+            assert.strictEqual(progressbarInput.value, "0🇧🇪44🇧🇪🇧🇪");
         }
     );
 
@@ -210,7 +201,7 @@ QUnit.module("Fields", (hooks) => {
                         <field name="monetary"/>
                         <field name="currency_id" invisible="1"/>
                         <field name="percentage"/>
-                        <field name="progressbar" widget="progressbar" options="{'editable': true, 'max_value': 'qux', 'edit_max_value': true, 'edit_current_value': true}"/>
+                        <field name="progressbar" widget="progressbar" options="{'editable': true, 'max_value': 'qux', 'edit_max_value': true}"/>
                     </form>`,
                 resId: 1,
             });
@@ -221,6 +212,7 @@ QUnit.module("Fields", (hooks) => {
             const integerInput = target.querySelector(".o_field_integer input");
             const monetaryInput = target.querySelector(".o_field_monetary input");
             const percentageInput = target.querySelector(".o_field_percentage input");
+            const progressbarInput = target.querySelector(".o_field_progressbar input");
 
             /**
              * Common assertion steps are extracted in this procedure.
@@ -235,6 +227,8 @@ QUnit.module("Fields", (hooks) => {
                 const { el, selectionRange, expectedValue, msg } = params;
 
                 el.focus();
+                await nextTick();
+
                 el.setSelectionRange(...selectionRange);
                 const numpadDecimalEvent = new KeyboardEvent("keydown", {
                     code: "NumpadDecimal",
@@ -298,18 +292,8 @@ QUnit.module("Fields", (hooks) => {
                 msg: "Percentage field from 99 to 9,9",
             });
 
-            await click(target.querySelector(".o_progress"));
-            const progressbarInputs = target.querySelectorAll(".o_field_progressbar input");
-
             await testInputElementOnNumpadDecimal({
-                el: progressbarInputs[0],
-                selectionRange: [2, 2],
-                expectedValue: "69,",
-                msg: "Progressbar field 1 from 69 to 69,",
-            });
-
-            await testInputElementOnNumpadDecimal({
-                el: progressbarInputs[1],
+                el: progressbarInput,
                 selectionRange: [1, 3],
                 expectedValue: "0,4",
                 msg: "Progressbar field 2 from 0,44 to 0,4",

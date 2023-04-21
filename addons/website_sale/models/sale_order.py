@@ -104,6 +104,24 @@ class SaleOrder(models.Model):
             return abandoned_domain
         return expression.distribute_not(['!'] + abandoned_domain)  # negative domain
 
+    def _cart_update_order_line(self, product_id, quantity, order_line, **kwargs):
+        self.ensure_one()
+
+        if order_line and quantity <= 0:
+            # Remove zero or negative lines
+            order_line.unlink()
+            order_line = self.env['sale.order.line']
+        elif order_line:
+            # Update existing line
+            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
+            if update_values:
+                self._update_cart_line_values(order_line, update_values)
+        elif quantity > 0:
+            # Create new line
+            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
+            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+        return order_line
+
     def _cart_update_pricelist(self, pricelist_id=None, update_pricelist=False):
         self.ensure_one()
 
@@ -129,7 +147,7 @@ class SaleOrder(models.Model):
             raise UserError(_('It is forbidden to modify a sales order which is not in draft status.'))
 
         product = self.env['product.product'].browse(product_id).exists()
-        if not product or not product._is_add_to_cart_allowed():
+        if add_qty and (not product or not product._is_add_to_cart_allowed()):
             raise UserError(_("The given product does not exist therefore it cannot be added to cart."))
 
         if product.lst_price == 0 and product.website_id.prevent_zero_price_sale:
@@ -173,19 +191,7 @@ class SaleOrder(models.Model):
             # the requested quantity update.
             warning = ''
 
-        if order_line and quantity <= 0:
-            # Remove zero or negative lines
-            order_line.unlink()
-            order_line = self.env['sale.order.line']
-        elif order_line:
-            # Update existing line
-            update_values = self._prepare_order_line_update_values(order_line, quantity, **kwargs)
-            if update_values:
-                self._update_cart_line_values(order_line, update_values)
-        elif quantity >= 0:
-            # Create new line
-            order_line_values = self._prepare_order_line_values(product_id, quantity, **kwargs)
-            order_line = self.env['sale.order.line'].sudo().create(order_line_values)
+        order_line = self._cart_update_order_line(product_id, quantity, order_line, **kwargs)
 
         return {
             'line_id': order_line.id,
@@ -413,7 +419,7 @@ class SaleOrder(models.Model):
 
     def _is_reorder_allowed(self):
         self.ensure_one()
-        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line)
+        return self.state == 'sale' and any(line._is_reorder_allowed() for line in self.order_line if not line.display_type)
 
     def _filter_can_send_abandoned_cart_mail(self):
         self.website_id.ensure_one()

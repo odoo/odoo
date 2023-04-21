@@ -129,7 +129,7 @@ class Partner(models.Model):
                     "id": main_user.id,
                     "isInternalUser": not main_user.share,
                 } if main_user else [('clear',)]
-            if 'guest' in self.env.context:
+            if 'guest' in self.env.context or not self.env.user._is_internal():
                 data.pop('email', None)
             partners_format[partner] = data
         return partners_format
@@ -218,7 +218,11 @@ class Partner(models.Model):
             remaining_limit = limit - len(partners)
             if remaining_limit <= 0:
                 break
-            partners |= self.search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
+            # We are using _search to avoid the default order that is
+            # automatically added by the search method. "Order by" makes the query
+            # really slow.
+            query = self._search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
+            partners |= self.browse(query)
         partners_format = partners.mail_partner_format()
         if channel_id:
             member_by_partner = {member.partner_id: member for member in self.env['mail.channel.member'].search([('channel_id', '=', channel_id), ('partner_id', 'in', partners.ids)])}

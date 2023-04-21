@@ -49,11 +49,14 @@ const dynamicSnippetOptions = options.Class.extend({
      * @override
      */
     async onBuilt() {
+        // TODO Remove in master.
+        this.$target[0].dataset['snippet'] = 's_dynamic_snippet';
         // Default values depend on the templates and filters available.
         // Therefore, they cannot be computed prior the start of the option.
         await this._setOptionsDefaultValues();
         // TODO Remove in master: adapt dropped snippet template.
-        if (this.$target[0].classList.contains('d-none') && !this.$target[0].classList.contains('d-md-block')) {
+        const classList = [...this.$target[0].classList];
+        if (classList.includes('d-none') && !classList.some(className => className.match(/^d-(md|lg)-(?!none)/))) {
             // Remove the 'd-none' of the old template if it is not related to
             // the visible on mobile option.
             this.$target[0].classList.remove('d-none');
@@ -164,6 +167,10 @@ const dynamicSnippetOptions = options.Class.extend({
             model_name: this.modelNameFilter,
             search_domain: this.contextualFilterDomain,
         }});
+        if (!dynamicFilters.length) {
+            // Additional modules are needed for dynamic filters to be defined.
+            return;
+        }
         for (let index in dynamicFilters) {
             this.dynamicFilters[dynamicFilters[index].id] = dynamicFilters[index];
         }

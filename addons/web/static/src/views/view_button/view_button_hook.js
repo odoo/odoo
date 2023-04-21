@@ -128,7 +128,8 @@ export function useViewButtons(model, ref, options = {}) {
 
     function getEl() {
         if (env.inDialog) {
-            return ref.el.closest(".modal");
+            const el = ref.el;
+            return el ? el.closest(".modal") : null;
         } else {
             return ref.el;
         }

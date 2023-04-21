@@ -42,7 +42,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
                 this.errorMessage = this.env._t('Insert a positive amount with the Cash In option.');
                 return;
             }
-            if (this.state.inputAmount < 0) {
+            if (parse.float(this.state.inputAmount) < 0) {
                 this.state.inputAmount = this.state.inputAmount.substring(1);
             }
             return super.confirm();

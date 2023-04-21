@@ -19,17 +19,15 @@ patch(AttendeeCalendarController.prototype, "microsoft_calendar_microsoft_calend
             [[this.user.userId]],
         );
         const syncResult = await this.model.syncMicrosoftCalendar();
-        if (["need_auth", "need_config_from_admin"].includes(syncResult.status)) {
+        if (syncResult.status === "need_auth") {
+            window.location.assign(syncResult.url);
+        } else if (syncResult.status === "need_config_from_admin") {
             if (this.isSystemUser) {
-                if (syncResult.status === "need_auth") {
-                    this.configureCalendarProviderSync("microsoft");
-                } else if (syncResult.status === "need_config_from_admin") {
-                    this.dialog.add(ConfirmationDialog, {
-                        title: this.env._t("Configuration"),
-                        body: this.env._t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"),
-                        confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
-                    });
-                }
+                this.dialog.add(ConfirmationDialog, {
+                    title: this.env._t("Configuration"),
+                    body: this.env._t("The Outlook Synchronization needs to be configured before you can use it, do you want to do it now?"),
+                    confirm: this.actionService.doAction.bind(this.actionService, syncResult.action),
+                });
             } else {
                 this.dialog.add(AlertDialog, {
                     title: this.env._t("Configuration"),

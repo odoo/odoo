@@ -16,8 +16,9 @@ import {
     mount,
     nextTick,
     makeDeferred,
+    editInput,
 } from "../../helpers/utils";
-import { toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import { pagerNext, toggleFilterMenu, toggleMenuItem } from "@web/../tests/search/helpers";
 import { session } from "@web/session";
 import {
     createWebClient,
@@ -966,6 +967,34 @@ QUnit.module("ActionManager", (hooks) => {
             assert.containsN(target, ".o_list_view .o_data_row", 1);
         }
     );
+
+    QUnit.test("should not crash while commiting changes", async (assert) => {
+        serverData.views["partner,false,form"] = `<form><field name="display_name" /></form>`;
+        const webClient = await createWebClient({ serverData });
+        await doAction(
+            webClient,
+            {
+                type: "ir.actions.act_window",
+                id: 1337,
+                res_id: 1,
+                res_model: "partner",
+                views: [[false, "form"]],
+            },
+            { props: { resIds: [1, 2] } }
+        );
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+        await pagerNext(target);
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Second record");
+        await editInput(target, "[name=display_name] input", "new name");
+
+        // without saving we now make a loadState which should commit changes
+        await loadState(webClient, { action: 1337, id: 1, model: "partner", view_type: "form" });
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "First record");
+
+        // loadState again just to check if changes were commited
+        await loadState(webClient, { action: 1337, id: 2, model: "partner", view_type: "form" });
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "new name");
+    });
 
     QUnit.test("initial action crashes", async (assert) => {
         assert.expect(8);

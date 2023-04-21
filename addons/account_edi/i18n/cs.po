@@ -8,17 +8,18 @@
 # Michal Veselý <michal@veselyberanek.net>, 2022
 # Jan Horzinka <jan.horzinka@centrum.cz>, 2022
 # Martin Trigaux, 2022
-# trendspotter <jirka.p@volny.cz>, 2022
+# Jiří Podhorecký, 2022
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2022
+# Aleš Fiala <f.ales1@seznam.cz>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-23 08:02+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: karolína schusterová <karolina.schusterova@vdp.sk>, 2022\n"
-"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"Last-Translator: Aleš Fiala <f.ales1@seznam.cz>, 2023\n"
+"Language-Team: Czech (https://app.transifex.com/odoo/teams/41243/cs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -26,30 +27,35 @@ msgstr ""
 "Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing error(s)"
 msgstr ""
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing info(s)"
 msgstr " Informac(e) o elektronické fakturaci"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid " Electronic invoicing warning(s)"
 msgstr " Upozornění (výstrahy) na elektronickou fakturaci"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A cancellation of the EDI has been requested."
 msgstr "Bylo požádáno o zrušení EDI."
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid "A request for cancellation of the EDI has been called off."
@@ -87,6 +93,7 @@ msgid "Cancelled"
 msgstr "Zrušeno"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_journal.py:0
 #, python-format
 msgid ""
@@ -125,6 +132,7 @@ msgid "Display Name"
 msgstr "Zobrazované jméno"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_edi_format.py:0
 #, python-format
 msgid "Display the currency"
@@ -139,7 +147,6 @@ msgstr "Stáhnout"
 #. module: account_edi
 #: model:ir.actions.server,name:account_edi.ir_cron_edi_network_ir_actions_server
 #: model:ir.cron,cron_name:account_edi.ir_cron_edi_network
-#: model:ir.cron,name:account_edi.ir_cron_edi_network
 msgid "EDI : Perform web services operations"
 msgstr "EDI: provádět operace webových služeb"
 
@@ -190,7 +197,7 @@ msgstr "Počet chyb EDI"
 #: model:ir.model.fields,field_description:account_edi.field_account_move__edi_error_message
 #: model:ir.model.fields,field_description:account_edi.field_account_payment__edi_error_message
 msgid "Edi Error Message"
-msgstr ""
+msgstr "Chybové hlášení Edi"
 
 #. module: account_edi
 #: model:ir.model.fields,field_description:account_edi.field_account_edi_document__edi_format_id
@@ -240,8 +247,13 @@ msgstr "Elektronická fakturace"
 
 #. module: account_edi
 #: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
-msgid "Electronic invoicing state"
+msgid "Electronic invoicing processing needed"
 msgstr ""
+
+#. module: account_edi
+#: model_terms:ir.ui.view,arch_db:account_edi.view_account_invoice_filter
+msgid "Electronic invoicing state"
+msgstr "Stát elektronické fakturace"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_mail_template
@@ -280,6 +292,7 @@ msgid "Info"
 msgstr "Informace"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid ""
@@ -346,7 +359,7 @@ msgstr "Platby"
 #: model_terms:ir.ui.view,arch_db:account_edi.view_move_form_inherit
 #: model_terms:ir.ui.view,arch_db:account_edi.view_payment_form_inherit
 msgid "Process now"
-msgstr ""
+msgstr "Zpracovat teď"
 
 #. module: account_edi
 #: model:ir.model,name:account_edi.model_uom_uom
@@ -393,6 +406,7 @@ msgid "The aggregated state of all the EDIs with web-service of this move"
 msgstr "Souhrnný stav všech EDI s webovou službou tohoto pohybu"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_edi_format.py:0
 #, python-format
 msgid ""
@@ -437,6 +451,7 @@ msgid "This code already exists"
 msgstr "Tento kód již existuje"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_edi_document.py:0
 #, python-format
 msgid "This document is being sent by another process already. "
@@ -461,6 +476,7 @@ msgid "Warning"
 msgstr "Varování"
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/account_move.py:0
 #, python-format
 msgid ""
@@ -472,6 +488,7 @@ msgstr ""
 "již byl odeslán. Místo toho použijte tlačítko „Požádat o zrušení EDI“."
 
 #. module: account_edi
+#. odoo-python
 #: code:addons/account_edi/models/ir_attachment.py:0
 #, python-format
 msgid ""

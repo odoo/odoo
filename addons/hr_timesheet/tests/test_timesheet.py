@@ -4,7 +4,7 @@
 from lxml import etree
 
 from odoo.fields import Command
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form
 from odoo.exceptions import AccessError, UserError, ValidationError
 
 
@@ -235,36 +235,63 @@ class TestTimesheet(TestCommonTimesheet):
     def test_transfert_project(self):
         """ Transfert task with timesheet to another project. """
         Timesheet = self.env['account.analytic.line']
+
+        # create nested subtasks
+        task_child = self.env['project.task'].create({
+            'name': 'Task Child',
+            'parent_id': self.task1.id,
+        })
+
+        task_grandchild = self.env['project.task'].create({
+            'name': 'Task Grandchild',
+            'parent_id': task_child.id,
+        })
+
         # create a second project
         self.project_customer2 = self.env['project.project'].create({
             'name': 'Project NUMBER DEUX',
             'allow_timesheets': True,
         })
-        # employee 1 log some timesheet on task 1
-        Timesheet.create({
+        # employee 1 log some timesheet on task 1 and its subtasks
+        Timesheet.create([{
             'project_id': self.project_customer.id,
             'task_id': self.task1.id,
             'name': 'my first timesheet',
             'unit_amount': 4,
-            'user_id': self.user_employee.id,
-        })
+            'employee_id': self.empl_employee.id,
+        }, {
+            'project_id': self.project_customer.id,
+            'task_id': task_child.id,
+            'name': 'my second timesheet',
+            'unit_amount': 4,
+            'employee_id': self.empl_employee.id,
+        }, {
+            'project_id': self.project_customer.id,
+            'task_id': task_grandchild.id,
+            'name': 'my third timesheet',
+            'unit_amount': 4,
+            'employee_id': self.empl_employee.id,
+        }])
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 1, "One timesheet in project 1")
-        self.assertEqual(timesheet_count2, 0, "No timesheet in project 2")
-        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task 1")
+        self.assertEqual(timesheet_count1, 3, "3 timesheets should be linked to Project1")
+        self.assertEqual(timesheet_count2, 0, "No timesheets should be linked to Project2")
+        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet should be linked to task1")
+        self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet should be linked to task_child")
+        self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet should be linked to task_grandchild")
 
-        # change project of task 1
-        self.task1.write({
-            'project_id': self.project_customer2.id
-        })
+        # change project of task 1 from form to trigger onchange
+        with Form(self.task1) as task_form:
+            task_form.project_id = self.project_customer2
 
         timesheet_count1 = Timesheet.search_count([('project_id', '=', self.project_customer.id)])
         timesheet_count2 = Timesheet.search_count([('project_id', '=', self.project_customer2.id)])
-        self.assertEqual(timesheet_count1, 0, "No timesheet in project 1")
-        self.assertEqual(timesheet_count2, 1, "Still one timesheet in project 2")
-        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task 1")
+        self.assertEqual(timesheet_count1, 0, "There are still timesheets linked to Project1")
+        self.assertEqual(timesheet_count2, 3, "3 timesheets should be linked to Project2")
+        self.assertEqual(len(self.task1.timesheet_ids), 1, "The timesheet still should be linked to task1")
+        self.assertEqual(len(task_child.timesheet_ids), 1, "The timesheet still should be linked to task_child")
+        self.assertEqual(len(task_grandchild.timesheet_ids), 1, "The timesheet still should be linked to task_grandchild")
 
         # it is forbidden to set a task with timesheet without project
         with self.assertRaises(UserError):
@@ -519,3 +546,36 @@ class TestTimesheet(TestCommonTimesheet):
             ('hr_timesheet.view_task_project_user_graph_inherited', '//field[@name="hours_planned"]', [None, 'Planned Days']),
             ('hr_timesheet.timesheets_analysis_report_pivot_employee', '//field[@name="unit_amount"]', [None, 'Days Spent']),
         ])
+
+    def test_uom_change_timesheet(self):
+        """
+        We check that we don't over transform the timesheet unit amount when changing
+        the company encoding timesheet uom, we keep it in the project as hours.
+        So it will be transformed only once when encoding the timesheet.
+        """
+        Timesheet = self.env['account.analytic.line']
+        project = self.env['project.project'].create({
+            'name': 'Project',
+            'allow_timesheets': True,
+            'partner_id': self.partner.id,
+        })
+        project.allocated_hours = 40.0
+
+        Timesheet.create({
+            'name': 'FirstTimeSheet',
+            'project_id': project.id,
+            'unit_amount': 8,
+            'employee_id': self.empl_employee2.id
+        })
+        self.env.company.timesheet_encode_uom_id = self.env.ref('uom.product_uom_day')
+        self.assertEqual(project.total_timesheet_time, 8, "Total timesheet time should be 8 hours")
+        self.assertEqual(project.timesheet_encode_uom_id.name, 'Days', "Timesheet encode uom should be 'Days'")
+
+    def test_create_timesheet_with_companyless_analytic_account(self):
+        """ This test ensures that a timesheet can be created on an analytic account whose company_id is set to False"""
+        self.project_customer.analytic_account_id.company_id = False
+        timesheet = self.env['account.analytic.line'].with_user(self.user_employee).create(
+            {'unit_amount': 1.0, 'project_id': self.project_customer.id})
+        self.assertEqual(timesheet.product_uom_id, self.project_customer.company_id.project_time_mode_id,
+                         "The product_uom_id of the timesheet should be equal to the project's company uom "
+                         "if the project's analytic account has no company_id")

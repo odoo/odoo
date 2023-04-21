@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Jolien De Paepe, 2022
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-15 12:44+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2022\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -512,6 +512,7 @@ msgstr "Slecht zoneformaat"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_bar_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Bar"
 msgstr "Balk"
@@ -752,6 +753,13 @@ msgstr "Rijen wissen"
 #, python-format
 msgid "Clear rows %s - %s"
 msgstr "Wis rijen %s - %s"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Clip"
+msgstr "Clip"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1418,7 +1426,7 @@ msgstr "Duur"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Edit"
-msgstr "Wijzigen"
+msgstr "Bewerken"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -1786,6 +1794,13 @@ msgstr "Toekomstige waarde van een lijfrente-investering."
 #, python-format
 msgid "Future value of principal from series of rates."
 msgstr "Toekomstige waarde van een hoofdsom uit een reeks percentages."
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Gauge"
+msgstr "Meterdiagram"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -2170,13 +2185,6 @@ msgstr "Ongeldige formule voor onderste buigpunt"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
-msgid "Invalid merge zone"
-msgstr "Ongeldige samenvoegzone"
-
-#. module: spreadsheet
-#. odoo-javascript
-#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
-#, python-format
 msgid ""
 "Invalid number of arguments for the %s function. Expected %s maximum, but "
 "got %s instead."
@@ -2512,6 +2520,7 @@ msgstr "Legenda positie"
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_line_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Line"
 msgstr "Lijn"
@@ -2754,7 +2763,7 @@ msgstr "Minpuntje"
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Minute component of a specific time."
-msgstr "Minuut onderdeel van een bepaalde tijd."
+msgstr "Minuutcomponent van een bepaalde tijd."
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -3047,6 +3056,13 @@ msgstr "Oktober"
 
 #. module: spreadsheet
 #. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Overflow"
+msgstr "Overloop"
+
+#. module: spreadsheet
+#. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.xml:0
 #, python-format
 msgid "Paint Format"
@@ -3149,6 +3165,7 @@ msgstr "Periodieke betaling voor een lijfrente-investering."
 #. module: spreadsheet
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/chart/odoo_chart/odoo_pie_chart.js:0
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
 msgid "Pie"
 msgstr "Taart"
@@ -3510,6 +3527,13 @@ msgstr "Rijnummer van een opgegeven cel."
 #, python-format
 msgid "Save"
 msgstr "Opslaan"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Scorecard"
+msgstr "Scorecard"
 
 #. module: spreadsheet
 #. odoo-javascript
@@ -5394,6 +5418,20 @@ msgstr "Alle rijen zichtbaar maken"
 #. odoo-javascript
 #: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
 #, python-format
+msgid "Unhide columns"
+msgstr "Kolommen zichtbaar maken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Unhide rows"
+msgstr "Rijen zichtbaar maken"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
 msgid "Unknown function: \"%s\""
 msgstr "Onbekende functie: \"%s\""
 
@@ -5665,6 +5703,13 @@ msgstr "Of de aangeboden waarde even is."
 #, python-format
 msgid "Whether the referenced cell is empty"
 msgstr "Of de cel waarnaar wordt verwezen leeg is"
+
+#. module: spreadsheet
+#. odoo-javascript
+#: code:addons/spreadsheet/static/src/o_spreadsheet/o_spreadsheet.js:0
+#, python-format
+msgid "Wrap"
+msgstr "Tekstterugloop"
 
 #. module: spreadsheet
 #. odoo-javascript

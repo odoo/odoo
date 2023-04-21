@@ -108,6 +108,10 @@ export class Notebook extends Component {
         }
     }
 
+    activatePage(pageIndex) {
+        this.state.currentPage = pageIndex;
+    }
+
     computePages(props) {
         if (!props.slots && !props.pages) {
             return [];

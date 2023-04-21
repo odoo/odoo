@@ -298,6 +298,10 @@ actual arch.
                 return m.group('prefix') + str(self.env['ir.model.data']._xmlid_to_res_id(xmlid))
             return re.sub(r'(?P<prefix>[^%])%\((?P<xmlid>.*?)\)[ds]', replacer, arch_fs)
 
+        lang = self.env.lang or 'en_US'
+        env_en = self.with_context(edit_translations=None, lang='en_US').env
+        env_lang = self.with_context(lang=lang).env
+        field_arch_db = self._fields['arch_db']
         for view in self:
             arch_fs = None
             read_file = self._context.get('read_arch_from_file') or \
@@ -311,9 +315,13 @@ actual arch.
                     # replace %(xml_id)s, %(xml_id)d, %%(xml_id)s, %%(xml_id)d by the res_id
                     if arch_fs:
                         arch_fs = resolve_external_ids(arch_fs, xml_id).replace('%%', '%')
-                        if self.env.context.get('lang'):
-                            tr = self._fields['arch_db'].get_trans_func(view)
-                            arch_fs = tr(view.id, arch_fs)
+                        translation_dictionary = field_arch_db.get_translation_dictionary(
+                            view.with_env(env_en).arch_db, {lang: view.with_env(env_lang).arch_db}
+                        )
+                        arch_fs = field_arch_db.translate(
+                            lambda term: translation_dictionary[term][lang],
+                            arch_fs
+                        )
                 else:
                     _logger.warning("View %s: Full path [%s] cannot be found.", xml_id, view.arch_fs)
                     arch_fs = False
@@ -1047,7 +1055,8 @@ actual arch.
         """
 
         for node in tree.xpath('//*[@groups]'):
-            if not self.user_has_groups(node.attrib.pop('groups')):
+            attrib_groups = node.attrib.pop('groups')
+            if attrib_groups and not self.user_has_groups(attrib_groups):
                 node.getparent().remove(node)
             elif node.tag == 't' and (not node.attrib or node.get('postprocess_added')):
                 # Move content of <t groups=""> blocks
@@ -2847,7 +2856,7 @@ class NameManager:
         field_info = self.model.fields_get(attributes=['invisible', 'states', 'readonly', 'required'])
         has_access = functools.partial(self.model.check_access_rights, raise_exception=False)
         if not (has_access('write') or has_access('create')):
-            for info in field_info.vals():
+            for info in field_info.values():
                 info['readonly'] = True
                 info['states'] = {}
         return field_info

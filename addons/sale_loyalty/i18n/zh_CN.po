@@ -6,15 +6,16 @@
 # Martin Trigaux, 2022
 # Raymond Yu <cl_yu@hotmail.com>, 2022
 # Jeffery CHEN <jeffery9@gmail.com>, 2022
+# Emily Jia <eji@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.5alpha1\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-20 09:02+0000\n"
+"POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jeffery CHEN <jeffery9@gmail.com>, 2022\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -32,6 +33,7 @@ msgstr ""
 "        用于将来自同一奖励的多个奖励线链接在一起的技术字段。"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid " - On product with the following taxes: %(taxes)s"
@@ -43,12 +45,14 @@ msgid "<span class=\"fa fa-clipboard\"/> Copy"
 msgstr "<span class=\"fa fa-clipboard\"/> 拷贝"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "A better global discount is already applied."
 msgstr "更好的全局折扣已经应用"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -99,6 +103,7 @@ msgid "Coupon Point"
 msgstr "优惠券积分"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "Coupon not found while trying to add the following reward: %s"
@@ -135,6 +140,7 @@ msgid "Discount & Loyalty"
 msgstr "折扣 & 会员"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Discount: %(desc)s%(tax_str)s"
@@ -158,6 +164,7 @@ msgid "Expired Date:"
 msgstr "过期日期:"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Free Product - %(product)s"
@@ -191,12 +198,14 @@ msgid "ID"
 msgstr "ID"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "Invalid product to claim."
 msgstr "投诉无效产品"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_coupon_wizard.py:0
 #, python-format
 msgid "Invalid sales order."
@@ -259,6 +268,7 @@ msgid "Multi Product"
 msgstr "多种产品"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid ""
@@ -267,6 +277,7 @@ msgid ""
 msgstr "此会员方案没有找到任何卡，此订单也不会给予积分。"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/wizard/sale_loyalty_reward_wizard.py:0
 #, python-format
 msgid "No reward selected."
@@ -278,6 +289,7 @@ msgid "No rewards available for this customer!"
 msgstr "此客户没有可用的奖励"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "One or more rewards on the sale order is invalid. Please check them."
@@ -378,12 +390,21 @@ msgid "Selected Reward"
 msgstr "选择的奖励"
 
 #. module: sale_loyalty
+#. odoo-python
+#: code:addons/sale_loyalty/models/sale_order.py:0
+#, python-format
+msgid "TEMPORARY DISCOUNT LINE"
+msgstr "临时折扣行"
+
+#. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon can only be claimed on future orders."
 msgstr "优惠券只能在未来的订单中申领"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The coupon does not have enough points for the selected reward."
@@ -395,6 +416,7 @@ msgid "The coupon points entry already exists."
 msgstr "优惠券积分条目已存在"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "The program is not available for this order."
@@ -406,6 +428,7 @@ msgid "The sales order from which coupon is generated"
 msgstr "销售订单，生成优惠券"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "There is nothing to discount"
@@ -417,12 +440,14 @@ msgid "These are the products that can be claimed with this rule."
 msgstr "这些是可以用这条规则来索赔的产品"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This code is expired (%s)."
 msgstr "这代码已过期 (%s)"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
@@ -430,36 +455,42 @@ msgid "This code is invalid (%s)."
 msgstr "这代码无效 (%s)"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon has already been used."
 msgstr "此优惠券已使用"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This coupon is expired."
 msgstr "此优惠券已过期"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is already applied to this order."
 msgstr "此方案已应用在此订单"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program is not available for public users."
 msgstr "此方案对公共用户是不可用的"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This program requires a code to be applied."
 msgstr "此方案需要应用一个代码"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "This promo code is already applied."
@@ -471,6 +502,7 @@ msgid "Update current promotional lines and select new rewards if applicable."
 msgstr "更新当前的促销明细行，并且如果适用选择新的奖励"
 
 #. module: sale_loyalty
+#. odoo-python
 #: code:addons/sale_loyalty/models/sale_order.py:0
 #, python-format
 msgid "You don't have the required product quantities on your sales order."

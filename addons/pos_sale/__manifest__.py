@@ -39,6 +39,9 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
             'pos_sale/static/src/js/OrderManagementScreen/SaleOrderRow.js',
             'pos_sale/static/src/xml/**/*',
         ],
+        'web.assets_tests': [
+            'pos_sale/static/tests/**/*',
+        ],
     },
     'license': 'LGPL-3',
 }

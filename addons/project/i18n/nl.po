@@ -6,18 +6,18 @@
 # Eric Geens <ericgeens@yahoo.com>, 2022
 # Lukas Van Cauter <cvl@odoo.com>, 2022
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
-# Martin Trigaux, 2022
-# Jolien De Paepe, 2022
+# Jolien De Paepe, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0+e\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-12-15 12:48+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2022\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -403,19 +403,19 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    <t t-set=\"access_token\" t-value=\"object._rating_get_access_token()\"/>\n"
-"    <t t-set=\"partner\" t-value=\"object._rating_get_partner()\"/>\n"
+"    <t t-set=\"relatie\" t-value=\"object._rating_get_partner()\"/>\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
 "    <tbody>\n"
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
-"            <t t-if=\"partner.naam\">\n"
-"                Hallo <t t-out=\"partner.name of ''\">Brandon Freeman</t>,<br/><br/>\n"
+"            <t t-if=\"relatie.naam\">\n"
+"                Hallo <t t-out=\"relatie.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                Hallo,<br/><br/>\n"
 "            </t>\n"
-"            Neem even de tijd om onze diensten te beoordelen met betrekking tot de taak \"<strong t-out=\"object.name of ''\">Planning en budget</strong>\"\n"
+"            Neem even de tijd om onze diensten te beoordelen met betrekking tot de taak \"<strong t-out=\"object.name or ''\">Planning en budget</strong>\"\n"
 "            <t t-if=\"object._rating_get_operator().name\">\n"
-"                toegewezen aan <strong t-out=\"object._rating_get_operator().name of ''\">Mitchell-beheerder</strong>.<br/>\n"
+"                toegewezen aan <strong t-out=\"object._rating_get_operator().name or ''\">Mitchell-beheerder</strong>.<br/>\n"
 "            </t>\n"
 "            <t t-else=\"\">\n"
 "                .<br/>\n"
@@ -453,10 +453,10 @@ msgstr ""
 "        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
 "            Wij waarderen je feedback. Het helpt ons om continu te verbeteren.\n"
 "            <t t-if=\"object.project_id.rating_status == 'stage'\">\n"
-"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name of ''\">In uitvoering</b></span>\n"
+"                <br/><br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Deze klantenenquête is verzonden omdat je taak is verplaatst naar de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b></span>\n"
 "            </t>\n"
 "            <t t-if=\"object.project_id.rating_status == 'periodiek'\">\n"
-"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden <b t-out=\"object.project_id.rating_status_period of ''\">Wekelijks</b> zolang de taak zich in de fase <b t-out=\"object.stage_id.name of ''\">In uitvoering</b> bevindt.</span>\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Dit klantenonderzoek is verzonden <b t-out=\"object.project_id.rating_status_period or ''\">Wekelijks</b> zolang de taak zich in de fase <b t-out=\"object.stage_id.name or ''\">In uitvoering</b> bevindt.</span>\n"
 "            </t>\n"
 "        </td></tr>\n"
 "    </tbody>\n"
@@ -615,7 +615,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
-msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Partner\" title=\"Partner\"/>"
+msgstr "<span class=\"fa fa-user me-2\" aria-label=\"Relatie\" title=\"Relatie\"/>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -643,6 +643,11 @@ msgstr "<span class=\"o_stat_text\">Laatste beoordeling</span>"
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "<span class=\"o_stat_text\">Sub-tasks</span>"
 msgstr "<span class=\"o_stat_text\">Subtaken</span>"
+
+#. module: project
+#: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
+msgid "<span class=\"o_stat_text\">Tasks</span>"
+msgstr "<span class=\"o_stat_text\">Tasken</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -961,7 +966,7 @@ msgstr "Subtaken toestaan"
 #: model:ir.model.fields,field_description:project.field_project_project__analytic_account_id
 #: model:ir.model.fields,field_description:project.field_project_task__analytic_account_id
 msgid "Analytic Account"
-msgstr "Analytische rekening"
+msgstr "Kostenplaats"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__analytic_account_id
@@ -972,10 +977,10 @@ msgid ""
 "This analytic account can be changed on each task individually if necessary.\n"
 "An analytic account is required in order to use timesheets."
 msgstr ""
-"Analytische rekening waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
-"Volg de kosten en inkomsten van je project door deze analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"Deze analytische rekening kan, indien nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
-"Om gebruik te kunnen maken van urenstaten is een analytische rekening vereist."
+"Kostenplaats waaraan dit project, zijn taken en zijn urenstaten zijn gekoppeld.\n"
+"Volg de kosten en omzet van je project door deze kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Deze kostenplaats kan, als nodig, voor elke taak afzonderlijk worden gewijzigd.\n"
+"Om gebruik te kunnen maken van urenstaten is een kostenplaats vereist."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__analytic_account_id
@@ -984,9 +989,9 @@ msgid ""
 "Track the costs and revenues of your task by setting its analytic account on your related documents (e.g. sales orders, invoices, purchase orders, vendor bills, expenses etc.).\n"
 "By default, the analytic account of the project is set. However, it can be changed on each task individually if necessary."
 msgstr ""
-"Analytische rekening waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
-"Houd de kosten en inkomsten van je taak bij door de analytische rekening in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
-"Standaard is de analytische rekening van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
+"Kostenplaats waaraan deze taak en de bijbehorende urenstaten zijn gekoppeld.\n"
+"Houd de kosten en omzet van je taak bij door de kostenplaats in te stellen op je gerelateerde documenten (bijv. verkooporders, facturen, inkooporders, leveranciersfacturen, onkosten, enz.).\n"
+"Standaard is de kostenplaats van het project ingesteld. Het kan echter indien nodig voor elke taak afzonderlijk worden gewijzigd."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1008,7 +1013,7 @@ msgstr ""
 msgid ""
 "Analyze the progress of your projects and the performance of your employees."
 msgstr ""
-"Analyseer de voortgang van je projecten en de prestaties van je medewerkers."
+"Analyseer de voortgang van je projecten en de prestaties van je werknemers."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__ancestor_id
@@ -1376,7 +1381,7 @@ msgstr "Kan veld %r niet agregeren."
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__partner_is_company
 msgid "Check if the contact is a company, otherwise it is a person"
-msgstr "Controleer of de partner een bedrijf is, anders is het een persoon"
+msgstr "Controleer of de relatie een bedrijf is, anders is het een persoon"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__child_text
@@ -1514,7 +1519,7 @@ msgid ""
 "      designers to the workers who print the t-shirt. Organize priorities amongst orders using the"
 msgstr ""
 "Communiceer met klanten over de taak met behulp van de e-mailgateway. Voeg logo-ontwerpen toe aan de taak, zodat informatie uit\n"
-"      ontwerpers tot de arbeiders die het t-shirt bedrukken. Organiseer prioriteiten onder bestellingen met behulp van de"
+"      ontwerpers tot de mensen die het T-shirt bedrukken. Organiseer prioriteiten onder bestellingen met behulp van de"
 
 #. module: project
 #: model:ir.model,name:project.model_res_company
@@ -1964,13 +1969,13 @@ msgstr "December"
 #: model:ir.model.fields,field_description:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,field_description:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan"
-msgstr "Standaard abonnement"
+msgstr "Standaardplan"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_res_company__analytic_plan_id
 #: model:ir.model.fields,help:project.field_res_config_settings__analytic_plan_id
 msgid "Default Plan for a new analytic account for projects"
-msgstr "Standaardplan voor een nieuwe analytische rekening voor projecten"
+msgstr "Standaardplan voor een nieuwe kostenplaats voor projecten"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_defaults
@@ -2036,7 +2041,7 @@ msgid ""
 "it to a sales order item."
 msgstr ""
 "Lever je diensten automatisch bij het bereiken van een milestone door deze "
-"te koppelen aan een verkooporderitem."
+"te koppelen aan een verkooporderregel."
 
 #. module: project
 #. odoo-javascript
@@ -2170,8 +2175,8 @@ msgstr ""
 "e-mail"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2204,7 +2209,7 @@ msgstr "Dropdown menu"
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_kanban
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Edit"
-msgstr "Wijzigen"
+msgstr "Bewerken"
 
 #. module: project
 #. odoo-javascript
@@ -2224,7 +2229,7 @@ msgstr "Bewerk terugkerende taak"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Editing"
-msgstr "Wijzigend"
+msgstr "Bewerkend"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_collaborator__partner_email
@@ -2299,7 +2304,8 @@ msgstr "Fout! Je kunt geen recursieve hiërarchie van taken maken."
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "Everyone can propose ideas, and the Editor marks the best ones as"
-msgstr "Iedereen kan ideeën voorstellen, en de Editor markeert de beste als"
+msgstr ""
+"Iedereen kan ideeën voorstellen en de marketing-editor markeert de beste als"
 
 #. module: project
 #. odoo-javascript
@@ -2420,7 +2426,7 @@ msgstr "Volgers"
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_update__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Volgers (Partners)"
+msgstr "Volgers (Relaties)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__activity_type_icon
@@ -2449,6 +2455,7 @@ msgstr "Vrijdag"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Future Activities"
 msgstr "Toekomstige activiteiten"
@@ -2479,7 +2486,7 @@ msgstr "Krijg klant feedback"
 msgid ""
 "Grant employees access to your project or tasks by adding them as followers."
 msgstr ""
-"Geef medewerkers toegang tot je project of taken door ze toe te voegen als "
+"Geef werknemers toegang tot je project of taken door ze toe te voegen als "
 "volgers."
 
 #. module: project
@@ -2521,8 +2528,8 @@ msgid ""
 "Handle your idea gathering within Tasks of your new Project and discuss them"
 " in the chatter of the tasks. Use the"
 msgstr ""
-"Behandel je ideeënverzameling binnen Taken van je nieuwe project en bespreek"
-" ze in het gebabbel van de taken. Gebruik de"
+"Verzamel al je ideeën als taken van je nieuwe project en bespreek ze in het "
+"chatter van de taken. Gebruik de"
 
 #. module: project
 #. odoo-javascript
@@ -2722,8 +2729,8 @@ msgstr ""
 "verwijderen."
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -2865,7 +2872,7 @@ msgstr "Gefactureerd"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_analytic_account_id_changed
 msgid "Is Analytic Account Manually Changed"
-msgstr "Is handmatig gewijzigde analytische rekening"
+msgstr "Is handmatig gewijzigde kostenplaats"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__is_blocked
@@ -3112,6 +3119,7 @@ msgid "Last Updated on"
 msgstr "Laatst bijgewerkt op"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Late Activities"
 msgstr "Te late activiteiten"
@@ -3296,6 +3304,11 @@ msgid "Menu"
 msgstr "Menu"
 
 #. module: project
+#: model:ir.model,name:project.model_mail_message
+msgid "Message"
+msgstr "Bericht"
+
+#. module: project
 #: model:ir.model.fields,field_description:project.field_project_milestone__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error
@@ -3312,8 +3325,8 @@ msgid "Messages"
 msgstr "Berichten"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/components/project_right_side_panel/components/project_milestone.js:0
@@ -3480,8 +3493,8 @@ msgid "Neutral face"
 msgstr "Neutraal gezicht"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/models/project.py:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
@@ -4048,7 +4061,7 @@ msgid ""
 msgstr ""
 "Beleid om een bericht te versturen bij een document door gebruik te maken van de mail gateway.\n"
 "-iedereen: iedereen mag versturen\n"
-"-partners: alleen geautoriseerde partners\n"
+"-relaties: alleen geautoriseerde relaties\n"
 "-volgers: allen volgers van een bijbehorend document of volgers van gevolgde kanalen\n"
 
 #. module: project
@@ -4140,8 +4153,8 @@ msgid "Progress Percentage"
 msgstr "Voortgangspercentage"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/js/project_rating_graph_view.js:0
@@ -4175,13 +4188,18 @@ msgstr "Project"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__project_analytic_account_id
 msgid "Project Analytic Account"
-msgstr "Analytische rekening project"
+msgstr "Kostenplaats project"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_collaborator_action
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_access_view_tree
 msgid "Project Collaborators"
-msgstr "Projectmedewerkers"
+msgstr "Projectwerknemers"
+
+#. module: project
+#: model:ir.model.fields,field_description:project.field_project_task__project_color
+msgid "Project Color"
+msgstr "Projectkleur"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_account_analytic_account__project_count
@@ -4277,11 +4295,6 @@ msgstr "Projectupdates"
 #: model:ir.model.fields,field_description:project.field_project_task__project_privacy_visibility
 msgid "Project Visibility"
 msgstr "Project zichtbaarheid"
-
-#. module: project
-#: model:ir.model.fields,field_description:project.field_project_task__project_color
-msgid "Project color"
-msgstr "Projectkleur"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -4829,7 +4842,7 @@ msgstr "Zoek in alle"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Assignees"
-msgstr "Zoeken in toegewezen personen"
+msgstr "Zoeken in toegewezen aan"
 
 #. module: project
 #. odoo-python
@@ -5010,6 +5023,7 @@ msgid "Show Project on Dashboard"
 msgstr "Toon project op dashboard"
 
 #. module: project
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Show all records which has next action date is before today"
 msgstr "Toon alle records welke een actiedatum voor vandaag hebben"
@@ -5068,8 +5082,8 @@ msgid "Sprint in Progress"
 msgstr "Sprint in behandeling"
 
 #. module: project
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/controllers/portal.py:0
 #: code:addons/project/static/src/views/burndown_chart/burndown_chart_search_model.js:0
@@ -5798,6 +5812,7 @@ msgstr "Vandaag"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_search
+#: model_terms:ir.ui.view,arch_db:project.view_project_project_filter
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Today Activities"
 msgstr "Activiteiten van vandaag"
@@ -5840,8 +5855,8 @@ msgid ""
 "belongs to a plan."
 msgstr ""
 "Volg de winstgevendheid van je projecten. Elk project, zijn taken en "
-"urenstaten zijn gekoppeld aan een analytische rekening en elke analytische "
-"rekening hoort bij een plan."
+"urenstaten zijn gekoppeld aan een kostenplaats en elke kostenplaats hoort "
+"bij een plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5925,7 +5940,7 @@ msgstr "Niet toegewezen"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Unknown Analytic Account"
-msgstr "Onbekende analytische rekening"
+msgstr "Onbekende kostenplaats"
 
 #. module: project
 #. odoo-python
@@ -6121,7 +6136,7 @@ msgstr "Website herontwerp"
 #: model:ir.model.fields,help:project.field_project_task__website_message_ids
 #: model:ir.model.fields,help:project.field_project_update__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__wed
@@ -6217,8 +6232,8 @@ msgid ""
 "You can also add a description to help your coworkers understand the meaning"
 " and purpose of the stage."
 msgstr ""
-"Je kunt ook een omschrijving toevoegen om je medewerkers te helpen begrijpen"
-" wat de bedoeling is van de fase."
+"Je kunt ook een omschrijving toevoegen om je werknemers te helpen begrijpen "
+"wat de bedoeling is van de fase."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__tag_ids
@@ -6240,20 +6255,13 @@ msgstr "Je kunt alleen een persoonlijk fase instellen op een privétaak."
 
 #. module: project
 #. odoo-python
-#: code:addons/project/models/project.py:0
-#, python-format
-msgid "You cannot %s %s fields in task."
-msgstr "Je kunt geen %s %s velden in taak opnemen."
-
-#. module: project
-#. odoo-python
 #: code:addons/project/models/analytic_account.py:0
 #, python-format
 msgid ""
 "You cannot change the company of an analytic account if it is related to a "
 "project."
 msgstr ""
-"Je kunt het bedrijf van een analytische rekening niet wijzigen als deze is "
+"Je kunt het bedrijf van een kostenplaats niet wijzigen als deze is "
 "gerelateerd aan een project."
 
 #. module: project
@@ -6263,7 +6271,7 @@ msgstr ""
 msgid ""
 "You cannot delete recurring tasks. Please disable the recurrence first."
 msgstr ""
-"Je kunt terugkerende taken niet verwijderen. Schakel eerst de herhaling uit."
+"Je kunt herhalende taken niet verwijderen. Schakel eerst de herhaling uit."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_task_type_delete_wizard
@@ -6282,6 +6290,20 @@ msgid ""
 msgstr ""
 "Je kunt geen fasen met taken verwijderen. Je moet eerst al hun taken "
 "verwijderen."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot read %s fields in task."
+msgstr "Ja kan geen %s velden in taak lezen."
+
+#. module: project
+#. odoo-python
+#: code:addons/project/models/project.py:0
+#, python-format
+msgid "You cannot write on %s fields in task."
+msgstr "Ja kan niet schrijven op %s velden in taak."
 
 #. module: project
 #. odoo-python
@@ -6504,7 +6526,7 @@ msgstr ""
 #: code:addons/project/static/src/xml/project_task_kanban_examples.xml:0
 #, python-format
 msgid "to indicate a problem or a need for discussion on a task."
-msgstr "om een probleem of behoefte aan discussie over een taak aan te geven."
+msgstr "om een probleem of behoefte aan overleg over een taak aan te geven."
 
 #. module: project
 #. odoo-javascript

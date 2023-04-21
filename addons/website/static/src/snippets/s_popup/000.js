@@ -35,10 +35,12 @@ const SharedPopupWidget = publicWidget.Widget.extend({
             return;
         }
 
-        // Popup are always closed when entering/leaving edit mode (see
-        // PopupWidget), this allows to make sure the class is sync on the
-        // .s_popup parent after that moment too.
-        this.el.classList.add('d-none');
+        // Popup are always closed when entering edit mode (see PopupWidget),
+        // this allows to make sure the class is sync on the .s_popup parent
+        // after that moment too.
+        if (!this.editableMode) {
+            this.el.classList.add('d-none');
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -73,6 +75,13 @@ const SharedPopupWidget = publicWidget.Widget.extend({
     _onModalHidden() {
         if (!this._isNormalCase()) {
             return;
+        }
+        if (this.el.querySelector('.s_popup_no_backdrop')) {
+            // We trigger a scroll event here to call the
+            // '_hideBottomFixedElements' method and re-display any bottom fixed
+            // elements that may have been hidden (e.g. the live chat button
+            // hidden when the cookies bar is open).
+            $().getScrollingElement()[0].dispatchEvent(new Event('scroll'));
         }
         this.el.classList.add('d-none');
     },

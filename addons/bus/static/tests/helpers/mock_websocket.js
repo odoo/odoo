@@ -6,10 +6,9 @@ import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 
 class WebSocketMock extends EventTarget {
-    constructor(url) {
+    constructor() {
         super();
         this.readyState = 0;
-        this.url = url;
 
         queueMicrotask(() => {
             this.readyState = 1;
@@ -19,7 +18,7 @@ class WebSocketMock extends EventTarget {
         });
     }
 
-    close(code, reason) {
+    close(code = 1000, reason) {
         this.readyState = 3;
         const closeEv = new CloseEvent('close', {
             code,
@@ -71,7 +70,7 @@ export function patchWebsocketWorkerWithCleanup(params = {}) {
         },
     }, { pure: true });
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
-    websocketWorker = websocketWorker || new WebsocketWorker('wss://odoo.com/websocket');
+    websocketWorker = websocketWorker || new WebsocketWorker();
     patchWithCleanup(browser, {
         SharedWorker: function () {
             const sharedWorker = new SharedWorkerMock(websocketWorker);

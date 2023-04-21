@@ -1099,7 +1099,7 @@
                                 "group_by_no_leaf": 1,
                                 "group_by": []
                             },
-                            "domain": [],
+                            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
                             "groupBy": [
                                 "date:month"
                             ],
@@ -1298,13 +1298,13 @@
                 "amount_total",
                 "state"
             ],
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "model": "pos.order",
             "context": {},
             "orderBy": [
                 {
                     "name": "amount_total",
-                    "asc": true
+                    "desc": true
                 }
             ],
             "id": "1",
@@ -1319,7 +1319,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "1",
             "measures": [
                 {
@@ -1349,7 +1349,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "2",
             "measures": [
                 {
@@ -1380,6 +1380,7 @@
                 "group_by": []
             },
             "domain": [
+                ["state", "in", ["paid", "done", "invoiced"]],
                 [
                     "user_id",
                     "!=",
@@ -1416,6 +1417,7 @@
                 "group_by": []
             },
             "domain": [
+                ["state", "in", ["paid", "done", "invoiced"]],
                 [
                     "product_id",
                     "!=",
@@ -1451,7 +1453,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "5",
             "measures": [
                 {
@@ -1472,7 +1474,7 @@
                 "group_by_no_leaf": 1,
                 "group_by": []
             },
-            "domain": [],
+            "domain": [["state", "in", ["paid", "done", "invoiced"]]],
             "id": "6",
             "measures": [
                 {

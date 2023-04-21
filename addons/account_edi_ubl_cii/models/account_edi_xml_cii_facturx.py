@@ -131,6 +131,9 @@ class AccountEdiXmlCII(models.AbstractModel):
                 'amount_type': tax.amount_type,
             }
 
+        # Validate the structure of the taxes
+        self._validate_taxes(invoice)
+
         # Create file content.
         tax_details = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
 
@@ -156,9 +159,10 @@ class AccountEdiXmlCII(models.AbstractModel):
             'ship_to_trade_party': invoice.partner_shipping_id if 'partner_shipping_id' in invoice._fields and invoice.partner_shipping_id
                 else invoice.commercial_partner_id,
             # Chorus Pro fields
-            'buyer_reference': invoice.buyer_reference if 'buyer_reference' in invoice._fields and invoice.buyer_reference else invoice.ref,
-            'purchase_order_reference': invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields and invoice.purchase_order_reference
-                else invoice.payment_reference or invoice.name,
+            'buyer_reference': invoice.buyer_reference if 'buyer_reference' in invoice._fields
+                and invoice.buyer_reference else invoice.commercial_partner_id.ref,
+            'purchase_order_reference': invoice.purchase_order_reference if 'purchase_order_reference' in invoice._fields
+                and invoice.purchase_order_reference else invoice.ref or invoice.name,
             'contract_reference': invoice.contract_reference if 'contract_reference' in invoice._fields and invoice.contract_reference else '',
         }
 
@@ -216,14 +220,12 @@ class AccountEdiXmlCII(models.AbstractModel):
 
         # ==== partner_id ====
 
-        partner_type = invoice.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
-        invoice.partner_id = self.env['account.edi.format']._retrieve_partner(
-            name=_find_value(f"//ram:{partner_type}/ram:Name"),
-            mail=_find_value(f"//ram:{partner_type}//ram:URIID[@schemeID='SMTP']"),
-            vat=_find_value(f"//ram:{partner_type}/ram:SpecifiedTaxRegistration/ram:ID"),
-        )
-        if not invoice.partner_id:
-            logs.append(_("Could not retrieve the %s.", _("customer") if invoice.move_type in ('out_invoice', 'out_refund') else _("vendor")))
+        role = invoice.journal_id.type == 'purchase' and 'SellerTradeParty' or 'BuyerTradeParty'
+        name = _find_value(f"//ram:{role}/ram:Name")
+        mail = _find_value(f"//ram:{role}//ram:URIID[@schemeID='SMTP']")
+        vat = _find_value(f"//ram:{role}/ram:SpecifiedTaxRegistration/ram:ID")
+        phone = _find_value(f"//ram:{role}/ram:DefinedTradeContact/ram:TelephoneUniversalCommunication/ram:CompleteNumber")
+        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat)
 
         # ==== currency_id ====
 
@@ -246,15 +248,21 @@ class AccountEdiXmlCII(models.AbstractModel):
         if ref_node is not None:
             invoice.ref = ref_node.text
 
+        # ==== Invoice origin ====
+
+        invoice_origin_node = tree.find('./{*}OrderReference/{*}ID')
+        if invoice_origin_node is not None:
+            invoice.invoice_origin = invoice_origin_node.text
+
         # === Note/narration ====
 
         narration = ""
         note_node = tree.find('./{*}ExchangedDocument/{*}IncludedNote/{*}Content')
-        if note_node is not None:
+        if note_node is not None and note_node.text:
             narration += note_node.text + "\n"
 
         payment_terms_node = tree.find('.//{*}SpecifiedTradePaymentTerms/{*}Description')
-        if payment_terms_node is not None:
+        if payment_terms_node is not None and payment_terms_node.text:
             narration += payment_terms_node.text + "\n"
 
         invoice.narration = narration
@@ -268,7 +276,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         # ==== invoice_date ====
 
         invoice_date_node = tree.find('./{*}ExchangedDocument/{*}IssueDateTime/{*}DateTimeString')
-        if invoice_date_node is not None:
+        if invoice_date_node is not None and invoice_date_node.text:
             date_str = invoice_date_node.text
             date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
             invoice.invoice_date = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)
@@ -276,7 +284,7 @@ class AccountEdiXmlCII(models.AbstractModel):
         # ==== invoice_date_due ====
 
         invoice_date_due_node = tree.find('.//{*}SpecifiedTradePaymentTerms/{*}DueDateDateTime/{*}DateTimeString')
-        if invoice_date_due_node is not None:
+        if invoice_date_due_node is not None and invoice_date_due_node.text:
             date_str = invoice_date_due_node.text
             date_obj = datetime.strptime(date_str, DEFAULT_FACTURX_DATE_FORMAT)
             invoice.invoice_date_due = date_obj.strftime(DEFAULT_SERVER_DATE_FORMAT)

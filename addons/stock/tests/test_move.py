@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.exceptions import UserError
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase
@@ -216,6 +217,8 @@ class StockMove(TransactionCase):
         self.assertEqual(move_line.reserved_qty, 100.0)
         self.assertEqual(move_line.qty_done, 0.0)
         move_line.qty_done = 100.0
+        with self.assertRaises(UserError, msg="It should not be possible to write directly to reserved_qty"):
+            move_line.reserved_qty = 1.0
 
         # validation
         move1._action_done()
@@ -938,6 +941,144 @@ class StockMove(TransactionCase):
 
         # check if the putaway was rightly applied
         self.assertEqual(move1.move_line_ids.location_dest_id.id, shelf2_location.id)
+
+    def test_putaway_7(self):
+        """
+        Putaway with one package type and one product
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        child_loc = self.stock_location.child_ids[0]
+
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Super Package Type',
+        })
+
+        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.product.id,
+            'package_type_ids': [(6, 0, package_type.ids)],
+            'location_in_id': self.stock_location.id,
+            'location_out_id': child_loc.id,
+        })
+
+        move_input = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        move_input._action_confirm()
+        move_input.move_line_ids.qty_done = 1
+        move_input.move_line_ids.result_package_id = package
+        move_input._action_done()
+
+        move_stock = move_input.move_dest_ids
+        self.assertEqual(move_stock.move_line_ids.location_dest_id, child_loc)
+
+    def test_putaway_8(self):
+        """
+        Putaway with product P
+        Receive 1 x P in a package with a specific type
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+        child_loc = self.stock_location.child_ids[0]
+
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Super Package Type',
+        })
+
+        package = self.env['stock.quant.package'].create({'package_type_id': package_type.id})
+
+        self.env['stock.putaway.rule'].create({
+            'product_id': self.product.id,
+            'location_in_id': self.stock_location.id,
+            'location_out_id': child_loc.id,
+        })
+
+        move_input = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        move_input._action_confirm()
+        move_input.move_line_ids.qty_done = 1
+        move_input.move_line_ids.result_package_id = package
+        move_input._action_done()
+
+        move_stock = move_input.move_dest_ids
+        self.assertEqual(move_stock.move_line_ids.location_dest_id, child_loc)
+
+    def test_putaway_9(self):
+        """
+        Putaway with one category C
+        2 steps receive
+        Receive one C-type product in a package with a specific type
+        The putaway should be selected
+        """
+        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
+        warehouse.reception_steps = 'two_steps'
+
+        basic_category = self.env.ref('product.product_category_all')
+        child_locations = self.env['stock.location']
+        categs = self.env['product.category']
+
+        for i in range(3):
+            loc = self.env['stock.location'].create({
+                'name': 'shelf %s' % i,
+                'usage': 'internal',
+                'location_id': self.stock_location.id,
+            })
+            child_locations |= loc
+
+            categ = self.env['product.category'].create({
+                'name': 'Category %s' % i,
+                'parent_id': basic_category.id
+            })
+            categs |= categ
+
+            self.env['stock.putaway.rule'].create({
+                'category_id': categ.id,
+                'location_in_id': self.stock_location.id,
+                'location_out_id': loc.id,
+            })
+
+        second_child_location = child_locations[1]
+        second_categ = categs[1]
+        self.product.categ_id = second_categ
+
+        package_type = self.env['stock.package.type'].create({
+            'name': 'Super Package Type',
+        })
+        package = self.env['stock.quant.package'].create({
+            'package_type_id': package_type.id,
+        })
+
+        move_input = self.env['stock.move'].create({
+            'name': self.product.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': warehouse.wh_input_stock_loc_id.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+            'warehouse_id': warehouse.id,
+        })
+        move_input._action_confirm()
+        move_input.move_line_ids.qty_done = 1
+        move_input.move_line_ids.result_package_id = package
+        move_input._action_done()
+
+        move_stock = move_input.move_dest_ids
+        self.assertEqual(move_stock.move_line_ids.location_dest_id, second_child_location)
 
     def test_putaway_with_storage_category_1(self):
         """Receive a product. Test the product will be move to a child location
@@ -4446,6 +4587,62 @@ class StockMove(TransactionCase):
         self.assertEqual(receipt2.state, 'done')
         self.assertEqual(receipt3.state, 'done')
 
+    def test_immediate_validate_9_tracked_move_with_0_qty_done(self):
+        """When trying to validate a picking as an immediate transfer, the done
+        quantity of tracked move should be automatically fulfilled if the
+        picking type doesn't use new or existing LN/SN."""
+        picking_type_receipt = self.env.ref('stock.picking_type_in')
+        picking_type_receipt.use_create_lots = False
+        picking_type_receipt.use_existing_lots = False
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = picking_type_receipt
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_serial
+            move.product_uom_qty = 4
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_lot
+            move.product_uom_qty = 20
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        immediate_wizard = receipt.button_validate()
+        immediate_wizard_form = Form(
+            self.env[immediate_wizard['res_model']].with_context(immediate_wizard['context'])
+        ).save()
+        immediate_wizard_form.process()
+        self.assertEqual(receipt.state, 'done')
+
+    def test_immediate_validate_10_tracked_move_without_backorder(self):
+        """
+            Create a picking for a tracked product, validate it as an
+            immediate transfer, and ensure that the backorder wizard is
+            not triggered when the qty is reserved.
+        """
+        picking_type_internal = self.env.ref('stock.picking_type_internal')
+        picking_type_internal.use_create_lots = True
+        picking_type_internal.use_existing_lots = True
+        lot = self.env['stock.lot'].create({
+            'name': 'Lot 1',
+            'product_id': self.product_lot.id,
+            'company_id': self.env.company.id,
+        })
+        self.env['stock.quant']._update_available_quantity(self.product_lot, self.stock_location, 10, lot_id=lot)
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = picking_type_internal
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_lot
+            move.product_uom_qty = 4
+        internal_transfer = picking_form.save()
+        internal_transfer.action_confirm()
+
+        immediate_wizard = internal_transfer.button_validate()
+        immediate_wizard_form = Form(
+            self.env[immediate_wizard['res_model']].with_context(immediate_wizard['context'])
+        ).save()
+        immediate_wizard_form.process()
+        self.assertEqual(internal_transfer.state, 'done')
+
     def test_set_quantity_done_1(self):
         move1 = self.env['stock.move'].create({
             'name': 'test_set_quantity_done_1',
@@ -5792,17 +5989,49 @@ class StockMove(TransactionCase):
         })
         self.assertEqual(move.product_uom, self.product.uom_id)
         self.assertEqual(move.move_line_ids.product_uom_id, self.product.uom_id)
+        uom_kg = self.env.ref('uom.product_uom_kgm')
+        product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'type': 'product',
+            'uom_id': uom_kg.id,
+            'uom_po_id': uom_kg.id
+        })
+        move.product_id = product1
+        self.assertEqual(move.product_uom, product1.uom_id)
 
     def test_move_line_compute_locations(self):
+        stock_location = self.env['stock.location'].create({
+            'name': 'test-stock',
+            'usage': 'internal',
+        })
+        shelf_location = self.env['stock.location'].create({
+            'name': 'shelf1',
+            'usage': 'internal',
+            'location_id': stock_location.id,
+        })
         move = self.env['stock.move'].create({
             'name': 'foo',
             'product_id': self.product.id,
-            'location_id': self.stock_location.id,
-            'location_dest_id': self.customer_location.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
             'move_line_ids': [(0, 0, {})]
         })
-        self.assertEqual(move.move_line_ids.location_id, self.stock_location)
-        self.assertEqual(move.move_line_ids.location_dest_id, self.customer_location)
+        self.assertEqual(move.move_line_ids.location_id, stock_location)
+        self.assertEqual(move.move_line_ids.location_dest_id, shelf_location)
+
+        # directly created mls should default to picking's src/dest locations
+        internal_transfer = self.env.ref('stock.picking_type_internal')
+        picking = self.env['stock.picking'].create({
+            'picking_type_id': internal_transfer.id,
+            'location_id': stock_location.id,
+            'location_dest_id': shelf_location.id,
+            'move_line_nosuggest_ids': [Command.create({
+                'product_id': self.product.id,
+                'qty_done': 1.0
+            })]
+        })
+        self.assertEqual(picking.move_line_ids.location_id.id, stock_location.id)
+        self.assertEqual(picking.move_line_ids.location_dest_id.id, shelf_location.id)
 
     def test_receive_more_and_in_child_location(self):
         """
@@ -5826,3 +6055,33 @@ class StockMove(TransactionCase):
         move._action_done()
         self.assertEqual(move.move_line_ids.qty_done, 3)
         self.assertEqual(move.move_line_ids.location_dest_id, self.stock_location.child_ids[0])
+
+    def test_serial_tracking(self):
+        """
+        Since updating the move's `lot_ids` field for product tracked by serial numbers will
+        also updates the move's `quantity_done`, this test checks the move's move lines will be
+        correclty updated and consequently its picking can be validated.
+        """
+        sn = self.env['stock.lot'].create({
+            'name': 'test_lot_001',
+            'product_id': self.product_serial.id,
+            'company_id': self.env.company.id,
+        })
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.product_serial
+            move.product_uom_qty = 1
+        receipt = picking_form.save()
+        receipt.action_confirm()
+
+        receipt_form = Form(receipt)
+        with receipt_form.move_ids_without_package.edit(0) as move:
+            move.lot_ids.add(sn)
+        receipt = receipt_form.save()
+        receipt.button_validate()
+
+        self.assertEqual(receipt.state, 'done')
+        self.assertEqual(len(receipt.move_line_ids), 1)
+        self.assertEqual(receipt.move_line_ids.qty_done, 1)

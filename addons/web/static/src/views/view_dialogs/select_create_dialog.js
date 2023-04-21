@@ -41,6 +41,8 @@ export class SelectCreateDialog extends Component {
         };
         if (type === "list") {
             props.allowSelectors = this.props.multiSelect;
+        } else if (type === "kanban" && this.props.kanbanViewId) {
+            props.viewId = this.props.kanbanViewId;
         }
         return props;
     }
@@ -50,6 +52,17 @@ export class SelectCreateDialog extends Component {
             await this.props.onSelected(resIds);
             this.props.close();
         }
+    }
+
+    async unselect() {
+        if (this.props.onUnselect) {
+            await this.props.onUnselect();
+            this.props.close();
+        }
+    }
+
+    get canUnselect() {
+        return this.env.isSmall && !!this.props.onUnselect;
     }
 
     async createEditRecord() {

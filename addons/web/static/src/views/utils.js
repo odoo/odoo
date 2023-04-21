@@ -2,10 +2,13 @@
 
 import { Domain } from "@web/core/domain";
 import { _t } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
 
 export const X2M_TYPES = ["one2many", "many2many"];
 const RELATIONAL_TYPES = [...X2M_TYPES, "many2one"];
 const NUMERIC_TYPES = ["integer", "float", "monetary"];
+
+/** @typedef {import("./relational_model").OrderTerm} OrderTerm */
 
 /**
  * @typedef ViewActiveActions {
@@ -15,6 +18,25 @@ const NUMERIC_TYPES = ["integer", "float", "monetary"];
  * @property {boolean} delete
  * @property {boolean} duplicate
  */
+
+export const BUTTON_CLICK_PARAMS = [
+    "name",
+    "type",
+    "args",
+    "context",
+    "close",
+    "confirm",
+    "special",
+    "effect",
+    "help",
+    "modifiers",
+    // WOWL SAD: is adding the support for debounce attribute here justified or should we
+    // just override compileButton in kanban compiler to add the debounce?
+    "debounce",
+    // WOWL JPP: is adding the support for not oppening the dialog of confirmation in the settings view
+    // This should be refactor someday
+    "noSaveDialog",
+];
 
 /**
  * Add dependencies to activeFields
@@ -115,6 +137,25 @@ export function evalDomain(modifier, evalContext) {
 }
 
 /**
+ * @param {String} fieldName
+ * @param {Object} rawAttrs
+ * @param {Record} record
+ * @returns {String}
+ */
+export function getFormattedValue(record, fieldName, rawAttrs) {
+    const field = record.fields[fieldName];
+    const formatter = registry.category("formatters").get(field.type, (val) => val);
+    const formatOptions = {
+        escape: false,
+        data: record.data,
+        isPassword: "password" in rawAttrs,
+        digits: rawAttrs.digits ? JSON.parse(rawAttrs.digits) : field.digits,
+        field: record.fields[fieldName],
+    };
+    return formatter(record.data[fieldName], formatOptions);
+}
+
+/**
  * @param {Element} rootNode
  * @returns {ViewActiveActions}
  */
@@ -201,19 +242,25 @@ export function isNull(value) {
 }
 
 export function processButton(node) {
+    const withDefault = {
+        close: (val) => archParseBoolean(val, false),
+        context: (val) => val || "{}",
+    };
+    const clickParams = {};
+    for (const { name, value } of node.attributes) {
+        if (BUTTON_CLICK_PARAMS.includes(name)) {
+            clickParams[name] = withDefault[name] ? withDefault[name](value) : value;
+        }
+    }
     return {
         className: node.getAttribute("class") || "",
+        disabled: !!node.getAttribute("disabled") || false,
         icon: node.getAttribute("icon") || false,
         title: node.getAttribute("title") || undefined,
         string: node.getAttribute("string") || undefined,
         options: JSON.parse(node.getAttribute("options") || "{}"),
         modifiers: JSON.parse(node.getAttribute("modifiers") || "{}"),
-        clickParams: {
-            close: archParseBoolean(node.getAttribute("close"), false),
-            context: node.getAttribute("context") || "{}",
-            name: node.getAttribute("name"),
-            type: node.getAttribute("type"),
-        },
+        clickParams,
     };
 }
 

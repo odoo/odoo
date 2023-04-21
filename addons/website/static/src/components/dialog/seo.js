@@ -29,7 +29,7 @@ class ImageSelector extends Component {
         this.seoContext = useState(seoContext);
 
         const firstImageId = this.props.hasSocialDefaultImage ? 'social_default_image' : 'logo';
-        const firstImageSrc = `/web/image/website/${this.website.currentWebsite.id}/${firstImageId}`;
+        const firstImageSrc = `/web/image/website/${encodeURIComponent(this.website.currentWebsite.id)}/${firstImageId}`;
         const firstImage = {
             src: firstImageSrc,
             active: this.areSameImages(firstImageSrc, this.seoContext.metaImage),
@@ -375,7 +375,7 @@ export class OptimizeSEODialog extends Component {
         onWillStart(async () => {
             const { metadata: { mainObject, seoObject, path } } = this.website.currentWebsite;
 
-            this.object = mainObject || seoObject;
+            this.object = seoObject || mainObject;
             this.data = await this.rpc('/website/get_seo_data', {
                 'res_id': this.object.id,
                 'res_model': this.object.model,

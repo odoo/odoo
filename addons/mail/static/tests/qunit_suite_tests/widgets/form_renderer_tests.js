@@ -4,6 +4,8 @@ import { makeDeferred } from '@mail/utils/deferred';
 import { patchUiSize, SIZES } from '@mail/../tests/helpers/patch_ui_size';
 import {
     afterNextRender,
+    dragenterFiles,
+    dropFiles,
     isScrolledToBottom,
     nextAnimationFrame,
     start,
@@ -11,8 +13,10 @@ import {
 } from '@mail/../tests/helpers/test_utils';
 
 import fieldRegistry from 'web.field_registry';
-import { dom, nextTick } from 'web.test_utils';
+import { dom, file, nextTick } from 'web.test_utils';
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
+
+const { createFile } = file;
 
 const { triggerEvent } = dom;
 
@@ -488,9 +492,7 @@ QUnit.test('chatter updating', async function (assert) {
     );
 });
 
-QUnit.test('chatter should become enabled when creation done', async function (assert) {
-    assert.expect(10);
-
+QUnit.test('post message on draft record', async function (assert) {
     const views = {
         'res.partner,false,form':
             `<form string="Partners">
@@ -502,61 +504,67 @@ QUnit.test('chatter should become enabled when creation done', async function (a
                 </div>
             </form>`,
     };
-    const { click, openView } = await start({
+    const { click, insertText, openView } = await start({
         serverData: { views },
     });
     await openView({
         res_model: 'res.partner',
         views: [[false, 'form']],
     });
-    assert.containsOnce(
-        document.body,
-        '.o_Chatter',
-        "there should be a chatter"
+    await click('.o_ChatterTopbar_buttonSendMessage');
+    await insertText('.o_ComposerTextInput_textarea', "Test");
+    await click('.o_Composer_buttonSend');
+    assert.containsOnce(document.body, ".o_Message");
+    assert.strictEqual(
+        document.querySelector(".o_Message_prettyBody").textContent,
+        "Test",
     );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatterTopbar_buttonSendMessage',
-        "there should be a send message button"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatterTopbar_buttonLogNote',
-        "there should be a log note button"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ChatterTopbar_buttonLogNote',
-        "there should be an attachments button"
-    );
-    assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
-        "send message button should be disabled"
-    );
-    assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).disabled,
-        "log note button should be disabled"
-    );
-    assert.ok(
-        document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
-        "attachments button should be disabled"
-    );
+});
 
-    document.querySelectorAll('.o_field_char')[0].focus();
-    document.execCommand('insertText', false, "hello");
-    await click('.o_form_button_save');
-    assert.notOk(
-        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).disabled,
-        "send message button should now be enabled"
-    );
-    assert.notOk(
-        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).disabled,
-        "log note button should now be enabled"
-    );
-    assert.notOk(
-        document.querySelector(`.o_ChatterTopbar_buttonAddAttachments`).disabled,
-        "attachments button should now be enabled"
-    );
+QUnit.test('schedule activities on draft record should prompt with scheduling an activity (proceed with action)', async function (assert) {
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="activity_ids"/>
+                </div>
+            </form>`,
+    };
+    const { click, openView } = await start({ serverData: { views } });
+    await openView({ res_model: 'res.partner', views: [[false, 'form']] });
+    await click('.o_ChatterTopbar_buttonScheduleActivity');
+    assert.containsOnce(document.body, ".o_dialog:contains(Schedule Activity)")
+});
+
+QUnit.test('upload attachment on draft record', async function (assert) {
+    const views = {
+        'res.partner,false,form':
+            `<form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>`,
+    };
+    const { openView } = await start({ serverData: { views }});
+    await openView({
+        res_model: 'res.partner',
+        views: [[false, 'form']],
+    });
+    const file = await createFile({
+        content: 'hello, world',
+        contentType: 'text/plain',
+        name: 'text.txt',
+    });
+    assert.containsNone(document.body, ".o_ChatterTopbar_buttonToggleAttachments:contains(1)");
+    await afterNextRender(() => dragenterFiles(document.querySelector('.o_Chatter')));
+    await afterNextRender(() => dropFiles(document.querySelector('.o_Chatter_dropZone'), [file]));
+    assert.containsOnce(document.body, ".o_ChatterTopbar_buttonToggleAttachments:contains(1)");
 });
 
 QUnit.test('read more/less links are not duplicated when switching from read to edit mode', async function (assert) {

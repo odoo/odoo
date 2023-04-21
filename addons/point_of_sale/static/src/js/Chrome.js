@@ -192,13 +192,12 @@ odoo.define('point_of_sale.Chrome', function(require) {
             // Basically, preload the images in the background.
             this._preloadImages();
             if (this.env.pos.config.limited_partners_loading && this.env.pos.config.partner_load_background) {
-                this.env.pos.loadPartnersBackground().then(() => {
-                    this.env.pos.isEveryPartnerLoaded = true;
-                });
+                // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
+                reactive(this.env.pos).loadPartnersBackground();
             }
             if (this.env.pos.config.limited_products_loading && this.env.pos.config.product_load_background) {
-                this.env.pos.loadProductsBackground().then(() => {
-                    this.env.pos.isEveryProductLoaded = true;
+                // Wrap in fresh reactive: none of the reads during loading should subscribe to anything
+                reactive(this.env.pos).loadProductsBackground().then(() => {
                     this.render(true);
                 });
             }
@@ -398,7 +397,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         _preloadImages() {
             for (let product of this.env.pos.db.get_product_by_category(0)) {
                 const image = new Image();
-                image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
+                image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.__last_update}`;
             }
             for (let category of Object.values(this.env.pos.db.category_by_id)) {
                 if (category.id == 0) continue;

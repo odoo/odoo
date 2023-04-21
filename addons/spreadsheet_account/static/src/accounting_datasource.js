@@ -1,5 +1,5 @@
 /** @odoo-module */
-import { camelToSnakeObject, sum, toServerDateString } from "@spreadsheet/helpers/helpers";
+import { camelToSnakeObject, toServerDateString } from "@spreadsheet/helpers/helpers";
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
 
@@ -89,29 +89,11 @@ export class AccountingDataSource {
         if (dateRange.year < 1900) {
             throw new Error(sprintf(_t("%s is not a valid year."), dateRange.year));
         }
-        const results = [];
-        let error = undefined;
-        // If some payload were to raise an error, we still need to process the others
-        // to make sure they are part of the next batch call.
-        for (const code of codes) {
-            try {
-                const result = this.serverData.batch.get(
-                    "account.account",
-                    "spreadsheet_fetch_debit_credit",
-                    camelToSnakeObject({ dateRange, code, companyId, includeUnposted })
-                );
-                results.push(result);
-            } catch (err) {
-                error = error || err;
-            }
-        }
-        if (error) {
-            throw error;
-        }
-        return {
-            debit: sum(results.map((values) => values.debit)),
-            credit: sum(results.map((values) => values.credit)),
-        };
+        return this.serverData.batch.get(
+            "account.account",
+            "spreadsheet_fetch_debit_credit",
+            camelToSnakeObject({ dateRange, codes, companyId, includeUnposted })
+        );
     }
 
     /**

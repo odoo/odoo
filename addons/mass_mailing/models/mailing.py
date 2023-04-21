@@ -26,8 +26,7 @@ image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
 class MassMailing(models.Model):
-    """ MassMailing models a wave of emails for a mass mailign campaign.
-    A mass mailing is an occurence of sending emails. """
+    """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread',
@@ -257,7 +256,7 @@ class MassMailing(models.Model):
     def _compute_total(self):
         for mass_mailing in self:
             total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
-            if total and mass_mailing.ab_testing_pc < 100:
+            if total and mass_mailing.ab_testing_enabled and mass_mailing.ab_testing_pc < 100:
                 total = max(int(total / 100.0 * mass_mailing.ab_testing_pc), 1)
             mass_mailing.total = total
 
@@ -319,15 +318,19 @@ class MassMailing(models.Model):
             self.browse(row.pop('mailing_id')).update(row)
 
     def _compute_next_departure(self):
-        cron_next_call = self.env.ref('mass_mailing.ir_cron_mass_mailing_queue').sudo().nextcall
-        str2dt = fields.Datetime.from_string
-        cron_time = str2dt(cron_next_call)
+        # Schedule_date should only be False if schedule_type = "now" or
+        # mass_mailing is canceled.
+        # A cron.trigger is created when mailing is put "in queue"
+        # so we can reasonably expect that the cron worker will
+        # execute this based on the cron.trigger's call_at which should
+        # be now() when clicking "Send" or schedule_date if scheduled
+
         for mass_mailing in self:
             if mass_mailing.schedule_date:
-                schedule_date = str2dt(mass_mailing.schedule_date)
-                mass_mailing.next_departure = max(schedule_date, cron_time)
+                # max in case the user schedules a date in the past
+                mass_mailing.next_departure = max(mass_mailing.schedule_date, fields.datetime.now())
             else:
-                mass_mailing.next_departure = cron_time
+                mass_mailing.next_departure = fields.datetime.now()
 
     @api.depends('email_from', 'mail_server_id')
     def _compute_warning_message(self):
@@ -920,7 +923,7 @@ class MassMailing(models.Model):
               JOIN %(target)s t ON (s.res_id = t.id)
               %(join_domain)s
              WHERE substring(t.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-              %(where_domain)s                               
+              %(where_domain)s
         """
 
         # Apply same 'get email field' rule from mail_thread.message_get_default_recipients
@@ -931,9 +934,9 @@ class MassMailing(models.Model):
                   FROM mailing_trace s
                   JOIN %(target)s t ON (s.res_id = t.id)
                   JOIN res_partner p ON (t.partner_id = p.id)
-                  %(join_domain)s                  
+                  %(join_domain)s
                  WHERE substring(p.%(mail_field)s, '([^ ,;<@]+@[^> ,;]+)') IS NOT NULL
-                  %(where_domain)s 
+                  %(where_domain)s
             """
         elif issubclass(type(target), self.pool['mail.thread.blacklist']):
             mail_field = 'email_normalized'
@@ -990,14 +993,14 @@ class MassMailing(models.Model):
             remaining = set(res_ids).difference(already_mailed)
             if topick > len(remaining) or (len(remaining) > 0 and topick == 0):
                 topick = len(remaining)
-            res_ids = random.sample(remaining, topick)
+            res_ids = random.sample(sorted(remaining), topick)
         return res_ids
 
     def _get_remaining_recipients(self):
         res_ids = self._get_recipients()
         trace_domain = [('model', '=', self.mailing_model_real)]
         if self.ab_testing_enabled and self.ab_testing_pc == 100:
-            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', '=', self._get_ab_testing_siblings_mailings().ids)]])
+            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)]])
         else:
             trace_domain = expression.AND([trace_domain, [
                 ('res_id', 'in', res_ids),

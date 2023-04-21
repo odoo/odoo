@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import date, datetime, timedelta
+from dateutil.relativedelta import relativedelta
 
 from odoo.exceptions import ValidationError
 from odoo.tests.common import Form, TransactionCase
@@ -517,4 +518,4 @@ class TestInventory(TransactionCase):
         self.assertEqual(existing_loc2.next_inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_new_loc.inventory_date, date.today() + timedelta(days=2))
         self.assertEqual(quant_existing_loc.inventory_date, date.today() + timedelta(days=2))
-        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + timedelta(days=365))
+        self.assertEqual(quant_non_cyclic_loc.inventory_date, date.today() + relativedelta(years=1))

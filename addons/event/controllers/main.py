@@ -10,6 +10,10 @@ class EventController(Controller):
 
     @route(['''/event/<model("event.event"):event>/ics'''], type='http', auth="public")
     def event_ics_file(self, event, **kwargs):
+        if request.env.user._is_public():
+            frontend_lang = request.httprequest.cookies.get('frontend_lang')
+            if frontend_lang:
+                event = event.with_context(lang=frontend_lang)
         files = event._get_ics_file()
         if not event.id in files:
             return NotFound()

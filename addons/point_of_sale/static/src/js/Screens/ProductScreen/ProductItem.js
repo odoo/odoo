@@ -20,7 +20,7 @@ odoo.define('point_of_sale.ProductItem', function(require) {
         }
         get imageUrl() {
             const product = this.props.product;
-            return `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
+            return `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.__last_update}`;
         }
         get pricelist() {
             const current_order = this.env.pos.get_order();

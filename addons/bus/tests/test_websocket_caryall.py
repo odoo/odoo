@@ -88,9 +88,9 @@ class TestWebsocketCaryall(WebsocketCase):
     def test_timeout_manager_keep_alive_timeout(self):
         with freeze_time('2022-08-19') as frozen_time:
             timeout_manager = TimeoutManager()
-            frozen_time.tick(delta=timedelta(seconds=TimeoutManager.KEEP_ALIVE_TIMEOUT / 2))
+            frozen_time.tick(delta=timedelta(seconds=timeout_manager._keep_alive_timeout / 2))
             self.assertFalse(timeout_manager.has_timed_out())
-            frozen_time.tick(delta=timedelta(seconds=TimeoutManager.KEEP_ALIVE_TIMEOUT / 2))
+            frozen_time.tick(delta=timedelta(seconds=timeout_manager._keep_alive_timeout / 2 + 1))
             self.assertTrue(timeout_manager.has_timed_out())
             self.assertEqual(timeout_manager.timeout_reason, TimeoutReason.KEEP_ALIVE)
 
@@ -148,11 +148,11 @@ class TestWebsocketCaryall(WebsocketCase):
                 'event_name': 'subscribe',
                 'data': {'channels': ['channel1'], 'last': 0}
             }))
+            subscribe_done_event.wait(timeout=5)
             self.url_open('/web/session/logout')
             # Simulate postgres notify. The session with whom the websocket
             # connected has been deleted. WebSocket should be closed without
             # receiving the message.
-            subscribe_done_event.wait(timeout=5)
             self.env['bus.bus']._sendone('channel1', 'notif type', 'message')
             odoo_ws.trigger_notification_dispatching()
             self.assert_close_with_code(websocket, CloseCode.SESSION_EXPIRED)
@@ -284,3 +284,9 @@ class TestWebsocketCaryall(WebsocketCase):
                 'data': {'channels': ['my_channel'], 'last': client_last_notification_id}
             }))
             subscribe_done_event.wait()
+
+    def test_no_cursor_when_no_callback_for_lifecycle_event(self):
+        with patch.object(Websocket, '_event_callbacks', defaultdict(set)):
+            with patch('odoo.addons.bus.websocket.acquire_cursor') as mock:
+                self.websocket_connect()
+                self.assertFalse(mock.called)

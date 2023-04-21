@@ -38,12 +38,9 @@ tour.register('event_booth_sale_pricelists_different_currencies', {
     {
         content: 'Submit your informations',
         trigger: 'button[type="submit"]',
-    },
-    {
-        content: 'Confirm Order',
-        extra_trigger: 'h3:contains("Billing Address")',
-        trigger: '.btn:contains("Confirm")',
-        run: function () {},
+    }, {
+        content: 'Checkout your order',
+        trigger: 'a[role="button"] span:contains("Process Checkout")',
     },
     ...getPriceListChecksSteps({
         pricelistName: "EUR With Discount Included",

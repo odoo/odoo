@@ -233,9 +233,14 @@ export function formatFloatTime(value, options = {}) {
 
     let hour = Math.floor(value);
     const milliSecLeft = Math.round(value * 3600000) - hour * 3600000;
-    // Although looking quite overkill, the following line ensures that we do
+    // Although looking quite overkill, the following lines ensures that we do
     // not have float issues while still considering that 59s is 00:00.
-    let min = Math.floor(milliSecLeft / 60000);
+    let min = milliSecLeft / 60000;
+    if (options.displaySeconds) {
+        min = Math.floor(min);
+    } else {
+        min = Math.round(min);
+    }
     if (min === 60) {
         min = 0;
         hour = hour + 1;
@@ -362,7 +367,7 @@ export function formatMonetary(value, options = {}) {
         currencyId = Array.isArray(dataValue) ? dataValue[0] : dataValue;
     }
     const currency = session.currencies[currencyId];
-    const digits = (currency && currency.digits) || options.digits;
+    const digits = options.digits || (currency && currency.digits);
 
     let formattedValue;
     if (options.humanReadable) {
@@ -447,6 +452,10 @@ export function formatText(value) {
     return value || "";
 }
 
+export function formatJson(value) {
+    return (value && JSON.stringify(value)) || "";
+}
+
 registry
     .category("formatters")
     .add("binary", formatBinary)
@@ -459,6 +468,7 @@ registry
     .add("float_time", formatFloatTime)
     .add("html", (value) => value)
     .add("integer", formatInteger)
+    .add("json", formatJson)
     .add("many2one", formatMany2one)
     .add("many2one_reference", formatInteger)
     .add("one2many", formatX2many)

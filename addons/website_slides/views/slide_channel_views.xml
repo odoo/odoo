@@ -12,12 +12,10 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_view_slides"
-                                type="object"
+                            <button
                                 icon="fa-eye"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
-                                disabled="1"
                                 attrs="{'invisible': [('total_views', '=', 0)]}">
                                 <field name="total_views" widget="statinfo" string="Visits"/>
                             </button>

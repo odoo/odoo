@@ -59,7 +59,7 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
                   'order has a blocking warning on it and cannot be selected to create an alternative.')
             )
         vals = self._get_alternative_values()
-        alt_po = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id).create(vals)
+        alt_po = self.env['purchase.order'].with_context(origin_po_id=self.origin_po_id.id, default_requisition_id=False).create(vals)
         return {
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
@@ -78,5 +78,11 @@ class PurchaseRequisitionCreateAlternative(models.TransientModel):
             'dest_address_id': self.origin_po_id.dest_address_id.id,
         }
         if self.copy_products and self.origin_po_id:
-            vals['order_line'] = [Command.create({'product_id': line.product_id.id, 'product_qty': line.product_qty}) for line in self.origin_po_id.order_line]
+            vals['order_line'] = [Command.create({
+                'product_id': line.product_id.id,
+                'product_qty': line.product_qty,
+                'product_uom': line.product_uom.id,
+                'display_type': line.display_type,
+                'name': line.name,
+            }) for line in self.origin_po_id.order_line]
         return vals

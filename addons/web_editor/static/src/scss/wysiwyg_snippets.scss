@@ -2,23 +2,6 @@
 /// This file contains all variables and mixins that are specific to the editor.
 ///
 
-// OVERRIDES FOR EDITOR WITH SNIPPETS
-body.editor_enable.editor_has_snippets {
-    padding-right: $o-we-sidebar-width !important;
-
-    #web_editor-top-edit .note-popover .popover {
-        right: $o-we-sidebar-width !important;
-    }
-
-    .modal:not(.o_technical_modal) {
-        top: 0 !important;
-        // set z-index so customize options visible on dialog.
-        z-index: $o-we-overlay-zindex - 1;
-        // just for fake backdrop effect
-        background-color: rgba(66, 66, 66, 0.4);
-    }
-}
-
 // Mobile fix for mass mailing
 @include media-breakpoint-down(lg) {
     body.editor_enable.editor_has_snippets {
@@ -987,6 +970,9 @@ body.editor_enable.editor_has_snippets {
                 background: none;
             }
 
+            we-toggler:empty::before {
+                content: '/';
+            }
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
@@ -998,7 +984,17 @@ body.editor_enable.editor_has_snippets {
                     max-height: 600px;
                     overflow-y: auto;
                 }
+                &:empty {
+                    line-height: $o-we-sidebar-content-field-dropdown-item-height;
+                    background-color: $o-we-sidebar-content-field-dropdown-item-bg;
+                    color: $o-we-sidebar-content-field-dropdown-item-color;
+                    // Padding from we-icon-button mixin.
+                    padding-left: 2 * $o-we-sidebar-content-field-control-item-spacing + $o-we-sidebar-content-field-control-item-size;
 
+                    &::before {
+                        content: '/';
+                    }
+                }
                 > we-title {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
                 }
@@ -1252,13 +1248,8 @@ body.editor_enable.editor_has_snippets {
                         width: 28px;
                     }
                 }
-                &.o_we_matrix_five_col {
-                    width: auto;
-                    td, th {
-                        input {
-                            width: 43px;
-                        }
-                    }
+                tr:last-child we-button {
+                    overflow: visible;
                 }
             }
         }
@@ -1426,13 +1417,20 @@ body.editor_enable.editor_has_snippets {
                         font-family: $o-we-sidebar-content-field-input-font-family;
                     }
                     tr {
+                        // Since the sortable list's <tr> loses its connection with
+                        // the table when dragged, the <td> with the input no longer
+                        // takes up the full width, causing a visual issue. To solve
+                        // this problem, we added the 'flex' display property.
+                        display: flex;
+                        align-items: center;
                         border: none;
                     }
                     td {
+                        flex-grow: 1;
                         padding-bottom: $o-we-sidebar-content-field-spacing / 2;
 
                         &:not(.o_we_list_record_name) {
-                            width: 1px;
+                            flex-grow: 0;
                         }
 
                         we-button.o_we_checkbox_wrapper {
@@ -1722,8 +1720,14 @@ body.editor_enable.editor_has_snippets {
 
             &::after {
                 content: "";
-                @include o-position-absolute(0, 0, 0, 0);
+                // We use a "sticky" position because it ensures that the
+                // backdrop covers the entire "customize panel" element, even
+                // when it has a vertical scrollbar and is scrolled to the
+                // bottom.
+                @include o-position-sticky(auto, 0, 0, 0);
                 display: block;
+                height: 100vh;
+                margin-top: -100vh;
                 pointer-events: none;
                 background: $o-we-sidebar-content-backdrop-bg;
             }
@@ -2541,16 +2545,16 @@ we-button:hover .o_we_shape_animated_label > span {
 // GRID LAYOUT
 we-button.o_grid {
     min-width: fit-content;
-    padding-left: 3px !important;
-    padding-right: 3px !important;
+    padding-left: 4.5px !important;
+    padding-right: 4.5px !important;
 }
 
 we-select.o_grid we-toggler {
     width: fit-content !important;
 }
 
-we-button-group.o_grid {
-    min-width: fit-content !important;
+we-button-group.o_grid we-selection-items {
+    width: fit-content !important;
 }
 
 // Background grid.
@@ -2569,4 +2573,27 @@ we-button-group.o_grid {
 .o_we_drag_helper {
     padding: 0;
     border: $o-we-handle-border-width solid $o-we-accent;
+}
+
+// Highlight of the grid items padding.
+@keyframes highlightPadding {
+    from {
+        border: solid rgba($o-we-handles-accent-color, 0.2);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+    to {
+        border: solid rgba($o-we-handles-accent-color, 0);
+        border-width: var(--grid-item-padding-y) var(--grid-item-padding-x);
+    }
+}
+
+.o_we_padding_highlight > .o_grid_item {
+    position: relative;
+
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        animation: highlightPadding 2s;
+        pointer-events: none;
+    }
 }

@@ -15,6 +15,7 @@ from odoo.tools import (
     email_split, email_domain_normalize,
     misc, formataddr,
     prepend_html_content,
+    config,
 )
 
 from . import test_mail_examples
@@ -311,7 +312,7 @@ class TestHtmlTools(BaseCase):
             ('<div><p>First <br/>Second <br/>Third Paragraph</p><p>--<br/>Signature paragraph with a <a href="./link">link</a></p></div>',
              'First Second Third Paragraph -- Signature paragraph with a link'),
             ('<p>Now =&gt; processing&nbsp;entities&#8203;and extra whitespace too.  </p>',
-             'Now =&gt; processing\xa0entities\u200band extra whitespace too.'),
+             'Now =&gt; processing&nbsp;entities\u200band extra whitespace too.'),
             ('<div>Look what happens with <p>unmatched tags</div>', 'Look what happens with unmatched tags'),
             ('<div>Look what happens with <p unclosed tags</div> Are we good?', 'Look what happens with Are we good?')
         ]
@@ -465,7 +466,7 @@ class TestEmailTools(BaseCase):
 
 
 class EmailConfigCase(TransactionCase):
-    @patch.dict("odoo.tools.config.options", {"email_from": "settings@example.com"})
+    @patch.dict(config.options, {"email_from": "settings@example.com"})
     def test_default_email_from(self, *args):
         """Email from setting is respected."""
         # ICP setting is more important

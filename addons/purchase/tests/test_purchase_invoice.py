@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from datetime import timedelta
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.tests.common import Form
@@ -57,6 +59,34 @@ class TestPurchaseToInvoiceCommon(AccountTestInvoicingCommon):
             'default_code': 'PROD_DEL',
             'taxes_id': False,
         })
+
+    @classmethod
+    def init_purchase(cls, partner=None, confirm=False, products=None, taxes=None, company=False):
+        date_planned = fields.Datetime.now() - timedelta(days=1)
+        po_form = Form(cls.env['purchase.order'] \
+                    .with_company(company or cls.env.company) \
+                    .with_context(tracking_disable=True))
+        po_form.partner_id = partner or cls.partner_a
+        po_form.partner_ref = 'my_match_reference'
+
+        for product in (products or []):
+            with po_form.order_line.new() as line_form:
+                line_form.product_id = product
+                line_form.price_unit = product.list_price
+                line_form.product_qty = 1
+                line_form.product_uom = product.uom_id
+                line_form.date_planned = date_planned
+                if taxes:
+                    line_form.tax_ids.clear()
+                    for tax in taxes:
+                        line_form.tax_ids.add(tax)
+
+        rslt = po_form.save()
+
+        if confirm:
+            rslt.button_confirm()
+
+        return rslt
 
 
 @tagged('post_install', '-at_install')
@@ -392,6 +422,41 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         po_no_analytic_distribution.button_confirm()
         self.assertFalse(pol_no_analytic_distribution.analytic_distribution, "The compute should not overwrite what the user has set.")
 
+    def test_purchase_order_to_invoice_analytic_rule_with_account_prefix(self):
+        """
+        Test whether, when an analytic plan is set within the scope (applicability) of purchase
+        and with an account prefix set in the distribution model,
+        the default analytic account is correctly set during the conversion from po to invoice
+        """
+        self.env.user.groups_id += self.env.ref('analytic.group_analytic_accounting')
+        analytic_plan_default = self.env['account.analytic.plan'].create({
+            'name': 'default',
+            'applicability_ids': [Command.create({
+                'business_domain': 'bill',
+                'applicability': 'optional',
+            })]
+        })
+        analytic_account_default = self.env['account.analytic.account'].create({'name': 'default', 'plan_id': analytic_plan_default.id})
+
+        analytic_distribution_model = self.env['account.analytic.distribution.model'].create({
+            'account_prefix': '600',
+            'analytic_distribution': {analytic_account_default.id: 100},
+            'product_id': self.product_a.id,
+        })
+
+        po = self.env['purchase.order'].create({'partner_id': self.partner_a.id})
+        self.env['purchase.order.line'].create({
+            'order_id': po.id,
+            'name': 'test',
+            'product_id': self.product_a.id
+        })
+        self.assertFalse(po.order_line.analytic_distribution, "There should be no analytic set.")
+        po.button_confirm()
+        po.order_line.qty_received = 1
+        po.action_create_invoice()
+        self.assertRecordValues(po.invoice_ids.invoice_line_ids,
+                                [{'analytic_distribution': analytic_distribution_model.analytic_distribution}])
+
     def test_sequence_invoice_lines_from_multiple_purchases(self):
         """Test if the invoice lines are sequenced by purchase order when creating an invoice
            from multiple selected po's"""
@@ -560,3 +625,78 @@ class TestPurchaseToInvoice(TestPurchaseToInvoiceCommon):
         # Ensure price unit is updated when changing quantity on PO confirmed and line NOT linked to an invoice line
         po_line.write({'product_qty': 4})
         self.assertEqual(40.0, po_line.price_unit, "Unit price should be set to 40.0 for 4 quantity")
+
+
+@tagged('post_install', '-at_install')
+class TestInvoicePurchaseMatch(TestPurchaseToInvoiceCommon):
+
+    def test_total_match_via_partner(self):
+        po = self.init_purchase(confirm=True, partner=self.partner_a, products=[self.product_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+
+        invoice._find_and_set_purchase_orders(
+            [], invoice.partner_id.id, invoice.amount_total)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        self.assertEqual(invoice.amount_total, po.amount_total)
+
+    def test_total_match_via_po_reference(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        self.assertEqual(invoice.amount_total, po.amount_total)
+
+    def test_subset_total_match_prefer_purchase(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=True)
+        additional_unmatch_po_line = po.order_line.filtered(lambda l: l.product_id == self.service_order)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        self.assertTrue(additional_unmatch_po_line.id in invoice.line_ids.purchase_line_id.ids)
+        self.assertTrue(invoice.line_ids.filtered(lambda l: l.purchase_line_id == additional_unmatch_po_line).quantity == 0)
+
+    def test_subset_total_match_reject_purchase(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        invoice = self.init_invoice('in_invoice', partner=self.partner_a, products=[self.product_order])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=False)
+        additional_unmatch_po_line = po.order_line.filtered(lambda l: l.product_id == self.service_order)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+        self.assertTrue(additional_unmatch_po_line.id not in invoice.line_ids.purchase_line_id.ids)
+
+    def test_po_match_prefer_purchase(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        invoice = self.init_invoice('in_invoice', products=[self.product_a])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=True)
+
+        self.assertTrue(invoice.id in po.invoice_ids.ids)
+
+    def test_po_match_reject_purchase(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        invoice = self.init_invoice('in_invoice', products=[self.product_a])
+
+        invoice._find_and_set_purchase_orders(
+            ['my_match_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=False)
+
+        self.assertTrue(invoice.id not in po.invoice_ids.ids)
+        self.assertNotEqual(invoice.amount_total, po.amount_total)
+
+    def test_no_match(self):
+        po = self.init_purchase(confirm=True, products=[self.product_order, self.service_order])
+        invoice = self.init_invoice('in_invoice', products=[self.product_a])
+
+        invoice._find_and_set_purchase_orders(
+            ['other_reference'], invoice.partner_id.id, invoice.amount_total, prefer_purchase_line=False)
+
+        self.assertTrue(invoice.id not in po.invoice_ids.ids)

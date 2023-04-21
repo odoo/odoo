@@ -190,9 +190,10 @@ export const websiteService = {
             },
 
             goToWebsite({ websiteId, path, edition, translation, lang } = {}) {
+                this.websiteRootInstance = undefined;
                 if (lang) {
                     invalidateSnippetCache = true;
-                    path = `/website/lang/${lang}?r=${encodeURIComponent(path)}`;
+                    path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(path)}`;
                 }
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,

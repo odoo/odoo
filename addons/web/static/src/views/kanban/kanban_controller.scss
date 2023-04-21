@@ -68,15 +68,6 @@
             z-index: 1; // show the shadow on top of the previous & next cards in grouped mode
         }
 
-        // In FireFox: elements with `overflow: hidden` will prevent mouseenter and mouseleave
-        // events from firing on elements underneath them. This is the case when dragging a card
-        // by the `.o_kanban_record_headings` element. In such cases, the pointer events are
-        // disabled to allow mouse events to fire properly.
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=1352061
-        &.o_dragged .o_kanban_record_headings {
-            pointer-events: none;
-        }
-
         // ------- Kanban Record, v11 Layout -------
         // Records colours
         > div::after {
@@ -132,6 +123,7 @@
         }
 
         .o_kanban_record_bottom {
+
             .oe_kanban_bottom_left,
             .oe_kanban_bottom_right {
                 display: flex;
@@ -149,6 +141,10 @@
                 .o_priority_star {
                     margin-top: 1px;
                     font-size: 18px;
+                }
+
+                span {
+                    overflow-wrap: anywhere;
                 }
             }
             .oe_kanban_bottom_right {
@@ -396,25 +392,10 @@
         }
 
         .o_progressbar {
-            display: flex;
             height: $o-kanban-progressbar-height;
 
             .o_progressbar_title {
                 flex: 0 0 auto;
-            }
-            .o_progress {
-                flex: 1 1 auto;
-                margin-top: 3px;
-            }
-            .o_progressbar_value {
-                flex: 0 0 auto;
-                width: auto;
-                height: 100%;
-                text-align: right;
-            }
-            input.o_progressbar_value {
-                width: 15%;
-                margin-left: 8px;
             }
         }
 

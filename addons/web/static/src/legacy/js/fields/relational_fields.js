@@ -641,6 +641,10 @@ var FieldMany2One = AbstractField.extend({
         }
 
         if (this.lastNameSearch) {
+            this.lastNameSearch.catch((reason) => {
+                // the last rpc name_search will be aborted, so we want to ignore its rejection
+                reason.event.preventDefault();
+            })
             this.lastNameSearch.abort(false)
         }
         this.lastNameSearch = this._rpc({

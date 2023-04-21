@@ -315,6 +315,17 @@ describe('List', () => {
                                     </li>
                                 </ul>`),
                             stepFunction: toggleCheckList,
+                            contentAfterEdit: unformat(`
+                                <ul class="o_checklist">
+                                    <li class="o_checked" id="checkId-1">abc</li>
+                                    <li class="oe-nested">
+                                        <ul class="o_checklist">
+                                            <li class="o_checked" id="checkId-2">def</li>
+                                            <li id="checkId-4">g[]hi</li>
+                                            <li class="o_checked" id="checkId-3">jkl</li>
+                                        </ul>
+                                    </li>
+                                </ul>`),
                             contentAfter: unformat(`
                                 <ul class="o_checklist">
                                     <li class="o_checked">abc</li>
@@ -4097,6 +4108,15 @@ describe('List', () => {
                                 stepFunction: deleteBackward,
                                 contentAfter:
                                     '<p>abc</p><ul class="o_checklist"><li class="o_checked">[]def</li></ul>',
+                            });
+                        });
+                        it('should outdent the list item without removing the header tag', async () => {
+                            await testEditor(BasicEditor, {
+                                contentBefore:
+                                    '<ul><li>abc</li><li class="oe-nested"><ul><li><h1>[]def</h1></li></ul></li></ul>',
+                                stepFunction: deleteBackward,
+                                contentAfter:
+                                    '<ul><li>abc</li><li><h1>[]def</h1></li></ul>',
                             });
                         });
                         it.skip('should outdent while nested within a list item', async () => {

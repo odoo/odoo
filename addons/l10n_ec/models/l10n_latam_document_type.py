@@ -11,6 +11,7 @@ class L10nLatamDocumentType(models.Model):
     internal_type = fields.Selection(
         selection_add=[
             ("purchase_liquidation", "Purchase Liquidation"),
+            ("withhold", "Withhold"),
         ]
     )
 

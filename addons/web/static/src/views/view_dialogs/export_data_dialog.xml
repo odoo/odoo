@@ -12,15 +12,15 @@
     </t>
 
     <t t-name="web.ExportDataItem" owl="1">
-        <div t-att-data-field_id="props.field.name" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded mb-2' : '' }}" role="treeitem" t-on-click.stop="onClick" t-on-dblclick="(ev) => !props.isFieldExpandable(props.field) and !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)">
-            <span t-if="props.isFieldExpandable(props.field)" t-attf-class="o_expand_parent d-inline-block position-absolute small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="expandText" />
-            <div t-attf-class="o_tree_column d-flex justify-content-between align-items-center {{ props.field.required ? 'fw-bolder' : ''}}">
-                <span t-if="props.isDebug and props.field.id" class="overflow-hidden" t-esc="`${props.field.string} (${props.field.id})`" />
-                <span t-else="" class="overflow-hidden" t-esc="props.field.string" />
-                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.name) ? 'o_inactive opacity-25' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(props.field.name) and this.props.onAdd(ev)" />
+        <div t-att-data-field_id="props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded mb-2' : '' }} {{ props.field.parent ? '' : 'pe-3'}}" role="treeitem" t-on-click.stop="() => this.loadExpandedContent(props.field.id)" t-on-dblclick="() => this.onDoubleClick(props.field.id)">
+            <div t-attf-class="o_tree_column d-flex align-items-center {{ props.field.required ? 'fw-bolder' : ''}}">
+                <span t-if="props.isFieldExpandable(props.field.id)" t-attf-class="ms-n3 float-start o_expand_parent small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
+                <span t-if="props.isDebug and props.field.id" class="overflow-hidden w-100" t-esc="`${props.field.string} (${props.field.id})`" />
+                <span t-else="" class="overflow-hidden w-100" t-esc="props.field.string" />
+                <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.id) ? 'o_inactive opacity-25' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(this.props.field.id) and this.props.onAdd(this.props.field.id)" />
             </div>
             <t t-if="state.isExpanded">
-                <t t-foreach="subFields" t-as="field" t-key="field.name">
+                <t t-foreach="subFields" t-as="field" t-key="field.id">
                     <ExportDataItem
                         t-props="props"
                         field="field"
@@ -44,16 +44,17 @@
                     <div class="o_left_field_panel h-100 overflow-auto border">
                         <div class="o_field_tree_structure">
                             <t t-if="fieldsAvailable">
-                                <t t-foreach="rootFields" t-as="field" t-key="field.name">
+                                <t t-foreach="rootFields" t-as="field" t-key="field.id + '_' + state.search.length">
                                     <ExportDataItem
-                                        field="field"
-                                        expandedContent.bind="expandedContent"
-                                        isFieldExpanded.bind="isFieldExpanded"
                                         exportList="state.exportList"
-                                        isFieldExpandable="isFieldExpandable"
+                                        field="field"
+                                        getSubFields.bind="getSubFields"
+                                        isFieldExpandable.bind="isFieldExpandable"
                                         isDebug="isDebug"
-                                        onClick.bind="onToggleExpandField"
+                                        isExpanded="state.search.length > 0"
+                                        onToggleExpandField.bind="onToggleExpandField"
                                         onAdd.bind="onAddItemExportList"
+                                        search="state.search"
                                     />
                                 </t>
                             </t>
@@ -67,7 +68,7 @@
                         <t t-foreach="availableFormats" t-as="format" t-key="format.tag">
                             <div class="radio form-check-inline ps-5">
                                 <input t-att-id="'o_radio' + format.tag" type="radio" t-att-checked="format.tag === availableFormats[state.selectedFormat].tag" name="o_export_format_name" t-att-value="format.tag" class="form-check-input" t-on-change="setFormat" />
-                                <label class="form-check-label" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
+                                <label class="form-check-label ms-1" t-att-for="'o_radio' + format.tag" t-esc="format.label" />
                             </div>
                         </t>
                     </div>
@@ -107,11 +108,11 @@
                     </div>
                     <div class="o_right_field_panel h-100 px-2 overflow-auto border">
                         <ul class="o_fields_list list-unstyled" t-ref="draggable">
-                            <t t-foreach="state.exportList" t-as="field" t-key="field.name">
-                                <li t-attf-class="o_export_field {{ state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.name">
+                            <t t-foreach="state.exportList" t-as="field" t-key="field.id">
+                                <li t-attf-class="o_export_field {{ state.isSmall ? '' : 'o_export_field_sortable' }}" t-att-data-field_id="field.id">
                                     <span t-if="!state.isSmall" class="fa fa-sort o_sort_field mx-1" t-attf-style="opacity:{{ state.exportList.length === 1 ? 0 : 1 }}" />
-                                    <span t-esc="isDebug and field.id ? `${field.string or field.label} (${field.id})` : field.string or field.label" />
-                                    <span class="fa fa-trash m-1 float-end o_remove_field cursor-pointer" t-att-title="removeFieldText" t-on-click.stop="onRemoveItemExportList" />
+                                    <span t-esc="isDebug and field.id ? `${field.string} (${field.id})` : field.string" />
+                                    <span class="fa fa-trash m-1 pe-2 float-end o_remove_field cursor-pointer" t-att-title="removeFieldText" t-on-click.stop="() => this.onRemoveItemExportList(field.id)" />
                                 </li>
                             </t>
                         </ul>

@@ -149,7 +149,7 @@ class StockMove(models.Model):
         for move in self:
             if move.state != 'draft':
                 continue
-            move.manual_consumption = not move.raw_material_production_id.use_auto_consume_components_lots and (move.bom_line_id.manual_consumption or move.has_tracking != 'none')
+            move.manual_consumption = move._is_manual_consumption()
 
     @api.depends('bom_line_id')
     def _compute_description_bom_line(self):
@@ -230,12 +230,6 @@ class StockMove(models.Model):
         if self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
             self._update_quantity_done(mo)
-
-    @api.onchange('quantity_done')
-    def _onchange_quantity_done(self):
-        if self.raw_material_production_id and not self.manual_consumption and \
-           self.should_consume_qty != self.quantity_done:
-            self.manual_consumption = True
 
     @api.model
     def default_get(self, fields_list):
@@ -421,7 +415,7 @@ class StockMove(models.Model):
             'state': 'confirmed',
             'reservation_date': self.reservation_date,
             'date_deadline': self.date_deadline,
-            'manual_consumption': self.bom_line_id.manual_consumption or self.product_id.tracking != 'none',
+            'manual_consumption': self._is_manual_consumption(),
             'move_orig_ids': [Command.link(m.id) for m in self.mapped('move_orig_ids')],
             'move_dest_ids': [Command.link(m.id) for m in self.mapped('move_dest_ids')],
             'procure_method': self.procure_method,
@@ -555,12 +549,6 @@ class StockMove(models.Model):
         res['bom_line_id'] = self.bom_line_id.id
         return res
 
-    def _get_mto_procurement_date(self):
-        date = super()._get_mto_procurement_date()
-        if 'manufacture' in self.product_id._get_rules_from_location(self.location_id).mapped('action'):
-            date -= relativedelta(days=self.company_id.manufacturing_lead)
-        return date
-
     def action_open_reference(self):
         res = super().action_open_reference()
         source = self.production_id or self.raw_material_production_id
@@ -572,3 +560,12 @@ class StockMove(models.Model):
                 'res_id': source.id,
             }
         return res
+
+    def _is_manual_consumption(self):
+        self.ensure_one()
+        return self._determine_is_manual_consumption(self.product_id, self.raw_material_production_id, self.bom_line_id)
+
+    @api.model
+    def _determine_is_manual_consumption(self, product, production, bom_line):
+        return (product.product_tmpl_id.tracking != 'none' and not production.use_auto_consume_components_lots) or \
+               (product.product_tmpl_id.tracking == 'none' and bom_line and bom_line.manual_consumption)

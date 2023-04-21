@@ -66,6 +66,10 @@ _CONST_OPCODES = set(to_opcodes([
     # 3.6: literal map with constant keys https://bugs.python.org/issue27140
     'BUILD_CONST_KEY_MAP',
     'LIST_EXTEND', 'SET_UPDATE',
+    # 3.11 replace DUP_TOP, DUP_TOP_TWO, ROT_TWO, ROT_THREE, ROT_FOUR
+    'COPY', 'SWAP',
+    # Added in 3.11 https://docs.python.org/3/whatsnew/3.11.html#new-opcodes
+    'RESUME',
 ])) - _BLACKLIST
 
 # operations which are both binary and inplace, same order as in doc'
@@ -88,6 +92,8 @@ _EXPR_OPCODES = _CONST_OPCODES.union(to_opcodes([
     'DICT_MERGE', 'DICT_UPDATE',
     # Basically used in any "generator literal"
     'GEN_START',  # added in 3.10 but already removed from 3.11.
+    # Added in 3.11, replacing all BINARY_* and INPLACE_*
+    'BINARY_OP',
 ])) - _BLACKLIST
 
 _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
@@ -114,6 +120,23 @@ _SAFE_OPCODES = _EXPR_OPCODES.union(to_opcodes([
     'LOAD_GLOBAL',
 
     'RERAISE', 'JUMP_IF_NOT_EXC_MATCH',
+
+    # Following opcodes were Added in 3.11
+    # replacement of opcodes CALL_FUNCTION, CALL_FUNCTION_KW, CALL_METHOD
+    'PUSH_NULL', 'PRECALL', 'CALL', 'KW_NAMES',
+    # replacement of POP_JUMP_IF_TRUE and POP_JUMP_IF_FALSE
+    'POP_JUMP_FORWARD_IF_FALSE', 'POP_JUMP_FORWARD_IF_TRUE',
+    'POP_JUMP_BACKWARD_IF_FALSE', 'POP_JUMP_BACKWARD_IF_TRUE',
+    #replacement of JUMP_ABSOLUTE
+    'JUMP_BACKWARD',
+    #replacement of JUMP_IF_NOT_EXC_MATCH
+    'CHECK_EXC_MATCH',
+    # new opcodes
+    'RETURN_GENERATOR',
+    'PUSH_EXC_INFO',
+    'NOP',
+    'FORMAT_VALUE', 'BUILD_STRING'
+
 ])) - _BLACKLIST
 
 _logger = logging.getLogger(__name__)

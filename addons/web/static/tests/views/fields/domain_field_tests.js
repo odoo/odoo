@@ -3,6 +3,7 @@
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import {
     click,
+    clickDiscard,
     clickSave,
     editInput,
     getFixture,
@@ -118,6 +119,49 @@ QUnit.module("Fields", (hooks) => {
                 "This domain is not supported.",
                 "The widget should not crash the view, but gracefully admit its failure."
             );
+        }
+    );
+
+    QUnit.test(
+        "The domain editor should not crash the view when given a dynamic filter ( datetime )",
+        async function (assert) {
+            // dynamic filters (containing variables, such as uid, parent or today)
+            // are not handled by the domain editor, but it shouldn't crash the view
+            serverData.models.partner.records[0].foo = `[("datetime", "=", context_today())]`;
+            serverData.models.partner.fields.datetime = { string: "A date", type: "datetime" };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                resId: 1,
+                serverData,
+                arch: `
+                    <form>
+                        <field name="foo" widget="domain" options="{'model': 'partner'}" />
+                    </form>`,
+            });
+
+            // The input field should display that the date is invalid
+            assert.equal(target.querySelector(".o_datepicker_input").value, "Invalid DateTime");
+
+            // Change the date in the datepicker
+            await click(target, ".o_datepicker_input");
+            // Select a date in the datepicker
+            await click(
+                document.body.querySelector(
+                    `.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]`
+                )
+            );
+            // Close the datepicker
+            await click(
+                document.body.querySelector(
+                    `.bootstrap-datetimepicker-widget a[data-action="close"]`
+                )
+            );
+            await clickDiscard(target);
+
+            // Open the datepicker again
+            await click(target, ".o_datepicker_input");
         }
     );
 

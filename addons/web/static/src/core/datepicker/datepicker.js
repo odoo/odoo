@@ -6,6 +6,7 @@ import {
     formatDateTime,
     luxonToMoment,
     luxonToMomentFormat,
+    momentToLuxon,
     parseDate,
     parseDateTime,
 } from "@web/core/l10n/dates";
@@ -26,14 +27,6 @@ import {
 const { DateTime } = luxon;
 
 let datePickerId = 0;
-
-/**
- * @param {string} format
- * @returns {boolean}
- */
-function isValidStaticFormat(format) {
-    return /^[\d\s/:-]+$/.test(DateTime.local().toFormat(format));
-}
 
 /**
  * @param {Function} fn
@@ -94,9 +87,9 @@ export class DatePicker extends Component {
             this.datePickerShown = true;
             this.inputRef.el.select();
         });
-        window.$(this.rootRef.el).on("hide.datetimepicker", () => {
+        window.$(this.rootRef.el).on("hide.datetimepicker", ({date}) => {
             this.datePickerShown = false;
-            this.onDateChange({ useStatic: true });
+            this.onDateChange({ eventDate: date, useStatic: true });
         });
         window.$(this.rootRef.el).on("error.datetimepicker", () => false);
     }
@@ -124,10 +117,18 @@ export class DatePicker extends Component {
     // Protected
     //---------------------------------------------------------------------
 
+    /**
+     * @param {string} format
+     * @returns {boolean}
+     */
+    isValidStaticFormat(format) {
+        return /^[\d\s\/.,:-]+$/.test(DateTime.local().toFormat(format));
+    }
+
     getOptions(useStatic = false) {
         return {
             format:
-                !useStatic || isValidStaticFormat(this.format) ? this.format : this.staticFormat,
+                !useStatic || this.isValidStaticFormat(this.format) ? this.format : this.staticFormat,
             locale: this.props.locale || (this.date && this.date.locale),
         };
     }
@@ -166,6 +167,7 @@ export class DatePicker extends Component {
         const [formattedDate] = this.formatValue(this.date, this.getOptions(useStatic));
         if (formattedDate !== null) {
             this.inputRef.el.value = formattedDate;
+            this.props.onUpdateInput(formattedDate);
         }
     }
 
@@ -179,7 +181,7 @@ export class DatePicker extends Component {
      */
     bootstrapDateTimePicker(commandOrParams) {
         if (typeof commandOrParams === "object") {
-            const format = isValidStaticFormat(this.format) ? this.format : this.staticFormat;
+            const format = this.isValidStaticFormat(this.format) ? this.format : this.staticFormat;
             const params = {
                 ...commandOrParams,
                 date: this.date || null,
@@ -188,7 +190,7 @@ export class DatePicker extends Component {
             };
             for (const prop in params) {
                 if (params[prop] instanceof DateTime) {
-                    params[prop] = params[prop].isValid ? luxonToMoment(params[prop]) : null;
+                    params[prop] = luxonToMoment(params[prop]);
                 }
             }
             commandOrParams = params;
@@ -214,15 +216,18 @@ export class DatePicker extends Component {
      * @param {Object} [params={}]
      * @param {boolean} [params.useStatic]
      */
-    onDateChange({ useStatic } = {}) {
+    onDateChange({ eventDate, useStatic } = {}) {
         const { value } = this.inputRef.el;
-        const options = this.getOptions(useStatic);
-        const parsedDate = value && this.parseValue(value, options)[0];
-        this.state.warning = parsedDate && parsedDate > DateTime.local();
-        if (value && !parsedDate) {
-            // Reset to default (= given) date.
-            this.updateInput();
+        let parsedDate = value && eventDate ? momentToLuxon(eventDate).setLocale(this.getOptions().locale): null;
+        if (!parsedDate) {
+            const options = this.getOptions(useStatic);
+            parsedDate = this.parseValue(value, options)[0];
         }
+        this.state.warning = parsedDate && parsedDate > DateTime.local();
+        // Always update input.
+        // if the date is invalid, it will reset to default (= given) date.
+        // if the input is a computed date (+5d for instance), it will put the correct date.
+        this.updateInput();
         if (parsedDate !== null && !areDateEquals(this.date, parsedDate)) {
             this.props.onDateTimeChanged(parsedDate);
         }
@@ -266,6 +271,8 @@ DatePicker.defaultProps = {
     minDate: DateTime.fromObject({ year: 1000 }),
     useCurrent: false,
     widgetParent: "body",
+    onInput: () => {},
+    onUpdateInput: () => {},
 };
 DatePicker.props = {
     // Components props
@@ -309,6 +316,8 @@ DatePicker.props = {
     widgetParent: { type: String, optional: true },
     daysOfWeekDisabled: { type: Array, optional: true },
     placeholder: { type: String, optional: true },
+    onInput: { type: Function, optional: true },
+    onUpdateInput: { type: Function, optional: true },
 };
 DatePicker.template = "web.DatePicker";
 

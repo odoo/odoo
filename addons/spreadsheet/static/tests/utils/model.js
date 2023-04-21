@@ -2,6 +2,7 @@
 
 import { ormService } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
+import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { nextTick } from "@web/../tests/helpers/utils";
 
@@ -32,6 +33,7 @@ export function setupDataSourceEvaluation(model) {
  */
 export async function createModelWithDataSource(params = {}) {
     registry.category("services").add("orm", ormService, { force: true });
+    registry.category("services").add("localization", makeFakeLocalizationService(), { force: true });
     const env = await makeTestEnv({
         serverData: params.serverData || getBasicServerData(),
         mockRPC: params.mockRPC,
@@ -39,7 +41,7 @@ export async function createModelWithDataSource(params = {}) {
     const model = new Model(params.spreadsheetData, {
         evalContext: { env },
         //@ts-ignore
-        dataSources: new DataSources(env.services.orm.silent),
+        dataSources: new DataSources(env.services.orm),
     });
     setupDataSourceEvaluation(model);
     await nextTick(); // initial async formulas loading

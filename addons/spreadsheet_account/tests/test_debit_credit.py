@@ -113,7 +113,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -122,13 +122,75 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             [{"credit": 0.0, "debit": 500.0}],
         )
 
+    def test_two_codes(self):
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": [self.account_revenue_c1.code, self.account_expense_c1.code],
+                        "company_id": None,
+                        "include_unposted": True,
+                    }
+                ]
+            ),
+            [{"credit": 500, "debit": 500.0}],
+        )
+
+    def test_two_codes_mixing_balance(self):
+        self.account_revenue_c1.sudo().include_initial_balance = True
+        self.env["account.move"].create(
+            {
+                "company_id": self.company_data["company"].id,
+                "move_type": "entry",
+                "date": "2000-07-02",
+                "line_ids": [
+                    Command.create(
+                        {
+                            "name": "line_debit_c1",
+                            "account_id": self.account_revenue_c1.id,
+                            "debit": 555,
+                        },
+                    ),
+                    Command.create(
+                        {
+                            "name": "line_credit_c1",
+                            "account_id": self.account_expense_c1.id,
+                            # not taken into account because the account
+                            # has include_initial_balance=False
+                            "credit": 555,
+                        },
+                    ),
+                ],
+            }
+        )
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": [self.account_revenue_c1.code, self.account_expense_c1.code],
+                        "company_id": None,
+                        "include_unposted": True,
+                    }
+                ]
+            ),
+            [{"credit": 500, "debit": 1055.0}],
+        )
+
     def test_response_order(self):
         request_1 = {
             "date_range": {
                 "range_type": "year",
                 "year": 2022,
             },
-            "code": self.account_revenue_c1.code,
+            "codes": [self.account_revenue_c1.code],
             "company_id": None,
             "include_unposted": True,
         }
@@ -137,7 +199,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "range_type": "year",
                 "year": 2020,
             },
-            "code": self.account_revenue_c1.code,
+            "codes": [self.account_revenue_c1.code],
             "company_id": None,
             "include_unposted": True,
         }
@@ -160,7 +222,27 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": code,
+                        "codes": [code],
+                        "company_id": None,
+                        "include_unposted": True,
+                    }
+                ]
+            ),
+            [
+                {"credit": 500.0, "debit": 500.0},
+            ],
+        )
+
+    def test_duplicated_prefix_code(self):
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": ["sp1234", "sp1234"],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -203,7 +285,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2021,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -246,7 +328,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2021,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -291,7 +373,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -333,7 +415,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "year": 2022,
                             "quarter": 3,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -371,7 +453,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 [
                     {
                         "date_range": {"range_type": "month", "year": 2022, "month": 7},
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -414,7 +496,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "month": 7,
                             "day": 2,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -482,7 +564,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "month": 2,
                             "day": 4,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -504,7 +586,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2025,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -549,7 +631,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "year": 2022,
                             "quarter": 3,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -590,7 +672,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 [
                     {
                         "date_range": {"range_type": "month", "year": 2022, "month": 7},
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -636,7 +718,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "month": 7,
                             "day": 2,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -681,7 +763,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": False,
                     }
@@ -699,7 +781,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -744,7 +826,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": False,
                     }
@@ -762,7 +844,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": self.account_revenue_c1.code,
+                        "codes": [self.account_revenue_c1.code],
                         "company_id": None,
                         "include_unposted": True,
                     }
@@ -770,6 +852,26 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
             ),
             [
                 {"credit": 888, "debit": 1388},
+            ],
+        )
+
+    def test_empty_code(self):
+        self.assertEqual(
+            self.env["account.account"].spreadsheet_fetch_debit_credit(
+                [
+                    {
+                        "date_range": {
+                            "range_type": "year",
+                            "year": 2022,
+                        },
+                        "codes": [""],
+                        "company_id": None,
+                        "include_unposted": False,
+                    }
+                ]
+            ),
+            [
+                {"credit": 0, "debit": 0},
             ],
         )
 
@@ -782,7 +884,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                             "range_type": "year",
                             "year": 2022,
                         },
-                        "code": "",
+                        "codes": [],
                         "company_id": None,
                         "include_unposted": False,
                     }
@@ -800,7 +902,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     "range_type": "year",
                     "year": 2022,
                 },
-                "code": self.account_revenue_c1.code,
+                "codes": [self.account_revenue_c1.code],
                 "company_id": self.account_revenue_c1.company_id.id,
                 "include_unposted": True,
             }
@@ -814,27 +916,21 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                 "views": [[False, "list"]],
                 "target": "current",
                 "domain": [
-                    "|",
                     "&",
                     "&",
                     "&",
                     ("account_id.code", "=like", "sp1234566%"),
-                    ("company_id", "=", self.account_revenue_c1.company_id.id),
-                    ("move_id.state", "!=", "cancel"),
+                    "|",
                     "&",
                     ("account_id.include_initial_balance", "=", True),
                     ("date", "<=", date(2022, 12, 31)),
                     "&",
                     "&",
-                    "&",
-                    ("account_id.code", "=like", "sp1234566%"),
-                    ("company_id", "=", self.account_revenue_c1.company_id.id),
-                    ("move_id.state", "!=", "cancel"),
-                    "&",
-                    "&",
                     ("account_id.include_initial_balance", "=", False),
                     ("date", ">=", date(2022, 1, 1)),
                     ("date", "<=", date(2022, 12, 31)),
+                    ("company_id", "=", self.account_revenue_c1.company_id.id),
+                    ("move_id.state", "!=", "cancel"),
                 ],
                 "name": "Journal items for account prefix sp1234566",
             },
@@ -847,7 +943,7 @@ class SpreadsheetAccountingFunctionsTest(AccountTestInvoicingCommon):
                     "range_type": "year",
                     "year": 2022,
                 },
-                "code": "",
+                "codes": [""],
                 "company_id": None,
                 "include_unposted": True,
             }

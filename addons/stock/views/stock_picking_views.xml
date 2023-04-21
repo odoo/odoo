@@ -5,7 +5,7 @@
             <field name="model">stock.picking</field>
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
-                <calendar string="Calendar View" date_start="scheduled_date" color="partner_id" event_limit="5">
+                <calendar string="Calendar View" date_start="scheduled_date" color="partner_id" event_limit="5" quick_add="False">
                     <field name="partner_id" filters="1"/>
                     <field name="origin"/>
                     <field name="picking_type_id"/>
@@ -300,7 +300,7 @@
                                         domain="[('product_id','=',product_id)]"
                                     />
                                     <button name="action_show_details" type="object" icon="fa-list" width="0.1" title="Details"
-                                            attrs="{'invisible': [('show_details_visible', '=', False)]}" options='{"warn": true}'/>
+                                            attrs="{'invisible': [('show_details_visible', '=', False)]}"/>
                                     <button name="action_assign_serial" type="object"
                                             icon="fa-plus-square"
                                             width="0.1"

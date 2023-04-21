@@ -38,26 +38,22 @@ tour.register('project_tour', {
         actions.auto('.modal:visible .btn.btn-primary');
     },
 }, {
-    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
+    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group .o_input",
     content: Markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
-    position: 'right',
-    run: function (actions) {
-        actions.text("Test", this.$anchor.find("input"));
-    },
+    position: 'bottom',
+    run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
-    auto: true,
+    position: 'right',
 }, {
-    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group",
+    trigger: ".o_kanban_project_tasks .o_column_quick_create .input-group .o_input",
     extra_trigger: '.o_kanban_group',
     content: Markup(_t("Add columns to organize your tasks into <b>stages</b> <i>e.g. New - In Progress - Done</i>.")),
-    position: 'right',
-    run: function (actions) {
-        actions.text("Test", this.$anchor.find("input"));
-    },
+    position: 'bottom',
+    run: "text Test",
 }, {
     trigger: ".o_kanban_project_tasks .o_column_quick_create .o_kanban_add",
-    auto: true,
+    position: 'right',
 }, {
     trigger: '.o-kanban-button-new',
     extra_trigger: '.o_kanban_group:eq(1)',
@@ -87,12 +83,14 @@ tour.register('project_tour', {
     position: "bottom",
 }, {
     trigger: ".o_ChatterTopbar_buttonSendMessage",
+    extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Use the chatter to <b>send emails</b> and communicate efficiently with your customers. \
     Add new people to the followers' list to make them aware of the main changes about this task.")),
     width: 350,
     position: "bottom",
 }, {
     trigger: ".o_ChatterTopbar_buttonLogNote",
+    extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("<b>Log notes</b> for internal communications <i>(the people following this task won't be notified \
     of the note you are logging unless you specifically tag them)</i>. Use @ <b>mentions</b> to ping a colleague \
     or # <b>mentions</b> to reach an entire team.")),
@@ -100,9 +98,11 @@ tour.register('project_tour', {
     position: "bottom"
 }, {
     trigger: ".o_ChatterTopbar_buttonScheduleActivity",
+    extra_trigger: '.o_form_project_tasks',
     content: Markup(_t("Create <b>activities</b> to set yourself to-dos or to schedule meetings.")),
 }, {
     trigger: ".modal-dialog .btn-primary",
+    extra_trigger: '.o_form_project_tasks',
     content: _t("Schedule your activity once it is ready."),
     position: "bottom",
     run: "click",
