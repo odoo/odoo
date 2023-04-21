@@ -163,14 +163,14 @@
                             <label for="product_uom_qty" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/>
                             <div class="o_row" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}">
                                 <span><field name="product_uom_qty" readonly="1" nolabel="1"/></span>
-                                <span><field name="product_uom" readonly="1" nolabel="1"/></span>
+                                <span><field name="product_uom" readonly="1" nolabel="1" options="{'no_open': True}"/></span>
                             </div>
                             <label for="quantity_done"/>
                             <div class="o_row">
                                 <span><field name="quantity_done" readonly="1" nolabel="1"/></span>
                                 <span attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}"> / </span>
                                 <span><field name="reserved_availability" nolabel="1" attrs="{'invisible': ['|', ('state', '=', 'done'), ('from_immediate_transfer', '=', True)]}" /></span>
-                                <span><field name="product_uom" readonly="1" nolabel="1" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}"/></span>
+                                <span><field name="product_uom" readonly="1" nolabel="1" attrs="{'invisible': [('from_immediate_transfer', '=', True)]}" options="{'no_open': True}"/></span>
                             </div>
                             <field name="next_serial"
                                 attrs="{'invisible': [('display_assign_serial', '=', False)]}"/>
