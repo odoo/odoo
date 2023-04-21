@@ -29,25 +29,22 @@ QUnit.test(
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-        pyEnv["discuss.channel"].records = [
-            {
-                channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: partnerId }],
-                ],
-                channel_type: "chat",
-                id: partnerId,
-                uuid: "channel-10-uuid",
-            },
-        ];
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: partnerId }],
+            ],
+            channel_type: "chat",
+        });
         patchUiSize({ size: SIZES.SM });
         const { env } = await start();
 
         // simulate receiving a message
-        env.services.rpc("/mail/chat_post", {
+        env.services.rpc("/mail/message/post", {
             context: { mockedUserId: userId },
-            message_content: "hu",
-            uuid: "channel-10-uuid",
+            post_data: { body: "hu", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
         });
         await nextAnimationFrame();
         assert.containsNone($, ".o-mail-ChatWindow");
@@ -568,7 +565,6 @@ QUnit.test(
                 [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
-            uuid: "channel-10-uuid",
         });
         const messageId = pyEnv["mail.message"].create({
             body: "not empty",
@@ -583,10 +579,11 @@ QUnit.test(
         const { env } = await start();
         // simulate receiving a message
         await afterNextRender(async () =>
-            env.services.rpc("/mail/chat_post", {
+            env.services.rpc("/mail/message/post", {
                 context: { mockedUserId: userId },
-                message_content: "hu",
-                uuid: "channel-10-uuid",
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
             })
         );
         assert.containsOnce($, ".o-mail-ChatWindow");
@@ -604,21 +601,21 @@ QUnit.test(
             name: "Foreigner user",
             partner_id: partnerId,
         });
-        pyEnv["discuss.channel"].create({
+        const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
                 [0, 0, { partner_id: pyEnv.currentPartnerId }],
                 [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
-            uuid: "channel-10-uuid",
         });
         const { env } = await start();
         // simulate receiving a message
         await afterNextRender(async () =>
-            env.services.rpc("/mail/chat_post", {
+            env.services.rpc("/mail/message/post", {
                 context: { mockedUserId: userId },
-                message_content: "hu",
-                uuid: "channel-10-uuid",
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
             })
         );
         assert.containsOnce($, "hr + span:contains(New messages)");
@@ -629,23 +626,23 @@ QUnit.test("chat window should open when receiving a new DM", async (assert) => 
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({});
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: partnerId }],
         ],
         channel_type: "chat",
-        uuid: "channel-uuid",
     });
     const { env } = await start();
     // simulate receiving the first message on chat
     await afterNextRender(() =>
-        env.services.rpc("/mail/chat_post", {
+        env.services.rpc("/mail/message/post", {
             context: {
                 mockedUserId: userId,
             },
-            message_content: "new message",
-            uuid: "channel-uuid",
+            post_data: { body: "new message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
         })
     );
     assert.containsOnce($, ".o-mail-ChatWindow");
@@ -654,21 +651,21 @@ QUnit.test("chat window should open when receiving a new DM", async (assert) => 
 QUnit.test("chat window should not open when receiving a new DM from odoobot", async (assert) => {
     const pyEnv = await startServer();
     const userId = pyEnv["res.users"].create({ partner_id: pyEnv.odoobotId });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
             [0, 0, { partner_id: pyEnv.odoobotId }],
         ],
         channel_type: "chat",
-        uuid: "channel-uuid",
     });
     const { env } = await start();
     // simulate receiving new message from odoobot
     await afterNextRender(() =>
-        env.services.rpc("/mail/chat_post", {
+        env.services.rpc("/mail/message/post", {
             context: { mockedUserId: userId },
-            message_content: "new message",
-            uuid: "channel-uuid",
+            post_data: { body: "new message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
         })
     );
     assert.containsNone($, ".o-mail-ChatWindow");
@@ -712,7 +709,7 @@ QUnit.test("chat window should remain folded when new message is received", asyn
         name: "Foreigner user",
         partner_id: partnerId,
     });
-    pyEnv["discuss.channel"].create({
+    const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
             [
                 0,
@@ -726,15 +723,15 @@ QUnit.test("chat window should remain folded when new message is received", asyn
             [0, 0, { partner_id: partnerId }],
         ],
         channel_type: "chat",
-        uuid: "channel-uuid",
     });
     const { env } = await start();
     assert.hasClass($(".o-mail-ChatWindow"), "o-folded");
 
-    env.services.rpc("/mail/chat_post", {
+    env.services.rpc("/mail/message/post", {
         context: { mockedUserId: userId },
-        message_content: "New Message",
-        uuid: "channel-uuid",
+        post_data: { body: "New Message", message_type: "comment" },
+        thread_id: channelId,
+        thread_model: "discuss.channel",
     });
     await nextTick();
     assert.hasClass($(".o-mail-ChatWindow"), "o-folded");
@@ -839,7 +836,6 @@ QUnit.test(
                 [0, 0, { partner_id: partnerId }],
             ],
             channel_type: "chat",
-            uuid: "channel-10-uuid",
         });
         const messageId = pyEnv["mail.message"].create([
             {
@@ -857,10 +853,11 @@ QUnit.test(
         $(".o-mail-Composer-input")[0].blur();
         // simulate receiving a message
         await afterNextRender(() =>
-            env.services.rpc("/mail/chat_post", {
+            env.services.rpc("/mail/message/post", {
                 context: { mockedUserId: userId },
-                message_content: "hu",
-                uuid: "channel-10-uuid",
+                post_data: { body: "hu", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
             })
         );
         assert.containsOnce($, "hr + span:contains(New messages)");

@@ -29,7 +29,7 @@ QUnit.test("Notify message received out of focus", async (assert) => {
             }),
         },
     });
-    await env.services.rpc("/mail/chat_post", {
+    await env.services.rpc("/im_livechat/chat_post", {
         context: { mockedUserId: senderId },
         message_content: "Hello",
         uuid: channel.uuid,

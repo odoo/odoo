@@ -466,7 +466,7 @@ QUnit.test("Message unread counter", async (assert) => {
     const { env, openDiscuss } = await start();
     await openDiscuss();
     await afterNextRender(async () =>
-        env.services.rpc("/mail/chat_post", {
+        env.services.rpc("/im_livechat/chat_post", {
             context: { mockedUserId: userId },
             message_content: "hu",
             uuid: pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0].uuid,

@@ -308,7 +308,7 @@ Model({
                 typing: false,
             });
             const messageId = await this.messaging.rpc({
-                route: "/mail/chat_post",
+                route: "/im_livechat/chat_post",
                 params: {
                     uuid: this.messaging.publicLivechatGlobal.publicLivechat.uuid,
                     message_content: message.content,
