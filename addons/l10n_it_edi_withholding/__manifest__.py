@@ -3,9 +3,9 @@
 
 {
     'name': 'Italy - E-invoicing (Withholding)',
+    'icon': '/account/static/description/l10n.png',
     'countries': ['it'],
     'version': '0.1',
-    'icon': '/l10n_it/static/description/icon.png',
     'depends': [
         'l10n_it_edi'
     ],

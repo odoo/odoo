@@ -26,7 +26,7 @@ E-invoice implementation
         'data/ir_cron.xml',
         'views/res_config_settings_views.xml',
         'views/l10n_it_view.xml',
-        ],
+    ],
     'demo': [
         'data/account_invoice_demo.xml',
     ],
