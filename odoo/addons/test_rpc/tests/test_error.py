@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from functools import partial
+from xmlrpc.client import Fault
 
 from odoo.tests import common, tagged
 from odoo.tools.misc import mute_logger
@@ -65,3 +66,8 @@ class TestError(common.HttpCase):
             )
             self.assertIn("Model: Model A (test_rpc.model_a)", e.faultString)
             self.assertIn("Constraint: test_rpc_model_a_field_b2_fkey", e.faultString)
+
+    def test_03_sql_constraint(self):
+        with mute_logger("odoo.sql_db"):
+            with self.assertRaisesRegex(Fault, r'The operation cannot be completed: The value must be positive'):
+                self.rpc("test_rpc.model_b", "create", {"name": "B1", "value": -1})
