@@ -160,70 +160,70 @@ function executeFailingImport(field, isMultiline, field_path = "") {
         ids: false,
         messages: isMultiline
             ? [
-                {
-                    field,
-                    field_name: serverData.models.partner.fields[field].string,
-                    field_path,
-                    message: "Invalid value",
-                    moreInfo,
-                    record: 0,
-                    rows: { from: 0, to: 0 },
-                    value: "Invalid value",
-                    priority: "info",
-                },
-                {
-                    field,
-                    field_name: serverData.models.partner.fields[field].string,
-                    field_path,
-                    message: "Duplicate value",
-                    moreInfo,
-                    record: 0,
-                    rows: { from: 1, to: 1 },
-                    priority: "error",
-                },
-                {
-                    field,
-                    field_name: serverData.models.partner.fields[field].string,
-                    field_path,
-                    message: "Wrong values",
-                    moreInfo,
-                    record: 0,
-                    rows: { from: 2, to: 3 },
-                    priority: "warning",
-                },
-                {
-                    field,
-                    field_name: serverData.models.partner.fields[field].string,
-                    field_path,
-                    message: "Bad value here",
-                    moreInfo,
-                    record: 0,
-                    rows: { from: 4, to: 4 },
-                    value: "Bad value",
-                    priority: "warning",
-                },
-                {
-                    field,
-                    field_name: serverData.models.partner.fields[field].string,
-                    field_path,
-                    message: "Duplicate value",
-                    moreInfo,
-                    record: 0,
-                    rows: { from: 5, to: 5 },
-                    priority: "error",
-                },
-            ]
+                  {
+                      field,
+                      field_name: serverData.models.partner.fields[field].string,
+                      field_path,
+                      message: "Invalid value",
+                      moreInfo,
+                      record: 0,
+                      rows: { from: 0, to: 0 },
+                      value: "Invalid value",
+                      priority: "info",
+                  },
+                  {
+                      field,
+                      field_name: serverData.models.partner.fields[field].string,
+                      field_path,
+                      message: "Duplicate value",
+                      moreInfo,
+                      record: 0,
+                      rows: { from: 1, to: 1 },
+                      priority: "error",
+                  },
+                  {
+                      field,
+                      field_name: serverData.models.partner.fields[field].string,
+                      field_path,
+                      message: "Wrong values",
+                      moreInfo,
+                      record: 0,
+                      rows: { from: 2, to: 3 },
+                      priority: "warning",
+                  },
+                  {
+                      field,
+                      field_name: serverData.models.partner.fields[field].string,
+                      field_path,
+                      message: "Bad value here",
+                      moreInfo,
+                      record: 0,
+                      rows: { from: 4, to: 4 },
+                      value: "Bad value",
+                      priority: "warning",
+                  },
+                  {
+                      field,
+                      field_name: serverData.models.partner.fields[field].string,
+                      field_path,
+                      message: "Duplicate value",
+                      moreInfo,
+                      record: 0,
+                      rows: { from: 5, to: 5 },
+                      priority: "error",
+                  },
+              ]
             : [
-                {
-                    field,
-                    field_name: serverData.models.partner.fields[field].string,
-                    field_path,
-                    message: "Incorrect value",
-                    moreInfo,
-                    record: 0,
-                    rows: { from: 0, to: 0 },
-                },
-            ],
+                  {
+                      field,
+                      field_name: serverData.models.partner.fields[field].string,
+                      field_path,
+                      message: "Incorrect value",
+                      moreInfo,
+                      record: 0,
+                      rows: { from: 0, to: 0 },
+                  },
+              ],
         name: ["Some invalid content", "Wrong content", "Bad content"],
         nextrow: 0,
     };
@@ -579,7 +579,7 @@ QUnit.module("Base Import Tests", (hooks) => {
             registerFakeHTTPService();
             const notificationMock = (message) => {
                 assert.step(message);
-                return () => { };
+                return () => {};
             };
             registry
                 .category("services")
@@ -755,7 +755,6 @@ QUnit.module("Base Import Tests", (hooks) => {
             "base_import.import/execute_import": (route, args) => {
                 if (shouldFail) {
                     shouldFail = false;
-                    // return executeFailingImport(args, args[1][0]);
                     return executeFailingImport(args[1][0]);
                 }
                 assert.deepEqual(
@@ -1181,57 +1180,90 @@ QUnit.module("Base Import Tests", (hooks) => {
         );
     });
 
-    QUnit.test("Import view: relational fields correctly mapped on preview", async function (assert) {
-        assert.expect(4);
+    QUnit.test(
+        "Import view: relational fields correctly mapped on preview",
+        async function (assert) {
+            assert.expect(4);
 
-        registerFakeHTTPService();
-        await createImportAction({
-            "base_import.import/parse_preview": async (route, args) => {
-                return customParsePreview(args[1], {
-                    fields: [
-                        { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
-                        { id: "display_name", name: "display_name", string: "Display Name", fields: [], type: "id" },
-                        {
-                            id: "many2many_field", name: "many2many_field", string: "Many2Many", fields: [
-                                { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
-                            ], type: "id"
+            registerFakeHTTPService();
+            await createImportAction({
+                "base_import.import/parse_preview": async (route, args) => {
+                    return customParsePreview(args[1], {
+                        fields: [
+                            { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
+                            {
+                                id: "display_name",
+                                name: "display_name",
+                                string: "Display Name",
+                                fields: [],
+                                type: "id",
+                            },
+                            {
+                                id: "many2many_field",
+                                name: "many2many_field",
+                                string: "Many2Many",
+                                fields: [
+                                    {
+                                        id: "id",
+                                        name: "id",
+                                        string: "External ID",
+                                        fields: [],
+                                        type: "id",
+                                    },
+                                ],
+                                type: "id",
+                            },
+                        ],
+                        headers: ["id", "display_name", "many2many_field/id"],
+                        rowCount: 5,
+                        matches: {
+                            0: ["id"],
+                            1: ["display_name"],
+                            2: ["many2many_field", "id"],
                         },
-                    ],
-                    headers: ["id", "display_name", "many2many_field/id"],
-                    rowCount: 5,
-                    matches: {
-                        0: ["id"],
-                        1: ["display_name"],
-                        2: ["many2many_field", "id"]
-                    },
-                    preview: [
-                        ["0", "1", "2"],
-                        ["Name 1", "Name 2", "Name 3",],
-                        ["", "1", "2"],
-                    ],
-                });
-            },
-            "base_import.import/execute_import": (route, args) => {
-                assert.deepEqual(args[1], ["id", "display_name", "many2many_field/id"],
-                    "The proper arguments are given for the import");
-                assert.deepEqual(args[2], ["id", "display_name", "many2many_field/id"],
-                    "The proper arguments are given for the import");
-                return executeImport(args);
-            },
-        });
+                        preview: [
+                            ["0", "1", "2"],
+                            ["Name 1", "Name 2", "Name 3"],
+                            ["", "1", "2"],
+                        ],
+                    });
+                },
+                "base_import.import/execute_import": (route, args) => {
+                    assert.deepEqual(
+                        args[1],
+                        ["id", "display_name", "many2many_field/id"],
+                        "The proper arguments are given for the import"
+                    );
+                    assert.deepEqual(
+                        args[2],
+                        ["id", "display_name", "many2many_field/id"],
+                        "The proper arguments are given for the import"
+                    );
+                    return executeImport(args);
+                },
+            });
 
-        // Set and trigger the change of a file for the input
-        const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
-        await editInput(target, "input[type='file']", file);
+            // Set and trigger the change of a file for the input
+            const file = new File(["fake_file"], "fake_file.xls", { type: "text/plain" });
+            await editInput(target, "input[type='file']", file);
 
-        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_import_file_column_cell span.text-truncate").innerText, "many2many_field/id",
-            "The third row should be the relational field");
+            assert.strictEqual(
+                target.querySelector(
+                    "tr:nth-child(3) .o_import_file_column_cell span.text-truncate"
+                ).innerText,
+                "many2many_field/id",
+                "The third row should be the relational field"
+            );
 
-        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_select_menu_toggler_slot span").innerText, "Many2Many / External ID",
-            "The relational field should be selected by default and the name should be the full path.");
+            assert.strictEqual(
+                target.querySelector("tr:nth-child(3) .o_select_menu_toggler_slot span").innerText,
+                "Many2Many / External ID",
+                "The relational field should be selected by default and the name should be the full path."
+            );
 
-        await click(target.querySelector(".o_control_panel button:first-child"));
-    });
+            await click(target.querySelector(".o_control_panel button:first-child"));
+        }
+    );
 
     QUnit.test("Import view: import errors with relational fields", async function (assert) {
         registerFakeHTTPService();
@@ -1244,11 +1276,27 @@ QUnit.module("Base Import Tests", (hooks) => {
                 return customParsePreview(args[1], {
                     fields: [
                         { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
-                        { id: "display_name", name: "display_name", string: "Display Name", fields: [], type: "id" },
                         {
-                            id: "many2many_field", name: "many2many_field", string: "Many2Many", fields: [
-                                { id: "id", name: "id", string: "External ID", fields: [], type: "id" },
-                            ], type: "id"
+                            id: "display_name",
+                            name: "display_name",
+                            string: "Display Name",
+                            fields: [],
+                            type: "id",
+                        },
+                        {
+                            id: "many2many_field",
+                            name: "many2many_field",
+                            string: "Many2Many",
+                            fields: [
+                                {
+                                    id: "id",
+                                    name: "id",
+                                    string: "External ID",
+                                    fields: [],
+                                    type: "id",
+                                },
+                            ],
+                            type: "id",
                         },
                     ],
                     headers: ["id", "display_name", "many2many_field/id"],
@@ -1256,11 +1304,11 @@ QUnit.module("Base Import Tests", (hooks) => {
                     matches: {
                         0: ["id"],
                         1: ["display_name"],
-                        2: ["many2many_field", "id"]
+                        2: ["many2many_field", "id"],
                     },
                     preview: [
                         ["0", "1", "2"],
-                        ["Name 1", "Name 2", "Name 3",],
+                        ["Name 1", "Name 2", "Name 3"],
                         ["", "1", "2"],
                     ],
                 });
@@ -1283,17 +1331,30 @@ QUnit.module("Base Import Tests", (hooks) => {
             "A message is shown if the import was blocked"
         );
 
-        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_import_file_column_cell span.text-truncate").innerText, "many2many_field/id",
-            "The third row should be the relational field");
+        assert.strictEqual(
+            target.querySelector("tr:nth-child(3) .o_import_file_column_cell span.text-truncate")
+                .innerText,
+            "many2many_field/id",
+            "The third row should be the relational field"
+        );
 
-        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_select_menu_toggler_slot span").innerText, "Many2Many / External ID",
-            "The relational field is properly mapped");
+        assert.strictEqual(
+            target.querySelector("tr:nth-child(3) .o_select_menu_toggler_slot span").innerText,
+            "Many2Many / External ID",
+            "The relational field is properly mapped"
+        );
 
-        assert.containsOnce(target, "tr:nth-child(3) .o_import_report.alert",
-            "The relational field should have error messages on his row");
+        assert.containsOnce(
+            target,
+            "tr:nth-child(3) .o_import_report.alert",
+            "The relational field should have error messages on his row"
+        );
 
-        assert.strictEqual(target.querySelector("tr:nth-child(3) .o_import_report.alert p b").innerText, "Many2Many / External ID",
-            "The error should contain the full path of the relational field");
+        assert.strictEqual(
+            target.querySelector("tr:nth-child(3) .o_import_report.alert p b").innerText,
+            "Many2Many / External ID",
+            "The error should contain the full path of the relational field"
+        );
     });
 
     QUnit.test("Import view: date format should be converted to strftime", async function (assert) {
@@ -1339,5 +1400,32 @@ QUnit.module("Base Import Tests", (hooks) => {
         await editSelect(target, ".o_import_date_format[name='date_format-3']", "YYYYMMDD");
         await click(target.querySelector(".o_control_panel button:first-child"));
         assert.verifySteps(["execute_import"]);
+    });
+
+    QUnit.test("Import action: field selection has a clear button", async function (assert) {
+        registerFakeHTTPService();
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        await createImportAction();
+
+        // Set and trigger the change of a file for the input
+        const file = new File(["fake_file"], "fake_file.xlsx", { type: "text/plain" });
+        await editInput(target, "input[type='file']", file);
+        await editSelectMenu(target, ".o_import_data_content .o_select_menu", "Bar");
+        assert.containsN(
+            target,
+            ".o_select_menu_toggler_clear",
+            2,
+            "clear button is present for each field to unselect it"
+        );
+
+        await click(target.querySelector(".o_select_menu_toggler_clear"));
+        assert.strictEqual(
+            target.querySelector("tr:nth-child(2) .o_select_menu").textContent,
+            "To import, select a field...",
+            "field has been unselected"
+        );
     });
 });

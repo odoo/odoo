@@ -4,7 +4,6 @@ import { Component, useState, useRef, onWillUpdateProps } from "@odoo/owl";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { _lt } from "@web/core/l10n/translation";
-import { shallowEqual } from "@web/core/utils/objects";
 import { useDebounced } from "@web/core/utils/timing";
 import { scrollTo } from "@web/core/utils/scrolling";
 import { fuzzyLookup } from "@web/core/utils/search";
@@ -172,12 +171,7 @@ export class SelectMenu extends Component {
     getSelectedChoice(props) {
         if (props.value) {
             const choices = [...props.choices, ...props.groups.flatMap((g) => g.choices)];
-            return choices.find((c) => {
-                if (typeof c.value === "object" && typeof props.value === "object") {
-                    return shallowEqual(c.value, props.value);
-                }
-                return c.value === props.value;
-            });
+            return choices.find((c) => c.value === props.value);
         } else {
             return undefined;
         }
