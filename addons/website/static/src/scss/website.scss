@@ -1041,7 +1041,6 @@ $-transition-duration: 200ms;
     }
 }
 
-$-off-canvas-hamburger: o-website-value('hamburger-type') == 'off-canvas';
 $-hamburger-left: o-website-value('hamburger-position') == 'left';
 $-hamburger-center: o-website-value('hamburger-position') == 'center';
 $-hamburger-right: o-website-value('hamburger-position') == 'right';
@@ -1107,20 +1106,6 @@ header {
         flex-direction: inherit;
     }
 
-    .collapsing, .show {
-        #top_menu {
-            @if $-hamburger-center {
-                @if not $-off-canvas-hamburger and not o-website-value('header-template') == 'magazine' {
-                    padding-top: 15vh;
-                    padding-bottom: 15vh;
-                }
-                text-align: center !important;
-            } @else if $-hamburger-right {
-                text-align: right;
-            }
-        }
-    }
-
     @include media-breakpoint-up(md) {
         // Allow to center the logo, ignoring the toggler space
         .o_navbar_toggler_container {
@@ -1140,158 +1125,6 @@ header {
     // Prevent the color of the header to impact the color of the nav.
     &.o_header_is_scrolled, &.o_transitioning.o_header_affixed {
         background-color: transparent !important;
-    }
-}
-
-@if $-off-canvas-hamburger {
-    #top_menu_collapse {
-
-        &.collapsing, &.show {
-            @include o-position-absolute(0, 0, 0, 0);
-            position: fixed;
-            z-index: $zindex-sticky;
-            height: 100vh;
-            max-height: 100vh;
-            transition: none;
-            transform: none;
-
-            @if o-website-value('header-template') == 'magazine' {
-                @include media-breakpoint-up(lg) {
-                    position: fixed;
-                }
-                #top_menu {
-                    align-items: normal !important;
-                }
-            }
-
-            &, & > .o_header_collapsed_content_wrapper {
-                // TODO improve: ugly code to reset a potential wrapper
-                display: flex !important;
-                flex-flow: if($-hamburger-left, row, row-reverse) nowrap !important;
-                align-items: stretch !important;
-                justify-content: flex-start !important;
-            }
-            > .o_header_collapsed_content_wrapper {
-                // TODO improve: ugly code to reset a potential wrapper
-                max-width: none !important;
-                padding: 0 !important;
-                margin: 0 !important;
-            }
-
-            .o_offcanvas_menu_backdrop {
-                @include o-position-absolute(0, 0, 0, 0);
-                opacity: .2;
-                cursor: pointer;
-            }
-
-            #top_menu {
-                flex: 0 0 auto !important;
-                overflow: auto;
-                flex-flow: column nowrap !important;
-                @if $-hamburger-center {
-                    width: 100%;
-                    max-width: none;
-                    text-align: center !important;
-                } @else {
-                    max-width: 560px;
-                    text-align: left !important;
-                    // Prevent #top_menu from overflowing the page below the
-                    // maximum width. (e.g. if contains an inline language
-                    // switcher with many elements.)
-                    @media (max-width: 560px) {
-                        max-width: 100%;
-                    }
-                }
-                min-width: 250px;
-                margin: 0 !important;
-                background-color: o-color('menu-custom') or o-color('menu');
-                @include o-add-gradient('menu-gradient');
-                transition: transform $-transition-duration cubic-bezier(.694, .0482, .335, 1);
-
-                @if $-hamburger-center {
-                    .o_offcanvas_menu_backdrop {
-                        display: none;
-                    }
-                    .o_offcanvas_menu_toggler {
-                        max-width: 90%;
-                    }
-                }
-
-                .nav-item, .o_offcanvas_logo {
-                    padding-left: $grid-gutter-width;
-                    padding-right: $grid-gutter-width;
-                }
-                .nav-item, .dropdown-menu {
-                    text-align: inherit;
-                }
-                .nav-item, .nav-link {
-                    margin: 0 !important;
-                }
-
-                .navbar-toggler {
-                    display: block !important;
-                }
-
-                // Open all dropdowns
-                .dropdown-toggle {
-                    padding-bottom: $nav-link-padding-y*0.5;
-
-                    &:after {
-                        content: none;
-                    }
-                }
-                .dropdown-menu {
-                    display: block;
-                    padding-top:0;
-                    border: 0;
-                    background: inherit;
-                    color: inherit;
-                }
-                .dropdown-item {
-                    padding-left: .5em;
-                    padding-right: .5em;
-                }
-                .js_language_selector .dropdown-toggle {
-                    // Hide the language switcher button because it does not
-                    // make sense to show it if the dropdown is always open.
-                    display: none;
-                }
-            }
-            @if o-website-value('header-template') == 'vertical' {
-                .oe_structure_solo {
-                    // Hide the "oe_structure_solo" because it is outside the
-                    // menu when the off-canvas menu is open.
-                    display: none;
-                }
-                #top_menu {
-                    // This is useful because otherwise, the 'order-first' class
-                    // of the 'template_header_vertical' template puts the menu
-                    // behind the "backdrop" and it's no longer possible to
-                    // click on the menu links (only on Firefox).
-                    order: unset !important;
-                }
-            }
-        }
-        &.collapsing #top_menu {
-            @if $-hamburger-center {
-                transform: translateY(-100%);
-            } @else if $-hamburger-left {
-                transform: translateX(-100%);
-            } @else if $-hamburger-right {
-                transform: translateX(100%);
-            }
-        }
-        &.show #top_menu {
-            transform: translate(0);
-        }
-
-        .o_offcanvas_menu_backdrop {
-            @if $-hamburger-left {
-                background-image: linear-gradient(90deg, currentColor 20%, transparent);
-            } @else {
-                background-image: linear-gradient(-90deg, currentColor 20%, transparent);
-            }
-        }
     }
 }
 
@@ -1382,33 +1215,31 @@ header {
         }
     }
 } @else if o-website-value('header-template') == 'hamburger-full' {
-    @if not $-off-canvas-hamburger {
-        @include media-breakpoint-up(md) {
-            #wrapwrap {
-                $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
-                > header {
-                    .navbar-collapse {
-                        max-height: unset;
+    @include media-breakpoint-up(md) {
+        #wrapwrap {
+            $o-hamburger-full-navbar-height: $o-theme-navbar-logo-height + ($navbar-padding-y * 2);
+            > header {
+                .navbar-collapse {
+                    max-height: unset;
 
-                        > .container {
-                            height: calc(100vh - #{$o-hamburger-full-navbar-height});
-                            transition: height .3s ease;
-                        }
-                        .nav-link {
-                            padding-right: $nav-link-padding-x;
-                            padding-left: $nav-link-padding-x;
-                        }
-                        .dropdown-menu {
-                            position: absolute;
-                        }
+                    > .container {
+                        height: calc(100vh - #{$o-hamburger-full-navbar-height});
+                        transition: height .3s ease;
+                    }
+                    .nav-link {
+                        padding-right: $nav-link-padding-x;
+                        padding-left: $nav-link-padding-x;
+                    }
+                    .dropdown-menu {
+                        position: absolute;
                     }
                 }
             }
         }
-        @include media-breakpoint-up(lg) {
-            #wrapwrap > header #top_menu {
-                align-items: center !important;
-            }
+    }
+    @include media-breakpoint-up(lg) {
+        #wrapwrap > header #top_menu {
+            align-items: center !important;
         }
     }
 }

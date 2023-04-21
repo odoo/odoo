@@ -31,6 +31,16 @@
         </xpath>
     </template>
 
+    <template id="template_header_mobile" inherit_id="website.template_header_mobile">
+        <xpath expr="//ul[hasclass('o_header_mobile_buttons_wrap')]//li" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_link_class" t-value="'o_navlink_background_hover btn position-relative rounded-circle border-0 p-1 text-reset'"/>
+                <t t-set="_badge_class" t-value="'position-absolute top-0 end-0 mt-n1 me-n1 rounded-pill'"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="template_header_default" inherit_id="website.template_header_default">
         <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
             <t t-call="website_sale.header_cart_link">
