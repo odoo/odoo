@@ -167,11 +167,11 @@
     <record id="mailing_sms_1_trace_3" model="mailing.trace">
         <field name="mass_mailing_id" ref="mailing_sms_1"/>
         <field name="trace_type">sms</field>
-        <field name="sms_number">+32456001133</field>
+        <field name="sms_number"></field>
         <field name="model">mailing.contact</field>
         <field name="res_id" ref="mass_mailing_sms.mailing_contact_0_3"/>
         <field name="trace_status">error</field>
-        <field name="failure_type">sms_credit</field>
+        <field name="failure_type">sms_number_missing</field>
     </record>
     <record id="mailing_sms_1_trace_4" model="mailing.trace">
         <field name="mass_mailing_id" ref="mailing_sms_1"/>
