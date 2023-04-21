@@ -5,6 +5,7 @@ const { MediaDialogWrapper } = require('@web_editor/components/media_dialog/medi
 const { ComponentWrapper } = require('web.OwlCompatibility');
 var core = require('web.core');
 var options = require('web_editor.snippets.options');
+const wUtils = require('website.utils');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -197,22 +198,26 @@ options.registry.gallery = options.Class.extend({
 
         // Dispatch images in columns by always putting the next one in the
         // smallest-height column
-        while (imgs.length) {
-            var min = Infinity;
-            var $lowest;
-            _.each(cols, function (col) {
-                var $col = $(col);
-                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
-                if (height < min) {
-                    min = height;
-                    $lowest = $col;
-                }
-            });
-            // Only on Chrome: appended images are sometimes invisible and not
-            // correctly loaded from cache, we use a clone of the image to force
-            // the loading.
-            $lowest.append(imgs.shift().cloneNode());
-        }
+        this.lastModeUpdate = new Promise(async resolve => {
+            for (const img of imgs) {
+                let min = Infinity;
+                let $lowest;
+                _.each(cols, function (col) {
+                    var $col = $(col);
+                    var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
+                    if (height < min) {
+                        min = height;
+                        $lowest = $col;
+                    }
+                });
+                // Only on Chrome: appended images are sometimes invisible and not
+                // correctly loaded from cache, we use a clone of the image to force
+                // the loading.
+                $lowest.append(img.cloneNode());
+                await wUtils.onceAllImagesLoaded(this.$target);
+            }
+            resolve();
+        });
     },
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
@@ -360,10 +365,17 @@ options.registry.gallery = options.Class.extend({
                 });
                 $carousel.addClass('slide');
             } else {
-                this.trigger_up('activate_snippet', {
-                    $snippet: data.$image,
-                    ifInactiveOptions: true,
-                });
+                // Wait for snippet_option_update to be completed.
+                this.trigger_up('snippet_edition_request', {exec: () => {
+                    // Wait for images which might have been cloned.
+                    (this.lastModeUpdate || Promise.resolve()).then(() => {
+                        const imageEl = this.$target[0].querySelector(`[data-index='${position}']`);
+                        this.trigger_up('activate_snippet', {
+                            $snippet: $(imageEl),
+                            ifInactiveOptions: true,
+                        });
+                    });
+                }});
             }
         }
     },
