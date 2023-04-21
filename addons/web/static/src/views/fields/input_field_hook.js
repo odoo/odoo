@@ -150,9 +150,10 @@ export function useInputField(params) {
             }
 
             if ((val || false) !== (component.props.record.data[component.props.name] || false)) {
+                const nextValue = inputRef.el.value;
                 await component.props.record.update({ [component.props.name]: val });
-                lastSetValue = inputRef.el.value;
-                component.props.record.model.bus.trigger("FIELD_IS_DIRTY", isDirty);
+                component.props.record.model.bus.trigger("FIELD_IS_DIRTY", false);
+                lastSetValue = nextValue;
             }
         }
     }
