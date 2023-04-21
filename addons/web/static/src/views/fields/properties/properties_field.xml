@@ -31,7 +31,7 @@
                             <PropertyValue
                                 id="domId"
                                 canChangeDefinition="state.canChangeDefinition"
-                                checkDefinitionWriteAccess.bind="checkDefinitionWriteAccess"
+                                checkDefinitionWriteAccess.bind="checkDefinitionWriteAccess ? checkDefinitionWriteAccess : () => {}"
                                 comodel="propertyConfiguration.comodel || ''"
                                 context="props.context"
                                 domain="propertyConfiguration.domain || '[]'"
