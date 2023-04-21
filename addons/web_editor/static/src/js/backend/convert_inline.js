@@ -1,7 +1,7 @@
 /** @odoo-module alias=web_editor.convertInline */
 'use strict';
 
-import { isBlock, rgbToHex } from '../editor/odoo-editor/src/utils/utils';
+import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from '../editor/odoo-editor/src/utils/utils';
 
 /* global html2canvas */
 
@@ -461,38 +461,62 @@ function classToStyle($editable, cssRules) {
  * @param {Element} editable
  */
 function enforceTablesResponsivity(editable) {
-    for (const tr of editable.querySelectorAll('tr')) {
-        tr.style.setProperty('width', '100%');
-    }
-    for (const td of editable.querySelectorAll('td[colspan]')) {
-        const colspan = +td.getAttribute('colspan');
-        const tdSiblings = [...td.parentElement.children].filter(child => child.nodeName === 'TD');
-        if ( // Don't allow little duos of columns to wrap (eg., col-2 col-10).
-            colspan > 2 && colspan < 10 || tdSiblings.length > 2
-            || tdSiblings.some(td => [...td.children].some(child => child.style.width === '100%')) // Unless they have a full width child.
-           ) {
-            td.setAttribute('width', '100%');
-            td.style.setProperty('width', '100%');
-            td.style.setProperty('display', 'inline-block'); // Allow cells to wrap.
-        } else if (td.getAttribute('width') === '100%') {
-            if (td.children.length === 1 && td.firstElementChild.nodeName === 'IMG') {
-                const width = td.firstElementChild.getAttribute('width');
-                td.setAttribute('width', width);
-                td.style.removeProperty('width');
-                td.style.setProperty('min-width', width + 'px');
+    // Trying this: https://www.litmus.com/blog/mobile-responsive-email-stacking/
+    const trs = [...editable.querySelectorAll('.o_mail_wrapper tr')]
+        .filter(tr => [...tr.children].some(td => td.classList.contains('o_converted_col')))
+        .reverse();
+    for (const tr of trs) {
+        const commonTable = _createTable();
+        commonTable.style.height = '100%';
+        const commonTr = document.createElement('tr');
+        const commonTd = document.createElement('td');
+        commonTr.appendChild(commonTd);
+        commonTable.appendChild(commonTr);
+        const tds = [...tr.children].filter(child => child.nodeName === 'TD');
+        let index = 0;
+        for (const td of tds) {
+            const width = td.style.maxWidth;
+            const div = document.createElement('div');
+            div.style.display = 'inline-block';
+            div.style.verticalAlign = 'top';
+            div.classList.toggle('o_stacking_wrapper', true);
+            commonTd.appendChild(div);
+            const newTable = _createTable();
+            newTable.style.width = width;
+            newTable.classList.toggle('o_stacking_wrapper', true);
+            div.appendChild(newTable);
+            const newTr = document.createElement('tr');
+            newTable.appendChild(newTr);
+            newTr.appendChild(td);
+            td.style.width = '100%';
+            td.removeAttribute('width');
+            if (index === 0) {
+                div.before(_createMso(`
+                    <table cellpadding="0" cellspacing="0" border="0" role="presentation" style="width: 100%;">
+                        <tr>
+                            <td valign="top" style="width: ${width};">`));
             } else {
-                td.removeAttribute('width');
-                td.style.removeProperty('width');
+                div.before(_createMso(`</td><td valign="top" style="width: ${width};">`));
             }
+            if (index === tds.length - 1) {
+                div.after(_createMso(`</td></tr></table>`));
+            }
+            index++;
         }
+        const topTd = document.createElement('td');
+        topTd.appendChild(commonTable);
+        tr.prepend(topTd);
     }
-    // Masonry has crazy nested tables that require some extra treatment.
+}
+// Masonry has crazy nested tables that require some extra treatment.
+function handleMasonry(editable) {
     const masonryTrs = editable.querySelectorAll('.s_masonry_block tr');
     for (const tr of masonryTrs) {
         const height = _getHeight(tr);
         const tds = [...tr.children].filter(child => child.nodeName === 'TD');
         const tdsWithTable = tds.filter(td => [...td.children].some(child => child.nodeName === 'TABLE'));
         if (tdsWithTable.length) {
+            // TODO: this seems a duplicate of the other o_desktop_h100 set below.
             // Set the cells' heights to fill their parents.
             for (const tdWithTable of tdsWithTable) {
                 tdWithTable.classList.toggle('o_desktop_h100', true);
@@ -512,6 +536,7 @@ function enforceTablesResponsivity(editable) {
     }
     for (const tr of masonryTrs) {
         const height = tr.style.height.includes('px') ? parseFloat(tr.style.height.replace('px', '').trim()) : _getHeight(tr);
+        tr.closest('table').classList.toggle('o_desktop_h100', true);
         tr.classList.toggle('o_desktop_h100', true);
         for (const td of [...tr.children].filter(child => child.nodeName === 'TD')) {
             td.classList.toggle('o_desktop_h100', true);
@@ -521,10 +546,21 @@ function enforceTablesResponsivity(editable) {
                 // Hack that makes vertical-align possible within an inline-block.
                 const wrapper = document.createElement('div');
                 wrapper.style.setProperty('display', 'inline-block');
-                for (const child of [...td.childNodes]) {
+                wrapper.style.setProperty('width', '100%');
+                // Transfer color to wrapper for Outlook on MacOS/iOS.
+                const tdStyle = getComputedStyle(td);
+                wrapper.style.setProperty('color', tdStyle.color);
+                const firstNonCommentChild = [...td.childNodes].find(child => child.nodeType !== Node.COMMENT_NODE);
+                let anchor;
+                if (firstNonCommentChild) {
+                    anchor = getAdjacentPreviousSiblings(firstNonCommentChild)
+                        .filter(sib => sib.nodeType !== Node.TEXT_NODE)
+                        .shift();
+                }
+                for (const child of [...td.childNodes].filter(child => child.nodeType !== Node.COMMENT_NODE)) {
                     wrapper.append(child);
                 }
-                td.append(wrapper);
+                anchor ? anchor.after(wrapper) : td.append(wrapper);
                 const centeringSpan = document.createElement('span');
                 centeringSpan.style.setProperty('height', '100%');
                 centeringSpan.style.setProperty('display', 'inline-block');
@@ -534,9 +570,16 @@ function enforceTablesResponsivity(editable) {
                 if (td.style.height.includes('%')) {
                     const newHeight = height * parseFloat(td.style.height.replace('%').trim()) / 100;
                     td.style.setProperty('height', newHeight + 'px');
+                    // Spread height down for responsivity
+                    td.style.setProperty('max-height', newHeight + 'px');
+                    wrapper.style.setProperty('max-height', newHeight + 'px');
+                    if (wrapper.childElementCount === 1 && wrapper.firstElementChild.nodeName === 'IMG' && wrapper.firstElementChild.style.height === '100%') {
+                        wrapper.firstElementChild.style.setProperty('max-height', newHeight + 'px');
+                    }
                 }
             }
         }
+    }
 }
 /**
  * Modify the styles of images so they are responsive.
@@ -626,6 +669,7 @@ async function toInline($editable, cssRules, $iframe) {
     cardToTable(editable);
     listGroupToTable(editable);
     addTables($editable);
+    handleMasonry(editable);
     normalizeColors($editable);
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
@@ -644,6 +688,8 @@ async function toInline($editable, cssRules, $iframe) {
 
     // Styles were applied inline, we don't need a style element anymore.
     $editable.find('style').remove();
+
+    editable.querySelectorAll('.o_converted_col').forEach(node => node.classList.remove('o_converted_col'));
 
     for (const [node, displayValue] of displaysToRestore) {
         node.style.setProperty('display', displayValue);
@@ -871,8 +917,9 @@ function formatTables($editable) {
         } else if (alignItems === 'flex-end' || alignItems === 'baseline') {
             row.style.verticalAlign = 'bottom';
         } else if (alignItems === 'stretch') {
-            const columns = [...row.children].filter(child => child.nodeName === 'TD');
-            const biggestHeight = Math.max(...columns.map(column => column.clientHeight));
+            const columns = [...row.querySelectorAll('td.o_converted_col')];
+            const commonAncestor = commonParentGet(columns[0], columns[1]);
+            const biggestHeight = commonAncestor.clientHeight;
             for (const column of columns) {
                 column.style.height = biggestHeight + 'px';
             }
@@ -1047,7 +1094,7 @@ function normalizeRem($editable, rootFontSize=16) {
  */
  function responsiveToStaticForOutlook(editable) {
     // Replace the responsive tables with static ones for Outlook
-    for (const td of editable.querySelectorAll('td')) {
+    for (const td of editable.querySelectorAll('td.o_converted_col:not(.mso-hide)')) {
         const tdStyle = td.getAttribute('style') || '';
         const msoAttributes = [...td.attributes].filter(attr => attr.name !== 'style' && attr.name !== 'width');
         const msoWidth = td.style.getPropertyValue('max-width');
@@ -1061,6 +1108,9 @@ function normalizeRem($editable, rootFontSize=16) {
             outlookTd.setAttribute('style', `${msoStyles}width: ${msoWidth};`);
         } else {
             outlookTd.setAttribute('style', msoStyles);
+        }
+        if (td.closest('.s_masonry_block')) {
+            outlookTd.style.padding = 0; // Not sure why this is needed.
         }
         // The opening tag of `outlookTd` is for Outlook.
         td.before(_createMso(outlookTd.outerHTML.replace('</td>', '')));
@@ -1122,6 +1172,7 @@ function _applyColspan(element, colspan, tableWidth) {
     // Round to 2 decimal places.
     const width = Math.round(tableWidth * widthPercentage * 100) / 100;
     element.style.setProperty('max-width', width + 'px');
+    element.classList.toggle('o_converted_col', true);
 }
 /**
  * Take a selector and return its specificity according to the w3 specification.

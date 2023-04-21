@@ -16,6 +16,14 @@ QUnit.module('convert_inline', {}, function () {
             this.testConvertGrid = ({ before, after, title, stepFunction }) => {
                 this.editable.innerHTML = before;
                 (stepFunction || convertInline.bootstrapToTable)(this.editable);
+                // Remove class that is added by `bootstrapToTable` for use in
+                // further methods of `toInline`, and removed at the end of it.
+                this.editable.querySelectorAll('.o_converted_col').forEach(node => {
+                    node.classList.remove('o_converted_col');
+                    if (!node.classList.length) {
+                        node.removeAttribute('class');
+                    }
+                });
                 assert.strictEqual(removeComments(this.editable.innerHTML), after, title);
             }
         }
