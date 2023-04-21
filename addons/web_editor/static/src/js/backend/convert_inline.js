@@ -421,20 +421,19 @@ function classToStyle($editable, cssRules) {
         // Outlook
         if (node.nodeName === 'A' && node.classList.contains('btn') && !node.classList.contains('btn-link') && !node.children.length) {
             writes.push(() => {
-                node.before(document.createComment(`[if mso]>
-                    <table align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-radius: 6px; border-collapse: separate !important;">
+                node.before(_createMso(`<table align="center" border="0"
+                    role="presentation" cellpadding="0" cellspacing="0"
+                    style="border-radius: 6px; border-collapse: separate !important;">
                         <tbody>
                             <tr>
                                 <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '').replaceAll('"', '&quot;')}" ${
                                     node.parentElement.style.textAlign === 'center' ? 'align="center" ' : ''
                                 }bgcolor="${rgbToHex(node.style.backgroundColor)}">
-                <![endif]`));
-                node.after(document.createComment(`[if mso]>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                <![endif]`));
+                    `));
+                node.after(_createMso(`</td>
+                        </tr>
+                    </tbody>
+                </table>`));
             });
         } else if (node.nodeName === 'IMG' && node.classList.contains('mx-auto') && node.classList.contains('d-block')) {
             writes.push(() => { _wrap(node, 'p', 'o_outlook_hack', 'text-align:center;margin:0'); });
@@ -528,10 +527,8 @@ function enforceImagesResponsivity(editable) {
     // Remove the height attribute in card images so they can resize
     // responsively, but leave it for Outlook.
     for (const image of editable.querySelectorAll('img[width="100%"][height]')) {
-        image.before(document.createComment(`[if mso]>${image.outerHTML}<![endif]`))
+        image.before(_createMso(image.outerHTML));
         image.classList.toggle('mso-hide', true);
-        image.before(document.createComment('[if !mso]><!'));
-        image.after(document.createComment('<![endif]'));
         image.removeAttribute('height');
     }
 }
@@ -614,10 +611,7 @@ async function toInline($editable, cssRules, $iframe) {
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
 
     // Hide replaced cells on Outlook
-    for (const toHide of editable.querySelectorAll('.mso-hide')) {
-        const style = toHide.getAttribute('style') || '';
-        toHide.setAttribute('style', `${style} mso-hide: all;`.trim());
-    }
+    editable.querySelectorAll('.mso-hide').forEach(_hideForOutlook);
 
     // Styles were applied inline, we don't need a style element anymore.
     $editable.find('style').remove();
@@ -1039,10 +1033,9 @@ function normalizeRem($editable, rootFontSize=16) {
             outlookTd.setAttribute('style', msoStyles);
         }
         // The opening tag of `outlookTd` is for Outlook.
-        td.before(document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`));
+        td.before(_createMso(outlookTd.outerHTML.replace('</td>', '')));
         // The opening tag of `td` is for the others.
-        td.before(document.createComment('[if !mso]><!'));
-        td.prepend(document.createComment('<![endif]'));
+        _hideForOutlook(td, 'opening');
     }
 }
 /**
@@ -1141,6 +1134,15 @@ function _computeStyleAndSpecificityOnRules(cssRules) {
  */
 function _createColumnGrid() {
     return new Array(12).fill().map(() => document.createElement('td'));
+}
+/**
+ * Return a comment element with the given content, wrapped in an mso condition.
+ *
+ * @param {string} content
+ * @returns {Comment}
+ */
+function _createMso(content='') {
+    return document.createComment(`[if mso]>${content}<![endif]`)
 }
 /**
  * Return a table element, with its default styles and attributes, as well as
@@ -1346,6 +1348,20 @@ function _getWidth(element) {
  */
 function _getHeight(element) {
     return parseFloat(getComputedStyle(element).height.replace('px', '')) || 0;
+}
+/**
+ * Hides the given node (or just its opening/closing tag) for Outlook with mso
+ * conditional comments and, if needed, mso hide style.
+ *
+ * @param {Node} node
+ * @param {false|'opening'|'closing'} [onlyHideTag=false]
+ */
+function _hideForOutlook(node, onlyHideTag = false) {
+    if (!onlyHideTag) {
+        node.setAttribute('style', `${node.getAttribute('style') || ''} mso-hide: all;`.trim());
+    }
+    node[onlyHideTag === 'closing' ? 'append' : 'before'](document.createComment('[if !mso]><!'));
+    node[onlyHideTag === 'opening' ? 'prepend' : 'after'](document.createComment('<![endif]'));
 }
 /**
  * Return true if the given element is hidden.
