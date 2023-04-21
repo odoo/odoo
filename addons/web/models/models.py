@@ -185,7 +185,7 @@ class Base(models.AbstractModel):
         elif limit and len(groups) == limit:
             length = limit + len(self._read_group(
                 domain,
-                groupby=groupby if not lazy else groupby[0],
+                groupby=groupby if not lazy else [groupby[0]],
                 offset=limit,
                 order=orderby,
             ))
