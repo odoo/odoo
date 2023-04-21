@@ -599,13 +599,13 @@
                                 <div class="o_kanban_record_bottom" t-if="!selection_mode">
                                     <div class="oe_kanban_bottom_left" t-att-class="record.is_closed.raw_value ? 'opacity-50' : ''">
                                         <field name="priority" widget="priority" style="margin-right: 5px;"/>
-                                        <field name="activity_ids" widget="kanban_activity" style="padding-top: 1.5px;"/>
+                                        <field name="activity_ids" widget="kanban_activity" style="padding-top: 1.5px; margin-right: 2px"/>
                                         <b t-if="record.rating_active.raw_value and record.rating_count.raw_value &gt; 0" groups="project.group_project_rating">
                                             <span class="fa fa-fw fa-smile-o text-success rating_face" t-if="record.rating_avg.raw_value &gt;= 3.66" title="Average Rating: Satisfied" role="img" aria-label="Happy face"/>
                                             <span class="fa fa-fw fa-meh-o text-warning rating_face" t-elif="record.rating_avg.raw_value &gt;= 2.33" title="Average Rating: Okay" role="img" aria-label="Neutral face"/>
                                             <span class="fa fa-fw fa-frown-o text-danger rating_face" t-else="" title="Average Rating: Dissatisfied" role="img" aria-label="Sad face"/>
                                         </b>
-                                        <a t-if="!record.project_id.raw_value" class="text-muted" style="font-size: 17px; padding-top: 1.5px;">
+                                        <a t-if="!record.project_id.raw_value" class="text-muted" style="font-size: 17px; padding-top: 1.5px; margin-left: 1.5px">
                                             <i title="Private Task" class="fa fa-lock"/>
                                         </a>
                                         <t t-if="!record.is_private.raw_value and record.subtask_count.raw_value">
