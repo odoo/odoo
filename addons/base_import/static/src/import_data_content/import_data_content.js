@@ -46,7 +46,7 @@ export class ImportDataContent extends Component {
     makeChoices(fields) {
         return fields.map((field) => ({
             label: field.label,
-            value: field,
+            value: field.id,
         }));
     }
 
