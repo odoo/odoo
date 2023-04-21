@@ -211,3 +211,11 @@ class LivechatController(http.Controller):
         discuss_channel = request.env['discuss.channel'].sudo().search([('uuid', '=', uuid)])
         if discuss_channel:
             discuss_channel._close_livechat_session()
+
+    @http.route(['/im_livechat/chat_history'], type="json", auth="public", cors="*")
+    def im_livechat_chat_history(self, uuid, last_id=False, limit=20):
+        channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
+        if not channel:
+            return []
+        else:
+            return channel._channel_fetch_message(last_id, limit)

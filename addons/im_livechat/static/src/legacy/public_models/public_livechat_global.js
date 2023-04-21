@@ -52,7 +52,7 @@ Model({
             const cookie = JSON.parse(strCookie || "{}");
             if (cookie.id) {
                 const history = await this.messaging.rpc({
-                    route: "/mail/chat_history",
+                    route: "/im_livechat/chat_history",
                     params: { uuid: cookie.uuid, limit: 100 },
                 });
                 history.reverse();
