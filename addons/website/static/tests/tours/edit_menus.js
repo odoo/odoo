@@ -251,6 +251,11 @@ wTourUtils.registerWebsitePreviewTour('edit_menus', {
         }
     },
     {
+        content: "Check that the mega menu is closed",
+        trigger: 'iframe #top_menu .nav-item:contains("Megaaaaa!"):has(div[data-name="Mega Menu"]:not(.show))',
+        run:() => {}, // It's a check.
+    },
+    {
         content: "Open the mega menu after scroll",
         trigger: 'iframe #top_menu .nav-item a.o_mega_menu_toggle:contains("Megaaaaa!")',
     },
