@@ -73,6 +73,7 @@ StateSelectionField.components = {
 StateSelectionField.props = {
     ...standardFieldProps,
     hideLabel: { type: Boolean, optional: true },
+    autosave: { type: Boolean, optional: true },
 };
 StateSelectionField.defaultProps = {
     hideLabel: false,
@@ -84,6 +85,7 @@ StateSelectionField.supportedTypes = ["selection"];
 StateSelectionField.extractProps = ({ attrs }) => {
     return {
         hideLabel: !!attrs.options.hide_label,
+        autosave: "autosave" in attrs.options ? !!attrs.options.autosave : true,
     };
 };
 
