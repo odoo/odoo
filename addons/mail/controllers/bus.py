@@ -8,13 +8,6 @@ from odoo.addons.bus.controllers.main import BusController
 
 class MailChatController(BusController):
 
-    def _default_request_uid(self):
-        """ For Anonymous people, they receive the access right of SUPERUSER_ID since they have NO access (auth=none)
-            !!! Each time a method from this controller is call, there is a check if the user (who can be anonymous and Sudo access)
-            can access to the resource.
-        """
-        return request.session.uid and request.session.uid or SUPERUSER_ID
-
     # --------------------------
     # Anonymous routes (Common Methods)
     # --------------------------
