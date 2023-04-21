@@ -15,20 +15,23 @@
                                 Fattura Elettronica mode
                             </span>
                             <span class="fa fa-lg fa-building-o" title="Values set here are company-specific."/>
-                            <div class="text-muted">
-                                In demo mode Odoo will just simulate the sending of invoices to the government.<br/>
-                                In test mode (experimental) Odoo will send the invoices to a non-production service.
-                                Saving this change will direct all companies on this database to this use this configuration.
-                                Once registered for testing or official, the mode cannot be changed.
+                            <div class="o_form_label text-warning mt8">
+                                <span class="fa fa-warning mr4"/>
+                                Once set as Test or Official, you cannot change.
+                            </div>
+                            <div class="text-muted mt8 mb8">
+                                <b>Demo</b>: e-invoices will not be sent.<br/>
+                                <b>Test</b> (experimental): e-invoices are sent to a non-production service.<br/>
+                                <b>Official</b>: e-invoices are sent to the official SdI service.<br/>
                             </div>
                             <field name="l10n_it_edi_sdicoop_demo_mode"
                                     widget="radio"
                                     options="{'horizontal': true}"/>
                         </div>
                         <div class="mt8 content-group" attrs="{'invisible': ['|',('l10n_it_edi_proxy_current_state','=','active'), '&amp;', ('l10n_it_edi_proxy_current_state','=','demo'), ('l10n_it_edi_sdicoop_demo_mode','=','demo')]}">
-                            <span class="o_form_label">Allow Odoo to process invoices</span>
+                            <span class="o_form_label">Allow Odoo to process e-invoices</span>
                             <div class="text-muted">
-                                By checking this box, I accept that Odoo may process my invoices.
+                                By checking this box, I accept that Odoo may process my e-invoices.
                             </div>
                             <div class="content-group">
                                 <field name="l10n_it_edi_sdicoop_register"/>
