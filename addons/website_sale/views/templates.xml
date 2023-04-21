@@ -2174,7 +2174,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="payment_tx_id.provider_id.sudo().name" />
+                                                <t t-esc="payment_tx_id.provider_id.display_as or payment_tx_id.provider_id.name" />
                                             </td>
                                             <td class="text-end" width="100">
                                                 <strong>Total:</strong>
