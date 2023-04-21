@@ -363,38 +363,6 @@
             }),
         ]"/>
     </record>
-    <record id="account_tax_template_s_iva21isp" model="account.tax.template">
-        <field name="description"/>
-        <!-- for resetting the value on existing DBs -->
-        <field name="type_tax_use">sale</field>
-        <field name="name">IVA 21% (ISP)</field>
-        <field name="chart_template_id" ref="l10n_es.account_chart_template_common"/>
-        <field name="amount" eval="21"/>
-        <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_iva_21"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_07')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('l10n_es.account_common_477'),
-                'tag_ids': [ref('mod_303_09')],
-            }),
-         ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'repartition_type': 'base',
-                'tag_ids': [ref('mod_303_14_sale')],
-            }),
-            (0,0, {
-                'repartition_type': 'tax',
-                'account_id': ref('l10n_es.account_common_477'),
-                'tag_ids': [ref('mod_303_15')],
-            }),
-        ]"/>
-    </record>
     <record id="account_tax_template_p_iva21_bc" model="account.tax.template">
         <field name="sequence" eval="0"/>
         <!-- Para que sea el impuesto por defecto de compras -->
