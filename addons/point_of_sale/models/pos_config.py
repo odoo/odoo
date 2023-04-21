@@ -125,7 +125,7 @@ class PosConfig(models.Model):
     group_pos_user_id = fields.Many2one('res.groups', string='Point of Sale User Group', default=_get_group_pos_user,
         help='This field is there to pass the id of the pos user group to the point of sale client.')
     iface_tipproduct = fields.Boolean(string="Product tips")
-    tip_product_id = fields.Many2one('product.product', string='Tip Product',
+    tip_product_id = fields.Many2one('product.product', string='Tip Product', compute='_compute_tip_product_id', store=True,
         help="This product is used as reference on customer receipts.")
     fiscal_position_ids = fields.Many2many('account.fiscal.position', string='Fiscal Positions', help='This is useful for restaurants with onsite and take-away services that imply specific tax rates.')
     default_fiscal_position_id = fields.Many2one('account.fiscal.position', string='Default Fiscal Position')
@@ -251,6 +251,13 @@ class PosConfig(models.Model):
     def _compute_customer_facing_display(self):
         for config in self:
             config.iface_customer_facing_display = config.iface_customer_facing_display_via_proxy or config.iface_customer_facing_display_local
+
+    @api.depends('iface_tipproduct')
+    def _compute_tip_product_id(self):
+        for pos_config in self:
+            pos_config.tip_product_id = self.env.ref("point_of_sale.product_product_tip")
+            if not pos_config.tip_product_id:
+                pos_config.tip_product_id = self.env['product.product'].search([('default_code', '=', 'TIPS')], limit=1)
 
     @api.constrains('rounding_method')
     def _check_rounding_method_strategy(self):
@@ -650,7 +657,7 @@ class PosConfig(models.Model):
                 )    OR p.id=%(tip_product_id)s
              ORDER BY t.priority DESC,
                       t.detailed_type DESC,
-                      COALESCE(pm.date,p.write_date) DESC 
+                      COALESCE(pm.date,p.write_date) DESC
                 LIMIT %(limit)s
         """
         params = {
