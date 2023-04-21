@@ -1721,12 +1721,77 @@
      * - all digit stored in the decimal part of the number
      *
      * The 'maxDecimal' parameter allows to indicate the number of digits to not
-     * exceed in the decimal part, in which case digits are rounded
+     * exceed in the decimal part, in which case digits are rounded.
      *
-     * Intl.Numberformat is used to properly handle all the roundings.
-     * e.g. 1234.7  with format ### (<> maxDecimals=0) should become 1235, not 1234
      **/
     function splitNumber(value, maxDecimals = MAX_DECIMAL_PLACES) {
+        const asString = value.toString();
+        if (asString.includes("e"))
+            return splitNumberIntl(value, maxDecimals);
+        if (Number.isInteger(value)) {
+            return { integerDigits: asString, decimalDigits: undefined };
+        }
+        const indexOfDot = asString.indexOf(".");
+        let integerDigits = asString.substring(0, indexOfDot);
+        let decimalDigits = asString.substring(indexOfDot + 1);
+        if (maxDecimals === 0) {
+            if (Number(decimalDigits[0]) >= 5) {
+                integerDigits = (Number(integerDigits) + 1).toString();
+            }
+            return { integerDigits, decimalDigits: undefined };
+        }
+        if (decimalDigits.length > maxDecimals) {
+            const { integerDigits: roundedIntegerDigits, decimalDigits: roundedDecimalDigits } = limitDecimalDigits(decimalDigits, maxDecimals);
+            decimalDigits = roundedDecimalDigits;
+            if (roundedIntegerDigits !== "0") {
+                integerDigits = (Number(integerDigits) + Number(roundedIntegerDigits)).toString();
+            }
+        }
+        return { integerDigits, decimalDigits: removeTrailingZeroes(decimalDigits || "") };
+    }
+    /**
+     *  Return the given string minus the trailing "0" characters.
+     *
+     * @param numberString : a string of integers
+     * @returns the numberString, minus the eventual zeroes at the end
+     */
+    function removeTrailingZeroes(numberString) {
+        let i = numberString.length - 1;
+        while (i >= 0 && numberString[i] === "0") {
+            i--;
+        }
+        return numberString.slice(0, i + 1) || undefined;
+    }
+    /**
+     * Limit the size of the decimal part of a number to the given number of digits.
+     */
+    function limitDecimalDigits(decimalDigits, maxDecimals) {
+        let integerDigits = "0";
+        let resultDecimalDigits = decimalDigits;
+        // Note : we'd want to simply use number.toFixed() to handle the max digits & rounding,
+        // but it has very strange behaviour. Ex: 12.345.toFixed(2) => "12.35", but 1.345.toFixed(2) => "1.34"
+        let slicedDecimalDigits = decimalDigits.slice(0, maxDecimals);
+        const i = maxDecimals;
+        if (Number(Number(decimalDigits[i]) < 5)) {
+            return { integerDigits, decimalDigits: slicedDecimalDigits };
+        }
+        // round up
+        const slicedRoundedUp = (Number(slicedDecimalDigits) + 1).toString();
+        if (slicedRoundedUp.length > slicedDecimalDigits.length) {
+            integerDigits = (Number(integerDigits) + 1).toString();
+            resultDecimalDigits = undefined;
+        }
+        else {
+            resultDecimalDigits = slicedRoundedUp;
+        }
+        return { integerDigits, decimalDigits: resultDecimalDigits };
+    }
+    /**
+     * Split numbers into decimal/integer digits using Intl.NumberFormat.
+     * Supports numbers with a lot of digits that are transformed to scientific notation by
+     * number.toString(), but is slow.
+     */
+    function splitNumberIntl(value, maxDecimals = MAX_DECIMAL_PLACES) {
         let formatter = numberRepresentation[maxDecimals];
         if (!formatter) {
             formatter = new Intl.NumberFormat("en-US", {
@@ -5761,12 +5826,12 @@
     function createActions(menuItems) {
         return menuItems.map(createAction).sort((a, b) => a.sequence - b.sequence);
     }
-    const uuidGenerator$1 = new UuidGenerator();
+    const uuidGenerator$2 = new UuidGenerator();
     function createAction(item) {
         const name = item.name;
         const children = item.children;
         return {
-            id: item.id || uuidGenerator$1.uuidv4(),
+            id: item.id || uuidGenerator$2.uuidv4(),
             name: typeof name === "function" ? name : () => name,
             isVisible: item.isVisible ? item.isVisible : () => true,
             isEnabled: item.isEnabled ? item.isEnabled : () => true,
@@ -17436,7 +17501,7 @@
         }
     }
 
-    const uuidGenerator = new UuidGenerator();
+    const uuidGenerator$1 = new UuidGenerator();
     css /* scss */ `
   .o-selection {
     .o-selection-input {
@@ -17493,7 +17558,7 @@
     class SelectionInput extends owl.Component {
         constructor() {
             super(...arguments);
-            this.id = uuidGenerator.uuidv4();
+            this.id = uuidGenerator$1.uuidv4();
             this.previousRanges = this.props.ranges || [];
             this.originSheet = this.env.model.getters.getActiveSheetId();
             this.state = owl.useState({
@@ -21186,12 +21251,25 @@
             const sheetId = this.env.model.getters.getActiveSheetId();
             const rowDims = this.env.model.getters.getRowDimensionsInViewport(sheetId, position.row);
             const colDims = this.env.model.getters.getColDimensionsInViewport(sheetId, position.col);
-            // TODO : change this offset when we support vertical cell align
-            const centeringOffset = Math.floor((rowDims.size - FILTER_ICON_EDGE_LENGTH) / 2);
+            const cell = this.env.model.getters.getCell({ sheetId, ...position });
+            const verticalFilterIconPosition = this.getIconVerticalPosition(rowDims, cell);
             return {
                 x: colDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.x - FILTER_ICON_MARGIN - 1,
-                y: rowDims.end - FILTER_ICON_EDGE_LENGTH + this.props.gridPosition.y - centeringOffset,
+                y: verticalFilterIconPosition + this.props.gridPosition.y,
             };
+        }
+        // Calculates the vertical position of the filter icon based on the row dimensions and cell styles.
+        getIconVerticalPosition(rowDims, cell) {
+            var _a;
+            const centeringOffset = Math.floor((rowDims.size - FILTER_ICON_EDGE_LENGTH) / 2);
+            switch ((_a = cell === null || cell === void 0 ? void 0 : cell.style) === null || _a === void 0 ? void 0 : _a.verticalAlign) {
+                case "bottom":
+                    return rowDims.end - FILTER_ICON_MARGIN - FILTER_ICON_EDGE_LENGTH;
+                case "top":
+                    return rowDims.start + FILTER_ICON_MARGIN;
+                default:
+                    return rowDims.end - FILTER_ICON_EDGE_LENGTH - centeringOffset;
+            }
         }
         isFilterActive(position) {
             const sheetId = this.env.model.getters.getActiveSheetId();
@@ -23108,6 +23186,7 @@
                 "CTRL+A": () => this.env.model.selection.loopSelection(),
                 "CTRL+Z": () => this.env.model.dispatch("REQUEST_UNDO"),
                 "CTRL+Y": () => this.env.model.dispatch("REQUEST_REDO"),
+                F4: () => this.env.model.dispatch("REQUEST_REDO"),
                 "CTRL+B": () => this.env.model.dispatch("SET_FORMATTING", {
                     sheetId: this.env.model.getters.getActiveSheetId(),
                     target: this.env.model.getters.getSelectedZones(),
@@ -23151,8 +23230,8 @@
                 },
                 "CTRL+END": () => {
                     const sheetId = this.env.model.getters.getActiveSheetId();
-                    const col = this.env.model.getters.findVisibleHeader(sheetId, "COL", range(0, this.env.model.getters.getNumberCols(sheetId)).reverse());
-                    const row = this.env.model.getters.findVisibleHeader(sheetId, "ROW", range(0, this.env.model.getters.getNumberRows(sheetId)).reverse());
+                    const col = this.env.model.getters.findVisibleHeader(sheetId, "COL", this.env.model.getters.getNumberCols(sheetId) - 1, 0);
+                    const row = this.env.model.getters.findVisibleHeader(sheetId, "ROW", this.env.model.getters.getNumberRows(sheetId) - 1, 0);
                     this.env.model.selection.selectCell(col, row);
                 },
                 "SHIFT+ ": () => {
@@ -23232,9 +23311,10 @@
             this.focus();
         }
         focus() {
+            var _a;
             if (!this.env.model.getters.getSelectedFigureId() &&
                 this.env.model.getters.getEditionMode() === "inactive") {
-                this.hiddenInput.el.focus();
+                (_a = this.hiddenInput.el) === null || _a === void 0 ? void 0 : _a.focus();
             }
         }
         get gridEl() {
@@ -27154,7 +27234,7 @@
                 }
             }
         }
-        data = JSON.parse(JSON.stringify(data));
+        data = deepCopy(data);
         // apply migrations, if needed
         if ("version" in data) {
             if (data.version < CURRENT_VERSION) {
@@ -32272,7 +32352,7 @@
         duplicateSheet(fromId, toId) {
             const sheet = this.getSheet(fromId);
             const toName = this.getDuplicateSheetName(sheet.name);
-            const newSheet = JSON.parse(JSON.stringify(sheet));
+            const newSheet = deepCopy(sheet);
             newSheet.id = toId;
             newSheet.name = toName;
             for (let col = 0; col <= newSheet.numberOfCols; col++) {
@@ -32399,10 +32479,10 @@
             }
         }
         moveCellOnColumnsDeletion(sheet, deletedColumn) {
-            for (let [index, row] of Object.entries(sheet.rows)) {
-                const rowIndex = parseInt(index, 10);
+            for (let rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+                const row = sheet.rows[rowIndex];
                 for (let i in row.cells) {
-                    const colIndex = parseInt(i, 10);
+                    const colIndex = Number(i);
                     const cellId = row.cells[i];
                     if (cellId) {
                         if (colIndex === deletedColumn) {
@@ -32429,11 +32509,11 @@
          */
         moveCellsOnAddition(sheet, addedElement, quantity, dimension) {
             const commands = [];
-            for (const [index, row] of Object.entries(sheet.rows)) {
-                const rowIndex = parseInt(index, 10);
+            for (let rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+                const row = sheet.rows[rowIndex];
                 if (dimension !== "rows" || rowIndex >= addedElement) {
                     for (let i in row.cells) {
-                        const colIndex = parseInt(i, 10);
+                        const colIndex = Number(i);
                         const cellId = row.cells[i];
                         if (cellId) {
                             if (dimension === "rows" || colIndex >= addedElement) {
@@ -32463,11 +32543,11 @@
          */
         moveCellOnRowsDeletion(sheet, deleteFromRow, deleteToRow) {
             const numberRows = deleteToRow - deleteFromRow + 1;
-            for (let [index, row] of Object.entries(sheet.rows)) {
-                const rowIndex = parseInt(index, 10);
+            for (let rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+                const row = sheet.rows[rowIndex];
                 if (rowIndex >= deleteFromRow && rowIndex <= deleteToRow) {
                     for (let i in row.cells) {
-                        const colIndex = parseInt(i, 10);
+                        const colIndex = Number(i);
                         const cellId = row.cells[i];
                         if (cellId) {
                             this.dispatch("CLEAR_CELL", {
@@ -32480,7 +32560,7 @@
                 }
                 if (rowIndex > deleteToRow) {
                     for (let i in row.cells) {
-                        const colIndex = parseInt(i, 10);
+                        const colIndex = Number(i);
                         const cellId = row.cells[i];
                         if (cellId) {
                             this.dispatch("UPDATE_CELL_POSITION", {
@@ -32498,7 +32578,7 @@
             const rows = [];
             const cellsQueue = sheet.rows.map((row) => row.cells);
             for (let i in sheet.rows) {
-                if (parseInt(i, 10) === index) {
+                if (Number(i) === index) {
                     continue;
                 }
                 rows.push({
@@ -33669,13 +33749,11 @@
             return Boolean(id && ((_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[id]) === null || _b === void 0 ? void 0 : _b.length));
         }
         intersectZoneWithViewport(sheetId, zone) {
-            const colsRange = range(zone.left, zone.right + 1);
-            const rowsRange = range(zone.top, zone.bottom + 1);
             return {
-                left: this.getters.findVisibleHeader(sheetId, "COL", colsRange),
-                right: this.getters.findVisibleHeader(sheetId, "COL", colsRange.reverse()),
-                top: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange),
-                bottom: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange.reverse()),
+                left: this.getters.findVisibleHeader(sheetId, "COL", zone.left, zone.right),
+                right: this.getters.findVisibleHeader(sheetId, "COL", zone.right, zone.left),
+                top: this.getters.findVisibleHeader(sheetId, "ROW", zone.top, zone.bottom),
+                bottom: this.getters.findVisibleHeader(sheetId, "ROW", zone.bottom, zone.top),
             };
         }
         updateFilter({ col, row, values, sheetId }) {
@@ -35797,13 +35875,33 @@
         getNextVisibleCellPosition({ sheetId, col, row }) {
             return {
                 sheetId,
-                col: this.findVisibleHeader(sheetId, "COL", range(col, this.getters.getNumberCols(sheetId))),
-                row: this.findVisibleHeader(sheetId, "ROW", range(row, this.getters.getNumberRows(sheetId))),
+                col: this.findVisibleHeader(sheetId, "COL", col, this.getters.getNumberCols(sheetId) - 1),
+                row: this.findVisibleHeader(sheetId, "ROW", row, this.getters.getNumberRows(sheetId) - 1),
             };
         }
-        findVisibleHeader(sheetId, dimension, indexes) {
-            return indexes.find((index) => this.getters.doesHeaderExist(sheetId, dimension, index) &&
-                !this.isHeaderHidden(sheetId, dimension, index));
+        /**
+         * Find the first visible header in the range [`from` => `to`].
+         *
+         * Both `from` and `to` are inclusive.
+         */
+        findVisibleHeader(sheetId, dimension, from, to) {
+            if (from <= to) {
+                for (let i = from; i <= to; i++) {
+                    if (this.getters.doesHeaderExist(sheetId, dimension, i) &&
+                        !this.isHeaderHidden(sheetId, dimension, i)) {
+                        return i;
+                    }
+                }
+            }
+            if (from > to) {
+                for (let i = from; i >= to; i--) {
+                    if (this.getters.doesHeaderExist(sheetId, dimension, i) &&
+                        !this.isHeaderHidden(sheetId, dimension, i)) {
+                        return i;
+                    }
+                }
+            }
+            return undefined;
         }
         findLastVisibleColRowIndex(sheetId, dimension, { last, first }) {
             const lastVisibleIndex = range(last, first, -1).find((index) => !this.isHeaderHidden(sheetId, dimension, index));
@@ -37264,7 +37362,8 @@
          *  - clientId: Client who initiated the action
          *  - changes: List of changes applied on the state.
          */
-        constructor(id, clientId, commands, changes) {
+        constructor(id, clientId, commands, rootCommand, changes) {
+            this.rootCommand = rootCommand;
             this._commands = [];
             this._changes = [];
             this.id = id;
@@ -37328,10 +37427,10 @@
          * Add a new revision to the collaborative session.
          * It will be transmitted to all other connected clients.
          */
-        save(commands, changes) {
+        save(rootCommand, commands, changes) {
             if (!commands.length || !changes.length || !this.canApplyOptimisticUpdate())
                 return;
-            const revision = new Revision(this.uuidGenerator.uuidv4(), this.clientId, commands, changes);
+            const revision = new Revision(this.uuidGenerator.uuidv4(), this.clientId, commands, rootCommand, changes);
             this.revisions.append(revision.id, revision);
             this.trigger("new-local-state-update", { id: revision.id });
             this.sendUpdateMessage({
@@ -37432,6 +37531,22 @@
         isFullySynchronized() {
             return this.pendingMessages.length === 0;
         }
+        /**
+         * Get the last local revision whose root command isn't in the given list of ignored commands
+         * */
+        getLastLocalNonEmptyRevision(ignoredRootCommands) {
+            var _a;
+            const revisions = this.revisions.getRevertedExecution();
+            for (const rev of revisions) {
+                if (rev.rootCommand === "SNAPSHOT")
+                    return undefined;
+                if (!rev.rootCommand || rev.rootCommand === "REMOTE")
+                    continue;
+                if (!ignoredRootCommands.includes((_a = rev.rootCommand) === null || _a === void 0 ? void 0 : _a.type) && rev.commands.length)
+                    return rev;
+            }
+            return undefined;
+        }
         _move(position) {
             var _a;
             // this method is debounced and might be called after the client
@@ -37491,7 +37606,7 @@
                         return;
                     }
                     const { clientId, commands } = message;
-                    const revision = new Revision(message.nextRevisionId, clientId, commands);
+                    const revision = new Revision(message.nextRevisionId, clientId, commands, "REMOTE");
                     if (revision.clientId !== this.clientId) {
                         this.revisions.insert(revision.id, revision, message.serverRevisionId);
                         const pendingCommands = this.pendingMessages
@@ -37504,7 +37619,7 @@
                     }
                     break;
                 case "SNAPSHOT_CREATED": {
-                    const revision = new Revision(message.nextRevisionId, "server", []);
+                    const revision = new Revision(message.nextRevisionId, "server", [], "SNAPSHOT");
                     this.revisions.insert(revision.id, revision, message.serverRevisionId);
                     this.dropPendingHistoryMessages();
                     this.trigger("snapshot");
@@ -38282,6 +38397,324 @@
         "getColRowOffset",
     ];
 
+    const genericRepeatsTransforms = [
+        repeatSheetDependantCommand,
+        repeatTargetDependantCommand,
+        repeatPositionDependantCommand,
+    ];
+    function repeatSheetDependantCommand(getters, command) {
+        if (!("sheetId" in command))
+            return command;
+        return { ...deepCopy(command), sheetId: getters.getActiveSheetId() };
+    }
+    function repeatTargetDependantCommand(getters, command) {
+        if (!("target" in command) || !Array.isArray(command.target))
+            return command;
+        return {
+            ...deepCopy(command),
+            target: getters.getSelectedZones(),
+        };
+    }
+    function repeatPositionDependantCommand(getters, command) {
+        if (!("row" in command) || !("col" in command))
+            return command;
+        const { col, row } = getters.getActivePosition();
+        return { ...deepCopy(command), col, row };
+    }
+
+    const uuidGenerator = new UuidGenerator();
+    function repeatCreateChartCommand(getters, cmd) {
+        return {
+            ...repeatSheetDependantCommand(getters, cmd),
+            id: uuidGenerator.uuidv4(),
+        };
+    }
+    function repeatCreateImageCommand(getters, cmd) {
+        return {
+            ...repeatSheetDependantCommand(getters, cmd),
+            figureId: uuidGenerator.uuidv4(),
+        };
+    }
+    function repeatCreateFigureCommand(getters, cmd) {
+        const newCmd = repeatSheetDependantCommand(getters, cmd);
+        newCmd.figure.id = uuidGenerator.uuidv4();
+        return newCmd;
+    }
+    function repeatCreateSheetCommand(getters, cmd) {
+        var _a;
+        const newCmd = deepCopy(cmd);
+        newCmd.sheetId = uuidGenerator.uuidv4();
+        const sheetName = cmd.name || getters.getSheet(getters.getActiveSheetId()).name;
+        // Extract the prefix of the sheet name (everything before the number at the end of the name)
+        const namePrefix = ((_a = sheetName.match(/(.+?)\d*$/)) === null || _a === void 0 ? void 0 : _a[1]) || sheetName;
+        newCmd.name = getters.getNextSheetName(namePrefix);
+        return newCmd;
+    }
+    function repeatAddColumnsRowsCommand(getters, cmd) {
+        const currentPosition = getters.getActivePosition();
+        return {
+            ...repeatSheetDependantCommand(getters, cmd),
+            base: cmd.dimension === "COL" ? currentPosition.col : currentPosition.row,
+        };
+    }
+    function repeatHeaderElementCommand(getters, cmd) {
+        const currentSelection = getters.getSelectedZone();
+        return {
+            ...repeatSheetDependantCommand(getters, cmd),
+            elements: cmd.dimension === "COL"
+                ? range(currentSelection.left, currentSelection.right + 1)
+                : range(currentSelection.top, currentSelection.bottom + 1),
+        };
+    }
+    function repeatInsertOrDeleteCellCommand(getters, cmd) {
+        const currentSelection = getters.getSelectedZone();
+        return {
+            ...deepCopy(cmd),
+            zone: currentSelection,
+        };
+    }
+    function repeatAutoResizeCommand(getters, cmd) {
+        const newCmd = deepCopy(cmd);
+        const currentSelection = getters.getSelectedZone();
+        const { top, bottom, left, right } = currentSelection;
+        if ("cols" in newCmd) {
+            newCmd.cols = range(left, right + 1);
+        }
+        else if ("rows" in newCmd) {
+            newCmd.rows = range(top, bottom + 1);
+        }
+        return newCmd;
+    }
+    function repeatSortCellsCommand(getters, cmd) {
+        const currentSelection = getters.getSelectedZone();
+        return {
+            ...repeatSheetDependantCommand(getters, cmd),
+            col: currentSelection.left,
+            row: currentSelection.top,
+            zone: currentSelection,
+        };
+    }
+    function repeatPasteCommand(getters, cmd) {
+        /**
+         * Note : we have to store the state of the clipboard in the clipboard plugin, and introduce a
+         * new command REPEAT_PASTE to be able to repeat the paste command.
+         *
+         * We cannot re-dispatch a paste, because the content of the clipboard may have changed in between.
+         *
+         * And we cannot adapt the sub-commands of the paste command, because they are dependant on the state of the sheet,
+         * and may change based on the paste location. A simple example is that paste create new col/rows for the clipboard
+         * content to fit the sheet. So there will be ADD_COL_ROW_COMMANDS in the sub-commands in the history, but repeating
+         * paste might not need them. Or they could only needed for the repeated paste, not for the original.
+         */
+        return {
+            type: "REPEAT_PASTE",
+            pasteOption: deepCopy(cmd.pasteOption),
+            target: getters.getSelectedZones(),
+        };
+    }
+
+    /**
+     *  Registry containing all the command that can be repeated on redo, and function to transform them
+     *  to the current state of the model.
+     *
+     * If the transform function is undefined, the command will be transformed using generic transformations.
+     * (change the sheetId, the row, the col, the target, the ranges, to the current active sheet & selection)
+     *
+     */
+    const repeatCommandTransformRegistry = new Registry();
+    repeatCommandTransformRegistry.add("UPDATE_CELL", genericRepeat);
+    repeatCommandTransformRegistry.add("CLEAR_CELL", genericRepeat);
+    repeatCommandTransformRegistry.add("DELETE_CONTENT", genericRepeat);
+    repeatCommandTransformRegistry.add("ADD_MERGE", genericRepeat);
+    repeatCommandTransformRegistry.add("REMOVE_MERGE", genericRepeat);
+    repeatCommandTransformRegistry.add("SET_FORMATTING", genericRepeat);
+    repeatCommandTransformRegistry.add("CLEAR_FORMATTING", genericRepeat);
+    repeatCommandTransformRegistry.add("SET_BORDER", genericRepeat);
+    repeatCommandTransformRegistry.add("CREATE_FILTER_TABLE", genericRepeat);
+    repeatCommandTransformRegistry.add("REMOVE_FILTER_TABLE", genericRepeat);
+    repeatCommandTransformRegistry.add("HIDE_SHEET", genericRepeat);
+    repeatCommandTransformRegistry.add("ADD_COLUMNS_ROWS", repeatAddColumnsRowsCommand);
+    repeatCommandTransformRegistry.add("REMOVE_COLUMNS_ROWS", repeatHeaderElementCommand);
+    repeatCommandTransformRegistry.add("HIDE_COLUMNS_ROWS", repeatHeaderElementCommand);
+    repeatCommandTransformRegistry.add("RESIZE_COLUMNS_ROWS", repeatHeaderElementCommand);
+    repeatCommandTransformRegistry.add("CREATE_SHEET", repeatCreateSheetCommand);
+    repeatCommandTransformRegistry.add("CREATE_FIGURE", repeatCreateFigureCommand);
+    repeatCommandTransformRegistry.add("CREATE_CHART", repeatCreateChartCommand);
+    repeatCommandTransformRegistry.add("CREATE_IMAGE", repeatCreateImageCommand);
+    const repeatLocalCommandTransformRegistry = new Registry();
+    repeatLocalCommandTransformRegistry.add("STOP_EDITION", repeatLocalCommandChildren);
+    repeatLocalCommandTransformRegistry.add("PASTE", repeatPasteCommand);
+    repeatLocalCommandTransformRegistry.add("INSERT_CELL", repeatInsertOrDeleteCellCommand);
+    repeatLocalCommandTransformRegistry.add("DELETE_CELL", repeatInsertOrDeleteCellCommand);
+    repeatLocalCommandTransformRegistry.add("AUTORESIZE_COLUMNS", repeatAutoResizeCommand);
+    repeatLocalCommandTransformRegistry.add("AUTORESIZE_ROWS", repeatAutoResizeCommand);
+    repeatLocalCommandTransformRegistry.add("SORT_CELLS", repeatSortCellsCommand);
+    repeatLocalCommandTransformRegistry.add("SUM_SELECTION", genericRepeat);
+    repeatLocalCommandTransformRegistry.add("SET_DECIMAL", genericRepeat);
+    function genericRepeat(getters, command) {
+        let transformedCommand = deepCopy(command);
+        for (const repeatTransform of genericRepeatsTransforms) {
+            transformedCommand = repeatTransform(getters, transformedCommand);
+        }
+        return transformedCommand;
+    }
+    function repeatCoreCommand(getters, command) {
+        if (!command) {
+            return undefined;
+        }
+        const isRepeatable = repeatCommandTransformRegistry.contains(command.type);
+        if (!isRepeatable) {
+            return undefined;
+        }
+        const transform = repeatCommandTransformRegistry.get(command.type);
+        return transform(getters, command);
+    }
+    function repeatLocalCommand(getters, command, childCommands) {
+        const isRepeatable = repeatLocalCommandTransformRegistry.contains(command.type);
+        if (!isRepeatable) {
+            return undefined;
+        }
+        const repeatTransform = repeatLocalCommandTransformRegistry.get(command.type);
+        return repeatTransform(getters, command, childCommands);
+    }
+    function repeatLocalCommandChildren(getters, cmd, childCommands) {
+        return childCommands
+            .map((childCommand) => repeatCoreCommand(getters, childCommand))
+            .filter(isDefined$1);
+    }
+
+    function canRepeatRevision(revision) {
+        if (!revision || !revision.rootCommand || typeof revision.rootCommand !== "object") {
+            return false;
+        }
+        if (isCoreCommand(revision.rootCommand)) {
+            return repeatCommandTransformRegistry.contains(revision.rootCommand.type);
+        }
+        return repeatLocalCommandTransformRegistry.contains(revision.rootCommand.type);
+    }
+    function repeatRevision(revision, getters) {
+        if (!revision.rootCommand || typeof revision.rootCommand !== "object") {
+            return undefined;
+        }
+        if (isCoreCommand(revision.rootCommand)) {
+            return repeatCoreCommand(getters, revision.rootCommand);
+        }
+        return repeatLocalCommand(getters, revision.rootCommand, revision.commands);
+    }
+
+    /**
+     * Local History
+     *
+     * The local history is responsible of tracking the locally state updates
+     * It maintains the local undo and redo stack to allow to undo/redo only local
+     * changes
+     */
+    class HistoryPlugin extends UIPlugin {
+        constructor(config) {
+            super(config);
+            /**
+             * Ids of the revisions which can be undone
+             */
+            this.undoStack = [];
+            /**
+             * Ids of the revisions which can be redone
+             */
+            this.redoStack = [];
+            this.session = config.session;
+            this.session.on("new-local-state-update", this, this.onNewLocalStateUpdate);
+            this.session.on("pending-revisions-dropped", this, ({ revisionIds }) => this.drop(revisionIds));
+            this.session.on("snapshot", this, () => {
+                this.undoStack = [];
+                this.redoStack = [];
+            });
+        }
+        allowDispatch(cmd) {
+            switch (cmd.type) {
+                case "REQUEST_UNDO":
+                    if (!this.canUndo()) {
+                        return 6 /* CommandResult.EmptyUndoStack */;
+                    }
+                    break;
+                case "REQUEST_REDO":
+                    if (!this.canRedo()) {
+                        return 7 /* CommandResult.EmptyRedoStack */;
+                    }
+                    break;
+            }
+            return 0 /* CommandResult.Success */;
+        }
+        handle(cmd) {
+            switch (cmd.type) {
+                case "REQUEST_UNDO":
+                case "REQUEST_REDO":
+                    // History changes (undo & redo) are *not* applied optimistically on the local state.
+                    // We wait a global confirmation from the server. The goal is to avoid handling concurrent
+                    // history changes on multiple clients which are very hard to manage correctly.
+                    this.requestHistoryChange(cmd.type === "REQUEST_UNDO" ? "UNDO" : "REDO");
+            }
+        }
+        finalize() { }
+        requestHistoryChange(type) {
+            const id = type === "UNDO" ? this.undoStack.pop() : this.redoStack.pop();
+            if (!id) {
+                const lastNonRedoRevision = this.getPossibleRevisionToRepeat();
+                if (!lastNonRedoRevision) {
+                    return;
+                }
+                const repeatedCommands = repeatRevision(lastNonRedoRevision, this.getters);
+                if (!repeatedCommands) {
+                    return;
+                }
+                if (!Array.isArray(repeatedCommands)) {
+                    this.dispatch(repeatedCommands.type, repeatedCommands);
+                    return;
+                }
+                for (const command of repeatedCommands) {
+                    this.dispatch(command.type, command);
+                }
+                return;
+            }
+            if (type === "UNDO") {
+                this.session.undo(id);
+                this.redoStack.push(id);
+            }
+            else {
+                this.session.redo(id);
+                this.undoStack.push(id);
+            }
+        }
+        canUndo() {
+            return this.undoStack.length > 0;
+        }
+        canRedo() {
+            if (this.redoStack.length > 0)
+                return true;
+            const lastNonRedoRevision = this.getPossibleRevisionToRepeat();
+            return canRepeatRevision(lastNonRedoRevision);
+        }
+        drop(revisionIds) {
+            this.undoStack = this.undoStack.filter((id) => !revisionIds.includes(id));
+            this.redoStack = [];
+        }
+        onNewLocalStateUpdate({ id }) {
+            this.undoStack.push(id);
+            this.redoStack = [];
+            if (this.undoStack.length > MAX_HISTORY_STEPS) {
+                this.undoStack.shift();
+            }
+        }
+        /**
+         * Fetch the last revision which is not empty and not a repeated command
+         *
+         * Ignore repeated commands (REQUEST_REDO command as root command)
+         * Ignore standard undo/redo revisions (that are empty)
+         */
+        getPossibleRevisionToRepeat() {
+            return this.session.getLastLocalNonEmptyRevision(["REQUEST_REDO"]);
+        }
+    }
+    HistoryPlugin.getters = ["canUndo", "canRedo"];
+
     /** Abstract state of the clipboard when copying/cutting content that is pasted in cells of the sheet */
     class ClipboardCellsAbstractState {
         constructor(operation, getters, dispatch, selection) {
@@ -38991,7 +39424,7 @@
             return 0 /* CommandResult.Success */;
         }
         handle(cmd) {
-            var _a, _b;
+            var _a, _b, _c;
             switch (cmd.type) {
                 case "COPY":
                 case "CUT":
@@ -39009,6 +39442,7 @@
                     if (this.state.operation === "CUT") {
                         this.state = undefined;
                     }
+                    this.lastPasteState = this.state;
                     this.status = "invisible";
                     break;
                 case "CLEAN_CLIPBOARD_HIGHLIGHT":
@@ -39061,10 +39495,19 @@
                     break;
                 }
                 case "PASTE_FROM_OS_CLIPBOARD":
-                    const state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
-                    state.paste(cmd.target);
+                    this.state = new ClipboardOsState(cmd.text, this.getters, this.dispatch, this.selection);
+                    this.state.paste(cmd.target);
+                    this.lastPasteState = this.state;
                     this.status = "invisible";
                     break;
+                case "REPEAT_PASTE": {
+                    (_c = this.lastPasteState) === null || _c === void 0 ? void 0 : _c.paste(cmd.target, {
+                        pasteOption: cmd.pasteOption,
+                        shouldPasteCF: true,
+                        selectTarget: true,
+                    });
+                    break;
+                }
                 case "ACTIVATE_PAINT_FORMAT": {
                     const zones = this.getters.getSelectedZones();
                     this.state = this.getClipboardStateForCopyCells(zones, "COPY");
@@ -40545,7 +40988,8 @@
         .add("automatic_sum", AutomaticSumPlugin)
         .add("format", FormatPlugin)
         .add("cell_popovers", CellPopoverPlugin)
-        .add("selection_multiuser", SelectionMultiUserPlugin);
+        .add("selection_multiuser", SelectionMultiUserPlugin)
+        .add("history", HistoryPlugin);
     // Plugins which have a state, but which should not be shared in collaborative
     const statefulUIPluginRegistry = new Registry()
         .add("selection", GridSelectionPlugin)
@@ -43232,6 +43676,14 @@
             this.revertBefore(operationId);
             this.tree.drop(operationId);
         }
+        getRevertedExecution() {
+            const data = [];
+            const operations = this.tree.revertedExecution(this.HEAD_BRANCH);
+            for (const { operation } of operations) {
+                data.push(operation.data);
+            }
+            return data;
+        }
         /**
          * Revert the state as it was *before* the given operation was executed.
          */
@@ -43288,12 +43740,12 @@
                 }
             });
             revision.setChanges(changes);
-        }, (revision) => revertChanges([revision]), (id) => new Revision(id, "empty", [], []), {
+        }, (revision) => revertChanges([revision]), (id) => new Revision(id, "empty", []), {
             with: (revision) => (toTransform) => {
-                return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands));
+                return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands), toTransform.rootCommand);
             },
             without: (revision) => (toTransform) => {
-                return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands.map(inverseCommand).flat()));
+                return new Revision(toTransform.id, toTransform.clientId, transformAll(toTransform.commands, revision.commands.map(inverseCommand).flat()), toTransform.rootCommand);
             },
         });
     }
@@ -43327,101 +43779,6 @@
         }
         else {
             val[key] = change[target];
-        }
-    }
-
-    /**
-     * Local History
-     *
-     * The local history is responsible of tracking the locally state updates
-     * It maintains the local undo and redo stack to allow to undo/redo only local
-     * changes
-     */
-    class LocalHistory extends owl.EventBus {
-        constructor(dispatch, session) {
-            super();
-            this.dispatch = dispatch;
-            this.session = session;
-            /**
-             * Ids of the revisions which can be undone
-             */
-            this.undoStack = [];
-            /**
-             * Ids of the revisions which can be redone
-             */
-            this.redoStack = [];
-            this.session.on("new-local-state-update", this, this.onNewLocalStateUpdate);
-            this.session.on("revision-undone", this, ({ commands }) => this.selectiveUndo(commands));
-            this.session.on("revision-redone", this, ({ commands }) => this.selectiveRedo(commands));
-            this.session.on("pending-revisions-dropped", this, ({ revisionIds }) => this.drop(revisionIds));
-            this.session.on("snapshot", this, () => {
-                this.undoStack = [];
-                this.redoStack = [];
-            });
-        }
-        allowDispatch(cmd) {
-            switch (cmd.type) {
-                case "REQUEST_UNDO":
-                    if (!this.canUndo()) {
-                        return 6 /* CommandResult.EmptyUndoStack */;
-                    }
-                    break;
-                case "REQUEST_REDO":
-                    if (!this.canRedo()) {
-                        return 7 /* CommandResult.EmptyRedoStack */;
-                    }
-                    break;
-            }
-            return 0 /* CommandResult.Success */;
-        }
-        beforeHandle(cmd) { }
-        handle(cmd) {
-            switch (cmd.type) {
-                case "REQUEST_UNDO":
-                case "REQUEST_REDO":
-                    // History changes (undo & redo) are *not* applied optimistically on the local state.
-                    // We wait a global confirmation from the server. The goal is to avoid handling concurrent
-                    // history changes on multiple clients which are very hard to manage correctly.
-                    this.requestHistoryChange(cmd.type === "REQUEST_UNDO" ? "UNDO" : "REDO");
-            }
-        }
-        finalize() { }
-        requestHistoryChange(type) {
-            const id = type === "UNDO" ? this.undoStack.pop() : this.redoStack.pop();
-            if (!id) {
-                return;
-            }
-            if (type === "UNDO") {
-                this.session.undo(id);
-                this.redoStack.push(id);
-            }
-            else {
-                this.session.redo(id);
-                this.undoStack.push(id);
-            }
-        }
-        canUndo() {
-            return this.undoStack.length > 0;
-        }
-        canRedo() {
-            return this.redoStack.length > 0;
-        }
-        drop(revisionIds) {
-            this.undoStack = this.undoStack.filter((id) => !revisionIds.includes(id));
-            this.redoStack = [];
-        }
-        onNewLocalStateUpdate({ id }) {
-            this.undoStack.push(id);
-            this.redoStack = [];
-            if (this.undoStack.length > MAX_HISTORY_STEPS) {
-                this.undoStack.shift();
-            }
-        }
-        selectiveUndo(commands) {
-            this.dispatch("UNDO", { commands });
-        }
-        selectiveRedo(commands) {
-            this.dispatch("REDO", { commands });
         }
     }
 
@@ -43825,8 +44182,8 @@
             }
             const { left, right, top, bottom } = zone;
             const sheetId = this.getters.getActiveSheetId();
-            const refCol = this.getters.findVisibleHeader(sheetId, "COL", range(left, right + 1));
-            const refRow = this.getters.findVisibleHeader(sheetId, "ROW", range(top, bottom + 1));
+            const refCol = this.getters.findVisibleHeader(sheetId, "COL", left, right);
+            const refRow = this.getters.findVisibleHeader(sheetId, "ROW", top, bottom);
             if (refRow === undefined || refCol === undefined) {
                 return 17 /* CommandResult.SelectionOutOfBound */;
             }
@@ -43901,10 +44258,10 @@
             const { col: anchorCol, row: anchorRow } = anchor.cell;
             return {
                 col: this.getters.isColHidden(sheetId, anchorCol)
-                    ? this.getters.findVisibleHeader(sheetId, "COL", range(left, right + 1)) || anchorCol
+                    ? this.getters.findVisibleHeader(sheetId, "COL", left, right) || anchorCol
                     : anchorCol,
                 row: this.getters.isRowHidden(sheetId, anchorRow)
-                    ? this.getters.findVisibleHeader(sheetId, "ROW", range(top, bottom + 1)) || anchorRow
+                    ? this.getters.findVisibleHeader(sheetId, "ROW", top, bottom) || anchorRow
                     : anchorRow,
             };
         }
@@ -45654,6 +46011,8 @@
              * Internal status of the model. Important for command handling coordination
              */
             this.status = 0 /* Status.Ready */;
+            this.handlers = [];
+            this.coreHandlers = [];
             /**
              * Check if a command can be dispatched, and returns a DispatchResult object with the possible
              * reasons the dispatch failed.
@@ -45698,7 +46057,7 @@
                             this.dispatchToHandlers(this.handlers, command);
                             this.finalize();
                         });
-                        this.session.save(commands, changes);
+                        this.session.save(command, commands, changes);
                         this.status = 0 /* Status.Ready */;
                         this.trigger("update");
                         break;
@@ -45730,9 +46089,7 @@
                 const command = { ...payload, type };
                 const previousStatus = this.status;
                 this.status = 2 /* Status.RunningCore */;
-                const handlers = this.isReplayingCommand
-                    ? [this.range, ...this.corePlugins, ...this.coreViewsPlugins]
-                    : this.handlers;
+                const handlers = this.isReplayingCommand ? this.coreHandlers : this.handlers;
                 this.dispatchToHandlers(handlers, command);
                 this.status = previousStatus;
                 return DispatchResult.Success;
@@ -45743,7 +46100,6 @@
             this.uuidGenerator = uuidGenerator;
             this.config = this.setupConfig(config);
             this.session = this.setupSession(workbookData.revisionId);
-            this.history = new LocalHistory(this.dispatchFromCorePlugin, this.session);
             this.coreGetters = {};
             this.range = new RangeAdapter(this.coreGetters);
             this.coreGetters.getRangeString = this.range.getRangeString.bind(this.range);
@@ -45756,8 +46112,6 @@
             this.getters = {
                 isReadonly: () => this.config.mode === "readonly" || this.config.mode === "dashboard",
                 isDashboard: () => this.config.mode === "dashboard",
-                canUndo: this.history.canUndo.bind(this.history),
-                canRedo: this.history.canRedo.bind(this.history),
                 getClient: this.session.getClient.bind(this.session),
                 getConnectedClients: this.session.getConnectedClients.bind(this.session),
                 isFullySynchronized: this.session.isFullySynchronized.bind(this.session),
@@ -45765,6 +46119,8 @@
             this.uuidGenerator.setIsFastStrategy(true);
             // Initiate stream processor
             this.selection = new SelectionStreamProcessorImpl(this.getters);
+            this.coreHandlers.push(this.range);
+            this.handlers.push(this.range);
             this.corePluginConfig = this.setupCorePluginConfig();
             this.uiPluginConfig = this.setupUiPluginConfig();
             // registering plugins
@@ -45773,13 +46129,20 @@
             }
             Object.assign(this.getters, this.coreGetters);
             for (let Plugin of statefulUIPluginRegistry.getAll()) {
-                this.statefulUIPlugins.push(this.setupUiPlugin(Plugin));
+                const plugin = this.setupUiPlugin(Plugin);
+                this.statefulUIPlugins.push(plugin);
+                this.handlers.push(plugin);
             }
             for (let Plugin of coreViewsPluginRegistry.getAll()) {
-                this.coreViewsPlugins.push(this.setupUiPlugin(Plugin));
+                const plugin = this.setupUiPlugin(Plugin);
+                this.coreViewsPlugins.push(plugin);
+                this.handlers.push(plugin);
+                this.coreHandlers.push(plugin);
             }
             for (let Plugin of featurePluginRegistry.getAll()) {
-                this.featurePlugins.push(this.setupUiPlugin(Plugin));
+                const plugin = this.setupUiPlugin(Plugin);
+                this.featurePlugins.push(plugin);
+                this.handlers.push(plugin);
             }
             this.uuidGenerator.setIsFastStrategy(false);
             // starting plugins
@@ -45802,15 +46165,6 @@
             // mark all models as "raw", so they will not be turned into reactive objects
             // by owl, since we do not rely on reactivity
             owl.markRaw(this);
-        }
-        get handlers() {
-            return [...this.coreHandlers, ...this.allUIPlugins, this.history];
-        }
-        get coreHandlers() {
-            return [this.range, ...this.corePlugins];
-        }
-        get allUIPlugins() {
-            return [...this.statefulUIPlugins, ...this.coreViewsPlugins, ...this.featurePlugins];
         }
         joinSession() {
             this.session.join(this.config.client);
@@ -45853,6 +46207,8 @@
             }
             plugin.import(data);
             this.corePlugins.push(plugin);
+            this.coreHandlers.push(plugin);
+            this.handlers.push(plugin);
         }
         onRemoteRevisionReceived({ commands }) {
             for (let command of commands) {
@@ -45870,15 +46226,21 @@
                     return;
                 }
                 this.isReplayingCommand = true;
-                this.dispatchToHandlers([this.range, ...this.corePlugins, ...this.coreViewsPlugins], command);
+                this.dispatchToHandlers(this.coreHandlers, command);
                 this.isReplayingCommand = false;
             }), this.config.transportService, revisionId);
             return session;
         }
         setupSessionEvents() {
             this.session.on("remote-revision-received", this, this.onRemoteRevisionReceived);
-            this.session.on("revision-redone", this, this.finalize);
-            this.session.on("revision-undone", this, this.finalize);
+            this.session.on("revision-undone", this, ({ commands }) => {
+                this.dispatchFromCorePlugin("UNDO", { commands });
+                this.finalize();
+            });
+            this.session.on("revision-redone", this, ({ commands }) => {
+                this.dispatchFromCorePlugin("REDO", { commands });
+                this.finalize();
+            });
             // How could we improve communication between the session and UI?
             // It feels weird to have the model piping specific session events to its own bus.
             this.session.on("unexpected-revision-id", this, () => this.trigger("unexpected-revision-id"));
@@ -45926,6 +46288,7 @@
                 custom: this.config.custom,
                 uiActions: this.config,
                 lazyEvaluation: this.config.lazyEvaluation,
+                session: this.session,
             };
         }
         // ---------------------------------------------------------------------------
@@ -45941,7 +46304,8 @@
             return this.checkDispatchAllowedLocalCommand(command);
         }
         checkDispatchAllowedCoreCommand(command) {
-            const results = this.coreHandlers.map((handler) => handler.allowDispatch(command));
+            const results = this.corePlugins.map((handler) => handler.allowDispatch(command));
+            results.push(this.range.allowDispatch(command));
             return new DispatchResult(results.flat());
         }
         checkDispatchAllowedLocalCommand(command) {
@@ -46005,7 +46369,7 @@
                 }
             }
             data.revisionId = this.session.getRevisionId() || DEFAULT_REVISION_ID;
-            data = JSON.parse(JSON.stringify(data));
+            data = deepCopy(data);
             return data;
         }
         updateMode(mode) {
@@ -46033,7 +46397,7 @@
                     handler.exportForExcel(data);
                 }
             }
-            data = JSON.parse(JSON.stringify(data));
+            data = deepCopy(data);
             return getXLSX(data);
         }
         garbageCollectExternalResources() {
@@ -46086,6 +46450,8 @@
         urlRegistry,
         cellPopoverRegistry,
         numberFormatMenuRegistry,
+        repeatLocalCommandTransformRegistry,
+        repeatCommandTransformRegistry,
     };
     const helpers = {
         arg,
@@ -46114,6 +46480,7 @@
         positionToZone,
         isDefined: isDefined$1,
         lazy,
+        genericRepeat,
     };
     const links = {
         isMarkdownLink,
@@ -46177,9 +46544,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.3.0-alpha.4';
-    __info__.date = '2023-04-14T13:55:06.449Z';
-    __info__.hash = '6824b8a';
+    __info__.version = '16.3.0-alpha.5';
+    __info__.date = '2023-04-21T08:03:01.799Z';
+    __info__.hash = '6304f41';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
