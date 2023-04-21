@@ -23,7 +23,7 @@ class AccountMoveSendBase(AccountTestInvoicingCommon, MailCommon):
         cls.user_accountman = cls.env.user  # main account setup shadows users, better save it
         cls.company_main = cls.company_data['company']
         cls.company_main.invoice_is_email = True
-        cls.company_main.invoice_is_print = False
+        cls.company_main.invoice_is_download = False
         cls.move_template = cls.env['mail.template'].create({
             'auto_delete': True,
             'body_html': '<p>TemplateBody for <t t-out="object.name"></t><t t-out="object.invoice_user_id.signature or \'\'"></t></p>',

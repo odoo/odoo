@@ -106,7 +106,7 @@ class ResConfigSettings(models.TransientModel):
     account_fiscal_country_id = fields.Many2one(string="Fiscal Country Code", related="company_id.account_fiscal_country_id", readonly=False, store=False)
 
     qr_code = fields.Boolean(string='Display SEPA QR-code', related='company_id.qr_code', readonly=False)
-    invoice_is_print = fields.Boolean(string='Print', related='company_id.invoice_is_print', readonly=False)
+    invoice_is_download = fields.Boolean(string='Download', related='company_id.invoice_is_download', readonly=False)
     invoice_is_email = fields.Boolean(string='Send Email', related='company_id.invoice_is_email', readonly=False)
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm', related='company_id.incoterm_id', help='International Commercial Terms are a series of predefined commercial terms used in international transactions.', readonly=False)
     invoice_terms = fields.Html(related='company_id.invoice_terms', string="Terms & Conditions", readonly=False)
