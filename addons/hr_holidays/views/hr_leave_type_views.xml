@@ -75,7 +75,7 @@
                         <group name="allocation_validation" id="allocation_requests" string="Allocation Requests">
                             <field name="requires_allocation" widget="radio" options="{'horizontal':true}"/>
                             <field name="employee_requests" widget="radio" attrs="{'invisible': [('requires_allocation', '=', 'no')]}"/>
-                            <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': ['|', ('requires_allocation', '=', 'no'), ('employee_requests', '=', 'no')]}"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': [('requires_allocation', '=', 'no')]}"/>
                         </group>
                     </group>
                     <group name="visual" id="visual" string="Display Option" class="mw-100 col-lg-12">
@@ -113,13 +113,15 @@
         <field name="name">hr.leave.type.normal.tree</field>
         <field name="model">hr.leave.type</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Type">
+            <tree string="Time Off Type" multi_edit="1">
                 <field name="sequence" widget="handle"/>
                 <field name="display_name"/>
                 <field name="allocation_validation_type"/>
                 <field name="employee_requests" optional="hide"/>
                 <field name="requires_allocation" optional="hide"/>
                 <field name="leave_validation_type" optional="hide"/>
+                <field name="responsible_ids" widget="many2many_tags" attrs="{
+                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('requires_allocation', '=', 'no'), ('allocation_validation_type', '!=', 'officer')]}" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="hide"/>
             </tree>
         </field>
