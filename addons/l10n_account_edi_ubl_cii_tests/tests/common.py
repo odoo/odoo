@@ -52,7 +52,10 @@ class TestUBLCommon(AccountTestInvoicingCommon):
             eur.active = True
 
         res = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
-        res['company'].currency_id = eur
+        res['company'].write({
+            'currency_id': eur.id,
+            'invoice_is_ubl_cii': True,  # check the ubl_cii format by default in the send & print wizard
+        })
         return res
 
     def assert_same_invoice(self, invoice1, invoice2, **invoice_kwargs):
