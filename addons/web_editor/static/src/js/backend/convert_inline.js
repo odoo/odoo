@@ -425,7 +425,7 @@ function classToStyle($editable, cssRules) {
                     <table align="center" role="presentation" border="0" cellpadding="0" cellspacing="0" style="border-radius: 6px; border-collapse: separate !important;">
                         <tbody>
                             <tr>
-                                <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '')}" ${
+                                <td style="${node.style.cssText.replace(RE_PADDING_MATCH, '').replaceAll('"', '&quot;')}" ${
                                     node.parentElement.style.textAlign === 'center' ? 'align="center" ' : ''
                                 }bgcolor="${rgbToHex(node.style.backgroundColor)}">
                 <![endif]`));
@@ -1038,10 +1038,11 @@ function normalizeRem($editable, rootFontSize=16) {
         } else {
             outlookTd.setAttribute('style', msoStyles);
         }
+        // The opening tag of `outlookTd` is for Outlook.
         td.before(document.createComment(`[if mso]>${outlookTd.outerHTML.replace('</td>', '')}<![endif]`));
-        td.before(document.createComment('[if !mso]><!--'));
+        // The opening tag of `td` is for the others.
+        td.before(document.createComment('[if !mso]><!'));
         td.prepend(document.createComment('<![endif]'));
-        td.after(document.createComment(`[if mso]></td><![endif]`));
     }
 }
 /**
