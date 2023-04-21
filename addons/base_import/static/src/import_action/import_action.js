@@ -191,8 +191,9 @@ export class ImportAction extends Component {
     // Fields
     //--------------------------------------------------------------------------
 
-    onFieldChanged(column, value) {
-        this.model.setColumnField(column, value);
+    onFieldChanged(column, fieldId) {
+        const selection = this.model.fields.find((f) => f.id === fieldId);
+        this.model.setColumnField(column, selection);
     }
 
     isFieldSet(column) {
