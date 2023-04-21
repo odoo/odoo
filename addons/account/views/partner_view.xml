@@ -208,7 +208,7 @@
                         <field name="show_credit_limit" invisible="1"/>
                         <group>
                             <group string="Bank Accounts" name="banks" groups="account.group_account_invoice,account.group_account_readonly">
-                                <field name="bank_ids" nolabel="1" colspan="2" context="{'default_partner_id': active_id}">
+                                <field name="bank_ids" nolabel="1" colspan="2" context="{'default_partner_id': active_id}" widget="auto_save_res_partner">
                                     <tree>
                                         <field name="sequence" widget="handle"/>
                                         <field name="acc_number"/>
