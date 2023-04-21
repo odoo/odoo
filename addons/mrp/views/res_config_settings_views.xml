@@ -12,7 +12,6 @@
                         <block title="Operations" name="process_operations_setting_container">
                             <setting id="work_order" string="Work Orders" help="Process operations at specific work centers" documentation="/applications/inventory_and_mrp/manufacturing/management/bill_configuration.html#adding-a-routing" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required components.">
                                 <field name="group_mrp_routings"/>
-                                <field name="module_mrp_workorder" invisible="1"/>
                                 <div id="workorder_settings_workcenters" class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
                                     <div class="mt8">
                                         <div>
