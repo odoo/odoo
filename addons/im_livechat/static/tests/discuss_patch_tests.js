@@ -89,7 +89,7 @@ QUnit.test("add livechat in the sidebar on visitor sending first message", async
     // simulate livechat visitor sending a message
     const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
     await afterNextRender(async () =>
-        env.services.rpc("/mail/chat_post", {
+        env.services.rpc("/im_livechat/chat_post", {
             context: { mockedUserId: false },
             uuid: channel.uuid,
             message_content: "new message",

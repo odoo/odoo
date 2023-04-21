@@ -212,6 +212,30 @@ class LivechatController(http.Controller):
         if discuss_channel:
             discuss_channel._close_livechat_session()
 
+    @http.route('/im_livechat/chat_post', type="json", auth="public", cors="*")
+    def im_livechat_chat_post(self, uuid, message_content):
+        channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
+        if not channel:
+            return False
+        # find the author from the user session
+        if request.session.uid:
+            author = request.env['res.users'].sudo().browse(request.session.uid).partner_id
+            author_id = author.id
+            email_from = author.email_formatted
+        else:  # If Public User, use catchall email from company
+            author_id = False
+            email_from = channel.anonymous_name or channel.create_uid.company_id.catchall_formatted
+        # post a message without adding followers to the channel. email_from=False avoid to get author from email data
+        body = tools.plaintext2html(message_content)
+        message = channel.with_context(mail_create_nosubscribe=True).message_post(
+            author_id=author_id,
+            email_from=email_from,
+            body=body,
+            message_type='comment',
+            subtype_xmlid='mail.mt_comment'
+        )
+        return message.id if message else False
+
     @http.route(['/im_livechat/chat_history'], type="json", auth="public", cors="*")
     def im_livechat_chat_history(self, uuid, last_id=False, limit=20):
         channel = request.env["discuss.channel"].sudo().search([('uuid', '=', uuid)], limit=1)
