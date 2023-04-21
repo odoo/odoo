@@ -1005,6 +1005,10 @@
         }
         return true;
     }
+    /** Check if the given array contains all the values of the other array. */
+    function includesAll(arr, values) {
+        return values.every((value) => arr.includes(value));
+    }
     /**
      * Return an object with all the keys in the object that have a falsy value removed.
      */
@@ -1678,12 +1682,77 @@
      * - all digit stored in the decimal part of the number
      *
      * The 'maxDecimal' parameter allows to indicate the number of digits to not
-     * exceed in the decimal part, in which case digits are rounded
+     * exceed in the decimal part, in which case digits are rounded.
      *
-     * Intl.Numberformat is used to properly handle all the roundings.
-     * e.g. 1234.7  with format ### (<> maxDecimals=0) should become 1235, not 1234
      **/
     function splitNumber(value, maxDecimals = MAX_DECIMAL_PLACES) {
+        const asString = value.toString();
+        if (asString.includes("e"))
+            return splitNumberIntl(value, maxDecimals);
+        if (Number.isInteger(value)) {
+            return { integerDigits: asString, decimalDigits: undefined };
+        }
+        const indexOfDot = asString.indexOf(".");
+        let integerDigits = asString.substring(0, indexOfDot);
+        let decimalDigits = asString.substring(indexOfDot + 1);
+        if (maxDecimals === 0) {
+            if (Number(decimalDigits[0]) >= 5) {
+                integerDigits = (Number(integerDigits) + 1).toString();
+            }
+            return { integerDigits, decimalDigits: undefined };
+        }
+        if (decimalDigits.length > maxDecimals) {
+            const { integerDigits: roundedIntegerDigits, decimalDigits: roundedDecimalDigits } = limitDecimalDigits(decimalDigits, maxDecimals);
+            decimalDigits = roundedDecimalDigits;
+            if (roundedIntegerDigits !== "0") {
+                integerDigits = (Number(integerDigits) + Number(roundedIntegerDigits)).toString();
+            }
+        }
+        return { integerDigits, decimalDigits: removeTrailingZeroes(decimalDigits || "") };
+    }
+    /**
+     *  Return the given string minus the trailing "0" characters.
+     *
+     * @param numberString : a string of integers
+     * @returns the numberString, minus the eventual zeroes at the end
+     */
+    function removeTrailingZeroes(numberString) {
+        let i = numberString.length - 1;
+        while (i >= 0 && numberString[i] === "0") {
+            i--;
+        }
+        return numberString.slice(0, i + 1) || undefined;
+    }
+    /**
+     * Limit the size of the decimal part of a number to the given number of digits.
+     */
+    function limitDecimalDigits(decimalDigits, maxDecimals) {
+        let integerDigits = "0";
+        let resultDecimalDigits = decimalDigits;
+        // Note : we'd want to simply use number.toFixed() to handle the max digits & rounding,
+        // but it has very strange behaviour. Ex: 12.345.toFixed(2) => "12.35", but 1.345.toFixed(2) => "1.34"
+        let slicedDecimalDigits = decimalDigits.slice(0, maxDecimals);
+        const i = maxDecimals;
+        if (Number(Number(decimalDigits[i]) < 5)) {
+            return { integerDigits, decimalDigits: slicedDecimalDigits };
+        }
+        // round up
+        const slicedRoundedUp = (Number(slicedDecimalDigits) + 1).toString();
+        if (slicedRoundedUp.length > slicedDecimalDigits.length) {
+            integerDigits = (Number(integerDigits) + 1).toString();
+            resultDecimalDigits = undefined;
+        }
+        else {
+            resultDecimalDigits = slicedRoundedUp;
+        }
+        return { integerDigits, decimalDigits: resultDecimalDigits };
+    }
+    /**
+     * Split numbers into decimal/integer digits using Intl.NumberFormat.
+     * Supports numbers with a lot of digits that are transformed to scientific notation by
+     * number.toString(), but is slow.
+     */
+    function splitNumberIntl(value, maxDecimals = MAX_DECIMAL_PLACES) {
         let formatter = numberRepresentation[maxDecimals];
         if (!formatter) {
             formatter = new Intl.NumberFormat("en-US", {
@@ -9132,6 +9201,11 @@
         name: REMOVE_COLUMNS_NAME,
         sequence: 90,
         action: REMOVE_COLUMNS_ACTION,
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const selectedCols = env.model.getters.getElementsFromSelection("COL");
+            return env.model.getters.canRemoveHeaders(sheetId, "COL", selectedCols);
+        },
     })
         .add("clear_column", {
         name: DELETE_CONTENT_COLUMNS_NAME,
@@ -9144,9 +9218,8 @@
         action: HIDE_COLUMNS_ACTION,
         isVisible: (env) => {
             const sheetId = env.model.getters.getActiveSheetId();
-            const hiddenCols = env.model.getters.getHiddenColsGroups(sheetId).flat();
-            return (env.model.getters.getNumberCols(sheetId) >
-                hiddenCols.length + env.model.getters.getElementsFromSelection("COL").length);
+            const selectedCols = env.model.getters.getElementsFromSelection("COL");
+            return env.model.getters.canRemoveHeaders(sheetId, "COL", selectedCols);
         },
         separator: true,
     })
@@ -9220,6 +9293,11 @@
         name: REMOVE_ROWS_NAME,
         sequence: 70,
         action: REMOVE_ROWS_ACTION,
+        isVisible: (env) => {
+            const sheetId = env.model.getters.getActiveSheetId();
+            const selectedRows = env.model.getters.getElementsFromSelection("ROW");
+            return env.model.getters.canRemoveHeaders(sheetId, "ROW", selectedRows);
+        },
     })
         .add("clear_row", {
         name: DELETE_CONTENT_ROWS_NAME,
@@ -9232,9 +9310,8 @@
         action: HIDE_ROWS_ACTION,
         isVisible: (env) => {
             const sheetId = env.model.getters.getActiveSheetId();
-            const hiddenRows = env.model.getters.getHiddenRowsGroups(sheetId).flat();
-            return (env.model.getters.getNumberRows(sheetId) >
-                hiddenRows.length + env.model.getters.getElementsFromSelection("ROW").length);
+            const selectedRows = env.model.getters.getElementsFromSelection("ROW");
+            return env.model.getters.canRemoveHeaders(sheetId, "ROW", selectedRows);
         },
         separator: true,
     })
@@ -21970,8 +22047,8 @@
                 },
                 "CTRL+END": () => {
                     const sheetId = this.env.model.getters.getActiveSheetId();
-                    const col = this.env.model.getters.findVisibleHeader(sheetId, "COL", range(0, this.env.model.getters.getNumberCols(sheetId)).reverse());
-                    const row = this.env.model.getters.findVisibleHeader(sheetId, "ROW", range(0, this.env.model.getters.getNumberRows(sheetId)).reverse());
+                    const col = this.env.model.getters.findVisibleHeader(sheetId, "COL", this.env.model.getters.getNumberCols(sheetId) - 1, 0);
+                    const row = this.env.model.getters.findVisibleHeader(sheetId, "ROW", this.env.model.getters.getNumberRows(sheetId) - 1, 0);
                     this.env.model.selection.selectCell(col, row);
                 },
                 "SHIFT+ ": () => {
@@ -22051,9 +22128,10 @@
             this.focus();
         }
         focus() {
+            var _a;
             if (!this.env.model.getters.getSelectedFigureId() &&
                 this.env.model.getters.getEditionMode() === "inactive") {
-                this.hiddenInput.el.focus();
+                (_a = this.hiddenInput.el) === null || _a === void 0 ? void 0 : _a.focus();
             }
         }
         get gridEl() {
@@ -25948,7 +26026,7 @@
                 }
             }
         }
-        data = JSON.parse(JSON.stringify(data));
+        data = deepCopy(data);
         // apply migrations, if needed
         if ("version" in data) {
             if (data.version < CURRENT_VERSION) {
@@ -29391,7 +29469,7 @@
         allowDispatch(cmd) {
             switch (cmd.type) {
                 case "HIDE_COLUMNS_ROWS": {
-                    if (!this.hiddenHeaders[cmd.sheetId]) {
+                    if (!this.getters.tryGetSheet(cmd.sheetId)) {
                         return 27 /* CommandResult.InvalidSheetId */;
                     }
                     const hiddenGroup = cmd.dimension === "COL"
@@ -29404,6 +29482,14 @@
                         ? 0 /* CommandResult.Success */
                         : 66 /* CommandResult.TooManyHiddenElements */;
                 }
+                case "REMOVE_COLUMNS_ROWS":
+                    if (!this.getters.tryGetSheet(cmd.sheetId)) {
+                        return 27 /* CommandResult.InvalidSheetId */;
+                    }
+                    if (!this.canRemoveHeaders(cmd.sheetId, cmd.dimension, cmd.elements)) {
+                        return 8 /* CommandResult.NotEnoughElements */;
+                    }
+                    return 0 /* CommandResult.Success */;
             }
             return 0 /* CommandResult.Success */;
         }
@@ -29450,6 +29536,10 @@
             }
             return;
         }
+        canRemoveHeaders(sheetId, dimension, elements) {
+            const visibleHeaders = this.getAllVisibleHeaders(sheetId, dimension);
+            return !includesAll(elements, visibleHeaders);
+        }
         isRowHiddenByUser(sheetId, index) {
             return this.hiddenHeaders[sheetId].ROW[index];
         }
@@ -29493,6 +29583,9 @@
                 consecutiveIndexes.pop();
             }
             return consecutiveIndexes;
+        }
+        getAllVisibleHeaders(sheetId, dimension) {
+            return range(0, this.hiddenHeaders[sheetId][dimension].length).filter((i) => !this.hiddenHeaders[sheetId][dimension][i]);
         }
         import(data) {
             var _a, _b;
@@ -29541,6 +29634,7 @@
         }
     }
     HeaderVisibilityPlugin.getters = [
+        "canRemoveHeaders",
         "getHiddenColsGroups",
         "getHiddenRowsGroups",
         "isRowHiddenByUser",
@@ -30559,14 +30653,6 @@
                     return this.orderedSheetIds.length > 1
                         ? 0 /* CommandResult.Success */
                         : 9 /* CommandResult.NotEnoughSheets */;
-                case "REMOVE_COLUMNS_ROWS": {
-                    const length = cmd.dimension === "COL"
-                        ? this.getNumberCols(cmd.sheetId)
-                        : this.getNumberRows(cmd.sheetId);
-                    return length > cmd.elements.length
-                        ? 0 /* CommandResult.Success */
-                        : 8 /* CommandResult.NotEnoughElements */;
-                }
                 case "FREEZE_ROWS": {
                     return this.checkValidations(cmd, this.checkRowFreezeQuantity, this.checkRowFreezeOverlapMerge);
                 }
@@ -31033,7 +31119,7 @@
         duplicateSheet(fromId, toId) {
             const sheet = this.getSheet(fromId);
             const toName = this.getDuplicateSheetName(sheet.name);
-            const newSheet = JSON.parse(JSON.stringify(sheet));
+            const newSheet = deepCopy(sheet);
             newSheet.id = toId;
             newSheet.name = toName;
             for (let col = 0; col <= newSheet.numberOfCols; col++) {
@@ -31160,10 +31246,10 @@
             }
         }
         moveCellOnColumnsDeletion(sheet, deletedColumn) {
-            for (let [index, row] of Object.entries(sheet.rows)) {
-                const rowIndex = parseInt(index, 10);
+            for (let rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+                const row = sheet.rows[rowIndex];
                 for (let i in row.cells) {
-                    const colIndex = parseInt(i, 10);
+                    const colIndex = Number(i);
                     const cellId = row.cells[i];
                     if (cellId) {
                         if (colIndex === deletedColumn) {
@@ -31190,11 +31276,11 @@
          */
         moveCellsOnAddition(sheet, addedElement, quantity, dimension) {
             const commands = [];
-            for (const [index, row] of Object.entries(sheet.rows)) {
-                const rowIndex = parseInt(index, 10);
+            for (let rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+                const row = sheet.rows[rowIndex];
                 if (dimension !== "rows" || rowIndex >= addedElement) {
                     for (let i in row.cells) {
-                        const colIndex = parseInt(i, 10);
+                        const colIndex = Number(i);
                         const cellId = row.cells[i];
                         if (cellId) {
                             if (dimension === "rows" || colIndex >= addedElement) {
@@ -31224,11 +31310,11 @@
          */
         moveCellOnRowsDeletion(sheet, deleteFromRow, deleteToRow) {
             const numberRows = deleteToRow - deleteFromRow + 1;
-            for (let [index, row] of Object.entries(sheet.rows)) {
-                const rowIndex = parseInt(index, 10);
+            for (let rowIndex = 0; rowIndex < sheet.rows.length; rowIndex++) {
+                const row = sheet.rows[rowIndex];
                 if (rowIndex >= deleteFromRow && rowIndex <= deleteToRow) {
                     for (let i in row.cells) {
-                        const colIndex = parseInt(i, 10);
+                        const colIndex = Number(i);
                         const cellId = row.cells[i];
                         if (cellId) {
                             this.dispatch("CLEAR_CELL", {
@@ -31241,7 +31327,7 @@
                 }
                 if (rowIndex > deleteToRow) {
                     for (let i in row.cells) {
-                        const colIndex = parseInt(i, 10);
+                        const colIndex = Number(i);
                         const cellId = row.cells[i];
                         if (cellId) {
                             this.dispatch("UPDATE_CELL_POSITION", {
@@ -31259,7 +31345,7 @@
             const rows = [];
             const cellsQueue = sheet.rows.map((row) => row.cells);
             for (let i in sheet.rows) {
-                if (parseInt(i, 10) === index) {
+                if (Number(i) === index) {
                     continue;
                 }
                 rows.push({
@@ -32430,13 +32516,11 @@
             return Boolean(id && ((_b = (_a = this.filterValues[sheetId]) === null || _a === void 0 ? void 0 : _a[id]) === null || _b === void 0 ? void 0 : _b.length));
         }
         intersectZoneWithViewport(sheetId, zone) {
-            const colsRange = range(zone.left, zone.right + 1);
-            const rowsRange = range(zone.top, zone.bottom + 1);
             return {
-                left: this.getters.findVisibleHeader(sheetId, "COL", colsRange),
-                right: this.getters.findVisibleHeader(sheetId, "COL", colsRange.reverse()),
-                top: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange),
-                bottom: this.getters.findVisibleHeader(sheetId, "ROW", rowsRange.reverse()),
+                left: this.getters.findVisibleHeader(sheetId, "COL", zone.left, zone.right),
+                right: this.getters.findVisibleHeader(sheetId, "COL", zone.right, zone.left),
+                top: this.getters.findVisibleHeader(sheetId, "ROW", zone.top, zone.bottom),
+                bottom: this.getters.findVisibleHeader(sheetId, "ROW", zone.bottom, zone.top),
             };
         }
         updateFilter({ col, row, values, sheetId }) {
@@ -34543,13 +34627,33 @@
         getNextVisibleCellPosition({ sheetId, col, row }) {
             return {
                 sheetId,
-                col: this.findVisibleHeader(sheetId, "COL", range(col, this.getters.getNumberCols(sheetId))),
-                row: this.findVisibleHeader(sheetId, "ROW", range(row, this.getters.getNumberRows(sheetId))),
+                col: this.findVisibleHeader(sheetId, "COL", col, this.getters.getNumberCols(sheetId) - 1),
+                row: this.findVisibleHeader(sheetId, "ROW", row, this.getters.getNumberRows(sheetId) - 1),
             };
         }
-        findVisibleHeader(sheetId, dimension, indexes) {
-            return indexes.find((index) => this.getters.doesHeaderExist(sheetId, dimension, index) &&
-                !this.isHeaderHidden(sheetId, dimension, index));
+        /**
+         * Find the first visible header in the range [`from` => `to`].
+         *
+         * Both `from` and `to` are inclusive.
+         */
+        findVisibleHeader(sheetId, dimension, from, to) {
+            if (from <= to) {
+                for (let i = from; i <= to; i++) {
+                    if (this.getters.doesHeaderExist(sheetId, dimension, i) &&
+                        !this.isHeaderHidden(sheetId, dimension, i)) {
+                        return i;
+                    }
+                }
+            }
+            if (from > to) {
+                for (let i = from; i >= to; i--) {
+                    if (this.getters.doesHeaderExist(sheetId, dimension, i) &&
+                        !this.isHeaderHidden(sheetId, dimension, i)) {
+                        return i;
+                    }
+                }
+            }
+            return undefined;
         }
         findLastVisibleColRowIndex(sheetId, dimension, { last, first }) {
             const lastVisibleIndex = range(last, first, -1).find((index) => !this.isHeaderHidden(sheetId, dimension, index));
@@ -34557,7 +34661,7 @@
         }
         findFirstVisibleColRowIndex(sheetId, dimension) {
             const numberOfHeaders = this.getters.getNumberHeaders(sheetId, dimension);
-            for (let i = 0; i < numberOfHeaders - 1; i++) {
+            for (let i = 0; i < numberOfHeaders; i++) {
                 if (dimension === "COL" && !this.isColHidden(sheetId, i)) {
                     return i;
                 }
@@ -42761,8 +42865,8 @@
             }
             const { left, right, top, bottom } = zone;
             const sheetId = this.getters.getActiveSheetId();
-            const refCol = this.getters.findVisibleHeader(sheetId, "COL", range(left, right + 1));
-            const refRow = this.getters.findVisibleHeader(sheetId, "ROW", range(top, bottom + 1));
+            const refCol = this.getters.findVisibleHeader(sheetId, "COL", left, right);
+            const refRow = this.getters.findVisibleHeader(sheetId, "ROW", top, bottom);
             if (refRow === undefined || refCol === undefined) {
                 return 17 /* CommandResult.SelectionOutOfBound */;
             }
@@ -42837,10 +42941,10 @@
             const { col: anchorCol, row: anchorRow } = anchor.cell;
             return {
                 col: this.getters.isColHidden(sheetId, anchorCol)
-                    ? this.getters.findVisibleHeader(sheetId, "COL", range(left, right + 1)) || anchorCol
+                    ? this.getters.findVisibleHeader(sheetId, "COL", left, right) || anchorCol
                     : anchorCol,
                 row: this.getters.isRowHidden(sheetId, anchorRow)
-                    ? this.getters.findVisibleHeader(sheetId, "ROW", range(top, bottom + 1)) || anchorRow
+                    ? this.getters.findVisibleHeader(sheetId, "ROW", top, bottom) || anchorRow
                     : anchorRow,
             };
         }
@@ -44590,6 +44694,8 @@
              * Internal status of the model. Important for command handling coordination
              */
             this.status = 0 /* Status.Ready */;
+            this.handlers = [];
+            this.coreHandlers = [];
             /**
              * The dispatch method is the only entry point to manipulate data in the model.
              * This is through this method that commands are dispatched most of the time
@@ -44694,6 +44800,8 @@
             this.uuidGenerator.setIsFastStrategy(true);
             // Initiate stream processor
             this.selection = new SelectionStreamProcessorImpl(this.getters);
+            this.coreHandlers.push(this.range);
+            this.handlers.push(this.range);
             this.corePluginConfig = this.setupCorePluginConfig();
             this.uiPluginConfig = this.setupUiPluginConfig();
             // registering plugins
@@ -44702,15 +44810,23 @@
             }
             Object.assign(this.getters, this.coreGetters);
             for (let Plugin of statefulUIPluginRegistry.getAll()) {
-                this.statefulUIPlugins.push(this.setupUiPlugin(Plugin));
+                const plugin = this.setupUiPlugin(Plugin);
+                this.statefulUIPlugins.push(plugin);
+                this.handlers.push(plugin);
             }
             for (let Plugin of coreViewsPluginRegistry.getAll()) {
-                this.coreViewsPlugins.push(this.setupUiPlugin(Plugin));
+                const plugin = this.setupUiPlugin(Plugin);
+                this.coreViewsPlugins.push(plugin);
+                this.handlers.push(plugin);
+                this.coreHandlers.push(plugin);
             }
             for (let Plugin of featurePluginRegistry.getAll()) {
-                this.featurePlugins.push(this.setupUiPlugin(Plugin));
+                const plugin = this.setupUiPlugin(Plugin);
+                this.featurePlugins.push(plugin);
+                this.handlers.push(plugin);
             }
             this.uuidGenerator.setIsFastStrategy(false);
+            this.handlers.push(this.history);
             // starting plugins
             this.dispatch("START");
             // Model should be the last permanent subscriber in the list since he should render
@@ -44731,12 +44847,6 @@
             // mark all models as "raw", so they will not be turned into reactive objects
             // by owl, since we do not rely on reactivity
             owl.markRaw(this);
-        }
-        get handlers() {
-            return [this.range, ...this.corePlugins, ...this.allUIPlugins, this.history];
-        }
-        get allUIPlugins() {
-            return [...this.statefulUIPlugins, ...this.coreViewsPlugins, ...this.featurePlugins];
         }
         joinSession() {
             this.session.join(this.config.client);
@@ -44779,6 +44889,8 @@
             }
             plugin.import(data);
             this.corePlugins.push(plugin);
+            this.coreHandlers.push(plugin);
+            this.handlers.push(plugin);
         }
         onRemoteRevisionReceived({ commands }) {
             for (let command of commands) {
@@ -44921,7 +45033,7 @@
                 }
             }
             data.revisionId = this.session.getRevisionId() || DEFAULT_REVISION_ID;
-            data = JSON.parse(JSON.stringify(data));
+            data = deepCopy(data);
             return data;
         }
         updateMode(mode) {
@@ -44949,7 +45061,7 @@
                     handler.exportForExcel(data);
                 }
             }
-            data = JSON.parse(JSON.stringify(data));
+            data = deepCopy(data);
             return getXLSX(data);
         }
         garbageCollectExternalResources() {
@@ -45091,9 +45203,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.3';
-    __info__.date = '2023-04-14T13:29:29.488Z';
-    __info__.hash = '4514375';
+    __info__.version = '16.2.4';
+    __info__.date = '2023-04-21T08:02:02.039Z';
+    __info__.hash = '7169d69';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
