@@ -2,7 +2,7 @@
 
 import { useWidget } from "@web/legacy/utils";
 import {useService} from '@web/core/utils/hooks';
-import AceEditor from '@web_editor/js/common/ace';
+import AceEditor from '@web_editor/js/backend/ace';
 
 import { Component, xml } from "@odoo/owl";
 
