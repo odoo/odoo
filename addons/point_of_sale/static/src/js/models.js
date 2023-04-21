@@ -1573,7 +1573,7 @@ export class Product extends PosModel {
     get isScaleAvailable() {
         return true;
     }
-    async getAddProductOptions(base_code) {
+    async getAddProductOptions(code) {
         let price_extra = 0.0;
         let draftPackLotLines, weight, description, packLotLinesToEdit;
 
@@ -1615,26 +1615,39 @@ export class Product extends PosModel {
                     packLotLinesToEdit = [];
                 }
             }
-            const { confirmed, payload } = await this.pos.env.services.popup.add(EditListPopup, {
-                title: this.pos.env._t("Lot/Serial Number(s) Required"),
-                name: this.display_name,
-                isSingleItem: isAllowOnlyOneLot,
-                array: packLotLinesToEdit,
-            });
-            if (confirmed) {
-                // Segregate the old and new packlot lines
+            // if the lot information exists in the barcode, we don't need to ask it from the user.
+            if (code && code.type === 'lot') {
+                // consider the old and new packlot lines
                 const modifiedPackLotLines = Object.fromEntries(
-                    payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+                    packLotLinesToEdit.filter(item => item.id).map(item => [item.id, item.text])
                 );
-                const newPackLotLines = payload.newArray
-                    .filter((item) => !item.id)
-                    .map((item) => ({ lot_name: item.text }));
-
+                const newPackLotLines = [
+                    { lot_name: code.code },
+                ];
                 draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
             } else {
-                // We don't proceed on adding product.
-                return;
+                const { confirmed, payload } = await this.pos.env.services.popup.add(EditListPopup, {
+                    title: this.pos.env._t("Lot/Serial Number(s) Required"),
+                    name: this.display_name,
+                    isSingleItem: isAllowOnlyOneLot,
+                    array: packLotLinesToEdit,
+                });
+                if (confirmed) {
+                    // Segregate the old and new packlot lines
+                    const modifiedPackLotLines = Object.fromEntries(
+                        payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+                    );
+                    const newPackLotLines = payload.newArray
+                        .filter((item) => !item.id)
+                        .map((item) => ({ lot_name: item.text }));
+
+                    draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
+                } else {
+                    // We don't proceed on adding product.
+                    return;
+                }
             }
+
         }
 
         // Take the weight if necessary.
@@ -1659,8 +1672,8 @@ export class Product extends PosModel {
             }
         }
 
-        if (base_code && this.pos.db.product_packaging_by_barcode[base_code.code]) {
-            weight = this.pos.db.product_packaging_by_barcode[base_code.code].qty;
+        if (code && this.pos.db.product_packaging_by_barcode[code.code]) {
+            weight = this.pos.db.product_packaging_by_barcode[code.code].qty;
         }
 
         return { draftPackLotLines, quantity: weight, description, price_extra };
