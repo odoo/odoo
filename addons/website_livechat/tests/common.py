@@ -73,7 +73,7 @@ class TestLivechatCommon(tests.TransactionCase):
         self.patch(type(self.env['website.visitor']), '_get_visitor_from_request', get_visitor_from_request)
 
     def _send_message(self, channel, email_from, body, author_id=False):
-        # As bus is unavailable in test mode, we cannot call /mail/chat_post route to post a message.
+        # As bus is unavailable in test mode, we cannot call /im_livechat/chat_post route to post a message.
         # Instead, we post directly the message on the given channel.
         channel.with_context(mail_create_nosubscribe=True) \
             .message_post(author_id=author_id, email_from=email_from, body=body,

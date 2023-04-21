@@ -17,12 +17,12 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
         await afterNextRender(() =>
-            env.services.rpc("/mail/chat_post", {
+            env.services.rpc("/mail/message/post", {
                 context: { mockedUserId: userId },
-                message_content: "new message",
-                uuid: channel.uuid,
+                post_data: { body: "new message", message_type: "comment" },
+                thread_id: channelId,
+                thread_model: "discuss.channel",
             })
         );
         assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
@@ -43,11 +43,11 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
-        const [channel] = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]]);
-        env.services.rpc("/mail/chat_post", {
+        env.services.rpc("/mail/message/post", {
             context: { mockedUserId: userId },
-            message_content: "new message",
-            uuid: channel.uuid,
+            post_data: { body: "new message", message_type: "comment" },
+            thread_id: channelId,
+            thread_model: "discuss.channel",
         });
         // leaving discuss.
         await openFormView("res.partner", partnerId);
