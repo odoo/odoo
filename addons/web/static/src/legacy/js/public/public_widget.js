@@ -5,13 +5,113 @@
  */
 
 import dom from 'web.dom';
-import Widget from 'web.Widget';
+import core from 'web.core';
+import mixins from 'web.mixins';
+import ServicesMixin from 'web.ServicesMixin';
+import { loadBundle } from '@web/core/assets';
+
 
 /**
- * Provides a way for executing code once a website DOM element is loaded in the
- * dom.
+ * Base class for all visual components. Provides a lot of functions helpful
+ * for the management of a part of the DOM.
+ *
+ * Widget handles:
+ *
+ * - Rendering with QWeb.
+ * - Life-cycle management and parenting (when a parent is destroyed, all its
+ *   children are destroyed too).
+ * - Insertion in DOM.
+ *
+ * **Guide to create implementations of the Widget class**
+ *
+ * Here is a sample child class::
+ *
+ *     var MyWidget = Widget.extend({
+ *         // the name of the QWeb template to use for rendering
+ *         template: "MyQWebTemplate",
+ *
+ *         init: function (parent) {
+ *             this._super(parent);
+ *             // stuff that you want to init before the rendering
+ *         },
+ *         willStart: function () {
+ *             // async work that need to be done before the widget is ready
+ *             // this method should return a promise
+ *         },
+ *         start: function() {
+ *             // stuff you want to make after the rendering, `this.$el` holds a correct value
+ *             this.$(".my_button").click(/* an example of event binding * /);
+ *
+ *             // if you have some asynchronous operations, it's a good idea to return
+ *             // a promise in start(). Note that this is quite rare, and if you
+ *             // need to fetch some data, this should probably be done in the
+ *             // willStart method
+ *             var promise = this._rpc(...);
+ *             return promise;
+ *         }
+ *     });
+ *
+ * Now this class can simply be used with the following syntax::
+ *
+ *     var myWidget = new MyWidget(this);
+ *     myWidget.appendTo($(".some-div"));
+ *
+ * With these two lines, the MyWidget instance was initialized, rendered,
+ * inserted into the DOM inside the ``.some-div`` div and its events were
+ * bound.
+ *
+ * This class can also be initialized and started on an existing DOM element
+ * using the `selector` property. See below for more documentation.
+ *
+ * And of course, when you don't need that widget anymore, just do::
+ *
+ *     myWidget.destroy();
+ *
+ * That will kill the widget in a clean way and erase its content from the dom.
+ *
+ * This class also provides a way for executing code once a website DOM element
+ * is loaded in the dom.
+ * @see PublicWidget.selector
  */
-var PublicWidget = Widget.extend({
+const PublicWidget = core.Class.extend(mixins.PropertiesMixin, ServicesMixin, {
+    // Backbone-ish API
+    tagName: 'div',
+    id: null,
+    className: null,
+    attributes: {},
+    /**
+     * The name of the QWeb template that will be used for rendering. Must be
+     * redefined in subclasses or the default render() method can not be used.
+     *
+     * @type {null|string}
+     */
+    template: null,
+    /**
+     * List of paths to css files that need to be loaded before the widget can
+     * be rendered. This will not induce loading anything that has already been
+     * loaded.
+     *
+     * @type {null|string[]}
+     */
+    cssLibs: null,
+    /**
+     * List of paths to js files that need to be loaded before the widget can
+     * be rendered. This will not induce loading anything that has already been
+     * loaded.
+     *
+     * @type {null|string[]}
+     */
+    jsLibs: null,
+    /**
+     * List of xmlID that need to be loaded before the widget can be rendered.
+     * The content css (link file or style tag) and js (file or inline) of the
+     * assets are loaded.
+     * This will not induce loading anything that has already been
+     * loaded.
+     *
+     * @type {null|string[]}
+     */
+    assetLibs: null,
     /**
      * The selector attribute, if defined, allows to automatically create an
      * instance of this widget on page load for each DOM element which matches
@@ -53,8 +153,40 @@ var PublicWidget = Widget.extend({
      * @param {Object} [options]
      */
     init: function (parent, options) {
-        this._super.apply(this, arguments);
+        mixins.PropertiesMixin.init.call(this);
+        this.setParent(parent);
         this.options = options || {};
+    },
+    /**
+     * Method called between @see init and @see start. Performs asynchronous
+     * calls required by the rendering and the start method.
+     *
+     * This method should return a Promise which is resolved when start can be
+     * executed.
+     *
+     * @returns {Promise}
+     */
+    willStart: function () {
+        var proms = [];
+        if (this.jsLibs || this.cssLibs || this.assetLibs) {
+            proms.push(loadBundle(this));
+        }
+        return Promise.all(proms);
+    },
+    /**
+     * Method called after rendering. Mostly used to bind actions, perform
+     * asynchronous calls, etc...
+     *
+     * By convention, this method should return an object that can be passed to
+     * Promise.resolve() to inform the caller when this widget has been initialized.
+     *
+     * Note that, for historic reasons, many widgets still do work in the start
+     * method that would be more suited to the willStart method.
+     *
+     * @returns {Promise}
+     */
+    start: function () {
+        return Promise.resolve();
     },
     /**
      * Destroys the widget and basically restores the target to the state it
@@ -63,35 +195,139 @@ var PublicWidget = Widget.extend({
      * selector property).
      */
     destroy: function () {
-        if (this.selector) {
-            var $oldel = this.$el;
-            // The difference with the default behavior is that we unset the
-            // associated element first so that:
-            // 1) its events are unbinded
-            // 2) it is not removed from the DOM
-            this.setElement(null);
-        }
-
-        this._super.apply(this, arguments);
-
-        if (this.selector) {
-            // Reassign the variables afterwards to allow extensions to use them
-            // after calling the _super method
-            this.$el = $oldel;
-            this.el = $oldel[0];
-            this.$target = this.$el;
-            this.target = this.el;
+        mixins.PropertiesMixin.destroy.call(this);
+        this._undelegateEvents();
+        // If not done with a selector, then
+        // remove the elements added to the DOM.
+        if (!this.selector && this.$el) {
+            this.$el.remove();
         }
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
-     * @override
+     * Renders the current widget and appends it to the given jQuery object.
+     *
+     * @param {jQuery} target
+     * @returns {Promise}
      */
-    setElement: function () {
-        this._super.apply(this, arguments);
+    appendTo: function (target) {
+        var self = this;
+        return this._widgetRenderAndInsert(function (t) {
+            self.$el.appendTo(t);
+        }, target);
+    },
+    /**
+     * Attach the current widget to a dom element
+     *
+     * @param {jQuery} target
+     * @returns {Promise}
+     */
+    attachTo: function (target) {
+        var self = this;
+        this.setElement(target.$el || target);
+        return this.willStart().then(function () {
+            if (self.__parentedDestroyed) {
+                return;
+            }
+            return self.start();
+        });
+    },
+    /**
+     * Renders the current widget and inserts it after to the given jQuery
+     * object.
+     *
+     * @param {jQuery} target
+     * @returns {Promise}
+     */
+    insertAfter: function (target) {
+        var self = this;
+        return this._widgetRenderAndInsert(function (t) {
+            self.$el.insertAfter(t);
+        }, target);
+    },
+    /**
+     * Renders the current widget and inserts it before to the given jQuery
+     * object.
+     *
+     * @param {jQuery} target
+     * @returns {Promise}
+     */
+    insertBefore: function (target) {
+        var self = this;
+        return this._widgetRenderAndInsert(function (t) {
+            self.$el.insertBefore(t);
+        }, target);
+    },
+    /**
+     * Renders the current widget and prepends it to the given jQuery object.
+     *
+     * @param {jQuery} target
+     * @returns {Promise}
+     */
+    prependTo: function (target) {
+        var self = this;
+        return this._widgetRenderAndInsert(function (t) {
+            self.$el.prependTo(t);
+        }, target);
+    },
+    /**
+     * Renders the element. The default implementation renders the widget using
+     * QWeb, `this.template` must be defined. The context given to QWeb contains
+     * the "widget" key that references `this`.
+     */
+    renderElement: function () {
+        var $el;
+        if (this.template) {
+            $el = $(core.qweb.render(this.template, {widget: this}).trim());
+        } else {
+            $el = this._makeDescriptive();
+        }
+        this._replaceElement($el);
+    },
+    /**
+     * Renders the current widget and replaces the given jQuery object.
+     *
+     * @param target A jQuery object or a Widget instance.
+     * @returns {Promise}
+     */
+    replace: function (target) {
+        return this._widgetRenderAndInsert((t) => {
+            this.$el.replaceAll(t);
+        }, target);
+    },
+    /**
+     * Re-sets the widget's root element (el/$el/$el).
+     *
+     * Includes:
+     *
+     * * re-delegating events
+     * * re-binding sub-elements
+     * * if the widget already had a root element, replacing the pre-existing
+     *   element in the DOM
+     *
+     * @param {HTMLElement | jQuery} element new root element for the widget
+     * @return {Widget} this
+     */
+    setElement: function (element) {
+        if (this.$el) {
+            this._undelegateEvents();
+        }
+
+        this.$el = (element instanceof $) ? element : $(element);
+        this.el = this.$el[0];
+
+        this._delegateEvents();
+
         if (this.selector) {
             this.$target = this.$el;
             this.target = this.el;
         }
+
+        return this;
     },
 
     //--------------------------------------------------------------------------
@@ -99,32 +335,55 @@ var PublicWidget = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Helper method, for ``this.$el.find(selector)``
+     *
+     * @private
+     * @param {string} selector CSS selector, rooted in $el
+     * @returns {jQuery} selector match
+     */
+    $: function (selector) {
+        if (selector === undefined) {
+            return this.$el;
+        }
+        return this.$el.find(selector);
+    },
+    /**
      * @see this.events
      * @override
      */
     _delegateEvents: function () {
         var self = this;
-        var originalEvents = this.events;
 
-        var events = {};
+        const _delegateEvent = (method, key) => {
+            var match = /^(\S+)(\s+(.*))?$/.exec(key);
+            var event = match[1];
+            var selector = match[3];
+
+            event += '.widget_events';
+            if (!selector) {
+                self.$el.on(event, method);
+            } else {
+                self.$el.on(event, selector, method);
+            }
+        };
         Object.entries(this.events || {}).forEach(([event, method]) => {
             // If the method is a function, use the default Widget system
             if (typeof method !== 'string') {
-                events[event] = method;
+                _delegateEvent(self.proxy(method), event);
                 return;
             }
             // If the method is only a function name without options, use the
             // default Widget system
             var methodOptions = method.split(' ');
             if (methodOptions.length <= 1) {
-                events[event] = method;
+                _delegateEvent(self.proxy(method), event);
                 return;
             }
             // If the method has no meaningful options, use the default Widget
             // system
             var isAsync = methodOptions.includes('async');
             if (!isAsync) {
-                events[event] = method;
+                _delegateEvent(self.proxy(method), event);
                 return;
             }
 
@@ -139,12 +398,8 @@ var PublicWidget = Widget.extend({
                 // async handler call is not finished.
                 method = dom.makeAsyncHandler(method);
             }
-            events[event] = method;
+            _delegateEvent(method, event);
         });
-
-        this.events = events;
-        this._super.apply(this, arguments);
-        this.events = originalEvents;
     },
     /**
      * @private
@@ -163,6 +418,77 @@ var PublicWidget = Widget.extend({
         });
         return context;
     },
+    /**
+     * Makes a potential root element from the declarative builder of the
+     * widget
+     *
+     * @private
+     * @return {jQuery}
+     */
+    _makeDescriptive: function () {
+        var attrs = Object.assign({}, this.attributes || {});
+        if (this.id) {
+            attrs.id = this.id;
+        }
+        if (this.className) {
+            attrs['class'] = this.className;
+        }
+        var $el = $(document.createElement(this.tagName));
+        if (Object.keys(attrs || {}).length > 0) {
+            $el.attr(attrs);
+        }
+        return $el;
+    },
+    /**
+     * Re-sets the widget's root element and replaces the old root element
+     * (if any) by the new one in the DOM.
+     *
+     * @private
+     * @param {HTMLElement | jQuery} $el
+     * @returns {Widget} this instance, so it can be chained
+     */
+    _replaceElement: function ($el) {
+        var $oldel = this.$el;
+        this.setElement($el);
+        if ($oldel && !$oldel.is(this.$el)) {
+            if ($oldel.length > 1) {
+                $oldel.wrapAll('<div/>');
+                $oldel.parent().replaceWith(this.$el);
+            } else {
+                $oldel.replaceWith(this.$el);
+            }
+        }
+        return this;
+    },
+    /**
+     * Remove all handlers registered on this.$el
+     *
+     * @private
+     */
+    _undelegateEvents: function () {
+        this.$el.off('.widget_events');
+    },
+    /**
+     * Render the widget.  This is a private method, and should really never be
+     * called by anyone (except this widget).  It assumes that the widget was
+     * not willStarted yet.
+     *
+     * @private
+     * @param {function: jQuery -> any} insertion
+     * @param {jQuery} target
+     * @returns {Promise}
+     */
+    _widgetRenderAndInsert: function (insertion, target) {
+        var self = this;
+        return this.willStart().then(function () {
+            if (self.__parentedDestroyed) {
+                return;
+            }
+            self.renderElement();
+            insertion(target);
+            return self.start();
+        });
+    },
 });
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -175,7 +501,7 @@ var PublicWidget = Widget.extend({
  *
  * @todo Merge with 'PublicWidget' ?
  */
-var RootWidget = Widget.extend({
+var RootWidget = PublicWidget.extend({
     /**
      * @constructor
      */
@@ -266,7 +592,7 @@ var registry = {};
 /**
  * This is a fix for apple device (<= IPhone 4, IPad 2)
  * Standard bootstrap requires data-bs-toggle='collapse' element to be <a/> tags.
- * Unfortunatly some layouts use a <div/> tag instead. The fix forces an empty
+ * Unfortunately some layouts use a <div/> tag instead. The fix forces an empty
  * click handler on these div, which allows standard bootstrap to work.
  */
 registry._fixAppleCollapse = PublicWidget.extend({

@@ -1,6 +1,6 @@
 /** @odoo-module alias=website_event_track_live.website_event_track_suggestion **/
 
-import Widget from "web.Widget";
+import { Widget } from "web.public.widget";
 
 var WebsiteEventTrackSuggestion = Widget.extend({
     template: 'website_event_track_live.website_event_track_suggestion',
