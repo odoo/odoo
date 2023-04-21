@@ -3,7 +3,8 @@ import {
     testEditor,
     triggerEvent,
     setTestSelection,
-    Direction
+    Direction,
+    readFromFile,
 } from "../utils.js";
 import {CLIPBOARD_WHITELISTS} from "../../src/OdooEditor.js";
 
@@ -1903,6 +1904,50 @@ describe('Copy and paste', () => {
                         editor.historyUndo();
                     },
                     contentAfter: '<p>[abc]</p>',
+                });
+            });
+        });
+    });
+    describe('HTML tables', async () => {
+        describe('From Microsoft Excel Online', async () => {
+            it('should keep all allowed style (Excel Online)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>\n',
+                    stepFunction: async editor => {
+                        const clipboard = await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/excel_clipboard.html');
+                        await pasteHtml(editor, clipboard);
+                    },
+                    // NOTE: clipboard & result files contain blank/whitespace
+                    // lines that are required for the test to pass.
+                    contentAfter: await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/excel_result.html'),
+                });
+            });
+        });
+        describe('From Google Sheets', async () => {
+            it('should keep all allowed style (Google Sheets)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>\n',
+                    stepFunction: async editor => {
+                        const clipboard = await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/google_clipboard.html');
+                        await pasteHtml(editor, clipboard);
+                    },
+                    // NOTE: clipboard & result files contain blank/whitespace
+                    // lines that are required for the test to pass.
+                    contentAfter: await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/google_result.html'),
+                });
+            });
+        });
+        describe('From Libre Office', async () => {
+            it('should keep all allowed style (Libre Office)', async () => {
+                await testEditor(BasicEditor, {
+                    contentBefore: '<p>[]</p>\n',
+                    stepFunction: async editor => {
+                        const clipboard = await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/libre_clipboard.html');
+                        await pasteHtml(editor, clipboard);
+                    },
+                    // NOTE: clipboard & result files contain blank/whitespace
+                    // lines that are required for the test to pass.
+                    contentAfter: await readFromFile('/web_editor/static/lib/odoo-editor/test/spec/html_tables/libre_result.html'),
                 });
             });
         });
