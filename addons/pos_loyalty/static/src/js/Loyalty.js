@@ -7,6 +7,8 @@ import concurrency from 'web.concurrency';
 import { Gui } from 'point_of_sale.Gui';
 import { round_decimals,round_precision } from 'web.utils';
 import core from 'web.core';
+import { Domain, InvalidDomainError } from '@web/core/domain';
+import { sprintf } from '@web/core/utils/strings';
 
 const _t = core._t;
 const dropPrevious = new concurrency.MutexedDropPrevious(); // Used for queuing reward updates
@@ -80,12 +82,56 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
     async _processData(loadedData) {
         this.couponCache = {};
         this.partnerId2CouponIds = {};
+        this.rewards = loadedData['loyalty.reward'] || [];
+
+        for (const reward of this.rewards) {
+            reward.all_discount_product_ids = new Set(reward.all_discount_product_ids);
+        }
+
         await super._processData(loadedData);
         this.productId2ProgramIds = loadedData['product_id_to_program_ids'];
         this.programs = loadedData['loyalty.program'] || []; //TODO: rename to `loyaltyPrograms` etc
         this.rules = loadedData['loyalty.rule'] || [];
-        this.rewards = loadedData['loyalty.reward'] || [];
         this._loadLoyaltyData();
+    }
+
+    _loadProductProduct(products) {
+        super._loadProductProduct(...arguments);
+
+        for (const reward of this.rewards) {
+            this.compute_discount_product_ids(reward, products);
+        }
+
+        this.rewards = this.rewards.filter(Boolean)
+    }
+
+    compute_discount_product_ids(reward, products) {
+        const reward_product_domain = JSON.parse(reward.reward_product_domain);
+        if (!reward_product_domain) {
+            return;
+        }
+
+        const domain = new Domain(reward_product_domain);
+
+        try {
+            products
+                .filter((product) => domain.contains(product))
+                .forEach(product => reward.all_discount_product_ids.add(product.id));
+        } catch (error) {
+            if (!(error instanceof InvalidDomainError)) {
+                throw error
+            }
+            const index = this.rewards.indexOf(reward);
+            if (index != -1) {
+                Gui.showPopup('ErrorPopup', {
+                    title: _t('A reward could not be loaded'),
+                    body:  sprintf(
+                        _t('The reward "%s" contain an error in its domain, your domain must be compatible with the PoS client'),
+                        this.rewards[index].description)
+                    });
+                this.rewards[index] = null;
+            }
+        }
     }
 
     async _getTableOrdersFromServer(tableIds) {
