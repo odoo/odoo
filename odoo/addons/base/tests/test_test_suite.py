@@ -13,6 +13,7 @@ from odoo.tests.common import BaseCase, TransactionCase
 from odoo.tests.common import users, warmup
 from odoo.tests.result import OdooTestResult
 from odoo.tests.case import TestCase
+from odoo.tools import config
 
 _logger = logging.getLogger(__name__)
 
@@ -138,6 +139,13 @@ class TestRunnerLoggingCommon(TransactionCase):
 
 
 class TestRunnerLogging(TestRunnerLoggingCommon):
+
+    @classmethod
+    def setUpClass(cls):
+        if config['log_level'] != 'info':
+            cls.skipTest(cls, "Logs testing must be done with INFO log level")
+        else:
+            return super().setUpClass()
 
     def test_has_add_error(self):
         self.assertTrue(hasattr(self, '_addError'))
