@@ -31,6 +31,7 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
 
     const {
         Component,
+        EventBus,
         onError,
         onMounted,
         onWillDestroy,
@@ -1809,5 +1810,31 @@ odoo.define('web.OwlCompatibilityTests', function (require) {
 
             await mount(MyComponent, getFixture(), { env: legacyEnv });
         });
+
+        QUnit.module("EventBus");
+
+        QUnit.test("unregister multiple listener from the same target", async function (assert) {
+            const target = Symbol("test");
+            const bus = new EventBus();
+            let i = 0;
+
+            bus.on("a", target, () => assert.step(`a:${i++}`));
+            bus.on("b", target, () => assert.step(`b:${i++}`));
+
+            bus.trigger("a");
+            bus.trigger("b");
+
+            bus.off("a", target);
+            bus.off("b", target);
+
+            bus.trigger("a");
+            bus.trigger("b");
+
+            assert.verifySteps([
+                "a:0",
+                "b:1",
+            ], "callback should not be called after unregistering them");
+        });
+
     });
 });

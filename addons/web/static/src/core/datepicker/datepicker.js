@@ -217,13 +217,13 @@ export class DatePicker extends Component {
      * @param {boolean} [params.useStatic]
      */
     onDateChange({ eventDate, useStatic } = {}) {
-        let parsedDate = eventDate && this.date.locale ? momentToLuxon(eventDate).setLocale(this.date.locale): null;
+        const { value } = this.inputRef.el;
+        let parsedDate = value && eventDate ? momentToLuxon(eventDate).setLocale(this.getOptions().locale): null;
         if (!parsedDate) {
-            const { value } = this.inputRef.el;
             const options = this.getOptions(useStatic);
             parsedDate = this.parseValue(value, options)[0];
-            this.state.warning = parsedDate && parsedDate > DateTime.local();
         }
+        this.state.warning = parsedDate && parsedDate > DateTime.local();
         // Always update input.
         // if the date is invalid, it will reset to default (= given) date.
         // if the input is a computed date (+5d for instance), it will put the correct date.

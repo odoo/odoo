@@ -61,13 +61,14 @@ class account_journal(models.Model):
         today = fields.Date.context_today(self)
         activities = defaultdict(list)
         # search activity on move on the journal
+        lang = self.env.user.lang or get_lang(self.env).code
         sql_query = """
             SELECT activity.id,
                    activity.res_id,
                    activity.res_model,
                    activity.summary,
                    CASE WHEN activity.date_deadline < %(today)s THEN 'late' ELSE 'future' END as status,
-                   act_type.name as act_type_name,
+                   COALESCE(act_type.name->> %(lang)s, act_type.name->>'en_US') as act_type_name,
                    act_type.category as activity_category,
                    activity.date_deadline,
                    move.date,
@@ -77,9 +78,8 @@ class account_journal(models.Model):
               JOIN mail_activity activity ON activity.res_id = move.id AND activity.res_model = 'account.move'
          LEFT JOIN mail_activity_type act_type ON activity.activity_type_id = act_type.id
              WHERE move.journal_id = ANY(%(ids)s)
-               AND (act_type.category != 'tax_report' OR (act_type.category = 'tax_report' AND activity.date_deadline <= %(today)s))
         """
-        self.env.cr.execute(sql_query, {'ids': self.ids, 'today': today})
+        self.env.cr.execute(sql_query, {'ids': self.ids, 'today': today, 'lang': lang})
         for activity in self.env.cr.dictfetchall():
             act = {
                 'id': activity['id'],
@@ -105,7 +105,7 @@ class account_journal(models.Model):
               JOIN res_company company ON company.id = move.company_id
              WHERE move.journal_id = ANY(%(journal_ids)s)
                AND move.state = 'posted'
-               AND (company.fiscalyear_lock_date IS NULL OR move.date >= company.fiscalyear_lock_date)
+               AND (company.fiscalyear_lock_date IS NULL OR move.date > company.fiscalyear_lock_date)
           GROUP BY move.journal_id, move.sequence_prefix
             HAVING COUNT(*) != MAX(move.sequence_number) - MIN(move.sequence_number) + 1
         """, {
