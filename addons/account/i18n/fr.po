@@ -13,7 +13,6 @@
 # SAKodoo <sak@odoo.com>, 2021
 # Julien Breton, 2022
 # Saad Thaifa <saad.thaifa@gmail.com>, 2022
-# vur1, 2022
 # Camille Dantinne <cmd@odoo.com>, 2022
 # jb78180 <jblum66@gmail.com>, 2022
 # Fabien Pinckaers <fp@openerp.com>, 2022
@@ -37,7 +36,7 @@ msgstr ""
 "POT-Creation-Date: 2022-02-18 09:52+0000\n"
 "PO-Revision-Date: 2021-09-14 12:18+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -923,8 +922,8 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
-"<span title=\"Outstanding Payments/Receipts\">Paiements/Reçus en "
-"attente</span>"
+"<span title=\"Outstanding Payments/Receipts\">Paiements entrants/sortants en"
+" suspens</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
@@ -6781,8 +6780,8 @@ msgid ""
 "If a payment is still outstanding more than sixty (60) days after the due "
 "payment date,"
 msgstr ""
-"Si un paiement est toujours en souffrance plus de soixante (60) jours après "
-"la date d'échéance,"
+"Si un paiement reste impayé plus de soixante (60) jours après la date "
+"d'échéance,"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__message_needaction
@@ -7173,7 +7172,7 @@ msgid ""
 "Incoming payments are posted on an Outstanding Receipts Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Receipts Accounts rather than the Receivable Account."
 msgstr ""
-"Les paiements sortants sont comptabilisés sur un compte d'attente des reçus. Dans le widget de la réconciliation bancaire, ils apparaissent sous forme de lignes bleues. \n"
+"Les paiements sortants sont comptabilisés sur un compte des paiements entrants en suspens. Dans le widget de la réconciliation bancaire, ils apparaissent sous forme de lignes bleues. \n"
 "Les transactions bancaires sont ensuite réconciliées sur le compte d'attente des reçus, plutôt que sur le compte débiteur."
 
 #. module: account
@@ -7441,7 +7440,7 @@ msgstr "La facture a un montant de suspension correspondant"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
-msgstr "La facture présente des encours"
+msgstr "La facture est en suspens"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
@@ -7890,7 +7889,8 @@ msgid ""
 "include one and only one outstanding payments/receipts account."
 msgstr ""
 "La pièce comptable %s n'est pas valide. Pour procéder, les écritures "
-"comptables doivent inclure un et un seul compte de paiement/reçu en attente."
+"comptables doivent inclure un et un seul compte des paiements "
+"entrants/sortants en suspens."
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
@@ -7998,13 +7998,13 @@ msgstr "Nom du journal"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_credit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_credit_account_id
 msgid "Journal Outstanding Payments Account"
-msgstr "compte de paiements sortants en attente "
+msgstr "Compte de paiements sortants en suspens "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_payment_debit_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__account_journal_payment_debit_account_id
 msgid "Journal Outstanding Receipts Account"
-msgstr "Compte de paiements rentrants en attente "
+msgstr "Compte de paiements entrants en suspens "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__account_journal_suspense_account_id
@@ -8460,7 +8460,7 @@ msgstr "Laisser vide pour assigner le Vendeur à la Facture."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Leave empty to use the default outstanding account"
-msgstr "Laissez vide pour utiliser le compte de paiements par défaut"
+msgstr "Laissez vide pour utiliser le compte en suspens par défaut"
 
 #. module: account
 #: model:ir.ui.menu,name:account.menu_finance_entries_accounting_ledgers
@@ -9852,8 +9852,8 @@ msgid ""
 "Outgoing Payments are posted on an Outstanding Payments Account. In the bank reconciliation widget, they appear as blue lines.\n"
 "Bank transactions are then reconciled on the Outstanding Payments Account rather the Payable Account."
 msgstr ""
-"Les décaissements sont comptabilisés sur un compte d'encours. Dans le widget Lettrage bancaire, ils apparaissent sous forme de lignes bleues.\n"
-"Les transactions bancaires sont ensuite lettrées sur le compte des paiements impayés plutôt que sur le compte créditeur."
+"Les paiements sortants sont comptabilisés sur un compte en suspens. Dans le widget Lettrage bancaire, ils apparaissent sous forme de lignes bleues.\n"
+"Les transactions bancaires sont ensuite lettrées sur le compte en suspens plutôt que sur le compte créditeur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__mail_server_id
@@ -9869,23 +9869,23 @@ msgstr "Compte de sortie pour la valorisation d'inventaire"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__outstanding_account_id
 msgid "Outstanding Account"
-msgstr "Compté débiteur"
+msgstr "Compte en suspens"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr "Paiements Sortants en Suspens"
+msgstr "Paiements sortants en suspens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr "Compte de Paiements Sortants"
+msgstr "Compte de paiements sortants en suspens"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Payments accounts"
-msgstr "Comptes de Paiements Sortants"
+msgstr "Comptes de paiements sortants en suspens"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -9896,12 +9896,12 @@ msgstr "Paiements entrants en suspens"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_journal_payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr "Compte de paiements entrants"
+msgstr "Compte de paiements entrants en suspens"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Outstanding Receipts accounts"
-msgstr "Comptes de paiements entrants"
+msgstr "Comptes de paiements entrants en suspens"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -10453,6 +10453,19 @@ msgid "Please check that the field 'Transfer Account' is set on the company."
 msgstr ""
 "SVP, veuillez vérifier que le champ \"Compte de transfert\" est paramétré "
 "sur la société."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+"Veuillez vérifier le pays fiscal de la société %s. (Paramètres > "
+"Comptabilité > Pays fiscal) Les taxes peuvent uniquement être mises à jour "
+"si elles se trouvent dans le pays fiscal de la société (%s) ou dans le pays "
+"de la localisation (%s)."
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -16276,9 +16289,9 @@ msgid ""
 "account set either on the company or the %s payment method in the %s "
 "journal."
 msgstr ""
-"Vous ne pouvez pas créer un nouveau paiement sans un compte d'attente de "
-"paiement/reçu défini soit sur l'entreprise soit sur la méthode de paiement "
-"%s du journal %s."
+"Vous ne pouvez pas créer un nouveau paiement sans un compte de paiements "
+"entrants/sortants en suspens défini soit sur l'entreprise soit sur le mode "
+"de paiement %s du journal %s."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -17087,7 +17100,7 @@ msgstr "sur"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding credits"
-msgstr "factures ouvertes"
+msgstr "crédits en circulation"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

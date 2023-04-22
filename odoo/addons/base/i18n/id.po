@@ -22,7 +22,7 @@
 # whenwesober, 2022
 # PAS IRVANUS <ipankbiz@gmail.com>, 2022
 # Imbar Budiman <imbarbudiman@yahoo.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2022
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
 # Edy Kend <edy@azmall.co.id>, 2022
 # Bonny Useful <bonny.useful@gmail.com>, 2022
@@ -4746,6 +4746,28 @@ msgid ""
 "correctly when the cn2an library is installed. (e.g. with pip3 install cn2an)\n"
 "    "
 msgstr ""
+"\n"
+"Termasuk data berikut untuk lokalisasi Cina\n"
+"========================================================\n"
+"\n"
+"Tipe Akun/科目类型\n"
+"\n"
+"Status Data/省份数据\n"
+"\n"
+"    科目类型\\会计科目表模板\\增值税\\辅助核算类别\\管理会计凭证簿\\财务会计凭证簿\n"
+"\n"
+"    添加中文省份数据\n"
+"\n"
+"    增加小企业会计科目表\n"
+"\n"
+"    修改小企业会计科目表\n"
+"\n"
+"    修改小企业会计税率\n"
+"\n"
+"Kita menambahkan opsi untuk mencetak voucher yang akan\n"
+"mencetak jumlah dalam kata-kata (karakter spesial Cina untuk angka)\n"
+"secara tepat bila pustaka cn2an diinstal. (contoh dengan pip3 install cn2an)\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_cn_city
@@ -4808,6 +4830,22 @@ msgid ""
 "    - Yearly Salary by Head and Yearly Salary by Employee Report\n"
 "    "
 msgstr ""
+"\n"
+"Peraturan Gaji Payroll India.\n"
+"============================\n"
+"\n"
+"    -Konfigurasi lokalisasi hr_payroll untuk India\n"
+"    -Semua peraturan kontribusi utama untuk payslip India.\n"
+"    * Laporan payslip baru\n"
+"    * Kontrak Karyawan\n"
+"    * Dapat mengonfigurasi Gaji Standar / Kotor / Bersih\n"
+"    * PaySlip Karyawan\n"
+"    * Tunjangan / Pemotongan\n"
+"    * Terintegrasi dengan Manajemen Cuti\n"
+"    * Tunjangan Kesehatan, Travel, Anak, ...\n"
+"    - Nasehat dan Laporan Payroll\n"
+"    - Gaji Tahunan per Kepala dan Gaji Tuhan per Laporan Karyawan\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_drive
@@ -6368,6 +6406,30 @@ msgid ""
 "    - Clicking the 'Send by mail' button will attach three files to your draft mail : the invoice, the ISR and the QR-bill.\n"
 "    "
 msgstr ""
+"\n"
+"Lokalisasi Swiss\n"
+"==================\n"
+"Modul ini mendefinisikan bagan akun untuk Swiss (Swiss PME/KMU 2015), pajak dan memungkinkan pembuatan ISR dan QR-bill saat Anda mencetak faktur atau mengirimkannya melalui email.\n"
+"\n"
+"ISR akan dibuat bila Anda secara spesifik menyediakan informasi yang dibutuhkan :\n"
+"    - Akun bank yang Anda harapkan untuk diberikan bayaran harus ditetapkan, dan memiliki referensi kode pos yang valid.\n"
+"    - Faktur Anda harus memiliki akun bank untuk menerima pembayaran\n"
+"      (ini dapat dilakukan secara manual, tapi nilai default dapat secara otomatis ditetapkan bila Anda memiliki akun bank yang ditetapkan).\n"
+"    - Anda harus menetapkan referensi kode pos bank Anda.\n"
+"    - Faktur Anda harus menggunakan EUR atau CHF (karena ISR tidak menerima mata uang lainnya)\n"
+"\n"
+"QR-bill akan dibuat bila:\n"
+"    - Mitra yang ditetapkan pada faktur Anda memiliki alamat yang lengkap (jalan, kota, kode pos dan negara) di Swiss\n"
+"    - Opsi untuk membuat kode QR Swiss dipilih pada faktur (secara default dicentang)\n"
+"    - Nomor akun/QR IBAN yang tepat ditetapkan pada jurnal bank Anda\n"
+"    - (saat menggunakan QR-IBAN): referensi pembayaran faktur adalah QR-reference\n"
+"\n"
+"Pembuatan ISR dan QR-bill bersifat otomatis bila Anda memenuhi kriteria-kriteria sebelumnya.\n"
+"\n"
+"Begini cara kerjanya:\n"
+"    - Mencetak faktur akan memicu pengunduhan tiga file: faktur, ITS dan QR-bill\n"
+"    - Mengeklik tombol 'Kirim melalui email' akan melampirkan tiga file tersebut ke draft email Anda : faktur, ISR dan QR-bill..\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_synchro

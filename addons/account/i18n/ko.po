@@ -9986,6 +9986,15 @@ msgstr "회사에 ‘이전 계정’ 필드가 설정되어 있는지 확인해
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
 "Please check these taxes. They might be outdated. We did not update them. "
 "Indeed, they do not exactly match the taxes of the original version of the "
 "localization module.<br/>You might want to archive or adapt them.<br/><ul>"
@@ -11820,7 +11829,7 @@ msgstr ""
 msgid ""
 "Some journal items already exist with this account but in other journals "
 "than the allowed ones."
-msgstr ""
+msgstr "해당 계정 상에서 일부 전표를 이미 사용하고 있으나, 허용된 전표가 아닌 다른 전표를 사용하고 있습니다."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -13111,7 +13120,7 @@ msgstr ""
 #: code:addons/account/models/account_reconcile_model.py:0
 #, python-format
 msgid "The amount is not a number"
-msgstr ""
+msgstr "금액이 숫자로 표시되지 않았습니다"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__amount_residual
@@ -15219,6 +15228,12 @@ msgid ""
 "2/ then filter on 'Draft' entries\n"
 "3/ select them all and post or delete them through the action menu"
 msgstr ""
+"미결 전표 항목이 포함되어 있는 전표는 보관 처리할 수 없습니다.\n"
+"\n"
+"계속하려면 다음을 참고하십시오:\n"
+"1/ 이 전표 양식의 오른쪽 상단에 있는 '전표입력' 을 클릭하십시오\n"
+"2/ 그 후 필터를 '미결' 항목으로 설정하십시오\n"
+"3/ 전체 선택 후 작업 메뉴를 통해 발행하거나 삭제하십시오"
 
 #. module: account
 #: code:addons/account/models/account_payment_term.py:0
@@ -15259,19 +15274,19 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You can only reconcile posted entries."
-msgstr ""
+msgstr "발행된 항목만 조정할 수 있습니다."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
 #, python-format
 msgid "You can only register payment for posted journal entries."
-msgstr ""
+msgstr "발행된 전표만 결제 등록을 할 수 있습니다."
 
 #. module: account
 #: code:addons/account/wizard/account_resequence.py:0
 #, python-format
 msgid "You can only resequence items from the same journal"
-msgstr ""
+msgstr "동일한 전표에 있는 항목만 순서를 변경할 수 있습니다."
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
@@ -15351,7 +15366,7 @@ msgstr ""
 msgid ""
 "You can't create a new statement line without a suspense account set on the "
 "%s journal."
-msgstr ""
+msgstr "%s 전표에 가계정이 설정되어 있지 않은 경우에는 새로운 명세서 내역을 생성할 수 없습니다."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15359,7 +15374,7 @@ msgstr ""
 #, python-format
 msgid ""
 "You can't create payments for entries belonging to different companies."
-msgstr ""
+msgstr "다른 회사에서 입력한 항목에 대해서는 결제와 관련되어 생성 할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_payment_method.py:0
@@ -15367,7 +15382,7 @@ msgstr ""
 msgid ""
 "You can't have two payment method lines of the same payment type (%s) and "
 "with the same name (%s) on a single journal."
-msgstr ""
+msgstr "두 가지 결제 방식의 결제 유형이 동일하고 (%s) 이름이 동일한 (%s) 경우, 하나의 전표 상에서 사용할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15383,7 +15398,7 @@ msgstr ""
 msgid ""
 "You can't open the register payment wizard without at least one "
 "receivable/payable line."
-msgstr ""
+msgstr "최소 하나 이상 미수금/미지급금 항목을 기재해야 결제 등록 마법사를 열 수 있습니다."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15391,7 +15406,7 @@ msgstr ""
 msgid ""
 "You can't provide an amount in foreign currency without specifying a foreign"
 " currency."
-msgstr ""
+msgstr "외환 통화를 지정하지 않으면 금액을 외화로 표시할 수 없습니다."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15399,7 +15414,7 @@ msgstr ""
 msgid ""
 "You can't register a payment because there is nothing left to pay on the "
 "selected journal items."
-msgstr ""
+msgstr "선택한 전표에 결제할 항목이 더 이상 없으므로 결제 등록을 진행할 수 없습니다."
 
 #. module: account
 #: code:addons/account/wizard/account_payment_register.py:0
@@ -15407,7 +15422,7 @@ msgstr ""
 msgid ""
 "You can't register payments for journal items being either all inbound, "
 "either all outbound."
-msgstr ""
+msgstr "전표가 인바운드이거나 아웃바운드로만 구성된 경우에는 결제 등록을 할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_analytic_line.py:0
@@ -15468,7 +15483,7 @@ msgstr "분개 항목이 이미 포함된 계정의 소유주 회사를 변경�
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country without assigning it a state."
-msgstr ""
+msgstr "회계 기준 국가 내에서 주를 설정하지 않으면 해외 VAT 번호를 이용하여 재정 상태를 생성할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -15476,7 +15491,7 @@ msgstr ""
 msgid ""
 "You cannot create a fiscal position with a foreign VAT within your fiscal "
 "country."
-msgstr ""
+msgstr "회계 기준 국가 내에서 해외 국가의 VAT 번호를 이용하여 재정 상태를 생성할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/partner.py:0
@@ -15485,6 +15500,7 @@ msgid ""
 "You cannot create a fiscal position within your fiscal country with the same"
 " VAT number as the main one set on your company."
 msgstr ""
+"회사용으로 설정한 기본 VAT 번호와 동일한 번호로 회계 기준 국가에서 재정 상태를 동일한 VAT 번호로 생성할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15542,7 +15558,7 @@ msgstr ""
 msgid ""
 "You cannot edit the journal of an account move if it already has a sequence "
 "number assigned."
-msgstr ""
+msgstr "일련번호가 이미 부여된 계정 작업에 대한 전표는 수정할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15624,7 +15640,7 @@ msgstr "마감된 예금거래 명세서에 자금을 투입/인출할 수 없�
 msgid ""
 "You cannot reduce the number of decimal places of a currency which has "
 "already been used to make accounting entries."
-msgstr ""
+msgstr "이미 회계 항목 입력에 사용한 통화에 대해서는 소수점 자리수를 줄일 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
@@ -15686,7 +15702,7 @@ msgstr "대차대조표에 기입하지 않는 계정의 내역에 세금을 사
 msgid ""
 "You cannot use this account (%s) in this journal, check the field 'Allowed "
 "Journals' on the related account."
-msgstr ""
+msgstr "이 전표에서 해당 계정 (%s)을 사용할 수 없습니다. 관련된 계정의 '사용할 수 있는 전표' 부분을 확인하십시오."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -15695,6 +15711,7 @@ msgid ""
 "You cannot use this account (%s) in this journal, check the section "
 "'Control-Access' under tab 'Advanced Settings' on the related journal."
 msgstr ""
+"이 전표에 해당 계정 (%s)을 사용할 수 없습니다. 관련된 전표의 '고급 설정' 탭에서 '액세스 제어' 부분을 확인하십시오."
 
 #. module: account
 #: code:addons/account/wizard/account_automatic_entry_wizard.py:0
@@ -15702,7 +15719,7 @@ msgstr ""
 msgid ""
 "You cannot use this wizard on journal entries belonging to different "
 "companies."
-msgstr ""
+msgstr "다른 회사의 전표에는 이 마법사를 사용할 수 없습니다."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

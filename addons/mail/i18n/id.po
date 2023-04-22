@@ -26,7 +26,7 @@
 # Altela Eleviansyah Pramardhika <altela_pramardhika@yahoo.com>, 2022
 # whenwesober, 2022
 # Gusti Rini <gustirini@gmail.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2022
 # Ryanto The <ry.the77@gmail.com>, 2022
 # arfa simoncelli, 2022
 # Abe Manyo, 2023
@@ -405,6 +405,11 @@ msgid ""
 "Please make sure you are using the correct address or contact us at %(default_email)s instead.<br /><br />\n"
 "Kind Regards,</p>"
 msgstr ""
+"<p>Yth Pengirim,<br /><br />\n"
+"Pesan di bawah tidak dapat diterima oleh alamat %(alias_display_name)s.\n"
+"Hanya %(contact_description)s yang diperbolehkan untuk menghubungi.<br /><br />\n"
+"Mohon pastikan Anda menggunakan alamat yang tepat atau hubungi kami pada %(default_email)s.<br /><br />\n"
+"Salam Hangat,</p>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -2192,6 +2197,7 @@ msgstr ""
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss

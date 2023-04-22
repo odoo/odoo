@@ -8,7 +8,7 @@
 # Muftiara Syuhada <muftiara.syuhada@gmail.com>, 2022
 # Andhitia Rama <andhitia.r@gmail.com>, 2022
 # Gradien Foundation <gradien.co@gmail.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2022
 # Muhammad Syarif <mhdsyarif.ms@gmail.com>, 2022
 # PAS IRVANUS <ipankbiz@gmail.com>, 2022
 # Edy Kend <edy@azmall.co.id>, 2022
@@ -379,6 +379,18 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"    Yth <t t-out=\"object.partner_id.name or 'customer'\">Brandon Freeman</t>,<br/>\n"
+"    Terima kasih untuk pertanyaan Anda.<br/>\n"
+"    Bila Anda memiliki pertanyaan apapun, mohon beritahu kami.\n"
+"    <br/><br/>\n"
+"    Terima kasih,\n"
+"    <t t-if=\"user.signature\">\n"
+"        <br/>\n"
+"        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
+"    </t>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
