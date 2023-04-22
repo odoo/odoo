@@ -87,11 +87,11 @@ export default class ListCorePlugin extends CorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
-                const { sheetId, col, row, id, definition, dataSourceId, linesNumber, columns } =
-                    cmd;
+                const { sheetId, col, row, id, definition, dataSourceId, linesNumber } = cmd;
                 const anchor = [col, row];
                 this._addList(id, definition, dataSourceId, linesNumber);
-                this._insertList(sheetId, anchor, id, linesNumber, columns);
+                const fields = definition["metaData"]["columns"];
+                this._insertList(sheetId, anchor, id, linesNumber, fields);
                 this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
             }
@@ -349,22 +349,22 @@ export default class ListCorePlugin extends CorePlugin {
      * @param {[number,number]} anchor Top-left cell in which the list should be inserted
      * @param {string} id Id of the list
      * @param {number} linesNumber Number of records to insert
-     * @param {Array<Object>} columns Columns ({name, type})
+     * @param {string[]} fields
      */
-    _insertList(sheetId, anchor, id, linesNumber, columns) {
-        this._resizeSheet(sheetId, anchor, columns.length, linesNumber + 1);
-        this._insertHeaders(sheetId, anchor, id, columns);
-        this._insertValues(sheetId, anchor, id, columns, linesNumber);
+    _insertList(sheetId, anchor, id, linesNumber, fields) {
+        this._resizeSheet(sheetId, anchor, fields.length, linesNumber + 1);
+        this._insertHeaders(sheetId, anchor, id, fields);
+        this._insertValues(sheetId, anchor, id, fields, linesNumber);
     }
 
-    _insertHeaders(sheetId, anchor, id, columns) {
+    _insertHeaders(sheetId, anchor, id, fields) {
         let [col, row] = anchor;
-        for (const column of columns) {
+        for (const field of fields) {
             this.dispatch("UPDATE_CELL", {
                 sheetId,
                 col,
                 row,
-                content: `=ODOO.LIST.HEADER(${id},"${column.name}")`,
+                content: `=ODOO.LIST.HEADER(${id},"${field}")`,
             });
             col++;
         }
@@ -376,24 +376,24 @@ export default class ListCorePlugin extends CorePlugin {
                     top: anchor[1],
                     bottom: anchor[1],
                     left: anchor[0],
-                    right: anchor[0] + columns.length - 1,
+                    right: anchor[0] + fields.length - 1,
                 },
             ],
             border: "external",
         });
     }
 
-    _insertValues(sheetId, anchor, id, columns, linesNumber) {
+    _insertValues(sheetId, anchor, id, fields, linesNumber) {
         let col = anchor[0];
         let row = anchor[1] + 1;
         for (let i = 1; i <= linesNumber; i++) {
             col = anchor[0];
-            for (const column of columns) {
+            for (const field of fields) {
                 this.dispatch("UPDATE_CELL", {
                     sheetId,
                     col,
                     row,
-                    content: `=ODOO.LIST(${id},${i},"${column.name}")`,
+                    content: `=ODOO.LIST(${id},${i},"${field}")`,
                 });
                 col++;
             }
