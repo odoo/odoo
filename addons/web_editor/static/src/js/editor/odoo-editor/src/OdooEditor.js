@@ -436,10 +436,8 @@ export class OdooEditor extends EventTarget {
                     this.historyRevertUntil(this._powerboxBeforeStepIndex);
                     this.historyStep(true);
                     this._historyStepsStates.set(peek(this._historySteps).id, 'consumed');
-                    setTimeout(() => {
-                        ensureFocus(this.editable);
-                        getDeepRange(this.editable, { select: true });
-                    });
+                    ensureFocus(this.editable);
+                    getDeepRange(this.editable, { select: true });
                 }
             },
             afterCommand: () => {
@@ -2353,7 +2351,7 @@ export class OdooEditor extends EventTarget {
                     this._selectTableCells(range);
                     appliedCustomSelection = true;
                 }
-            } else if (!descendants(startTd).some(child => isVisibleTextNode(child) && child.textContent !== '\u200B') &&
+            } else if (!!startTd && !descendants(startTd).some(child => isVisibleTextNode(child) && child.textContent !== '\u200B') &&
                 ev.clientX - (this._lastMouseClickPosition ? this._lastMouseClickPosition[0] : ev.clientX) >= 15
             ) {
                 // Handle selecting an empty cell.

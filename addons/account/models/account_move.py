@@ -721,7 +721,6 @@ class AccountMove(models.Model):
                AND this.sequence_number != 1
                AND this.name != '/'
                AND this.id = ANY(%(move_ids)s)
-               AND (company.fiscalyear_lock_date IS NULL OR this.date >= company.fiscalyear_lock_date)
         """, {
             'move_ids': self.ids,
         })
@@ -1926,6 +1925,12 @@ class AccountMove(models.Model):
         if self.currency_id.is_zero(diff_balance) and self.currency_id.is_zero(diff_amount_currency):
             existing_cash_rounding_line.unlink()
             # self.line_ids -= existing_cash_rounding_line
+            return
+
+        # No update needed
+        if existing_cash_rounding_line \
+            and existing_cash_rounding_line.balance == diff_balance \
+            and existing_cash_rounding_line.amount_currency == diff_amount_currency:
             return
 
         _apply_cash_rounding(self, diff_balance, diff_amount_currency, existing_cash_rounding_line)

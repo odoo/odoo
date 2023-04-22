@@ -593,7 +593,7 @@ class AccountMoveLine(models.Model):
                 previous_two_accounts = line.move_id.line_ids.filtered(
                     lambda l: l.account_id and l.display_type == line.display_type
                 )[-2:].account_id
-                if len(previous_two_accounts) == 1:
+                if len(previous_two_accounts) == 1 and len(line.move_id.line_ids) > 2:
                     line.account_id = previous_two_accounts
                 else:
                     line.account_id = line.move_id.journal_id.default_account_id
@@ -1017,7 +1017,7 @@ class AccountMoveLine(models.Model):
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
                         'tax_ids': [Command.set(taxes.ids)],
-                        'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
+                        'tax_tag_ids': line.compute_all_tax[frozendict({'id': line.id})]['tax_tag_ids'],
                         'display_type': 'epd',
                     }),
                     {
