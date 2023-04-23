@@ -20,7 +20,7 @@ msgstr ""
 "POT-Creation-Date: 2020-09-29 13:45+0000\n"
 "PO-Revision-Date: 2020-09-07 08:13+0000\n"
 "Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
-"Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
+"Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -37,7 +37,7 @@ msgstr "% endif"
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "<b>Click to view</b> the application."
-msgstr "<b>Haz clic para ver</b> la postulación."
+msgstr "<b>Pulse para ver</b> la solicitud."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -45,8 +45,8 @@ msgstr "<b>Haz clic para ver</b> la postulación."
 #, python-format
 msgid "<b>Did you apply by sending an email?</b> Check incoming applications."
 msgstr ""
-"<b>¿Te postulaste enviando un correo electrónico?</b> Verifica las "
-"postulaciones entrantes."
+"<b>¿Realizó la solicitud enviando un correo electrónico?</b> Verifique las "
+"solicitudes entrantes."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -217,10 +217,10 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hola,\n"
 "                <br/><br/>\n"
-"                Confirmamos que hemos recibido con éxito tu aplicación para el trabajo\n"
+"                Le confirmamos que hemos recibido su solicitud para el trabajo\n"
 "                \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\" en <strong>${object.company_id.name}</strong>.\n"
 "                <br/><br/>\n"
-"                Te contactaremos pronto.\n"
+"                Le contactaremos pronto.\n"
 "\n"
 "                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
 "                    <div style=\"margin: 16px 8px 16px 8px;\">\n"
@@ -230,7 +230,7 @@ msgstr ""
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
 "                % if object.user_id:\n"
-"                    <h3 style=\"color:#9A6C8E;\"><strong>Tu contacto:</strong></h3>\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Su contacto:</strong></h3>\n"
 "                    <table>\n"
 "                        <tr>\n"
 "                            <td width=\"75\">\n"
@@ -247,10 +247,10 @@ msgstr ""
 "                % endif\n"
 "\n"
 "                <h3 style=\"color:#9A6C8E;\"><strong>¿Cuál es el siguiente paso?</strong></h3>\n"
-"                Usualmente <strong>contestamos postulaciones en pocos días.</strong><br/><br/>\n"
-"                Siéntete libre de <strong>contactarnos si quieres una retroalimentación\n"
-"                más rápida</strong> o si no recibes noticias de nosotros\n"
-"                lo suficientemente rápido (solo responde a este correo electrónico).\n"
+"                Usualmente <strong>contestamos las solicitudes en pocos días.</strong><br/><br/>\n"
+"                Siéntase libre de <strong>contactarnos si quieres una retroalimentación\n"
+"                más rápida</strong> o si no recibe noticias de nosotros\n"
+"                lo suficientemente rápido (solo responda a este correo electrónico).\n"
 "\n"
 "                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
 "                % set location = ''\n"
@@ -664,12 +664,12 @@ msgstr "Modelo con seudónimo"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__all_application_count
 msgid "All Application Count"
-msgstr "Cantidad de postulaciones"
+msgstr "Nº de todas las solicitudes"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_crm_case_categ_all_app
 msgid "All Applications"
-msgstr "Todas las postulaciones"
+msgstr "Todas las solicitudes"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant
@@ -752,23 +752,23 @@ msgid ""
 "application automatically"
 msgstr ""
 "Los candidatos pueden enviar su currículum a esta dirección de correo "
-"electrónico, <br/> creará una postulación automáticamente"
+"electrónico, <br/> creará una solicitud automáticamente"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__application_count
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__application_count
 msgid "Application Count"
-msgstr "Número de postulaciones"
+msgstr "Nº de solicitudes"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Application Summary"
-msgstr "Resumen de la postulación"
+msgstr "Resumen de la solicitud"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "Application email"
-msgstr "Correo electrónico de postulación"
+msgstr "Correo electrónico para solicitudes"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -785,7 +785,7 @@ msgstr "Postulaciones"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email"
-msgstr "Postulaciones con el mismo correo electrónico"
+msgstr "Solicitudes con el mismo correo electrónico"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
@@ -1728,8 +1728,8 @@ msgid ""
 "Let's create the position. An email will be setup for applications, and a "
 "public job description, if you use the Website app."
 msgstr ""
-"Vamos a crear el puesto. Si utilizas la aplicación de Sitio Web, se "
-"establecerá un correo electrónico para las postulaciones, y también una "
+"Vamos a crear el puesto. Si utiliza la aplicación de Sitio Web, se "
+"establecerá un correo electrónico para las solicitudes, y también una "
 "descripción pública del trabajo."
 
 #. module: hr_recruitment
@@ -1746,7 +1746,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Let's have a look at the applications pipeline."
-msgstr "Echemos un vistazo al pipeline de postulaciones."
+msgstr "Echemos un vistazo al flujo de solicitudes."
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1822,7 +1822,7 @@ msgstr "Celular"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "My Applications"
-msgstr "Mis postulaciones"
+msgstr "Mis solicitudes"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_job_filter_recruitment
@@ -1859,12 +1859,12 @@ msgstr "Nueva postulación"
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_action_from_department
 msgid "New Applications"
-msgstr "Nuevas postulaciones"
+msgstr "Nuevas solicitudes"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "New Applications <br/>"
-msgstr "Nuevas postulaciones <br/>"
+msgstr "Nuevas solicitudes <br/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_hired_employee
@@ -1916,13 +1916,13 @@ msgstr "Sin asunto"
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "No application yet"
-msgstr "Aún no hay postulaciones"
+msgstr "Aún no hay solicitudes"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
 #: model_terms:ir.actions.act_window,help:hr_recruitment.crm_case_categ0_act_job
 msgid "No applications yet"
-msgstr "Aún no hay postulaciones"
+msgstr "Aún no hay solicitudes"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_recruitment_report_filtered_department
@@ -2035,7 +2035,7 @@ msgstr "O habla en privado con tus colegas sobre este candidato."
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other Applications"
-msgstr "Otras aplicaciones"
+msgstr "Otras solicitudes"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_user_id

@@ -27,6 +27,7 @@
 # Friederike Fasterling-Nesselbosch, 2022
 # Ahmed Aly <ahmed.aly@datenpol.at>, 2022
 # Chris Egal <sodaswed@web.de>, 2023
+# Stephanie Speiser, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -11359,7 +11360,7 @@ msgstr "Arch Dateiname"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__arch_to_compare
 msgid "Arch To Compare To"
-msgstr ""
+msgstr "Arch zu vergleichen mit"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_view_form
@@ -15112,6 +15113,8 @@ msgid ""
 "Domain on non-relational field \"%(name)s\" makes no sense "
 "(domain:%(domain)s)"
 msgstr ""
+"Domain auf nichtrelationalem Feld „%(name)s“ macht keinen Sinn "
+"(Domain:%(domain)s)"
 
 #. module: base
 #: model:res.country,name:base.dm
@@ -16581,7 +16584,7 @@ msgstr "Markieren"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_lang__flag_image_url
 msgid "Flag Image Url"
-msgstr ""
+msgstr "URL des Flaggenbilds"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_human_resources_fleet
@@ -17981,6 +17984,11 @@ msgid ""
 "of the field contains a lot of records; usually used on models with\n"
 "few records (e.g. Stages, Job Positions, Event Types, etc.)."
 msgstr ""
+"Wenn diese Option aktiviert ist, werden alle Datensätze des Zielmodells\n"
+"in ein gruppiertes Ergebnis aufgenommen (z. B. „Gruppieren nach“-Filter, Kanban-Spalten usw.).\n"
+"Beachten Sie, dass dies die Leistung erheblich beeinträchtigen kann,\n"
+"wenn das Zielmodell des Feldes viele Datensätze enthält; normalerweise wird es bei\n"
+"Modellen mit wenigen Datensätzen (z. B. Stages, Jobpositionen, Ereignistypen usw.)."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_debug
@@ -19787,7 +19795,7 @@ msgstr "Liste der Module, in denen das Feld definiert ist"
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_model__modules
 msgid "List of modules in which the object is defined or inherited"
-msgstr "List der Module, in denen ein Objekt definiert oder geerbt wird."
+msgstr "Liste der Module, in denen ein Objekt definiert oder geerbt wird."
 
 #. module: base
 #: model:res.country,name:base.lt
@@ -28153,6 +28161,9 @@ msgid ""
 "The m2o field %s is required but declares its ondelete policy as being 'set "
 "null'. Only 'restrict' and 'cascade' make sense."
 msgstr ""
+"Das m2o-Feld %s ist obligatorisch, aber seine ondelete-Richtlinie ist als "
+"„Null eingestellt“ angegeben. Nur „einschränken“ und „Absturz“ sind "
+"sinnvoll."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_filters__action_id
@@ -28231,7 +28242,7 @@ msgstr "Der nächste Schritt ist abhängig vom Dateiformat:"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "The ondelete policy %r is not valid for field %r"
-msgstr ""
+msgstr "Die ondelete-Richtlinie %r ist nicht für das Feld %r gültig"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_model_fields_form
