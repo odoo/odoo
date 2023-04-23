@@ -92,8 +92,8 @@
 # beau sebastien <sebastien.beau@akretion.com>, 2022
 # HASSAN ABDELLAH <aitabdellahhassan@gmail.com>, 2022
 # Kévin Roche, 2022
-# Jolien De Paepe, 2023
 # Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023
+# Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
@@ -101,7 +101,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-02-25 10:15+0000\n"
 "PO-Revision-Date: 2020-09-07 08:09+0000\n"
-"Last-Translator: Karoliina Nisula <karoliina.nisula@tawasta.fi>, 2023\n"
+"Last-Translator: Jolien De Paepe, 2023\n"
 "Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -752,8 +752,8 @@ msgid ""
 "<span title=\"Outstanding Payments/Receipts\">Outstanding "
 "Payments/Receipts</span>"
 msgstr ""
-"<span title=\"Outstanding Payments/Receipts\">Paiements/Reçus en "
-"attente</span>"
+"<span title=\"Outstanding Payments/Receipts\">Paiements entrants/sortants en"
+" suspens</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -6505,9 +6505,9 @@ msgid ""
 msgstr ""
 "Les paiements entrants déclenchés par des factures/remboursements seront "
 "comptabilisés dans le Compte des paiements entrants et affichés sous forme "
-"de lignes bleues dans le widget de réconciliation bancaire. Pendant le "
-"processus de réconciliation, les transactions concernées seront réconciliées"
-" avec des écritures sur le Compte des paiements entrants au lieu du Compte "
+"de lignes bleues dans le widget de rapprochement bancaire. Pendant le "
+"processus de rapprochement, les transactions concernées seront réconciliées "
+"avec des écritures sur le Compte des paiements entrants au lieu du Compte "
 "débiteur."
 
 #. module: account
@@ -6741,7 +6741,7 @@ msgstr "La facture a un montant de suspension correspondant"
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_has_outstanding
 #: model:ir.model.fields,field_description:account.field_account_payment__invoice_has_outstanding
 msgid "Invoice Has Outstanding"
-msgstr "La facture présente des encours"
+msgstr "La facture est en suspens"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_invoice_layout_step
@@ -8899,10 +8899,10 @@ msgid ""
 msgstr ""
 "Les paiements sortants déclenchés par les factures/notes de crédit seront "
 "comptabilisés dans le Compte des paiements sortants et seront affichés sous "
-"forme de lignes bleues dans le widget de réconciliation bancaire. Pendant le"
-" processus de réconciliation, les transactions concernées seront "
-"réconciliées avec des écritures sur le Compte des paiements sortants au lieu"
-" du Compte créditeur."
+"forme de lignes bleues dans le widget de rapprochement bancaire. Pendant le "
+"processus de rapprochement, les transactions concernées seront réconciliées "
+"avec des écritures sur le Compte des paiements sortants au lieu du Compte "
+"créditeur."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_stock_account_output_categ_id
@@ -8914,23 +8914,23 @@ msgstr "Compte de sortie pour la valorisation d'inventaire"
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Payments"
-msgstr "Paiements Sortants en Suspens"
+msgstr "Paiements sortants en suspens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_credit_account_id
 msgid "Outstanding Payments Account"
-msgstr "Compte de Paiements Sortants"
+msgstr "Compte de paiements sortants en suspens"
 
 #. module: account
 #: code:addons/account/models/account_journal.py:0
 #, python-format
 msgid "Outstanding Receipts"
-msgstr "Paiements Entrants en Suspens"
+msgstr "Paiements entrants en suspens"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__payment_debit_account_id
 msgid "Outstanding Receipts Account"
-msgstr "Compte de Paiements Entrants"
+msgstr "Compte de paiements entrants en suspens"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -14715,7 +14715,7 @@ msgid ""
 "account set on the %s journal."
 msgstr ""
 "Vous ne pouvez pas créer un nouveau paiement sans définir un compte de "
-"paiements entrants/sortants sur le journal %s."
+"paiements entrants/sortants en suspens sur le journal %s."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -15340,7 +15340,7 @@ msgstr "débits en circulation"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 msgid "outstanding payments"
-msgstr "paiements en circulation"
+msgstr "paiements sortants en suspens"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__payment_state__paid
