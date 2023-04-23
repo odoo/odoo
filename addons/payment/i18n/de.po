@@ -370,7 +370,7 @@ msgstr "Rückrufmethode"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__callback_res_id
 msgid "Callback Record ID"
-msgstr ""
+msgstr "Datensatz-ID des Callbacks"
 
 #. module: payment
 #. odoo-javascript
@@ -768,7 +768,7 @@ msgstr "Von"
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_provider__support_refund__full_only
 msgid "Full Only"
-msgstr ""
+msgstr "Nur vollständig"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
@@ -888,7 +888,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__inline_form_view_id
 msgid "Inline Form Template"
-msgstr ""
+msgstr "Inline-Formularvorlage"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_form
@@ -933,7 +933,7 @@ msgstr "Gerade erledigt"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__landing_route
 msgid "Landing Route"
-msgstr ""
+msgstr "Abschließende Route"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -943,7 +943,7 @@ msgstr "Sprache"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__last_state_change
 msgid "Last State Change Date"
-msgstr ""
+msgstr "Datum der letzten Statusänderung"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon__write_uid
@@ -1430,7 +1430,7 @@ msgstr "Begründung: %s"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__redirect_form_view_id
 msgid "Redirect Form Template"
-msgstr ""
+msgstr "Weiterleitungsformularvorlage"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__reference
@@ -1539,7 +1539,7 @@ msgstr "„Express-Kassiervorgang erlauben“ anzeigen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_allow_tokenization
 msgid "Show Allow Tokenization"
-msgstr ""
+msgstr "„Tokenisierung erlauben“ anzeigen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_auth_msg
@@ -1549,7 +1549,7 @@ msgstr "Autorisierte Nachricht anzeigen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_cancel_msg
 msgid "Show Cancel Msg"
-msgstr ""
+msgstr "„Nachricht stornieren“ anzeigen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_credentials_page
@@ -1559,7 +1559,7 @@ msgstr "Seite Anmeldedaten anzeigen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_done_msg
 msgid "Show Done Msg"
-msgstr ""
+msgstr "„Erledigte Nachricht“ anzeigen"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_payment_icon_ids
@@ -1574,7 +1574,7 @@ msgstr "Ausstehende Nachricht anzeigen"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__show_pre_msg
 msgid "Show Pre Msg"
-msgstr ""
+msgstr "Vorabnachricht anzeigen"
 
 #. module: payment
 #: model:payment.provider,name:payment.payment_provider_sips
@@ -1584,7 +1584,7 @@ msgstr "Sips"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__source_transaction_id
 msgid "Source Transaction"
-msgstr ""
+msgstr "Ursprungstransaktion"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__state
@@ -1597,7 +1597,7 @@ msgstr "Status"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_res_company__payment_provider_onboarding_state
 msgid "State of the onboarding payment provider step"
-msgstr ""
+msgstr "Status des Zahlungsanbieter-Einarbeitungsschritts"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__state
@@ -1779,7 +1779,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__source_transaction_id
 msgid "The source transaction of related refund transactions"
-msgstr ""
+msgstr "Die Ursprungstransaktion der entsprechenden Erstattungstransaktionen"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__code
@@ -1800,7 +1800,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__express_checkout_form_view_id
 msgid "The template rendering the express payment methods' form."
-msgstr ""
+msgstr "Die Vorlage, die as Formular der Express-Zahlungsmethode rendert."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_provider__inline_form_view_id
@@ -1816,6 +1816,8 @@ msgid ""
 "The template rendering the inline payment form when making a payment by "
 "token."
 msgstr ""
+"Die Vorlage, die das Inline-Zahlungsformular rendert, wenn eine Zahlung mit "
+"einem Token getätigt wird."
 
 #. module: payment
 #. odoo-python
@@ -1942,7 +1944,7 @@ msgstr "Diese Zahlungsmethode wurde von unserem System nicht überprüft."
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__token_inline_form_view_id
 msgid "Token Inline Form Template"
-msgstr ""
+msgstr "Inline-Formularvorlage für Token"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_provider__support_tokenization
@@ -2023,7 +2025,7 @@ msgstr "Nichtige Transaktion"
 #: code:addons/payment/static/src/xml/payment_post_processing.xml:0
 #, python-format
 msgid "Waiting for operations to process"
-msgstr ""
+msgstr "Warten auf zu verarbeitende Vorgänge"
 
 #. module: payment
 #. odoo-python
@@ -2296,7 +2298,7 @@ msgstr "Gefahr"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "info"
-msgstr ""
+msgstr "Info"
 
 #. module: payment
 #: model:ir.actions.server,name:payment.cron_post_process_payment_tx_ir_actions_server
@@ -2307,7 +2309,7 @@ msgstr "Zahlung: Nachbearbeitung von Transaktionen"
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_kanban
 #: model_terms:ir.ui.view,arch_db:payment.payment_provider_search
 msgid "provider"
-msgstr ""
+msgstr "Anbieter"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.icon_list
@@ -2322,7 +2324,7 @@ msgstr "mehr anzeigen"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_status
 msgid "success"
-msgstr ""
+msgstr "Erfolg"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.company_mismatch_warning

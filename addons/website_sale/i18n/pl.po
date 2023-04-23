@@ -25,7 +25,6 @@
 # Slawomir Adamus <melthalion@gmail.com>, 2023
 # Piotr Strębski <strebski@gmail.com>, 2023
 # Bartłomiej Maliński <bartlomiej.malinski@gmail.com>, 2023
-# danielkowalczyk007, 2023
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2023
 # Tomasz Leppich <t.leppich@gmail.com>, 2023
 # Krystian Harkot <kharkot@trilab.pl>, 2023
@@ -35,6 +34,7 @@
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2023
 # Martin Trigaux, 2023
 # Wojciech Warczakowski <w.warczakowski@gmail.com>, 2023
+# danielkowalczyk007, 2023
 # Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
@@ -54,7 +54,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "\" category."
-msgstr ""
+msgstr "\" kategoria."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -120,7 +120,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 #: model_terms:ir.ui.view,arch_db:website_sale.products_categories_list
 msgid "<b>Categories</b>"
-msgstr ""
+msgstr "<b>Kategorie</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -130,7 +130,7 @@ msgstr "<b>Komunikacja: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.filter_products_price
 msgid "<b>Price Range</b>"
-msgstr ""
+msgstr "<b>Zakres Cen</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
@@ -146,7 +146,7 @@ msgstr "<b>Wysyłka: </b>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.o_wsale_offcanvas
 msgid "<b>Sort By</b>"
-msgstr ""
+msgstr "<b>Sortuj według</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -167,7 +167,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment
 msgid "<i class=\"fa fa-arrow-right\"/> Add payment providers"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right\"/> Dodaj dostawców płatności"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_buy_now
@@ -179,7 +179,7 @@ msgstr "<span style=\"font-weight:bold\">KUP TERAZ</span>"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
 msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-cart-plus me-2\"/>Dodaj do koszyka"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -246,6 +246,8 @@ msgid ""
 "<i class=\"fa fa-rotate-right me-1\"/>\n"
 "                    Order Again"
 msgstr ""
+"<i class=\"fa fa-rotate-right me-1\"/>\n"
+"                    Zamów Ponownie"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -253,6 +255,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                                                <span style=\"font-weight: bold\">ADD TO CART</span>"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                                                <span style=\"font-weight: bold\">DODAJ DO KOSZYKA</span>"
 
 #. module: website_sale
 #. odoo-python
@@ -264,11 +268,17 @@ msgid ""
 "                        <p>You should send an email to the customers to encourage them!</p>\n"
 "                    "
 msgstr ""
+"<p class=\"o_view_nocontent_smiling_face\">\n"
+"                        Tutaj znajdziesz wszystkie porzucone koszyki, czyli koszyki wygenerowane przez użytkowników Twojej witryny sprzed ponad godziny, które nie zostały jeszcze potwierdzone.</p>\n"
+"                        <p>YPowinieneś wysłać e-mail do klientów, aby ich zachęcić!</p>\n"
+"                    "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.sort
 msgid "<small class=\"d-none d-lg-inline text-muted\">Sort By:</small>"
 msgstr ""
+"<span class=\"d-none d-lg-inline font-weight-bold text-muted\">Sortuj "
+"według:</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -277,6 +287,9 @@ msgid ""
 " not allowed once document(s) have been issued for your account. Please "
 "contact us directly for this operation.</small>"
 msgstr ""
+"<small class=\"form-text text-muted\">Zmiana nazwy firmy lub numeru VAT są "
+"niedozwolone kiedy istnieją już wystawione dokumenty na koncie. Proszę się "
+"skontaktować z nami w celu wykonania tej operacji.</small>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products_attributes
@@ -284,6 +297,8 @@ msgid ""
 "<small class=\"mx-auto\"><b>Clear Filters</b></small>\n"
 "                        <i class=\"oi oi-close\"/>"
 msgstr ""
+"<small class=\"mx-auto\"><b>Wyczyść Filtry</b></small>\n"
+"                        <i class=\"oi oi-close\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
@@ -305,11 +320,13 @@ msgid ""
 "<span class=\"fa fa-chevron-left\"/>\n"
 "                                                <span>Continue<span class=\"d-none d-md-inline\"> Shopping</span></span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                                <span>Kontynuuj<span class=\"d-none d-md-inline\"> Zakupy</span></span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"fa fa-chevron-left\"/> Previous"
-msgstr ""
+msgstr "<span class=\"fa fa-chevron-left\"/> Poprzedni"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -321,22 +338,23 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "<span class=\"mx-2 o_wsale_ppr_by\">by</span>"
-msgstr ""
+msgstr "<span class=\"mx-2 o_wsale_ppr_by\">przez</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Give us your feedback</span>"
 msgstr ""
+"<span class=\"s_website_form_label_content\">Przekaż nam swoje uwagi</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Upload a document</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Prześlij dokument</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
 msgid "<span class=\"s_website_form_label_content\">Your Reference</span>"
-msgstr ""
+msgstr "<span class=\"s_website_form_label_content\">Twój odnośnik</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_template_only_website_form_view
@@ -344,11 +362,13 @@ msgid ""
 "<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
 "'&lt;=', 1)]}\">Based on variants</span>"
 msgstr ""
+"<span class=\"text-muted\" attrs=\"{'invisible': [('product_variant_count', "
+"'&lt;=', 1)]}\">Na podstawie wariantów</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "<span class=\"visually-hidden\">filters active</span>"
-msgstr ""
+msgstr "<span class=\"visually-hidden\">filtry aktywne</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.tax_indication
@@ -360,6 +380,12 @@ msgid ""
 "            VAT Included\n"
 "        </span>"
 msgstr ""
+"<span groups=\"account.group_show_line_subtotals_tax_excluded\" class=\"h6 text-muted\">\n"
+"            cena netto\n"
+"        </span>\n"
+"        <span groups=\"account.group_show_line_subtotals_tax_included\" class=\"h6 text-muted\">\n"
+"            cena brutto\n"
+"        </span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.checkout
@@ -427,7 +453,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_product_image_form
 msgid "<span>Video Preview</span>"
-msgstr ""
+msgstr "<span>Podgląd wideo</span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form_web_terms
@@ -513,7 +539,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
-msgstr ""
+msgstr "<u>Warunki i postanowienia</u>"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
@@ -530,7 +556,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
 msgid "A short description that will also appear on documents."
-msgstr ""
+msgstr "Krótki opis, który pojawi się również na dokumentach."
 
 #. module: website_sale
 #. odoo-javascript
@@ -685,6 +711,11 @@ msgstr "Dodaj jeden"
 #, python-format
 msgid "Add to Cart"
 msgstr "Dodaj do koszyka"
+
+#. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
+msgid "Add to Cart Button"
+msgstr "Przycisk dodaj do koszyka"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
@@ -980,7 +1011,7 @@ msgstr "Karuzela"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Cart"
-msgstr ""
+msgstr "Koszyk"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_sale_order__cart_quantity
@@ -1030,7 +1061,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
 msgid "Categories:"
-msgstr ""
+msgstr "Kategorie:"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
@@ -1041,7 +1072,7 @@ msgstr "Kategoria"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__website_description
 msgid "Category Description"
-msgstr ""
+msgstr "Opis kategorii"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_category_extra_link
@@ -2199,7 +2230,7 @@ msgstr "Nowy Produkt"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.new_ribbon
 msgid "New!"
-msgstr ""
+msgstr "Nowość!"
 
 #. module: website_sale
 #. odoo-python
@@ -2211,7 +2242,7 @@ msgstr ""
 #. module: website_sale
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_newest_products
 msgid "Newest Products"
-msgstr ""
+msgstr "Najnowsze Produkty"
 
 #. module: website_sale
 #. odoo-javascript
@@ -2235,12 +2266,12 @@ msgstr "Nie"
 #. module: website_sale
 #: model_terms:ir.actions.act_window,help:website_sale.action_view_abandoned_tree
 msgid "No abandoned carts found"
-msgstr ""
+msgstr "Nie znaleziono porzuconych koszyków"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
 msgid "No product defined"
-msgstr ""
+msgstr "Nie określono produktu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.products
@@ -2457,7 +2488,7 @@ msgstr "Zamówień/Dzień"
 #. module: website_sale
 #: model:product.ribbon,html:website_sale.out_of_stock_ribbon
 msgid "Out of stock"
-msgstr ""
+msgstr "Brak w magazynie"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__parent_id
@@ -2606,14 +2637,14 @@ msgstr "Cena"
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - High to Low"
-msgstr ""
+msgstr "Cena - od najwyższej do najniższej"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/website.py:0
 #, python-format
 msgid "Price - Low to High"
-msgstr ""
+msgstr "Cena - od najniższej do najwyższej"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2816,7 +2847,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.actions.act_window,name:website_sale.website_sale_visitor_product_action
 msgid "Product Views History"
-msgstr ""
+msgstr "Historia wyświetleń produktu"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_dynamic_snippet_products_template_options
@@ -2843,6 +2874,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_sale.products_breadcrumb
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_tree
@@ -3291,7 +3323,7 @@ msgstr ""
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__send_abandoned_cart_email
 msgid "Send email to customers who abandoned their cart."
-msgstr ""
+msgstr "Wyślij e-mail do klientów, którzy porzucili swój koszyk."
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_public_category__seo_name
@@ -3532,6 +3564,8 @@ msgid ""
 "Suggest alternatives to your customer (upsell strategy). Those products show"
 " up on the product page."
 msgstr ""
+"Zaproponuj klientowi alternatywy (strategia sprzedaży dodatkowej). Te "
+"produkty pojawiają się na stronie produktu."
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -3581,7 +3615,7 @@ msgstr "Tekst"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale_text
 msgid "Text to show instead of price"
-msgstr ""
+msgstr "Tekst do wyświetlenia zamiast ceny"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -4306,4 +4340,4 @@ msgstr "Regulamin"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
 msgid "to follow your order."
-msgstr ""
+msgstr "wykonać twoje zamówienie"

@@ -7,8 +7,8 @@
 # Tobias R <tobias.reinwarth@manatec.de>, 2023
 # Friederike Fasterling-Nesselbosch, 2023
 # Michael Hofer, 2023
-# Martin Trigaux, 2023
 # Chris Egal <sodaswed@web.de>, 2023
+# Martin Trigaux, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -111,6 +111,8 @@ msgstr "$9.00"
 #, python-format
 msgid "%s record(s) selected, are you sure you want to publish them all?"
 msgstr ""
+"%s Eintrag/Einträge ausgewählt. Sind Sie sicher, dass Sie diese alle "
+"veröffentlichen möchten?"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -1096,7 +1098,7 @@ msgstr "<span class=\"mx-2\">/</span>"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<span class=\"mx-2\">to</span>"
-msgstr ""
+msgstr "<span class=\"mx-2\">bis</span>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.language_selector_inline
@@ -1441,6 +1443,11 @@ msgid "Accessories"
 msgstr "Zubehör"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Accordion"
+msgstr "Accordeon"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Account &amp; Sales management"
 msgstr "Kunden- &amp; Vertriebsmanagement"
@@ -1648,6 +1655,7 @@ msgstr "Nach"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Alert"
 msgstr "Warnung"
@@ -1999,7 +2007,7 @@ msgstr "Vermögenswerte Utils"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__copy_ids
 msgid "Assets using a copy of me"
-msgstr ""
+msgstr "Assets mit einer Kopie von mir"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -2094,6 +2102,7 @@ msgstr "Hintergrundform"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Badge"
 msgstr "Auszeichnung"
@@ -2102,6 +2111,11 @@ msgstr "Auszeichnung"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Bags"
 msgstr "Taschen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Banner"
+msgstr "Banner"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -2165,6 +2179,11 @@ msgid "Big"
 msgstr "Groß"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Big Boxes"
+msgstr "Große Blöcke"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Big Icons Subtitles"
 msgstr "Große Symbole Untertitel"
@@ -2192,6 +2211,7 @@ msgstr "Blockieren"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Blockquote"
 msgstr "Blockzitat"
@@ -2325,7 +2345,7 @@ msgstr "Aufbau Ihrer Website..."
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__bundle
 msgid "Bundle"
-msgstr ""
+msgstr "Bündel"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2362,6 +2382,7 @@ msgstr "CTA"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Call to Action"
 msgstr "Call-to-Action"
 
@@ -2425,6 +2446,7 @@ msgstr "Kann die Google-Karte nicht laden."
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Card"
 msgstr "Karte"
@@ -2443,6 +2465,11 @@ msgstr "Karten"
 #: model:website.configurator.feature,name:website.feature_module_career
 msgid "Career"
 msgstr "Karriere"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Carousel"
+msgstr "Karrussel"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
@@ -2521,6 +2548,7 @@ msgstr ""
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Chart"
 msgstr "Diagramm"
@@ -2780,6 +2808,7 @@ msgstr "Spalten"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Columns"
 msgstr "Spalten"
 
@@ -2805,6 +2834,11 @@ msgstr "Unternehmen"
 #, python-format
 msgid "Company"
 msgstr "Unternehmen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Comparisons"
+msgstr "Vergleiche"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
@@ -3033,6 +3067,11 @@ msgid "Copyright"
 msgstr "Copyright"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Countdown"
+msgstr "Countdown"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/snippets/s_countdown/000.js:0
 #, python-format
@@ -3070,6 +3109,7 @@ msgstr "Kurs"
 #: model_terms:ir.ui.view,arch_db:website.record_cover
 #: model_terms:ir.ui.view,arch_db:website.s_blockquote_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Cover"
 msgstr "Titelbild"
 
@@ -3124,7 +3164,7 @@ msgstr "Erstellen Sie einen Link, der auf diesen Abschnitt zielt"
 #: code:addons/website/static/src/snippets/s_website_form/options.js:0
 #, python-format
 msgid "Create new"
-msgstr ""
+msgstr "Neue erstellen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content
@@ -3182,7 +3222,7 @@ msgstr "Erstellt am"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_process_steps_options
 msgid "Curved arrow"
-msgstr ""
+msgstr "Gebogener Pfeil"
 
 #. module: website
 #. odoo-javascript
@@ -3758,6 +3798,7 @@ msgstr "Domain"
 #, python-format
 msgid "Don't forget to update all links referring to it."
 msgstr ""
+"Vergessen Sie nicht, alle Links, die darauf verweisen, zu aktualisieren."
 
 #. module: website
 #. odoo-javascript
@@ -3871,8 +3912,18 @@ msgstr "Dauer"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Dynamic Carousel"
+msgstr "Dynamisches Karussell"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Dynamic Content"
 msgstr "Dynamischer Inhalt"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Dynamic Snippet"
+msgstr "Dynamische Snippets"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__website_homepage_url
@@ -3988,7 +4039,7 @@ msgstr "Redakteur und Designer"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Effect"
-msgstr ""
+msgstr "Effekt"
 
 #. module: website
 #. odoo-python
@@ -4024,6 +4075,11 @@ msgstr "E-Mail-Marketing"
 #: model_terms:ir.ui.view,arch_db:website.s_comparisons
 msgid "Email support"
 msgstr "E-Mail-Unterstützung"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Embed Code"
+msgstr "Code für die Einbettung"
 
 #. module: website
 #. odoo-python
@@ -4203,6 +4259,7 @@ msgid "F.A.Q."
 msgstr "F.A.Q."
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.template_footer_links
 msgid "Facebook"
 msgstr "Facebook"
@@ -4263,7 +4320,7 @@ msgstr "Zweites Feature"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_configurator_feature__feature_url
 msgid "Feature Url"
-msgstr ""
+msgstr "URL der Funktion"
 
 #. module: website
 #. odoo-javascript
@@ -4272,6 +4329,11 @@ msgstr ""
 #, python-format
 msgid "Features"
 msgstr "Funktionen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Features Grid"
+msgstr "Raster für Eigenschaften"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_dynamic_snippet_options_template
@@ -4433,7 +4495,7 @@ msgstr "Flagge und Text"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flash"
-msgstr ""
+msgstr "Blitz"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -4448,7 +4510,7 @@ msgstr "Flip-In-X"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Flip-In-Y"
-msgstr ""
+msgstr "Über Y-Achse kippen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
@@ -4501,6 +4563,11 @@ msgstr "Schriftgröße"
 #: model:ir.model.fields,field_description:website.field_website_page__footer_visible
 msgid "Footer Visible"
 msgstr "Fußzeile Sichtbar"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Form"
+msgstr "Formular"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_model__website_form_label
@@ -4669,7 +4736,7 @@ msgstr "Geben Sie Besuchern die Informationen, die Sie benötigen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Glasses"
-msgstr ""
+msgstr "Brillen"
 
 #. module: website
 #. odoo-javascript
@@ -4689,7 +4756,7 @@ msgstr "Zum Page Manager"
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Go to View"
-msgstr ""
+msgstr "Zur Ansicht gehen"
 
 #. module: website
 #. odoo-javascript
@@ -4784,7 +4851,7 @@ msgstr "Grau #{grayCode}"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Grays"
-msgstr ""
+msgstr "Grauton"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -5099,7 +5166,7 @@ msgstr "Wie können wir helfen?"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Hue"
-msgstr ""
+msgstr "Färbung"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_google_map_options
@@ -5255,9 +5322,19 @@ msgid "Image"
 msgstr "Bild"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Image - Text"
+msgstr "Bild - Text"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
 msgid "Image Cover"
 msgstr "Bildcover"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Image Gallery"
+msgstr "Bildergallerie"
 
 #. module: website
 #. odoo-javascript
@@ -5298,6 +5375,11 @@ msgid "Images Subtitles"
 msgstr "Bilder Untertitel"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Images Wall"
+msgstr "Bilderwand"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In"
 msgstr "In"
@@ -5310,7 +5392,7 @@ msgstr "Im Hauptmenü"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "In Place"
-msgstr ""
+msgstr "An der Stelle"
 
 #. module: website
 #. odoo-javascript
@@ -5395,7 +5477,7 @@ msgstr "Innere Inhalte"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Input Aligned"
-msgstr ""
+msgstr "Eingabe ausgerichtet"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
@@ -5724,6 +5806,11 @@ msgid "Item"
 msgstr "Element"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Items"
+msgstr "Positionen"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
 msgid "Jacket"
 msgstr "Jacke"
@@ -5798,7 +5885,7 @@ msgstr "Bezeichnung für die Formularaktion"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 msgid "Labels Width"
-msgstr ""
+msgstr "Aufschriftsbreite"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__lang_id
@@ -6228,6 +6315,11 @@ msgstr ""
 "Stellen Sie sicher, dass Ihre Einstellungen richtig konfiguriert sind:"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Map"
+msgstr "Karte"
+
+#. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
@@ -6263,6 +6355,7 @@ msgstr "Marktplatz"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_image_gallery_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Masonry"
 msgstr "Kacheln"
 
@@ -6280,6 +6373,11 @@ msgstr "Mess-ID"
 #: model_terms:ir.ui.view,arch_db:website.s_media_list_options
 msgid "Media"
 msgstr "Medien"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Media List"
+msgstr "Medienliste"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_media_list
@@ -6430,6 +6528,13 @@ msgstr "Mobile Ansicht"
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/js/editor/snippets.options.js:0
+#, python-format
+msgid "Mobile Alignment"
+msgstr "Mobile Ausrichtung"
+
+#. module: website
+#. openerp-web
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Mobile menu"
@@ -6851,7 +6956,7 @@ msgstr "Normal"
 #. module: website
 #: model:website,prevent_zero_price_sale_text:website.default_website
 msgid "Not Available For Sale"
-msgstr ""
+msgstr "Nicht zum Verkauf verfügbar"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_kanban_view
@@ -6891,6 +6996,8 @@ msgstr ""
 msgid ""
 "Note: To hide this page, uncheck it from the Customize tab in edit mode."
 msgstr ""
+"Hinweis: Um diese Seite zu verbergen, deaktivieren Sie sie im "
+"„Anpassen“-Reiter im Bearbeitungsmodus."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_countdown_options
@@ -6908,6 +7015,11 @@ msgstr "Nummer"
 #: model:ir.model.fields,field_description:website.field_website__language_count
 msgid "Number of languages"
 msgstr "Anzahl der Sprachen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Numbers"
+msgstr "Nummern"
 
 #. module: website
 #. odoo-javascript
@@ -6939,17 +7051,17 @@ msgstr "Von der Seite hinein geschoben"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Off-Canvas Logo"
-msgstr ""
+msgstr "Off-Canvas-Logo"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Office audio"
-msgstr ""
+msgstr "Büro-Audio"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Office screens"
-msgstr ""
+msgstr "Büro-Bildschirme"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
@@ -7164,7 +7276,7 @@ msgstr "Unser Team wird sich so schnell wie möglich bei Ihnen zurückmelden."
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Out"
-msgstr ""
+msgstr "Aus"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -7309,8 +7421,9 @@ msgstr "Hosen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_background_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Parallax"
-msgstr ""
+msgstr "Bewegungsparallaxe"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_theme_website_menu__parent_id
@@ -7374,6 +7487,11 @@ msgstr "Telefone"
 #, python-format
 msgid "Pick a Theme"
 msgstr "Wählen Sie ein Thema"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Picture"
+msgstr "Bild"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_chart_options
@@ -7442,6 +7560,7 @@ msgstr "Verkaufspunkte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Popup"
 msgstr "Popup"
 
@@ -7483,7 +7602,7 @@ msgstr "Voranstellen"
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Press <Tab> for next ["
-msgstr ""
+msgstr "Drücken Sie <Tab> für nächstes ["
 
 #. module: website
 #. odoo-javascript
@@ -7520,6 +7639,11 @@ msgstr "Vorherige"
 #: model:ir.model.fields,field_description:website.field_website_page__arch_prev
 msgid "Previous View Architecture"
 msgstr "Vorherige Ansicht Architektur"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Pricelist"
+msgstr "Preisliste"
 
 #. module: website
 #: model:website.configurator.feature,name:website.feature_page_pricing
@@ -7596,6 +7720,7 @@ msgstr "Profil"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Progress Bar"
 msgstr "Fortschrittsbalken"
@@ -7618,7 +7743,7 @@ msgstr "Fortschrittsbalken Gewicht"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 msgid "Projectors"
-msgstr ""
+msgstr "Projektoren"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -7687,7 +7812,7 @@ msgstr "Veröffentlichungsdatum"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Pulse"
-msgstr ""
+msgstr "Impuls"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.cookie_policy
@@ -7703,6 +7828,11 @@ msgstr "Legen Sie den Fokus auf das, was Sie zu sagen haben!"
 #: model_terms:ir.ui.view,arch_db:website.s_rating
 msgid "Quality"
 msgstr "Qualität"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Quotes"
+msgstr "Zitate"
 
 #. module: website
 #: model:ir.model,name:website.model_ir_qweb
@@ -7727,6 +7857,7 @@ msgstr "Radiobuttons"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Rating"
 msgstr "Bewertung"
@@ -7770,6 +7901,11 @@ msgstr "Weiterleitungstyp"
 #: model:ir.ui.menu,name:website.menu_website_rewrite
 msgid "Redirects"
 msgstr "Weiterleitungen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "References"
+msgstr "Referenzen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
@@ -8143,6 +8279,7 @@ msgstr "Nach unten blättern zum nächsten Abschnitt"
 #. odoo-javascript
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
 #: code:addons/website/static/src/js/backend/view_hierarchy/hierarchy_navbar.xml:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #: model_terms:ir.ui.view,arch_db:website.website_search_box
 #, python-format
 msgid "Search"
@@ -8301,6 +8438,7 @@ msgstr "E-Mail-Adressen durch ein Komma trennen."
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Separator"
 msgstr "Separator"
@@ -8382,12 +8520,13 @@ msgstr "Schatten"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Shake"
-msgstr ""
+msgstr "Schütteln"
 
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_share
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Share"
 msgstr "Teilen"
@@ -8432,7 +8571,7 @@ msgstr "Sollen Benutzer zur Sprache ihres Browsers weitergeleitet werden"
 #: code:addons/website/static/src/js/backend/view_hierarchy/view_hierarchy.xml:0
 #, python-format
 msgid "Show Arch Diff"
-msgstr ""
+msgstr "Arch-Differenz anzeigen"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__customize_show
@@ -8489,7 +8628,7 @@ msgstr "reCaptcha-Richtlinie anzeigen"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_view_form_extend
 msgid "Show site map"
-msgstr ""
+msgstr "Seitenansicht anzeigen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8500,6 +8639,11 @@ msgstr "Auf Desktop anzeigen/verbergen"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Show/Hide on Mobile"
 msgstr "Auf Handy anzeigen/verbergen"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Showcase"
+msgstr "Schaukasten"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -8626,6 +8770,7 @@ msgstr "Smartphones"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_social_media
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Social Media"
 msgstr "Soziale Medien"
 
@@ -8702,7 +8847,7 @@ msgstr "Geschwindigkeit"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options_shadow_widgets
 msgid "Spread"
-msgstr ""
+msgstr "Ausbreiten"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menus_logos
@@ -8784,6 +8929,11 @@ msgid ""
 msgstr ""
 "Bleiben Sie auf dem Laufenden und erfahren Sie, was in den nächsten Wochen "
 "passieren wird."
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Steps"
+msgstr "Schritte"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_table_of_content_options
@@ -8916,6 +9066,11 @@ msgid "TRANSLATE"
 msgstr "ÜBERSETZEN"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Table of Content"
+msgstr "Inhaltsverzeichnis"
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_odoo_menu
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_thumbnails
 msgid "Tablets"
@@ -8923,6 +9078,7 @@ msgstr "Tablets"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Tabs"
 msgstr "Tabs"
 
@@ -8940,6 +9096,11 @@ msgstr "Tada"
 #: model:ir.model.fields,field_description:website.field_theme_ir_asset__target
 msgid "Target"
 msgstr "Ziel"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Team"
+msgstr "Team"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -8996,8 +9157,14 @@ msgstr "Testen Sie Ihre robots.txt mit der Google Search Console"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_website_form_options
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Text"
 msgstr "Text"
+
+#. module: website
+#: model_terms:ir.ui.view,arch_db:website.snippets
+msgid "Text - Image"
+msgstr "Text - Bild"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -9013,6 +9180,7 @@ msgstr "Textfarbe"
 #. odoo-javascript
 #: code:addons/website/static/src/components/wysiwyg_adapter/wysiwyg_adapter.js:0
 #: model_terms:ir.ui.view,arch_db:website.s_text_highlight
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Text Highlight"
 msgstr "Text hervorheben"
@@ -9127,7 +9295,7 @@ msgstr ""
 #: code:addons/website/models/website.py:0
 #, python-format
 msgid "The homepage URL should be relative and start with '/'."
-msgstr ""
+msgstr "Die Homepage-URL sollte relativ sein und mit „/“ beginnen."
 
 #. module: website
 #. odoo-javascript
@@ -9208,7 +9376,7 @@ msgstr "Design"
 #. module: website
 #: model:ir.model,name:website.model_theme_ir_asset
 msgid "Theme Asset"
-msgstr ""
+msgstr "Motiv-Assets"
 
 #. module: website
 #: model:ir.model,name:website.model_theme_ir_attachment
@@ -9315,7 +9483,7 @@ msgstr "Drittes Menü"
 #: code:addons/website/static/src/components/dialog/page_properties.xml:0
 #, python-format
 msgid "This URL is contained in the '%s' of the following '%s'"
-msgstr ""
+msgstr "Diese URL ist enthalten in „%s“ des folgenden „%s“"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__favicon
@@ -9417,6 +9585,13 @@ msgstr ""
 
 #. module: website
 #. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "This translation is not editable."
+msgstr "Die Übersetzung ist nicht bearbeitbar."
+
+#. module: website
+#. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.js:0
 #, python-format
 msgid ""
@@ -9454,6 +9629,7 @@ msgstr "Die Zeit ist um! Sie können jetzt besuchen"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_facebook_page_options
+#: model_terms:ir.ui.view,arch_db:website.snippets
 msgid "Timeline"
 msgstr "Zeitleiste"
 
@@ -9497,6 +9673,7 @@ msgstr "Tipp: Verwenden Sie lizenzfreie Fotos"
 #. module: website
 #. odoo-javascript
 #: code:addons/website/static/src/components/dialog/seo.xml:0
+#: model_terms:ir.ui.view,arch_db:website.snippets
 #, python-format
 msgid "Title"
 msgstr "Titel"
@@ -9626,6 +9803,13 @@ msgstr "Übergang"
 #, python-format
 msgid "Translate Attribute"
 msgstr "Attribut übersetzen"
+
+#. module: website
+#. odoo-javascript
+#: code:addons/website/static/src/components/translator/translator.js:0
+#, python-format
+msgid "Translate header in the text. Menu is generated automatically."
+msgstr "Kopfzeile im Text übersetzen. Menü wird automatisch erstellt."
 
 #. module: website
 #. odoo-javascript
@@ -10810,6 +10994,16 @@ msgstr "Sie kÃ¶nnen den Submit-Button des Formulars nicht entfernen"
 #, python-format
 msgid "You cannot duplicate this field."
 msgstr "Sie können dieses Feld nicht duplizieren."
+
+#. module: website
+#. odoo-python
+#: code:addons/website/models/website.py:0
+#, python-format
+msgid ""
+"You cannot delete default website %s. Try to change its settings instead"
+msgstr ""
+"Sie können die Standardwebsite %s nicht löschen. Versuchen Sie stattdessen "
+"die Einstellungen zu ändern"
 
 #. module: website
 #. odoo-python
