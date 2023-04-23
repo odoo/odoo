@@ -38,7 +38,7 @@ msgstr "(keine Konten)"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "<span class=\"o_stat_text\">Analytic Accounts</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Kostenstellen</span>"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form
@@ -81,7 +81,7 @@ msgstr "Verwaltung"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr ""
+msgstr "Anzahl aller Kostenstellen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -121,7 +121,7 @@ msgstr "Kostenstellenkonten"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
-msgstr ""
+msgstr "Anzahl Kostenstellen"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
@@ -146,12 +146,12 @@ msgstr "Kostenstellenmodelle"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Analytic Distribution Template"
-msgstr ""
+msgstr "Vorlage für Kostenverteilung"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
 msgid "Analytic Item"
-msgstr ""
+msgstr "Kostenpunkt"
 
 #. module: analytic
 #: model:ir.actions.act_window,name:analytic.account_analytic_line_action_entries
@@ -180,7 +180,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__analytic_plan_id
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_filter
 msgid "Analytic Plan"
-msgstr ""
+msgstr "Kostenstellenplan"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_account_analytic_applicability
@@ -277,7 +277,7 @@ msgstr "Kostenstellen"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "Anzahl Unterpläne"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -320,7 +320,7 @@ msgstr "Vollständiger Name"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Conditions to meet"
-msgstr ""
+msgstr "Zu erfüllende Bedingungen"
 
 #. module: analytic
 #: model:ir.model,name:analytic.model_res_config_settings
@@ -441,7 +441,7 @@ msgstr "Anzeigename"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_distribution_model_form_view
 msgid "Distribution to apply"
-msgstr ""
+msgstr "Anzuwendende Verteilung"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__business_domain
@@ -610,7 +610,7 @@ msgstr ""
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "No Analytic Accounts for this plan"
-msgstr ""
+msgstr "Keine Kostenstellen für diesen Plan"
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -627,7 +627,7 @@ msgstr "Noch keine Aktivität auf diesem Konto"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "No plans available"
-msgstr ""
+msgstr "Keine Pläne verfügbar"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_needaction_counter
@@ -662,6 +662,7 @@ msgstr "OK"
 #, python-format
 msgid "One or more lines require a 100% analytic distribution."
 msgstr ""
+"Eine oder mehrere Zeilen erfordern eine Verteilung der Kosten von 100 %."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_internal
@@ -752,7 +753,7 @@ msgstr ""
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__root_plan_id
 msgid "Root Plan"
-msgstr ""
+msgstr "Wurzelplan"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_seagate_p2
@@ -771,6 +772,10 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Wählen Sie ein Unternehmen, für das diese Kostenstellenverteilung genutzt "
+"werden soll (z. B. bei der Erstellung einer neuen Kundenrechnung oder einem "
+"neuen Verkaufsauftrag soll dann diese Kostenstelle automatisch eingetragen "
+"werden, wenn das entsprechende Unternehmen ausgewählt wird)."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -779,6 +784,10 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"Wählen Sie eine Partnerkategorie, für die diese Kostenstellenverteilung "
+"genutzt werden soll (z. B. bei der Erstellung einer neuen Kundenrechnung "
+"oder einem neuen Verkaufsauftrag soll dann diese Kostenstelle automatisch "
+"eingetragen werden, wenn dieser Partner ausgewählt wird)."
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -787,6 +796,10 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"Wählen Sie einen Partner, für den diese Kostenstellenverteilung genutzt "
+"werden soll (z. B. bei der Erstellung einer neuen Kundenrechnung oder einem "
+"neuen Verkaufsauftrag soll dann diese Kostenstelle automatisch eingetragen "
+"werden, wenn dieser Partner ausgewählt wird)."
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
@@ -853,6 +866,8 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
+"Sie können in Ihrer Kostenstelle kein anderes Unternehmen einstellen, da "
+"einige Kostenbuchungen damit verknüpft sind."
 
 #. module: analytic
 #. odoo-python
@@ -862,6 +877,9 @@ msgid ""
 "You defined a distribution with analytic account(s) belonging to a specific "
 "company but a model shared between companies or with a different company"
 msgstr ""
+"Sie haben eine Verteilung mit Kostenstellen festgelegt, die zu einem "
+"bestimmten Unternehmen gehören, aber zu einem Modell, das zwischen "
+"Unternehmen oder mit einem anderen Unternehmen geteilt wird"
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_account_form

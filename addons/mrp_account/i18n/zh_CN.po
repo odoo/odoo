@@ -3,9 +3,9 @@
 # 	* mrp_account
 # 
 # Translators:
-# Emily Jia <eji@odoo.com>, 2023
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2023
+# Jeffery CHEN <jeffery9@gmail.com>, 2023
 # Martin Trigaux, 2023
+# Emily Jia <eji@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,8 +13,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:01+0000\n"
 "PO-Revision-Date: 2023-03-23 10:39+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
-"Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
+"Last-Translator: Emily Jia <eji@odoo.com>, 2023\n"
+"Language-Team: Chinese (China) (https://app.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -42,14 +42,14 @@ msgstr "分析行"
 msgid ""
 "Analytic account in which cost and revenue entries will take        place "
 "for financial management of the manufacturing order."
-msgstr "分析账户，其中的成本和收入条目将用于制造订单的财务管理。"
+msgstr "分析科目，其中的成本和收入条目用于生产订单财务管理。"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_bom__analytic_account_id
 msgid ""
 "Analytic account in which cost and revenue entries will take place for "
 "financial management of the manufacturing order."
-msgstr "分析账户，其中的成本和收入条目将用于制造订单的财务管理。"
+msgstr "分析科目，其中的成本和收入条目用于生产订单财务管理。"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_bom
@@ -67,7 +67,7 @@ msgstr "物料清单"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__bom_count
 msgid "BoM Count"
-msgstr "BoM计数"
+msgstr "物料清单（BOM）计数"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_line__category
@@ -81,7 +81,7 @@ msgstr "类别"
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_view_form_normal_inherit_extended
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_variant_easy_edit_view_bom_inherit
 msgid "Compute Price from BoM"
-msgstr "从BOM计算价格"
+msgstr "从物料清单（BOM）计算价格"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.product_product_ext_form_view2
@@ -90,17 +90,17 @@ msgstr "从BOM计算价格"
 msgid ""
 "Compute the price of the product using products and operations of related "
 "bill of materials, for manufactured products only."
-msgstr "只是对生产的产品用产品和物料表相关的作业计算产品的价格"
+msgstr "使用物料清单的产品和操作计算价格，仅限已生产产品。"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid "Cost Recorded"
-msgstr "记录的成本"
+msgstr "已记录成本"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Unit Cost"
-msgstr "额外的单位成本"
+msgstr "额外单位成本"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_account_move_line
@@ -110,7 +110,7 @@ msgstr "日记账项目"
 #. module: mrp_account
 #: model:ir.model.fields.selection,name:mrp_account.selection__account_analytic_line__category__manufacturing_order
 msgid "Manufacturing Order"
-msgstr "制造订单"
+msgstr "生产订单"
 
 #. module: mrp_account
 #: code:addons/mrp_account/models/analytic_account.py:0
@@ -118,24 +118,24 @@ msgstr "制造订单"
 #: model_terms:ir.ui.view,arch_db:mrp_account.account_analytic_account_view_form_mrp
 #, python-format
 msgid "Manufacturing Orders"
-msgstr "制造订单"
+msgstr "生产订单"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_account_analytic_account__production_count
 msgid "Manufacturing Orders Count"
-msgstr "制造业订单计数"
+msgstr "生产订单计数"
 
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__mo_analytic_account_line_id
 msgid "Mo Analytic Account Line"
-msgstr "MO分析账户行"
+msgstr "生产订单（MO）分析科目行"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
 msgid ""
 "Posts analytical accounting entries in real time for both component and "
 "operational costs."
-msgstr "实时发布部件和运营成本的分析会计条目。"
+msgstr "实时过账组件和运营成本的分析会计条目。"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_product_template
@@ -175,7 +175,7 @@ msgstr "计价"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_workorder__wc_analytic_account_line_id
 msgid "Wc Analytic Account Line"
-msgstr "WC分析账户行"
+msgstr "工作中心（WC）分析科目行"
 
 #. module: mrp_account
 #: model:ir.model,name:mrp_account.model_mrp_workcenter
