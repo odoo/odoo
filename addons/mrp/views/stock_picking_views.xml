@@ -138,6 +138,26 @@
             <field name="auto_show_reception_report" position="after">
                 <field name="auto_show_reception_report" invisible="code != 'mrp_operation'" groups="mrp.group_mrp_reception_report"/>
             </field>
+            <xpath expr="//page[@name='hardware']" position="after">
+                <page name="mrp_hardware" string="Hardware" invisible="code != 'mrp_operation'">
+                    <group>
+                        <group string="Print when done">
+                            <field name="auto_print_done_production_order" string="Production Order"/>
+                        </group>
+                        <group string="">
+                            <div colspan="2">
+                                Odoo opens a PDF preview by default. If you want to print instantly,
+                                install the IoT App on a computer that is on the same local network as the
+                                barcode operator and configure the routing of the reports.
+                                <a href="https://www.odoo.com/documentation/master/applications/productivity/iot/devices/printer.html"
+                                    target="_blank" class="fa fa-arrow-right">
+                                    Documentation
+                                </a>
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
         </field>
     </record>
 
