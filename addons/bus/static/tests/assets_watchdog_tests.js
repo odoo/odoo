@@ -4,7 +4,7 @@ import { busService } from "@bus/services/bus_service";
 import { busParametersService } from "@bus/bus_parameters_service";
 import { presenceService } from "@bus/services/presence_service";
 import { multiTabService } from "@bus/multi_tab_service";
-import { getPyEnv } from '@bus/../tests/helpers/mock_python_environment';
+import { getPyEnv } from "@bus/../tests/helpers/mock_python_environment";
 
 import { createWebClient } from "@web/../tests/webclient/helpers";
 import { assetsWatchdogService } from "@bus/services/assets_watchdog_service";
@@ -41,8 +41,8 @@ QUnit.module("Bus Assets WatchDog", (hooks) => {
         const pyEnv = await getPyEnv();
         const { afterNextRender } = owl.App;
         await afterNextRender(() => {
-            pyEnv['bus.bus']._sendone("broadcast", "bundle_changed", {
-                server_version: "NEW_MAJOR_VERSION"
+            pyEnv["bus.bus"]._sendone("broadcast", "bundle_changed", {
+                server_version: "NEW_MAJOR_VERSION",
             });
         });
 

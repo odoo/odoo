@@ -12,7 +12,7 @@ class WebSocketMock extends EventTarget {
 
         queueMicrotask(() => {
             this.readyState = 1;
-            const openEv = new Event('open');
+            const openEv = new Event("open");
             this.onopen(openEv);
             this.dispatchEvent(openEv);
         });
@@ -20,7 +20,7 @@ class WebSocketMock extends EventTarget {
 
     close(code = 1000, reason) {
         this.readyState = 3;
-        const closeEv = new CloseEvent('close', {
+        const closeEv = new CloseEvent("close", {
             code,
             reason,
             wasClean: code === 1000,
@@ -35,7 +35,7 @@ class WebSocketMock extends EventTarget {
 
     send(data) {
         if (this.readyState !== 1) {
-            const errorEv = new Event('error');
+            const errorEv = new Event("error");
             this.onerror(errorEv);
             this.dispatchEvent(errorEv);
             throw new DOMException("Failed to execute 'send' on 'WebSocket': State is not OPEN");
@@ -53,8 +53,7 @@ class SharedWorkerMock extends EventTarget {
         this._messageChannel.port2.start();
         this._websocketWorker.registerClient(this._messageChannel.port2);
     }
-  }
-
+}
 
 let websocketWorker;
 /**
@@ -64,23 +63,31 @@ let websocketWorker;
  * websocket behavior.
  */
 export function patchWebsocketWorkerWithCleanup(params = {}) {
-    patchWithCleanup(window, {
-        WebSocket: function () {
-            return new WebSocketMock();
+    patchWithCleanup(
+        window,
+        {
+            WebSocket: function () {
+                return new WebSocketMock();
+            },
         },
-    }, { pure: true });
+        { pure: true }
+    );
     patchWithCleanup(websocketWorker || WebsocketWorker.prototype, params);
     websocketWorker = websocketWorker || new WebsocketWorker();
-    patchWithCleanup(browser, {
-        SharedWorker: function () {
-            const sharedWorker = new SharedWorkerMock(websocketWorker);
-            registerCleanup(() => {
-                sharedWorker._messageChannel.port1.close();
-                sharedWorker._messageChannel.port2.close();
-            });
-            return sharedWorker;
+    patchWithCleanup(
+        browser,
+        {
+            SharedWorker: function () {
+                const sharedWorker = new SharedWorkerMock(websocketWorker);
+                registerCleanup(() => {
+                    sharedWorker._messageChannel.port1.close();
+                    sharedWorker._messageChannel.port2.close();
+                });
+                return sharedWorker;
+            },
         },
-    }, { pure: true });
+        { pure: true }
+    );
     registerCleanup(() => {
         if (websocketWorker) {
             clearTimeout(websocketWorker.connectTimeout);

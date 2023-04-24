@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { presenceService } from '@bus/services/presence_service';
+import { presenceService } from "@bus/services/presence_service";
 
 export function makeFakePresenceService(params = {}) {
     return {

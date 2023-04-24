@@ -11,7 +11,7 @@ export const assetsWatchdogService = {
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
-        bus_service.addEventListener('notification', onNotification.bind(this));
+        bus_service.addEventListener("notification", onNotification.bind(this));
         bus_service.start();
 
         /**
@@ -24,26 +24,23 @@ export const assetsWatchdogService = {
                 // We wait until things settle down
                 browser.clearTimeout(bundleNotifTimerID);
                 bundleNotifTimerID = browser.setTimeout(() => {
-                    notification.add(
-                        env._t("The page appears to be out of date."),
-                        {
-                            title: env._t("Refresh"),
-                            type: "warning",
-                            sticky: true,
-                            buttons: [
-                                {
-                                    name: env._t("Refresh"),
-                                    primary: true,
-                                    onClick: () => {
-                                        browser.location.reload();
-                                    },
+                    notification.add(env._t("The page appears to be out of date."), {
+                        title: env._t("Refresh"),
+                        type: "warning",
+                        sticky: true,
+                        buttons: [
+                            {
+                                name: env._t("Refresh"),
+                                primary: true,
+                                onClick: () => {
+                                    browser.location.reload();
                                 },
-                            ],
-                            onClose: () => {
-                                isNotificationDisplayed = false;
                             },
-                        }
-                    );
+                        ],
+                        onClose: () => {
+                            isNotificationDisplayed = false;
+                        },
+                    });
                     isNotificationDisplayed = true;
                 }, getBundleNotificationDelay());
             }
@@ -68,7 +65,7 @@ export const assetsWatchdogService = {
          */
         function onNotification({ detail: notifications }) {
             for (const { payload, type } of notifications) {
-                if (type === 'bundle_changed') {
+                if (type === "bundle_changed") {
                     if (payload.server_version !== session.server_version) {
                         displayBundleChangedNotification();
                         break;

@@ -3,17 +3,21 @@
 import { patch } from "@web/core/utils/patch";
 import { MockServer } from "@web/../tests/helpers/mock_server";
 
-patch(MockServer.prototype, 'bus/models/ir_websocket', {
+patch(MockServer.prototype, "bus/models/ir_websocket", {
     /**
      * Simulates `_update_presence` on `ir.websocket`.
      *
      * @param inactivityPeriod
      * @param imStatusIdsByModel
      */
-     _mockIrWebsocket__updatePresence(inactivityPeriod, imStatusIdsByModel) {
+    _mockIrWebsocket__updatePresence(inactivityPeriod, imStatusIdsByModel) {
         const imStatusNotifications = this._mockIrWebsocket__getImStatus(imStatusIdsByModel);
         if (Object.keys(imStatusNotifications).length > 0) {
-            this._mockBusBus__sendone(this.currentPartnerId, 'mail.record/insert', imStatusNotifications);
+            this._mockBusBus__sendone(
+                this.currentPartnerId,
+                "mail.record/insert",
+                imStatusNotifications
+            );
         }
     },
     /**
@@ -25,9 +29,12 @@ patch(MockServer.prototype, 'bus/models/ir_websocket', {
      */
     _mockIrWebsocket__getImStatus(imStatusIdsByModel) {
         const imStatus = {};
-        const { 'res.partner': partnerIds } = imStatusIdsByModel;
+        const { "res.partner": partnerIds } = imStatusIdsByModel;
         if (partnerIds) {
-            imStatus['Partner'] = this.mockSearchRead('res.partner', [[['id', 'in', partnerIds]]], { context: { 'active_test': false }, fields: ['im_status'] })
+            imStatus["Partner"] = this.mockSearchRead("res.partner", [[["id", "in", partnerIds]]], {
+                context: { active_test: false },
+                fields: ["im_status"],
+            });
         }
         return imStatus;
     },

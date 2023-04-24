@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { browser } from '@web/core/browser/browser';
-import { registry } from '@web/core/registry';
+import { browser } from "@web/core/browser/browser";
+import { registry } from "@web/core/registry";
 
 export const UPDATE_BUS_PRESENCE_DELAY = 60000;
 /**
@@ -12,35 +12,37 @@ export const UPDATE_BUS_PRESENCE_DELAY = 60000;
  * register model/ids to monitor to this service.
  */
 export const imStatusService = {
-    dependencies: ['bus_service', 'multi_tab', 'presence'],
+    dependencies: ["bus_service", "multi_tab", "presence"],
 
     start(env, { bus_service, multi_tab, presence }) {
         const imStatusModelToIds = {};
         let updateBusPresenceTimeout;
-        const throttledUpdateBusPresence = _.throttle(
-            function updateBusPresence() {
-                clearTimeout(updateBusPresenceTimeout);
-                if (!multi_tab.isOnMainTab()) {
-                    return;
-                }
-                const now = new Date().getTime();
-                bus_service.send("update_presence", {
-                    inactivity_period: now - presence.getLastPresence(),
-                    im_status_ids_by_model: { ...imStatusModelToIds },
-                });
-                updateBusPresenceTimeout = browser.setTimeout(throttledUpdateBusPresence, UPDATE_BUS_PRESENCE_DELAY);
-            },
-            UPDATE_BUS_PRESENCE_DELAY
-        );
+        const throttledUpdateBusPresence = _.throttle(function updateBusPresence() {
+            clearTimeout(updateBusPresenceTimeout);
+            if (!multi_tab.isOnMainTab()) {
+                return;
+            }
+            const now = new Date().getTime();
+            bus_service.send("update_presence", {
+                inactivity_period: now - presence.getLastPresence(),
+                im_status_ids_by_model: { ...imStatusModelToIds },
+            });
+            updateBusPresenceTimeout = browser.setTimeout(
+                throttledUpdateBusPresence,
+                UPDATE_BUS_PRESENCE_DELAY
+            );
+        }, UPDATE_BUS_PRESENCE_DELAY);
 
-        bus_service.addEventListener('connect', () => {
+        bus_service.addEventListener("connect", () => {
             // wait for im_status model/ids to be registered before starting.
             browser.setTimeout(throttledUpdateBusPresence, 250);
         });
-        multi_tab.bus.addEventListener('become_main_tab', throttledUpdateBusPresence);
-        bus_service.addEventListener('reconnect', throttledUpdateBusPresence);
-        multi_tab.bus.addEventListener('no_longer_main_tab', () => clearTimeout(updateBusPresenceTimeout));
-        bus_service.addEventListener('disconnect', () => clearTimeout(updateBusPresenceTimeout));
+        multi_tab.bus.addEventListener("become_main_tab", throttledUpdateBusPresence);
+        bus_service.addEventListener("reconnect", throttledUpdateBusPresence);
+        multi_tab.bus.addEventListener("no_longer_main_tab", () =>
+            clearTimeout(updateBusPresenceTimeout)
+        );
+        bus_service.addEventListener("disconnect", () => clearTimeout(updateBusPresenceTimeout));
 
         return {
             /**
@@ -71,4 +73,4 @@ export const imStatusService = {
     },
 };
 
-registry.category('services').add('im_status', imStatusService);
+registry.category("services").add("im_status", imStatusService);

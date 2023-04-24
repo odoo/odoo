@@ -1,21 +1,21 @@
 /** @odoo-module **/
 
-import { registry } from '@web/core/registry';
+import { registry } from "@web/core/registry";
 
-const modelDefinitionsRegistry = registry.category('bus.model.definitions');
-const customModelFieldsRegistry = modelDefinitionsRegistry.category('fieldsToInsert');
-const recordsToInsertRegistry = modelDefinitionsRegistry.category('recordsToInsert');
-const fakeModelsRegistry = modelDefinitionsRegistry.category('fakeModels');
+const modelDefinitionsRegistry = registry.category("bus.model.definitions");
+const customModelFieldsRegistry = modelDefinitionsRegistry.category("fieldsToInsert");
+const recordsToInsertRegistry = modelDefinitionsRegistry.category("recordsToInsert");
+const fakeModelsRegistry = modelDefinitionsRegistry.category("fakeModels");
 /**
  * Add models whose definitions need to be fetched on the server.
  *
  * @param {string[]} modelName
  */
 export function addModelNamesToFetch(modelNames) {
-    if (!modelDefinitionsRegistry.contains('modelNamesToFetch')) {
-        modelDefinitionsRegistry.add('modelNamesToFetch', []);
+    if (!modelDefinitionsRegistry.contains("modelNamesToFetch")) {
+        modelDefinitionsRegistry.add("modelNamesToFetch", []);
     }
-    modelDefinitionsRegistry.get('modelNamesToFetch').push(...modelNames);
+    modelDefinitionsRegistry.get("modelNamesToFetch").push(...modelNames);
 }
 
 /**
@@ -36,7 +36,7 @@ export function addFakeModel(modelName, fields) {
  * @param {string} modelName
  * @param {Object} fieldNamesToFields
  */
- export function insertModelFields(modelName, fieldNamesToFields) {
+export function insertModelFields(modelName, fieldNamesToFields) {
     const modelCustomFieldsRegistry = customModelFieldsRegistry.category(modelName);
     for (const fname in fieldNamesToFields) {
         modelCustomFieldsRegistry.add(fname, fieldNamesToFields[fname]);

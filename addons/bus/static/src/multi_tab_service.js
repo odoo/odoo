@@ -1,7 +1,7 @@
 /** @odoo-module **/
 
-import { registry } from '@web/core/registry';
-import { browser } from '@web/core/browser/browser';
+import { registry } from "@web/core/registry";
+import { browser } from "@web/core/browser/browser";
 
 const { EventBus } = owl;
 
@@ -34,13 +34,13 @@ export const multiTabService = {
         const HEARTBEAT_OUT_OF_DATE_PERIOD = 5000; // 5 seconds
         const HEARTBEAT_KILL_OLD_PERIOD = 15000; // 15 seconds
         // Keys that should not trigger the `shared_value_updated` event.
-        const PRIVATE_LOCAL_STORAGE_KEYS = ['main', 'heartbeat'];
+        const PRIVATE_LOCAL_STORAGE_KEYS = ["main", "heartbeat"];
 
         // PROPERTIES
         let _isOnMainTab = false;
         let lastHeartbeat = 0;
         let heartbeatTimeout;
-        const sanitizedOrigin = location.origin.replace(/:\/{0,2}/g, '_');
+        const sanitizedOrigin = location.origin.replace(/:\/{0,2}/g, "_");
         const localStoragePrefix = `${this.name}.${sanitizedOrigin}.`;
         const now = new Date().getTime();
         const tabId = `${this.name}${multiTabId++}:${now}`;
@@ -68,7 +68,7 @@ export const multiTabService = {
             }
             // Check who's next.
             const now = new Date().getTime();
-            const lastPresenceByTab = getItemFromStorage('lastPresenceByTab', {});
+            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
             const heartbeatKillOld = now - HEARTBEAT_KILL_OLD_PERIOD;
             let newMain;
             for (const [tab, lastPresence] of Object.entries(lastPresenceByTab)) {
@@ -82,24 +82,24 @@ export const multiTabService = {
             if (newMain === tabId) {
                 // We're next in queue. Electing as main.
                 lastHeartbeat = now;
-                setItemInStorage('heartbeat', lastHeartbeat);
-                setItemInStorage('main', true);
+                setItemInStorage("heartbeat", lastHeartbeat);
+                setItemInStorage("main", true);
                 _isOnMainTab = true;
-                bus.trigger('become_main_tab');
+                bus.trigger("become_main_tab");
                 // Removing main peer from queue.
                 delete lastPresenceByTab[newMain];
-                setItemInStorage('lastPresenceByTab', lastPresenceByTab);
+                setItemInStorage("lastPresenceByTab", lastPresenceByTab);
             }
         }
 
         function heartbeat() {
             const now = new Date().getTime();
-            let heartbeatValue = getItemFromStorage('heartbeat', 0);
-            const lastPresenceByTab = getItemFromStorage('lastPresenceByTab', {});
+            let heartbeatValue = getItemFromStorage("heartbeat", 0);
+            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
             if (heartbeatValue + HEARTBEAT_OUT_OF_DATE_PERIOD < now) {
                 // Heartbeat is out of date. Electing new main.
                 startElection();
-                heartbeatValue = getItemFromStorage('heartbeat', 0);
+                heartbeatValue = getItemFromStorage("heartbeat", 0);
             }
             if (_isOnMainTab) {
                 // Walk through all tabs and kill old ones.
@@ -115,24 +115,24 @@ export const multiTabService = {
                     _isOnMainTab = false;
                     lastHeartbeat = 0;
                     lastPresenceByTab[tabId] = now;
-                    setItemInStorage('lastPresenceByTab', lastPresenceByTab);
-                    bus.trigger('no_longer_main_tab');
+                    setItemInStorage("lastPresenceByTab", lastPresenceByTab);
+                    bus.trigger("no_longer_main_tab");
                 } else {
                     lastHeartbeat = now;
-                    setItemInStorage('heartbeat', now);
-                    setItemInStorage('lastPresenceByTab', cleanedTabs);
+                    setItemInStorage("heartbeat", now);
+                    setItemInStorage("lastPresenceByTab", cleanedTabs);
                 }
             } else {
                 // Update own heartbeat.
                 lastPresenceByTab[tabId] = now;
-                setItemInStorage('lastPresenceByTab', lastPresenceByTab);
+                setItemInStorage("lastPresenceByTab", lastPresenceByTab);
             }
             const hbPeriod = _isOnMainTab ? MAIN_TAB_HEARTBEAT_PERIOD : TAB_HEARTBEAT_PERIOD;
             heartbeatTimeout = browser.setTimeout(heartbeat, hbPeriod);
         }
 
         function onStorage({ key, newValue }) {
-            if (key === generateLocalStorageKey('main') && !newValue) {
+            if (key === generateLocalStorageKey("main") && !newValue) {
                 // Main was unloaded.
                 startElection();
             }
@@ -142,34 +142,34 @@ export const multiTabService = {
             if (key && key.includes(localStoragePrefix)) {
                 // Only trigger the shared_value_updated event if the key is
                 // related to this service/origin.
-                const baseKey = key.replace(localStoragePrefix, '');
-                bus.trigger('shared_value_updated', { key: baseKey, newValue });
+                const baseKey = key.replace(localStoragePrefix, "");
+                bus.trigger("shared_value_updated", { key: baseKey, newValue });
             }
         }
 
         function onPagehide() {
             clearTimeout(heartbeatTimeout);
-            const lastPresenceByTab = getItemFromStorage('lastPresenceByTab', {});
+            const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
             delete lastPresenceByTab[tabId];
-            setItemInStorage('lastPresenceByTab', lastPresenceByTab);
+            setItemInStorage("lastPresenceByTab", lastPresenceByTab);
 
             // Unload main.
             if (_isOnMainTab) {
                 _isOnMainTab = false;
-                bus.trigger('no_longer_main_tab');
-                browser.localStorage.removeItem(generateLocalStorageKey('main'));
+                bus.trigger("no_longer_main_tab");
+                browser.localStorage.removeItem(generateLocalStorageKey("main"));
             }
         }
 
-        browser.addEventListener('pagehide', onPagehide);
-        browser.addEventListener('storage', onStorage);
+        browser.addEventListener("pagehide", onPagehide);
+        browser.addEventListener("storage", onStorage);
 
         // REGISTER THIS TAB
-        const lastPresenceByTab = getItemFromStorage('lastPresenceByTab', {});
+        const lastPresenceByTab = getItemFromStorage("lastPresenceByTab", {});
         lastPresenceByTab[tabId] = now;
-        setItemInStorage('lastPresenceByTab', lastPresenceByTab);
+        setItemInStorage("lastPresenceByTab", lastPresenceByTab);
 
-        if (!getItemFromStorage('main')) {
+        if (!getItemFromStorage("main")) {
             startElection();
         }
         heartbeat();
@@ -221,4 +221,4 @@ export const multiTabService = {
     },
 };
 
-registry.category('services').add('multi_tab', multiTabService);
+registry.category("services").add("multi_tab", multiTabService);

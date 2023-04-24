@@ -8,7 +8,7 @@
  *
  * Inspired by https://davidwalsh.name/javascript-debounce-function
  */
- export function debounce(func, wait, immediate) {
+export function debounce(func, wait, immediate) {
     let timeout;
     return function () {
         const context = this;
