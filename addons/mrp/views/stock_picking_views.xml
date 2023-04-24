@@ -143,6 +143,12 @@
                     <group>
                         <group string="Print when done">
                             <field name="auto_print_done_production_order" string="Production Order"/>
+                            <label for="auto_print_done_mrp_product_labels" string="Product Labels"/>
+                            <div class="o_row">
+                                <field name="auto_print_done_mrp_product_labels" string="Product Labels"/>
+                                <label for="mrp_product_label_to_print" string="Print labels as:" invisible="not auto_print_done_mrp_product_labels" class="fw-bold"/>
+                                <field name="mrp_product_label_to_print" invisible="not auto_print_done_mrp_product_labels"/>
+                            </div>
                         </group>
                         <group string="">
                             <div colspan="2">
