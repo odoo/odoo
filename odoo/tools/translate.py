@@ -29,6 +29,7 @@ import odoo
 from odoo.modules.module import get_resource_path
 from . import config, pycompat
 from .misc import file_open, get_iso_codes, SKIPPED_ELEMENT_TYPES
+from ..modules import module
 
 _logger = logging.getLogger(__name__)
 
@@ -986,11 +987,8 @@ class TranslationModuleReader:
         self.env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
         self._to_translate = []
         self._path_list = [(path, True) for path in odoo.addons.__path__]
-        self._installed_modules = [
-            m['name']
-            for m in self.env['ir.module.module'].search_read([('state', '=', 'installed')], fields=['name'])
-        ]
 
+        self._export_module_description_terms()
         self._export_translatable_records()
         self._export_translatable_resources()
 
@@ -1015,6 +1013,31 @@ class TranslationModuleReader:
         if not sanitized_term or len(sanitized_term) <= 1:
             return
         self._to_translate.append((module, source, name, res_id, ttype, tuple(comments or ()), record_id, value))
+
+    def _export_module_description_terms(self):
+        """ Export translations of module shortdesc and summary """
+        module_descs = {
+            module.name: (module.id,
+                          module.shortdesc, module.with_context(lang=self._lang).shortdesc,
+                          module.summary, module.with_context(lang=self._lang).summary,
+                          module.description, module.with_context(lang=self._lang).description,
+                          )
+            for module in self.env["ir.module.module"].search([('state', '=', 'installed')])
+        }
+        self._installed_modules = module_descs.keys()
+
+        if 'all' not in self._modules:
+            modules = list(self._modules)
+        else:
+            modules = self._installed_modules
+        for module in modules:
+            desc = module_descs[module]
+            self._push_translation(module, "model", "ir.module.module,shortdesc", f"base.module_{module}",
+                                   desc[1], record_id=desc[0], value=desc[2] if desc[2] != desc[1] else '')
+            self._push_translation(module, "model", "ir.module.module,summary", f"base.module_{module}",
+                                   desc[3], record_id=desc[0], value=desc[4] if desc[4] != desc[3] else '')
+            self._push_translation(module, "model", "ir.module.module,description", f"base.module_{module}",
+                                   desc[5], record_id=desc[0], value=desc[6] if desc[6] != desc[5] else '')
 
     def _get_translatable_records(self, imd_records):
         """ Filter the records that are translatable
@@ -1471,6 +1494,9 @@ class CodeTranslations:
         self.python_translations = {}
         # {(module_name, lang): {'message': [{'id': src, 'string': value}]}
         self.web_translations = {}
+        # {(module_name, lang): {'shortdesc': value, 'summary': value}
+        self.module_translations = {}
+        self.module_translations_loaded = {}
 
     @staticmethod
     def _get_po_paths(mod, lang):
@@ -1534,6 +1560,43 @@ class CodeTranslations:
             "messages": [{"id": src, "string": value} for src, value in translations.items()]
         }
 
+    def _load_module_translations(self, module_name, lang):
+        self.module_translations[(module_name, lang)] = {}
+        if lang == 'en_US':
+            terp = module.get_manifest(module_name)
+            translations = {}
+            if terp.get('name'):
+                translations['shortdesc'] = terp.get('name')
+            if terp.get('summary'):
+                translations['summary'] = terp.get('summary')
+            if terp.get('description'):
+                translations['description'] = terp.get('description')
+            self.module_translations[(module_name, lang)] = translations
+        else:
+            translations = defaultdict(dict)
+            po_paths = CodeTranslations._get_po_paths(module_name, lang)
+            for po_path in po_paths:
+                try:
+                    with file_open(po_path, mode='rb') as fileobj:
+                        fileobj.seek(0)
+                        reader = TranslationFileReader(fileobj, fileformat='po')
+                        for row in reader:
+                            if row.get('type') == 'model' and row.get('name') in [
+                                'ir.module.module,shortdesc',
+                                'ir.module.module,summary',
+                                'ir.module.module,description',
+                            ]:
+                                if row['value']:
+                                    mname = row.get('imd_name').replace('module_', '')
+                                    translations[mname][row.get('name').split(',')[1]] = row['value']
+                except IOError:
+                    iso_lang = get_iso_codes(lang)
+                    filename = '[lang: %s][format: %s]' % (iso_lang or 'new', 'po')
+                    _logger.exception("couldn't read translation file %s", filename)
+            for mname in translations:
+                self.module_translations[(mname, lang)] = translations[mname]
+        self.module_translations_loaded[(module_name, lang)] = True
+
     def get_python_translations(self, module_name, lang):
         if (module_name, lang) not in self.python_translations:
             self._load_python_translations(module_name, lang)
@@ -1543,6 +1606,11 @@ class CodeTranslations:
         if (module_name, lang) not in self.web_translations:
             self._load_web_translations(module_name, lang)
         return self.web_translations[(module_name, lang)]
+
+    def get_module_translation(self, module_name, lang):
+        if (module_name, lang) not in self.module_translations_loaded:
+            self._load_module_translations(module_name, lang)
+        return self.module_translations[(module_name, lang)]
 
 
 code_translations = CodeTranslations()

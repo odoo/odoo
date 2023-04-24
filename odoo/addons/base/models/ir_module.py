@@ -31,7 +31,7 @@ from odoo.exceptions import AccessDenied, UserError
 from odoo.osv import expression
 from odoo.tools.parse_version import parse_version
 from odoo.tools.misc import topological_sort
-from odoo.tools.translate import TranslationImporter
+from odoo.tools.translate import TranslationImporter, code_translations
 from odoo.http import request
 from odoo.modules import get_module_path, get_module_resource
 
@@ -753,6 +753,7 @@ class Module(models.Model):
         default_version = modules.adapt_version('1.0')
         known_mods = self.with_context(lang=None).search([])
         known_mods_names = {mod.name: mod for mod in known_mods}
+        mods = self.env[self._name]
 
         # iterate through detected modules and update/create them in db
         for mod_name in modules.get_modules():
@@ -783,6 +784,8 @@ class Module(models.Model):
             mod._update_dependencies(terp.get('depends', []), terp.get('auto_install'))
             mod._update_exclusions(terp.get('excludes', []))
             mod._update_category(terp.get('category', 'Uncategorized'))
+            mods += mod
+        mods._update_description_translations()
 
         return res
 
@@ -820,6 +823,26 @@ class Module(models.Model):
         if categs != current_category_path:
             cat_id = modules.db.create_categories(self._cr, categs)
             self.write({'category_id': cat_id})
+
+    def _update_description_translations(self, filter_lang=None):
+        if not filter_lang:
+            langs = self.env['res.lang'].get_installed()
+            filter_lang = [code for code, _ in langs]
+        elif not isinstance(filter_lang, (list, tuple)):
+            filter_lang = [filter_lang]
+
+        mod_dict = {
+            mod.name: mod.dependencies_id.mapped('name')
+            for mod in self
+        }
+        mod_names = topological_sort(mod_dict)
+        mod_dict = {
+            mod.name: mod
+            for mod in self
+        }
+        for module in mod_names:
+            for lang in filter_lang:
+                mod_dict[module].with_context(lang=lang).update(code_translations.get_module_translation(module, lang))
 
     def _update_translations(self, filter_lang=None, overwrite=False):
         if not filter_lang:
