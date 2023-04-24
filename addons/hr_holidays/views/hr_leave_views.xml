@@ -261,14 +261,16 @@
                             </div>
                             <!-- full days: show date start/end with daterange -->
                             <div class="o_row" attrs="{'invisible': ['|', ('request_unit_half', '=', True), ('request_unit_hours', '=', True)]}">
-                                <span class="text-muted">From</span>
-                                <field name="request_date_from" class="oe_inline" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                    'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
-                                    }" widget="daterange" options="{'related_end_date': 'request_date_to'}" />
-                                <span class="text-muted">To</span>
-                                <field name="request_date_to" class="oe_inline" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))],
-                                    'required': ['|', ('date_from', '=', False), ('date_to', '=', False)]
-                                    }" widget="daterange" options="{'related_end_date': 'request_date_from'}" />
+                                <field
+                                    name="request_date_from"
+                                    widget="daterange"
+                                    attrs="{
+                                        'readonly': [('state', 'not in', ('draft', 'confirm'))],
+                                        'required': ['|', ('date_from', '=', False), ('date_to', '=', False)],
+                                    }"
+                                    options="{'end_date_field': 'request_date_to'}"
+                                />
+                                <field name="request_date_to" invisible="1" />
                             </div>
                             <label for="request_unit_half" string="" attrs="{'invisible': [('leave_type_request_unit', '=', 'day')]}"/>
                             <div class="o_row o_row_readonly oe_edit_only" style="margin-left: -2px;" attrs="{'invisible': [('leave_type_request_unit', '=', 'day')]}">

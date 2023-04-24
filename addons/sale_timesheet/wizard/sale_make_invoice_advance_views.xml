@@ -11,20 +11,17 @@
             </xpath>
             <group name="down_payment_specification" position="after">
                 <field name="invoicing_timesheet_enabled" invisible="1"/>
-                <group name="timesheet_invoice_date_range"
-                    attrs="{'invisible': [ '|', ('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}">
-                    <label for="date_start_invoice_timesheet" string="Timesheets Period" attrs="{'invisible': [ '|', ('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}"/>
-                    <div class="o_row" attrs="{'invisible': [ '|',('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}">
-                        <field name="date_start_invoice_timesheet"
-                            class="oe_inline" widget="daterange"
-                            options="{'related_end_date': 'date_end_invoice_timesheet'}"
-                            title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."/>
-                        <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
-                        <field name="date_end_invoice_timesheet"
-                            class="oe_inline" widget="daterange"
-                            options="{'related_start_date': 'date_start_invoice_timesheet'}"
-                            title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."/>
-                    </div>
+                <group
+                    name="timesheet_invoice_date_range"
+                    attrs="{'invisible': ['|', ('invoicing_timesheet_enabled', '=', False), ('advance_payment_method', '!=', 'delivered')]}"
+                >
+                    <field
+                        name="date_start_invoice_timesheet"
+                        widget="daterange"
+                        options="{'end_date_field': 'date_end_invoice_timesheet'}"
+                        title="Only timesheets not yet invoiced (and validated, if applicable) from this period will be invoiced. If the period is not indicated, all timesheets not yet invoiced (and validated, if applicable) will be invoiced without distinction."
+                    />
+                    <field name="date_end_invoice_timesheet" invisible="1" />
                 </group>
             </group>
         </field>
