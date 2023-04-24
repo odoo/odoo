@@ -2651,4 +2651,18 @@ class MrpProduction(models.Model):
                     action = self.env.ref('stock.label_picking').report_action(moves_to_print, data=data, config=False)
                     clean_action(action, self.env)
                     report_actions.append(action)
+        if self.user_has_groups('stock.group_production_lot'):
+            productions_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_done_mrp_lot and p.move_finished_ids.move_line_ids.lot_id)
+            productions_by_print_formats = productions_to_print.grouped(lambda p: p.picking_type_id.done_mrp_lot_label_to_print)
+            for print_format in productions_to_print.picking_type_id.mapped('done_mrp_lot_label_to_print'):
+                lots_to_print = productions_by_print_formats.get(print_format)
+                lots_to_print = lots_to_print.move_finished_ids.move_line_ids.mapped('lot_id')
+                if print_format == 'pdf':
+                    action = self.env.ref("stock.action_report_lot_label").report_action(lots_to_print.ids, config=False)
+                    clean_action(action, self.env)
+                    report_actions.append(action)
+                elif print_format == 'zpl':
+                    action = self.env.ref("stock.label_lot_template").report_action(lots_to_print.ids, config=False)
+                    clean_action(action, self.env)
+                    report_actions.append(action)
         return report_actions

@@ -35,6 +35,12 @@ class StockPickingType(models.Model):
     mrp_product_label_to_print = fields.Selection(
         [('pdf', 'PDF'), ('zpl', 'ZPL')],
         "Product Label to Print", default='pdf')
+    auto_print_done_mrp_lot = fields.Boolean(
+        "Auto Print Produced Lot Label",
+        help="If this checkbox is ticked, Odoo will automatically print the lot/SN label of a MO when it is done.")
+    done_mrp_lot_label_to_print = fields.Selection(
+        [('pdf', 'PDF'), ('zpl', 'ZPL')],
+        "Lot/SN Label to Print", default='pdf')
     auto_print_mrp_reception_report_labels = fields.Boolean(
         "Auto Print Allocation Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the allocation report labels of a MO when it is done.")
