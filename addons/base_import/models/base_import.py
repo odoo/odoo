@@ -1269,14 +1269,13 @@ class Import(models.TransientModel):
 
             return base64.b64encode(content)
         except Exception as e:
-            _logger.exception(e)
-            raise ImportValidationError(
-                _(
-                    "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s",
-                    url=url, field_name=field, line_number=line_number + 1, error=e
-                ),
-                field=field
-            )
+            _logger.warning(e, exc_info=True)
+            raise ValueError(_("Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: %(error)s") % {
+                'url': url,
+                'field_name': field,
+                'line_number': line_number + 1,
+                'error': e
+            })
 
     def execute_import(self, fields, columns, options, dryrun=False):
         """ Actual execution of the import
