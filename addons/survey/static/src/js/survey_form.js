@@ -465,7 +465,7 @@ publicWidget.registry.SurveyFormWidget = publicWidget.Widget.extend(SurveyPreloa
 
             if (!options.skipValidation) {
                 // Validation pre submit
-                if (!this._validateForm($form, formData)) {
+                if (!this._validateForm($form, formData) && params.previous_page_id===undefined) {
                     return;
                 }
             }
