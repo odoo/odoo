@@ -759,22 +759,14 @@ export const messagingService = {
     start(env, services) {
         // compute initial discuss thread if not on public page
         if (!services["mail.store"].inPublicPage) {
-            let threadLocalId = createLocalId("mail.box", "inbox");
-            const activeId = services.router.current.hash.active_id;
-            if (typeof activeId === "number") {
-                threadLocalId = createLocalId("discuss.channel", activeId);
+            const activeId = services.router.current.hash.active_id ?? "mail.box_inbox";
+            let [model, id] =
+                typeof activeId === "number" ? ["discuss.channel", activeId] : activeId.split("_");
+            if (model === "mail.channel") {
+                // legacy format (sent in old emails, shared links, ...)
+                model = "discuss.channel";
             }
-            if (typeof activeId === "string" && activeId.startsWith("mail.box_")) {
-                threadLocalId = createLocalId("mail.box", activeId.slice(9));
-            }
-            // legacy format (sent in old emails, shared links, ...)
-            if (typeof activeId === "string" && activeId.startsWith("mail.channel_")) {
-                threadLocalId = createLocalId("discuss.channel", parseInt(activeId.slice(13), 10));
-            }
-            if (typeof activeId === "string" && activeId.startsWith("discuss.channel_")) {
-                threadLocalId = createLocalId("discuss.channel", parseInt(activeId.slice(13), 10));
-            }
-            services["mail.store"].discuss.threadLocalId = threadLocalId;
+            services["mail.store"].discuss.threadLocalId = createLocalId(model, id);
         }
         const messaging = new Messaging(env, services);
         messaging.initialize();
