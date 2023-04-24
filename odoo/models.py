@@ -2535,7 +2535,7 @@ class BaseModel(metaclass=MetaModel):
             new_terms = []
             for order_term in orderby.split(','):
                 order_term = order_term.strip()
-                for key_name, annoted in itertools.chain(reversed(annoted_groupby.items()), annoted_aggregates.items()):
+                for key_name, annoted in itertools.chain(reversed(list(annoted_groupby.items())), annoted_aggregates.items()):
                     key_name = key_name.split(':')[0]
                     if order_term.startswith(f'{key_name} ') or key_name == order_term:
                         order_term = order_term.replace(key_name, annoted)
