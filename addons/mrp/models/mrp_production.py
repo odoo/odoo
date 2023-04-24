@@ -2637,4 +2637,18 @@ class MrpProduction(models.Model):
                 action = self.env.ref("mrp.label_manufacture_template").report_action(labels_to_print.ids, config=False)
                 clean_action(action, self.env)
                 report_actions.append(action)
+        if self.user_has_groups('mrp.group_mrp_reception_report'):
+            reception_labels_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_mrp_reception_report_labels and p.picking_type_id.code == 'mrp_operation')
+            if reception_labels_to_print:
+                moves_to_print = reception_labels_to_print.move_finished_ids.move_dest_ids
+                if moves_to_print:
+                    # needs to be string to support python + js calls to report
+                    quantities = ','.join(str(qty) for qty in moves_to_print.mapped(lambda m: math.ceil(m.product_uom_qty)))
+                    data = {
+                        'docids': moves_to_print.ids,
+                        'quantity': quantities,
+                    }
+                    action = self.env.ref('stock.label_picking').report_action(moves_to_print, data=data, config=False)
+                    clean_action(action, self.env)
+                    report_actions.append(action)
         return report_actions
