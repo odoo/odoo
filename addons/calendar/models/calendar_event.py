@@ -656,7 +656,11 @@ class Meeting(models.Model):
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
         groupby = [groupby] if isinstance(groupby, str) else groupby
-        grouped_fields = {group_field.split(':')[0] for group_field in groupby + (fields or list(self._fields))}
+        fields_aggregates = [
+            field_name for field_name in (fields or list(self._fields))
+            if ':' in field_name or (field_name in self and self._fields[field_name].group_operator)
+        ]
+        grouped_fields = {group_field.split(':')[0] for group_field in groupby + fields_aggregates}
         private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
             # display public and confidential events
