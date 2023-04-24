@@ -7,9 +7,11 @@
 $o-webclient-color-scheme: bright !default;
 
 // Font sizes
-$o-root-font-size: 12px !default;
-$o-font-size-base: 13rem * (1px / $o-root-font-size) !default;
-$o-font-size-base-touch: 15px !default;
+$o-root-font-size: 1rem !default;
+$o-font-size-base: o-to-rem(14px) !default;
+$o-font-size-base-touch: o-to-rem(16px) !default;
+$o-font-size-base-small: o-to-rem(13px) !default;
+$o-font-size-base-smaller: o-to-rem(12px) !default;
 $o-line-height-base: 1.5 !default; // This is BS default
 
 // Global sans-serif fonts stack, defined here as we need to process
