@@ -9,7 +9,8 @@ class ProjectProductEmployeeMap(models.Model):
     _description = 'Project Sales line, employee mapping'
 
     project_id = fields.Many2one('project.project', "Project", required=True)
-    employee_id = fields.Many2one('hr.employee', "Employee", required=True)
+    employee_id = fields.Many2one('hr.employee', "Employee", required=True, domain="[('id', 'not in', existing_employee_ids)]")
+    existing_employee_ids = fields.Many2many('hr.employee', compute="_compute_existing_employee_ids")
     sale_line_id = fields.Many2one(
         'sale.order.line', "Sales Order Item",
         compute="_compute_sale_line_id", store=True, readonly=False,
@@ -33,6 +34,15 @@ class ProjectProductEmployeeMap(models.Model):
     _sql_constraints = [
         ('uniqueness_employee', 'UNIQUE(project_id,employee_id)', 'An employee cannot be selected more than once in the mapping. Please remove duplicate(s) and try again.'),
     ]
+
+    @api.depends('employee_id', 'project_id.sale_line_employee_ids.employee_id')
+    def _compute_existing_employee_ids(self):
+        project = self.project_id
+        if len(project) == 1:
+            self.existing_employee_ids = project.sale_line_employee_ids.employee_id
+            return
+        for map_entry in self:
+            map_entry.existing_employee_ids = map_entry.project_id.sale_line_employee_ids.employee_id
 
     @api.depends('partner_id')
     def _compute_sale_line_id(self):

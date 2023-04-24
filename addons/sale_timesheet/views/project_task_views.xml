@@ -12,12 +12,13 @@
             </xpath>
             <xpath expr="//page[@name='settings']" position="after">
                 <page name="billing_employee_rate" string="Invoicing" attrs="{'invisible': ['|', ('allow_billable', '=', False), ('partner_id', '=', False)]}">
-                    <field name="sale_line_employee_ids">
+                    <field name="sale_line_employee_ids" context="{'default_sale_line_id': sale_line_id}">
                         <tree editable="bottom">
                             <field name="company_id" invisible="1"/>
                             <field name="partner_id" invisible="1"/>
                             <field name="sale_order_id" invisible="1"/>
-                            <field name="employee_id" options="{'no_create': True}" widget="many2one_avatar_user"/>
+                            <field name="employee_id" widget="many2one_avatar_user"/>
+                            <field name="existing_employee_ids" invisible="1"/>
                             <field name="sale_line_id" attrs="{'required': True}" options="{'no_create': True}" context="{'search_default_order_id': sale_order_id}"/>
                             <field name="price_unit" widget="monetary" force_save="1" options="{'currency_field': 'currency_id'}"/>
                             <field name="display_cost" widget="monetary" options="{'currency_field': 'currency_id'}"/>
