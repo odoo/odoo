@@ -671,7 +671,7 @@ class PosOrder(models.Model):
             invoice_receivables = self.account_move.line_ids.filtered(lambda line: line.account_id == receivable_account and not line.reconciled)
             if invoice_receivables:
                 payment_receivables = payment_moves.mapped('line_ids').filtered(lambda line: line.account_id == receivable_account and line.partner_id)
-                (invoice_receivables | payment_receivables).sudo().with_company(self.company_id).reconcile()
+                (invoice_receivables | payment_receivables).sorted(key=lambda l: l.amount_currency).sudo().with_company(self.company_id).reconcile()
 
     @api.model
     def create_from_ui(self, orders, draft=False):
