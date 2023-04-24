@@ -2,6 +2,8 @@
 
 import { ActivityListPopover } from "@mail/web/activity/activity_list_popover";
 
+import { _t } from "@web/core/l10n/translation";
+
 import { usePopover } from "@web/core/popover/popover_hook";
 
 import { Component, useRef } from "@odoo/owl";
@@ -49,6 +51,19 @@ export class ActivityButton extends Component {
                 break;
         }
         return classes.join(" ");
+    }
+
+    get title() {
+        if (this.props.record.data.activity_exception_decoration) {
+            return _t("Warning");
+        }
+        if (this.props.record.data.activity_summary) {
+            return this.props.record.data.activity_summary;
+        }
+        if (this.props.record.data.activity_type_id) {
+            return this.props.record.data.activity_type_id[1 /* display_name */];
+        }
+        return _t("Show activities");
     }
 
     onClick() {
