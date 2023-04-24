@@ -52,7 +52,3 @@ class AccountChartTemplate(models.AbstractModel):
                 'show_on_dashboard': True,
             }
         }
-
-    def _setup_utility_bank_accounts(self, template_code, company, template_data):
-        super()._setup_utility_bank_accounts(template_code, company, template_data)
-        company.account_journal_suspense_account_id.tag_ids = self.env.ref('l10n_mx.tag_credit_balance_account')
