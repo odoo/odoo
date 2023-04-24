@@ -2393,7 +2393,7 @@ class BaseModel(metaclass=MetaModel):
             field = self._fields[field_name]
 
             if field.type in ('many2one', 'many2many') or field_name == 'id':
-                ids = [row[group].id for row in rows_dict if row[group]]
+                ids = [row[group].id for row in rows_dict if row[group] and isinstance(row[group], BaseModel)]
                 m2x_records = self.env[field.comodel_name].browse(ids)
                 name_get_dict = dict(m2x_records.sudo().name_get())
 
@@ -2406,7 +2406,7 @@ class BaseModel(metaclass=MetaModel):
             for row in rows_dict:
                 value = row[group]
 
-                if field.type in ('many2one', 'many2many'):
+                if field.type in ('many2one', 'many2many') and isinstance(value, BaseModel):
                     value = value.id
                     row[group] = (value, name_get_dict[value]) if value else value
 
