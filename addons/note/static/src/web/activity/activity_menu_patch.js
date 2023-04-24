@@ -11,9 +11,8 @@ patch(ActivityMenu.prototype, "note", {
     setup() {
         this._super(...arguments);
         this.rpc = useService("rpc");
-        this.state = useState({ addingNote: false });
+        this.state = useState({ addingNote: false, addingNoteDate: false });
         this.noteInputRef = useRef("noteInput");
-        this.addingNoteDate = false;
         useEffect(
             (addingNote) => {
                 if (addingNote) {
@@ -60,7 +59,7 @@ patch(ActivityMenu.prototype, "note", {
         }
         await this.rpc("/note/new", {
             note: note,
-            date_deadline: this.addingNoteDate ? this.addingNoteDate : DateTime.local(),
+            date_deadline: this.state.addingNoteDate ? this.state.addingNoteDate : DateTime.local(),
         });
         this.state.addingNote = false;
         this.fetchSystrayActivities();
