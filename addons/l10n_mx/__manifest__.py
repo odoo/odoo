@@ -1,7 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Mexico - Accounting',
-    'version': '2.0',
+    'version': '2.1',
     'author': 'Vauxoo',
     'category': 'Accounting/Localizations/Account Charts',
     'description': """
