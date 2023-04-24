@@ -2625,4 +2625,16 @@ class MrpProduction(models.Model):
             action = self.env.ref("mrp.action_report_production_order").report_action(productions_to_print.ids, config=False)
             clean_action(action, self.env)
             report_actions.append(action)
+        productions_to_print = self.filtered(lambda p: p.picking_type_id.auto_print_done_mrp_product_labels)
+        productions_by_print_formats = productions_to_print.grouped(lambda p: p.picking_type_id.mrp_product_label_to_print)
+        for print_format in productions_to_print.picking_type_id.mapped('mrp_product_label_to_print'):
+            labels_to_print = productions_by_print_formats.get(print_format)
+            if print_format == 'pdf':
+                action = self.env.ref("mrp.action_report_finished_product").report_action(labels_to_print.ids, config=False)
+                clean_action(action, self.env)
+                report_actions.append(action)
+            elif print_format == 'zpl':
+                action = self.env.ref("mrp.label_manufacture_template").report_action(labels_to_print.ids, config=False)
+                clean_action(action, self.env)
+                report_actions.append(action)
         return report_actions
