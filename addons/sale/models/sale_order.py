@@ -941,7 +941,7 @@ class SaleOrder(models.Model):
     def action_update_prices(self):
         self.ensure_one()
 
-        self._recompute_prices()
+        self.with_context(update_prices_button=True)._recompute_prices()
 
         if self.pricelist_id:
             self.message_post(body=_(
