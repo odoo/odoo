@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { debounce } from '@bus/workers/websocket_worker_utils';
+import { debounce } from "@bus/workers/websocket_worker_utils";
 
 /**
  * Type of events that can be sent from the worker to its clients.
@@ -34,7 +34,7 @@ export const WEBSOCKET_CLOSE_CODES = Object.freeze({
 });
 // Should be incremented on every worker update in order to force
 // update of the worker in browser cache.
-export const WORKER_VERSION = '1.0.5';
+export const WORKER_VERSION = "1.0.5";
 const INITIAL_RECONNECT_DELAY = 1000;
 const MAXIMUM_RECONNECT_DELAY = 60000;
 
@@ -93,7 +93,7 @@ export class WebsocketWorker {
      * @param {MessagePort} messagePort
      */
     registerClient(messagePort) {
-        messagePort.onmessage = ev => {
+        messagePort.onmessage = (ev) => {
             this._onClientMessage(messagePort, ev.data);
         };
         this.channelsByClient.set(messagePort, []);
@@ -127,21 +127,21 @@ export class WebsocketWorker {
      */
     _onClientMessage(client, { action, data }) {
         switch (action) {
-            case 'send':
+            case "send":
                 return this._sendToServer(data);
-            case 'start':
+            case "start":
                 return this._start();
-            case 'stop':
+            case "stop":
                 return this._stop();
-            case 'leave':
+            case "leave":
                 return this._unregisterClient(client);
-            case 'add_channel':
+            case "add_channel":
                 return this._addChannel(client, data);
-            case 'delete_channel':
+            case "delete_channel":
                 return this._deleteChannel(client, data);
-            case 'force_update_channels':
+            case "force_update_channels":
                 return this._forceUpdateChannels();
-            case 'initialize_connection':
+            case "initialize_connection":
                 return this._initializeConnection(client, data);
         }
     }
@@ -199,7 +199,9 @@ export class WebsocketWorker {
     _unregisterClient(client) {
         this.channelsByClient.delete(client);
         this.debugModeByClient.delete(client);
-        this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
+        this.isDebug = Object.values(this.debugModeByClient).some(
+            (debugValue) => debugValue !== ""
+        );
         this._updateChannels();
     }
 
@@ -221,7 +223,9 @@ export class WebsocketWorker {
     _initializeConnection(client, { debug, lastNotificationId, uid, websocketURL, startTs }) {
         if (this.newestStartTs && this.newestStartTs > startTs) {
             this.debugModeByClient[client] = debug;
-            this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
+            this.isDebug = Object.values(this.debugModeByClient).some(
+                (debugValue) => debugValue !== ""
+            );
             this.sendToClient(client, "initialized");
             return;
         }
@@ -229,7 +233,9 @@ export class WebsocketWorker {
         this.websocketURL = websocketURL;
         this.lastNotificationId = lastNotificationId;
         this.debugModeByClient[client] = debug;
-        this.isDebug = Object.values(this.debugModeByClient).some(debugValue => debugValue !== '');
+        this.isDebug = Object.values(this.debugModeByClient).some(
+            (debugValue) => debugValue !== ""
+        );
         const isCurrentUserKnown = uid !== undefined;
         if (this.isWaitingForNewUID && isCurrentUserKnown) {
             this.isWaitingForNewUID = false;
@@ -288,7 +294,12 @@ export class WebsocketWorker {
      */
     _onWebsocketClose({ code, reason }) {
         if (this.isDebug) {
-            console.debug(`%c${new Date().toLocaleString()} - [onClose]`, 'color: #c6e; font-weight: bold;', code, reason);
+            console.debug(
+                `%c${new Date().toLocaleString()} - [onClose]`,
+                "color: #c6e; font-weight: bold;",
+                code,
+                reason
+            );
         }
         this.lastChannelSubscription = null;
         if (this.isReconnecting) {
@@ -297,13 +308,13 @@ export class WebsocketWorker {
             // this case.
             return;
         }
-        this.broadcast('disconnect', { code, reason });
+        this.broadcast("disconnect", { code, reason });
         if (code === WEBSOCKET_CLOSE_CODES.CLEAN) {
             // WebSocket was closed on purpose, do not try to reconnect.
             return;
         }
         // WebSocket was not closed cleanly, let's try to reconnect.
-        this.broadcast('reconnecting', { closeCode: code });
+        this.broadcast("reconnecting", { closeCode: code });
         this.isReconnecting = true;
         if (code === WEBSOCKET_CLOSE_CODES.KEEP_ALIVE_TIMEOUT) {
             // Don't wait to reconnect on keep alive timeout.
@@ -320,23 +331,30 @@ export class WebsocketWorker {
      */
     _onWebsocketError() {
         if (this.isDebug) {
-            console.debug(`%c${new Date().toLocaleString()} - [onError]`, 'color: #c6e; font-weight: bold;');
+            console.debug(
+                `%c${new Date().toLocaleString()} - [onError]`,
+                "color: #c6e; font-weight: bold;"
+            );
         }
         this._retryConnectionWithDelay();
     }
 
     /**
-    * Handle data received from the bus.
-    *
-    * @param {MessageEvent} messageEv
-    */
+     * Handle data received from the bus.
+     *
+     * @param {MessageEvent} messageEv
+     */
     _onWebsocketMessage(messageEv) {
         const notifications = JSON.parse(messageEv.data);
         if (this.isDebug) {
-            console.debug(`%c${new Date().toLocaleString()} - [onMessage]`, 'color: #c6e; font-weight: bold;', notifications);
+            console.debug(
+                `%c${new Date().toLocaleString()} - [onMessage]`,
+                "color: #c6e; font-weight: bold;",
+                notifications
+            );
         }
         this.lastNotificationId = notifications[notifications.length - 1].id;
-        this.broadcast('notification', notifications);
+        this.broadcast("notification", notifications);
     }
 
     /**
@@ -345,12 +363,15 @@ export class WebsocketWorker {
      */
     _onWebsocketOpen() {
         if (this.isDebug) {
-            console.debug(`%c${new Date().toLocaleString()} - [onOpen]`, 'color: #c6e; font-weight: bold;');
+            console.debug(
+                `%c${new Date().toLocaleString()} - [onOpen]`,
+                "color: #c6e; font-weight: bold;"
+            );
         }
         this._updateChannels();
-        this.messageWaitQueue.forEach(msg => this.websocket.send(msg));
+        this.messageWaitQueue.forEach((msg) => this.websocket.send(msg));
         this.messageWaitQueue = [];
-        this.broadcast(this.isReconnecting ? 'reconnect' : 'connect');
+        this.broadcast(this.isReconnecting ? "reconnect" : "connect");
         this.connectRetryDelay = INITIAL_RECONNECT_DELAY;
         this.connectTimeout = null;
         this.isReconnecting = false;
@@ -361,7 +382,8 @@ export class WebsocketWorker {
      * applied to the reconnect attempts.
      */
     _retryConnectionWithDelay() {
-        this.connectRetryDelay = Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + 1000 * Math.random();
+        this.connectRetryDelay =
+            Math.min(this.connectRetryDelay * 1.5, MAXIMUM_RECONNECT_DELAY) + 1000 * Math.random();
         this.connectTimeout = setTimeout(this._start.bind(this), this.connectRetryDelay);
     }
 
@@ -389,10 +411,10 @@ export class WebsocketWorker {
             return;
         }
         if (this.websocket) {
-            this.websocket.removeEventListener('open', this._onWebsocketOpen);
-            this.websocket.removeEventListener('message', this._onWebsocketMessage);
-            this.websocket.removeEventListener('error', this._onWebsocketError);
-            this.websocket.removeEventListener('close', this._onWebsocketClose);
+            this.websocket.removeEventListener("open", this._onWebsocketOpen);
+            this.websocket.removeEventListener("message", this._onWebsocketMessage);
+            this.websocket.removeEventListener("error", this._onWebsocketError);
+            this.websocket.removeEventListener("close", this._onWebsocketClose);
         }
         if (this._isWebsocketClosing()) {
             // close event was not triggered and will never be, broadcast the
@@ -401,10 +423,10 @@ export class WebsocketWorker {
             this.broadcast("disconnect", { code: WEBSOCKET_CLOSE_CODES.ABNORMAL_CLOSURE });
         }
         this.websocket = new WebSocket(this.websocketURL);
-        this.websocket.addEventListener('open', this._onWebsocketOpen);
-        this.websocket.addEventListener('error', this._onWebsocketError);
-        this.websocket.addEventListener('message', this._onWebsocketMessage);
-        this.websocket.addEventListener('close', this._onWebsocketClose);
+        this.websocket.addEventListener("open", this._onWebsocketOpen);
+        this.websocket.addEventListener("error", this._onWebsocketError);
+        this.websocket.addEventListener("message", this._onWebsocketMessage);
+        this.websocket.addEventListener("close", this._onWebsocketClose);
     }
 
     /**
@@ -428,12 +450,18 @@ export class WebsocketWorker {
      * event if the channels haven't change since last subscription.
      */
     _updateChannels({ force = false } = {}) {
-        const allTabsChannels = [...new Set([].concat.apply([], [...this.channelsByClient.values()]))].sort();
+        const allTabsChannels = [
+            ...new Set([].concat.apply([], [...this.channelsByClient.values()])),
+        ].sort();
         const allTabsChannelsString = JSON.stringify(allTabsChannels);
-        const shouldUpdateChannelSubscription = allTabsChannelsString !== this.lastChannelSubscription;
+        const shouldUpdateChannelSubscription =
+            allTabsChannelsString !== this.lastChannelSubscription;
         if (force || shouldUpdateChannelSubscription) {
             this.lastChannelSubscription = allTabsChannelsString;
-            this._sendToServer({ event_name: 'subscribe', data: { channels: allTabsChannels, last: this.lastNotificationId } });
+            this._sendToServer({
+                event_name: "subscribe",
+                data: { channels: allTabsChannels, last: this.lastNotificationId },
+            });
         }
     }
 }

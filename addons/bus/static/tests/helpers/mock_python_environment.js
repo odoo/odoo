@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { TEST_USER_IDS } from '@bus/../tests/helpers/test_constants';
+import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 
-import { registry } from '@web/core/registry';
+import { registry } from "@web/core/registry";
 import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { makeMockServer } from "@web/../tests/helpers/mock_server";
-import core from 'web.core';
+import core from "web.core";
 
-const modelDefinitionsPromise = new Promise(resolve => {
+const modelDefinitionsPromise = new Promise((resolve) => {
     QUnit.begin(() => resolve(getModelDefinitions()));
 });
 
@@ -21,24 +21,27 @@ const modelDefinitionsPromise = new Promise(resolve => {
  * @see model_definitions_setup.js
  */
 async function getModelDefinitions() {
-    const modelDefinitionsRegistry = registry.category('bus.model.definitions');
-    const modelNamesToFetch = modelDefinitionsRegistry.get('modelNamesToFetch');
-    const fieldsToInsertRegistry = modelDefinitionsRegistry.category('fieldsToInsert');
+    const modelDefinitionsRegistry = registry.category("bus.model.definitions");
+    const modelNamesToFetch = modelDefinitionsRegistry.get("modelNamesToFetch");
+    const fieldsToInsertRegistry = modelDefinitionsRegistry.category("fieldsToInsert");
 
     // fetch the model definitions.
     const formData = new FormData();
-    formData.append('csrf_token', core.csrf_token);
-    formData.append('model_names_to_fetch', JSON.stringify(modelNamesToFetch));
-    const response = await window.fetch('/bus/get_model_definitions', { body: formData, method: 'POST' });
+    formData.append("csrf_token", core.csrf_token);
+    formData.append("model_names_to_fetch", JSON.stringify(modelNamesToFetch));
+    const response = await window.fetch("/bus/get_model_definitions", {
+        body: formData,
+        method: "POST",
+    });
     if (response.status !== 200) {
-        throw new Error('Error while fetching required models');
+        throw new Error("Error while fetching required models");
     }
     const modelDefinitions = new Map(Object.entries(await response.json()));
 
     for (const [modelName, fields] of modelDefinitions) {
-         // insert fields present in the fieldsToInsert registry : if the field
-         // exists, update its default value according to the one in the
-         // registry; If it does not exist, add it to the model definition.
+        // insert fields present in the fieldsToInsert registry : if the field
+        // exists, update its default value according to the one in the
+        // registry; If it does not exist, add it to the model definition.
         const fieldNamesToFieldToInsert = fieldsToInsertRegistry.category(modelName).getEntries();
         for (const [fname, fieldToInsert] of fieldNamesToFieldToInsert) {
             if (fname in fields) {
@@ -50,19 +53,20 @@ async function getModelDefinitions() {
         // apply default values for date like fields if none was passed.
         for (const fname in fields) {
             const field = fields[fname];
-            if (['date', 'datetime'].includes(field.type) && !field.default) {
-                const defaultFieldValue = field.type === 'date'
-                    ? () => moment.utc().format('YYYY-MM-DD')
-                    : () => moment.utc().format("YYYY-MM-DD HH:mm:ss");
+            if (["date", "datetime"].includes(field.type) && !field.default) {
+                const defaultFieldValue =
+                    field.type === "date"
+                        ? () => moment.utc().format("YYYY-MM-DD")
+                        : () => moment.utc().format("YYYY-MM-DD HH:mm:ss");
                 field.default = defaultFieldValue;
-            } else if (fname === 'active' && !('default' in field)) {
+            } else if (fname === "active" && !("default" in field)) {
                 // records are active by default.
                 field.default = true;
             }
         }
     }
     // add models present in the fake models registry to the model definitions.
-    const fakeModels = modelDefinitionsRegistry.category('fakeModels').getEntries();
+    const fakeModels = modelDefinitionsRegistry.category("fakeModels").getEntries();
     for (const [modelName, fields] of fakeModels) {
         modelDefinitions.set(modelName, fields);
     }
@@ -82,10 +86,12 @@ let pyEnv;
  * @returns {Object} An environment that can be used to interact with
  * the mock server (creation, deletion, update of records...)
  */
- export async function startServer({ actions, views = {} } = {}) {
+export async function startServer({ actions, views = {} } = {}) {
     const models = {};
     const modelDefinitions = await modelDefinitionsPromise;
-    const recordsToInsertRegistry = registry.category('bus.model.definitions').category('recordsToInsert');
+    const recordsToInsertRegistry = registry
+        .category("bus.model.definitions")
+        .category("recordsToInsert");
     for (const [modelName, fields] of modelDefinitions) {
         const records = [];
         if (recordsToInsertRegistry.contains(modelName)) {
@@ -95,18 +101,20 @@ let pyEnv;
         models[modelName] = { fields: { ...fields }, records };
 
         // generate default views for this model if none were passed.
-        const viewArchsSubRegistries = registry.category('bus.view.archs').subRegistries;
+        const viewArchsSubRegistries = registry.category("bus.view.archs").subRegistries;
         for (const [viewType, archsRegistry] of Object.entries(viewArchsSubRegistries)) {
             views[`${modelName},false,${viewType}`] =
                 views[`${modelName},false,${viewType}`] ||
-                archsRegistry.get(modelName, archsRegistry.get('default'));
+                archsRegistry.get(modelName, archsRegistry.get("default"));
         }
     }
     pyEnv = new Proxy(
         {
             get currentPartner() {
-                if ('res.partner' in this.mockServer.models) {
-                    return this.mockServer.getRecords('res.partner', [['id', '=', this.currentPartnerId]])[0];
+                if ("res.partner" in this.mockServer.models) {
+                    return this.mockServer.getRecords("res.partner", [
+                        ["id", "=", this.currentPartnerId],
+                    ])[0];
                 }
                 return undefined;
             },
@@ -141,7 +149,9 @@ let pyEnv;
                         if (!Array.isArray(values)) {
                             values = [values];
                         }
-                        const recordIds = values.map(value => target.mockServer.mockCreate(name, value));
+                        const recordIds = values.map((value) =>
+                            target.mockServer.mockCreate(name, value)
+                        );
                         return recordIds.length === 1 ? recordIds[0] : recordIds;
                     },
                     /**
@@ -193,20 +203,24 @@ let pyEnv;
                         return target.mockServer.mockWrite(name, [ids, values]);
                     },
                 };
-                if (name === 'bus.bus') {
-                    modelAPI['_sendone'] = target.mockServer._mockBusBus__sendone.bind(target.mockServer);
-                    modelAPI['_sendmany'] = target.mockServer._mockBusBus__sendmany.bind(target.mockServer);
+                if (name === "bus.bus") {
+                    modelAPI["_sendone"] = target.mockServer._mockBusBus__sendone.bind(
+                        target.mockServer
+                    );
+                    modelAPI["_sendmany"] = target.mockServer._mockBusBus__sendmany.bind(
+                        target.mockServer
+                    );
                 }
                 return modelAPI;
             },
             set(target, name, value) {
-                return target[name] = value;
+                return (target[name] = value);
             },
-         },
+        }
     );
-    pyEnv['mockServer'] = await makeMockServer({ actions, models, views });
-    pyEnv['mockServer'].pyEnv = pyEnv;
-    registerCleanup(() => pyEnv = undefined);
+    pyEnv["mockServer"] = await makeMockServer({ actions, models, views });
+    pyEnv["mockServer"].pyEnv = pyEnv;
+    registerCleanup(() => (pyEnv = undefined));
     return pyEnv;
 }
 

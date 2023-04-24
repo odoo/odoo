@@ -7,7 +7,7 @@ import { WebsocketWorker } from "./websocket_worker";
 (function () {
     const websocketWorker = new WebsocketWorker();
 
-    if (self.name.includes('shared')) {
+    if (self.name.includes("shared")) {
         // The script is running in a shared worker: let's register every
         // tab connection to the worker in order to relay notifications
         // coming from the websocket.
@@ -20,4 +20,3 @@ import { WebsocketWorker } from "./websocket_worker";
         websocketWorker.registerClient(self);
     }
 })();
-
