@@ -858,11 +858,17 @@ class Task(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        new_context = dict(self.env.context)
+        default_personal_stage = new_context.pop('default_personal_stage_type_ids', False)
+        self = self.with_context(new_context)
+
         is_portal_user = self.env.user.has_group('base.group_portal')
         if is_portal_user:
             self.check_access_rights('create')
         default_stage = dict()
         for vals in vals_list:
+            if default_personal_stage and 'personal_stage_type_id' not in vals:
+                vals['personal_stage_type_id'] = default_personal_stage[0]
             if not vals.get('name') and vals.get('display_name'):
                 vals['name'] = vals['display_name']
             if is_portal_user:
