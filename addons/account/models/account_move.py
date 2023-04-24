@@ -1197,11 +1197,10 @@ class AccountMove(models.Model):
             if move.is_invoice(include_receipts=True):
                 base_lines = move.invoice_line_ids.filtered(lambda line: line.display_type == 'product')
                 base_line_values_list = [line._convert_to_tax_base_line_dict() for line in base_lines]
-
+                sign = move.direction_sign
                 if move.id:
                     # The invoice is stored so we can add the early payment discount lines directly to reduce the
                     # tax amount without touching the untaxed amount.
-                    sign = -1 if move.is_inbound(include_receipts=True) else 1
                     base_line_values_list += [
                         {
                             **line._convert_to_tax_base_line_dict(),
@@ -1254,7 +1253,8 @@ class AccountMove(models.Model):
                 move.tax_totals = self.env['account.tax']._prepare_tax_totals(**kwargs)
                 rounding_line = move.line_ids.filtered(lambda l: l.display_type == 'rounding')
                 if rounding_line:
-                    amount_total_rounded = move.tax_totals['amount_total'] - rounding_line.balance
+                    amount_total_rounded = move.tax_totals['amount_total'] + sign * rounding_line.amount_currency
+                    move.tax_totals['amount_total_rounded'] = amount_total_rounded
                     move.tax_totals['formatted_amount_total_rounded'] = formatLang(self.env, amount_total_rounded, currency_obj=move.currency_id) or ''
             else:
                 # Non-invoice moves don't support that field (because of multicurrency: all lines of the invoice share the same currency)
@@ -1914,6 +1914,7 @@ class AccountMove(models.Model):
             '''
             rounding_line_vals = {
                 'balance': diff_balance,
+                'amount_currency': diff_amount_currency,
                 'partner_id': self.partner_id.id,
                 'move_id': self.id,
                 'currency_id': self.currency_id.id,
