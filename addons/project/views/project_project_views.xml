@@ -68,13 +68,8 @@
                         <group>
                             <field name="active" invisible="1"/>
                             <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]" options="{'no_quick_create': True}"/>
-                            <label for="date_start" string="Planned Date"/>
-                            <div name="dates" class="o_row">
-                                <field name="date_start" widget="daterange" options='{"related_end_date": "date"}'/>
-                                <i class="fa fa-long-arrow-right mx-2 oe_edit_only" aria-label="Arrow icon" title="Arrow"/>
-                                <i class="fa fa-long-arrow-right mx-2 oe_read_only" aria-label="Arrow icon" title="Arrow" attrs="{'invisible': [('date_start', '=', False), ('date', '=', False)]}"/>
-                                <field name="date" widget="daterange" options='{"related_start_date": "date_start"}'/>
-                            </div>
+                            <field name="date_start" string="Planned Date" widget="daterange" options='{"end_date_field": "date"}' />
+                            <field name="date" invisible="1" />
                         </group>
                     </group>
                     <notebook>
@@ -211,8 +206,8 @@
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="company_id" optional="show" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="date_start" string="Start Date" widget="daterange" options="{'related_end_date': 'date'}" optional="hide"/>
-                    <field name="date" string="End Date" widget="daterange" options="{'related_start_date': 'date_start'}" optional="hide"/>
+                    <field name="date_start" string="Start Date" widget="daterange" options="{'end_date_field': 'date'}" optional="hide"/>
+                    <field name="date" invisible="1" />
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user" options="{'no_open':True, 'no_create': True, 'no_create_edit': True}"/>
                     <field name="last_update_color" invisible="1"/>
                     <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" optional="hide"/>
