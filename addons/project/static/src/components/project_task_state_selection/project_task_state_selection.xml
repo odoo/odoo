@@ -72,9 +72,6 @@
             <div t-if="option[0] == '1_canceled' and (currentValue != '04_waiting_normal' or this.env.isSmall)" role="separator" class="dropdown-divider"/>
         </xpath>
         <!-- Approval mode dropdown button (class)-->
-        <xpath expr="//DropdownItem" position="attributes">
-            <attribute name="class" separator=" " add="+ `dropdown-item_active_noarrow`" remove="" value=""></attribute>
-        </xpath>
         <xpath expr="//DropdownItem/span[1]" position="attributes">
             <attribute name="t-attf-class" separator=" " add="{{ stateIcon(option[0]) }}" remove="o_status"></attribute>
         </xpath>
