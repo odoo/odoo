@@ -55,7 +55,7 @@ class BaseLanguageImport(models.TransientModel):
                                       'Please check the content of the file you are trying to import.\n\n'
                                       'Technical Details:\n%s') % (self.filename, tools.ustr(e)))
             except Exception as e:
-                _logger.exception('File unsuccessfully imported, due to format mismatch.')
+                _logger.warning('File unsuccessfully imported, due to format mismatch.')
                 raise UserError(
                     _('File %r not imported due to format mismatch or a malformed file.'
                       ' (Valid formats are .csv, .po, .pot)\n\nTechnical Details:\n%s') % \
