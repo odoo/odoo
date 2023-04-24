@@ -3,6 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
 import { LinkPreviewConfirmDelete } from "./link_preview_confirm_delete";
+import { useViewer, Viewable } from "@mail/viewer/viewer_hook";
 
 /**
  * @typedef {Object} Props
@@ -13,10 +14,19 @@ import { LinkPreviewConfirmDelete } from "./link_preview_confirm_delete";
 export class LinkPreview extends Component {
     static template = "mail.LinkPreview";
     static props = ["linkPreview", "deletable"];
-    static components = {};
 
     setup() {
         this.dialogService = useService("dialog");
+        this.viewer = useViewer();
+    }
+
+    openViewer() {
+        const viewable = new Viewable(
+            this.props.linkPreview.imageUrl,
+            this.props.linkPreview.imageUrl,
+            this.props.linkPreview.image_mimetype
+        );
+        this.viewer.open(viewable);
     }
 
     onClick() {
