@@ -63,4 +63,18 @@ registry.category("web_tour.tours").add('personal_stage_tour', {
 }, {
     content: "Check that column was updated",
     trigger: '.o_kanban_header:contains("Todo")',
+}, {
+    content: "Create a personal task from the quick create form",
+    trigger: '.o-kanban-button-new',
+}, {
+    content: "Create a new personal task",
+    trigger: 'input.o_input',
+    run: 'text New Test Task',
+}, {
+    content: "Confirm create",
+    trigger: '.o_kanban_add',
+}, {
+    content: "Check that task exists",
+    trigger: '.o_kanban_record_title:contains("New Test Task")',
+    run: function () {},
 }]});
