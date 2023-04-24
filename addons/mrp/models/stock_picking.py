@@ -26,6 +26,10 @@ class StockPickingType(models.Model):
         help="Allow automatic consumption of tracked components that are reserved",
     )
 
+    auto_print_done_production_order = fields.Boolean(
+        "Auto Print Done Production Order",
+        help="If this checkbox is ticked, Odoo will automatically print the production order of a MO when it is done.")
+
     @api.depends('code')
     def _compute_use_create_lots(self):
         for picking_type in self:
