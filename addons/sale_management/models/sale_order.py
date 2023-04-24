@@ -119,7 +119,7 @@ class SaleOrder(models.Model):
 
         for order in self:
             if order.sale_order_template_id and order.sale_order_template_id.mail_template_id:
-                order.sale_order_template_id.mail_template_id.send_mail(order.id)
+                order.message_post_with_source(order.sale_order_template_id.mail_template_id)
         return res
 
     def _recompute_prices(self):
