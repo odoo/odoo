@@ -1959,12 +1959,18 @@ class AccountMoveLine(models.Model):
         """
 
         def process_amls(amls):
-            sorted_amls = amls.sorted(key=lambda aml: (
-                aml.date_maturity or aml.date,
-                aml.currency_id,
-                aml.amount_currency,
-                aml.balance,
-            ))
+            if self._context.get('reduced_line_sorting'):
+                sorted_amls = amls.sorted(key=lambda aml: (
+                    aml.date_maturity or aml.date,
+                    aml.currency_id,
+                ))
+            else:
+                sorted_amls = amls.sorted(key=lambda aml: (
+                    aml.date_maturity or aml.date,
+                    aml.currency_id,
+                    aml.amount_currency,
+                    aml.balance,
+                ))
             currencies = sorted_amls.currency_id
 
             results = {
