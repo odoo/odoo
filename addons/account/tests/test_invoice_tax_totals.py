@@ -809,3 +809,61 @@ class TestTaxTotals(AccountTestInvoicingCommon):
             ],
             'subtotals_order': ["Untaxed Amount"],
         })
+
+    def test_cash_rounding_amount_total_rounded(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': "tax_15",
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 1,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+
+        invoice = self.init_invoice('out_invoice', amounts=[378], taxes=tax_15)
+        invoice.invoice_cash_rounding_id = cash_rounding
+        self.assertEqual(invoice.tax_totals['amount_total_rounded'], 435)
+
+        bill = self.init_invoice('in_invoice', amounts=[378], taxes=tax_15)
+        bill.invoice_cash_rounding_id = cash_rounding
+        self.assertEqual(bill.tax_totals['amount_total_rounded'], 435)
+
+    def test_cash_rounding_amount_total_rounded_foreign_currency(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': "tax_15",
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 10,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+        self.env['res.currency.rate'].create({
+            'name': '2023-01-01',
+            'rate': 0.2,
+            'currency_id': self.currency_data['currency'].id,
+            'company_id': self.env.company.id,
+        })
+        for move_type in ['out_invoice', 'in_invoice']:
+            move = self.env['account.move'].create({
+                'move_type': move_type,
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2023-01-01',
+                'currency_id': self.currency_data['currency'].id,
+                'invoice_line_ids': [
+                    Command.create({
+                        'name': 'line',
+                        'display_type': 'product',
+                        'price_unit': 100,
+                        'tax_ids': [tax_15.id],
+                    })
+                ]
+            })
+            move.invoice_cash_rounding_id = cash_rounding
+            self.assertEqual(move.tax_totals['amount_total'], 115)
+            self.assertEqual(move.tax_totals['amount_total_rounded'], 120)
