@@ -16,7 +16,7 @@ __path__ = [
 ]
 
 import sys
-assert sys.version_info > (3, 7), "Outdated python version detected, Odoo requires Python >= 3.7 to run."
+assert sys.version_info > (3, 8), "Outdated python version detected, Odoo requires Python >= 3.8 to run."
 
 #----------------------------------------------------------
 # Running mode flags (gevent, prefork)
