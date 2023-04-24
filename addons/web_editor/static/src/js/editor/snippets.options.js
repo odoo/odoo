@@ -3948,6 +3948,11 @@ const SnippetOptionWidget = Widget.extend({
      */
     _select: async function (previewMode, widget) {
         let $applyTo = null;
+        // Wait until the observer is activated: In some specific situations,
+        // option methods are called while the editor observer is disabled from
+        // an external widget. E.g. On link popover, the observer is unactive on
+        // "hide" to prevent the popover mutations to be recorded).
+        await Promise.all(this.options.wysiwyg.odooEditor.observerUnactivePromises);
 
         if (previewMode === true) {
             this.options.wysiwyg.odooEditor.automaticStepUnactive('preview_option');

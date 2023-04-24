@@ -225,6 +225,7 @@ export class OdooEditor extends EventTarget {
                 allowCommandVideo: true,
                 renderingClasses: [],
                 allowInlineAtRoot: false,
+                renderingObserverLabels: [],
             },
             options,
         );
@@ -271,6 +272,11 @@ export class OdooEditor extends EventTarget {
         for (const plugin of this.options.plugins) {
             this._pluginAdd(plugin);
         }
+
+        // Used to track some `_observerUnactiveLabels` triggered by external
+        // widgets which may prevent recording required options updates from
+        // the editor.
+        this.observerUnactivePromises = [];
 
         // -------------------
         // Alter the editable
@@ -496,6 +502,15 @@ export class OdooEditor extends EventTarget {
     }
     observerUnactive(label) {
         this._observerUnactiveLabels.add(label);
+        if (this.options.renderingObserverLabels.includes(label)) {
+            this.observerUnactivePromises.push(new Promise(resolve => {
+                this.addEventListener('observerActive', (e) => {
+                    if (e.detail.label === label) {
+                        resolve();
+                    }
+                });
+            }));
+        }
         if (this.observer) {
             clearTimeout(this.observerTimeout);
             this.observerFlush();
@@ -533,7 +548,9 @@ export class OdooEditor extends EventTarget {
             characterData: true,
             characterDataOldValue: true,
         });
-        this.dispatchEvent(new Event('observerActive'));
+        this.dispatchEvent(new CustomEvent('observerActive', {
+            detail: {label},
+        }));
     }
 
     observerApply(records) {

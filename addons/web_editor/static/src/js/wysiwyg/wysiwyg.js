@@ -200,6 +200,7 @@ const Wysiwyg = Widget.extend({
             plugins: options.editorPlugins,
             direction: localization.direction || 'ltr',
             renderingClasses: ['o_dirty', 'o_transform_removal', 'oe_edited_link', 'o_menu_loading'],
+            renderingObserverLabels: ['hide.bs.popover'],
         }, editorCollaborationOptions));
 
         document.addEventListener("mousemove", this._signalOnline, true);

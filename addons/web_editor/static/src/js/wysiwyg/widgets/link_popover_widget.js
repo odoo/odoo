@@ -128,9 +128,9 @@ const LinkPopoverWidget = Widget.extend({
                 }
             }
         }
-        $(document).on('mouseup.link_popover', onClickDocument);
+        $(document).on('mouseup.link_popover dragstart.link_popover', onClickDocument);
         if (document !== this.options.wysiwyg.odooEditor.document) {
-            $(this.options.wysiwyg.odooEditor.document).on('mouseup.link_popover', onClickDocument);
+            $(this.options.wysiwyg.odooEditor.document).on('mouseup.link_popover dragstart.link_popover', onClickDocument);
         }
 
         return this._super(...arguments);
