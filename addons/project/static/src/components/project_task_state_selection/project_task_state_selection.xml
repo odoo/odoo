@@ -41,7 +41,7 @@
 
         <!-- Normal dropdown mode toggle button (displayed on the card/record by default) -->
         <xpath expr="//t[@t-set-slot='toggler']/div" position="replace">
-            <div t-if="isView(['kanban', 'list']) or this.env.isSmall" class="d-flex align-items-center" t-att-class="{'o_task_state_list_view': isView(['list'])}">
+            <div t-if="isView(['kanban', 'list']) or this.env.isSmall" class="d-flex align-items-center" t-att-class="{'o_task_state_list_view': isView(['list'])}" t-att-title="label">
                 <i t-if="currentValue == '04_waiting_normal'" t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }}" style="color: #4A4F59;"/>
                 <i t-else="" t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }} {{ ['1_done', '1_canceled'].includes(currentValue) and isView(['kanban']) ? 'opacity-50' : '' }}"/>
             </div>
