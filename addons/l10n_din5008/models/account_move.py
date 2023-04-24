@@ -42,8 +42,18 @@ class AccountMove(models.Model):
 
     def _compute_l10n_din5008_addresses(self):
         for record in self:
+<<<<<<< HEAD:addons/l10n_din5008/models/account_move.py
             record.l10n_din5008_addresses = data = []
             if record.partner_shipping_id == record.partner_id:
+||||||| parent of 52dfb5b6132 (temp):addons/l10n_de/models/account_move.py
+            record.l10n_de_addresses = data = []
+            if record.partner_shipping_id == record.partner_id:
+=======
+            record.l10n_de_addresses = data = []
+            if 'partner_shipping_id' not in record._fields:
+                data.append((_("Invoicing Address:"), record.partner_id))
+            elif record.partner_shipping_id == record.partner_id:
+>>>>>>> 52dfb5b6132 (temp):addons/l10n_de/models/account_move.py
                 data.append((_("Invoicing and Shipping Address:"), record.partner_shipping_id))
             elif record.move_type in ("in_invoice", "in_refund"):
                 data.append((_("Invoicing and Shipping Address:"), record.partner_id))
