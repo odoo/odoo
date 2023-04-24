@@ -69,8 +69,6 @@ Model({
                         if (!saved) {
                             return;
                         }
-                        chatter.update({ createNewRecordFiles: files });
-                        return;
                     }
                     await chatter.fileUploader.uploadFiles(files);
                     return;
