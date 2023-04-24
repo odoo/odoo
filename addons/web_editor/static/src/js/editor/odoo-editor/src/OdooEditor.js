@@ -70,7 +70,7 @@ import {
     isEditorTab,
     isMacOS,
     isProtected,
-    isVoidElement,
+    isArtificialVoidElement,
     cleanZWS,
     isZWS,
     getDeepestPosition,
@@ -2301,7 +2301,7 @@ export class OdooEditor extends EventTarget {
         this.observerUnactive('_activateContenteditable');
         this.editable.setAttribute('contenteditable', this.options.isRootEditable);
 
-        const editableAreas = this.options.getContentEditableAreas(this).filter(node => !isVoidElement(node));
+        const editableAreas = this.options.getContentEditableAreas(this).filter(node => !isArtificialVoidElement(node));
         for (const node of editableAreas) {
             if (!node.isContentEditable) {
                 node.setAttribute('contenteditable', true);

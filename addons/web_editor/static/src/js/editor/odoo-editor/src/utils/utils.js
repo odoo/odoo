@@ -1358,8 +1358,17 @@ export function isProtected(node) {
     }
     return false;
 }
-export function isVoidElement(node) {
-    return isMediaElement(node) || node.tagName === 'HR';
+
+// https://developer.mozilla.org/en-US/docs/Glossary/Void_element
+const VOID_ELEMENT_NAMES = ['AREA', 'BASE', 'BR', 'COL', 'EMBED', 'HR', 'IMG',
+    'INPUT', 'KEYGEN', 'LINK', 'META', 'PARAM', 'SOURCE', 'TRACK', 'WBR'];
+
+export function isArtificialVoidElement(node) {
+    return isMediaElement(node) || node.nodeName === 'HR';
+}
+
+export function isNotAllowedContent(node) {
+    return isArtificialVoidElement(node) || VOID_ELEMENT_NAMES.includes(node.nodeName);
 }
 
 export function containsUnremovable(node) {
