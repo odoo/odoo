@@ -696,6 +696,16 @@ async function toInline($editable, cssRules, $iframe) {
     for (const imgTop of editable.querySelectorAll('.card-img-top')) {
         imgTop.style.setProperty('height', _getHeight(imgTop) + 'px');
     }
+    // Fix img-fluid for Outlook.
+    for (const image of editable.querySelectorAll('img.img-fluid')) {
+        const width = _getWidth(image);
+        const clone = image.cloneNode();
+        clone.setAttribute('width', width);
+        clone.style.setProperty('width', width + 'px');
+        clone.style.removeProperty('max-width');
+        image.before(_createMso(clone.outerHTML));
+        _hideForOutlook(image);
+    }
 
     attachmentThumbnailToLinkImg($editable);
     fontToImg($editable);
