@@ -19,7 +19,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         this.icons = {
             "01_in_progress": "o_status",
             "03_approved": "o_status o_status_green",
-            "02_changes_requested": "o_status o_status_bubble o_color_bubble_22",
+            "02_changes_requested": "fa fa-lg fa-exclamation-circle",
             "1_done": "fa fa-lg fa-check-circle",
             "1_canceled": "fa fa-lg fa-times-circle",
             "04_waiting_normal": "fa fa-lg fa-hourglass-o",
@@ -27,7 +27,7 @@ export class ProjectTaskStateSelection extends StateSelectionField {
         this.colorIcons = {
             "01_in_progress": "",
             "03_approved": "text-success",
-            "02_changes_requested": "text-warning",
+            "02_changes_requested": "o_status_changes_requested",
             "1_done": "text-success",
             "1_canceled": "text-danger",
             "04_waiting_normal": "",
