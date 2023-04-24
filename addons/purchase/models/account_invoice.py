@@ -58,7 +58,7 @@ class AccountMove(models.Model):
         self.update(invoice_vals)
 
         # Copy purchase lines.
-        po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
+        po_lines = self.purchase_id.order_line - self.invoice_line_ids.mapped('purchase_line_id')
         for line in po_lines.filtered(lambda l: not l.display_type):
             self.invoice_line_ids += self.env['account.move.line'].new(
                 line._prepare_account_move_line(self)
