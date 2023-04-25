@@ -295,8 +295,10 @@ export class EmojiPicker extends Component {
         this.recent[codepoints]++;
         browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(this.recent));
         this.gridRef.el.scrollTop = 0;
-        this.props.close();
-        this.props.onClose();
+        if (!ev.shiftKey) {
+            this.props.close();
+            this.props.onClose();
+        }
     }
 
     highlightActiveCategory() {
