@@ -280,6 +280,13 @@ export function customErrorMessage(assertLocation, value, expected) {
     return `[${assertLocation}]\nactual  : '${value}'\nexpected: '${expected}'\n\nStackTrace `;
 }
 
+/**
+ * Return whether the device is in mobile view or not
+ */
+export function _isMobile(){
+    return matchMedia('(max-width: 767px)').matches;
+}
+
 export async function testEditor(Editor = OdooEditor, spec, options = {}) {
     hasMobileTest = false;
     isMobileTest = options.isMobile;
