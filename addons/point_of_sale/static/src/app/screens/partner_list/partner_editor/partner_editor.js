@@ -32,6 +32,10 @@ export class PartnerDetailsEdit extends Component {
         return this.pos.default_pricelist?.id ?? false;
     }
 
+    get missingFields() {
+        return this.props.missingFields ? this.props.missingFields : [];
+    }
+
     get partnerImageUrl() {
         // We prioritize image_1920 in the `changes` field because we want
         // to show the uploaded image without fetching new data from the server.

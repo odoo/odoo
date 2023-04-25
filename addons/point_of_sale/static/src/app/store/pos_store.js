@@ -13,6 +13,7 @@ import { Reactive } from "@web/core/utils/reactive";
 import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { memoize } from "@web/core/utils/functions";
 import { ErrorPopup } from "@point_of_sale/app/errors/popups/error_popup";
+import { ConnectionLostError } from "@web/core/network/rpc_service";
 import { _t } from "@web/core/l10n/translation";
 import { CashOpeningPopup } from "@point_of_sale/app/store/cash_opening_popup/cash_opening_popup";
 import { sprintf } from "@web/core/utils/strings";
@@ -1006,20 +1007,33 @@ export class PosStore extends Reactive {
 
     // Send validated orders to the backend.
     // Resolves to the backend ids of the synced orders.
-    _flush_orders(orders, options) {
-        var self = this;
-
-        return this._save_to_server(orders, options)
-            .then(function (server_ids) {
-                for (let i = 0; i < server_ids.length; i++) {
-                    self.validated_orders_name_server_id_map[server_ids[i].pos_reference] =
-                        server_ids[i].id;
+    async _flush_orders(orders, options) {
+        try {
+            const server_ids = await this._save_to_server(orders, options);
+            for (let i = 0; i < server_ids.length; i++) {
+                this.validated_orders_name_server_id_map[server_ids[i].pos_reference] =
+                    server_ids[i].id;
+            }
+            return server_ids;
+        } catch (error) {
+            if (error instanceof ConnectionLostError) {
+                Promise.reject(error);
+                return error;
+            } else {
+                for (const order of orders) {
+                    const reactiveOrder = this.orders.find((o) => o.uid === order.id);
+                    reactiveOrder.validation_date = null;
+                    reactiveOrder.formatted_validation_date = null;
+                    reactiveOrder.finalized = false;
+                    this.db.remove_order(reactiveOrder.uid);
+                    this.db.save_unpaid_order(reactiveOrder);
                 }
-                return server_ids;
-            })
-            .finally(function () {
-                self._after_flush_orders(orders);
-            });
+                this.set_synch("connected");
+                throw error;
+            }
+        } finally {
+            this._after_flush_orders(orders);
+        }
     }
     /**
      * Hook method after _flush_orders resolved or rejected.
@@ -1713,7 +1727,6 @@ export class PosStore extends Reactive {
         });
         if (confirmed) {
             currentOrder.set_partner(newPartner);
-            currentOrder.updatePricelist(newPartner);
         }
     }
     // FIXME: POSREF, method exist only to be overrided
@@ -1809,6 +1822,10 @@ export class PosStore extends Reactive {
             this.mainScreen.component === PaymentScreen ||
             (this.mainScreen.component === ProductScreen && this.mobile_pane == "left")
         );
+    }
+
+    doNotAllowRefundAndSales() {
+        return false;
     }
 }
 

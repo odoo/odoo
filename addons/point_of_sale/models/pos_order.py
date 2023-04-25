@@ -608,8 +608,13 @@ class PosOrder(models.Model):
         self.ensure_one()
         timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         invoice_date = fields.Datetime.now() if self.session_id.state == 'closed' else self.date_order
+        pos_refunded_invoice_ids = []
+        for orderline in self.lines:
+            if orderline.refunded_orderline_id and orderline.refunded_orderline_id.order_id.account_move:
+                pos_refunded_invoice_ids.append(orderline.refunded_orderline_id.order_id.account_move.id)
         vals = {
             'invoice_origin': self.name,
+            'pos_refunded_invoice_ids': pos_refunded_invoice_ids,
             'journal_id': self.session_id.config_id.invoice_journal_id.id,
             'move_type': 'out_invoice' if self.amount_total >= 0 else 'out_refund',
             'ref': self.name,
@@ -1447,6 +1452,7 @@ class PosOrderLine(models.Model):
             'refunded_qty': orderline.refunded_qty,
             'price_extra': orderline.price_extra,
             'full_product_name': orderline.full_product_name,
+            'refunded_orderline_id': orderline.refunded_orderline_id,
         }
 
     def export_for_ui(self):

@@ -67,7 +67,7 @@
                     <div class="right-content">
                         <div class="payment-buttons">
                             <div class="partner-button">
-                                <div class="button" t-att-class="{ highlight: currentOrder.get_partner() }" t-on-click="selectPartner">
+                                <div class="button" t-att-class="{ highlight: currentOrder.get_partner() }" t-on-click="() => this.selectPartner(false, [])">
                                     <i class="fa fa-user" role="img" title="Customer" />
                                     <t t-set="partner" t-value="currentOrder.get_partner()" />
                                     <span>

@@ -6,5 +6,11 @@
                 using <t t-esc="payment_vals['pos_payment_name']" />
             </t>
         </xpath>
+        <xpath expr="//div[@name='origin']" position="after">
+            <div t-attf-class="#{'col-auto col-3 mw-100' if report_type != 'html' else 'col'} mb-2" t-if="o.pos_refunded_invoice_ids" name="source_invoice">
+                <strong>Source Invoice:</strong>
+                <p class="m-0" t-field="o.pos_refunded_invoice_ids"/>
+            </div>
+        </xpath>
     </template>
 </odoo>

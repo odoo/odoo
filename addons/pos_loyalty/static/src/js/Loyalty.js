@@ -206,7 +206,6 @@ patch(Order.prototype, "pos_loyalty.Order", {
                     });
                 if (confirmed) {
                     this.set_partner(newPartner);
-                    this.updatePricelist(newPartner);
                 }
             }
         } else {
@@ -621,7 +620,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
      */
     _validForPointsCorrection(reward, line, rule) {
         // Check if the reward type is free product
-        if (reward.reward_type !== 'product') {
+        if (reward.reward_type !== "product") {
             return false;
         }
 
