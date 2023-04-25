@@ -92,6 +92,12 @@ export class LinkTools extends Link {
 
         this._setSelectOptionFromLink();
         this._updateOptionsUI();
+
+        if (!this.linkEl.href && this.state.url) {
+            // Link URL was deduced from label. Apply changes to DOM.
+            this.__onURLInput();
+        }
+
         return ret;
     }
     destroy() {
