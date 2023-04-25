@@ -46,6 +46,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
             'value': 40,
             'partner_id': partner12.id,
         }])
+        cls.env.invalidate_all()
 
     @users('__system__', 'demo')
     @warmup
@@ -144,6 +145,28 @@ class TestPerformance(SavepointCaseWithUserDemo):
         with self.assertQueryCount(0):
             # 'display_name' depends on name that should already be fetched
             records.fetch(['id', 'display_name'])
+
+        with self.assertQueryCount(0):
+            # touch the field display_name, they are now in cache
+            records.mapped('display_name')
+
+            # remove the dependencies of display_name (only name)
+            records.invalidate_recordset(['name'])
+
+            # 'display_name' is in cache, so we should not load its dependencies
+            records.fetch(['display_name'])
+
+        with self.assertQueryCount(0):
+            # 'indirect_computed_value' depends 'computed_value', which depends
+            #  on 'value', and the latter is in cache
+            records.fetch(['indirect_computed_value'])
+
+        with self.assertQueryCount(1):
+            records.invalidate_recordset(['value', 'computed_value', 'indirect_computed_value'])
+
+            # 'indirect_computed_value' depends 'computed_value', which depends
+            #  on 'value', and none of them are in cache
+            records.fetch(['indirect_computed_value'])
 
     @warmup
     def test_search_fetch(self):
