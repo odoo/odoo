@@ -693,7 +693,7 @@ class AccountTax(models.Model):
                     'amount': sign * line_amount,
                     'base': float_round(sign * tax_base_amount, precision_rounding=prec),
                     'sequence': tax.sequence,
-                    'account_id': repartition_line._get_aml_target_tax_account().id,
+                    'account_id': repartition_line._get_aml_target_tax_account(force_caba_exigibility=include_caba_tags).id,
                     'analytic': tax.analytic,
                     'use_in_tax_closing': repartition_line.use_in_tax_closing,
                     'price_include': price_include,
@@ -777,7 +777,7 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _get_generation_dict_from_base_line(self, line_vals, tax_vals):
+    def _get_generation_dict_from_base_line(self, line_vals, tax_vals, force_caba_exigibility=False):
         """ Take a tax results returned by the taxes computation method and return a dictionary representing the way
         the tax amounts will be grouped together. To do so, the dictionary will be converted into a string key.
         Then, the existing tax lines sharing the same key will be updated and the missing ones will be created.
@@ -787,7 +787,7 @@ class AccountTax(models.Model):
         :return:            A python dict.
         """
         tax_repartition_line = tax_vals['tax_repartition_line']
-        tax_account = tax_repartition_line._get_aml_target_tax_account() or line_vals['account']
+        tax_account = tax_repartition_line._get_aml_target_tax_account(force_caba_exigibility=force_caba_exigibility) or line_vals['account']
         return {
             'account_id': tax_account.id,
             'currency_id': line_vals['currency'].id,
@@ -1081,7 +1081,7 @@ class AccountTax(models.Model):
                 existing_tax_line_map[grouping_key] = line_vals
 
         def grouping_key_generator(base_line, tax_values):
-            return self._get_generation_dict_from_base_line(base_line, tax_values)
+            return self._get_generation_dict_from_base_line(base_line, tax_values, force_caba_exigibility=include_caba_tags)
 
         # Update/create the tax lines.
         global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
@@ -1345,13 +1345,13 @@ class AccountTaxRepartitionLine(models.Model):
         if self.repartition_type == 'base':
             self.account_id = None
 
-    def _get_aml_target_tax_account(self):
+    def _get_aml_target_tax_account(self, force_caba_exigibility=False):
         """ Get the default tax account to set on a business line.
 
         :return: An account.account record or an empty recordset.
         """
         self.ensure_one()
-        if self.tax_id.tax_exigibility == 'on_payment' and not self._context.get('caba_no_transition_account'):
+        if not force_caba_exigibility and self.tax_id.tax_exigibility == 'on_payment' and not self._context.get('caba_no_transition_account'):
             return self.tax_id.cash_basis_transition_account_id
         else:
             return self.account_id
