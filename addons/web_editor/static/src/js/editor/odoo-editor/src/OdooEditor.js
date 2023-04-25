@@ -488,7 +488,14 @@ export class OdooEditor extends EventTarget {
                     fontawesome: 'fa-table',
                     isDisabled: () => !this.isSelectionInBlockRoot(),
                     callback: () => {
-                        this.powerboxTablePicker.show();
+                        if(this.isMobile){
+                            this.execCommand('insertTable', {
+                                rowNumber: this.powerboxTablePicker.rowNumber,
+                                colNumber: this.powerboxTablePicker.colNumber,
+                            });
+                        } else {
+                            this.powerboxTablePicker.show();
+                        }
                     },
                 },
                 {
