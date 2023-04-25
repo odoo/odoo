@@ -2028,7 +2028,10 @@ class MailThread(models.AbstractModel):
 
                 if isinstance(content, str):
                     encoding = info and info.get('encoding')
-                    content = content.encode(encoding or 'utf-8')
+                    try:
+                        content = content.encode(encoding or "utf-8")
+                    except UnicodeEncodeError:
+                        content = content.encode("utf-8")
                 elif isinstance(content, EmailMessage):
                     content = content.as_bytes()
                 elif content is None:
