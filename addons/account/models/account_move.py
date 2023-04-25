@@ -3217,8 +3217,11 @@ class AccountMove(models.Model):
         self.ensure_one()
         if self.move_type != 'entry':
             for group_name, _group_method, group_data in groups:
-                if group_name == 'portal_customer':
+                if group_name in ('portal_customer', 'customer'):
                     group_data['has_button_access'] = True
+
+                    # 'notification_is_customer' is used to determine whether the group should be sent the access_token
+                    group_data['notification_is_customer'] = True
 
         return groups
 
