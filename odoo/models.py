@@ -37,11 +37,12 @@ import pytz
 import re
 import uuid
 import warnings
-from collections import defaultdict, OrderedDict
+from collections import defaultdict, OrderedDict, deque
 from collections.abc import MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
+from typing import Set
 
 import babel
 import babel.dates
@@ -1532,22 +1533,7 @@ class BaseModel(metaclass=MetaModel):
             # optimization: don't execute the query at all
             return self.browse()
 
-        # determine fields to fetch
-        fields_to_fetch = OrderedSet()
-        if field_names:
-            field_names = self.check_field_access_rights('read', field_names)
-        for field_name in field_names:
-            field = self._fields.get(field_name)
-            if not field:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            if field.store:
-                fields_to_fetch.add(field)
-            elif field.compute:
-                # optimization: fetch direct field dependencies
-                for dotname in self.pool.field_depends[field]:
-                    dep = self._fields[dotname.split('.', 1)[0]]
-                    if dep.prefetch is True and (not dep.groups or self.user_has_groups(dep.groups)):
-                        fields_to_fetch.add(dep)
+        fields_to_fetch = self._determine_fields_to_fetch(field_names)
 
         return self._fetch_query(query, fields_to_fetch)
 
@@ -3235,30 +3221,7 @@ class BaseModel(metaclass=MetaModel):
         if not self or not field_names:
             return
 
-        # determine fields to fetch
-        fields_to_verify = OrderedSet()
-        field_names = self.check_field_access_rights('read', field_names)
-        for field_name in field_names:
-            if field_name == 'id':
-                continue
-            field = self._fields.get(field_name)
-            if not field:
-                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
-            if field.store:
-                fields_to_verify.add(field)
-            elif field.compute:
-                # optimization: fetch direct field dependencies
-                for dotname in self.pool.field_depends[field]:
-                    dep = self._fields[dotname.split('.', 1)[0]]
-                    if dep.prefetch is True and (not dep.groups or self.user_has_groups(dep.groups)):
-                        fields_to_verify.add(dep)
-
-        # verifies only once for each stored field or dependency if they are already in cache
-        cache = self.env.cache
-        fields_to_fetch = [
-            field for field in fields_to_verify
-            if any(cache.get_missing_ids(self, field))
-        ]
+        fields_to_fetch = self._determine_fields_to_fetch(field_names, ignore_when_in_cache=True)
 
         if not fields_to_fetch:
             # there is nothing to fetch, but we expect an error anyway in case
@@ -3298,6 +3261,46 @@ class BaseModel(metaclass=MetaModel):
             forbidden = (self - fetched).exists()
             if forbidden:
                 raise self.env['ir.rule']._make_access_error('read', forbidden)
+
+    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> Set[str]:
+        """
+        Return the fields to fetch from database among the given field names,
+        and following the dependencies of computed fields. The method is used
+        by :meth:`fetch` and :meth:`search_fetch`.
+
+        :param field_names: the list of fields requested
+        :param ignore_when_in_cache: whether to ignore fields that are alreay in cache for ``self``
+        :return: the set of fields that must be fetched
+        """
+        cache = self.env.cache
+
+        fields_to_fetch = OrderedSet()
+        field_names_todo = deque(field_names)
+        field_names_done = {'id'}  # trick: ignore 'id'
+
+        while field_names_todo:
+            field_name = field_names_todo.popleft()
+            if field_name in field_names_done:
+                continue
+            field_names_done.add(field_name)
+            field = self._fields.get(field_name)
+            if not field:
+                raise ValueError(f"Invalid field {field_name!r} on model {self._name!r}")
+            if ignore_when_in_cache and not any(cache.get_missing_ids(self, field)):
+                # field is already in cache: don't fetch it
+                continue
+            if field.store:
+                fields_to_fetch.add(field)
+            else:
+                # optimization: fetch field dependencies
+                for dotname in self.pool.field_depends[field]:
+                    dep_field = self._fields[dotname.split('.', 1)[0]]
+                    if (not dep_field.store) or (dep_field.prefetch is True and (
+                        not dep_field.groups or self.user_has_groups(dep_field.groups)
+                    )):
+                        field_names_todo.append(dep_field.name)
+
+        return fields_to_fetch
 
     def _fetch_query(self, query, fields):
         """ Fetch the given fields (iterable of :class:`Field` instances) from
