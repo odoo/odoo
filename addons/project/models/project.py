@@ -955,7 +955,7 @@ class Task(models.Model):
 
     active = fields.Boolean(default=True)
     name = fields.Char(string='Title', tracking=True, required=True, index=True)
-    description = fields.Html(string='Description')
+    description = fields.Html(string='Description', sanitize_attributes=False)
     priority = fields.Selection([
         ('0', 'Normal'),
         ('1', 'Important'),
