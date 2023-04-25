@@ -105,6 +105,10 @@ class TestACL(TransactionCaseWithUserDemo):
         self._set_field_groups(partner, 'bank_ids', GROUP_SYSTEM)
 
         with self.assertRaises(AccessError):
+            partner.search_fetch([], ['bank_ids'])
+        with self.assertRaises(AccessError):
+            partner.fetch(['bank_ids'])
+        with self.assertRaises(AccessError):
             partner.read(['bank_ids'])
         with self.assertRaises(AccessError):
             partner.write({'bank_ids': []})

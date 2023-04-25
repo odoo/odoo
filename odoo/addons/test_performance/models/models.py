@@ -12,6 +12,8 @@ class BaseModel(models.Model):
     value = fields.Integer(default=0)
     value_pc = fields.Float(compute="_value_pc", store=True)
     value_ctx = fields.Float(compute="_value_ctx")
+    computed_value = fields.Float(compute="_computed_value")
+    indirect_computed_value = fields.Float(compute="_indirect_computed_value")
     partner_id = fields.Many2one('res.partner', string='Customer')
 
     line_ids = fields.One2many('test_performance.line', 'base_id')
@@ -22,6 +24,16 @@ class BaseModel(models.Model):
     def _value_pc(self):
         for record in self:
             record.value_pc = float(record.value) / 100
+
+    @api.depends('value')
+    def _computed_value(self):
+        for record in self:
+            record.computed_value = float(record.value) / 100
+
+    @api.depends('computed_value')
+    def _indirect_computed_value(self):
+        for record in self:
+            record.indirect_computed_value = record.computed_value / 100
 
     @api.depends_context('key')
     def _value_ctx(self):
