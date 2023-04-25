@@ -10,7 +10,7 @@
             <kanban default_group_by="personal_stage_type_ids"
                     class="o_kanban_small_column"
                     on_create="quick_create"
-                    quick_create_view="todo.project_task_view_todo_quick_create_form"
+                    quick_create_view="project_todo.project_task_view_todo_quick_create_form"
                     sample="1"
                     js_class="project_task_kanban"
                     default_order="state, priority desc, date_deadline asc, sequence, id desc">
@@ -243,7 +243,7 @@
         <field name="domain">[('user_ids', 'in', [uid]), ('project_id', '=', False), ('parent_id', '=', False)]</field>
         <field name="view_mode">kanban,form,tree,activity</field>
         <field name="search_view_id" ref="project_task_view_todo_search"/>
-        <field name="context">{'search_default_open_tasks': 1, 'tree_view_ref': 'todo.project_task_view_todo_tree'}</field>
+        <field name="context">{'search_default_open_tasks': 1, 'tree_view_ref': 'project_todo.project_task_view_todo_tree'}</field>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 No to-do found. Let's create one!
@@ -284,7 +284,7 @@
         <field name="model_id" ref="project.model_project_task"/>
         <field name="state">code</field>
         <field name="code">
-            model._ensure_onboarding_todo(); action = env["ir.actions.actions"]._for_xml_id("todo.project_task_action_todo")
+            model._ensure_onboarding_todo(); action = env["ir.actions.actions"]._for_xml_id("project_todo.project_task_action_todo")
         </field>
     </record>
 

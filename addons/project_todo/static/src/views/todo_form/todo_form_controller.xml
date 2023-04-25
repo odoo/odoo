@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="todo.TodoFormView" t-inherit="web.FormView" t-inherit-mode="primary" owl="1">
-        
+    <t t-name="project_todo.TodoFormView" t-inherit="web.FormView" t-inherit-mode="primary" owl="1">
         <xpath expr="//div[hasclass('o_form_view_container')]/Layout" position="inside">
             <t t-set-slot="control-panel-todo-name">
                 <t t-set="record" t-value="model.root"/>

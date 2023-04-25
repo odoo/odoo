@@ -1,8 +1,8 @@
 /** @odoo-module **/
 
 import { FormController } from "@web/views/form/form_controller";
-import { TodoEditableBreadcrumbName } from "@todo/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name";
-import { TodoDoneCheckmark } from "@todo/components/todo_done_checkmark/todo_done_checkmark";
+import { TodoEditableBreadcrumbName } from "@project_todo/components/todo_editable_breadcrumb_name/todo_editable_breadcrumb_name";
+import { TodoDoneCheckmark } from "@project_todo/components/todo_done_checkmark/todo_done_checkmark";
 
 import { onWillStart } from "@odoo/owl";
 
@@ -12,7 +12,7 @@ import { onWillStart } from "@odoo/owl";
  */
 
 export class TodoFormController extends FormController {
-    static template = "todo.TodoFormView";
+    static template = "project_todo.TodoFormView";
 
     setup() {
         super.setup();
@@ -32,7 +32,7 @@ export class TodoFormController extends FormController {
                 description: this.env._t("Convert to Task"),
                 callback: () => {
                     this.model.actionService.doAction(
-                        "todo.project_task_action_convert_todo_to_task",
+                        "project_todo.project_task_action_convert_todo_to_task",
                         {
                             props: {
                                 resId: this.model.root.resId,
