@@ -39,15 +39,14 @@ class IrAttachment(models.Model):
                 related_record.message_main_attachment_id = self
 
     def _delete_and_notify(self):
-        for attachment in self:
-            if attachment.res_model == 'discuss.channel' and attachment.res_id:
-                target = self.env['discuss.channel'].browse(attachment.res_id)
-            else:
-                target = self.env.user.partner_id
-            self.env['bus.bus']._sendone(target, 'ir.attachment/delete', {
-                'id': attachment.id,
-            })
+        self.env['bus.bus']._sendmany((attachment._bus_notification_target(), 'ir.attachment/delete', {
+            'id': attachment.id,
+        }) for attachment in self)
         self.unlink()
+
+    def _bus_notification_target(self):
+        self.ensure_one()
+        return self.env.user.partner_id
 
     def _attachment_format(self, legacy=False):
         safari = request and request.httprequest.user_agent and request.httprequest.user_agent.browser == 'safari'

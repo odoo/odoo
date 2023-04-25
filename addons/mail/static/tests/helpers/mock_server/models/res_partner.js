@@ -20,6 +20,12 @@ patch(MockServer.prototype, "mail/models/res_partner", {
         if (args.model === "res.partner" && args.method === "get_mention_suggestions") {
             return this._mockResPartnerGetMentionSuggestions(args);
         }
+        if (
+            args.model === "res.partner" &&
+            args.method === "get_mention_suggestions_from_channel"
+        ) {
+            return this._mockResPartnerGetMentionSuggestionsFromChannel(args);
+        }
         return this._super(route, args);
     },
 
@@ -30,6 +36,69 @@ patch(MockServer.prototype, "mail/models/res_partner", {
      * @returns {Array[]}
      */
     _mockResPartnerGetMentionSuggestions(args) {
+        const search = (args.args[0] || args.kwargs.search || "").toLowerCase();
+        const limit = args.args[1] || args.kwargs.limit || 8;
+        /**
+         * Returns the given list of partners after filtering it according to
+         * the logic of the Python method `get_mention_suggestions` for the
+         * given search term. The result is truncated to the given limit and
+         * formatted as expected by the original method.
+         *
+         * @param {Object[]} partners
+         * @param {string} search
+         * @param {integer} limit
+         * @returns {Object[]}
+         */
+        const mentionSuggestionsFilter = (partners, search, limit) => {
+            const matchingPartners = [
+                ...this._mockResPartnerMailPartnerFormat(
+                    partners
+                        .filter((partner) => {
+                            // no search term is considered as return all
+                            if (!search) {
+                                return true;
+                            }
+                            // otherwise name or email must match search term
+                            if (partner.name && partner.name.toLowerCase().includes(search)) {
+                                return true;
+                            }
+                            if (partner.email && partner.email.toLowerCase().includes(search)) {
+                                return true;
+                            }
+                            return false;
+                        })
+                        .map((partner) => partner.id)
+                ).values(),
+            ];
+            // reduce results to max limit
+            matchingPartners.length = Math.min(matchingPartners.length, limit);
+            return matchingPartners;
+        };
+
+        // add main suggestions based on users
+        const partnersFromUsers = this.getRecords("res.users", [])
+            .map((user) => this.getRecords("res.partner", [["id", "=", user.partner_id]])[0])
+            .filter((partner) => partner);
+        const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
+
+        let extraMatchingPartners = [];
+        // if not enough results add extra suggestions based on partners
+        const remainingLimit = limit - mainMatchingPartners.length;
+        if (mainMatchingPartners.length < limit) {
+            const partners = this.getRecords("res.partner", [
+                ["id", "not in", mainMatchingPartners.map((partner) => partner.id)],
+            ]);
+            extraMatchingPartners = mentionSuggestionsFilter(partners, search, remainingLimit);
+        }
+        return mainMatchingPartners.concat(extraMatchingPartners);
+    },
+    /**
+     * Simulates `get_channel_mention_suggestions` on `res.partner`.
+     *
+     * @private
+     * @returns {Array[]}
+     */
+    _mockResPartnerGetMentionSuggestionsFromChannel(args) {
         const search = (args.args[0] || args.kwargs.search || "").toLowerCase();
         const limit = args.args[1] || args.kwargs.limit || 8;
         const channel_id = args.args[2] || args.kwargs.channel_id;
@@ -50,14 +119,12 @@ patch(MockServer.prototype, "mail/models/res_partner", {
                 ...this._mockResPartnerMailPartnerFormat(
                     partners
                         .filter((partner) => {
-                            if (channel_id) {
-                                const [member] = this.getRecords("discuss.channel.member", [
-                                    ["channel_id", "=", channel_id],
-                                    ["partner_id", "=", partner.id],
-                                ]);
-                                if (!member) {
-                                    return false;
-                                }
+                            const [member] = this.getRecords("discuss.channel.member", [
+                                ["channel_id", "=", channel_id],
+                                ["partner_id", "=", partner.id],
+                            ]);
+                            if (!member) {
+                                return false;
                             }
                             // no search term is considered as return all
                             if (!search) {
@@ -75,22 +142,20 @@ patch(MockServer.prototype, "mail/models/res_partner", {
                         .map((partner) => partner.id)
                 ).values(),
             ].map((partnerFormat) => {
-                if (channel_id) {
-                    const [member] = this.getRecords("discuss.channel.member", [
-                        ["channel_id", "=", channel_id],
-                        ["partner_id", "=", partnerFormat.id],
-                    ]);
-                    partnerFormat["persona"] = {
-                        channelMembers: [
-                            [
-                                "insert",
-                                this._mockDiscussChannelMember_DiscussChannelMemberFormat([
-                                    member.id,
-                                ]),
-                            ],
+                const [member] = this.getRecords("discuss.channel.member", [
+                    ["channel_id", "=", channel_id],
+                    ["partner_id", "=", partnerFormat.id],
+                ]);
+                partnerFormat["persona"] = {
+                    channelMembers: [
+                        [
+                            "insert",
+                            this._mockDiscussChannelMember_DiscussChannelMemberFormat([
+                                member.id,
+                            ])[0],
                         ],
-                    };
-                }
+                    ],
+                };
                 return partnerFormat;
             });
             // reduce results to max limit

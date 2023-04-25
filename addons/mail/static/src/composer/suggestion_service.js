@@ -37,19 +37,20 @@ export class SuggestionService {
         }
     }
 
+    /**
+     * @param {string} term
+     * @param {import("@mail/core/thread_model").Thread} thread
+     */
     async fetchPartners(term, thread) {
         const kwargs = { search: term };
-        const isNonPublicChannel =
-            thread &&
-            (thread.type === "group" ||
-                thread.type === "chat" ||
-                (thread.type === "channel" && thread.group_based_subscription));
-        if (isNonPublicChannel) {
+        if (thread.model === "discuss.channel") {
             kwargs.channel_id = thread.id;
         }
         const suggestedPartners = await this.orm.call(
             "res.partner",
-            "get_mention_suggestions",
+            thread.model === "discuss.channel"
+                ? "get_mention_suggestions_from_channel"
+                : "get_mention_suggestions",
             [],
             kwargs
         );

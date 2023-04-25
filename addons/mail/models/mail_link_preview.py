@@ -42,14 +42,7 @@ class LinkPreview(models.Model):
             link_previews |= self.env['mail.link.preview']._create_link_preview(url, message.id, requests_session)
         if not link_previews:
             return
-        guest = self.env['mail.guest']._get_guest_from_context()
-        if message.model == 'discuss.channel' and message.res_id:
-            target = self.env['discuss.channel'].browse(message.res_id)
-        elif self.env.user._is_public() and guest:
-            target = guest
-        else:
-            target = self.env.user.partner_id
-        self.env['bus.bus']._sendone(target, 'mail.record/insert', {
+        self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
             'LinkPreview': link_previews._link_preview_format()
         })
 
@@ -67,13 +60,7 @@ class LinkPreview(models.Model):
         notifications = []
         guest = self.env['mail.guest']._get_guest_from_context()
         for link_preview in self:
-            if link_preview.message_id.model == 'discuss.channel' and link_preview.message_id.res_id:
-                target = self.env['discuss.channel'].browse(link_preview.message_id.res_id)
-            elif self.env.user._is_public() and guest:
-                target = guest
-            else:
-                target = self.env.user.partner_id
-            notifications.append((target, 'mail.link.preview/delete', {
+            notifications.append((link_preview.message_id._bus_notification_target(), 'mail.link.preview/delete', {
                 'id': link_preview.id,
                 'message_id': link_preview.message_id.id,
             }))
