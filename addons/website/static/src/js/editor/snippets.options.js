@@ -2213,7 +2213,8 @@ options.registry.HeaderNavbar = options.Class.extend({
         // For all header templates except those in the following array, change
         // the label of the option to "Mobile Alignment" (instead of
         // "Alignment") because it only impacts the mobile view.
-        if (!["'default'", "'hamburger'", "'sidebar'"].includes(weUtils.getCSSVariableValue('header-template'))) {
+        if (!["'default'", "'hamburger'", "'sidebar'", "'magazine'", "'hamburger-full'", "'slogan'"]
+            .includes(weUtils.getCSSVariableValue("header-template"))) {
             const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
             alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
         }
