@@ -4,7 +4,7 @@ import { useMessaging, useStore } from "@mail/core/messaging_hook";
 import { CallActionList } from "@mail/discuss/call/call_action_list";
 import { CallParticipantCard } from "@mail/discuss/call/call_participant_card";
 import { useRtc } from "@mail/discuss/call/rtc_hook";
-import { isEventHandled, markEventHandled } from "@mail/utils/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import {
     Component,
     onMounted,
@@ -260,3 +260,4 @@ export class Call extends Component {
         );
     }
 }
+

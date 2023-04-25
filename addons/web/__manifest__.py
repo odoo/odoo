@@ -182,6 +182,8 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/webclient/navbar/navbar.scss'),  # already in assets_common
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
+
             ('remove', 'web/static/src/core/file_viewer/file_viewer.dark.scss'),
 
             # remove the report code and whitelist only what's needed
@@ -436,6 +438,9 @@ This module provides the core of the Odoo Web Client.
         'web.pdf_js_lib': [
             'web/static/lib/pdfjs/build/pdf.js',
             'web/static/lib/pdfjs/build/pdf.worker.js',
+        ],
+        'web.assets_emoji': [
+            'web/static/src/core/emoji_picker/emoji_data.js',
         ],
         'web.report_assets_common': [
             ('include', 'web._assets_helpers'),

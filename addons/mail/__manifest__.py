@@ -129,7 +129,6 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/src/worklets/**/*'),
             ('remove', 'mail/static/src/**/public/**/*'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
-            ('remove', 'mail/static/src/emoji_picker/emoji_data.js'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),
             'mail/static/src/discuss/**/*',
@@ -155,9 +154,7 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/tests/tours/**/*'),
             ('remove', 'mail/static/tests/helpers/**/*'),
         ],
-        'mail.assets_emoji': [
-            'mail/static/src/emoji_picker/emoji_data.js',
-        ],
+
         'mail.assets_public': [
             ('include', 'web._assets_helpers'),
             ('include', 'web._assets_backend_helpers'),
@@ -186,8 +183,8 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/src/xml/**/*'),
             ('remove', 'mail/static/src/worklets/**/*'),
             ('remove', 'mail/static/src/views/**/*'),
-            ('remove', 'mail/static/src/**/web/**/*'),
-            ('remove', 'mail/static/src/emoji_picker/emoji_data.js'),
+            ('remove', 'mail/static/src/web/**/*'),
+            ('remove', 'web/static/src/core/emoji_picker/emoji_data.js'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
             # discuss (loaded last to fix dependencies)
             ('remove', 'mail/static/src/discuss/**/*'),

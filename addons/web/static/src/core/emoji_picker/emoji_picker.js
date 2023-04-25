@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { markEventHandled } from "@mail/utils/misc";
+import { markEventHandled } from "@web/core/utils/misc";
 
 import {
     Component,
@@ -103,17 +103,15 @@ export function useEmojiPicker(ref, props, options = {}) {
     };
 }
 
-export const loader = {
-    loadEmoji: memoize(() => getBundle("mail.assets_emoji").then(loadBundle)),
-};
+const _loadEmoji = memoize(() => getBundle("web.assets_emoji").then(loadBundle));
 
 /**
- * @returns {import("@mail/emoji_picker/emoji_data")}
+ * @returns {import("@web/core/emoji_picker/emoji_data")}
  */
 export async function loadEmoji() {
     try {
-        await loader.loadEmoji();
-        return odoo.runtimeImport("@mail/emoji_picker/emoji_data");
+        await _loadEmoji();
+        return odoo.runtimeImport("@web/core/emoji_picker/emoji_data");
     } catch {
         // Could be intentional (tour ended successfully while emoji still loading)
         return { emojis: [], categories: [] };
@@ -125,7 +123,7 @@ export const EMOJI_PER_ROW = 9;
 export class EmojiPicker extends Component {
     static props = ["onSelect", "close", "onClose?", "storeScroll?"];
     static defaultProps = { onClose: () => {} };
-    static template = "mail.EmojiPicker";
+    static template = "web.EmojiPicker";
 
     recent = [];
     categories = null;
@@ -148,7 +146,7 @@ export class EmojiPicker extends Component {
                 this.emojis.map((emoji) => [emoji.codepoints, emoji])
             );
             this.state.categoryId = this.categories[0]?.sortId;
-            this.recent = JSON.parse(browser.localStorage.getItem("mail.emoji.frequent") || "{}");
+            this.recent = JSON.parse(browser.localStorage.getItem("web.emoji.frequent") || "{}");
             this.recentCategory = {
                 name: "Frequently used",
                 displayName: _t("Frequently used"),
@@ -174,7 +172,7 @@ export class EmojiPicker extends Component {
                 this.shouldScrollElem = false;
                 const getElement = () =>
                     this.gridRef.el.querySelector(
-                        `.o-mail-EmojiPicker-category[data-category="${this.state.categoryId}"`
+                        `.o-EmojiPicker-category[data-category="${this.state.categoryId}"`
                     );
                 const elem = getElement();
                 if (elem) {
@@ -254,7 +252,7 @@ export class EmojiPicker extends Component {
             case "Enter":
                 this.gridRef.el
                     .querySelector(
-                        `.o-mail-EmojiPicker-content .o-mail-Emoji[data-index="${this.state.activeEmojiIndex}"]`
+                        `.o-EmojiPicker-content .o-Emoji[data-index="${this.state.activeEmojiIndex}"]`
                     )
                     .click();
                 break;
@@ -295,7 +293,7 @@ export class EmojiPicker extends Component {
         this.props.onSelect(codepoints);
         this.recent[codepoints] ??= 0;
         this.recent[codepoints]++;
-        browser.localStorage.setItem("mail.emoji.frequent", JSON.stringify(this.recent));
+        browser.localStorage.setItem("web.emoji.frequent", JSON.stringify(this.recent));
         this.gridRef.el.scrollTop = 0;
         if (!ev.shiftKey) {
             this.props.close();
@@ -315,3 +313,4 @@ export class EmojiPicker extends Component {
         this.state.categoryId = parseInt(res.dataset.category);
     }
 }
+

@@ -3,11 +3,12 @@
 import { AttachmentList } from "@mail/attachments/attachment_list";
 import { useAttachmentUploader } from "@mail/attachments/attachment_uploader_hook";
 import { useSelection } from "@mail/utils/hooks";
-import { isDragSourceExternalFile, isEventHandled, markEventHandled } from "@mail/utils/misc";
+import { isDragSourceExternalFile } from "@mail/utils/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc"; 
 import { Component, onMounted, useChildSubEnv, useEffect, useRef, useState } from "@odoo/owl";
 import { useDropzone } from "../dropzone/dropzone_hook";
 import { useMessaging, useStore } from "../core/messaging_hook";
-import { useEmojiPicker } from "../emoji_picker/emoji_picker";
+import { useEmojiPicker } from "@web/core/emoji_picker/emoji_picker";
 
 import { sprintf } from "@web/core/utils/strings";
 import { escapeAndCompactTextContent } from "../utils/format.js";

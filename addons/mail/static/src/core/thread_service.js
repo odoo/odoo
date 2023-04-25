@@ -15,7 +15,7 @@ import { registry } from "@web/core/registry";
 import { url } from "@web/core/utils/urls";
 import { memoize } from "@web/core/utils/functions";
 import { DEFAULT_AVATAR } from "@mail/core/persona_service";
-import { loadEmoji } from "@mail/emoji_picker/emoji_picker";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { browser } from "@web/core/browser/browser";
 
 const FETCH_LIMIT = 30;

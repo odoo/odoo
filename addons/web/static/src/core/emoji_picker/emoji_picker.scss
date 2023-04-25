@@ -1,4 +1,4 @@
-.o-mail-EmojiPicker {
+.o-EmojiPicker {
     width: 285px;
     height: 350px;
 
@@ -9,7 +9,7 @@
     "content";
     grid-template-rows: 30px 35px 1fr;
 
-    .o-mail-Emoji {
+    .o-Emoji {
         width: 30px;
         font-size: 1rem;
         &:hover {
@@ -17,37 +17,28 @@
         }
     }
 
-    .o-mail-EmojiPicker-content {
+    .o-EmojiPicker-content {
         grid-area: content;
     }
 
-    .o-mail-EmojiPicker-header {
+    .o-EmojiPicker-header {
         grid-area: header;
-        .o-mail-Emoji {
+        .o-Emoji:not(:hover):not(.o-isActive) {
             filter: grayscale(1);
         }
     }
 
-    .o-mail-EmojiPicker-sectionIcon {
-        filter: grayscale(1);
-    }
-
-    .o-mail-EmojiPicker-searchContainer {
-        border: $input-border-width solid $border-color !important;
-
-        &:focus-within {
-            border-color: $input-focus-border-color !important;
-
-            i {
-                opacity: 100% !important;
-            }
-        }
-    }
-
-    .o-mail-EmojiPicker-search {
+    .o-EmojiPicker-search {
         grid-area: search;
         border-radius: 0%;
         background-color: $input-focus-bg;
+        border-bottom: $input-border-width solid $border-color !important;
+
+        &:focus-within {
+            background-color: $input-focus-bg;
+            border-color: $input-focus-border-color !important;
+            color: $input-focus-color;
+        }
 
         input {
             appearance: none;
@@ -56,7 +47,7 @@
         }
     }
 
-    .o-mail-EmojiPicker-empty {
+    .o-EmojiPicker-empty {
         font-size: 5rem !important;
         filter: grayscale(0.25);
     }
@@ -72,7 +63,7 @@
     }
 }
 
-.o-mail-EmojiPicker-category:before {
+.o-EmojiPicker-category:before {
     // invisible character so that category has constant height, regardless of text content.
     content: "\200b"; /* unicode zero width space character */
 }

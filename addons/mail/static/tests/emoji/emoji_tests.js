@@ -7,7 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
-import { EMOJI_PER_ROW } from "@mail/emoji_picker/emoji_picker";
+import { EMOJI_PER_ROW } from "@web/core/emoji_picker/emoji_picker";
 
 import { triggerHotkey } from "@web/../tests/helpers/utils";
 

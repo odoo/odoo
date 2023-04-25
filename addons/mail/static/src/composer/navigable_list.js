@@ -5,7 +5,7 @@ import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
 import { ImStatus } from "../discuss_app/im_status"; // Used in composer suggestion template
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
-import { markEventHandled, isEventHandled } from "../utils/misc";
+import { markEventHandled, isEventHandled } from "@web/core/utils/misc";
 import { onExternalClick } from "@mail/utils/hooks";
 
 export class NavigableList extends Component {

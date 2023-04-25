@@ -5,7 +5,7 @@ import { CallContextMenu } from "@mail/discuss/call/call_context_menu";
 import { CallParticipantVideo } from "@mail/discuss/call/call_participant_video";
 import { useRtc } from "@mail/discuss/call/rtc_hook";
 import { useHover } from "@mail/utils/hooks";
-import { isEventHandled, markEventHandled } from "@mail/utils/misc";
+import { isEventHandled, markEventHandled } from "@web/core/utils/misc";
 import { Component, onMounted, onWillUnmount, useRef } from "@odoo/owl";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
@@ -133,3 +133,4 @@ export class CallParticipantCard extends Component {
         });
     }
 }
+

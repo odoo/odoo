@@ -10,7 +10,7 @@ import {
 } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { Dialog } from "@web/core/dialog/dialog";
-import { loadEmoji } from "@mail/emoji_picker/emoji_picker";
+import { loadEmoji } from "@web/core/emoji_picker/emoji_picker";
 import { onExternalClick } from "@mail/utils/hooks";
 import { useStore } from "../core/messaging_hook";
 

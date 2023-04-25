@@ -10,7 +10,7 @@ import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
 import { ThreadIcon } from "@mail/discuss_app/thread_icon";
 import { ImStatus } from "@mail/discuss_app/im_status";
-import { isEventHandled } from "@mail/utils/misc";
+import { isEventHandled } from "@web/core/utils/misc";
 import { _t } from "@web/core/l10n/translation";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
@@ -117,3 +117,4 @@ export class ChatWindow extends Component {
         this.state.moreActionsExpanded = state.open;
     }
 }
+

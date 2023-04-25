@@ -8,7 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { onExternalClick } from "@mail/utils/hooks";
 import { Component, useState } from "@odoo/owl";
-import { markEventHandled } from "@mail/utils/misc";
+import { markEventHandled } from "@web/core/utils/misc";
 
 import { _t } from "@web/core/l10n/translation";
 
