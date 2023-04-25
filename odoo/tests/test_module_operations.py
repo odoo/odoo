@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import argparse
-import logging
+import logging.config
 import os
 import sys
 import time
@@ -208,8 +208,17 @@ if __name__ == '__main__':
         odoo.modules.module.initialize_sys_path()
 
     init_logger()
-    logging.getLogger('odoo.modules.loading').setLevel(logging.CRITICAL)
-    logging.getLogger('odoo.sql_db').setLevel(logging.CRITICAL)
+    logging.config.dictConfig({
+        'version': 1,
+        'incremental': True,
+        'disable_existing_loggers': False,
+        'loggers': {
+            'odoo.modules.loading': {'level': 'CRITICAL'},
+            'odoo.sql_db': {'level': 'CRITICAL'},
+            'odoo.models.unlink': {'level': 'WARNING'},
+            'odoo.addons.base.models.ir_model': {'level': "WARNING"},
+        }
+    })
 
     try:
         args.func(args)
