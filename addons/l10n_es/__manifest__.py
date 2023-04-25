@@ -27,6 +27,8 @@ Spanish charts of accounts (PGCE 2008).
     ],
     'data': [
         'data/account_tax_data.xml',
+
+        'views/report_invoice.xml',
     ],
     'demo': [
         'demo/demo_company.xml',
