@@ -3,9 +3,20 @@
 import { ViewButton } from "./view_button";
 
 export class MultiRecordViewButton extends ViewButton {
+    static props = [
+        ...ViewButton.props,
+        "list",
+        "domain",
+        "appliesToSelectedRecords?",
+    ]
+    static defaultProps = {
+        ...ViewButton.defaultProps,
+        appliesToSelectedRecords: true,
+    }
+
     async onClick() {
-        const { clickParams, list } = this.props;
-        const resIds = await list.getResIds(true);
+        const { appliesToSelectedRecords, clickParams, list } = this.props;
+        const resIds = await list.getResIds(appliesToSelectedRecords);
         clickParams.buttonContext = {
             active_domain: this.props.domain,
             active_ids: resIds,
@@ -23,5 +34,3 @@ export class MultiRecordViewButton extends ViewButton {
         });
     }
 }
-
-MultiRecordViewButton.props = [...ViewButton.props, "list", "domain"];

@@ -13473,7 +13473,7 @@ QUnit.module("Views", (hooks) => {
                     // The action's execution context
                     assert.deepEqual(buttonContext, {
                         active_domain: domain,
-                        active_ids: [],
+                        active_ids: [1],
                         active_model: "partner",
                     });
 
@@ -13483,13 +13483,54 @@ QUnit.module("Views", (hooks) => {
                         uid: 7,
                     });
                     assert.strictEqual(resModel, "partner");
-                    assert.deepEqual([...resIds], []);
+                    assert.deepEqual([...resIds], [1]);
                 },
             });
 
             const cpButtons = getVisibleButtons(target);
             assert.deepEqual(
                 [...cpButtons].map((button) => button.textContent.trim()),
+                ["New", "display", ""]
+            );
+            assert.hasClass(cpButtons[1], "display");
+
+            await click(cpButtons[1]);
+            assert.verifySteps(["execute_action"]);
+        }
+    );
+
+    QUnit.test(
+        "kanban view: action button in controlPanel with multiple record in kanban",
+        async (assert) => {
+            const kanban = await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <kanban class="o_kanban_test">
+                    <header>
+                        <button name="display" type="object" class="display" string="display" display="always"/>
+                    </header>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+                domain: [["id", "in", [1, 2, 3]]],
+            });
+            patchWithCleanup(kanban.env.services.action, {
+                doActionButton: async (params) => {
+                    assert.step("execute_action");
+                    assert.deepEqual(params.resIds, [1, 2, 3]);
+                },
+            });
+
+            const cpButtons = getVisibleButtons(target);
+            assert.deepEqual(
+                cpButtons.map((button) => button.textContent.trim()),
                 ["New", "display", ""]
             );
             assert.hasClass(cpButtons[1], "display");
