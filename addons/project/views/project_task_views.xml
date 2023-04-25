@@ -284,7 +284,7 @@
                             </div>
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
-                            attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': user_ids, 'default_project_id': project_id}">
+                            attrs="{'invisible' : ['|', ('id', '=', False), ('subtask_count', '=', 0)]}" context="{'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value">
                                     <field name="subtask_count" widget="statinfo" nolabel="1"/>
