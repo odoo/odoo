@@ -1853,41 +1853,4 @@
         <field name="l10n_ar_withholding_amount_type">untaxed_amount</field>
     </record>
 
-<!-- SOLO RI -->
-<!-- Retenciones iva -->
-    <record id="ri_tax_retencion_iva_sufrida" model="account.tax.template">
-        <field name="chart_template_id" ref="l10n_ar.l10nar_ri_chart_template"/>
-        <field name="name">Retención IVA Sufrida</field>
-        <field name="description">Ret IVA S</field>
-        <field name="sequence">4</field>
-        <field name="amount_type">fixed</field>
-        <field eval="0.0" name="amount"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('l10n_ar.ri_retencion_iva_sufrida'),
-            }),
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('l10n_ar.ri_retencion_iva_sufrida'),
-            }),
-        ]"/>
-        <field name="type_tax_use">none</field>
-        <field name="l10n_ar_withholding">customer</field>
-    </record>
-
 </odoo>

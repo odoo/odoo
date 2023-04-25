@@ -35,10 +35,10 @@ class ResCompany(models.Model):
         self.ensure_one()
         return self.account_fiscal_country_id.code == "AR" or super()._localization_use_documents()
 
-    @api.constrains('l10n_ar_afip_responsibility_type_id')
-    def _check_accounting_info(self):
-        """ Do not let to change the AFIP Responsibility of the company if there is already installed a chart of
-        account and if there has accounting entries """
-        if self._existing_accounting():
-            raise ValidationError(_(
-                'Could not change the AFIP Responsibility of this company because there are already accounting entries.'))
+    # @api.constrains('l10n_ar_afip_responsibility_type_id')
+    # def _check_accounting_info(self):
+    #     """ Do not let to change the AFIP Responsibility of the company if there is already installed a chart of
+    #     account and if there has accounting entries """
+    #     if self._existing_accounting():
+    #         raise ValidationError(_(
+    #             'Could not change the AFIP Responsibility of this company because there are already accounting entries.'))
