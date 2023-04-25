@@ -3,6 +3,7 @@ odoo.define('pos_sale.tour', function (require) {
 
     const { Chrome } = require('point_of_sale.tour.ChromeTourMethods');
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { PosCoupon } = require('pos_coupon.tour.PosCouponTourMethods');
     const { ProductScreen } = require('pos_sale.tour.ProductScreenTourMethods');
     const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
@@ -42,4 +43,15 @@ odoo.define('pos_sale.tour', function (require) {
     ReceiptScreen.check.isShown();
 
     Tour.register('PosSettleOrder2', { test: true, url: '/pos/ui' }, getSteps());
+
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    PosCoupon.do.resetActivePrograms();
+    ProductScreen.check.totalAmountIs(100);
+
+    Tour.register('PosSettleOrderWithPromotions', { test: true, url: '/pos/ui' }, getSteps());
 });
