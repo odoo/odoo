@@ -137,7 +137,7 @@ class Product(models.Model):
 
     def _compute_quantities_dict(self, lot_id, owner_id, package_id, from_date=False, to_date=False):
         domain_quant_loc, domain_move_in_loc, domain_move_out_loc = self._get_domain_locations()
-        domain_quant = [('product_id', 'in', self.ids)] + domain_quant_loc
+        domain_quant = [('product_id', 'in', self.ids), ('location_id.no_availability', '=', False)] + domain_quant_loc
         dates_in_the_past = False
         # only to_date as to_date will correspond to qty_available
         to_date = fields.Datetime.to_datetime(to_date)
@@ -204,7 +204,6 @@ class Product(models.Model):
             res[product_id]['virtual_available'] = float_round(
                 qty_available + res[product_id]['incoming_qty'] - res[product_id]['outgoing_qty'],
                 precision_rounding=rounding)
-
         return res
 
     def _compute_nbr_moves(self):
@@ -287,7 +286,6 @@ class Product(models.Model):
                 location_ids = _search_ids('stock.location', location)
             else:
                 location_ids = set(Warehouse.search([]).mapped('view_location_id').ids)
-
         return self._get_domain_locations_new(location_ids)
 
     def _get_domain_locations_new(self, location_ids):

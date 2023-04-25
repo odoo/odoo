@@ -36,7 +36,7 @@ class StockMove(models.Model):
         'Date Scheduled', default=fields.Datetime.now, index=True, required=True,
         help="Scheduled date until move is done, then date of actual move processing")
     date_deadline = fields.Datetime(
-        "Deadline", readonly=True, copy=False,
+        "Deadline", readonly=True, copy=False, default=fields.Datetime.now(),
         help="Date Promise to the customer on the top level document (SO/PO)")
     company_id = fields.Many2one(
         'res.company', 'Company',
@@ -2257,7 +2257,10 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         ids_in_self = set(self.ids)
         product_ids = self.product_id
-        wh_location_query = self.env['stock.location']._search([('id', 'child_of', warehouse.view_location_id.id)])
+        wh_location_query = self.env['stock.location']._search([
+            ('id', 'child_of', warehouse.view_location_id.id),
+            ('no_availability', '=', False),
+        ])
 
         # Prefetch data to avoid future request
         in_domain, out_domain = self.env['stock.forecasted_product_product']._move_confirmed_domain(

@@ -1150,7 +1150,8 @@ class TestSinglePicking(TestStockCommon):
             'picking_id': delivery_order.id,
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'date': datetime.now() + relativedelta(days=10)
+            'date': datetime.now() + relativedelta(days=10),
+            'date_deadline': datetime.now() + relativedelta(days=11)
         })
         move4 = self.MoveObj.create({
             'name': "move4",
@@ -1160,7 +1161,8 @@ class TestSinglePicking(TestStockCommon):
             'picking_id': delivery_order.id,
             'location_id': self.pack_location,
             'location_dest_id': self.customer_location,
-            'date': datetime.now() + relativedelta(days=0)
+            'date': datetime.now() + relativedelta(days=0),
+            'date_deadline': datetime.now() + relativedelta(days=10)
         })
 
         # make some stock
@@ -1173,7 +1175,6 @@ class TestSinglePicking(TestStockCommon):
 
         self.assertEqual(move1.reserved_availability, 2, "Earlier deadline should have reserved quantity")
         self.assertEqual(move2.reserved_availability, 0, "Later deadline should not have reserved quantity")
-
         # add new stock
         self.StockQuantObj._update_available_quantity(self.productA, pack_location, 2)
         delivery_order.action_assign()

@@ -72,6 +72,9 @@ class Location(models.Model):
     return_location = fields.Boolean('Is a Return Location?', help='Check this box to allow using this location as a return location.')
     replenish_location = fields.Boolean('Replenish Location', copy=False, compute="_compute_replenish_location", readonly=False, store=True,
                                         help='Activate this function to get all quantities to replenish at this particular location')
+    no_availability = fields.Boolean('No Availability', default=False,
+                                     help='When a product is in a location with No availability, then its not a part of the available quanatity.this can be use for pre-reception locations.')
+
     removal_strategy_id = fields.Many2one(
         'product.removal', 'Removal Strategy',
         help="Defines the default method used for suggesting the exact location (shelf) "

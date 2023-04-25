@@ -41,6 +41,7 @@
                             <field name="scrap_location" attrs="{'invisible': [('usage', 'not in', ('inventory', 'internal'))]}"/>
                             <field name="return_location"/>
                             <field name="replenish_location" attrs="{'invisible': [('usage', '!=', 'internal')]}"/>
+                            <field name="no_availability"/>
                         </group>
                         <group string="Cyclic Counting" attrs="{'invisible': ['|', ('usage', 'not in', ('internal', 'transit')), ('company_id', '=', False)]}">
                             <field name="cyclic_inventory_frequency"/>

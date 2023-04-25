@@ -116,7 +116,8 @@ class StockForecasted(models.AbstractModel):
             warehouse = self.env['stock.warehouse'].search([['active', '=', True]])[0]
 
         wh_location_ids = [loc['id'] for loc in self.env['stock.location'].search_read(
-            [('id', 'child_of', warehouse.view_location_id.id)],
+            [('id', 'child_of', warehouse.view_location_id.id),
+            ('no_availability', '=', False)],
             ['id'],
         )]
         # any quantities in this location will be considered free stock, others are free stock in transit
@@ -162,7 +163,7 @@ class StockForecasted(models.AbstractModel):
                     'id' : document_in.id,
                     'name' : document_in.display_name,
                 } if document_in else False,
-                'receipt_date': format_date(self.env, move_in.date),
+                'receipt_date': format_date(self.env, move_in.date_deadline),
             })
 
         if move_out:

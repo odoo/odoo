@@ -175,7 +175,7 @@ class StockRule(models.Model):
         in stock_move.py inside the method _push_apply
         """
         self.ensure_one()
-        new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
+        new_date = fields.Datetime.to_string(move.date_deadline + relativedelta(days=self.delay))
         if self.auto == 'transparent':
             old_dest_location = move.location_dest_id
             move.write({'date': new_date, 'location_dest_id': self.location_dest_id.id})
@@ -204,8 +204,8 @@ class StockRule(models.Model):
             'origin': move_to_copy.origin or move_to_copy.picking_id.name or "/",
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_dest_id.id,
-            'date': new_date,
-            'date_deadline': move_to_copy.date_deadline,
+            'date': move_to_copy.date_deadline,
+            'date_deadline': new_date,
             'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,

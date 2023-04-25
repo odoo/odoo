@@ -110,7 +110,7 @@ class MrpProduction(models.Model):
         domain="[('usage','=','internal'), '|', ('company_id', '=', False), ('company_id', '=', company_id)]",
         help="Location where the system will stock the finished products.")
     date_deadline = fields.Datetime(
-        'Deadline', copy=False, store=True, readonly=True, compute='_compute_date_deadline',
+        'Deadline', copy=False, store=True, readonly=True, compute='_compute_date_deadline', default=fields.Datetime.now(),
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
     date_start = fields.Datetime(
         'Start', copy=False, default=_get_default_date_start,

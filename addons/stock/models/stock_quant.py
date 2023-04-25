@@ -1159,7 +1159,7 @@ class StockQuant(models.Model):
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
-            'domain': domain or [],
+            'domain': domain or [('location_id.no_availability', '=', False)],
             'help': """
                 <p class="o_view_nocontent_empty_folder">{}</p>
                 <p>{}</p>
