@@ -463,12 +463,12 @@ function makeActionManager(env) {
             resModel: action.res_model,
             type: view.type,
             selectRecord: async (resId, { activeIds, mode }) => {
-                if (_getView("form")) {
+                if (target !== "new" && _getView("form")) {
                     await switchView("form", { mode, resId, resIds: activeIds });
                 }
             },
             createRecord: async () => {
-                if (_getView("form")) {
+                if (target !== "new" && _getView("form")) {
                     await switchView("form", { resId: false });
                 }
             },
