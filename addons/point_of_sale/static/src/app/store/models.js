@@ -159,26 +159,29 @@ export class Product extends PosModel {
                 }
             }
             // if the lot information exists in the barcode, we don't need to ask it from the user.
-            if (code && code.type === 'lot') {
+            if (code && code.type === "lot") {
                 // consider the old and new packlot lines
                 const modifiedPackLotLines = Object.fromEntries(
-                    packLotLinesToEdit.filter(item => item.id).map(item => [item.id, item.text])
+                    packLotLinesToEdit.filter((item) => item.id).map((item) => [item.id, item.text])
                 );
-                const newPackLotLines = [
-                    { lot_name: code.code },
-                ];
+                const newPackLotLines = [{ lot_name: code.code }];
                 draftPackLotLines = { modifiedPackLotLines, newPackLotLines };
             } else {
-                const { confirmed, payload } = await this.pos.env.services.popup.add(EditListPopup, {
-                    title: this.pos.env._t("Lot/Serial Number(s) Required"),
-                    name: this.display_name,
-                    isSingleItem: isAllowOnlyOneLot,
-                    array: packLotLinesToEdit,
-                });
+                const { confirmed, payload } = await this.pos.env.services.popup.add(
+                    EditListPopup,
+                    {
+                        title: this.pos.env._t("Lot/Serial Number(s) Required"),
+                        name: this.display_name,
+                        isSingleItem: isAllowOnlyOneLot,
+                        array: packLotLinesToEdit,
+                    }
+                );
                 if (confirmed) {
                     // Segregate the old and new packlot lines
                     const modifiedPackLotLines = Object.fromEntries(
-                        payload.newArray.filter((item) => item.id).map((item) => [item.id, item.text])
+                        payload.newArray
+                            .filter((item) => item.id)
+                            .map((item) => [item.id, item.text])
                     );
                     const newPackLotLines = payload.newArray
                         .filter((item) => !item.id)
@@ -190,7 +193,6 @@ export class Product extends PosModel {
                     return;
                 }
             }
-
         }
 
         // Take the weight if necessary.
@@ -1949,7 +1951,25 @@ export class Order extends PosModel {
         line.set_unit_price(line.compute_fixed_price(line.price));
     }
 
+    _isRefundOrder() {
+        if (this.orderlines.length > 0 && this.orderlines[0].refunded_orderline_id) {
+            return true;
+        }
+        return false;
+    }
+
     async add_product(product, options) {
+        if (
+            this.pos.doNotAllowRefundAndSales() &&
+            this._isRefundOrder() &&
+            (!options.quantity || options.quantity > 0)
+        ) {
+            this.pos.env.services.popup.add(ErrorPopup, {
+                title: _t("Refund and Sales not allowed"),
+                body: _t("It is not allowed to mix refunds and sales"),
+            });
+            return;
+        }
         if (this._printed) {
             // when adding product with a barcode while being in receipt screen
             this.pos.removeOrder(this);
@@ -1957,7 +1977,11 @@ export class Order extends PosModel {
         }
         this.assert_editable();
         options = options || {};
-        var line = new Orderline({}, { pos: this.pos, order: this, product: product });
+        const quantity = options.quantity ? options.quantity : 1;
+        const line = new Orderline(
+            {},
+            { pos: this.pos, order: this, product: product, quantity: quantity }
+        );
         this.fix_tax_included_price(line);
 
         this.set_orderline_options(line, options);
@@ -2351,10 +2375,8 @@ export class Order extends PosModel {
                 var remaining = this.get_total_with_tax() - this.get_total_paid();
                 var sign = this.get_total_with_tax() > 0 ? 1.0 : -1.0;
                 if (
-                    (
-                        (this.get_total_with_tax() < 0 && remaining > 0) ||
-                        (this.get_total_with_tax() > 0 && remaining < 0)
-                    ) &&
+                    ((this.get_total_with_tax() < 0 && remaining > 0) ||
+                        (this.get_total_with_tax() > 0 && remaining < 0)) &&
                     rounding_method !== "HALF-UP"
                 ) {
                     rounding_method = rounding_method === "UP" ? "DOWN" : "UP";
@@ -2380,8 +2402,10 @@ export class Order extends PosModel {
                     rounding_applied -= this.pos.cash_rounding[0].rounding;
                 } else if (rounding_method === "DOWN" && rounding_applied < 0 && remaining < 0) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
-                }
-                else if(rounding_method === "HALF-UP" && rounding_applied === this.pos.cash_rounding[0].rounding / -2){
+                } else if (
+                    rounding_method === "HALF-UP" &&
+                    rounding_applied === this.pos.cash_rounding[0].rounding / -2
+                ) {
                     rounding_applied += this.pos.cash_rounding[0].rounding;
                 }
                 return sign * rounding_applied;
@@ -2468,6 +2492,7 @@ export class Order extends PosModel {
     set_partner(partner) {
         this.assert_editable();
         this.partner = partner;
+        this.updatePricelistAndFiscalPosition(partner);
     }
     get_partner() {
         return this.partner;
@@ -2523,7 +2548,7 @@ export class Order extends PosModel {
             shippingDate: this.shippingDate ? this._exportShippingDateForPrinting() : false,
         };
     }
-    updatePricelist(newPartner) {
+    updatePricelistAndFiscalPosition(newPartner) {
         let newPartnerPricelist, newPartnerFiscalPosition;
         const defaultFiscalPosition = this.pos.fiscal_positions.find(
             (position) => position.id === this.pos.config.default_fiscal_position_id[0]

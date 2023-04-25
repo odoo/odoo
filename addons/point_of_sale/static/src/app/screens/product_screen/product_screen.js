@@ -171,7 +171,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                     price_type: "manual",
                 },
             });
-        } else if (code.type === "weight" || code.type === 'quantity') {
+        } else if (code.type === "weight" || code.type === "quantity") {
             Object.assign(options, {
                 quantity: code.value,
                 merge: false,
@@ -190,7 +190,6 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         if (partner) {
             if (this.currentOrder.get_partner() !== partner) {
                 this.currentOrder.set_partner(partner);
-                this.currentOrder.updatePricelist(partner);
             }
             return;
         }
@@ -202,14 +201,14 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             last_orderline.set_discount(code.value);
         }
     }
-        /**
+    /**
      * Add a product to the current order using the product identifier and lot number from parsed results.
      * This function retrieves the product identifier and lot number from the `parsed_results` parameter.
      * It then uses these values to retrieve the product and add it to the current order.
      */
     async _barcodeGS1Action(parsed_results) {
-        const productBarcode = parsed_results.find(element => element.type === 'product');
-        const lotBarcode = parsed_results.find(element => element.type === 'lot');
+        const productBarcode = parsed_results.find((element) => element.type === "product");
+        const lotBarcode = parsed_results.find((element) => element.type === "lot");
         const product = await this._getProductByBarcode(productBarcode);
         if (!product) {
             return;

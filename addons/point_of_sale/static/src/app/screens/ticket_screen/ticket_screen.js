@@ -252,7 +252,9 @@ export class TicketScreen extends Component {
         // Use the destinationOrder from props if the order to refund has the same
         // partner as the destinationOrder.
         const destinationOrder =
-            this.props.destinationOrder && partner === this.props.destinationOrder.get_partner()
+            this.props.destinationOrder &&
+            partner === this.props.destinationOrder.get_partner() &&
+            !this.pos.doNotAllowRefundAndSales()
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
@@ -265,16 +267,18 @@ export class TicketScreen extends Component {
         }
 
         // Set the partner to the destinationOrder.
-        if (partner && !destinationOrder.get_partner()) {
-            destinationOrder.set_partner(partner);
-            destinationOrder.updatePricelist(partner);
-        }
+        this.setPartnerToRefundOrder(partner, destinationOrder);
 
         if (this.pos.get_order().cid !== destinationOrder.cid) {
             this.pos.set_order(destinationOrder);
         }
 
         this.pos.closeScreen();
+    }
+    setPartnerToRefundOrder(partner, destinationOrder) {
+        if (partner && !destinationOrder.get_partner()) {
+            destinationOrder.set_partner(partner);
+        }
     }
     //#endregion
     //#region PUBLIC METHODS
