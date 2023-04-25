@@ -292,6 +292,11 @@ $o-wblog-loader-size: 50px;
         #o_wblog_sidebar .oe_structure:empty {
             display: none;
         }
+
+        // Prevent users from using the select in the sidebar during edit.
+        .o_wblog_sidebar_block select[name="archive"] {
+            pointer-events: none;
+        }
     }
 }
 
