@@ -157,15 +157,20 @@ def test_cycle(args):
 
 def test_uninstall(args):
     """ Tries to uninstall/reinstall one ore more modules"""
-    domain = [('name', 'in', args.uninstall.split(',')), ('state', '=', 'installed')]
-    with odoo.registry(args.database).cursor() as cr:
-        env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
-        modules = env['ir.module.module'].search(domain)
-        modules_todo = [(module.id, module.name) for module in modules]
+    for module_name in args.uninstall.split(','):
+        with odoo.registry(args.database).cursor() as cr:
+            env = odoo.api.Environment(cr, odoo.SUPERUSER_ID, {})
+            module = env['ir.module.module'].search([('name', '=', module_name)])
+            module_id, module_state = module.id, module.state
 
-    for module_id, module_name in modules_todo:
-        uninstall(args.database, module_id, module_name)
-        if args.reinstall and module_name not in INSTALL_BLACKLIST:
+        if module_state == 'installed':
+            uninstall(args.database, module_id, module_name)
+            if args.reinstall and module_name not in INSTALL_BLACKLIST:
+                install(args.database, module_id, module_name)
+        elif module_state:
+            _logger.warning("Module %r is not installed", module_name)
+        else:
+            _logger.warning("Module %r does not exist", module_name)
 
 
 def test_standalone(args):
