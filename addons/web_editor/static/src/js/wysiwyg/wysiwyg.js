@@ -22,6 +22,7 @@ import Link from "wysiwyg.widgets.Link";
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "web_editor.utils";
 import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
+import { EmojiPickerWrapper } from '@web_editor/components/emoji_popover/emoji_popover'
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
@@ -39,6 +40,7 @@ const isBlock = OdooEditorLib.isBlock;
 const rgbToHex = OdooEditorLib.rgbToHex;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const closestElement = OdooEditorLib.closestElement;
+const closestBlock = OdooEditorLib.closestBlock;
 const setSelection = OdooEditorLib.setSelection;
 const endPos = OdooEditorLib.endPos;
 const hasValidSelection = OdooEditorLib.hasValidSelection;
@@ -1430,6 +1432,21 @@ const Wysiwyg = Widget.extend({
         // component is mounted on the global document.
         return this.mediaDialogWrapper.mount(document.body);
     },
+
+    showEmojiPicker() {
+        const targetEl = this.odooEditor.document.getSelection();
+        const closest = closestBlock(targetEl.anchorNode);
+        const restoreSelection = preserveCursor(this.odooEditor.document);
+        const emojiPicker = new ComponentWrapper(this, EmojiPickerWrapper, {
+            targetEl: closest,
+            onSelect: (str) => {
+                restoreSelection();
+                this.odooEditor.execCommand('insert', str);
+            }
+        });
+        emojiPicker.mount(closest);
+    },
+
     /**
      * Sets custom CSS Variables on the snippet menu element.
      * Used for color previews and color palette to get the color
@@ -2262,6 +2279,16 @@ const Wysiwyg = Widget.extend({
                         setTimeout(() => {
                             $(".o_link_dialog .link-style[value=primary]").click();
                         }, 150);
+                    },
+                },
+                {
+                    category: _t('Widget'),
+                    name: _t('Emoji'),
+                    priority: 70,
+                    description: _t('Add an emoji'),
+                    fontawesome: 'fa-smile-o',
+                    callback: () => {
+                        this.showEmojiPicker();
                     },
                 },
             );

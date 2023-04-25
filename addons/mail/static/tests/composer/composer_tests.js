@@ -96,7 +96,7 @@ QUnit.test("add an emoji", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😤)");
+    await click(".o-Emoji:contains(😤)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "😤");
 });
 
@@ -122,7 +122,7 @@ QUnit.test("add an emoji after some text", async (assert) => {
     assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla");
 
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤑)");
+    await click(".o-Emoji:contains(🤑)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla🤑");
 });
 
@@ -138,7 +138,7 @@ QUnit.test("add emoji replaces (keyboard) text selection", async (assert) => {
     // simulate selection of all the content by keyboard
     textarea.setSelectionRange(0, textarea.value.length);
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤠)");
+    await click(".o-Emoji:contains(🤠)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "🤠");
 });
 
@@ -151,7 +151,7 @@ QUnit.test("Cursor is positioned after emoji after adding it", async (assert) =>
     await insertText(".o-mail-Composer-input", "Blabla");
     textarea.setSelectionRange(2, 2);
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤠)");
+    await click(".o-Emoji:contains(🤠)");
     const expectedPos = 2 + "🤠".length;
     assert.strictEqual(textarea.selectionStart, expectedPos);
     assert.strictEqual(textarea.selectionEnd, expectedPos);
@@ -171,7 +171,7 @@ QUnit.test("selected text is not replaced after cancelling the selection", async
     $(".o-mail-Discuss-content")[0].click();
     await nextTick();
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(🤠)");
+    await click(".o-Emoji:contains(🤠)");
     assert.strictEqual($(".o-mail-Composer-input").val(), "Blabla🤠");
 });
 
@@ -204,9 +204,9 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[aria-label='Emojis']");
-        await click(".o-mail-Emoji:contains(👺)");
+        await click(".o-Emoji:contains(👺)");
         await click("button[aria-label='Emojis']");
-        assert.containsOnce($, ".o-mail-EmojiPicker");
+        assert.containsOnce($, ".o-EmojiPicker");
     }
 );
 
@@ -216,10 +216,10 @@ QUnit.test("keep emoji picker scroll value when re-opening it", async (assert) =
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
+    $(".o-EmojiPicker-content")[0].scrollTop = 150;
     await click("button[aria-label='Emojis']");
     await click("button[aria-label='Emojis']");
-    assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 150);
+    assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 150);
 });
 
 QUnit.test("reset emoji picker scroll value after an emoji is picked", async (assert) => {
@@ -228,10 +228,10 @@ QUnit.test("reset emoji picker scroll value after an emoji is picked", async (as
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[aria-label='Emojis']");
-    $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
-    await click(".o-mail-Emoji:contains(😎)");
+    $(".o-EmojiPicker-content")[0].scrollTop = 150;
+    await click(".o-Emoji:contains(😎)");
     await click("button[aria-label='Emojis']");
-    assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 0);
+    assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 0);
 });
 
 QUnit.test(
@@ -252,19 +252,19 @@ QUnit.test(
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
-        $(".o-mail-EmojiPicker-content")[0].scrollTop = 150;
+        $(".o-EmojiPicker-content")[0].scrollTop = 150;
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
-        $(".o-mail-EmojiPicker-content")[0].scrollTop = 200;
+        $(".o-EmojiPicker-content")[0].scrollTop = 200;
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("button[aria-label='Emojis']");
-        assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 150);
+        assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 150);
 
         await triggerEvent(getFixture(), null, "mousedown");
         await click("[title='Add a Reaction']");
-        assert.strictEqual($(".o-mail-EmojiPicker-content")[0].scrollTop, 200);
+        assert.strictEqual($(".o-EmojiPicker-content")[0].scrollTop, 200);
     }
 );
 
@@ -370,7 +370,7 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner ");
 
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😊)");
+    await click(".o-Emoji:contains(😊)");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "@TestPartner 😊");
 });
 
@@ -421,7 +421,7 @@ QUnit.test("add an emoji after a channel mention", async (assert) => {
 
     // select emoji
     await click("button[aria-label='Emojis']");
-    await click(".o-mail-Emoji:contains(😊)");
+    await click(".o-Emoji:contains(😊)");
     assert.strictEqual($(".o-mail-Composer-input").val().replace(/\s/, " "), "#General 😊");
 });
 

@@ -85,8 +85,6 @@ Help your customers with this chat, and analyse their feedback.
             'mail/static/src/core/**/*',
             'mail/static/src/core_ui/**/*',
             'mail/static/src/utils/**/*',
-            'mail/static/src/emoji_picker/**/*',
-            ('remove', 'mail/static/src/emoji_picker/emoji_data.js'),
             'mail/static/src/attachments/**/*',
             'mail/static/src/composer/**/*',
             'mail/static/src/dropzone/**/*',

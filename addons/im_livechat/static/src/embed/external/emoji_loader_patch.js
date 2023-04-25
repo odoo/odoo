@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { loader } from "@mail/emoji_picker/emoji_picker";
+import { loader } from "@web/core/emoji_picker/emoji_picker";
 
 import { loadBundle } from "@web/core/assets";
 import { patch } from "@web/core/utils/patch";
