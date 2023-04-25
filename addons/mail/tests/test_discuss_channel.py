@@ -6,7 +6,7 @@ from datetime import datetime
 from unittest.mock import patch
 
 from odoo import Command, fields
-from odoo.addons.mail.models.discuss_channel import channel_avatar, group_avatar
+from odoo.addons.mail.models.discuss.discuss_channel import channel_avatar, group_avatar
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.mail.tests.common import MailCommon
 from odoo.exceptions import AccessError, UserError

@@ -34,10 +34,6 @@ from . import mail_tracking_value
 from . import mail_template
 
 # discuss
-from . import discuss_channel_member
-from . import discuss_channel_rtc_session
-from . import discuss_channel
-from . import mail_guest
 from . import mail_ice_server
 from . import mail_shortcode
 from . import res_users_settings
@@ -55,10 +51,13 @@ from . import ir_model
 from . import ir_model_fields
 from . import ir_ui_view
 from . import ir_qweb
-from . import ir_websocket
 from . import res_company
 from . import res_config_settings
-from . import res_partner
 from . import res_users
-from . import res_groups
 from . import update
+
+# after mail specifically as discuss module depends on mail
+from . import discuss
+
+# discuss_channel_member must be loaded first
+from . import res_partner

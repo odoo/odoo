@@ -20,8 +20,6 @@ class Partner(models.Model):
     parent_id = fields.Many2one(tracking=3)
     user_id = fields.Many2one(tracking=4)
     vat = fields.Char(tracking=5)
-    # channels
-    channel_ids = fields.Many2many('discuss.channel', 'discuss_channel_member', 'partner_id', 'channel_id', string='Channels', copy=False)
     # tracked field used for chatter logging purposes
     # we need this to be readable inline as tracking messages use inline HTML nodes
     contact_address_inline = fields.Char(compute='_compute_contact_address_inline', string='Inlined Complete Address', tracking=True)
@@ -264,71 +262,34 @@ class Partner(models.Model):
         ], limit=100)
         return notifications.mail_message_id._message_notification_format()
 
-    def _get_channels_as_member(self):
-        """Returns the channels of the partner."""
-        self.ensure_one()
-        channels = self.env['discuss.channel']
-        # get the channels and groups
-        channels |= self.env['discuss.channel'].search([
-            ('channel_type', 'in', ('channel', 'group')),
-            ('channel_partner_ids', 'in', [self.id]),
-        ])
-        # get the pinned direct messages
-        channels |= self.env['discuss.channel'].search([
-            ('channel_type', '=', 'chat'),
-            ('channel_member_ids', 'in', self.env['discuss.channel.member'].sudo()._search([
-                ('partner_id', '=', self.id),
-                ('is_pinned', '=', True),
-            ])),
-        ])
-        return channels
+    @api.model
+    def get_mention_suggestions(self, search, limit=8):
+        """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
+            Prioritize partners that are also (internal) users, and then extend the research to all partners.
+            The return format is a list of partner data (as per returned by `mail_partner_format()`).
+        """
+        domain = self._get_mention_suggestions_domain(search)
+        partners = self._search_mention_suggestions(domain, limit)
+        return list(partners.mail_partner_format().values())
 
     @api.model
-    def search_for_channel_invite(self, search_term, channel_id=None, limit=30):
-        """ Returns partners matching search_term that can be invited to a channel.
-        If the channel_id is specified, only partners that can actually be invited to the channel
-        are returned (not already members, and in accordance to the channel configuration).
-        """
-        domain = expression.AND([
+    def _get_mention_suggestions_domain(self, search):
+        return expression.AND([
             expression.OR([
-                [('name', 'ilike', search_term)],
-                [('email', 'ilike', search_term)],
+                [('name', 'ilike', search)],
+                [('email', 'ilike', search)],
             ]),
             [('active', '=', True)],
             [('type', '!=', 'private')],
-            [('user_ids', '!=', False)],
-            [('user_ids.active', '=', True)],
-            [('user_ids.share', '=', False)],
         ])
-        if channel_id:
-            channel = self.env['discuss.channel'].search([('id', '=', int(channel_id))])
-            domain = expression.AND([domain, [('channel_ids', 'not in', channel.id)]])
-            if channel.group_public_id:
-                domain = expression.AND([domain, [('user_ids.groups_id', 'in', channel.group_public_id.id)]])
-        query = self.env['res.partner']._search(domain, order='name, id')
-        query.order = 'LOWER("res_partner"."name"), "res_partner"."id"'  # bypass lack of support for case insensitive order in search()
-        query.limit = int(limit)
-        return {
-            'count': self.env['res.partner'].search_count(domain),
-            'partners': list(self.env['res.partner'].browse(query).mail_partner_format().values()),
-        }
 
     @api.model
-    def get_mention_suggestions(self, search, limit=8, channel_id=None):
-        """ Return 'limit'-first partners' such that the name or email matches a 'search' string.
-            Prioritize partners that are also (internal) users, and then extend the research to all partners.
-            If channel_id is given, only members of this channel are returned.
-            The return format is a list of partner data (as per returned by `mail_partner_format()`).
-        """
-        search_dom = expression.OR([[('name', 'ilike', search)], [('email', 'ilike', search)]])
-        search_dom = expression.AND([[('active', '=', True), ('type', '!=', 'private')], search_dom])
-        if channel_id:
-            search_dom = expression.AND([[('channel_ids', 'in', channel_id)], search_dom])
-        domain_is_user = expression.AND([[('user_ids', '!=', False), ('user_ids.active', '=', True)], search_dom])
+    def _search_mention_suggestions(self, domain, limit):
+        domain_is_user = expression.AND([[('user_ids', '!=', False)], [('user_ids.active', '=', True)], domain])
         priority_conditions = [
             expression.AND([domain_is_user, [('partner_share', '=', False)]]),  # Search partners that are internal users
             domain_is_user,  # Search partners that are users
-            search_dom,  # Search partners that are not users
+            domain,  # Search partners that are not users
         ]
         partners = self.env['res.partner']
         for domain in priority_conditions:
@@ -340,14 +301,7 @@ class Partner(models.Model):
             # really slow.
             query = self._search(expression.AND([[('id', 'not in', partners.ids)], domain]), limit=remaining_limit)
             partners |= self.browse(query)
-        partners_format = partners.mail_partner_format()
-        if channel_id:
-            member_by_partner = {member.partner_id: member for member in self.env['discuss.channel.member'].search([('channel_id', '=', channel_id), ('partner_id', 'in', partners.ids)])}
-            for partner in partners:
-                partners_format.get(partner)['persona'] = {
-                    'channelMembers': [('insert', member_by_partner.get(partner)._discuss_channel_member_format(fields={'id': True, 'channel': {'id'}, 'persona': {'partner': {'id'}}}).get(member_by_partner.get(partner)))],
-                }
-        return list(partners_format.values())
+        return partners
 
     @api.model
     def im_search(self, name, limit=20, excluded_ids=None):
