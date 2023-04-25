@@ -235,6 +235,7 @@ export class HtmlField extends Component {
             value: this.props.record.data[this.props.name],
             autostart: false,
             onAttachmentChange: this._onAttachmentChange.bind(this),
+            onDblClickEditableMedia: this._onDblClickEditableMedia.bind(this),
             onWysiwygBlur: this._onWysiwygBlur.bind(this),
             ...wysiwygOptions,
             ...dynamicPlaceholderOptions,
@@ -569,6 +570,12 @@ export class HtmlField extends Component {
                 ids: attachment,
             },
         });
+    }
+    _onDblClickEditableMedia(ev) {
+        const el = ev.target;
+        if (el.nodeName === 'IMG' && el.src) {
+            this.wysiwyg.showImageFullscreen(el.src);
+        }
     }
     _onWysiwygBlur() {
         this.commitChanges();

@@ -25,6 +25,8 @@ import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
 import { debounce } from "@web/core/utils/timing";
+import { registry } from "@web/core/registry";
+import { FileViewer } from "@web/core/file_viewer/file_viewer";
 
 var _t = core._t;
 const QWeb = core.qweb;
@@ -67,6 +69,8 @@ const PTP_CLIENT_DISCONNECTED_STATES = [
 
 // this is a local cache for ice server descriptions
 let ICE_SERVERS = null;
+
+let fileViewerId = 0;
 
 const Wysiwyg = Widget.extend({
     defaultOptions: {
@@ -306,29 +310,17 @@ const Wysiwyg = Widget.extend({
 
         this.$editable.on('click', '.o_image, .media_iframe_video', e => e.preventDefault());
         this.showTooltip = true;
-        this.$editable.on('dblclick', mediaSelector, function () {
-            if (this.isContentEditable || (this.parentElement && this.parentElement.isContentEditable)) {
-                self.showTooltip = false;
+        this.$editable.on('dblclick', mediaSelector, ev => {
+            const target = ev.target;
+            if (target.isContentEditable || (target.parentElement && target.parentElement.isContentEditable)) {
+                this.showTooltip = false;
 
-                const selection = self.odooEditor.document.getSelection();
-                const anchorNode = selection.anchorNode;
-                if (isProtected(anchorNode)) {
-                    return;
-                }
-
-                const $el = $(this);
-                let params = {node: this};
-                $el.selectElement();
-
-                if (!$el.parent().hasClass('o_stars')) {
-                    // Waiting for all the options to be initialized before
-                    // opening the media dialog and only if the media has not
-                    // been deleted in the meantime.
-                    self.waitForEmptyMutexAction().then(() => {
-                        if ($el[0].parentElement) {
-                            self.openMediaDialog(params);
-                        }
-                    });
+                if (!isProtected(this.odooEditor.document.getSelection().anchorNode)) {
+                    if (this.options.onDblClickEditableMedia && target.nodeName === 'IMG' && target.src) {
+                        this.options.onDblClickEditableMedia(ev);
+                    } else {
+                        this._onDblClickEditableMedia(ev);
+                    }
                 }
             }
         });
@@ -1366,6 +1358,33 @@ const Wysiwyg = Widget.extend({
         }
     },
     /**
+     * Take an image's URL and display it in a fullscreen viewer.
+     *
+     * @todo should use `useFileViewer` instead once Wysiwyg becomes an Owl Component.
+     * @param {string} url
+     */
+    showImageFullscreen(url) {
+        const viewerId = `web.file_viewer${fileViewerId++}`;
+        registry.category("main_components").add(viewerId, {
+            Component: FileViewer,
+            props: {
+                files: [{
+                        isImage: true,
+                        isViewable: true,
+                        displayName: url,
+                        defaultSource: url,
+                        downloadUrl: url,
+                }],
+                startIndex: 0,
+                close: () => {
+                    registry.category('main_components').remove(viewerId);
+                },
+            },
+        });
+        this.odooEditor.document.getSelection()?.removeAllRanges();
+        this.odooEditor.editable.blur();
+    },
+    /**
      * Open the media dialog.
      *
      * Used to insert or change image, icon, document and video.
@@ -1535,6 +1554,12 @@ const Wysiwyg = Widget.extend({
         if (!options.snippets) {
             $toolbar.find('#justify, #media-insert').remove();
         }
+        $toolbar.find('#image-fullscreen').click(() => {
+            if (!this.lastMediaClicked?.src) {
+                return;
+            }
+            this.showImageFullscreen(this.lastMediaClicked.src);
+    })
         $toolbar.find('#media-insert, #media-replace, #media-description').click(openTools);
         $toolbar.find('#create-link').click(openTools);
         $toolbar.find('#image-shape div, #fa-spin').click(e => {
@@ -1877,6 +1902,7 @@ const Wysiwyg = Widget.extend({
         const isInMedia = $target.is(mediaSelector) && !$target.parent().hasClass('o_stars') && e.target &&
             (e.target.isContentEditable || (e.target.parentElement && e.target.parentElement.isContentEditable));
         this.toolbar.$el.find([
+            '#image-preview',
             '#image-shape',
             '#image-width',
             '#image-padding',
@@ -2469,6 +2495,20 @@ const Wysiwyg = Widget.extend({
         this.trigger_up('attachment_changed', attachment);
         if (this.options.onAttachmentChange) {
             this.options.onAttachmentChange(attachment);
+        }
+    },
+    _onDblClickEditableMedia(ev) {
+        const $el = $(ev.target);
+        $el.selectElement();
+        if (!$el.parent().hasClass('o_stars')) {
+            // Waiting for all the options to be initialized before
+            // opening the media dialog and only if the media has not
+            // been deleted in the meantime.
+            this.waitForEmptyMutexAction().then(() => {
+                if ($el[0].parentElement) {
+                    this.openMediaDialog({ node: ev.target });
+                }
+            });
         }
     },
     _onSelectionChange() {
