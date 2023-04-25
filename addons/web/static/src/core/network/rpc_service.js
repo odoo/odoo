@@ -61,8 +61,9 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
         request.addEventListener("load", () => {
             if (request.status === 502) {
                 // If Odoo is behind another server (eg.: nginx)
-                bus.trigger("RPC:RESPONSE", { data, settings });
-                reject(new ConnectionLostError(url));
+                const error = new ConnectionLostError(url);
+                bus.trigger("RPC:RESPONSE", { data, settings, error });
+                reject(error);
                 return;
             }
             let params;
@@ -71,21 +72,24 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
             } catch {
                 // the response isn't json parsable, which probably means that the rpc request could
                 // not be handled by the server, e.g. PoolError('The Connection Pool Is Full')
-                bus.trigger("RPC:RESPONSE", { data, settings });
-                return reject(new ConnectionLostError(url));
+                const error = new ConnectionLostError(url);
+                bus.trigger("RPC:RESPONSE", { data, settings, error });
+                return reject(error);
             }
             const { error: responseError, result: responseResult } = params;
-            bus.trigger("RPC:RESPONSE", { data, settings });
-            if (!responseError) {
+            if (!params.error) {
+                bus.trigger("RPC:RESPONSE", { data, settings, result: params.result });
                 return resolve(responseResult);
             }
             const error = makeErrorFromResponse(responseError);
+            bus.trigger("RPC:RESPONSE", { data, settings, error });
             reject(error);
         });
         // handle failure
         request.addEventListener("error", () => {
-            bus.trigger("RPC:RESPONSE", { data, settings });
-            reject(new ConnectionLostError(url));
+            const error = new ConnectionLostError(url);
+            bus.trigger("RPC:RESPONSE", { data, settings, error });
+            reject(error);
         });
         // configure and send request
         request.open("POST", url);
@@ -100,9 +104,10 @@ export function jsonrpc(env, rpcId, url, params, settings = {}) {
         if (request.abort) {
             request.abort();
         }
-        bus.trigger("RPC:RESPONSE", { data, settings });
+        const error = new ConnectionAbortedError("XmlHttpRequestError abort");
+        bus.trigger("RPC:RESPONSE", { data, settings, error });
         if (rejectError) {
-            rejectFn(new ConnectionAbortedError("XmlHttpRequestError abort"));
+            rejectFn(error);
         }
     };
     return promise;

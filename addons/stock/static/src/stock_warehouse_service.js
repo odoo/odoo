@@ -8,8 +8,9 @@ registry.category("services").add("stock_warehouse", {
     dependencies: ["action"],
     start(env, { action }) {
         env.bus.addEventListener("RPC:RESPONSE", (ev) => {
-            const { model, method } = ev.detail.data.params;
-            if (model === "stock.warehouse") {
+            const { data, error } = ev.detail;
+            const { model, method } = data.params;
+            if (!error && model === "stock.warehouse") {
                 if (UPDATE_METHODS.includes(method) && !browser.localStorage.getItem("running_tour")) {
                     action.doAction("reload_context");
                 }

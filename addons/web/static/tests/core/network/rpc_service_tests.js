@@ -197,15 +197,17 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a simple rpc", async 
     });
     env.bus.addEventListener("RPC:RESPONSE", (ev) => {
         rpcIdsResponse.push(ev.detail.data.id);
-        const silent = ev.detail.settings.silent;
-        assert.step("RPC:RESPONSE" + (silent ? "(silent)" : ""));
+        const silent = ev.detail.settings.silent ? "(silent)" : "";
+        const success = "result" in ev.detail ? "(ok)" : "";
+        const fail = "error" in ev.detail ? "(ko)" : "";
+        assert.step("RPC:RESPONSE" + silent + success + fail);
     });
     await env.services.rpc("/test/");
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
-    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
+    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE(ok)"]);
 
     await env.services.rpc("/test/", {}, { silent: true });
-    assert.verifySteps(["RPC:REQUEST(silent)", "RPC:RESPONSE(silent)"]);
+    assert.verifySteps(["RPC:REQUEST(silent)", "RPC:RESPONSE(silent)(ok)"]);
 
     unpatch(browser, "mock.xhr");
 });
@@ -226,21 +228,24 @@ QUnit.test("check trigger RPC:REQUEST and RPC:RESPONSE for a rpc with an error",
     });
     const rpcIdsRequest = [];
     const rpcIdsResponse = [];
-    env.bus.addEventListener("RPC:REQUEST", (rpcId) => {
-        rpcIdsRequest.push(rpcId);
+    env.bus.addEventListener("RPC:REQUEST", (ev) => {
+        rpcIdsRequest.push(ev);
         assert.step("RPC:REQUEST");
     });
-    env.bus.addEventListener("RPC:RESPONSE", (rpcId) => {
-        rpcIdsResponse.push(rpcId);
-        assert.step("RPC:RESPONSE");
+    env.bus.addEventListener("RPC:RESPONSE", (ev) => {
+        rpcIdsResponse.push(ev);
+        const silent = ev.detail.settings.silent ? "(silent)" : "";
+        const success = "result" in ev.detail ? "(ok)" : "";
+        const fail = "error" in ev.detail ? "(ko)" : "";
+        assert.step("RPC:RESPONSE" + silent + success + fail);
     });
     try {
         await env.services.rpc("/test/");
     } catch {
-        assert.ok(true);
+        assert.step("ok");
     }
     assert.strictEqual(rpcIdsRequest.toString(), rpcIdsResponse.toString());
-    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE"]);
+    assert.verifySteps(["RPC:REQUEST", "RPC:RESPONSE(ko)", "ok"]);
     unpatch(browser, "mock.xhr");
 });
 

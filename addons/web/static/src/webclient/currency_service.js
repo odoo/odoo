@@ -18,8 +18,9 @@ export const currencyService = {
             Object.assign(currencies, result);
         }
         env.bus.addEventListener("RPC:RESPONSE", (ev) => {
-            const { model, method } = ev.detail.data.params;
-            if (model === "res.currency" && UPDATE_METHODS.includes(method)) {
+            const { data, error } = ev.detail;
+            const { model, method } = data.params;
+            if (!error && model === "res.currency" && UPDATE_METHODS.includes(method)) {
                 reloadCurrencies();
             }
         });
