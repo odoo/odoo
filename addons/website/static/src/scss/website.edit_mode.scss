@@ -10,7 +10,7 @@ $-editor-messages-margin-x: 2%;
         font-size: 20px;
     }
     // Show the default editor message only for "empty" elements
-    &:not(:empty), &:not(:only-child) {
+    &:not(:empty) {
         &[data-editor-message-default]:before {
             content: none;
         }
@@ -91,8 +91,13 @@ $-editor-messages-margin-x: 2%;
                 padding: 12px 0px;
             }
 
-            &:not(:only-child)::before {
-                font-size: 16px;
+            &:not(:only-child) {
+                &::before {
+                    font-size: 16px;
+                }
+                &[data-editor-message-default]::before {
+                    content: none;
+                }
             }
         }
 
