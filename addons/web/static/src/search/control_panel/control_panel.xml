@@ -18,22 +18,38 @@
                     <t t-slot="layout-actions"/>
                 </div>
 
-                <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap align-items-center justify-content-between justify-content-md-end w-100 w-md-auto gap-3 gap-lg-1 gap-xl-3 order-2 order-lg-3">
+                <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap align-items-center justify-content-end w-100 w-md-auto gap-3 gap-lg-1 gap-xl-3 order-2 order-lg-3">
                     <span class="d-none d-xl-block ms-auto"/> <!-- Spacer -->
                     <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap order-2 order-md-1" role="search">
                         <Pager t-props="pagerProps"/>
                     </div>
-                    <nav t-if="env.config.viewSwitcherEntries?.length > 1"
-                         class="o_cp_switch_buttons d-print-none btn-group order-1"
-                         t-att-class="{'w-100 w-sm-auto': env.config.viewSwitcherEntries?.length > 5}">
-                        <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                            <button class="btn btn-secondary o_switch_view "
-                                t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
-                                t-att-data-tooltip="view.name"
-                                t-on-click="() => this.onViewClicked(view.type)"
-                                />
+                    <t t-if="env.config.viewSwitcherEntries?.length > 1">
+                        <t t-if="env.isSmall">
+                            <Dropdown class="'o_cp_switch_buttons order-1 order-md-2'" togglerClass="'btn btn-secondary'" showCaret="true">
+                                <t t-set-slot="toggler">
+                                    <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
+                                    <i class="oi-fw" t-att-class="activeView.icon"/>
+                                </t>
+                                <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                    <DropdownItem onSelected="() => this.onViewClicked(view.type)" class="view.active ? 'selected' : ''">
+                                        <i class="oi-fw" t-att-class="view.icon"/>
+                                        <span class="ms-1" t-out="view.name"/>
+                                    </DropdownItem>
+                                </t>
+                            </Dropdown>
                         </t>
-                    </nav>
+                        <t t-else="">
+                            <nav class="o_cp_switch_buttons d-print-none btn-group order-1 order-md-2">
+                                <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                    <button class="btn btn-secondary o_switch_view "
+                                        t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
+                                        t-att-data-tooltip="view.name"
+                                        t-on-click="() => this.onViewClicked(view.type)"
+                                        />
+                                </t>
+                            </nav>
+                        </t>
+                    </t>
                 </div>
             </div>
         </div>
