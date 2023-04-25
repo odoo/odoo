@@ -631,4 +631,32 @@ QUnit.module("Components", (hooks) => {
         await editInput(target, ".o_domain_leaf_value_input", `["b"]`);
         assert.strictEqual(comp.value, `[("state", "in", ["b"])]`);
     });
+
+    QUnit.test("parse -1", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.value = `[("id", "=", -1)]`;
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`
+            <DomainSelector resModel="'partner'" value="value" readonly="false"/>
+        `;
+        await mountComponent(Parent);
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "-1");
+    });
+
+    QUnit.test("parse 3-1", async (assert) => {
+        class Parent extends Component {
+            setup() {
+                this.value = `[("id", "=", 3-1)]`;
+            }
+        }
+        Parent.components = { DomainSelector };
+        Parent.template = xml`
+            <DomainSelector resModel="'partner'" value="value" readonly="false"/>
+        `;
+        await mountComponent(Parent);
+        assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "undefined");
+    });
 });
