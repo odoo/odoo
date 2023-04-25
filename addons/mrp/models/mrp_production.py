@@ -1372,6 +1372,8 @@ class MrpProduction(models.Model):
         self._set_lot_producing()
         if self.product_id.tracking == 'serial':
             self._set_qty_producing()
+        if self.picking_type_id.auto_print_generated_mrp_lot:
+            return self._autoprint_generated_lot(self.lot_producing_id)
 
     def action_confirm(self):
         self._check_company()
@@ -2667,3 +2669,14 @@ class MrpProduction(models.Model):
                     clean_action(action, self.env)
                     report_actions.append(action)
         return report_actions
+
+    def _autoprint_generated_lot(self, lot_id):
+        self.ensure_one()
+        if self.picking_type_id.generated_mrp_lot_label_to_print == 'pdf':
+            action = self.env.ref("stock.action_report_lot_label").report_action(lot_id.id, config=False)
+            clean_action(action, self.env)
+            return action
+        elif self.picking_type_id.generated_mrp_lot_label_to_print == 'zpl':
+            action = self.env.ref("stock.label_lot_template").report_action(lot_id.id, config=False)
+            clean_action(action, self.env)
+            return action
