@@ -374,6 +374,14 @@ export class GraphModel extends Model {
     }
 
     /**
+     * @protected
+     * @returns {string}
+     */
+    _getDefaultFilterLabel(field) {
+        return this.env._t("Undefined");
+    }
+
+    /**
      * Eventually filters and sort data points.
      * @protected
      * @returns {Object[]}
@@ -383,7 +391,7 @@ export class GraphModel extends Model {
         let processedDataPoints = [];
         if (mode === "line") {
             processedDataPoints = this.dataPoints.filter(
-                (dataPoint) => dataPoint.labels[0] !== this.env._t("Undefined")
+                (dataPoint) => dataPoint.labels[0] !== this._getDefaultFilterLabel(groupBy[0]),
             );
         } else if (mode === "pie") {
             processedDataPoints = this.dataPoints.filter(
@@ -505,7 +513,7 @@ export class GraphModel extends Model {
                     if (type === "boolean") {
                         label = `${val}`; // toUpperCase?
                     } else if (val === false) {
-                        label = this.env._t("Undefined");
+                        label = this._getDefaultFilterLabel(gb);
                     } else if (["many2many", "many2one"].includes(type)) {
                         const [id, name] = val;
                         const key = JSON.stringify([fieldName, name]);
