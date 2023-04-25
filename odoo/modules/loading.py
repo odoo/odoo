@@ -553,6 +553,7 @@ def load_modules(registry, force_demo=False, status=None, update_module=False):
                     if uninstall_hook:
                         py_module = sys.modules['odoo.addons.%s' % (pkg.name,)]
                         getattr(py_module, uninstall_hook)(env)
+                        env.flush_all()
 
                 Module = env['ir.module.module']
                 Module.browse(modules_to_remove.values()).module_uninstall()
