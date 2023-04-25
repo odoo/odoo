@@ -68,12 +68,14 @@ ConfirmationDialog.props = {
     body: String,
     confirm: { type: Function, optional: true },
     confirmLabel: { type: String, optional: true },
+    confirmClass: { type: String, optional: true },
     cancel: { type: Function, optional: true },
     cancelLabel: { type: String, optional: true },
 };
 ConfirmationDialog.defaultProps = {
     confirmLabel: _lt("Ok"),
     cancelLabel: _lt("Cancel"),
+    confirmClass: "btn-primary",
     title: _lt("Confirmation"),
 };
 
