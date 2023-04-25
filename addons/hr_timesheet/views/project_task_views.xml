@@ -243,7 +243,7 @@
             <field name="model">project.task</field>
             <field name="inherit_id" ref="project.view_project_task_pivot"/>
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='stage_id']" position='after'>
+                <xpath expr="//field[@name='planned_hours']" position='after'>
                     <field name="planned_hours" widget="timesheet_uom"/>
                     <field name="remaining_hours" widget="timesheet_uom"/>
                     <field name="effective_hours" widget="timesheet_uom"/>

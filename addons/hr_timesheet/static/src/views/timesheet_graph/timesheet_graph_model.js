@@ -1,13 +1,13 @@
 /** @odoo-module **/
 
-import { GraphModel } from "@web/views/graph/graph_model";
+import { ProjectTaskGraphModel } from "@project/views/project_task_graph/project_task_graph_model";
 
 const FIELDS = [
     'unit_amount', 'effective_hours', 'planned_hours', 'remaining_hours', 'total_hours_spent', 'subtask_effective_hours',
     'overtime', 'number_hours', 'difference', 'timesheet_unit_amount'
 ];
 
-export class hrTimesheetGraphModel extends GraphModel {
+export class hrTimesheetGraphModel extends ProjectTaskGraphModel {
     /**
      * @override
      */
@@ -36,4 +36,4 @@ export class hrTimesheetGraphModel extends GraphModel {
         return super._getProcessedDataPoints(...arguments);
     }
 }
-hrTimesheetGraphModel.services = [...GraphModel.services, "company"];
+hrTimesheetGraphModel.services = [...ProjectTaskGraphModel.services, "company"];

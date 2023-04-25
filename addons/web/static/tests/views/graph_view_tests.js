@@ -65,12 +65,12 @@ function checkDatasets(assert, graph, keys, expectedDatasets) {
     assert.deepEqual(actualValues, expectedDatasets);
 }
 
-function checkLabels(assert, graph, expectedLabels) {
+export function checkLabels(assert, graph, expectedLabels) {
     const labels = getChart(graph).data.labels.map((l) => l.toString());
     assert.deepEqual(labels, expectedLabels);
 }
 
-function checkLegend(assert, graph, expectedLegendLabels) {
+export function checkLegend(assert, graph, expectedLegendLabels) {
     expectedLegendLabels =
         expectedLegendLabels instanceof Array ? expectedLegendLabels : [expectedLegendLabels];
     const chart = getChart(graph);
@@ -124,7 +124,7 @@ function getModeButton(el, mode) {
     return el.querySelector(`.o_graph_button[data-mode="${mode}"`);
 }
 
-async function selectMode(el, mode) {
+export async function selectMode(el, mode) {
     await click(getModeButton(el, mode));
 }
 
@@ -4238,5 +4238,51 @@ QUnit.module("Views", (hooks) => {
         assert.verifySteps(["rendering"]);
         await validateSearch(target);
         assert.verifySteps(["rendering"]);
+    });
+
+    QUnit.test("apply default filter label", async function (assert) {
+        const graphView = registry.category("views").get("graph");
+        class CustomGraphModel extends graphView.Model {
+            _getDefaultFilterLabel(fields) {
+                return "None";
+            }
+        }
+        registry.category("views").add("custom_graph", {
+            ...graphView,
+            Model: CustomGraphModel,
+        });
+
+        const graph = await makeView({
+            serverData,
+            type: "graph",
+            resModel: "foo",
+            arch: `
+                <graph js_class="custom_graph">
+                    <field name="product_id"/>
+                    <field name="color_id"/>
+                </graph>
+            `,
+        });
+
+        checkLabels(assert, graph, ["xphone", "xpad"]);
+        checkLegend(assert, graph, ["None", "red", "Sum"]);
+
+        await selectMode(target, "line");
+
+        checkLabels(assert, graph, ["xphone", "xpad"]);
+        checkLegend(assert, graph, ["None", "red"]);
+
+        await selectMode(target, "pie");
+
+        checkLabels(assert, graph, [
+            "xphone / None",
+            "xphone / red",
+            "xpad / None",
+        ]);
+        checkLegend(assert, graph, [
+            "xphone / None",
+            "xphone / red",
+            "xpad / None",
+        ]);
     });
 });
