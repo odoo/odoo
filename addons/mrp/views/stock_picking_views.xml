@@ -168,6 +168,14 @@
                                 </a>
                             </div>
                         </group>
+                        <group string='Print when "Create new Lot/SN"' groups="stock.group_production_lot">
+                            <label for="auto_print_generated_mrp_lot" string="Lot/SN Label"/>
+                            <div class="o_row">
+                                <field name="auto_print_generated_mrp_lot" string="Lot/SN Label"/>
+                                <label for="generated_mrp_lot_label_to_print" string="Print labels as:" invisible="not auto_print_generated_mrp_lot" class="fw-bold"/>
+                                <field name="generated_mrp_lot_label_to_print" invisible="not auto_print_generated_mrp_lot"/>
+                            </div>
+                        </group>
                     </group>
                 </page>
             </xpath>
