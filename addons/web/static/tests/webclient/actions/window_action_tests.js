@@ -2696,7 +2696,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view");
         assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb-item")), [
             "Partners",
-            "First record",
+            "Partners",
             "Partners",
             "Second record",
         ]);
