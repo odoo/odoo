@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { parse } from "web.field_utils";
+import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { barcodeService } from "@barcodes/barcode_service";
 import { registry } from "@web/core/registry";
 import { EventBus, onWillDestroy, useComponent } from "@odoo/owl";
@@ -109,7 +109,7 @@ class NumberBuffer extends EventBus {
      * @returns {number} float equivalent of the value of buffer
      */
     getFloat() {
-        return parse.float(this.get());
+        return oParseFloat(this.get());
     }
     /**
      * @param {Object} config Use to setup the buffer
@@ -284,8 +284,8 @@ class NumberBuffer extends EventBus {
             }
         } else if (input[0] === "+" && !isNaN(parseFloat(input))) {
             // when input is like '+10', '+50', etc
-            const inputValue = parse.float(input.slice(1));
-            const currentBufferValue = this.state.buffer ? parse.float(this.state.buffer) : 0;
+            const inputValue = oParseFloat(input.slice(1));
+            const currentBufferValue = this.state.buffer ? oParseFloat(this.state.buffer) : 0;
             this.state.buffer = this.component.env.pos.formatFixed(inputValue + currentBufferValue);
         } else if (!isNaN(parseInt(input, 10))) {
             if (this.state.toStartOver) {

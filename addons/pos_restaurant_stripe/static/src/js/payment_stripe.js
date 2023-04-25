@@ -1,8 +1,9 @@
 /** @odoo-module */
 
 import { PaymentStripe } from "@pos_stripe/js/payment_stripe";
+import { patch } from "@web/core/utils/patch";
 
-PaymentStripe.include({
+patch(PaymentStripe.prototype, "pos_restaurant_stripe.PaymentStripe", {
     captureAfterPayment: async function (processPayment, line) {
         // Don't capture if the customer can tip, in that case we
         // will capture later.

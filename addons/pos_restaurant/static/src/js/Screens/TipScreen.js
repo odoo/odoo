@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { parse } from "web.field_utils";
-import { renderToString } from "@web/core/utils/render";
+import { parseFloat } from "@web/views/fields/parsers";
+import { renderToElement } from "@web/core/utils/render";
 import { registry } from "@web/core/registry";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
@@ -27,7 +27,7 @@ export class TipScreen extends Component {
         });
     }
     get overallAmountStr() {
-        const tipAmount = parse.float(this.state.inputTipAmount || "0");
+        const tipAmount = parseFloat(this.state.inputTipAmount || "0");
         const original = this.env.pos.format_currency(this.totalAmount);
         const tip = this.env.pos.format_currency(tipAmount);
         const overall = this.env.pos.format_currency(this.totalAmount + tipAmount);
@@ -47,7 +47,7 @@ export class TipScreen extends Component {
         ];
     }
     async validateTip() {
-        const amount = parse.float(this.state.inputTipAmount) || 0;
+        const amount = parseFloat(this.state.inputTipAmount) || 0;
         const order = this.env.pos.get_order();
         const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
 
@@ -119,7 +119,7 @@ export class TipScreen extends Component {
 
         for (let i = 0; i < receipts.length; i++) {
             const data = receipts[i];
-            var receipt = renderToString("TipReceipt", {
+            var receipt = renderToElement("TipReceipt", {
                 receipt: this.currentOrder.getOrderReceiptEnv().receipt,
                 data: data,
                 total: this.env.pos.format_currency(this.totalAmount),
@@ -134,7 +134,7 @@ export class TipScreen extends Component {
     }
 
     async _printIoT(receipt) {
-        const printResult = await this.hardwareProxy.printer.print_receipt(receipt);
+        const printResult = await this.hardwareProxy.printer.printReceipt(receipt);
         if (!printResult.successful) {
             await this.popup.add(ErrorPopup, {
                 title: printResult.message.title,

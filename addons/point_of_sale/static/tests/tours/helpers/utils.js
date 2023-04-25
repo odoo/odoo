@@ -1,5 +1,4 @@
 /** @odoo-module */
-import config from "web.config";
 
 /**
  * USAGE
@@ -72,7 +71,7 @@ export function getSteps() {
 const methodProxyHandler = {
     apply(target, thisArg, args) {
         const res = target.call(thisArg, ...args);
-        if (config.isDebug()) {
+        if (odoo.debug) {
             // This step is added before the real steps.
             // Very useful when debugging because we know which
             // method call failed and what were the parameters.

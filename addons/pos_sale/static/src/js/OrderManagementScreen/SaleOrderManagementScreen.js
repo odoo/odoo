@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import { sprintf } from "web.utils";
-import { parse } from "web.field_utils";
+import { sprintf } from "@web/core/utils/strings";
+import { parseFloat } from "@web/views/fields/parsers";
 import { useBus, useService } from "@web/core/utils/hooks";
 import { registry } from "@web/core/registry";
 import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
@@ -256,7 +256,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                         startingValue: 0,
                     });
                     if (confirmed) {
-                        down_payment = (down_payment * parse.float(payload)) / 100;
+                        down_payment = (down_payment * parseFloat(payload)) / 100;
                     }
 
                     if (down_payment > sale_order.amount_unpaid) {

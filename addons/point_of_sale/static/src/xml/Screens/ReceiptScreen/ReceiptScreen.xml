@@ -22,7 +22,7 @@
                         <form t-on-submit.prevent="onSendEmail" class="send-email">
                             <div class="input-email">
                                 <input type="email" placeholder="Send receipt by email" t-model="orderUiState.inputEmail" />
-                                <button class="send" t-att-class="{ highlight: is_email(orderUiState.inputEmail) }" type="submit">
+                                <button class="send" t-att-class="{ highlight: isValidEmail() }" type="submit">
                                     <i class="fa fa-paper-plane" aria-hidden="true" t-ref="order-mail-receipt-button" />
                                 </button>
                             </div>

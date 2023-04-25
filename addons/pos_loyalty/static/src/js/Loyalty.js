@@ -1,15 +1,18 @@
 /** @odoo-module **/
 
 import { Order, Orderline, PosGlobalState } from "@point_of_sale/js/models";
+import { Mutex } from "@web/core/utils/concurrency";
 import concurrency from "web.concurrency";
-import { round_decimals, round_precision } from "web.utils";
-import core from "web.core";
+import { roundDecimals, roundPrecision } from "@web/core/utils/numbers";
+import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 
-const _t = core._t;
+// FIXME: Perhaps MutexedDropPrevious can be replaced by the new KeepLast.
+// > This might require thorough investigation on how _updateRewards work.
+// > If successful, we can fully get rid of the legacy concurrency module.
 const dropPrevious = new concurrency.MutexedDropPrevious(); // Used for queuing reward updates
-const mutex = new concurrency.Mutex(); // Used for sequential cache updates
+const mutex = new Mutex(); // Used for sequential cache updates
 
 const COUPON_CACHE_MAX_SIZE = 4096; // Maximum coupon cache size, prevents long run memory issues and (to some extent) invalid data
 
@@ -743,7 +746,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                 if (rule.reward_point_mode === "order") {
                     res += rule.reward_point_amount;
                 } else if (rule.reward_point_mode === "money") {
-                    res -= round_precision(
+                    res -= roundPrecision(
                         rule.reward_point_amount * line.get_price_with_tax(),
                         0.01
                     );
@@ -934,7 +937,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                             if (program.program_type === "gift_card") {
                                 price_to_use = line.price;
                             }
-                            const pointsPerUnit = round_precision(
+                            const pointsPerUnit = roundPrecision(
                                 (rule.reward_point_amount * price_to_use) / line.get_quantity(),
                                 0.01
                             );
@@ -960,7 +963,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                         points += rule.reward_point_amount;
                     } else if (rule.reward_point_mode === "money") {
                         // NOTE: unlike in sale_loyalty this performs a round half-up instead of round down
-                        points += round_precision(
+                        points += roundPrecision(
                             rule.reward_point_amount * orderedProductPaid,
                             0.01
                         );
@@ -1460,7 +1463,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
                         if (rule.reward_point_mode === "order") {
                             result += rule.reward_point_amount;
                         } else if (rule.reward_point_mode === "money") {
-                            result += round_precision(
+                            result += roundPrecision(
                                 rule.reward_point_amount * product.lst_price,
                                 0.01
                             );
@@ -1545,7 +1548,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
         return [
             {
                 product: reward.discount_line_product_id,
-                price: -round_decimals(
+                price: -roundDecimals(
                     product.get_price(this.pricelist, freeQuantity),
                     this.pos.currency.decimal_places
                 ),

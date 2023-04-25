@@ -2,7 +2,7 @@
 
 import core from "web.core";
 import portalChatter from "portal.chatter";
-import utils from "web.utils";
+import { roundPrecision } from "@web/core/utils/numbers";
 import time from "web.time";
 
 var _t = core._t;
@@ -141,7 +141,7 @@ PortalChatter.include({
             .forEach((rating) => {
                 ratingData["percent"].push({
                     num: self.roundToHalf(rating),
-                    percent: utils.round_precision(result["rating_stats"]["percent"][rating], 0.01),
+                    percent: roundPrecision(result["rating_stats"]["percent"][rating], 0.01),
                 });
             });
         this.set('rating_card_values', ratingData);

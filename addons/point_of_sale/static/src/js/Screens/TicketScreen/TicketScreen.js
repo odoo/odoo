@@ -4,7 +4,8 @@ import { Order } from "@point_of_sale/js/models";
 import { IndependentToOrderScreen } from "@point_of_sale/js/Misc/IndependentToOrderScreen";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { parse, format } from "web.field_utils";
+import { deserializeDateTime } from "@web/core/l10n/dates";
+import { parseFloat } from "@web/views/fields/parsers";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
@@ -18,6 +19,8 @@ import { SearchBar } from "../../Misc/SearchBar";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { onMounted, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
+
+const { DateTime } = luxon;
 
 export class TicketScreen extends IndependentToOrderScreen {
     static template = "TicketScreen";
@@ -203,7 +206,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         if (buffer == null || buffer == "") {
             toRefundDetail.qty = 0;
         } else {
-            const quantity = Math.abs(parse.float(buffer));
+            const quantity = Math.abs(parseFloat(buffer));
             if (quantity > refundableQty) {
                 this.numberBuffer.reset();
                 this.popup.add(ErrorPopup, {
@@ -671,11 +674,11 @@ export class TicketScreen extends IndependentToOrderScreen {
         const idsNotInCache = ordersInfo.filter(
             (orderInfo) => !(orderInfo[0] in this._state.syncedOrders.cache)
         );
-        const idsNotUpToDate = ordersInfo.filter(
-            (orderInfo) =>
-                format.datetime(moment(orderInfo[1]), {}, {}) >
-                format.datetime(moment(this._state.syncedOrders.cacheDate), {}, { timezone: false })
-        );
+        // If no cacheDate, then assume reasonable earlier date.
+        const cacheDate = this._state.syncedOrders.cacheDate || DateTime.fromMillis(0);
+        const idsNotUpToDate = ordersInfo.filter((orderInfo) => {
+            return deserializeDateTime(orderInfo[1]) > cacheDate;
+        });
         const idsToLoad = idsNotInCache.concat(idsNotUpToDate).map((info) => info[0]);
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [idsToLoad]);
@@ -691,7 +694,7 @@ export class TicketScreen extends IndependentToOrderScreen {
                 );
             });
             //Update the datetime indicator of the cache refresh
-            this._state.syncedOrders.cacheDate = new Date();
+            this._state.syncedOrders.cacheDate = DateTime.local();
         }
 
         const ids = ordersInfo.map((info) => info[0]);
