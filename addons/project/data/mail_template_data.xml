@@ -47,7 +47,7 @@
             <t t-else="">
                 Hello,<br/><br/>
             </t>
-            Please take a moment to rate our services related to the task "<strong t-out="object.name or ''">Planning and budget</strong>"
+            Please take a moment to rate our services related to the <strong t-out="object.name or ''">Planning and budget</strong> task
             <t t-if="object._rating_get_operator().name">
                 assigned to <strong t-out="object._rating_get_operator().name or ''">Mitchell Admin</strong>.<br/>
             </t>
@@ -58,7 +58,7 @@
         <tr><td style="text-align: center;">
             <table border="0" cellpadding="0" cellspacing="0" width="590" summary="o_mail_notification" style="width:100%; margin: 32px 0px 32px 0px;">
                 <tr><td style="font-size: 13px;">
-                    <strong>Tell us how you feel about our service</strong><br/>
+                    <strong>Tell us how you feel about our services</strong><br/>
                     <span style="font-size: 12px; opacity: 0.5; color: #454748;">(click on one of these smileys)</span>
                 </td></tr>
                 <tr><td style="font-size: 13px;">
@@ -85,12 +85,25 @@
             </table>
         </td></tr>
         <tr><td valign="top" style="font-size: 13px;">
-            We appreciate your feedback. It helps us to improve continuously.
+            We appreciate your feedback. It helps us improve continuously.
             <t t-if="object.project_id.rating_status == 'stage'">
-                <br/><br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey has been sent because your task has been moved to the stage <b t-out="object.stage_id.name or ''">In progress</b></span>
+                <br/><span style="margin: 0; font-size: 12px; opacity: 0.5; color: #454748;">This satisfaction survey has been sent because your task has been moved to the <b t-out="object.stage_id.name or ''">In progress</b> stage</span>
             </t>
             <t t-if="object.project_id.rating_status == 'periodic'">
-                <br/><span style="margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;">This customer survey is sent <b t-out="object.project_id.rating_status_period or ''">Weekly</b> as long as the task is in the <b t-out="object.stage_id.name or ''">In progress</b> stage.</span>
+                <br/><span style="margin: 0; font-size: 12px; opacity: 0.5; color: #454748;">This satisfaction survey is sent <b t-out="object.project_id.rating_status_period or ''">weekly</b> as long as the task is in the <b t-out="object.stage_id.name or ''">In progress</b> stage.</span>
+            </t>
+        </td></tr>
+        <tr><td><br/>Best regards,</td></tr>
+        <tr><td>
+           <t t-out="object.project_id.company_id.name or ''">YourCompany</t>
+        </td></tr>
+        <tr><td style="opacity: 0.5;">
+            <t t-out="object.project_id.company_id.phone or ''">1 650-123-4567</t>
+            <t t-if="object.project_id.company_id.email">
+                | <a t-attf-href="mailto:{{ object.project_id.company_id.email }}" style="text-decoration:none; color: #454748;" t-out="object.project_id.company_id.email or ''">info@yourcompany.com</a>
+            </t>
+            <t t-if="object.project_id.company_id.website">
+                | <a t-attf-href="{{ object.project_id.company_id.website }}" style="text-decoration:none; color: #454748;" t-out="object.project_id.company_id.website or ''">http://www.example.com</a>
             </t>
         </td></tr>
     </tbody>
