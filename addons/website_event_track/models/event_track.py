@@ -72,6 +72,7 @@ class Track(models.Model):
         readonly=False, store=True, tracking=30)
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
+        sanitize_attributes=False,
         readonly=False, store=True)
     partner_function = fields.Char(
         'Job Position', compute='_compute_partner_function',
