@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { useService } from "@web/core/utils/hooks";
-import { renderToString } from "@web/core/utils/render";
+import { renderToElement } from "@web/core/utils/render";
 import { ErrorPopup } from "../Popups/ErrorPopup";
 import { Component } from "@odoo/owl";
 
@@ -24,14 +24,14 @@ export class SaleDetailsButton extends Component {
             "get_sale_details",
             [false, false, false, [this.env.pos.pos_session.id]]
         );
-        const report = renderToString(
+        const report = renderToElement(
             "SaleDetailsReport",
             Object.assign({}, saleDetails, {
                 date: new Date().toLocaleString(),
                 pos: this.env.pos,
             })
         );
-        const { successful, message } = await this.hardwareProxy.printer.print_receipt(report);
+        const { successful, message } = await this.hardwareProxy.printer.printReceipt(report);
         if (!successful) {
             await this.popup.add(ErrorPopup, {
                 title: message.title,

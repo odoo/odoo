@@ -1,9 +1,11 @@
 /** @odoo-module */
-import { Printer } from "@point_of_sale/js/printers";
+
+import { HWPrinter } from "../printer/hw_printer";
 import { EventBus, reactive } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
 import { effect } from "@point_of_sale/utils";
+import { deduceUrl } from "@point_of_sale/js/utils";
 
 /**
  * This object interfaces with the local proxy to communicate to the various hardware devices
@@ -27,7 +29,7 @@ export class HardwareProxy extends EventBus {
         effect(
             (info) => {
                 if (info.status === "connected" && this.printer) {
-                    this.printer.print_receipt();
+                    this.printer.printReceipt();
                 }
             },
             [this.connectionInfo]
@@ -68,7 +70,7 @@ export class HardwareProxy extends EventBus {
     }
 
     connectToPrinter() {
-        this.printer = new Printer(this.host, this.pos);
+        this.printer = new HWPrinter({ rpc: this.rpc, url: this.host });
     }
 
     /**
@@ -88,13 +90,7 @@ export class HardwareProxy extends EventBus {
             return new Promise(() => {});
         }
 
-        const { protocol } = window.location;
-        if (!url.includes("//")) {
-            url = `${protocol}//${url}`;
-        }
-        if (url.indexOf(":", 5) < 0) {
-            url += ":" + (options.port || (protocol === "https:" ? 443 : 8069));
-        }
+        url = deduceUrl(url);
 
         if (await this.checkProxyAvailability(url)) {
             this.host = url;

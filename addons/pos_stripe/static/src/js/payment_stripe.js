@@ -1,48 +1,41 @@
 /** @odoo-module */
 /* global StripeTerminal */
 
-import core from "web.core";
-import rpc from "web.rpc";
+import { _t } from "@web/core/l10n/translation";
 import { PaymentInterface } from "@point_of_sale/js/payment";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { sprintf } from "@web/core/utils/strings";
 
-const _t = core._t;
-
-export const PaymentStripe = PaymentInterface.extend({
-    init: function (pos, payment_method) {
-        this._super(...arguments);
+export class PaymentStripe extends PaymentInterface {
+    setup() {
+        super.setup(...arguments);
         this.createStripeTerminal();
-    },
+    }
 
-    stripeUnexpectedDisconnect: function () {
+    stripeUnexpectedDisconnect() {
         // Include a way to attempt to reconnect to a reader ?
         this._showError(_t("Reader disconnected"));
-    },
+    }
 
-    stripeFetchConnectionToken: async function () {
+    async stripeFetchConnectionToken() {
         // Do not cache or hardcode the ConnectionToken.
         try {
-            const data = await rpc.query(
-                {
-                    model: "pos.payment.method",
-                    method: "stripe_connection_token",
-                },
-                {
-                    silent: true,
-                }
+            const data = await this.pos.env.services.orm.silent.call(
+                "pos.payment.method",
+                "stripe_connection_token",
+                []
             );
             if (data.error) {
                 throw data.error;
             }
             return data.secret;
         } catch (error) {
-            this._showError(error.message.message, 'Fetch Token');
+            this._showError(error.message.message, "Fetch Token");
             this.terminal = false;
-        };
-    },
+        }
+    }
 
-    discoverReaders: async function () {
+    async discoverReaders() {
         const discoverResult = await this.terminal.discoverReaders({});
         if (discoverResult.error) {
             this._showError(sprintf(_t("Failed to discover: %s"), discoverResult.error));
@@ -53,21 +46,21 @@ export const PaymentStripe = PaymentInterface.extend({
             // for the Stripe SDK
             this.pos.discoveredReaders = JSON.stringify(discoverResult.discoveredReaders);
         }
-    },
+    }
 
-    checkReader: async function () {
+    async checkReader() {
         try {
-            if ( !this.terminal ) {
-                let createStripeTerminal = this.createStripeTerminal();
-                if ( !createStripeTerminal ) {
-                    throw _t('Failed to load resource: net::ERR_INTERNET_DISCONNECTED.');
+            if (!this.terminal) {
+                const createStripeTerminal = this.createStripeTerminal();
+                if (!createStripeTerminal) {
+                    throw _t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED.");
                 }
             }
         } catch (error) {
             this._showError(error);
             return false;
         }
-        let line = this.pos.get_order().selected_paymentline;
+        const line = this.pos.get_order().selected_paymentline;
         // Because the reader can only connect to one instance of the SDK at a time.
         // We need the disconnect this reader if we want to use another one
         if (
@@ -87,15 +80,17 @@ export const PaymentStripe = PaymentInterface.extend({
         } else {
             return true;
         }
-    },
+    }
 
-    connectReader: async function () {
+    async connectReader() {
         const line = this.pos.get_order().selected_paymentline;
         const discoveredReaders = JSON.parse(this.pos.discoveredReaders);
         for (const selectedReader of discoveredReaders) {
             if (selectedReader.serial_number == this.payment_method.stripe_serial_number) {
                 try {
-                    let connectResult = await this.terminal.connectReader(selectedReader, {fail_if_in_use: true});
+                    const connectResult = await this.terminal.connectReader(selectedReader, {
+                        fail_if_in_use: true,
+                    });
                     if (connectResult.error) {
                         throw connectResult;
                     }
@@ -107,20 +102,20 @@ export const PaymentStripe = PaymentInterface.extend({
                     } else {
                         this._showError(error);
                     }
-                    line.set_payment_status('retry');
+                    line.set_payment_status("retry");
                     return false;
                 }
             }
         }
         this._showError(
             _.str.sprintf(
-                _t('Stripe readers %s not listed in your account'), 
+                _t("Stripe readers %s not listed in your account"),
                 this.payment_method.stripe_serial_number
             )
         );
-    },
+    }
 
-    collectPayment: async function (amount) {
+    async collectPayment(amount) {
         const line = this.pos.get_order().selected_paymentline;
         const clientSecret = await this.fetchPaymentIntentClientSecret(line.payment_method, amount);
         if (!clientSecret) {
@@ -150,9 +145,9 @@ export const PaymentStripe = PaymentInterface.extend({
                 return true;
             }
         }
-    },
+    }
 
-    createStripeTerminal: function () {
+    createStripeTerminal() {
         try {
             this.terminal = StripeTerminal.create({
                 onFetchConnectionToken: this.stripeFetchConnectionToken.bind(this),
@@ -161,72 +156,62 @@ export const PaymentStripe = PaymentInterface.extend({
             this.discoverReaders();
             return true;
         } catch (error) {
-            this._showError(_t('Failed to load resource: net::ERR_INTERNET_DISCONNECTED.'), error);
+            this._showError(_t("Failed to load resource: net::ERR_INTERNET_DISCONNECTED."), error);
             this.terminal = false;
             return false;
         }
-    },
+    }
 
-    captureAfterPayment: async function (processPayment, line) {
+    async captureAfterPayment(processPayment, line) {
         const capturePayment = await this.capturePayment(processPayment.paymentIntent.id);
         if (capturePayment.charges) {
             line.card_type =
                 capturePayment.charges.data[0].payment_method_details.card_present.brand;
         }
         line.transaction_id = capturePayment.id;
-    },
+    }
 
-    capturePayment: async function (paymentIntentId) {
+    async capturePayment(paymentIntentId) {
         try {
-            const data = await rpc.query(
-                {
-                    model: "pos.payment.method",
-                    method: "stripe_capture_payment",
-                    args: [paymentIntentId],
-                },
-                {
-                    silent: true,
-                }
+            const data = await this.pos.env.services.orm.silent.call(
+                "pos.payment.method",
+                "stripe_capture_payment",
+                [paymentIntentId]
             );
             if (data.error) {
                 throw data.error;
             }
             return data;
         } catch (error) {
-            this._showError(error.message.message, 'Capture Payment');
+            this._showError(error.message.message, "Capture Payment");
             return false;
         }
-    },
+    }
 
-    fetchPaymentIntentClientSecret: async function (payment_method, amount) {
+    async fetchPaymentIntentClientSecret(payment_method, amount) {
         try {
-            const data = await rpc.query(
-                {
-                    model: "pos.payment.method",
-                    method: "stripe_payment_intent",
-                    args: [[payment_method.id], amount],
-                },
-                {
-                    silent: true,
-                }
+            const data = await this.pos.env.services.orm.silent.call(
+                "pos.payment.method",
+                "stripe_payment_intent",
+                [[payment_method.id], amount]
             );
             if (data.error) {
                 throw data.error;
             }
             return data.client_secret;
         } catch (error) {
-            this._showError(error.message.message, 'Fetch Secret');
+            this._showError(error.message.message, "Fetch Secret");
             return false;
         }
-    },
+    }
 
-    send_payment_request: async function (cid) {
+    async send_payment_request(cid) {
         /**
          * Override
          */
-        await this._super.apply(this, arguments);
-        let line = this.pos.get_order().selected_paymentline;
-        line.set_payment_status('waiting');
+        await super.send_payment_request(...arguments);
+        const line = this.pos.get_order().selected_paymentline;
+        line.set_payment_status("waiting");
         try {
             if (await this.checkReader()) {
                 return await this.collectPayment(line.amount);
@@ -235,26 +220,26 @@ export const PaymentStripe = PaymentInterface.extend({
             this._showError(error);
             return false;
         }
-    },
+    }
 
-    send_payment_cancel: async function (order, cid) {
+    async send_payment_cancel(order, cid) {
         /**
          * Override
          */
-        this._super.apply(this, arguments);
+        super.send_payment_cancel(...arguments);
         const line = this.pos.get_order().selected_paymentline;
         const stripeCancel = await this.stripeCancel();
         if (stripeCancel) {
             line.set_payment_status("retry");
             return true;
         }
-    },
+    }
 
-    stripeCancel: async function () {
+    async stripeCancel() {
         if (!this.terminal) {
             return true;
-        } else if (this.terminal.getConnectionStatus() != 'connected') {
-            this._showError(_t('Payment canceled because not reader connected'));
+        } else if (this.terminal.getConnectionStatus() != "connected") {
+            this._showError(_t("Payment canceled because not reader connected"));
             return true;
         } else {
             const cancelCollectPaymentMethod = await this.terminal.cancelCollectPaymentMethod();
@@ -266,11 +251,11 @@ export const PaymentStripe = PaymentInterface.extend({
             }
             return true;
         }
-    },
+    }
 
     // private methods
 
-    _showError: function (msg, title) {
+    _showError(msg, title) {
         if (!title) {
             title = _t("Stripe Error");
         }
@@ -278,5 +263,5 @@ export const PaymentStripe = PaymentInterface.extend({
             title: title,
             body: msg,
         });
-    },
-});
+    }
+}

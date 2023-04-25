@@ -2,7 +2,7 @@
 
 import { _t } from "@web/core/l10n/translation";
 import { sprintf } from "@web/core/utils/strings";
-import { renderToString } from "@web/core/utils/render";
+import { renderToElement } from "@web/core/utils/render";
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { parseFloat, InvalidNumberError } from "@web/views/fields/parsers";
 import { useState } from "@odoo/owl";
@@ -66,7 +66,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             extras,
         ]);
         if (this.hardwareProxy.printer) {
-            const renderedReceipt = renderToString("point_of_sale.CashMoveReceipt", {
+            const renderedReceipt = renderToElement("point_of_sale.CashMoveReceipt", {
                 _receipt: {
                     type,
                     reason,
@@ -77,7 +77,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
                     company: this.pos.globalState.company,
                 },
             });
-            const printResult = await this.hardwareProxy.printer.print_receipt(renderedReceipt);
+            const printResult = await this.hardwareProxy.printer.printReceipt(renderedReceipt);
             if (!printResult.successful) {
                 this.popup.add(ErrorPopup, {
                     title: printResult.message.title,

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderChangeReceipt">
+    <t t-name="OrderChangeReceipt" owl="">
         <div class="pos-receipt">
             <div class="pos-receipt-order-data"><t t-esc="changes.name" /></div>
             <t t-if="changes.floor_name || changes.table_name">
@@ -20,7 +20,7 @@
                     </div>
                     <br />
                     <br />
-                    <t t-foreach="changes.cancelled" t-as="change">
+                    <t t-foreach="changes.cancelled" t-as="change" t-key="change_index">
                         <div class="multiprint-flex">
                             <span class="product-quantity" t-esc="change.quantity"/>
                             <span class="product-name" t-esc="change.name"/>
@@ -45,7 +45,7 @@
                 </div>
                 <br />
                 <br />
-                <t t-foreach="changes.new" t-as="change">
+                <t t-foreach="changes.new" t-as="change" t-key="change_index">
                     <div class="multiprint-flex">
                         <span class="product-quantity" t-esc="change.quantity"/>
                         <span class="product-name" t-esc="change.name"/>

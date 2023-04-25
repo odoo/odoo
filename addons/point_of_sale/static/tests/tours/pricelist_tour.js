@@ -2,8 +2,7 @@
 /* global posmodel */
 
 import { registry } from "@web/core/registry";
-import utils from "web.utils";
-var round_di = utils.round_decimals;
+import { roundDecimals as round_di } from "@web/core/utils/numbers";
 
 function assert(condition, message) {
     if (!condition) {

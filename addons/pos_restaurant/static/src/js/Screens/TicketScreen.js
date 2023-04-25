@@ -2,7 +2,7 @@
 import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScreen";
 import { useAutofocus } from "@web/core/utils/hooks";
 import { patch } from "@web/core/utils/patch";
-import { parse } from "web.field_utils";
+import { parseFloat } from "@web/views/fields/parsers";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
 import { Component, useState } from "@odoo/owl";
 
@@ -57,7 +57,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     async settleTips() {
         // set tip in each order
         for (const order of this.getFilteredOrderList()) {
-            const tipAmount = parse.float(order.uiState.TipScreen.inputTipAmount || "0");
+            const tipAmount = parseFloat(order.uiState.TipScreen.inputTipAmount || "0");
             const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
             if (!serverId) {
                 console.warn(
@@ -164,7 +164,7 @@ export class TipCell extends Component {
         useAutofocus();
     }
     get tipAmountStr() {
-        return this.env.pos.format_currency(parse.float(this.orderUiState.inputTipAmount || "0"));
+        return this.env.pos.format_currency(parseFloat(this.orderUiState.inputTipAmount || "0"));
     }
     onBlur() {
         this.state.isEditing = false;

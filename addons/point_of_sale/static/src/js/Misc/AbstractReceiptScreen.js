@@ -20,8 +20,8 @@ export class AbstractReceiptScreen extends Component {
     }
     async _printReceipt() {
         if (this.hardwareProxy.printer) {
-            const printResult = await this.hardwareProxy.printer.print_receipt(
-                this.orderReceipt.el.innerHTML
+            const printResult = await this.hardwareProxy.printer.printReceipt(
+                this.orderReceipt.el.firstChild
             );
             if (printResult.successful) {
                 return true;
