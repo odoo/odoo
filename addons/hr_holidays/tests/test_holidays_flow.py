@@ -99,17 +99,17 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
                     'holiday_status_id': holiday_status_paid_time_off.id,
                     'number_of_days': 20,
                     'employee_id': self.employee_emp_id,
-                    'state': 'validate',
+                    'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }, {
                     'name': 'Paid Time off for David',
                     'holiday_status_id': holiday_status_paid_time_off.id,
                     'number_of_days': 20,
                     'employee_id': self.ref('hr.employee_admin'),
-                    'state': 'validate',
+                    'state': 'confirm',
                     'date_from': time.strftime('%Y-%m-01'),
                 }
-            ])
+            ]).action_validate()
 
             def _check_holidays_status(holiday_status, ml, lt, rl, vrl):
                 self.assertEqual(holiday_status.max_leaves, ml,
@@ -252,10 +252,10 @@ class TestHolidaysFlow(TestHrHolidaysCommon):
             'holiday_status_id': holiday_status_paid_time_off.id,
             'number_of_days': 20,
             'employee_id': self.ref('hr.employee_admin'),
-            'state': 'validate',
+            'state': 'confirm',
             'date_from': time.strftime('%Y-%m-01'),
             'date_to': time.strftime('%Y-12-31'),
-        })
+        }).action_validate()
 
         leave_vals = {
             'name': 'Sick Time Off',
