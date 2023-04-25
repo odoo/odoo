@@ -1455,7 +1455,7 @@ export class OdooEditor extends EventTarget {
             const parentFragmentTr = closestElement(td, 'tr');
             // Skip the first and the last partially selected TD.
             if (i && !(splitEndTd && i === tds.length - 1)) {
-                if (parentFragmentTr !== currentFragmentTr && currentTr && [...parentFragmentTr.querySelectorAll('td')].every(td => tds.includes(td))) {
+                if (parentFragmentTr && parentFragmentTr !== currentFragmentTr && currentTr && [...parentFragmentTr.querySelectorAll('td')].every(td => tds.includes(td))) {
                     currentTr.after(parentFragmentTr);
                     currentTr = parentFragmentTr;
                     parentFragmentTr.textContent = '';
