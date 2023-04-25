@@ -95,7 +95,7 @@ class SaleOrderLine(models.Model):
             company = self.event_id.company_id or self.env.company
             pricelist = self.order_id.pricelist_id
             if pricelist.discount_policy == "with_discount":
-                total_price = sum([booth.booth_category_id.price_reduce for booth in self.event_booth_pending_ids])
+                total_price = sum([booth.booth_category_id.with_context(pricelist=pricelist.id).price_reduce for booth in self.event_booth_pending_ids])
             else:
                 total_price = sum([booth.price for booth in self.event_booth_pending_ids])
 
