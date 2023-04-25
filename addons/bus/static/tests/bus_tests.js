@@ -101,7 +101,7 @@ QUnit.module('Bus', {
 
         const pyEnv = await startServer();
         const env = await makeTestEnv({ activateMockServer: true });
-        env.services["bus_service"].start();
+        await env.services["bus_service"].start();
         await nextTick();
         env.services['bus_service'].addEventListener('notification', ({ detail: notifications }) => {
             assert.step('notification - ' + notifications.map(notif => notif.payload).toString());
@@ -470,14 +470,20 @@ QUnit.module('Bus', {
 
     QUnit.test("Disconnect on offline, re-connect on online", async function (assert) {
         patchWebsocketWorkerWithCleanup();
+        let websocketConnectedDeferred = makeDeferred();
         const env = await makeTestEnv();
-        env.services["bus_service"].addEventListener("connect", () => assert.step("connect"));
+        env.services["bus_service"].addEventListener("connect", () => {
+            assert.step("connect");
+            websocketConnectedDeferred.resolve();
+            websocketConnectedDeferred = makeDeferred();
+        });
         env.services["bus_service"].addEventListener("disconnect", () => assert.step("disconnect"));
         await env.services["bus_service"].start();
+        await websocketConnectedDeferred;
         window.dispatchEvent(new Event("offline"));
         await nextTick();
         window.dispatchEvent(new Event("online"));
-        await nextTick();
+        await websocketConnectedDeferred;
         assert.verifySteps(["connect", "disconnect", "connect"]);
     });
 
