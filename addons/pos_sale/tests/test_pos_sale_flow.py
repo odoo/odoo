@@ -119,3 +119,45 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(orderline_product_a.move_ids.product_uom_qty, 0)
         # 1 item to deliver for product b.
         self.assertEqual(orderline_product_b.move_ids.product_uom_qty, 1)
+
+    def test_settle_order_with_promotions(self):
+        self.promotion_program = self.env['coupon.program'].create({
+            'name': '50% on current order',
+            'program_type': 'promotion_program',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'discount',
+            'discount_type': 'percentage',
+            'discount_percentage': 50,
+            'discount_apply_on': 'on_order',
+        })
+
+        self.product = self.env['product.product'].create({
+            'name': 'Product',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 200.0,
+            'taxes_id': False,
+        })
+
+        sale_order = self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_2').id,
+            'order_line': [(0, 0, {
+                'product_id': self.product.id,
+                'name': self.product.name,
+                'product_uom_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'price_unit': self.product.lst_price,
+            })],
+        })
+
+        #validate the sale order
+        sale_order.recompute_coupon_lines()
+        sale_order.action_confirm()
+
+        #add the promo program to the pos config
+        self.main_pos_config.write({
+            'use_coupon_programs': True,
+            'promo_program_ids': [(6, 0, [self.promotion_program.id])],
+        })
+        self.main_pos_config.open_session_cb()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderWithPromotions', login="accountman")
