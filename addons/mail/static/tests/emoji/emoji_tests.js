@@ -150,3 +150,21 @@ QUnit.test("first category should be highlight by default", async (assert) => {
     await click("button[aria-label='Emojis']");
     assert.containsOnce($, ".o-mail-EmojiPicker-header .o-mail-Emoji:eq(0).bg-300");
 });
+
+QUnit.test(
+    "selecting an emoji while holding down the Shift key prevents the emoji picker from closing",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const channelId = pyEnv["discuss.channel"].create({ name: "" });
+        const { openDiscuss } = await start();
+        await openDiscuss(channelId);
+        await click("button[aria-label='Emojis']");
+        await afterNextRender(() =>
+            $(".o-mail-EmojiPicker-content .o-mail-Emoji:contains(👺)")[0].dispatchEvent(
+                new MouseEvent("click", { shiftKey: true })
+            )
+        );
+        assert.containsOnce($, ".o-mail-EmojiPicker");
+        assert.strictEqual($(".o-mail-Composer-input").val(), "👺");
+    }
+);
