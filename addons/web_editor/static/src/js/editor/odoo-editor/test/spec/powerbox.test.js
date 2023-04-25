@@ -2,7 +2,7 @@
 
 import { setSelection } from '../../src/OdooEditor.js';
 import { Powerbox } from '../../src/powerbox/Powerbox.js';
-import { BasicEditor, insertText, testEditor, triggerEvent } from '../utils.js';
+import { BasicEditor, _isMobile, insertText, testEditor, triggerEvent } from '../utils.js';
 
 const getCurrentCommandNames = powerbox => {
     return [...powerbox.el.querySelectorAll('.oe-powerbox-commandName')].map(c => c.innerText);
@@ -46,6 +46,20 @@ describe('Powerbox', () => {
                 contentAfter: '<h1>ab[]</h1>',
             });
         });
+    });
+    it('should insert a 3x3 table on type `/table` in mobile view', async () => {
+        if(_isMobile()){
+            await testEditor(BasicEditor, {
+                contentBefore: `<p>[]<br></p>`,
+                stepFunction: async editor => {
+                    await insertText(editor,'/');
+                    await insertText(editor, 'table');
+                    triggerEvent(editor.editable,'keyup');
+                    triggerEvent(editor.editable,'keydown', {key: 'Enter'});
+                },
+                contentAfter: `<table class="table table-bordered o_table"><tbody><tr><td>[]<p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr><tr><td><p><br></p></td><td><p><br></p></td><td><p><br></p></td></tr></tbody></table><p><br></p>`,
+            });
+        }
     });
     describe('class', () => {
         it('should properly order default commands and categories', async () => {
