@@ -83,6 +83,10 @@ const LinkTools = Link.extend({
             this._setSelectOption($(customOption), true);
             this._updateOptionsUI();
         }
+        if (!link.href && this.data.url) {
+            // Link URL was deduced from label. Apply changes to DOM.
+            this.__onURLInput();
+        }
         return ret;
     },
     destroy: function () {
