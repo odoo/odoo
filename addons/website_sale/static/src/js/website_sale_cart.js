@@ -7,7 +7,7 @@ var _t = core._t;
 var timeout;
 
 publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
-    selector: '#top a[href$="/shop/cart"]',
+    selector: '#top a[href$="/shop/cart"]:not(.js_change_lang)',
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
