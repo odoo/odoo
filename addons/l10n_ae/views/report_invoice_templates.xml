@@ -32,7 +32,7 @@
             </td>
         </xpath>
 
-        <xpath expr="//div[hasclass('clearfix')]" position="after">
+        <xpath expr="//div[@id='right-elements']" position="after">
             <div t-if="o.company_id.country_id.code == 'AE' and o.currency_id != o.company_id.currency_id"
                  id="aed_amounts" class="row clearfix ms-auto my-3 text-nowrap table">
                 <t t-set="aed_rate"
