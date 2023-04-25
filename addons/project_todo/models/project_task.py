@@ -21,9 +21,9 @@ class Task(models.Model):
         return super().create(vals_list)
 
     def _ensure_onboarding_todo(self):
-        if not self.env.user.has_group('todo.group_onboarding_todo'):
+        if not self.env.user.has_group('project_todo.group_onboarding_todo'):
             self._generate_onboarding_todo(self.env.user)
-            onboarding_group = self.env.ref('todo.group_onboarding_todo').sudo()
+            onboarding_group = self.env.ref('project_todo.group_onboarding_todo').sudo()
             onboarding_group.write({'users': [Command.link(self.env.user.id)]})
 
     def _generate_onboarding_todo(self, user):
