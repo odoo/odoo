@@ -906,3 +906,62 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertTrue(exchange_diff)
         with self.assertRaises(UserError), self.cr.savepoint():
             exchange_diff.button_draft()
+
+    def test_always_exigible_caba_account(self):
+        """ Always exigible misc operations (so, the ones without payable/receivable line) with cash basis
+        taxes should see their tax lines use the final tax account, not the transition account.
+        """
+        tax_account = self.company_data['default_account_tax_sale']
+
+        caba_tax = self.env['account.tax'].create({
+            'name': "CABA",
+            'amount_type': 'percent',
+            'amount': 20.0,
+            'tax_exigibility': 'on_payment',
+            'cash_basis_transition_account_id': self.safe_copy(tax_account).id,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_account.id,
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'account_id': tax_account.id,
+                }),
+            ],
+        })
+
+        move_form = Form(self.env['account.move'].with_context(default_move_type='entry'))
+
+        # Create a new account.move.line with debit amount.
+        income_account = self.company_data['default_account_revenue']
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'debit'
+            debit_line.account_id = income_account
+            debit_line.debit = 120
+
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'credit'
+            credit_line.account_id = income_account
+            credit_line.credit = 100
+            credit_line.tax_ids.clear()
+            credit_line.tax_ids.add(caba_tax)
+
+        move = move_form.save()
+
+        self.assertTrue(move.always_tax_exigible)
+
+        self.assertRecordValues(move.line_ids.sorted(lambda x: -x.balance), [
+            # pylint: disable=C0326
+            {'name': 'debit',  'debit': 120.0, 'credit': 0.0,   'account_id': income_account.id, 'tax_ids': [],           'tax_line_id': False},
+            {'name': 'CABA',   'debit': 0.0,   'credit': 20.0,  'account_id': tax_account.id,    'tax_ids': [],           'tax_line_id': caba_tax.id},
+            {'name': 'credit', 'debit': 0.0,   'credit': 100.0, 'account_id': income_account.id, 'tax_ids': caba_tax.ids, 'tax_line_id': False},
+        ])
