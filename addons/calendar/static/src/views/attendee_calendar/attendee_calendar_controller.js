@@ -36,31 +36,30 @@ export class AttendeeCalendarController extends CalendarController {
         });
     }
 
+    getQuickCreateFormViewProps(context) {
+        const props = super.getQuickCreateFormViewProps(context);
+        const onDialogClosed = () => {
+            this.model.load();
+        };
+        return {
+            ...props,
+            size: "md",
+            goToFullEvent: (contextData) => {
+                const fullContext = {
+                    ...context,
+                    ...contextData
+                }
+                this.goToFullEvent(false, fullContext);
+            },
+            onRecordSaved: () => onDialogClosed(),
+        }
+    }
+
     async editRecord(record, context = {}) {
         if (record.id) {
             return this.goToFullEvent(record.id, context);
         }
-        const onDialogClosed = () => {
-            this.model.load();
-        };
-        return new Promise((resolve) => {
-            this.displayDialog(
-                CalendarQuickCreate, {
-                    viewId: this.model.quickCreateFormViewId,
-                    resModel: "calendar.event",
-                    size: "md",
-                    context,
-                    goToFullEvent: (contextData) => {
-                        const fullContext = {
-                            ...context,
-                            ...contextData
-                        };
-                        this.goToFullEvent(false, fullContext)
-                    },
-                    onRecordSaved: () => resolve(onDialogClosed())
-                }
-            );
-        });
+        return super.editRecord(...arguments);
     }
 
     /**
@@ -117,3 +116,7 @@ export class AttendeeCalendarController extends CalendarController {
     }
 }
 AttendeeCalendarController.template = "calendar.AttendeeCalendarController";
+AttendeeCalendarController.components = {
+    ...AttendeeCalendarController.components,
+    quickCreateFormView: CalendarQuickCreate,
+}

@@ -136,6 +136,14 @@ export class CalendarController extends Component {
         };
     }
 
+    getQuickCreateFormViewProps(context = {}) {
+        return {
+            resModel: this.model.resModel,
+            viewId: this.model.quickCreateFormViewId,
+            context,
+        };
+    }
+
     createRecord(record) {
         if (!this.model.canCreate) {
             return;
@@ -168,6 +176,16 @@ export class CalendarController extends Component {
                         onRecordSaved: () => this.model.load(),
                     },
                     { onClose: () => resolve() }
+                );
+            });
+        } else if (this.model.quickCreateFormViewId) {
+            return new Promise((resolve) => {
+                this.displayDialog(
+                    this.constructor.components.quickCreateFormView,
+                    this.getQuickCreateFormViewProps(context),
+                    {
+                        onClose: () => resolve(),
+                    }
                 );
             });
         } else {
@@ -217,6 +235,7 @@ CalendarController.components = {
     FilterPanel: CalendarFilterPanel,
     MobileFilterPanel: CalendarMobileFilterPanel,
     QuickCreate: CalendarQuickCreate,
+    quickCreateFormView: FormViewDialog,
     Layout,
     ViewScaleSelector,
 };
