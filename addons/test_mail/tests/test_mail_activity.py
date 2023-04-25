@@ -9,7 +9,7 @@ from unittest.mock import DEFAULT
 
 import pytz
 
-from odoo import fields, exceptions, tests
+from odoo import Command, fields, exceptions, tests
 from odoo.addons.mail.tests.common import mail_new_test_user
 from odoo.addons.test_mail.tests.common import TestMailCommon
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
@@ -719,3 +719,63 @@ class TestORM(TestActivityCommon):
         self.assertEqual(groups[0][groupby], pg_groups["overdue"])
         self.assertEqual(groups[1][groupby], pg_groups["today"])
         self.assertEqual(groups[2][groupby], pg_groups["planned"])
+
+    def test_read_progress_bar_security(self):
+        """Test that ``ir.rules`` are applied when reading the progress bar."""
+        Model = self.env['mail.test.activity'].with_context(lang='en_US')
+        self.env['ir.rule'].create(
+            [
+                {
+                    'name': 'User: See own activities',
+                    'model_id': self.env['ir.model']._get('mail.activity').id,
+                    'domain_force': "[('user_id', '=', user.id)]",
+                    'groups': [Command.set(self.env.ref('base.group_user').ids)],
+                },
+                {
+                    'name': 'Admin: See all activities',
+                    'model_id': self.env['ir.model']._get('mail.activity').id,
+                    'domain_force': "[(1, '=', 1)]",
+                    'groups': [Command.set(self.env.ref('base.group_system').ids)],
+                }
+            ]
+        )
+        record = Model.create(
+            {
+                'date': fields.Date.today(),
+                'name': "Yesterday, all my troubles seemed so far away",
+            }
+        )
+        record.activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="A late activity (admin)",
+            date_deadline=fields.Date.context_today(Model) - timedelta(days=7),
+        )
+        record.with_user(self.user_employee).activity_schedule(
+            'test_mail.mail_act_test_todo',
+            summary="A planned, on-time, activity (employee)",
+            date_deadline=fields.Date.context_today(Model) + timedelta(days=7),
+        )
+
+        domain = [('id', '=', record.id)]
+        groupby = 'date'
+        progress_bar = {
+            'field': 'activity_state',
+            'colors': {
+                "overdue": 'danger',
+                "today": 'warning',
+                "planned": 'success',
+            }
+        }
+
+        res = Model.read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+        group = list(res.values())[0]
+
+        self.assertEqual(group['overdue'], 1, "Admin sees the overdue activity, thus the progress bar is red")
+        self.assertFalse(group['planned'])
+        self.assertFalse(group['today'])
+
+        res = Model.with_user(self.user_employee).read_progress_bar(domain, group_by=groupby, progress_bar=progress_bar)
+        group = list(res.values())[0]
+        self.assertEqual(group['planned'], 1, "Employee sees only his activities, thus the progress bar is green")
+        self.assertFalse(group['overdue'])
+        self.assertFalse(group['today'])
