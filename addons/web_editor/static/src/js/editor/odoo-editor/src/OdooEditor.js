@@ -1901,6 +1901,62 @@ export class OdooEditor extends EventTarget {
             closestBlock(range.endContainer).after(n);
             n.textContent = '';
         });
+<<<<<<< HEAD:addons/web_editor/static/src/js/editor/odoo-editor/src/OdooEditor.js
+||||||| parent of d89f671248b (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
+        // Restore table contents removed by extractContents.
+        const tds = [...contents.querySelectorAll('td')].filter(n => !closestElement(n, 'table'));
+        let currentFragmentTr, currentTr;
+        const currentTd = closestElement(range.endContainer, 'td');
+        tds.forEach((td, i) => {
+            const parentFragmentTr = closestElement(td, 'tr');
+            // Skip the first and the last partially selected TD.
+            if (i && !(splitEndTd && i === tds.length - 1)) {
+                if (parentFragmentTr !== currentFragmentTr && currentTr && [...parentFragmentTr.querySelectorAll('td')].every(td => tds.includes(td))) {
+                    currentTr.after(parentFragmentTr);
+                    currentTr = parentFragmentTr;
+                    parentFragmentTr.textContent = '';
+                } else {
+                    if (parentFragmentTr !== currentFragmentTr) {
+                        currentTr = currentTr
+                            ? currentTr.nextElementSibling
+                            : closestElement(range.endContainer, 'tr').nextElementSibling;
+                    }
+                    currentTr ? currentTr.prepend(td) : currentTd.after(td);
+                    td.textContent = '';
+                }
+            }
+            currentFragmentTr = parentFragmentTr;
+        });
+        this.observerFlush();
+        this._toRollback = false; // Errors caught with observerFlush were already handled.
+=======
+        // Restore table contents removed by extractContents.
+        const tds = [...contents.querySelectorAll('td')].filter(n => !closestElement(n, 'table'));
+        let currentFragmentTr, currentTr;
+        const currentTd = closestElement(range.endContainer, 'td');
+        tds.forEach((td, i) => {
+            const parentFragmentTr = closestElement(td, 'tr');
+            // Skip the first and the last partially selected TD.
+            if (i && !(splitEndTd && i === tds.length - 1)) {
+                if (parentFragmentTr && parentFragmentTr !== currentFragmentTr && currentTr && [...parentFragmentTr.querySelectorAll('td')].every(td => tds.includes(td))) {
+                    currentTr.after(parentFragmentTr);
+                    currentTr = parentFragmentTr;
+                    parentFragmentTr.textContent = '';
+                } else {
+                    if (parentFragmentTr !== currentFragmentTr) {
+                        currentTr = currentTr
+                            ? currentTr.nextElementSibling
+                            : closestElement(range.endContainer, 'tr').nextElementSibling;
+                    }
+                    currentTr ? currentTr.prepend(td) : currentTd.after(td);
+                    td.textContent = '';
+                }
+            }
+            currentFragmentTr = parentFragmentTr;
+        });
+        this.observerFlush();
+        this._toRollback = false; // Errors caught with observerFlush were already handled.
+>>>>>>> d89f671248b (temp):addons/web_editor/static/lib/odoo-editor/src/OdooEditor.js
         // If the end container was fully selected, extractContents may have
         // emptied it without removing it. Ensure it's gone.
         const isRemovableInvisible = (node, noBlocks = true) =>
