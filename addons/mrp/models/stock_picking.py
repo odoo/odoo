@@ -44,6 +44,12 @@ class StockPickingType(models.Model):
     auto_print_mrp_reception_report_labels = fields.Boolean(
         "Auto Print Allocation Report Labels",
         help="If this checkbox is ticked, Odoo will automatically print the allocation report labels of a MO when it is done.")
+    auto_print_generated_mrp_lot = fields.Boolean(
+        "Auto Print Generated Lot/SN Label",
+        help='Automatically print the lot/SN label when the "Create a new serial/lot number" button is used.')
+    generated_mrp_lot_label_to_print = fields.Selection(
+        [('pdf', 'PDF'), ('zpl', 'ZPL')],
+        "Generated Lot/SN Label to Print", default='pdf')
 
     @api.depends('code')
     def _compute_use_create_lots(self):
