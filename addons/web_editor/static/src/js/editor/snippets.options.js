@@ -4445,13 +4445,13 @@ registry.sizing = SnippetOptionWidget.extend({
                 let current = 0;
                 const cssProperty = resize[2];
                 const cssPropertyValue = parseInt(self.$target.css(cssProperty));
-                for (const [key, val] of Object.entries(resize[0])) {
+                resize[0].forEach((val, key) => {
                     if (self.$target.hasClass(val)) {
                         current = key;
                     } else if (resize[1][key] === cssPropertyValue) {
                         current = key;
                     }
-                }
+                });
 
                 props.resize = resize;
                 props.current = current;
