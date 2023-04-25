@@ -2010,10 +2010,11 @@ options.registry.HeaderNavbar = options.Class.extend({
      */
     async updateUI() {
         await this._super(...arguments);
-        // For all header templates except those of the following selector,
-        // change the label of the option to "Mobile Alignment" (instead of
+        // For all header templates except those in the following array, change
+        // the label of the option to "Mobile Alignment" (instead of
         // "Alignment") because it only impacts the mobile view.
-        if (!this.$target[0].querySelector('#oe_structure_header_default_1, #oe_structure_header_hamburger_1, #oe_structure_header_sidebar_1')) {
+        if (!["'default'", "'hamburger'", "'sidebar'", "'magazine'", "'hamburger-full'"]
+            .includes(weUtils.getCSSVariableValue("header-template"))) {
             const alignmentOptionTitleEl = this.el.querySelector('[data-name="header_alignment_opt"] we-title');
             alignmentOptionTitleEl.textContent = _t("Mobile Alignment");
         }
