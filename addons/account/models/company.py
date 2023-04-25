@@ -121,6 +121,7 @@ class ResCompany(models.Model):
     terms_type = fields.Selection([('plain', 'Add a Note'), ('html', 'Add a link to a Web Page')],
                                   string='Terms & Conditions format', default='plain')
     invoice_terms_html = fields.Html(string='Default Terms and Conditions as a Web page', translate=True,
+                                     sanitize_attributes=False,
                                      compute='_compute_invoice_terms_html', store=True, readonly=False)
 
     account_setup_bill_state = fields.Selection(ONBOARDING_STEP_STATES, string="State of the onboarding bill step", default='not_done')
