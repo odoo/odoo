@@ -1,40 +1,18 @@
 /** @odoo-module **/
 
-import { companyService } from "@web/webclient/company_service";
-import {
-    checkLabels,
-    checkLegend,
-    getGraphRenderer,
-    selectMode
-} from "@web/../tests/views/graph_view_tests";
-import { makeView } from "@web/../tests/views/helpers";
-import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
-import { session } from "@web/session";
 import { registry } from "@web/core/registry";
-import { setupControlPanelServiceRegistry } from "@web/../tests/search/helpers";
 
-const serviceRegistry = registry.category("services");
+import { fakeCookieService } from "@web/../tests/helpers/mock_services";
+import { getFixture } from "@web/../tests/helpers/utils";
+import { checkLabels, checkLegend, selectMode } from "@web/../tests/views/graph_view_tests";
+import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 
-QUnit.module('hr_timesheet', function (hooks) {
-    let serverData, target;
-    hooks.beforeEach(() => {
+let serverData, target;
+
+QUnit.module("Project", (hooks) => {
+    hooks.beforeEach(async () => {
         serverData = {
             models: {
-                'account.analytic.line': {
-                    fields: {
-                        unit_amount: { string: "Unit Amount", type: "float", group_operator: "sum", store: true },
-                        project_id: {
-                            string: "Project",
-                            type: "many2one",
-                            relation: "project.project",
-                            store: true,
-                            sortable: true,
-                        },
-                    },
-                    records: [
-                        { id: 1, unit_amount: 8, project_id: false },
-                    ],
-                },
                 "project.task": {
                     fields: {
                         id: { string: "ID", type: "integer" },
@@ -78,56 +56,15 @@ QUnit.module('hr_timesheet', function (hooks) {
                     ],
                 },
             },
-            views: {
-                // unit_amount is used as group_by and measure
-                "account.analytic.line,false,graph": `
-                    <graph>
-                        <field name="unit_amount"/>
-                        <field name="unit_amount" type="measure"/>
-                    </graph>
-                `,
-            }
-        }
-        setupControlPanelServiceRegistry();
+            views: {},
+        };
+        setupViewRegistries();
+
         target = getFixture();
-        serviceRegistry.add("company", companyService, { force: true });
+        registry.category("services").add("cookie", fakeCookieService);
     });
 
-    QUnit.module("hr_timesheet_graphview");
-
-    QUnit.test('the timesheet graph view data are not multiplied by a factor that is company related (factor = 1)', async function (assert) {
-        assert.expect(1);
-
-        patchWithCleanup(session.user_companies.allowed_companies[1], {
-            timesheet_uom_factor: 1,
-        });
-
-        const graph = await makeView({
-            serverData,
-            resModel: "account.analytic.line",
-            type: "hr_timesheet_graphview",
-        });
-
-        const renderedData = getGraphRenderer(graph).chart.data.datasets[0].data;
-        assert.deepEqual(renderedData, [8], 'The timesheet graph view is taking the timesheet_uom_factor into account (factor === 1)');
-    });
-
-    QUnit.test('the timesheet graph view data are multiplied by a factor that is company related (factor !== 1)', async function (assert) {
-        assert.expect(1);
-
-        patchWithCleanup(session.user_companies.allowed_companies[1], {
-            timesheet_uom_factor: 0.125,
-        });
-
-        const graph = await makeView({
-            serverData,
-            resModel: "account.analytic.line",
-            type: "hr_timesheet_graphview",
-        });
-
-        const renderedData = getGraphRenderer(graph).chart.data.datasets[0].data;
-        assert.deepEqual(renderedData, [1], 'The timesheet graph view is taking the timesheet_uom_factor into account (factor !== 1)');
-    });
+    QUnit.module("ProjectTaskGraphView");
 
     QUnit.test("check custom default label", async function (assert) {
         const graph = await makeView({
@@ -135,7 +72,7 @@ QUnit.module('hr_timesheet', function (hooks) {
             type: "graph",
             resModel: "project.task",
             arch: `
-                <graph js_class="hr_timesheet_graphview">
+                <graph js_class="project_task_graph">
                     <field name="project_id"/>
                 </graph>
             `,
@@ -161,7 +98,7 @@ QUnit.module('hr_timesheet', function (hooks) {
             type: "graph",
             resModel: "project.task",
             arch: `
-                <graph js_class="hr_timesheet_graphview">
+                <graph js_class="project_task_graph">
                     <field name="project_id"/>
                     <field name="milestone_id"/>
                 </graph>

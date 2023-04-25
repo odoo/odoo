@@ -167,17 +167,17 @@ class Task(models.Model):
     # See project_task_stage_personal.py for the model defininition
     personal_stage_type_ids = fields.Many2many('project.task.type', 'project_task_user_rel', column1='task_id', column2='stage_id',
         ondelete='restrict', group_expand='_read_group_personal_stage_type_ids', copy=False,
-        domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Personal Stage')
+        domain="[('user_id', '=', user.id)]", depends=['user_ids'], string='Personal Stages')
     # Personal Stage computed from the user
     personal_stage_id = fields.Many2one('project.task.stage.personal', string='Personal Stage State', compute_sudo=False,
         compute='_compute_personal_stage_id', help="The current user's personal stage.")
     # This field is actually a related field on personal_stage_id.stage_id
     # However due to the fact that personal_stage_id is computed, the orm throws out errors
     # saying the field cannot be searched.
-    personal_stage_type_id = fields.Many2one('project.task.type', string='Personal User Stage',
+    personal_stage_type_id = fields.Many2one('project.task.type', string='Personal Stage',
         compute='_compute_personal_stage_type_id', inverse='_inverse_personal_stage_type_id', store=False,
         search='_search_personal_stage_type_id', default=_default_personal_stage_type_id,
-        help="The current user's personal task stage.")
+        help="The current user's personal task stage.", domain="[('user_id', '=', uid)]")
     partner_id = fields.Many2one('res.partner',
         string='Customer', recursive=True, tracking=True, compute='_compute_partner_id', store=True, readonly=False,
         domain="['|', ('company_id', '=?', company_id), ('company_id', '=', False)]", )
