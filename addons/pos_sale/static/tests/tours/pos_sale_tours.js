@@ -42,4 +42,14 @@ odoo.define('pos_sale.tour', function (require) {
     ReceiptScreen.check.isShown();
 
     Tour.register('PosSettleOrder2', { test: true, url: '/pos/ui' }, getSteps());
+
+
+    startSteps();
+
+    ProductScreen.do.confirmOpeningPopup();
+    ProductScreen.do.clickQuotationButton();
+    ProductScreen.do.selectFirstOrder();
+    ProductScreen.check.totalAmountIs(100);
+
+    Tour.register('PosSettleOrderWithPromotions', { test: true, url: '/pos/ui' }, getSteps());
 });
