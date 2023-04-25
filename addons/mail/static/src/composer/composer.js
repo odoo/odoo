@@ -29,6 +29,15 @@ export const LONG_TYPING = 50000;
  * @typedef {Object} Props
  * @property {import("@mail/composer/composer_model").Composer} composer
  * @property {import("@mail/utils/hooks").MessageToReplyTo} messageToReplyTo
+ * @property {import("@mail/utils/hooks").MessageEdition} [messageEdition]
+ * @property {'compact'|'normal'|'extended'} [mode] default: 'normal'
+ * @property {string} [placeholder]
+ * @property {string} [className]
+ * @property {function} [onDiscardCallback]
+ * @property {function} [onPostCallback]
+ * @property {Component} [messageComponent]
+ * @property {number} [autofocus]
+ * @property {import("@web/core/utils/hooks").Ref} [dropzoneRef]
  * @extends {Component<Props, Env>}
  */
 export class Composer extends Component {
@@ -41,7 +50,7 @@ export class Composer extends Component {
     static defaultProps = {
         mode: "normal",
         className: "",
-    }; // mode = compact, normal, extended
+    };
     static props = [
         "composer",
         "autofocus?",
