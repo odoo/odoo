@@ -39,6 +39,7 @@ class Job(models.Model):
         'Process Details',
         translate=True,
         help="Complementary information that will appear on the job submission page",
+        sanitize_attributes=False,
         default="""
             <span class="text-muted small">Time to Answer</span>
             <h6>2 open days</h6>
