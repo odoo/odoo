@@ -276,6 +276,56 @@ SGVsbG8gd29ybGQK
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
 
+MAIL_MULTIPART_INVALID_ENCODING = """Return-Path: <whatever-2a840@postmaster.twitter.com>
+To: {to}
+cc: {cc}
+Received: by mail1.openerp.com (Postfix, from userid 10002)
+    id 5DF9ABFB2A; Fri, 10 Aug 2012 16:16:39 +0200 (CEST)
+From: {email_from}
+Subject: {subject}
+MIME-Version: 1.0
+Content-Type: multipart/alternative;
+    boundary="00000000000005d9da05fa394cc0"
+Date: Fri, 10 Aug 2012 14:16:26 +0000
+Message-ID: {msg_id}
+{extra}
+
+--00000000000005d9da05fa394cc0
+Content-Type: multipart/alternative; boundary="00000000000005d9d905fa394cbe"
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/plain; charset="UTF-8"
+
+Dear customer,
+
+Please find attached the Peppol Bis 3 attachment of your invoice (with an
+encoding error in the address)
+
+Cheers,
+
+--00000000000005d9d905fa394cbe
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Dear customer,<div><br></div><div>Please find attached the Peppol Bis 3 attachment of your invoice (with an encoding error in the address)</div><div><br></div><div>Cheers,</div></div>
+
+--00000000000005d9d905fa394cbe--
+
+--00000000000005d9da05fa394cc0
+Content-Type: text/xml; charset="US-ASCII";
+ name="bis3_with_error_encoding_address.xml"
+Content-Disposition: attachment; 
+	filename="bis3_with_error_encoding_address.xml"
+Content-Transfer-Encoding: base64
+Content-ID: <f_lgxgdqx40>
+X-Attachment-Id: f_lgxgdqx40
+
+PEludm9pY2UgeG1sbnM6Y2JjPSJ1cm46b2FzaXM6bmFtZXM6c3BlY2lmaWNhdGlvbjp1Ymw6c2No
+ZW1hOnhzZDpDb21tb25CYXNpY0NvbXBvbmVudHMtMiIgeG1sbnM9InVybjpvYXNpczpuYW1lczpz
+cGVjaWZpY2F0aW9uOnVibDpzY2hlbWE6eHNkOkludm9pY2UtMiI+DQo8Y2JjOlN0cmVldE5hbWU+
+Q2hhdXNz77+977+9ZSBkZSBCcnV4ZWxsZXM8L2NiYzpTdHJlZXROYW1lPg0KPC9JbnZvaWNlPg0K
+--00000000000005d9da05fa394cc0--
+"""
+
 
 MAIL_SINGLE_BINARY = """X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr
