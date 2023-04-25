@@ -21,24 +21,28 @@
                         <span class="label">Street</span>
                         <input class="detail" name="street"
                                t-on-change="captureChange" t-att-value="props.partner.street || ''"
-                               placeholder="Street" />
+                               placeholder="Street"
+                               t-att-class="{'border-red': missingFields.includes('street')}"/>
                     </div>
                     <div class="partner-detail">
                         <span class="label">City</span>
                         <input class="detail" name="city"
                                t-on-change="captureChange" t-att-value="props.partner.city || ''"
-                               placeholder="City" />
+                               placeholder="City"
+                               t-att-class="{'border-red': missingFields.includes('city')}" />
                     </div>
                     <div class="partner-detail">
                         <span class="label">Postcode</span>
                         <input class="detail" name="zip"
                                t-on-change="captureChange" t-att-value="props.partner.zip || ''"
-                               placeholder="ZIP" />
+                               placeholder="ZIP"
+                               t-att-class="{'border-red': missingFields.includes('zip')}" />
                     </div>
                     <div class="partner-detail">
                         <span class="label">State</span>
                         <select class="detail" name="state_id"
-                                t-on-change="captureChange">
+                                t-on-change="captureChange"
+                                t-att-class="{'border-red': missingFields.includes('state_id')}">
                             <option value="">None</option>
                             <t t-foreach="pos.states" t-as="state" t-key="state.id">
                                 <option t-if="props.partner.country_id[0] == state.country_id[0]"
@@ -52,7 +56,8 @@
                     <div class="partner-detail">
                         <span class="label">Country</span>
                         <select class="detail" name="country_id"
-                                t-on-change="captureChange">
+                                t-on-change="captureChange"
+                                t-att-class="{'border-red': missingFields.includes('country_id')}">
                             <option value="">None</option>
                             <t t-foreach="pos.countries" t-as="country" t-key="country.id">
                                 <option t-att-value="country.id"
@@ -67,7 +72,8 @@
                     <div class="partner-detail">
                         <span class="label">Language</span>
                         <select class="detail" name="lang"
-                                t-on-change="captureChange">
+                                t-on-change="captureChange"
+                                t-att-class="{'border-red': missingFields.includes('lang')}">
                             <t t-foreach="pos.langs" t-as="lang" t-key="lang.id">
                                 <option t-att-value="lang.code"
                                         t-att-selected="props.partner.lang ? ((lang.code === props.partner.lang) ? true : undefined) : lang.code === pos.user.lang? true : undefined">
@@ -80,34 +86,40 @@
                         <span class="label">Email</span>
                         <input class="detail" name="email" type="email"
                                t-on-change="captureChange"
-                               t-att-value="props.partner.email || ''" />
+                               t-att-value="props.partner.email || ''"
+                               t-att-class="{'border-red': missingFields.includes('email')}" />
                     </div>
                     <div class="partner-detail">
                         <span class="label">Phone</span>
                         <input class="detail" name="phone" type="tel"
                                t-on-change="captureChange"
-                               t-att-value="props.partner.phone || ''" />
+                               t-att-value="props.partner.phone || ''"
+                               t-att-class="{'border-red': missingFields.includes('phone')}" />
                     </div>
                     <div class="partner-detail">
                         <span class="label">Mobile</span>
                         <input class="detail" name="mobile" type="tel"
                                t-on-change="captureChange"
-                               t-att-value="props.partner.mobile || ''" />
+                               t-att-value="props.partner.mobile || ''"
+                               t-att-class="{'border-red': missingFields.includes('tel')}" />
                     </div>
                     <div class="partner-detail">
                         <span class="label">Barcode</span>
                         <input class="detail barcode" name="barcode" t-on-change="captureChange"
-                               t-att-value="props.partner.barcode || ''" />
+                               t-att-value="props.partner.barcode || ''"
+                               t-att-class="{'border-red': missingFields.includes('barcode')}" />
                     </div>
                     <div class="partner-detail">
                         <span class="label">Tax ID</span>
                         <input class="detail vat" name="vat" t-on-change="captureChange"
-                               t-att-value="props.partner.vat || ''" />
+                               t-att-value="props.partner.vat || ''"
+                               t-att-class="{'border-red': missingFields.includes('vat')}" />
                     </div>
                     <div t-if="pos.pricelists.length gt 1" class="partner-detail">
                         <span class="label">Pricelist</span>
                         <select class="detail" name="property_product_pricelist"
-                                t-on-change="captureChange">
+                                t-on-change="captureChange"
+                                t-att-class="{'border-red': missingFields.includes('property_product_pricelist')}">
                             <t t-foreach="pos.pricelists" t-as="pricelist"
                                t-key="pricelist.id">
                                 <option t-att-value="pricelist.id"

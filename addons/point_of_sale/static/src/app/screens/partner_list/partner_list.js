@@ -39,9 +39,10 @@ export class PartnerListScreen extends Component {
         this.state = useState({
             query: null,
             selectedPartner: this.props.partner,
-            detailIsShown: false,
+            detailIsShown: this.props.editModeProps ? true : false,
             editModeProps: {
-                partner: null,
+                partner: this.props.editModeProps ? this.props.partner : null,
+                missingFields: this.props.missingFields ? this.props.missingFields : null,
             },
             previousQuery: "",
             currentOffset: 0,
