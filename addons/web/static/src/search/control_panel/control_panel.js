@@ -70,6 +70,28 @@ export class ControlPanel extends Component {
             this.lastScrollTop = 0;
             this.initialScrollTop = this.getScrollingElement().scrollTop;
         });
+
+        this.mainButtons = useRef("mainButtons");
+
+        useEffect(() => {
+            if (!this.env.isSmall) {
+                return;
+            }
+            // on small screen, clean-up the dropdown elements
+            const dropdownButtons = this.mainButtons.el.querySelectorAll(".dropdown-menu button");
+            if (!dropdownButtons.length) {
+                this.mainButtons.el
+                    .querySelectorAll(".dropdown-menu, .dropdown-toggle")
+                    .forEach((el) => el.classList.add("d-none"));
+                return;
+            }
+            for (const button of dropdownButtons) {
+                for (const cl of Array.from(button.classList)) {
+                    button.classList.toggle(cl, !cl.startsWith("btn-"));
+                }
+                button.classList.add("dropdown-item", "btn", "btn-link");
+            }
+        });
     }
 
     getScrollingElement() {
