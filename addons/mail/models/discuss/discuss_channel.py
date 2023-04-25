@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
@@ -260,7 +259,7 @@ class Channel(models.Model):
             failing_channels = self.sudo().filtered(lambda channel: channel.channel_type != vals.get('channel_type'))
             if failing_channels:
                 raise UserError(_('Cannot change the channel type of: %(channel_names)s'), channel_names=', '.join(failing_channels.mapped('name')))
-        result = super(Channel, self).write(vals)
+        result = super().write(vals)
         if vals.get('group_ids'):
             self._subscribe_users_automatically()
         if 'image_128' in vals:
@@ -561,7 +560,7 @@ class Channel(models.Model):
 
     def _notify_thread(self, message, msg_vals=False, **kwargs):
         # link message to channel
-        rdata = super(Channel, self)._notify_thread(message, msg_vals=msg_vals, **kwargs)
+        rdata = super()._notify_thread(message, msg_vals=msg_vals, **kwargs)
 
         message_format_values = message.message_format()[0]
         bus_notifications = self._channel_message_notifications(message, message_format_values)
@@ -583,7 +582,7 @@ class Channel(models.Model):
         for p in partner:
             if p.message_bounce >= self.MAX_BOUNCE_LIMIT:
                 self._action_unfollow(p)
-        return super(Channel, self)._message_receive_bounce(email, partner)
+        return super()._message_receive_bounce(email, partner)
 
     def _message_compute_author(self, author_id=None, email_from=None, raise_on_email=True):
         return super()._message_compute_author(author_id=author_id, email_from=email_from, raise_on_email=False)
@@ -1163,7 +1162,7 @@ class Channel(models.Model):
 
     @api.model
     def get_mention_suggestions(self, search, limit=8):
-        """ Return 'limit'-first channels' id, name, channel_type and  authorizedGroupFullName fields such that the
+        """ Return 'limit'-first channels' id, name, channel_type and authorizedGroupFullName fields such that the
             name matches a 'search' string. Exclude channels of type chat (DM) and group.
         """
         domain = expression.AND([

@@ -856,12 +856,10 @@ class Message(models.Model):
     def _message_format(self, fnames, format_reply=True, legacy=False):
         """Reads values from messages and formats them for the web client."""
         vals_list = self._read_format(fnames)
-
         thread_ids_by_model_name = defaultdict(set)
         for message in self:
             if message.model and message.res_id:
                 thread_ids_by_model_name[message.model].add(message.res_id)
-
         for vals in vals_list:
             message_sudo = self.browse(vals['id']).sudo().with_prefetch(self.ids)
             author = {
@@ -890,9 +888,8 @@ class Message(models.Model):
                 'message': {'id': message_sudo.id},
                 'partners': [{'id': partner.id, 'name': partner.name} for partner in reactions.partner_id],
             } for content, reactions in reactions_per_content.items()]
-            if format_reply and message_sudo.model == 'discuss.channel' and message_sudo.parent_id:
-                vals['parentMessage'] = message_sudo.parent_id.message_format(format_reply=False)[0]
             allowed_tracking_ids = message_sudo.tracking_value_ids.filtered(lambda tracking: not tracking.field_groups or self.env.is_superuser() or self.user_has_groups(tracking.field_groups))
+            vals.update(message_sudo._message_format_extras(format_reply))
             vals.update({
                 'author': author,
                 'default_subject': default_subject,
@@ -905,8 +902,11 @@ class Message(models.Model):
                 'pinned_at': message_sudo.pinned_at,
                 'record_name': record_name,
             })
-
         return vals_list
+
+    def _message_format_extras(self, format_reply):
+        self.ensure_one()
+        return {}
 
     @api.model
     def _message_fetch(self, domain, before=None, after=None, around=None, limit=30):
@@ -1074,6 +1074,10 @@ class Message(models.Model):
             for partner, messages in messages_per_partner.items()
         ]
         self.env['bus.bus']._sendmany(updates)
+
+    def _bus_notification_target(self):
+        self.ensure_one()
+        return self.env.user.partner_id
 
     # ------------------------------------------------------
     # TOOLS
