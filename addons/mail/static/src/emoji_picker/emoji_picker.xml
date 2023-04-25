@@ -26,7 +26,7 @@
                 <hr class="mx-2 my-0 text-muted"/>
             </div>
             <t t-set="itemIndex" t-value="0"/>
-            <div class="o-mail-EmojiPicker-content overflow-auto d-flex flex-wrap align-items-center" t-att-class="getEmojis().length === 0 ? 'flex-column justify-content-center' : 'align-content-start'" t-ref="emoji-grid" t-on-scroll="highlightActiveCategory">
+            <div class="o-mail-EmojiPicker-content overflow-auto d-flex flex-wrap align-items-center user-select-none" t-att-class="getEmojis().length === 0 ? 'flex-column justify-content-center' : 'align-content-start'" t-ref="emoji-grid" t-on-scroll="highlightActiveCategory">
                 <t t-if="state.searchStr and getEmojis().length === 0" class="d-flex flex-column">
                     <span class="o-mail-EmojiPicker-empty">😢</span>
                     <span class="fs-5 text-muted">No emoji match your search</span>
