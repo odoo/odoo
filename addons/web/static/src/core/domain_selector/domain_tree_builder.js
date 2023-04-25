@@ -92,7 +92,11 @@ export class DomainTreeBuilder {
 
     /** @private */
     getLeafValue(rawNode) {
-        return rawNode.value[2].value;
+        const valueAst = rawNode.value[2];
+        if (valueAst.type === 6 && valueAst.op === "-" && valueAst.right.type === 0) {
+            return -valueAst.right.value;
+        }
+        return valueAst.value;
     }
 
     /** @private */
