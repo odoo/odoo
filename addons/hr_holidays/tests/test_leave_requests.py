@@ -171,8 +171,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': fields.Datetime.from_string('2017-01-01 00:00:00'),
                 'date_to': fields.Datetime.from_string('2017-06-01 00:00:00'),
                 'number_of_days': 10,
-                'state': 'validate',
-        })
+        }).action_validate()
 
         self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Valid time period',
