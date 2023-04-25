@@ -2591,9 +2591,11 @@ class AccountMove(models.Model):
             taxes = self.env['account.tax'].browse(tax_ids)
         else:
             account_id = self.journal_id.default_account_id.id
-            if self.journal_id.default_account_id.tax_ids:
-                taxes = self.journal_id.default_account_id.tax_ids
+            if self.is_sale_document(include_receipts=True):
+                taxes = self.journal_id.default_account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
             else:
+                taxes = self.journal_id.default_account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
+            if not taxes:
                 taxes = (
                     self.journal_id.company_id.account_sale_tax_id
                     if self.journal_id.type == 'sale' else
