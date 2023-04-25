@@ -3600,6 +3600,11 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     async cleanForSave() {
         const img = this._getImg();
         if (img.matches('.o_modified_image_to_save')) {
+            // First delete everything in the dataset because a data attribute
+            // could have been be removed (ex : glFilter).
+            Object.entries(this.$target[0].dataset).forEach(([key]) => {
+                delete this.$target[0].dataset[key];
+            });
             this.$target.addClass('o_modified_image_to_save');
             Object.entries(img.dataset).forEach(([key, value]) => {
                 this.$target[0].dataset[key] = value;
@@ -3631,15 +3636,20 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
      */
     async _loadImageInfo() {
         this.img = new Image();
-        Object.entries(this.$target[0].dataset).filter(([key]) =>
+        const targetEl = this.$target[0].classList.contains("oe_img_bg")
+            ? this.$target[0] : this.$target[0].querySelector(".oe_img_bg");
+        if (targetEl) {
+            Object.entries(targetEl.dataset).filter(([key]) =>
             // Avoid copying dynamic editor attributes
-            !['oeId','oeModel', 'oeField', 'oeXpath', 'noteId'].includes(key)
-        ).forEach(([key, value]) => {
-            this.img.dataset[key] = value;
-        });
-        const src = getBgImageURL(this.$target[0]);
-        // Don't set the src if not relative (ie, not local image: cannot be modified)
-        this.img.src = src.startsWith('/') ? src : '';
+            !["oeId", "oeModel", "oeField", "oeXpath", "noteId"].includes(key)
+            ).forEach(([key, value]) => {
+                this.img.dataset[key] = value;
+            });
+            const src = getBgImageURL(targetEl);
+            // Don't set the src if not relative (ie, not local image: cannot
+            // be modified)
+            this.img.src = src.startsWith("/") ? src : "";
+        }
         return await this._super(...arguments);
     },
     /**
