@@ -660,14 +660,15 @@ function makeActionManager(env) {
                             Promise.resolve().then(() => {
                                 throw error;
                             });
-                            return;
                         } else {
                             info = lastCt.__info__;
                             // the error occurred while rendering a new controller,
                             // so go back to the last non faulty controller
                             // (the error will be shown anyway as the promise
                             // has been rejected)
+                            restore(lastCt.jsId);
                         }
+                        return;
                     }
                     env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
@@ -814,8 +815,9 @@ function makeActionManager(env) {
      */
     function _executeActURLAction(action, options) {
         let url = action.url;
-        if (url && !(url.startsWith('http') || url.startsWith('/')))
-            url = '/' + url;
+        if (url && !(url.startsWith("http") || url.startsWith("/"))) {
+            url = "/" + url;
+        }
         if (action.target === "self") {
             let willUnload = false;
             const onUnload = () => {
