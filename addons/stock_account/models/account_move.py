@@ -232,7 +232,7 @@ class AccountMoveLine(models.Model):
         return super(AccountMoveLine, self)._get_computed_account()
 
     def _can_use_stock_accounts(self):
-        return self.product_id.type == 'product'
+        return self.product_id.type == 'product' and self.product_id.categ_id.property_valuation == 'real_time'
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()
