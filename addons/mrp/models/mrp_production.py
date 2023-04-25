@@ -1981,11 +1981,12 @@ class MrpProduction(models.Model):
                     'res_id': self.id,
                     'target': 'main',
                 }
-            if self.user_has_groups('mrp.group_mrp_reception_report') and self.picking_type_id.auto_show_reception_report:
-                lines = self.move_finished_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
+            if self.user_has_groups('mrp.group_mrp_reception_report'):
+                mos_to_show = self.filtered(lambda mo: mo.picking_type_id.auto_show_reception_report)
+                lines = mos_to_show.move_finished_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
                 if lines:
-                    if any(mo.show_allocation for mo in self):
-                        action = self.action_view_reception_report()
+                    if any(mo.show_allocation for mo in mos_to_show):
+                        action = mos_to_show.action_view_reception_report()
                         return action
             return True
         context = self.env.context.copy()
@@ -2060,7 +2061,10 @@ class MrpProduction(models.Model):
         return action
 
     def action_view_reception_report(self):
-        return self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_reception_action")
+        action = self.env["ir.actions.actions"]._for_xml_id("mrp.mrp_reception_action")
+        # default_production_ids needs to be first default_ key so the "print" button correctly works
+        action['context'] = dict({'default_production_ids': self.ids}, **self.env.context)
+        return action
 
     def action_view_mrp_production_unbuilds(self):
         self.ensure_one()
