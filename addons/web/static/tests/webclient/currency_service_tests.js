@@ -29,3 +29,29 @@ QUnit.test("reload currencies when updating a res.currency", async (assert) => {
     await env.services.orm.unlink("notcurrency", [32]);
     assert.verifySteps(["/web/dataset/call_kw/notcurrency/unlink"]);
 });
+
+QUnit.test(
+    "do not reload webclient when updating a res.currency, but there is an error",
+    async (assert) => {
+        const fakeRpc = makeFakeRPCService((route) => {
+            assert.step(route);
+        });
+        serviceRegistry.add("rpc", fakeRpc);
+        serviceRegistry.add("currency", currencyService);
+
+        const env = await makeTestEnv();
+        assert.verifySteps([]);
+        env.bus.trigger("RPC:RESPONSE", {
+            data: { params: { model: "res.currency", method: "write" } },
+            settings: {},
+            result: {},
+        });
+        assert.verifySteps(["/web/session/get_session_info"]);
+        env.bus.trigger("RPC:RESPONSE", {
+            data: { params: { model: "res.currency", method: "write" } },
+            settings: {},
+            error: {},
+        });
+        assert.verifySteps([]);
+    }
+);

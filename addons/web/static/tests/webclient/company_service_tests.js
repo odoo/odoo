@@ -30,3 +30,34 @@ QUnit.test("reload webclient when updating a res.company", async (assert) => {
     await env.services.orm.unlink("notacompany", [32]);
     assert.verifySteps([]);
 });
+
+QUnit.test(
+    "do not reload webclient when updating a res.company, but there is an error",
+    async (assert) => {
+        serviceRegistry.add("company", companyService);
+        serviceRegistry.add("orm", ormService);
+        serviceRegistry.add("action", {
+            start(env) {
+                return {
+                    doAction(action) {
+                        assert.step(action);
+                    },
+                };
+            },
+        });
+        const env = await makeTestEnv();
+        assert.verifySteps([]);
+        env.bus.trigger("RPC:RESPONSE", {
+            data: { params: { model: "res.company", method: "write"}},
+            settings: {},
+            result: {},
+        });
+        assert.verifySteps(["reload_context"]);
+        env.bus.trigger("RPC:RESPONSE", {
+            data: { params: { model: "res.company", method: "write" }},
+            settings: {},
+            error: {},
+        });
+        assert.verifySteps([]);
+    }
+);
