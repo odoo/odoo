@@ -277,7 +277,7 @@ class PosSession(models.Model):
             },
             'res.currency': {
                 'domain': [('id', '=', config_id.currency_id.id)],
-                'fields': ['id', 'name', 'symbol', 'position', 'rounding', 'rate', 'decimal_places'],
+                'fields': ['id', 'name', 'iso_numeric', 'symbol', 'position', 'rounding', 'rate', 'decimal_places'],
             },
             'pos.note': {
                 'domain': [('id', '=', config_id.note_ids.ids)] if config_id.note_ids else [],
