@@ -1,7 +1,5 @@
 /** @odoo-module */
 
-import { Printer } from "@point_of_sale/js/printers";
-import { is_email } from "web.utils";
 import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
 import { AbstractReceiptScreen } from "@point_of_sale/js/Misc/AbstractReceiptScreen";
 import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
@@ -10,6 +8,7 @@ import { OrderReceipt } from "./OrderReceipt";
 import { onMounted, useRef, status } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
+import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
 
 export class ReceiptScreen extends AbstractReceiptScreen {
     static template = "ReceiptScreen";
@@ -28,7 +27,6 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.orderUiState = this.currentOrder.uiState.ReceiptScreen;
         this.orderUiState.inputEmail =
             this.orderUiState.inputEmail || (partner && partner.email) || "";
-        this.is_email = is_email;
 
         onMounted(() => {
             // Here, we send a task to the event loop that handles
@@ -59,7 +57,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.buttonMailReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
         this.orderUiState.emailNotice = "";
 
-        if (!is_email(this.orderUiState.inputEmail)) {
+        if (!this.isValidEmail()) {
             this.orderUiState.emailSuccessful = false;
             this.buttonMailReceipt.el.className = "fa fa-paper-plane";
             this.orderUiState.emailNotice = this.env._t("Invalid email.");
@@ -80,6 +78,10 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             }
             this.buttonMailReceipt.el.className = "fa fa-paper-plane";
         }, 1000);
+    }
+    isValidEmail() {
+        // A basic check of whether the `inputEmail` is an email or not.
+        return /^.+@.+$/.test(this.orderUiState.inputEmail);
     }
     get orderAmountPlusTip() {
         const order = this.currentOrder;
@@ -165,8 +167,8 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         );
     }
     async _sendReceiptToCustomer() {
-        const printer = new Printer(null, this.env.pos);
-        const receiptString = this.orderReceipt.el.innerHTML;
+        const printer = new BasePrinter();
+        const receiptString = this.orderReceipt.el.firstChild;
         const ticketImage = await printer.htmlToImg(receiptString);
         const order = this.currentOrder;
         const partner = order.get_partner();

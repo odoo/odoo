@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { parse } from "web.field_utils";
+import { parseFloat } from "@web/views/fields/parsers";
 import { useErrorHandlers } from "@point_of_sale/js/custom_hooks";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import utils from "web.utils";
+import { floatIsZero } from "@web/core/utils/numbers";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
@@ -135,7 +135,7 @@ export class PaymentScreen extends Component {
         this.render(true);
     }
     openCashbox() {
-        this.hardwareProxy.printer.open_cashbox();
+        this.hardwareProxy.printer.openCashbox();
     }
     async addTip() {
         // click_tip
@@ -150,7 +150,7 @@ export class PaymentScreen extends Component {
         });
 
         if (confirmed) {
-            this.currentOrder.set_tip(parse.float(payload));
+            this.currentOrder.set_tip(parseFloat(payload));
         }
     }
     async toggleShippingDatePicker() {
@@ -220,7 +220,7 @@ export class PaymentScreen extends Component {
             (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
             this.env.pos.config.iface_cashdrawer
         ) {
-            this.hardwareProxy.printer.open_cashbox();
+            this.hardwareProxy.printer.openCashbox();
         }
 
         this.currentOrder.initialize_validation_date();
@@ -475,10 +475,7 @@ export class PaymentScreen extends Component {
             // the current order is fully paid and due is zero.
             if (
                 this.currentOrder.is_paid() &&
-                utils.float_is_zero(
-                    this.currentOrder.get_due(),
-                    this.env.pos.currency.decimal_places
-                ) &&
+                floatIsZero(this.currentOrder.get_due(), this.env.pos.currency.decimal_places) &&
                 this.env.pos.config.auto_validate_terminal_payment
             ) {
                 this.validateOrder(false);

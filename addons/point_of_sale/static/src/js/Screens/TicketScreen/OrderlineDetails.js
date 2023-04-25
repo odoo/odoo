@@ -2,8 +2,8 @@
 
 import { Component } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
-import { format } from "web.field_utils";
-import { round_precision as round_pr } from "web.utils";
+import { formatFloat } from "@web/views/fields/formatters";
+import { roundPrecision as round_pr } from "@web/core/utils/numbers";
 
 /**
  * @props {pos.order.line} line
@@ -19,7 +19,7 @@ export class OrderlineDetails extends Component {
             const decimals = this.env.pos.dp["Product Unit of Measure"];
             const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
             const roundedQuantity = round_pr(quantity, rounding);
-            return format.float(roundedQuantity, { digits: [69, decimals] });
+            return formatFloat(roundedQuantity, { digits: [69, decimals] });
         };
         return {
             productName: line.get_full_product_name(),

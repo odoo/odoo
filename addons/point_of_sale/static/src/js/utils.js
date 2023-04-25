@@ -37,3 +37,20 @@ export function uuidv4() {
         return v.toString(16);
     });
 }
+
+/**
+ * Formats the given `url` with correct protocol and port.
+ * Useful for communicating to local iot box instance.
+ * @param {string} url
+ * @returns {string}
+ */
+export function deduceUrl(url) {
+    const { protocol } = window.location;
+    if (!url.includes("//")) {
+        url = `${protocol}//${url}`;
+    }
+    if (url.indexOf(":", 6) < 0) {
+        url += ":" + (protocol === "https:" ? 443 : 8069);
+    }
+    return url;
+}

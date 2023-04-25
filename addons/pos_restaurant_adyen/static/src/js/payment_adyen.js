@@ -1,9 +1,10 @@
 /** @odoo-module */
 
 import { PaymentAdyen } from "@pos_adyen/js/payment_adyen";
+import { patch } from "@web/core/utils/patch";
 
-PaymentAdyen.include({
-    _adyen_pay_data: function () {
+patch(PaymentAdyen.prototype, "pos_restaurant_adyen.PaymentAdyen", {
+    _adyen_pay_data() {
         var data = this._super(...arguments);
 
         if (data.SaleToPOIRequest.PaymentRequest.SaleData.SaleToAcquirerData) {
@@ -17,7 +18,7 @@ PaymentAdyen.include({
         return data;
     },
 
-    send_payment_adjust: function (cid) {
+    send_payment_adjust(cid) {
         var order = this.pos.get_order();
         var line = order.get_paymentline(cid);
         var data = {
@@ -35,7 +36,7 @@ PaymentAdyen.include({
         return this._call_adyen(data, "adjust");
     },
 
-    canBeAdjusted: function (cid) {
+    canBeAdjusted(cid) {
         var order = this.pos.get_order();
         var line = order.get_paymentline(cid);
         return ["mc", "visa", "amex", "discover"].includes(line.card_type);

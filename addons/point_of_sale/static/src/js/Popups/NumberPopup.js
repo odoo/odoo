@@ -1,7 +1,6 @@
 /** @odoo-module */
-import core from "web.core";
-var _t = core._t;
 
+import { _t } from "@web/core/l10n/translation";
 import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import { useService } from "@web/core/utils/hooks";
 import { useState } from "@odoo/owl";

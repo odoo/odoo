@@ -4,7 +4,7 @@ import { ControlButtonsMixin } from "@point_of_sale/js/ControlButtonsMixin";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
-import { parse } from "web.field_utils";
+import { parseFloat } from "@web/views/fields/parsers";
 
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -97,7 +97,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 });
                 return;
             }
-            const parsedInput = (buffer && parse.float(buffer)) || 0;
+            const parsedInput = (buffer && parseFloat(buffer)) || 0;
             if (lastId != selectedLine.cid) {
                 this._showDecreaseQuantityPopup();
             } else if (currentQuantity < parsedInput) {
@@ -203,7 +203,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             startingValue: 0,
             title: this.env._t("Set the new quantity"),
         });
-        const newQuantity = inputNumber && inputNumber !== "" ? parse.float(inputNumber) : null;
+        const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
         if (confirmed && newQuantity !== null) {
             const order = this.env.pos.get_order();
             const selectedLine = this.env.pos.get_order().get_selected_orderline();

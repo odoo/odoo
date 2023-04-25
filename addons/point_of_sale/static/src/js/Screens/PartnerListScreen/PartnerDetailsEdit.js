@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { _t } from "web.core";
-import { getDataURLFromFile } from "web.utils";
+import { _t } from "@web/core/l10n/translation";
+import { getDataURLFromFile } from "@web/core/utils/urls";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, onWillUnmount  } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 export class PartnerDetailsEdit extends Component {
     static template = "PartnerDetailsEdit";

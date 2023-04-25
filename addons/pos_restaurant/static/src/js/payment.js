@@ -1,8 +1,9 @@
 /** @odoo-module */
 
 import { PaymentInterface } from "@point_of_sale/js/payment";
+import { patch } from "@web/core/utils/patch";
 
-PaymentInterface.include({
+patch(PaymentInterface.prototype, "pos_restaurant.PaymentInterface", {
     /**
      * Return true if the amount that was authorized can be modified,
      * false otherwise
@@ -18,5 +19,5 @@ PaymentInterface.include({
      * canBeAdjusted returns True
      * @param {string} cid - The id of the paymentline
      */
-    send_payment_adjust: function (cid) {},
+    send_payment_adjust(cid) {},
 });

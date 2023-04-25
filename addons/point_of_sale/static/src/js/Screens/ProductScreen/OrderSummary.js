@@ -1,7 +1,7 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
-import { float_is_zero } from "web.utils";
+import { floatIsZero } from "@web/core/utils/numbers";
 
 export class OrderSummary extends Component {
     static template = "OrderSummary";
@@ -14,7 +14,7 @@ export class OrderSummary extends Component {
         const totalWithoutTax = this.props.order.get_total_without_tax();
         const taxAmount = total - totalWithoutTax;
         return {
-            hasTax: !float_is_zero(taxAmount, this.env.pos.currency.decimal_places),
+            hasTax: !floatIsZero(taxAmount, this.env.pos.currency.decimal_places),
             displayAmount: this.env.pos.format_currency(taxAmount),
         };
     }

@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { parse } from "web.field_utils";
+import { parseFloat } from "@web/views/fields/parsers";
 import { Transition } from "@web/core/transition";
 import { constrain, getLimits, useMovable } from "@point_of_sale/app/movable_hook";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
@@ -65,7 +65,7 @@ export class DebugWidget extends Component {
         this.state.isShown = !this.state.isShown;
     }
     setWeight() {
-        var weightInKg = parse.float(this.state.weightInput);
+        var weightInKg = parseFloat(this.state.weightInput);
         if (!isNaN(weightInKg)) {
             this.hardwareProxy.setDebugWeight(weightInKg);
         }

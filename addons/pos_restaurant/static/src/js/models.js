@@ -1,14 +1,12 @@
 /** @odoo-module */
 
 import { PosGlobalState, Order, Orderline, Payment } from "@point_of_sale/js/models";
-import { uuidv4, batched } from "@point_of_sale/js/utils";
-import core from "web.core";
-import { Printer } from "@point_of_sale/js/printers";
+import { uuidv4, batched, deduceUrl } from "@point_of_sale/js/utils";
+import { HWPrinter } from "@point_of_sale/app/printer/hw_printer";
 import { patch } from "@web/core/utils/patch";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
-
-const QWeb = core.qweb;
-const _t = core._t;
+import { _t } from "@web/core/l10n/translation";
+import { renderToElement } from "@web/core/utils/render";
 
 patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     setup() {
@@ -233,21 +231,15 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         return tableOrders.reduce((count, order) => count + order.getCustomerCount(), 0);
     },
     create_printer(config) {
-        var url = config.proxy_ip || "";
-        if (url.indexOf("//") < 0) {
-            url = window.location.protocol + "//" + url;
-        }
-        if (url.indexOf(":", url.indexOf("//") + 2) < 0 && window.location.protocol !== "https:") {
-            url = url + ":8069";
-        }
-        return new Printer(url, this);
+        const url = deduceUrl(config.proxy_ip || "");
+        return new HWPrinter({ rpc: this.env.services.rpc, url });
     },
     isOpenOrderShareable() {
         return this._super(...arguments) || this.config.is_table_management;
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
-    }
+    },
 });
 
 // New orders are now associated with the current table, if any.
@@ -508,8 +500,8 @@ patch(Order.prototype, "pos_restaurant.Order", {
                         minutes,
                     },
                 };
-                const receipt = QWeb.render("OrderChangeReceipt", { changes: printingChanges });
-                const result = await printer.print_receipt(receipt);
+                const receipt = renderToElement("OrderChangeReceipt", { changes: printingChanges });
+                const result = await printer.printReceipt(receipt);
                 if (!result.successful) {
                     isPrintSuccessful = false;
                 }

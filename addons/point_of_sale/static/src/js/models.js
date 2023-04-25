@@ -2,21 +2,28 @@
 /* global waitForWebfonts */
 
 import { PosDB } from "@point_of_sale/js/db";
-import config from "web.config";
-import field_utils from "web.field_utils";
-import time from "web.time";
-import utils from "web.utils";
+import { formatFloat } from "@web/views/fields/formatters";
+// FIXME POSREF - unify use of native parseFloat and web's parseFloat. We probably don't need the native version.
+import { parseFloat as oParseFloat } from "@web/views/fields/parsers";
 import { batched, uuidv4 } from "@point_of_sale/js/utils";
+import { formatDate, formatDateTime, serializeDateTime } from "@web/core/l10n/dates";
+import {
+    roundDecimals as round_di,
+    roundPrecision as round_pr,
+    floatIsZero,
+} from "@web/core/utils/numbers";
 import { ErrorPopup } from "./Popups/ErrorPopup";
 import { ProductConfiguratorPopup } from "@point_of_sale/js/Popups/ProductConfiguratorPopup";
 import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 import { markRaw, reactive } from "@odoo/owl";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
-import { escape, sprintf } from "@web/core/utils/strings";
+import { sprintf } from "@web/core/utils/strings";
 import { Mutex } from "@web/core/utils/concurrency";
 import { memoize } from "@web/core/utils/functions";
 import { _t } from "@web/core/l10n/translation";
 import { renderToString } from "@web/core/utils/render";
+
+const { DateTime } = luxon;
 
 /* Returns an array containing all elements of the given
  * array corresponding to the rule function {agg} and without duplicates
@@ -37,10 +44,6 @@ export function uniqueBy(array, agg) {
     }
     return [...map.values()];
 }
-
-var round_di = utils.round_decimals;
-var round_pr = utils.round_precision;
-const Markup = utils.Markup;
 
 /**
  * Gets a product image as a base64 string so that it can be sent to the
@@ -138,7 +141,6 @@ export class PosGlobalState extends PosModel {
         super.setup(...arguments);
 
         this.db = new PosDB(); // a local database used to search trough products and categories & store pending orders
-        this.debug = config.isDebug(); //debug mode
         this.unwatched = markRaw({});
         this.pushOrderMutex = new Mutex();
 
@@ -1443,11 +1445,11 @@ export class PosGlobalState extends PosModel {
     }
 
     isProductQtyZero(qty) {
-        return utils.float_is_zero(qty, this.dp["Product Unit of Measure"]);
+        return floatIsZero(qty, this.dp["Product Unit of Measure"]);
     }
 
     formatProductQty(qty) {
-        return field_utils.format.float(qty, {
+        return formatFloat(qty, {
             digits: [true, this.dp["Product Unit of Measure"]],
         });
     }
@@ -1474,7 +1476,7 @@ export class PosGlobalState extends PosModel {
 
         if (typeof amount === "number") {
             amount = round_di(amount, decimals).toFixed(decimals);
-            amount = field_utils.format.float(round_di(amount, decimals), {
+            amount = formatFloat(round_di(amount, decimals), {
                 digits: [69, decimals],
             });
         }
@@ -1934,7 +1936,7 @@ export class Orderline extends PosModel {
                 ? discount
                 : isNaN(parseFloat(discount))
                 ? 0
-                : field_utils.parse.float("" + discount);
+                : oParseFloat("" + discount);
         var disc = Math.min(Math.max(parsed_discount || 0, 0), 100);
         this.discount = disc;
         this.discountStr = "" + disc;
@@ -1977,7 +1979,7 @@ export class Orderline extends PosModel {
             var quant =
                 typeof quantity === "number"
                     ? quantity
-                    : field_utils.parse.float("" + (quantity ? quantity : 0));
+                    : oParseFloat("" + (quantity ? quantity : 0));
             if (this.refunded_orderline_id in this.pos.toRefundLines) {
                 const toRefundDetail = this.pos.toRefundLines[this.refunded_orderline_id];
                 const maxQtyToRefund =
@@ -2013,7 +2015,7 @@ export class Orderline extends PosModel {
                     var decimals = this.pos.dp["Product Unit of Measure"];
                     var rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
                     this.quantity = round_pr(quant, rounding);
-                    this.quantityStr = field_utils.format.float(this.quantity, {
+                    this.quantityStr = formatFloat(this.quantity, {
                         digits: [69, decimals],
                     });
                 } else {
@@ -2140,7 +2142,7 @@ export class Orderline extends PosModel {
             this.get_unit().is_pos_groupable &&
             // don't merge discounted orderlines
             this.get_discount() === 0 &&
-            utils.float_is_zero(
+            floatIsZero(
                 price - order_line_price - orderline.get_price_extra(),
                 this.pos.currency.decimal_places
             ) &&
@@ -2247,7 +2249,7 @@ export class Orderline extends PosModel {
             ? price
             : isNaN(parseFloat(price))
             ? 0
-            : field_utils.parse.float("" + price);
+            : oParseFloat("" + price);
         this.price = round_di(parsed_price || 0, this.pos.dp["Product Price"]);
     }
     get_unit_price() {
@@ -2573,7 +2575,7 @@ export class Payment extends PosModel {
         return this.amount;
     }
     get_amount_str() {
-        return field_utils.format.float(this.amount, {
+        return formatFloat(this.amount, {
             digits: [69, this.pos.currency.decimal_places],
         });
     }
@@ -2632,7 +2634,7 @@ export class Payment extends PosModel {
     //exports as JSON for server communication
     export_as_JSON() {
         return {
-            name: time.datetime_to_str(new Date()),
+            name: serializeDateTime(DateTime.local()),
             payment_method_id: this.payment_method.id,
             amount: this.get_amount(),
             payment_status: this.payment_status,
@@ -2645,12 +2647,11 @@ export class Payment extends PosModel {
     }
     //exports as JSON for receipt printing
     export_for_printing() {
-        const ticket = escape(this.ticket).replace(/\n/g, "<br />"); // formatting
         return {
             cid: this.cid,
             amount: this.get_amount(),
             name: this.name,
-            ticket: Markup(ticket),
+            ticket: this.ticket,
         };
     }
     // If payment status is a non-empty string, then it is an electronic payment.
@@ -2860,17 +2861,8 @@ export class Order extends PosModel {
         return json;
     }
     _exportShippingDateForPrinting() {
-        const shippingDate = new Date(this.shippingDate);
-        const localeShippingDate = field_utils.format.date(
-            moment(shippingDate),
-            {},
-            { timezone: false }
-        );
-        const exportedDate = {
-            localestring: localeShippingDate,
-            validationDate: shippingDate,
-        };
-        return exportedDate;
+        const shippingDate = DateTime.fromJSDate(new Date(this.shippingDate));
+        return formatDate(shippingDate);
     }
     export_for_printing() {
         var orderlines = [];
@@ -2951,11 +2943,7 @@ export class Order extends PosModel {
         receipt.footer = (isHeaderOrFooter && this.pos.config.receipt_footer) || "";
 
         if (!receipt.date.localestring && (!this.state || this.state == "draft")) {
-            receipt.date.localestring = field_utils.format.datetime(
-                moment(new Date()),
-                {},
-                { timezone: false }
-            );
+            receipt.date.localestring = formatDateTime(DateTime.local());
         }
 
         return receipt;
@@ -3112,11 +3100,7 @@ export class Order extends PosModel {
 
     initialize_validation_date() {
         this.validation_date = new Date();
-        this.formatted_validation_date = field_utils.format.datetime(
-            moment(this.validation_date),
-            {},
-            { timezone: false }
-        );
+        this.formatted_validation_date = formatDateTime(DateTime.fromJSDate(this.validation_date));
     }
 
     set_tip(tip) {
@@ -3591,7 +3575,7 @@ export class Order extends PosModel {
                 var rounding_applied = total - remaining;
 
                 // because floor and ceil doesn't include decimals in calculation, we reuse the value of the half-up and adapt it.
-                if (utils.float_is_zero(rounding_applied, this.pos.currency.decimal_places)) {
+                if (floatIsZero(rounding_applied, this.pos.currency.decimal_places)) {
                     // https://xkcd.com/217/
                     return 0;
                 } else if (
@@ -3632,7 +3616,7 @@ export class Order extends PosModel {
             }
 
             if (
-                !utils.float_is_zero(
+                !floatIsZero(
                     line.amount - round_pr(line.amount, this.pos.cash_rounding[0].rounding),
                     6
                 )

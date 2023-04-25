@@ -1,7 +1,7 @@
 /** @odoo-module */
 
-import core from "web.core";
-import utils from "web.utils";
+import { unaccent } from "@web/core/utils/strings";
+
 /* The PosDB holds reference to data that is either
  * - static: does not change between pos reloads
  * - persistent : must stay between reloads ( orders )
@@ -18,10 +18,10 @@ import utils from "web.utils";
  */
 const CACHE = {};
 
-export const PosDB = core.Class.extend({
-    name: "openerp_pos_db", //the prefix of the localstorage data
-    limit: 100, // the maximum number of results returned by a search
-    init: function (options) {
+export class PosDB {
+    name = "openerp_pos_db"; //the prefix of the localstorage data
+    limit = 100; // the maximum number of results returned by a search
+    constructor(options) {
         options = options || {};
         this.name = options.name || this.name;
         this.limit = options.limit || this.limit;
@@ -48,7 +48,7 @@ export const PosDB = core.Class.extend({
         this.category_childs = {};
         this.category_parent = {};
         this.category_search_string = {};
-    },
+    }
 
     /**
      * sets an uuid to prevent conflict in locally stored data between multiple PoS Configs. By
@@ -57,14 +57,14 @@ export const PosDB = core.Class.extend({
      *
      * @param {string} uuid Unique identifier of the PoS Config linked to the current session.
      */
-    set_uuid: function (uuid) {
+    set_uuid(uuid) {
         this.name = this.name + "_" + uuid;
-    },
+    }
 
     /* returns the category object from its id. If you pass a list of id as parameters, you get
      * a list of category objects.
      */
-    get_category_by_id: function (categ_id) {
+    get_category_by_id(categ_id) {
         if (categ_id instanceof Array) {
             var list = [];
             for (var i = 0, len = categ_id.length; i < len; i++) {
@@ -79,26 +79,26 @@ export const PosDB = core.Class.extend({
         } else {
             return this.category_by_id[categ_id];
         }
-    },
+    }
     /* returns a list of the category's child categories ids, or an empty list
      * if a category has no childs */
-    get_category_childs_ids: function (categ_id) {
+    get_category_childs_ids(categ_id) {
         return this.category_childs[categ_id] || [];
-    },
+    }
     /* returns a list of all ancestors (parent, grand-parent, etc) categories ids
      * starting from the root category to the direct parent */
-    get_category_ancestors_ids: function (categ_id) {
+    get_category_ancestors_ids(categ_id) {
         return this.category_ancestors[categ_id] || [];
-    },
+    }
     /* returns the parent category's id of a category, or the root_category_id if no parent.
      * the root category is parent of itself. */
-    get_category_parent_id: function (categ_id) {
+    get_category_parent_id(categ_id) {
         return this.category_parent[categ_id] || this.root_category_id;
-    },
+    }
     /* adds categories definitions to the database. categories is a list of categories objects as
      * returned by the openerp server. Categories must be inserted before the products or the
      * product/ categories association may (will) not work properly */
-    add_categories: function (categories) {
+    add_categories(categories) {
         var self = this;
         if (!this.category_by_id[this.root_category_id]) {
             this.category_by_id[this.root_category_id] = {
@@ -132,8 +132,8 @@ export const PosDB = core.Class.extend({
             }
         }
         make_ancestors(this.root_category_id, []);
-    },
-    category_contains: function (categ_id, product_id) {
+    }
+    category_contains(categ_id, product_id) {
         var product = this.product_by_id[product_id];
         if (product) {
             var cid = product.pos_categ_id[0];
@@ -143,9 +143,9 @@ export const PosDB = core.Class.extend({
             return !!cid;
         }
         return false;
-    },
+    }
     /* loads a record store from the database. returns default if nothing is found */
-    load: function (store, deft) {
+    load(store, deft) {
         if (CACHE[store] !== undefined) {
             return CACHE[store];
         }
@@ -157,13 +157,13 @@ export const PosDB = core.Class.extend({
         } else {
             return deft;
         }
-    },
+    }
     /* saves a record store to the database */
-    save: function (store, data) {
+    save(store, data) {
         localStorage[this.name + "_" + store] = JSON.stringify(data);
         CACHE[store] = data;
-    },
-    _product_search_string: function (product) {
+    }
+    _product_search_string(product) {
         var str = product.display_name;
         if (product.barcode) {
             str += "|" + product.barcode;
@@ -179,8 +179,8 @@ export const PosDB = core.Class.extend({
         }
         str = product.id + ":" + str.replace(/[\n:]/g, "") + "\n";
         return str;
-    },
-    add_products: function (products) {
+    }
+    add_products(products) {
         var stored_categories = this.product_by_category_id;
 
         if (!(products instanceof Array)) {
@@ -192,7 +192,7 @@ export const PosDB = core.Class.extend({
                 continue;
             }
             if (product.available_in_pos) {
-                var search_string = utils.unaccent(this._product_search_string(product));
+                var search_string = unaccent(this._product_search_string(product));
                 var categ_id = product.pos_categ_id
                     ? product.pos_categ_id[0]
                     : this.root_category_id;
@@ -227,8 +227,8 @@ export const PosDB = core.Class.extend({
                 this.product_by_barcode[product.barcode] = product;
             }
         }
-    },
-    add_packagings: function (product_packagings) {
+    }
+    add_packagings(product_packagings) {
         var self = this;
         Object.values(product_packagings || {}).map((product_packaging) => {
             const products = Object.values(self.product_by_id);
@@ -236,8 +236,8 @@ export const PosDB = core.Class.extend({
                 self.product_packaging_by_barcode[product_packaging.barcode] = product_packaging;
             }
         });
-    },
-    _partner_search_string: function (partner) {
+    }
+    _partner_search_string(partner) {
         var str = partner.name || "";
         if (partner.barcode) {
             str += "|" + partner.barcode;
@@ -262,8 +262,8 @@ export const PosDB = core.Class.extend({
         }
         str = "" + partner.id + ":" + str.replace(":", "").replace(/\n/g, " ") + "\n";
         return str;
-    },
-    add_partners: function (partners) {
+    }
+    add_partners(partners) {
         var updated = {};
         var new_write_date = "";
         var partner;
@@ -335,20 +335,20 @@ export const PosDB = core.Class.extend({
                 searchString += this._partner_search_string(partner);
             }
 
-            this.partner_search_strings[chunkId] = utils.unaccent(searchString);
+            this.partner_search_strings[chunkId] = unaccent(searchString);
         }
         return Object.keys(updated).length;
-    },
-    get_partner_write_date: function () {
+    }
+    get_partner_write_date() {
         return this.partner_write_date || "1970-01-01 00:00:00";
-    },
-    get_partner_by_id: function (id) {
+    }
+    get_partner_by_id(id) {
         return this.partner_by_id[id];
-    },
-    get_partner_by_barcode: function (barcode) {
+    }
+    get_partner_by_barcode(barcode) {
         return this.partner_by_barcode[barcode];
-    },
-    get_partners_sorted: function (max_count) {
+    }
+    get_partners_sorted(max_count) {
         max_count = max_count
             ? Math.min(this.partner_sorted.length, max_count)
             : this.partner_sorted.length;
@@ -357,13 +357,13 @@ export const PosDB = core.Class.extend({
             partners.push(this.partner_by_id[this.partner_sorted[i]]);
         }
         return partners;
-    },
-    search_partner: function (query) {
+    }
+    search_partner(query) {
         try {
             // eslint-disable-next-line no-useless-escape
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g, ".");
             query = query.replace(/ /g, ".+");
-            var re = RegExp("([0-9]+):.*?" + utils.unaccent(query), "gi");
+            var re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
         } catch {
             return [];
         }
@@ -380,15 +380,15 @@ export const PosDB = core.Class.extend({
             }
         }
         return results;
-    },
+    }
     /* removes all the data from the database. TODO : being able to selectively remove data */
-    clear: function () {
+    clear() {
         for (var i = 0, len = arguments.length; i < len; i++) {
             localStorage.removeItem(this.name + "_" + arguments[i]);
         }
-    },
+    }
     /* this internal methods returns the count of properties in an object. */
-    _count_props: function (obj) {
+    _count_props(obj) {
         var count = 0;
         for (var prop in obj) {
             if (Object.hasOwnProperty.call(obj, prop)) {
@@ -396,19 +396,19 @@ export const PosDB = core.Class.extend({
             }
         }
         return count;
-    },
-    get_product_by_id: function (id) {
+    }
+    get_product_by_id(id) {
         return this.product_by_id[id];
-    },
-    get_product_by_barcode: function (barcode) {
+    }
+    get_product_by_barcode(barcode) {
         if (this.product_by_barcode[barcode]) {
             return this.product_by_barcode[barcode];
         } else if (this.product_packaging_by_barcode[barcode]) {
             return this.product_by_id[this.product_packaging_by_barcode[barcode].product_id[0]];
         }
         return undefined;
-    },
-    get_product_by_category: function (category_id) {
+    }
+    get_product_by_category(category_id) {
         var product_ids = this.product_by_category_id[category_id];
         var list = [];
         if (product_ids) {
@@ -421,17 +421,17 @@ export const PosDB = core.Class.extend({
             }
         }
         return list;
-    },
+    }
     /* returns a list of products with :
      * - a category that is or is a child of category_id,
      * - a name, package or barcode containing the query (case insensitive)
      */
-    search_product_in_category: function (category_id, query) {
+    search_product_in_category(category_id, query) {
         try {
             // eslint-disable-next-line no-useless-escape
             query = query.replace(/[\[\]\(\)\+\*\?\.\-\!\&\^\$\|\~\_\{\}\:\,\\\/]/g, ".");
             query = query.replace(/ /g, ".+");
-            var re = RegExp("([0-9]+):.*?" + utils.unaccent(query), "gi");
+            var re = RegExp("([0-9]+):.*?" + unaccent(query), "gi");
         } catch {
             return [];
         }
@@ -450,12 +450,12 @@ export const PosDB = core.Class.extend({
             }
         }
         return results;
-    },
+    }
     /* from a product id, and a list of category ids, returns
      * true if the product belongs to one of the provided category
      * or one of its child categories.
      */
-    is_product_in_category: function (category_ids, product_id) {
+    is_product_in_category(category_ids, product_id) {
         let cat = this.get_product_by_id(product_id).pos_categ_id[0];
         while (cat) {
             for (const cat_id of category_ids) {
@@ -467,10 +467,10 @@ export const PosDB = core.Class.extend({
             cat = this.get_category_parent_id(cat);
         }
         return false;
-    },
+    }
 
     /* paid orders */
-    add_order: function (order) {
+    add_order(order) {
         var order_id = order.uid;
         var orders = this.load("orders", []);
 
@@ -490,19 +490,19 @@ export const PosDB = core.Class.extend({
         orders.push({ id: order_id, data: order });
         this.save("orders", orders);
         return order_id;
-    },
-    remove_order: function (order_id) {
+    }
+    remove_order(order_id) {
         var orders = this.load("orders", []);
         orders = orders.filter((order) => order.id !== order_id);
         this.save("orders", orders);
-    },
-    remove_all_orders: function () {
+    }
+    remove_all_orders() {
         this.save("orders", []);
-    },
-    get_orders: function () {
+    }
+    get_orders() {
         return this.load("orders", []);
-    },
-    get_order: function (order_id) {
+    }
+    get_order(order_id) {
         var orders = this.get_orders();
         for (var i = 0, len = orders.length; i < len; i++) {
             if (orders[i].id === order_id) {
@@ -510,10 +510,10 @@ export const PosDB = core.Class.extend({
             }
         }
         return undefined;
-    },
+    }
 
     /* working orders */
-    save_unpaid_order: function (order) {
+    save_unpaid_order(order) {
         var order_id = order.uid;
         var orders = this.load("unpaid_orders", []);
         var serialized = order.export_as_JSON();
@@ -529,36 +529,36 @@ export const PosDB = core.Class.extend({
         orders.push({ id: order_id, data: serialized });
         this.save("unpaid_orders", orders);
         return order_id;
-    },
-    remove_unpaid_order: function (order) {
+    }
+    remove_unpaid_order(order) {
         var orders = this.load("unpaid_orders", []);
         orders = orders.filter((o) => o.id !== order.uid);
         this.save("unpaid_orders", orders);
-    },
-    remove_all_unpaid_orders: function () {
+    }
+    remove_all_unpaid_orders() {
         this.save("unpaid_orders", []);
-    },
-    get_unpaid_orders: function () {
+    }
+    get_unpaid_orders() {
         var saved = this.load("unpaid_orders", []);
         var orders = [];
         for (var i = 0; i < saved.length; i++) {
             orders.push(saved[i].data);
         }
         return orders;
-    },
+    }
     /**
      * Return the orders with requested ids if they are unpaid.
      * @param {array<number>} ids order_ids.
      * @return {array<object>} list of orders.
      */
-    get_unpaid_orders_to_sync: function (ids) {
+    get_unpaid_orders_to_sync(ids) {
         const savedOrders = this.load("unpaid_orders", []);
         return savedOrders.filter(
             (order) =>
                 ids.includes(order.id) &&
                 (order.data.server_id || order.data.lines.length || order.data.statement_ids.length)
         );
-    },
+    }
     /**
      * Add a given order to the orders to be removed from the server.
      *
@@ -566,28 +566,28 @@ export const PosDB = core.Class.extend({
      * after syncing. This function will add the server_id of the order to a list of orders still to be removed.
      * @param {object} order object.
      */
-    set_order_to_remove_from_server: function (order) {
+    set_order_to_remove_from_server(order) {
         if (order.server_id !== undefined) {
             var to_remove = this.load("unpaid_orders_to_remove", []);
             to_remove.push(order.server_id);
             this.save("unpaid_orders_to_remove", to_remove);
         }
-    },
+    }
     /**
      * Get a list of server_ids of orders to be removed.
      * @return {array<number>} list of server_ids.
      */
-    get_ids_to_remove_from_server: function () {
+    get_ids_to_remove_from_server() {
         return this.load("unpaid_orders_to_remove", []);
-    },
+    }
     /**
      * Remove server_ids from the list of orders to be removed.
      * @param {array<number>} ids
      */
-    set_ids_removed_from_server: function (ids) {
+    set_ids_removed_from_server(ids) {
         var to_remove = this.load("unpaid_orders_to_remove", []);
 
         to_remove = to_remove.filter((id) => !ids.includes(id));
         this.save("unpaid_orders_to_remove", to_remove);
-    },
-});
+    }
+}
