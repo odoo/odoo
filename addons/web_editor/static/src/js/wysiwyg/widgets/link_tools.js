@@ -11,6 +11,8 @@ import {
 } from "web_editor.utils";
 import {
     onWillUpdateProps,
+    onMounted,
+    onWillUnmount,
     useState,
 } from "@odoo/owl";
 import { normalizeCSSColor } from '@web/core/utils/colors';
@@ -60,16 +62,32 @@ export class LinkTools extends Link {
             this._setSelectOptionFromLink();
             this._updateOptionsUI();
         });
+        onMounted(() => {
+            this._observer = new MutationObserver(records => {
+                if (records.some(record => record.type === 'attributes')) {
+                    this.state.url = this.props.link.getAttribute('href') || '';
+                    this._setUrl();
+                }
+                this._updateLabelInput();
+            });
+            this._observerOptions = {
+                subtree: true,
+                childList: true,
+                characterData: true,
+                attributes: true,
+                attributeFilter: ['href'],
+            };
+            this._observer.observe(this.props.link, this._observerOptions);
+        });
+        onWillUnmount(() => {
+            this._observer.disconnect();
+        });
     }
     /**
      * @override
      */
     async _updateState() {
         await super._updateState(...arguments);
-        this._observer = new MutationObserver(async () => {
-            this._updateLabelInput();
-        });
-        this._observer.observe(this.props.link, {subtree: true, childList: true, characterData: true});
         // Keep track of each selected custom color and colorpicker.
         this.customColors = {};
         this.PREFIXES = {
@@ -108,7 +126,6 @@ export class LinkTools extends Link {
         if (shouldUnlink(this.$link[0], this.colorCombinationClass)) {
             $contents.unwrap();
         }
-        this._observer.disconnect();
         super.destroy(...arguments);
         this.props.onDestroy();
     }
@@ -118,7 +135,7 @@ export class LinkTools extends Link {
         super.applyLinkToDom(...arguments);
         this.props.wysiwyg.odooEditor.historyStep();
         this.props.onPostApplyLink();
-        this._observer.observe(this.props.link, {subtree: true, childList: true, characterData: true});
+        this._observer.observe(this.props.link, this._observerOptions);
     }
 
     //--------------------------------------------------------------------------
@@ -495,7 +512,7 @@ export class LinkTools extends Link {
         // Force update of link's content with new data using 'force: true'.
         // Without this, no update if input is same as original text.
         this._updateLinkContent(this.$link, data, {force: true});
-        this._observer.observe(this.props.link, {subtree: true, childList: true, characterData: true});
+        this._observer.observe(this.props.link, this._observerOptions);
     }
     /* If content is equal to previous URL, update it to match current URL.
      *
