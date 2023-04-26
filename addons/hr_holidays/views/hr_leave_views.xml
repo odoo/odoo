@@ -189,9 +189,9 @@
                 <field name="number_of_days"/>
                 <templates>
                     <div t-name="activity-box">
-                        <img t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="50" height="50"/>
-                        <div>
-                            <field name="name"/> <span class="text-muted">(<field name="number_of_days"/> days)</span>
+                        <img class="rounded-circle" t-att-src="activity_image('hr.employee', 'avatar_128', record.employee_id.raw_value)" t-att-title="record.employee_id.value" t-att-alt="record.employee_id.value" width="50" height="50"/>
+                        <div class="ms-2">
+                            <field name="name" bold="1"/> <span class="text-muted">(<field name="number_of_days"/> days)</span>
                             <div class="text-muted">
                                 <field name="date_from" widget="date"/> <i class="fa fa-long-arrow-right" title="to" /> <field name="date_to" widget="date"/>
                             </div>
