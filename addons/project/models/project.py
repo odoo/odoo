@@ -775,6 +775,7 @@ class Project(models.Model):
         action['context'] = {
             'default_project_id': self.id,
             'delete': False,
+            'active_id_chatter': self.id,
         }
         action['display_name'] = self.name
         return action
