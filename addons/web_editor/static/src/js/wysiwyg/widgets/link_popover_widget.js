@@ -150,6 +150,24 @@ const LinkPopoverWidget = Widget.extend({
             $(this.options.wysiwyg.odooEditor.document).on('mouseup.link_popover', onClickDocument);
         }
 
+        // Update popover's content and position upon changes
+        // on the link's label or href.
+        this._observer = new MutationObserver(records => {
+            if (!popoverShown) {
+                return;
+            }
+            if (records.some(record => record.type === 'attributes')) {
+                this._loadAsyncLinkPreview();
+            }
+            this.$target.popover('update');
+        });
+        this._observer.observe(this.target, {
+            subtree: true,
+            characterData: true,
+            attributes: true,
+            attributeFilter: ['href'],
+        });
+
         return this._super(...arguments);
     },
     /**
@@ -164,6 +182,7 @@ const LinkPopoverWidget = Widget.extend({
         $(document).off('.link_popover');
         $(this.options.wysiwyg.odooEditor.document).off('.link_popover');
         this.$target.popover('dispose');
+        this._observer.disconnect();
         return this._super(...arguments);
     },
 
