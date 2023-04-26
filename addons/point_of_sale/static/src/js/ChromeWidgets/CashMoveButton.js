@@ -52,6 +52,7 @@ class CashMoveButton extends PosComponent {
         const result = { ...payload };
         result.cashier = this.env.pos.get_cashier();
         result.company = this.env.pos.company;
+        result.date = new Date().toLocaleString();
         return result;
     }
 }
