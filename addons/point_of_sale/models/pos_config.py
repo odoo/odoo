@@ -208,10 +208,7 @@ class PosConfig(models.Model):
     @api.depends('company_id')
     def _compute_company_has_template(self):
         for config in self:
-            if config.company_id.chart_template_id:
-                config.company_has_template = True
-            else:
-                config.company_has_template = False
+            config.company_has_template = self.env['account.chart.template'].existing_accounting(config.company_id) or config.company_id.chart_template_id
 
     def _compute_is_installed_account_accountant(self):
         account_accountant = self.env['ir.module.module'].sudo().search([('name', '=', 'account_accountant'), ('state', '=', 'installed')])
