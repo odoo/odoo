@@ -1,0 +1,38 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--Bizkaia uses an extra layer to send TicketBAI invoices, called LROE 
+    see https://www.batuz.eus/es/documentacion-tecnica -->
+<odoo>
+    <data>
+        <template id="template_LROE_240_main">
+            <lrpjfecsgap:LROEPJ240FacturasEmitidasConSGAltaPeticion
+                xmlns:lrpjfecsgap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AltaPeticion_V1_0_2.xsd"
+                t-if="is_emission"
+                t-call="l10n_es_edi_tbai.template_LROE_240_inner"/>
+            <lrpjfecsgap:LROEPJ240FacturasEmitidasConSGAnulacionPeticion
+                xmlns:lrpjfecsgap="https://www.batuz.eus/fitxategiak/batuz/LROE/esquemas/LROE_PJ_240_1_1_FacturasEmitidas_ConSG_AnulacionPeticion_V1_0_0.xsd"
+                t-else=""
+                t-call="l10n_es_edi_tbai.template_LROE_240_inner"/>
+        </template>
+
+        <template id="template_LROE_240_inner">
+            <Cabecera>
+                <Modelo>240</Modelo>
+                <Capitulo>1</Capitulo>
+                <Subcapitulo>1.1</Subcapitulo>
+                <Operacion t-out="'A00' if is_emission else 'AN0'"/>
+                <Version>1.0</Version>
+                <Ejercicio t-out="fiscal_year"/>
+                <ObligadoTributario>
+                    <NIF t-out="sender_vat"/>
+                    <ApellidosNombreRazonSocial t-out="sender.name"/>
+                </ObligadoTributario>
+            </Cabecera>
+            <FacturasEmitidas>
+                <FacturaEmitida t-foreach="tbai_b64_list" t-as="tbai_b64">
+                    <TicketBai t-if="is_emission" t-out="tbai_b64"/>
+                    <AnulacionTicketBai t-else="" t-out="tbai_b64"/>
+                </FacturaEmitida>
+            </FacturasEmitidas>
+        </template>
+    </data>
+</odoo>
