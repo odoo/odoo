@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="web.CogMenu" owl="1">
-        <div t-if="hasItems" class="o_cp_action_menus d-flex pe-2 gap-1">
-            <Dropdown togglerClass="'d-print-none btn btn-text ms-1 lh-sm'">
+        <div t-if="hasItems" class="o_cp_action_menus d-flex align-items-center pe-2 gap-1">
+            <Dropdown class="'lh-1'" togglerClass="'d-print-none btn p-0 ms-1 lh-sm'" menuClass="'lh-base'">
                 <t t-set-slot="toggler">
                     <i class="fa fa-cog"/>
                 </t>
