@@ -34,7 +34,7 @@ class TestChartTemplate(SavepointCase):
             cls.fiscal_position_template, 'account.test_fp_tax_template_1', cls.tax_template_1, cls.tax_template_2
         )
 
-        cls.chart_template.try_loading(company=cls.company)
+        cls.chart_template.try_loading(company=cls.company, install_demo=False)
         cls.chart_template_xmlid = cls.chart_template.get_external_id()[cls.chart_template.id]
         cls.fiscal_position = cls.env['account.fiscal.position'].search([
             ('company_id', '=', cls.company.id),
@@ -214,7 +214,7 @@ class TestChartTemplate(SavepointCase):
             'country_id': self.env.ref('base.be').id,
             'account_tax_fiscal_country_id': self.env.ref('base.be').id,
         })
-        self.chart_template.try_loading(company=company_2)
+        self.chart_template.try_loading(company=company_2, install_demo=False)
 
         # triggers recreation of taxes related to template 1
         self.tax_template_1.amount += 1
