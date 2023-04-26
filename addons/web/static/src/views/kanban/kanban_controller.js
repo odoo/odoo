@@ -84,7 +84,7 @@ export class KanbanController extends Component {
         return {
             activeFields: archInfo.activeFields,
             progressAttributes: archInfo.progressAttributes,
-            fields,
+            fields: { ...fields },
             resModel,
             handleField: archInfo.handleField,
             limit: archInfo.limit || limit,

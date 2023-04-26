@@ -11,6 +11,7 @@ import {
     patchWithCleanup,
     triggerEvent,
 } from "@web/../tests/helpers/utils";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog";
@@ -1354,6 +1355,44 @@ QUnit.module("Fields", (hooks) => {
             ".o_kanban_record:nth-child(1) .o_kanban_property_field"
         );
         assert.equal(items.length, 2);
+    });
+
+    /**
+     * Check that the properties are shown when switching view.
+     */
+    QUnit.test("properties: switch view", async function (assert) {
+        serverData.views = {
+            "partner,false,search": `<search/>`,
+            "partner,99,kanban": `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div>
+                            <field name="company_id"/> <hr/>
+                            <field name="display_name"/> <hr/>
+                            <field name="properties" widget="properties"/>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
+            "partner,100,list": `<list limit="1">
+                <field name="display_name"/>
+                <field name="properties"/>
+            </list>`,
+        };
+        const wc = await createWebClient({ serverData });
+        await doAction(wc, {
+            res_model: "partner",
+            type: "ir.actions.act_window",
+            views: [
+                [false, "kanban"],
+                [false, "list"],
+            ],
+        });
+
+        await click(target, ".o_switch_view.o_list");
+        assert.ok(target.querySelector(".o_optional_columns_dropdown"),
+            "Properties should be added as optional columns."
+        );
     });
 
     /**
