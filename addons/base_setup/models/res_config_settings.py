@@ -40,7 +40,7 @@ class ResConfigSettings(models.TransientModel):
             implied_group='base.group_multi_currency',
             help="Allows to work in a multi currency environment")
     paperformat_id = fields.Many2one(related="company_id.paperformat_id", string='Paper format', readonly=False)
-    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id", readonly=False)
+    external_report_layout_id = fields.Many2one(related="company_id.external_report_layout_id")
     show_effect = fields.Boolean(string="Show Effect", config_parameter='base_setup.show_effect')
     company_count = fields.Integer('Number of Companies', compute="_compute_company_count")
     active_user_count = fields.Integer('Number of Active Users', compute="_compute_active_user_count")
