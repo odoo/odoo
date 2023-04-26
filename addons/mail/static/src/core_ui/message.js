@@ -1,6 +1,6 @@
 /* @odoo-module */
 
-import { ImStatus } from "@mail/discuss/im_status";
+import { ImStatus } from "@mail/discuss_app/im_status";
 import { AttachmentList } from "@mail/attachments/attachment_list";
 import { MessageInReply } from "./message_in_reply";
 import { isEventHandled, markEventHandled } from "@mail/utils/misc";

@@ -3,7 +3,7 @@
 import { useService } from "@web/core/utils/hooks";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
 import { usePosition } from "@web/core/position_hook";
-import { ImStatus } from "../discuss/im_status"; // Used in composer suggestion template
+import { ImStatus } from "../discuss_app/im_status"; // Used in composer suggestion template
 import { Component, useEffect, useExternalListener, useRef, useState } from "@odoo/owl";
 import { markEventHandled, isEventHandled } from "../utils/misc";
 import { onExternalClick } from "@mail/utils/hooks";

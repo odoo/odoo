@@ -30,13 +30,13 @@ import { threadService } from "@mail/core/thread_service";
 import { messageService } from "@mail/core/message_service";
 import { activityService } from "@mail/web/activity/activity_service";
 import { outOfFocusService } from "@mail/core/out_of_focus_service";
-import { DiscussClientAction } from "@mail/discuss/discuss_client_action";
+import { DiscussClientAction } from "@mail/discuss_app/discuss_client_action";
 import { personaService } from "@mail/core/persona_service";
 import { attachmentService } from "@mail/attachments/attachment_service";
 import { notificationPermissionService } from "@mail/core/notification_permission_service";
 import { session } from "@web/session";
 import { channelMemberService } from "@mail/core/channel_member_service";
-import { contextService } from "@mail/web/discuss/context_service";
+import { contextService } from "@mail/web/discuss_app/context_service";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",

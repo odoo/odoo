@@ -10,12 +10,12 @@ import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
 import { CallSettings } from "@mail/rtc/call_settings";
-import { ChannelMemberList } from "@mail/discuss/channel_member_list";
-import { ThreadIcon } from "@mail/discuss/thread_icon";
-import { ChannelInvitation } from "@mail/discuss/channel_invitation";
+import { ChannelMemberList } from "@mail/discuss_app/channel_member_list";
+import { ThreadIcon } from "@mail/discuss_app/thread_icon";
+import { ChannelInvitation } from "@mail/discuss_app/channel_invitation";
 import { isEventHandled } from "@mail/utils/misc";
-import { ChannelSelector } from "@mail/discuss/channel_selector";
-import { PinnedMessagesPanel } from "@mail/discuss/pinned_messages_panel";
+import { ChannelSelector } from "@mail/discuss_app/channel_selector";
+import { PinnedMessagesPanel } from "@mail/discuss_app/pinned_messages_panel";
 import { _t } from "@web/core/l10n/translation";
 
 /**
