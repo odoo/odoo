@@ -65,17 +65,28 @@
                     </li>
                 </t>
             </ol>
-            <div class="active d-flex gap-2 align-items-center min-w-0 lh-sm">
-                <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
+            <div class="d-flex gap-1">
+                <div class="active d-flex gap-2 align-items-center min-w-0 lh-sm">
+                    <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
+                </div>
+                <t t-call="web.Breadcrumb.Actions"/>
             </div>
         </div>
 
-        <div t-else="" class="active d-flex fs-4 min-w-0">
-            <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
+        <div t-else="" class="d-flex gap-1">
+            <div class="active d-flex fs-4 min-w-0">
+                <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
+            </div>
+            <t t-call="web.Breadcrumb.Actions"/>
         </div>
 
-        <t t-slot="control-panel-additional-actions"/>
         <t t-slot="control-panel-status-indicator" />
+    </t>
+
+    <t t-name="web.Breadcrumb.Actions" owl="1">
+        <div class="o_control_panel_breadcrumbs_actions d-inline-flex">
+            <t t-slot="control-panel-additional-actions"/>
+        </div>
     </t>
 
     <t t-name="web.Breadcrumb.Name" owl="1">
