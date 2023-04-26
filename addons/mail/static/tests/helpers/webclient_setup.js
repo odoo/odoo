@@ -160,7 +160,7 @@ export async function setupMessagingServiceRegistries({
     loadingBaseDelayDuration = 0,
     messagingBus,
     services,
-}) {
+} = {}) {
     const serviceRegistry = registry.category("services");
 
     const OriginalAudio = window.Audio;

@@ -123,7 +123,7 @@ function getAfterEvent({ messagingBus }) {
     };
 }
 
-function getClick({ target, afterNextRender }) {
+export function getClick({ target, afterNextRender }) {
     return async function click(selector) {
         await afterNextRender(() => {
             if (typeof selector === "string") {
@@ -533,28 +533,31 @@ function pasteFiles(el, files) {
 // Public: input utilities
 //------------------------------------------------------------------------------
 
-/**
- * @param {string} selector
- * @param {string} content
- * @param {Object} [param2 = {}]
- * @param {boolean} [param2.replace = false]
- */
-export async function insertText(selector, content, { replace = false } = {}) {
-    await afterNextRender(() => {
-        if (replace) {
-            document.querySelector(selector).value = "";
-        }
-        document.querySelector(selector).focus();
-        for (const char of content) {
-            document.execCommand("insertText", false, char);
-            document
-                .querySelector(selector)
-                .dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
-            document
-                .querySelector(selector)
-                .dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
-        }
-    });
+export function getInsertText({ target } = {}) {
+    /**
+     * @param {string} selector
+     * @param {string} content
+     * @param {Object} [param2 = {}]
+     * @param {boolean} [param2.replace = false]
+     */
+    return function insertText(selector, content, { replace = false } = {}) {
+        target = target ?? document;
+        return afterNextRender(() => {
+            if (replace) {
+                target.querySelector(selector).value = "";
+            }
+            target.querySelector(selector).focus();
+            for (const char of content) {
+                document.execCommand("insertText", false, char);
+                target
+                    .querySelector(selector)
+                    .dispatchEvent(new window.KeyboardEvent("keydown", { key: char }));
+                target
+                    .querySelector(selector)
+                    .dispatchEvent(new window.KeyboardEvent("keyup", { key: char }));
+            }
+        });
+    };
 }
 
 //------------------------------------------------------------------------------
@@ -676,6 +679,7 @@ export {
 };
 
 export const click = getClick({ afterNextRender });
+export const insertText = getInsertText();
 
 /**
  * Function that wait until a selector is present in the DOM

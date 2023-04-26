@@ -95,7 +95,8 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
         anonymous_name,
         previous_operator_id,
         user_id,
-        country_id
+        country_id,
+        persisted
     ) {
         let operator;
         if (previous_operator_id) {
@@ -117,8 +118,16 @@ patch(MockServer.prototype, "im_livechat/models/im_livechat_channel", {
             user_id,
             country_id
         );
-        const discussChannelId = this.pyEnv["discuss.channel"].create(discussChannelVals);
-        this._mockDiscussChannel_broadcast([discussChannelId], [operator.partner_id]);
-        return this._mockDiscussChannelChannelInfo([discussChannelId])[0];
+        if (persisted) {
+            const discussChannelId = this.pyEnv["discuss.channel"].create(discussChannelVals);
+            this._mockDiscussChannel_broadcast([discussChannelId], [operator.partner_id]);
+            return this._mockDiscussChannelChannelInfo([discussChannelId])[0];
+        }
+        return {
+            name: discussChannelVals["name"],
+            chatbot_current_step_id: discussChannelVals["chatbot_current_step_id"],
+            state: "open",
+            operator_pid: [operator.partner_id, operator.name],
+        };
     },
 });

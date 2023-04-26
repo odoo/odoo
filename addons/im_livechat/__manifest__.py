@@ -35,6 +35,7 @@ Help your customers with this chat, and analyse their feedback.
         "views/im_livechat_chatbot_templates.xml",
         "views/res_users_views.xml",
         "views/digest_views.xml",
+        "views/webclient_templates.xml",
         "report/im_livechat_report_channel_views.xml",
         "report/im_livechat_report_operator_views.xml"
     ],
@@ -72,9 +73,11 @@ Help your customers with this chat, and analyse their feedback.
         ],
         'web.tests_assets': [
             'im_livechat/static/tests/helpers/**/*.js',
+            ('remove', 'im_livechat/static/tests/helpers/new/**/*'),
         ],
         'web.qunit_suite_tests': [
             'im_livechat/static/tests/**/*',
+            ('remove', 'im_livechat/static/tests/new/**/*'),
             ('remove', 'im_livechat/static/tests/tours/**/*'),
             ('remove', 'im_livechat/static/tests/helpers/**/*.js'),
         ],
@@ -147,6 +150,19 @@ Help your customers with this chat, and analyse their feedback.
             'im_livechat/static/src/new/public/**/*',
             'im_livechat/static/src/public/bus_parameters_service_patch.js',
             'im_livechat/static/src/public/session.js',
+        ],
+        'im_livechat.external_tests_assets': [
+            ('include', 'web.assets_backend'),
+            ('include', 'web.tests_assets'),
+            ('remove', 'web/static/tests/mock_server_tests.js'),
+            ('remove', 'im_livechat/**'),
+            'im_livechat/static/tests/helpers/**',
+            'im_livechat/static/src/new/**/*',
+            'im_livechat/static/src/livechat_data.js',
+            ('remove', 'im_livechat/static/src/new/public/**/*'),
+        ],
+        'im_livechat.qunit_external_suite': [
+            'im_livechat/static/tests/new/**/*',
         ],
     },
     'license': 'LGPL-3',

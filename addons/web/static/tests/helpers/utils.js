@@ -506,47 +506,51 @@ export async function editSelectMenu(el, selector, value) {
     }
 }
 
-/**
- * Triggers an hotkey properly disregarding the operating system.
- *
- * @param {string} hotkey
- * @param {boolean} addOverlayModParts
- * @param {KeyboardEventInit} eventAttrs
- * @returns {{ keydownEvent: KeyboardEvent, keyupEvent: KeyboardEvent }}
- */
-export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
-    eventAttrs.key = hotkey.split("+").pop();
+export function getTriggerHotkey({ target } = {}) {
+    /**
+     * Triggers an hotkey properly disregarding the operating system.
+     *
+     * @param {string} hotkey
+     * @param {boolean} addOverlayModParts
+     * @param {KeyboardEventInit} eventAttrs
+     * @returns {{ keydownEvent: KeyboardEvent, keyupEvent: KeyboardEvent }}
+     */
+    return function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
+        target = target ?? document;
+        eventAttrs.key = hotkey.split("+").pop();
 
-    if (/shift/i.test(hotkey)) {
-        eventAttrs.shiftKey = true;
-    }
-
-    if (/control/i.test(hotkey)) {
-        if (isMacOS()) {
-            eventAttrs.metaKey = true;
-        } else {
-            eventAttrs.ctrlKey = true;
+        if (/shift/i.test(hotkey)) {
+            eventAttrs.shiftKey = true;
         }
-    }
 
-    if (/alt/i.test(hotkey) || addOverlayModParts) {
-        if (isMacOS()) {
-            eventAttrs.ctrlKey = true;
-        } else {
-            eventAttrs.altKey = true;
+        if (/control/i.test(hotkey)) {
+            if (isMacOS()) {
+                eventAttrs.metaKey = true;
+            } else {
+                eventAttrs.ctrlKey = true;
+            }
         }
-    }
 
-    if (!("bubbles" in eventAttrs)) {
-        eventAttrs.bubbles = true;
-    }
+        if (/alt/i.test(hotkey) || addOverlayModParts) {
+            if (isMacOS()) {
+                eventAttrs.ctrlKey = true;
+            } else {
+                eventAttrs.altKey = true;
+            }
+        }
 
-    const keydownEvent = new KeyboardEvent("keydown", eventAttrs);
-    const keyupEvent = new KeyboardEvent("keyup", eventAttrs);
-    document.activeElement.dispatchEvent(keydownEvent);
-    document.activeElement.dispatchEvent(keyupEvent);
-    return { keydownEvent, keyupEvent };
+        if (!("bubbles" in eventAttrs)) {
+            eventAttrs.bubbles = true;
+        }
+
+        const keydownEvent = new KeyboardEvent("keydown", eventAttrs);
+        const keyupEvent = new KeyboardEvent("keyup", eventAttrs);
+        target.activeElement.dispatchEvent(keydownEvent);
+        target.activeElement.dispatchEvent(keyupEvent);
+        return { keydownEvent, keyupEvent };
+    };
 }
+export const triggerHotkey = getTriggerHotkey();
 
 export async function legacyExtraNextTick() {
     return nextTick();
