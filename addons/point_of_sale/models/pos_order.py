@@ -1380,6 +1380,11 @@ class PosOrderLine(models.Model):
                     del pl[2]['server_id']
         return super().write(values)
 
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_order_state(self):
+        if self.filtered(lambda x: x.order_id.state not in ["draft", "cancel"]):
+            raise UserError(_("You can only unlink PoS order lines that are related to orders in new or cancelled state."))
+
     @api.onchange('price_unit', 'tax_ids', 'qty', 'discount', 'product_id')
     def _onchange_amount_line_all(self):
         for line in self:
