@@ -40,7 +40,7 @@ class ImporterCase(common.TransactionCase):
     def setUp(self):
         super(ImporterCase, self).setUp()
         self.model = self.env[self.model_name]
-        self.env['ir.model.data'].clear_caches()
+        self.env.registry.clear_cache()
         self.cr.cache.clear()
 
     def import_(self, fields, rows, context=None):
@@ -1114,7 +1114,7 @@ class test_realworld(SavepointCaseWithUserDemo):
         """ The content of the o2m field's dict needs to go through conversion
         as it may be composed of convertables or other relational fields
         """
-        self.env['ir.model.data'].clear_caches()
+        self.env.registry.clear_cache()
         Model = self.env['export.one2many.recursive']
         result = Model.load(
             ['value', 'child/const', 'child/child1/str', 'child/child2/value'],
@@ -1141,7 +1141,7 @@ class test_realworld(SavepointCaseWithUserDemo):
                          [12])
 
     def test_o2m_subfields_fail_by_implicit_id(self):
-        self.env['ir.model.data'].clear_caches()
+        self.env.registry.clear_cache()
         Model = self.env['export.one2many.recursive']
         result = Model.with_context(import_file=True).load(
             ['child/child1/parent_id'],

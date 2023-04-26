@@ -64,15 +64,15 @@ class IrAsset(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
+        self.env.registry.clear_cache('assets')
         return super().create(vals_list)
 
     def write(self, values):
-        self.clear_caches()
+        self.env.registry.clear_cache('assets')
         return super().write(values)
 
     def unlink(self):
-        self.clear_caches()
+        self.env.registry.clear_cache('assets')
         return super().unlink()
 
     name = fields.Char(string='Name', required=True)
@@ -106,7 +106,7 @@ class IrAsset(models.Model):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'tuple(sorted(assets_params.items()))'),
+        tools.ormcache('bundle', 'tuple(sorted(assets_params.items()))', cache='assets'),
     )
     def _get_asset_paths(self, bundle, assets_params):
         """

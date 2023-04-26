@@ -1339,7 +1339,9 @@ class Import(models.TransientModel):
             if dryrun:
                 self._cr.execute('ROLLBACK TO SAVEPOINT import')
                 # cancel all changes done to the registry/ormcache
-                self.pool.clear_caches()
+                # we need to clear the cache in case any created id was added to an ormcache and would be missing afterward
+                self.pool.clear_all_caches()
+                # don't propagate to other workers since it was rollbacked
                 self.pool.reset_changes()
             else:
                 self._cr.execute('RELEASE SAVEPOINT import')

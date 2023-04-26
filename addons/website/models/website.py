@@ -186,7 +186,7 @@ class Website(models.Model):
             website.menu_id = top_menus and top_menus[0].id or False
 
     # self.env.uid for ir.rule groups on menu
-    @tools.ormcache('self.env.uid', 'self.id')
+    @tools.ormcache('self.env.uid', 'self.id', cache='templates')
     def _get_menu_ids(self):
         return self.env['website.menu'].search([('website_id', '=', self.id)]).ids
 
@@ -216,7 +216,7 @@ class Website(models.Model):
         original_company = self.company_id
         self._handle_create_write(values)
 
-        self.clear_caches()
+        self.env.registry.clear_cache()
 
         if 'company_id' in values and 'user_id' not in values:
             public_user_to_change_websites = self.filtered(lambda w: w.sudo().user_id.company_id.id != values['company_id'])
@@ -228,7 +228,7 @@ class Website(models.Model):
 
         if 'cdn_activated' in values or 'cdn_url' in values or 'cdn_filters' in values:
             # invalidate the caches from static node at compile time
-            self.env['ir.qweb'].clear_caches()
+            self.env.registry.clear_cache()
 
         # invalidate cache for `company.website_id` to be recomputed
         if 'sequence' in values or 'company_id' in values:
@@ -1088,7 +1088,7 @@ class Website(models.Model):
         return view
 
     @api.model
-    @tools.ormcache_context('key', keys=('website_id',))
+    @tools.ormcache('key', 'self._context.get("website_id")', cache='templates')
     def is_view_active(self, key):
         """
             Return True if active, False if not active, None if not found

@@ -73,13 +73,13 @@ class IrActions(models.Model):
     def create(self, vals_list):
         res = super(IrActions, self).create(vals_list)
         # self.get_bindings() depends on action records
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
         res = super(IrActions, self).write(vals)
         # self.get_bindings() depends on action records
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     def unlink(self):
@@ -89,7 +89,7 @@ class IrActions(models.Model):
         todos.unlink()
         res = super(IrActions, self).unlink()
         # self.get_bindings() depends on action records
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -303,14 +303,14 @@ class IrActionsActWindow(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         for vals in vals_list:
             if not vals.get('name') and vals.get('res_model'):
                 vals['name'] = self.env[vals['res_model']]._description
         return super(IrActionsActWindow, self).create(vals_list)
 
     def unlink(self):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return super(IrActionsActWindow, self).unlink()
 
     def exists(self):

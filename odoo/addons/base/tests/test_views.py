@@ -334,12 +334,12 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss + 2)
 
-        with self.assertQueryCount(9):
+        with self.assertQueryCount(7):
             self.assertValid("""
                 <field name="name" position="replace"/>
             """, inherit_id=base_view.id)
-        self.assertEqual(counter.hit, hit)
-        self.assertEqual(counter.miss, miss + 4)
+        self.assertEqual(counter.hit, hit + 2)
+        self.assertEqual(counter.miss, miss + 2)
 
     def test_view_validate_attrs_groups_query_count(self):
         _, _, counter = get_cache_key_counter(self.env['ir.model.data']._xmlid_lookup, 'base.group_system')
@@ -356,14 +356,14 @@ class TestViewInheritance(ViewCase):
         self.assertEqual(counter.hit, hit)
         self.assertEqual(counter.miss, miss + 1)
 
-        with self.assertQueryCount(6):
+        with self.assertQueryCount(5):
             self.assertValid("""
                 <field name="name" position="replace">
                     <field name="key" groups="base.group_system"/>
                 </field>
             """, inherit_id=base_view.id)
-        self.assertEqual(counter.hit, hit)
-        self.assertEqual(counter.miss, miss + 2)
+        self.assertEqual(counter.hit, hit + 1)
+        self.assertEqual(counter.miss, miss + 1)
 
 
 class TestApplyInheritanceSpecs(ViewCase):

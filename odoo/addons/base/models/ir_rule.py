@@ -159,14 +159,9 @@ class IrRule(models.Model):
                 v = tuple(v)
             yield v
 
-    @api.model
-    def clear_cache(self):
-        warnings.warn("Deprecated IrRule.clear_cache(), use IrRule.clear_caches() instead", DeprecationWarning)
-        self.clear_caches()
-
     def unlink(self):
         res = super(IrRule, self).unlink()
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     @api.model_create_multi
@@ -174,7 +169,7 @@ class IrRule(models.Model):
         res = super(IrRule, self).create(vals_list)
         # DLE P33: tests
         self.env.flush_all()
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     def write(self, vals):
@@ -184,7 +179,7 @@ class IrRule(models.Model):
         # - odoo/addons/test_access_rights/tests/test_ir_rules.py
         # - odoo/addons/base/tests/test_orm.py (/home/dle/src/odoo/master-nochange-fp/odoo/addons/base/tests/test_orm.py)
         self.env.flush_all()
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     def _make_access_error(self, operation, records):

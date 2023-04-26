@@ -148,7 +148,7 @@ class Page(models.Model):
                 # If there is no other pages linked to that ir_ui_view, we can delete the ir_ui_view
                 page.view_id.unlink()
         # Make sure website._get_menu_ids() will be recomputed
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return super(Page, self).unlink()
 
     def write(self, vals):
@@ -186,7 +186,7 @@ class Page(models.Model):
             if 'visibility' in vals:
                 if vals['visibility'] != 'restricted_group':
                     vals['groups_id'] = False
-        self.clear_caches()  # write on page == write on view that invalid cache
+        self.env.registry.clear_cache()  # write on page == write on view that invalid cache
         return super(Page, self).write(vals)
 
     def get_website_meta(self):

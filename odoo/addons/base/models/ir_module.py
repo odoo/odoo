@@ -311,7 +311,7 @@ class Module(models.Model):
                 raise UserError(_('You are trying to remove a module that is installed or will be installed.'))
 
     def unlink(self):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return super(Module, self).unlink()
 
     def _get_modules_to_load_domain(self):

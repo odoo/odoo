@@ -128,9 +128,9 @@ class Property(models.Model):
             # DLE P44: test `test_27_company_dependent`
             # Easy solution, need to flush write when changing a property.
             # Maybe it would be better to be able to compute all impacted cache value and update those instead
-            # Then clear_caches must be removed as well.
+            # Then clear_cache must be removed as well.
             self.env.flush_all()
-            self.clear_caches()
+            self.env.registry.clear_cache()
         return r
 
     @api.model_create_multi
@@ -141,7 +141,7 @@ class Property(models.Model):
         if created_default:
             # DLE P44: test `test_27_company_dependent`
             self.env.flush_all()
-            self.clear_caches()
+            self.env.registry.clear_cache()
         return r
 
     def unlink(self):
@@ -154,7 +154,7 @@ class Property(models.Model):
             default_deleted = self.env.cr.rowcount == 1
         r = super().unlink()
         if default_deleted:
-            self.clear_caches()
+            self.env.registry.clear_cache()
         return r
 
     def get_by_record(self):

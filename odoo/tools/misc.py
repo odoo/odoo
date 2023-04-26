@@ -1786,3 +1786,8 @@ def get_flag(country_code: str) -> str:
     This emoji is composed of the two regional indicator emoji of the country code.
     """
     return "".join(chr(int(f"1f1{ord(c)+165:02x}", base=16)) for c in country_code)
+
+
+def format_frame(frame):
+    code = frame.f_code
+    return f'{code.co_name} {code.co_filename}:{frame.f_lineno}'

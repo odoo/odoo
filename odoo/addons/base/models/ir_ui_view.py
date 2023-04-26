@@ -564,7 +564,7 @@ actual arch.
                         values['arch_updated'] = False
             values.update(self._compute_defaults(values))
 
-        self.clear_caches()
+        self.env.registry.clear_cache('templates')
         result = super(View, self.with_context(ir_ui_view_partial_validation=True)).create(vals_list)
         return result.with_env(self.env)
 
@@ -580,7 +580,7 @@ actual arch.
         if custom_view:
             custom_view.unlink()
 
-        self.clear_caches()
+        self.env.registry.clear_cache('templates')
         if 'arch_db' in vals and not self.env.context.get('no_save_prev'):
             vals['arch_prev'] = self.arch_db
 
@@ -2027,7 +2027,6 @@ actual arch.
         """ Return the list of context keys to use for caching ``_read_template``. """
         return ['lang', 'inherit_branding', 'edit_translations']
 
-    # apply ormcache_context decorator unless in dev mode...
     @api.model
     def _read_template(self, view_id):
         arch_tree = self.browse(view_id)._get_combined_arch()
@@ -2057,11 +2056,6 @@ actual arch.
         view ID or an XML ID.
         """
         return self.browse(self._get_view_id(view_ref))
-
-    def clear_cache(self):
-        """ Deprecated, use `clear_caches` instead. """
-        if 'xml' not in config['dev_mode']:
-            self.clear_caches()
 
     def _contains_branded(self, node):
         return node.tag == 't'\
@@ -2647,7 +2641,7 @@ class Model(models.AbstractModel):
     @api.model
     @tools.conditional(
         'xml' not in config['dev_mode'],
-        tools.ormcache('self._get_view_cache_key(view_id, view_type, **options)'),
+        tools.ormcache('self._get_view_cache_key(view_id, view_type, **options)', cache='templates'),
     )
     def _get_view_cache(self, view_id=None, view_type='form', **options):
         """ Get the view information ready to be cached

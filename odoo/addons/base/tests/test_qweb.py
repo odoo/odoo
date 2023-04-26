@@ -1618,7 +1618,7 @@ class TestQWebBasic(TransactionCase):
             QWeb.with_context(preserve_comments=False)._render(view.id),
             markupsafe.Markup('<p></p>'),
             "Should not have the comment")
-        QWeb.clear_caches()
+        self.env.registry.clear_cache('templates')
         self.assertEqual(
             QWeb.with_context(preserve_comments=True)._render(view.id),
             markupsafe.Markup(f'<p>{comment}</p>'),
@@ -1639,7 +1639,7 @@ class TestQWebBasic(TransactionCase):
             QWeb.with_context(preserve_comments=False)._render(view.id),
             markupsafe.Markup('<p></p>'),
             "Should not have the processing instruction")
-        QWeb.clear_caches()
+        self.env.registry.clear_cache('templates')
         self.assertEqual(
             QWeb.with_context(preserve_comments=True)._render(view.id),
             markupsafe.Markup(f'<p>{p_instruction}</p>'),

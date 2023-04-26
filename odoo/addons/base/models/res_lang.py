@@ -281,7 +281,7 @@ class Lang(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         for vals in vals_list:
             if not vals.get('url_code'):
                 vals['url_code'] = vals.get('iso_code') or vals['code']
@@ -301,7 +301,7 @@ class Lang(models.Model):
 
         res = super(Lang, self).write(vals)
         self.env.flush_all()
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return res
 
     @api.ondelete(at_uninstall=True)
@@ -316,7 +316,7 @@ class Lang(models.Model):
                 raise UserError(_("You cannot delete the language which is Active!\nPlease de-activate the language first."))
 
     def unlink(self):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return super(Lang, self).unlink()
 
     def format(self, percent, value, grouping=False, monetary=False):
