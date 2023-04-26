@@ -5,6 +5,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 import { parse } from "web.field_utils";
+import { _lt } from "@web/core/l10n/translation";
 
 import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
@@ -31,6 +32,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         OrderWidget,
         ProductsWidget,
     };
+    static numpadActionName = _lt("Payment");
 
     setup() {
         super.setup();
