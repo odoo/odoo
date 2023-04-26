@@ -18,10 +18,9 @@
                             </t>
                         </div>
                         <div class="subpads">
-                            <t t-set="_actionName">Payment</t>
                             <ActionpadWidget
                                 partner="partner"
-                                actionName="_actionName"
+                                actionName="constructor.numpadActionName"
                                 onSwitchPane.bind="switchPane" />
                             <NumpadWidget
                                 updateSelectedOrderline.bind="updateSelectedOrderline"
