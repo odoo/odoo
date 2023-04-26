@@ -400,7 +400,7 @@ list of filtered posts (by date or tag).
                                     <div t-field="next_post.subtitle" id="o_wblog_post_subtitle" placeholder="Subtitle" class="lead"/>
                                 </a>
                             </div>
-                            <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25">
+                            <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25 flex-shrink-0">
                                 <t t-call="website.record_cover">
                                     <t t-set="_record" t-value="next_post"/>
                                     <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
