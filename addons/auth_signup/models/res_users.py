@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import datetime
 import logging
 
 from ast import literal_eval
 from collections import defaultdict
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
@@ -208,7 +208,7 @@ class ResUsers(models.Model):
                 force_send = not(self.env.context.get('import_file', False))
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
-            message = _("Password Reset Request for user ") + user.name
+            message = _("Password Reset Request for user %s", user.name)
             path = f"user:{user.id}"
             self.env['ir.logging'].create({
                         'name': 'Password Reset',
@@ -222,8 +222,8 @@ class ResUsers(models.Model):
                     })
 
     def check_password_reset_availability(self):
-        threshold_date = fields.Datetime.now() - datetime.timedelta(hours=HOURS_THRESHOLD)
-        mails = self.env['ir.logging'].search_count([('name', '=', 'Password Reset'), ('path', '=', f"user:{self.id}"), ('create_date', '>', threshold_date)], limit=3)
+        threshold_date = datetime.now() - timedelta(hours=HOURS_THRESHOLD)
+        mails = self.env['ir.logging'].search_count(['&', '&', ('name', '=', 'Password Reset'), ('path', '=', f"user:{self.id}"), ('create_date', '>', threshold_date)], limit=3)
         if mails < 3:
             return True
         return False
