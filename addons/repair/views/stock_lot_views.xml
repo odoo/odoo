@@ -11,8 +11,17 @@
                     <div class="o_field_widget o_stat_info">
                         <span class="o_stat_value">
                             <field name="repair_order_count" widget="statinfo" nolabel="1" class="mr4"/>
+                            <span class="o_stat_text">Used</span>
                         </span>
-                        <span class="o_stat_text">Repairs</span>
+                        <span class="o_stat_text">In Repairs</span>
+                    </div>
+                </button>
+                <button name="action_lot_open_repairs" icon="fa-wrench" class="oe_stat_button" type="object">
+                    <div class="o_field_widget o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="repaired_count" widget="statinfo" nolabel="1" class="mr4"/>
+                        </span>
+                        <span class="o_stat_text">Repaired</span>
                     </div>
                 </button>
             </xpath>
