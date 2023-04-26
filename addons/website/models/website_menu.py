@@ -174,7 +174,13 @@ class Menu(models.Model):
                 return False
 
             menu_url = url_parse(menu_url)
-            if unslug_url(menu_url.path) == unslug_url(request_url.path) and menu_url.decode_query() == request_url.decode_query():
+            if unslug_url(menu_url.path) == unslug_url(request_url.path):
+                if not (
+                    set(menu_url.decode_query().items(multi=True))
+                    <= set(request_url.decode_query().items(multi=True))
+                ):
+                    # correct path but query arguments does not match
+                    return False
                 if menu_url.netloc and menu_url.netloc != request_url.netloc:
                     # correct path but not correct domain
                     return False
