@@ -3,7 +3,7 @@
 
 import contextlib
 
-from odoo import models
+from odoo import api, models
 from odoo.exceptions import AccessError
 from odoo.http import request
 
@@ -71,3 +71,7 @@ class IrAttachment(models.Model):
                 })
             res_list.append(res)
         return res_list
+
+    @api.model
+    def _get_upload_env(self, request, thread_model, thread_id):
+        return request.env
