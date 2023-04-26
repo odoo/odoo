@@ -82,10 +82,5 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
         trigger: 'button[name="action_approve"]',
         content: _t("Let's approve it"),
         position: 'bottom'
-    },
-    {
-        trigger: 'a[data-menu-xmlid="hr_holidays.menu_hr_holidays_root"]',
-        content: _t("State is now confirmed. We can go back to the calendar"),
-        position: 'bottom'
     }
 ]});

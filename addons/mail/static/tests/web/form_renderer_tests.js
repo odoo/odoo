@@ -70,12 +70,12 @@ QUnit.test("Form view not scrolled when switching record", async (assert) => {
         },
         { resIds: [partnerId_1, partnerId_2] }
     );
-    assert.strictEqual($(".breadcrumb-item.active").text(), "Partner 1");
+    assert.strictEqual($(".o_breadcrumb .active").text(), "Partner 1");
     assert.strictEqual($(".o_content")[0].scrollTop, 0);
     $(".o_content")[0].scrollTop = 150;
 
     await click(".o_pager_next");
-    assert.strictEqual($(".breadcrumb-item.active").text(), "Partner 2");
+    assert.strictEqual($(".o_breadcrumb .active").text(), "Partner 2");
     assert.strictEqual($(".o_content")[0].scrollTop, 0);
 
     await click(".o_pager_previous");

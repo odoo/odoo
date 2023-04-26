@@ -407,7 +407,7 @@ QUnit.module("ActionManager", (hooks) => {
         // execute an action in target="current"
         await doAction(webClient, 1);
         assert.deepEqual(
-            [...target.querySelectorAll(".breadcrumb-item")].map((i) => i.innerText),
+            [...target.querySelectorAll(".o_breadcrumb span")].map((i) => i.innerText),
             ["Partners Action 1"]
         );
 
@@ -420,7 +420,7 @@ QUnit.module("ActionManager", (hooks) => {
             type: "ir.actions.act_window",
             views: [[false, "list"]],
         });
-        assert.containsNone(target, ".modal .breadcrumb");
+        assert.containsNone(target, ".modal .o_breadcrumb");
     });
 
     QUnit.test('call switchView in an action in target="new"', async function (assert) {
@@ -554,9 +554,9 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 1);
 
         assert.containsOnce(target, ".o_kanban_view");
-        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Partners Action 1"
         );
 
@@ -569,9 +569,9 @@ QUnit.module("ActionManager", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_list_view");
-        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Another Partner Action"
         );
     });
@@ -590,9 +590,9 @@ QUnit.module("ActionManager", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_list_view");
-        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Partner Action"
         );
 
@@ -600,9 +600,10 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target.querySelector(".o_data_row .o_data_cell"));
 
         assert.containsOnce(target, ".o_form_view");
-        assert.containsN(target, ".breadcrumb-item", 2);
+        assert.containsOnce(target, "ol.breadcrumb");
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Partner ActionFirst record"
         );
     });
@@ -621,31 +622,34 @@ QUnit.module("ActionManager", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_list_view");
-        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Partner Action"
         );
 
         // open first record
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
-        assert.containsN(target, ".breadcrumb-item", 2);
+        assert.containsOnce(target, "ol.breadcrumb");
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Partner ActionFirst record"
         );
 
         await doAction(webClient, 1);
         assert.containsOnce(target, ".o_kanban_view");
-        assert.containsN(target, ".breadcrumb-item", 3);
+        assert.containsOnce(target, "ol.breadcrumb");
+        assert.containsOnce(target, ".o_breadcrumb span");
 
         // go back to form view
-        await click(target.querySelectorAll(".breadcrumb-item")[1]);
+        await click(target.querySelector("ol.breadcrumb .o_back_button"));
         assert.containsOnce(target, ".o_form_view");
-        assert.containsN(target, ".breadcrumb-item", 2);
+        assert.containsOnce(target, "ol.breadcrumb");
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Partner ActionFirst record"
         );
     });

@@ -140,7 +140,11 @@ QUnit.module("Fields", (hooks) => {
         await editInput(cell, "input", "new");
 
         // save
-        await click(target.querySelector(".o_list_button_save"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+            )
+        );
         cell = target.querySelector("tbody td:not(.o_list_record_selector)");
         assert.doesNotHaveClass(
             cell.parentElement,

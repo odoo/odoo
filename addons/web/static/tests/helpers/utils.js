@@ -384,10 +384,24 @@ export function click(el, selector, skipVisibilityCheck = false) {
 }
 
 export function clickCreate(htmlElement) {
-    if (htmlElement.querySelectorAll(".o_form_button_create").length) {
-        return click(htmlElement, ".o_form_button_create");
-    } else if (htmlElement.querySelectorAll(".o_list_button_create").length) {
-        return click(htmlElement, ".o_list_button_create");
+    if (
+        htmlElement.querySelectorAll(
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+        ).length
+    ) {
+        return click(
+            htmlElement,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+        );
+    } else if (
+        htmlElement.querySelectorAll(
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_create"
+        ).length
+    ) {
+        return click(
+            htmlElement,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_create"
+        );
     } else {
         throw new Error("No edit button found to be clicked.");
     }
@@ -407,8 +421,10 @@ export async function clickSave(htmlElement) {
     }
     if (htmlElement.querySelectorAll(".o_form_button_save").length) {
         return click(htmlElement, ".o_form_button_save");
-    } else if (htmlElement.querySelectorAll(".o_list_button_save").length) {
-        return click(htmlElement, ".o_list_button_save");
+    }
+    const listSaveButtons = htmlElement.querySelectorAll(".o_list_button_save");
+    if (listSaveButtons.length) {
+        return listSaveButtons.length >= 2 ? click(listSaveButtons[1]) : click(listSaveButtons[0]);
     } else {
         throw new Error("No save button found to be clicked.");
     }
@@ -420,8 +436,8 @@ export async function clickDiscard(htmlElement) {
     }
     if (htmlElement.querySelectorAll(".o_form_button_cancel").length) {
         return click(htmlElement, ".o_form_button_cancel");
-    } else if (htmlElement.querySelectorAll(".o_list_button_discard").length) {
-        return click(htmlElement, ".o_list_button_discard");
+    } else if ($(htmlElement).find(".o_list_button_discard:visible").length) {
+        return click($(htmlElement).find(".o_list_button_discard:visible").get(0));
     } else {
         throw new Error("No discard button found to be clicked.");
     }

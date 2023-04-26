@@ -7,7 +7,7 @@
         steps: [
     {
         trigger: '.o_kanban_record',
-        extra_trigger:'.breadcrumb',
+        extra_trigger: '.o_breadcrumb',
     },
     {
         trigger: '.nav-item > a:contains("Inventory")',

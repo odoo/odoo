@@ -777,50 +777,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         }
     );
 
-    QUnit.test(`breadcrumbs are updated with the displayed period`, async (assert) => {
-        await makeView({
-            type: "calendar",
-            resModel: "event",
-            serverData,
-            arch: `
-                <calendar date_start="start" date_stop="stop" all_day="allday" />
-            `,
-        });
-
-        // displays week mode by default
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item.active").textContent,
-            "undefined (Dec 11 – 17, 2016)",
-            "should display the current week"
-        );
-
-        // switch to day mode
-        await changeScale(target, "day");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item.active").textContent,
-            "undefined (December 12, 2016)",
-            "should display the current day"
-        );
-
-        // switch to month mode
-        await changeScale(target, "month");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item.active").textContent,
-            "undefined (December 2016)",
-            "should display the current month"
-        );
-
-        // switch to year mode
-        await changeScale(target, "year");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item.active").textContent,
-            "undefined (2016)",
-            "should display the current year"
-        );
-    });
-
     QUnit.test(`create and change events`, async (assert) => {
-        assert.expect(28);
+        assert.expect(30);
 
         await makeView({
             type: "calendar",
@@ -999,9 +957,26 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsN(target, ".fc-event-container .fc-event", 10, "should display 10 events");
         // move to next month
         await navigate(target, "next");
+        assert.containsN(
+            target,
+            ".fc-event-container .fc-event",
+            10,
+            "should still display 10 events"
+        );
+        await pickDate(target, "2017-01-01");
+        assert.containsN(
+            target,
+            ".o_calendar_sidebar tr:has(.ui-state-active) td",
+            7,
+            "week scale should highlight 7 days in mini calendar"
+        );
+
+        await changeScale(target, "month");
         assert.containsNone(target, ".fc-event-container .fc-event", "should display 0 events");
 
         await navigate(target, "prev");
+        await pickDate(target, "2016-12-27");
+        await changeScale(target, "month");
         await selectDateRange(target, "2016-12-20", "2016-12-21");
         await editInput(target, ".o-calendar-quick-create--input", "test");
         await click(target, ".o-calendar-quick-create--create-btn");
@@ -3403,7 +3378,8 @@ QUnit.module("Views", ({ beforeEach }) => {
         // select filter for partner 1, 2 and 4
         await toggleSectionFilter(target, "partner_ids");
         await toggleFilter(target, "partner_id", 4);
-        await navigate(target, "prev");
+        await pickDate(target, "2016-12-05");
+        await changeScale(target, "week");
         assert.containsN(target, ".o_calendar_filter_item", 6, "should display 6 filter items");
         assert.containsN(target, ".fc-event", 2, "should display 2 events");
         const events = target.querySelectorAll(".fc-event .o_event_title");
@@ -3999,7 +3975,7 @@ QUnit.module("Views", ({ beforeEach }) => {
     });
 
     QUnit.test(`initial_date given in the context`, async (assert) => {
-        assert.expect(1);
+        assert.expect(2);
         serverData.views = {
             "event,1,calendar": `<calendar date_start="start" date_stop="stop" mode="day"/>`,
             "event,false,search": `<search />`,
@@ -4018,8 +3994,13 @@ QUnit.module("Views", ({ beforeEach }) => {
         await doAction(webClient, 1);
         await nextTick();
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-            "context initial date (January 30, 2016)",
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
+            "context initial date",
+            "should display name passed in the context"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_calendar_renderer .fc-day-header").textContent,
+            "January 30, 2016",
             "should display day passed in the context"
         );
     });

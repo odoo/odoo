@@ -3,7 +3,6 @@
 import { getFixture, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import {
@@ -16,10 +15,12 @@ import {
     setupControlPanelServiceRegistry,
     toggleFavoriteMenu,
     toggleSaveFavorite,
+    toggleSearchBarMenu,
     validateSearch,
 } from "./helpers";
 
 import { Component, xml } from "@odoo/owl";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 const serviceRegistry = registry.category("services");
 
 /**
@@ -79,7 +80,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["favorite"],
             searchViewId: false,
             config: {
@@ -87,7 +88,7 @@ QUnit.module("Search", (hooks) => {
             },
         });
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         assert.strictEqual(
             target.querySelector('.o_add_favorite input[type="text"]').value,
@@ -107,12 +108,12 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["favorite"],
             searchViewId: false,
         });
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         const checkboxes = target.querySelectorAll('input[type="checkbox"]');
 
@@ -211,8 +212,8 @@ QUnit.module("Search", (hooks) => {
                 }
             },
             resModel: "foo",
-            Component: ControlPanel,
-            searchMenuTypes: ["favorite"],
+            Component: SearchBar,
+            searchMenuTypes: ["filter", "favorite"],
             searchViewId: false,
             searchViewArch: `
                     <search>
@@ -224,7 +225,7 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(getFacetTexts(target), ["Filter"]);
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "My favorite");
         await saveFavorite(target);
@@ -245,7 +246,7 @@ QUnit.module("Search", (hooks) => {
                 }
             },
             resModel: "foo",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["favorite"],
             searchViewId: false,
             searchViewArch: `
@@ -262,7 +263,7 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(getFacetTexts(target), ["Foo\na"]);
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "My favorite");
         await saveFavorite(target);
@@ -312,7 +313,7 @@ QUnit.module("Search", (hooks) => {
                     }
                 },
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: ["favorite"],
                 searchViewId: false,
                 irFilters: [
@@ -328,7 +329,7 @@ QUnit.module("Search", (hooks) => {
                 ],
             });
 
-            await toggleFavoriteMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleSaveFavorite(target);
 
             // first try: should fail
@@ -345,44 +346,47 @@ QUnit.module("Search", (hooks) => {
         }
     );
 
-    QUnit.test("undefined name for filter shows notification and not error", async function (assert) {
-        assert.expect(2);
+    QUnit.test(
+        "undefined name for filter shows notification and not error",
+        async function (assert) {
+            assert.expect(2);
 
-        serviceRegistry.add(
-            "notification",
-            {
-                start() {
-                    return {
-                        add(message, options) {
-                            assert.strictEqual(
-                                message,
-                                "A name for your favorite filter is required.",
-                                "The notification should match: A name for your favorite filter is required."
-                            );
-                            assert.deepEqual(options, { type: "danger" });
-                        },
-                    };
+            serviceRegistry.add(
+                "notification",
+                {
+                    start() {
+                        return {
+                            add(message, options) {
+                                assert.strictEqual(
+                                    message,
+                                    "A name for your favorite filter is required.",
+                                    "The notification should match: A name for your favorite filter is required."
+                                );
+                                assert.deepEqual(options, { type: "danger" });
+                            },
+                        };
+                    },
                 },
-            },
-            { force: true }
-        );
+                { force: true }
+            );
 
-        await makeWithSearch({
-            serverData,
-            mockRPC: (_, args) => {
-                if (args.model === "ir.filters" && args.method === "create_or_replace") {
-                    return 7; // fake serverSideId
-                }
-            },
-            resModel: "foo",
-            Component: FavoriteMenu,
-            searchViewId: false,
-        });
+            await makeWithSearch({
+                serverData,
+                mockRPC: (_, args) => {
+                    if (args.model === "ir.filters" && args.method === "create_or_replace") {
+                        return 7; // fake serverSideId
+                    }
+                },
+                resModel: "foo",
+                Component: FavoriteMenu,
+                searchViewId: false,
+            });
 
-        await toggleFavoriteMenu(target);
-        await toggleSaveFavorite(target);
-        await saveFavorite(target);
-    });
+            await toggleFavoriteMenu(target);
+            await toggleSaveFavorite(target);
+            await saveFavorite(target);
+        }
+    );
 
     QUnit.skip("save search filter in modal", async function (assert) {
         /** @todo I don't know yet how to convert this test */

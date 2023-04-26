@@ -262,7 +262,11 @@ QUnit.module("Fields", (hooks) => {
             "The value should be displayed properly in the input."
         );
 
-        await click(target.querySelector(".o_list_button_save"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+            )
+        );
         assert.strictEqual(
             target.querySelector("td:not(.o_list_record_selector)").textContent,
             "-28",

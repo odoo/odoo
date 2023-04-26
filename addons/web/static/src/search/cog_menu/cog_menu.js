@@ -23,7 +23,7 @@ export class CogMenu extends Component {
     static template = "web.CogMenu";
     static components = {
         Dropdown,
-    }
+    };
     static props = {
         slots: { type: Object, optional: true },
     };
