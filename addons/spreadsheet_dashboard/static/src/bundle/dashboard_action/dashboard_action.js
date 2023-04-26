@@ -7,7 +7,7 @@ import { Spreadsheet } from "@odoo/o-spreadsheet";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import { DashboardMobileSearchPanel } from "./mobile_search_panel/mobile_search_panel";
 import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_container";
-import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
+import { FilterValueForDashboard } from "./filter_values/filter_value";
 import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
 
@@ -22,6 +22,7 @@ export class SpreadsheetDashboardAction extends Component {
             "bottom-left": false,
             "bottom-right": false,
         };
+
         this.orm = useService("orm");
         this.router = useService("router");
         // Use the non-protected orm service (`this.env.services.orm` instead of `useService("orm")`)
@@ -140,7 +141,7 @@ SpreadsheetDashboardAction.template = "spreadsheet_dashboard.DashboardAction";
 SpreadsheetDashboardAction.components = {
     ControlPanel,
     Spreadsheet,
-    FilterValue,
+    FilterValueForDashboard,
     DashboardMobileSearchPanel,
     MobileFigureContainer,
 };

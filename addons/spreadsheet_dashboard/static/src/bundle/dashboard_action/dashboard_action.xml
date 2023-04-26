@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardAction" owl="1" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
-        <ControlPanel display="controlPanelDisplay">
+      <ControlPanel display="controlPanelDisplay">
             <t t-set-slot="control-panel-top-right">
                 <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
-                <FilterValue
-                    t-if="status === Status.Loaded"
-                    filter="filter"
-                    model="state.activeDashboard.model"
-                    t-as="filter"
-                    t-foreach="filters"
-                    t-key="filter.id"
-                />
+                <div class="filters_panel">
+                    <h4 class="filters_panel_title">Filters panel</h4>
+                    <div class="d-flex flex-wrap fitlers_wrapper">
+                        <FilterValueForDashboard
+                            t-if="status === Status.Loaded"
+                            filter="filter"
+                            model="state.activeDashboard.model"
+                            t-as="filter"
+                            t-foreach="filters"
+                            t-key="filter.id"
+                        />
+                    </div>
+                </div>
             </t>
-        </ControlPanel>
+        </ControlPanel> 
+        <div class="dashboard_control_panel">
+            <div class=""></div>
+        </div>
         <t t-set="dashboard" t-value="state.activeDashboard"/>
         <div class="o_content o_component_with_search_panel" t-att-class="{ o_mobile_dashboard: env.isSmall }">
             <!-- Dashboard selection -->
