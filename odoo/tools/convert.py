@@ -142,7 +142,7 @@ def _eval_xml(self, node, env):
             return '<?xml version="1.0"?>\n'\
                 +_process("".join(etree.tostring(n, encoding='unicode') for n in node))
         if t == 'html':
-            return _process("".join(etree.tostring(n, encoding='unicode') for n in node))
+            return _process("".join(etree.tostring(n, method='html', encoding='unicode') for n in node))
 
         data = node.text
         if node.get('file'):

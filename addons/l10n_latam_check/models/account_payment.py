@@ -15,6 +15,7 @@ class AccountPayment(models.Model):
         string='Check',
         readonly=True, states={'draft': [('readonly', False)]},
         copy=False,
+        check_company=True,
     )
     l10n_latam_check_operation_ids = fields.One2many(
         comodel_name='account.payment',
