@@ -1509,11 +1509,15 @@ Please change the quantity done or the rounding precision of your unit of measur
             )
         return vals
 
-    def _update_reserved_quantity(self, need, available_quantity, location_id, lot_id=None, package_id=None, owner_id=None, strict=True):
-        """ Create or update move lines.
+    def _update_reserved_quantity(self, need, location_id, quant_ids=None, lot_id=None, package_id=None, owner_id=None, strict=True):
+        """ Create or update move lines and reserves quantity from quants
+            Expects the need (qty to reserve) and location_id to reserve from.
+            `quant_ids` can be passed as an optimization since no search on the database
+            is performed and reservation is done on the passed quants set
         """
         self.ensure_one()
-
+        if not quant_ids:
+            quant_ids = self.env['stock.quant']
         if not lot_id:
             lot_id = self.env['stock.lot']
         if not package_id:
@@ -1521,39 +1525,15 @@ Please change the quantity done or the rounding precision of your unit of measur
         if not owner_id:
             owner_id = self.env['res.partner']
 
-        # do full packaging reservation when it's needed
-        if self.product_packaging_id and self.product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
-            available_quantity = self.product_packaging_id._check_qty(available_quantity, self.product_id.uom_id, "DOWN")
+        quants = quant_ids._get_reserve_quantity(
+            self.product_id, location_id, need, product_packaging_id=self.product_packaging_id,
+            uom_id=self.product_uom, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict)
 
-        taken_quantity = min(available_quantity, need)
-
-        # `taken_quantity` is in the quants unit of measure. There's a possibility that the move's
-        # unit of measure won't be respected if we blindly reserve this quantity, a common usecase
-        # is if the move's unit of measure's rounding does not allow fractional reservation. We chose
-        # to convert `taken_quantity` to the move's unit of measure with a down rounding method and
-        # then get it back in the quants unit of measure with an half-up rounding_method. This
-        # way, we'll never reserve more than allowed. We do not apply this logic if
-        # `available_quantity` is brought by a chained move line. In this case, `_prepare_move_line_vals`
-        # will take care of changing the UOM to the UOM of the product.
-        if not strict and self.product_id.uom_id != self.product_uom:
-            taken_quantity_move_uom = self.product_id.uom_id._compute_quantity(taken_quantity, self.product_uom, rounding_method='DOWN')
-            taken_quantity = self.product_uom._compute_quantity(taken_quantity_move_uom, self.product_id.uom_id, rounding_method='HALF-UP')
-
-        quants = []
+        taken_quantity = 0
         rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-
-        if self.product_id.tracking == 'serial':
-            if float_compare(taken_quantity, int(taken_quantity), precision_digits=rounding) != 0:
-                taken_quantity = 0
-
-        if not float_is_zero(taken_quantity, precision_rounding=self.product_id.uom_id.rounding):
-            quants = self.env['stock.quant']._get_reserve_quantity(
-                self.product_id, location_id, taken_quantity, lot_id=lot_id,
-                package_id=package_id, owner_id=owner_id, strict=strict
-            )
-
         # Find a candidate move line to update or create a new one.
         for reserved_quant, quantity in quants:
+            taken_quantity += quantity
             to_update = next((line for line in self.move_line_ids if line._reservation_is_updatable(quantity, reserved_quant)), False)
             if to_update:
                 uom_quantity = self.product_id.uom_id._compute_quantity(quantity, to_update.product_uom_id, rounding_method='HALF-UP')
@@ -1649,6 +1629,9 @@ Please change the quantity done or the rounding precision of your unit of measur
         moves_to_assign = self
         if not force_qty:
             moves_to_assign = self.filtered(lambda m: m.state in ['confirmed', 'waiting', 'partially_available'])
+        moves_to_reserve = moves_to_assign.filtered(lambda m: not m._should_bypass_reservation())
+        quants_by_product = self.env['stock.quant']._get_quants_by_products_locations(moves_to_reserve.product_id, moves_to_reserve.location_id)
+
         for move in moves_to_assign:
             rounding = roundings[move]
             if not force_qty:
@@ -1657,6 +1640,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                 missing_reserved_uom_quantity = force_qty
             missing_reserved_uom_quantity -= reserved_availability[move]
             missing_reserved_quantity = move.product_uom._compute_quantity(missing_reserved_uom_quantity, move.product_id.uom_id, rounding_method='HALF-UP')
+            quants = quants_by_product[move.product_id.id]
             if move._should_bypass_reservation():
                 # create the move line(s) but do not impact quants
                 if move.move_orig_ids:
@@ -1707,10 +1691,7 @@ Please change the quantity done or the rounding precision of your unit of measur
                         continue
                     # Reserve new quants and create move lines accordingly.
                     forced_package_id = move.package_level_id.package_id or None
-                    available_quantity = move._get_available_quantity(move.location_id, package_id=forced_package_id)
-                    if available_quantity <= 0:
-                        continue
-                    taken_quantity = move._update_reserved_quantity(need, available_quantity, move.location_id, package_id=forced_package_id, strict=False)
+                    taken_quantity = move._update_reserved_quantity(need, move.location_id, quant_ids=quants, package_id=forced_package_id, strict=False)
                     if float_is_zero(taken_quantity, precision_rounding=rounding):
                         continue
                     moves_to_redirect.add(move.id)
@@ -1738,10 +1719,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                         # partially `quantity`. When this happens, we chose to reserve the maximum
                         # still available. This situation could not happen on MTS move, because in
                         # this case `quantity` is directly the quantity on the quants themselves.
-                        available_quantity = move._get_available_quantity(location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True)
-                        if float_is_zero(available_quantity, precision_rounding=rounding):
-                            continue
-                        taken_quantity = move._update_reserved_quantity(need, min(quantity, available_quantity), location_id, lot_id, package_id, owner_id)
+
+                        taken_quantity = move._update_reserved_quantity(min(quantity, need), location_id, quants, lot_id, package_id, owner_id)
                         if float_is_zero(taken_quantity, precision_rounding=rounding):
                             continue
                         moves_to_redirect.add(move.id)

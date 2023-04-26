@@ -313,7 +313,5 @@ class StockMove(models.Model):
                         if existing_lots:
                             existing_lot = existing_lots.filtered_domain([('product_id', '=', line.product_id.id), ('name', '=', lot.lot_name)])
                             if existing_lot:
-                                available_quantity = move._get_available_quantity(move.location_id, lot_id=existing_lot, strict=True)
-                                if not float_is_zero(available_quantity, precision_rounding=line.product_id.uom_id.rounding):
-                                    move._update_reserved_quantity(qty, min(qty, available_quantity), move.location_id, existing_lot)
-                                    continue
+                                move._update_reserved_quantity(qty, move.location_id, lot_id=existing_lot)
+                                continue

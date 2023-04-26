@@ -700,7 +700,19 @@ class StockQuant(models.Model):
             return domain, 'in_date ASC, id'
         raise UserError(_('Removal strategy %s not implemented.') % (removal_strategy,))
 
+    def _get_removal_strategy_sort_key(self, removal_strategy):
+        key = lambda q: (q.in_date, q.id)
+        reverse = False
+        if removal_strategy == 'lifo':
+            reverse = True
+        elif removal_strategy == 'closest':
+            key = lambda q: (q.location_id, -q.id)
+        return key, reverse
+
     def _gather(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, qty=0):
+        """ if records in self, the records are filtered based on the wanted characteristics passed to this function
+            if not, a search is done with all the characteristics passed.
+        """
         removal_strategy = self._get_removal_strategy(product_id, location_id)
         domain = [('product_id', '=', product_id.id)]
         if not strict:
@@ -720,14 +732,19 @@ class StockQuant(models.Model):
             domain = expression.AND([[('expiration_date', '>=', self.env.context['with_expiration'])], domain])
 
         domain, order = self._get_removal_strategy_domain_order(domain, removal_strategy, qty)
-        return self.search(domain, order=order).sorted(lambda q: not q.lot_id)
+        if self:
+            sort_key = self._get_removal_strategy_sort_key(removal_strategy)
+            res = self.filtered_domain(domain).sorted(key=sort_key[0], reverse=sort_key[1])
+        else:
+            res = self.search(domain, order=order)
+        return res.sorted(lambda q: not q.lot_id)
 
-    @api.model
     def _get_available_quantity(self, product_id, location_id, lot_id=None, package_id=None, owner_id=None, strict=False, allow_negative=False):
         """ Return the available quantity, i.e. the sum of `quantity` minus the sum of
         `reserved_quantity`, for the set of quants sharing the combination of `product_id,
         location_id` if `strict` is set to False or sharing the *exact same characteristics*
         otherwise.
+        The set of quants to filter from can be in `self`, if not a search will be done
         This method is called in the following usecases:
             - when a stock move checks its availability
             - when a stock move actually assign
@@ -762,19 +779,46 @@ class StockQuant(models.Model):
             else:
                 return sum([available_quantity for available_quantity in availaible_quantities.values() if float_compare(available_quantity, 0, precision_rounding=rounding) > 0])
 
-    def _get_reserve_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, strict=False):
+    def _get_reserve_quantity(self, product_id, location_id, quantity, product_packaging_id=None, uom_id=None, lot_id=None, package_id=None, owner_id=None, strict=False):
         """ Get the quantity available to reserve for the set of quants
         sharing the combination of `product_id, location_id` if `strict` is set to False or sharing
-        the *exact same characteristics* otherwise. Typically, this method is called before the
-        `stock.move.line` creation to know the reserved_qty that could be use. It's also call by
-        `_update_reserve_quantity` to find the quant to reserve.
+        the *exact same characteristics* otherwise. If no quants are in self, `_gather` will do a search to fetch the quants
+        Typically, this method is called before the `stock.move.line` creation to know the reserved_qty that could be use.
+        It's also called by `_update_reserve_quantity` to find the quant to reserve.
 
         :return: a list of tuples (quant, quantity_reserved) showing on which quant the reservation
             could be done and how much the system is able to reserve on it
         """
         self = self.sudo()
         rounding = product_id.uom_id.rounding
-        quants = self or self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
+
+        quants = self._gather(product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=strict, qty=quantity)
+
+        # avoid quants with negative qty to not lower available_qty
+        available_quantity = quants._get_available_quantity(product_id, location_id, lot_id, package_id, owner_id, strict)
+
+        # do full packaging reservation when it's needed
+        if product_packaging_id and product_id.product_tmpl_id.categ_id.packaging_reserve_method == "full":
+            available_quantity = product_packaging_id._check_qty(available_quantity, product_id.uom_id, "DOWN")
+
+        quantity = min(quantity, available_quantity)
+
+        # `quantity` is in the quants unit of measure. There's a possibility that the move's
+        # unit of measure won't be respected if we blindly reserve this quantity, a common usecase
+        # is if the move's unit of measure's rounding does not allow fractional reservation. We chose
+        # to convert `quantity` to the move's unit of measure with a down rounding method and
+        # then get it back in the quants unit of measure with an half-up rounding_method. This
+        # way, we'll never reserve more than allowed. We do not apply this logic if
+        # `available_quantity` is brought by a chained move line. In this case, `_prepare_move_line_vals`
+        # will take care of changing the UOM to the UOM of the product.
+        if not strict and uom_id and product_id.uom_id != uom_id:
+            quantity_move_uom = product_id.uom_id._compute_quantity(quantity, uom_id, rounding_method='DOWN')
+            quantity = uom_id._compute_quantity(quantity_move_uom, product_id.uom_id, rounding_method='HALF-UP')
+
+        if self.product_id.tracking == 'serial':
+            if float_compare(quantity, int(quantity), precision_digits=rounding) != 0:
+                quantity = 0
+
         reserved_quants = []
 
         if float_compare(quantity, 0, precision_rounding=rounding) > 0:
@@ -905,6 +949,18 @@ class StockQuant(models.Model):
             quant.inventory_date = date_by_location[quant.location_id]
         self.write({'inventory_quantity': 0, 'user_id': False})
         self.write({'inventory_diff_quantity': 0})
+
+    @api.model
+    def _get_quants_by_products_locations(self, product_ids, location_ids):
+        quants_by_product = defaultdict(lambda: self.env['stock.quant'])
+        if product_ids and location_ids:
+            needed_quants = self.env['stock.quant'].read_group([('product_id', 'in', product_ids.ids),
+                                                                ('location_id', 'child_of', location_ids.ids)],
+                                                            ['ids:array_agg(id)', 'product_id'],
+                                                            ['product_id'])
+            for quant in needed_quants:
+                quants_by_product[quant['product_id'][0]] = self.env['stock.quant'].browse(quant['ids'])
+        return quants_by_product
 
     @api.model
     def _update_available_quantity(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, in_date=None):
