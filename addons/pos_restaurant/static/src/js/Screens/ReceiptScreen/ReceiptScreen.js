@@ -23,20 +23,19 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
     },
     //@override
     _addNewOrder() {
-        if (!this.env.pos.config.is_table_management) {
+        if (!this.env.pos.config.module_pos_restaurant) {
             this._super(...arguments);
         }
     },
     isResumeVisible() {
-        if (this.env.pos.config.is_table_management &&
-            this.env.pos.table) {
-                return this.env.pos.getTableOrders(this.env.pos.table.id).length > 1;
-            }
+        if (this.env.pos.config.module_pos_restaurant && this.env.pos.table) {
+            return this.env.pos.getTableOrders(this.env.pos.table.id).length > 1;
+        }
         return this._super(...arguments);
     },
     //@override
     get nextScreen() {
-        if (this.env.pos.config.is_table_management) {
+        if (this.env.pos.config.module_pos_restaurant) {
             const table = this.env.pos.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {

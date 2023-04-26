@@ -35,7 +35,6 @@ class TestFrontend(odoo.tests.HttpCase):
         pos_config = self.env['pos.config'].create({
             'name': 'Bar',
             'module_pos_restaurant': True,
-            'is_table_management': True,
             'iface_splitbill': True,
             'iface_printbill': True,
             'iface_orderline_notes': True,
