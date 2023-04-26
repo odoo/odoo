@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import contextlib
 import re
+import werkzeug.urls
 from lxml import etree
 from unittest.mock import Mock, MagicMock, patch
 
@@ -167,3 +168,21 @@ def text_from_html(html_fragment, collapse_whitespace=False):
     if collapse_whitespace:
         content = re.sub('\\s+', ' ', content).strip()
     return content
+
+def get_base_domain(url, strip_www=False):
+    """
+    Returns the domain of a given url without the scheme and the www. and the
+    final '/' if any.
+
+    :param url: url from which the domain must be extracted
+    :param strip_www: if True, strip the www. from the domain
+
+    :return: domain of the url
+    """
+    if not url:
+        return ''
+
+    url = werkzeug.urls.url_parse(url).netloc
+    if strip_www and url.startswith('www.'):
+        url = url[4:]
+    return url
