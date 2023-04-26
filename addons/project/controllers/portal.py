@@ -151,7 +151,7 @@ class ProjectCustomerPortal(CustomerPortal):
         })
         return request.render("project.portal_my_projects", values)
 
-    @http.route(['/my/project/<int:project_id>'], type='http', auth="public", website=True)
+    @http.route(['/my/project/<int:project_id>', '/my/project/<int:project_id>/page/<int:page>'], type='http', auth="public", website=True)
     def portal_my_project(self, project_id=None, access_token=None, page=1, date_begin=None, date_end=None, sortby=None, search=None, search_in='content', groupby=None, **kw):
         try:
             project_sudo = self._document_check_access('project.project', project_id, access_token)
