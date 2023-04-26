@@ -78,6 +78,7 @@ import {
     leftPos,
     isNotAllowedContent,
     childNodeIndex,
+    EMAIL_REGEX,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -4589,7 +4590,7 @@ export class OdooEditor extends EventTarget {
             const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
             const textNodeSplitted = textSliced.split(/\s/);
             let potentialUrl = textNodeSplitted.pop();
-            const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS);
+            const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS) && !potentialUrl.match(EMAIL_REGEX);
 
             if (lastWordMatch) {
                 const matches = getUrlsInfosInString(textSliced);
