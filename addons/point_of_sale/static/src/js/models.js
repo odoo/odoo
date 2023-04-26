@@ -413,7 +413,7 @@ export class PosGlobalState extends PosModel {
     }
     _onReactiveOrderUpdated(order) {
         order.save_to_db();
-        if (this.isOpenOrderShareable()) {
+        if (this.isOpenOrderShareable() && !this.loadingOrderState) {
             this.ordersToUpdateSet.add(order);
         }
     }
