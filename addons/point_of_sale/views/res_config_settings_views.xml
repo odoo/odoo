@@ -238,7 +238,7 @@
                             <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
                                 <field name="pos_auto_validate_terminal_payment"/>
                             </setting>
-                            <setting string="Cash Rounding" documentation="/applications/sales/point_of_sale/shop/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
+                            <setting string="Cash Rounding" documentation="/applications/sales/point_of_sale/pricing/cash_rounding.html" help="Define the smallest coinage of the currency used to pay by cash">
                                 <field name="pos_cash_rounding"/>
                                 <div class="content-group mt16" attrs="{'invisible': [('pos_cash_rounding', '=', False)]}">
                                     <div class="row mt16">
@@ -279,20 +279,20 @@
 
                         <block title="Payment Terminals" help="Those settings are common to all PoS." id="pos_payment_terminals_section">
                             <setting id="adyen_payment_terminal_setting" title="The transactions are processed by Adyen. Set your Adyen credentials on the related payment method." string="Adyen" help="Accept payments with an Adyen payment terminal"
-                                     documentation="/applications/sales/point_of_sale/payment/adyen.html">
+                                     documentation="/applications/sales/point_of_sale/payment_methods/terminals/adyen.html">
                                 <field name="module_pos_adyen"/>
                             </setting>
                             <setting id="stripe_payment_terminal_setting" title="The transactions are processed by Stripe. Set your Stripe credentials on the related payment method." string="Stripe" help="Accept payments with a Stripe payment terminal">
                                 <field name="module_pos_stripe"/>
                             </setting>
-                            <setting id="vantiv_payment_terminal_setting" title="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method." string="Vantiv (US &amp; Canada)" documentation="/applications/sales/point_of_sale/payment/vantiv.html" help="Accept payments with a Vantiv payment terminal">
+                            <setting id="vantiv_payment_terminal_setting" title="The transactions are processed by Vantiv. Set your Vantiv credentials on the related payment method." string="Vantiv (US &amp; Canada)" documentation="/applications/sales/point_of_sale/payment_methods/terminals/vantiv.html" help="Accept payments with a Vantiv payment terminal">
                                 <field name="module_pos_mercury"/>
                                 <div class="content-group" attrs="{'invisible': [('module_pos_mercury', '=', False)]}">
                                     <div class="mt16" id="btn_use_pos_mercury">
                                     </div>
                                 </div>
                             </setting>
-                            <setting title="The transactions are processed by Six. Set the IP address of the terminal on the related payment method." string="Six" documentation="/applications/sales/point_of_sale/payment/six.html" help="Accept payments with a Six payment terminal">
+                            <setting title="The transactions are processed by Six. Set the IP address of the terminal on the related payment method." string="Six" documentation="/applications/sales/point_of_sale/payment_methods/terminals/six.html" help="Accept payments with a Six payment terminal">
                                 <field name="module_pos_six"/>
                             </setting>
                         </block>
