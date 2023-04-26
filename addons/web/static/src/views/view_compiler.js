@@ -368,6 +368,10 @@ export class ViewCompiler {
         field.setAttribute("name", `'${fieldName}'`);
         field.setAttribute("record", params.recordExpr || "__comp__.props.record");
         field.setAttribute("fieldInfo", `__comp__.props.archInfo.fieldNodes['${fieldId}']`);
+        field.setAttribute(
+            "readonly",
+            `__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew`
+        );
 
         if (el.hasAttribute("widget")) {
             field.setAttribute("type", `'${el.getAttribute("widget")}'`);

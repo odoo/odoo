@@ -53,7 +53,7 @@ QUnit.module("Form Compiler", (hooks) => {
             const expected = /*xml*/ `
             <t>
                 <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                    <Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']"/>
+                    <Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                     <FormLabel id="'test'" fieldName="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" className="&quot;&quot;" string="\`\`" />
                 </div>
             </t>`;
@@ -68,7 +68,7 @@ QUnit.module("Form Compiler", (hooks) => {
                 <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
                     <div class="someClass">
                         lol
-                        <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']"/>
+                        <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                     </div>
                 </div>
             </t>`;
@@ -89,14 +89,14 @@ QUnit.module("Form Compiler", (hooks) => {
                <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
                      <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'display_name',fieldName:'display_name',record:__comp__.props.record,string:__comp__.props.record.fields.display_name.string,fieldInfo:__comp__.props.archInfo.fieldNodes['display_name']}" Component="__comp__.constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
-                        <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" class="scope &amp;&amp; scope.className" />
+                        <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew" class="scope &amp;&amp; scope.className"/>
                      </t>
                   </InnerGroup>
                </t>
                <t t-set-slot="item_1" type="'item'" sequence="1" t-slot-scope="scope" isVisible="true" itemSpan="1">
                   <InnerGroup class="scope &amp;&amp; scope.className">
                      <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" props="{id:'charfield',fieldName:'charfield',record:__comp__.props.record,string:__comp__.props.record.fields.charfield.string,fieldInfo:__comp__.props.archInfo.fieldNodes['charfield']}" Component="__comp__.constructor.components.FormLabel" subType="'item_component'" isVisible="true" itemSpan="2">
-                        <Field id="'charfield'" name="'charfield'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['charfield']" class="scope &amp;&amp; scope.className" />
+                        <Field id="'charfield'" name="'charfield'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['charfield']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew" class="scope &amp;&amp; scope.className"/>
                      </t>
                   </InnerGroup>
                </t>
@@ -126,7 +126,7 @@ QUnit.module("Form Compiler", (hooks) => {
                             <InnerGroup class="scope &amp;&amp; scope.className">
                                 <t t-set-slot="item_0" type="'item'" sequence="0" t-slot-scope="scope" isVisible="true" itemSpan="1">
                                     <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }} {{scope &amp;&amp; scope.className || &quot;&quot; }}">
-                                        <div><Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']"/></div>
+                                        <div><Field id="'test'" name="'test'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['test']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/></div>
                                     </div>
                                 </t>
                             </InnerGroup>
@@ -151,10 +151,10 @@ QUnit.module("Form Compiler", (hooks) => {
         const expected = /*xml*/ `
             <Notebook defaultPage="__comp__.props.record.isNew ? undefined : __comp__.props.activeNotebookPages[0]" onPageUpdate="(page) =&gt; __comp__.props.onNotebookPageChange(0, page)">
                 <t t-set-slot="page_1" title="\`Page1\`" name="\`p1\`" isVisible="true">
-                    <Field id="'charfield'" name="'charfield'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['charfield']"/>
+                    <Field id="'charfield'" name="'charfield'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['charfield']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                 </t>
                 <t t-set-slot="page_2" title="\`Page2\`" name="\`p2\`" isVisible="true">
-                    <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']"/>
+                    <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                </t>
            </Notebook>`;
 
@@ -168,7 +168,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']"/>
+            <Field id="'display_name'" name="'display_name'" record="__comp__.props.record" fieldInfo="__comp__.props.archInfo.fieldNodes['display_name']" readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
         `;
 
         assert.areContentEquivalent(compileTemplate(arch), expected);
@@ -319,7 +319,8 @@ QUnit.module("Form Compiler", (hooks) => {
                     <Field id="'bar'"
                         name="'bar'"
                         record="__comp__.props.record"
-                        fieldInfo="__comp__.props.archInfo.fieldNodes['bar']"/>
+                        fieldInfo="__comp__.props.archInfo.fieldNodes['bar']"
+                        readonly="__comp__.props.archInfo.activeActions?.edit === false and !__comp__.props.record.isNew"/>
                 </t>
                 <label>label with content</label>
             </Setting>`;
