@@ -2,6 +2,7 @@
 
 import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import Registries from "@point_of_sale/js/Registries";
+import { _lt } from "@web/core/l10n/translation";
 import { parse } from "web.field_utils";
 
 const { useRef, useState, onMounted } = owl;
@@ -50,6 +51,11 @@ class CashMovePopup extends AbstractAwaitablePopup {
     }
 }
 CashMovePopup.template = "point_of_sale.CashMovePopup";
+CashMovePopup.defaultProps = {
+    cancelText: _lt("Cancel"),
+    title: _lt("Cash In/Out"),
+};
+
 Registries.Component.add(CashMovePopup);
 
 export default CashMovePopup;

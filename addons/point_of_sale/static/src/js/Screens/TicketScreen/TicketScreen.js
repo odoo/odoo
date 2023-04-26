@@ -6,6 +6,7 @@ import IndependentToOrderScreen from "@point_of_sale/js/Misc/IndependentToOrderS
 import NumberBuffer from "@point_of_sale/js/Misc/NumberBuffer";
 import { useListener } from "@web/core/utils/hooks";
 import { parse } from "web.field_utils";
+import { _lt } from "@web/core/l10n/translation";
 
 const { onMounted, onWillUnmount, useState } = owl;
 
@@ -697,6 +698,8 @@ TicketScreen.defaultProps = {
     reuseSavedUIState: false,
     ui: {},
 };
+TicketScreen.numpadActionName = _lt("Refund");
+TicketScreen.searchPlaceholder = _lt("Search Orders...");
 
 Registries.Component.add(TicketScreen);
 
