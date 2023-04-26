@@ -109,7 +109,6 @@ class AccountChartTemplate(models.AbstractModel):
             'demo_invoice_5': {
                 'move_type': 'in_invoice',
                 'partner_id': 'base.res_partner_12',
-                'invoice_user_id': 'base.user_demo',
                 'invoice_payment_term_id': 'account.account_payment_term_end_following_month',
                 'invoice_date': time.strftime('%Y-%m-01'),
                 'delivery_date': time.strftime('%Y-%m-01'),
@@ -120,7 +119,6 @@ class AccountChartTemplate(models.AbstractModel):
             },
             'demo_invoice_extract': {
                 'move_type': 'in_invoice',
-                'invoice_user_id': 'base.user_demo',
             },
             'demo_invoice_equipment_purchase': {
                 'move_type': 'in_invoice',

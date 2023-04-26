@@ -35,7 +35,7 @@ class AccountMove(models.Model):
     @api.depends('invoice_user_id')
     def _compute_team_id(self):
         for move in self:
-            if not move.invoice_user_id.sale_team_id:
+            if not move.invoice_user_id.sale_team_id or not move.is_sale_document(include_receipts=True):
                 continue
             move.team_id = self.env['crm.team']._get_default_team_id(
                 user_id=move.invoice_user_id.id,
