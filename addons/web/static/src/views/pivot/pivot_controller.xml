@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PivotView.Buttons" owl="1">
-        <div class="d-flex gap-1 mt-2 mx-3 mb-3">
+        <div class="o_pivot_buttons d-flex gap-1 mt-2 mx-3 mb-3">
             <div class="btn-group" role="toolbar" aria-label="Main actions">
                 <t t-call="web.ReportViewMeasures">
                     <t t-set="measures" t-value="model.metaData.measures"/>
@@ -39,9 +39,7 @@
                     </t>
                     <t t-else="" t-call="web.NoContentHelper"/>
                 </t>
-                <t t-if="model.hasData() and model.metaData.activeMeasures.length">
-                    <t t-component="props.Renderer" model="model"/>
-                </t>
+                <t t-component="props.Renderer" model="model"/>
             </Layout>
         </div>
     </t>

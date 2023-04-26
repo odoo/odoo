@@ -72,7 +72,7 @@ QUnit.test("Burger Menu on an App", async (assert) => {
         document.body.querySelector(".o_burger_menu nav.o_burger_menu_content li").textContent,
         "SubMenu"
     );
-    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_dark");
+    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_app");
 
     await click(document.body, ".o_burger_menu_topbar");
     assert.doesNotHaveClass(
@@ -81,7 +81,7 @@ QUnit.test("Burger Menu on an App", async (assert) => {
     );
 
     await click(document.body, ".o_burger_menu_topbar");
-    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_dark");
+    assert.hasClass(document.body.querySelector(".o_burger_menu_content"), "o_burger_menu_app");
 });
 
 QUnit.test("Burger Menu on an App without SubMenu", async (assert) => {

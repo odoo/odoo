@@ -33,7 +33,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, "1");
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partners Action 1");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").textContent, "Partners Action 1");
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record span")].map((el) => el.textContent),
             ["yop", "blip", "gnap", "plop", "zoup"]
@@ -46,7 +46,7 @@ QUnit.module("ActionManager", (hooks) => {
             assert.ok(e.cause instanceof TypeError);
         }
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partners Action 1");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").textContent, "Partners Action 1");
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_record span")].map((el) => el.textContent),
             ["yop", "blip", "gnap", "plop", "zoup"]

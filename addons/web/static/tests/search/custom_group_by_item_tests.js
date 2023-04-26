@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { getFixture, patchWithCleanup } from "../helpers/utils";
 import {
     applyGroup,
@@ -11,9 +10,10 @@ import {
     makeWithSearch,
     setupControlPanelServiceRegistry,
     toggleAddCustomGroup,
-    toggleGroupByMenu,
     toggleMenuItem,
+    toggleSearchBarMenu,
 } from "./helpers";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 let target;
 let serverData;
@@ -52,12 +52,12 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
         });
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
 
         const customGroupByItem = target.querySelector(".o_add_custom_group_menu");
         assert.strictEqual(customGroupByItem.innerText.trim(), "Add Custom Group");
@@ -85,7 +85,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewFields: {
@@ -94,7 +94,7 @@ QUnit.module("Search", (hooks) => {
                 },
             });
 
-            await toggleGroupByMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleAddCustomGroup(target);
 
             assert.deepEqual(
@@ -116,7 +116,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewFields: {
@@ -130,7 +130,7 @@ QUnit.module("Search", (hooks) => {
                 },
             });
 
-            await toggleGroupByMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleAddCustomGroup(target);
 
             assert.deepEqual(
@@ -152,7 +152,7 @@ QUnit.module("Search", (hooks) => {
             const controlPanel = await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewFields: {
@@ -160,7 +160,7 @@ QUnit.module("Search", (hooks) => {
                     id: { sortable: true, string: "ID", type: "integer" },
                 },
             });
-            await toggleGroupByMenu(target);
+            await toggleSearchBarMenu(target);
 
             assert.deepEqual(controlPanel.env.searchModel.groupBy, []);
             assert.containsNone(target, ".o_menu_item");
@@ -184,14 +184,14 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["groupBy"],
             searchViewFields: {
                 date: { sortable: true, name: "date", string: "Super Date", type: "date" },
             },
         });
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
 
         const addCustomGroupMenu = target.querySelector(".o_add_custom_group_menu");
 
@@ -220,7 +220,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: ["groupBy"],
                 searchViewFields: {
                     candle_light: {
@@ -231,7 +231,7 @@ QUnit.module("Search", (hooks) => {
                 },
             });
 
-            await toggleGroupByMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleAddCustomGroup(target);
             await applyGroup(target);
 

@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     click,
     getFixture,
@@ -9,7 +8,6 @@ import {
     nextTick,
     patchDate,
     patchTimeZone,
-    patchWithCleanup,
     triggerEvent,
 } from "../helpers/utils";
 import {
@@ -18,9 +16,8 @@ import {
     makeWithSearch,
     removeFacet,
     setupControlPanelServiceRegistry,
-    toggleComparisonMenu,
-    toggleGroupByMenu,
     toggleMenuItem,
+    toggleSearchBarMenu,
     validateSearch,
 } from "./helpers";
 
@@ -32,7 +29,8 @@ function getDomain(controlPanel) {
     return controlPanel.env.searchModel.domain;
 }
 
-import { onWillUpdateProps } from "@odoo/owl";
+import { Component, onWillUpdateProps, xml } from "@odoo/owl";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 
 let target;
 let serverData;
@@ -143,7 +141,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -161,7 +159,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             context: { search_default_date_group_by: 1 },
@@ -190,7 +188,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             context: {
@@ -236,7 +234,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -248,7 +246,7 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" }); // select
 
         assert.deepEqual(
-            getFacetTexts(target).map((str) => str.replace(/\s+/, " ")),
+            getFacetTexts(target).map((str) => str.replace(/\s+/g, " ")),
             ["Birthday 07/15/1983"],
             "The format of the date in the facet should be in locale"
         );
@@ -265,8 +263,8 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" }); // select
 
         assert.deepEqual(
-            getFacetTexts(target).map((str) => str.replace(/\s+/, " ")),
-            ["Birth DateTime\n07/15/1983 00:00:00"],
+            getFacetTexts(target).map((str) => str.replace(/\s+/g, " ")),
+            ["Birth DateTime 07/15/1983 00:00:00"],
             "The format of the datetime in the facet should be in locale"
         );
 
@@ -279,7 +277,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -324,7 +322,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -352,19 +350,20 @@ QUnit.module("Search", (hooks) => {
         assert.expect(8);
 
         let updateCount = 0;
-        patchWithCleanup(ControlPanel.prototype, {
+        class TestComponent extends Component {
             setup() {
-                this._super();
                 onWillUpdateProps(() => {
                     updateCount++;
                 });
-            },
-        });
+            }
+        }
+        TestComponent.template = xml`<SearchBar/>`;
+        TestComponent.components = { SearchBar };
 
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: TestComponent,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -378,8 +377,8 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" });
 
         assert.deepEqual(
-            getFacetTexts(target).map((str) => str.replace(/\s+/, "")),
-            ["BarFirst record"]
+            getFacetTexts(target).map((str) => str.replace(/\s+/g, " ")),
+            ["Bar First record"]
         );
 
         assert.strictEqual(updateCount, 1);
@@ -396,8 +395,8 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" });
 
         assert.deepEqual(
-            getFacetTexts(target).map((str) => str.replace(/\s+/, "")),
-            ["BarFirst recordorSecond record"]
+            getFacetTexts(target).map((str) => str.replace(/\s+/g, " ")),
+            ["Bar First record or Second record"]
         );
 
         assert.strictEqual(updateCount, 2);
@@ -410,19 +409,20 @@ QUnit.module("Search", (hooks) => {
         assert.expect(2);
 
         let updateCount = 0;
-        patchWithCleanup(ControlPanel.prototype, {
+        class TestComponent extends Component {
             setup() {
-                this._super();
                 onWillUpdateProps(() => {
                     updateCount++;
                 });
-            },
-        });
+            }
+        }
+        TestComponent.template = xml`<SearchBar/>`;
+        TestComponent.components = { SearchBar };
 
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: TestComponent,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -440,7 +440,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -487,7 +487,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "partner",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: [],
                 searchViewId: false,
             });
@@ -588,7 +588,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -610,7 +610,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -647,7 +647,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -672,7 +672,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -719,7 +719,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -759,7 +759,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -801,7 +801,7 @@ QUnit.module("Search", (hooks) => {
                 serverData,
                 mockRPC,
                 resModel: "partner",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: [],
                 searchViewId: false,
                 searchViewArch: `
@@ -840,7 +840,7 @@ QUnit.module("Search", (hooks) => {
                 serverData,
                 mockRPC,
                 resModel: "partner",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchMenuTypes: [],
                 searchViewId: false,
                 searchViewArch: `
@@ -867,7 +867,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -895,7 +895,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -926,7 +926,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: /*xml*/ `
@@ -989,7 +989,7 @@ QUnit.module("Search", (hooks) => {
             serverData,
             mockRPC,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
         });
@@ -1029,18 +1029,18 @@ QUnit.module("Search", (hooks) => {
             serverData,
             mockRPC,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             context: { search_default_company: 1 },
         });
 
         await nextTick();
-        assert.containsNone(target, ".o_control_panel");
+        assert.containsNone(target, ".o_cp_searchview");
 
         def.resolve();
         await nextTick();
-        assert.containsOnce(target, ".o_control_panel");
+        assert.containsOnce(target, ".o_cp_searchview");
         assert.strictEqual(getFacetTexts(target)[0].replace("\n", ""), "CompanyFirst record");
     });
 
@@ -1050,7 +1050,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -1147,7 +1147,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -1211,7 +1211,7 @@ QUnit.module("Search", (hooks) => {
         ]);
 
         // expand the selection properties
-        await click(target.querySelector(".o_control_panel"));
+        await click(target.querySelector(".o_cp_searchview"));
         await editSearch(target, "a");
         await click(target.querySelector(".o_expand"));
         items = target.querySelectorAll(".o_searchview_input_container li");
@@ -1233,7 +1233,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getDomain(controlPanel), expectedDomain);
 
         // select the selection option "A"
-        await click(target.querySelector(".o_control_panel"));
+        await click(target.querySelector(".o_cp_searchview"));
         await editSearch(target, "a");
         await click(target.querySelector(".o_expand"));
         await click(target.querySelector(".o_searchview_input_container li:nth-child(4)"));
@@ -1257,7 +1257,7 @@ QUnit.module("Search", (hooks) => {
         await click(target.querySelector(".o_facet_remove"));
 
         // search a many2one value
-        await click(target.querySelector(".o_control_panel"));
+        await click(target.querySelector(".o_cp_searchview"));
         await editSearch(target, "Ali");
         await click(target.querySelector(".o_expand"));
         await click(target.querySelector("li:nth-child(2) .o_expand"));
@@ -1270,7 +1270,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getDomain(controlPanel), expectedDomain);
 
         // search a tag value
-        await click(target.querySelector(".o_control_panel"));
+        await click(target.querySelector(".o_cp_searchview"));
         await editSearch(target, "A");
         await click(target.querySelector(".o_expand"));
         items = target.querySelectorAll(".o_searchview_input_container li");
@@ -1290,7 +1290,7 @@ QUnit.module("Search", (hooks) => {
         ];
         assert.deepEqual(getDomain(controlPanel), expectedDomain);
         // add the tag "B"
-        await click(target.querySelector(".o_control_panel"));
+        await click(target.querySelector(".o_cp_searchview"));
         await editSearch(target, "B");
         await click(target.querySelector(".o_expand"));
         items = target.querySelectorAll(".o_searchview_input_container li");
@@ -1402,7 +1402,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: [],
             searchViewId: false,
             searchViewArch: `
@@ -1414,7 +1414,7 @@ QUnit.module("Search", (hooks) => {
             context: { active_id: 2 },
         });
 
-        await click(target.querySelector(".o_control_panel"));
+        await click(target.querySelector(".o_cp_searchview"));
         await editSearch(target, "a");
         await click(target.querySelector(".o_expand"));
 
@@ -1427,7 +1427,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
             searchViewId: false,
             searchViewArch: `
@@ -1490,7 +1490,7 @@ QUnit.module("Search", (hooks) => {
             const controlPanel = await makeWithSearch({
                 serverData,
                 resModel: "partner",
-                Component: ControlPanel,
+                Component: SearchBar,
                 searchViewId: false,
                 searchViewArch: `
                 <search>
@@ -1527,7 +1527,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["groupBy"], // we need it to have facet (see facets getter in search_model)
             searchViewId: false,
             searchViewArch: `
@@ -1543,7 +1543,7 @@ QUnit.module("Search", (hooks) => {
             ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
         );
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Company");
 
         assert.deepEqual(getFacetTexts(target), ["My favorite", "Company"]);
@@ -1562,7 +1562,7 @@ QUnit.module("Search", (hooks) => {
 
         await click(target.querySelector(".modal footer button"));
         assert.containsNone(target, ".modal");
-        assert.deepEqual(getFacetTexts(target), ["Bool>Company", 'Foo contains "abc"']);
+        assert.deepEqual(getFacetTexts(target), ["Bool\n>\nCompany", 'Foo contains "abc"']);
     });
 
     QUnit.test("edit a date filter with comparison active", async function (assert) {
@@ -1570,7 +1570,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchMenuTypes: ["filter", "comparison"],
             searchViewId: false,
             searchViewArch: `
@@ -1588,8 +1588,8 @@ QUnit.module("Search", (hooks) => {
             ".o_searchview_facet.o_facet_with_domain .o_searchview_facet_label"
         );
 
-        await toggleComparisonMenu(target);
-        await toggleMenuItem(target);
+        await toggleSearchBarMenu(target);
+        await toggleMenuItem(target, "Birthday: Previous Period");
 
         assert.deepEqual(getFacetTexts(target), [
             "Birthday: April 2023",
@@ -1628,7 +1628,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "partner",
-            Component: ControlPanel,
+            Component: SearchBar,
             searchViewId: false,
             searchViewArch: `
                 <search>
@@ -1650,7 +1650,7 @@ QUnit.module("Search", (hooks) => {
         await triggerEvent(searchInput, null, "keydown", { key: "ArrowDown" });
         await triggerEvent(searchInput, null, "keydown", { key: "Enter" }); // select
 
-        assert.deepEqual(getFacetTexts(target), ["Foo\nabcordef"]);
+        assert.deepEqual(getFacetTexts(target), ["Foo\nabc\nor\ndef"]);
 
         await click(target, ".o_facet_with_domain .o_searchview_facet_label");
         assert.containsN(target, ".o_domain_leaf", 2);

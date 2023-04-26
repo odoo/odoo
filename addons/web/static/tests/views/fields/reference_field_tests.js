@@ -865,7 +865,7 @@ QUnit.module("Fields", (hooks) => {
             mockRPC: (route, { method, args }) => {
                 if (method === "onchange") {
                     return {
-                        value: {reference: "partner,2"},
+                        value: { reference: "partner,2" },
                     };
                 } else if (method === "create") {
                     assert.strictEqual(args.length, 1);
@@ -874,10 +874,16 @@ QUnit.module("Fields", (hooks) => {
             },
         });
 
-        await click(target, '.o_list_button_add');
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
+        );
         await click(target, '.o_list_char[name="display_name"] input');
         await editInput(target, '.o_list_char[name="display_name"] input', "Blabla");
-        await click(target, '.o_list_button_save');
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+        );
     });
 
     QUnit.test(

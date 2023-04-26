@@ -3,14 +3,16 @@
 import {
     click,
     getFixture,
+    getNodesTextContent,
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
 } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 import {
     isItemSelected,
-    toggleFilterMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
     switchView,
 } from "@web/../tests/search/helpers";
@@ -25,6 +27,10 @@ import {
 
 import { Component, xml } from "@odoo/owl";
 const actionRegistry = registry.category("actions");
+
+function getBreadCrumbTexts(target) {
+    return getNodesTextContent(target.querySelectorAll(".breadcrumb-item, .o_breadcrumb .active"));
+}
 
 let serverData;
 let target;
@@ -109,12 +115,7 @@ QUnit.module("ActionManager", (hooks) => {
         doAction(webClient, 4);
         def.resolve();
         await nextTick();
-        await legacyExtraNextTick();
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item.active").text(),
-            "Partners Action 4",
-            "action 4 should be loaded"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
     });
 
     QUnit.test("clicking quickly on breadcrumbs...", async function (assert) {
@@ -140,11 +141,7 @@ QUnit.module("ActionManager", (hooks) => {
         // resolve the form view read
         def.resolve();
         await nextTick();
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item.active").text(),
-            "Partners Action 4",
-            "action 4 should be loaded and visible"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
     });
 
     QUnit.test(
@@ -335,11 +332,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view", "should display the kanban view of action 4");
         assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -370,11 +363,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view", "should display the kanban view of action 4");
         assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -398,12 +387,12 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
         assert.containsN(target, ".o_list_view .o_data_row", 5);
-        assert.containsOnce(target, ".o_control_panel .o_list_buttons");
+        assert.containsOnce(target, ".o_control_panel .d-none.d-xl-inline-flex .o_list_buttons");
         // reload (the search_read RPC will be blocked)
         def = makeDeferred();
         await switchView(target, "list");
         assert.containsN(target, ".o_list_view .o_data_row", 5);
-        assert.containsOnce(target, ".o_control_panel .o_list_buttons");
+        assert.containsOnce(target, ".o_control_panel .d-none.d-xl-inline-flex .o_list_buttons");
         // open a record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
@@ -468,10 +457,7 @@ QUnit.module("ActionManager", (hooks) => {
             def.resolve();
             await nextTick();
             assert.containsOnce(target, ".o_list_view");
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-                "Partners"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
             assert.containsNone(target, ".o_form_view");
             assert.verifySteps([
                 "/web/webclient/load_menus",
@@ -505,10 +491,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-            "Partners"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         assert.containsNone(target, ".o_list_view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -540,10 +523,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-            "Partners"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         assert.containsNone(target, ".o_list_view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -575,10 +555,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-            "Partners"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         assert.containsNone(target, ".o_list_view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -616,18 +593,12 @@ QUnit.module("ActionManager", (hooks) => {
         await click(row1.querySelector(".o_data_cell"));
         await click(row2.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").innerText,
-            "Second record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
 
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").innerText,
-            "Second record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
     });
 
     QUnit.test("local state, global state, and race conditions", async function (assert) {
@@ -659,15 +630,15 @@ QUnit.module("ActionManager", (hooks) => {
         ToyController.template = xml`
             <div class="o_toy_view">
                 <ControlPanel />
+                <SearchBar />
             </div>`;
-        ToyController.components = { ControlPanel };
+        ToyController.components = { ControlPanel, SearchBar };
 
         registry.category("views").add("toy", {
             type: "toy",
             display_name: "Toy",
             icon: "fab fa-android",
             multiRecord: true,
-            searchMenuTypes: ["filter"],
             Controller: ToyController,
         });
 
@@ -683,7 +654,7 @@ QUnit.module("ActionManager", (hooks) => {
             ],
         });
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Foo");
         assert.ok(isItemSelected(target, "Foo"));
 
@@ -695,7 +666,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         assert.ok(isItemSelected(target, "Foo"));
         // this test is not able to detect that getGlobalState is put on the right place:
         // currentController.action.globalState contains in any case the search state

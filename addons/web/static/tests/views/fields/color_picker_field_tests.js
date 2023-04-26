@@ -224,7 +224,11 @@ QUnit.module("Fields", (hooks) => {
                  </tree>`,
             domain: [["id", "<", 0]],
         });
-        await click(target.querySelector(".o_list_button_add"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
+            )
+        );
         const date_column_width = target
             .querySelector('.o_list_table thead th[data-name="date_field"]')
             .style.width.replace("px", "");

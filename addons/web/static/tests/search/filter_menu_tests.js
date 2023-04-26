@@ -9,7 +9,6 @@ import {
     patchWithCleanup,
 } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     getFacetTexts,
     isItemSelected,
@@ -20,6 +19,7 @@ import {
     toggleFilterMenu,
     toggleMenuItem,
     toggleMenuItemOption,
+    DropDownMenusTestComponent,
 } from "./helpers";
 
 function getDomain(controlPanel) {
@@ -68,7 +68,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter"],
         });
 
@@ -83,7 +83,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -109,7 +109,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -132,7 +132,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Foo"]);
         assert.containsOnce(
             target.querySelector(".o_searchview .o_searchview_facet"),
-            "span.fa.fa-filter.o_searchview_facet_label"
+            ".o_searchview_facet_label"
         );
         assert.ok(isItemSelected(target, "Foo"));
         assert.deepEqual(getDomain(controlPanel), [["foo", "=", "qsdf"]]);
@@ -152,7 +152,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -382,7 +382,7 @@ QUnit.module("Search", (hooks) => {
             const controlPanel = await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchViewId: false,
                 searchMenuTypes: ["filter"],
                 searchViewArch: `
@@ -416,7 +416,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -443,7 +443,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -469,7 +469,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -493,7 +493,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchViewId: false,
                 searchMenuTypes: ["filter"],
                 searchViewArch: `
@@ -519,7 +519,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -547,7 +547,7 @@ QUnit.module("Search", (hooks) => {
 
         assert.deepEqual(getFacetTexts(target), [
             "Filter Group 1",
-            "Filter 1 Group 2orFilter 2 GROUP 2",
+            "Filter 1 Group 2\nor\nFilter 2 GROUP 2",
         ]);
     });
 
@@ -557,7 +557,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchViewId: false,
             searchMenuTypes: ["filter"],
             searchViewArch: `
@@ -600,7 +600,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter"],
         });
 
@@ -628,7 +628,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchMenuTypes: ["filter"],
             });
             await toggleFilterMenu(target);
@@ -652,7 +652,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchMenuTypes: ["filter"],
             });
             await toggleFilterMenu(target);
@@ -670,7 +670,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter"],
         });
         await toggleFilterMenu(target);
@@ -696,7 +696,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter"],
             searchViewId: false,
             searchViewArch: `
@@ -756,7 +756,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter"],
             searchViewId: false,
             searchViewArch: `<search />`,
@@ -781,7 +781,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter"],
             searchViewId: false,
             searchViewArch: `<search />`,

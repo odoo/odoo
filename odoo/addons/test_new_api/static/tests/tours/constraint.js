@@ -9,7 +9,7 @@
         steps: [
     {
         content: "wait web client",
-        trigger: '.breadcrumb:contains(Categories)',
+        trigger: '.o_breadcrumb:contains(Categories)',
     }, { // create test category
         content: "create new category",
         trigger: 'button.o_list_button_add',

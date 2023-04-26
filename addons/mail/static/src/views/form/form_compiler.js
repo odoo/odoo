@@ -46,9 +46,9 @@ function compileChatter(node, params) {
         hasParentReloadOnFollowersUpdate,
         hasParentReloadOnMessagePosted,
         isAttachmentBoxVisibleInitially,
-        threadId: "__comp__.props.record.model.root.resId or undefined",
-        threadModel: "__comp__.props.record.model.root.resModel",
-        webRecord: "__comp__.props.record.model.root",
+        threadId: "__comp__.props.record.resId or undefined",
+        threadModel: "__comp__.props.record.resModel",
+        webRecord: "__comp__.props.record",
         saveRecord: "() => __comp__.saveButtonClicked and __comp__.saveButtonClicked()",
     });
     const chatterContainerHookXml = createElement("div");
@@ -63,8 +63,8 @@ function compileAttachmentPreview(node, params) {
     const webClientViewAttachmentViewContainerXml = createElement("t");
     setAttributes(webClientViewAttachmentViewContainerXml, {
         "t-component": "__comp__.mailComponents.AttachmentView",
-        threadId: "__comp__.props.record.model.root.resId or undefined",
-        threadModel: "__comp__.props.record.model.root.resModel",
+        threadId: "__comp__.props.record.resId or undefined",
+        threadModel: "__comp__.props.record.resModel",
     });
     append(webClientViewAttachmentViewContainerHookXml, webClientViewAttachmentViewContainerXml);
     return webClientViewAttachmentViewContainerHookXml;

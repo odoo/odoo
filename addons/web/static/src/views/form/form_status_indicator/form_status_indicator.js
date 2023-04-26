@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { Component, useState } from "@odoo/owl";
+import { Component, useEffect, useRef, useState } from "@odoo/owl";
 import { useBus } from "@web/core/utils/hooks";
 
 export class FormStatusIndicator extends Component {
@@ -13,6 +13,18 @@ export class FormStatusIndicator extends Component {
             "FIELD_IS_DIRTY",
             (ev) => (this.state.fieldIsDirty = ev.detail)
         );
+        useEffect(
+            () => {
+                if (!this.props.model.root.isNew && this.indicatorMode === "invalid") {
+                    this.saveButton.el.setAttribute("disabled", "1");
+                } else {
+                    this.saveButton.el.removeAttribute("disabled");
+                }
+            },
+            () => [this.props.model.root.isValid]
+        );
+
+        this.saveButton = useRef("save");
     }
 
     get displayButtons() {
@@ -43,5 +55,4 @@ FormStatusIndicator.props = {
     model: Object,
     save: Function,
     discard: Function,
-    isDisabled: Boolean,
 };

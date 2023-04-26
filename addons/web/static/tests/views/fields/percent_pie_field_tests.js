@@ -63,72 +63,15 @@ QUnit.module("Fields", (hooks) => {
             "should have a pie chart"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
+            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value")
                 .textContent,
             "10%",
             "should have 10% as pie value since int_field=10"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                .transform,
-            "rotate(180deg)",
-            "left mask should be covering the whole left side of the pie"
-        );
-        assert.strictEqual(
-            target.querySelectorAll(".o_field_percent_pie.o_field_widget .o_pie .o_mask")[1].style
-                .transform,
-            "rotate(36deg)",
-            "right mask should be rotated from 360*(10/100) = 36 degrees"
-        );
-
-        assert.containsOnce(
-            target,
-            ".o_field_percent_pie.o_field_widget .o_pie",
-            "should have a pie chart"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .textContent,
-            "10%",
-            "should have 10% as pie value since int_field=10"
-        );
-        assert.ok(
-            String(
-                target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                    .transform
-            ).includes("rotate(180deg)"),
-            "left mask should be covering the whole left side of the pie"
-        );
-        assert.ok(
-            String(
-                target.querySelectorAll(".o_field_percent_pie.o_field_widget .o_pie .o_mask")[1]
-                    .style.transform
-            ).includes("rotate(36deg)"),
-            "right mask should be rotated from 360*(10/100) = 36 degrees"
-        );
-
-        assert.containsOnce(
-            target,
-            ".o_field_percent_pie.o_field_widget .o_pie",
-            "should have a pie chart"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .textContent,
-            "10%",
-            "should have 10% as pie value since int_field=10"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                .transform,
-            "rotate(180deg)",
-            "left mask should be covering the whole left side of the pie"
-        );
-        assert.strictEqual(
-            target.querySelectorAll(".o_field_percent_pie.o_field_widget .o_pie .o_mask")[1].style
-                .transform,
-            "rotate(36deg)",
-            "right mask should be rotated from 360*(10/100) = 36 degrees"
+            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie").style.background,
+            "conic-gradient( var(--PercentPieField-color-active) 0% 10%, var(--PercentPieField-color-static) 0% 100% )",
+            "pie should have a background computed for its value of 10%"
         );
     });
 
@@ -154,117 +97,15 @@ QUnit.module("Fields", (hooks) => {
             "should have a pie chart"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .textContent,
-            "80%",
-            "should have 80% as pie value since int_field=80"
-        );
-        assert.ok(
-            String(
-                target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                    .transform
-            ).includes("rotate(288deg)"),
-            "left mask should be rotated from 360*(80/100) = 288 degrees"
-        );
-        assert.hasClass(
-            target.querySelectorAll(".o_field_percent_pie.o_field_widget .o_pie .o_mask")[1],
-            "o_full",
-            "right mask should be hidden since the value > 50%"
-        );
-
-        assert.containsOnce(
-            target,
-            ".o_field_percent_pie.o_field_widget .o_pie",
-            "should have a pie chart"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
+            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie_info .o_pie_value")
                 .textContent,
             "80%",
             "should have 80% as pie value since int_field=80"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                .transform,
-            "rotate(288deg)",
-            "left mask should be rotated from 360*(80/100) = 288 degrees"
-        );
-        assert.hasClass(
-            target.querySelectorAll(".o_field_percent_pie.o_field_widget .o_pie .o_mask")[1],
-            "o_full",
-            "right mask should be hidden since the value > 50%"
-        );
-
-        assert.containsOnce(
-            target,
-            ".o_field_percent_pie.o_field_widget .o_pie",
-            "should have a pie chart"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_pie_value")
-                .textContent,
-            "80%",
-            "should have 80% as pie value since int_field=80"
-        );
-        assert.strictEqual(
-            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie .o_mask").style
-                .transform,
-            "rotate(288deg)",
-            "left mask should be rotated from 360*(80/100) = 288 degrees"
-        );
-        assert.hasClass(
-            target.querySelectorAll(".o_field_percent_pie.o_field_widget .o_pie .o_mask")[1],
-            "o_full",
-            "right mask should be hidden since the value > 50%"
+            target.querySelector(".o_field_percent_pie.o_field_widget .o_pie").style.background,
+            "conic-gradient( var(--PercentPieField-color-active) 0% 80%, var(--PercentPieField-color-static) 0% 100% )",
+            "pie should have a background computed for its value of 80%"
         );
     });
-
-    // TODO: This test would pass without any issue since all the classes and
-    //       custom style attributes are correctly set on the widget in list
-    //       view, but since the scss itself for this widget currently only
-    //       applies inside the form view, the widget is unusable. This test can
-    //       be uncommented when we refactor the scss files so that this widget
-    //       stylesheet applies in both form and list view.
-    // QUnit.test('percentpie widget in editable list view', async function(assert) {
-    //     assert.expect(10);
-    //
-    //     var list = await createView({
-    //         View: ListView,
-    //         model: 'partner',
-    //         data: this.data,
-    //         arch: '<tree editable="bottom">' +
-    //                 '<field name="foo"/>' +
-    //                 '<field name="int_field" widget="percentpie"/>' +
-    //               '</tree>',
-    //     });
-    //
-    //     assert.containsN(list, '.o_field_percent_pie .o_pie', 5,
-    //         "should have five pie charts");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').textContent,
-    //         '10%', "should have 10% as pie value since int_field=10");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').attr('style'),
-    //         'rotate(180deg)', "left mask should be covering the whole left side of the pie");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').last().attr('style'),
-    //         'rotate(36deg)', "right mask should be rotated from 360*(10/100) = 36 degrees");
-    //
-    //     // switch to edit mode and check the result
-    //    testUtils.dom.click(     target.querySelector('tbody td:not(.o_list_record_selector)'));
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').textContent,
-    //         '10%', "should have 10% as pie value since int_field=10");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').attr('style'),
-    //         'rotate(180deg)', "left mask should be covering the whole right side of the pie");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').last().attr('style'),
-    //         'rotate(36deg)', "right mask should be rotated from 360*(10/100) = 36 degrees");
-    //
-    //     // save
-    //    testUtils.dom.click(     list.$buttons.find('.o_list_button_save'));
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_pie_value').textContent,
-    //         '10%', "should have 10% as pie value since int_field=10");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').attr('style'),
-    //         'rotate(180deg)', "left mask should be covering the whole right side of the pie");
-    //     assert.strictEqual(target.querySelector('.o_field_percent_pie:first .o_pie .o_mask').last().attr('style'),
-    //         'rotate(36deg)', "right mask should be rotated from 360*(10/100) = 36 degrees");
-    //
-    //     list.destroy();
-    // });
 });

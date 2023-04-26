@@ -62,38 +62,23 @@ const projectSharingSteps = [...stepUtils.goToAppSteps("project.menu_main_pm", '
     trigger: 'iframe ol.breadcrumb > li.o_back_button > a:contains(Project Sharing)',
     content: 'Go back to the kanban view',
 }, {
-    trigger: 'iframe .o_filter_menu > button',
-    content: 'click on filter menu in the search view',
+    trigger: 'iframe .o_searchview_dropdown_toggler',
+    content: 'open the search panel menu',
 }, {
-    trigger: 'iframe .o_filter_menu > .dropdown-menu > .dropdown-item:first-child',
+    trigger: 'iframe .o_filter_menu .dropdown-item:first-child',
     content: 'click on the first item in the filter menu',
 }, {
-    trigger: 'iframe .o_group_by_menu > button',
-    content: 'click on group by menu in the search view',
-}, {
-    trigger: 'iframe .o_group_by_menu > .dropdown-menu > .dropdown-item:first-child',
+    trigger: 'iframe .o_group_by_menu .dropdown-item:first-child',
     content: 'click on the first item in the group by menu',
-}, {
-    trigger: 'iframe .o_favorite_menu > button',
-    content: 'click on the favorite menu in the search view',
 }, {
     trigger: 'iframe .o_favorite_menu .o_add_favorite > button',
     content: 'click to "save current search" button in favorite menu',
 }, {
-    trigger: 'iframe .o_filter_menu > button',
-    content: 'click on filter menu in the search view',
-}, {
-    trigger: 'iframe .o_filter_menu > .dropdown-menu > .dropdown-item:first-child',
+    trigger: 'iframe .o_filter_menu .dropdown-item:first-child',
     content: 'click on the first item in the filter menu',
 }, {
-    trigger: 'iframe .o_group_by_menu > button',
-    content: 'click on group by menu in the search view',
-}, {
-    trigger: 'iframe .o_group_by_menu > .dropdown-menu > .dropdown-item:first-child',
+    trigger: 'iframe .o_group_by_menu .dropdown-item:first-child',
     content: 'click on the first item in the group by menu',
-}, {
-    trigger: 'iframe .o_favorite_menu > button',
-    content: 'click on the favorite menu in the search view',
 }, {
     trigger: 'iframe .o_favorite_menu .o_add_favorite > button',
     content: 'click to "save current search" button in favorite menu',

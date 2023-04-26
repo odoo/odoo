@@ -75,14 +75,18 @@ export class ControlPanel extends Component {
 
         useEffect(() => {
             // on small screen, clean-up the dropdown elements
-            const dropdownButtons = this.mainButtons.el.querySelectorAll(".o_control_panel_collapsed_create.dropdown-menu button");
+            const dropdownButtons = this.mainButtons.el.querySelectorAll(
+                ".o_control_panel_collapsed_create.dropdown-menu button"
+            );
             if (!dropdownButtons.length) {
                 this.mainButtons.el
-                    .querySelectorAll(".o_control_panel_collapsed_create.dropdown-menu, .o_control_panel_collapsed_create.dropdown-toggle")
+                    .querySelectorAll(
+                        ".o_control_panel_collapsed_create.dropdown-menu, .o_control_panel_collapsed_create.dropdown-toggle"
+                    )
                     .forEach((el) => el.classList.add("d-none"));
                 this.mainButtons.el
-                .querySelectorAll(".o_control_panel_collapsed_create.btn-group")
-                .forEach((el) => el.classList.remove("btn-group"));
+                    .querySelectorAll(".o_control_panel_collapsed_create.btn-group")
+                    .forEach((el) => el.classList.remove("btn-group"));
                 return;
             }
             for (const button of dropdownButtons) {
@@ -190,7 +194,7 @@ export class ControlPanel extends Component {
     /**
      * @param {KeyboardEvent} ev
      */
-    onBottomLeftKeydown(ev) {
+    onMainButtonsKeydown(ev) {
         const hotkey = getActiveHotkey(ev);
         if (hotkey === "arrowdown") {
             this.env.searchModel.trigger("focus-view");

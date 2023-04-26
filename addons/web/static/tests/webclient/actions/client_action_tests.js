@@ -430,7 +430,7 @@ QUnit.module("ActionManager", (hooks) => {
         await click(target, ".my_owl_action");
         await doAction(webClient, 3);
         assert.strictEqual(
-            target.querySelector(".breadcrumb").textContent,
+            target.querySelector(".o_breadcrumb").textContent,
             "Favorite PoniesnewOwlTitlePartners"
         );
     });

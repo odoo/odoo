@@ -181,7 +181,11 @@ QUnit.module("Fields", (hooks) => {
         );
 
         // save and check the result
-        await click(target.querySelector(".o_list_button_save"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+            )
+        );
         assert.strictEqual(
             target.querySelectorAll(".o_field_widget .badge:not(:empty)").length,
             3,

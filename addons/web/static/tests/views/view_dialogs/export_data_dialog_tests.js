@@ -19,6 +19,11 @@ import { makeFakeUserService } from "../../helpers/mock_services";
 
 const serviceRegistry = registry.category("services");
 
+async function exportAllAction(target) {
+    await click(target, ".o_cp_action_menus .dropdown-toggle");
+    await click(target, ".o_cp_action_menus .dropdown-item");
+}
+
 QUnit.module("ViewDialogs", (hooks) => {
     let serverData;
     let target;
@@ -947,7 +952,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             domain: [["bar", "!=", "glou"]],
         });
 
-        await click(target.querySelector(".o_list_export_xlsx"));
+        await exportAllAction(target);
     });
 
     QUnit.test("Direct export grouped list ", async function (assert) {
@@ -999,7 +1004,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             domain: [["bar", "!=", "glou"]],
         });
 
-        await click(target.querySelector(".o_list_export_xlsx"));
+        await exportAllAction(target);
     });
 
     QUnit.test("Export dialog with duplicated fields", async function (assert) {

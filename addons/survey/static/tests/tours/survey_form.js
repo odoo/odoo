@@ -205,7 +205,7 @@ registry.category("web_tour.tours").add('survey_tour_test_survey_form_triggers',
         run: () => {}, // it's a check
     }, {
         content: 'Go back to Kanban View',
-        trigger: 'a[data-menu-xmlid="survey.menu_surveys"]',
+        trigger: '[data-menu-xmlid="survey.menu_survey_form"]',
     }, {
         content: "Check that we arrived on the kanban view",
         trigger: ".o-kanban-button-new",
