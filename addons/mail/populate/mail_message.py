@@ -17,7 +17,23 @@ class Message(models.Model):
 
         return [
             ('body', populate.constant('message_body_{counter}')),
-            ('message_type', populate.constant('comment')), ('model', populate.constant('discuss.channel')),
+            ('message_type', populate.constant('comment')),
+            ('model', populate.constant('discuss.channel')),
             ('res_id', populate.randomize(channel_ids)),
             ('author_id', populate.compute(get_author_id)),
         ]
+
+    def _populate(self, size):
+        partner = self.env.ref('base.user_admin').partner_id
+        # create 100 in the chatter of the res.partner admin
+        messages = []
+        for counter in range(100):
+            messages.append({
+                'body': f'message_body_{counter}',
+                'message_type': 'comment',
+                'model': 'res.partner',
+                'res_id': partner.id,
+                'author_id': partner.id,
+            })
+        self.env['mail.message'].create(messages)
+        return super()._populate(size)
