@@ -70,18 +70,30 @@ class SMSComposer(models.TransientModel):
                 all_bodies[sms_id] = body
         return all_bodies
 
-    def _prepare_mass_sms_values(self, records):
-        result = super(SMSComposer, self)._prepare_mass_sms_values(records)
-        if self.composition_mode == 'mass' and self.mailing_id:
-            for record in records:
-                sms_values = result[record.id]
+    def _prepare_mass_sms_values(self, records, mass_include_canceled=False):
+        is_mass_mailing = self.composition_mode == 'mass' and self.mailing_id
+        sms_values_all = super(SMSComposer, self)._prepare_mass_sms_values(
+            records, mass_include_canceled=mass_include_canceled or is_mass_mailing)
 
-                trace_values = self._prepare_mass_sms_trace_values(record, sms_values)
-                sms_values.update({
-                    'mailing_id': self.mailing_id.id,
-                    'mailing_trace_ids': [(0, 0, trace_values)],
-                })
-        return result
+        if not is_mass_mailing:
+            return sms_values_all
+
+        canceled_message_traces_values = []
+        results = {}
+        for record in records:
+            sms_values = sms_values_all[record.id]
+
+            trace_values = self._prepare_mass_sms_trace_values(record, sms_values)
+            if not mass_include_canceled and sms_values['state'] == 'canceled':
+                canceled_message_traces_values.append(trace_values)
+                continue
+            results[record.id] = sms_values
+            sms_values.update({
+                'mailing_id': self.mailing_id.id,
+                'mailing_trace_ids': [(0, 0, trace_values)],
+            })
+        self.env['mailing.trace'].sudo().create(canceled_message_traces_values)
+        return results
 
     def _prepare_mass_sms(self, records, sms_record_values):
         sms_all = super(SMSComposer, self)._prepare_mass_sms(records, sms_record_values)

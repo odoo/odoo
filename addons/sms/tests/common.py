@@ -119,6 +119,15 @@ class SMSCase(MockSMS):
         """ Check no sms went through gateway during mock. """
         self.assertTrue(len(self._new_sms) == 0)
 
+    def assertNoSMSMatching(self, partner, number, status=None):
+        """ Check no mail.mail matching the parameter was generated during gateway mock. """
+        try:
+            self._find_sms_sms(partner, number, status)
+        except AssertionError:
+            pass
+        else:
+            raise AssertionError('sms.sms exists for partner %s / number %s but should not exist' % (partner, number))
+
     def assertSMSIapSent(self, numbers, content=None):
         """ Check sent SMS. Order is not checked. Each number should have received
         the same content. Useful to check batch sending.

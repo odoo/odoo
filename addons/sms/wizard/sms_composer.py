@@ -236,8 +236,9 @@ class SendSMS(models.TransientModel):
         sms_all = self._prepare_mass_sms(records, sms_record_values)
 
         if sms_all and self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
-            log_values = self._prepare_mass_log_values(records, sms_record_values)
-            records._message_log_batch(**log_values)
+            filtered_records = records.filtered(lambda r: r.id in sms_record_values)
+            log_values = self._prepare_mass_log_values(filtered_records, sms_record_values)
+            filtered_records._message_log_batch(**log_values)
 
         if sms_all and self.mass_force_send:
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
@@ -284,7 +285,7 @@ class SendSMS(models.TransientModel):
             all_bodies = self.env['mail.render.mixin']._render_template(self.body, records._name, records.ids)
         return all_bodies
 
-    def _prepare_mass_sms_values(self, records):
+    def _prepare_mass_sms_values(self, records, mass_include_canceled=False):
         all_bodies = self._prepare_body_values(records)
         all_recipients = self._prepare_recipient_values(records)
         blacklist_ids = self._get_blacklist_record_ids(records, all_recipients)
@@ -318,10 +319,12 @@ class SendSMS(models.TransientModel):
                 'state': state,
                 'failure_type': failure_type,
             }
-        return result
+        if self.composition_mode != 'mass' or mass_include_canceled:
+            return result
+        return {res_id: values for res_id, values in result.items() if values.get('state') != 'canceled'}
 
     def _prepare_mass_sms(self, records, sms_record_values):
-        sms_create_vals = [sms_record_values[record.id] for record in records]
+        sms_create_vals = [sms_record_values[record.id] for record in records if record.id in sms_record_values]
         return self.env['sms.sms'].sudo().create(sms_create_vals)
 
     def _prepare_log_body_values(self, sms_records_values):
