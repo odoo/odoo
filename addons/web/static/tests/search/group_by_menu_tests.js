@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { browser } from "@web/core/browser/browser";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { getFixture, patchWithCleanup } from "../helpers/utils";
 import {
     getFacetTexts,
@@ -13,6 +12,7 @@ import {
     toggleGroupByMenu,
     toggleMenuItem,
     toggleMenuItemOption,
+    DropDownMenusTestComponent,
 } from "./helpers";
 
 let target;
@@ -54,7 +54,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewFields: {},
@@ -74,7 +74,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
         });
@@ -90,7 +90,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -115,7 +115,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -141,7 +141,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Foo"]);
         assert.containsOnce(
             target.querySelector(".o_searchview .o_searchview_facet"),
-            "span.oi.oi-group.o_searchview_facet_label"
+            ".o_searchview_facet_label"
         );
         assert.ok(isItemSelected(target, "Foo"));
 
@@ -158,7 +158,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -184,7 +184,7 @@ QUnit.module("Search", (hooks) => {
             const controlPanel = await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchMenuTypes: ["groupBy"],
                 searchViewId: false,
                 searchViewArch: `
@@ -218,7 +218,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -245,19 +245,19 @@ QUnit.module("Search", (hooks) => {
         const steps = [
             {
                 description: "Year",
-                facetTexts: ["Date: Year>Date: Week"],
+                facetTexts: ["Date: Year\n>\nDate: Week"],
                 selectedoptions: ["Year", "Week"],
                 groupBy: ["date_field:year", "date_field:week"],
             },
             {
                 description: "Month",
-                facetTexts: ["Date: Year>Date: Month>Date: Week"],
+                facetTexts: ["Date: Year\n>\nDate: Month\n>\nDate: Week"],
                 selectedoptions: ["Year", "Month", "Week"],
                 groupBy: ["date_field:year", "date_field:month", "date_field:week"],
             },
             {
                 description: "Week",
-                facetTexts: ["Date: Year>Date: Month"],
+                facetTexts: ["Date: Year\n>\nDate: Month"],
                 selectedoptions: ["Year", "Month"],
                 groupBy: ["date_field:year", "date_field:month"],
             },
@@ -286,7 +286,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -309,43 +309,49 @@ QUnit.module("Search", (hooks) => {
         // select option 'week'
         await toggleMenuItemOption(target, "Date", "Week");
 
-        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Week"]);
+        assert.deepEqual(getFacetTexts(target), ["Bar\n>\nDate: Week"]);
 
         // select option 'day'
         await toggleMenuItemOption(target, "Date", "Day");
 
-        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Week>Date: Day"]);
+        assert.deepEqual(getFacetTexts(target), ["Bar\n>\nDate: Week\n>\nDate: Day"]);
 
         // select option 'year'
         await toggleMenuItemOption(target, "Date", "Year");
 
-        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Year>Date: Week>Date: Day"]);
+        assert.deepEqual(getFacetTexts(target), [
+            "Bar\n>\nDate: Year\n>\nDate: Week\n>\nDate: Day",
+        ]);
 
         // select 'Foo'
         await toggleMenuItem(target, "Foo");
 
-        assert.deepEqual(getFacetTexts(target), ["Bar>Date: Year>Date: Week>Date: Day>Foo"]);
+        assert.deepEqual(getFacetTexts(target), [
+            "Bar\n>\nDate: Year\n>\nDate: Week\n>\nDate: Day\n>\nFoo",
+        ]);
 
         // select option 'quarter'
         await toggleMenuItem(target, "Date");
         await toggleMenuItemOption(target, "Date", "Quarter");
 
         assert.deepEqual(getFacetTexts(target), [
-            "Bar>Date: Year>Date: Quarter>Date: Week>Date: Day>Foo",
+            "Bar\n>\nDate: Year\n>\nDate: Quarter\n>\nDate: Week\n>\nDate: Day\n>\nFoo",
         ]);
 
         // unselect 'Bar'
         await toggleMenuItem(target, "Bar");
 
         assert.deepEqual(getFacetTexts(target), [
-            "Date: Year>Date: Quarter>Date: Week>Date: Day>Foo",
+            "Date: Year\n>\nDate: Quarter\n>\nDate: Week\n>\nDate: Day\n>\nFoo",
         ]);
 
         // unselect option 'week'
         await toggleMenuItem(target, "Date");
         await toggleMenuItemOption(target, "Date", "Week");
 
-        assert.deepEqual(getFacetTexts(target), ["Date: Year>Date: Quarter>Date: Day>Foo"]);
+        assert.deepEqual(getFacetTexts(target), [
+            "Date: Year\n>\nDate: Quarter\n>\nDate: Day\n>\nFoo",
+        ]);
     });
 
     QUnit.test("default groupbys can be ordered", async function (assert) {
@@ -354,7 +360,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -371,7 +377,7 @@ QUnit.module("Search", (hooks) => {
             "date_field:week",
             "birthday:month",
         ]);
-        assert.deepEqual(getFacetTexts(target), ["Date: Week>Birthday: Month"]);
+        assert.deepEqual(getFacetTexts(target), ["Date: Week\n>\nBirthday: Month"]);
     });
 
     QUnit.test("a separator in groupbys does not cause problems", async function (assert) {
@@ -380,7 +386,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -407,7 +413,7 @@ QUnit.module("Search", (hooks) => {
         assert.ok(isItemSelected(target, "Date"));
         assert.ok(isItemSelected(target, "Bar"));
         assert.ok(isOptionSelected(target, "Date", "Day"), "selected");
-        assert.deepEqual(getFacetTexts(target), ["Date: Day>Bar"]);
+        assert.deepEqual(getFacetTexts(target), ["Date: Day\n>\nBar"]);
 
         await toggleMenuItemOption(target, "Date", "Quarter");
 
@@ -415,7 +421,7 @@ QUnit.module("Search", (hooks) => {
         assert.ok(isItemSelected(target, "Bar"));
         assert.ok(isOptionSelected(target, "Date", "Quarter"), "selected");
         assert.ok(isOptionSelected(target, "Date", "Day"), "selected");
-        assert.deepEqual(getFacetTexts(target), ["Date: Quarter>Date: Day>Bar"]);
+        assert.deepEqual(getFacetTexts(target), ["Date: Quarter\n>\nDate: Day\n>\nBar"]);
 
         await toggleMenuItem(target, "Bar");
         await toggleMenuItem(target, "Date");
@@ -424,7 +430,7 @@ QUnit.module("Search", (hooks) => {
         assert.notOk(isItemSelected(target, "Bar"));
         assert.ok(isOptionSelected(target, "Date", "Quarter"), "selected");
         assert.ok(isOptionSelected(target, "Date", "Day"), "selected");
-        assert.deepEqual(getFacetTexts(target), ["Date: Quarter>Date: Day"]);
+        assert.deepEqual(getFacetTexts(target), ["Date: Quarter\n>\nDate: Day"]);
 
         await removeFacet(target);
 
@@ -445,7 +451,7 @@ QUnit.module("Search", (hooks) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["groupBy"],
             searchViewId: false,
             searchViewArch: `
@@ -467,7 +473,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchViewId: false,
                 searchViewArch: `
                     <search>
@@ -490,7 +496,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchViewId: false,
                 searchViewArch: `
                     <search>
@@ -514,7 +520,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchViewId: false,
                 searchViewArch: `
                     <search>

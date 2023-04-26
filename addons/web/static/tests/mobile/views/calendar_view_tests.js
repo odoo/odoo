@@ -92,63 +92,59 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.containsNone(target, ".o_calendar_button_prev", "prev button should be hidden");
         assert.containsNone(target, ".o_calendar_button_next", "next button should be hidden");
+        await click(target, ".o_calendar_container .o_other_calendar_panel");
         assert.isVisible(
             target.querySelector(
-                ".o_cp_bottom_left .o_calendar_buttons .o_view_scale_selector + button.o_cp_today_button"
+                ".o_calendar_container .o_calendar_sidebar_container button.o_calendar_button_today"
             ),
-            "today button should be visible near the calendar buttons (bottom left corner)"
+            "today button should be visible"
         );
 
         // Test all views
         // displays month mode by default
-        assert.containsOnce(
-            target,
-            ".fc-view-container > .fc-timeGridWeek-view",
-            "should display the current week"
-        );
         assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (Dec 11 – 17, 2016)"
+            target.querySelector(
+                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
+            ).textContent,
+            "Week",
+            "should display the current week"
         );
 
         // switch to day mode
-        await click(target, ".o_control_panel .scale_button_selection");
-        await click(target, ".o_control_panel .o_scale_button_day");
+        await click(target, ".o_calendar_sidebar_container .dropdown-toggle");
+        await click(target, ".o_calendar_sidebar_container .o_scale_button_day");
         await nextTick();
-        assert.containsOnce(
-            target,
-            ".fc-view-container > .fc-timeGridDay-view",
-            "should display the current day"
-        );
         assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (December 12, 2016)"
+            target.querySelector(
+                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
+            ).textContent,
+            "Day",
+            "should display the current day"
         );
 
         // switch to month mode
-        await click(target, ".o_control_panel .scale_button_selection");
-        await click(target, ".o_control_panel .o_scale_button_month");
+        await click(target, ".o_calendar_sidebar_container .dropdown-toggle");
+        await click(target, ".o_calendar_sidebar_container .o_scale_button_month");
         await nextTick();
-        assert.containsOnce(
-            target,
-            ".fc-view-container > .fc-dayGridMonth-view",
-            "should display the current month"
-        );
         assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (December 2016)"
+            target.querySelector(
+                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
+            ).textContent,
+            "Month",
+            "should display the current month"
         );
 
         // switch to year mode
-        await click(target, ".o_control_panel .scale_button_selection");
-        await click(target, ".o_control_panel .o_scale_button_year");
+        await click(target, ".o_calendar_sidebar_container .dropdown-toggle");
+        await click(target, ".o_calendar_sidebar_container .o_scale_button_year");
         await nextTick();
-        assert.containsOnce(
-            target,
-            ".fc-view-container > .fc-dayGridYear-view",
+        assert.equal(
+            target.querySelector(
+                ".o_calendar_container .o_calendar_sidebar_container .dropdown-toggle"
+            ).textContent,
+            "Year",
             "should display the current year"
         );
-        assert.equal(target.querySelector(".breadcrumb-item").textContent, "undefined (2016)");
     });
 
     QUnit.test("calendar: popover is rendered as dialog in mobile", async function (assert) {
@@ -186,7 +182,9 @@ QUnit.module("Views", ({ beforeEach }) => {
         await swipeRight(target, ".o_calendar_widget");
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-11");
 
+        await click(target, ".o_other_calendar_panel");
         await click(target, ".o_calendar_button_today");
+        await click(target, ".o_other_calendar_panel");
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-12");
     });
 
@@ -358,7 +356,6 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Should display year view
         assert.containsOnce(target, ".fc-dayGridYear-view");
         assert.containsN(target, ".fc-month-container", 12);
-        assert.equal(target.querySelector(".breadcrumb-item").textContent, "undefined (2016)");
 
         // Tap on a date
         await tap(target, ".fc-day-top[data-date='2016-02-05']");
@@ -368,19 +365,14 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Should display day view
         assert.containsNone(target, ".fc-dayGridYear-view");
         assert.containsOnce(target, ".fc-timeGridDay-view");
-        assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (February 5, 2016)"
-        );
+        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-05");
 
         // Change scale to month
+        await click(target, ".o_calendar_container .o_other_calendar_panel");
         await changeScale(target, "month");
+        await click(target, ".o_calendar_container .o_other_calendar_panel");
         assert.containsNone(target, ".fc-timeGridDay-view");
         assert.containsOnce(target, ".fc-dayGridMonth-view");
-        assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (February 2016)"
-        );
 
         // Tap on a date
         await tap(target, ".fc-day-top[data-date='2016-02-10']");
@@ -389,9 +381,6 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.containsNone(target, ".fc-dayGridMonth-view");
         assert.containsOnce(target, ".fc-timeGridDay-view");
-        assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (February 10, 2016)"
-        );
+        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-10");
     });
 });

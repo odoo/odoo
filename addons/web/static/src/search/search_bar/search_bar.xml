@@ -97,7 +97,7 @@
             </div>
             <SearchBarMenu/>
         </div>
-        <t t-portal="'.o_control_panel_navigation'">
+        <t t-portal="'.o_control_panel_navigation,.o_searchview'">
             <button t-attf-class="btn btn-secondary {{state.showSearchBar?'d-md-none active':''}}" t-on-click="onToggleSearchBar">
                 <i class="fa fa-fw fa-search"/>
             </button>

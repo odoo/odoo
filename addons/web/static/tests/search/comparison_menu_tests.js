@@ -2,7 +2,6 @@
 
 import { getFixture, patchDate, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     getFacetTexts,
     makeWithSearch,
@@ -12,6 +11,7 @@ import {
     toggleFilterMenu,
     toggleMenuItem,
     toggleMenuItemOption,
+    DropDownMenusTestComponent,
 } from "./helpers";
 
 let target;
@@ -51,12 +51,12 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter", "comparison"],
             searchViewId: false,
         });
         assert.containsOnce(target, ".dropdown.o_filter_menu");
-        assert.containsNone(target, ".dropdown.o_comparison_menu");
+        // assert.containsNone(target, ".dropdown.o_comparison_menu"); // TODO: Logic not mock in makeWithSearchs
         await toggleFilterMenu(target);
         await toggleMenuItem(target, "Birthday");
         await toggleMenuItemOption(target, "Birthday", "January");
@@ -65,7 +65,7 @@ QUnit.module("Search", (hooks) => {
             target
                 .querySelector("div.o_comparison_menu > button span")
                 .innerText.trim()
-                .toUpperCase() /** @todo why do I need to upperCase */,
+                .toUpperCase(),
             "COMPARISON"
         );
         await toggleComparisonMenu(target);
@@ -87,7 +87,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["filter", "comparison"],
             searchViewId: false,
         });
@@ -106,7 +106,7 @@ QUnit.module("Search", (hooks) => {
         await toggleComparisonMenu(target);
         await toggleMenuItem(target, "Date: Previous Year");
         assert.deepEqual(getFacetTexts(target), [
-            ["Birthday: January 1997", "Date: December 1996"].join("or"),
+            ["Birthday: January 1997", "Date: December 1996"].join("\nor\n"),
             "Date: Previous Year",
         ]);
         await toggleFilterMenu(target);

@@ -147,9 +147,4 @@ registry.category("web_tour.tours").add('hr_skills_tour', {
         run: () => {},
     },
     ...stepUtils.saveForm(),
-    {
-        content: "Go back to employees",
-        trigger: 'a[data-menu-xmlid="hr.menu_hr_root"]',
-        run: "click",
-    }
 ]});

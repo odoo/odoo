@@ -16,11 +16,12 @@
         position: 'bottom',
     }, {
         trigger: '.o_data_row:first .o_data_cell',
-        extra_trigger: '.breadcrumb',
+        extra_trigger: '.o_breadcrumb',
     }, {
-        trigger: '.o_control_panel button:contains("' + _t('Print') + '")',
+        trigger: '.o_control_panel .o_cp_action_menus .dropdown-toggle',
+        extra_trigger: '.o_breadcrumb .active:contains("INV/")',
     }, {
-        trigger: '.o_control_panel .o-dropdown--menu span:contains("' + _t('Invoices without Payment') + '")',
+        trigger: '.o_control_panel .o_cp_action_menus .o_menu_item:contains("' + _t('Invoices without Payment') + '")',
     }, {
         trigger: 'iframe .o_report_layout_standard h2',
         content: 'Primary color is correct',

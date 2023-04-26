@@ -114,8 +114,6 @@ FormRenderer.props = {
     // Template props : added by the FormCompiler
     class: { type: String, optional: 1 },
     translateAlert: { type: [Object, { value: null }], optional: true },
-    enableViewButtons: { type: Function, optional: true },
-    disableViewButtons: { type: Function, optional: true },
     onNotebookPageChange: { type: Function, optional: true },
     activeNotebookPages: { type: Object, optional: true },
     setFieldAsDirty: { type: Function, optional: true },
@@ -123,6 +121,4 @@ FormRenderer.props = {
 FormRenderer.defaultProps = {
     activeNotebookPages: {},
     onNotebookPageChange: () => {},
-    enableViewButtons: () => {},
-    disableViewButtons: () => {},
 };

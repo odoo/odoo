@@ -771,7 +771,11 @@ QUnit.module("Fields", (hooks) => {
                 </tree>`,
         });
 
-        await click(target.querySelector(".o_list_button_add"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
+            )
+        );
         assert.containsOnce(
             target,
             ".o_selected_row .o_field_widget[name=float_field] input",

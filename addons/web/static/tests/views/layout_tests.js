@@ -70,7 +70,7 @@ QUnit.module("Views", (hooks) => {
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
             <Layout display="props.display">
-                <t t-set-slot="control-panel-top-right">
+                <t t-set-slot="layout-actions">
                     <div class="toy_search_bar" />
                 </t>
                 <div class="toy_content" />
@@ -84,7 +84,7 @@ QUnit.module("Views", (hooks) => {
             searchViewId: false,
         });
 
-        assert.containsOnce(target, ".o_control_panel .o_cp_top_right .toy_search_bar");
+        assert.containsOnce(target, ".o_control_panel .o_control_panel_actions .toy_search_bar");
         assert.containsOnce(target, ".o_component_with_search_panel .o_search_panel");
         assert.containsNone(target, ".o_cp_searchview");
         assert.containsOnce(target, ".o_content > .toy_content");
@@ -106,7 +106,7 @@ QUnit.module("Views", (hooks) => {
         }
         ToyComponent.template = xml`
             <Layout className="'o_view_sample_data'" display="{
-                controlPanel: { 'top-right': false, 'bottom-right': false, 'bottom-left': false },
+                controlPanel: {},
                 searchPanel: true,
                 }">
                 <div class="toy_content" />
@@ -122,7 +122,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_search_panel");
         assert.containsOnce(target, ".o_control_panel");
-        assert.containsOnce(target, ".breadcrumb");
+        assert.containsOnce(target, ".o_breadcrumb");
         assert.containsOnce(target, ".o_component_with_search_panel");
         assert.containsOnce(target, ".o_content > .toy_content");
     });
@@ -159,7 +159,7 @@ QUnit.module("Views", (hooks) => {
         }
         ToyB.template = xml`
             <Layout className="'toy_b'" display="props.display">
-                <t t-set-slot="control-panel-top-right">
+                <t t-set-slot="layout-actions">
                     <div class="toy_b_breadcrumbs" />
                 </t>
                 <ToyC/>
@@ -170,7 +170,7 @@ QUnit.module("Views", (hooks) => {
         class ToyA extends Component {}
         ToyA.template = xml`
             <Layout className="'toy_a'" display="props.display">
-                <t t-set-slot="control-panel-top-right">
+                <t t-set-slot="layout-actions">
                     <div class="toy_a_search" />
                 </t>
                 <ToyB display="props.display"/>
@@ -291,21 +291,21 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("Simple rendering: with dynamically displayed search", async (assert) => {
-        let displayControlPanelTopRight = true;
+        let displayLayoutActions = true;
         class ToyComponent extends Component {
             get display() {
                 return {
                     ...this.props.display,
                     controlPanel: {
                         ...this.props.display.controlPanel,
-                        "top-right": displayControlPanelTopRight,
+                        layoutActions: displayLayoutActions,
                     },
                 };
             }
         }
         ToyComponent.template = xml`
             <Layout display="display">
-                <t t-set-slot="control-panel-top-right">
+                <t t-set-slot="layout-actions">
                     <div class="toy_search_bar" />
                 </t>
                 <div class="toy_content" />
@@ -319,16 +319,16 @@ QUnit.module("Views", (hooks) => {
             searchViewId: false,
         });
 
-        assert.containsOnce(target, ".o_control_panel .o_cp_top_right .toy_search_bar");
+        assert.containsOnce(target, ".o_control_panel .o_control_panel_actions .toy_search_bar");
         assert.containsOnce(target, ".o_component_with_search_panel .o_search_panel");
         assert.containsNone(target, ".o_cp_searchview");
         assert.containsOnce(target, ".o_content > .toy_content");
 
-        displayControlPanelTopRight = false;
+        displayLayoutActions = false;
         comp.render();
         await nextTick();
 
-        assert.containsNone(target, ".o_control_panel .o_cp_top_right .toy_search_bar");
+        assert.containsNone(target, ".o_control_panel .o_control_panel_actions .toy_search_bar");
         assert.containsOnce(target, ".o_component_with_search_panel .o_search_panel");
         assert.containsNone(target, ".o_cp_searchview");
         assert.containsOnce(target, ".o_content > .toy_content");

@@ -23,7 +23,7 @@ import { Field } from "@web/views/fields/field";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 import { ActionMenusItems } from "@web/search/cog_menu/action_menus_items";
 
-import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
+import { Component, onRendered, useEffect, useRef } from "@odoo/owl";
 import { useViewCompiler } from "../view_compiler";
 import { FormCompiler } from "./form_compiler";
 import { evalDomain } from "../utils";
@@ -108,9 +108,6 @@ export class FormController extends Component {
         this.user = useService("user");
         this.viewService = useService("view");
         this.ui = useService("ui");
-        this.state = useState({
-            isDisabled: false,
-        });
         useBus(this.ui.bus, "resize", this.render);
 
         this.archInfo = this.props.archInfo;
@@ -119,6 +116,8 @@ export class FormController extends Component {
         const { create, edit } = this.archInfo.activeActions;
         this.canCreate = create && !this.props.preventCreate;
         this.canEdit = edit && !this.props.preventEdit;
+
+        this.disabledButtons = null;
 
         let mode = this.props.mode || "edit";
         if (!this.canEdit) {
@@ -198,8 +197,8 @@ export class FormController extends Component {
             this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
         }
 
-        const rootRef = useRef("root");
-        useViewButtons(this.model, rootRef, {
+        this.rootRef = useRef("root");
+        useViewButtons(this.model, this.rootRef, {
             beforeExecuteAction: this.beforeExecuteActionButton.bind(this),
             afterExecuteAction: this.afterExecuteActionButton.bind(this),
         });
@@ -213,7 +212,7 @@ export class FormController extends Component {
         };
 
         useSetupView({
-            rootRef,
+            rootRef: this.rootRef,
             beforeLeave: () => this.beforeLeave(),
             beforeUnload: (ev) => this.beforeUnload(ev),
             getLocalState: () => {
@@ -248,9 +247,11 @@ export class FormController extends Component {
                 (isInEdition) => {
                     if (
                         !isInEdition &&
-                        !rootRef.el.querySelector(".o_content").contains(document.activeElement)
+                        !this.rootRef.el
+                            .querySelector(".o_content")
+                            .contains(document.activeElement)
                     ) {
-                        const elementToFocus = rootRef.el.querySelector(
+                        const elementToFocus = this.rootRef.el.querySelector(
                             ".o_content button.btn-primary"
                         );
                         if (elementToFocus) {
@@ -398,11 +399,18 @@ export class FormController extends Component {
     }
 
     disableButtons() {
-        this.state.isDisabled = true;
+        const btns = [...this.rootRef.el.querySelectorAll("button:not([disabled])")];
+        for (const btn of btns) {
+            btn.setAttribute("disabled", "1");
+        }
+        this.disabledButtons = btns;
     }
 
     enableButtons() {
-        this.state.isDisabled = false;
+        for (const btn of this.disabledButtons) {
+            btn.removeAttribute("disabled");
+        }
+        this.disabledButtons = null;
     }
 
     async beforeExecuteActionButton(clickParams) {

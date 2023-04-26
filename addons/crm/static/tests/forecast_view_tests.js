@@ -3,8 +3,7 @@
 import { getFixture, patchWithCleanup } from "@web/../tests/helpers/utils";
 import { menuService } from "@web/webclient/menus/menu_service";
 import {
-    toggleFilterMenu,
-    toggleGroupByMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
     toggleMenuItemOption,
 } from "@web/../tests/search/helpers";
@@ -115,7 +114,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Bar");
 
         await toggleMenuItem(target, "Date Field");
@@ -123,7 +122,6 @@ QUnit.module("Views", (hooks) => {
 
         await toggleMenuItemOption(target, "Date Field", "Year");
 
-        await toggleFilterMenu(target);
         await toggleMenuItem(target, "Forecast Filter");
 
         unpatchDate();

@@ -376,7 +376,10 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await click(target, ".o_form_button_create");
+            await click(
+                target,
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+            );
             await click(target, ".o_field_many2one[name='product_id'] input");
             await click(
                 target.querySelector(".o_field_many2one[name='product_id'] .dropdown-item")
@@ -474,7 +477,7 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test('isUploading state should be set to false after upload', async function(assert) {
+    QUnit.test("isUploading state should be set to false after upload", async function (assert) {
         assert.expect(1);
         serverData.models.partner.onchanges = {
             document: function (obj) {
@@ -498,7 +501,7 @@ QUnit.module("Fields", (hooks) => {
         await editInput(target, ".o_field_binary .o_input_file", file);
         assert.equal(
             target.querySelector(".o_select_file_button").innerText,
-            "UPLOAD YOUR FILE",
+            "Upload your file",
             "displayed value should be upload your file"
         );
     });

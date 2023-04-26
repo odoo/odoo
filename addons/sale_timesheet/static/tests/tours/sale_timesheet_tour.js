@@ -185,7 +185,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: 'Set Project name',
     run: 'text Project with employee mapping',
 }, {
-    trigger: '.dropdown-item[data-menu-xmlid="project.menu_main_pm"]',
+    trigger: '[data-menu-xmlid="project.menu_projects"]',
     content: 'Select Project main menu',
 }, {
     trigger: '.o_kanban_record:contains("Project for Freeman") .o_dropdown_kanban .dropdown-toggle',
@@ -231,7 +231,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     // timer: 300,
     isCheck: true,
 }, {
-    trigger: ".o_rightpanel_section .oe_button_box .o_stat_text:contains('Sales Orders')",
+    trigger: ".o_rightpanel_section .o-form-buttonbox .o_stat_text:contains('Sales Orders')",
     content: 'Check the user sees Sales Orders Stat Button',
     isCheck: true,
 }, {
