@@ -353,7 +353,7 @@ class TestCustomFields(common.TransactionCase):
             assert set(self.registry[self.MODEL]._fields) == fnames
 
         self.addCleanup(self.registry.reset_changes)
-        self.addCleanup(self.registry.clear_caches)
+        self.addCleanup(self.registry.clear_all_caches)
 
         super().setUp()
 
@@ -550,7 +550,7 @@ class TestCustomFields(common.TransactionCase):
         model_id = self.env['ir.model']._get_id('res.partner')
         query_count = 40
         with self.assertQueryCount(query_count):
-            self.env.registry.clear_caches()
+            self.env.registry.clear_cache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
                 'name': 'x_oh_box',
@@ -561,7 +561,7 @@ class TestCustomFields(common.TransactionCase):
 
         # same with a related field, it only takes 8 extra queries
         with self.assertQueryCount(query_count + 8):
-            self.env.registry.clear_caches()
+            self.env.registry.clear_cache()
             self.env['ir.model.fields'].create({
                 'model_id': model_id,
                 'name': 'x_oh_boy',

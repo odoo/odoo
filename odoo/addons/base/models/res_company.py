@@ -181,10 +181,6 @@ class Company(models.Model):
         for record in self:
             record.is_company_details_empty = not html2plaintext(record.company_details or '')
 
-    def cache_restart(self):
-        warnings.warn("Since 17.0, deprecated method, use `clear_caches` instead", DeprecationWarning, 2)
-        self.clear_caches()
-
     @api.model_create_multi
     def create(self, vals_list):
 
@@ -213,7 +209,7 @@ class Company(models.Model):
             for vals, partner in zip(no_partner_vals_list, partners):
                 vals['partner_id'] = partner.id
 
-        self.clear_caches()
+        self.env.registry.clear_cache()
         companies = super().create(vals_list)
 
         # The write is made on the user to set it automatically in the multi company group.
@@ -228,7 +224,7 @@ class Company(models.Model):
         return companies
 
     def write(self, values):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         # Make sure that the selected currency is enabled
         if values.get('currency_id'):
             currency = self.env['res.currency'].browse(values['currency_id'])

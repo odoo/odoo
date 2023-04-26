@@ -85,7 +85,7 @@ class CRMRevealRule(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
         return super().create(vals_list)
 
     def write(self, vals):
@@ -93,11 +93,11 @@ class CRMRevealRule(models.Model):
             'country_ids', 'regex_url', 'active'
         }
         if set(vals.keys()) & fields_set:
-            self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+            self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).write(vals)
 
     def unlink(self):
-        self.clear_caches() # Clear the cache in order to recompute _get_active_rules
+        self.env.registry.clear_cache() # Clear the cache in order to recompute _get_active_rules
         return super(CRMRevealRule, self).unlink()
 
     def action_get_lead_tree_view(self):

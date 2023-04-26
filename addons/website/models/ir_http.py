@@ -13,7 +13,7 @@ import werkzeug.utils
 from functools import partial
 
 import odoo
-from odoo import api, models
+from odoo import api, models, tools
 from odoo import SUPERUSER_ID
 from odoo.exceptions import AccessError
 from odoo.http import request
@@ -62,16 +62,10 @@ def get_request_website():
 class Http(models.AbstractModel):
     _inherit = 'ir.http'
 
-    @classmethod
-    def routing_map(cls, key=None):
+    def routing_map(self, key=None):
         if not key and request:
             key = request.website_routing
-        return super(Http, cls).routing_map(key=key)
-
-    @classmethod
-    def clear_caches(cls):
-        super()._clear_routing_map()
-        return super().clear_caches()
+        return super().routing_map(key=key)
 
     @classmethod
     def _slug_matching(cls, adapter, endpoint, **kw):
@@ -81,18 +75,31 @@ class Http(models.AbstractModel):
         qs = request.httprequest.query_string.decode('utf-8')
         return adapter.build(endpoint, kw) + (qs and '?%s' % qs or '')
 
-    @classmethod
-    def _generate_routing_rules(cls, modules, converters):
+    @tools.ormcache('website_id', cache='routing')
+    def _rewrite_len(self, website_id, rewrites=None):
+        # This little hack allow to store a _rewrite_len in cache if we have the value,
+        # (Populated during routing map computation)
+        # but also ensures that we will have the correct value if the cache is not populated.
+        # The cache key actually does not depends on "rewrites" because this is the information
+        # we are storing, rewrites actually depends on website_id
+        if rewrites is None:
+            rewrites = self._get_rewrites(website_id)
+        return len(rewrites)
+
+    def _get_rewrites(self, website_id):
+        domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
+        rewrites = {x.url_from: x for x in self.env['website.rewrite'].sudo().search(domain)}
+        self._rewrite_len(website_id, rewrites)  # optionnal, update value in cache
+        #self._rewrite_len.add_cache_value(website_id, value=rewrites)
+        return rewrites
+
+    def _generate_routing_rules(self, modules, converters):
         if not request:
             yield from super()._generate_routing_rules(modules, converters)
             return
-
         website_id = request.website_routing
         logger.debug("_generate_routing_rules for website: %s", website_id)
-        domain = [('redirect_type', 'in', ('308', '404')), '|', ('website_id', '=', False), ('website_id', '=', website_id)]
-
-        rewrites = dict([(x.url_from, x) for x in request.env['website.rewrite'].sudo().search(domain)])
-        cls._rewrite_len[website_id] = len(rewrites)
+        rewrites = self._get_rewrites(website_id)
 
         for url, endpoint in super()._generate_routing_rules(modules, converters):
             if url in rewrites:
@@ -104,7 +111,7 @@ class Http(models.AbstractModel):
 
                     if url != url_to:
                         logger.debug('Redirect from %s to %s for website %s' % (url, url_to, website_id))
-                        _slug_matching = partial(cls._slug_matching, endpoint=endpoint)
+                        _slug_matching = partial(self._slug_matching, endpoint=endpoint)
                         endpoint.routing['redirect_to'] = _slug_matching
                         yield url, endpoint  # yield original redirected to new url
                 elif rewrite.redirect_type == '404':

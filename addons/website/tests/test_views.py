@@ -1163,7 +1163,7 @@ class TestCowViewSaving(TestViewSavingCommon):
         french = self.env['res.lang']._activate_lang('fr_FR')
         self.env['ir.module.module']._load_module_terms(['website'], [french.code])
         # Make sure res.lang.get_installed is recomputed
-        self.env.registry.clear_caches()
+        self.env.registry.clear_cache()
 
         View = self.env['ir.ui.view'].with_context(lang=french.code, website_id=1)
         old_specific_views = View.search([('website_id', '!=', None)])
