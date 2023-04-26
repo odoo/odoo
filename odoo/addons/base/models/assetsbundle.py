@@ -302,7 +302,7 @@ class AssetsBundle(object):
             but the transaction is rollbacked, leading to 404 when getting the attachments.
             This postrollback hook will help fix this issue by clearing the cache if it isn't commited.
         """
-        self.env.cr.postrollback.add(self.env.registry._Registry__cache.clear)
+        self.env.cr.postrollback.add(self.env.registry._Registry__caches['assets'].clear)
 
     def save_attachment(self, extension, content):
         """Record the given bundle in an ir.attachment and delete

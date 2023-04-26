@@ -62,6 +62,7 @@ class Assets(models.AbstractModel):
             # If it was already modified, simply override the corresponding
             # attachment content
             custom_attachment.write({"datas": datas})
+            self.env.registry.clear_cache('assets')
         else:
             # If not, create a new attachment to copy the original scss/js file
             # content, with its modifications
@@ -93,7 +94,6 @@ class Assets(models.AbstractModel):
                 new_asset['bundle'] = IrAsset._get_related_bundle(url, bundle)
             IrAsset.create(new_asset)
 
-        self.env["ir.qweb"].clear_caches()
 
     @api.model
     def _get_content_from_url(self, url, url_info=None, custom_attachments=None):

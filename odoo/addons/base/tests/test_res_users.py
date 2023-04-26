@@ -209,15 +209,15 @@ class TestUsers(TransactionCase):
         request_patch.start()
 
         self.assertEqual(user.context_get()['lang'], 'fr_FR')
-        self.env.registry.clear_caches()
+        self.env.registry.clear_cache()
         user.lang = False
 
         self.assertEqual(user.context_get()['lang'], 'es_ES')
-        self.env.registry.clear_caches()
+        self.env.registry.clear_cache()
         request_patch.stop()
 
         self.assertEqual(user.context_get()['lang'], 'de_DE')
-        self.env.registry.clear_caches()
+        self.env.registry.clear_cache()
         company.lang = False
 
         self.assertEqual(user.context_get()['lang'], 'en_US')

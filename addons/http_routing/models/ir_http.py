@@ -185,15 +185,15 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
         :param no_rewrite: don't try to match route with website.rewrite.
     '''
     new_url = False
-
+    rewrite = not no_rewrite
     # don't try to match route if we know that no rewrite has been loaded.
     routing = getattr(request, 'website_routing', None)  # not modular, but not overridable
-    if not getattr(request.env['ir.http'], '_rewrite_len', {}).get(routing):
-        no_rewrite = True
+    if not request.env['ir.http']._rewrite_len(routing):
+        rewrite = False
 
     path, _, qs = (url_from or '').partition('?')
 
-    if (not no_rewrite and path and (
+    if (rewrite and path and (
             len(path) > 1
             and path.startswith('/')
             and '/static/' not in path
@@ -660,7 +660,7 @@ class IrHttp(models.AbstractModel):
         return response
 
     @api.model
-    @tools.ormcache('path', 'query_args')
+    @tools.ormcache('path', 'query_args', cache='routing.rewrites')
     def url_rewrite(self, path, query_args=None):
         new_url = False
         router = http.root.get_db_router(request.db).bind('')
@@ -676,3 +676,6 @@ class IrHttp(models.AbstractModel):
         except werkzeug.exceptions.NotFound:
             new_url = path
         return new_url or path, endpoint and endpoint[0]
+
+    def _rewrite_len(self, website_id, rewrites=None):
+        return 0

@@ -41,17 +41,18 @@ class ProductPricelist(models.Model):
                 # It be set when we actually create the pricelist
                 self = self.with_context(default_company_id=vals['company_id'])
         pricelists = super().create(vals_list)
-        pricelists and pricelists.clear_caches()
+        if pricelists:
+            self.env.registry.clear_cache()
         return pricelists
 
     def write(self, data):
         res = super(ProductPricelist, self).write(data)
-        self and self.clear_caches()
+        self and self.env.registry.clear_cache()
         return res
 
     def unlink(self):
         res = super(ProductPricelist, self).unlink()
-        self and self.clear_caches()
+        self and self.env.registry.clear_cache()
         return res
 
     def _get_partner_pricelist_multi_search_domain_hook(self, company_id):

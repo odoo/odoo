@@ -506,7 +506,7 @@ class TestTrackingInternals(MailCommon):
 
         # test editing the record with user not in the group of the field
         self.env.invalidate_all()
-        self.record.clear_caches()
+        self.env.registry.clear_cache()
         record_form = Form(self.record.with_user(self.user_employee))
         record_form.name = 'TestDoNoCrash'
         # the employee user must be able to save the fields on which they can write

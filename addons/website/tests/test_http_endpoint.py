@@ -25,7 +25,7 @@ class TestHttpEndPoint(HttpCase):
             'inherit_id': homepage_view.id,
             'arch_db': """
                 <t t-call="website.layout" position="before">
-                    <t t-esc="website.env['ir.http']._clear_routing_map()"/>
+                    <t t-esc="website.env.registry.clear_cache('routing')"/>
                 </t>
             """,
         })

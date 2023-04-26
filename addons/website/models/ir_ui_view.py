@@ -224,7 +224,7 @@ class View(models.Model):
                 specific_views += view._get_specific_views()
 
         result = super(View, self + specific_views).unlink()
-        self.clear_caches()
+        self.env.registry.clear_cache('templates')
         return result
 
     def _create_website_specific_pages_for_view(self, new_view, website):
@@ -363,7 +363,7 @@ class View(models.Model):
                     """
 
     @api.model
-    @tools.ormcache_context('self.env.uid', 'self.env.su', 'xml_id', keys=('website_id',))
+    @tools.ormcache('self.env.uid', 'self.env.su', 'xml_id', 'self._context.get("website_id")', cache='templates')
     def _get_view_id(self, xml_id):
         """If a website_id is in the context and the given xml_id is not an int
         then try to get the id of the specific view for that website, but
@@ -374,7 +374,7 @@ class View(models.Model):
         method. `viewref` is probably more suitable.
 
         Archived views are ignored (unless the active_test context is set, but
-        then the ormcache_context will not work as expected).
+        then the ormcache will not work as expected).
         """
         website_id = self._context.get('website_id')
         if website_id and not isinstance(xml_id, int):
@@ -388,7 +388,7 @@ class View(models.Model):
             return view.id
         return super(View, self.sudo())._get_view_id(xml_id)
 
-    @tools.ormcache('self.id')
+    @tools.ormcache('self.id', cache='templates')
     def _get_cached_visibility(self):
         return self.visibility
 

@@ -6,6 +6,7 @@ from collections import Counter, defaultdict
 from decorator import decorator
 from inspect import signature, Parameter
 import logging
+import warnings
 
 unsafe_eval = eval
 
@@ -52,12 +53,13 @@ class ormcache(object):
     def __init__(self, *args, **kwargs):
         self.args = args
         self.skiparg = kwargs.get('skiparg')
+        self.cache_name = kwargs.get('cache', 'default')
 
     def __call__(self, method):
         self.method = method
         self.determine_key()
         lookup = decorator(self.lookup, method)
-        lookup.clear_cache = self.clear
+        lookup.ormcache = self
         return lookup
 
     def determine_key(self):
@@ -82,7 +84,7 @@ class ormcache(object):
 
     def lru(self, model):
         counter = STAT[(model.pool.db_name, model._name, self.method)]
-        return model.pool._Registry__cache, (model._name, self.method), counter
+        return model.pool._Registry__caches[self.cache_name], (model._name, self.method), counter
 
     def lookup(self, method, *args, **kwargs):
         d, key0, counter = self.lru(args[0])
@@ -102,7 +104,8 @@ class ormcache(object):
 
     def clear(self, model, *args):
         """ Clear the registry cache """
-        model.pool._clear_cache()
+        warnings.warn('Deprecated method ormcache.clear(model, *args), use registry.clear_cache() instead')
+        model.pool.clear_all_cache()
 
 
 class ormcache_context(ormcache):
@@ -133,81 +136,6 @@ class ormcache_context(ormcache):
         self.key = unsafe_eval(code)
 
 
-class ormcache_multi(ormcache):
-    """ This LRU cache decorator is a variant of :class:`ormcache`, with an
-    extra parameter ``multi`` that gives the name of a parameter. Upon call, the
-    corresponding argument is iterated on, and every value leads to a cache
-    entry under its own key.
-    """
-    def __init__(self, *args, **kwargs):
-        super(ormcache_multi, self).__init__(*args, **kwargs)
-        self.multi = kwargs['multi']
-
-    def determine_key(self):
-        """ Determine the function that computes a cache key from arguments. """
-        assert self.skiparg is None, "ormcache_multi() no longer supports skiparg"
-        assert isinstance(self.multi, str), "ormcache_multi() parameter multi must be an argument name"
-
-        super(ormcache_multi, self).determine_key()
-
-        # key_multi computes the extra element added to the key
-        sign = signature(self.method)
-        args = ', '.join(
-            str(params.replace(annotation=Parameter.empty, default=Parameter.empty))
-            for params in sign.parameters.values()
-        )
-        code_multi = "lambda %s: %s" % (args, self.multi)
-        self.key_multi = unsafe_eval(code_multi)
-
-        # self.multi_pos is the position of self.multi in args
-        self.multi_pos = list(sign.parameters).index(self.multi)
-
-    def lookup(self, method, *args, **kwargs):
-        d, key0, counter = self.lru(args[0])
-        base_key = key0 + self.key(*args, **kwargs)
-        ids = self.key_multi(*args, **kwargs)
-        result = {}
-        missed = []
-
-        # first take what is available in the cache
-        for i in ids:
-            key = base_key + (i,)
-            try:
-                result[i] = d[key]
-                counter.hit += 1
-            except Exception:
-                counter.miss += 1
-                missed.append(i)
-
-        if missed:
-            # call the method for the ids that were not in the cache; note that
-            # thanks to decorator(), the multi argument will be bound and passed
-            # positionally in args.
-            args = list(args)
-            args[self.multi_pos] = missed
-            result.update(method(*args, **kwargs))
-
-            # store those new results back in the cache
-            for i in missed:
-                key = base_key + (i,)
-                d[key] = result[i]
-
-        return result
-
-
-class dummy_cache(object):
-    """ Cache decorator replacement to actually do no caching. """
-    def __init__(self, *l, **kw):
-        pass
-
-    def __call__(self, fn):
-        fn.clear_cache = self.clear
-        return fn
-
-    def clear(self, *l, **kw):
-        pass
-
-
 def log_ormcache_stats(sig=None, frame=None):
     """ Log statistics of ormcache usage by database, model, and method. """
     from odoo.modules.registry import Registry
@@ -216,18 +144,22 @@ def log_ormcache_stats(sig=None, frame=None):
     me = threading.current_thread()
     me_dbname = getattr(me, 'dbname', 'n/a')
 
-    for dbname, reg in sorted(Registry.registries.d.items()):
-        # set logger prefix to dbname
-        me.dbname = dbname
-        entries = Counter(k[:2] for k in reg._Registry__cache.d)
+    def _log_ormcache_stats(cache_name, cache):
+        entries = Counter(k[:2] for k in cache.d)
         # show entries sorted by model name, method name
         for key in sorted(entries, key=lambda key: (key[0], key[1].__name__)):
             model, method = key
             stat = STAT[(dbname, model, method)]
             _logger.info(
-                "%6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
-                entries[key], stat.hit, stat.miss, stat.err, stat.ratio, model, method.__name__,
+                "%s, %6d entries, %6d hit, %6d miss, %6d err, %4.1f%% ratio, for %s.%s",
+                cache_name.rjust(25), entries[key], stat.hit, stat.miss, stat.err, stat.ratio, model, method.__name__,
             )
+
+    for dbname, reg in sorted(Registry.registries.d.items()):
+        # set logger prefix to dbname
+        me.dbname = dbname
+        for cache_name, cache in reg._Registry__caches.items():
+            _log_ormcache_stats(cache_name, cache)
 
     me.dbname = me_dbname
 
@@ -235,7 +167,7 @@ def log_ormcache_stats(sig=None, frame=None):
 def get_cache_key_counter(bound_method, *args, **kwargs):
     """ Return the cache, key and stat counter for the given call. """
     model = bound_method.__self__
-    ormcache = bound_method.clear_cache.__self__
+    ormcache = bound_method.ormcache
     cache, key0, counter = ormcache.lru(model)
     key = key0 + ormcache.key(model, *args, **kwargs)
     return cache, key, counter

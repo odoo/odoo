@@ -162,14 +162,14 @@ class IrUiMenu(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         for values in vals_list:
             if 'web_icon' in values:
                 values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).create(vals_list)
 
     def write(self, values):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         if 'web_icon' in values:
             values['web_icon_data'] = self._compute_web_icon_data(values.get('web_icon'))
         return super(IrUiMenu, self).write(values)
@@ -194,7 +194,7 @@ class IrUiMenu(models.Model):
         direct_children = self.with_context(**extra).search([('parent_id', 'in', self.ids)])
         direct_children.write({'parent_id': False})
 
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return super(IrUiMenu, self).unlink()
 
     def copy(self, default=None):

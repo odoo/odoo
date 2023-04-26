@@ -73,7 +73,7 @@ class Menu(models.Model):
                   Be careful to return correct record for ir.model.data xml_id in case
                   of default main menus creation.
         '''
-        self.clear_caches()
+        self.env.registry.clear_cache('templates')
         # Only used when creating website_data.xml default menu
         menus = self.env['website.menu']
         for vals in vals_list:
@@ -103,11 +103,11 @@ class Menu(models.Model):
         return menus
 
     def write(self, values):
-        self.clear_caches()
+        self.env.registry.clear_cache('templates')
         return super().write(values)
 
     def unlink(self):
-        self.clear_caches()
+        self.env.registry.clear_cache('templates')
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         menus_to_remove = self
         for menu in self.filtered(lambda m: default_menu and m.parent_id.id == default_menu.id):

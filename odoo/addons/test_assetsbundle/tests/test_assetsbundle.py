@@ -125,7 +125,7 @@ class FileTouchable(AddonManifestPatched):
 @tagged('-at_install', 'post_install')
 class Test404(HttpCase):
     def get_assets_node_cache(self):
-        return [e for e in self.env.registry._Registry__cache.d if e[0] == 'ir.qweb' and '_generate_' in str(e[1])]  #_generate_asset_nodes_cache
+        return [e for e in self.env.registry._Registry__caches['assets'].d if e[0] == 'ir.qweb' and '_generate_' in str(e[1])]  #_generate_asset_nodes_cache
 
     def test_rollback(self):
         """
@@ -133,14 +133,14 @@ class Test404(HttpCase):
         this actually tests the add_post_rollback behaviour
         """
         self.env['ir.attachment'].search([('url', '=like', '/web/assets/%web.assets_frontend%')]).unlink()
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache()
         self.url_open('/some_404_routes')
         self.assertFalse(self.get_assets_node_cache(), 'orm_cache should be emptied by rollback')
         self.assertFalse(self.env['ir.attachment'].search([('url', '=like', '/web/assets/%web.assets_frontend%%')]), "attachments should have been rollbacked")
         self.url_open('/')
         self.assertTrue(self.env['ir.attachment'].search([('url', '=like', '/web/assets/%web.assets_frontend%%')]), "attachments should have been generated as expected")
         self.assertTrue(self.get_assets_node_cache(), 'orm_cache should remain populated')
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache()
 
 class TestJavascriptAssetsBundle(FileTouchable):
     @classmethod
@@ -1895,19 +1895,21 @@ class TestAssetsManifest(AddonManifestPatched):
 class AssetsNodeOrmCacheUsage(TransactionCase):
 
     def cache_keys(self):
-        keys = self.env.registry._Registry__cache.d
+        keys = self.env.registry._Registry__caches['assets'].d
+
         asset_keys = [key for key in keys if key[0] == 'ir.asset' and '_get_asset_paths' in str(key[1])] # ignore topological sort entry
         qweb_keys = [key for key in keys if key[0] == 'ir.qweb']
         return asset_keys, qweb_keys
 
     def test_assets_node_orm_cache_usage_debug(self):
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache('assets')
 
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 0)
         self.assertEqual(len(qweb_keys), 0)
 
         self.env['ir.qweb']._get_asset_nodes('web.assets_backend')
+
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 1)
         self.assertEqual(len(qweb_keys), 1)
@@ -1929,7 +1931,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(qweb_keys), 1)
 
     def test_assets_node_orm_cache_usage_file_type(self):
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache('assets')
 
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 0)
@@ -1954,7 +1956,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
 
 
     def test_assets_node_orm_cache_usage_lang(self):
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache('assets')
         self.env['res.lang']._activate_lang('ar_SY')
         self.env['res.lang']._activate_lang('fr_FR')
         self.env['res.lang']._activate_lang('en_US')
@@ -1981,7 +1983,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
     def test_assets_node_orm_cache_usage_website(self):
         if self.env['ir.module.module'].search([('name', '=', 'website'), ('state', '=', 'uninstalled')]):
             return  # only makes sence if website is installed
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache('assets')
 
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 0)
@@ -1998,7 +2000,7 @@ class AssetsNodeOrmCacheUsage(TransactionCase):
         self.assertEqual(len(qweb_keys), 2)
 
     def test_assets_node_orm_cache_usage_node_flags(self):
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache('assets')
 
         asset_keys, qweb_keys = self.cache_keys()
         self.assertEqual(len(asset_keys), 0)

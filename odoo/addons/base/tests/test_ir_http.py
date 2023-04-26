@@ -12,12 +12,12 @@ _logger = logging.getLogger(__name__)
 class TestIrHttpPerformances(TransactionCase):
 
     def test_routing_map_performance(self):
-        self.env['ir.http']._clear_routing_map()
+        self.env.registry.clear_cache('routing')
         # if the routing map was already generated it is possible that some compiled regex are in cache.
         # we want to mesure the cold state, when the worker just spawned, we need to empty the re cache
         re._cache.clear()
 
-        self.env['ir.http']._clear_routing_map()
+        self.env.registry.clear_cache('routing')
         start = time.time()
         self.env['ir.http'].routing_map()
         duration = time.time() - start

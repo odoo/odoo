@@ -31,12 +31,12 @@ class TestTOTPortal(HttpCase):
         totp_hook.routing_type = 'json'
         # patch Home to add test endpoint
         Home.totp_hook = http.route('/totphook', type='json', auth='none')(totp_hook)
-        self.env['ir.http']._clear_routing_map()
+        self.env.registry.clear_cache('routing')
         # remove endpoint and destroy routing map
         @self.addCleanup
         def _cleanup():
             del Home.totp_hook
-            self.env['ir.http']._clear_routing_map()
+            self.env.registry.clear_cache('routing')
 
         self.start_tour('/my/security', 'totportal_tour_setup', login='portal')
         # also disables totp otherwise we can't re-login

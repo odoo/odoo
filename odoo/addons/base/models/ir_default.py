@@ -32,17 +32,17 @@ class IrDefault(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        self.clear_caches()
+        self.env.registry.clear_cache()
         return super(IrDefault, self).create(vals_list)
 
     def write(self, vals):
         if self:
-            self.clear_caches()
+            self.env.registry.clear_cache()
         return super(IrDefault, self).write(vals)
 
     def unlink(self):
         if self:
-            self.clear_caches()
+            self.env.registry.clear_cache()
         return super(IrDefault, self).unlink()
 
     @api.model

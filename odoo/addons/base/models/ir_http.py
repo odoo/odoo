@@ -128,8 +128,8 @@ class IrHttp(models.AbstractModel):
         return {'model': ModelConverter, 'models': ModelsConverter, 'int': SignedIntConverter}
 
     @classmethod
-    def _match(cls, path_info, key=None):
-        rule, args = cls.routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
+    def _match(cls, path_info):
+        rule, args = request.env['ir.http'].routing_map().bind_to_environ(request.httprequest.environ).match(path_info=path_info, return_rule=True)
         return rule, args
 
     @classmethod
@@ -216,44 +216,30 @@ class IrHttp(models.AbstractModel):
     def _redirect(cls, location, code=303):
         return werkzeug.utils.redirect(location, code=code, Response=Response)
 
-    @classmethod
-    def _generate_routing_rules(cls, modules, converters):
+    def _generate_routing_rules(self, modules, converters):
         return http._generate_routing_rules(modules, False, converters)
 
-    @classmethod
-    def routing_map(cls, key=None):
-
-        if not hasattr(cls, '_routing_map'):
-            cls._routing_map = {}
-            cls._rewrite_len = {}
-
-        if key not in cls._routing_map:
-            _logger.info("Generating routing map for key %s" % str(key))
-            registry = Registry(threading.current_thread().dbname)
-            installed = registry._init_modules.union(odoo.conf.server_wide_modules)
-            if tools.config['test_enable'] and odoo.modules.module.current_test:
-                installed.add(odoo.modules.module.current_test)
-            mods = sorted(installed)
-            # Note : when routing map is generated, we put it on the class `cls`
-            # to make it available for all instance. Since `env` create an new instance
-            # of the model, each instance will regenared its own routing map and thus
-            # regenerate its EndPoint. The routing map should be static.
-            routing_map = werkzeug.routing.Map(strict_slashes=False, converters=cls._get_converters())
-            for url, endpoint in cls._generate_routing_rules(mods, converters=cls._get_converters()):
-                routing = submap(endpoint.routing, ROUTING_KEYS)
-                if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
-                    routing['methods'] = routing['methods'] + ['OPTIONS']
-                rule = FasterRule(url, endpoint=endpoint, **routing)
-                rule.merge_slashes = False
-                routing_map.add(rule)
-            cls._routing_map[key] = routing_map
-        return cls._routing_map[key]
-
-    @classmethod
-    def _clear_routing_map(cls):
-        if hasattr(cls, '_routing_map'):
-            cls._routing_map = {}
-            _logger.debug("Clear routing map")
+    @tools.ormcache('key', cache='routing')
+    def routing_map(self, key=None):
+        _logger.info("Generating routing map for key %s", str(key))
+        registry = Registry(threading.current_thread().dbname)
+        installed = registry._init_modules.union(odoo.conf.server_wide_modules)
+        if tools.config['test_enable'] and odoo.modules.module.current_test:
+            installed.add(odoo.modules.module.current_test)
+        mods = sorted(installed)
+        # Note : when routing map is generated, we put it on the class `cls`
+        # to make it available for all instance. Since `env` create an new instance
+        # of the model, each instance will regenared its own routing map and thus
+        # regenerate its EndPoint. The routing map should be static.
+        routing_map = werkzeug.routing.Map(strict_slashes=False, converters=self._get_converters())
+        for url, endpoint in self._generate_routing_rules(mods, converters=self._get_converters()):
+            routing = submap(endpoint.routing, ROUTING_KEYS)
+            if routing['methods'] is not None and 'OPTIONS' not in routing['methods']:
+                routing['methods'] = routing['methods'] + ['OPTIONS']
+            rule = FasterRule(url, endpoint=endpoint, **routing)
+            rule.merge_slashes = False
+            routing_map.add(rule)
+        return routing_map
 
     @api.autovacuum
     def _gc_sessions(self):

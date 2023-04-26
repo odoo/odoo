@@ -25,7 +25,7 @@ class BusWebTests(odoo.tests.HttpCase):
             ])
         # start from a clean slate
         self.env['ir.attachment'].search(domain).unlink()
-        self.env.registry._clear_cache()
+        self.env.registry.clear_cache()
 
         sendones = []
         def patched_sendone(self, channel, notificationType, message):

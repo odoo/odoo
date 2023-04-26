@@ -141,7 +141,7 @@ class Home(http.Controller):
         if request.env.user._is_system():
             uid = request.session.uid = odoo.SUPERUSER_ID
             # invalidate session token cache as we've changed the uid
-            request.env['res.users'].clear_caches()
+            request.env.registry.clear_cache()
             request.session.session_token = security.compute_session_token(request.session, request.env)
 
         return request.redirect(self._login_redirect(uid))

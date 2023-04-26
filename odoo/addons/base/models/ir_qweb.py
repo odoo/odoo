@@ -380,10 +380,12 @@ from dateutil.relativedelta import relativedelta
 from psycopg2.extensions import TransactionRollbackError
 
 from odoo import api, models, tools
+from odoo.modules import registry
 from odoo.tools import config, safe_eval, pycompat
 from odoo.tools.constants import SUPPORTED_DEBUGGER, EXTERNAL_ASSET
 from odoo.tools.safe_eval import assert_valid_codeobj, _BUILTINS, to_opcodes, _EXPR_OPCODES, _BLACKLIST
 from odoo.tools.json import scriptsafe
+from odoo.tools.lru import LRU
 from odoo.tools.misc import str2bool
 from odoo.tools.image import image_data_uri, FILETYPE_BASE64_MAGICWORD
 from odoo.http import request
@@ -597,7 +599,7 @@ class IrQWeb(models.AbstractModel):
 
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('template', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())'),
+        tools.ormcache('template', 'tuple(self.env.context.get(k) for k in self._get_template_cache_keys())', cache='templates'),
     )
     def _get_view_id(self, template):
         try:
@@ -2485,7 +2487,6 @@ class IrQWeb(models.AbstractModel):
         """ generate value from the function if the result is not cached. """
         if not cache_key:
             return get_value()
-
         value = loaded_values and loaded_values.get(cache_key)
         if not value:
             value = self._get_cached_values(cache_key, get_value)
@@ -2497,7 +2498,7 @@ class IrQWeb(models.AbstractModel):
     # in '_compile' method contains the write_date of all inherited views.
     @tools.conditional(
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('cache_key'),
+        tools.ormcache('cache_key', cache='templates.cached_values'),
     )
     def _get_cached_values(self, cache_key, get_value):
         """ generate value from the function if the result is not cached. """
@@ -2508,7 +2509,7 @@ class IrQWeb(models.AbstractModel):
         # in non-xml-debug mode we want assets to be cached forever, and the admin can force a cache clear
         # by restarting the server after updating the source code (or using the "Clear server cache" in debug tools)
         'xml' not in tools.config['dev_mode'],
-        tools.ormcache('bundle', 'css', 'js', 'tuple(sorted(assets_params.items()))', 'rtl'),
+        tools.ormcache('bundle', 'css', 'js', 'tuple(sorted(assets_params.items()))', 'rtl', cache='assets'),
     )
     def _generate_asset_links_cache(self, bundle, css=True, js=True, assets_params=None, rtl=False):
         return self._generate_asset_links(bundle, css, js, False, assets_params, rtl)
@@ -2649,7 +2650,11 @@ def render(template_name, values, load, **options):
     """
     class MockPool:
         db_name = None
-        _Registry__cache = {}
+        _Registry__caches = {cache_name: LRU(cache_size) for cache_name, cache_size in registry._REGISTRY_CACHES.items()}
+        _Registry__caches_groups = {}
+        for cache_name, cache in _Registry__caches.items():
+            _Registry__caches_groups.setdefault(cache_name.split('.')[0], []).append(cache)
+
 
     class MockIrQWeb(IrQWeb):
         _register = False               # not visible in real registry

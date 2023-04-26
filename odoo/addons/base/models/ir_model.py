@@ -932,7 +932,7 @@ class IrModelFields(models.Model):
             models.add(vals['model'])
 
         # for self._get_ids() in _update_selection()
-        self.clear_caches()
+        self.env.registry.clear_cache()
 
         res = super(IrModelFields, self).create(vals_list)
 
@@ -1042,7 +1042,7 @@ class IrModelFields(models.Model):
     def update_field_translations(self, field_name, translations):
         res = super().update_field_translations(field_name, translations)
         if res:
-            self.clear_caches()
+            self.env.registry.clear_cache()
         return res
 
     @api.depends('field_description', 'model')
@@ -1917,23 +1917,11 @@ class IrModelAccess(models.Model):
 
         return has_access
 
-    __cache_clearing_methods = set()
-
-    @classmethod
-    def register_cache_clearing_method(cls, model, method):
-        cls.__cache_clearing_methods.add((model, method))
-
-    @classmethod
-    def unregister_cache_clearing_method(cls, model, method):
-        cls.__cache_clearing_methods.discard((model, method))
 
     @api.model
     def call_cache_clearing_methods(self):
         self.env.invalidate_all()
-        self._get_allowed_models.clear_cache(self)    # clear the cache of check function
-        for model, method in self.__cache_clearing_methods:
-            if model in self.env:
-                getattr(self.env[model], method)()
+        self.env.registry.clear_cache()  # mainly _get_allowed_models
 
     #
     # Check rights on actions
@@ -2019,7 +2007,7 @@ class IrModelData(models.Model):
 
     # NEW V8 API
     @api.model
-    @tools.ormcache('xmlid')
+    @tools.ormcache('xmlid', cache='xmlid')
     def _xmlid_lookup(self, xmlid: str) -> tuple:
         """Low level xmlid lookup
         Return (id, res_model, res_id) or raise ValueError if not found
@@ -2066,9 +2054,13 @@ class IrModelData(models.Model):
         default = dict(default or {}, name="%s_%s" % (self.name, rand))
         return super().copy(default)
 
+    def write(self, values):
+        self.env.registry.clear_cache('xmlid')  # _xmlid_lookup
+        return super().write(values)
+
     def unlink(self):
         """ Regular unlink method, but make sure to clear the caches. """
-        self.clear_caches()
+        self.env.registry.clear_cache('xmlid')  # _xmlid_lookup
         return super(IrModelData, self).unlink()
 
     def _lookup_xmlids(self, xml_ids, model):
@@ -2120,6 +2112,7 @@ class IrModelData(models.Model):
             query = self._build_update_xmlids_query(sub_rows, update)
             try:
                 self.env.cr.execute(query, [arg for row in sub_rows for arg in row])
+                self.env.registry.clear_cache('xmlid')
             except Exception:
                 _logger.error("Failed to insert ir_model_data\n%s", "\n".join(str(row) for row in sub_rows))
                 raise

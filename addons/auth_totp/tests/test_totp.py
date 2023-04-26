@@ -34,14 +34,14 @@ class TestTOTP(HttpCase):
                 return totp.generate(time.time() + 30).token
         # because not preprocessed by ControllerType metaclass
         totp_hook.routing_type = 'json'
-        self.env['ir.http']._clear_routing_map()
+        self.env.registry.clear_cache('routing')
         # patch Home to add test endpoint
         Home.totp_hook = http.route('/totphook', type='json', auth='none')(totp_hook)
         # remove endpoint and destroy routing map
         @self.addCleanup
         def _cleanup():
             del Home.totp_hook
-            self.env['ir.http']._clear_routing_map()
+            self.env.registry.clear_cache('routing')
 
     def test_totp(self):
         # 1. Enable 2FA
