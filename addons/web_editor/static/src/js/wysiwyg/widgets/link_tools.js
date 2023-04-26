@@ -31,11 +31,21 @@ const LinkTools = Link.extend({
      */
     init: function (parent, options, editable, data, $button, link) {
         this._link = link;
-        this._observer = new MutationObserver(async () => {
+        this._observer = new MutationObserver(async (records) => {
             await this.renderingPromise;
+            if (records.some(record => record.type === 'attributes')) {
+                this._updateUrlInput(this._link.getAttribute('href') || '');
+            }
             this._updateLabelInput();
         });
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._observerOptions = {
+            subtree: true,
+            childList: true,
+            characterData: true,
+            attributes: true,
+            attributeFilter: ['href'],
+        };
+        this._observer.observe(this._link, this._observerOptions);
         this._super(parent, options, editable, data, $button, this._link);
         // Keep track of each selected custom color and colorpicker.
         this.customColors = {};
@@ -107,7 +117,7 @@ const LinkTools = Link.extend({
         this._super(...arguments);
         this.options.wysiwyg.odooEditor.historyStep();
         this._addHintClasses();
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._observer.observe(this._link, this._observerOptions);
     },
 
     //--------------------------------------------------------------------------
@@ -490,7 +500,7 @@ const LinkTools = Link.extend({
         // Force update of link's content with new data using 'force: true'.
         // Without this, no update if input is same as original text.
         this._updateLinkContent(this.$link, data, {force: true});
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._observer.observe(this._link, this._observerOptions);
     },
     /* If content is equal to previous URL, update it to match current URL.
      *
