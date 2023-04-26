@@ -114,8 +114,11 @@ class PaymentTransaction(models.Model):
     def _reconcile_after_done(self):
         """ Override of payment to automatically confirm quotations and generate invoices. """
         confirmed_orders = self._check_amount_and_confirm_order()
-        confirmed_orders._send_order_confirmation_mail()
-
+        # If the mail template is erroneous this should not perturb the rest of the sales flow.
+        try:
+            confirmed_orders._send_order_confirmation_mail()
+        except Exception:
+            _logger.exception(_("The sale order confirmation mail template is incorrect"))
         auto_invoice = str2bool(
             self.env['ir.config_parameter'].sudo().get_param('sale.automatic_invoice'))
         if auto_invoice:
