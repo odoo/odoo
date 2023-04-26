@@ -46,6 +46,9 @@ import { url } from "@web/core/utils/urls";
  * @extends {Component<Props, Env>}
  */
 export class Message extends Component {
+    // This is the darken version of #71639e
+    static SHADOW_LINK_COLOR = "#66598f";
+    static SHADOW_LINK_HOVER_COLOR = "#564b79";
     static components = {
         ActionSwiper,
         AttachmentList,
@@ -77,6 +80,11 @@ export class Message extends Component {
     ];
     static template = "mail.Message";
 
+    /** @type {HTMLStyleElement} */
+    shadowStyle;
+    /** @type {ShadowRoot} */
+    shadowRoot;
+
     setup() {
         this.popover = usePopover(this.constructor.components.Popover, { position: "top" });
         this.state = useState({
@@ -86,10 +94,13 @@ export class Message extends Component {
             expandOptions: false,
             lastReadMoreIndex: 0,
             isReadMoreByIndex: new Map(),
+            originalEmail: false,
+            emailHeaderOpen: false,
         });
         this.root = useRef("root");
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
+        this.shadowBody = useRef("shadowBody");
         this.messaging = useMessaging();
         this.store = useStore();
         this.rpc = useService("rpc");
@@ -113,6 +124,19 @@ export class Message extends Component {
                 }
             },
             () => [this.props.messageEdition?.editingMessage]
+        );
+        useEffect(
+            () => {
+                if (!this.shadowRoot) {
+                    return;
+                }
+                if (this.state.originalEmail) {
+                    this.shadowRoot.removeChild(this.shadowStyle);
+                } else {
+                    this.shadowRoot.insertBefore(this.shadowStyle, this.shadowRoot.firstChild);
+                }
+            },
+            () => [this.state.originalEmail]
         );
         onPatched(() => {
             if (this.props.highlighted && this.root.el) {
@@ -138,6 +162,29 @@ export class Message extends Component {
             if (this.messageBody.el) {
                 $(this.messageBody.el).find(".o-mail-read-more-less").remove();
                 this.insertReadMoreLess($(this.messageBody.el));
+            }
+            if (this.shadowBody.el) {
+                this.shadowRoot = this.shadowBody.el.attachShadow({ mode: "open" });
+                const body = document.createElement("span");
+                body.innerHTML = this.message.body;
+                this.insertReadMoreLess($(body));
+                const color =
+                    this.env.services.cookie?.current.color_scheme === "dark" ? "white" : "black";
+                this.shadowStyle = document.createElement("style");
+                this.shadowStyle.innerHTML = `
+                    * {
+                        background-color: transparent !important;
+                        color: ${color} !important;
+                    }
+                    a, a * {
+                        color: ${this.constructor.SHADOW_LINK_COLOR} !important;
+                    }
+                    a:hover, a *:hover {
+                        color: ${this.constructor.SHADOW_LINK_HOVER_COLOR} !important;
+                    }
+                `;
+                this.shadowRoot.appendChild(this.shadowStyle);
+                this.shadowRoot.appendChild(body);
             }
         });
         onWillUnmount(() => {
@@ -355,6 +402,12 @@ export class Message extends Component {
 
     get authorText() {
         return this.hasOpenChatFeature ? _t("Open chat") : "";
+    }
+
+    get originalEmailText() {
+        return this.state.originalEmail
+            ? _t("Don't show Original Email")
+            : _t("Show Original Email");
     }
 
     get pinOptionText() {
