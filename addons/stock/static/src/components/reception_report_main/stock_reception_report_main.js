@@ -133,7 +133,7 @@ export class ReceptionReportMain extends Component {
     }
 
     get isAssignAllDisabled() {
-        return Object.values(this.state.sourcesToLines).every(lines => lines.every(line => line.is_assigned));
+        return Object.values(this.state.sourcesToLines).every(lines => lines.every(line => line.is_assigned || !line.is_qty_assignable));
     }
 
     get isPrintLabelDisabled() {
