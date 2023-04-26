@@ -10,7 +10,7 @@ registry.category("web_tour.tours").add('main_flow_tour', {
     url: "/web",
     steps: [
 ...stepUtils.goToAppSteps('sale.sale_menu_root', Markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
-stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Quotations')"),
+stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
 {
 // Add Stockable product
     mobile: false,
@@ -24,7 +24,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Quotations')"),
     position: "bottom"
 }, {
     trigger: '.o-kanban-button-new',
-    extra_trigger: "li.breadcrumb-item.active:contains('Products')",
+    extra_trigger: ".o_breadcrumb .active:contains('Products')",
     content: _t("Let's create your first product."),
     position: 'bottom',
 }, {
@@ -149,7 +149,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 }, {
     mobile: false,
     trigger: ".o_field_widget[name=partner_id] input",
-    extra_trigger: ".breadcrumb-item.active:contains(the_flow.component1)",
+    extra_trigger: ".o_breadcrumb .active:contains(the_flow.component1)",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -221,7 +221,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 // Add second component
     mobile: false,
     trigger: ".o_field_x2many_list_row_add > a",
-    extra_trigger: ".breadcrumb-item.active:contains('the_flow.product')",
+    extra_trigger: ".o_breadcrumb .active:contains('the_flow.product')",
     content: _t("Click here to add some lines."),
     position: "bottom",
 }, {
@@ -289,7 +289,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 }, {
     mobile: false,
     trigger: ".o_field_widget[name=partner_id] input",
-    extra_trigger: ".breadcrumb-item.active:contains(the_flow.component2)",
+    extra_trigger: ".o_breadcrumb .active:contains(the_flow.component2)",
     content: _t('Select a seller'),
     position: 'top',
     run: "text the_flow.vendor",
@@ -338,8 +338,8 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
 ...stepUtils.goBackBreadcrumbsMobile(
         Markup(_t("Use the breadcrumbs to <b>go back to products</b>.")),
         undefined,
-        ".breadcrumb-item.active:contains('Bill of Materials')",
-        ".breadcrumb-item.active:contains('the_flow.product')"
+        ".o_breadcrumb .active:contains('Bill of Materials')",
+        ".o_breadcrumb .active:contains('the_flow.product')"
     ),
 {
 // Add service product
@@ -613,7 +613,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     position: 'bottom',
 },
 ...stepUtils.goToAppSteps('stock.menu_stock_root', _t('Go to Inventory')),
-stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Inventory Overview')"),
+stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Inventory Overview')"),
 {
     mobile: false,
     trigger: ".o_menu_sections button[data-menu-xmlid='stock.menu_stock_config_settings']",
@@ -674,7 +674,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Inventory Overview
     content: Markup(_t("<p>Save this reordering rule</p>")),
     position: "bottom"
 },
-stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('OP/')"),
+stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('OP/')"),
 {
 //Go to purchase:
     edition: "enterprise",
@@ -727,7 +727,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('OP/')"),
     position: 'bottom',
 },
 ...stepUtils.goToAppSteps('mrp.menu_mrp_root', _t('Go to Manufacturing')),
-stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Manufacturing Orders'), li.breadcrumb-item.active:contains('Work Centers Overview')"),
+stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Manufacturing Orders'), .o_breadcrumb .active:contains('Work Centers Overview')"),
 {
     mobile: false,
     trigger: ".o_menu_sections button[data-menu-xmlid='mrp.menu_mrp_manufacturing']",
@@ -745,7 +745,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Manufacturing Orde
 }, {
     mobile: true,
     trigger: '.o_kanban_record .o_kanban_record_title:contains("the_flow.product"):first',
-    extra_trigger: "li.breadcrumb-item.active:contains('Manufacturing Orders')",
+    extra_trigger: ".o_breadcrumb .active:contains('Manufacturing Orders')",
     content: _t('Select the generated manufacturing order'),
     position: 'bottom',
 },
@@ -774,7 +774,7 @@ stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Manufacturing Orde
     position: 'bottom',
 },
 ...stepUtils.goToAppSteps('sale.sale_menu_root', Markup(_t('Organize your sales activities with the <b>Sales app</b>.'))),
-stepUtils.openBurgerMenu("li.breadcrumb-item.active:contains('Quotations')"),
+stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
 {
     mobile: false,
     trigger: ".o_menu_sections button[data-menu-xmlid='sale.sale_order_menu']",
@@ -849,7 +849,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .brea
 ...stepUtils.goBackBreadcrumbsMobile(
         _t('Back to the sale order'),
         undefined,
-        ".breadcrumb-item.active:contains('the_flow.service')"
+        ".o_breadcrumb .active:contains('the_flow.service')"
     ),
 {
     mobile: false,
@@ -864,7 +864,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .brea
     content: _t("Create and View Invoices"),
     position: "bottom",
 },
-...stepUtils.statusbarButtonsSteps('Confirm', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
+...stepUtils.statusbarButtonsSteps('Confirm', _t("Validate"), ".o_breadcrumb .active:contains('Draft Invoice')"),
 ...stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
     trigger: ".modal-footer .btn-primary",

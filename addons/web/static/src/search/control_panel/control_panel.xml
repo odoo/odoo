@@ -75,7 +75,7 @@
         <t t-set="collapsedBreadcrumbs" t-value="breadcrumbs.slice(0, -3).reverse()"/>
         <t t-set="breadcrumb" t-value="currentBreadcrumbs[0] || {}"/>
 
-        <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
+        <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="o_breadcrumb d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
             <t t-if="env.isSmall">
                 <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.slice(-1)"/>
                 <button class="o_back_button btn btn-link px-1" t-on-click.prevent="() => this.onBreadcrumbClicked(previousBreadcrumb.jsId)">
@@ -97,7 +97,7 @@
                         </Dropdown>
                     </li>
                     <t t-foreach="visiblePathBreadcrumbs" t-as="breadcrumb" t-key="breadcrumb.jsId">
-                        <li class="breadcrumb-item d-inline-flex min-w-0" t-att-data-hotkey="breadcrumb_last and 'b'" t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
+                        <li class="breadcrumb-item d-inline-flex min-w-0" t-att-class="{ o_back_button: breadcrumb_last }" t-att-data-hotkey="breadcrumb_last and 'b'" t-on-click.prevent="() => this.onBreadcrumbClicked(breadcrumb.jsId)">
                             <a href="#" class="fw-bold text-truncate" t-att-data-tooltip="'Back to &quot;' + breadcrumb.name + '&quot;'"><t t-call="web.Breadcrumb.Name"/></a>
                         </li>
                     </t>
@@ -111,7 +111,7 @@
             </div>
         </div>
 
-        <div t-else="" class="d-flex gap-1">
+        <div t-else="" class="o_breadcrumb d-flex gap-1">
             <div class="active d-flex fs-4 min-w-0">
                 <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
             </div>

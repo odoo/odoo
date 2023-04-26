@@ -16,7 +16,7 @@
         position: 'bottom',
     }, {
         trigger: '.o_data_row:first .o_data_cell',
-        extra_trigger: '.breadcrumb',
+        extra_trigger: '.o_breadcrumb',
     }, {
         trigger: '.o_control_panel .o_cp_action_menus .dropdown-toggle',
         extra_trigger: '.o_breadcrumb .active:contains("INV/")',

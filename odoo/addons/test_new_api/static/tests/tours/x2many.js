@@ -13,7 +13,7 @@
     /////////////////////////////////////////////////////////////////////////////////////////////
     {
         content: "wait web client",
-        trigger: '.breadcrumb:contains(Discussions)',
+        trigger: '.o_breadcrumb:contains(Discussions)',
     }, { // create test discussion
         content: "create new discussion",
         trigger: 'button.o_list_button_add',
@@ -314,7 +314,7 @@
     }, {
         content: "select previous created record",
         trigger: 'td:contains(test_trigger):last',
-        extra_trigger: '.breadcrumb-item:contains(Discussions 2)',
+        extra_trigger: '.o_breadcrumb:contains(Discussions 2)',
     }, {
         content: "edit content",
         trigger: '.o_field_widget[name=name] input',
@@ -422,7 +422,7 @@
         trigger: '.dropdown-item[data-menu-xmlid="test_new_api.menu_discussions_3"]',
     }, {
         content: "wait web client",
-        trigger: '.breadcrumb:contains(Discussions 3)',
+        trigger: '.o_breadcrumb:contains(Discussions 3)',
     }, {
         content: "create new discussion",
         trigger: 'button.o_list_button_add',
