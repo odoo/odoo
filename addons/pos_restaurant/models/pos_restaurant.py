@@ -21,7 +21,7 @@ class RestaurantFloor(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
-        confs = self.mapped('pos_config_ids').filtered(lambda c: c.is_table_management)
+        confs = self.mapped('pos_config_ids').filtered(lambda c: c.module_pos_restaurant)
         opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
         if opened_session:
             error_msg = _("You cannot remove a floor that is used in a PoS session, close the session(s) first: \n")
@@ -112,7 +112,7 @@ class RestaurantTable(models.Model):
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_active_pos_session(self):
-        confs = self.mapped('floor_id').mapped('pos_config_ids').filtered(lambda c: c.is_table_management)
+        confs = self.mapped('floor_id.pos_config_ids').filtered(lambda c: c.module_pos_restaurant)
         opened_session = self.env['pos.session'].search([('config_id', 'in', confs.ids), ('state', '!=', 'closed')])
         if opened_session:
             error_msg = _("You cannot remove a table that is used in a PoS session, close the session(s) first.")

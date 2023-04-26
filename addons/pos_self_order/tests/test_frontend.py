@@ -12,7 +12,6 @@ class TestFrontend(odoo.tests.HttpCase):
             {
                 "name": "Bar",
                 "module_pos_restaurant": True,
-                "is_table_management": True,
                 "iface_splitbill": True,
                 "iface_printbill": True,
                 "iface_orderline_notes": True,

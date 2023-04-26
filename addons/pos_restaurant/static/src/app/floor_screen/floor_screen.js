@@ -270,7 +270,7 @@ export class FloorScreen extends Component {
                 const result = await this.orm.call("pos.session", "get_pos_ui_restaurant_floor", [
                     [odoo.pos_session_id],
                 ]);
-                if (this.env.pos.config.is_table_management) {
+                if (this.env.pos.config.module_pos_restaurant) {
                     this.env.pos.floors = result;
                     this.env.pos.loadRestaurantFloor();
                 }

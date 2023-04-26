@@ -2987,8 +2987,10 @@ export class Order extends PosModel {
                 const printingChanges = {
                     new: changes["new"],
                     cancelled: changes["cancelled"],
-                    table_name: this.pos.config.is_table_management ? this.getTable().name : false,
-                    floor_name: this.pos.config.is_table_management
+                    table_name: this.pos.config.module_pos_restaurant
+                        ? this.getTable().name
+                        : false,
+                    floor_name: this.pos.config.module_pos_restaurant
                         ? this.getTable().floor.name
                         : false,
                     name: this.name || "unknown order",

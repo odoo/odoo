@@ -23,7 +23,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
      */
     async setup() {
         await this._super(...arguments);
-        if (this.globalState.config.is_table_management) {
+        if (this.globalState.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.globalState.table?.floor || null });
         }
@@ -59,7 +59,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
             this.mainScreen.component === PaymentScreen &&
             this.globalState.get_order().paymentlines.length > 0;
         return (
-            this.globalState.config.is_table_management &&
+            this.globalState.config.module_pos_restaurant &&
             !stayPaymentScreen &&
             this.mainScreen.component !== FloorScreen
         );
@@ -72,7 +72,7 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
         this.setIdleTimer();
     },
     closeScreen() {
-        if (this.globalState.config.is_table_management && !this.globalState.get_order()) {
+        if (this.globalState.config.module_pos_restaurant && !this.globalState.get_order()) {
             return this.showScreen("FloorScreen");
         }
         return this._super(...arguments);
