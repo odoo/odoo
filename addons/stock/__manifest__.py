@@ -67,6 +67,7 @@
         'wizard/stock_inventory_warning.xml',
         'wizard/stock_label_type.xml',
         'wizard/stock_lot_label_layout.xml',
+        'wizard/stock_quant_relocate.xml',
 
         'views/res_partner_views.xml',
         'views/product_strategy_views.xml',
