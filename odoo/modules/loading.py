@@ -619,6 +619,10 @@ def reset_modules_state(db_name):
     # of time
     db = odoo.sql_db.db_connect(db_name)
     with db.cursor() as cr:
+        cr.execute("SELECT 1 FROM information_schema.tables WHERE table_name='ir_module_module'")
+        if not cr.fetchall():
+            _logger.info('skipping reset_modules_state, ir_module_module table does not exists')
+            return
         cr.execute(
             "UPDATE ir_module_module SET state='installed' WHERE state IN ('to remove', 'to upgrade')"
         )
