@@ -944,3 +944,24 @@ QUnit.test("failure notifications are shown before channel preview", async (asse
         ".o-mail-NotificationItem:contains(An error occurred when sending an email) ~ .o-mail-NotificationItem:contains(message)"
     );
 });
+
+QUnit.test("messaging menu should show new needaction messages from chatter", async (assert) => {
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Frodo Baggins" });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsNone($, ".o-mail-NotificationItem:contains(@Mitchell Admin)");
+
+    // simulate receiving a new needaction message
+    await afterNextRender(() => {
+        pyEnv["bus.bus"]._sendone(pyEnv.currentPartner, "mail.message/inbox", {
+            body: "@Mitchell Admin",
+            id: 100,
+            needaction_partner_ids: [pyEnv.currentPartnerId],
+            model: "res.partner",
+            res_id: partnerId,
+            record_name: "Frodo Baggins",
+        });
+    });
+    assert.containsOnce($, ".o-mail-NotificationItem:contains(@Mitchell Admin)");
+});
