@@ -1415,7 +1415,7 @@ describe('Paste', () => {
                     stepFunction: async editor => {
                         await pasteText(editor, 'oom');
                     },
-                    contentAfter: '<p>a<a href="https://boom.com">boom[].com</a>d</p>',
+                    contentAfter: '<p>a<a href="http://boom.com">boom[].com</a>d</p>',
                 });
             });
             it('should replace link for new content when pasting in an empty link', async () => {
