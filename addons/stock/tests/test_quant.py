@@ -3,6 +3,7 @@
 from contextlib import closing
 from datetime import datetime, timedelta
 from unittest.mock import patch
+from ast import literal_eval
 
 from odoo import fields
 from odoo.addons.mail.tests.common import mail_new_test_user
@@ -887,6 +888,138 @@ class StockQuant(TransactionCase):
         quant = self.env['stock.quant'].search([('product_id', '=', self.product_serial.id), ('location_id', '=', stock_location.id)])
         self.assertEqual(len(quant), 1)
         self.assertEqual(quant.lot_id.name, 'Michel')
+
+    def test_relocate(self):
+        """ Test the relocation wizard. """
+        def _get_relocate_wizard(quant_ids):
+            relocate_wizard_dict = quant_ids.action_stock_quant_relocate()
+            return Form(self.env[relocate_wizard_dict['res_model']].with_context(relocate_wizard_dict['context']))
+
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_tracking_lot').id)]})
+        package_01 = self.env['stock.quant.package'].create({})
+        package_02 = self.env['stock.quant.package'].create({})
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 10, package_id=package_01)
+        quant_a = self.env['stock.quant'].search([('product_id', '=', self.product.id)])
+
+        # testing assigning a package to a quant
+        relocate_wizard = _get_relocate_wizard(quant_a)
+        relocate_wizard.dest_package_id = package_02
+        relocate_wizard.save().action_relocate_quants()
+        new_quant_a = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('quantity', '=', 10)])
+        self.assertEqual(new_quant_a.package_id, package_02)
+
+        # testing moving a packed quant to a new location
+        relocate_wizard = _get_relocate_wizard(new_quant_a)
+        self.assertEqual(relocate_wizard.is_partial_package, False)
+        relocate_wizard.dest_location_id = self.stock_subloc2
+        relocate_wizard.save().action_relocate_quants()
+        new_quant_a_bis = self.env['stock.quant'].search([('product_id', '=', self.product.id), ('quantity', '=', 10)])
+        self.assertEqual(new_quant_a_bis.location_id, self.stock_subloc2)
+        self.assertEqual(new_quant_a_bis.package_id, package_02)
+
+        # testing moving multiple packed quants to a new location with incomplete package
+        product_b = self.env['product.product'].create({
+            'name': 'product B',
+            'type': 'product'
+        })
+        self.env['stock.quant']._update_available_quantity(product_b, self.stock_location, 10, package_id=package_01)
+        product_c = self.env['product.product'].create({
+            'name': 'product C',
+            'type': 'product'
+        })
+        self.env['stock.quant']._update_available_quantity(product_c, self.stock_location, 10, package_id=package_01)
+
+        quants_ab = self.env['stock.quant'].search([('product_id', 'in', (self.product.id, product_b.id)), ('quantity', '=', 10)])
+        relocate_wizard = _get_relocate_wizard(quants_ab)
+        self.assertEqual(relocate_wizard.is_partial_package, True)
+
+        relocate_wizard.dest_location_id = self.stock_subloc3
+        relocate_wizard.save().action_relocate_quants()
+        new_quants_abc = self.env['stock.quant'].search([('product_id', 'in', (self.product.id, product_b.id, product_c.id)), ('quantity', '=', 10)], order='product_id')
+        self.assertRecordValues(new_quants_abc, [
+            {'product_id': self.product.id, 'location_id': self.stock_subloc3.id, 'package_id': package_02.id},
+            {'product_id': product_b.id, 'location_id': self.stock_subloc3.id, 'package_id': False},
+            {'product_id': product_c.id, 'location_id': self.stock_location.id, 'package_id': package_01.id},
+        ])
+
+        ### CURRENT STATE
+            # COMPANY A
+            #     product A (self.product): stock_subloc3, package_02
+            #     product B: stock_subloc3, no package
+            #     product C: stock_location, package_01
+
+        ### testing blocks on relocating quants from different companies
+        package_03 = self.env['stock.quant.package'].create({})
+        package_04 = self.env['stock.quant.package'].create({})
+        company_B = self.env['res.company'].create({
+            'name': 'company B',
+            'currency_id': self.env.ref('base.USD').id
+        })
+        location_company_B = self.env['stock.location'].create({
+            'name': 'stock location company B',
+            'usage': 'internal',
+            'company_id': company_B.id
+        })
+        product_a_company_B = self.env['product.product'].create({
+            'name': 'product A company B',
+            'type': 'product',
+            'company_id': company_B.id
+        })
+        product_b_company_B = self.env['product.product'].create({
+            'name': 'product b company B',
+            'type': 'product',
+            'company_id': company_B.id
+        })
+        self.env['stock.quant']._update_available_quantity(product_a_company_B, location_company_B, 10, package_id=package_03)
+        self.env['stock.quant']._update_available_quantity(product_b_company_B, location_company_B, 10)
+
+        # testing the available packs from company B
+        quant_b_B = self.env['stock.quant'].search([('product_id', '=', product_b_company_B.id), ('quantity', '=', 10)])
+        relocate_wizard = _get_relocate_wizard(quant_b_B)
+        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_03+package_04)
+
+        # testing the available packs from company A with multiple quants
+        quants_ab_A = self.env['stock.quant'].search([('product_id', 'in', (self.product.id, product_b.id)), ('quantity', '=', 10)])
+        relocate_wizard = _get_relocate_wizard(quants_ab_A)
+        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_02+package_04)
+
+        # testing the recomputation of available packages
+        relocate_wizard.dest_location_id = self.stock_location
+        self.assertEqual(relocate_wizard.dest_package_id.search(literal_eval(relocate_wizard.dest_package_id_domain)), package_01+package_04)
+
+        # testing calling the wizard with quants from multiple companies
+        quants_bab_AB = quant_b_B + quants_ab_A
+        with self.assertRaises(UserError):
+            _get_relocate_wizard(quants_bab_AB)
+
+    def test_inventory_adjustment_package(self):
+        """ With the changes implemented in _get_inventory_move_values(), we want to make sure that it correctly
+        writes the package and destination package for inventory adjustments in _apply_inventory(). """
+
+        dummy_product = self.env['product.product'].create({'name': 'dummy product', 'type': 'product'})
+        dummy_package = self.env['stock.quant.package'].create({'name': 'dummy package'})
+        dummy_quant = self.env['stock.quant'].create({
+            'product_id': dummy_product.id,
+            'location_id': self.stock_location.id,
+            'package_id': dummy_package.id,
+            'inventory_quantity': 42
+        })
+        dummy_quant.action_apply_inventory()
+
+        creation_move_line = self.env['stock.move.line'].search([('product_id', '=', dummy_product.id)])
+        self.assertEqual(creation_move_line.package_id.id, False, "There should be no origin package")
+        self.assertEqual(creation_move_line.result_package_id.id, dummy_package.id, "The destination package should be the dummy package")
+        self.assertEqual(creation_move_line.location_dest_id.id, self.stock_location.id, "The destination location should be the stock location")
+
+        dummy_quant.inventory_quantity = 0
+        dummy_quant.action_apply_inventory()
+
+        destruction_move_line = self.env['stock.move.line'].search([('product_id', '=', dummy_product.id), ('id', '!=', creation_move_line.id)])
+        self.assertEqual(destruction_move_line.package_id.id, dummy_package.id, "The origin package should be the dummy package")
+        self.assertEqual(destruction_move_line.result_package_id.id, False, "The destination package should be False")
+        self.assertEqual(destruction_move_line.location_id.id, self.stock_location.id, "The origin location should be the stock location")
+        self.assertEqual(destruction_move_line.location_dest_id.id, creation_move_line.location_id.id)
+        self.assertEqual(dummy_quant.quantity, 0)
 
 class StockQuantRemovalStrategy(TransactionCase):
     def setUp(self):

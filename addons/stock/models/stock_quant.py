@@ -451,6 +451,22 @@ class StockQuant(models.Model):
             "context": context,
         }
 
+    def action_stock_quant_relocate(self):
+        if len(self.company_id) > 1 or any(not q.company_id.id for q in self) or any(q <= 0 for q in self.mapped('quantity')):
+            raise UserError(_('You can only move positive quantities stored in locations used by a single company per relocation.'))
+        context = {
+            'default_quant_ids': self.ids,
+            'default_lot_id': self.env.context.get("default_lot_id", False),
+            'single_product': self.env.context.get("single_product", False)
+        }
+        return {
+            'res_model': 'stock.quant.relocate',
+            'views': [[False, 'form']],
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+            'context': context,
+        }
+
     def action_inventory_history(self):
         self.ensure_one()
         action = {
@@ -514,10 +530,11 @@ class StockQuant(models.Model):
             'context': ctx,
         }
 
-    def action_set_inventory_quantity_to_zero(self):
+    def action_clear_inventory_quantity(self):
         self.inventory_quantity = 0
         self.inventory_diff_quantity = 0
         self.inventory_quantity_set = False
+        self.user_id = False
 
     def action_set_inventory_quantity_zero(self):
         self.filtered(lambda l: not l.inventory_quantity).inventory_quantity = 0
@@ -940,13 +957,13 @@ class StockQuant(models.Model):
                 move_vals.append(
                     quant._get_inventory_move_values(quant.inventory_diff_quantity,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                                                     quant.location_id))
+                                                     quant.location_id, package_dest_id=quant.package_id))
             else:
                 move_vals.append(
                     quant._get_inventory_move_values(-quant.inventory_diff_quantity,
                                                      quant.location_id,
                                                      quant.product_id.with_company(quant.company_id).property_stock_inventory,
-                                                     out=True))
+                                                     package_id=quant.package_id))
         moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
         moves._action_done()
         self.location_id.write({'last_inventory_date': fields.Date.today()})
@@ -1129,23 +1146,25 @@ class StockQuant(models.Model):
     def _get_inventory_fields_create(self):
         """ Returns a list of fields user can edit when he want to create a quant in `inventory_mode`.
         """
-        return ['product_id', 'location_id', 'lot_id', 'package_id', 'owner_id'] + self._get_inventory_fields_write()
+        return ['product_id', 'owner_id'] + self._get_inventory_fields_write()
 
     @api.model
     def _get_inventory_fields_write(self):
         """ Returns a list of fields user can edit when he want to edit a quant in `inventory_mode`.
         """
         fields = ['inventory_quantity', 'inventory_quantity_auto_apply', 'inventory_diff_quantity',
-                  'inventory_date', 'user_id', 'inventory_quantity_set', 'is_outdated', 'lot_id']
+                  'inventory_date', 'user_id', 'inventory_quantity_set', 'is_outdated', 'lot_id',
+                  'location_id', 'package_id']
         return fields
 
-    def _get_inventory_move_values(self, qty, location_id, location_dest_id, out=False):
+    def _get_inventory_move_values(self, qty, location_id, location_dest_id, package_id=False, package_dest_id=False):
         """ Called when user manually set a new quantity (via `inventory_quantity`)
         just before creating the corresponding stock move.
 
         :param location_id: `stock.location`
         :param location_dest_id: `stock.location`
-        :param out: boolean to set on True when the move go to inventory adjustment location.
+        :param package_id: `stock.quant.package`
+        :param package_dest_id: `stock.quant.package`
         :return: dict with all values needed to create a new `stock.move` with its move line.
         """
         self.ensure_one()
@@ -1176,8 +1195,8 @@ class StockQuant(models.Model):
                 'location_dest_id': location_dest_id.id,
                 'company_id': self.company_id.id or self.env.company.id,
                 'lot_id': self.lot_id.id,
-                'package_id': out and self.package_id.id or False,
-                'result_package_id': (not out) and self.package_id.id or False,
+                'package_id': package_id.id if package_id else False,
+                'result_package_id': package_dest_id.id if package_dest_id else False,
                 'owner_id': self.owner_id.id,
             })]
         }
@@ -1314,18 +1333,28 @@ class StockQuant(models.Model):
                                     lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
         return message, recommended_location
 
-    def _move_quants(self, location_dest_id=False, message=False):
-        """ Directly move a stock.quant to another location by creating a stock.move. """
-        if not location_dest_id:
-            return
-        for quant in self:
-            move_vals = quant._get_inventory_move_values(quant.quantity, quant.location_id, location_dest_id)
-            move_vals.update({
-                'name': message or 'Quantity Relocated',
-            })
-            moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
-            moves._action_done()
+    def move_quants(self, location_dest_id=False, package_dest_id=False, message=False, unpack=False):
+        """ Directly move a stock.quant to another location and/or package by creating a stock.move.
 
+        :param location_dest_id: `stock.location` destination location for the quants
+        :param package_dest_id: `stock.quant.package´ destination package for the quants
+        :param message: String to fill the reference field on the generated stock.move
+        :param unpack: set to True when needing to unpack the quant
+        """
+        message = message or _('Quantity Relocated')
+        move_vals = []
+        for quant in self:
+            result_package_id = package_dest_id  # temp variable to keep package_dest_id unchanged
+            if not unpack and not package_dest_id:
+                result_package_id = quant.package_id
+            move_vals.append(quant.with_context(inventory_name=message)._get_inventory_move_values(
+                quant.quantity,
+                quant.location_id,
+                location_dest_id or quant.location_id,
+                quant.package_id,
+                result_package_id))
+        moves = self.env['stock.move'].create(move_vals)
+        moves._action_done()
 
 class QuantPackage(models.Model):
     """ Packages containing quants and/or other packages """
@@ -1395,20 +1424,10 @@ class QuantPackage(models.Model):
             return [('id', '=', False)]
 
     def unpack(self):
-        unpacked_quants = self.env['stock.quant']
-        for package in self:
-            move_line_to_modify = self.env['stock.move.line'].search([
-                ('package_id', '=', package.id),
-                ('state', 'in', ('assigned', 'partially_available')),
-                ('reserved_qty', '!=', 0),
-            ])
-            move_line_to_modify.write({'package_id': False})
-            unpacked_quants |= package.quant_ids
-            package.mapped('quant_ids').sudo().write({'package_id': False})
-
+        self.quant_ids.move_quants(message=_("Quantities unpacked"), unpack=True)
         # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
         # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
-        unpacked_quants._quant_tasks()
+        self.quant_ids._quant_tasks()
 
     def action_view_picking(self):
         action = self.env["ir.actions.actions"]._for_xml_id("stock.action_picking_tree_all")

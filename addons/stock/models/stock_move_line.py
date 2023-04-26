@@ -742,7 +742,7 @@ class StockMoveLine(models.Model):
         ml_ids_to_ignore |= self.ids
 
         # Check the available quantity, with the `strict` kw set to `True`. If the available
-        # quantity is greather than the quantity now unavailable, there is nothing to do.
+        # quantity is greater than the quantity now unavailable, there is nothing to do.
         available_quantity = self.env['stock.quant']._get_available_quantity(
             product_id, location_id, lot_id=lot_id, package_id=package_id, owner_id=owner_id, strict=True
         )
