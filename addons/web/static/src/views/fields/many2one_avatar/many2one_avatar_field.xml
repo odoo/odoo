@@ -16,7 +16,7 @@
             <attribute name="class" separator=" " add="d-flex"/>
         </xpath>
         <xpath expr="//span[hasclass('o_m2o_avatar_empty')]" position="replace">
-            <t t-if="props.record.data[props.name] === false">
+            <t t-if="props.record.data[props.name] === false and props.isEditable">
                 <a t-on-click.stop.prevent="openPopover" tabIndex="-1" href="#" title="Assign"
                    aria-label="Assign" class="fa fa-user-plus o_quick_assign d-flex align-items-center"/>
             </t>

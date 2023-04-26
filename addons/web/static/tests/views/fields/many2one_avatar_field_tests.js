@@ -459,4 +459,44 @@ QUnit.module("Fields", (hooks) => {
             "should not have the quick assign icon"
         );
     });
+
+    QUnit.test(
+        "widget many2one_avatar in kanban view without access rights",
+        async function (assert) {
+            assert.expect(2);
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <kanban edit="0" create="0">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="user_id" widget="many2one_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+            assert.strictEqual(
+                target.querySelector(
+                    ".o_kanban_record:nth-child(1) .o_field_many2one_avatar .o_m2o_avatar > img"
+                ).dataset.src,
+                "/web/image/user/17/avatar_128",
+                "should have correct avatar image"
+            );
+            assert.containsNone(
+                target,
+                ".o_kanban_record:nth-child(4) .o_field_many2one_avatar .o_m2o_avatar > .o_quick_assign",
+                "should not have the quick assign icon"
+            );
+        }
+    );
 });
