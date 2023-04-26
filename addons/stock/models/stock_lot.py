@@ -34,6 +34,7 @@ class StockLot(models.Model):
     delivery_count = fields.Integer('Delivery order count', compute='_compute_delivery_ids')
     last_delivery_partner_id = fields.Many2one('res.partner', compute='_compute_delivery_ids')
     lot_properties = fields.Properties('Properties', definition='product_id.lot_properties_definition', copy=True)
+    location_id = fields.Many2one('stock.location', 'Location', compute='_compute_single_location', store=True, readonly=False, inverse='_set_single_location', domain="[('usage', '!=', 'view')]")
 
     @api.model
     def generate_lot_names(self, first_lot, count):
@@ -125,6 +126,19 @@ class StockLot(models.Model):
             # If lot is serial, keep track of the latest delivery's partner
             if lot.product_id.tracking == 'serial' and lot.delivery_count > 0:
                 lot.last_delivery_partner_id = lot.delivery_ids.sorted(key=attrgetter('date_done'), reverse=True)[0].partner_id
+
+    @api.depends('quant_ids')
+    def _compute_single_location(self):
+        for lot in self:
+            location_id = lot.quant_ids.filtered(lambda q: q.quantity > 0).mapped('location_id')
+            lot.location_id = location_id if len(location_id) == 1 else False
+
+    def _set_single_location(self):
+        quant_to_move = self.quant_ids.filtered(lambda q: q.quantity > 0)
+        if len(quant_to_move) == 1:
+            quant_to_move._move_quants(self.location_id, 'Lot/Serial Number Relocated')
+        elif len(quant_to_move) > 1:
+            raise UserError(_('You can only move a lot/serial to a new location if it exists in a single location.'))
 
     @api.model_create_multi
     def create(self, vals_list):
