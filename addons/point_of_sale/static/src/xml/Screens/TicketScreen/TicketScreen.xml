@@ -35,11 +35,10 @@
                                 </button>
                             </t>
                         </t>
-                        <t t-set="_placeholder">Search Orders...</t>
                         <SearchBar
                             t-if="state.showSearchBar"
                             config="getSearchBarConfig()"
-                            placeholder="_placeholder"
+                            placeholder="constructor.searchPlaceholder"
                             onSearch.bind="onSearch"
                             onFilterSelected.bind="onFilterSelected" />
                         <div t-if="shouldShowPageControls()" class="item">
@@ -131,11 +130,9 @@
                             <ReprintReceiptButton order="_selectedSyncedOrder" />
                         </div>
                         <div class="subpads">
-                            <!-- We set so that the term 'Refund' is translated. -->
-                            <t t-set="_actionName">Refund</t>
                             <ActionpadWidget
                                 partner="getSelectedPartner()"
-                                actionName="_actionName"
+                                actionName="constructor.numpadActionName"
                                 actionToTrigger.bind="onDoRefund"
                                 isActionButtonHighlighted="getHasItemsToRefund()" />
                             <NumpadWidget
