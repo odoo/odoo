@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import { createElement } from "@web/core/utils/xml";
+import { createElement, extractAttributes } from "@web/core/utils/xml";
 import { toStringExpression } from "@web/views/utils";
 import { toInterpolatedStringExpression, ViewCompiler } from "@web/views/view_compiler";
 
@@ -10,14 +10,35 @@ export class ActivityCompiler extends ViewCompiler {
      */
     compileField(el, params) {
         let compiled;
-        if (!el.hasAttribute("widget")) {
-            // fields without a specified widget are rendered as simple spans in activity records
-            compiled = createElement("div", { "class": "d-inline-block", "t-out": `record["${el.getAttribute("name")}"].value` });
-            if (el.getAttribute("muted")) {
-                compiled.classList.add("text-muted");
-            }
-        } else {
+        if (el.hasAttribute("widget")) {
             compiled = super.compileField(el, params);
+        } else {
+            // fields without a specified widget are rendered as simple spans in activity records
+            compiled = createElement("div", {
+                "t-out": `record["${el.getAttribute("name")}"].value`,
+            });
+        }
+        const classNames = [];
+        const { bold, display, muted } = extractAttributes(el, ["bold", "display", "muted"]);
+        if (display === "right") {
+            classNames.push("float-end");
+        }
+        if (display === "full") {
+            classNames.push("d-block", "text-truncate");
+        } else {
+            classNames.push("d-inline-block");
+        }
+        if (bold) {
+            classNames.push("fw-bold");
+        }
+        if (muted) {
+            classNames.push("text-muted");
+        }
+        if (classNames.length > 0) {
+            const clsFormatted = el.hasAttribute("widget")
+                ? toStringExpression(classNames.join(" "))
+                : classNames.join(" ");
+            compiled.setAttribute("class", clsFormatted);
         }
 
         const attrs = {};

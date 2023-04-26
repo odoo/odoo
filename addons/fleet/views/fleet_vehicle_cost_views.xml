@@ -172,7 +172,7 @@
                 <templates>
                     <div t-name="activity-box">
                         <img t-att-src="activity_image('res.partner', 'avatar_128', record.purchaser_id.raw_value)" t-att-title="record.purchaser_id.value" t-att-alt="record.purchaser_id.value"/>
-                        <div>
+                        <div class="ms-2">
                             <field name="vehicle_id" display="full"/>
                         </div>
                     </div>
@@ -349,11 +349,9 @@
                 <templates>
                     <div t-name="activity-box">
                         <img t-att-src="activity_image('fleet.vehicle', 'image_128', record.vehicle_id.raw_value)" role="img" t-att-title="record.vehicle_id.value" t-att-alt="record.vehicle_id.value"/>
-                        <div>
+                        <div class="ms-2">
                             <field name="vehicle_id"/>
-                            <t t-if="record.description.raw_value">
-                                : <field name="description"/>
-                            </t>
+                            <field t-if="record.description.raw_value" name="description" muted="1"/>
                         </div>
                     </div>
                 </templates>
