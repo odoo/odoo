@@ -6,6 +6,7 @@ import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 import { parseFloat } from "@web/views/fields/parsers";
+import { _lt } from "@web/core/l10n/translation";
 
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ConfirmPopup } from "@point_of_sale/js/Popups/ConfirmPopup";
@@ -41,6 +42,8 @@ export class TicketScreen extends IndependentToOrderScreen {
         reuseSavedUIState: false,
         ui: {},
     };
+    static numpadActionName = _lt("Refund");
+    static searchPlaceholder = _lt("Search Orders...");
 
     setup() {
         super.setup();
