@@ -7,6 +7,7 @@ import { useListener } from "@web/core/utils/hooks";
 import Registries from "@point_of_sale/js/Registries";
 import { useBarcodeReader } from "@point_of_sale/js/custom_hooks";
 import { parse } from "web.field_utils";
+import { _lt } from "@web/core/l10n/translation";
 
 const { onMounted, useState } = owl;
 
@@ -398,6 +399,7 @@ class ProductScreen extends ControlButtonsMixin(PosComponent) {
     }
 }
 ProductScreen.template = "ProductScreen";
+ProductScreen.numpadActionName = _lt("Payment");
 
 Registries.Component.add(ProductScreen);
 
