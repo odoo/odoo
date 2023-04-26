@@ -191,7 +191,7 @@
                                 </div>
                             </setting>
                             <setting id="pos-loyalty" title="Boost your sales with multiple kinds of programs: Coupons, Promotions, Gift Card, Loyalty. Specific conditions can be set (products, customers, minimum purchase amount, period). Rewards can be discounts (% or amount) or free products." string="Promotions, Coupons, Gift Card &amp; Loyalty Program" help="Manage promotion that will grant customers discounts or gifts">
-                                <field name="module_loyalty" nolabel="1"/>
+                                <field name="module_loyalty"/>
                             </setting>
                         </block>
 
@@ -230,7 +230,7 @@
 
                         <block title="Payment" id="pos_payment_section">
                             <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available">
-                                <field name="pos_payment_method_ids" colspan="4" nolabel="1" widget="many2many_tags" attrs="{'readonly': [('pos_has_active_session','=', True)], 'required': [('pos_company_has_template', '=', True)]}" options="{'no_create': True}" />
+                                <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" attrs="{'readonly': [('pos_has_active_session','=', True)], 'required': [('pos_company_has_template', '=', True)]}" options="{'no_create': True}" />
                                 <div>
                                     <button name="%(action_payment_methods_tree)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
                                 </div>
