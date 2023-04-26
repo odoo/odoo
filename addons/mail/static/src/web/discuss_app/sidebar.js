@@ -1,9 +1,9 @@
 /* @odoo-module */
 
 import { useMessaging, useStore } from "@mail/core/messaging_hook";
-import { ThreadIcon } from "@mail/discuss/thread_icon";
-import { ChannelSelector } from "@mail/discuss/channel_selector";
-import { ImStatus } from "@mail/discuss/im_status";
+import { ThreadIcon } from "@mail/discuss_app/thread_icon";
+import { ChannelSelector } from "@mail/discuss_app/channel_selector";
+import { ImStatus } from "@mail/discuss_app/im_status";
 import { useService } from "@web/core/utils/hooks";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { onExternalClick } from "@mail/utils/hooks";

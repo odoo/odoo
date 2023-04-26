@@ -1,7 +1,7 @@
 /* @odoo-module */
 
 import { Component, useRef } from "@odoo/owl";
-import { ImStatus } from "@mail/discuss/im_status";
+import { ImStatus } from "@mail/discuss_app/im_status";
 import { RelativeTime } from "@mail/core_ui/relative_time";
 import { ActionSwiper } from "@web/core/action_swiper/action_swiper";
 

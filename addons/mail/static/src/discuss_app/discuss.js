@@ -2,7 +2,7 @@
 
 import { AutoresizeInput } from "./autoresize_input";
 import { Thread } from "../core_ui/thread";
-import { ThreadIcon } from "../discuss/thread_icon";
+import { ThreadIcon } from "./thread_icon";
 import { useMessaging, useStore } from "../core/messaging_hook";
 import { useRtc } from "../rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/utils/hooks";
