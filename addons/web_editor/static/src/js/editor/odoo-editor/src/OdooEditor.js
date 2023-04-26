@@ -78,6 +78,7 @@ import {
     leftPos,
     isNotAllowedContent,
     isEditorTab,
+    EMAIL_REGEX,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -3328,7 +3329,7 @@ export class OdooEditor extends EventTarget {
                     // Remove added space
                     textNodeSplitted.pop();
                     const potentialUrl = textNodeSplitted.pop();
-                    const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS);
+                    const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS) && !potentialUrl.match(EMAIL_REGEX);
 
                     if (lastWordMatch) {
                         const matches = getUrlsInfosInString(textSliced);
