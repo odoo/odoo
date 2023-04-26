@@ -495,6 +495,7 @@ class BaseCase(case.TestCase, metaclass=MetaCase):
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
                     frame, filename, linenum, funcname, lines, index = inspect.stack()[2]
+                    filename = filename.replace('\\', '/')
                     if "/odoo/addons/" in filename:
                         filename = filename.rsplit("/odoo/addons/", 1)[1]
                     if count > expected:
