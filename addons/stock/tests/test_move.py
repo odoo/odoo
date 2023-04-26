@@ -4693,3 +4693,29 @@ class StockMove(SavepointCase):
         self.assertEqual(move.reserved_availability, 2)
         # check forecast_availability expressed in product base uom
         self.assertEqual(move.forecast_availability, 24)
+
+    def test_create_lot_id_from_lot_name(self):
+        """
+        Check that the lot_id is correctly created when the lot_name and the corresponding context key is set.
+        """
+        move = self.env['stock.move'].create({
+            'name': self.product_serial.name,
+            'location_id': self.supplier_location.id,
+            'location_dest_id': self.stock_location.id,
+            'product_id': self.product_serial.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 1.0,
+        })
+        move._action_confirm()
+        ml = self.env['stock.move.line'].create({
+            'lot_name': 'test_SN_001',
+            'tracking': 'serial',
+            'product_id': self.product_serial.id,
+            'product_uom_id': move.product_uom.id,
+            'company_id': self.env.company.id,
+            'location_id': move.location_id.id,
+            'location_dest_id': move.location_dest_id.id,
+            'move_id': move.id,
+        })
+        ml.with_context({'must_create_lot_id': True})._create_lot_id_from_lot_name()
+        self.assertTrue(ml.lot_id)

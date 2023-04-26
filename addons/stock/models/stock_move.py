@@ -652,7 +652,8 @@ class StockMove(models.Model):
                 show_source_location=self.picking_type_id.code != 'incoming',
                 show_destination_location=self.picking_type_id.code != 'outgoing',
                 show_package=not self.location_id.usage == 'supplier',
-                show_reserved_quantity=self.state != 'done' and not self.picking_id.immediate_transfer and self.picking_type_id.code != 'incoming'
+                show_reserved_quantity=self.state != 'done' and not self.picking_id.immediate_transfer and self.picking_type_id.code != 'incoming',
+                must_create_lot_id=True
             ),
         }
 
@@ -958,6 +959,9 @@ class StockMove(models.Model):
                         'warning': {'title': _('Warning'), 'message': _('Existing Serial Numbers (%s). Please correct the serial numbers encoded.') % ','.join(existing_lots.mapped('display_name'))}
                     }
                 break
+        if self.env.context.get('must_create_lot_id'):
+            new_move_lines = self.move_line_ids if self.picking_type_id.show_reserved else self.move_line_nosuggest_ids
+            new_move_lines._create_lot_id_from_lot_name()
 
     @api.onchange('product_uom')
     def onchange_product_uom(self):

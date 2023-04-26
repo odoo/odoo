@@ -704,3 +704,19 @@ class StockMoveLine(models.Model):
             'restrict_partner_id': self.picking_id.owner_id.id,
             'company_id': self.picking_id.company_id.id,
         }
+
+    def _create_lot_id_from_lot_name(self):
+        if self.env.context.get('must_create_lot_id'):
+            ml_ids_to_create_lot = OrderedSet()
+            for ml in self:
+                breaking_char = '\n'
+                if ml.lot_name and not ml.lot_id and breaking_char not in ml.lot_name:
+                    lot = self.env['stock.production.lot'].search([
+                        ('company_id', '=', ml.company_id.id),
+                        ('product_id', '=', ml.product_id.id),
+                        ('name', '=', ml.lot_name),
+                    ], limit=1)
+                    ml_ids_to_create_lot.add(ml.id) if not lot else None
+
+            ml_to_create_lot = self.env['stock.move.line'].browse(ml_ids_to_create_lot)
+            ml_to_create_lot.with_context(bypass_reservation_update=True)._create_and_assign_production_lot()
