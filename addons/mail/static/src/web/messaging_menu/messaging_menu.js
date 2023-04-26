@@ -1,10 +1,10 @@
 /* @odoo-module */
 
-import { ImStatus } from "@mail/discuss/im_status";
+import { ImStatus } from "@mail/discuss_app/im_status";
 
 import { useMessaging, useStore } from "@mail/core/messaging_hook";
 import { NotificationItem } from "@mail/web/messaging_menu/notification_item";
-import { ChannelSelector } from "@mail/discuss/channel_selector";
+import { ChannelSelector } from "@mail/discuss_app/channel_selector";
 import { createLocalId } from "@mail/utils/misc";
 import { onExternalClick } from "@mail/utils/hooks";
 import { Component, useState } from "@odoo/owl";

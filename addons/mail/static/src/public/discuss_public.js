@@ -3,7 +3,7 @@
 import { Component, useEffect, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { WelcomePage } from "./welcome_page";
-import { Discuss } from "./../discuss/discuss";
+import { Discuss } from "./../discuss_app/discuss";
 import { useMessaging, useStore } from "../core/messaging_hook";
 import { useService } from "@web/core/utils/hooks";
 
