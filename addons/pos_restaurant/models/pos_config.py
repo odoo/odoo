@@ -11,7 +11,6 @@ class PosConfig(models.Model):
     iface_printbill = fields.Boolean(string='Bill Printing', help='Allows to print the Bill before payment.')
     iface_orderline_notes = fields.Boolean(string='Internal Notes', help='Allow custom Internal notes on Orderlines.', default=True)
     floor_ids = fields.Many2many('restaurant.floor', string='Restaurant Floors', help='The restaurant floors served by this point of sale.')
-    is_table_management = fields.Boolean('Floors & Tables')
     set_tip_after_payment = fields.Boolean('Set Tip After Payment', help="Adjust the amount authorized by payment terminals to add a tip after the customers left or at the end of the day.")
     module_pos_restaurant = fields.Boolean(default=True)
 
@@ -31,12 +30,11 @@ class PosConfig(models.Model):
 
     def _get_forbidden_change_fields(self):
         forbidden_keys = super(PosConfig, self)._get_forbidden_change_fields()
-        forbidden_keys.append('is_table_management')
         forbidden_keys.append('floor_ids')
         return forbidden_keys
 
     def write(self, vals):
-        if ('is_table_management' in vals and vals['is_table_management'] == False):
+        if ('module_pos_restaurant' in vals and vals['module_pos_restaurant'] is False):
             vals['floor_ids'] = [(5, 0, 0)]
         return super(PosConfig, self).write(vals)
 

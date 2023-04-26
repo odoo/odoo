@@ -8,9 +8,8 @@
             <div id="warning_text_pos_restaurant" position="replace"/>
             <block id="pos_interface_section" position="after">
                 <block title="Restaurant &amp; Bar" id="restaurant_section" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
-                    <setting string="Floors &amp; Tables Map" help="Design floors and assign orders to tables" id="is_table_management" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
-                        <field name="pos_is_table_management" attrs="{'readonly': [('pos_has_active_session','=', True)]}"/>
-                        <div class="content-group" attrs="{'invisible': [('pos_is_table_management','=',False)]}">
+                    <setting string="Floors &amp; Tables Map" help="Design floors and assign orders to tables" attrs="{'invisible': [('pos_module_pos_restaurant', '=', False)]}">
+                        <div class="content-group">
                             <div class="mt16">
                                 <label string="Floors" for="pos_floor_ids" class="o_light_label me-2"/>
                                 <field name="pos_floor_ids" widget="many2many_tags" attrs="{'readonly': [('pos_has_active_session','=', True)]}" />

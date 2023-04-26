@@ -97,14 +97,14 @@ export class TipScreen extends Component {
     }
     goNextScreen() {
         this.env.pos.removeOrder(this.currentOrder);
-        if (!this.env.pos.config.is_table_management) {
+        if (!this.env.pos.config.module_pos_restaurant) {
             this.env.pos.add_new_order();
         }
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
     get nextScreen() {
-        if (this.env.pos.config.module_pos_restaurant && this.env.pos.config.is_table_management) {
+        if (this.env.pos.config.module_pos_restaurant) {
             const table = this.env.pos.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {

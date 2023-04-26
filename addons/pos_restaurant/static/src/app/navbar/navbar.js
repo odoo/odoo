@@ -14,21 +14,19 @@ patch(Navbar.prototype, "pos_restaurant.Navbar", {
         if (!this.env.pos || !this.env.pos.config) {
             return 0;
         }
-        if (this.env.pos.config.is_table_management && this.env.pos.table) {
+        if (this.env.pos.config.module_pos_restaurant && this.env.pos.table) {
             return this.env.pos.getTableOrders(this.env.pos.table.id).length;
         }
         return this._super(...arguments);
     },
     _shouldLoadOrders() {
-        return (this._super() || (
-            this.env.pos.config.is_table_management &&
-            !this.env.pos.table
-        ));
+        return this._super() || (this.env.pos.config.module_pos_restaurant && !this.env.pos.table);
     },
     onSwitchButtonClick() {
-        this.env.pos.floorPlanStyle = this.env.pos.floorPlanStyle == "kanban" ? "default" : "kanban";
+        this.env.pos.floorPlanStyle =
+            this.env.pos.floorPlanStyle == "kanban" ? "default" : "kanban";
     },
     toggleEditMode() {
         this.env.pos.toggleEditMode();
-    }
+    },
 });

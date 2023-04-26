@@ -45,6 +45,7 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         })
         cls.main_pos_config = env['pos.config'].create({
             'name': 'Shop',
+            'module_pos_restaurant': False,
         })
 
         env['res.partner'].create({

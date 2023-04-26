@@ -10,7 +10,7 @@ class PosSession(models.Model):
 
     def _pos_ui_models_to_load(self):
         result = super()._pos_ui_models_to_load()
-        if self.config_id.module_pos_restaurant and self.config_id.is_table_management:
+        if self.config_id.module_pos_restaurant:
             result.append('restaurant.floor')
         return result
 

@@ -5,7 +5,7 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="pos_restaurant.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <setting id="is_table_management" position="after">
+            <setting id="iface_orderline_notes" position="before">
                 <setting string="QR Code Menu" help="Allow customers to see the menu from their phone" id="pos_self_order_view_mode">
                     <field name="pos_self_order_view_mode"/>
                     <div class="content-group d-flex gap-5" attrs="{'invisible': [('pos_self_order_view_mode','=',False)]}">

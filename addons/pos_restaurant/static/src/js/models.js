@@ -14,7 +14,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     //@override
     async _processData(loadedData) {
         await this._super(...arguments);
-        if (this.config.is_table_management) {
+        if (this.config.module_pos_restaurant) {
             this.floors = loadedData["restaurant.floor"];
             this.loadRestaurantFloor();
         }
@@ -22,7 +22,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     //@override
     async after_load_server_data() {
         var res = await this._super(...arguments);
-        if (this.config.is_table_management) {
+        if (this.config.module_pos_restaurant) {
             this.table = null;
         }
         return res;
@@ -31,7 +31,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
     // if we have tables, we do not load a default order, as the default order will be
     // set when the user selects a table.
     set_start_order() {
-        if (!this.config.is_table_management) {
+        if (!this.config.module_pos_restaurant) {
             this._super(...arguments);
         }
     },
@@ -82,7 +82,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         this._replaceOrders(tableOrders, ordersJsons);
     },
     async _getOrdersJson() {
-        if (this.config.is_table_management) {
+        if (this.config.module_pos_restaurant) {
             const tableIds = [].concat(
                 ...this.floors.map((floor) => floor.tables.map((table) => table.id))
             );
@@ -182,7 +182,7 @@ patch(PosGlobalState.prototype, "pos_restaurant.PosGlobalState", {
         return tableOrders.reduce((count, order) => count + order.getCustomerCount(), 0);
     },
     isOpenOrderShareable() {
-        return this._super(...arguments) || this.config.is_table_management;
+        return this._super(...arguments) || this.config.module_pos_restaurant;
     },
     toggleEditMode() {
         this.isEditMode = !this.isEditMode;
@@ -194,12 +194,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     setup(options) {
         this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (
-                this.pos.config.is_table_management &&
-                !this.tableId &&
-                !options.json &&
-                this.pos.table
-            ) {
+            if (!this.tableId && !options.json && this.pos.table) {
                 this.tableId = this.pos.table.id;
             }
             this.customerCount = this.customerCount || 1;
@@ -209,9 +204,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     export_as_JSON() {
         const json = this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (this.pos.config.is_table_management) {
-                json.table_id = this.tableId;
-            }
+            json.table_id = this.tableId;
             json.customer_count = this.customerCount;
         }
 
@@ -221,10 +214,8 @@ patch(Order.prototype, "pos_restaurant.Order", {
     init_from_JSON(json) {
         this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (this.pos.config.is_table_management) {
-                this.tableId = json.table_id;
-                this.validation_date = moment.utc(json.creation_date).local().toDate();
-            }
+            this.tableId = json.table_id;
+            this.validation_date = moment.utc(json.creation_date).local().toDate();
             this.customerCount = json.customer_count;
         }
     },
@@ -232,7 +223,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
     export_for_printing() {
         const json = this._super(...arguments);
         if (this.pos.config.module_pos_restaurant) {
-            if (this.pos.config.is_table_management && this.getTable()) {
+            if (this.getTable()) {
                 json.table = this.getTable().name;
             }
             json.customer_count = this.getCustomerCount();
@@ -246,7 +237,7 @@ patch(Order.prototype, "pos_restaurant.Order", {
         this.customerCount = Math.max(count, 0);
     },
     getTable() {
-        if (this.pos.config.is_table_management) {
+        if (this.pos.config.module_pos_restaurant) {
             return this.pos.tables_by_id[this.tableId];
         }
         return null;
