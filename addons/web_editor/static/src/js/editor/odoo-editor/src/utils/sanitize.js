@@ -16,9 +16,10 @@ import {
     isEditorTab,
     isProtected,
     isZWS,
-    getUrlsInfosInString,
     isArtificialVoidElement,
     ancestors,
+    EMAIL_REGEX,
+    URL_REGEX_WITH_INFOS,
 } from './utils.js';
 
 const NOT_A_NUMBER = /[^\d]/g;
@@ -72,6 +73,39 @@ export function areSimilarElements(node, node2) {
         !+nodeStyle.margin.replace(NOT_A_NUMBER, '') &&
         !+node2Style.margin.replace(NOT_A_NUMBER, '')
     );
+}
+
+/**
+* Returns a URL if link's label is a valid email of http URL, null otherwise.
+*
+* @param {HTMLAnchorElement} link
+* @returns {String|null}
+*/
+function deduceURLfromLabel(link) {
+   const label = link.innerText.trim();
+   // Check first for e-mail.
+   let match = label.match(EMAIL_REGEX);
+   if (match) {
+       return match[1] ? match[0] : 'mailto:' + match[0];
+   }
+   // Check for http link.
+   // Regex with 'g' flag is stateful, reset lastIndex before and after using
+   // exec.
+   URL_REGEX_WITH_INFOS.lastIndex = 0;
+   match = URL_REGEX_WITH_INFOS.exec(label);
+   URL_REGEX_WITH_INFOS.lastIndex = 0;
+   if (match && match[0] === label) {
+       const currentHttpProtocol = (link.href.match(/^http(s)?:\/\//gi) || [])[0];
+       if (match[2]) {
+           return match[0];
+       } else if (currentHttpProtocol) {
+           // Avoid converting a http link to https.
+           return currentHttpProtocol + match[0];
+       } else {
+           return 'https://' + match[0];
+       }
+   }
+   return null;
 }
 
 /**
@@ -208,10 +242,9 @@ export function sanitize(nodeToSanitize, root = nodeToSanitize) {
         // Update link URL if label is a new valid link.
         const startEl = start && closestElement(start, 'a');
         if (startEl && root.contains(startEl)) {
-            const linkLabel = startEl.innerText;
-            const urlInfo = getUrlsInfosInString(linkLabel);
-            if (urlInfo.length && urlInfo[0].label === linkLabel && !startEl.href.startsWith('mailto:')) {
-                startEl.setAttribute('href', urlInfo[0].url);
+            const url = deduceURLfromLabel(startEl);
+            if (url) {
+                startEl.setAttribute('href', url);
             }
         }
     }
