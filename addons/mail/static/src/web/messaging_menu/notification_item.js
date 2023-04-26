@@ -13,7 +13,7 @@ export class NotificationItem extends Component {
         "datetime?",
         "displayName",
         "hasMarkAsReadButton?",
-        "iconSrc",
+        "iconSrc?",
         "isLast",
         "onClick",
         "onSwipeLeft?",

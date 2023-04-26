@@ -276,6 +276,11 @@ export class Messaging {
                         inbox.messages.push(message);
                         inbox.counter++;
                     }
+                    const thread = message.originThread;
+                    if (!thread.needactionMessages.includes(message)) {
+                        thread.needactionMessages.push(message);
+                        thread.message_needaction_counter++;
+                    }
                     break;
                 }
                 case "mail.message/delete": {
