@@ -160,10 +160,7 @@ const Link = Widget.extend({
         this._updateOptionsUI();
 
         if (this.data.url) {
-            var match = /mailto:(.+)/.exec(this.data.url);
-            this.$('input[name="url"]').val(match ? match[1] : this.data.url);
-            this._onURLInput();
-            this._savedURLInputOnDestroy = false;
+            this._updateUrlInput(this.data.url);
         }
 
         if (!this.noFocusUrl) {
@@ -508,6 +505,19 @@ const Link = Widget.extend({
      * @private
      */
     _updateOptionsUI: function () {},
+    /**
+     * @private
+     * @param {String} url
+     */
+    _updateUrlInput: function (url) {
+        if (!this.el) {
+            return;
+        }
+        const match = /mailto:(.+)/.exec(url);
+        this.el.querySelector('input[name="url"]').value = match ? match[1] : url;
+        this._onURLInput();
+        this._savedURLInputOnDestroy = false;
+    },
 
     //--------------------------------------------------------------------------
     // Handlers

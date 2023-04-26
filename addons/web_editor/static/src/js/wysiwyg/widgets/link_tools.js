@@ -30,11 +30,27 @@ const LinkTools = Link.extend({
      */
     init: function (parent, options, editable, data, $button, link) {
         this._link = link;
-        this._observer = new MutationObserver(() =>{
-            this._setLinkContent = false;
-            this._observer.disconnect();
+        this._observer = new MutationObserver(records => {
+            let hrefChanged = false;
+            for (const record of records) {
+                if (record.type === 'attributes') {
+                    hrefChanged = true;
+                } else {
+                    this._setLinkContent = false;
+                }
+            }
+            if (hrefChanged) {
+                this._updateUrlInput(this._link.getAttribute('href') || '');
+            }
         });
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._observerOptions = {
+            subtree: true,
+            childList: true,
+            characterData: true,
+            attributes: true,
+            attributeFilter: ['href'],
+        };
+        this._observer.observe(this._link, this._observerOptions);
         this._super(parent, options, editable, data, $button, this._link);
         // Keep track of each selected custom color and colorpicker.
         this.customColors = {};
@@ -110,7 +126,7 @@ const LinkTools = Link.extend({
         this._super(...arguments);
         this.options.wysiwyg.odooEditor.historyStep();
         this._addHintClasses();
-        this._observer.observe(this._link, {subtree: true, childList: true, characterData: true});
+        this._observer.observe(this._link, this._observerOptions);
     },
 
     //--------------------------------------------------------------------------
@@ -497,6 +513,7 @@ const LinkTools = Link.extend({
             // string if `newContent` has no length.
             this._updateLinkContent(this.$link, { content: newContent, url: '' }, { force: true });
             this._setLinkContent = false;
+            this._observer.observe(this._link, this._observerOptions);
         }
     },
 });
