@@ -19,6 +19,7 @@ Allow users to sign up and reset their password
         'data/ir_config_parameter_data.xml',
         'data/ir_cron_data.xml',
         'data/mail_template_data.xml',
+        'security/ir.model.access.csv',
         'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
         'views/auth_signup_login_templates.xml',

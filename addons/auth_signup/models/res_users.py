@@ -10,7 +10,6 @@ from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-from odoo.http import request
 from odoo.osv import expression
 from odoo.tools.misc import ustr
 
@@ -19,7 +18,7 @@ from odoo.addons.auth_signup.models.res_partner import SignupError, now
 
 _logger = logging.getLogger(__name__)
 
-HOURS_THRESHOLD = 2 # Modify this to change the duration of the password reset request spam limitation (value is in hours, can be float)
+HOURS_THRESHOLD = 1 # Modify this to change the duration of the password reset request spam limitation (value is in hours, can be float)
 
 class ResUsers(models.Model):
     _inherit = 'res.users'
@@ -200,7 +199,7 @@ class ResUsers(models.Model):
         for user in self:
             if not user.email:
                 raise UserError(_("Cannot send email: user %s has no email address.", user.name))
-            if not user.check_password_reset_availability():
+            if not user._check_password_reset_availability():
                 raise UserError(_("You have asked for too many password resets, please wait a bit."))
             email_values['email_to'] = user.email
             # TDE FIXME: make this template technical (qweb)
@@ -209,21 +208,15 @@ class ResUsers(models.Model):
                 template.send_mail(user.id, force_send=force_send, raise_exception=True, email_values=email_values)
             _logger.info("Password reset email sent for user <%s> to <%s>", user.login, user.email)
             message = _("Password Reset Request for user %s", user.name)
-            path = f"user:{user.id}"
-            self.env['ir.logging'].create({
-                        'name': 'Password Reset',
-                        'type': 'client',
-                        'level': 'INFO',
-                        'dbname': self._cr.dbname,
+            userid = f"user:{user.id}"
+            self.env['res.users.password.reset.log'].sudo().create({
                         'message': message,
-                        'func': 'action_reset_password',
-                        'path': path,
-                        'line': request.httprequest.remote_addr if request else 'None',
+                        'userid': userid,
                     })
 
-    def check_password_reset_availability(self):
+    def _check_password_reset_availability(self):
         threshold_date = datetime.now() - timedelta(hours=HOURS_THRESHOLD)
-        mails = self.env['ir.logging'].search_count(['&', '&', ('name', '=', 'Password Reset'), ('path', '=', f"user:{self.id}"), ('create_date', '>', threshold_date)], limit=3)
+        mails = self.env['res.users.password.reset.log'].sudo().search_count(['&', ('userid', '=', f"user:{self.id}"), ('create_date', '>', threshold_date)], limit=3)
         if mails < 3:
             return True
         return False
@@ -279,3 +272,12 @@ class ResUsers(models.Model):
             # avoid sending email to the user we are duplicating
             sup = super(ResUsers, self.with_context(no_reset_password=True))
         return sup.copy(default=default)
+
+class ResUsersPasswordResetLog(models.TransientModel):
+    _name = 'res.users.password.reset.log'
+    _order = 'id desc'
+    _description = "User's password reset requests logs"
+    _transient_max_hours = HOURS_THRESHOLD
+
+    message = fields.Text(required=True)
+    userid = fields.Char(required=True)
