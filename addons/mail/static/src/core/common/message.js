@@ -92,6 +92,7 @@ export class Message extends Component {
         this.root = useRef("root");
         this.hasTouch = hasTouch;
         this.messageBody = useRef("body");
+        this.bodyShadow = useRef("body-shadow");
         this.messaging = useMessaging();
         this.store = useStore();
         this.rpc = useService("rpc");
@@ -138,6 +139,10 @@ export class Message extends Component {
             if (this.messageBody.el) {
                 $(this.messageBody.el).find(".o-mail-read-more-less").remove();
                 this.insertReadMoreLess($(this.messageBody.el));
+            }
+            if (this.message.type === "email") {
+                const shadow = this.bodyShadow.el.attachShadow({ mode: "open" });
+                shadow.innerHTML = this.message.body;
             }
         });
         onWillUnmount(() => {
