@@ -120,14 +120,15 @@ class StockLot(models.Model):
     @api.depends('quant_ids')
     def _compute_single_location(self):
         for lot in self:
-            location_id = lot.quant_ids.filtered(lambda q: q.quantity > 0).mapped('location_id')
-            lot.location_id = location_id if len(location_id) == 1 else False
+            quants = lot.quant_ids.filtered(lambda q: q.quantity > 0)
+            lot.location_id = quants.location_id if len(quants.location_id) == 1 else False
 
     def _set_single_location(self):
-        quant_to_move = self.quant_ids.filtered(lambda q: q.quantity > 0)
-        if len(quant_to_move) == 1:
-            quant_to_move._move_quants(self.location_id, 'Lot/Serial Number Relocated')
-        elif len(quant_to_move) > 1:
+        quants = self.quant_ids.filtered(lambda q: q.quantity > 0)
+        if len(quants.location_id) == 1:
+            unpack = len(quants.package_id.quant_ids) > 1
+            quants.move_quants(location_dest_id=self.location_id, message=_("Lot/Serial Number Relocated"), unpack=unpack)
+        elif len(quants.location_id) > 1:
             raise UserError(_('You can only move a lot/serial to a new location if it exists in a single location.'))
 
     @api.model_create_multi
@@ -168,7 +169,7 @@ class StockLot(models.Model):
         self = self.with_context(search_default_lot_id=self.id, create=False)
         if self.user_has_groups('stock.group_stock_manager'):
             self = self.with_context(inventory_mode=True)
-        return self.env['stock.quant']._get_quants_action()
+        return self.env['stock.quant'].action_view_quants()
 
     def action_lot_open_transfers(self):
         self.ensure_one()

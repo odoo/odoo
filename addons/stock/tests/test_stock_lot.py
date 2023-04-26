@@ -57,7 +57,7 @@ class TestLotSerial(TestStockCommon):
         self.assertEqual(self.lot_p_b.quant_ids.filtered(lambda q: q.quantity > 0).location_id, self.locationB)
 
         # testing changing the location from the quant
-        self.lot_p_b.quant_ids._move_quants(self.locationC, 'test_quant_move')
+        self.lot_p_b.quant_ids.move_quants(location_dest_id=self.locationC, message='test_quant_move')
         self.assertEqual(self.lot_p_b.location_id, self.locationC)
 
         # testing having the lot in multiple locations
@@ -70,7 +70,7 @@ class TestLotSerial(TestStockCommon):
         self.assertEqual(self.lot_p_a.location_id.id, False)
 
         # testing having the lot back in a single location
-        self.lot_p_a.quant_ids.filtered(lambda q: q.location_id == self.locationA)._move_quants(self.locationC)
+        self.lot_p_a.quant_ids.filtered(lambda q: q.location_id == self.locationA).move_quants(location_dest_id=self.locationC)
         self.StockQuantObj.invalidate_model()
         self.StockQuantObj._unlink_zero_quants()
         self.assertEqual(self.lot_p_a.location_id, self.locationC)

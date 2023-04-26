@@ -117,6 +117,7 @@
                             invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"
                             class="btn-primary ms-1"
                             display="always"/>
+                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_quants'}"/>
                 </header>
                 <field name="create_date" column_invisible="True"/>
                 <field name="write_date" column_invisible="True"/>
@@ -418,6 +419,7 @@ in this location. That leads to a negative stock.
                     <button name="stock.action_stock_inventory_adjustement_name" groups="stock.group_stock_manager" type="action" string="Apply"/>
                     <button name="action_reset" type="object" string="Clear"/>
                     <button name="stock.action_stock_request_count" groups="stock.group_stock_manager" type="action" string="Request a Count"/>
+                    <button name="action_stock_quant_relocate" string="Relocate" type="object" groups="stock.group_stock_manager" invisible="context.get('hide_location', False)" context="{'action_ref': 'stock.action_view_inventory_tree'}"/>
                 </header>
                 <field name="create_date" column_invisible="True"/>
                 <field name="write_date" column_invisible="True"/>
@@ -455,7 +457,7 @@ in this location. That leads to a negative stock.
                 <button name="action_inventory_history" type="object" class="btn btn-link text-info" icon="fa-history" string="History"/>
                 <button name="action_apply_inventory" groups="stock.group_stock_manager" type="object" string="Apply" class="btn btn-link" icon="fa-save" invisible="not inventory_quantity_set"/>
                 <button name="action_set_inventory_quantity" type="object" string="Set" class="btn btn-link" icon="fa-bullseye" invisible="inventory_quantity_set"/>
-                <button name="action_set_inventory_quantity_to_zero" type="object" string="Clear" class="btn text-warning" icon="fa-times" invisible="not inventory_quantity_set"/>
+                <button name="action_clear_inventory_quantity" type="object" string="Clear" class="btn text-warning" icon="fa-times" invisible="not inventory_quantity_set"/>
             </tree>
         </field>
     </record>
