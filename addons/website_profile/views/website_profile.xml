@@ -329,7 +329,7 @@
                     <stop offset="100%" stop-color="var(--o-pc-color-stop-2)"/>
                 </linearGradient>
             </svg>
-            <div class="o_pc_overlay d-flex flex-column align-items-center justify-content-center">
+            <div class="o_pc_overlay d-flex flex-column align-items-center justify-content-center p-4">
                 <t t-set="rank_id" t-value="next_rank_id if next_rank_id else user.rank_id"/>
                 <div t-field="rank_id.image_1920"
                     t-attf-style="max-width: {{img_max_width or '50%'}};"

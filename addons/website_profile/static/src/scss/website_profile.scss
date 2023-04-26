@@ -100,6 +100,10 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
     position: relative;
 
     svg.o_pc_circular_chart {
+        // Allow hover effect on svg paths in order to display bootstrap tooltip,
+        // by pushing the circular chart above the next rank info.
+        z-index: 1;
+        position: relative;
         display: block;
         max-width: 100%;
 
@@ -125,10 +129,6 @@ $owprofile-color-bg: mix($body-bg, #efeff4);
 
     .o_pc_overlay {
         @include o-position-absolute(0,0,0,0);
-        // Allow hover effect on svg paths in order to display bootstrap tooltip,
-        // by pushing the absolute div behind it
-        z-index: -1;
-
         h4 {
             width: 60%;
             // only apply ellipsis when in non-edit mode, that way the editor can see the full value
