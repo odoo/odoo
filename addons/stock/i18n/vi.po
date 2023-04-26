@@ -469,7 +469,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
 #: model_terms:ir.ui.view,arch_db:stock.product_template_form_view_procurement_button
 msgid "<span class=\"o_stat_text\">Forecasted</span>"
-msgstr "<span class=\"o_stat_text\">Đã dự báo</span>"
+msgstr "<span class=\"o_stat_text\">Được dự báo</span>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -862,7 +862,7 @@ msgid ""
 " You can also set putaway strategies on warehouse locations in order to send incoming products into specific child locations straight away (e.g. specific bins, racks)."
 msgstr ""
 "Thêm và tùy chỉnh hoạt động theo tuyến để xử lý các dịch chuyển sản phẩm trong (các) kho hàng của bạn: ví dụ: dỡ hàng> kiểm soát chất lượng> tồn kho cho các sản phẩm đang về hàng, lấy hàng > đóng gói > giao hàng.\n"
-"Bạn cũng có thể thiết lập chiến lược putaway trong các vị trí của kho hàng để chuyển sản phẩm đang về hàng đến các vị trí con cụ thể ngay lập tức (ví dụ: thùng, giá đỡ cụ thể)."
+"Bạn cũng có thể thiết lập chiến lược lưu kho trong các vị trí của kho hàng để chuyển sản phẩm đang về hàng đến các vị trí con cụ thể ngay lập tức (ví dụ: thùng, giá đỡ cụ thể)."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -876,7 +876,7 @@ msgstr ""
 "Thêm và tùy chỉnh hoạt động theo tuyến để xử lý các dịch chuyển sản phẩm "
 "trong (các) kho hàng của bạn: ví dụ: dỡ hàng> kiểm soát chất lượng> tồn kho "
 "cho các sản phẩm đang về hàng, lấy hàng > đóng gói > giao hàng. Bạn cũng có "
-"thể thiết lập chiến lược putaway trong các vị trí của kho hàng để chuyển sản"
+"thể thiết lập chiến lược lưu kho trong các vị trí của kho hàng để chuyển sản"
 " phẩm đang về hàng đến các vị trí con cụ thể ngay lập tức (ví dụ: thùng, giá"
 " đỡ cụ thể)."
 
@@ -1430,7 +1430,7 @@ msgstr "Sức chứa theo Sản phẩm"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Categorize your locations for smarter putaway rules"
-msgstr "Phân loại vị trí của bạn để có các quy tắc putaway hiệu quả hơn"
+msgstr "Phân loại vị trí của bạn để có các quy tắc lưu kho hiệu quả hơn"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_category_id
@@ -1928,7 +1928,7 @@ msgid ""
 "Create new putaway rules to dispatch automatically specific products to "
 "their appropriate destination location upon receptions."
 msgstr ""
-"Tạo các quy tắc putaway mới để tự động gửi các sản phẩm cụ thể đến vị trí "
+"Tạo các quy tắc lưu kho mới để tự động đưa các sản phẩm cụ thể đến vị trí "
 "thích hợp của chúng khi nhập kho."
 
 #. module: stock
@@ -2804,7 +2804,7 @@ msgstr "Ngày hiệu lực"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Email Confirmation"
-msgstr "Email xác nhận"
+msgstr "Xác nhận qua email"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__stock_move_email_validation
@@ -3840,7 +3840,7 @@ msgstr "Số lượng được kiểm kho"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Tồn kho"
+msgstr "Kho"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_product_stock_tree
@@ -3892,7 +3892,7 @@ msgstr "Tần suất kiểm kho (ngày)"
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "Vị trí hàng tồn kho"
+msgstr "Vị trí kiểm kho"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
@@ -5055,12 +5055,12 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_putaway_tree
 msgid "No putaway rule found. Let's create one!"
-msgstr "Không tìm thấy quy tắc putaway. Hãy tạo một quy tắc mới!"
+msgstr "Không tìm thấy quy tắc lưu kho. Hãy tạo một quy tắc mới!"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_orderpoint
 msgid "No reordering rule found"
-msgstr "Không tìm thấy quy tắc tái cung ứng"
+msgstr "Không tìm thấy quy tắc tái đặt hàng"
 
 #. module: stock
 #. odoo-python
@@ -5169,7 +5169,7 @@ msgstr "Số lỗi"
 #: model:ir.model.fields,help:stock.field_product_product__nbr_moves_in
 #: model:ir.model.fields,help:stock.field_product_template__nbr_moves_in
 msgid "Number of incoming stock moves in the past 12 months"
-msgstr "Số lần dịch chuyển nhập hàng trong 12 tháng qua"
+msgstr "Số dịch chuyển nhập hàng trong 12 tháng qua"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_lot__message_needaction_counter
@@ -6319,7 +6319,7 @@ msgstr "Đặt sản phẩm trong kiện hàng (vd: gói, hộp) và theo dõi c
 #. module: stock
 #: model:ir.model,name:stock.model_stock_putaway_rule
 msgid "Putaway Rule"
-msgstr "Quy tắc putaway"
+msgstr "Quy tắc lưu kho"
 
 #. module: stock
 #. odoo-python
@@ -6340,17 +6340,17 @@ msgstr "Quy tắc putaway"
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 #, python-format
 msgid "Putaway Rules"
-msgstr "Quy tắc putaway"
+msgstr "Quy tắc lưu kho"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
 msgid "Putaway:"
-msgstr "Putaway:"
+msgstr "Lưu kho:"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_putaway_tree
 msgid "Putaways Rules"
-msgstr "Quy tắc putaway"
+msgstr "Quy tắc lưu kho"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_orderpoint_qty_multiple_check
@@ -7162,7 +7162,7 @@ msgstr "Chạy trình kế hoạch"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_stock_sms
 msgid "SMS Confirmation"
-msgstr "SMS xác nhận"
+msgstr "Xác nhận qua SMS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__message_has_sms_error
@@ -7587,7 +7587,7 @@ msgstr "Hiển thị phân bổ"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_check_availability
 msgid "Show Check Availability"
-msgstr "Hiển thị tình trạng còn hàng"
+msgstr "Hiển thị kiểm tra tình trạng còn hàng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__show_clear_qty_button
@@ -8051,7 +8051,7 @@ msgstr "Sức chứa danh mục lưu kho"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__group_stock_multi_locations
 msgid "Storage Locations"
-msgstr "Vị trí tồn kho"
+msgstr "Vị trí lưu kho"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_config_settings__group_stock_multi_locations
@@ -8174,7 +8174,7 @@ msgid ""
 msgstr ""
 "Số sê-ri (%s) đã được sử dụng ở (các) vị trí này: %s.\n"
 "\n"
-"Đây có phải điều bạn muốn thực hiện không? Ví dụ, điều này có thể xảy ra nếu xác nhận một hành động xuất kho trước khi hành động nhập kho tương ứng của nó được xác nhận. Trong trường hợp này, vấn đề sẽ tự động được giải quyết sau khi hoàn thành tất cả các bước. Nếu không, bạn cần sửa số sê-ri để tránh dữ liệu không nhất quán."
+"Đây có phải điều bạn muốn thực hiện không? Ví dụ, điều này có thể xảy ra nếu xác nhận một hoạt động xuất kho trước khi hoạt động nhập kho tương ứng của nó được xác nhận. Trong trường hợp này, vấn đề sẽ tự động được giải quyết sau khi hoàn thành tất cả các bước. Nếu không, bạn cần sửa số sê-ri để tránh dữ liệu không nhất quán."
 
 #. module: stock
 #. odoo-python
@@ -8425,7 +8425,7 @@ msgid ""
 msgstr ""
 "Kho hàng để thông báo khi dịch chuyển/cung ứng được tạo, kho hàng này có thể"
 " khác với kho hàng mà quy tắc cung ứng này thuộc về (VD: đối với quy tắc tái"
-" cung ứng từ một kho hàng khác)."
+" đặt hàng từ một kho hàng khác)."
 
 #. module: stock
 #. odoo-python
@@ -9509,7 +9509,7 @@ msgstr "Khối lượng của loại bao bì"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_storage_category__weight_uom_name
 msgid "Weight unit"
-msgstr ""
+msgstr "Đơn vị khối lượng"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_type__weight_uom_name
@@ -10067,8 +10067,8 @@ msgid ""
 "You have product(s) in stock that have no lot/serial number. You can assign "
 "lot/serial numbers by doing an inventory adjustment."
 msgstr ""
-"Bạn có (các) sản phẩm trong tồn kho không có số lô/số sê-ri. Bạn có thể gắn "
-"số lô/số sê-ri bằng cách lập một điều chỉnh hàng tồn kho."
+"Tồn kho của bạn có (các) sản phẩm không có số lô/số sê-ri. Bạn có thể gắn số"
+" lô/số sê-ri bằng cách lập một điều chỉnh hàng tồn kho."
 
 #. module: stock
 #. odoo-python
@@ -10100,7 +10100,7 @@ msgstr "Bạn chỉ có thể trả lại một phiếu kho mỗi lần."
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "You might want to update the locations of this transfer's operations"
-msgstr ""
+msgstr "Có thể bạn cần cập nhật vị trí của các hoạt động điều chuyển này"
 
 #. module: stock
 #. odoo-python
@@ -10110,7 +10110,7 @@ msgid ""
 "You need to activate storage locations to be able to do internal operation "
 "types."
 msgstr ""
-"Bạn cần kích hoạt các vị trí lưu trữ để có thể thực hiện các loại hoạt động "
+"Bạn cần kích hoạt các vị trí lưu kho để có thể thực hiện các loại hoạt động "
 "nội bộ."
 
 #. module: stock
