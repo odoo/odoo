@@ -8,6 +8,7 @@ class StockLot(models.Model):
 
     repair_order_ids = fields.Many2many('repair.order', string="Repair Orders", compute="_compute_repair_order_ids")
     repair_order_count = fields.Integer('Repair order count', compute="_compute_repair_order_ids")
+    repaired_count = fields.Integer('Repaired count', compute='_compute_repaired_count')
 
     @api.depends('name')
     def _compute_repair_order_ids(self):
@@ -17,6 +18,22 @@ class StockLot(models.Model):
         for lot in self:
             lot.repair_order_ids = repair_orders[lot.id]
             lot.repair_order_count = len(lot.repair_order_ids)
+
+    def _compute_repaired_count(self):
+        for lot in self:
+            lot.repaired_count = len(self.env['repair.order'].search([('lot_id', '=', self.id), ('state', '=', 'done')]))
+
+    def action_lot_open_repairs(self):
+        action = self.env["ir.actions.actions"]._for_xml_id("repair.action_repair_order_tree")
+        action.update({
+            'domain': [('lot_id', '=', self.id)],
+            'context': {
+                'default_product_id': self.product_id.id,
+                'default_lot_id': self.id,
+                'default_company_id': self.company_id.id,
+            },
+        })
+        return action
 
     def action_view_ro(self):
         self.ensure_one()

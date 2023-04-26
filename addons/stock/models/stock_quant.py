@@ -77,7 +77,6 @@ class StockQuant(models.Model):
         'stock.lot', 'Lot/Serial Number', index=True,
         ondelete='restrict', check_company=True,
         domain=lambda self: self._domain_lot_id())
-    lot_properties = fields.Properties(related='lot_id.lot_properties', definition='product_id.lot_properties_definition', readonly=True)
     sn_duplicated = fields.Boolean(string="Duplicated Serial Number", compute='_compute_sn_duplicated', help="If the same SN is in another Quant")
     package_id = fields.Many2one(
         'stock.quant.package', 'Package',
@@ -1236,6 +1235,18 @@ class StockQuant(models.Model):
                                     'Please correct this to prevent inconsistent data.',
                                     lot_id.name, source_location_id.display_name, ', '.join(sn_locations.mapped('display_name')))
         return message, recommended_location
+
+    def _move_quants(self, location_dest_id=False, message=False):
+        """ Directly move a stock.quant to another location by creating a stock.move. """
+        if not location_dest_id:
+            return
+        for quant in self:
+            move_vals = quant._get_inventory_move_values(quant.quantity, quant.location_id, location_dest_id)
+            move_vals.update({
+                'name': message or 'Quantity Relocated',
+            })
+            moves = self.env['stock.move'].with_context(inventory_mode=False).create(move_vals)
+            moves._action_done()
 
 
 class QuantPackage(models.Model):
