@@ -514,6 +514,7 @@ class BaseCase(unittest.TestCase, metaclass=MetaCase):
                 if count != expected:
                     # add some info on caller to allow semi-automatic update of query count
                     frame, filename, linenum, funcname, lines, index = inspect.stack()[2]
+                    filename = filename.replace('\\', '/')
                     if "/odoo/addons/" in filename:
                         filename = filename.rsplit("/odoo/addons/", 1)[1]
                     if count > expected:
@@ -777,7 +778,7 @@ class _ErrorCatcher(list):
         # method since the error does not comme especially from the test method.
         while tb:
             code = tb.tb_frame.f_code
-            if code.co_filename.endswith('/unittest/case.py') and code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
+            if pathlib.PurePath(code.co_filename).name == 'case.py' and code.co_name in ('_callTestMethod', '_callSetUp', '_callTearDown', '_callCleanup'):
                 return tb.tb_next
             tb = tb.tb_next
 
