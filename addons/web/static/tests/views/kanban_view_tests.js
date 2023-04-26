@@ -4568,6 +4568,35 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_kanban_record:first-child .o_tag:first-child");
     });
 
+    QUnit.test(
+        "priority field should not be editable when missing access rights",
+        async (assert) => {
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban edit="0">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="foo"/>
+                                <field name="state" widget="priority"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+            // Try to fill one star in the priority field of the first record
+            await click(target, ".o_kanban_record:first-child .o_priority_star:first-child");
+            assert.containsN(
+                target,
+                ".o_kanban_record:first-child .o_priority .fa-star-o",
+                2,
+                "first record should still contain 2 empty stars"
+            );
+        }
+    );
+
     QUnit.test("Do not open record when clicking on `a` with `href`", async (assert) => {
         serverData.models.partner.records = [{ id: 1, foo: "yop" }];
 
@@ -4575,19 +4604,18 @@ QUnit.module("Views", (hooks) => {
             type: "kanban",
             resModel: "partner",
             serverData,
-            arch:
-                "<kanban>" +
-                "<templates>" +
-                '<t t-name="kanban-box">' +
-                '<div class="oe_kanban_global_click">' +
-                '<field name="foo"/>' +
-                "<div>" +
-                '<a class="o_test_link" href="#">test link</a>' +
-                "</div>" +
-                "</div>" +
-                "</t>" +
-                "</templates>" +
-                "</kanban>",
+            arch: `<kanban>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click">
+                            <field name="foo"/>
+                            <div>
+                                <a class="o_test_link" href="#">test link</a>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>`,
         });
 
         patchWithCleanup(kanban.env.services.action, {
@@ -8472,6 +8500,36 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(getCard(0), "oe_kanban_color_9");
     });
 
+    QUnit.test("colorpicker doesnt appear when missing access rights", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "category",
+            serverData,
+            arch: `
+                <kanban edit="0">
+                    <field name="color"/>
+                    <templates>
+                        <t t-name="kanban-menu">
+                            <div class="oe_kanban_colorpicker"/>
+                        </t>
+                        <t t-name="kanban-box">
+                            <div color="color">
+                                <field name="name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        await toggleRecordDropdown(0);
+
+        assert.containsNone(
+            target,
+            ".o_kanban_record:first-child .oe_kanban_colorpicker",
+            "there shouldn't be a color picker"
+        );
+    });
+
     QUnit.test("load more records in column", async (assert) => {
         await makeView({
             type: "kanban",
@@ -10122,14 +10180,15 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("keyboard navigation on kanban when the kanban has a oe_kanban_global_click class", async (assert) => {
-        assert.expect(1);
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                `<kanban>
+    QUnit.test(
+        "keyboard navigation on kanban when the kanban has a oe_kanban_global_click class",
+        async (assert) => {
+            assert.expect(1);
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -10139,18 +10198,19 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            selectRecord(recordId) {
-                assert.strictEqual(
-                    recordId,
-                    1,
-                    "should call its selectRecord prop with the selected record"
-                );
-            },
-        });
-        const firstCard = getCard(0);
-        firstCard.focus();
-        await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
-    });
+                selectRecord(recordId) {
+                    assert.strictEqual(
+                        recordId,
+                        1,
+                        "should call its selectRecord prop with the selected record"
+                    );
+                },
+            });
+            const firstCard = getCard(0);
+            firstCard.focus();
+            await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
+        }
+    );
 
     QUnit.test("set cover image", async (assert) => {
         assert.expect(10);

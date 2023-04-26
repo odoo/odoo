@@ -476,4 +476,39 @@ QUnit.module("Fields", (hooks) => {
             "should have 1 record"
         );
     });
+
+    QUnit.test(
+        "widget many2many_tags_avatar in kanban view missing access rights",
+        async function (assert) {
+            assert.expect(1);
+            await makeView({
+                type: "kanban",
+                resModel: "turtle",
+                serverData,
+                arch: `
+                <kanban edit="0" create="0">
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="display_name"/>
+                                <div class="oe_kanban_footer">
+                                    <div class="o_kanban_record_bottom">
+                                        <div class="oe_kanban_bottom_right">
+                                            <field name="partner_ids" widget="many2many_tags_avatar"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            });
+
+            assert.containsNone(
+                target,
+                ".o_kanban_record:first-child .o_field_many2many_tags_avatar .o_quick_assign",
+                "should not have the assign icon"
+            );
+        }
+    );
 });

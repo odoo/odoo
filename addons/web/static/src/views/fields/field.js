@@ -115,6 +115,7 @@ export class Field extends Component {
     get fieldComponentProps() {
         const record = this.props.record;
         const evalContext = record.evalContext;
+        const readonly = this.props.readonly === true;
 
         let readonlyFromModifiers = false;
         let propsFromNode = {};
@@ -131,7 +132,6 @@ export class Field extends Component {
                         attrs: { ...fieldInfo.attrs, ...this.props.attrs },
                     };
                 }
-
                 const dynamicInfo = {
                     get context() {
                         const evalContext = record.getEvalContext
@@ -160,7 +160,7 @@ export class Field extends Component {
                         const { domain } = record.fields[fieldInfo.name];
                         return domain ? new Domain(domain).toList(evalContext) : [];
                     },
-                    readonly: readonlyFromModifiers,
+                    readonly: readonly || readonlyFromModifiers,
                     get required() {
                         return (
                             fieldInfo.modifiers &&
@@ -180,9 +180,10 @@ export class Field extends Component {
         delete props.fieldInfo;
         delete props.attrs;
         delete props.type;
+        delete props.readonly;
 
         return {
-            readonly: !record.isInEdition || readonlyFromModifiers || false,
+            readonly: readonly || !record.isInEdition || readonlyFromModifiers || false,
             ...propsFromNode,
             ...props,
         };
