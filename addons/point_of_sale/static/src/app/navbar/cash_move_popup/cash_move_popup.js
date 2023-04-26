@@ -75,6 +75,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
                     formattedAmount,
                     cashier: this.pos.globalState.get_cashier(),
                     company: this.pos.globalState.company,
+                    date: new Date().toLocaleString(),
                 },
             });
             const printResult = await this.hardwareProxy.printer.printReceipt(renderedReceipt);
