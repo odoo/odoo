@@ -472,23 +472,21 @@ class MrpWorkcenterProductivity(models.Model):
         for wo in workorders:
             self._split(wo)
             return_created_ids = self._merge_timesheets(return_created_ids, wo)
-        return return_created_ids
+        return return_created_ids if len(return_created_ids) > 0 else self.env['mrp.workcenter.productivity'].browse()
 
     def write(self, vals_list):
-        self.ensure_one()
         if self.env.context.get('timesheet_splitting_merging'):
             return super().write(vals_list)
 
-        self.with_context(timesheet_splitting_merging=True)
         super().write(vals_list)
         if vals_list.get("workorder_id"):
             workorder = self.env['mrp.workorder'].browse(vals_list["workorder_id"])
         else:
             workorder = self.workorder_id
-        self._split(workorder)
-        self._merge_timesheets([], workorder)
+        if workorder:
+            self._split(workorder)
+            self._merge_timesheets([], workorder)
 
-        self.with_context(timesheet_splitting_merging=False)
         return True
 
     def _merge_timesheets(self, created_time_ids, workorder=None, ):
