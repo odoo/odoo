@@ -166,6 +166,8 @@ class TestMenu(common.TransactionCase):
                 self.assertFalse(a_menu._is_active(), "Same path, no domain, qs mismatch (not the same val), should not match")
                 self.request_url_mock = f'http://localhost:8069{url}?qs=1'
                 self.assertTrue(a_menu._is_active(), "Same path, no domain, qs match, should match")
+                self.request_url_mock = f'http://localhost:8069{url}?qs=1&qs_extra=1'
+                self.assertTrue(a_menu._is_active(), "Same path, no domain, qs subset match, should match")
                 a_menu.url = f'http://localhost.com:8069{url}'
                 self.request_url_mock = f'http://example.com:8069{url}'
                 self.assertFalse(a_menu._is_active(), "Same path, domain mismatch, should not match")
