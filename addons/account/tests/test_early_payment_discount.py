@@ -563,3 +563,21 @@ class TestAccountEarlyPaymentDiscount(AccountTestInvoicingCommon):
                     }
                 ],
             })
+
+    def test_mixed_epd_with_tax_no_duplication(self):
+        (self.pay_terms_a | self.early_pay_10_percents_10_days).write({'early_pay_discount_computation': 'mixed'})
+        inv = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': '2019-01-01',
+            'date': '2019-01-01',
+            'invoice_line_ids': [
+                Command.create({'name': 'line', 'price_unit': 100.0, 'tax_ids': [Command.set(self.product_a.taxes_id.ids)]}),
+            ],
+            'invoice_payment_term_id': self.early_pay_10_percents_10_days.id,
+        })
+        self.assertEqual(len(inv.line_ids), 6) # 1 prod, 1 tax, 2 epd, 1 epd tax discount, 1 payment terms
+        inv.write({'invoice_payment_term_id': self.pay_terms_a.id})
+        self.assertEqual(len(inv.line_ids), 3) # 1 prod, 1 tax, 1 payment terms
+        inv.write({'invoice_payment_term_id': self.early_pay_10_percents_10_days.id})
+        self.assertEqual(len(inv.line_ids), 6)
