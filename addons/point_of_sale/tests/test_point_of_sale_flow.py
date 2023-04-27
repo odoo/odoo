@@ -1474,3 +1474,59 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         order_payment.with_context(**payment_context).check()
         current_session.action_pos_session_closing_control()
         self.assertEqual(current_session.picking_ids.move_line_ids.owner_id.id, self.partner1.id)
+
+    def test_order_refund_with_invoice(self):
+        """This test make sure that credit notes of pos orders are correctly
+           linked to the original invoice."""
+        self.pos_config.open_session_cb(check_coa=False)
+        current_session = self.pos_config.current_session_id
+
+        order_data = {'data':
+          {'amount_paid': 450,
+           'amount_tax': 0,
+           'amount_return': 0,
+           'amount_total': 450,
+           'creation_date': fields.Datetime.to_string(fields.Datetime.now()),
+           'fiscal_position_id': False,
+           'pricelist_id': self.pos_config.available_pricelist_ids[0].id,
+           'lines': [[0, 0, {
+               'discount': 0,
+               'pack_lot_ids': [],
+               'price_unit': 450.0,
+               'product_id': self.product3.id,
+               'price_subtotal': 450.0,
+               'price_subtotal_incl': 450.0,
+               'tax_ids': [[6, False, []]],
+               'qty': 1,
+           }]],
+           'name': 'Order 12345-123-1234',
+           'partner_id': self.partner1.id,
+           'pos_session_id': current_session.id,
+           'sequence_number': 2,
+           'statement_ids': [[0, 0, {
+               'amount': 450,
+               'name': fields.Datetime.now(),
+               'payment_method_id': self.cash_payment_method.id
+           }]],
+           'uid': '12345-123-1234',
+           'user_id': self.env.uid,
+           'to_invoice': True, }
+        }
+        order = self.PosOrder.create_from_ui([order_data])
+        order = self.PosOrder.browse(order[0]['id'])
+
+        refund_id = order.refund()['res_id']
+        refund = self.PosOrder.browse(refund_id)
+        context_payment = {"active_ids": refund.ids, "active_id": refund.id}
+        refund_payment = self.PosMakePayment.with_context(**context_payment).create({
+            'amount': refund.amount_total,
+            'payment_method_id': self.cash_payment_method.id
+        })
+        refund_payment.with_context(**context_payment).check()
+        refund.action_pos_order_invoice()
+        #get last invoice created
+        current_session.action_pos_session_closing_control()
+        invoices = self.env['account.move'].search([('move_type', '=', 'out_invoice')], order='id desc', limit=1)
+        credit_notes = self.env['account.move'].search([('move_type', '=', 'out_refund')], order='id desc', limit=1)
+        self.assertEqual(credit_notes.ref, "Reversal of: "+invoices.name)
+        self.assertEqual(credit_notes.reversed_entry_id.id, invoices.id)
