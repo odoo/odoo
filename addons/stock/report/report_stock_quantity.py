@@ -18,7 +18,6 @@ class ReportStockQuantity(models.Model):
         ('out', 'Forecasted Deliveries'),
     ], string='State', readonly=True)
     product_qty = fields.Float(string='Quantity', readonly=True)
-    move_ids = fields.One2many('stock.move', readonly=True)
     company_id = fields.Many2one('res.company', readonly=True)
     warehouse_id = fields.Many2one('stock.warehouse', readonly=True)
 
