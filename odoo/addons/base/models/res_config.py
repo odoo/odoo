@@ -8,7 +8,7 @@ import re
 from ast import literal_eval
 from lxml import etree
 
-from odoo import api, models, _
+from odoo import api, models, fields, _
 from odoo.exceptions import AccessError, RedirectWarning, UserError
 from odoo.tools import ustr
 
@@ -339,6 +339,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         *   For a field like 'default_XXX', ``execute`` sets the (global) default value of
             the field 'XXX' in the model named by ``default_model`` to the field's value.
+            If ``company_dependent`` is set, the default value is only valid for the current
+            company.
 
         *   For a boolean field like 'group_XXX', ``execute`` adds/removes 'implied_group'
             to/from the implied groups of 'group', depending on the field's value.
@@ -373,6 +375,9 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
     _name = 'res.config.settings'
     _description = 'Config Settings'
 
+    company_id = fields.Many2one('res.company', string='Company', required=True,
+        default=lambda self: self.env.company)
+
     def _valid_field_parameter(self, field, name):
         return (
             name in ('default_model', 'config_parameter')
@@ -402,10 +407,14 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         def make_method(name):
             return lambda self: self.onchange_module(self[name], name)
 
-        for name in self._fields:
+        for name, field in self._fields.items():
             if name.startswith('module_'):
                 method = make_method(name)
                 self._onchange_methods[name].append(method)
+
+            if name.startswith('default_') and field.default and field.default_model:
+                Model = self.env[field.default_model]
+                self.env['ir.default'].set(field.default_model, field.name[8:], field.default(Model))
 
     @api.model
     def _get_classified_fields(self, fnames=None):
@@ -476,7 +485,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
 
         # defaults: take the corresponding default value they set
         for name, model, field in classified['default']:
-            value = IrDefault._get(model, field)
+            company_id = self._fields[name].company_dependent and res.get('company_id', self.env.company.id)
+            value = IrDefault._get(model, field, company_id=company_id)
             if value is not None:
                 res[name] = value
 
@@ -543,7 +553,8 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             else:
                 value = self[name]
             if name not in current_settings or value != current_settings[name]:
-                IrDefault.set(model, field, value)
+                company_id = self._fields[name].company_dependent and self.company_id.id
+                IrDefault.set(model, field, value, company_id=company_id)
 
         # group fields: modify group / implied groups
         for name, groups, implied_group in sorted(classified['group'], key=lambda k: self[k[0]]):
