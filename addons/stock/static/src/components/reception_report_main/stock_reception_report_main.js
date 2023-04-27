@@ -16,6 +16,8 @@ export class ReceptionReportMain extends Component {
         this.ormService = useService("orm");
         this.actionService = useService("action");
         this.reportName = "stock.report_reception";
+        const defaultDocIds = Object.entries(this.context).find(([k,v]) => k.startsWith("default_"));
+        this.contextDefaultDoc = { field: defaultDocIds[0], ids: defaultDocIds[1] };
         this.state = useState({
             sourcesToLines: {},
         });
@@ -29,7 +31,7 @@ export class ReceptionReportMain extends Component {
 
     async getReportData() {
         const args = [
-            this.context.default_picking_ids,
+            this.contextDefaultDoc.ids,
             { context: this.context, report_type: "html" },
         ];
         return this.ormService.call(
@@ -78,7 +80,7 @@ export class ReceptionReportMain extends Component {
         return this.actionService.doAction({
             type: "ir.actions.report",
             report_type: "qweb-pdf",
-            report_name: `${this.reportName}/${this.context.default_picking_ids.join(",")}`,
+            report_name: `${this.reportName}/?context={"${this.contextDefaultDoc.field}": ${JSON.stringify(this.contextDefaultDoc.ids)}}`,
             report_file: this.reportName,
         });
     }
