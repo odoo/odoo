@@ -324,3 +324,10 @@ class Partner(models.Model):
             ('partner_id', 'not in', excluded_ids)
         ], order='name, id', limit=limit)
         return list(users.partner_id.mail_partner_format().values())
+
+    @api.model
+    def _get_current_persona(self):
+        guest = self.env["mail.guest"]._get_guest_from_context()
+        if self.env.user._is_public() and guest:
+            return (self.env["res.partner"], guest)
+        return (self.env.user.partner_id, self.env["mail.guest"])

@@ -567,6 +567,14 @@ class Message(models.Model):
             + ' - ({} {}, {} {})'.format(_('Records:'), list(messages_to_check)[:6], _('User:'), self._uid)
         )
 
+    def _validate_access_for_current_persona(self, operation):
+        if not self:
+            return False
+        self.ensure_one()
+        self.sudo(False).check_access_rule(operation)
+        self.sudo(False).check_access_rights(operation)
+        return True
+
     @api.model_create_multi
     def create(self, values_list):
         tracking_values_list = []
@@ -815,39 +823,43 @@ class Message(models.Model):
             'starred': starred,
         })
 
-    def _message_add_reaction(self, content):
+    def _message_reaction(self, content, action):
         self.ensure_one()
-        self.check_access_rule('write')
-        self.check_access_rights('write')
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guest = self.env.context.get('guest')
-            partner = self.env['res.partner']
-        else:
-            guest = self.env['mail.guest']
-            partner = self.env.user.partner_id
-        reaction = self.env['mail.message.reaction'].sudo().search([('message_id', '=', self.id), ('partner_id', '=', partner.id), ('guest_id', '=', guest.id), ('content', '=', content)])
-        if not reaction:
-            reaction = self.env['mail.message.reaction'].sudo().create({
-                'message_id': self.id,
-                'content': content,
-                'partner_id': partner.id,
-                'guest_id': guest.id,
-            })
-        self.env[self.model].browse(self.res_id)._message_add_reaction_after_hook(message=self, content=reaction.content)
-
-    def _message_remove_reaction(self, content):
-        self.ensure_one()
-        self.check_access_rule('write')
-        self.check_access_rights('write')
-        if self.env.user._is_public() and 'guest' in self.env.context:
-            guest = self.env.context.get('guest')
-            partner = self.env['res.partner']
-        else:
-            guest = self.env['mail.guest']
-            partner = self.env.user.partner_id
-        reaction = self.env['mail.message.reaction'].sudo().search([('message_id', '=', self.id), ('partner_id', '=', partner.id), ('guest_id', '=', guest.id), ('content', '=', content)])
-        reaction.unlink()
-        self.env[self.model].browse(self.res_id)._message_remove_reaction_after_hook(message=self, content=content)
+        partner, guest = self.env["res.partner"]._get_current_persona()
+        # search for existing reaction
+        domain = [
+            ("message_id", "=", self.id),
+            ("partner_id", "=", partner.id),
+            ("guest_id", "=", guest.id),
+            ("content", "=", content),
+        ]
+        reaction = self.env["mail.message.reaction"].search(domain)
+        # create/unlink reaction if necessary
+        if action == "add" and not reaction:
+            create_values = {
+                "message_id": self.id,
+                "content": content,
+                "partner_id": partner.id,
+                "guest_id": guest.id,
+            }
+            self.env["mail.message.reaction"].create(create_values)
+        if action == "remove" and reaction:
+            reaction.unlink()
+        # format result
+        group_domain = [("message_id", "=", self.id), ("content", "=", content)]
+        count = self.env["mail.message.reaction"].search_count(group_domain)
+        group_command = "insert" if count > 0 else "insert-and-unlink"
+        guests = [("insert" if action == "add" else "insert-and-unlink", {"id": guest.id})] if guest else []
+        partners = [("insert" if action == "add" else "insert-and-unlink", {"id": partner.id})] if partner else []
+        group_values = {
+            "content": content,
+            "count": count,
+            "guests": guests,
+            "message": {"id": self.id},
+            "partners": partners,
+        }
+        payload = {"Message": {"id": self.id, "messageReactionGroups": [(group_command, group_values)]}}
+        self.env["bus.bus"]._sendone(self._bus_notification_target(), "mail.record/insert", payload)
 
     # ------------------------------------------------------
     # MESSAGE READ / FETCH / FAILURE API

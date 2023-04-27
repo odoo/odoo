@@ -6,6 +6,15 @@ from odoo import models
 class MailMessage(models.Model):
     _inherit = "mail.message"
 
+    def _validate_access_for_current_persona(self, operation):
+        if not self:
+            return False
+        self.ensure_one()
+        if self.env.user._is_public():
+            guest = self.env["mail.guest"]._get_guest_from_context()
+            return guest and self.model == "discuss.channel" and self.res_id in guest.channel_ids.ids
+        return super()._validate_access_for_current_persona(operation)
+
     def _message_format_extras(self, format_reply):
         self.ensure_one()
         vals = super()._message_format_extras(format_reply)
