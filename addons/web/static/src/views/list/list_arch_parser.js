@@ -55,7 +55,6 @@ export class ListArchParser extends XMLParser {
 
     parse(arch, models, modelName) {
         const xmlDoc = this.parseXML(arch);
-        const className = xmlDoc.getAttribute("class") || null;
         const fieldNodes = {};
         const widgetNodes = {};
         let widgetNextId = 0;
@@ -238,7 +237,6 @@ export class ListArchParser extends XMLParser {
         }
 
         return {
-            className,
             creates,
             handleField,
             headerButtons,
@@ -247,6 +245,7 @@ export class ListArchParser extends XMLParser {
             activeFields,
             columns,
             groupBy,
+            xmlDoc,
             __rawArch: arch,
             ...treeAttr,
         };

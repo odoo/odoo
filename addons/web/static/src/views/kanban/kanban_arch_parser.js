@@ -199,6 +199,7 @@ export class KanbanArchParser extends XMLParser {
             templateDocs,
             tooltipInfo,
             examples: xmlDoc.getAttribute("examples"),
+            xmlDoc,
             __rawArch: arch,
         };
     }

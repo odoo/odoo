@@ -432,15 +432,32 @@ QUnit.module("Views", (hooks) => {
         }
     });
 
-    QUnit.test("list with class", async function (assert) {
+    QUnit.test("list with class and style attributes", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
             serverData,
-            arch: '<tree class="myClass"><field name="foo"/></tree>',
+            arch: /* xml */ `
+                <tree class="myClass" style="border: 1px solid red;">
+                    <field name="foo"/>
+                </tree>
+            `,
         });
-
-        assert.hasClass(target.querySelector(".o_list_renderer"), "myClass");
+        assert.containsNone(
+            target,
+            ".o_view_controller[style*='border: 1px solid red;'], .o_view_controller [style*='border: 1px solid red;']",
+            "style attribute should not be copied"
+        );
+        assert.containsOnce(
+            target,
+            ".o_view_controller.o_list_view.myClass",
+            "class attribute should be passed to the view controller"
+        );
+        assert.containsOnce(
+            target,
+            ".myClass",
+            "class attribute should ONLY be passed to the view controller"
+        );
     });
 
     QUnit.test('list with create="0"', async function (assert) {
