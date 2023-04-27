@@ -279,6 +279,13 @@ class Channel(models.Model):
         if not self._cr.fetchone():
             self._cr.execute('CREATE INDEX discuss_channel_member_seen_message_id_idx ON discuss_channel_member (channel_id,partner_id,seen_message_id)')
 
+    @api.model
+    def _get_from_request_or_raise(self, request, thread_id):
+        """Overridden because guests and (portal) users need sudo to post on channels. This ensures they are actually
+        members before granting them access, as well as properly setting up the guest context on the resulting thread
+        if applicable."""
+        return self.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(request, thread_id).channel_id
+
     # ------------------------------------------------------------
     # MEMBERS MANAGEMENT
     # ------------------------------------------------------------
