@@ -83,8 +83,3 @@ class ThreadController(http.Controller):
         request.env[message_sudo.model].browse([message_sudo.res_id])._message_update_content(
             message_sudo, body, attachment_ids=attachment_ids
         )
-        return {
-            "id": message_sudo.id,
-            "body": message_sudo.body,
-            "attachment_ids": message_sudo.attachment_ids._attachment_format(),
-        }

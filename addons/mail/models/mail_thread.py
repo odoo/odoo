@@ -4057,11 +4057,13 @@ class MailThread(models.AbstractModel):
         empty_messages._cleanup_side_records()
         empty_messages.write({'pinned_at': None})
 
-        return self._message_update_content_after_hook(message)
-
-    def _message_update_content_after_hook(self, message):
-        """ Hook to add custom behavior after having updated the message content. """
-        return True
+        self.env['bus.bus']._sendone(message._bus_notification_target(), 'mail.record/insert', {
+            'Message': {
+                'id': message.id,
+                'body': message.body,
+                'attachment_ids': message.attachment_ids._attachment_format(),
+            }
+        })
 
     # ------------------------------------------------------
     # CONTROLLERS
