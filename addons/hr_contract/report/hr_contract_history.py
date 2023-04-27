@@ -17,7 +17,6 @@ class ContractHistory(models.Model):
     # to the employee. That's why we will use this id (employee_id) as the id of the hr.contract.history.
     contract_id = fields.Many2one('hr.contract', readonly=True)
 
-    display_name = fields.Char(compute='_compute_display_name')
     name = fields.Char('Contract Name', readonly=True)
     date_hired = fields.Date('Hire Date', readonly=True)
     date_start = fields.Date('Start Date', readonly=True)

@@ -777,16 +777,15 @@ class Contact(models.AbstractModel):
             opsep = Markup('<br/>')
 
         value = value.sudo().with_context(show_address=True)
-        name_get = value.name_get()[0][1]
         # Avoid having something like:
-        # name_get = 'Foo\n  \n' -> This is a res.partner with a name and no address
+        # display_name = 'Foo\n  \n' -> This is a res.partner with a name and no address
         # That would return markup('<br/>') as address. But there is no address set.
-        if any(elem.strip() for elem in name_get.split("\n")[1:]):
-            address = opsep.join(name_get.split("\n")[1:]).strip()
+        if any(elem.strip() for elem in value.display_name.split("\n")[1:]):
+            address = opsep.join(value.display_name.split("\n")[1:]).strip()
         else:
             address = ''
         val = {
-            'name': name_get.split("\n")[0],
+            'name': value.display_name.split("\n")[0],
             'address': address,
             'phone': value.phone,
             'mobile': value.mobile,

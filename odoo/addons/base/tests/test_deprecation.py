@@ -27,3 +27,12 @@ class TestModelDeprecations(TransactionCase):
                     if module:
                         msg += f" in {module}"
                     self.fail(msg)
+
+    def test_name_get(self):
+        for model_name, Model in self.registry.items():
+            with self.subTest(model=model_name):
+                # name_get should exist but define by BaseModel
+                module = inspect.getmodule(Model.name_get)
+                if module.__name__ == 'odoo.models':
+                    continue
+                self.fail(f"Deprecated name_get method found on {model_name} in {module.__name__}, you should override `_compute_display_name` instead")

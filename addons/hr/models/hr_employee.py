@@ -191,10 +191,11 @@ class HrEmployeePrivate(models.Model):
             })
         }
 
-    def name_get(self):
+    def _compute_display_name(self):
         if self.check_access_rights('read', raise_exception=False):
-            return super(HrEmployeePrivate, self).name_get()
-        return self.env['hr.employee.public'].browse(self.ids).name_get()
+            return super()._compute_display_name()
+        for employee_private, employee_public in zip(self, self.env['hr.employee.public'].browse(self.ids)):
+            employee_private.display_name = employee_public.display_name
 
     def search_fetch(self, domain, field_names, offset=0, limit=None, order=None):
         if self.check_access_rights('read', raise_exception=False):

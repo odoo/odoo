@@ -22,11 +22,7 @@ class EWayBillType(models.Model):
     )
     active = fields.Boolean("Active", default=True)
 
-    def name_get(self):
+    def _compute_display_name(self):
         """Show name and sub_type in name"""
-        result_dict = dict()
         for ewaybill_type in self:
-            name = ewaybill_type.name
-            name += _(" (Sub-Type: %s)", ewaybill_type.sub_type)
-            result_dict[ewaybill_type.id] = name
-        return list(result_dict.items())
+            ewaybill_type.display_name = _("%s (Sub-Type: %s)", ewaybill_type.name, ewaybill_type.sub_type)

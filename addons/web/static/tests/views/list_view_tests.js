@@ -10750,7 +10750,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<tree><field name="reference"/></tree>',
             mockRPC(route, args) {
-                if (args.method === "name_get") {
+                if (args.method === "read") {
                     assert.step(args.model);
                 }
             },
@@ -10758,7 +10758,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(
             ["bar", "res_currency"],
-            "should have done 1 name_get by model in reference values"
+            "should have done 1 read by model in reference values"
         );
         assert.strictEqual(
             $(target).find("tbody td:not(.o_list_record_selector)").text(),
@@ -10791,7 +10791,7 @@ QUnit.module("Views", (hooks) => {
             groupBy: ["foo"],
             mockRPC(route, args) {
                 assert.step(args.method || route);
-                if (args.method === "name_get") {
+                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
                     if (args.model === "bar") {
                         assert.deepEqual(args.args[0], [1, 2, 3]);
                     }
@@ -10801,7 +10801,7 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
-        assert.verifySteps(["get_views", "web_read_group", "name_get", "name_get"]);
+        assert.verifySteps(["get_views", "web_read_group", "read", "read"]);
         assert.containsN(target, ".o_group_header", 2);
         const allNames = Array.from(
             target.querySelectorAll(".o_data_cell"),
@@ -10876,7 +10876,7 @@ QUnit.module("Views", (hooks) => {
                 if (args.method === "write") {
                     assert.deepEqual(args.args, [[1, 2, 3], { bar: true }]);
                 }
-                if (args.method === "name_get") {
+                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
                     if (nameGetCount === 2) {
                         assert.strictEqual(args.model, "bar");
                         assert.deepEqual(args.args[0], [1, 2]);
@@ -10890,7 +10890,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.verifySteps(["get_views", "web_read_group", "name_get", "name_get"]);
+        assert.verifySteps(["get_views", "web_read_group", "read", "read"]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[0]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[1]);
         await click(target.querySelectorAll(".o_data_row .o_list_record_selector input")[2]);
@@ -10899,7 +10899,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, ".modal .modal-footer .btn-primary");
         assert.containsNone(target, ".modal");
-        assert.verifySteps(["write", "read", "name_get", "name_get"]);
+        assert.verifySteps(["write", "read", "read", "read"]);
         assert.containsN(target, ".o_group_header", 2);
 
         const allNames = Array.from(target.querySelectorAll(".o_data_cell"))
@@ -17833,8 +17833,8 @@ QUnit.module("Views", (hooks) => {
                 </tree>
             `,
             mockRPC(_, args) {
-                if (args.method === "name_get") {
-                    assert.step("name_get");
+                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
+                    assert.step("readDisplayName");
                     assert.deepEqual(args.args[0], [3]);
                 }
             },
@@ -17853,7 +17853,7 @@ QUnit.module("Views", (hooks) => {
 
         await click(target, ".modal .o_data_row:nth-child(3) td[name=display_name]");
 
-        assert.verifySteps(["name_get"]);
+        assert.verifySteps(["readDisplayName"]);
 
         await clickSave(target);
         assert.deepEqual(

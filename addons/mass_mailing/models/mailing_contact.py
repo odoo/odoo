@@ -129,13 +129,13 @@ class MassMailingContact(models.Model):
     def name_create(self, name):
         name, email = self.get_name_email(name)
         contact = self.create({'name': name, 'email': email})
-        return contact.name_get()[0]
+        return contact.id, contact.display_name
 
     @api.model
     def add_to_list(self, name, list_id):
         name, email = self.get_name_email(name)
         contact = self.create({'name': name, 'email': email, 'list_ids': [(4, list_id)]})
-        return contact.name_get()[0]
+        return contact.id, contact.display_name
 
     def _message_get_default_recipients(self):
         return {r.id: {

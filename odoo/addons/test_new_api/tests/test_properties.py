@@ -524,12 +524,12 @@ class PropertiesCase(TestPropertiesMixin):
             msg='When reading many2one default, it should return the display name',
         )
 
-        # read the default many2one and deactivate the name_get
+        # read the default many2one and deactivate the display_name
         read_values = self.discussion_1.read(['attributes_definition'], load=None)[0]['attributes_definition']
         self.assertEqual(
             read_values[0]['default'],
             self.partner.id,
-            msg='If the name_get is deactivate, it should not return the display name',
+            msg='If the display_name is deactivate, it should not return the display name',
         )
 
         message = self.env['test_new_api.message'].create({
@@ -609,7 +609,7 @@ class PropertiesCase(TestPropertiesMixin):
 
         In comparison with a simple "record.properties", the read method should not
         record a recordset for the many2one, but a tuple with the record id and
-        the record name_get.
+        the record display_name.
         """
         properties_values = (self.message_1 | self.message_3).read(['attributes'])
 
@@ -646,13 +646,13 @@ class PropertiesCase(TestPropertiesMixin):
             msg='Definition must be present when reading child')
         self.assertEqual(many2one_property['value'], (self.partner.id, self.partner.display_name))
 
-        # disable the name_get
+        # disable the display_name
         properties_values = (self.message_1 | self.message_3).read(['attributes'], load=None)
         many2one_property = properties_values[0]['attributes'][1]
 
         self.assertEqual(
             many2one_property['value'], self.partner.id,
-            msg='If name_get is disable, should only return the record id')
+            msg='If display_name is disable, should only return the record id')
 
     def test_properties_field_many2one_basic(self):
         """Test the basic (read, write...) of the many2one property."""
@@ -698,7 +698,7 @@ class PropertiesCase(TestPropertiesMixin):
         with self.assertQueryCount(4):
             # 1 query to read the field
             # 1 query to read the definition
-            # 2 queries to check if the many2one still exists / name_get
+            # 2 queries to check if the many2one still exists / display_name
             self.assertFalse(self.message_2.read(['attributes'])[0]['attributes'][0]['value'])
 
         # remove the partner, and use the read method
@@ -1072,7 +1072,7 @@ class PropertiesCase(TestPropertiesMixin):
                     "string": "Partners",
                     "type": "many2many",
                     "comodel": "test_new_api.partner",
-                    "value": partners[:10].name_get(),
+                    "value": list(zip(partners[:10]._ids, partners[:10].mapped('display_name'))),
                 }
             ]
             attributes = self.message_1.read(['attributes'], load=None)[0]['attributes']
@@ -1086,7 +1086,7 @@ class PropertiesCase(TestPropertiesMixin):
         partners[5].unlink()
         with self.assertQueryCount(5):
             properties = self.message_1.read(['attributes'])[0]['attributes']
-        self.assertEqual(properties[0]['value'], partners[6:10].name_get())
+        self.assertEqual(properties[0]['value'], list(zip(partners[6:10]._ids, partners[6:10].mapped('display_name'))))
 
         # need to wait next write to clean data in database
         # a single read won't clean the removed many2many
@@ -1097,7 +1097,7 @@ class PropertiesCase(TestPropertiesMixin):
         sql_values = self._get_sql_properties(self.message_1)
         self.assertEqual(sql_values, {'moderator_partner_ids': partners[6:10].ids})
 
-        # read and disable name_get
+        # read and disable display_name
         properties = self.message_1.read(['attributes'], load=None)[0]['attributes']
         self.assertEqual(
             properties[0]['value'],

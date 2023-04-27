@@ -46,8 +46,9 @@ for name, field in MODELS:
         const = fields.Integer(default=4)
         value = field
 
-        def name_get(self):
-            return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+        def _compute_display_name(self):
+            for record in self:
+                record.display_name = f"{self._name}:{record.value}"
 
         @api.model
         def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -59,7 +60,7 @@ for name, field in MODELS:
 class One2ManyChild(models.Model):
     _name = 'export.one2many.child'
     _description = 'Export One to Many Child'
-    # FIXME: orm.py:1161, fix to name_get on m2o field
+    # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = 'value'
 
     parent_id = fields.Many2one('export.one2many')
@@ -67,8 +68,9 @@ class One2ManyChild(models.Model):
     m2o = fields.Many2one('export.integer')
     value = fields.Integer()
 
-    def name_get(self):
-        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{self._name}:{record.value}"
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -91,7 +93,7 @@ class One2ManyMultiple(models.Model):
 
 class One2ManyChildMultiple(models.Model):
     _name = 'export.one2many.multiple.child'
-    # FIXME: orm.py:1161, fix to name_get on m2o field
+    # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = 'value'
     _description = 'Export One To Many Multiple Child'
 
@@ -99,8 +101,9 @@ class One2ManyChildMultiple(models.Model):
     str = fields.Char()
     value = fields.Integer()
 
-    def name_get(self):
-        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{self._name}:{record.value}"
 
 
 class One2ManyChild1(models.Model):
@@ -118,14 +121,15 @@ class One2ManyChild2(models.Model):
 class Many2ManyChild(models.Model):
     _name = 'export.many2many.other'
     _description = 'Export Many to Many Other'
-    # FIXME: orm.py:1161, fix to name_get on m2o field
+    # FIXME: orm.py:1161, fix to display_name on m2o field
     _rec_name = 'value'
 
     str = fields.Char()
     value = fields.Integer()
 
-    def name_get(self):
-        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{self._name}:{record.value}"
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

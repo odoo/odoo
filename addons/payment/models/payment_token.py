@@ -27,6 +27,12 @@ class PaymentToken(models.Model):
     verified = fields.Boolean(string="Verified")
     active = fields.Boolean(string="Active", default=True)
 
+    #=== COMPUTE METHODS ===#
+
+    def _compute_display_name(self):
+        for token in self:
+            token.display_name = token._build_display_name()
+
     #=== CRUD METHODS ===#
 
     @api.model_create_multi
@@ -90,9 +96,6 @@ class PaymentToken(models.Model):
         :return: None
         """
         return
-
-    def name_get(self):
-        return [(token.id, token._build_display_name()) for token in self]
 
     #=== BUSINESS METHODS ===#
 

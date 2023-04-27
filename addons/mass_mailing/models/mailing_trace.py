@@ -52,7 +52,6 @@ class MailingTrace(models.Model):
     _order = 'create_date DESC'
 
     trace_type = fields.Selection([('mail', 'Email')], string='Type', default='mail', required=True)
-    display_name = fields.Char(compute='_compute_display_name')
     # mail data
     mail_mail_id = fields.Many2one('mail.mail', string='Mail', index='btree_not_null')
     mail_mail_id_int = fields.Integer(
@@ -117,7 +116,7 @@ class MailingTrace(models.Model):
     @api.depends('trace_type', 'mass_mailing_id')
     def _compute_display_name(self):
         for trace in self:
-            trace.display_name = '%s: %s (%s)' % (trace.trace_type, trace.mass_mailing_id.name, trace.id)
+            trace.display_name = f'{trace.trace_type}: {trace.mass_mailing_id.name} ({trace.id})'
 
     @api.model_create_multi
     def create(self, values_list):

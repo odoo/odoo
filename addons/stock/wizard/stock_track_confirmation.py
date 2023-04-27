@@ -25,12 +25,12 @@ class StockTrackingLines(models.TransientModel):
     _name = 'stock.track.line'
     _description = 'Stock Track Line'
 
-    product_display_name = fields.Char('Name', compute='_compute_display_name', readonly=True)
+    product_display_name = fields.Char('Name', compute='_compute_product_display_name', readonly=True)
     product_id = fields.Many2one('product.product', 'Product', readonly=True)
     tracking = fields.Selection(related='product_id.tracking')
     wizard_id = fields.Many2one('stock.track.confirmation', readonly=True)
 
-    def _compute_display_name(self):
+    def _compute_product_display_name(self):
         """ Onchange results in product.display_name not being directly accessible """
         for line in self:
             line.product_display_name = line.product_id._origin.display_name

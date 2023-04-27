@@ -257,7 +257,7 @@ class test_datetime(CreatorCase):
     def test_tz(self):
         """ Export converts the value in the user's TZ
 
-        .. note:: on the other hand, export uses user lang for name_get
+        .. note:: on the other hand, export uses user lang for display_name
         """
         self.assertEqual(
             self.export('2011-11-07 21:05:48', context={'tz': 'Pacific/Norfolk'}),
@@ -326,13 +326,12 @@ class test_m2o(CreatorCase):
             [['']])
 
     def test_basic(self):
-        """ Exported value is the name_get of the related object
+        """ Exported value is the display_name of the related object
         """
         record = self.env['export.integer'].create({'value': 42})
-        name = dict(record.name_get())[record.id]
         self.assertEqual(
             self.export(record.id),
-            [[name]])
+            [[record.display_name]])
 
     def test_path(self):
         """ Can recursively export fields of m2o via path
@@ -389,7 +388,7 @@ class test_o2m(CreatorCase):
     def test_single(self):
         self.assertEqual(
             self.export([Command.create({'value': 42})]),
-            # name_get result
+            # display_name result
             [[u'export.one2many.child:42']])
 
     def test_single_subfield(self):
@@ -600,7 +599,7 @@ class test_m2m(CreatorCase):
     def test_single(self):
         self.assertEqual(
             self.export([Command.create({'value': 42})]),
-            # name_get result
+            # display_name result
             [[u'export.many2many.other:42']])
 
     def test_single_subfield(self):

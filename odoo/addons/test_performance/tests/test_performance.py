@@ -614,7 +614,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         } for partner in partners]
 
     @users('__system__', 'demo')
-    def test_read_group_with_name_get(self):
+    def test_read_group_with_display_name(self):
         model = self.env['test_performance.base']
         expected = self.expected_read_group()
         # use read_group and check the expected result

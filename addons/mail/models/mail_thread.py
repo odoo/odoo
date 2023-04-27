@@ -2712,7 +2712,7 @@ class MailThread(models.AbstractModel):
 
         :return str: default subject """
         self.ensure_one()
-        return self.name_get()[0][1]
+        return self.display_name
 
     def _message_create(self, values_list):
         """ Low-level helper to create mail.message records. It is mainly used

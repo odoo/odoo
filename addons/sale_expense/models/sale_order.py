@@ -13,7 +13,7 @@ class SaleOrder(models.Model):
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        """ For expense, we want to show all sales order but only their name_get (no ir.rule applied), this is the only way to do it. """
+        """ For expense, we want to show all sales order but only their display_name (no ir.rule applied), this is the only way to do it. """
         if (
             self._context.get('sale_expense_all_order')
             and self.user_has_groups('sales_team.group_sale_salesman')

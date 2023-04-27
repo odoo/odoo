@@ -679,7 +679,7 @@
             'search_default_active_employee': 3,
             'search_default_active_time_off': 4,
             'hide_employee_name': 1,
-            'holiday_status_name_get': False}
+            'holiday_status_display_name': False}
         </field>
         <field name="domain">['|', ('employee_id.company_id', 'in', allowed_company_ids),
                                     '&amp;', ('multi_employee', '=', True),
@@ -701,7 +701,7 @@
         <field name="search_view_id" ref="hr_holidays.hr_leave_view_search_manager"/>
         <field name="context">{
             'hide_employee_name': 1,
-            'holiday_status_name_get': False}
+            'holiday_status_display_name': False}
         </field>
         <field name="domain">[('holiday_allocation_id', '=', active_id)]</field>
         <field name="help" type="html">

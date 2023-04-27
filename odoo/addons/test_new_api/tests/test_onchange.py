@@ -106,7 +106,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
         self.env.invalidate_all()
         result = Category.onchange(values, 'parent', field_onchange).get('value', {})
         self.assertIn('root_categ', result)
-        self.assertEqual(result['root_categ'], root.name_get()[0])
+        self.assertEqual(result['root_categ'], (root.id, root.display_name))
 
         values.update(result)
         values['parent'] = False
@@ -160,21 +160,21 @@ class TestOnChange(SavepointCaseWithUserDemo):
             Command.update(message1.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "ABC",
-                'author': USER.name_get()[0],
+                'author': (USER.id, USER.display_name),
                 'size': 3,
                 'important': False,
             }),
             Command.update(message2.id, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "XYZ",          # this must be sent back
-                'author': USER.name_get()[0],
+                'author': (USER.id, USER.display_name),
                 'size': 3,
                 'important': False,
             }),
             Command.create({
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': "ABC",
-                'author': USER.name_get()[0],
+                'author': (USER.id, USER.display_name),
                 'size': 3,
                 'important': False,
             }),
@@ -231,7 +231,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             (0, REFERENCE, {
                 'name': "[%s] %s" % ("Foo", USER.name),
                 'body': BODY,
-                'author': USER.name_get()[0],
+                'author': (USER.id, USER.display_name),
                 'size': len(BODY),
                 'important': False,
             }),
@@ -479,7 +479,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
             [Command.clear(), Command.update(email.id, {
                 'name': u'[Foo Bar] %s' % USER.name,
                 'body': BODY,
-                'author': USER.name_get()[0],
+                'author': (USER.id, USER.display_name),
                 'size': len(BODY),
                 'important': True,
                 'email_to': demo.email,
@@ -500,7 +500,7 @@ class TestOnChange(SavepointCaseWithUserDemo):
 
         onchange_result = {
             'message_name': 'Hey dude!',
-            'message_currency': self.env.user.name_get()[0],
+            'message_currency': (self.env.user.id, self.env.user.display_name),
         }
 
         self.env.invalidate_all()
@@ -625,7 +625,6 @@ class TestOnChange(SavepointCaseWithUserDemo):
         record = form.save()
         self.assertEqual(record.name, False)
         self.assertEqual(record.display_name, "")
-        self.assertEqual(record.name_get(), [(record.id, "")])
 
 
 class TestComputeOnchange(common.TransactionCase):

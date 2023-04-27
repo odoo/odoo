@@ -37,7 +37,6 @@ class ProjectUpdate(models.Model):
                 ('is_downpayment', '=', False),
             ]),
         )
-        name_by_sol = dict(sols.with_context(with_price_unit=True).name_get())
         product_uom_unit = self.env.ref('uom.product_uom_unit')
         product_uom_hour = self.env.ref('uom.product_uom_hour')
         company_uom = self.env.company.timesheet_encode_uom_id
@@ -50,7 +49,7 @@ class ProjectUpdate(models.Model):
                 qty_invoiced = sol.product_uom._compute_quantity(sol.qty_invoiced, company_uom, raise_if_failure=False)
                 unit = sol.product_uom if is_unit else company_uom
                 services.append({
-                    'name': name_by_sol[sol.id],
+                    'name': sol.with_context(with_price_unit=True).display_name,
                     'sold_value': product_uom_qty,
                     'effective_value': qty_delivered,
                     'remaining_value': product_uom_qty - qty_delivered,

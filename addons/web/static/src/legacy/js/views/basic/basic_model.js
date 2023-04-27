@@ -1603,7 +1603,7 @@ var BasicModel = AbstractModel.extend({
      * Apply an x2one (either a many2one or a reference field) change. There is
      * a need for this function because the server only gives an id when a
      * onchange modifies a many2one field. For this reason, we need (sometimes)
-     * to do a /name_get to fetch a display_name.
+     * to do a read of display_name.
      *
      * Moreover, for the many2one case, a new value can sometimes be set (i.e.
      * a display_name is given, but no id). When this happens, we first do a
@@ -1673,12 +1673,12 @@ var BasicModel = AbstractModel.extend({
             // TODO: refactor this to use _fetchNameGet
             def = this._rpc({
                     model: coModel,
-                    method: 'name_get',
-                    args: [data.id],
+                    method: 'read',
+                    args: [data.id, ['display_name']],
                     context: this._getContext(record, { fieldName, viewType }),
                 })
                 .then(function (result) {
-                    rel_data.display_name = result[0][1];
+                    rel_data.display_name = result[0]['display_name'];
                 });
         }
         return Promise.resolve(def).then(function () {
@@ -2479,7 +2479,7 @@ var BasicModel = AbstractModel.extend({
         }
     },
     /**
-     * Fetch name_get for a record datapoint.
+     * Fetch display_name for a record datapoint.
      *
      * @param {Object} dataPoint
      * @returns {Promise}
@@ -2487,15 +2487,15 @@ var BasicModel = AbstractModel.extend({
     _fetchNameGet: function (dataPoint) {
         return this._rpc({
             model: dataPoint.model,
-            method: 'name_get',
-            args: [dataPoint.res_id],
+            method: 'read',
+            args: [dataPoint.res_id, ['display_name']],
             context: dataPoint.getContext(),
         }).then(function (result) {
-            dataPoint.data.display_name = result[0][1];
+            dataPoint.data.display_name = result[0]['display_name'];
         });
     },
     /**
-     * Fetch name_get for a field of type Many2one or Reference
+     * Fetch display_name for a field of type Many2one or Reference
      *
      * @private
      * @params {Object} list: must be a datapoint of type list
@@ -2530,14 +2530,14 @@ var BasicModel = AbstractModel.extend({
         }
         return this._rpc({
                 model: model,
-                method: 'name_get',
-                args: [unique(ids)],
+                method: 'read',
+                args: [unique(ids), ['display_name']],
                 context: list.context,
             })
-            .then(function (name_gets) {
+            .then(function (readRecords) {
                 records.forEach((record) => {
-                    var nameGet = name_gets.find(nameGet => nameGet[0] === record.data.id);
-                    record.data.display_name = nameGet[1];
+                    const readRecord = readRecords.find(readRecord => readRecord['id'] === record.data.id);
+                    record.data.display_name = readRecord['display_name'];
                 });
             });
     },
@@ -2585,7 +2585,7 @@ var BasicModel = AbstractModel.extend({
             });
     },
     /**
-     * Fetch the `name_get` for a reference field.
+     * Fetch the `display_name` for a reference field.
      *
      * @private
      * @param {Object} record
@@ -2601,15 +2601,12 @@ var BasicModel = AbstractModel.extend({
         if (model && model !== 'False' && resID) {
             def = self._rpc({
                 model: model,
-                method: 'name_get',
-                args: [resID],
+                method: 'read',
+                args: [resID, ['display_name']],
                 context: record.getContext({fieldName: fieldName}),
             }).then(function (result) {
                 return self._makeDataPoint({
-                    data: {
-                        id: result[0][0],
-                        display_name: result[0][1],
-                    },
+                    data: result[0],
                     modelName: model,
                     parentID: record.id,
                 });
@@ -2635,19 +2632,16 @@ var BasicModel = AbstractModel.extend({
         var parent = datapoints[ids[0]][0];
         var def = self._rpc({
             model: model,
-            method: 'name_get',
-            args: [ids],
+            method: 'read',
+            args: [ids, ['display_name']],
             context: self.localData[parent].getContext({fieldName: fieldName, withoutRecordData: true}),
         }).then(function (result) {
             result.forEach((el) => {
-                var parentIDs = datapoints[el[0]];
+                var parentIDs = datapoints[el['id']];
                 parentIDs.forEach((parentID) => {
                     var parent = self.localData[parentID];
                     var referenceDp = self._makeDataPoint({
-                        data: {
-                            id: el[0],
-                            display_name: el[1],
-                        },
+                        data: el,
                         modelName: model,
                         parentID: parent.id,
                     });
@@ -2658,7 +2652,7 @@ var BasicModel = AbstractModel.extend({
         return def;
     },
     /**
-     * Fetch the extra data (`name_get`) for the reference fields of the record
+     * Fetch the extra data (`display_name`) for the reference fields of the record
      * model.
      *
      * @private
@@ -2698,7 +2692,7 @@ var BasicModel = AbstractModel.extend({
 
         var toFetch = this._getDataToFetchByModel(list, fieldName);
         var defs = [];
-        // one name_get by model
+        // one display_name read by model
         Object.entries(toFetch).forEach(([model, datapoints]) => {
             defs.push(self._fetchReferenceData(datapoints, model, fieldName));
         });
@@ -2741,7 +2735,7 @@ var BasicModel = AbstractModel.extend({
         });
 
         var defs = [];
-        // one name_get by model
+        // one display_name read by model
         Object.entries(toFetch).forEach(([model, datapoints]) => {
             defs.push(self._fetchReferenceData(datapoints, model, fieldName));
         });
@@ -2750,7 +2744,7 @@ var BasicModel = AbstractModel.extend({
     },
     /**
      * Batch requests for all reference field in list's children.
-     * Called by _readGroup to make only one 'name_get' rpc by fieldName.
+     * Called by _readGroup to make only one display_name 'read' rpc by fieldName.
      *
      * @param {Object} list a valid resource object
      * @returns {Promise}
@@ -2939,7 +2933,7 @@ var BasicModel = AbstractModel.extend({
             });
     },
     /**
-     * Fetches the `name_get` associated to the reference widget if the field is
+     * Fetches the `display_name` associated to the reference widget if the field is
      * a `char` (which is a supported case).
      *
      * @private
@@ -2951,7 +2945,7 @@ var BasicModel = AbstractModel.extend({
     _fetchSpecialReference: function (record, fieldName, fieldInfo) {
         var field = record.fields[fieldName];
         if (field.type === 'char') {
-            // if the widget reference is set on a char field, the name_get
+            // if the widget reference is set on a char field, the display_name
             // needs to be fetched a posteriori
             return Promise.resolve(this._fetchReference(record, fieldName));
         } else if (fieldInfo.options.model_field) {
@@ -4504,17 +4498,17 @@ var BasicModel = AbstractModel.extend({
                     const _changes = record._changes || {};
                     const relRecordId = _changes[name] || record.data[name];
                     if (!relRecordId) {
-                        return; // field is unset, no need to do the name_get
+                        return; // field is unset, no need to do the display_name read
                     }
                     var relRecord = self.localData[relRecordId];
                     defs.push(self._rpc({
                             model: field.relation,
-                            method: 'name_get',
-                            args: [relRecord.data.id],
+                            method: 'read',
+                            args: [relRecord.data.id, ['display_name']],
                             context: self._getContext(record, {fieldName: name, viewType: viewType, withoutRecordData: true}),
                         })
                         .then(function (result) {
-                            relRecord.data.display_name = result[0][1];
+                            relRecord.data.display_name = result[0]['display_name'];
                         }));
                 }
             }

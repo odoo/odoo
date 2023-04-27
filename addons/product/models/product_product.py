@@ -8,6 +8,7 @@ from odoo import api, fields, models, tools, _
 from odoo.exceptions import ValidationError
 from odoo.osv import expression
 from odoo.tools import float_compare
+from odoo.tools.misc import unique
 
 
 class ProductProduct(models.Model):
@@ -415,21 +416,13 @@ class ProductProduct(models.Model):
             domain.append((('categ_id', 'child_of', self._context['search_default_categ_id'])))
         return super()._search(domain, offset, limit, order, access_rights_uid)
 
-    @api.depends_context('display_default_code', 'seller_id')
+    @api.depends_context('display_default_code', 'seller_id', 'company_id')
     def _compute_display_name(self):
-        # `display_name` is calling `name_get()`` which is overidden on product
-        # to depend on `display_default_code` and `seller_id`
-        return super()._compute_display_name()
 
-    def name_get(self):
-        # TDE: this could be cleaned a bit I think
-
-        def _name_get(d):
-            name = d.get('name', '')
-            code = self._context.get('display_default_code', True) and d.get('default_code', False) or False
-            if code:
-                name = '[%s] %s' % (code,name)
-            return (d['id'], name)
+        def get_display_name(name, code):
+            if self._context.get('display_default_code', True) and code:
+                return f'[{code}] {name}'
+            return name
 
         partner_id = self._context.get('partner_id')
         if partner_id:
@@ -443,15 +436,13 @@ class ProductProduct(models.Model):
         self.check_access_rights("read")
         self.check_access_rule("read")
 
-        result = []
-
-        # prefetch the fields used by the `name_get`
+        # prefetch the fields used by the `display_name`
         self.sudo().fetch(['name', 'default_code', 'product_tmpl_id'])
 
         product_template_ids = self.sudo().product_tmpl_id.ids
 
         if partner_ids:
-            # prefetch the fields used by the `name_get`
+            # prefetch the fields used by the `display_name`
             supplier_info = self.env['product.supplierinfo'].sudo().search_fetch(
                 [('product_tmpl_id', 'in', product_template_ids), ('partner_id', 'in', partner_ids)],
                 ['product_tmpl_id', 'product_id', 'company_id', 'product_name', 'product_code'],
@@ -476,27 +467,18 @@ class ProductProduct(models.Model):
                 if company_id:
                     sellers = [x for x in sellers if x.company_id.id in [company_id, False]]
             if sellers:
+                temp = []
                 for s in sellers:
                     seller_variant = s.product_name and (
                         variant and "%s (%s)" % (s.product_name, variant) or s.product_name
                         ) or False
-                    mydict = {
-                              'id': product.id,
-                              'name': seller_variant or name,
-                              'default_code': s.product_code or product.default_code,
-                              }
-                    temp = _name_get(mydict)
-                    if temp not in result:
-                        result.append(temp)
-            else:
-                mydict = {
-                          'id': product.id,
-                          'name': name,
-                          'default_code': product.default_code,
-                          }
-                result.append(_name_get(mydict))
+                    temp.append(get_display_name(seller_variant or name, s.product_code or product.default_code))
 
-        return result
+                # => Feature drop here, one record can only have one display_name now, instead separate with `,`
+                # Remove this comment
+                product.display_name = ", ".join(unique(temp))
+            else:
+                product.display_name = get_display_name(name, product.default_code)
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):

@@ -59,7 +59,7 @@ def _compute_sparse(self, records):
 def _inverse_sparse(self, records):
     for record in records:
         values = record[self.sparse]
-        value = self.convert_to_read(record[self.name], record, use_name_get=False)
+        value = self.convert_to_read(record[self.name], record, use_display_name=False)
         if value:
             if values.get(self.name) != value:
                 values[self.name] = value

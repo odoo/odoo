@@ -3837,7 +3837,7 @@ QUnit.module("Views", (hooks) => {
                     </field>
                 </form>`,
             mockRPC(route, args) {
-                if (args.method === "name_get") {
+                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
                     nameGetCount++;
                 }
             },
@@ -3868,8 +3868,8 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: '<form><field name="trululu"/></form>',
             mockRPC(route, args) {
-                if (args.method === "name_get") {
-                    throw new Error("Should not call name_get");
+                if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
+                    throw new Error("Should not call display_name read");
                 }
             },
         });

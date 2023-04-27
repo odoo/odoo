@@ -368,7 +368,7 @@ class TestTranslation(TransactionCase):
 
     def test_101_create_translated_record(self):
         category = self.customers.with_context({})
-        self.assertEqual(category.name, 'Customers', "Error in basic name_get")
+        self.assertEqual(category.name, 'Customers', "Error in basic name")
 
         category_fr = category.with_context({'lang': 'fr_FR'})
         self.assertEqual(category_fr.name, 'Clients', "Translation not found")

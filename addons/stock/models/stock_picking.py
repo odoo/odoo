@@ -164,20 +164,17 @@ class PickingType(models.Model):
             for record in self:
                 record[field_name] = count.get(record.id, 0)
 
-    def name_get(self):
+    def _compute_display_name(self):
         """ Display 'Warehouse_name: PickingType_name' """
-        res = []
         for picking_type in self:
             if picking_type.warehouse_id:
-                name = picking_type.warehouse_id.name + ': ' + picking_type.name
+                picking_type.display_name = f"{picking_type.warehouse_id.name}: {picking_type.name}"
             else:
-                name = picking_type.name
-            res.append((picking_type.id, name))
-        return res
+                picking_type.display_name = picking_type.name
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
-        # Try to reverse the `name_get` structure
+        # Try to reverse the `display_name` structure
         parts = name.split(': ')
         if len(parts) == 2:
             name_domain = [('warehouse_id.name', operator, parts[0]), ('name', operator, parts[1])]

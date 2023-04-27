@@ -64,8 +64,9 @@ class Pricelist(models.Model):
         ],
         copy=True)
 
-    def name_get(self):
-        return [(pricelist.id, '%s (%s)' % (pricelist.name, pricelist.currency_id.name)) for pricelist in self]
+    def _compute_display_name(self):
+        for pricelist in self:
+            pricelist.display_name = f'{pricelist.name} ({pricelist.currency_id.name})'
 
     def _get_products_price(self, products, *args, **kwargs):
         """Compute the pricelist prices for the specified products, quantity & uom.

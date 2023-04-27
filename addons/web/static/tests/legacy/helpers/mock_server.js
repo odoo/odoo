@@ -229,7 +229,7 @@ var MockServer = Class.extend({
     /**
      * Converts an Object representing a record to actual return Object of the
      * python `onchange` method.
-     * Specifically, it applies `name_get` on many2one's and transforms raw id
+     * Specifically, it reads `display_name` on many2one's and transforms raw id
      * list in orm command lists for x2many's.
      * For x2m fields that add or update records (ORM commands 0 and 1), it is
      * recursive.
@@ -243,7 +243,6 @@ var MockServer = Class.extend({
         Object.entries(values).forEach(([fname, val]) => {
             const field = this.data[model].fields[fname];
             if (field.type === 'many2one' && typeof val === 'number') {
-                // implicit name_get
                 const m2oRecord = this.data[field.relation].records.find(r => r.id === val);
                 values[fname] = [val, m2oRecord.display_name];
             } else if (field.type === 'one2many' || field.type === 'many2many') {
@@ -1235,31 +1234,6 @@ var MockServer = Class.extend({
         return views;
     },
     /**
-     * Simulate a 'name_get' operation
-     *
-     * @private
-     * @param {string} model
-     * @param {Array} args
-     * @returns {Array[]} a list of [id, display_name]
-     */
-    _mockNameGet: function (model, args) {
-        var ids = args[0];
-        if (!args.length) {
-            throw new Error("name_get: expected one argument");
-        }
-        else if (!ids) {
-            return []
-        }
-        if (!Array.isArray(ids)) {
-            ids = [ids];
-        }
-        var records = this.data[model].records;
-        var names = ids.map((id) => {
-            return id ? [id, records.find((r) => r.id === id).display_name] : [null, ""];
-        });
-        return names;
-    },
-    /**
      * Simulate a 'name_create' operation
      *
      * @private
@@ -2029,8 +2003,6 @@ var MockServer = Class.extend({
             case 'get_views':
                 return this._mockGetViews(args.model, args.kwargs);
 
-            case 'name_get':
-                return this._mockNameGet(args.model, args.args);
 
             case 'name_create':
                 return this._mockNameCreate(args.model, args.args);

@@ -61,7 +61,7 @@ class Department(models.Model):
             **self._get_action_context(),
             'search_default_active_time_off': 3,
             'hide_employee_name': 1,
-            'holiday_status_name_get': False
+            'holiday_status_display_name': False
         }
         return action
 

@@ -740,8 +740,9 @@ class AccountPayment(models.Model):
         return res
 
     @api.depends('move_id.name')
-    def name_get(self):
-        return [(payment.id, payment.move_id.name != '/' and payment.move_id.name or _('Draft Payment')) for payment in self]
+    def _compute_display_name(self):
+        for payment in self:
+            payment.display_name = payment.move_id.name if payment.move_id.name != '/' else _('Draft Payment')
 
     # -------------------------------------------------------------------------
     # SYNCHRONIZATION account.payment <-> account.move

@@ -86,7 +86,7 @@ class TestBasicFields(BaseImportCase):
         self.assertEqualFields(self.get_fields('char.stillreadonly'), [ID_FIELD])
 
     def test_m2o(self):
-        """ M2O fields should allow import of themselves (name_get),
+        """ M2O fields should allow import of themselves (display_name),
         their id and their xid"""
         self.assertEqualFields(self.get_fields('m2o'), make_field(
             field_type='many2one', comodel_name=base_import_model('m2o.related'), model_name=base_import_model('m2o'),

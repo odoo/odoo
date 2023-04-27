@@ -225,7 +225,7 @@ class TestResConfigExecute(TransactionCase):
         settings.set_values()
 
         # Check user has access to all models of relational fields in view
-        # because the webclient makes a name_get request for all specified records
+        # because the webclient makes a read of display_name request for all specified records
         # even if they are not shown to the user.
         settings_view_arch = etree.fromstring(settings.get_view(view_id=self.settings_view.id)['arch'])
         seen_fields = set()

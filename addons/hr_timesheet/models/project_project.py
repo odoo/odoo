@@ -164,15 +164,14 @@ class Project(models.Model):
                     project._create_analytic_account()
         return super(Project, self).write(values)
 
-    def name_get(self):
-        res = super().name_get()
+    def _compute_display_name(self):
+        super()._compute_display_name()
         if len(self.env.context.get('allowed_company_ids', [])) <= 1:
-            return res
-        name_mapping = dict(res)
+            return
+
         for project in self:
             if project.is_internal_project:
-                name_mapping[project.id] = f'{name_mapping[project.id]} - {project.company_id.name}'
-        return list(name_mapping.items())
+                project.display_name = f'{project.display_name} - {project.company_id.name}'
 
     @api.model
     def _init_data_analytic_account(self):

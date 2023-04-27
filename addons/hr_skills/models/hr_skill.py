@@ -13,7 +13,8 @@ class Skill(models.Model):
     sequence = fields.Integer(default=10)
     skill_type_id = fields.Many2one('hr.skill.type', required=True, ondelete='cascade')
 
-    def name_get(self):
+    def _compute_display_name(self):
         if not self._context.get('from_skill_dropdown'):
-            return super().name_get()
-        return [(record.id, f"{record.name} ({record.skill_type_id.name})") for record in self]
+            return super()._compute_display_name()
+        for record in self:
+            record.display_name = f"{record.name} ({record.skill_type_id.name})"

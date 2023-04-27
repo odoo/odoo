@@ -146,9 +146,9 @@ class RequestBatcherORM extends ORM {
     }
 
     /**
-     * Entry point to batch "name_get" calls. If the `resModel` argument has
+     * Entry point to batch display_name "read" calls. If the `resModel` argument has
      * already been called, the given ids are added to the previous list of ids
-     * to perform a single name_get call.
+     * to perform a single read of display_name call.
      *
      * @param {string} resModel
      * @param {number[]} resIds

@@ -637,14 +637,14 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         assert.expect(6);
         const model = await createModelWithDataSource({
             mockRPC: function (route, { method, args }) {
-                if (method === "name_get") {
-                    const [resId] = args[0];
+                if (method === "read") {
+                    const resId = args[0][0];
                     const names = {
                         1: "Jean-Jacques",
                         2: "Raoul Grosbedon",
                     };
-                    assert.step(`name_get_${resId}`);
-                    return [[resId, names[resId]]];
+                    assert.step(`read_${resId}`);
+                    return [{id: resId, display_name: names[resId]}]
                 }
             },
         });
@@ -685,7 +685,7 @@ QUnit.module("spreadsheet > Global filters model", {}, () => {
         });
         await nextTick();
         assert.equal(getCellValue(model, "A10"), "Raoul Grosbedon");
-        assert.verifySteps(["name_get_1", "name_get_2"]);
+        assert.verifySteps(["read_1", "read_2"]);
     });
 
     QUnit.test(

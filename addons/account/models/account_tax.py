@@ -362,8 +362,7 @@ class AccountTax(models.Model):
             default['name'] = _("%s (Copy)") % self.name
         return super(AccountTax, self).copy(default=default)
 
-    def name_get(self):
-        name_list = []
+    def _compute_display_name(self):
         type_tax_use = dict(self._fields['type_tax_use']._description_selection(self.env))
         tax_scope = dict(self._fields['tax_scope']._description_selection(self.env))
         for record in self:
@@ -372,8 +371,7 @@ class AccountTax(models.Model):
                 name += ' (%s)' % type_tax_use.get(record.type_tax_use)
             if record.tax_scope:
                 name += ' (%s)' % tax_scope.get(record.tax_scope)
-            name_list += [(record.id, name)]
-        return name_list
+            record.display_name = name
 
     @api.onchange('amount')
     def onchange_amount(self):

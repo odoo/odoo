@@ -290,7 +290,7 @@ class TestSaleOrder(SaleCommon):
             "No validity date must be specified if the company validity duration is 0")
 
     def test_so_names(self):
-        """Test custom context key for name_get & name_search.
+        """Test custom context key for display_name & name_search.
 
         Note: this key is used in sale_expense & sale_timesheet modules.
         """
@@ -302,7 +302,7 @@ class TestSaleOrder(SaleCommon):
         self.assertNotIn(self.sale_order.partner_id.name, self.sale_order.display_name)
         self.assertIn(
             self.sale_order.partner_id.name,
-            self.sale_order.with_context(sale_show_partner_name=True).name_get()[0][1])
+            self.sale_order.with_context(sale_show_partner_name=True).display_name)
 
     def test_state_changes(self):
         """Test some untested state changes methods & logic."""

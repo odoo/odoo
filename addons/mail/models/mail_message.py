@@ -103,7 +103,7 @@ class Message(models.Model):
     # related document
     model = fields.Char('Related Document Model')
     res_id = fields.Many2oneReference('Related Document ID', model_field='model')
-    record_name = fields.Char('Message Record Name') # name_get() of the related document
+    record_name = fields.Char('Message Record Name') # display_name of the related document
     link_preview_ids = fields.One2many('mail.link.preview', 'message_id', string='Link Previews', groups="base.group_erp_manager")
     # characteristics
     message_type = fields.Selection([
@@ -993,7 +993,7 @@ class Message(models.Model):
                     'email_from': 'sacha@pokemon.com' # email address or False
                     'subtype_id': (1, u'Discussions'),
                     'date': '2015-06-30 08:22:33',
-                    'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner name_get
+                    'partner_ids': [[7, "Sacha Du Bourg-Palette"]], # list of partner convert_to_read
                     'message_type': u'comment',
                     'id': 59,
                     'subject': False
@@ -1194,7 +1194,7 @@ class Message(models.Model):
 
     @api.model
     def _get_record_name(self, values):
-        """ Return the related document name, using name_get. It is done using
+        """ Return the related document name, using display_name. It is done using
             SUPERUSER_ID, to be sure to have the record name correctly stored. """
         model = values.get('model', self.env.context.get('default_model'))
         res_id = values.get('res_id', self.env.context.get('default_res_id'))

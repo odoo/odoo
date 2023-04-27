@@ -587,7 +587,7 @@ export class TicketScreen extends Component {
             PARTNER: {
                 repr: (order) => order.get_partner_name(),
                 displayName: this.env._t("Customer"),
-                modelField: "partner_id.display_name",
+                modelField: "partner_id.complete_name",
             },
         };
 

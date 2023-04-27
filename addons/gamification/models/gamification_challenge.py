@@ -698,11 +698,10 @@ class Challenge(models.Model):
                 message_body = _("The challenge %s is finished.", challenge.name)
 
                 if rewarded_users:
-                    user_names = rewarded_users.name_get()
                     message_body += Markup("<br/>") + _(
                         "Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
                         badge_name=challenge.reward_id.name,
-                        users=", ".join(name for (user_id, name) in user_names)
+                        users=", ".join(rewarded_users.mapped('display_name'))
                     )
                 else:
                     message_body += Markup("<br/>") + _("Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")

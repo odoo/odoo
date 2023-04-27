@@ -597,12 +597,9 @@ class AccountAccount(models.Model):
             self.name = name
             self.code = code
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for account in self:
-            name = account.code + ' ' + account.name
-            result.append((account.id, name))
-        return result
+            account.display_name = f"{account.code} {account.name}"
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
@@ -701,7 +698,8 @@ class AccountAccount(models.Model):
         """
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
-            return self.create({'code': code, 'name': name}).name_get()[0]
+            record = self.create({'code': code, 'name': name})
+            return record.id, record.display_name
         raise ValidationError(_("Please create new accounts from the Chart of Accounts menu."))
 
     @api.model_create_multi
@@ -828,15 +826,14 @@ class AccountGroup(models.Model):
             if not group.code_prefix_start or group.code_prefix_start > group.code_prefix_end:
                 group.code_prefix_start = group.code_prefix_end
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for group in self:
             prefix = group.code_prefix_start and str(group.code_prefix_start)
             if prefix and group.code_prefix_end != group.code_prefix_start:
                 prefix += '-' + str(group.code_prefix_end)
             name = (prefix and (prefix + ' ') or '') + group.name
-            result.append((group.id, name))
-        return result
+            group.display_name = name
+
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
