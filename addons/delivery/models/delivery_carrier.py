@@ -397,6 +397,7 @@ class DeliveryCarrier(models.Model):
         commodities = []
 
         product_lines = move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu'])
+        price_unit_prec = self.env['decimal.precision'].precision_get('Product Price')
         for product, lines in groupby(product_lines, lambda x: x.product_id):
             unit_quantity = sum(
                 line.product_uom_id._compute_quantity(
@@ -405,7 +406,7 @@ class DeliveryCarrier(models.Model):
                 for line in lines)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
-            unit_price = float_round(sum(line.sale_price for line in lines) / rounded_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Price'))
+            unit_price = float_round(sum(line.sale_price for line in lines) / rounded_qty, precision_digits=price_unit_prec)
             commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
 
         return commodities
