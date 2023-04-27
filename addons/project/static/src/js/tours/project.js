@@ -118,7 +118,7 @@ registry.category("web_tour.tours").add('project_tour', {
     auto: true,
 }, {
     trigger: ".o_form_button_save",
-    extra_trigger: '.o_form_project_tasks.o_form_dirty',
+    extra_trigger: '.o_form_project_tasks .o_form_dirty',
     content: Markup(_t("You have unsaved changes - no worries! Odoo will automatically save it as you navigate.<br/> You can discard these changes from here or manually save your task.<br/>Let's save it manually.")),
     position: "bottom",
 }, {
