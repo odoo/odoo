@@ -31,7 +31,7 @@ class pos_multi_barcode_opt(models.Model):
 class product_product(models.Model):
     _inherit = 'product.product'
 
-    pos_multi_barcode_option = fields.One2many('pos.multi.barcode.options','product_id',string='Barcodes')
+    pos_multi_barcode_option = fields.One2many('pos.multi.barcode.options','product_id',string='الباركود المتعدد الثانوي ')
     barcode_options = fields.Text("New Barcode", compute="_compute_barcode_options")
 
     def _compute_barcode_options(self):

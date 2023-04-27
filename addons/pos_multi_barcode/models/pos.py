@@ -15,7 +15,7 @@ class pos_multi_barcode(models.Model):
 class product_product(models.Model):
     _inherit = 'product.product'
 
-    pos_multi_barcode = fields.One2many('pos.multi.barcode','product_id',string='Barcodes')
+    pos_multi_barcode = fields.One2many('pos.multi.barcode','product_id',string='الباركود المتعدد الأساسي')
     pos_multi_barcode_list = fields.Text(string='Barcodes',compute="_compute_multi_barcode")
 
 

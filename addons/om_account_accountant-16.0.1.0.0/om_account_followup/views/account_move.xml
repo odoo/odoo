@@ -1,0 +1,72 @@
+<odoo>
+    <data>
+
+        <record id="view_move_line_reconcile_tree" model="ir.ui.view">
+            <field name="name">account.move.line.tree</field>
+            <field name="model">account.move.line</field>
+            <field name="arch" type="xml">
+                <tree string="Journal Items to Reconcile" create="false">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="account_id"/>
+                    <field name="journal_id" invisible="1"/>
+                    <field name="full_reconcile_id"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="account_manual_reconcile_action" model="ir.actions.act_window">
+            <field name="context">{'search_default_unreconciled': 1,'view_mode':True}</field>
+            <field name="name">Journal Items to Reconcile</field>
+            <field name="res_model">account.move.line</field>
+            <field name="view_id" ref="view_move_line_reconcile_tree"/>
+            <field name="view_mode">tree</field>
+            <field name="help" type="html">
+                <p>No journal items found.</p>
+            </field>
+        </record>
+
+
+        <record id="account_move_line_partner_tree" model="ir.ui.view">
+            <field name="name">account.move.line.partner.tree</field>
+            <field name="model">account.move.line</field>
+            <field eval="32" name="priority"/>
+            <field name="arch" type="xml">
+                <tree editable="bottom" string="Partner Entries">
+                    <field name="date"/>
+                    <field name="move_id"/>
+                    <field name="ref"/>
+                    <field name="name"/>
+                    <field name="partner_id"/>
+                    <field name="company_id" invisible="1"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <field name="account_id" options="{'no_open': True, 'no_create': True}"
+                           domain="[('company_id', '=', company_id)]" groups="account.group_account_readonly"/>
+                    <field name="followup_line_id"/>
+                    <field name="followup_date"/>
+                    <field name="debit" sum="Total debit"/>
+                    <field name="credit" sum="Total credit"/>
+                    <field name="date_maturity"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_move_line_form" model="ir.ui.view">
+            <field name="name">account.move.line.form.followup</field>
+            <field name="model">account.move.line</field>
+            <field name="inherit_id" ref="account.view_move_line_form"/>
+            <field name="arch" type="xml">
+                <field name="date_maturity" position="after">
+                    <field name="followup_line_id"/>
+                    <field name="followup_date"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>
