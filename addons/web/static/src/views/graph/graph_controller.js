@@ -53,4 +53,5 @@ GraphController.props = {
     Model: Function,
     modelParams: Object,
     Renderer: Function,
+    buttonTemplate: String,
 };

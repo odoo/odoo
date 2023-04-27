@@ -754,4 +754,4 @@ export class GraphRenderer extends Component {
 
 GraphRenderer.template = "web.GraphRenderer";
 GraphRenderer.components = { Dropdown, DropdownItem };
-GraphRenderer.props = ["class?", "model"];
+GraphRenderer.props = ["class?", "model", "buttonTemplate"];
