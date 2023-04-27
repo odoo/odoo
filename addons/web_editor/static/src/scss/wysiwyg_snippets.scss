@@ -512,6 +512,32 @@
                 padding: ($o-we-sidebar-content-field-height * .12) ($o-we-sidebar-content-field-button-group-button-spacing - 2);
             }
 
+            #font-size > button {
+                &:focus-within {
+                    @extend %we-generic-text-input;
+                    // Cancel the height of the border:
+                    margin-top: -1px;
+                    margin-bottom: -1px;
+
+                    input {
+                        padding: 0 !important;
+                        width: calc(2ch + #{$o-we-sidebar-content-field-clickable-spacing * 2} - #{$o-we-sidebar-content-field-border-width * 2});
+                    }
+                }
+                &.dropdown-toggle::after {
+                    display: none;
+                }
+
+                input {
+                    background-color: unset;
+                    border: none;
+                    color: unset;
+                    padding: 0;
+                    text-align: center;
+                    width: calc(2ch + #{$o-we-sidebar-content-field-clickable-spacing * 2});
+                }
+            }
+
             we-customizeblock-option {
                 grid-area: options;
                 padding-left: 0;
