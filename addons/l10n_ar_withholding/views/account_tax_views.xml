@@ -9,7 +9,6 @@
             <field name="type_tax_use" position="after">
                 <field name="l10n_ar_withholding" attrs="{'invisible': ['|', ('type_tax_use', '!=', 'none'), ('country_code', '!=', 'AR')]}"/>
                 <field name="l10n_ar_withholding_amount_type" attrs="{'invisible':[('l10n_ar_withholding', 'not in', ['customer', 'supplier'])], 'required':[('l10n_ar_withholding', 'in', ['customer', 'supplier'])]}"/>
-                <field name="l10n_ar_withholding_sequence_id" attrs="{'invisible':[('l10n_ar_withholding', '!=', 'supplier')], 'required':[('l10n_ar_withholding', '=', 'supplier')]}"/>
             </field>
         </field>
     </record>
