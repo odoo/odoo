@@ -3,7 +3,9 @@
 
     <t t-name="web.EmailField" owl="1">
         <t t-if="props.readonly">
-            <a class="o_form_uri o_text_overflow" t-on-click.stop="" t-att-href="props.record.data[props.name] ? 'mailto:'+props.record.data[props.name] : undefined" t-esc="props.record.data[props.name] || ''"/>
+            <div class="d-grid">
+                <a class="o_form_uri o_text_overflow" t-on-click.stop="" t-att-href="props.record.data[props.name] ? 'mailto:'+props.record.data[props.name] : undefined" t-esc="props.record.data[props.name] || ''"/>
+            </div>
         </t>
         <t t-else="">
             <div class="d-inline-flex w-100">
