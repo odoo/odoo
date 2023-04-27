@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { Dialog } from "@web/core/dialog/dialog";
+import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { View } from "@web/views/view";
 import { escape } from "@web/core/utils/strings";
@@ -14,11 +15,14 @@ export class SelectCreateDialog extends Component {
         this.viewService = useService("view");
         this.dialogService = useService("dialog");
         this.state = useState({ resIds: [] });
+        // ℹ️ `_t` can only be inlined directly inside JS template literals
+        // after Babel has been updated to version 2.12.
+        const translatedText = _t("No records found!");
         this.baseViewProps = {
             display: { searchPanel: false },
             editable: false, // readonly
             noBreadcrumbs: true,
-            noContentHelp: markup(`<p>${escape(this.env._t("No records found!"))}</p>`),
+            noContentHelp: markup(`<p>${escape(translatedText)}</p>`),
             showButtons: false,
             selectRecord: (resId) => this.select([resId]),
             onSelectionChanged: (resIds) => {

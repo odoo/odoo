@@ -29,7 +29,7 @@ export class CalendarFilterPanel extends Component {
         return {
             autoSelect: true,
             resetOnSelect: true,
-            placeholder: `+ ${_t("Add")} ${section.label}`,
+            placeholder: sprintf(_t("+ Add %s"), section.label),
             sources: [
                 {
                     placeholder: _t("Loading..."),
