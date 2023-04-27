@@ -260,6 +260,8 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/legacy/xml/control_panel.xml',
             'web/static/src/legacy/xml/fields.xml',
             'web/static/src/legacy/xml/week_days.xml',
+            # Don't include dark mode files in light mode
+            ('remove', 'web/static/src/**/*.dark.scss'),
         ],
         'web.assets_frontend_minimal': [
             'web/static/src/legacy/js/promise_extension.js',
@@ -483,6 +485,7 @@ This module provides the core of the Odoo Web Client.
         ],
         "web.dark_mode_assets_backend": [
             ('include', 'web.assets_backend'),
+            'web/static/src/**/*.dark.scss',
         ],
         "web.dark_mode_variables": [
             ('before', 'base/static/src/scss/onboarding.variables.scss', 'base/static/src/scss/onboarding.variables.dark.scss'),
