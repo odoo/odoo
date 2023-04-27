@@ -81,6 +81,11 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
         }
         return this._super(...arguments);
     },
+    addOrderIfEmpty() {
+        if (!this.globalState.config.iface_floorplan) {
+            return this._super(...arguments);
+        }
+    },
     /**
      * @override
      * Before closing pos, we remove the event listeners set on window
