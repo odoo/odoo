@@ -62,13 +62,7 @@ class ThreadController(http.Controller):
 
     @http.route("/mail/message/post", methods=["POST"], type="json", auth="public")
     def mail_message_post(self, thread_model, thread_id, post_data):
-        if thread_model == "discuss.channel":
-            channel_member_sudo = request.env["discuss.channel.member"]._get_as_sudo_from_request_or_raise(
-                request=request, channel_id=int(thread_id)
-            )
-            thread = channel_member_sudo.channel_id
-        else:
-            thread = request.env[thread_model].browse(int(thread_id)).exists()
+        thread = request.env[thread_model]._get_from_request_or_raise(request, int(thread_id))
         if "body" in post_data:
             post_data["body"] = Markup(post_data["body"])  # contains HTML such as @mentions
         message_data = thread.message_post(
