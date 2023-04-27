@@ -430,7 +430,7 @@
             <field name="arch" type="xml">
                 <search string="Search Partner">
                     <field name="name"
-                       filter_domain="['|', '|', '|', '|', ('display_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
+                       filter_domain="['|', '|', '|', '|', ('complete_name', 'ilike', self), ('ref', '=', self), ('email', 'ilike', self), ('vat', 'ilike', self), ('company_registry', 'ilike', self)]"/>
                     <field name="parent_id" domain="[('is_company', '=', True)]" operator="child_of"/>
                     <field name="email" filter_domain="[('email', 'ilike', self)]"/>
                     <field name="phone" filter_domain="['|', ('phone', 'ilike', self), ('mobile', 'ilike', self)]"/>

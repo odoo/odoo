@@ -237,7 +237,7 @@ class SnailmailLetter(models.Model):
                 'letter_id': letter.id,
                 'res_model': letter.model,
                 'res_id': letter.res_id,
-                'contact_address': letter.partner_id.with_context(snailmail_layout=True, show_address=True).name_get()[0][1],
+                'contact_address': letter.partner_id.with_context(snailmail_layout=True, show_address=True).display_name,
                 'address': {
                     'name': recipient_name,
                     'street': letter.partner_id.street,
@@ -459,7 +459,7 @@ class SnailmailLetter(models.Model):
         return all(record[key] for key in required_keys)
 
     def _append_cover_page(self, invoice_bin: bytes):
-        address_split = self.partner_id.with_context(show_address=True, lang='en_US')._get_name().split('\n')
+        address_split = self.partner_id.with_context(show_address=True, lang='en_US').display_name.split('\n')
         address_split[0] = self.partner_id.name or self.partner_id.parent_id and self.partner_id.parent_id.name or address_split[0]
         address = '<br/>'.join(address_split)
         address_x = 118 * mm

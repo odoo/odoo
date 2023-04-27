@@ -777,7 +777,7 @@ class Contact(models.AbstractModel):
             opsep = Markup('<br/>')
 
         value = value.sudo().with_context(show_address=True)
-        name_get = value.name_get()[0][1]
+        name_get = value.display_name
         # Avoid having something like:
         # name_get = 'Foo\n  \n' -> This is a res.partner with a name and no address
         # That would return markup('<br/>') as address. But there is no address set.

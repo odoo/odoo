@@ -162,10 +162,11 @@ class EventRegistration(models.Model):
 
         return ret
 
-    def name_get(self):
-        """ Custom name_get in case a registration is nott linked to an attendee
+    def _compute_display_name(self):
+        """ Custom display_name in case a registration is nott linked to an attendee
         """
-        return [(registration.id, registration.name or f"#{registration.id}") for registration in self]
+        for registration in self:
+            registration.display_name = registration.name or f"#{registration.id}"
 
     def toggle_active(self):
         pre_inactive = self - self.filtered(self._active_name)

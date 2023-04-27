@@ -91,8 +91,9 @@ class PaymentToken(models.Model):
         """
         return
 
-    def name_get(self):
-        return [(token.id, token._build_display_name()) for token in self]
+    def _compute_display_name(self):
+        for token in self:
+            token.display_name = token._build_display_name()
 
     #=== BUSINESS METHODS ===#
 

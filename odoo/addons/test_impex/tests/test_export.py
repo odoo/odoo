@@ -329,10 +329,9 @@ class test_m2o(CreatorCase):
         """ Exported value is the name_get of the related object
         """
         record = self.env['export.integer'].create({'value': 42})
-        name = dict(record.name_get())[record.id]
         self.assertEqual(
             self.export(record.id),
-            [[name]])
+            [[record.display_name]])
 
     def test_path(self):
         """ Can recursively export fields of m2o via path

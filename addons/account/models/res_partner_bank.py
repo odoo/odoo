@@ -307,15 +307,13 @@ class ResPartnerBank(models.Model):
             account.partner_id._message_log(body=msg)
         return super().unlink()
 
-    def name_get(self):
-        res = super().name_get()
+    def _compute_display_name(self):
+        super()._compute_display_name()
         if self.env.context.get('display_account_trust'):
-            res = []
             for acc in self:
                 trusted_label = _('trusted') if acc.allow_out_payment else _('untrusted')
                 if acc.bank_id:
-                    name = '{} - {} ({})'.format(acc.acc_number, acc.bank_id.name, trusted_label)
+                    name = f'{acc.acc_number} - {acc.bank_id.name} ({trusted_label})'
                 else:
-                    name = '{} ({})'.format(acc.acc_number, trusted_label)
-                res.append((acc.id, name))
-        return res
+                    name = f'{acc.acc_number} ({trusted_label})'
+                acc.display_name = name

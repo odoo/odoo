@@ -366,15 +366,13 @@ class PosConfig(models.Model):
                 if trusted_config.currency_id != config.currency_id:
                     raise ValidationError(_("You cannot share open orders with configuration that does not use the same currency."))
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for config in self:
             last_session = self.env['pos.session'].search([('config_id', '=', config.id)], limit=1)
             if (not last_session) or (last_session.state == 'closed'):
-                result.append((config.id, _("%(pos_name)s (not used)", pos_name=config.name)))
+                config.display_name = _("%(pos_name)s (not used)", pos_name=config.name)
             else:
-                result.append((config.id, "%s (%s)" % (config.name, last_session.user_id.name)))
-        return result
+                config.display_name = f"{config.name} ({last_session.user_id.name})"
 
     @api.model_create_multi
     def create(self, vals_list):

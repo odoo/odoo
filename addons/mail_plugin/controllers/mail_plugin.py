@@ -193,7 +193,7 @@ class MailPluginController(http.Controller):
         if normalized_email:
             filter_domain = [('email_normalized', 'ilike', search_term)]
         else:
-            filter_domain = ['|', '|', ('display_name', 'ilike', search_term), ('ref', '=', search_term),
+            filter_domain = ['|', '|', ('complete_name', 'ilike', search_term), ('ref', '=', search_term),
                              ('email', 'ilike', search_term)]
 
         # Search for the partner based on the email.

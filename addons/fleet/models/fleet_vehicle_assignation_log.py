@@ -14,5 +14,6 @@ class FleetVehicleAssignationLog(models.Model):
     date_start = fields.Date(string="Start Date")
     date_end = fields.Date(string="End Date")
 
-    def name_get(self):
-        return [(rec.id, f'{rec.vehicle_id.name} - {rec.driver_id.name}') for rec in self]
+    def _compute_display_name(self):
+        for rec in self:
+            rec.display_name = f'{rec.vehicle_id.name} - {rec.driver_id.name}'

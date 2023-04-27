@@ -493,13 +493,11 @@ class Applicant(models.Model):
                 applicant._message_add_suggested_recipient(recipients, email=email_from, reason=_('Contact Email'))
         return recipients
 
-    def name_get(self):
+    def _compute_display_name(self):
         if self.env.context.get('show_partner_name'):
-            return [
-                (applicant.id, applicant.partner_name or applicant.name)
-                for applicant in self
-            ]
-        return super().name_get()
+            for applicant in self:
+                applicant.display_name = applicant.partner_name or applicant.name
+        super()._compute_display_name()
 
     @api.model
     def message_new(self, msg, custom_values=None):

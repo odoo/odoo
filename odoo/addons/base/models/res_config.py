@@ -639,12 +639,13 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             return actions.read()[0]
         return {}
 
-    def name_get(self):
+    def _compute_display_name(self):
         """ Override name_get method to return an appropriate configuration wizard
         name, and not the generated name."""
         action = self.env['ir.actions.act_window'].search([('res_model', '=', self._name)], limit=1)
         name = action.name or self._name
-        return [(record.id, name) for record in self]
+        for record in self:
+            record.display_name = name
 
     @api.model
     def get_option_path(self, menu_xml_id):

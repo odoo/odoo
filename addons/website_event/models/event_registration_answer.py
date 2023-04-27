@@ -25,10 +25,6 @@ class EventRegistrationAnswer(models.Model):
     ]
 
     # for displaying selected answers by attendees in attendees list view
-    def name_get(self):
-        return [
-            (reg.id,
-             reg.value_answer_id.name if reg.question_type == "simple_choice" else reg.value_text_box
-             )
-            for reg in self
-        ]
+    def _compute_display_name(self):
+        for reg in self:
+            reg.display_name = reg.value_answer_id.name if reg.question_type == "simple_choice" else reg.value_text_box

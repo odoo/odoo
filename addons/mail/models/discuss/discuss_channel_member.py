@@ -59,8 +59,9 @@ class ChannelMember(models.Model):
         else:
             self.message_unread_counter = 0
 
-    def name_get(self):
-        return [(record.id, record.partner_id.name or record.guest_id.name) for record in self]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = record.partner_id.name or record.guest_id.name
 
     def init(self):
         self.env.cr.execute("CREATE UNIQUE INDEX IF NOT EXISTS discuss_channel_member_partner_unique ON %s (channel_id, partner_id) WHERE partner_id IS NOT NULL" % self._table)

@@ -18,8 +18,9 @@ class LunchCashMove(models.Model):
     amount = fields.Float('Amount', required=True)
     description = fields.Text('Description')
 
-    def name_get(self):
-        return [(cashmove.id, '%s %s' % (_('Lunch Cashmove'), '#%d' % cashmove.id)) for cashmove in self]
+    def _compute_display_name(self):
+        for cashmove in self:
+            cashmove.display_name = '{} {}'.format(_('Lunch Cashmove'), '#%d' % cashmove.id)
 
     @api.model
     def get_wallet_balance(self, user, include_config=True):

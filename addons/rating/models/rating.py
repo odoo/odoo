@@ -59,8 +59,8 @@ class Rating(models.Model):
     @api.depends('res_model', 'res_id')
     def _compute_res_name(self):
         for rating in self:
-            name = self.env[rating.res_model].sudo().browse(rating.res_id).name_get()
-            rating.res_name = name and name[0][1] or ('%s/%s') % (rating.res_model, rating.res_id)
+            name = self.env[rating.res_model].sudo().browse(rating.res_id).display_name
+            rating.res_name = name or f'{rating.res_model}/{rating.res_id}'
 
     @api.depends('res_model', 'res_id')
     def _compute_resource_ref(self):
@@ -83,8 +83,8 @@ class Rating(models.Model):
         for rating in self:
             name = False
             if rating.parent_res_model and rating.parent_res_id:
-                name = self.env[rating.parent_res_model].sudo().browse(rating.parent_res_id).name_get()
-                name = name and name[0][1] or ('%s/%s') % (rating.parent_res_model, rating.parent_res_id)
+                name = self.env[rating.parent_res_model].sudo().browse(rating.parent_res_id).display_name
+                name = name or f'{rating.parent_res_model}/{rating.parent_res_id}'
             rating.parent_res_name = name
 
     def _get_rating_image_filename(self):

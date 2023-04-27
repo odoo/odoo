@@ -22,11 +22,9 @@ class MrpProduction(models.Model):
     incoming_picking = fields.Many2one(related='move_finished_ids.move_dest_ids.picking_id')
 
     @api.depends('name')
-    def name_get(self):
-        return [
-            (record.id, "%s (%s)" % (record.incoming_picking.name, record.name)) if record.bom_id.type == 'subcontract'
-            else (record.id, record.name) for record in self
-        ]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = record.name
 
     @api.depends('move_raw_ids.move_line_ids')
     def _compute_move_line_raw_ids(self):

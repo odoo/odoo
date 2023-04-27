@@ -13,4 +13,4 @@ class Bill(models.Model):
     @api.model
     def name_create(self, name):
         result = super().create({"name": name, "value": float(name)})
-        return result.name_get()[0]
+        return result.id, result.display_name
