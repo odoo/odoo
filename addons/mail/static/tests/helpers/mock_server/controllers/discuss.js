@@ -109,11 +109,8 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                 args.context
             );
         }
-        if (route === "/mail/message/add_reaction") {
-            return this._mockRouteMailMessageAddReaction(args);
-        }
-        if (route === "/mail/message/remove_reaction") {
-            return this._mockRouteMailMessageRemoveReaction(args);
+        if (route === "/mail/message/reaction") {
+            return this._mockRouteMailMessageReaction(args);
         }
         if (route === "/mail/message/update_content") {
             this.pyEnv["mail.message"].write([args.message_id], {
@@ -289,34 +286,10 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
         }
     },
     /**
-     * Simulates `/mail/message/add_reaction` route.
+     * Simulates `/mail/message/reaction` route.
      */
-    _mockRouteMailMessageAddReaction({ content, message_id: messageId }) {
-        return this._mockMailMessage_messageAddReaction(content, messageId);
-    },
-    /**
-     * Simulates `/mail/message/remove_reaction` route.
-     */
-    _mockRouteMailMessageRemoveReaction({ content, message_id: messageId }) {
-        this._mockMailMessage_messageRemoveReaction(content, messageId);
-        const reactions = this.pyEnv["mail.message.reaction"].search([
-            ["message_id", "=", messageId],
-            ["content", "=", content],
-        ]);
-        return {
-            id: messageId,
-            messageReactionGroups: [
-                [
-                    reactions.length > 0 ? "insert" : "insert-and-unlink",
-                    {
-                        content,
-                        count: reactions.length,
-                        message: { id: messageId },
-                        partners: [["insert-and-unlink", { id: this.pyEnv.currentPartnerId }]],
-                    },
-                ],
-            ],
-        };
+    _mockRouteMailMessageReaction({ action, content, message_id }) {
+        return this._mockMailMessage_messageReaction(message_id, content, action);
     },
     /**
      * Simulates the `/mail/history/messages` route.
