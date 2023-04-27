@@ -33,6 +33,11 @@
             <field name="arch" type="xml">
                 <search string="Action">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('type','ilike',self)]" string="Action"/>
+                    <group>
+                        <filter string="Action Type" name="type" context="{'group_by':'type'}"/>
+                        <filter string="Binding Type" name="binding_type" context="{'group_by':'binding_type'}"/>
+                        <filter string="Binding Model" name="binding_model_id" context="{'group_by':'binding_model_id'}"/>
+                    </group>
                 </search>
             </field>
         </record>
@@ -242,6 +247,10 @@
             <field name="arch" type="xml">
                 <search string="Open a Window">
                     <field name="name" filter_domain="['|', ('name','ilike',self), ('res_model','ilike',self)]" string="Action"/>
+                    <group>
+                        <filter string="Binding Model" name="binding_model_id" context="{'group_by':'binding_model_id'}"/>
+                        <filter string="Target Window" name="target" context="{'group_by':'target'}"/>
+                    </group>
                 </search>
             </field>
         </record>
