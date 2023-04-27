@@ -537,26 +537,26 @@ class HolidaysType(models.Model):
             if leave_type.employee_requests == 'no':
                 leave_type.allocation_validation_type = 'officer'
 
-    def requested_name_get(self):
-        return self._context.get('holiday_status_name_get', True) and self._context.get('employee_id')
+    def requested_display_name(self):
+        return self._context.get('holiday_status_display_name', True) and self._context.get('employee_id')
 
-    def name_get(self):
-        if not self.requested_name_get():
+    @api.depends('requires_allocation', 'virtual_remaining_leaves', 'max_leaves', 'request_unit')
+    @api.depends_context('holiday_status_display_name', 'employee_id', 'from_manager_leave_form')
+    def _compute_display_name(self):
+        if not self.requested_display_name():
             # leave counts is based on employee_id, would be inaccurate if not based on correct employee
-            return super(HolidaysType, self).name_get()
-        res = []
+            return super()._compute_display_name()
         for record in self:
             name = record.name
             if record.requires_allocation == "yes" and not self._context.get('from_manager_leave_form'):
-                name = "%(name)s (%(count)s)" % {
-                    'name': name,
-                    'count': _('%g remaining out of %g') % (
+                name = "{name} ({count})".format(
+                    name=name,
+                    count=_('%g remaining out of %g') % (
                         float_round(record.virtual_remaining_leaves, precision_digits=2) or 0.0,
                         float_round(record.max_leaves, precision_digits=2) or 0.0,
-                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days'))
-                }
-            res.append((record.id, name))
-        return res
+                    ) + (_(' hours') if record.request_unit == 'hour' else _(' days')),
+            )
+            record.display_name = name
 
     @api.model
     def _search(self, domain, offset=0, limit=None, order=None, access_rights_uid=None):

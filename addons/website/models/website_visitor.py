@@ -84,14 +84,9 @@ class WebsiteVisitor(models.Model):
     ]
 
     @api.depends('partner_id')
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for record in self:
-            res.append((
-                record.id,
-                record.partner_id.name or _('Website Visitor #%s', record.id)
-            ))
-        return res
+            record.display_name = record.partner_id.name or _('Website Visitor #%s', record.id)
 
     @api.depends('access_token')
     def _compute_partner_id(self):

@@ -193,16 +193,14 @@ class PurchaseOrder(models.Model):
                 order.date_planned = False
 
     @api.depends('name', 'partner_ref')
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for po in self:
             name = po.name
             if po.partner_ref:
                 name += ' (' + po.partner_ref + ')'
             if self.env.context.get('show_total_amount') and po.amount_total:
                 name += ': ' + formatLang(self.env, po.amount_total, currency_obj=po.currency_id)
-            result.append((po.id, name))
-        return result
+            po.display_name = name
 
     @api.depends('order_line.taxes_id', 'order_line.price_subtotal', 'amount_total', 'amount_untaxed')
     def _compute_tax_totals(self):

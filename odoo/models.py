@@ -1039,7 +1039,7 @@ class BaseModel(metaclass=MetaModel):
                                     break
                             if index is None:
                                 # not found anything, assume we just want the
-                                # name_get in the first column
+                                # display_name in the first column
                                 name = None
                                 index = i
 
@@ -1279,7 +1279,7 @@ class BaseModel(metaclass=MetaModel):
 
         The following sub-fields may be set on the record (by key):
 
-        * None is the name_get for the record (to use with name_create/name_search)
+        * None is the display_name for the record (to use with name_create/name_search)
         * "id" is the External ID for the record
         * ".id" is the Database ID for the record
         """
@@ -1323,7 +1323,7 @@ class BaseModel(metaclass=MetaModel):
                 comodel = self.env[fields[relfield].comodel_name]
 
                 # get only cells for this sub-field, should be strictly
-                # non-empty, field path [None] is for name_get field
+                # non-empty, field path [None] is for display_name field
                 indices, subfields = zip(*((index, fnames[1:] or [None])
                                            for index, fnames in enumerate(fields_)
                                            if fnames[0] == relfield))
@@ -1604,18 +1604,18 @@ class BaseModel(metaclass=MetaModel):
     def _compute_display_name(self):
         """Compute the value of the `display_name` field.
 
-        In general `display_name` is equal to calling `name_get()[0][1]`.
-
-        In that case, it is recommended to use `display_name` to uniformize the
-        code and to potentially take advantage of prefetch when applicable.
-
-        However some models might override this method. For them, the behavior
-        might differ, and it is important to select which of `display_name` or
-        `name_get()[0][1]` to call depending on the desired result.
+        The `display_name` field is a textual representation of the record.
+        This method can be overridden to change the representation.  If needed,
+        it can be made field-dependent using :attr:`~odoo.api.depends` and
+        context-dependent using :attr:`~odoo.api.depends_context`.
         """
-        names = dict(self.name_get())
-        for record in self:
-            record.display_name = names.get(record.id)
+        if self._rec_name:
+            convert = self._fields[self._rec_name].convert_to_display_name
+            for record in self:
+                record.display_name = convert(record[self._rec_name], record)
+        else:
+            for record in self:
+                record.display_name = f"{record._name},{record.id}"
 
     def name_get(self):
         """Returns a textual representation for the records in ``self``, with
@@ -1628,20 +1628,14 @@ class BaseModel(metaclass=MetaModel):
             :attr:`~.display_name` it is important that it resets to the
             "default" behaviour if the context keys are empty / missing.
 
+        .. deprecated:: 17.0
+            Deprecated method, read([`display_name`]) instead
+
         :return: list of pairs ``(id, text_repr)`` for each record
         :rtype: list[(int, str)]
         """
-        result = []
-        name = self._rec_name
-        if name in self._fields:
-            convert = self._fields[name].convert_to_display_name
-            for record in self:
-                result.append((record.id, convert(record[name], record) or ""))
-        else:
-            for record in self:
-                result.append((record.id, "%s,%s" % (record._name, record.id)))
-
-        return result
+        warnings.warn("Since 17.0, deprecated method, read display_name instead", DeprecationWarning, 2)
+        return [(record.id, record.display_name) for record in self]
 
     @api.model
     def name_create(self, name):
@@ -1656,11 +1650,11 @@ class BaseModel(metaclass=MetaModel):
 
         :param name: display name of the record to create
         :rtype: tuple
-        :return: the :meth:`~.name_get` pair value of the created record
+        :return: the (id, display_name) pair value of the created record
         """
         if self._rec_name:
             record = self.create({self._rec_name: name})
-            return record.name_get()[0]
+            return record.id, record.display_name
         else:
             _logger.warning("Cannot execute name_create, no _rec_name defined on %s", self._name)
             return False
@@ -1675,11 +1669,11 @@ class BaseModel(metaclass=MetaModel):
 
         This is used for example to provide suggestions based on a partial
         value for a relational field. Should usually behave as the reverse of
-        :meth:`~.name_get`, but that is ont guaranteed.
+        ``display_name``, but that is not guaranteed.
 
         This method is equivalent to calling :meth:`~.search` with a search
-        domain based on ``display_name`` and then :meth:`~.name_get` on the
-        result of the search.
+        domain based on ``display_name`` and mapping id and display_name on
+        the resulting search.
 
         :param str name: the name pattern to match
         :param list args: optional search domain (see :meth:`~.search` for
@@ -1691,7 +1685,7 @@ class BaseModel(metaclass=MetaModel):
         :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
         ids = self._name_search(name, args, operator, limit=limit, order=self._order)
-        return self.browse(ids).sudo().name_get()
+        return [(record.id, record.display_name) for record in self.browse(ids).sudo()]
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -2376,12 +2370,7 @@ class BaseModel(metaclass=MetaModel):
             field_name = group.split(':')[0]
             field = self._fields[field_name]
 
-            if field.type in ('many2one', 'many2many') or field_name == 'id':
-                ids = [row[group].id for row in rows_dict if row[group] and isinstance(row[group], BaseModel)]
-                m2x_records = self.env[field.comodel_name].browse(ids)
-                name_get_dict = dict(m2x_records.sudo().name_get())
-
-            elif field.type in ('date', 'datetime'):
+            if field.type in ('date', 'datetime'):
                 locale = get_lang(self.env).code
                 fmt = DEFAULT_SERVER_DATETIME_FORMAT if field.type == 'datetime' else DEFAULT_SERVER_DATE_FORMAT
                 granularity = group.split(':')[1] if ':' in group else 'month'
@@ -2391,8 +2380,8 @@ class BaseModel(metaclass=MetaModel):
                 value = row[group]
 
                 if field.type in ('many2one', 'many2many') and isinstance(value, BaseModel):
+                    row[group] = (value.id, value.sudo().display_name) if value else False
                     value = value.id
-                    row[group] = (value, name_get_dict[value]) if value else value
 
                 additional_domain = [(field_name, '=', value)]
 
@@ -3161,7 +3150,7 @@ class BaseModel(metaclass=MetaModel):
 
         :param list fields: field names to return (default is all fields)
         :param str load: loading mode, currently the only option is to set to
-            ``None`` to avoid loading the ``name_get`` of m2o fields
+            ``None`` to avoid loading the `display_name` of m2o fields
         :return: a list of dictionaries mapping field names to their values,
                  with one dictionary per record
         :rtype: list
@@ -3337,7 +3326,7 @@ class BaseModel(metaclass=MetaModel):
         values from the cache without doing a query when it is avoidable.
         """
         data = [(record, {'id': record._ids[0]}) for record in self]
-        use_name_get = (load == '_classic_read')
+        use_display_name = (load == '_classic_read')
         for name in fnames:
             field = self._fields[name]
             if field.type == 'properties':
@@ -3350,7 +3339,7 @@ class BaseModel(metaclass=MetaModel):
                     except MissingError:
                         vals.clear()
 
-                results = field.convert_to_read_multi(values_list, self.browse(records), use_name_get)
+                results = field.convert_to_read_multi(values_list, self.browse(records), use_display_name)
                 for record_read_vals, convert_result in zip(data, results):
                     record_read_vals[1][name] = convert_result
                 continue
@@ -3361,7 +3350,7 @@ class BaseModel(metaclass=MetaModel):
                 if not vals:
                     continue
                 try:
-                    vals[name] = convert(record[name], record, use_name_get)
+                    vals[name] = convert(record[name], record, use_display_name)
                 except MissingError:
                     vals.clear()
         result = [vals for record, vals in data if vals]
@@ -5260,7 +5249,7 @@ class BaseModel(metaclass=MetaModel):
             Defaults to no sort.
         :param read_kwargs: All read keywords arguments used to call
             ``read(..., **read_kwargs)`` method e.g. you can use
-            ``search_read(..., load='')`` in order to avoid computing name_get
+            ``search_read(..., load='')`` in order to avoid computing display_name
         :return: List of dictionaries containing the asked fields.
         :rtype: list(dict).
         """
@@ -7017,13 +7006,6 @@ PGERROR_TO_OE = defaultdict(
     '23505': convert_pgerror_unique,
     '23514': convert_pgerror_constraint,
 })
-
-
-def lazy_name_get(self):
-    """ Evaluate self.name_get() lazily. """
-    names = tools.lazy(lambda: dict(self.name_get()))
-    return [(rid, tools.lazy(operator.getitem, names, rid)) for rid in self.ids]
-
 
 # keep those imports here to avoid dependency cycle errors
 # pylint: disable=wrong-import-position

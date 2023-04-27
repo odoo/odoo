@@ -160,9 +160,9 @@ export class SearchArchParser extends XMLParser {
                 } else if (fieldType === "many2one") {
                     this.labels.push((orm) => {
                         return orm
-                            .call(relation, "name_get", [value], { context })
+                            .call(relation, "read", [value, ['display_name']], { context })
                             .then((results) => {
-                                preField.defaultAutocompleteValue.label = results[0][1];
+                                preField.defaultAutocompleteValue.label = results[0]['display_name'];
                             });
                     });
                 }

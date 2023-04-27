@@ -121,5 +121,5 @@ class ProjectTags(models.Model):
     def name_create(self, name):
         existing_tag = self.search([('name', '=ilike', name.strip())], limit=1)
         if existing_tag:
-            return existing_tag.name_get()[0]
+            return existing_tag.id, existing_tag.display_name
         return super().name_create(name)

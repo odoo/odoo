@@ -32,8 +32,9 @@ class PosCategory(models.Model):
         self.ensure_one()
         return (self.parent_id._get_hierarchy() if self.parent_id else []) + [self.name]
 
-    def name_get(self) -> List[Tuple[int, str]]:
-        return [(category.id, " / ".join(category._get_hierarchy())) for category in self if category.name]
+    def _compute_display_name(self):
+        for cat in self:
+            cat.display_name = " / ".join(cat._get_hierarchy())
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):

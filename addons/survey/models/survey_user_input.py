@@ -671,9 +671,7 @@ class SurveyUserInputLine(models.Model):
                 line.display_name = fields.Datetime.to_string(line.value_datetime)
             elif line.answer_type == 'suggestion':
                 if line.matrix_row_id:
-                    line.display_name = '%s: %s' % (
-                        line.suggested_answer_id.value,
-                        line.matrix_row_id.value)
+                    line.display_name = f'{line.suggested_answer_id.value}: {line.matrix_row_id.value}'
                 else:
                     line.display_name = line.suggested_answer_id.value
 

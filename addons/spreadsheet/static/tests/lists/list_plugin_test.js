@@ -46,7 +46,7 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         assert.strictEqual(getCellValue(model, "A2"), "Spreadsheet");
     });
 
-    QUnit.test("Return name_get of many2one field", async (assert) => {
+    QUnit.test("Return display_name of many2one field", async (assert) => {
         const { model } = await createSpreadsheetWithList({ columns: ["product_id"] });
         assert.strictEqual(getCellValue(model, "A2"), "xphone");
     });

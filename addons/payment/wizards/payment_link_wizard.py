@@ -100,14 +100,15 @@ class PaymentLinkWizard(models.TransientModel):
             partner_id = related_document.partner_id
             currency_id = related_document.currency_id
             selection.extend(
-                self._get_payment_provider_available(
+                (payment_provider.id, payment_provider.display_name)
+                for payment_provider in self._get_payment_provider_available(
                     res_model=res_model,
                     res_id=res_id,
                     company_id=company_id.id,
                     partner_id=partner_id.id,
                     amount=related_document.amount_total,
                     currency_id=currency_id.id,
-                ).name_get()
+                )
             )
         return selection
 

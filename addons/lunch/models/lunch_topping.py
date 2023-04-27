@@ -17,10 +17,8 @@ class LunchTopping(models.Model):
     supplier_id = fields.Many2one('lunch.supplier', ondelete='cascade')
     topping_category = fields.Integer('Topping Category', required=True, default=1)
 
-    def name_get(self):
+    def _compute_display_name(self):
         currency_id = self.env.company.currency_id
-        res = dict(super(LunchTopping, self).name_get())
         for topping in self:
             price = formatLang(self.env, topping.price, currency_obj=currency_id)
-            res[topping.id] = '%s %s' % (topping.name, price)
-        return list(res.items())
+            topping.display_name = f'{topping.name} {price}'
