@@ -209,6 +209,9 @@ class TestPoSStock(TestPoSCommon):
 
         group_owner = self.env.ref('stock.group_tracking_owner')
         self.env.user.write({'groups_id': [(4, group_owner.id)]})
+        group_stock_user = self.env.ref('stock.group_stock_user')
+        self.env.user.write({'groups_id': [(4, group_stock_user.id)]})
+
         self.product4 = self.create_product('Product 3', self.categ_basic, 30.0, 15.0)
         inventory = self.env['stock.inventory'].create({
             'name': 'Inventory adjustment'
