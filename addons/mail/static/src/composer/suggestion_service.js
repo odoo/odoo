@@ -216,9 +216,9 @@ export class SuggestionService {
             if (!isAInternalUser && isBInternalUser) {
                 return 1;
             }
-            if (thread?.channel) {
-                const isMember1 = thread.channel.channelMembers[0][1].includes(p1);
-                const isMember2 = thread.channel.channelMembers[0][1].includes(p2);
+            if (thread.model === "discuss.channel") {
+                const isMember1 = thread.channelMembers.some((member) => member.persona === p1);
+                const isMember2 = thread.channelMembers.some((member) => member.persona === p2);
                 if (isMember1 && !isMember2) {
                     return -1;
                 }
