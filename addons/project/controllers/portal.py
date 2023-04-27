@@ -34,6 +34,10 @@ class ProjectCustomerPortal(CustomerPortal):
         # pager
         url = "/my/projects/%s" % project.id
         values = self._prepare_tasks_values(page, date_begin, date_end, sortby, search, search_in, groupby, url, domain, su=bool(access_token))
+        # adding the access_token to the pager's url args,
+        # so we are not prompted for loging when switching pages
+        # if access_token is None, the arg is not present in the URL
+        values['pager']['url_args']['access_token'] = access_token
         pager = portal_pager(**values['pager'])
 
         values.update(
