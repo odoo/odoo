@@ -150,14 +150,15 @@ export class Field extends Component {
                             ...makeContext([fieldInfo.context], evalContext),
                         };
                     },
-                    get domain() {
+                    domain() {
                         const evalContext = record.getEvalContext
                             ? record.getEvalContext(true)
                             : record.evalContext;
-
-                        return fieldInfo.domain
-                            ? new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList()
-                            : undefined;
+                        if (fieldInfo.domain) {
+                            return new Domain(evaluateExpr(fieldInfo.domain, evalContext)).toList();
+                        }
+                        const { domain } = record.fields[fieldInfo.name];
+                        return domain ? new Domain(domain).toList(evalContext) : [];
                     },
                     readonly: readonlyFromModifiers,
                     get required() {
