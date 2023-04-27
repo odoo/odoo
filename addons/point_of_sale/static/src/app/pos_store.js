@@ -42,8 +42,15 @@ export class PosStore extends Reactive {
     }
 
     closeScreen() {
+        this.addOrderIfEmpty();
         const { name: screenName } = this.globalState.get_order().get_screen_data();
         this.showScreen(screenName);
+    }
+
+    addOrderIfEmpty() {
+        if (!this.globalState.get_order()) {
+            this.globalState.add_new_order();
+        }
     }
 
     connect_to_proxy() {

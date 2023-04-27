@@ -72,12 +72,6 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     //@override
-    _selectNextOrder(currentOrder) {
-        if (this.env.pos.config.iface_floorplan && this.env.pos.table) {
-            return this._super(...arguments);
-        }
-    },
-    //@override
     async onDeleteOrder() {
         await this._super(...arguments);
         if (this.env.pos.config.iface_floorplan) {
