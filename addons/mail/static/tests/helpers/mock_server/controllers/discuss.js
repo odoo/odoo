@@ -75,7 +75,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
             return this._mockRouteMailMessageInbox(after, before, around, limit);
         }
         if (route === "/mail/link_preview") {
-            return this._mockRouteMailLinkPreview(args.message_id);
+            return this._mockRouteMailLinkPreview(args.message_id, args.clear);
         }
         if (route == "/mail/link_preview/delete") {
             const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
@@ -265,10 +265,24 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
      * @param {integer} message_id
      * @returns {Object}
      */
-    _mockRouteMailLinkPreview(message_id) {
+    _mockRouteMailLinkPreview(message_id, clear = false) {
         const linkPreviews = [];
         const [message] = this.pyEnv["mail.message"].searchRead([["id", "=", message_id]]);
         if (message.body === "https://make-link-preview.com") {
+            if (clear) {
+                const [linkPreview] = this.pyEnv["mail.link.preview"].searchRead([
+                    ["message_id", "=", message_id],
+                ]);
+                this.pyEnv["bus.bus"]._sendone(
+                    this.pyEnv.currentPartnerId,
+                    "mail.link.preview/delete",
+                    {
+                        id: linkPreview.id,
+                        message_id: linkPreview.message_id[0],
+                    }
+                );
+            }
+
             const linkPreviewId = this.pyEnv["mail.link.preview"].create({
                 og_description: "test description",
                 og_title: "Article title",
