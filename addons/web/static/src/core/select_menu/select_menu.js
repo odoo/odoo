@@ -83,7 +83,6 @@ export class SelectMenu extends Component {
             searchValue: "",
         });
         this.inputRef = useRef("inputRef");
-        this.inputContainerRef = useRef("inputContainerRef");
         this.debouncedOnInput = useDebounced(
             () => this.onInput(this.inputRef.el ? this.inputRef.el.value.trim() : ""),
             250
@@ -162,9 +161,24 @@ export class SelectMenu extends Component {
         this.state.searchValue = searchString;
 
         // Get reference to dropdown container and scroll to the top.
-        const inputContainer = this.inputContainerRef.el;
-        if (inputContainer && inputContainer.parentNode) {
-            inputContainer.parentNode.scrollTo(0, 0);
+        const inputEl = this.inputRef.el;
+        if (inputEl && inputEl.parentNode) {
+            inputEl.parentNode.scrollTo(0, 0);
+        }
+    }
+
+    onSearchKeydown(ev) {
+        if (ev.key === "ArrowDown" || ev.key === "Enter") {
+            // Focus the first choice when navigating from the input using the arrow down key
+            const target = ev.target.parentElement.querySelector(".o_select_menu_item");
+            ev.target.classList.remove("focus");
+            target?.classList.add("focus");
+            target?.focus();
+            ev.preventDefault();
+        }
+        if (ev.key === "Enter" && this.state.choices.length === 1) {
+            // When there is only one displayed option, the enter key selects the value
+            ev.target.parentElement.querySelector(".o_select_menu_item").click();
         }
     }
 

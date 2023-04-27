@@ -12,6 +12,7 @@ import {
     click,
     triggerEvent,
     nextTick,
+    triggerHotkey,
     editInput,
 } from "../helpers/utils";
 
@@ -171,8 +172,8 @@ QUnit.module("Web Components", (hooks) => {
 
         await mount(Parent, target, { env });
         await open();
-        assert.containsOnce(target, ".o_select_menu_input");
-        assert.equal(document.activeElement, target.querySelector(".o_select_menu_input input"));
+        assert.containsOnce(target, "input.o_select_menu_sticky");
+        assert.equal(document.activeElement, target.querySelector("input.o_select_menu_sticky"));
     });
 
     QUnit.test(
@@ -426,7 +427,7 @@ QUnit.module("Web Components", (hooks) => {
                 >
                     <span class="select_menu_test">Select something</span>
                     <t t-set-slot="bottomArea" t-slot-scope="select">
-                    <span>
+                    <span class="o_select_menu_bottom_area">
                         <t t-esc="state.value.length"/> items selected
                     </span>
                     </t>
@@ -440,7 +441,7 @@ QUnit.module("Web Components", (hooks) => {
                 "2 items selected"
             );
 
-            await click(target, ".o_select_menu_item:nth-child(2)");
+            await click(target, ".o_select_menu_item:nth-child(3)");
             await open();
             assert.strictEqual(
                 target.querySelector(".o_select_menu_bottom_area").textContent.trim(),
@@ -481,7 +482,7 @@ QUnit.module("Web Components", (hooks) => {
         await open();
         assert.containsNone(target, ".coolClass");
 
-        await editInput(target, ".o_select_menu_input input", "coucou");
+        await editInput(target, "input.o_select_menu_sticky", "coucou");
         assert.containsOnce(target, ".coolClass");
 
         await click(target.querySelector(".coolClass"));
@@ -653,6 +654,11 @@ QUnit.module("Web Components", (hooks) => {
             await open();
             assert.containsNone(
                 target,
+                ".o_select_menu_sticky.top-0",
+                "Search box is not present."
+            );
+            assert.containsNone(
+                target,
                 ".o_select_menu_item.o_select_active",
                 "No choice should be selected."
             );
@@ -764,6 +770,101 @@ QUnit.module("Web Components", (hooks) => {
             assert.verifySteps(["[]"], "The selection list should be empty");
 
             assert.containsNone(target, ".o_select_menu .o_tag", "There should be no tags.");
+        }
+    );
+
+    QUnit.test("Navigation is possible from the input when it is focused", async (assert) => {
+        assert.expect(6);
+
+        class Parent extends Component {
+            setup() {
+                this.state = useState({ value: "b" });
+                this.choices = [
+                    { label: "A", value: "a" },
+                    { label: "B", value: "b" },
+                    { label: "C", value: "c" },
+                ];
+            }
+
+            onSelect(newValue) {
+                assert.step(newValue);
+                this.state.value = newValue;
+            }
+        }
+        Parent.components = { SelectMenu };
+        Parent.template = xml`
+                <SelectMenu
+                    value="this.state.value"
+                    choices="this.choices"
+                    onSelect.bind="this.onSelect"
+                />
+            `;
+
+        await mount(Parent, target, { env });
+        await open();
+        assert.equal(
+            document.activeElement,
+            target.querySelector("input.o_select_menu_sticky"),
+            "search input is focused by default"
+        );
+
+        await triggerHotkey("ArrowDown");
+        assert.strictEqual(
+            document.activeElement.textContent,
+            "A",
+            "first item is focused after keyboard navigation"
+        );
+
+        await triggerHotkey("ArrowDown");
+        assert.strictEqual(document.activeElement.textContent, "B", "second item is now focused");
+
+        await triggerHotkey("ArrowUp");
+        await triggerHotkey("ArrowUp");
+        assert.equal(
+            document.activeElement,
+            target.querySelector("input.o_select_menu_sticky"),
+            "search input is focused again"
+        );
+
+        await triggerHotkey("ArrowDown");
+        await triggerHotkey("Enter");
+        assert.verifySteps(["a"], "value has been selected after keyboard navigation");
+    });
+
+    QUnit.test(
+        "When only one choice is displayed, 'enter' key should select the value",
+        async (assert) => {
+            assert.expect(2);
+
+            class Parent extends Component {
+                setup() {
+                    this.state = useState({ value: "b" });
+                    this.choices = [
+                        { label: "A", value: "a" },
+                        { label: "B", value: "b" },
+                        { label: "C", value: "c" },
+                    ];
+                }
+
+                onSelect(newValue) {
+                    assert.step(newValue);
+                    this.state.value = newValue;
+                }
+            }
+            Parent.components = { SelectMenu };
+            Parent.template = xml`
+                <SelectMenu
+                    value="this.state.value"
+                    choices="this.choices"
+                    onSelect.bind="this.onSelect"
+                />
+            `;
+
+            await mount(Parent, target, { env });
+            await open();
+            await editInput(target, "input.o_select_menu_sticky", "a");
+            await triggerHotkey("Enter");
+            assert.verifySteps(["a"], "value has been selected after keyboard navigation");
         }
     );
 });
