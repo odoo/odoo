@@ -35,8 +35,8 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: 'A "The Burndown Chart must be grouped by Date and Stage" notification is shown when trying to remove the group by "Date: Month > Stage"',
     trigger: '.o_notification_manager .o_notification:contains("The Burndown Chart must be grouped by Date and Stage") button.o_notification_close',
 }, {
-    content: 'Open the group by menu',
-    trigger: '.o_group_by_menu button',
+    content: 'Open the search panel menu',
+    trigger: '.o_control_panel .o_searchview_dropdown_toggler',
 }, {
     content: 'The Stage group menu item is invisible',
     trigger: '.o_group_by_menu:not(:has(.o_menu_item:contains("Stage")))',
@@ -56,8 +56,8 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: 'A "The Burndown Chart must be grouped by Date" notification is shown when trying to remove the group by "Date: Month > Stage"',
     trigger: '.o_notification_manager .o_notification:contains("The Burndown Chart must be grouped by Date") button.o_notification_close',
 }, {
-    content: 'Open the filter menu',
-    trigger: '.o_filter_menu button',
+    content: 'Open the search panel menu',
+    trigger: '.o_control_panel .o_searchview_dropdown_toggler',
 }, {
     content: 'Open the Date filter sub menu',
     trigger: '.o_filter_menu button.o_menu_item:contains("Date")',
@@ -74,6 +74,9 @@ registry.category("web_tour.tours").add('burndown_chart_tour', {
     content: 'Close the Date filter menu',
     trigger: '.o_graph_renderer',
 }, {
+    content: 'Open the search panel menu',
+    trigger: '.o_control_panel .o_searchview_dropdown_toggler',
+}, {
     content: 'The comparison menu is not rendered',
-    trigger: '.o_search_options:not(:has(.o_comparison_menu))',
+    trigger: ':not(:has(.o_comparison_menu))',
 }]});
