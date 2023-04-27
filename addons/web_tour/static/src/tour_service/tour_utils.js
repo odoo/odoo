@@ -49,16 +49,22 @@ export function getFirstVisibleElement($elements) {
     return $();
 }
 
-export function getJQueryElementFromSelector(selector) {
+/**
+ * @param {JQuery|undefined} target
+ */
+export function getJQueryElementFromSelector(selector, $target) {
+    $target = $target || $(document);
     const iframeSplit = typeof selector === "string" && selector.match(/(.*\biframe[^ ]*)(.*)/);
     if (iframeSplit && iframeSplit[2]) {
-        var $iframe = $(`${iframeSplit[1]}:not(.o_ignore_in_tour)`);
+        var $iframe = $target.find(`${iframeSplit[1]}:not(.o_ignore_in_tour)`);
         if ($iframe.is('[is-ready="false"]')) {
             return $();
         }
         var $el = $iframe.contents().find(iframeSplit[2]);
         $el.iframeContainer = $iframe[0];
         return $el;
+    } else if (typeof selector === "string") {
+        return $target.find(selector);
     } else {
         return $(selector);
     }
