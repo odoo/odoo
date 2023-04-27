@@ -41,7 +41,7 @@
             <field name="name">hr.recruitment.source.tree</field>
             <field name="model">hr.recruitment.source</field>
             <field name="arch" type="xml">
-                <tree string="Sources of Applicants" editable="top" class="o_recruitment_list" sample="1">
+                <tree string="Sources of Applicants" editable="top" sample="1">
                     <field name="has_domain" invisible="1"/>
                     <field name="source_id" placeholder="e.g. LinkedIn" decoration-bf="1" attrs="{'readonly': [('id', '!=', False)]}"/>
                     <field name="medium_id" optional="hidden"/>

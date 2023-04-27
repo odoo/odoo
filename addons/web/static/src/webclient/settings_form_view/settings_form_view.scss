@@ -1,4 +1,4 @@
-.o_base_settings {
+.o_base_settings_view .o_form_renderer {
    height: 100%;
    overflow: auto;
 }
@@ -27,14 +27,14 @@
 }
 
 // Use a very specif selector to overwrite generic form-view rules
-.o_form_view.o_form_nosheet.o_base_settings {
+.o_form_view.o_base_settings_view .o_form_renderer.o_form_nosheet {
    display: flex;
    flex-flow: column nowrap;
    padding: 0px;
 }
 
 // BASE SETTINGS LAYOUT
-.o_base_settings {
+.o_base_settings_view .o_form_renderer {
    --settings__tab-bg: #{map-get($grays, '900')};
    --settings__tab-bg--active: #{map-get($grays, '800')};
    --settings__tab-color: #{map-get($grays, '400')};

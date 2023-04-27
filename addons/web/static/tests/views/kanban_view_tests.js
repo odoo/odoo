@@ -365,6 +365,36 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_record:contains(gnap)");
     });
 
+    QUnit.test("kanban rendering with class and style attributes", async (assert) => {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `
+                <kanban class="myCustomClass" style="border: 1px solid red;">
+                    <templates><t t-name="kanban-box">
+                        <field name="foo"/>
+                    </t></templates>
+                </kanban>
+            `,
+        });
+        assert.containsNone(
+            target,
+            ".o_view_controller[style*='border: 1px solid red;'], .o_view_controller [style*='border: 1px solid red;']",
+            "style attribute should not be copied"
+        );
+        assert.containsOnce(
+            target,
+            ".o_view_controller.o_kanban_view.myCustomClass",
+            "class attribute should be passed to the view controller"
+        );
+        assert.containsOnce(
+            target,
+            ".myCustomClass",
+            "class attribute should ONLY be passed to the view controller"
+        );
+    });
+
     QUnit.test("generic tags are case insensitive", async function (assert) {
         await makeView({
             type: "kanban",
