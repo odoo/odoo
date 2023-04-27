@@ -24,7 +24,15 @@
                             <t t-slot="control-panel-always-buttons"/>
                         </t>
                     </div>
-                    <t t-if="!env.config.noBreadcrumbs" t-call="web.Breadcrumbs"/>
+                    <t t-if="env.config.noBreadcrumbs">
+                        <section class="o_control_panel_breadcrumbs_actions d-contents">
+                            <t t-slot="control-panel-additional-actions"/>
+                            <t t-slot="control-panel-status-indicator" />
+                        </section>
+                    </t>
+                    <t t-else="">
+                        <t t-call="web.Breadcrumbs"/>
+                    </t>
                     <span class="d-none d-xl-block me-auto"/> <!-- Spacer -->
                 </div>
 
