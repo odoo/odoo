@@ -145,57 +145,6 @@ td {
     overflow: hidden;
 }
 
-/*  ********* The black loading screen ********* */
-
-.pos .loader{
-    background-color: #222;
-    position:absolute;
-    left:0px;
-    top:0px;
-    width:100%;
-    height:100%;
-    z-index: 999;
-    text-align: center;
-    font-family: Lato;
-    color: $gray-700;
-}
-
-.pos .loader-feedback{
-    width: 400px;
-    height: 160px;
-    margin: -60px -200px;
-    position: absolute;
-    left: 50%; top: 50%;
-    text-align: center;
-}
-.pos .loader-feedback h1{
-    font-weight: 300;
-}
-.pos .loader-feedback .progressbar{
-    background: rgb(73,73,73);
-    height: 1px;
-}
-.pos .loader-feedback .progressbar > .progress{
-    height: 100%;
-    background: white;
-    width: 0%;
-    box-shadow: 0px 0px 5px rgba(255,255,255,0.35);
-}
-.pos .loader-feedback .button{
-    display: inline-block;
-    margin: 25px auto;
-    line-height: 42px;
-    padding: 0px 16px;
-    font-size: 20px;
-    font-weight: 300;
-    border: solid 1px;
-    border-radius: 5px;
-    cursor: pointer;
-}
-.pos .loader-feedback .button:active{
-    color: #222;
-    background: $gray-700;
-}
 /*  ********* Generic Layout Constructs  ********* */
 
 .pos .window{
@@ -2921,14 +2870,6 @@ td {
     opacity: 0;
 }
 
-.o-swing {
-    transition: opacity 0.8s;
-}
-
-.o-swing-enter, .o-swing-leave {
-    opacity: 0;
-}
-
 /*
     We block the top-header when a temp screen is displayed.
     Similar to blocking the whole ui when a popup is displayed.
@@ -3733,64 +3674,6 @@ td {
 @media screen and (max-width: 768px) {
     .ticket-screen .pos-search-bar .search input {
         padding-left: 10px;
-    }
-}
-
-/* For LoadingScreen */
-
-.lds-ellipsis {
-    display: inline-block;
-    position: relative;
-    width: 80px;
-    height: 60px;
-}
-.lds-ellipsis div {
-    position: absolute;
-    top: 33px;
-    width: 13px;
-    height: 13px;
-    border-radius: 50%;
-    background: #fff;
-    animation-timing-function: cubic-bezier(0, 1, 1, 0);
-}
-.lds-ellipsis div:nth-child(1) {
-    left: 8px;
-    animation: lds-ellipsis1 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(2) {
-    left: 8px;
-    animation: lds-ellipsis2 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(3) {
-    left: 32px;
-    animation: lds-ellipsis2 0.6s infinite;
-}
-.lds-ellipsis div:nth-child(4) {
-    left: 56px;
-    animation: lds-ellipsis3 0.6s infinite;
-}
-@keyframes lds-ellipsis1 {
-    0% {
-        transform: scale(0);
-    }
-    100% {
-        transform: scale(1);
-    }
-}
-@keyframes lds-ellipsis3 {
-    0% {
-        transform: scale(1);
-    }
-    100% {
-        transform: scale(0);
-    }
-}
-@keyframes lds-ellipsis2 {
-    0% {
-        transform: translate(0, 0);
-    }
-    100% {
-        transform: translate(24px, 0);
     }
 }
 

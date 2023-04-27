@@ -19,7 +19,7 @@ import { App, whenReady } from "@odoo/owl";
  *
  * @param {Component} Webclient
  */
-export async function startWebClient(Webclient) {
+export async function startWebClient(Webclient, props = {}) {
     odoo.info = {
         db: session.db,
         server_version: session.server_version,
@@ -39,6 +39,7 @@ export async function startWebClient(Webclient) {
     const app = new App(Webclient, {
         name: "Odoo Web Client",
         env,
+        props,
         templates,
         dev: env.debug,
         warnIfNoStaticProps: true,

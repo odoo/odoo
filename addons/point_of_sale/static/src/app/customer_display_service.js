@@ -104,46 +104,23 @@ export const customerDisplayService = {
     start(env, deps) {
         const { globalState } = deps.pos;
 
-        // Dummy service, does nothing until the globalState is ready, then the methods get replaced
-        const service = {
-            connect() {},
-        };
+        const {
+            iface_customer_facing_display: enabled,
+            iface_customer_facing_display_via_proxy: proxy,
+        } = globalState.config;
+        if (!enabled) {
+            return;
+        }
 
-        globalState.ready.then(() => {
-            const {
-                iface_customer_facing_display: enabled,
-                iface_customer_facing_display_local: local,
-                iface_customer_facing_display_via_proxy: proxy,
-            } = globalState.config;
-            if (!enabled) {
-                return;
-            }
-
-            let display;
-            if (local) {
-                display = new LocalDisplay(globalState);
-            } else if (proxy) {
-                display = new RemoteDisplay(
-                    globalState,
-                    pick(deps, ...RemoteDisplay.serviceDependencies)
-                );
-            } else {
-                // FIXME POSREF can this ever happen?
-                return;
-            }
-            // FIXME POSREF this is very inelegant. There are a lot of places that get more complicated
-            // because we want to mount the chrome before the globalState is loaded. Maybe we should
-            // just make the loading screen its own thing that doesn't depend on anything, instead
-            // of having it be a part of the chrome and having to propagate complexity everywhere.
-            env.services.customer_display = display;
-            // Register an effect to update the display automatically when anything it renders changes
-            effect(
-                batched((display) => display.update()),
-                [display]
-            );
-        });
-
-        return service;
+        const display = proxy
+            ? new RemoteDisplay(globalState, pick(deps, ...RemoteDisplay.serviceDependencies))
+            : new LocalDisplay(globalState);
+        // Register an effect to update the display automatically when anything it renders changes
+        effect(
+            batched((display) => display.update()),
+            [display]
+        );
+        return display;
     },
 };
 

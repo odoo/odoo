@@ -83,11 +83,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         if (this.env.pos.config.is_table_management) {
             this.env.pos.setOrderToRemove(order);
             if (!this.env.pos.table) {
-                try {
-                    await this.env.pos._removeOrdersFromServer();
-                } catch (error) {
-                    throw error;
-                }
+                await this.env.pos._removeOrdersFromServer();
             }
         }
         await _super(...arguments);
