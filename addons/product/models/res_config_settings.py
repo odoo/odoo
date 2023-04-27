@@ -67,7 +67,8 @@ class ResConfigSettings(models.TransientModel):
             pl = self.env['product.pricelist'].search([('discount_policy', '=', 'without_discount')])
             pl.write({'discount_policy': 'with_discount'})
 
-        if self.group_product_pricelist:
+        had_group_pl = self.default_get(['group_product_pricelist'])['group_product_pricelist']
+        if self.group_product_pricelist and not had_group_pl:
             self.env['res.company']._activate_or_create_pricelists()
-        else:
+        elif not self.group_product_pricelist:
             self.env['product.pricelist'].sudo().search([]).action_archive()
