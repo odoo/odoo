@@ -1,3 +1,16 @@
+.o_kanban_record  {
+    @include media-breakpoint-up(sm) {
+        .o_field_widget.o_field_many2one_avatar_user .o_quick_assign {
+            visibility: hidden;
+        }
+        &:hover {
+            .o_field_widget.o_field_many2one_avatar_user .o_quick_assign {
+                visibility: visible;
+            }
+        }
+    }
+}
+
 .o_m2o_tags_avatar_field_popover {
     z-index: $zindex-modal - 1;
     font-size: $dropdown-font-size;

@@ -68,6 +68,20 @@
             padding-left:2px;
         }
     }
+
+}
+
+.o_kanban_record  {
+    @include media-breakpoint-up(sm) {
+        .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+            visibility: hidden;
+        }
+        &:hover {
+            .o_field_widget.o_field_many2many_tags_avatar .o_quick_assign {
+                visibility: visible;
+            }
+        }
+    }
 }
 
 .o_list_view .o_field_widget.o_field_many2many_tags_avatar {
