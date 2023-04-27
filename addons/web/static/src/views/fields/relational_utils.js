@@ -15,7 +15,7 @@ import { createElement } from "@web/core/utils/xml";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
 import { loadSubViews } from "@web/views/form/form_controller";
 import { FormRenderer } from "@web/views/form/form_renderer";
-import { evalDomain, isNull } from "@web/views/utils";
+import { computeViewClassName, evalDomain, isNull } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { FormViewDialog } from "@web/views/view_dialogs/form_view_dialog";
@@ -491,6 +491,7 @@ export class X2ManyFieldDialog extends Component {
         this.archInfo = this.props.archInfo;
         this.record = this.props.record;
         this.title = this.props.title;
+        this.contentClass = computeViewClassName("form", this.archInfo.xmlDoc);
         useSubEnv({ config: this.props.config });
 
         useBus(this.record.model.bus, "update", () => this.render(true));

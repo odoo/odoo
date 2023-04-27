@@ -33,12 +33,12 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
     mobile: true,
 }, {
     trigger: '.o_field_widget[name="product_id"] .o_input_dropdown',
-    extra_trigger: '.o_expense_form',
+    extra_trigger: '.o_hr_expense_form_view_view',
     content: _t("Enter a name then choose a category and configure the amount of your expense."),
     position: 'bottom',
 }, {
     trigger: '.o_form_status_indicator_dirty .o_form_button_save',
-    extra_trigger: '.o_expense_form',
+    extra_trigger: '.o_hr_expense_form_view_view',
     content: Markup(_t("Ready? You can save it manually or discard modifications from here. You don't <em>need to save</em> - Odoo will save eveyrthing for you when you navigate.")),
     position: 'bottom',
 }, ...stepUtils.statusbarButtonsSteps(_t("Attach Receipt"), _t("Attach a receipt - usually an image or a PDF file.")),
@@ -47,11 +47,11 @@ registry.category("web_tour.tours").add('hr_expense_tour' , {
 ...stepUtils.goBackBreadcrumbsMobile(
     _t("Use the breadcrumbs to go back to the list of expenses."),
     undefined,
-    ".o_expense_form",
+    ".o_hr_expense_form_view_view",
 ),
 {
     trigger: '.breadcrumb > li.breadcrumb-item:first',
-    extra_triggger: ".o_expense_form",
+    extra_triggger: ".o_hr_expense_form_view_view",
     content: _t("Let's go back to your expenses."),
     position: 'bottom',
     mobile: false,

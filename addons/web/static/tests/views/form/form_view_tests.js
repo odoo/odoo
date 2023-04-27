@@ -294,6 +294,31 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, "label.o_form_label_empty:contains(timmy)");
     });
 
+    QUnit.test("form rendering with class and style attributes", async (assert) => {
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: /* xml */ `<form class="myCustomClass" style="border: 1px solid red;"/>`,
+            resId: 2,
+        });
+        assert.containsNone(
+            target,
+            ".o_view_controller[style*='border: 1px solid red;'], .o_view_controller [style*='border: 1px solid red;']",
+            "style attribute should not be copied"
+        );
+        assert.containsOnce(
+            target,
+            ".o_view_controller.o_form_view.myCustomClass",
+            "class attribute should be passed to the view controller"
+        );
+        assert.containsOnce(
+            target,
+            ".myCustomClass",
+            "class attribute should ONLY be passed to the view controller"
+        );
+    });
+
     QUnit.test("generic tags are case insensitive", async function (assert) {
         await makeView({
             type: "form",

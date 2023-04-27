@@ -73,6 +73,19 @@ export function archParseBoolean(str, trueIfEmpty = false) {
     return str ? !/^false|0$/i.test(str) : trueIfEmpty;
 }
 
+export function computeViewClassName(viewType, rootNode, additionalClassList = []) {
+    const subType = rootNode.getAttribute("js_class");
+    const isValidSubType = subType && registry.category("views").contains(subType);
+    const subTypeClass = isValidSubType ? `o_${subType}_view` : "";
+    const classList = [
+        `o_${viewType}_view`,
+        subTypeClass,
+        ...(rootNode.getAttribute("class") || "").split(" "),
+        ...additionalClassList,
+    ];
+    return [...new Set(classList)].filter((c) => c).join(" ");
+}
+
 /**
  * TODO: doc
  *
@@ -156,8 +169,8 @@ export function getFormattedValue(record, fieldName, attrs) {
         field: record.fields[fieldName],
     };
     return record.data[fieldName] !== undefined
-            ? formatter(record.data[fieldName], formatOptions)
-            : "";
+        ? formatter(record.data[fieldName], formatOptions)
+        : "";
 }
 
 /**

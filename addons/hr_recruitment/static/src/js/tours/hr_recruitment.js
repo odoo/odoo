@@ -100,7 +100,7 @@ registry.category("web_tour.tours").add('hr_recruitment_tour',{
     width: 225
 }, {
     trigger: ".o_form_button_save",
-    extra_trigger: ".o_employee_form",
+    extra_trigger: ".o_hr_employee_form_view",
     content: _t("Save it!"),
     position: "bottom",
     width: 80

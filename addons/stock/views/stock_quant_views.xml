@@ -363,7 +363,7 @@
         <field name="model">stock.quant</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" class="o_inventory_adjustments" sample="1">
+            <tree default_order="location_id, inventory_date, product_id, package_id, lot_id, owner_id" decoration-warning='is_outdated' editable="bottom" create="1" edit="1" import="1" js_class="inventory_report_list" sample="1">
                 <header>
                     <button name="action_inventory_at_date" string="Inventory at Date" type="object"
                             invisible="((context.get('inventory_mode') and not context.get('inventory_report_mode')) or context.get('no_at_date'))"

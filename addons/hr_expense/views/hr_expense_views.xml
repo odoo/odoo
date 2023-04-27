@@ -111,7 +111,7 @@
             <field name="name">hr.expense.view.form</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <form string="Expenses" class="o_expense_form" js_class="hr_expense_form_view">
+                <form string="Expenses" js_class="hr_expense_form_view">
                 <header>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="oe_highlight o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&lt;=', 0), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
                   <widget name="attach_document" string="Attach Receipt" action="attach_document" attrs="{'invisible': [('attachment_number', '&lt;', 1)]}"/>
@@ -655,7 +655,7 @@
             <field name="model">hr.expense.sheet</field>
             <field eval="25" name="priority"/>
             <field name="arch" type="xml">
-                <form string="Expense Reports" class="o_expense_sheet">
+                <form string="Expense Reports">
                 <field name="can_reset" invisible="1"/>
                 <field name="can_approve" invisible="1"/>
                 <field name="company_id" invisible="1"/>
@@ -777,7 +777,7 @@
                                     }"
                                     attrs="{'readonly': [('is_editable', '=', False)]}"
                                     force_save="1">
-                                <tree editable="bottom" class="o_expense_line_list">
+                                <tree editable="bottom">
                                     <field name="date" optional="show"/>
                                     <field name="product_id"/>
                                     <field name="name"/>

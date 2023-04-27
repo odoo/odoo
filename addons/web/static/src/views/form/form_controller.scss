@@ -931,7 +931,7 @@
         display: none;  // Hide the handler on readonly fields
     }
 
-    .oe_form_configuration {
+    &.oe_form_configuration .o_form_renderer {
         .o_inner_group .o_form_label {
             white-space: nowrap;
         }
@@ -1086,6 +1086,13 @@
             }
         }
 
+        &.o_onboarding_payment_provider_wizard .o_form_renderer {
+            a[type="action"] {
+                color: $link-color;
+                cursor: pointer;
+            }
+        }
+
         @include media-breakpoint-down(lg) {
             .o_group.o_inner_group .o_wrap_label {
                 min-width: 100px;
@@ -1102,13 +1109,6 @@
     &.modal-sm .o_form_view {
         .o_inner_group {
             @include form-break-table;
-        }
-    }
-
-    .o_onboarding_payment_provider_wizard {
-        a[type="action"] {
-            color: $link-color;
-            cursor: pointer;
         }
     }
 }
