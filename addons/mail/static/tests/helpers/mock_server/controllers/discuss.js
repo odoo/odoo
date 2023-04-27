@@ -124,7 +124,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
                     attachment_ids: this._mockIrAttachment_attachmentFormat(args.attachment_ids),
                 },
             });
-            return args;
+            return "dummy value for mock server";
         }
         if (route === "/mail/read_subscription_data") {
             const follower_id = args.follower_id;

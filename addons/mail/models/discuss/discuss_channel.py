@@ -628,17 +628,6 @@ class Channel(models.Model):
         if not message.message_type == 'comment':
             raise UserError(_("Only messages type comment can have their content updated on model 'discuss.channel'"))
 
-    def _message_update_content_after_hook(self, message):
-        self.ensure_one()
-        self.env['bus.bus']._sendone(self, 'mail.record/insert', {
-            'Message': {
-                'id': message.id,
-                'body': message.body,
-                'attachment_ids': message.attachment_ids._attachment_format(),
-            }
-        })
-        return super()._message_update_content_after_hook(message=message)
-
     def _message_subscribe(self, partner_ids=None, subtype_ids=None, customer_ids=None):
         """ Do not allow follower subscription on channels. Only members are
         considered. """

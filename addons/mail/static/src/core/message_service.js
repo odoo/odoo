@@ -1,6 +1,5 @@
 /** @odoo-module */
 
-import { markup } from "@odoo/owl";
 import { Message } from "./message_model";
 import { removeFromArrayWithPredicate } from "../utils/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
@@ -34,15 +33,13 @@ export class MessageService {
             return;
         }
         const validMentions = this.getMentionsFromText(rawMentions, body);
-        const data = await this.rpc("/mail/message/update_content", {
+        await this.rpc("/mail/message/update_content", {
             attachment_ids: attachments
                 .map(({ id }) => id)
                 .concat(message.attachments.map(({ id }) => id)),
             body: await prettifyMessageContent(body, validMentions),
             message_id: message.id,
         });
-        message.body = markup(data.body);
-        message.attachments.push(...attachments);
         if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
             this.rpc(
                 "/mail/link_preview",
@@ -62,7 +59,7 @@ export class MessageService {
         }
         message.body = "";
         message.attachments = [];
-        return this.rpc("/mail/message/update_content", {
+        await this.rpc("/mail/message/update_content", {
             attachment_ids: [],
             body: "",
             message_id: message.id,
