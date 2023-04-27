@@ -1086,21 +1086,21 @@ class Picking(models.Model):
         pickings_not_to_backorder.with_context(cancel_backorder=True)._action_done()
         pickings_to_backorder.with_context(cancel_backorder=False)._action_done()
 
-        if self.user_has_groups('stock.group_reception_report') \
-                and self.picking_type_id.auto_show_reception_report:
-            lines = self.move_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
+        if self.user_has_groups('stock.group_reception_report'):
+            pickings_show_report = self.filtered(lambda p: p.picking_type_id.auto_show_reception_report)
+            lines = pickings_show_report.move_ids.filtered(lambda m: m.product_id.type == 'product' and m.state != 'cancel' and m.quantity_done and not m.move_dest_ids)
             if lines:
                 # don't show reception report if all already assigned/nothing to assign
-                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', self.picking_type_id.warehouse_id.view_location_id.ids), ('usage', '!=', 'supplier')])
+                wh_location_ids = self.env['stock.location']._search([('id', 'child_of', pickings_show_report.picking_type_id.warehouse_id.view_location_id.ids), ('usage', '!=', 'supplier')])
                 if self.env['stock.move'].search([
                         ('state', 'in', ['confirmed', 'partially_available', 'waiting', 'assigned']),
                         ('product_qty', '>', 0),
                         ('location_id', 'in', wh_location_ids),
                         ('move_orig_ids', '=', False),
-                        ('picking_id', 'not in', self.ids),
+                        ('picking_id', 'not in', pickings_show_report.ids),
                         ('product_id', 'in', lines.product_id.ids)], limit=1):
-                    action = self.action_view_reception_report()
-                    action['context'] = {'default_picking_ids': self.ids}
+                    action = pickings_show_report.action_view_reception_report()
+                    action['context'] = {'default_picking_ids': pickings_show_report.ids}
                     return action
         return True
 
