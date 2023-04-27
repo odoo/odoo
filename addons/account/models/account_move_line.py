@@ -911,7 +911,7 @@ class AccountMoveLine(models.Model):
                     'tax_tag_ids': [(6, 0, line.tax_tag_ids.ids)],
                     'partner_id': line.partner_id.id,
                     'move_id': line.move_id.id,
-                    'display_type': line.display_type,
+                    'display_type': 'epd' if line.name and _('(Discount)') in line.name else line.display_type,
                 })
             else:
                 line.tax_key = frozendict({'id': line.id})
@@ -958,7 +958,7 @@ class AccountMoveLine(models.Model):
                     'move_id': line.move_id.id,
                     'display_type': line.display_type,
                 }): {
-                    'name': tax['name'],
+                    'name': tax['name'] + (' ' + _('(Discount)') if line.display_type == 'epd' else ''),
                     'balance': tax['amount'] / rate,
                     'amount_currency': tax['amount'],
                     'tax_base_amount': tax['base'] / rate * (-1 if line.tax_tag_invert else 1),
