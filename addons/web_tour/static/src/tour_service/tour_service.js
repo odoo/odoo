@@ -28,6 +28,7 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {string} [saveAs]
  * @property {string} [fadeout]
  * @property {number} [checkDelay]
+ * @property {string|undefined} [shadow_dom]
  *
  * @typedef TourStep
  * @property {string} [id]
@@ -48,6 +49,7 @@ import { callWithUnloadCheck } from "./tour_utils";
  * @property {string} [consumeEvent]
  * @property {boolean} [mobile]
  * @property {string} [title]
+ * @property {string|false|undefined} [shadow_dom]
  *
  * @typedef {"manual" | "auto"} TourMode
  */
@@ -58,7 +60,11 @@ function extractRegisteredTours() {
     for (const [name, tour] of registry.category("web_tour.tours").getEntries()) {
         tours[name] = {
             name: tour.saveAs || name,
-            steps: tour.steps,
+            steps: tour.steps.map((step) => {
+                step.shadow_dom = step.shadow_dom ?? tour.shadow_dom;
+                return step;
+            }),
+            shadow_dom: tour.shadow_dom,
             url: tour.url,
             rainbowMan: tour.rainbowMan === undefined ? true : !!tour.rainbowMan,
             rainbowManMessage: tour.rainbowManMessage,
@@ -196,6 +202,34 @@ export const tourService = {
         }
 
         /**
+         * Wait for the shadow hosts matching the given selectors to
+         * appear in the DOM then, register the underlying shadow roots
+         * to the macro engine observer in order to listen to the
+         * changes in the shadow DOM.
+         *
+         * @param {Set<string>} shadowHostSelectors
+         */
+        function observeShadows(shadowHostSelectors) {
+            const observer = new MutationObserver(() => {
+                const shadowRoots = [];
+                for (const selector of shadowHostSelectors) {
+                    const shadowHost = document.querySelector(selector);
+                    if (shadowHost) {
+                        shadowRoots.push(shadowHost.shadowRoot);
+                        shadowHostSelectors.delete(selector);
+                    }
+                }
+                for (const shadowRoot of shadowRoots) {
+                    macroEngine.observer.observe(shadowRoot, macroEngine.observerOptions);
+                }
+                if (shadowHostSelectors.size === 0) {
+                    observer.disconnect();
+                }
+            });
+            observer.observe(macroEngine.target, { childList: true, subtree: true });
+        }
+
+        /**
          * Disable transition before starting an "auto" tour.
          * @param {Macro} macro
          * @param {'auto' | 'manual'} mode
@@ -236,6 +270,15 @@ export const tourService = {
                 }
             });
             if (!willUnload) {
+                const shadow_doms = tour.steps.reduce((acc, step) => {
+                    if (step.shadow_dom) {
+                        acc.add(step.shadow_dom);
+                    }
+                    return acc;
+                }, new Set());
+                if (shadow_doms.size > 0) {
+                    observeShadows(shadow_doms);
+                }
                 pointer.start();
                 activateMacro(macro, options.mode);
             }
