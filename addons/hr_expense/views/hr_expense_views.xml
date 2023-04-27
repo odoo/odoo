@@ -45,9 +45,6 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <tree string="Expenses" multi_edit="1" sample="1" js_class="hr_expense_tree" decoration-info="state == 'draft'">
-                    <header>
-                        <button name="get_expenses_to_submit" string="Create Report" type="object" display="always"/>
-                    </header>
                     <field name="company_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
                     <field name="attachment_number" invisible="1"/>
@@ -69,12 +66,15 @@
                     <field name="unit_amount_display" string="Unit Price" optional="hide" widget="monetary" options="{'currency_field': 'company_currency_id'}"/>
                     <field name="quantity" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags" groups="account.group_account_invoice,account.group_account_readonly"/>
-                    <field name="amount_tax_company" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
+                    <field name="amount_tax_company" sum="Total Taxes"
+                           optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
                     <field name="attachment_number" nolabel="1" class='fa fa-paperclip pe-0' attrs="{'invisible': [('attachment_number', '=', 0)]}"/>
-                    <field name="total_amount_company" widget='monetary' options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
+                    <field name="total_amount_company" sum="Total Amount" widget='monetary'
+                           options="{'currency_field': 'company_currency_id'}" decoration-bf="1"/>
                     <field name="total_amount" widget='monetary' options="{'currency_field': 'currency_id'}" optional="hide" decoration-bf="1" groups="base.group_multi_currency"/>
                     <field name="currency_id" optional="hide" groups="base.group_multi_currency"/>
-                    <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
+                    <field name="state" optional="show" readonly="1" decoration-info="state in ['draft', 'reported']" decoration-success="state in ['approved', 'done']"
+                           decoration-warning="state == 'submitted'" decoration-danger="state == 'refused'" widget="badge"/>
                 </tree>
             </field>
         </record>
@@ -117,7 +117,10 @@
                   <widget name="attach_document" string="Attach Receipt" action="attach_document" attrs="{'invisible': [('attachment_number', '&lt;', 1)]}"/>
                   <widget name="attach_document" string="Attach Receipt" action="attach_document" highlight="1" attrs="{'invisible': [('attachment_number', '&gt;=', 1)]}"/>
                   <button name="action_submit_expenses" string="Create Report" type="object" class="o_expense_submit" attrs="{'invisible': ['|', ('attachment_number', '&gt;=', 1), ('sheet_id', '!=', False)]}" data-hotkey="v"/>
-                  <field name="state" widget="statusbar" statusbar_visible="draft,reported,approved,done,refused"/>
+                  <field name="state" widget="statusbar" statusbar_visible="draft,reported,submitted,approved,done"
+                         attrs="{'invisible': [('state', '=', 'refused')]}"/>
+                  <field name="state" widget="statusbar" statusbar_visible="draft,reported,submitted,refused"
+                         attrs="{'invisible': [('state', '!=', 'refused')]}"/>
                   <button name="action_view_sheet" type="object" string="View Report" class="oe_highlight" attrs="{'invisible': [('sheet_id', '=', False)]}" data-hotkey="w"/>
                   <button name="action_split_wizard" string="Split Expense" type="object" attrs="{'invisible': ['|', ('sheet_id', '!=', False), ('product_has_cost', '=', True)]}"/>
                 </header>
@@ -270,7 +273,7 @@
                                     </div>
                                     <div class="col-6">
                                         <span class="float-end text-end">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'reported': 'primary', 'refused': 'danger', 'done': 'warning',
+                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'default', 'reported': 'primary', 'submitted': 'warning', 'refused': 'danger', 'done': 'warning',
                                             'approved': 'success'}}"/>
                                         </span>
                                     </div>
@@ -629,8 +632,10 @@
                     <field name="activity_ids" widget="list_activity" optional="show" readonly="1"/>
                     <field name="journal_id" optional="hide"/>
                     <field name="total_amount" sum="Total Amount" decoration-bf="1" widget="monetary"/>
-                    <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['submit', 'approve', 'post', 'done']" decoration-danger="state == 'cancel'" widget="badge"/>
-                    <field name="payment_state" optional="show" decoration-info="payment_state in ('partial','in_payment')" decoration-success="payment_state == 'paid'" decoration-danger="payment_state in ('reversed','not_paid')" widget="badge"/>
+                    <field name="state" optional="show" decoration-info="state == 'draft'" decoration-success="state in ['approve', 'post', 'done']"
+                           decoration-warning="state == 'submit'" decoration-danger="state == 'cancel'" widget="badge"/>
+                    <field name="payment_state" optional="show" decoration-info="payment_state in ('partial','in_payment')" decoration-success="payment_state == 'paid'"
+                           decoration-danger="payment_state in ('reversed','not_paid')" widget="badge" attrs="{'invisible': [('state', 'in', ['draft', 'submit', 'cancel'])]}"/>
                 </tree>
             </field>
         </record>
@@ -708,7 +713,11 @@
                             data-hotkey="c"
                             attrs="{'invisible': [('state', '!=', 'post')]}"
                             groups="account.group_account_readonly,account.group_account_invoice"/>
-                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done" force_save="1"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"
+                           force_save="1" attrs="{'invisible': [('state', '=', 'cancel')]}"/>
+                    <field name="state" widget="statusbar" statusbar_visible="draft,submit,cancel"
+                           force_save="1" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
+
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
@@ -763,7 +772,7 @@
                                     widget="many2many"
                                     mode="tree,kanban"
                                     domain="[
-                                        ('state', '=', 'draft'),
+                                        ('state', '=', 'reported'),
                                         ('employee_id', '=', employee_id),
                                         ('company_id', '=', company_id),
                                         ('payment_mode', '=?', payment_mode),
@@ -934,6 +943,8 @@
                     <field string="Journal" name="journal_id"/>
                     <filter string="My Reports" name="my_reports" domain="[('employee_id.user_id', '=', uid)]"/>
                     <filter string="My Team" name="my_team_reports" domain="[('employee_id.parent_id.user_id', '=', uid)]" groups="hr_expense.group_hr_expense_manager" help="Expenses of Your Team Member"/>
+                    <separator invisible="1"/>
+                    <filter string="Not Refused" name="not_refused_reports" domain="[('employee_id.user_id', '=', uid), ('state', '!=', 'cancel')]" invisible="1"/>
                     <separator />
                     <filter string="Date" name="filter_accounting_date" date="accounting_date"/>
                     <separator/>
@@ -999,8 +1010,7 @@
             <field name="res_model">hr.expense.sheet</field>
             <field name="view_mode">tree,kanban,form,pivot,graph,activity</field>
             <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="domain">[('state', '!=', 'cancel')]</field>
-            <field name="context">{'search_default_my_reports': 1}</field>
+            <field name="context">{'search_default_my_reports': 1, 'search_default_not_refused_reports': 1}</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 No expense report found. Let's create one!

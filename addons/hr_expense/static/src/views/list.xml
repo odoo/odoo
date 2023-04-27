@@ -7,6 +7,10 @@
             <button type="button" class="d-none d-md-inline o_button_upload_expense btn btn-primary mx-1" t-on-click.prevent="uploadDocument">
                 Scan
             </button>
+            <button t-if="displayCreateReport()" class="d-none d-md-block btn btn-secondary"
+                    t-on-click="() => this.action_show_expenses_to_submit()">
+                Create Report
+            </button>
         </xpath>
 
         <xpath expr="//div" position="inside">

@@ -88,13 +88,18 @@ class HrExpense(models.Model):
         ("company_account", "Company")
     ], default='own_account', tracking=True, states={'done': [('readonly', True)], 'approved': [('readonly', True)], 'reported': [('readonly', True)]}, string="Paid By")
     attachment_number = fields.Integer('Number of Attachments', compute='_compute_attachment_number')
-    state = fields.Selection([
-        ('draft', 'To Submit'),
-        ('reported', 'Submitted'),
-        ('approved', 'Approved'),
-        ('done', 'Paid'),
-        ('refused', 'Refused')
-    ], compute='_compute_state', string='Status', copy=False, index=True, readonly=True, store=True, default='draft')
+    state = fields.Selection(
+        selection=[
+            ('draft', 'To Report'),
+            ('reported', 'To Submit'),
+            ('submitted', 'Submitted'),
+            ('approved', 'Approved'),
+            ('done', 'Done'),
+            ('refused', 'Refused')
+        ],
+        string='Status', default='draft', index=True, copy=False,
+        compute='_compute_state', readonly=True, store=True,
+    )
     sheet_id = fields.Many2one('hr.expense.sheet', string="Expense Report", domain="[('employee_id', '=', employee_id), ('company_id', '=', company_id)]", readonly=True, copy=False)
     sheet_is_editable = fields.Boolean(compute='_compute_sheet_is_editable')
     approved_by = fields.Many2one('res.users', string='Approved By', related='sheet_id.user_id', tracking=False)
@@ -152,16 +157,18 @@ class HrExpense(models.Model):
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
         for expense in self:
-            if not expense.sheet_id or expense.sheet_id.state == 'draft':
-                expense.state = "draft"
-            elif expense.sheet_id.state == "cancel":
-                expense.state = "refused"
-            elif expense.sheet_id.state == "approve" or expense.sheet_id.state == "post":
-                expense.state = "approved"
+            if not expense.sheet_id:
+                expense.state = 'draft'
+            elif expense.sheet_id.state == 'draft':
+                expense.state = 'reported'
+            elif expense.sheet_id.state == 'cancel':
+                expense.state = 'refused'
+            elif expense.sheet_id.state in {'approve', 'post'}:
+                expense.state = 'approved'
             elif not expense.sheet_id.account_move_id:
-                expense.state = "reported"
+                expense.state = 'submitted'
             else:
-                expense.state = "done"
+                expense.state = 'done'
 
     @api.depends('quantity', 'unit_amount', 'tax_ids')
     def _compute_amount(self):
@@ -213,7 +220,7 @@ class HrExpense(models.Model):
     def _compute_is_editable(self):
         is_account_manager = self.env.user.has_group('account.group_account_user') or self.env.user.has_group('account.group_account_manager')
         for expense in self:
-            if expense.state == 'draft' or expense.sheet_id.state in ['draft', 'submit']:
+            if expense.state in {'draft', 'reported'} or expense.sheet_id.state in {'draft', 'submit'}:
                 expense.is_editable = True
             elif expense.sheet_id.state == 'approve':
                 expense.is_editable = is_account_manager
@@ -229,7 +236,7 @@ class HrExpense(models.Model):
     def _compute_is_ref_editable(self):
         is_account_manager = self.env.user.has_group('account.group_account_user') or self.env.user.has_group('account.group_account_manager')
         for expense in self:
-            if expense.state == 'draft' or expense.sheet_id.state in ['draft', 'submit']:
+            if expense.state in {'draft', 'reported'} or expense.sheet_id.state in {'draft', 'submit'}:
                 expense.is_ref_editable = True
             else:
                 expense.is_ref_editable = is_account_manager
@@ -476,8 +483,7 @@ class HrExpense(models.Model):
 
         if not expenses:
             raise UserError(_('You have no expense to report'))
-        else:
-            return expenses.action_submit_expenses()
+        return expenses.action_submit_expenses()
 
     def action_submit_expenses(self):
         context_vals = self._get_default_expense_sheet_values()
@@ -580,19 +586,22 @@ class HrExpense(models.Model):
     @api.model
     def get_expense_dashboard(self):
         expense_state = {
-            'draft': {
-                'description': _('to report'),
+            'to_submit': {
+                'description': _('to submit'),
                 'amount': 0.0,
+                'tooltip': _("Expenses that need to be submitted to the approver."),
                 'currency': self.env.company.currency_id.id,
             },
-            'reported': {
+            'submitted': {
                 'description': _('under validation'),
                 'amount': 0.0,
+                'tooltip': _("Expenses from which the report has been submitted to the approver and is waiting for approval."),
                 'currency': self.env.company.currency_id.id,
             },
             'approved': {
                 'description': _('to be reimbursed'),
                 'amount': 0.0,
+                'tooltip': _("Expenses from which the report is approved or posted. The payment still needs to be done."),
                 'currency': self.env.company.currency_id.id,
             }
         }
@@ -603,9 +612,11 @@ class HrExpense(models.Model):
             [
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
                 ('payment_mode', '=', 'own_account'),
-                ('state', 'in', ['draft', 'reported', 'approved'])
+                ('state', 'in', ('draft', 'reported', 'submitted', 'approved'))
             ], ['state', 'currency_id'], ['total_amount:sum'])
         for state, currency, total_amount_sum in expenses:
+            if state in {'draft', 'reported'}:  # Fusion the two states into only one "To Submit" state
+                state = 'to_submit'
             currency = currency or target_currency
             amount = currency._convert(
                     total_amount_sum, target_currency, self.env.company, fields.Date.today())
@@ -798,7 +809,7 @@ class HrExpenseSheet(models.Model):
     product_ids = fields.Many2many('product.product', compute='_compute_product_ids', search='_search_product_ids', string='Categories')
     expense_number = fields.Integer(compute='_compute_expense_number', string='Number of Expenses')
     state = fields.Selection([
-        ('draft', 'Draft'),
+        ('draft', 'To Submit'),
         ('submit', 'Submitted'),
         ('approve', 'Approved'),
         ('post', 'Posted'),
