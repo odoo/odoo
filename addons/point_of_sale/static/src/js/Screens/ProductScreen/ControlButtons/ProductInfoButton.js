@@ -12,6 +12,7 @@ export class ProductInfoButton extends Component {
     setup() {
         this.pos = usePos();
         this.popup = useService("popup");
+        this.pos = usePos();
     }
     async click() {
         const orderline = this.pos.globalState.get_order().get_selected_orderline();

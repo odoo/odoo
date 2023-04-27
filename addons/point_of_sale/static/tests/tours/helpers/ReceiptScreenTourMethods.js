@@ -11,6 +11,14 @@ class Do {
             },
         ];
     }
+    clickContinueOrder() {
+        return [
+            {
+                content: "go to next screen",
+                trigger: ".receipt-screen .button.next.highlight[name='resume']",
+            },
+        ];
+    }
     setEmail(email) {
         return [
             {

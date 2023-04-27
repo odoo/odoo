@@ -10,7 +10,7 @@ const debugService = {
      * @param {{ debug: string }} env
      */
     start(env) {
-        const internalState = reactive({ widgetOpen: true });
+        const internalState = reactive({ widgetOpen: false });
         const state = withComputedProperties(reactive({}), [internalState], {
             showWidget(internalState) {
                 return env.debug && internalState.widgetOpen;

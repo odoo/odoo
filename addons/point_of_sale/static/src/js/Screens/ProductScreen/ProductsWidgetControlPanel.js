@@ -5,7 +5,7 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 import { CategoryButton } from "./CategoryButton";
 
-import { Component, useState } from "@odoo/owl";
+import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class ProductsWidgetControlPanel extends Component {
@@ -19,7 +19,25 @@ export class ProductsWidgetControlPanel extends Component {
         this.notification = useService("pos_notification");
         this.orm = useService("orm");
         this.updateSearch = debounce(this.updateSearch, 100);
-        this.state = useState({ mobileSearchBarIsShown: false });
+        this.state = useState({ mobileSearchBarIsShown: false, isMobile: false });
+        this.productsWidgetControl = useRef("products-widget-control");
+        this.ui = useService("ui");
+
+        const toggleIsMobile = () => this.toggleIsMobile();
+        onMounted(() => {
+            toggleIsMobile();
+            window.addEventListener("resize", toggleIsMobile);
+        });
+        onWillUnmount(() => {
+            window.removeEventListener("resize", toggleIsMobile);
+        });
+    }
+    toggleIsMobile() {
+        // In addition to the UI service we need to check the width of the window
+        // because the search bar glitches on a specific width between when the
+        // UI is considered small and not.
+        const element = this.productsWidgetControl.el;
+        this.state.isMobile = (element && element.offsetWidth < 350) || this.ui.isSmall;
     }
     toggleMobileSearchBar() {
         this.state.mobileSearchBarIsShown = !this.state.mobileSearchBarIsShown;
