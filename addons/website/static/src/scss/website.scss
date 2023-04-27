@@ -898,6 +898,12 @@ header {
         max-height: 80vh;
         overflow-y: auto;
         overflow-x: hidden; // Needed because of container in container having 0px padding... TODO improve
+
+        @include media-breakpoint-down(lg) {
+            .nav-link, .dropdown-item {
+                white-space: normal;
+            }
+        }
     }
 
     &:not(.o_header_is_scrolled) {
