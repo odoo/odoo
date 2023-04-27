@@ -185,6 +185,7 @@ This module provides the core of the Odoo Web Client.
             ('remove', 'web/static/src/webclient/navbar/navbar.scss'),  # already in assets_common
             ('remove', 'web/static/src/webclient/clickbot/clickbot.js'), # lazy loaded
             ('remove', 'web/static/src/views/form/button_box/*.scss'),
+            ('remove', 'web/static/src/core/attachment_viewer/attachment_viewer.dark.scss'),
 
             # remove the report code and whitelist only what's needed
             ('remove', 'web/static/src/webclient/actions/reports/**/*'),
@@ -399,6 +400,7 @@ This module provides the core of the Odoo Web Client.
             'web/static/src/core/**/*',
             ('remove', 'web/static/src/core/commands/**/*'),
             ('remove', 'web/static/src/core/debug/debug_menu.js'),
+            ('remove', 'web/static/src/core/attachment_viewer/attachment_viewer.dark.scss'),
             'web/static/src/public/error_notifications.js',
 
             'web/static/src/legacy/utils.js',
@@ -481,6 +483,7 @@ This module provides the core of the Odoo Web Client.
         # ---------------------------------------------------------------------
         "web.dark_mode_assets_common": [
             ('include', 'web.assets_common'),
+            'web/static/src/core/attachment_viewer/attachment_viewer.dark.scss',
         ],
         "web.dark_mode_assets_backend": [
             ('include', 'web.assets_backend'),

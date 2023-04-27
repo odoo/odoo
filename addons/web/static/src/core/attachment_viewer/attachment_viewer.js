@@ -9,7 +9,7 @@ import { useService } from "@web/core/utils/hooks";
  * @extends {Component<Props, Env>}
  */
 export class AttachmentViewer extends Component {
-    static template = "mail.AttachmentViewer";
+    static template = "web.AttachmentViewer";
     static components = {};
     static props = ["attachments", "startIndex", "close", "modal?"];
     static defaultProps = {
