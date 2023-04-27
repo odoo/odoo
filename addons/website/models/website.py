@@ -474,7 +474,16 @@ class Website(models.Model):
 
         def configure_page(page_code, snippet_list, pages_views, cta_data):
             if page_code == 'homepage':
-                page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
+                try:
+                    page_view_id = self.with_context(website_id=website.id).viewref('website.homepage')
+                except ValueError as e:
+                    homepage_url = website.homepage_url or '/'
+                    homepage_page = self.env['website.page'].search([('url', '=', homepage_url)], limit=1)
+                    if homepage_page:
+                        page_view_id = self.with_context(website_id=website.id).viewref(homepage_page.key)
+                    else:
+                        logger.warning('Homepage view not found for website URL: %s', homepage_url)
+                        return
             else:
                 page_view_id = self.env['ir.ui.view'].browse(pages_views[page_code])
             rendered_snippets = []
