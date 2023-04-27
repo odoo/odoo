@@ -3,6 +3,7 @@
 
 from . import models
 from . import tools
+from . import wizard
 
 
 def _l10n_it_edi_update_export_tax(env):
