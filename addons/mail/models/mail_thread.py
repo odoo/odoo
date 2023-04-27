@@ -3953,16 +3953,6 @@ class MailThread(models.AbstractModel):
         return True
 
     # ------------------------------------------------------
-    # DISCORDUSS API
-    # ------------------------------------------------------
-
-    def _message_add_reaction_after_hook(self, message, content):
-        """ Hook to add custom behavior after having added a reaction to a message. """
-
-    def _message_remove_reaction_after_hook(self, message, content):
-        """ Hook to add custom behavior after having removed a reaction from a message. """
-
-    # ------------------------------------------------------
     # THREAD MESSAGE UPDATE
     # ------------------------------------------------------
 

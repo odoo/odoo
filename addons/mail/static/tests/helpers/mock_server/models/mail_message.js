@@ -27,19 +27,23 @@ patch(MockServer.prototype, "mail/models/mail_message", {
         return this._super(route, args);
     },
     /**
-     * Simulates `_message_add_reaction` on `mail.message`.
+     * Simulates `_message_reaction` on `mail.message`.
      */
-    _mockMailMessage_messageAddReaction(content, messageId) {
-        const reaction = this.pyEnv["mail.message.reaction"].searchRead([
+    _mockMailMessage_messageReaction(messageId, content, action) {
+        const [reaction] = this.pyEnv["mail.message.reaction"].searchRead([
             ["content", "=", content],
+            ["message_id", "=", messageId],
             ["partner_id", "=", this.pyEnv.currentPartnerId],
         ]);
-        if (!reaction.length) {
+        if (action === "add" && !reaction) {
             this.pyEnv["mail.message.reaction"].create({
                 content,
-                partner_id: this.pyEnv.currentPartnerId,
                 message_id: messageId,
+                partner_id: this.pyEnv.currentPartnerId,
             });
+        }
+        if (action === "remove" && reaction) {
+            this.pyEnv["mail.message.reaction"].unlink(reaction.id);
         }
         const reactions = this.pyEnv["mail.message.reaction"].search([
             ["message_id", "=", messageId],
@@ -56,6 +60,7 @@ patch(MockServer.prototype, "mail/models/mail_message", {
                     {
                         content,
                         count: reactions.length,
+                        guests: [],
                         message: { id: messageId },
                         partners: [
                             [
@@ -70,17 +75,6 @@ patch(MockServer.prototype, "mail/models/mail_message", {
         this.pyEnv["bus.bus"]._sendone(this.pyEnv.currentPartnerId, "mail.record/insert", {
             Message: result,
         });
-        return result;
-    },
-    /**
-     * Simulates `_message_add_reaction` on `mail.message`.
-     */
-    _mockMailMessage_messageRemoveReaction(content, messageId) {
-        const reactionsIdsToUnlink = this.pyEnv["mail.message.reaction"].search([
-            ["content", "=", content],
-            ["partner_id", "=", this.pyEnv.currentPartnerId],
-        ]);
-        this.pyEnv["mail.message.reaction"].unlink(reactionsIdsToUnlink);
     },
     /**
      * Simulates `mark_all_as_read` on `mail.message`.
