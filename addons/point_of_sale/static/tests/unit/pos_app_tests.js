@@ -1,6 +1,6 @@
 /** @odoo-module */
 import { Chrome } from "@point_of_sale/js/Chrome";
-import { getFixture, mount, nextTick } from "@web/../tests/helpers/utils";
+import { getFixture, mount } from "@web/../tests/helpers/utils";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { registry } from "@web/core/registry";
 import { posService } from "@point_of_sale/app/pos_store";
@@ -46,11 +46,12 @@ const serverData = {
 
 QUnit.test("mount the Chrome", async (assert) => {
     const fixture = getFixture();
-    const root = await mount(Chrome, fixture, {
+    assert.verifySteps([]);
+    await mount(Chrome, fixture, {
         env: await makeTestEnv({ serverData }),
         test: true,
+        props: { disableLoader: () => assert.step("disable loader") },
     });
-    await root.env.services.pos.globalState.ready;
-    await nextTick();
     assert.containsOnce(fixture, ".pos");
+    assert.verifySteps(["disable loader"]);
 });

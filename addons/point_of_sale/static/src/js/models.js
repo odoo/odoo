@@ -231,6 +231,8 @@ export class PosGlobalState extends PosModel {
         const { start_category, iface_start_categ_id } = this.config;
         this.selectedCategoryId = (start_category && iface_start_categ_id?.[0]) || 0;
         this.hasBigScrollBars = this.config.iface_big_scrollbars;
+        // Push orders in background, do not await
+        this.push_orders();
         this.markReady();
     }
 

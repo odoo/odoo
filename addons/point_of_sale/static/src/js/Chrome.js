@@ -8,7 +8,14 @@ import { MainComponentsContainer } from "@web/core/main_components_container";
 import { ErrorHandler } from "@web/core/utils/components";
 import { Navbar } from "@point_of_sale/app/navbar/navbar";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { useExternalListener, useSubEnv, reactive, onWillUnmount, Component } from "@odoo/owl";
+import {
+    useExternalListener,
+    useSubEnv,
+    reactive,
+    onWillUnmount,
+    Component,
+    onMounted,
+} from "@odoo/owl";
 
 /**
  * Chrome is the root component of the PoS App.
@@ -16,6 +23,7 @@ import { useExternalListener, useSubEnv, reactive, onWillUnmount, Component } fr
 export class Chrome extends Component {
     static template = "Chrome"; // FIXME POSREF namespace templates
     static components = { Transition, MainComponentsContainer, ErrorHandler, Navbar };
+    static props = { disableLoader: Function };
     setup() {
         this.pos = usePos();
         this.popup = useService("popup");
@@ -51,88 +59,11 @@ export class Chrome extends Component {
             }
         });
 
-        // This is not done in onWillStart because we want to show the loader immediately
-        this.start();
-    }
-    async start() {
-        await this.pos.globalState.load_server_data();
-        if (this.pos.globalState.config.use_proxy) {
-            await this.pos.connectToProxy();
-        }
-        this._closeOtherTabs();
-        this.pos.uiState = "READY";
-        const { name, props } = this.startScreen;
-        this.pos.showScreen(name, props);
-        this.runBackgroundTasks();
+        onMounted(this.props.disableLoader);
     }
 
     // GETTERS //
 
-    /**
-     * Startup screen can be based on pos config so the startup screen
-     * is only determined after pos data is completely loaded.
-     */
-    get startScreen() {
-        return { name: "ProductScreen" };
-    }
-
-    // CONTROL METHODS //
-
-    runBackgroundTasks() {
-        // push order in the background, no need to await
-        this.pos.globalState.push_orders();
-        // Allow using the app even if not all the images are loaded.
-        // Basically, preload the images in the background.
-        this._preloadImages();
-    }
-
-    // MISC METHODS //
-    _preloadImages() {
-        for (const product of this.pos.globalState.db.get_product_by_category(0)) {
-            const image = new Image();
-            image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
-        }
-        for (const category of Object.values(this.pos.globalState.db.category_by_id)) {
-            if (category.id == 0) {
-                continue;
-            }
-            const image = new Image();
-            image.src = `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
-        }
-        const staticImages = ["backspace.png", "bc-arrow-big.png"];
-        for (const imageName of staticImages) {
-            const image = new Image();
-            image.src = `/point_of_sale/static/src/img/${imageName}`;
-        }
-    }
-    /**
-     * Close other tabs that contain the same pos session.
-     */
-    _closeOtherTabs() {
-        // FIXME POSREF use the bus?
-        localStorage["message"] = "";
-        localStorage["message"] = JSON.stringify({
-            message: "close_tabs",
-            session: this.pos.globalState.pos_session.id,
-        });
-
-        window.addEventListener(
-            "storage",
-            (event) => {
-                if (event.key === "message" && event.newValue) {
-                    const msg = JSON.parse(event.newValue);
-                    if (
-                        msg.message === "close_tabs" &&
-                        msg.session == this.pos.globalState.pos_session.id
-                    ) {
-                        console.info("POS / Session opened in another window. EXITING POS");
-                        this.pos.closePos();
-                    }
-                }
-            },
-            false
-        );
-    }
     get showCashMoveButton() {
         return Boolean(this.pos.globalState?.config?.cash_control);
     }

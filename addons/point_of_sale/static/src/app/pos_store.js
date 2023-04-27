@@ -11,8 +11,6 @@ import { CashOpeningPopup } from "@point_of_sale/js/Popups/CashOpeningPopup";
 import { sprintf } from "@web/core/utils/strings";
 
 export class PosStore extends Reactive {
-    /** @type {'LOADING' | 'READY' | 'CLOSING'} */
-    uiState = "LOADING";
     hasBigScrollBars = false;
     loadingSkipButtonIsShown = false;
     mainScreen = { name: null, component: null };
@@ -27,10 +25,10 @@ export class PosStore extends Reactive {
     ];
     constructor() {
         super();
-        this.setup(...arguments);
+        this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader }) {
+    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader }) {
         this.orm = orm;
         this.popup = popup;
         this.numberBuffer = number_buffer;
@@ -40,6 +38,13 @@ export class PosStore extends Reactive {
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
         // the hardware proxy should just be part of the pos service?
         this.hardwareProxy.pos = this.globalState;
+        await this.globalState.load_server_data();
+        if (this.globalState.config.use_proxy) {
+            await this.connectToProxy();
+        }
+        this.closeOtherTabs();
+        this.preloadImages();
+        this.showScreen("ProductScreen");
     }
 
     showScreen(name, props) {
@@ -126,9 +131,6 @@ export class PosStore extends Reactive {
                 body: reason,
             });
             if (confirmed) {
-                // FIXME POSREF setting the location prevents the next render, the loading screen never shows
-                this.globalState.uiState = "CLOSING";
-                this.globalState.loadingSkipButtonIsShown = false;
                 window.location = "/web#action=point_of_sale.action_client_pos_menu";
             }
         }
@@ -209,12 +211,57 @@ export class PosStore extends Reactive {
             this.globalState.pos_session.state == "opening_control"
         );
     }
+
+    preloadImages() {
+        for (const product of this.globalState.db.get_product_by_category(0)) {
+            const image = new Image();
+            image.src = `/web/image?model=product.product&field=image_128&id=${product.id}&unique=${product.write_date}`;
+        }
+        for (const category of Object.values(this.globalState.db.category_by_id)) {
+            if (category.id == 0) {
+                continue;
+            }
+            const image = new Image();
+            image.src = `/web/image?model=pos.category&field=image_128&id=${category.id}&unique=${category.write_date}`;
+        }
+        const image = new Image();
+        image.src = "/point_of_sale/static/src/img/backspace.png";
+    }
+
+    /**
+     * Close other tabs that contain the same pos session.
+     */
+    closeOtherTabs() {
+        // FIXME POSREF use the bus?
+        localStorage["message"] = "";
+        localStorage["message"] = JSON.stringify({
+            message: "close_tabs",
+            session: this.globalState.pos_session.id,
+        });
+
+        window.addEventListener(
+            "storage",
+            (event) => {
+                if (event.key === "message" && event.newValue) {
+                    const msg = JSON.parse(event.newValue);
+                    if (
+                        msg.message === "close_tabs" &&
+                        msg.session == this.globalState.pos_session.id
+                    ) {
+                        console.info("POS / Session opened in another window. EXITING POS");
+                        this.closePos();
+                    }
+                }
+            },
+            false
+        );
+    }
 }
 
 export const posService = {
     dependencies: PosStore.serviceDependencies,
-    start(env, deps) {
-        return new PosStore(env, deps);
+    async start(env, deps) {
+        return new PosStore(env, deps).ready;
     },
 };
 
