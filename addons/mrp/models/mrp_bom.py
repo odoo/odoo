@@ -219,8 +219,9 @@ class MrpBom(models.Model):
         self.with_context({'active_test': False}).operation_ids.toggle_active()
         return super().toggle_active()
 
-    def name_get(self):
-        return [(bom.id, '%s%s' % (bom.code and '%s: ' % bom.code or '', bom.product_tmpl_id.display_name)) for bom in self]
+    def _compute_display_name(self):
+        for bom in self:
+            bom.display_name = f"{bom.code + ': ' if bom.code else ''}{bom.product_tmpl_id.display_name}"
 
     def action_compute_bom_days(self):
         company_id = self.env.context.get('default_company_id', self.env.company.id)

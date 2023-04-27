@@ -2366,11 +2366,9 @@ class AccountMove(models.Model):
         self.line_ids.unlink()
         return super().unlink()
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for move in self:
-            result.append((move.id, move._get_move_display_name(show_ref=True)))
-        return result
+            move.display_name = move._get_move_display_name(show_ref=True)
 
     def onchange(self, values, field_name, field_onchange):
         if field_name in ('line_ids', 'invoice_line_ids'):

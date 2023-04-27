@@ -634,14 +634,12 @@ Please change the quantity done or the rounding precision of your unit of measur
                 defaults['additional'] = True  # to trigger `_autoconfirm_picking`
         return defaults
 
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for move in self:
-            res.append((move.id, '%s%s%s>%s' % (
+            move.display_name = '%s%s%s>%s' % (
                 move.picking_id.origin and '%s/' % move.picking_id.origin or '',
                 move.product_id.code and '%s: ' % move.product_id.code or '',
-                move.location_id.name, move.location_dest_id.name)))
-        return res
+                move.location_id.name, move.location_dest_id.name)
 
     @api.model_create_multi
     def create(self, vals_list):

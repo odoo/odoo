@@ -1133,16 +1133,14 @@ class SaleOrderLine(models.Model):
             if so_line.order_partner_id.ref or so_line.order_partner_id.name
         }
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         name_per_id = self._additional_name_per_id()
         for so_line in self.sudo():
-            name = '%s - %s' % (so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
+            name = '{} - {}'.format(so_line.order_id.name, so_line.name and so_line.name.split('\n')[0] or so_line.product_id.name)
             additional_name = name_per_id.get(so_line.id)
             if additional_name:
-                name = '%s %s' % (name, additional_name)
-            result.append((so_line.id, name))
-        return result
+                name = f'{name} {additional_name}'
+            so_line.display_name = name
 
     #=== HOOKS ===#
 

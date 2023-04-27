@@ -46,10 +46,10 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
             GROUP BY "test_read_group_aggregate"."key",
                      "test_read_group_aggregate"."partner_id",
-                     "test_read_group_aggregate__partner_id"."display_name",
+                     "test_read_group_aggregate__partner_id"."complete_name",
                      "test_read_group_aggregate__partner_id"."id"
             ORDER BY "test_read_group_aggregate"."key" ASC,
-                     "test_read_group_aggregate__partner_id"."display_name",
+                     "test_read_group_aggregate__partner_id"."complete_name",
                      "test_read_group_aggregate__partner_id"."id"
         """]):
             self.assertEqual(
@@ -152,9 +152,9 @@ class TestPrivateReadGroup(common.TransactionCase):
                 ON ("test_read_group_aggregate"."partner_id" = "test_read_group_aggregate__partner_id"."id")
             GROUP BY "test_read_group_aggregate"."display_name",
                      "test_read_group_aggregate"."partner_id",
-                     "test_read_group_aggregate__partner_id"."display_name",
+                     "test_read_group_aggregate__partner_id"."complete_name",
                      "test_read_group_aggregate__partner_id"."id"
-            ORDER BY "test_read_group_aggregate__partner_id"."display_name" DESC,
+            ORDER BY "test_read_group_aggregate__partner_id"."complete_name" DESC,
                      "test_read_group_aggregate__partner_id"."id" DESC
         """]):
             result = Model._read_group(

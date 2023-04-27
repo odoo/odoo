@@ -368,7 +368,7 @@
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
-                    if (args.method === 'name_get') {
+                    if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
                         assert.strictEqual(args.model, 'product');
                     }
                     return this._super(route, args);
@@ -448,7 +448,7 @@
                 Model: BasicModel,
                 data: this.data,
                 mockRPC: function (route, args) {
-                    if (args.method === 'name_get') {
+                    if (args.method === 'read' && args.args[1].length === 1 && args.args[1][0] === 'display_name') {
                         assert.strictEqual(args.model, 'product');
                     }
                     return this._super(route, args);
@@ -2083,9 +2083,9 @@
                 data: this.data,
                 mockRPC: function (route, args) {
                     assert.step(route);
-                    if (route === "/web/dataset/call_kw/product/name_get") {
-                        assert.deepEqual(args.args, [[37, 41]],
-                            "the name_get should contain the product ids");
+                    if (route === "/web/dataset/call_kw/product/read") {
+                        assert.deepEqual(args.args, [[37, 41], ['display_name']],
+                            "the read display_name should contain the product ids");
                     }
                     return this._super(route, args);
                 },
@@ -2095,9 +2095,9 @@
             var record = model.get(resultID);
 
             assert.strictEqual(record.data[0].data.reference.data.display_name, "xphone",
-                "name_get should have been correctly fetched");
-            assert.verifySteps(["/web/dataset/search_read", "/web/dataset/call_kw/product/name_get"],
-                "should have done 2 rpc (searchread and name_get for product)");
+                "display_name should have been correctly fetched");
+            assert.verifySteps(["/web/dataset/search_read", "/web/dataset/call_kw/product/read"],
+                "should have done 2 rpc (searchread and read display_name for product)");
             model.destroy();
         });
 

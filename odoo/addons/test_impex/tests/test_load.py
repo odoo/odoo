@@ -562,14 +562,11 @@ class test_m2o(ImporterCase):
         # create integer objects
         record1 = self.env['export.integer'].create({'value': 42})
         record2 = self.env['export.integer'].create({'value': 36})
-        # get its name
-        name1 = dict(record1.name_get())[record1.id]
-        name2 = dict(record2.name_get())[record2.id]
 
         # preheat the oven
         for _ in range(5):
             with contextlib.closing(self.env.cr.savepoint(flush=False)):
-                self.import_(['value'], [[name1], [name1], [name2]])
+                self.import_(['value'], [[record1.display_name], [record1.display_name], [record2.display_name]])
 
         # 1 x SAVEPOINT load
         # 3 x name_search
@@ -581,18 +578,18 @@ class test_m2o(ImporterCase):
         with self.assertQueryCount(8):
             result = self.import_(['value'], [
                 # import by name_get
-                [name1],
-                [name1],
-                [name2],
+                [record1.display_name],
+                [record1.display_name],
+                [record2.display_name],
             ])
 
         self.assertFalse(result['messages'])
         self.assertEqual(len(result['ids']), 3)
         # correct ids assigned to corresponding records
         self.assertEqual([
-            (record1.id, name1),
-            (record1.id, name1),
-            (record2.id, name2),],
+            (record1.id, record1.display_name),
+            (record1.id, record1.display_name),
+            (record2.id, record2.display_name),],
             values(self.read()))
 
     def test_by_xid(self):
@@ -616,19 +613,17 @@ class test_m2o(ImporterCase):
     def test_by_names(self):
         record1 = self.env['export.integer'].create({'value': 42})
         record2 = self.env['export.integer'].create({'value': 42})
-        name1 = dict(record1.name_get())[record1.id]
-        name2 = dict(record2.name_get())[record2.id]
         # names should be the same
-        self.assertEqual(name1, name2)
+        self.assertEqual(record1.display_name, record2.display_name)
 
-        result = self.import_(['value'], [[name2]])
+        result = self.import_(['value'], [[record2.display_name]])
         self.assertEqual(
             result['messages'],
             [message(u"Found multiple matches for value 'export.integer:42' in field 'Value' (2 matches)",
                      type='warning')])
         self.assertEqual(len(result['ids']), 1)
         self.assertEqual([
-            (record1.id, name1)
+            (record1.id, record1.display_name)
         ], values(self.read()))
 
     def test_fail_by_implicit_id(self):

@@ -156,12 +156,10 @@ class SaleOrderLine(models.Model):
     has_displayed_warning_upsell = fields.Boolean('Has Displayed Warning Upsell')
     timesheet_ids = fields.One2many('account.analytic.line', 'so_line', 'Timesheets')
 
-    def name_get(self):
-        res = super(SaleOrderLine, self).name_get()
+    def _compute_display_name(self):
+        super()._compute_display_name()
         with_remaining_hours = self.env.context.get('with_remaining_hours')
         if with_remaining_hours and any(line.remaining_hours_available for line in self):
-            names = dict(res)
-            result = []
             company = self.env.company
             encoding_uom = company.timesheet_encode_uom_id
             is_hour = is_day = False
@@ -173,7 +171,6 @@ class SaleOrderLine(models.Model):
                 is_day = True
                 unit_label = _('days remaining')
             for line in self:
-                name = names.get(line.id)
                 if line.remaining_hours_available:
                     remaining_time = ''
                     if is_hour:
@@ -197,12 +194,10 @@ class SaleOrderLine(models.Model):
                             unit=unit_label
                         )
                     name = '{name}{remaining_time}'.format(
-                        name=name,
+                        name=line.display_name,
                         remaining_time=remaining_time
                     )
-                result.append((line.id, name))
-            return result
-        return res
+                    line.display_name = name
 
     @api.depends('product_id.service_policy')
     def _compute_remaining_hours_available(self):

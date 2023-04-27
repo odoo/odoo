@@ -204,11 +204,9 @@ class AccountReport(models.Model):
         return name
 
     @api.depends('name', 'country_id')
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for report in self:
-            result.append((report.id, report.name + (f' ({report.country_id.code})' if report.country_id else '')))
-        return result
+            report.display_name = report.name + (f' ({report.country_id.code})' if report.country_id else '')
 
 
 class AccountReportLine(models.Model):
@@ -562,8 +560,10 @@ class AccountReportExpression(models.Model):
             tags_to_archive.active = False
             tags_to_unlink.unlink()
 
-    def name_get(self):
-        return [(expr.id, f'{expr.report_line_name} [{expr.label}]') for expr in self]
+    def _compute_display_name(self):
+        for expr in self:
+            expr.display_name = f'{expr.report_line_name} [{expr.label}]'
+
 
     def _expand_aggregations(self):
         """Return self and its full aggregation expression dependency"""

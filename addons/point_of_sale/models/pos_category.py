@@ -24,14 +24,16 @@ class PosCategory(models.Model):
     # field to determine whether a pos.category has an image or not.
     has_image = fields.Boolean(compute='_compute_has_image')
 
-    def name_get(self):
+    def _compute_display_name(self):
         def get_names(cat):
             res = []
             while cat:
-                res.append(cat.name)
+                res.append(cat.name or '')
                 cat = cat.parent_id
             return res
-        return [(cat.id, " / ".join(reversed(get_names(cat)))) for cat in self if cat.name]
+
+        for cat in self:
+            cat.display_name = " / ".join(reversed(get_names(cat)))
 
     @api.ondelete(at_uninstall=False)
     def _unlink_except_session_open(self):

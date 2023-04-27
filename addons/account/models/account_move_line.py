@@ -1522,14 +1522,15 @@ class AccountMoveLine(models.Model):
 
         return res
 
-    def name_get(self):
-        return [(line.id, " ".join(
-            element for element in (
-                line.move_id.name,
-                line.ref and f"({line.ref})",
-                line.name or line.product_id.display_name,
-            ) if element
-        )) for line in self]
+    def _compute_display_name(self):
+        for line in self:
+            line.display_name = " ".join(
+                element for element in (
+                    line.move_id.name,
+                    line.ref and f"({line.ref})",
+                    line.name or line.product_id.display_name,
+                ) if element
+            )
 
     def copy_data(self, default=None):
         data_list = super().copy_data(default=default)

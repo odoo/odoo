@@ -326,7 +326,7 @@ QUnit.module("Record Component", (hooks) => {
                 },
             }),
         });
-        assert.verifySteps(["/web/dataset/call_kw/bar/name_get"]);
+        assert.verifySteps(["/web/dataset/call_kw/bar/read"]);
         assert.strictEqual(target.querySelector(".o_field_many2one_selection input").value, "bar1");
         await editInput(target, ".o_field_many2one_selection input", "abc");
         assert.verifySteps(["/web/dataset/call_kw/bar/name_search"]);

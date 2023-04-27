@@ -70,7 +70,7 @@ class ResourceCalendarAttendance(models.Model):
         section_names = {'0': _('First week'), '1': _('Second week')}
         section_info = {True: _('this week'), False: _('other week')}
         for record in self.filtered(lambda l: l.display_type == 'line_section'):
-            section_name = "%s (%s)" % (section_names[record.week_type], section_info[this_week_type == record.week_type])
+            section_name = f"{section_names[record.week_type]} ({section_info[this_week_type == record.week_type]})"
             record.display_name = section_name
 
     def _copy_attendance_vals(self):

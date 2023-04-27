@@ -2995,7 +2995,7 @@ class Many2one(_Relational):
 
     def convert_to_read(self, value, record, use_name_get=True):
         if use_name_get and value:
-            # evaluate name_get() as superuser, because the visibility of a
+            # evaluate display_name as superuser, because the visibility of a
             # many2one field value (id and name) depends on the current record's
             # access rights, and not the value's access rights.
             try:
@@ -4189,7 +4189,7 @@ class _RelationalMulti(_Relational):
         raise ValueError("Wrong value for %s: %s" % (self, value))
 
     def convert_to_export(self, value, record):
-        return ','.join(name for id, name in value.name_get()) if value else ''
+        return ','.join(value.mapped('display_name')) if value else ''
 
     def convert_to_display_name(self, value, record):
         raise NotImplementedError()

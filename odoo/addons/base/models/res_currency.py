@@ -156,8 +156,9 @@ class Currency(models.Model):
         for currency in self:
             currency.date = currency.rate_ids[:1].name
 
-    def name_get(self):
-        return [(currency.id, tools.ustr(currency.name)) for currency in self]
+    def _compute_display_name(self):
+        for currency in self:
+            currency.display_name = tools.ustr(currency.name)
 
     def amount_to_text(self, amount):
         self.ensure_one()

@@ -371,11 +371,11 @@ class IrModel(models.Model):
     @api.model
     def name_create(self, name):
         """ Infer the model from the name. E.g.: 'My New Model' should become 'x_my_new_model'. """
-        vals = {
+        ir_model = self.create({
             'name': name,
             'model': 'x_' + '_'.join(name.lower().split(' ')),
-        }
-        return self.create(vals).name_get()[0]
+        })
+        return ir_model.id, ir_model.display_name
 
     def _reflect_model_params(self, model):
         """ Return the values to write to the database for the given model. """
@@ -1023,11 +1023,9 @@ class IrModelFields(models.Model):
             self.clear_caches()
         return res
 
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for field in self:
-            res.append((field.id, '%s (%s)' % (field.field_description, field.model)))
-        return res
+            field.display_name = f'{field.field_description} ({field.model})'
 
     def _reflect_field_params(self, field, model_id):
         """ Return the values to write to the database for the given field. """
@@ -1974,22 +1972,14 @@ class IrModelData(models.Model):
                            self._table, ['model', 'res_id'])
         return res
 
-    def name_get(self):
-        model_id_name = defaultdict(dict)       # {res_model: {res_id: name}}
-        for xid in self:
-            model_id_name[xid.model][xid.res_id] = None
-
-        # fill in model_id_name with name_get() of corresponding records
-        for model, id_name in model_id_name.items():
-            try:
-                ng = self.env[model].browse(id_name).name_get()
-                id_name.update(ng)
-            except Exception:
-                pass
-
-        # return results, falling back on complete_name
-        return [(xid.id, model_id_name[xid.model][xid.res_id] or xid.complete_name)
-                for xid in self]
+    def _compute_display_name(self):
+        for model, model_data_records in self.grouped('model').items():
+            records = self.env[model].browse(model_data_records.mapped('res_id'))
+            for xid, target_record in zip(model_data_records, records):
+                try:
+                    xid.display_name = target_record.display_name or xid.complete_name
+                except Exception:  # Should we keep the try/except, pylint: disable=broad-except
+                    xid.display_name = xid.complete_name
 
     # NEW V8 API
     @api.model

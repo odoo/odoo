@@ -483,11 +483,11 @@ class ProductTemplate(models.Model):
             default['name'] = _("%s (copy)", self.name)
         return super(ProductTemplate, self).copy(default=default)
 
-    def name_get(self):
-        # Prefetch the fields used by the `name_get`, so `browse` doesn't fetch other fields
+    def _compute_display_name(self):
+        # Prefetch the fields used by the `display_name`, so `browse` doesn't fetch other fields
         self.fetch(['name', 'default_code'])
-        return [(template.id, '%s%s' % (template.default_code and '[%s] ' % template.default_code or '', template.name))
-                for template in self]
+        for template in self:
+            template.display_name = '{}{}'.format(template.default_code and '[%s] ' % template.default_code or '', template.name)
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -527,7 +527,7 @@ class ProductTemplate(models.Model):
             domain2 = expression.AND([domain, [('id', 'in', tmpl_without_variant.ids)]])
             searched_ids |= set(super()._name_search(name, domain2, operator, limit, order))
 
-        # re-apply product.template order + name_get
+        # re-apply product.template order + display_name
         domain = [('id', 'in', list(searched_ids))]
         return super()._name_search('', domain, 'ilike', limit, order)
 

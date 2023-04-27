@@ -33,15 +33,15 @@ class TestPartner(TransactionCase):
         test_partner_jetha = self.env['res.partner'].create({'name': 'Jethala', 'street': 'Powder gali', 'street2': 'Gokuldham Society'})
         test_partner_bhide = self.env['res.partner'].create({'name': 'Atmaram Bhide'})
 
-        res_jetha = test_partner_jetha.with_context(show_address=1).name_get()
-        self.assertEqual(res_jetha[0][1], "Jethala\nPowder gali\nGokuldham Society", "name should contain comma separated name and address")
-        res_bhide = test_partner_bhide.with_context(show_address=1).name_get()
-        self.assertEqual(res_bhide[0][1], "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
+        res_jetha = test_partner_jetha.with_context(show_address=1).display_name
+        self.assertEqual(res_jetha, "Jethala\nPowder gali\nGokuldham Society", "name should contain comma separated name and address")
+        res_bhide = test_partner_bhide.with_context(show_address=1).display_name
+        self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
-        res_jetha = test_partner_jetha.with_context(show_address=1, address_inline=1).name_get()
-        self.assertEqual(res_jetha[0][1], "Jethala, Powder gali, Gokuldham Society", "name should contain comma separated name and address")
-        res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).name_get()
-        self.assertEqual(res_bhide[0][1], "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
+        res_jetha = test_partner_jetha.with_context(show_address=1, address_inline=1).display_name
+        self.assertEqual(res_jetha, "Jethala, Powder gali, Gokuldham Society", "name should contain comma separated name and address")
+        res_bhide = test_partner_bhide.with_context(show_address=1, address_inline=1).display_name
+        self.assertEqual(res_bhide, "Atmaram Bhide", "name should contain only name if address is not available, without extra commas")
 
     def test_company_change_propagation(self):
         """ Check propagation of company_id across children """
@@ -182,8 +182,7 @@ class TestPartner(TransactionCase):
         partner_merge_wizard = self.env['base.partner.merge.automatic.wizard'].with_context(
             {'partner_show_db_id': True, 'default_dst_partner_id': test_partner}).new()
         self.assertEqual(
-            partner_merge_wizard.dst_partner_id.name_get(),
-            [(test_partner.id, expected_partner_name)],
+            partner_merge_wizard.dst_partner_id.display_name, expected_partner_name,
             "'Destination Contact' name should contain db ID in brackets"
         )
 

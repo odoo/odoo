@@ -520,16 +520,15 @@ class HolidaysAllocation(models.Model):
     ####################################################
 
     def onchange(self, values, field_name, field_onchange):
-        # Try to force the leave_type name_get when creating new records
-        # This is called right after pressing create and returns the name_get for
+        # Try to force the leave_type display_name when creating new records
+        # This is called right after pressing create and returns the display_name for
         # most fields in the view.
         if field_onchange.get('employee_id') and 'employee_id' not in self._context and values:
             employee_id = get_employee_from_context(values, self._context, self.env.user.employee_id.id)
             self = self.with_context(employee_id=employee_id)
         return super().onchange(values, field_name, field_onchange)
 
-    def name_get(self):
-        res = []
+    def _compute_display_name(self):
         for allocation in self:
             if allocation.holiday_type == 'company':
                 target = allocation.mode_company_id.name
@@ -542,16 +541,12 @@ class HolidaysAllocation(models.Model):
             else:
                 target = ', '.join(allocation.employee_ids.sudo().mapped('name'))
 
-            res.append(
-                (allocation.id,
-                 _("Allocation of %(allocation_name)s: %(duration).2f %(duration_type)s to %(person)s",
-                   allocation_name=allocation.holiday_status_id.sudo().name,
-                   duration=allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
-                   duration_type=_('hours') if allocation.type_request_unit == 'hour' else _('days'),
-                   person=target
-                ))
+            allocation.display_name = _("Allocation of %s: %.2f %s to %s",
+                allocation.holiday_status_id.sudo().name,
+                allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
+                _('hours') if allocation.type_request_unit == 'hour' else _('days'),
+                target,
             )
-        return res
 
     def add_follower(self, employee_id):
         employee = self.env['hr.employee'].browse(employee_id)

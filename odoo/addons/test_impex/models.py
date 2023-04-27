@@ -46,8 +46,9 @@ for name, field in MODELS:
         const = fields.Integer(default=4)
         value = field
 
-        def name_get(self):
-            return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+        def _compute_display_name(self):
+            for record in self:
+                record.display_name = f"{self._name}:{record.value}"
 
         @api.model
         def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -67,8 +68,9 @@ class One2ManyChild(models.Model):
     m2o = fields.Many2one('export.integer')
     value = fields.Integer()
 
-    def name_get(self):
-        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{self._name}:{record.value}"
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
@@ -99,8 +101,9 @@ class One2ManyChildMultiple(models.Model):
     str = fields.Char()
     value = fields.Integer()
 
-    def name_get(self):
-        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{self._name}:{record.value}"
 
 
 class One2ManyChild1(models.Model):
@@ -124,8 +127,9 @@ class Many2ManyChild(models.Model):
     str = fields.Char()
     value = fields.Integer()
 
-    def name_get(self):
-        return [(record.id, "%s:%s" % (self._name, record.value)) for record in self]
+    def _compute_display_name(self):
+        for record in self:
+            record.display_name = f"{self._name}:{record.value}"
 
     @api.model
     def _name_search(self, name, domain=None, operator='ilike', limit=None, order=None):
