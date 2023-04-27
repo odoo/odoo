@@ -454,6 +454,10 @@ class MailThread(models.AbstractModel):
         if any(message.message_type != 'comment' for message in messages):
             raise exceptions.UserError(_("Only messages type comment can have their content updated"))
 
+    @api.model
+    def _get_from_request_or_raise(self, request, thread_id):
+        return self.search([("id", "=", thread_id)])
+
     # ------------------------------------------------------------
     # FIELDS HELPERS
     # ------------------------------------------------------------
