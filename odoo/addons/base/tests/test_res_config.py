@@ -112,7 +112,7 @@ class TestResConfig(TransactionCase):
         arch = self.env['res.config.settings'].get_view(view.id)['arch']
         tree = etree.fromstring(arch)
         self.assertTrue(tree.xpath("""
-            //form[@class="oe_form_configuration o_base_settings"]
+            //form[@class="oe_form_configuration"]
             /app[@name="foo"]
         """), 'The res.config.settings form view architecture is not what is expected by the web client.')
 

@@ -52,7 +52,7 @@ export class FormCompiler extends ViewCompiler {
         this.compilers.push(
             ...compilersRegistry.getAll(),
             { selector: "div[name='button_box']", fn: this.compileButtonBox },
-            { selector: "form", fn: this.compileForm },
+            { selector: "form", fn: this.compileForm, doNotCopyAttributes: true },
             { selector: "group", fn: this.compileGroup },
             { selector: "header", fn: this.compileHeader },
             { selector: "label", fn: this.compileLabel, doNotCopyAttributes: true },
@@ -224,6 +224,7 @@ export class FormCompiler extends ViewCompiler {
         const stateClasses =
             "{{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}";
         const form = createElement("div", {
+            class: "o_form_renderer",
             "t-att-class": "__comp__.props.class",
             "t-attf-class": `{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} ${displayClasses} ${stateClasses}`,
         });
@@ -231,7 +232,7 @@ export class FormCompiler extends ViewCompiler {
             for (const child of el.childNodes) {
                 append(form, this.compileNode(child, params));
             }
-            form.className = "o_form_nosheet";
+            form.classList.add("o_form_nosheet");
         } else {
             let compiledList = [];
             for (const child of el.childNodes) {
