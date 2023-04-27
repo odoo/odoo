@@ -66,6 +66,7 @@ export class SplitBillScreen extends Component {
             }
 
             this.newOrder.setCustomerCount(1);
+            this.newOrder.originalSplittedOrder = this.currentOrder;
             const newCustomerCount = this.currentOrder.getCustomerCount() - 1;
             this.currentOrder.setCustomerCount(newCustomerCount || 1);
             this.currentOrder.set_screen_data({ name: "ProductScreen" });

@@ -211,3 +211,7 @@ class TestFrontend(odoo.tests.HttpCase):
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="demo")
+
+    def test_07_split_bill_screen(self):
+        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour3', login="demo")
