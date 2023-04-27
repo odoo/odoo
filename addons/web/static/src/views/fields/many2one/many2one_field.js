@@ -54,7 +54,7 @@ export class Many2OneField extends Component {
         canQuickCreate: { type: Boolean, optional: true },
         canCreateEdit: { type: Boolean, optional: true },
         context: { type: Object, optional: true },
-        domain: { type: Array, optional: true },
+        domain: { type: [Array, Function], optional: true },
         nameCreateField: { type: String, optional: true },
         searchLimit: { type: Number, optional: true },
         relation: { type: String, optional: true },
@@ -215,7 +215,8 @@ export class Many2OneField extends Component {
         };
     }
     getDomain() {
-        return this.props.domain || this.props.record.getFieldDomain(this.props.name);
+        const domain = this.props.domain;
+        return typeof domain === "function" ? domain() : domain;
     }
     async openAction() {
         const action = await this.orm.call(this.relation, "get_formview_action", [[this.resId]], {

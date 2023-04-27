@@ -32,7 +32,7 @@ export class X2ManyField extends Component {
         crudOptions: { type: Object, optional: true },
         string: { type: String, optional: true },
         views: { type: Object, optional: true },
-        domain: { type: Array, optional: true },
+        domain: { type: [Array, Function], optional: true },
         context: { type: Object },
     };
 
@@ -240,7 +240,8 @@ export class X2ManyField extends Component {
     }
 
     async onAdd({ context, editable } = {}) {
-        const domain = this.props.domain || this.props.record.getFieldDomain(this.props.name);
+        const domain =
+            typeof this.props.domain === "function" ? this.props.domain() : this.props.domain;
         context = makeContext([this.props.context, context]);
         if (this.isMany2Many) {
             const { string } = this.props;
