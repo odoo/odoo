@@ -58,7 +58,6 @@ class LinkPreview(models.Model):
 
     def _delete_and_notify(self):
         notifications = []
-        guest = self.env['mail.guest']._get_guest_from_context()
         for link_preview in self:
             notifications.append((link_preview.message_id._bus_notification_target(), 'mail.link.preview/delete', {
                 'id': link_preview.id,
