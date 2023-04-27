@@ -30,18 +30,18 @@
                     <i class="fa fa-caret-down"></i>
                 </span>
             </t>
-            <div t-if="props.searchable" class="o_select_menu_input p-2 position-sticky top-0 start-0" t-ref="inputContainerRef">
-                <input
-                    type="text"
-                    class="form-control"
-                    t-ref="inputRef"
-                    t-on-input="debouncedOnInput"
-                    t-att-placeholder="props.searchPlaceholder"
-                    autocomplete="off"
-                    autocorrect="off"
-                    spellcheck="false"
-                />
-            </div>
+            <input
+                t-if="props.searchable"
+                type="text"
+                class="dropdown-item o_select_menu_sticky px-3 py-3 position-sticky top-0 start-0 border-bottom"
+                t-ref="inputRef"
+                t-on-input="debouncedOnInput"
+                t-on-keydown="onSearchKeydown"
+                t-att-placeholder="props.searchPlaceholder"
+                autocomplete="selectMenuAutocompleteOff"
+                autocorrect="off"
+                spellcheck="false"
+            />
             <t t-if="state.choices.length === 0">
                 <span class="text-muted fst-italic ms-3">No result found</span>
             </t>
@@ -61,9 +61,7 @@
                     </t>
                 </DropdownItem>
             </t>
-            <div t-if="props.slots and props.slots.bottomArea" class="o_select_menu_bottom_area position-sticky bottom-0">
-                <t t-slot="bottomArea" data="state"/>
-            </div>
+            <t t-if="props.slots and props.slots.bottomArea" t-slot="bottomArea" data="state"/>
         </Dropdown>
     </t>
 
