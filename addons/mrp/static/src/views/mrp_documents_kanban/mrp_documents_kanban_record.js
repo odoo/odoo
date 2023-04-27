@@ -2,7 +2,7 @@
 
 import { CANCEL_GLOBAL_CLICK, KanbanRecord } from "@web/views/kanban/kanban_record";
 import { useService } from "@web/core/utils/hooks";
-import { useAttachmentViewer } from "@mail/attachments/attachment_viewer_hook";
+import { useAttachmentViewer } from "@web/core/attachment_viewer/attachment_viewer_hook";
 
 export class MrpDocumentsKanbanRecord extends KanbanRecord {
     setup() {
