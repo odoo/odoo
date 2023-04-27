@@ -203,6 +203,8 @@ class PaymentTransaction(models.Model):
             "payment request response for transaction with reference %s:\n%s",
             self.reference, pprint.pformat(payment_intent)
         )
+        if not payment_intent:  # The PI might be missing if Stripe failed to create it.
+            return  # There is nothing to process; the transaction is in error at this point.
         self.stripe_payment_intent = payment_intent['id']
 
         # Handle the payment request response
@@ -242,7 +244,14 @@ class PaymentTransaction(models.Model):
         if 'error' not in response:
             payment_intent = response
         else:  # A processing error was returned in place of the payment intent
+            # The request failed and no error was raised because we are in an offline payment flow.
+            # Extract the error from the response, log it, and set the transaction in error to let
+            # the calling module handle the issue without rolling back the cursor.
             error_msg = response['error'].get('message')
+            _logger.error(
+                "The creation of the payment intent failed.\n"
+                "Stripe gave us the following info about the problem:\n'%s'", error_msg
+            )
             self._set_error("Stripe: " + _(
                 "The communication with the API failed.\n"
                 "Stripe gave us the following info about the problem:\n'%s'", error_msg
