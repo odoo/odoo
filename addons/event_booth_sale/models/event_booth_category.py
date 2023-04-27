@@ -51,34 +51,28 @@ class EventBoothCategory(models.Model):
     def _compute_price_incl(self):
         for category in self:
             if category.product_id and category.price:
-                tax_ids = category.product_id.taxes_id
-                taxes = tax_ids.compute_all(category.price, category.currency_id, 1.0, product=category.product_id)
-                category.price_incl = taxes['total_included']
+                category.price_incl = category._tax_compute(category.price, category.currency_id)
             else:
                 category.price_incl = 0
 
-    @api.depends_context('pricelist', 'quantity')
+    @api.depends_context('uom', 'pricelist', 'quantity')
     @api.depends('product_id', 'price')
     def _compute_price_reduce(self):
         for category in self:
-            product = category.product_id
-            pricelist = product.product_tmpl_id._get_contextual_pricelist()
-            lst_price = product.currency_id._convert(
-                product.lst_price,
-                pricelist.currency_id,
-                self.env.company,
-                fields.Datetime.now()
-            )
-            discount = (lst_price - product._get_contextual_price()) / lst_price if lst_price else 0.0
-            category.price_reduce = (1.0 - discount) * category.price
+            currency = category.product_id._get_contextual_pricelist().currency_id or self.env.company.currency_id
+            category.price_reduce = currency._convert(
+                category.product_id.with_context({
+                    **self._context,
+                    'record_being_sold': category.id,
+                })._get_contextual_price(),
+                category.currency_id, category.product_id.company_id or self.env.company, fields.Date.today(),
+                round=False)
 
     @api.depends_context('pricelist', 'quantity')
     @api.depends('product_id', 'price_reduce')
     def _compute_price_reduce_taxinc(self):
         for category in self:
-            tax_ids = category.product_id.taxes_id
-            taxes = tax_ids.compute_all(category.price_reduce, category.currency_id, 1.0, product=category.product_id)
-            category.price_reduce_taxinc = taxes['total_included'] or 0
+            category.price_reduce_taxinc = category._tax_compute(category.price_reduce, category.currency_id)
 
     def _init_column(self, column_name):
         """ Initialize product_id for existing columns when installing sale
@@ -117,3 +111,10 @@ class EventBoothCategory(models.Model):
             f'UPDATE {self._table} SET product_id = %s WHERE id IN %s;',
             (product_id, tuple(booth_category_ids))
         )
+
+    def _tax_compute(self, price, currency):
+        """ Helper function to compute the price tax included for the booth (self). """
+        self.ensure_one()
+        tax_ids = self.product_id.taxes_id
+        taxes = tax_ids.compute_all(price, currency, 1.0, product=self.product_id)
+        return taxes['total_included'] or 0

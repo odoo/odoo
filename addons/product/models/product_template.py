@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError, RedirectWarning, UserError
 from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
+DETAILED_TYPE_MODELS = dict()
 
 
 class ProductTemplate(models.Model):
@@ -429,6 +430,32 @@ class ProductTemplate(models.Model):
     def _get_related_fields_variant_template(self):
         """ Return a list of fields present on template and variants models and that are related"""
         return ['barcode', 'default_code', 'standard_price', 'volume', 'weight', 'packaging_ids']
+
+    def _get_base_or_overridden_price(self, price_type):
+        """Allow other modules to override the price during the computation of the final price (based on the rules of
+        the price list, ...).
+
+        This method overrides the list_price if record_being_sold is set by getting the price (field price) from the
+        record targeted by record_being_sold on the model identified by the detailed_type and the mapping
+        DETAILED_TYPE_MODELS. The price is assumed to be in product currency.
+        Other price types are not overridden (ex.: standard_price).
+
+        See example in event module where we need to compute the final price for different tickets with different price
+        but linked to the same product.
+
+        :returns: price: the base price if is_overridden is False otherwise the overridden price.
+                  is_overridden: whether the price is overridden or the base price
+        :rtype: (float, bool)
+        """
+        self.ensure_one()
+        if price_type == 'list_price' and self._context.get('record_being_sold'):
+            # Multi-tenant: self.detailed_type ensures that model_name is installed (because the one-to-one relation)
+            model_name = DETAILED_TYPE_MODELS.get(self.detailed_type)
+            if not model_name:
+                raise ValueError(_('Unable to gather all the information about the "%(detailed_type)s" product.',
+                                   detailed_type=self.detailed_type))
+            return self.env[model_name].browse(self._context['record_being_sold']).price, True
+        return self[price_type] or 0.0, False
 
     @api.model_create_multi
     def create(self, vals_list):

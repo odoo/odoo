@@ -92,6 +92,12 @@ class SaleOrderLine(models.Model):
     def _unlink_associated_registrations(self):
         self.env['event.registration'].search([('sale_order_line_id', 'in', self.ids)]).unlink()
 
+    def _get_product_price_context(self):
+        res = super()._get_product_price_context()
+        if self.event_ticket_id:
+            res['record_being_sold'] = self.event_ticket_id.id
+        return res
+
     def _get_sale_order_line_multiline_description_sale(self):
         """ We override this method because we decided that:
                 The default description of a sales order line containing a ticket must be different than the default description when no ticket is present.
@@ -102,18 +108,3 @@ class SaleOrderLine(models.Model):
             return self.event_ticket_id._get_ticket_multiline_description() + self._get_sale_order_line_multiline_description_variants()
         else:
             return super()._get_sale_order_line_multiline_description_sale()
-
-    def _get_display_price(self):
-        if self.event_ticket_id and self.event_id:
-            event_ticket = self.event_ticket_id.with_context(
-                pricelist=self.order_id.pricelist_id.id,
-                uom=self.product_uom.id
-            )
-            company = event_ticket.company_id or self.env.company
-            pricelist = self.order_id.pricelist_id
-            if pricelist.discount_policy == "with_discount":
-                price = event_ticket.price_reduce
-            else:
-                price = event_ticket.price
-            return self._convert_to_sol_currency(price, company.currency_id)
-        return super()._get_display_price()

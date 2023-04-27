@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 
 from odoo import Command, fields
 from odoo.addons.event_booth_sale.tests.common import TestEventBoothSaleCommon
+from odoo.addons.event_sale.tests.common import TestEventSaleTicketWithPriceListCommon
 from odoo.addons.sales_team.tests.common import TestSalesCommon
 from odoo.tests.common import tagged, users
 from odoo.tools import float_compare
@@ -107,6 +108,150 @@ class TestEventBoothSale(TestEventBoothSaleWData):
             self.assertEqual(
                 booth.state, 'unavailable',
                 "Booth should not be available anymore.")
+
+
+@tagged('post_install', '-at_install')
+class TestEventBoothSaleWithPriceList(TestEventSaleTicketWithPriceListCommon):
+    """Extensive test of booth sales using price list.
+
+    As with tickets, multiple booths (with various prices) can be linked to a single product.
+    This test verifies that the price is correctly computed for various configuration (price list, ...).
+    See TestEventSaleTicketWithPriceList for more details as it is very similar.
+    """
+    @classmethod
+    def setUpClass(cls):
+        super(TestEventBoothSaleWithPriceList, cls).setUpClass()
+        # Reuse event_product and event_product_templ configured instances and adapt them
+        cls.booth_product = cls.event_product
+        cls.booth_product_templ = cls.event_product_templ
+        cls.booth_product.write({'detailed_type': 'event_booth'})
+        cls.booth_product_templ.write({'detailed_type': 'event_booth'})
+
+        cls.booth_price = 100.0
+        cls.booth_cat = cls.env['event.booth.category'].create({
+            'name': 'Custom',
+            'description': '<p>Custom</p>',
+            'price': cls.booth_price,
+        })
+        cls.booth_0 = cls.env['event.booth'].create({
+            'name': 'Event booth 0',
+            'event_id': cls.event_0.id,
+            'booth_category_id': cls.booth_cat.id,
+        })
+        cls.booth_1 = cls.env['event.booth'].create({
+            'name': 'Event booth 1',
+            'event_id': cls.event_0.id,
+            'booth_category_id': cls.booth_cat.id,
+        })
+
+    def create_sale_order_booth(self, qty):
+        """Create a sale order for the booth_0 if qty == 1 and for booth_0 and booth_1 if qty == 2 (booths are unique)
+
+        :param int qty: number of booth ordered, must be 1 or 2
+        :return: sale_order_line
+        """
+        if qty not in (1, 2):
+            raise ValueError('Parameter qty must be 1 or 2')
+        booths = self.booth_0
+        if qty == 2:
+            booths += self.booth_1
+        so = self.env['sale.order'].create({
+            'partner_id': self.env.user.partner_id.id,
+            'pricelist_id': self.price_list.id,
+            'date_order': self.now,
+            'company_id': self.env.company.id,
+        })
+        self.env['sale.order.line'].create({
+            'product_id': self.product_or_template.product_variant_id.id,
+            'order_id': so.id,
+            'event_id': self.event_0.id,
+            'event_booth_category_id': self.booth_cat.id,
+            'event_booth_pending_ids': booths.mapped('id'),
+            'product_uom_qty': 1,
+        })
+        return so
+
+    def assert_amount_total(self, actual_sale_order, expected_1_unit_price, qty, msg):
+        """ Assert that the sale order amount total and the booth cat price reduce tax incl have the expected value.
+
+        The goal is to test the 2 ways of computing the price (based on the price list): through sale order and
+        through booth category.
+
+        Assert that actual_sale_order.amount_total = expected_amount_total
+        Assert that amount total computed with booth category price reduce tax incl = expected_amount_total
+       """
+        with self.subTest(msg, actual_sale_order=actual_sale_order,
+                          expected_1_unit_price=expected_1_unit_price, qty=qty):
+            order_qty_msg = '(2 booths ordered at the same price each)' if qty == 2 else ''
+            self.assertAlmostEqual(actual_sale_order.amount_total, expected_1_unit_price * qty,
+                                   msg=f'Sale order: {msg} {order_qty_msg}',
+                                   delta=self.precision_delta * qty)  # * qty because price_unit is rounded then mult by qty
+            price_reduce_taxinc = self.booth_cat.currency_id._convert(
+                self.booth_cat.with_context({'pricelist': self.price_list.id}).price_reduce_taxinc,
+                self.price_list.currency_id, self.price_list.company_id or self.env.company, self.now, round=False)
+            self.assertAlmostEqual(price_reduce_taxinc, expected_1_unit_price,
+                                   msg=f'booth category price reduce tax included: {msg} {order_qty_msg}',
+                                   delta=self.precision_delta * qty)  # * qty because price_unit is rounded then mult by qty
+
+    def test_booth_price_with_price_list_extensive(self):
+        # Only vary price list currency because product and booth currency are related to company.currency (see models)
+        cases = [(currency, is_product_tpl, qty)
+                 for currency in (self.usd_currency, self.eur_currency)
+                 for is_product_tpl in (False, True)
+                 for qty in (1, 2)]
+        for currency, use_product_tpl, qty in cases:
+            # For all tests, the following values are fixed by the setup:
+            # booth_price = 100, product_lst_price = 10, product_standard_price = 30
+            self.product_or_template = self.booth_product_templ if use_product_tpl else self.booth_product
+            self.booth_cat.write({
+                'product_id': self.product_or_template.product_variant_id.id,
+                'price': self.booth_price, # If not written, the booth will get the price from the product
+            })
+
+            descr = f'(using {"product template" if use_product_tpl else "product"}, price list in {currency.name})'
+            pricelist_config = dict(rule_type='formula', rule_amount=20.0, min_qty=2)
+            self.configure_pricelist(price_list_currency=currency, **pricelist_config)
+            sale_order = self.create_sale_order_booth(qty)
+            self.assert_amount_total(sale_order,
+                                     self.convert_to_sale_order_currency(110),
+                                     qty,
+                                     msg=f"Booth is $100 + 10% tax -> 110 {descr} (price list: {pricelist_config})")
+
+            pricelist_config = dict(rule_type='formula', rule_amount=20.0, min_qty=1)
+            self.configure_pricelist(price_list_currency=currency, **pricelist_config)
+            sale_order = self.create_sale_order_booth(qty)
+            self.assert_amount_total(sale_order,
+                                     self.convert_to_sale_order_currency(88),
+                                     qty,
+                                     msg=f"Booth at $100 -20%  -> $80 + 10% tax -> 88 {descr} "
+                                         f"(price list: {pricelist_config})")
+
+            pricelist_config = dict(rule_type='fixed', rule_amount=10.0, min_qty=1)
+            self.configure_pricelist(price_list_currency=currency, **pricelist_config)
+            sale_order = self.create_sale_order_booth(qty)
+            self.assert_amount_total(sale_order,
+                                     11,  # No conversion because the price is expressed in price list currency
+                                     qty,
+                                     msg=f"Booth is $10 + 10% tax -> 11 {descr} (price list: {pricelist_config})")
+
+            pricelist_config = dict(rule_type='percentage', rule_amount=20.0, min_qty=1)
+            self.configure_pricelist(price_list_currency=currency, **pricelist_config)
+            sale_order = self.create_sale_order_booth(qty)
+            self.assert_amount_total(sale_order,
+                                     self.convert_to_sale_order_currency(88),
+                                     qty,
+                                     msg=f"Booth at $100 -20%  -> $80 + 10% tax -> 88 {descr} "
+                                         f"(price list: {pricelist_config})")
+
+            pricelist_config = dict(rule_type='percentage', rule_amount=20.0, min_qty=1,
+                                    rule_based_on='standard_price')
+            self.configure_pricelist(price_list_currency=currency, **pricelist_config)
+            sale_order = self.create_sale_order_booth(qty)
+            self.assert_amount_total(sale_order,
+                                     self.convert_to_sale_order_currency(26.4),
+                                     qty,
+                                     msg=f"Cost of booth at $30 -20%  -> $24 + 10% tax -> 26.4 {descr} "
+                                         f"(price list: {pricelist_config})")
 
 
 @tagged('post_install', '-at_install')

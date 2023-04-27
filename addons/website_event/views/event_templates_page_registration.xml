@@ -192,7 +192,8 @@
                             <div class="w-auto ms-auto">
                                 <select t-if="not ticket.is_expired and ticket.sale_available"
                                     t-attf-name="nb_register-#{ticket.id}"
-                                    class="form-select">
+                                    class="form-select o_event_ticket_quantity_selection"
+                                    t-att-data-ticket-id="ticket.id">
                                     <t t-set="seats_max_ticket" t-value="(not ticket.seats_limited or ticket.seats_available &gt; 9) and 10 or ticket.seats_available + 1"/>
                                     <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event)"/>
@@ -243,7 +244,10 @@
                             <t t-if="event.event_registrations_open">
                                 <span class="text-dark fw-bold align-middle px-2">Qty</span>
                                 <link itemprop="availability" content="http://schema.org/InStock"/>
-                                <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)" class="d-inline w-auto form-select">
+                                <select t-att-name="'nb_register-%s' % (tickets.id if tickets else 0)"
+                                        t-attf-class="d-inline w-auto form-select {{'o_event_ticket_quantity_selection' if tickets else ''}}"
+                                        t-att-data-ticket-id="tickets.id if tickets else False"
+                                        t-att-data-ticket-init-quantity="1 if tickets else False">
                                     <t t-set="seats_max_ticket" t-value="(not tickets or not tickets.seats_limited or tickets.seats_available &gt; 9) and 10 or tickets.seats_available + 1"/>
                                     <t t-set="seats_max_event" t-value="(not event.seats_limited or event.seats_available &gt; 9) and 10 or event.seats_available + 1"/>
                                     <t t-set="seats_max" t-value="min(seats_max_ticket, seats_max_event) if tickets else seats_max_event"/>

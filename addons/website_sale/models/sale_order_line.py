@@ -63,3 +63,12 @@ class SaleOrderLine(models.Model):
     def _is_reorder_allowed(self):
         self.ensure_one()
         return self.product_id._is_add_to_cart_allowed()
+
+    def _get_product_website_url(self):
+        """ Return the product website_url if it is published otherwise False.
+
+        This method is meant to be overridden for product that doesn't redirect to the product URL but a related one
+        (ex.: event).
+        """
+        self.ensure_one()
+        return self.product_id.website_published and self.product_id.website_url

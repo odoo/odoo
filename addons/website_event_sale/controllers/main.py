@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from collections import defaultdict
+import datetime
 from odoo import _
 from odoo.http import request, route
 
@@ -75,3 +76,51 @@ class WebsiteEventSaleController(WebsiteEventController):
                 request.website.sale_reset()
 
         return res
+
+    def _prepare_event_values(self, name, event_start, event_end, address_values=None):
+        values = super()._prepare_event_values(name, event_start, event_end, address_values)
+        product = request.env.ref('event_sale.product_product_event', raise_if_not_found=False)
+        if product:
+            values.update({
+                'event_ticket_ids': [[0, 0, {
+                    'name': _('Registration'),
+                    'product_id': product.id,
+                    'end_sale_datetime': False,
+                    'seats_max': 1000,
+                    'price': 0,
+                }]]
+            })
+        return values
+
+    @route(['/website_event_sale/ticket/<int:event_ticket_id>/unit_price/render'],
+           type='json', auth="public", website=True, sitemap=False)
+    def render_ticket_unit_price(self, event_ticket_id, quantity=1):
+        """ Render ticket price.
+
+        :param: int event_ticket_id: id of an event ticket
+        :param: int quantity: optional quantity (default 1)
+        :return MarkupSafe: rendered price
+        """
+        website = request.website.get_current_website()
+        website_pricelist = website.get_current_pricelist()
+        event_ticket = request.env['event.event.ticket'].browse(event_ticket_id).with_context({
+            'quantity': quantity,
+            'pricelist': website_pricelist.id if website_pricelist else None,
+        })
+        ticket_currency = event_ticket.currency_id
+        now = datetime.date.today()
+
+        if website.company_id.show_line_subtotals_tax_selection == 'tax_excluded':
+            price = event_ticket.price_reduce
+            price_not_reduced = event_ticket.price
+        else:
+            price = event_ticket.price_reduce_taxinc
+            price_not_reduced = event_ticket.price_incl
+
+        return request.env['ir.qweb']._render('website_event_sale.event_ticket_price', {
+            'price': ticket_currency._convert(price, website.currency_id, website.company_id, now),
+            'price_not_reduced': ticket_currency._convert(price_not_reduced,
+                                                          website.currency_id, website.company_id, now),
+            'currency': website.currency_id,
+            'discount_policy': website_pricelist.discount_policy if website_pricelist else None,
+        })

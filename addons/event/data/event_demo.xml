@@ -62,6 +62,12 @@
         <field name="kanban_state">blocked</field>
         <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_3'))]"/>
     </record>
+    <record id="event_1_ticket_1" model="event.event.ticket">
+        <field name="end_sale_datetime" eval="(DateTime.today() + timedelta(90)).strftime('%Y-%m-%d 23:00:00')"/>
+        <field name="event_id" ref="event.event_1"/>
+        <field name="name">Standard</field>
+        <field name="seats_max">5000</field>
+    </record>
 
     <record id="message_event_1_0" model="mail.message">
         <field name="model">event.event</field>

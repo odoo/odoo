@@ -7,14 +7,11 @@
                 trigger: '.nav-link:contains("Shop")',
             },
             {
-                content: "Toggle Pricelist",
-                trigger: '.o_pricelist_dropdown > .dropdown-toggle',
-                run: 'click',
-            },
-            {
                 content: `Activate Pricelist ${pricelistName}`,
-                trigger: `.dropdown-item:contains(${pricelistName})`,
-                run: 'click',
+                trigger: '.o_pricelist_dropdown',
+                run: function () {
+                    $(`.o_pricelist_dropdown .dropdown-item:contains("${pricelistName}")`)[0].click();
+                },
             },
             {
                 content: 'Wait for pricelist to load',

@@ -143,6 +143,14 @@ class SaleOrderLine(models.Model):
         compute='_compute_price_unit',
         digits='Product Price',
         store=True, readonly=False, required=True, precompute=True)
+    price_unit_before_discount_taxexcl = fields.Float(
+        string="Unit Price Before Discount",
+        compute='_compute_price_unit_before_discount_taxexcl',
+        digits='Product Price')
+    price_unit_before_discount_taxinc = fields.Float(
+        string="Unit Price Before Discount Tax Included",
+        compute='_compute_price_unit_before_discount_taxinc',
+        digits='Product Price')
 
     discount = fields.Float(
         string="Discount (%)",
@@ -442,6 +450,16 @@ class SaleOrderLine(models.Model):
                     product_currency=line.currency_id
                 )
 
+    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    def _compute_price_unit_before_discount_taxexcl(self):
+        for line in self:
+            line.price_unit_before_discount_taxexcl = line._get_price_unit_before_discount_taxexcl()
+
+    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    def _compute_price_unit_before_discount_taxinc(self):
+        for line in self:
+            line.price_unit_before_discount_taxinc = line._get_price_unit_before_discount_taxinc()
+
     def _get_display_price(self):
         """Compute the displayed unit price for a given line.
 
@@ -534,6 +552,28 @@ class SaleOrderLine(models.Model):
         )
 
         return price
+
+    def _get_price_unit_before_discount_taxexcl(self):
+        """ Method used by the related computed field meant to be overridden
+
+        Ex.: for event booth where one unit can represent a variable number of booths.
+        """
+        self.ensure_one()
+        return self._get_pricelist_price_before_discount()
+
+    def _get_price_unit_before_discount_taxinc(self):
+        """ Method used by the related computed field meant to be overridden """
+        self.ensure_one()
+        base_line = self._convert_to_tax_base_line_dict()
+        base_line.update({
+            'price_unit': self._get_price_unit_before_discount_taxexcl(),
+            'discount': 0,
+            'price_subtotal': 0,
+            'quantity': 1,
+        })
+        tax_results = self.env['account.tax']._compute_taxes([base_line])
+        totals = list(tax_results['totals'].values())[0]
+        return totals['amount_untaxed'] + totals['amount_tax']
 
     @api.depends('product_id', 'product_uom', 'product_uom_qty')
     def _compute_discount(self):

@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models
+from odoo.addons.product.models.product_template import DETAILED_TYPE_MODELS
+
+DETAILED_TYPE_MODELS['event'] = 'event.event.ticket'
 
 
 class ProductTemplate(models.Model):

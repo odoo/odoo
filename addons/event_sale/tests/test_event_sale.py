@@ -19,6 +19,7 @@ class TestEventSale(TestEventSaleCommon):
             'name': 'Event',
             'detailed_type': 'event',
         })
+        cls.empty_pricelist = cls.env['product.pricelist'].sudo().create({'name': 'empty_pricelist'})
 
         cls.user_salesperson = mail_new_test_user(cls.env, login='user_salesman', groups='sales_team.group_sale_salesman')
 
@@ -75,6 +76,8 @@ class TestEventSale(TestEventSaleCommon):
         customer_so = self.customer_so.with_user(self.env.user)
         ticket1 = self.event_0.event_ticket_ids[0]
         ticket2 = self.event_0.event_ticket_ids[1]
+        ticket1.price = 10
+        ticket2.price = 50
 
         # PREPARE SO DATA
         # ------------------------------------------------------------
@@ -87,15 +90,15 @@ class TestEventSale(TestEventSaleCommon):
                     'event_ticket_id': ticket1.id,
                     'product_id': ticket1.product_id.id,
                     'product_uom_qty': TICKET1_COUNT,
-                    'price_unit': 10,
                 }), (0, 0, {
                     'event_id': self.event_0.id,
                     'event_ticket_id': ticket2.id,
                     'product_id': ticket2.product_id.id,
                     'product_uom_qty': TICKET2_COUNT,
-                    'price_unit': 50,
                 })
-            ]
+            ],
+            # Override the default price list with an empty one
+            'pricelist_id': self.empty_pricelist.id,
         })
         ticket1_line = customer_so.order_line.filtered(lambda line: line.event_ticket_id == ticket1)
         ticket2_line = customer_so.order_line.filtered(lambda line: line.event_ticket_id == ticket2)
@@ -357,6 +360,7 @@ class TestEventSale(TestEventSaleCommon):
         })
 
         event_product = self.env['product.template'].create({
+            'detailed_type': 'event',
             'name': 'Event Product',
             'list_price': 10.0,
             'taxes_id': False,
@@ -407,6 +411,7 @@ class TestEventSale(TestEventSaleCommon):
         })
 
         event_product = self.env['product.template'].create({
+            'detailed_type': 'event',
             'name': 'Event Product',
             'list_price': 10.0,
         })
@@ -418,6 +423,7 @@ class TestEventSale(TestEventSaleCommon):
             'date_begin': '2020-02-02',
             'date_end': '2020-04-04',
         })
+        pricelist.currency_id = event.currency_id
         event_ticket = self.env['event.event.ticket'].create({
             'name': 'VIP',
             'price': 1000.0,
@@ -445,7 +451,7 @@ class TestEventSale(TestEventSaleCommon):
             'event_id': event.id,
             'event_ticket_id': event_ticket.id,
         })
-        self.assertEqual(so.amount_total, 660.0, "Ticket is $1000 but the event product is on a pricelist 10 -> 6. So, $600 + a 10% tax.")
+        self.assertAlmostEqual(so.amount_total, 6.6, msg="Ticket is $1000 but the pricelist says fixed price $6 -> So, $6 + a 10% tax.")
 
     @users('user_salesman')
     def test_unlink_so(self):
