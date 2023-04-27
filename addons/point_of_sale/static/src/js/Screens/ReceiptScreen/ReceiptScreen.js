@@ -145,6 +145,11 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         const { name, props } = this.ticketScreen;
         this.pos.showScreen(name, props);
     }
+    continueSplitting() {
+        this.pos.globalState.selectedOrder = this.currentOrder.originalSplittedOrder;
+        this.pos.globalState.removeOrder(this.currentOrder);
+        this.pos.showScreen("ProductScreen");
+    }
     isResumeVisible() {
         return this.pos.globalState.get_order_list().length > 1;
     }
