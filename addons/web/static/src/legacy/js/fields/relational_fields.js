@@ -663,9 +663,14 @@ var FieldMany2One = AbstractField.extend({
             const [id, fullName] = result;
             const displayName = this._getDisplayName(fullName).trim();
             result[1] = displayName;
+            // ℹ️ `_t` can only be inlined directly inside JS template literals
+            // after Babel has been updated to version 2.12.
+            const translatedText = _t("Unnamed");
             return {
                 id,
-                label: escape(displayName) || `<em class="text-warning">${escape(_t("Unnamed"))}</em>`,
+                label:
+                    escape(displayName) ||
+                    `<em class="text-warning">${escape(translatedText)}</em>`,
                 value: displayName,
                 name: displayName,
             };

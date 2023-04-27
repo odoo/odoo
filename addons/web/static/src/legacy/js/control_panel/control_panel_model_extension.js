@@ -1,5 +1,7 @@
 /** @odoo-module alias=web/static/src/js/control_panel/control_panel_model_extension.js **/
-    
+
+    import { _t } from "@web/core/l10n/translation";
+    import { sprintf } from "@web/core/utils/strings";
     import ActionModel from "web.ActionModel";
     import Domain from "web.Domain";
     import pyUtils from "web.py_utils";
@@ -436,7 +438,10 @@
                 );
             } catch (err) {
                 throw new Error(
-                    `${this.env._t("Control panel model extension failed to evaluate domain")}:/n${JSON.stringify(err)}`
+                    sprintf(
+                        _t("Control panel model extension failed to evaluate domain:\n%(error)s"),
+                        { error: JSON.stringify(err) }
+                    )
                 );
             }
         }
