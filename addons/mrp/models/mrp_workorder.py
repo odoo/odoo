@@ -752,10 +752,16 @@ class MrpWorkorder(models.Model):
     @api.depends('qty_production', 'qty_reported_from_previous_wo', 'qty_produced', 'production_id.product_uom_id')
     def _compute_qty_remaining(self):
         for wo in self:
+<<<<<<< HEAD
             if wo.production_id.product_uom_id:
                 wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_reported_from_previous_wo - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding), 0)
             else:
                 wo.qty_remaining = 0
+||||||| parent of 7ab8b7e0752 (temp)
+            wo.qty_remaining = float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
+=======
+            wo.qty_remaining = max(float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding), 0)
+>>>>>>> 7ab8b7e0752 (temp)
 
     def _get_duration_expected(self, alternative_workcenter=False, ratio=1):
         self.ensure_one()
