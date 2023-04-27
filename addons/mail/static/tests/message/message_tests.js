@@ -241,6 +241,34 @@ QUnit.test("Do not call server on save if no changes", async (assert) => {
     assert.verifySteps([]);
 });
 
+QUnit.test("Update the link previews when a message is edited", async (assert) => {
+    const pyEnv = await startServer();
+    const channelId = pyEnv["discuss.channel"].create({
+        name: "general",
+        channel_type: "channel",
+    });
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "Hello world",
+        model: "discuss.channel",
+        res_id: channelId,
+        message_type: "comment",
+    });
+    const { openDiscuss } = await start({
+        async mockRPC(route, args) {
+            if (route === "/mail/link_preview") {
+                assert.step("link_preview");
+            }
+        },
+    });
+    await openDiscuss(channelId);
+    await click(".o-mail-Message [title='Expand']");
+    await click(".o-mail-Message [title='Edit']");
+    await editInput(document.body, ".o-mail-Message .o-mail-Composer-input", "Goodbye World");
+    await click(".o-mail-Message a:contains('save')");
+    assert.verifySteps(["link_preview"]);
+});
+
 QUnit.test("Scroll bar to the top when edit starts", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({

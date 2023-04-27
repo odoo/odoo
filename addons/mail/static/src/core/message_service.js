@@ -43,6 +43,13 @@ export class MessageService {
         });
         message.body = markup(data.body);
         message.attachments.push(...attachments);
+        if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
+            this.rpc(
+                "/mail/link_preview",
+                { message_id: message.id, clear: true },
+                { silent: true }
+            );
+        }
     }
 
     async delete(message) {

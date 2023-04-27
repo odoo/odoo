@@ -25,6 +25,10 @@ class LinkPreview(models.Model):
     create_date = fields.Datetime(index=True)
 
     @api.model
+    def _clear_link_previews(self, message):
+        message.link_preview_ids._delete_and_notify()
+
+    @api.model
     def _create_link_previews(self, message):
         if not message.body:
             return
