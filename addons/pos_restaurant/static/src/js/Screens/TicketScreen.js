@@ -72,12 +72,6 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
     },
     //@override
-    _selectNextOrder(currentOrder) {
-        if (this.pos.globalState.config.module_pos_restaurant && this.pos.globalState.table) {
-            return this._super(...arguments);
-        }
-    },
-    //@override
     async onDeleteOrder(order) {
         const _super = this._super;
         const { globalState } = this.pos;
