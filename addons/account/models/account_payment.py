@@ -546,9 +546,10 @@ class AccountPayment(models.Model):
             self.reconciled_statements_count = 0
             return
 
-        self.env['account.move'].flush()
-        self.env['account.move.line'].flush()
-        self.env['account.partial.reconcile'].flush()
+        self.env['account.payment'].flush(fnames=['move_id', 'outstanding_account_id'])
+        self.env['account.move'].flush(fnames=['move_type', 'payment_id', 'statement_line_id'])
+        self.env['account.move.line'].flush(fnames=['move_id', 'account_id', 'statement_line_id'])
+        self.env['account.partial.reconcile'].flush(fnames=['debit_move_id', 'credit_move_id'])
 
         self._cr.execute('''
             SELECT
@@ -594,7 +595,6 @@ class AccountPayment(models.Model):
                 ARRAY_AGG(DISTINCT counterpart_line.statement_id) AS statement_ids
             FROM account_payment payment
             JOIN account_move move ON move.id = payment.move_id
-            JOIN account_journal journal ON journal.id = move.journal_id
             JOIN account_move_line line ON line.move_id = move.id
             JOIN account_account account ON account.id = line.account_id
             JOIN account_partial_reconcile part ON
