@@ -33,32 +33,40 @@ import {
 /**
  * @param {string} selector - any valid jquery selector
  * @param {boolean} inModal
+ * @param {string|undefined} shadowDOM - selector of the shadow root host
  * @returns {Element | undefined}
  */
-function findTrigger(selector, inModal) {
-    const $visibleModal = $(".modal:visible").last();
+function findTrigger(selector, inModal, shadowDOM) {
+    const $target = $(shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document);
+    const $visibleModal = $target.find(".modal:visible").last();
     let $el;
     if (inModal !== false && $visibleModal.length) {
         $el = $visibleModal.find(selector);
     } else {
-        $el = getJQueryElementFromSelector(selector);
+        $el = getJQueryElementFromSelector(selector, $target);
     }
     return getFirstVisibleElement($el).get(0);
 }
 
-function findExtraTrigger(selector) {
-    const $el = getJQueryElementFromSelector(selector);
+/**
+ * @param {string|undefined} shadowDOM - selector of the shadow root host
+ */
+function findExtraTrigger(selector, shadowDOM) {
+    const $target = $(shadowDOM ? document.querySelector(shadowDOM)?.shadowRoot : document);
+    const $el = getJQueryElementFromSelector(selector, $target);
     return getFirstVisibleElement($el).get(0);
 }
 
 function findStepTriggers(step) {
-    const triggerEl = findTrigger(step.trigger, step.in_modal);
-    const altEl = findTrigger(step.alt_trigger, step.in_modal);
-    const skipEl = findTrigger(step.skip_trigger, step.in_modal);
+    const triggerEl = findTrigger(step.trigger, step.in_modal, step.shadowDOM);
+    const altEl = findTrigger(step.alt_trigger, step.in_modal, step.shadowDOM);
+    const skipEl = findTrigger(step.skip_trigger, step.in_modal, step.shadowDOM);
 
     // `extraTriggerOkay` should be true when `step.extra_trigger` is undefined.
     // No need for it to be in the modal.
-    const extraTriggerOkay = step.extra_trigger ? findExtraTrigger(step.extra_trigger) : true;
+    const extraTriggerOkay = step.extra_trigger
+        ? findExtraTrigger(step.extra_trigger, step.shadowDOM)
+        : true;
 
     return { triggerEl, altEl, extraTriggerOkay, skipEl };
 }
@@ -142,7 +150,11 @@ function getAnchorEl(el, consumeEvent) {
  * @param {TourStep} step
  */
 function canContinue(el, step) {
-    const isInDoc = el.ownerDocument.contains(el);
+    const rootNode = el.getRootNode();
+    const isInDoc =
+        rootNode instanceof ShadowRoot
+            ? el.ownerDocument.contains(rootNode.host)
+            : el.ownerDocument.contains(el);
     const isElement = el instanceof el.ownerDocument.defaultView.Element || el instanceof Element;
     const isBlocked = document.body.classList.contains("o_ui_blocked") || document.querySelector(".o_blockUI");
     return (
