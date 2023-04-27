@@ -1,5 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo import models, fields, api
+from odoo import models, fields, api, _
+from odoo.exceptions import UserError
 
 
 class AccountPaymentRegisterWithholding(models.TransientModel):
@@ -73,7 +74,7 @@ class AccountPaymentRegister(models.TransientModel):
         if self.withholding_ids:
             for payment in payments.with_context(check_move_validity=False):
                 # TODO remove this hack when creating withholdings properly
-                liquidity_lines, counterpart_lines, _ = payment._seek_for_lines()
+                liquidity_lines, counterpart_lines, writeoff_lines = payment._seek_for_lines()
                 counterpart_lines.parent_state = 'draft'
                 # TODO ver el caso de mas de una liquidity_lines
                 rate = liquidity_lines.amount_currency / liquidity_lines.balance if liquidity_lines.balance else 1
@@ -81,6 +82,8 @@ class AccountPaymentRegister(models.TransientModel):
                 liquidity_lines.amount_currency = self.net_amount * (-1 if liquidity_lines.tax_tag_invert else 1)
                 counterpart_lines.tax_ids = self.withholding_ids.mapped('tax_id')
                 for line in self.withholding_ids:
+                    if line.name == '/':
+                        raise UserError(_('Please enter withholding number for tax %s' % line.tax_id.name))
                     tax_line = payment.line_ids.filtered(lambda x: x.tax_line_id == line.tax_id)
                     rate = tax_line.amount_currency / tax_line.balance if tax_line.balance else 1
                     tax_line.write({
