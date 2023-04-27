@@ -702,6 +702,59 @@ export class OdooEditor extends EventTarget {
                 this.updateColorpickerLabels();
             });
         }
+        const fontSizeInput = this.toolbar.querySelector('input#fontSizeCurrentValue');
+        this.addDomListener(this.toolbar, 'click', ev => {
+            if (fontSizeInput && ev.target.closest('#font-size .dropdown-toggle')) {
+                // If the click opened the font size dropdown, select the input content.
+                fontSizeInput.select();
+            } else if (!this.isSelectionInEditable()) {
+                // Otherwise, if we lost the selection in the editable, restore it.
+                this.historyResetLatestComputedSelection(true);
+            }
+        })
+        // Handle the font size input.
+        if (fontSizeInput) {
+            const debouncedOnInputChange = (() => {
+                let handle;
+                return () => new Promise(resolve => {
+                    clearTimeout(handle);
+                    handle = setTimeout(() => {
+                        handle = null;
+                        setFontSize(fontSizeInput.value);
+                        resolve();
+                    }, 50);
+                });
+            })();
+            const setFontSize = fontSize => {
+                if (fontSize === 'default' || parseInt(fontSize) > 0) {
+                    if (!this.isSelectionInEditable()) {
+                        this.historyResetLatestComputedSelection(true);
+                    }
+                    this.execCommand('setFontSize', fontSize === 'default' ? undefined : parseInt(fontSize) + 'px');
+                    fontSizeInput.closest('#font-size').querySelectorAll('.show').forEach(el => {
+                        el.classList.remove('show'); // Close the dropdown.
+                        // Remove Popper's styles to ensure proper positioning
+                        // of the dropdown next time it opens.
+                        el.style.removeProperty('inset');
+                        el.style.removeProperty('transform');
+                    });
+                    fontSizeInput.blur();
+                }
+            }
+            this.addDomListener(fontSizeInput, 'change', debouncedOnInputChange);
+            // Handle the font size dropdown.
+            const fontSizeDropdown = this.toolbar.querySelector('#font-size');
+            if (fontSizeDropdown) {
+                fontSizeDropdown.querySelectorAll('.dropdown-item').forEach(item => {
+                    this.addDomListener(item, 'mousedown', ev => setFontSize(ev.target.textContent));
+                    this.addDomListener(item, 'keydown', ev => {
+                        if (ev.key === 'Enter') {
+                            setFontSize(ev.target.textContent);
+                        }
+                    });
+                });
+            }
+        }
     }
 
     resetContent(value) {
@@ -2901,7 +2954,7 @@ export class OdooEditor extends EventTarget {
 
             const fontSizeValue = this.toolbar.querySelector('#fontSizeCurrentValue');
             if (fontSizeValue) {
-                fontSizeValue.textContent = /\d+/.exec(selectionStartStyle.fontSize).pop();
+                fontSizeValue.value = /\d+/.exec(selectionStartStyle.fontSize).pop();
             }
             const table = getInSelection(this.document, 'table');
             const toolbarButton = this.toolbar.querySelector('.toolbar-edit-table');

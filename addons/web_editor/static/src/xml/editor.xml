@@ -74,30 +74,32 @@
                 </div>
             </div>
 
-            <t t-if="widget.isMobile()"></t>  
+            <t t-if="widget.isMobile()"></t>
             <t t-else="">
                 <div id="font-size" class="btn-group dropdown">
                     <button type="button" class="btn dropdown-toggle"
                         data-bs-toggle="dropdown" tabindex="-1"
                         data-bs-original-title="Font Size" aria-expanded="false">
-                        <span id="fontSizeCurrentValue" title="Font size"></span>
+                        <div id="font-size-input-container">
+                            <input type="text" id="fontSizeCurrentValue" title="Font size" value="13"></input>
+                        </div>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize">default</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="8px">8</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="9px">9</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="10px">10</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="11px">11</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="12px">12</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="14px">14</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="18px">18</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="24px">24</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="36px">36</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="48px">48</a></li>
-                        <li><a class="dropdown-item" href="#" data-call="setFontSize" data-arg1="62px">62</a></li>
+                        <li><a class="dropdown-item" href="#">default</a></li>
+                        <li><a class="dropdown-item" href="#">8</a></li>
+                        <li><a class="dropdown-item" href="#">9</a></li>
+                        <li><a class="dropdown-item" href="#">10</a></li>
+                        <li><a class="dropdown-item" href="#">11</a></li>
+                        <li><a class="dropdown-item" href="#">12</a></li>
+                        <li><a class="dropdown-item" href="#">14</a></li>
+                        <li><a class="dropdown-item" href="#">18</a></li>
+                        <li><a class="dropdown-item" href="#">24</a></li>
+                        <li><a class="dropdown-item" href="#">36</a></li>
+                        <li><a class="dropdown-item" href="#">48</a></li>
+                        <li><a class="dropdown-item" href="#">62</a></li>
                     </ul>
                 </div>
-            </t>    
+            </t>
 
             <div id="justify" class="btn-group dropdown">
                 <button type="button" class="btn dropdown-toggle"

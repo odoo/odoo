@@ -361,6 +361,19 @@ body.editor_enable.o_basic_theme.o_in_iframe {
                     top: unset !important;
                 }
             }
+
+            #font-size > button {
+                &:focus-within input {
+                    padding: 0 !important;
+                    width: calc(2ch + #{$o-we-sidebar-content-field-clickable-spacing * 2} - #{$o-we-sidebar-content-field-border-width * 2});
+                }
+
+                input {
+                    padding: 0;
+                    text-align: center;
+                    width: calc(2ch + #{$o-we-sidebar-content-field-clickable-spacing * 2});
+                }
+            }
         }
     }
 }
