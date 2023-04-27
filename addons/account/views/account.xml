@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/variables.scss"/>
+        </xpath>
+    </template>
+
+    <template id="assets_backend" name="account assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" href="/account/static/src/css/account_bank_and_cash.css"/>
+            <link rel="stylesheet" href="/account/static/src/css/account.css"/>
+            <link rel="stylesheet" href="/account/static/src/css/tax_group.css"/>
+            <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_reconciliation.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_journal_dashboard.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_dashboard.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_searchpanel.scss"/>
+
+            <link rel="stylesheet" href="/account/static/src/scss/section_and_note_backend.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/account/static/src/scss/account_activity.scss"/>
+
+            <script type="text/javascript" src="/account/static/src/js/account_payment_field.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/account_resequence_field.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/grouped_view_widget.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/mail_activity.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/tax_group.js"></script>
+
+            <script type="text/javascript" src="/account/static/src/js/bank_statement.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/section_and_note_fields_backend.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/tours/account.js"></script>
+            <script type="text/javascript" src="/account/static/src/js/bills_tree_upload.js"/>
+            <script type="text/javascript" src="/account/static/src/js/account_selection.js"/>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" name="account assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/account/static/src/js/account_portal_sidebar.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Account Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/account/static/tests/tours/account_dashboard_setup_bar_tests.js"></script>
+            <script type="text/javascript" src="/account/static/tests/tours/tax_group_tests.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="account tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
+            <script type="text/javascript" src="/account/static/tests/account_payment_field_tests.js"></script>
+            <script type="text/javascript" src="/account/static/tests/section_and_note_tests.js"></script>
+        </xpath>
+    </template>
+</odoo>

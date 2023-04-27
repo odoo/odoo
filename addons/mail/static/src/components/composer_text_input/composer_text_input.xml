@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ComposerTextInput" owl="1">
+        <div class="o_ComposerTextInput">
+            <t t-if="composer">
+                <t t-if="composer.hasSuggestions">
+                    <ComposerSuggestionList
+                        composerLocalId="props.composerLocalId"
+                        isBelow="props.hasMentionSuggestionsBelowPosition"
+                    />
+                </t>
+                <textarea class="o_ComposerTextInput_textarea o_ComposerTextInput_textareaStyle" t-att-class="{ 'o-composer-is-compact': props.isCompact }" t-esc="composer.textInputContent" t-att-placeholder="textareaPlaceholder" t-on-click="_onClickTextarea" t-on-focusin="_onFocusinTextarea" t-on-focusout="_onFocusoutTextarea" t-on-keydown="_onKeydownTextarea" t-on-keyup="_onKeyupTextarea" t-on-input="_onInputTextarea" t-ref="textarea"/>
+                <!--
+                     This is an invisible textarea used to compute the composer
+                     height based on the text content. We need it to downsize
+                     the textarea properly without flicker.
+                -->
+                <textarea class="o_ComposerTextInput_mirroredTextarea o_ComposerTextInput_textareaStyle" t-att-class="{ 'o-composer-is-compact': props.isCompact }" t-esc="composer.textInputContent" t-ref="mirroredTextarea" disabled="1"/>
+            </t>
+        </div>
+    </t>
+
+</templates>

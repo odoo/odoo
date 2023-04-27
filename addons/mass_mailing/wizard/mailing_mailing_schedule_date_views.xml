@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="mailing_mailing_schedule_date_view_form"  model="ir.ui.view">
+        <field name="name">mailing.mailing.schedule.date.view.form</field>
+        <field name="model">mailing.mailing.schedule.date</field>
+        <field name="arch" type="xml">
+            <form string="Take Future Schedule Date">
+                <group>
+                    <group>
+                        <field name="schedule_date" string="Send on" required="1"/>
+                    </group>
+                </group>
+                <footer>
+                    <button string="Schedule" name="set_schedule_date" type="object" class="btn-primary"/>
+                    <button string="Discard " class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="mailing_mailing_schedule_date_action" model="ir.actions.act_window">
+        <field name="name">When do you want to send your mailing?</field>
+        <field name="res_model">mailing.mailing.schedule.date</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

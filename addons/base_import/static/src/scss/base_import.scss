@@ -1,0 +1,164 @@
+.oe_import {
+    @include o-webclient-padding($top: 8px);
+    overflow: auto;
+    position: absolute; // Needed for chrome
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    @include media-breakpoint-down(sm) {
+        position: static;
+    }
+
+    > p {
+        text-align: justify
+    }
+    h2 {
+        margin-top: 0.5em;
+        font-size: large; // override h2 font-size which is too large
+    }
+    .oe_padding {
+        padding: 13px 0;
+    }
+
+    .oe_import_box {
+        padding: 8px;
+        background: #F0EEEE;
+        border-radius: $border-radius;
+        border: solid 1px #dddddd;
+        label {
+            font-weight: normal;
+        }
+        .oe_import_file {
+            display: inline-block;
+        }
+    }
+
+    a.oe_import_toggle {
+        display: block;
+        &:before {
+            content: '+'
+        }
+    }
+    .oe_import_options {
+        margin-top: 8px;
+        p {
+            margin: 0;
+        }
+        label {
+            width: 48%;
+            line-height: 32px;
+            text-align: right;
+        }
+    }
+    /* ----------- INITIAL SETUP ------------ */
+    dd,
+    .oe_import_toggled,
+    .oe_import_grid,
+    .oe_import_error_report,
+    .oe_import_noheaders,
+    .oe_import_report_more {
+        display: none;
+    }
+
+    .oe_import_with_file label {
+        font-weight: normal;
+    }
+    .oe_import_debug_options {
+        max-width: 800px;
+        columns: 1;
+        @include media-breakpoint-up(md) {
+            columns: 2;
+        }
+        // try to keep the batch fields together, doesn't work on firefox &
+        // not sure how to do that (except by adding intermediate dom
+        // elements)
+        .oe_import_batch_limit {
+            break-before: column;
+        }
+    }
+
+    &.oe_import_preview .oe_import_grid {
+        display: table;
+    }
+    &.oe_import_error .oe_import_error_report,
+    &.oe_import_noheaders .oe_import_noheaders{
+        display: block;
+    }
+    .oe_import_report_showmore .oe_import_report_more {
+        display: list-item;
+    }
+
+    /* ------------- ERRORS AND WARNINGS REPORT ------------ */
+    .oe_import_error_report > ul {
+        padding: 0;
+    }
+    .oe_import_report {
+        list-style: none;
+    }
+    .alert {
+        padding: 0.50rem 1.25rem;
+        margin: 0.25rem 0;
+
+        a {
+            @extend .alert-link;
+            &:hover {opacity: 0.8;}
+        }
+
+        // alias -error to -danger
+        &.alert-error {
+            @extend .alert-danger;
+        }
+        &.text-error {
+            @extend .text-danger;
+        }
+    }
+
+    /* ------------- THE CSV TABLE ------------ */
+
+    $cell-max-width: 350px;
+    $cell-padding: 4px;
+    .oe_import_grid {
+        tr {
+            &.oe_import_grid-header:first-child {
+                line-height: 24px;
+                font-weight: normal;
+            }
+            .oe_import_grid-cell {
+                max-width: $cell-max-width;
+                padding: $cell-padding;
+                vertical-align: top;
+                .o_multi_line_text {
+                    word-break: break-word;
+                }
+                .o_single_line_text {
+                    @include o-text-overflow($display: table-cell, $max-width: $cell-max-width - $cell-padding);
+                }
+            }
+        }
+    }
+
+    /* Default Color for placeholder on import fields*/
+    .select2-default{
+        color: #F00 !important;
+    }
+}
+/* ------------- PARTIAL MODE buttons ------------ */
+// hide import in partial mode, resume otherwise
+.o_import_import_full.o_import_partial_mode,
+.o_import_import_partial:not(.o_import_partial_mode) {
+    display: none;
+}
+
+/* Field dropdown */
+.oe_import_selector {
+    font-size: $font-size-sm;
+    ul, li {
+        margin: 0; padding: 0;
+    }
+    width: 250px !important;
+}
+
+.o-list-buttons.o-editing .o_button_import {
+    display: none; // hidden for list view editable
+}

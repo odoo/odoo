@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <menuitem id="account_reports_in_statements_menu" name="India" parent="account.menu_finance_reports" sequence="0"/>
+
+        <record id="indian_chart_template_standard" model="account.chart.template">
+            <field name="name">Indian Chart of Accounts - Standard</field>
+            <field name="bank_account_code_prefix">1002</field>
+            <field name="cash_account_code_prefix">1001</field>
+            <field name="transfer_account_code_prefix">1008</field>
+            <field name="code_digits">6</field>
+            <field name="currency_id" ref="base.INR"/>
+        </record>
+
+        <record id="sgst_tag_account" model="account.account.tag">
+            <field name="name">SGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="cgst_tag_account" model="account.account.tag">
+            <field name="name">CGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="igst_tag_account" model="account.account.tag">
+            <field name="name">IGST</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="cess_tag_account" model="account.account.tag">
+            <field name="name">CESS</field>
+            <field name="applicability">accounts</field>
+        </record>
+        <record id="p10055" model="account.account.template">
+            <field name="name">CESS Receivable</field>
+            <field name="code">10055</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('cess_tag_account'),])]"/>
+        </record>
+        <record id="p10056" model="account.account.template">
+            <field name="name">Tax Receivable</field>
+            <field name="code">10056</field>
+            <field name="user_type_id" ref="account.data_account_type_current_assets"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        </record>
+        <record model="account.account.template" id="p11235">
+            <field name="name">CESS Payable</field>
+            <field name="code">11235</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_standard"/>
+            <field name="tag_ids" eval="[(6,0,[ref('cess_tag_account'),])]"/>
+        </record>
+        <record id="p11236" model="account.account.template">
+            <field name="name">Tax Payable</field>
+            <field name="code">11236</field>
+            <field name="user_type_id" ref="account.data_account_type_current_liabilities"/>
+            <field name="reconcile" eval="False"/>
+            <field name="chart_template_id" ref="indian_chart_template_standard"/>
+        </record>
+</odoo>

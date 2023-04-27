@@ -1,0 +1,677 @@
+//-------------------------------------
+// legacy: mail/abstract_thread_window.scss
+//-------------------------------------
+
+$o-mail-thread-window-zindex: $zindex-modal + 1 !default;
+
+.o_thread_window {
+    direction: ltr;
+    display: flex;
+    flex-flow: column nowrap;
+    position: fixed;
+    width: $o-mail-thread-window-width;
+    max-width: 100%;
+    height: 400px;
+    max-height: 100%;
+    font-size: 12px;
+    background-color: $o-mail-thread-window-bg;
+    border-radius: 6px 6px 0 0;
+    z-index: $o-mail-thread-window-zindex;
+    box-shadow: -5px -5px 10px rgba(black, 0.18);
+
+    @include media-breakpoint-down(sm) {
+        width: 100%;
+        height: 100%!important;
+        box-shadow: none;
+        &.o_folded {
+            display: none;
+        }
+    }
+
+    @media print {
+        display: none;
+    }
+
+    .o_thread_window_header {
+        align-items: center;
+        display: flex;
+        flex: 0 0 auto;
+        color: white;
+        padding: $o-mail-chatter-gap*0.5 $o-mail-chatter-gap;
+        border-radius: 3px 3px 0 0;
+        border-bottom: 1px solid gray('300');
+        background-color: $o-brand-odoo;
+        padding: 8px;
+
+        @include media-breakpoint-down(sm) {
+            align-items: center;
+            height: $o-mail-chat-header-height;
+            padding: 0;
+            border-radius: 0px;
+            .o_thread_window_title {
+                font-size: 16px;
+                margin-left: 10px;
+            }
+
+            .o_thread_window_close {
+                $o-close-font-size: 17px;
+                padding: (($o-mail-chat-header-height - $o-close-font-size) / 2);
+                font-size: $o-close-font-size;
+                color: white;
+            }
+        }
+        .o_thread_window_avatar {
+            margin: -6px 6px -6px 0;
+            position: relative;
+
+            img {
+                height: 25px;
+                width: 25px;
+                border-radius: 50%;
+            }
+            span {
+                bottom: -4px;
+                right: -2px;
+                position: absolute;
+
+                .fa-circle-o {
+                    display: none;
+                }
+            }
+        }
+
+        .o_thread_window_title {
+            cursor: pointer;
+            flex: 1 1 auto;
+            @include o-text-overflow;
+
+            .o_mail_thread_typing_icon {
+                padding-left: 2px;
+
+                .o_mail_thread_typing_icon_dot {
+                    background: gray('300');
+                }
+            }
+        }
+
+        .o_thread_window_buttons {
+            flex: 0 0 auto;
+            .o_thread_window_close, .o_thread_window_expand {
+                color: white;
+                padding: 0px 3px;
+                margin-left: 5px;
+                @include o-hover-opacity(0.7, 1);
+            }
+        }
+
+    }
+
+    .o_mail_thread {
+        flex: 1 1 100%;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch; // smooth scrolling in iOS app (Safari)
+
+        .o_thread_date_separator {
+            margin: 0px 0px 15px 0px;
+            .o_thread_date {
+                background-color: $o-mail-thread-window-bg;
+            }
+        }
+        .o_thread_message {
+            padding: 4px 5px;
+            .o_thread_message_sidebar {
+                margin-right: 5px;
+            }
+            .o_attachment {
+                @include media-breakpoint-up(md) {
+                    width: percentage(1/3);
+                }
+            }
+        }
+    }
+
+    .o_thread_composer input {
+        width: 100%;
+    }
+}
+
+.o_thread_window_dropdown {
+    width: auto;
+    height: 28px;
+    color: white;
+    background-color: gray('900');
+    cursor: pointer;
+    box-shadow: none;
+
+    @include media-breakpoint-down(sm) {
+        display: none;
+    }
+
+    .o_thread_window_header {
+        border-radius: 0;
+    }
+
+    .o_thread_window_dropdown_toggler {
+        padding: 5px;
+
+        .o_total_unread_counter {
+            @include o-position-absolute(-10px, 0, auto, auto);
+            background-color: $o-brand-primary;
+            padding: 0 2px;
+            font-size: smaller;
+        }
+    }
+    &.show .o_thread_window_dropdown_toggler .o_total_unread_counter, .o_thread_window_expand {
+        display: none;
+    }
+
+    > ul {
+        max-width: $o-mail-thread-window-width;
+        padding: 0;
+
+        > li.o_thread_window_header {
+            font-size: 12px;
+            padding: 3px 5px;
+            &~li.o_thread_window_header {
+                border-top: 1px solid white;
+            }
+            &:hover {
+                background-color: darken($o-brand-odoo, 10%);
+            }
+        }
+    }
+}
+
+.o_ui_blocked .o_thread_window {
+    // We cannot put the z-index of thread windows directly to be greater than
+    // blockUI's as ui-autocomplete dropdowns (which are below blockUI) would
+    // appear under the thread windows (and ui-autocomplete is used to choose the
+    // person you want to chat with). So we only raise the z-index value when
+    // the ui is really blocked (in that case, the ui-autocomplete dropdowns
+    // will disappear under the thread windows but this is not really an issue as
+    // there should not be any at that time).
+    z-index: 1101; // blockUI's z-index is 1100
+}
+
+.o_no_thread_window .o_thread_window {
+    display: none;
+}
+
+//-------------------------------------
+// legacy: mail/thread.scss
+//-------------------------------------
+
+
+.o_mail_thread_loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.o_mail_thread_loading_icon {
+    margin-right: 5px;
+}
+
+.o_mail_thread, .o_mail_activity {
+    .o_thread_show_more {
+        text-align: center;
+    }
+
+    .o_mail_thread_content {
+        display: flex;
+        flex-direction: column;
+        min-height: 100%;
+    }
+
+    .o_thread_bottom_free_space {
+        height: 15px;
+    }
+
+    .o_thread_tooltip_container {
+        display: inline;
+        position: relative;
+    }
+
+    .o_thread_date_separator {
+        margin-top: 15px;
+        margin-bottom: 30px;
+        @include media-breakpoint-down(sm) {
+            margin-top: 0px;
+            margin-bottom: 15px;
+        }
+        border-bottom: 1px solid gray('400');
+        text-align: center;
+
+        .o_thread_date {
+            position: relative;
+            top: 10px;
+            margin: 0 auto;
+            padding: 0 10px;
+            font-weight: bold;
+            background: white;
+        }
+    }
+
+    .o_thread_new_messages_separator {
+        margin-bottom: 15px;
+        border-bottom: solid lighten($o-brand-odoo, 15%) 1px;
+        text-align: right;
+        .o_thread_separator_label {
+            position: relative;
+            top: 8px;
+            padding: 0 10px;
+            background: white;
+            color: lighten($o-brand-odoo, 15%);
+            font-size: smaller;
+        }
+    }
+
+    .o_thread_message {
+        display: flex;
+        padding: 4px $o-horizontal-padding;
+        margin-bottom: 0px;
+
+        &.o_mail_not_discussion {
+            background-color: rgba(gray('300'), 0.5);
+            border-bottom: 1px solid gray('400');
+        }
+
+        .o_thread_message_sidebar {
+            flex: 0 0 $o-mail-thread-avatar-size;
+            margin-right: 10px;
+            margin-top: 2px;
+            text-align: center;
+            font-size: smaller;
+            .o_thread_message_sidebar_image {
+                position: relative;
+                height: $o-mail-thread-avatar-size;
+
+                .o_updatable_im_status {
+                    width: $o-mail-thread-avatar-size;
+                }
+                .o_mail_user_status {
+                    position: absolute;
+                    bottom: 0;
+                    right: 0;
+
+                    &.fa-circle-o {
+                        display: none;
+                    }
+                }
+            }
+
+            @include media-breakpoint-down(sm) {
+                margin-top: 4px;
+                font-size: x-small;
+            }
+
+            .o_thread_message_avatar {
+                width: $o-mail-thread-avatar-size;
+                height: $o-mail-thread-avatar-size;
+                object-fit: cover;
+            }
+            .o_thread_message_side_date {
+                display: none;
+                margin-left: -5px;
+            }
+            .o_thread_message_star {
+                display: none;
+                margin-right: -5px;
+            }
+
+            .o_thread_message_side_date {
+                opacity: 0;
+            }
+
+            .o_mail_thread_message_seen_icon:not(.o_all_seen) {
+                opacity: $o-mail-thread-icon-opacity*0.5;
+            }
+        }
+        .o_thread_icon {
+            cursor: pointer;
+            opacity: 0;
+            &.fa-star {
+                opacity: $o-mail-thread-icon-opacity;
+                color: gold;
+            }
+        }
+
+        &:hover, &.o_thread_selected_message {
+            .o_thread_message_side_date {
+                display: inline-block;
+                opacity: $o-mail-thread-side-date-opacity;
+            }
+            .o_thread_icon {
+                display: inline-block;
+                opacity: $o-mail-thread-icon-opacity;
+                &:hover {
+                    opacity: 1;
+                }
+            }
+            .o_thread_message_sidebar {
+                .o_mail_thread_message_seen_icon {
+                    display: none;
+                }
+            }
+        }
+
+        .o_mail_redirect {
+            cursor: pointer;
+        }
+
+        .o_thread_message_core {
+            flex: 1 1 auto;
+            min-width: 0;
+            max-width: 100%;
+            word-wrap: break-word;
+            > pre {
+                white-space: pre-wrap;
+                word-break: break-word;
+                text-align: justify;
+            }
+
+            .o_mail_note_title {
+                margin-top: 9px;
+            }
+
+            .o_mail_subject {
+                font-style: italic;
+            }
+
+            .o_mail_notification {
+                font-style: italic;
+                color: gray;
+            }
+
+            [summary~=o_mail_notification] { // name conflicts with channel notifications, but is odoo notification buttons to hide in chatter if present
+                display: none;
+            }
+
+            p {
+                margin: 0 0 9px; // Required by the old design to override a general rule on p's
+                &:last-child {
+                    margin-bottom: 0;
+                }
+            }
+            a {
+                display: inline-block;
+                word-break: break-all;
+            }
+            :not(.o_image_box) > img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .o_mail_body_long {
+                display: none;
+            }
+
+            .o_mail_info {
+                margin-bottom: 2px;
+
+                strong {
+                    color: $headings-color;
+                }
+            }
+
+            .o_thread_message_star, .o_thread_message_needaction, .o_thread_message_reply, .o_thread_message_notification {
+                padding: 4px;
+            }
+
+            .o_thread_message_notification {
+                color: grey;
+                &.o_thread_message_notification_error {
+                    color: red;
+                    opacity: 1;
+                    cursor: pointer;
+                }
+            }
+
+            .o_attachments_list, .o_attachments_previews {
+                &:last-child {
+                    margin-bottom: $grid-gutter-width;
+                }
+            }
+
+            .o_thread_tooltip_container {
+                display: inline;
+                position: relative;
+            }
+        }
+    }
+    .o_thread_title {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        font-weight: bold;
+        font-size: 125%;
+
+        &.o_neutral_face_icon:before {
+            @extend %o-nocontent-init-image;
+            @include size(120px, 140px);
+            background: transparent url(/web/static/src/img/neutral_face.svg) no-repeat center;
+        }
+    }
+
+    .o_mail_no_content {
+        @include o-position-absolute(30%, 0, 0, 0);
+        text-align: center;
+        font-size: 115%;
+    }
+
+    .o_thread_message .o_thread_message_core .o_mail_read_more {
+        display: block;
+    }
+}
+
+.o_web_client .popover .o_thread_tooltip_icon {
+    min-width: 1rem;
+}
+
+.o_web_client.o_touch_device {
+    .o_mail_thread .o_thread_icon {
+        opacity: $o-mail-thread-icon-opacity;
+    }
+}
+
+// ------------------------------------------------------------------
+// Thread typing icon: shared between discuss and chat windows
+// ------------------------------------------------------------------
+
+.o_mail_thread_typing_icon {
+    position: relative;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+
+    .o_mail_thread_typing_icon_dot {
+        display: inline-block;
+        width: 3px;
+        height: 3px;
+        border-radius: 50%;
+        background: gray('800');
+        animation: o_mail_thread_typing_icon_dot 1.5s linear infinite;
+
+        &:nth-child(2) {
+            animation-delay: -1.35s;
+        }
+
+        &:nth-child(3) {
+            animation-delay: -1.2s;
+        }
+    }
+}
+
+@keyframes o_mail_thread_typing_icon_dot {
+    0%, 40%, 100% {
+        transform: initial;
+    }
+    20% {
+        transform: translateY(-5px);
+    }
+}
+
+// ------------------------------------------------------------------
+// Thread seen icon: shared between discuss and chat windows
+// ------------------------------------------------------------------
+
+.o_mail_thread_message_seen_icon {
+    position: relative;
+    opacity: 0.6;
+
+    &.o_all_seen {
+        color: $o-enterprise-color;
+    }
+
+    &:hover {
+        cursor: pointer;
+        opacity: 0.8;
+    }
+
+    .fa-check:nth-child(1) {
+        padding-left: 3px;
+    }
+
+    .fa-check:nth-child(2) {
+        position: absolute;
+        top: -1px;
+        left: 0px;
+    }
+}
+
+//-------------------------------------
+// legacy: im_livechat/im_livechat.scss
+//-------------------------------------
+
+.o_livechat_button {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    margin-right: 12px;
+    min-width: 100px;
+    cursor: pointer;
+    white-space: nowrap;
+    background-color: rgba(60, 60, 60, 0.6);
+    font-family: 'Lucida Grande', 'Lucida Sans Unicode', Arial, Verdana, sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px;
+    color: white;
+    text-shadow: rgb(59, 76, 88) 1px 1px 0px;
+    border: 1px solid rgb(80, 80, 80);
+    border-bottom: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    z-index: 5;
+}
+
+.o_thread_window {
+    z-index: $zindex-modal - 9; // to go over the navbar
+    .o_thread_date_separator {
+        display: none;
+    }
+
+    .btn {
+        color: #FFFFFF;
+        background-color: #30908e;
+        border-color: #2d8685;
+        border: 1px solid transparent;
+    }
+
+    .btn-sm {
+        padding: 0.0625rem 0.3125rem;
+        font-size: 0.75rem;
+        line-height: 1.5;
+        border-radius: 0.2rem;
+    }
+
+    .o_livechat_rating {
+        /* Livechat Rating : feedback smiley */
+        flex: 1 1 auto;
+        overflow: auto;
+        padding: 15px;
+        font-size: 14px;
+
+        .o_livechat_email {
+            font-size: 12px;
+            > div {
+                display: flex;
+                padding: 5px 0;
+                input {
+                    display: block;
+                    width: 100%;
+                    height: calc(1.5em + 0.75rem + 2px);
+                    padding: 0.375rem 0.75rem;
+                    font-size: 0.875rem;
+                    font-weight: 400;
+                    line-height: 1.5;
+                    color: #495057;
+                    background-color: #FFFFFF;
+                    background-clip: padding-box;
+                    border: 1px solid #CED4DA;
+                }
+                button {
+                    display: inline-block;
+                    font-weight: 400;
+                    text-align: center;
+                    vertical-align: middle;
+                    user-select: none;
+                    padding: 0.375rem 0.75rem;
+                    font-size: 0.875rem;
+                    line-height: 1.5;
+                }
+            }
+        }
+
+        .o_livechat_no_feedback {
+            text-decoration: underline;
+            cursor: pointer;
+            margin: 20px 0;
+        }
+
+        .o_livechat_rating_box {
+            margin: 40px 0 30px 0;
+        }
+
+        .o_livechat_rating_choices {
+            margin: 10px 0;
+
+            > img {
+                width: 65px;
+                opacity: 0.60;
+                cursor: pointer;
+                margin: 10px;
+                &:hover, &.selected {
+                    opacity: 1;
+                }
+            }
+        }
+
+        /* feedback reason */
+        .o_livechat_rating_reason {
+            margin: 10px 0px 25px 0px;
+            display: none; /* hidden by default */
+
+            > textarea {
+                width: 100%;
+                height: 70px;
+                resize: none;
+            }
+        }
+
+        .o_livechat_rating_reason_button > input {
+            float: right;
+        }
+    }
+
+    .o_composer_text_field {
+        line-height: 1.3em;
+    }
+}
+
+.o_livechat_operator_avatar {
+    padding-right: 8px;
+}
+
+.o_livechat_no_rating {
+    opacity: 0.5;
+}

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <!-- This template is for a table at the top of purchase views that shows some KPIs. -->
+    <t t-name="purchase.PurchaseDashboard">
+        <div class="o_purchase_dashboard container">
+        <div class="row">
+            <div class="col-sm-5">
+            <table class="table table-sm">
+                <!-- thead needed to avoid list view rendering error for some reason -->
+                <thead>
+                    <tr>
+                    <!-- can't use th tag due to list rendering error when no values in list... -->
+                        <td class="o_text">
+                            <div>All RFQs</div>
+                        </td>
+                        <td class="o_main o_dashboard_action" title="All Draft RFQs" name="purchase.purchase_action_dashboard" context='{"search_default_draft_rfqs": true}'>
+                            <a href="#"><t t-esc="values['all_to_send']"/><br/>To Send</a>
+                        </td>
+                        <td class="o_main o_dashboard_action" title="All Waiting RFQs" name="purchase.purchase_action_dashboard" context='{"search_default_waiting_rfqs": true}'>
+                            <a href="#"><t t-esc="values['all_waiting']"/><br/>Waiting</a>
+                        </td>
+                        <td class="o_main o_dashboard_action" title="All Late RFQs" name="purchase.purchase_action_dashboard" context='{"search_default_late_rfqs": true}'>
+                            <a href="#"><t t-esc="values['all_late']"/><br/>Late</a>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="o_text">
+                            <div>My RFQs</div>
+                        </td>
+                        <td class="o_main o_dashboard_action" title="My Draft RFQs" name="purchase.purchase_action_dashboard" context='{"search_default_draft_rfqs": true, "search_default_my_purchases": true}'>
+                            <a href="#"><t t-esc="values['my_to_send']"/></a>
+                        </td>
+                        <td class="o_main o_dashboard_action" title="My Waiting RFQs" name="purchase.purchase_action_dashboard" context='{"search_default_waiting_rfqs": true, "search_default_my_purchases": true}'>
+                            <a href="#"><t t-esc="values['my_waiting']"/></a>
+                        </td>
+                        <td class="o_main o_dashboard_action" title="My Late RFQs" name="purchase.purchase_action_dashboard" context='{"search_default_late_rfqs": true, "search_default_my_purchases": true}'>
+                            <a href="#"><t t-esc="values['my_late']"/></a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table></div>
+
+            <div class="col-sm-7">
+            <table class="table table-sm">
+                <!-- thead needed to avoid list view rendering error for some reason -->
+                <thead>
+                    <tr>
+                        <!-- can't use th tag due to list rendering error when no values in list... -->
+                        <td class="o_text">Avg Order Value (<t t-esc="values['company_currency_symbol']"/>)</td>
+                        <td><span><t t-esc="values['all_avg_order_value']"/></span></td>
+                        <td class="o_text">Purchased Last 7 Days (<t t-esc="values['company_currency_symbol']"/>)</td>
+                        <td><span><t t-esc="values['all_total_last_7_days']"/></span></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="o_text">Lead Time to Purchase</td>
+                        <td><span><t t-esc="values['all_avg_days_to_purchase']"/> &#160;Days</span></td>
+                        <td class="o_text">RFQs Sent Last 7 Days</td>
+                        <td><span><t t-esc="values['all_sent_rfqs']"/></span></td>
+                    </tr>
+                </tbody>
+            </table></div>
+        </div></div>
+    </t>
+</templates>

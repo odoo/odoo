@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <template id="assets" inherit_id="point_of_sale.assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/pos_mercury/static/src/js/pos_mercury.js"></script>
+                <script type="text/javascript" src="/pos_mercury/static/src/js/OrderReceipt.js"></script>
+                <script type="text/javascript" src="/pos_mercury/static/src/js/PaymentScreen.js"></script>
+                <script type="text/javascript" src="/pos_mercury/static/src/js/PaymentScreenPaymentLines.js"></script>
+                <script type="text/javascript" src="/pos_mercury/static/src/js/PaymentTransactionPopup.js"></script>
+                <script type="text/javascript" src="/pos_mercury/static/src/js/ProductScreen.js"></script>
+                <link rel="stylesheet" href="/pos_mercury/static/src/css/pos_mercury.css"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

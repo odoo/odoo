@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" inherit_id="web.assets_backend" name="sale_product_configurator assets backend">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/sale/static/src/js/variant_mixin.js"></script>
+            <script type="text/javascript" src="/sale_product_configurator/static/src/js/product_configurator_renderer.js"></script>
+            <script type="text/javascript" src="/sale_product_configurator/static/src/js/product_configurator_controller.js"></script>
+            <script type="text/javascript" src="/sale_product_configurator/static/src/js/product_configurator_view.js"></script>
+            <script type="text/javascript" src="/sale_product_configurator/static/src/js/product_configurator_widget.js"/>
+            <script type="text/javascript" src="/sale_product_configurator/static/src/js/product_configurator_modal.js"></script>
+        </xpath>
+    </template>
+    <template id="assets_tests" name="Sale Product Configurator Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_product_configurator/static/tests/tours/product_configurator_ui.js"/>
+            <script type="text/javascript" src="/sale_product_configurator/static/tests/tours/product_configurator_advanced_ui.js"/>
+            <script type="text/javascript" src="/sale_product_configurator/static/tests/tours/product_configurator_edition_ui.js"/>
+            <script type="text/javascript" src="/sale_product_configurator/static/tests/tours/product_configurator_single_custom_attribute_ui.js"/>
+            <script type="text/javascript" src="/sale_product_configurator/static/tests/tours/product_configurator_pricelist_ui.js"/>
+            <script type="text/javascript" src="/sale_product_configurator/static/tests/tours/product_configurator_optional_products_ui.js"/>
+        </xpath>
+    </template>
+    <template id="qunit_suite" inherit_id="web.qunit_suite_tests" name="sale_product_configurator_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/sale_product_configurator/static/tests/product_configurator.test.js"></script>
+        </xpath>
+    </template>
+</odoo>

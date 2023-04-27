@@ -1,0 +1,109 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* auth_password_policy
+# 
+# Translators:
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# Federico Castellano <castellano.federico@outlook.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:10+0000\n"
+"Last-Translator: Federico Castellano <castellano.federico@outlook.com>, 2020\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_config_settings
+msgid "Config Settings"
+msgstr "Impostazioni di configurazione"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__id
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users__id
+msgid "ID"
+msgstr "ID"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_users____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,field_description:auth_password_policy.field_res_config_settings__minlength
+msgid "Minimum Password Length"
+msgstr "Lunghezza minima della password"
+
+#. module: auth_password_policy
+#: model:ir.model.fields,help:auth_password_policy.field_res_config_settings__minlength
+msgid ""
+"Minimum number of characters passwords must contain, set to 0 to disable."
+msgstr ""
+"Numero minimo di caratteri che devono contenere le password, impostare a 0 "
+"per disabilitare."
+
+#. module: auth_password_policy
+#: code:addons/auth_password_policy/models/res_users.py:0
+#, python-format
+msgid "Passwords must have at least %d characters, got %d."
+msgstr "La password deve avere almeno %d caratteri, ne sono stati usati%d."
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid ""
+"Required: %s.\n"
+"\n"
+"Hint: increase length, use multiple words and use non-letter characters to increase your password's strength."
+msgstr ""
+"Obbligatorio: %s.\n"
+"\n"
+"Suggerimento: per rendere più robusta la password, aumentarne la lunghezza con più parole e usare caratteri diversi dalle lettere."
+
+#. module: auth_password_policy
+#: model:ir.model,name:auth_password_policy.model_res_users
+msgid "Users"
+msgstr "Utenti"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d character classes"
+msgstr "almeno %d categorie di caratteri"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d characters"
+msgstr "almeno %d caratteri"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "at least %d words"
+msgstr "almeno %d parole"
+
+#. module: auth_password_policy
+#. openerp-web
+#: code:addons/auth_password_policy/static/src/js/password_gauge.js:0
+#, python-format
+msgid "no requirements"
+msgstr "nessun requisito"

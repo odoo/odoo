@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_website_form" name="Form">
+    <section class="s_website_form pt16 pb16" data-vcss="001" data-snippet="s_website_form">
+        <div class="container">
+            <form action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*">
+                <div class="s_website_form_rows row s_col_no_bgcolor">
+                    <div class="form-group col-12 s_website_form_submit" data-name="Submit Button">
+                        <div style="width: 200px;" class="s_website_form_label"/>
+                        <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                        <span id="s_website_form_result"></span>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+</template>
+
+<template id="s_website_form_options" inherit_id="website.snippet_options">
+    <!-- Extend drop locations to columns -->
+    <xpath expr="//t[@t-set='so_content_addition_selector']" position="inside">, .s_website_form</xpath>
+
+    <xpath expr="//div" position="after">
+        <!-- Form -->
+        <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form">
+            <we-select string="Marked Fields" data-name="field_mark_select">
+                <we-button data-select-class="">None</we-button>
+                <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
+                <we-button data-select-class="o_mark_optional" data-name="form_optional_opt">Optional</we-button>
+            </we-select>
+            <we-input string="Mark Text" data-set-mark="" data-dependencies="form_required_opt, form_optional_opt"/>
+            <we-input string="Labels Width"
+                data-select-style="" data-css-property="width"
+                data-unit="px" data-apply-to=".s_website_form_label"/>
+            <we-row>
+                <we-select string="On Success" data-no-preview="true">
+                    <we-button data-on-success="nothing">Nothing</we-button>
+                    <we-button data-on-success="redirect" data-name="show_redirect_opt">Redirect</we-button>
+                    <we-button data-on-success="message" data-name="show_message_opt">Show Message</we-button>
+                </we-select>
+                <we-button class="fa fa-fw fa-eye align-self-end toggle-edit-message" title="Edit Message" data-name="message_opt" data-dependencies="show_message_opt"/>
+            </we-row>
+            <we-urlpicker string="URL" data-select-data-attribute="/contactus-thank-you" data-attribute-name="successPage" data-name="url_opt" data-dependencies="show_redirect_opt"/>
+            <t t-set="recaptcha_public_key" t-value="request.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')"/>
+            <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
+        </div>
+
+        <!-- Add Field Form -->
+        <div data-js="AddFieldForm" data-selector=".s_website_form" data-target="form">
+            <we-button class="o_we_text_success"
+                title="Add a new field at the end"
+                data-add-field=""
+                data-no-preview="true">
+                <i class="fa fa-fw fa-plus"/>
+            </we-button>
+        </div>
+
+        <!-- Add Field -->
+        <div data-js="AddField" data-selector=".s_website_form_field" data-exclude=".s_website_form_dnone">
+            <we-button class="o_we_text_success"
+                title="Add a new field after this one"
+                data-add-field=""
+                data-no-preview="true">
+                <i class="fa fa-fw fa-plus"/>
+            </we-button>
+        </div>
+
+        <!-- Field -->
+        <div data-js='WebsiteFieldEditor' data-selector=".s_website_form_field"
+             data-exclude=".s_website_form_dnone" data-drop-near=".s_website_form_field">
+            <we-select data-name="type_opt" string="Type" data-no-preview="true">
+                <we-title>Custom field</we-title>
+                <we-button data-custom-field="char">Text</we-button>
+                <we-button data-custom-field="text">Long Text</we-button>
+                <we-button data-custom-field="email">Email</we-button>
+                <we-button data-custom-field="tel">Telephone</we-button>
+                <we-button data-custom-field="url">Url</we-button>
+                <we-button data-custom-field="integer">Number</we-button>
+                <we-button data-custom-field="float">Decimal Number</we-button>
+                <we-button data-custom-field="boolean">Checkbox</we-button>
+                <we-button data-custom-field="one2many">Multiple Checkboxes</we-button>
+                <we-button data-custom-field="selection">Radio Buttons</we-button>
+                <we-button data-custom-field="many2one">Selection</we-button>
+                <we-button data-custom-field="date">Date</we-button>
+                <we-button data-custom-field="datetime">Date &amp; Time</we-button>
+                <we-button data-custom-field="binary">File Upload</we-button>
+            </we-select>
+            <we-select data-name="char_input_type_opt" string="Input Type" data-no-preview="true">
+                <we-button data-select-type="char">Text</we-button>
+                <we-button data-select-type="email">Email</we-button>
+                <we-button data-select-type="tel">Telephone</we-button>
+                <we-button data-select-type="url">Url</we-button>
+            </we-select>
+            <t t-set="unit_textarea_height">rows</t>
+            <we-input string="Height" data-step="1" t-attf-data-select-attribute="3#{unit_textarea_height}" t-att-data-unit="unit_textarea_height"
+                data-attribute-name="rows" data-apply-to="textarea"/>
+            <we-select string="Display" data-name="multi_check_display_opt" data-no-preview="true">
+                <we-button data-multi-checkbox-display="horizontal">Horizontal</we-button>
+                <we-button data-multi-checkbox-display="vertical">Vertical</we-button>
+            </we-select>
+            <we-input string="Input Placeholder" class="o_we_large_input" data-name="placeholder_opt" data-set-placeholder=""/>
+            <we-input string="Label Name" class="o_we_large_input" data-set-label-text=""/>
+            <we-button-group string="Label Position">
+                <we-button title="Hide"
+                           data-select-label-position="none">
+                    <i class="fa fa-eye-slash"/>
+                </we-button>
+                <we-button title="Top"
+                           data-select-label-position="top"
+                           data-img="/website/static/src/img/snippets_options/pos_top.svg"/>
+                <we-button title="Left"
+                           data-select-label-position="left"
+                           data-img="/website/static/src/img/snippets_options/pos_left.svg"/>
+                <we-button title="Right"
+                           data-select-label-position="right"
+                           data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
+            </we-button-group>
+            <we-checkbox string="Required" data-name="required_opt" data-no-preview="true"
+                data-toggle-required="s_website_form_required"/>
+            <we-checkbox string="Hidden" data-name="hidden_opt" data-no-preview="true"
+                data-select-class="s_website_form_field_hidden"/>
+        </div>
+
+        <div data-js="WebsiteFormSubmit" data-selector=".s_website_form_submit" data-exclude=".s_website_form_no_submit_options">
+            <we-select string="Button Position">
+                <we-button data-select-class="text-left s_website_form_no_submit_label">Left</we-button>
+                <we-button data-select-class="text-center s_website_form_no_submit_label">Center</we-button>
+                <we-button data-select-class="text-right s_website_form_no_submit_label">Right</we-button>
+                <we-button data-select-class="">Input Aligned</we-button>
+            </we-select>
+        </div>
+
+        <!-- Remove the duplicate option of model fields -->
+        <div data-js="WebsiteFormFieldModel" data-selector=".s_website_form .s_website_form_field:not(.s_website_form_custom)"/>
+
+        <!-- Remove the delete option of model required fields -->
+        <div data-js="WebsiteFormFieldRequired" data-selector=".s_website_form .s_website_form_model_required"/>
+
+        <!-- Remove the delete and duplicate option of the submit button -->
+        <div data-js="WebsiteFormSubmitRequired" data-selector=".s_website_form .s_website_form_submit"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_website_form_css_000" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_form/static/src/snippets/s_website_form/000.scss"/>
+    </xpath>
+</template>
+<template id="assets_snippet_s_website_form_css_001" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website_form/static/src/snippets/s_website_form/001.scss"/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_website_form_js_000" inherit_id="website.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_form/static/src/snippets/s_website_form/000.js"/>
+    </xpath>
+</template>
+
+</odoo>

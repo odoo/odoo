@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <menuitem id="crm_menu_resellers" name="Resellers" parent="crm.crm_menu_config" sequence="16"/>
+
+        <!--Partner Activation -->
+
+        <record model="ir.ui.view" id="res_partner_activation_form">
+            <field name="name">res.partner.activation.form</field>
+            <field name="model">res.partner.activation</field>
+            <field name="arch" type="xml">
+                <form string="Activation">
+                    <sheet>
+                        <group col="4">
+                            <field name="name" />
+                            <field name="sequence" />
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="res_partner_activation_tree">
+            <field name="name">res.partner.activation.tree</field>
+            <field name="model">res.partner.activation</field>
+            <field name="arch" type="xml">
+                <tree string="Activation" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="res_partner_activation_act">
+            <field name="name">Partner Activations</field>
+            <field name="res_model">res.partner.activation</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="res_partner_activation_config_mi" parent="crm_menu_resellers" action="res_partner_activation_act"
+            sequence="6"/>
+
+    <!--Partner Level -->
+
+    <record id="view_partner_grade_tree" model="ir.ui.view">
+        <field name="name">res.partner.grade.tree</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <tree string="Partner Level">
+                <field name="sequence" widget="handle"/>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_partner_grade_form" model="ir.ui.view">
+        <field name="name">res.partner.grade.form</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <form string="Partner Level">
+                <sheet string="Level">
+                    <div class="oe_button_box" name="button_box">
+                        <field name="is_published" widget="website_redirect_button"/>
+                    </div>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Gold Partner" required="True"/>
+                        </h1>
+                    </div>
+                    <group>
+                        <field name="partner_weight"/>
+                        <field name="sequence"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="res_partner_grade_view_search" model="ir.ui.view">
+        <field name="name">res.partner.grade.view.search</field>
+        <field name="model">res.partner.grade</field>
+        <field name="arch" type="xml">
+            <search string="Search Partner Grade">
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="res_partner_grade_action" model="ir.actions.act_window">
+        <field name="name">Partner Level</field>
+        <field name="res_model">res.partner.grade</field>
+        <field name="search_view_id" ref="res_partner_grade_view_search"/>
+    </record>
+
+    <menuitem action="res_partner_grade_action" id="menu_res_partner_grade_action"
+        parent="crm_menu_resellers"
+        sequence="5" />
+
+    <!-- Partner form -->
+    <record id="view_res_partner_filter_assign_tree" model="ir.ui.view">
+        <field name="name">res.partner.geo.inherit.tree</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_tree"/>
+        <field name="arch" type="xml">
+            <field name="vat" position="after">
+                <field name="date_review_next" optional="hide"/>
+                <field name="grade_id" optional="hide"/>
+                <field name="activation" optional="hide"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_res_partner_filter_assign" model="ir.ui.view">
+        <field name="name">res.partner.geo.inherit.search</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_res_partner_filter"/>
+        <field name="arch" type="xml">
+            <field name="user_id" position="after">
+                <field name="grade_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_crm_partner_assign_form" model="ir.ui.view">
+        <field name="name">res.partner.assign.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base_geolocalize.view_crm_partner_geo_form"/>
+        <field name="arch" type="xml">
+            <data>
+                <xpath expr="//page[@name='geo_location']" position="inside">
+                    <group>
+                        <group>
+                            <separator string="Partner Activation" colspan="2"/>
+                            <field name="grade_id" widget="selection"/>
+                            <field name="activation" widget="selection"/>
+                            <field name="partner_weight"/>
+                        </group>
+                        <group>
+                            <separator string="Partner Review" colspan="2"/>
+                            <field name="date_review"/>
+                            <field name="date_review_next"/>
+                            <field name="date_partnership"/>
+                        </group>
+                    </group>
+                </xpath>
+                <xpath expr="//group[@name='sale']" position="inside">
+                    <field name="assigned_partner_id" groups="base.group_no_one"/>
+                </xpath>
+            </data>
+        </field>
+    </record>
+
+</odoo>

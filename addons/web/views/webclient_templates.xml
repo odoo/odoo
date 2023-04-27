@@ -1,0 +1,904 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="_assets_utils">
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_functions.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_mixins.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bs_mixins_overrides.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/utils.scss"/>
+    </template>
+
+    <template id="_assets_primary_variables">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/primary_variables.scss"/>
+    </template>
+
+    <template id="_assets_secondary_variables">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/secondary_variables.scss"/>
+    </template>
+
+    <template id="_assets_helpers">
+        <t t-call="web._assets_utils"/>
+        <t t-call="web._assets_primary_variables"/>
+        <t t-call="web._assets_secondary_variables"/>
+
+        <t t-raw="0"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/bootstrap/scss/_variables.scss"/>
+    </template>
+
+    <template id="_assets_backend_helpers">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden.scss"/>
+    </template>
+
+    <template id="_assets_frontend_helpers">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_overridden_frontend.scss"/>
+    </template>
+
+    <template id="_assets_bootstrap">
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/import_bootstrap.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/bootstrap_review.scss"/>
+    </template>
+
+    <!-- The assets common minimal code should not require any library to work. -->
+    <!-- An exception is made for the promises polyfill and extensions that the -->
+    <!-- boot.js script needs to work -->
+    <template id="_assets_common_minimal_js">
+        <script type="text/javascript" src="/web/static/lib/es6-promise/es6-promise-polyfill.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/promise_extension.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+    </template>
+
+    <template id="assets_common_minimal_js">
+        <t t-call="web._assets_common_minimal_js"/>
+    </template>
+
+    <template id="assets_common" name="Common Assets (used in backend interface and website)">
+        <t t-call="web._assets_helpers"/>
+
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/fontawesome/css/font-awesome.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/select2/select2.css"/>
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/select2-bootstrap-css/select2-bootstrap.css"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/lib/tempusdominus/tempusdominus.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fonts.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ui.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ui_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/mimetypes.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/modal.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/animation.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/rainbow.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/datepicker.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/daterangepicker.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/banner.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/colorpicker.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/popover.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/translation_dialog.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/keyboard.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/name_and_signature.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web.zoomodoo.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/color_picker.scss"/>
+
+        <link rel="stylesheet" type="text/less" href="/web/static/src/scss/fontawesome_overridden.scss"/>
+
+        <t t-call="web._assets_common_minimal_js"/>
+
+        <script type="text/javascript" src="/web/static/lib/underscore/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/lib/underscore.string/lib/underscore.string.js"></script>
+        <script type="text/javascript" src="/web/static/lib/moment/moment.js"></script>
+        <script type="text/javascript" src="/web/static/lib/owl/owl.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/component_extension.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ui/jquery-ui.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery/jquery.browser.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.blockUI/jquery.blockUI.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.hotkeys/jquery.hotkeys.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.placeholder/jquery.placeholder.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.form/jquery.form.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jquery.mjs.nestedSortable/jquery.mjs.nestedSortable.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/popper/popper.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/index.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/util.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/alert.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/button.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/carousel.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/collapse.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/dropdown.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/modal.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/tooltip.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/popover.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/scrollspy.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/tab.js"></script>
+        <script type="text/javascript" src="/web/static/lib/bootstrap/js/toast.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/tempusdominus/tempusdominus.js"/>
+        <script type="text/javascript" src="/web/static/lib/select2/select2.js"></script>
+        <script type="text/javascript" src="/web/static/lib/clipboard/clipboard.js"></script>
+        <script type="text/javascript" src="/web/static/lib/jSignature/jSignatureCustom.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/autocomplete.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/bootstrap.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/jquery.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/download.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/content-disposition.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/underscore.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/popper.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/fullcalendar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/moment.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/chrome/keyboard_navigation_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/abstract_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/abstract_storage_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/ajax.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/browser_detection.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/bus.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/custom_hooks.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/class.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/collections.js"/>
+        <script type="text/javascript" src="/web/static/src/js/core/concurrency.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/owl_dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/popover.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/dom.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/local_storage.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/mixins.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/patch_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/qweb.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/ram_storage.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/rpc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/service_mixins.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/session.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/session_storage.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/time.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/translation.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/widget.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/services/ajax_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/config.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/core.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/local_storage_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/notification_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/crash_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session_storage_service.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/tools/debug_manager.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/common_env.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/widgets/name_and_signature.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/notification.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/rainbow_man.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/smooth_scroll_on_drag.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/colorpicker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/translation_dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/zoomodoo.js"></script>
+    </template>
+
+    <template id="assets_common_lazy" inherit_id="web.assets_common" primary="True">
+        <xpath expr="//t[@t-call='web._assets_common_minimal_js']" position="replace"/>
+    </template>
+
+    <template id="assets_backend" name="Backend Assets (used in backend interface)">
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_backend_helpers"/>
+        </t>
+
+        <t t-call="web._assets_bootstrap"/>
+
+        <link rel="stylesheet" type="text/css" href="/base/static/src/css/modules.css"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient_layout.scss"/>
+
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/webclient.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/domain_selector.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/model_field_selector.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/progress_bar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/tooltip.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/switch_company_menu.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/debug_manager.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/control_panel.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fields.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/fields_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/file_upload.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/views.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/pivot_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/graph_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/form_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/form_view_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/list_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/list_view_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_dashboard.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_examples_dialog.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_column_progressbar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/kanban_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/web_calendar.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_panel.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/dropdown_menu.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/search_view_extra.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/data_export.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/base/static/src/scss/onboarding.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/attachment_preview.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_document_layout.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/special_fields.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/ribbon.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_settings.scss"/>
+        <script type="text/javascript" src="/base/static/src/js/res_config_settings.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/jquery.scrollTo/jquery.scrollTo.js"></script>
+        <script type="text/javascript" src="/web/static/lib/fuzzy-master/fuzzy.js"></script>
+
+        <script type="text/javascript" charset="utf-8">
+            odoo._modules = <t t-raw="get_modules_order()"/>;
+        </script>
+
+        <script type="text/javascript" src="/web/static/lib/py.js/lib/py.js"></script>
+        <script type="text/javascript" src="/web/static/lib/py.js/lib/py_extras.js"></script>
+        <!-- Special case: core.js declares $.browser needed by ba-bbq -->
+        <script type="text/javascript" src="/web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/core/domain.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/mvc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/py_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/abstract_action.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_act_window.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action_manager_report.js"/>
+        <script type="text/javascript" src="/web/static/src/js/chrome/action_mixin.js"/>
+        <script type="text/javascript" src="/web/static/src/js/chrome/abstract_web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/web_client.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/root_widget.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/_deprecated/data.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/context.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/data_comparison_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/math_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/core/misc.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/crash_manager_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/data_manager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/report_service.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/change_password.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/tools/test_menus_loader.js"/>
+        <script type="text/javascript" src="/web/static/src/js/tools/debug_manager_backend.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/tools/tools.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/env.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/data_export.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/date_picker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/domain_selector_dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/domain_selector.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/iframe_widget.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/loading.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/model_field_selector.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/systray_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/switch_company_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/user_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/chrome/apps_menu.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/widgets/pie_chart.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/ribbon.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/signature.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/action_menus.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/dropdown_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/dropdown_menu_item.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/custom_checkbox.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/custom_file_input.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/datepicker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/components/pager.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/apps.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/_deprecated/basic_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/abstract_field.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/basic_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_registry_owl.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/widget_registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/relational_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/special_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/upgrade_fields.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/field_wrapper.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/abstract_field_owl.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/basic_fields_owl.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_renderer_owl.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/abstract_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/renderer_wrapper.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/basic/basic_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/comparison_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/control_panel.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/control_panel_model_extension.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/control_panel_x2many.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/custom_favorite_item.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/favorite_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/custom_filter_item.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/filter_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/groupby_menu.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/custom_group_by_item.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/search_bar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/control_panel/search_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_panel_model_extension.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/search_panel.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/action_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/field_manager_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/file_upload_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/file_upload_progress_bar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/file_upload_progress_card.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/sample_server.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/select_create_controllers_registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/signature_dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/standalone_field_manager_mixin.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/view_registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/view_dialogs.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/view_utils.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form/form_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form/form_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/form/form_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/graph/graph_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_column.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_column_progressbar.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_column_quick_create.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_examples_registry.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_record_quick_create.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/kanban_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/kanban/quick_create_form_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_editable_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/list/list_confirm_dialog.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/pivot/pivot_view.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_controller.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_model.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_popover.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_quick_create.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_renderer.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/calendar/calendar_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/qweb/qweb_view.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/widgets/attach_document.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/fields/signature.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/owl_compatibility.js"></script>
+
+        <script type="text/javascript" src="/web/static/src/js/report/utils.js"/>
+        <script type="text/javascript" src="/web/static/src/js/report/client_action.js"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/report_backend.scss"/>
+    </template>
+
+    <template id="_assets_frontend_minimal_js">
+        <script type="text/javascript" src="/web/static/src/js/public/lazyloader.js"/>
+    </template>
+
+    <template id="assets_frontend_minimal_js">
+        <t t-call="web._assets_frontend_minimal_js"/>
+    </template>
+
+    <template id="assets_frontend" name="Website Assets">
+        <t t-call="web._assets_helpers">
+            <t t-call="web._assets_frontend_helpers"/>
+        </t>
+
+        <t t-call="web._assets_bootstrap"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/base_frontend.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/lazyloader.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/navbar_mobile.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/notification.scss"/>
+
+        <t t-call="web._assets_frontend_minimal_js"/>
+
+        <script type="text/javascript" src="/web/static/src/js/services/session.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_env.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_crash_manager.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_notification.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_root.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_root_instance.js"/>
+        <script type="text/javascript" src="/web/static/src/js/public/public_widget.js"/>
+    </template>
+
+    <template id="assets_frontend_lazy" inherit_id="web.assets_frontend" primary="True">
+        <xpath expr="//t[@t-call='web._assets_frontend_minimal_js']" position="replace"/>
+    </template>
+
+    <!-- Do not direcly call this template, call 'conditional_assets_tests' instead -->
+    <template id="assets_tests" name="Tests Assets">
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_file.js"/>
+    </template>
+
+    <template id="conditional_assets_tests" name="Tests Assets Bundle">
+        <t t-call-assets="web.assets_tests" t-if="'tests' in debug or test_mode_enabled" defer_load="True" />
+    </template>
+
+    <template id="web.layout" name="Web layout">&lt;!DOCTYPE html&gt;
+        <html t-att="html_data or {}">
+            <head>
+                <meta charset="utf-8"/>
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+
+                <title t-esc="title or 'Odoo'"/>
+                <link type="image/x-icon" rel="shortcut icon" t-att-href="x_icon or '/web/static/src/img/favicon.ico'"/>
+
+                <script id="web.layout.odooscript" type="text/javascript">
+                    var odoo = {
+                        csrf_token: "<t t-esc="request.csrf_token(None)"/>",
+                        debug: "<t t-esc="debug"/>",
+                    };
+                </script>
+
+                <t t-raw="head or ''"/>
+            </head>
+            <body t-att-class="body_classname">
+                <t t-raw="0"/>
+            </body>
+        </html>
+    </template>
+
+    <template id="web.frontend_layout" name="Frontend Layout" inherit_id="web.layout" primary="True">
+        <xpath expr="//head/meta[last()]" position="after">
+            <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        </xpath>
+        <xpath expr="//head/link[last()]" position="after">
+            <link rel="preload" href="/web/static/lib/fontawesome/fonts/fontawesome-webfont.woff2?v=4.7.0" as="font" crossorigin=""/>
+            <t t-call-assets="web.assets_common" t-js="false"/>
+            <t t-call-assets="web.assets_frontend" t-js="false"/>
+        </xpath>
+        <xpath expr="//head/script[@id='web.layout.odooscript'] | //head/script[last()]" position="after">
+            <script type="text/javascript">
+                odoo.session_info = <t t-raw="json.dumps(request.env['ir.http'].get_frontend_session_info())"/>;
+                if (!/(^|;\s)tz=/.test(document.cookie)) {
+                    const userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+                    document.cookie = `tz=${userTZ}; path=/`;
+                }
+            </script>
+            <t t-call-assets="web.assets_common_minimal_js" t-css="false" defer_load="True"/>
+            <t t-call-assets="web.assets_frontend_minimal_js" t-css="false" defer_load="True"/>
+            <t t-call="web.conditional_assets_tests"/>
+            <t t-call-assets="web.assets_common_lazy" t-css="false" lazy_load="True"/>
+            <t t-call-assets="web.assets_frontend_lazy" t-css="false" lazy_load="True"/>
+        </xpath>
+        <xpath expr="//t[@t-raw='0']" position="replace">
+            <div id="wrapwrap" t-attf-class="#{pageName or ''}">
+                <header t-if="not no_header" id="top" data-anchor="true">
+                    <img class="img-responsive d-block mx-auto"
+                        t-attf-src="/web/binary/company_logo"
+                        alt="Logo"/>
+                </header>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+                <footer t-if="not no_footer" id="bottom" data-anchor="true" t-attf-class="bg-light o_footer">
+                    <div id="footer"/>
+                    <div t-if="not no_copyright" class="o_footer_copyright">
+                        <div class="container py-3">
+                            <div class="row">
+                                <div class="col-sm text-center text-sm-left text-muted">
+                                    <t t-call="web.debug_icon"/>
+                                    <span class="o_footer_copyright_name mr-2">Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span></span>
+                                </div>
+                                <div class="col-sm text-center text-sm-right">
+                                    <t t-call="web.brand_promotion"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </xpath>
+    </template>
+
+    <template id="brand_promotion_message" name="Brand Promotion Message">
+        <t t-set="odoo_logo">
+            <a target="_blank"
+                t-attf-href="http://www.odoo.com?utm_source=db&amp;utm_medium=#{_utm_medium}"
+                class="badge badge-light">
+                <img alt="Odoo"
+                        src="/web/static/src/img/odoo_logo_tiny.png"
+                        style="height: 1em; vertical-align: baseline;"/>
+            </a>
+        </t>
+        <t t-set="final_message">Powered by %s%s</t>
+        <t t-raw="final_message % (odoo_logo, _message and ('- %s' % _message) or '')"/>
+    </template>
+    <template id="brand_promotion" name="Brand Promotion">
+        <div class="o_brand_promotion">
+            <t t-call="web.brand_promotion_message">
+                <t t-set="_message"></t>
+                <t t-set="_utm_medium" t-valuef="portal"/>
+            </t>
+        </div>
+    </template>
+
+    <template id="web.login_layout" name="Login Layout">
+        <t t-call="web.frontend_layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="body_classname" t-value="'bg-100'"/>
+            <t t-set="no_header" t-value="True"/>
+            <t t-set="no_footer" t-value="True"/>
+
+            <div class="container py-5">
+                <div t-attf-class="card border-0 mx-auto bg-100 {{login_card_classes}} o_database_list" style="max-width: 300px;">
+                    <div class="card-body">
+                        <div t-attf-class="text-center pb-3 border-bottom {{'mb-3' if form_small else 'mb-4'}}">
+                            <img t-attf-src="/web/binary/company_logo{{ '?dbname='+db if db else '' }}" alt="Logo" style="max-height:120px; max-width: 100%; width:auto"/>
+                        </div>
+                        <t t-raw="0"/>
+                        <div class="text-center small mt-4 pt-3 border-top" t-if="not disable_footer">
+                            <t t-if="not disable_database_manager">
+                                <a class="border-right pr-2 mr-1" href="/web/database/manager">Manage Databases</a>
+                            </t>
+                            <a href="https://www.odoo.com?utm_source=db&amp;utm_medium=auth" target="_blank">Powered by <span>Odoo</span></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </t>
+    </template>
+
+    <template id="web.login" name="Login">
+        <t t-call="web.login_layout">
+            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+
+                <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
+                    <label for="db" class="col-form-label">Database</label>
+                    <div t-attf-class="input-group {{'input-group-sm' if form_small else ''}}">
+                        <input type="text" name="db" t-att-value="request.db" id="db" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" readonly="readonly"/>
+                        <span class="input-group-append">
+                            <a role="button" href="/web/database/selector" class="btn btn-secondary">Select <i class="fa fa-database" role="img" aria-label="Database" title="Database"></i></a>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="form-group field-login">
+                    <label for="login">Email</label>
+                    <input type="text" placeholder="Email" name="login" t-att-value="login" id="login" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autofocus="autofocus" autocapitalize="off"/>
+                </div>
+
+                <div class="form-group field-password">
+                    <label for="password">Password</label>
+                    <input type="password" placeholder="Password" name="password" id="password" t-attf-class="form-control #{'form-control-sm' if form_small else ''}" required="required" autocomplete="current-password" t-att-autofocus="'autofocus' if login else None" maxlength="4096"/>
+                </div>
+
+                <p class="alert alert-danger" t-if="error" role="alert">
+                    <t t-esc="error"/>
+                </p>
+                <p class="alert alert-success" t-if="message" role="status">
+                    <t t-esc="message"/>
+                </p>
+
+                <div t-attf-class="clearfix oe_login_buttons text-center mb-1 {{'pt-2' if form_small else 'pt-3'}}">
+                    <button type="submit" class="btn btn-primary btn-block">Log in</button>
+                    <t t-if="debug">
+                        <button type="submit" name="redirect" value="/web/become" class="btn btn-link btn-sm btn-block">Log in as superuser</button>
+                    </t>
+                    <div class="o_login_auth"/>
+                </div>
+
+                <input type="hidden" name="redirect" t-att-value="redirect"/>
+            </form>
+        </t>
+    </template>
+
+    <template id="web.tests_assets">
+        <link type="text/css" rel="stylesheet" href="/web/static/lib/daterangepicker/daterangepicker.css"/>
+        <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
+        <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
+
+        <!-- add lazy-loaded libs to make tests synchronous -->
+        <link rel="stylesheet" href="/web/static/lib/fullcalendar/core/main.css"/>
+        <link rel="stylesheet" href="/web/static/lib/fullcalendar/daygrid/main.css"/>
+        <link rel="stylesheet" href="/web/static/lib/fullcalendar/timegrid/main.css"/>
+        <link rel="stylesheet" href="/web/static/lib/fullcalendar/list/main.css"/>
+        <script type="text/javascript" src="/web/static/lib/fullcalendar/core/main.js"></script>
+        <script type="text/javascript" src="/web/static/lib/fullcalendar/moment/main.js"></script>
+        <script type="text/javascript" src="/web/static/lib/fullcalendar/interaction/main.js"></script>
+        <script type="text/javascript" src="/web/static/lib/fullcalendar/daygrid/main.js"></script>
+        <script type="text/javascript" src="/web/static/lib/fullcalendar/timegrid/main.js"></script>
+        <script type="text/javascript" src="/web/static/lib/fullcalendar/list/main.js"></script>
+
+        <script type="text/javascript" src="/web/static/lib/ace/ace.js"></script>
+        <script type="text/javascript" src="/web/static/lib/ace/javascript_highlight_rules.js"></script>
+        <script type="text/javascript" src="/web/static/lib/ace/mode-python.js"></script>
+        <script type="text/javascript" src="/web/static/lib/ace/mode-xml.js"></script>
+        <script type="text/javascript" src="/web/static/lib/ace/mode-js.js"></script>
+        <script type="text/javascript" src="/web/static/lib/Chart/Chart.js"></script>
+        <script type="text/javascript" src="/web/static/lib/nearest/jquery.nearest.js"/>
+        <script type="text/javascript" src="/web/static/lib/daterangepicker/daterangepicker.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/libs/daterangepicker.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/main_tests.js"></script>
+
+        <style>
+            body {
+                position: relative; // bootstrap-datepicker needs this
+            }
+            body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
+                opacity: 0 !important;
+            }
+            #qunit-testrunner-toolbar label {
+                font-weight: inherit;
+                margin-bottom: inherit;
+            }
+            #qunit-testrunner-toolbar input[type=text] {
+                width: inherit;
+                display: inherit;
+            }
+        </style>
+
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_control_panel.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_file.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
+        <script type="text/javascript" src="/web/static/tests/helpers/test_env.js"></script>
+    </template>
+
+    <template id="web.qunit_suite">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Web Tests</t>
+            <t t-set="head">
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <t t-call-assets="web.tests_assets" t-js="false"/>
+                <t t-call-assets="web.tests_assets" t-css="false"/>
+                <t t-call-assets="web.qunit_suite_tests" t-js="false"/>
+                <t t-call-assets="web.qunit_suite_tests" t-css="false"/>
+            </t>
+            <div id="qunit"/>
+            <div id="qunit-fixture"/>
+        </t>
+    </template>
+
+    <template id="web.qunit_suite_tests">
+        <script type="text/javascript" src="/base/static/tests/base_settings_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/qweb_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/mockserver_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/services/crash_manager_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/services/data_manager_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/services/notification_service_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/fields/basic_fields_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/field_utils_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/relational_fields_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_many2many_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_many2one_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/relational_fields/field_one2many_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/signature_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/special_fields_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/upgrade_fields_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/views/sample_server_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/abstract_controller_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/abstract_view_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/form_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/graph_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/list_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/pivot_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/kanban_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/calendar_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/qweb_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/abstract_model_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/basic_model_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/abstract_view_banner_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/kanban_model_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/view_dialogs_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/search_panel_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/ajax_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/registry_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/py_utils_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/class_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/rpc_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/domain_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/data_comparison_utils_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/math_utils_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/mixins_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/patch_mixin_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/time_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/concurrency_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/util_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/widget_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/dialog_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/owl_dialog_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/popover_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/core/dom_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/chrome/action_manager_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/chrome/keyboard_navigation_mixin_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/chrome/menu_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/chrome/user_menu_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/chrome/systray_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/components/custom_checkbox_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/components/custom_file_input_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/components/datepicker_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/components/pager_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/components/action_menus_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/components/dropdown_menu_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/control_panel/control_panel_model_extension_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/control_panel_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/comparison_menu_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/favorite_menu_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/custom_filter_item_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/filter_menu_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/custom_group_by_item_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/groupby_menu_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/search_bar_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/control_panel/search_utils_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/widgets/company_switcher_tests.js"/>
+        <script type="text/javascript" src="/web/static/tests/widgets/data_export_tests.js"/>
+        <script type="text/javascript" src="/web/static/tests/widgets/domain_selector_tests.js"/>
+        <script type="text/javascript" src="/web/static/tests/widgets/model_field_selector_tests.js"/>
+        <script type="text/javascript" src="/web/static/tests/widgets/rainbow_man_tests.js"/>
+
+        <script type="text/javascript" src="/web/static/tests/report/client_action_tests.js"/>
+
+        <script type="text/javascript" src="/web/static/tests/tools/debug_manager_tests.js"/>
+
+        <script type="text/javascript" src="/web/static/tests/helpers/test_utils_tests.js"></script>
+
+        <script type="text/javascript" src="/web/static/tests/owl_compatibility_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/component_extension_tests.js"></script>
+    </template>
+
+    <template id="web.qunit_mobile_suite">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Web Mobile Tests</t>
+            <t t-set="head">
+                <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+
+                <t t-call-assets="web.tests_assets" t-js="false"/>
+                <t t-call-assets="web.tests_assets" t-css="false"/>
+                <t t-call-assets="web.qunit_mobile_suite_tests" t-js="false"/>
+                <t t-call-assets="web.qunit_mobile_suite_tests" t-css="false"/>
+            </t>
+            <div id="qunit"/>
+            <div id="qunit-fixture"/>
+        </t>
+    </template>
+
+    <template id="web.qunit_mobile_suite_tests">
+        <script type="text/javascript" src="/web/static/lib/jquery.touchSwipe/jquery.touchSwipe.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/basic_fields_mobile_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/fields/relational_fields_mobile_tests.js"></script>
+    </template>
+
+    <template id="web.benchmark_suite">
+        <t t-call="web.layout">
+            <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+            <t t-set="title">Web Benchmarks</t>
+            <t t-set="head">
+                <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
+                <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
+
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+                <t t-call-assets="web.tests_assets" t-js="false"/>
+                <t t-call-assets="web.tests_assets" t-css="false"/>
+
+                <script type="text/javascript">
+                    QUnit.config.hidepassed = false;
+                </script>
+
+                <style>
+                    body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
+                        opacity: 0 !important;
+                    }
+                    #qunit-testrunner-toolbar label {
+                        font-weight: inherit;
+                        margin-bottom: inherit;
+                    }
+                    #qunit-testrunner-toolbar input[type=text] {
+                        width: inherit;
+                        display: inherit;
+                    }
+                </style>
+
+                <script type="text/javascript" src="/web/static/tests/views/list_benchmarks.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/kanban_benchmarks.js"></script>
+                <script type="text/javascript" src="/web/static/tests/views/form_benchmarks.js"></script>
+            </t>
+
+            <div id="qunit"/>
+            <div id="qunit-fixture"/>
+        </t>
+    </template>
+
+    <template id="web.assets_backend_prod_only">
+        <script type="text/javascript" src="/web/static/src/js/main.js"></script>
+    </template>
+
+    <template id="web.webclient_bootstrap">
+        <t t-call="web.layout">
+            <t t-set="head_web">
+                <script type="text/javascript">
+                    odoo.session_info = <t t-raw="json.dumps(session_info)"/>;
+                    odoo.reloadMenus = () => fetch(`/web/webclient/load_menus/${odoo.session_info.cache_hashes.load_menus}`).then(res => res.json());
+                    odoo.loadMenusPromise = odoo.reloadMenus();
+                </script>
+                <t t-call-assets="web.assets_common" t-js="false"/>
+                <t t-call-assets="web.assets_backend" t-js="false"/>
+                <t t-call-assets="web.assets_common" t-css="false"/>
+                <t t-call-assets="web.assets_backend" t-css="false"/>
+                <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>
+                <t t-call="web.conditional_assets_tests"/>
+            </t>
+            <t t-set="head" t-value="head_web + (head or '')"/>
+            <t t-set="body_classname" t-value="'o_web_client'"/>
+        </t>
+    </template>
+
+    <template id="debug_icon" name="Debug Icon">
+        <t t-if="debug">
+            <t t-set="debug_mode_help" t-value="' (%s)' % debug if debug != '1' else ''"/>
+            <a t-attf-href="?#{keep_query('*', debug='')}" t-attf-title="Debug mode is activated#{debug_mode_help}. Click here to exit debug mode."
+               class="o_debug_mode"><span class="fa fa-bug"/></a>
+        </t>
+    </template>
+
+    <!--
+        Optional Bundle for PDFJS lib
+        Since PDFJS is quite huge (80000≈ lines), please only load it when it is necessary.
+        For now, it is only use to display the PDF slide Viewer during an embed.
+        Bundlized, the size is reduced to 5300≈ lines.
+    -->
+    <template id="pdf_js_lib" name="PDF JS Library">
+        <script type="text/javascript" src="/web/static/lib/pdfjs/build/pdf.js"></script>
+        <script type="text/javascript" src="/web/static/lib/pdfjs/build/pdf.worker.js"></script>
+    </template>
+</odoo>

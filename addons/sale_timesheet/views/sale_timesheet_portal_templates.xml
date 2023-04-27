@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" name="report timesheet assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/sale_timesheet/static/src/scss/sale_timesheet_portal.scss"/>
+        </xpath>
+    </template>
+
+    <!-- TODO: [XBO] Remove me in master -->
+    <template id="portal_invoice_page_inherit_timesheet" inherit_id="account.portal_invoice_page">
+        <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="after">
+            <t t-if="1 == 0">
+                <li t-if="timesheets" class="list-group-item flex-grow-1" >
+                    <a href="#accordion">Timesheets</a>
+                </li>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='invoice_content']//div[hasclass('o_portal_html_view')]" position="after">
+            <t t-if="1 == 0">
+                <div t-if="timesheets" class="container">
+                    <div id="accordion" class="o_timesheet_accordion mt-4">
+                        <div class="card mb-0">
+                            <div class="card-header">
+                                <h5 class="mb0">
+                                    <a class="card-title" data-toggle="collapse" href="#collapseTimesheet">
+                                        Timesheets
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseTimesheet" class="card-body show" data-parent="#accordion">
+                                <t t-set="nr_tasks" t-value="len(timesheets.mapped('task_id'))"/>
+                                <t t-set="nr_projects" t-value="len(timesheets.mapped('project_id'))"/>
+                                <table class="table table-sm">
+                                    <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Employee</th>
+                                        <th t-if="nr_projects &gt; 1">Project</th>
+                                        <th t-if="nr_tasks &gt; 0">Task</th>
+                                        <th>Description</th>
+                                        <th t-if="timesheets[0]._is_timesheet_encode_uom_day()" class="text-right">Duration (days)</th>
+                                        <th t-else="" class="text-right">Duration (hours)</th>
+                                    </tr>
+                                    </thead>
+                                    <tr t-foreach="timesheets" t-as="timesheet">
+                                        <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
+                                        <td><t t-esc="timesheet.employee_id.name"/></td>
+                                        <td t-if="nr_projects &gt; 1"><span t-field="timesheet.project_id"/></td>
+                                        <td t-if="nr_tasks &gt; 0"><span t-field="timesheet.task_id"/></td>
+                                        <td><t t-esc="timesheet.name"/></td>
+                                        <td class="text-right">
+                                            <span t-if="timesheet._is_timesheet_encode_uom_day()" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                                            <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="sale_order_portal_content_inherit" inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//td[@id='product_name']" position="inside">
+            <a t-if="timesheets and len(timesheets.filtered(lambda t: t.so_line == line)) > 0" t-att-href="'/my/timesheets?search_in=sol_id&amp;search=%s' % line.id">View Timesheets</a>
+        </xpath>
+    </template>
+
+    <!-- TODO: [XBO] Remove me in master -->
+    <template id="sale_order_portal_template_inherit" inherit_id="sale.sale_order_portal_template">
+        <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="after">
+            <t t-if="1 == 0">
+                <li t-if="timesheets" class="list-group-item flex-grow-1" >
+                    <a href="#accordion">Timesheets</a>
+                </li>
+            </t>
+        </xpath>
+
+        <xpath expr="//div[@id='sale_order_communication']" position="before">
+            <t t-if="1 == 0">
+                <div t-if="timesheets" class="container">
+                    <div id="accordion" class="o_timesheet_accordion mt-4">
+                        <div class="card mb-0">
+                            <div class="card-header">
+                                <h5 class="mb0">
+                                    <a class="card-title" data-toggle="collapse" href="#collapseTimesheet">
+                                        Timesheets
+                                    </a>
+                                </h5>
+                            </div>
+                            <div id="collapseTimesheet" class="card-body show" data-parent="#accordion">
+                                <t t-set="nr_tasks" t-value="len(timesheets.mapped('task_id'))"/>
+                                <t t-set="nr_projects" t-value="len(timesheets.mapped('project_id'))"/>
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Employee</th>
+                                            <th t-if="nr_projects &gt; 1">Project</th>
+                                            <th t-if="nr_tasks &gt; 0">Task</th>
+                                            <th>Description</th>
+                                            <th t-if="timesheets[0]._is_timesheet_encode_uom_day()" class="text-right">Duration (days)</th>
+                                            <th t-else="" class="text-right">Duration (hours)</th>
+                                        </tr>
+                                    </thead>
+                                    <tr t-foreach="timesheets" t-as="timesheet">
+                                        <td><t t-esc="timesheet.date" t-options='{"widget": "date"}'/></td>
+                                        <td><t t-esc="timesheet.employee_id.name"/></td>
+                                        <td t-if="nr_projects &gt; 1"><span t-field="timesheet.project_id"/></td>
+                                        <td t-if="nr_tasks &gt; 0"><span t-field="timesheet.task_id"/></td>
+                                        <td><t t-esc="timesheet.name"/></td>
+                                        <td class="text-right">
+                                            <span t-if="timesheet._is_timesheet_encode_uom_day()" t-esc="timesheet._get_timesheet_time_day()" t-options='{"widget": "timesheet_uom"}'/>
+                                            <span t-else="" t-field="timesheet.unit_amount" t-options='{"widget": "float_time"}'/>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="portal_my_timesheets_inherit" inherit_id="hr_timesheet.portal_my_timesheets">
+        <xpath expr="//thead/tr[contains(@t-attf-class, 'thead-light')]" position="inside">
+            <t t-elif="groupby == 'sol'">
+                <t t-set="sol" t-value="timesheets[0].so_line"/>
+                <th colspan="5">
+                    <t t-if="sol">
+                        <em class="font-weight-normal text-muted">Timesheets for sales order item:</em>
+                        <span t-field="sol.display_name"/>
+                        <t t-if="sol.remaining_hours_available">
+                            <span class="text-muted font-weight-normal">(<span t-field="sol.product_uom_qty" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Ordered, <span t-field="sol.remaining_hours" t-options='{"widget": "float_time"}'></span> <span t-field="sol.product_uom.display_name"></span> Remaining)</span>
+                        </t>
+                    </t>
+                </th>
+                <th colspan="1" class="text-right text-muted font-weight-normal">
+                    <t t-if="is_uom_day">
+                        Total: <span t-esc="timesheets[0]._convert_hours_to_days(hours_spent)" t-options='{"widget": "timesheet_uom"}'/>
+                    </t>
+                    <t t-else="">
+                        Total: <span t-esc="hours_spent" t-options='{"widget": "float_time"}'/>
+                    </t>
+                </th>
+            </t>
+        </xpath>
+        <xpath expr="//thead/tr/th[@t-if='is_uom_day']" position="before">
+            <th t-if="not groupby == 'sol'">Sale Order Item</th>
+        </xpath>
+        <xpath expr="//tbody//td[hasclass('text-right')]" position="before">
+            <td t-if="not groupby == 'sol'"><span t-field="timesheet.so_line" t-att-title="timesheet.so_line.display_name"></span></td>
+        </xpath>
+    </template>
+
+</odoo>

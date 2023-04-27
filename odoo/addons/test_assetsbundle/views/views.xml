@@ -1,0 +1,55 @@
+<odoo>
+    <template id="test_assetsbundle.bundle1">
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile1.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile2.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile3.js"></script>
+    </template>
+
+    <template id="test_assetsbundle.template1" name="test template 1">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="test_assetsbundle.bundle1"/>
+    </head>
+    <body>
+    </body>
+</html>
+    </template>
+
+    <template id="test_assetsbundle.bundle2">
+        <link rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css"/>
+    </template>
+
+    <template id="test_assetsbundle.bundle3">
+        <link rel="stylesheet" type="text/scss" href="/test_assetsbundle/static/src/scss/test_file1.scss"/>
+    </template>
+
+    <template id="test_assetsbundle.bundle4">
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile1.js"></script>
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile2.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
+
+        <link rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile1.css"/>
+        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
+        <link rel="stylesheet" href="/test_assetsbundle/static/src/css/test_cssfile2.css"/>
+
+        <script type="text/javascript" src="/test_assetsbundle/static/src/js/test_jsfile3.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
+
+        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
+    </template>
+
+    <template id="test_assetsbundle.template2" name="test template 2">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="test_assetsbundle.bundle4" t-js="False"/>
+        <meta/>
+        <t t-call-assets="test_assetsbundle.bundle4" t-css="False"/>
+    </head>
+    <body>
+    </body>
+</html>
+    </template>
+
+</odoo>

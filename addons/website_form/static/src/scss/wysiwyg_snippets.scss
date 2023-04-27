@@ -1,0 +1,43 @@
+#oe_snippets > .o_we_customize_panel we-customizeblock-option {
+    we-list {
+        we-title, we-button {
+            margin-top: $o-we-sidebar-content-field-spacing;
+        }
+        .oe_we_table_wraper {
+            margin-top: $o-we-sidebar-content-field-spacing;
+            max-height: 200px;
+            overflow-y: auto;
+
+            table {
+                width: 100%;
+
+                input {
+                    width: 100%;
+                    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+                    border-radius: $o-we-sidebar-content-field-border-radius;
+                    padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+                    background-color: $o-we-sidebar-content-field-input-bg;
+                    color: inherit;
+                    font-family: $o-we-sidebar-content-field-input-font-family;
+                }
+                tr {
+                    // Since the sortable list's <tr> loses its connection with
+                    // the table when dragged, the <td> with the input no longer
+                    // takes up the full width, causing a visual issue. To solve
+                    // this problem, we added the 'flex' display property.
+                    display: flex;
+                    border: 1px solid rgba(white, 0.1);
+                    border-left: none;
+                    border-right: none;
+                }
+                td {
+                    flex-grow: 1;
+                    &:first-child, &:last-child {
+                        flex-grow: 0;
+                        width: 28px;
+                    }
+                }
+            }
+        }
+    }
+}

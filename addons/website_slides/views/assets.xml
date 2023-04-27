@@ -1,0 +1,75 @@
+<?xml version="1.0" ?>
+<odoo>
+    <data>
+        <template id="assets_backend" inherit_id="web.assets_backend" name="Slides Backend Assets">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/rating_rating_views.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/slide_views.scss"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slide_category_one2many.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/rating_field_backend.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/activity.js"/>
+            </xpath>
+        </template>
+
+        <template id="assets_frontend" inherit_id="website.assets_frontend" name="Slides Frontend Assets">
+            <xpath expr="//link[last()]" position="after">
+                <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
+                <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides_profile.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/slides_slide_fullscreen.scss" t-ignore="true"/>
+            </xpath>
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/website_slides/static/src/js/slides.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_share.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_upload.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_category_add.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_slide_archive.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_slide_toggle_is_preview.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_slide_like.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_slides_list.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_fullscreen_player.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_join.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_enroll_email.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_quiz.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_quiz_question_form.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_quiz_finish.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_tag_add.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/slides_course_unsubscribe.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/js/tours/slides_tour.js"/>
+            </xpath>
+        </template>
+
+        <template id="assets_tests" inherit_id="web.assets_tests" name="Slides Tests Assets">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_slides/static/src/tests/tours/slides_tour_tools.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/tests/tours/slides_course_member.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/tests/tours/slides_course_member_yt.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/tests/tours/slides_course_publisher.js"/>
+                <script type="text/javascript" src="/website_slides/static/src/tests/tours/slides_full_screen_web_editor.js"/>
+            </xpath>
+        </template>
+
+        <template id="assets_editor_inherit_website_slides" inherit_id="website.assets_editor" name="website_slides Assets Editor">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_slides/static/src/js/website_slides.editor.js"/>
+            </xpath>
+        </template>
+
+        <!-- Bundle (minimal) for embedded slide iframe -->
+        <template id="website_slides.slide_embed_assets" name="Website slides embed assets">
+            <t t-call="web._assets_helpers"/>
+            <t t-call="web._assets_bootstrap"/>
+            <link rel="stylesheet" type="text/scss" href="/website_slides/static/src/scss/website_slides.scss" t-ignore="true"/>
+
+            <t t-call="web.pdf_js_lib"></t>
+            <script type="text/javascript" src="/website_slides/static/lib/pdfslidesviewer/PDFSlidesViewer.js"></script>
+            <script type="text/javascript" src="/website_slides/static/src/js/slides_embed.js"></script>
+        </template>
+
+        <template id="website_slides_tests" name="eLearning tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/website_slides/static/src/components/activity/activity_tests.js"/>
+            </xpath>
+        </template>
+
+    </data>
+</odoo>

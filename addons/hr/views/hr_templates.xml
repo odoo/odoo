@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_backend" name="hr assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/hr/static/src/scss/hr.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/hr/static/src/bugfix/bugfix.scss"/>
+
+            <script type="text/javascript" src="/hr/static/src/bugfix/bugfix.js"/>
+            <script type="text/javascript" src="/hr/static/src/js/chat.js"></script>
+            <script type="text/javascript" src="/hr/static/src/js/language.js"></script>
+            <script type="text/javascript" src="/hr/static/src/js/many2one_avatar_employee.js"></script>
+            <script type="text/javascript" src="/hr/static/src/js/standalone_m2o_avatar_employee.js"></script>
+            <script type="text/javascript" src="/hr/static/src/models/employee/employee.js"/>
+            <script type="text/javascript" src="/hr/static/src/models/messaging/messaging.js"/>
+            <script type="text/javascript" src="/hr/static/src/models/partner/partner.js"/>
+            <script type="text/javascript" src="/hr/static/src/models/user/user.js"/>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="hr tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/hr/static/src/bugfix/bugfix_tests.js"/>
+            <script type="text/javascript" src="/hr/static/tests/helpers/mock_models.js"/>
+            <script type="text/javascript" src="/hr/static/tests/many2one_avatar_employee_tests.js"></script>
+            <script type="text/javascript" src="/hr/static/tests/standalone_m2o_avatar_employee_tests.js"></script>
+        </xpath>
+    </template>
+</odoo>

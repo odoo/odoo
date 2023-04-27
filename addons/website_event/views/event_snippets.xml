@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Snippet - Country Events - Placeholder -->
+<template id="s_country_events" name="Events">
+    <div t-attf-class="s_country_events_list oe_country_events #{_classes}">
+        <div class="country_events_list">
+            <h6 class="o_wevent_sidebar_title">
+                <i class="fa fa-globe mr-2"/>Upcoming Events
+            </h6>
+        </div>
+    </div>
+</template>
+
+<!-- Snippets and options -->
+<template id="snippets" inherit_id="website.snippets">
+    <xpath expr="//t[@id='event_local_events_hook']" position="replace">
+        <t t-snippet="website_event.s_country_events" t-thumbnail="/website_event/static/src/img/snippets_thumbs/s_country_events.svg"/>
+    </xpath>
+    <xpath expr="//t[@id='event_speaker_bio_hook']" position="replace">
+        <t t-snippet="website_event.s_speaker_bio" t-thumbnail="/website_event/static/src/img/snippets_thumbs/s_speaker_bio.svg"/>
+    </xpath>
+</template>
+
+<template id="snippet_options" inherit_id="website.snippet_options">
+    <xpath expr="//*[@t-set='so_content_addition_selector']" position="inside">, .oe_country_events, .s_speaker_bio</xpath>
+</template>
+
+<!-- Snippet - Speaker Bio -->
+<template id="s_speaker_bio" name="Speaker Bio">
+    <div class="s_speaker_bio" itemscope="itemscope" itemtype="http://schema.org/Person" itemprop="performer">
+        <span class="badge badge-secondary text-uppercase o_wevent_badge">Speaker</span>
+        <img src="/website_event/static/src/img/speaker.png" width="70" class="img-fluid rounded-circle float-left mr-3" alt=""/>
+        <div class="overflow-hidden">
+            <h4 class="mt-3 mb-1" itemprop="name">John DOE</h4>
+            <h6 class="mb-4">Company</h6>
+            <p>At just 13 years old, John DOE was already starting to develop his first business applications for customers. After mastering civil engineering, he founded TinyERP. This was the first phase of OpenERP which would later became Odoo, the most installed open-source business software worldwide.</p>
+        </div>
+    </div>
+</template>
+
+</odoo>

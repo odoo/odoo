@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="website.test_bundle">
+        <script type="text/javascript" src="/web/static/lib/qweb/qweb2.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript1.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="/web/static/lib/jquery.ui/jquery-ui.css"/>
+        <link rel="stylesheet" href="http://test.external.link/style1.css"/>
+
+        <script type="text/javascript" src="/web/static/src/js/boot.js"></script>
+        <script type="text/javascript" src="http://test.external.link/javascript2.js"></script>
+
+        <link rel="stylesheet" href="http://test.external.link/style2.css"/>
+    </template>
+
+    <template id="website.test_template" name="test template 2">
+&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <t t-call-assets="website.test_bundle" t-js="False"/>
+        <meta/>
+        <t t-call-assets="website.test_bundle" t-css="False"/>
+    </head>
+    <body>
+        <img src="http://test.external.link/img.png"/>
+        <img src="/website/static/img.png"/>
+        <a href="http://test.external.link/link">x</a>
+        <a href="/web/content/local_link">x</a>
+        <span t-attf-style="background-image: url('/web/image/2')" t-att-empty="False">xxx</span>
+        <div widget="html" t-field="user.signature"/>
+        <div widget="image" t-field="user.image_1920" t-options="{'widget': 'image'}"/>
+    </body>
+</html>
+    </template>
+
+</odoo>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Badge" id="s_badge">
+    <span class="s_badge badge badge-secondary o_animable" data-name="Badge">
+        <i class="fa fa-1x fa-fw fa-folder o_not-animable"/>Category
+    </span>
+</template>
+
+<template id="s_badge_options" inherit_id="website.snippet_options">
+    <xpath expr="//div[@data-js='Box']" position="before">
+        <div data-selector=".s_badge">
+            <we-colorpicker string="Color" data-name="badge_colorpicker_opt"
+                data-select-style="true"
+                data-css-property="background-color"
+                data-color-prefix="badge-"/>
+        </div>
+    </xpath>
+</template>
+
+<template id="_assets_snippet_s_badge_css_000_variables" inherit_id="website._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_badge/000_variables.scss"/>
+    </xpath>
+</template>
+<template id="assets_snippet_s_badge_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_badge/000.scss"/>
+    </xpath>
+</template>
+
+</odoo>

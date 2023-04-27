@@ -1,0 +1,20 @@
+id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
+cashmove_user,"Cashmove user",model_lunch_cashmove,group_lunch_user,1,0,0,0
+cashmove_manager,"Cashmove user",model_lunch_cashmove,group_lunch_manager,1,1,1,1
+order_user,"Order Line user",model_lunch_order,group_lunch_user,1,1,1,1
+order_manager,"Order Line user",model_lunch_order,group_lunch_manager,1,1,1,1
+product_user,"Product user",model_lunch_product,group_lunch_user,1,0,0,0
+product_manager,"Product user",model_lunch_product,group_lunch_manager,1,1,1,1
+product_category_user,"Product category user",model_lunch_product_category,group_lunch_user,1,0,0,0
+product_category_manager,"Product category user",model_lunch_product_category,group_lunch_manager,1,1,1,1
+lunch_alert_access,access_lunch_alert_user,model_lunch_alert,base.group_user,1,0,0,0
+lunch_alert_user,access_lunch_alert_lunch_user,model_lunch_alert,group_lunch_user,1,1,1,1
+lunch_alert_manager,access_lunch_alert_manager,model_lunch_alert,group_lunch_manager,1,1,1,1
+lunch_cashmove_report_manager,access_lunch_cashmove_report,model_lunch_cashmove_report,base.group_user,1,0,0,0
+lunch_location_user,access_lunch_location,model_lunch_location,group_lunch_user,1,1,0,0
+lunch_location_manager,access_lunch_location,model_lunch_location,group_lunch_manager,1,1,1,1
+lunch_topping_user,access_lunch_topping,model_lunch_topping,group_lunch_user,1,0,0,0
+lunch_topping_manager,access_lunch_topping,model_lunch_topping,group_lunch_manager,1,1,1,1
+lunch_supplier_user,"Lunch Supplier User Rights",model_lunch_supplier,group_lunch_user,1,0,0,0
+lunch_supplier_manager,"Lunch Supplier Manager Rights",model_lunch_supplier,group_lunch_manager,1,1,1,1
+lunch_product_report_user,access_lunch_product_report,model_lunch_product_report,group_lunch_user,1,1,0,0

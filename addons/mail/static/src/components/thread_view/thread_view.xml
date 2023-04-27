@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadView" owl="1">
+        <div class="o_ThreadView" t-att-data-correspondent-id="threadView and threadView.thread and threadView.thread.correspondent and threadView.thread.correspondent.id" t-att-data-thread-local-id="threadView and threadView.thread and threadView.thread.localId">
+            <t t-if="threadView">
+                <t t-if="threadView.isLoading and !threadView.threadCache.isLoaded" name="loadingCondition">
+                    <div class="o_ThreadView_loading">
+                        <span><i class="o_ThreadView_loadingIcon fa fa-spinner fa-spin" title="Loading..." role="img"/>Loading...</span>
+                    </div>
+                </t>
+                <t t-elif="threadView.threadCache.isLoaded or threadView.thread.isTemporary">
+                    <MessageList
+                        class="o_ThreadView_messageList"
+                        getScrollableElement= "props.getScrollableElement"
+                        hasMessageCheckbox="props.hasMessageCheckbox"
+                        hasScrollAdjust="props.hasScrollAdjust"
+                        hasSquashCloseMessages="props.hasSquashCloseMessages"
+                        haveMessagesMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
+                        haveMessagesReplyIcon="props.haveMessagesReplyIcon"
+                        order="props.order"
+                        selectedMessageLocalId="props.selectedMessageLocalId"
+                        threadViewLocalId="threadView.localId"
+                        t-ref="messageList"
+                    />
+                </t>
+                <t t-elif="props.hasComposer">
+                    <div class="o-autogrow"/>
+                </t>
+                <t t-if="props.hasComposer">
+                    <Composer
+                        class="o_ThreadView_composer"
+                        attachmentsDetailsMode="props.composerAttachmentsDetailsMode"
+                        composerLocalId="threadView.thread.composer.localId"
+                        hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
+                        hasSendButton="props.hasComposerSendButton"
+                        hasThreadTyping="props.hasComposerThreadTyping"
+                        isCompact="(threadView.thread.model === 'mail.channel' and threadView.thread.mass_mailing) ? false : undefined"
+                        isDoFocus="props.isDoFocus"
+                        showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
+                        showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
+                        textInputSendShortcuts="threadView.textInputSendShortcuts"
+                        t-ref="composer"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

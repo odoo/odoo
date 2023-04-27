@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <template id="chat_room_join_button">
+        <div t-att-class="'o_wjitsi_room_widget %s' % (_classes or '')"
+            t-att-data-chat-room-id="chat_room_id"
+            t-att-data-room-name="room_name"
+            t-att-data-auto-open="auto_open"
+            t-att-data-check-full="check_full"
+            t-att-data-attach-to="attach_to"
+            t-att-data-default-username="default_username"
+            t-att-data-max-capacity="max_capacity"
+            t-att-data-jitsi-server="jitsi_server_domain">
+            <button class="o_wjitsi_room_link btn btn-primary">Join the room</button>
+        </div>
+    </template>
+
+</data></odoo>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+         <record id="report_layout_background" model="report.layout">
+            <field name="name">Background</field>
+            <field name="sequence">5</field>
+            <field name="view_id" ref="web.external_layout_background"/>
+            <field name="image">/web/static/img/preview_background.png</field>
+            <field name="pdf">/web/static/pdf/preview_background.pdf</field>
+        </record>
+
+        <record id="report_layout_standard" model="report.layout">
+            <field name="name">Light</field>
+            <field name="sequence">2</field>
+            <field name="view_id" ref="web.external_layout_standard"/>
+            <field name="image">/web/static/img/preview_standard.png</field>
+            <field name="pdf">/web/static/pdf/preview_standard.pdf</field>
+        </record>
+
+        <record id="report_layout_boxed" model="report.layout">
+            <field name="name">Boxed</field>
+            <field name="sequence">3</field>
+            <field name="view_id" ref="web.external_layout_boxed"/>
+            <field name="image">/web/static/img/preview_boxed.png</field>
+            <field name="pdf">/web/static/pdf/preview_boxed.pdf</field>
+        </record>
+        <record id="report_layout_clean" model="report.layout">
+            <field name="name">Clean</field>
+            <field name="sequence">4</field>
+            <field name="view_id" ref="web.external_layout_clean"/>
+            <field name="image">/web/static/img/preview_clean.png</field>
+            <field name="pdf">/web/static/pdf/preview_clean.pdf</field>
+        </record>
+
+        <record id="asset_styles_company_report" model="ir.attachment">
+            <field name="datas" model="res.company" eval="obj()._get_asset_style_b64()"/>
+            <field name="mimetype">text/scss</field>
+            <field name="name">res.company.scss</field>
+            <field name="type">binary</field>
+            <field name="url">/web/static/src/scss/asset_styles_company_report.scss</field>
+        </record>
+
+    </data>
+</odoo>

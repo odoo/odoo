@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="acquirer_form_ogone" model="ir.ui.view">
+            <field name="name">acquirer.form.ogone</field>
+            <field name="model">payment.acquirer</field>
+            <field name="inherit_id" ref="payment.acquirer_form"/>
+            <field name="arch" type="xml">
+                <xpath expr='//group[@name="acquirer"]' position='inside'>
+                    <group attrs="{'invisible': [('provider', '!=', 'ogone')]}">
+                        <field name="ogone_pspid" attrs="{'required':[ ('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
+                        <field name="ogone_userid" attrs="{'required':[ ('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
+                        <field name="ogone_password" attrs="{'required':[ ('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
+                        <field name="ogone_shakey_in" attrs="{'required':[ ('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
+                        <field name="ogone_shakey_out" attrs="{'required':[ ('provider', '=', 'ogone'), ('state', '!=', 'disabled')]}"/>
+                        <field name="ogone_alias_usage"/>
+                    </group>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,98 @@
+<?xml version="1.0"?>
+<odoo>
+    <data noupdate="1">
+        <!--default alias for leads-->
+        <record id="mail_alias_lead_info" model="mail.alias">
+            <field name="alias_name"></field>
+            <field name="alias_model_id" ref="model_crm_lead"/>
+            <field name="alias_user_id" ref="base.user_admin"/>
+            <field name="alias_parent_model_id" ref="model_crm_team"/>
+        </record>
+
+        <!-- CRM-related subtypes for messaging / Chatter -->
+        <record id="mt_lead_create" model="mail.message.subtype">
+            <field name="name">Opportunity Created</field>
+            <field name="hidden" eval="True"/>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Lead/Opportunity created</field>
+        </record>
+        <record id="mt_lead_stage" model="mail.message.subtype">
+            <field name="name">Stage Changed</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Stage changed</field>
+        </record>
+        <record id="mt_lead_won" model="mail.message.subtype">
+            <field name="name">Opportunity Won</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Opportunity won</field>
+        </record>
+        <record id="mt_lead_lost" model="mail.message.subtype">
+            <field name="name">Opportunity Lost</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Opportunity lost</field>
+        </record>
+        <record id="mt_lead_restored" model="mail.message.subtype">
+            <field name="name">Opportunity Restored</field>
+            <field name="res_model">crm.lead</field>
+            <field name="default" eval="False"/>
+            <field name="description">Opportunity restored</field>
+        </record>
+        <!-- Salesteam-related subtypes for messaging / Chatter -->
+        <record id="mt_salesteam_lead" model="mail.message.subtype">
+            <field name="name">Opportunity Created</field>
+            <field name="sequence">10</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="True"/>
+            <field name="parent_id" ref="mt_lead_create"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_stage" model="mail.message.subtype">
+            <field name="name">Opportunity Stage Changed</field>
+            <field name="sequence">11</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" ref="mt_lead_stage"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_won" model="mail.message.subtype">
+            <field name="name">Opportunity Won</field>
+            <field name="sequence">12</field>
+            <field name="res_model">crm.team</field>
+            <field name="parent_id" ref="mt_lead_won"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_lost" model="mail.message.subtype">
+            <field name="name">Opportunity Lost</field>
+            <field name="sequence">13</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" ref="mt_lead_lost"/>
+            <field name="relation_field">team_id</field>
+        </record>
+        <record id="mt_salesteam_lead_restored" model="mail.message.subtype">
+            <field name="name">Opportunity Restored</field>
+            <field name="sequence">14</field>
+            <field name="res_model">crm.team</field>
+            <field name="default" eval="False"/>
+            <field name="parent_id" ref="mt_lead_restored"/>
+            <field name="relation_field">team_id</field>
+        </record>
+
+        <!--Definition of an email template with an empty body that will be used in opportunity mailing.
+            Used to give a basis for email recipients, name and to ease the definition of a further
+            elaborated template.  -->
+        <record id="email_template_opportunity_mail" model="mail.template">
+            <field name="name">Lead/Opportunity: Mass Mail</field>
+            <field name="model_id" ref="crm.model_crm_lead"/>
+            <field name="partner_to">${object.partner_id != False and object.partner_id.id}</field>
+            <field name="email_to">${(not object.partner_id and object.email_from)|safe}</field>
+            <field name="body_html"></field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    </data>
+</odoo>

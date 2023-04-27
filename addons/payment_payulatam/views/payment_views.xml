@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="payment_acquirer_form_inherit_payment_payulatam" model="ir.ui.view">
+        <field name="name">payment.acquirer.form.inherit.payment.payulatam</field>
+        <field name="model">payment.acquirer</field>
+        <field name="inherit_id" ref="payment.acquirer_form"/>
+        <field name="arch" type="xml">
+            <xpath expr='//group[@name="acquirer"]' position='inside'>
+                <group attrs="{'invisible': [('provider', '!=', 'payulatam')]}">
+                    <field name="payulatam_account_id" options="{'no_create': True}"/>
+                    <field name="payulatam_merchant_id"/>
+                    <field name="payulatam_api_key"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

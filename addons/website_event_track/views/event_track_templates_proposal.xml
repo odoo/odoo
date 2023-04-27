@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_track_proposal">
+    <t t-call="website_event.layout">
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_1"/>
+        <div class="container">
+            <section class="pt48">
+                <h1 class="o_page_header">Call for Proposals</h1>
+                <h2 class="text-center text-secondary font-weight-bold my-4" t-esc="event.name"/>
+            </section>
+            <section id="forms" t-if="not event.website_track_proposal">
+                <h1>Proposals are closed!</h1>
+                <p>
+                    This event does not accept proposals.
+                </p>
+            </section>
+            <section class="row">
+                <div class="col-lg-9">
+                    <div class="oe_structure">
+                        <section>
+                            <h3 class="o_page_header mt16">
+                                Introduction
+                            </h3>
+                            <p>
+                                We will accept a broad range of
+                                presentations, from reports on academic and
+                                commercial projects to tutorials and case
+                                studies. As long as the presentation is
+                                interesting and potentially useful to the
+                                audience, it will be considered for
+                                inclusion in the programme.
+                            </p>
+                        </section>
+                    </div>
+                    <div t-if="not track">
+                        <section class="mt-5">
+                            <h3 class="o_page_header">Application</h3>
+                            <p>
+                                Fill this form to propose your talk.
+                            </p>
+                            <div class="alert alert-info" role="alert">
+                                <i class="fa fa-info-circle"/>
+                                You can add multiple speakers by separating names, emails and phones with commas.
+                            </div>
+                        </section>
+                        <section id="forms" class="mb-5"
+                            t-if="event.website_track_proposal">
+                            <form class="mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="track_name">Talk Title</label>
+                                    <div class="col-lg-7 col-md-8">
+                                        <input type="text" class="form-control" name="track_name" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="description">Talk Introduction</label>
+                                    <div class="col-lg-7 col-md-8">
+                                        <textarea  class="form-control" name="description"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row" t-if="len(event.allowed_track_tag_ids)">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="phone">Tags</label>
+                                    <div class="col-lg-9 col-md-8">
+                                        <div class="row">
+                                            <label class="col-md-4" t-foreach="event.allowed_track_tag_ids" t-as="tag">
+                                                <input type="checkbox" value="1" t-attf-name="tag_#{str(tag.id)}"/>
+                                                <t t-esc="tag.name"/>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="partner_name">Speaker(s) Name</label>
+                                    <div class="col-lg-7 col-md-8">
+                                        <input type="text" class="form-control" name="partner_name" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="email_from">Speaker(s) Email</label>
+                                    <div class="col-lg-7 col-md-8">
+                                        <input type="email" class="form-control" name="email_from" required="True" multiple="multiple"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="phone">Speaker(s) Phone</label>
+                                    <div class="col-lg-7 col-md-8">
+                                        <input type="text" class="form-control" name="phone" required="True"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="biography">Speaker(s) Biography</label>
+                                    <div class="col-lg-7 col-md-8">
+                                        <textarea  class="form-control" name="biography" rows="5"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-lg-3 col-md-4 col-form-label" for="image">Speaker(s) Picture</label>
+                                    <div class="col-lg-7 col-md-8">
+                                        <input name="image" type="file" accept="image/*"/>
+                                    </div>
+                                </div>
+                                <div class="form-group row o_form_buttons">
+                                    <div class="offset-lg-3 offset-md-4 col-md-8 col-lg-7">
+                                        <button type="submit" class="btn btn-primary">Submit Proposal</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </section>
+                    </div>
+                    <div t-else="">
+                        <t t-call="website_event_track.event_track_proposal_success"/>
+                    </div>
+                    <div class="oe_structure" id="oe_structure_website_event_track_proposal_2"/>
+                </div>
+                <div class="col-lg-3">
+                    <div class="card mb-3 bg-secondary">
+                        <h4 class="card-header">Talks Types</h4>
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li>
+                                    <strong>Regular Talks</strong>. These are standard talks with slides,
+                                    alocated in slots of 60 minutes.
+                                </li><li>
+                                    <strong>Lightning Talks</strong>. These are 30 minutes talks on many
+                                    different topics. Most topics are accepted in lightning talks.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="card bg-secondary">
+                        <h4 class="card-header">Submission Agreement</h4>
+                        <div class="card-body">
+                            <p>
+                            We require speakers to accept an agreement in which they commit to:
+                            </p>
+                            <ul class="list-unstyled">
+                                <li>
+                                    Timely release of presentation material (slides),
+                                    for publishing on our website.
+                                </li><li>
+                                    Allow video and audio recording of their
+                                    presentation, for publishing on our website.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="oe_structure" id="oe_structure_website_event_track_proposal_3"/>
+    </t>
+</template>
+
+<template id="event_track_proposal_success">
+    <section class="mt-5">
+        <h3 class="o_page_header">Application</h3>
+        <p>
+            Thank you for your proposal.
+        </p><p>
+            We will evaluate your proposition and get back to you shortly.
+        </p>
+    </section>
+</template>
+
+</odoo>

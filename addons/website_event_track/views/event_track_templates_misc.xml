@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_layout" inherit_id="website_event.layout">
+    <xpath expr="//div[@id='wrap']" position="attributes">
+        <attribute name="t-attf-class">o_wevent_event js_event #{'o_wevent_hide_sponsors' if hide_sponsors else ''}</attribute>
+    </xpath>
+</template>
+
+<template name="Sponsors" id="event_sponsor" customize_show="True" inherit_id="website_event.layout">
+    <xpath expr="//div[@id='wrap']" position="inside">
+        <div class="container mt32 mb16 d-none d-md-block d-print-none" t-if="event.sponsor_ids">
+            <div t-attf-class="d-flex flex-wrap mb-5 #{'' if (len(event.sponsor_ids) > 10) else 'justify-content-md-center'}">
+                <t t-foreach="event.sponsor_ids" t-as="sponsor">
+                    <t t-if="sponsor.url">
+                        <a class="o_wevent_sponsor o_wevent_sponsor_card" target="_blank" t-att-href="sponsor.url">
+                            <div class="h-100 shadow-sm p-2">
+                                <span t-field="sponsor.image_128"
+                                    t-options='{"widget": "image", "class": "img img-fluid"}'/>
+                                <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                                      t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
+                            </div>
+                        </a>
+                    </t>
+                    <t t-if="not sponsor.url">
+                        <div class="o_wevent_sponsor o_wevent_sponsor_card">
+                            <div class="h-100 shadow-sm p-2">
+                                <span t-field="sponsor.image_128"
+                                    t-options='{"widget": "image", "class": "img img-fluid"}'/>
+                                <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                                      t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<!-- Chatter templates -->
+<template id="event_track_template_new">
+    <p>New track proposal <a href="#" t-att-data-oe-model="track._name" t-att-data-oe-id="track.id"> <t t-esc="track.name"/></a></p>
+    <ul>
+        <li><b>Proposed By</b>: <t t-esc="track.partner_name or track.partner_email"/></li>
+        <li><b>Mail</b>: <a t-attf-href="mailto:#{track.partner_email}"><t t-esc="track.partner_email"/></a></li>
+        <li><b>Phone</b>: <t t-esc="track.partner_phone"/></li>
+        <li><b>Speakers Biography</b>: <div t-field="track.partner_biography"/></li>
+        <li><b>Talk Introduction</b>: <div t-field="track.description"/></li>
+    </ul>
+</template>
+
+</odoo>

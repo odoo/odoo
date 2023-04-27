@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="website.cookies_bar.text_title">
+        <h3 class="o_cookies_bar_text_title">
+            Respecting your privacy is our priority.
+        </h3>
+    </t>
+    <t t-name="website.cookies_bar.text_primary">
+        <p class="o_cookies_bar_text_primary">
+            We use cookies to provide you a better user experience.
+        </p>
+    </t>
+    <t t-name="website.cookies_bar.text_secondary">
+        <p class="o_cookies_bar_text_secondary">
+            We use them to store info about your habits on our website. It will helps us to provide you the very best experience and customize what you see. <br/>
+            By clicking on this banner, you give us permission to collect data.
+        </p>
+    </t>
+    <t t-name="website.cookies_bar.discrete">
+        <section class="o_colored_level o_cc o_cc1">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 pt16">
+                        <p>We use cookies to provide you a better user experience.</p>
+                    </div>
+                    <div class="col-lg-4 pt16 text-right">
+                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-sm">Cookie Policy</a>
+                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-sm">I agree</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+    <t t-name="website.cookies_bar.classic">
+        <section class="o_colored_level o_cc o_cc1 pt32 pb16">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-6">
+                        <t t-call="website.cookies_bar.text_title"/>
+                        <t t-call="website.cookies_bar.text_primary"/>
+                        <t t-call="website.cookies_bar.text_secondary"/>
+                    </div>
+                    <div class="col-lg-3 offset-lg-3">
+                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary btn-block">I agree</a>
+                        <a href="/cookie-policy" class="o_cookies_bar_text_policy btn btn-link btn-block">Cookie Policy</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+    <t t-name="website.cookies_bar.popup">
+        <section class="o_colored_level o_cc o_cc1 p-5">
+            <div class="container text-center">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <img t-attf-src="/web/image/website/#{websiteId}/logo/250x250" class="img img-fluid mb-4" alt="Website Logo"/>
+                        <t t-call="website.cookies_bar.text_title"/>
+                        <t t-call="website.cookies_bar.text_primary"/>
+                        <t t-call="website.cookies_bar.text_secondary"/>
+                        <a href="/cookie-policy" class=" o_cookies_bar_text_policy btn btn-link mr-2">Cookie Policy</a>
+                        <a href="#" role="button" class="js_close_popup o_cookies_bar_text_button btn btn-primary">I agree</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </t>
+</templates>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_exhibitors" name="Event Exhibitors">
+    <t t-call="website_event.layout">
+        <div class="o_wevent_online o_wevent_online_bg o_wesponsor_index">
+            <!-- Topbar -->
+            <t t-call="website_event_track_exhibitor.exhibitors_topbar"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div class="o_wesponsor_container container">
+                <div class="row">
+                    <t t-call="website_event_track_exhibitor.exhibitors_search"/>
+                </div>
+                <div class="row">
+                    <t t-call="website_event_track_exhibitor.exhibitors_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_2" class="oe_structure mb-5"/>
+        </div>
+    </t>
+</template>
+
+<!-- ============================================================ -->
+<!-- TOPBAR: BASE NAVIGATION -->
+<!-- ============================================================ -->
+
+<!-- TOPBAR: BASE NAVIGATION -->
+
+<!-- Main topbar -->
+<template id="exhibitors_topbar"
+    name="Exhibitor Tools">
+    <nav class="navbar navbar-light border-top shadow-sm d-print-none">
+        <div class="container">
+            <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
+                <ul class="o_wesponsor_topbar_filters o_wevent_index_topbar_filters nav"/>
+                <div class="d-flex align-items-center flex-wrap pl-sm-3 pr-0">
+                    <t t-call="website_event.events_search_box">
+                        <t t-set="_searches" t-value="searches"/>
+                        <t t-set="action" t-value="'/event/%s/exhibitors' % (slug(event))"/>
+                        <t t-set="_placeholder" t-value="'Search an exhibitor ...'"/>
+                    </t>
+                </div>
+            </div>
+        </div>
+    </nav>
+</template>
+
+<!-- Topbar: optional country filters -->
+<template id="exhibitors_topbar_country"
+    inherit_id="website_event_track_exhibitor.exhibitors_topbar"
+    name="Filter by Country"
+    active="True"
+    customize_show="True">
+    <xpath expr="//ul[hasclass('o_wesponsor_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-folder-open"/>
+                By Country
+            </a>
+            <div class="dropdown-menu">
+                <a t-att-href="'/event/%s/exhibitors?%s' % (slug(event), keep_query('*', countries=''))"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if not search_countries else ''}">
+                    All Countries
+                </a>
+                <t t-foreach="sponsor_countries" t-as="sponsor_country">
+                    <a t-att-href="'/event/%s/exhibitors?%s' % (
+                            slug(event),
+                            keep_query('*', countries=str((search_countries - sponsor_country).ids if sponsor_country in search_countries else (sponsor_country | search_countries).ids))
+                        )"
+                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if sponsor_country in search_countries else ''}">
+                        <t t-esc="sponsor_country.name"/>
+                    </a>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- Topbar: optional sponsorship filters -->
+<template id="exhibitors_topbar_sponsorship"
+    inherit_id="website_event_track_exhibitor.exhibitors_topbar"
+    name="Filter by Sponsorship"
+    active="True"
+    customize_show="True">
+    <xpath expr="//ul[hasclass('o_wesponsor_topbar_filters')]" position="inside">
+        <li class="nav-item dropdown mr-2 my-1">
+            <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                <i class="fa fa-folder-open"/>
+                By Sponsorship
+            </a>
+            <div class="dropdown-menu">
+                <a t-att-href="'/event/%s/exhibitors?%s' % (slug(event), keep_query('*', sponsorships=''))"
+                    t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if not search_sponsorships else ''}">
+                    All Sponsorships
+                </a>
+                <t t-foreach="sponsor_types" t-as="sponsor_type">
+                    <a t-att-href="'/event/%s/exhibitors?%s' % (
+                            slug(event),
+                            keep_query('*', sponsorships=str((search_sponsorships - sponsor_type).ids if sponsor_type in search_sponsorships else (sponsor_type | search_sponsorships).ids))
+                        )"
+                        t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if sponsor_type in search_sponsorships else ''}">
+                        <t t-esc="sponsor_type.name"/>
+                    </a>
+                </t>
+            </div>
+        </li>
+    </xpath>
+</template>
+
+<!-- ============================================================ -->
+<!-- CONTENT: MAIN TEMPLATES -->
+<!-- ============================================================ -->
+
+<!-- Exhibitors Main Display -->
+<template id="exhibitors_main" name="Exhibitors: Main Display">
+    <!-- No exhibitors -->
+    <t t-if="not sponsor_categories">
+        <div class="col-12">
+            <div class="h2 mb-3">No exhibitor found.</div>
+            <div t-if="search_key" class="alert alert-info text-center">
+                <p class="m-0">We did not find any exhibitor matching your <strong t-esc="search_key"/> search.</p>
+            </div>
+            <div t-else="" class="alert alert-info text-center" groups="event.group_event_manager">
+                <p class="m-0">Add some exhibitors to get started !</p>
+            </div>
+        </div>
+    </t>
+    <!-- Cards -->
+    <div class="col-12" t-call="website_event_track_exhibitor.exhibitors_display_cards"/>
+</template>
+
+<!-- Exhibitors: Cards-based display -->
+<template id="exhibitors_display_cards" name="Exhibitors Cards">
+    <div t-foreach="sponsor_categories" t-as="sponsor_category" class="row mb-3">
+        <div class="col-12">
+            <h2 class="m-0" t-esc="sponsor_category['sponsorship'].name"/>
+            <hr class="mt-2 pb-1 mb-1"/>
+        </div>
+        <div t-foreach="sponsor_category['sponsors']" t-as="sponsor" class="col-md-6 col-lg-3 mb-4">
+            <t t-call="website_event_track_exhibitor.exhibitor_card"/>
+        </div>
+    </div>
+</template>
+
+<!-- ============================================================ -->
+<!-- TOOL TEMPLATES -->
+<!-- ============================================================ -->
+
+<template id="exhibitor_card" name="Exhibitor Card">
+    <article t-att-class="'h-100 card border-0 shadow-sm o_wesponsor_card %s' % ('o_wesponsor_card_unpublished' if not sponsor.is_published else '')"
+        itemscope="itemscope" itemtype="http://schema.org/Event">
+        <div class="h-100 row no-gutters">
+            <t t-set="sponsor_image_url" t-value="sponsor.website_image_url"/>
+            <header t-att-class="'overflow-hidden col-12 rounded-top position-static %s' % ('bg-secondary' if not sponsor_image_url else '')">
+
+                <small t-if="not sponsor.is_published" class="o_wesponsor_card_header_badge bg-danger">
+                    <i class="fa fa-ban mr-2"/>Unpublished
+                </small>
+
+                <div t-att-data-sponsor-url="sponsor.website_url" class="o_wesponsor_js_connect"
+                     t-attf-data-register-url="/event/#{slug(event)}/register?from_sponsor_id=#{sponsor.id}"
+                     t-att-data-is-participating="event.is_participating"
+                     t-att-data-sponsor-id="sponsor.id"
+                     t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
+                     t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours"
+                     t-att-data-user-event-manager="user_event_manager">
+                    <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
+                        t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
+                        <div class="o_wesponsor_connect_button">
+                            <a href="#" class="btn btn-primary h3">
+                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                    Register
+                                </t>
+                                <t t-else="">Connect</t>
+                            </a>
+                        </div>
+                        <img class="position-absolute mr-2 mt-2"
+                            style="right: 0; top: 0; max-height: 20px;"
+                            t-if="sponsor.partner_id.country_id"
+                            t-att-src="sponsor.partner_id.country_id.image_url"
+                            t-att-alt="sponsor.partner_id.country_id.name"/>
+                    </div>
+                    <div t-else="" class="o_wesponsor_gradient card-img-top position-relative"
+                        style="padding-top: 50%">
+                        <div class="o_wesponsor_connect_button">
+                            <a href="#" class="btn btn-primary h3">
+                                <t t-if="not user_event_manager and not sponsor.event_id.is_ongoing and not event.is_participating">
+                                    Register
+                                </t>
+                                <t t-else="">Connect</t>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <div class="col-12">
+                <main class="card-body h-100">
+                    <!-- Title -->
+                    <h5 class="card-title mt-0 mb-0 text-truncate d-flex align-items-top">
+                        <span t-field="sponsor.name" itemprop="name"/>
+                        <span t-if="sponsor.is_in_opening_hours and sponsor.chat_room_id"
+                            class="ml-auto badge badge-danger">Live
+                        </span>
+                    </h5>
+                    <!-- Catchy sentence -->
+                    <span class="text-muted" t-esc="sponsor.subtitle"/>
+                </main>
+            </div>
+        </div>
+    </article>
+</template>
+
+<!-- Searched terms -->
+<template id="exhibitors_search" name="Exhibitors: search terms">
+    <div class="d-flex align-items-center mb-3">
+        <t t-foreach="search_countries" t-as="country">
+            <span class="align-items-baseline border d-inline-flex pl-2 mt-3 rounded ml16 mb-2 bg-white">
+                <i class="fa fa-tag mr-2 text-muted"/>
+                <t t-esc="country.display_name"/>
+                <a t-att-href="'/event/%s/exhibitors?%s' % (
+                    slug(event),
+                    keep_query('*', countries=str((search_countries - country).ids)))"
+                    class="btn border-0 py-1">&#215;</a>
+            </span>
+        </t>
+        <t t-foreach="search_sponsorships" t-as="sponsorship">
+            <span class="align-items-baseline border d-inline-flex pl-2 mt-3 rounded ml16 mb-2 bg-white">
+                <i class="fa fa-tag mr-2 text-muted"/>
+                <t t-esc="sponsorship.display_name"/>
+                <a t-att-href="'/event/%s/exhibitors?%s' % (
+                    slug(event),
+                    keep_query('*', sponsorships=str((search_sponsorships - sponsorship).ids)))"
+                    class="btn border-0 py-1">&#215;</a>
+            </span>
+        </t>
+    </div>
+</template>
+
+</odoo>

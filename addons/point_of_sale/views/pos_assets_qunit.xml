@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="point_of_sale.qunit_suite_assets">
+    <t t-call-assets="point_of_sale.pos_assets_backend" t-js="false"/>
+
+    <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
+    <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
+
+    <style>
+        body {
+            position: relative;
+        }
+        body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
+            opacity: 0 !important;
+        }
+        #qunit-testrunner-toolbar label {
+            font-weight: inherit;
+            margin-bottom: inherit;
+        }
+        #qunit-testrunner-toolbar input[type=text] {
+            width: inherit;
+            display: inherit;
+        }
+    </style>
+
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_control_panel.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_file.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
+    <script type="text/javascript" src="/web/static/tests/helpers/test_env.js"></script>
+
+    <script type="text/javascript" src="/web/static/tests/component_extension_tests.js"></script>
+    <script type="text/javascript" src="/web/static/tests/boot_tests.js"></script>
+
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/helpers/test_env.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/helpers/test_main.js"></script>
+</template>
+
+<template id="point_of_sale.qunit_suite_tests">
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/test_ComponentRegistry.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/test_NumberBuffer.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/test_ChromeWidgets.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/test_ProductScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/test_PaymentScreen.js"></script>
+    <script type="text/javascript" src="/point_of_sale/static/tests/unit/test_popups.js"></script>
+</template>
+
+<template id="point_of_sale.qunit_suite">
+    <t t-call="web.layout">
+        <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
+        <t t-set="title">Point of Sale Tests</t>
+        <t t-set="head">
+            <!-- we need session_info in order to properly instantiate PosModel -->
+            <script type="text/javascript">
+                var odoo = <t t-raw="json.dumps({
+                    'csrf_token': request.csrf_token(None),
+                    'session_info': session_info,
+                    'debug': debug,
+                })"/>;
+            </script>
+
+            <t t-call="point_of_sale.assets_common" />
+            <t t-call="point_of_sale.qunit_suite_assets" />
+            <t t-call="point_of_sale.qunit_suite_tests" />
+        </t>
+
+        <div id="qunit"/>
+        <div id="qunit-fixture"/>
+    </t>
+</template>
+
+</odoo>

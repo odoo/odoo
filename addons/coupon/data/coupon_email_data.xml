@@ -1,0 +1,117 @@
+<?xml version="1.0" ?>
+<odoo>
+   <data noupdate="1">
+      <record id="coupon.mail_template_sale_coupon" model="mail.template">
+         <field name="name">Coupon: Send by Email</field>
+         <field name="model_id" ref="coupon.model_coupon_coupon"/>
+         <field name="subject">Your reward coupon from ${object.program_id.company_id.name} </field>
+         <field name="email_from">${object.program_id.company_id.email | safe}</field>
+         <field name="partner_to">${object.order_id.partner_id.id or object.partner_id.id}</field>
+         <field name="lang">${object.partner_id.lang}</field>
+         <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="width:100%; margin:0px auto;"><tbody>
+    <tr><td valign="top" style="text-align: center; font-size: 14px;">
+        % if object.partner_id.name:
+        Congratulations ${object.partner_id.name},<br />
+        % endif
+
+        Here is your reward from ${object.program_id.company_id.name}.<br />
+
+        % if object.program_id.reward_type == 'discount':
+            % if object.program_id.discount_type == 'fixed_amount':
+            <span style="font-size: 50px; color: #875A7B; font-weight: bold;">
+                ${'%s' % format_amount(object.program_id.discount_fixed_amount, object.program_id.currency_id)}
+            </span><br />
+            <strong style="font-size: 24px;">off on your next order</strong><br />
+            %else
+            <span style="font-size: 50px; color: #875A7B; font-weight: bold;">
+                ${object.program_id.discount_percentage} %
+            </span>
+            % if object.program_id.discount_apply_on == 'specific_products'
+                <br />
+                % if len(object.program_id.discount_specific_product_ids) != 1
+                % set display_specific_products = True
+                <strong style="font-size: 24px;">
+                    on some products*
+                </strong>
+                % else
+                <strong style="font-size: 24px;">
+                    ${'on %s' % object.program_id.discount_specific_product_ids.name}
+                </strong>
+                % endif
+            % elif object.program_id.discount_apply_on == 'cheapest_product':
+            <br /><strong style="font-size: 24px;">
+                off on the cheapest product
+            </strong>
+            % else
+            <br /><strong style="font-size: 24px;">
+                off on your next order
+            </strong>
+            % endif
+            <br />
+            % endif
+        % elif object.program_id.reward_type == 'product':
+            <span style="font-size: 36px; color: #875A7B; font-weight: bold;">
+                ${'get %s free %s' % (object.program_id.reward_product_quantity, object.program_id.reward_product_id.name)}
+            </span><br />
+            <strong style="font-size: 24px;">on your next order</strong><br />
+        % elif object.program_id.reward_type == 'free_shipping':
+            <span style="font-size: 36px; color: #875A7B; font-weight: bold;">
+                get free shipping
+            </span><br />
+            <strong style="font-size: 24px;">on your next order</strong><br />
+        % endif
+    </td></tr>
+    <tr style="margin-top: 16px"><td valign="top" style="text-align: center; font-size: 14px;">
+        Use this promo code
+        % if object.expiration_date:
+            before ${object.expiration_date}
+        % endif
+        <p style="margin-top: 16px;">
+            <strong style="padding: 16px 8px 16px 8px; border-radius: 3px; background-color: #F1F1F1;">
+                ${object.code}
+            </strong>
+        </p>
+        % if object.program_id.rule_min_quantity not in [0, 1]
+        <span style="font-size: 14px;">
+            Minimum purchase of ${object.program_id.rule_min_quantity} products
+        </span><br />
+        % endif
+        % if object.program_id.rule_minimum_amount != 0.00
+        <span style="font-size: 14px;">
+            Valid for purchase above ${object.program_id.company_id.currency_id.symbol}${'%0.2f' % object.program_id.rule_minimum_amount |float}
+        </span><br />
+        % endif
+        % if display_specific_products
+        <span>
+            *Valid for following products: ${', '.join(object.program_id.discount_specific_product_ids.mapped('name'))}
+        </span><br />
+        % endif
+        <br/>
+        Thank you,
+        % if object.order_id.user_id.signature:
+            <br />
+            ${object.order_id.user_id.signature | safe}
+        % endif
+    </td></tr>
+</tbody></table>
+            </field>
+            <field name="report_template" ref="report_coupon_code"/>
+            <field name="report_name">Your Coupon Code</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+      </record>
+
+        <record id="expire_coupon_cron" model="ir.cron">
+            <field name="name">Coupon: expire coupon based on date</field>
+            <field name="model_id" ref="coupon.model_coupon_coupon"/>
+            <field name="state">code</field>
+            <field name="code">model.cron_expire_coupon()</field>
+            <field name="active" eval="True"/>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">days</field>
+            <field name="numbercall">-1</field>
+        </record>
+   </data>
+</odoo>

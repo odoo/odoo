@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_backorder_confirmation" model="ir.ui.view">
+        <field name="name">stock_backorder_confirmation</field>
+        <field name="model">stock.backorder.confirmation</field>
+        <field name="arch" type="xml">
+            <form string="Backorder creation">
+                <group>
+                    <p>
+                        You have processed less products than the initial demand.
+                    </p><p class="text-muted">
+                        Create a backorder if you expect to process the remaining
+                        products later. Do not create a backorder if you will not
+                        process the remaining products.
+                    </p>
+                </group>
+
+                <!-- Added to ensure a correct default_get behavior
+
+                The wizard is always opened with default_pick_ids values in context,
+                which are used to generate the backorder_confirmation_line_ids.
+
+                To ensure default_pick_ids is correctly converted from the context
+                by default_get, the field has to be present in the view.
+                -->
+                <field name="pick_ids" invisible="1"/>
+
+                <field name="show_transfers" invisible="1"/>
+                <field name="backorder_confirmation_line_ids" nolabel="1" attrs="{'invisible': [('show_transfers', '=', False)]}">>
+                    <tree create="0" delete="0" editable="top">
+                        <field name="picking_id"/>
+                        <field name="to_backorder" widget="boolean_toggle"/>
+                    </tree>
+                </field>
+
+                <footer>
+                    <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
+                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_transfers', '=', True)]}"/>
+                    <button string="_Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

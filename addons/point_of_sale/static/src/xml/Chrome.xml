@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="Chrome" owl="1">
+        <div class="pos" t-att-class="{ 'big-scrollbars': state.hasBigScrollBars }">
+            <div class="pos-receipt-print"></div>
+            <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
+                <div t-if="tempScreen.isShown" class="block-top-header" />
+                <div class="pos-branding" t-if= "!env.isMobile">
+                    <img class="pos-logo" t-on-click="trigger('toggle-debug-widget')"
+                         src="/point_of_sale/static/src/img/logo.png" alt="Logo" />
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" />
+                </div>
+                <div class="pos-rightheader">
+                    <TicketButton isTicketScreenShown="isTicketScreenShown" t-if="env.isMobile" />
+                    <div class="search-bar-portal" />
+                    <div class="status-buttons-portal" />
+                </div>
+            </div>
+            <t t-if="state.uiState === 'READY'">
+                <Portal target="'.pos .status-buttons-portal'">
+                    <div class="status-buttons">
+                        <t t-if="!env.isMobile">
+                            <CashierName />
+                        </t>
+                        <OrderManagementButton t-if="env.pos.config.manage_orders" />
+                        <SaleDetailsButton t-if="env.pos.proxy.printer" />
+                        <ProxyStatus t-if="env.pos.config.use_proxy" />
+                        <ClientScreenButton t-if="clientScreenButtonIsShown" />
+                        <SyncNotification />
+                        <HeaderButton />
+                    </div>
+                </Portal>
+                <div class="pos-content">
+                    <div class="window">
+                        <div class="subwindow">
+                            <div class="subwindow-container">
+                                <div class="subwindow-container-fix screens">
+                                    <t isShown="!tempScreen.isShown" t-component="mainScreen.component"
+                                       t-props="mainScreenProps" t-key="mainScreen.name" />
+                                    <t t-if="tempScreen.isShown" t-component="tempScreen.component"
+                                       t-props="tempScreenProps" t-key="tempScreen.name" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <DebugWidget t-if="env.isDebug() and state.debugWidgetIsShown"
+                                 t-transition="fade" />
+                </div>
+            </t>
+
+            <div t-if="['LOADING', 'CLOSING'].includes(state.uiState)" class="loader" t-transition="swing">
+                <div class="loader-feedback">
+                    <h1 class="message">
+                        <t t-esc="loading.message" />
+                    </h1>
+                    <div class="progressbar">
+                        <div class="progress" t-ref="progressbar"></div>
+                    </div>
+                    <div t-if="loading.skipButtonIsShown" class="button skip" t-on-click="trigger('loading-skip-callback')">
+                        Skip
+                    </div>
+                </div>
+            </div>
+
+            <!-- Allow popups to be visible at any state of the ui. -->
+            <div t-if="popup.isShown" class="popups">
+                <t t-component="popup.component" t-props="popupProps"
+                   t-key="popup.name" />
+            </div>
+
+            <NotificationSound t-if="state.sound.src" sound="state.sound" />
+        </div>
+    </t>
+
+    <t t-name="CustomerFacingDisplayHead">
+        <div class="resources">
+            <base t-att-href="origin" />
+            <link href="/point_of_sale/static/src/css/customer_facing_display.css"
+                  rel="stylesheet" />
+            <script type="text/javascript">
+                // This function needs to be named that way, call it the foreign JS API
+                // The iotbox will execute it, with the behavior intended
+                function foreign_js() {
+                    if ($('.pos-adv').hasClass('pos-hidden')) {
+                        $('.pos-customer_facing_display').addClass('pos-js_no_ADV');
+                    }
+                    $(window).on('resize', function () {
+                        $('.pos-customer_facing_display').toggleClass('pos-js_no_ADV', $('.pos-adv').hasClass('pos-hidden'));
+                    }).trigger('resize');
+                };
+            </script>
+        </div>
+    </t>
+
+    <t t-name="CustomerFacingDisplayOrderLines">
+        <t t-foreach="orderlines" t-as="orderline">
+            <div class="pos_orderlines_item">
+                <div>
+                    <div t-attf-style="background-image:url(#{orderline.product.image_base64})" />
+                </div>
+                <div>
+                    <t t-esc="orderline.get_full_product_name()" />
+                </div>
+                <div>
+                    <t t-esc="orderline.get_quantity_str()" />
+                </div>
+                <div>
+                    <t t-esc="pos.format_currency(orderline.get_display_price())" />
+                </div>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="CustomerFacingDisplayPaymentLines">
+        <t t-foreach="order.get_paymentlines()" t-as="paymentline">
+            <div>
+                <span>
+                    <t t-esc="paymentline.name" /></span>
+            </div>
+            <div>
+                <span>
+                    <t t-esc="pos.format_currency(paymentline.get_amount())" /></span>
+            </div>
+        </t>
+        <t t-if="order.get_paymentlines().length > 0">
+            <div>
+                <span class="pos-change_title">Change:</span>
+            </div>
+            <div>
+                <span class="pos-change_amount">
+                    <t t-esc="pos.format_currency(order.get_change())" /></span>
+            </div>
+        </t>
+    </t>
+</templates>

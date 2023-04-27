@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- QWeb Reports -->
+        <record id="certification_report" model="ir.actions.report">
+            <field name="name">Certifications</field>
+            <field name="model">survey.user_input</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">survey.certification_report_view</field>
+            <field name="report_file">survey.certification_report_view</field>
+            <field name="print_report_name">'Certification - %s' % (object.survey_id.display_name)</field>
+            <field name="attachment">'certification.pdf'</field>
+            <field name="binding_model_id" ref="model_survey_user_input"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

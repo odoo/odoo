@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-extend="website.slide.channel.create">
+        <t t-jquery="#communication-label" t-operation="replace">
+            <label id="communication-label">Communication</label>
+        </t>
+        <t t-jquery=".o_wslide_channel_communication_type" t-operation="append">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="link_forum" name="link_forum"/>
+                <span class="form-check-label" for="link_forum">Create a Forum</span>
+            </div>
+        </t>
+    </t>
+</templates>

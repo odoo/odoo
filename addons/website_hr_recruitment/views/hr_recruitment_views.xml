@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_hr_recruitment_tree_url" model="ir.ui.view" >
+        <field name="name">hr.recruitment.tree.inherit.url</field>
+        <field name="model">hr.recruitment.source</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_recruitment_source_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='email']" position="before">
+                <field name="url" widget="url"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_hr_job_form_website_published_button" model="ir.ui.view" >
+        <field name="name">hr.job.form.inherit.published.button</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr_recruitment.hr_job_survey"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <field name="is_published" widget="website_redirect_button"/>
+            </div>
+        </field>
+    </record>
+
+    <record id="view_hr_job_form_inherit_website" model="ir.ui.view">
+        <field name="name">hr.job.form</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_form"/>
+        <field name="arch" type="xml">
+            <field name="company_id" position="after">
+                <field name="website_id" options="{'no_create': True}" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_hr_job_tree_inherit_website" model="ir.ui.view">
+        <field name="name">hr.job.tree</field>
+        <field name="model">hr.job</field>
+        <field name="inherit_id" ref="hr.view_hr_job_tree"/>
+        <field name="arch" type="xml">
+            <field name="department_id" position="after">
+                <field name="website_id" groups="website.group_multi_website"/>
+            </field>
+        </field>
+    </record>
+</odoo>

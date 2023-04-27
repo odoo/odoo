@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_account_payment_register_form_inherit_payment" model="ir.ui.view">
+            <field name="name">account.payment.register.form.inherit.payment</field>
+            <field name="model">account.payment.register</field>
+            <field name="inherit_id" ref="account.view_account_payment_register_form"/>
+            <field name="arch" type="xml">
+                <field name="payment_method_id" position="after">
+                    <!-- Invisible fields -->
+                    <field name="payment_method_code" invisible="1"/>
+                    <field name="suitable_payment_token_partner_ids" invisible="1"/>
+
+                    <field name="payment_token_id"
+                           options="{'no_create': True}"
+                           attrs="{'invisible': ['|', ('payment_method_code', '!=', 'electronic'), '|', ('can_edit_wizard', '=', False), '&amp;', ('can_group_payments', '=', True), ('group_payment', '=', False)]}"/>
+                </field>
+            </field>
+        </record>
+
+    </data>
+</odoo>

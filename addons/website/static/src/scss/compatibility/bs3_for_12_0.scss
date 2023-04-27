@@ -1,0 +1,355 @@
+/**
+ * This file's purpose is to *ease* migration from 11.0.
+ */
+
+// Restore gray utilities
+$-compat-gray-map: (
+    'gray-darker': '900',
+    'gray-dark': '900',
+    'gray': '700',
+    'gray-light': '600',
+    'gray-lighter': '200',
+) !default;
+@each $old, $new in $-compat-gray-map {
+    @if not map-has-key($grays, $old) {
+        @include bg-variant(".bg-#{$old}", gray($new));
+        @include text-emphasis-variant(".text-#{$old}", gray($new));
+    }
+}
+
+// Restore media ?
+
+// Restore progress bars
+@each $color, $value in $theme-colors {
+    @include bg-variant(".progress-bar-#{$color}", $value);
+}
+
+// Adapt radio ?
+
+// Adapt labels
+.label {
+    @extend .badge;
+}
+@each $color, $value in $theme-colors {
+    .label-#{$color} {
+        @include badge-variant($value);
+    }
+}
+.label-default {
+    @include badge-variant(theme-color('secondary'));
+}
+
+// Adapt center-block
+.center-block {
+    display: block;
+    margin: auto;
+}
+
+// Adapt pull-* classes
+.pull-left {
+    float: left;
+}
+.pull-right {
+    float: right;
+}
+
+// Adapt pagination
+.pagination > li {
+    @extend .page-item;
+    > a {
+        @extend .page-link;
+    }
+}
+
+// Adapt carousel
+.carousel .item {
+    @extend .carousel-item;
+}
+
+// Adapt checkboxes ?
+
+// Adapt tables
+.table-condensed {
+    @extend .table-sm;
+}
+
+// Adapt forms
+.control-label {
+    @extend .col-form-label;
+}
+.help-block {
+    @extend .form-text;
+}
+.has-error .form-control {
+    @extend .is-invalid;
+}
+.has-success .form-control {
+    @extend .is-valid;
+}
+.form-horizontal .form-group {
+    @extend .row;
+}
+
+// Adapt list-inline
+.list-inline > li {
+    @extend .list-inline-item;
+}
+
+// Adapt list-group
+.panel .list-group {
+    @extend .list-group-flush;
+}
+
+// Adapt image utilies
+.img-rounded {
+    @extend .rounded;
+}
+.img-circle {
+    @extend .rounded-circle;
+}
+
+// Adapt input group
+.input-group {
+    .input-group-btn:first-child {
+        @extend .input-group-prepend;
+    }
+    .form-control ~ .input-group-btn {
+        @extend .input-group-append;
+    }
+    .input-group-addon {
+        @extend .input-group-append;
+        @extend .input-group-text;
+    }
+}
+
+// Adapt panels
+.panel {
+    @extend .card;
+}
+@each $color, $value in $theme-colors {
+    @include bg-variant(".panel-#{$color}", $value);
+}
+@include bg-variant(".panel-default", $white);
+.panel-heading {
+    @extend .card-header;
+}
+.panel-body {
+    @extend .card-body;
+}
+.panel-footer {
+    @extend .card-footer;
+}
+.well {
+    @extend .card;
+    @extend .card-body;
+}
+
+// Adapt grid (push-pull ?)
+$-compat-breakpoints: (
+  xs: map-get($grid-breakpoints, 'xs'),
+  sm: map-get($grid-breakpoints, 'md'),
+  md: map-get($grid-breakpoints, 'lg'),
+  lg: map-get($grid-breakpoints, 'xl'),
+);
+@each $breakpoint in map-keys($-compat-breakpoints) {
+    $infix: breakpoint-infix($breakpoint, $-compat-breakpoints);
+    $infix: if($infix != "", $infix, "-xs");
+
+    @include media-breakpoint-up($breakpoint, $-compat-breakpoints) {
+        // `$grid-columns - 1` because offsetting by the width of an entire row isn't possible
+        @for $i from 0 through ($grid-columns - 1) {
+            .col#{$infix}-offset-#{$i} {
+                @include make-col-offset($i, $grid-columns);
+            }
+        }
+    }
+}
+
+// Adapt breadcrumb
+.breadcrumb > li {
+    @extend .breadcrumb-item;
+}
+
+// Adapt nav
+.nav > li {
+    @extend .nav-item;
+    > a {
+        @extend .nav-link;
+    }
+}
+.nav-stacked {
+    flex-direction: column;
+}
+@include bg-variant(".navbar-default", $light);
+
+// Adapt img-responsive
+.img-responsive {
+    @extend .img-fluid;
+}
+
+// Adapt dropdowns
+.dropdown-menu {
+    a {
+        @extend .dropdown-item;
+    }
+    .divider {
+        @extend .dropdown-divider;
+    }
+}
+.dropdown-toggle .caret {
+    display: none;
+}
+
+// Adapt buttons
+.btn-default {
+    @include button-variant(theme-color('secondary'), theme-color('secondary'));
+}
+.btn-xs {
+    @extend .btn-sm;
+}
+
+// Adapt display classes
+.hide {
+    display: none !important;
+}
+// The 'show' class could be supported if defined here and like that,
+// unfortunately, BS4 still defines a 'show' class for other purposes which
+// conflict with this (tab-pane, fade effects, ...). Adding more complex rules
+// won't solve the problem as they would change css rules priorities.
+// .show {
+//     display: block !important;
+// }
+.hidden {
+    display: none !important;
+}
+.visible {
+    &-xs, &-sm, &-md, &-lg {
+        &, &-block, &-inline, &-inline-block {
+            display: none !important;
+        }
+    }
+    &-xs {
+        &, &-block {
+            @include media-breakpoint-down(sm) {
+                display: block !important;
+            }
+        }
+        &-inline {
+            @include media-breakpoint-down(sm) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-down(sm) {
+                display: inline-block !important;
+            }
+        }
+    }
+    &-sm {
+        &, &-block {
+            @include media-breakpoint-only(md) {
+                display: block !important;
+            }
+        }
+        &-inline {
+            @include media-breakpoint-only(md) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-only(md) {
+                display: inline-block !important;
+            }
+        }
+    }
+    &-md {
+        &, &-block {
+            @include media-breakpoint-only(lg) {
+                display: block !important;
+            }
+        }
+        &-inline {
+            @include media-breakpoint-only(lg) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-only(lg) {
+                display: inline-block !important;
+            }
+        }
+    }
+    &-lg {
+        &, &-block {
+            @include media-breakpoint-up(xl) {
+                display: block !important;
+            }
+        }
+        &-inline {
+            @include media-breakpoint-up(xl) {
+                display: inline !important;
+            }
+        }
+        &-inline-block {
+            @include media-breakpoint-up(xl) {
+                display: inline-block !important;
+            }
+        }
+    }
+}
+.hidden {
+    &-xs {
+        @include media-breakpoint-down(sm) {
+            display: none !important;
+        }
+    }
+    &-sm {
+        @include media-breakpoint-only(md) {
+            display: none !important;
+        }
+    }
+    &-md {
+        @include media-breakpoint-only(lg) {
+            display: none !important;
+        }
+    }
+    &-lg {
+        @include media-breakpoint-up(xl) {
+            display: none !important;
+        }
+    }
+}
+.visible-print {
+    display: none !important;
+
+    @media print {
+        display: block !important;
+    }
+
+    &-block {
+        display: none !important;
+
+        @media print {
+            display: block !important;
+        }
+    }
+    &-inline {
+        display: none !important;
+
+        @media print {
+            display: inline !important;
+        }
+    }
+    &-inline-block {
+        display: none !important;
+
+        @media print {
+            display: inline-block !important;
+        }
+    }
+}
+.hidden-print {
+    @media print {
+        display: none !important;
+    }
+}

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_hr_timesheet_attendance_report_search" model="ir.ui.view">
+            <field name="name">Search for HR timesheet attendance report</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <search string="timesheet attendance">
+                    <field name="user_id"/>
+                    <filter name="month" string="Date" date="date"/>
+                    <filter name="group_by_month" string="Date" date="date" context="{'group_by': 'date'}"/>
+                </search>
+            </field>
+        </record>
+        <record id="view_hr_timesheet_attendance_report_pivot" model="ir.ui.view">
+            <field name="name">HR timesheet attendance report: Pivot</field>
+            <field name="model">hr.timesheet.attendance.report</field>
+            <field name="arch" type="xml">
+                <pivot string="timesheet attendance" disable_linking="True" sample="1">
+                    <field name="date" interval="month" type="row"/>
+                    <field name="total_attendance" type="measure" widget="timesheet_uom"/>
+                    <field name="total_timesheet" type="measure" widget="timesheet_uom"/>
+                    <field name="total_difference" type="measure" widget="timesheet_uom"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_hr_timesheet_attendance_report" model="ir.actions.act_window">
+            <field name="name">Timesheet / Attendance</field>
+            <field name="res_model">hr.timesheet.attendance.report</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="view_id" ref="view_hr_timesheet_attendance_report_pivot"/>
+            <field name="context">{'search_default_group_by_month': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_hr_timesheet_attendance_report"
+                  parent="hr_timesheet.menu_timesheets_reports"
+                  action="action_hr_timesheet_attendance_report"
+                  name="Timesheet / Attendance"/>
+    </data>
+</odoo>

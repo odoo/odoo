@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.et"/>
+    </record>
+
+    <record id="account_tax_report_purch_vt" model="account.tax.report.line">
+        <field name="name">Taxable Purchases - VAT</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+    </record>
+
+    <record id="account_tax_report_purch_vt_out_scope" model="account.tax.report.line">
+        <field name="name">Taxable Purchase VAT Out of Scope</field>
+        <field name="tag_name">Taxable Purchase VAT Out of Scope</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_purch_vt"/>
+    </record>
+
+    <record id="account_tax_report_purch_vt_exmpt" model="account.tax.report.line">
+        <field name="name">Taxable Purchase VAT Exempt</field>
+        <field name="tag_name">Taxable Purchase VAT Exempt</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_purch_vt"/>
+    </record>
+
+    <record id="account_tax_report_purch_vt_ratd_0" model="account.tax.report.line">
+        <field name="name">Taxable Purchase VAT Rated 0%</field>
+        <field name="tag_name">Taxable Purchase VAT Rated 0%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_purch_vt"/>
+    </record>
+
+    <record id="account_tax_report_purch_vt_ratd_15" model="account.tax.report.line">
+        <field name="name">Taxable Purchase VAT Rated 15%</field>
+        <field name="tag_name">Taxable Purchase VAT Rated 15%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_purch_vt"/>
+    </record>
+
+    <record id="account_tax_report_purch_withholding" model="account.tax.report.line">
+        <field name="name">Taxable Purchases - Witholding</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+    </record>
+
+    <record id="account_tax_report_purch_withholding_2" model="account.tax.report.line">
+        <field name="name">Taxable 2% Withholding on Purchases</field>
+        <field name="tag_name">Taxable 2% Withholding on Purchases</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_purch_withholding"/>
+    </record>
+
+    <record id="account_tax_report_purch_withholding_35" model="account.tax.report.line">
+        <field name="name">Taxable 35% Withholding on Purchases</field>
+        <field name="tag_name">Taxable 35% Withholding on Purchases</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_purch_withholding"/>
+    </record>
+
+    <record id="account_tax_report_sale_vat" model="account.tax.report.line">
+        <field name="name">Taxable Sales - VAT</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+    </record>
+
+    <record id="account_tax_report_sale_vat_out_scope" model="account.tax.report.line">
+        <field name="name">Taxable Sales VAT Out of Scope (Sales)</field>
+        <field name="tag_name">Taxable Sales VAT Out of Scope (Sales)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_sale_vat"/>
+    </record>
+
+    <record id="account_tax_report_sale_vat_exmpt" model="account.tax.report.line">
+        <field name="name">Taxable Sales VAT Exempt</field>
+        <field name="tag_name">Taxable Sales VAT Exempt</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_sale_vat"/>
+    </record>
+
+    <record id="account_tax_report_sale_vat_rated_0" model="account.tax.report.line">
+        <field name="name">Taxable Sales VAT Rated 0%</field>
+        <field name="tag_name">Taxable Sales VAT Rated 0%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_sale_vat"/>
+    </record>
+
+    <record id="account_tax_report_sale_vat_rated_15" model="account.tax.report.line">
+        <field name="name">Taxable Sales VAT Rated 15%</field>
+        <field name="tag_name">Taxable Sales VAT Rated 15%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+        <field name="parent_id" ref="account_tax_report_sale_vat"/>
+    </record>
+
+    <record id="account_tax_report_sale_withholding" model="account.tax.report.line">
+        <field name="name">Taxable Sales - Withholding</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="4"/>
+    </record>
+
+    <record id="account_tax_report_sale_withholding_2" model="account.tax.report.line">
+        <field name="name">Taxable 2% Withholding on Sales</field>
+        <field name="tag_name">Taxable 2% Withholding on Sales</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_sale_withholding"/>
+    </record>
+
+    <record id="account_tax_report_sale_withholding_35" model="account.tax.report.line">
+        <field name="name">Taxable 35% Withholding on Sales</field>
+        <field name="tag_name">Taxable 35% Withholding on Sales</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_sale_withholding"/>
+    </record>
+
+    <record id="account_tax_report_sale_vat_withholding" model="account.tax.report.line">
+        <field name="name">Taxable VAT Withholding on Sales</field>
+        <field name="tag_name">Taxable VAT Withholding on Sales</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_sale_withholding"/>
+    </record>
+
+    <record id="account_tax_report_net_vat" model="account.tax.report.line">
+        <field name="name">Net VAT to be Paid/Reclaimed</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="5"/>
+    </record>
+
+    <record id="account_tax_report_purch_vat" model="account.tax.report.line">
+        <field name="name">Purchase VAT</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_net_vat"/>
+    </record>
+
+    <record id="account_tax_report_purch_vat_rated_15" model="account.tax.report.line">
+        <field name="name">Purchase VAT Rated 15%</field>
+        <field name="tag_name">Purchase VAT Rated 15%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_purch_vat"/>
+    </record>
+
+    <record id="account_tax_report_net_sale_vat" model="account.tax.report.line">
+        <field name="name">Sales VAT</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_net_vat"/>
+    </record>
+
+    <record id="account_tax_report_net_sale_vat_15" model="account.tax.report.line">
+        <field name="name">Sales VAT Rated 15%</field>
+        <field name="tag_name">Sales VAT Rated 15%</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_net_sale_vat"/>
+    </record>
+
+    <record id="account_tax_report_net_purch_witholding" model="account.tax.report.line">
+        <field name="name">Withholding on Purchases</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="6"/>
+    </record>
+
+    <record id="account_tax_report_net_purch_witholding_2" model="account.tax.report.line">
+        <field name="name">2% Withholding on Purchases</field>
+        <field name="tag_name">2% Withholding on Purchases</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_net_purch_witholding"/>
+    </record>
+
+    <record id="account_tax_report_net_purch_witholding_35" model="account.tax.report.line">
+        <field name="name">35% Withholding on Purchases</field>
+        <field name="tag_name">35% Withholding on Purchases</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_net_purch_witholding"/>
+    </record>
+
+    <record id="account_tax_report_net_sale_witholding" model="account.tax.report.line">
+        <field name="name">Withholding on Sales</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="7"/>
+    </record>
+
+    <record id="account_tax_report_net_sale_witheld_2" model="account.tax.report.line">
+        <field name="name">2% Withheld on Sales</field>
+        <field name="tag_name">2% Withheld on Sales</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1"/>
+        <field name="parent_id" ref="account_tax_report_net_sale_witholding"/>
+    </record>
+
+    <record id="account_tax_report_net_sale_witheld_35" model="account.tax.report.line">
+        <field name="name">35% Withheld on Sales</field>
+        <field name="tag_name">35% Withheld on Sales</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="2"/>
+        <field name="parent_id" ref="account_tax_report_net_sale_witholding"/>
+    </record>
+
+    <record id="account_tax_report_net_sale_vat_witheld" model="account.tax.report.line">
+        <field name="name">VAT Withheld on Sales</field>
+        <field name="tag_name">VAT Withheld on Sales</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="3"/>
+        <field name="parent_id" ref="account_tax_report_net_sale_witholding"/>
+    </record>
+
+</odoo>

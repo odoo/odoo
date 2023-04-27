@@ -1,0 +1,332 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+
+        <record id="im_livechat_channel_action" model="ir.actions.act_window">
+            <field name="name">Website Live Chat Channels</field>
+            <field name="res_model">im_livechat.channel</field>
+            <field name="view_mode">kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Define a new website live chat channel
+              </p><p>
+                You can create channels for each website on which you want
+                to integrate the website live chat widget, allowing your website
+                visitors to talk in real time with your operators.
+              </p>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_view_kanban" model="ir.ui.view">
+            <field name="name">im_livechat.channel.kanban</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="id"/>
+                    <field name="name"/>
+                    <field name="web_page" widget="url"/>
+                    <field name="are_you_inside"/>
+                    <field name="user_ids"/>
+                    <field name="nbr_channel"/>
+                    <field name="rating_percentage_satisfaction"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="o_kanban_image">
+                                    <img t-att-src="kanban_image('im_livechat.channel', 'image_128', record.id.raw_value)" class="img-fluid" alt="Channel"/>
+                                </div>
+                                <div class="oe_kanban_details">
+                                    <div class="float-right">
+                                        <button t-if="record.are_you_inside.raw_value" name="action_quit" type="object" class="btn btn-primary">Leave</button>
+                                        <button t-if="!record.are_you_inside.raw_value" name="action_join" type="object" class="btn btn-primary">Join</button>
+                                    </div>
+                                    <strong class="o_kanban_record_title" style="word-wrap: break-word;"><field name="name"/></strong>
+                                    <div>
+                                        <div>
+                                            <i class="fa fa-user" role="img" aria-label="User" title="User"></i>
+                                            <t t-esc="(record.user_ids.raw_value || []).length"/> Operators
+                                            <br/>
+                                            <i class="fa fa-comments" role="img" aria-label="Comments" title="Comments"></i>
+                                            <t t-esc="record.nbr_channel.raw_value"/> Sessions
+                                             <div class="float-right">
+                                                <t t-if="record.rating_percentage_satisfaction.raw_value &gt; 0">
+                                                    <a type="action" name="%(rating_rating_action_view_livechat_rating)d" tabindex="10">
+                                                        <i class="fa fa-smile-o text-success" t-if="record.rating_percentage_satisfaction.raw_value &gt;= 70" title="Rating: Great" role="img" aria-label="Happy face"/>
+                                                        <i class="fa fa-meh-o text-warning" t-if="record.rating_percentage_satisfaction.raw_value &gt; 30 and record.rating_percentage_satisfaction.raw_value &lt; 70" title="Rating: Okay" role="img" aria-label="Neutral face"/>
+                                                        <i class="fa fa-frown-o text-danger" t-if="record.rating_percentage_satisfaction.raw_value &lt;= 30" title="Rating: Bad" role="img" aria-label="Sad face"/>
+                                                       <t t-esc="record.rating_percentage_satisfaction.raw_value"/>%
+                                                   </a>
+                                                </t>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_view_form" model="ir.ui.view">
+            <field name="name">im_livechat.channel.form</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="arch" type="xml">
+                <form js_class="im_livechat_channel_form_view_js">
+                    <header>
+                        <button type="object" name="action_join" class="oe_highlight" string="Join Channel" attrs='{"invisible": [["are_you_inside", "=", True]]}'/>
+                        <button type="object" name="action_quit" string="Leave Channel" attrs='{"invisible": [["are_you_inside", "=", False]]}'/>
+                        <field name="are_you_inside" invisible="1"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" attrs="{'invisible':[('nbr_channel','=', 0)]}" name="%(mail_channel_action_from_livechat_channel)d" icon="fa-comments">
+                                <field string="Sessions" name="nbr_channel" widget="statinfo"/>
+                            </button>
+                            <button name="action_view_rating" attrs="{'invisible':[('rating_percentage_satisfaction','=', -1)]}" class="oe_stat_button" type="object" icon="fa-smile-o">
+                                <field string="% Happy" name="rating_percentage_satisfaction" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <field name="image_128" widget="image" class="oe_avatar"/>
+                        <div class="oe_title">
+                            <label for="name" class="oe_edit_only"/>
+                            <h1>
+                                <field name="name" placeholder="e.g. YourWebsite.com"/>
+                            </h1>
+                        </div>
+                        <notebook>
+                            <page string="Operators" name="operators">
+                                <group>
+                                    <field name="user_ids" nolabel="1" colspan="2">
+                                        <kanban>
+                                            <field name="id"/>
+                                            <field name="name"/>
+                                            <templates>
+                                                <t t-name="kanban-box">
+                                                    <div class="oe_kanban_global_click">
+                                                        <div class="o_kanban_image">
+                                                            <img t-att-src="kanban_image('res.users', 'image_1024', record.id.raw_value)" alt="User"/>
+                                                        </div>
+                                                        <div class="o_kanban_details">
+                                                            <h4 class="o_kanban_record_title"><field name="name"/></h4>
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </templates>
+                                        </kanban>
+                                    </field>
+                                    <p class="text-muted" style="padding-left: 8px">
+                                        Operators that do not show any activity In Odoo for more than 30 minutes will be considered as disconnected.
+                                    </p>
+                                </group>
+                            </page>
+                            <page string="Options" name="options">
+                                <group>
+                                    <group string="Livechat Button">
+                                        <field name="button_text"/>
+                                        <label for="button_background_color" string="Livechat Button Color" />
+                                        <div class="o_livechat_layout_colors">
+                                            <field name="button_background_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <field name="button_text_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <button class="btn btn-link oe_edit_only o_im_livechat_channel_form_button_colors_reset_button" aria-label="Reset to default colors" title="Reset to default colors">
+                                                <span class="fa fa-refresh mb-4"/>
+                                            </button>
+                                        </div>
+                                    </group>
+                                    <group string="Livechat Window">
+                                        <field name="default_message" placeholder="e.g. Hello, how may I help you?"/>
+                                        <field name="input_placeholder"/>
+                                        <label for="header_background_color" string="Channel Header Color" />
+                                        <div class="o_livechat_layout_colors">
+                                            <field name="header_background_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <field name="title_color" widget="color" class="mb-4 o_im_livechat_field_widget_color"/>
+                                            <button class="btn btn-link oe_edit_only o_im_livechat_channel_form_chat_window_colors_reset_button" aria-label="Reset to default colors" title="Reset to default colors">
+                                                <span class="fa fa-refresh mb-4"/>
+                                            </button>
+                                        </div>
+                                    </group>
+                                </group>
+                            </page>
+                            <page string="Channel Rules" name="channel_rules">
+                                <span class="text-muted">Define rules for your live support channel. You can apply an action for the given URL, and per country.<br />To identify the country, GeoIP must be installed on your server, otherwise, the countries of the rule will not be taken into account.</span>
+                                <group>
+                                    <field name="rule_ids" nolabel="1"/>
+                                </group>
+                            </page>
+                            <page string="Widget" name="configuration_widget">
+                                <group attrs='{"invisible": [["web_page", "!=", False]]}'>
+                                    <div class="alert alert-warning mt4 mb16" role="alert">
+                                    Save your Channel to get your configuration widget.
+                                    </div>
+                                </group>
+                                <group>
+                                    <div attrs='{"invisible": [["web_page", "=", False]]}'>
+                                        <separator string="How to use the Website Live Chat widget?"/>
+                                        <p>
+                                            Copy and paste this code into your website, within the &lt;head&gt; tag:
+                                        </p>
+                                        <field name="script_external" readonly="1" widget="CopyClipboardText"/>
+                                        <p>
+                                            or copy this url and send it by email to your customers or suppliers:
+                                        </p>
+                                        <field name="web_page" readonly="1" widget="CopyClipboardChar"/>
+                                        <p>For websites built with the Odoo CMS, go to Website > Configuration > Settings and select the Website Live Chat Channel you want to add to your website.</p>
+                                    </div>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_view_search" model="ir.ui.view">
+            <field name="name">im.livechat.channel.view.search</field>
+            <field name="model">im_livechat.channel</field>
+            <field name="arch" type="xml">
+                <search string="LiveChat Channel Search">
+                    <field name="name" string="Channel"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- im_livechat.channel.rule -->
+        <record id="im_livechat_channel_rule_view_tree" model="ir.ui.view">
+            <field name="name">im.livechat.channel.rule.tree</field>
+            <field name="model">im_livechat.channel.rule</field>
+            <field name="arch" type="xml">
+                <tree string="Rules">
+                    <field name="sequence" widget="handle"/>
+                    <field name="regex_url"/>
+                    <field name="action"/>
+                    <field name="country_ids"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_rule_view_kanban" model="ir.ui.view">
+            <field name="name">im_livechat.channel.rule.kanban</field>
+            <field name="model">im_livechat.channel.rule</field>
+            <field name="arch" type="xml">
+                <kanban>
+                    <field name="regex_url"/>
+                    <field name="action"/>
+                    <field name="country_ids"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div><field name="action"/></div>
+                                <field name="regex_url" />
+                                <field name="country_ids" widget="many2many_tags" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="im_livechat_channel_rule_view_form" model="ir.ui.view">
+            <field name="name">im_livechat.channel.rule.form</field>
+            <field name="model">im_livechat.channel.rule</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <form string="Channel Rule" class="o_livechat_rules_form">
+                    <sheet>
+                        <group>
+                            <field name="action" widget="radio"/>
+                            <field name="regex_url" placeholder="e.g. /contactus"/>
+                            <label for="auto_popup_timer" class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}"/>
+                            <div class="oe_inline" attrs="{'invisible': [('action', '!=', 'auto_popup')]}">
+                                <field name="auto_popup_timer" class="oe_inline"/> seconds
+                            </div>
+                            <field name="country_ids" widget="many2many_tags"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Canned responses -->
+        <record id="im_livechat_canned_response_view_tree" model="ir.ui.view">
+            <field name="name">im_livechat.canned_response.tree</field>
+            <field name="model">mail.shortcode</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="source"/>
+                    <field name="substitution"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="im_livechat_canned_response_action" model="ir.actions.act_window">
+            <field name="name">Canned Responses</field>
+            <field name="res_model">mail.shortcode</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="im_livechat_canned_response_view_tree"/>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new canned response
+              </p><p>
+                Canned responses allow you to insert prewritten responses in
+                your messages by typing <i>:shortcut</i>. The shortcut is
+                replaced directly in your message, so that you can still edit
+                it before sending.
+              </p>
+            </field>
+        </record>
+
+        <!-- Menu items -->
+        <menuitem
+            id="menu_livechat_root"
+            name="Live Chat"
+            web_icon="im_livechat,static/description/icon.png"
+            groups="im_livechat_group_user"
+            sequence="205"/>
+
+        <menuitem
+            id="support_channels"
+            name="Channels"
+            parent="menu_livechat_root"
+            action="im_livechat_channel_action"
+            groups="im_livechat_group_user"
+            sequence="5"/>
+
+        <menuitem
+            id="menu_reporting_livechat"
+            name="Report"
+            parent="menu_livechat_root"
+            sequence="50"
+            groups="im_livechat_group_manager"/>
+
+
+        <menuitem
+            id="session_history"
+            name="Sessions History"
+            parent="menu_reporting_livechat"
+            action="mail_channel_action"
+            groups="im_livechat_group_user"
+            sequence="5"/>
+
+        <menuitem id="rating_rating_menu_livechat"
+            name="Customer Ratings"
+            action="rating_rating_action_livechat_report"
+            parent="menu_reporting_livechat"
+            sequence="40"/>
+
+        <menuitem
+            id="livechat_config"
+            name="Configuration"
+            parent="menu_livechat_root"
+            sequence="55"/>
+
+        <menuitem
+            id="canned_responses"
+            name="Canned Responses"
+            parent="livechat_config"
+            action="im_livechat_canned_response_action"
+            groups="im_livechat_group_user"
+            sequence="15"/>
+
+    </data>
+</odoo>

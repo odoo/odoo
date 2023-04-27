@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<odoo>
+    <template id="assets_backend" name="purchase assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/purchase/static/src/scss/purchase.scss"/>
+            <script type="text/javascript" src="/purchase/static/src/js/purchase_dashboard.js"></script>
+            <script type="text/javascript" src="/purchase/static/src/js/purchase_toaster_button.js"></script>
+        </xpath>
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/purchase/static/src/js/tours/purchase.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_frontend" name="purchase assets" inherit_id="web.assets_frontend">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/purchase/static/src/js/purchase_datetimepicker.js"></script>
+        </xpath>
+    </template>
+</odoo>

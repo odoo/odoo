@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="mail_blacklist_view_tree" model="ir.ui.view">
+        <field name="name">mail.blacklist.view.tree</field>
+        <field name="model">mail.blacklist</field>
+        <field name="arch" type="xml">
+            <tree string="Email Blacklist">
+                <field name="create_date" string="Blacklist Date"/>
+                <field name="email"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_view_form" model="ir.ui.view">
+        <field name="name">mail.blacklist.view.form</field>
+        <field name="model">mail.blacklist</field>
+        <field name="arch" type="xml">
+            <form string="Add Email Blacklist" duplicate="false" edit="false">
+                <header>
+                    <button name="mail_action_blacklist_remove" string="Unblacklist"
+                        type="object" class="oe_highlight" context="{'default_email': email}"
+                        attrs="{'invisible': ['|', ('active', '=', False), ('email', '=', False)]}"/>
+                    <button name="action_add" string="Blacklist"
+                        type="object" class="oe_highlight"
+                        attrs="{'invisible': ['|', ('active', '=', True), ('email', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <group>
+                        <group>
+                            <field name="email"/>
+                            <field name="active" readonly="1"/>
+                            <br/>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_view_search" model="ir.ui.view">
+        <field name="name">mail.blacklist.view.search</field>
+        <field name="model">mail.blacklist</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="email"/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="mail_blacklist_action" model="ir.actions.act_window">
+        <field name="name">Blacklisted Email Addresses</field>
+        <field name="res_model">mail.blacklist</field>
+        <field name="view_id" ref="mail_blacklist_view_tree"/>
+        <field name="search_view_id" ref="mail_blacklist_view_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Add an email address in the blacklist
+          </p><p>
+            Email addresses that are blacklisted means that the recipient won't receive mass mailing anymore.
+        </p>
+        </field>
+    </record>
+
+    <!-- Technical Menu -->
+    <menuitem id="mail_blacklist_menu"
+        name="Email Blacklist"
+        action="mail_blacklist_action"
+        parent="mail.mail_menu_technical"
+        sequence="22"/>
+
+</odoo>

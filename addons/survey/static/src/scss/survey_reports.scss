@@ -1,0 +1,196 @@
+@font-face {
+    font-family: certification-cursive;
+    src: url(/survey/static/src/fonts/MrDeHaviland-Regular.ttf);
+}
+@font-face {
+    font-family: certification-serif;
+    src: url(/survey/static/src/fonts/ETHOS-REGULAR.OTF);
+}
+@font-face {
+    font-family: certification-modern;
+    src: url(/survey/static/src/fonts/Oswald-Light.ttf);
+}
+
+#o_survey_certification.certification-wrapper {
+    width: 250mm;
+    height: 280mm;
+    display: flex;
+    background-size: 100% 100%;
+    background-color: #875A7B;
+
+    &.blue {
+        background-color: #4761e2;
+    }
+
+    &.gold {
+        background-color: #af881a;
+    }
+
+    .certification {
+        position: relative;
+        width: 100%;
+        height: 100%;
+
+        .test-entry {
+            top: 0px;
+            left: 0px;
+            position: absolute;
+            content: '';
+            height: 610px;
+            width: 860px;
+            background: url(/survey/static/src/img/watermark.png) no-repeat;
+            background-size: 100% 100%;
+            background-position: center;
+        }
+    }
+
+    &.classic {
+        padding: 5mm;
+        background-image: url(/survey/static/src/img/certification_bg_classic_default.jpg);
+        color: #3e2e3a;
+
+        &.blue {
+            background-image: url(/survey/static/src/img/certification_bg_classic_blue.jpg);
+            color: #272d4f;
+        }
+
+        &.gold {
+            background-image: url(/survey/static/src/img/certification_bg_classic_gold.jpg);
+            color: #5A4721;
+        }
+
+        .certification {
+            padding: 20mm;
+            font-family: certification-serif, serif;
+            font-family: Times;
+            text-align: center;
+            color: inherit;
+
+            .certification-name-label {
+                padding: 5mm 0 8mm;
+            }
+
+            .certification-name {
+                font-size: 45pt;
+                line-height: 0.9;
+                text-transform: uppercase;
+                letter-spacing: 0.2mm;
+            }
+
+            .user-name {
+                padding-bottom: 6mm;
+                padding-top: 3mm;
+                font-family: certification-cursive, cursive;
+                letter-spacing: -0.2mm;
+                word-spacing: 0.2mm;
+                font-size: 60pt;
+            }
+
+            hr {
+                border-color: inherit;
+                margin: 15mm auto;
+                opacity: 0.6;
+                width: 50mm;
+
+                &.small {
+                    margin: 2mm auto;
+                }
+            }
+
+            .certification-description, .certification-date {
+                padding: 5mm 40mm 10mm;
+            }
+
+            .certificate-signature {
+                position: absolute;
+                bottom: 10mm;
+                right: 10mm;
+                left: 10mm;
+                font-size: 14pt;
+
+                img {
+                    max-width: 40mm;
+                    max-height: 40mm;
+                }
+            }
+        }
+    }
+
+    &.modern {
+        background-image: url(/survey/static/src/img/certification_bg_modern.png);
+
+        .certification {
+            padding-left: 40mm;
+            padding-right: 40mm;
+            font-family: certification-modern, sans-serif;
+            color: #223541;
+
+            .certification-bg-dark {
+                display: inline-block;
+                background-color: #223541;
+                background: rgba(34, 53, 65, 0.1);
+            }
+
+            .certification-top {
+                .certification-bg-dark {
+                    margin-bottom: 10mm;
+                    padding: 20mm 6mm 5mm;
+                    text-align: center;
+                    width: 56mm;
+                }
+
+                .certification-company-wrapper {
+                    padding: 1mm 2mm;
+
+                    img {
+                        max-width: 40mm;
+                        max-height: 30mm;
+                    }
+                }
+
+                .certification-name {
+                    text-transform: uppercase;
+                    font-size: 40pt;
+                    line-height: 0.9;
+                }
+            }
+
+            .certification-bottom {
+                padding: 60mm 0 10mm;
+                font-size: 16pt;
+
+                .user-name {
+                    margin-bottom: 20mm;
+                    font-family: certification-cursive, cursive;
+                    font-size: 50pt;
+                }
+
+                .certification-bottom-group {
+                    position: absolute;
+                    bottom: 0;
+                    right: 40mm;
+                    left: 40mm;
+                    top: 220mm;
+
+                    > div {
+                        display: inline-block;
+                        height: 100%;
+                        float: left;
+                        bottom: 0;
+                        top: 0;
+                    }
+
+                    .certification-bg-dark {
+                        width: 56mm;
+                        max-height: 100%;
+                    }
+
+                    .certification-date {
+                        padding-right: 30mm;
+                        padding-left: 15mm;
+                    }
+                }
+            }
+        }
+    }
+}

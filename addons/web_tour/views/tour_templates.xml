@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_common" name="tours assets" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/web_tour/static/src/scss/tip.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/web_tour/static/src/scss/keyframes.scss"/>
+                <script type="text/javascript" src="/web_tour/static/src/js/tip.js"></script>
+                <script type="text/javascript" src="/web_tour/static/src/js/tour_utils.js"></script>
+                <script type="text/javascript" src="/web_tour/static/src/js/running_tour_action_helper.js"></script>
+                <script type="text/javascript" src="/web_tour/static/src/js/tour_manager.js"></script>
+                <script type="text/javascript" src="/web_tour/static/src/js/tour_service.js"></script>
+                <script type="text/javascript" src="/web_tour/static/src/js/tour_step_utils.js"></script>
+            </xpath>
+        </template>
+
+        <template id="assets_backend" name="tours backend assets" inherit_id="web.assets_backend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/web_tour/static/src/js/debug_manager.js"></script>
+            </xpath>
+        </template>
+
+        <template id="assets_frontend" inherit_id="web.assets_frontend">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/web_tour/static/src/js/public/tour_manager.js"/>
+            </xpath>
+        </template>
+
+        <template id="web_tour.qunit_suite" name="tour tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="//script[last()]" position="after">
+                <script type="text/javascript" src="/web_tour/static/tests/tour_manager_tests.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

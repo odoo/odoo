@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="slide_channel_invite_view_form" model="ir.ui.view">
+            <field name="name">slide.channel.invite.view.form</field>
+            <field name="model">slide.channel.invite</field>
+            <field name="arch" type="xml">
+                <form string="Compose Email">
+                    <group col="1">
+                        <group col="2">
+                            <field name="partner_ids"
+                                widget="many2many_tags_email"
+                                placeholder="Add existing contacts..."
+                                context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+                        </group>
+                        <group col="2">
+                            <field name="subject" placeholder="Subject..."/>
+                        </group>
+                        <field name="body" options="{'style-inline': true}"/>
+                        <group>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group>
+                                <field name="template_id" label="Use template" context="{'default_model': 'slide.channel.partner'}"/>
+                            </group>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Send" name="action_invite" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

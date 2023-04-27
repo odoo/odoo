@@ -1,0 +1,90 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatWindowHiddenMenu {
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    width: 50px;
+    height: 28px;
+    align-items: stretch;
+}
+
+.o_ChatWindowHiddenMenu_chatWindowHeader {
+    max-width: 200px;
+}
+
+.o_ChatWindowHiddenMenu_dropdownToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1 1 auto;
+    max-width: 100%;
+}
+
+.o_ChatWindowHiddenMenu_dropdownToggleIcon {
+    margin-right: 1px;
+}
+
+.o_ChatWindowHiddenMenu_dropdownToggleItem {
+    margin: 0 3px;
+}
+
+.o_ChatWindowHiddenMenu_list {
+    overflow: auto;
+    margin: 0;
+    padding: 0;
+}
+
+.o_ChatWindowHiddenMenu_listItem {
+
+    &:not(:last-child) {
+        margin-bottom: 1px;
+    }
+}
+
+.o_ChatWindowHiddenMenu_unreadCounter {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate(50%, -50%);
+    z-index: 1001; // on top of bootstrap dropup menu
+}
+
+.o_ChatWindowHiddenMenu_windowCounter {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-left: 1px;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatWindowHiddenMenu {
+    background-color: gray('900');
+    border-radius: 6px 6px 0 0;
+    color: white;
+    cursor: pointer;
+}
+
+.o_ChatWindowHiddenMenu_chatWindowHeader {
+    opacity: 0.95;
+
+    &:hover {
+        opacity: 1;
+    }
+}
+
+.o_ChatWindowHiddenMenu_dropdownToggle.show {
+    opacity: 0.5;
+}
+
+.o_ChatWindowHiddenMenu_unreadCounter {
+    background-color: $o-brand-primary;
+}
+
+.o_ChatWindowHiddenMenu_windowCounter {
+    user-select: none;
+}

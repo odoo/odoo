@@ -1,0 +1,114 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="pos_config_view_form_inherit_restaurant" model="ir.ui.view">
+        <field name="name">pos.config.form.inherit.restaurant</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <button id="btn_use_pos_restaurant" position="replace"/>
+            <div id="iface_invoicing" position="before">
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="iface_printbill"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="iface_printbill"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="iface_printbill"/>
+                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <div class="text-muted">
+                            Allow to print bill before payment
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="iface_splitbill"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="iface_splitbill"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="iface_splitbill"/>
+                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <div class="text-muted">
+                            Split total or order lines
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="barcode_scanner" position="after">
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="is_order_printer"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="is_order_printer"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="is_order_printer"/>
+                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <div class="text-muted">
+                            Print orders at the kitchen, at the bar, etc.
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('is_order_printer', '=', False)]}">
+                            <div class="mt16">
+                                <label string="Printers" for="printer_ids" class="o_light_label"/>
+                                <field name="printer_ids" widget="many2many_tags"/>
+                            </div>
+                            <div>
+                                <button name="%(pos_restaurant.action_restaurant_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="tip_product" position="after">
+                <div attrs="{'invisible': ['|', ('module_pos_restaurant', '=', False), ('iface_tipproduct', '=', False)]}">
+                    <field name="set_tip_after_payment" class="oe_inline"/>
+                    <label class="font-weight-normal" for="set_tip_after_payment" string="Add tip after payment (North America specific)"/>
+                    <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                </div>
+            </div>
+            <div id="category_reference" position="before">
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="is_table_management"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="is_table_management" attrs="{'readonly': [('has_active_session','=', True)]}"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="is_table_management"/>
+                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <div class="text-muted">
+                            Design floors and assign orders to tables
+                        </div>
+                        <div class="content-group" attrs="{'invisible': [('is_table_management','=',False)]}">
+                            <div class="mt16">
+                                <label string="Floors" for="floor_ids" class="o_light_label"/>
+                                <field name="floor_ids" widget="many2many_tags" attrs="{'readonly': [('has_active_session','=', True)]}" domain="['|', ('pos_config_id', '=', False), ('pos_config_id', '=', active_id)]"/>
+                            </div>
+                            <div>
+                                <button name="%(pos_restaurant.action_restaurant_floor_form)d" icon="fa-arrow-right" type="action" string="Floors" class="btn-link"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="iface_orderline_notes"
+                     attrs="{'invisible': [('module_pos_restaurant', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="iface_orderline_notes"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="iface_orderline_notes"/>
+                        <span class="fa fa-lg fa-cutlery" title="For bars and restaurants" role="img" aria-label="For bars and restaurants"/>
+                        <div class="text-muted">
+                            Add notes on order lines
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>

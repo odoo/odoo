@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.MessageAuthorPrefix" owl="1">
+        <span class="o_MessageAuthorPrefix">
+            <t t-if="message">
+                <t t-if="message.author and message.author === env.messaging.currentPartner">
+                    <i class="o_MessageAuthorPrefixIcon fa fa-mail-reply"/>You:
+                </t>
+                <t t-elif="thread and message.author !== thread.correspondent">
+                    <t t-esc="message.author.nameOrDisplayName"/>:
+                </t>
+            </t>
+        </span>
+    </t>
+
+</templates>

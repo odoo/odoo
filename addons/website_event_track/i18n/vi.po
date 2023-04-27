@@ -1,0 +1,2686 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_track
+# 
+# Translators:
+# PHAM QUOC MY <mypham2802@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Dung Nguyen Thi <dungnt@trobz.com>, 2020
+# Dao Nguyen <trucdao.uel@gmail.com>, 2020
+# Phuc Tran Thanh <phuctran.odoo@gmail.com>, 2020
+# fanha99 <fanha99@hotmail.com>, 2020
+# Trinh Tran Thi Phuong <trinhttp@trobz.com>, 2020
+# Duy BQ <duybq86@gmail.com>, 2020
+# Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2021
+# Trần Hà <tranthuha13590@gmail.com>, 2021
+# Vo Thanh Thuy, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-27 14:13+0000\n"
+"PO-Revision-Date: 2020-09-07 08:21+0000\n"
+"Last-Translator: Vo Thanh Thuy, 2021\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: vi\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "\"Events App Name\" field is required."
+msgstr "Trường \"Tên ứng dụng sự kiện\" là bắt buộc. "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_count
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_count
+msgid "# Wishlisted"
+msgstr "# trong wishlist"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/website.py:0
+#, python-format
+msgid "%s Events"
+msgstr "%s Sự kiện"
+
+#. module: website_event_track
+#: code:addons/website_event_track/controllers/webmanifest.py:0
+#, python-format
+msgid "%s Online Events Application"
+msgstr "%s Đăng ký sự kiện trực tuyến"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "&amp;bull;"
+msgstr "&amp;bull;"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_17
+msgid "10 DIY Furniture Ideas For Absolute Beginners"
+msgstr "10 ý tưởng nội thất DIY cho người mới bắt đầu "
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_18
+msgid "6 Woodworking tips and tricks for beginners"
+msgstr "6 mẹo làm mộc cho người mới bắt đầu "
+
+#. module: website_event_track
+#: model:mail.template,body_html:website_event_track.mail_template_data_track_confirmation
+msgid ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    Dear ${object.partner_name or ''}<br/>\n"
+"    We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.\n"
+"    <br/>\n"
+"    You will find more details here:\n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/event/${object.event_id.id}/track/${object.id}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            View Talk\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Thank you,\n"
+"    % if user.signature\n"
+"        <br/>\n"
+"        ${user.signature | safe}\n"
+"    % endif\n"
+"</div>"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Mail</b>:"
+msgstr "<b>Thư</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Phone</b>:"
+msgstr "<b>Điện thoại</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Proposed By</b>:"
+msgstr "<b>Đề xuất Bởi</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Speakers Biography</b>:"
+msgstr "<b>Tiểu sử Diễn giả</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "<b>Talk Introduction</b>:"
+msgstr "<b>Giới thiệu Diễn thuyết</b>:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
+msgstr "<i class=\"fa fa-ban mr-2\"/>Không đăng"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
+msgid "<i class=\"fa fa-bell mr-2 text-muted\"/> Wishlisted Talks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "<i class=\"fa fa-folder-open\"/> Favorites"
+msgstr "<i class=\"fa fa-folder-open\"/> Yêu thích"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<i class=\"fa fa-info-circle\"/>\n"
+"                                You can add multiple speakers by separating names, emails and phones with commas."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "<span class=\"d-none d-md-block ml-2\">&amp;bull;</span>"
+msgstr "<span class=\"d-none d-md-block ml-2\">&amp;bull;</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Values set here are website-"
+"specific.\" groups=\"website.group_multi_website\"/>"
+msgstr ""
+"<span class=\"fa fa-lg fa-globe\" title=\"Đây là các giá trị chi tiết của "
+"website website-specific.\" groups=\"website.group_multi_website\"/>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "<span id=\"search_number\" class=\"mr-1\">0</span>Results"
+msgstr "<span id=\"search_number\" class=\"mr-1\">0</span>Kết quả"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<span>&amp;nbsp;at&amp;nbsp;</span>"
+msgstr "<span>&amp;nbsp;at&amp;nbsp;</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "<span>hours</span>"
+msgstr "<span>giờ</span>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Lightning Talks</strong>. These are 30 minutes talks on many\n"
+"                                    different topics. Most topics are accepted in lightning talks."
+msgstr ""
+"<strong>Diễn thuyết Đột xuất</strong>. Đây là các bài diễn thuyết\n"
+"                                    về nhiều chủ đề khác nhau. Hầu\n"
+"                                    hết các chủ đề đều được chấp thuận."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "<strong>Location:</strong>"
+msgstr "<strong>Địa điểm:</strong>"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"<strong>Regular Talks</strong>. These are standard talks with slides,\n"
+"                                    alocated in slots of 60 minutes."
+msgstr ""
+"<strong>Diễn thuyết thông thường</strong>. Đây là các bài diễn thuyết\n"
+"                                    có trình diễn các bài thuyết trình\n"
+"                                    (slide) được cấp phép trong khoảng\n"
+"                                    thời lượng 60 phút."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid ">e.g. : https://www.odoo.com"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_2
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_2
+msgid ""
+"A non-profit international educational and scientific\n"
+"                    organisation, hosting three departments (aeronautics and\n"
+"                    aerospace, environmental and applied fluid dynamics, and\n"
+"                    turbomachinery and propulsion)."
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track7
+msgid "A technical explanation of how to use computer design apps"
+msgstr "Giải thích kỹ thuật về cách sử dụng ứng dụng thiết kế máy tính "
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__kanban_state
+msgid ""
+"A track's kanban state indicates special situations affecting it:\n"
+" * Grey is the default situation\n"
+" * Red indicates something is preventing the progress of this track\n"
+" * Green indicates the track is ready to be pulled to the next stage"
+msgstr ""
+"Trạng thái ở kanban của một bài cho biết tình huống đặc biệt đang xảy ra:\n"
+" * Màu xám là tình huống mặc định\n"
+" * Màu đỏ nghĩa là có trở ngại đối với tiến trình của bài\n"
+" * Màu xanh nghĩa là bài đã sẵn sàng và có thể kéo sang giai đoạn tiếp theo"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_accepted
+msgid "Accepted Stage"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_accepted
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__is_accepted
+msgid "Accepted tracks are displayed in agenda views but not accessible."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
+msgid "Action Needed"
+msgstr "Hành động cần thiết"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__active
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__active
+msgid "Active"
+msgstr "Có hiệu lực"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_ids
+msgid "Activities"
+msgstr "Các hoạt động"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_exception_decoration
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr "Hành động ngoại lệ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_state
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_state
+msgid "Activity State"
+msgstr "Trạng thái hoạt động"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_type_icon
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_icon
+msgid "Activity Type Icon"
+msgstr "Biểu tượng kiểu hoạt động"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid "Add a new stage in the task pipeline"
+msgstr "Thêm giai đoạn mới vào chu trình nhiệm vụ"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid "Add a new track"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid "Add a new track visitor"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track19
+msgid "Advanced lead management : tips and tricks from the fields"
+msgstr "Quản lý lead nâng cao : mẹo và lời khuyên từ thực tế"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track13
+msgid "Advanced reporting"
+msgstr "Báo cáo nâng cao"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Agenda"
+msgstr "Chương trình"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "All Talks"
+msgstr "Tất cả diễn thuyết"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Allow Track Proposals"
+msgstr "Cho phép đề xuất diễn thuyết"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Allow video and audio recording of their\n"
+"                                    presentation, for publishing on our website."
+msgstr ""
+"Cho phép ghi video và audio với các bài\n"
+"                                    thuyết trình, để xuất bản trên website của chúng tôi."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlisted_by_default
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Always Wishlisted"
+msgstr "Luôn trong wishlist"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage2
+msgid "Announced"
+msgstr "Đã thông báo"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
+msgid "Application"
+msgstr "Ứng dụng"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Archived"
+msgstr "Đã lưu"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_1
+msgid "As a team, we are happy to contribute to this event."
+msgstr ""
+"Với tư cách là một đội, chúng tôi rất vui khi được đóng góp vào sự kiện này."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_visitor__is_blacklisted
+msgid ""
+"As key track cannot be un-wishlisted, this field store the partner choice to"
+" remove the reminder for key tracks."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"As you may have heard before, making your own furniture is actually not as difficult or as complicated as you think.\n"
+"    In fact, some projects are so easy anyone could successfully complete them. For example, making a cute stool out of\n"
+"    a old tire is a real piece of cake and if you’re in need of a coffee table you can easily put one together using\n"
+"    wood crates."
+msgstr ""
+"Như bạn biết đấy, tạo nội thất cho riêng bạn không thực sự khó hay phức tạp như bạn nghĩ. \n"
+"    Thực tế là một số dự án rất dễ nên ai cũng có thể làm được ví dụ như làm một chiếc ghế đẩu từ\n"
+"    bánh xe cũ và nếu bạn muốn một chiếc bàn trà, bạn có thể đóng một chiếc dễ dàng bằng cách ghép\n"
+"    các mảnh gỗ lại với nhau. "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_attachment_count
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
+msgid "Attachment Count"
+msgstr "Số lượng tập tin đính kèm"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_1
+msgid "Audience"
+msgstr "Khán giả"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__allowed_track_tag_ids
+msgid "Available Track Tags"
+msgstr "Các Thẻ Vết Khả dụng"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Bandy clamp hack"
+msgstr "Mẹo với kìm dây"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_biography
+msgid "Biography"
+msgstr "Tiểu sử"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Book your seats to the best talks"
+msgstr "Đặt chỗ các buổi diễn thuyết hay nhất"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Book your talks"
+msgstr "Đặt chỗ buổi diễn thuyết "
+
+#. module: website_event_track
+#: model:event.sponsor.type,name:website_event_track.event_sponsor_type1
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__bronze
+msgid "Bronze"
+msgstr "Đồng"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_14
+msgid "Building a DIY cabin from the ground up"
+msgstr "Tự xây cabin từ đầu đến cuối"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
+msgid "Button Target URL"
+msgstr "Nút nhắm URL"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
+msgid "Button Title"
+msgstr "Tiêu đề nút"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
+msgid "Button appears"
+msgstr "Nút xuất hiện"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
+msgid "CTA button is available"
+msgstr "Nút CTA khả dụng"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Call for Proposals"
+msgstr "Mời Diễn thuyết"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
+msgid "Can Publish"
+msgstr "Có thể đăng"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
+msgid "Canceled Stage"
+msgstr "Giai đoạn bị hủy"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage5
+msgid "Cancelled"
+msgstr "Đã hủy"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__category_id
+msgid "Category"
+msgstr "Danh mục"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_12
+msgid "Climate positive"
+msgstr "Tốt cho khí hậu "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__color
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__color
+msgid "Color"
+msgstr "Màu sắc"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__color
+msgid "Color Index"
+msgstr "Mã màu"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_1
+msgid "Come see us live, we hope to meet you !"
+msgstr "Đón xem trực tiếp, chúng tôi rất mong gặp các bạn!"
+
+#. module: website_event_track
+#: code:addons/website_event_track/controllers/event_track.py:0
+#, python-format
+msgid "Coming soon"
+msgstr "Sắp tới"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Coming soon ..."
+msgstr "Sắp tới ..."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__company_id
+msgid "Company"
+msgstr "Công ty"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_company_name
+msgid "Company Name"
+msgstr "Tên Công ty"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_res_config_settings
+msgid "Config Settings"
+msgstr "Thiết lập cấu hình"
+
+#. module: website_event_track
+#: model:mail.template,subject:website_event_track.mail_template_data_track_confirmation
+msgid "Confirmation of ${object.name}"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage1
+msgid "Confirmed"
+msgstr "Đã được xác nhận"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_13
+#: model_terms:event.track,description:website_event_track.event_7_track_3
+msgid ""
+"Considering to build a wooden house? Watch this video to find out more "
+"information about a construction process and final result. Step by step "
+"simple explanation! Interested?"
+msgstr ""
+"Đang cân nhắc đóng một căn nhà gỗ? Hãy xem video này để biết thêm thông tin "
+"về quá trình xây dựng và kết quả. Hướng dẫn chi tiết cho từng bước! Bạn có "
+"quan tâm không? "
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid "Create a Sponsor / Exhibitor"
+msgstr "Tạo một nhà tài trợ/ nhà triển lãm"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_uid
+msgid "Created by"
+msgstr "Tạo bởi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__create_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__create_date
+msgid "Created on"
+msgstr "Thời điểm tạo"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Customer"
+msgstr "Khách hàng"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid "Customer Relationship Management"
+msgstr "Quản trị quan hệ khách hàng"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_19
+msgid "DIY Timber Cladding Project"
+msgstr "Tự làm ốp gỗ "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Date"
+msgstr "Ngày"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_11
+msgid "Day 2 Wrapup"
+msgstr "Tổng kết ngày thứ 2"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_8
+msgid "Dealing with OpenWood Furniture"
+msgstr "Cách lắp đặt nội thất OpenWood"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid ""
+"Deco Addict designs, develops, integrates and supports HR and Supply\n"
+"                Chain processes in order to make our customers more productive,\n"
+"                responsive and profitable."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid ""
+"Deco Addict integrates ERP for Global Companies and supports PME\n"
+"                with Open Sources software to manage their businesses. Our\n"
+"                consultants are experts in the following areas:"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
+msgid ""
+"Define the steps that will be used in the event from the\n"
+"            creation of the track, up to the closing of the track.\n"
+"            You will use these stages in order to track the progress in\n"
+"            solving an event track."
+msgstr ""
+"Xác định các bước sẽ được sử dụng trong sự kiện, từ bước\n"
+"            tạo bài cho tới bước đóng bài.\n"
+"            Bạn sẽ sử dụng các giai đoạn để theo dõi tiến trình\n"
+"            giải quyết một bài trong sự kiện. "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Delete"
+msgstr "Xoá"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__description
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Description"
+msgstr "Mô tả"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track25
+msgid "Design contest (entire afternoon)"
+msgstr "Cuộc thi thiết kế (cả buổi chiều)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track24
+msgid "Design contest (entire day)"
+msgstr "Cuộc thi thiết kế (cả ngày)"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track6
+msgid "Detailed roadmap of our new products"
+msgstr "Lộ trình chi tiết của sản phẩm mới "
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_1
+msgid "Discover more"
+msgstr "Tìm hiểu thêm"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track11
+msgid "Discover our new design team"
+msgstr "Khám phá đội ngũ thiết kế mới"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__display_name
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__display_name
+msgid "Display Name"
+msgstr "Tên hiển thị"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+msgid "Done"
+msgstr "Hoàn thành"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Dowel Hack"
+msgstr "Mẹo với thanh gỗ "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Dropdown menu"
+msgstr "Trình đơn thả xuống"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__duration
+msgid "Duration"
+msgstr "Thời lượng"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_3
+msgid "Easy Way To Build a Wooden House"
+msgstr "Cách đóng một căn nhà gỗ đơn giản "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "Edit Track"
+msgstr "Sửa Vết"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_email
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_email
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Email"
+msgstr "Email"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__mail_template_id
+msgid "Email Template"
+msgstr "Mẫu email"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Error"
+msgstr "Lỗi"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_event
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event"
+msgstr "Sự kiện"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_tree
+msgid "Event Location"
+msgstr "Địa điểm Sự kiện"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_location
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_location_form
+msgid "Event Locations"
+msgstr "Địa điểm Sự kiện"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
+msgid "Event Proposals Menus"
+msgstr "Menu đề xuất sự kiện"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_sponsor
+msgid "Event Sponsor"
+msgstr "Nhà tài trợ sự kiện"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_sponsor_type
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_type_view_tree
+msgid "Event Sponsor Type"
+msgstr "Kiểu Tài trợ Sự kiện"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_type_view_form
+msgid "Event Sponsor Types"
+msgstr "Kiểu Tài trợ Sự kiện"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_sponsor_action_from_event
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+msgid "Event Sponsors"
+msgstr "Nhà tài trợ Sự kiện"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_type
+msgid "Event Template"
+msgstr "Event Template"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tree
+msgid "Event Track"
+msgstr "Vết sự kiện"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_location
+msgid "Event Track Location"
+msgstr "Địa điểm bài sự kiện"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_stage
+msgid "Event Track Stage"
+msgstr "Giai đoạn bài sự kiện"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
+msgid "Event Track Tag"
+msgstr "Thẻ Theo vết Sự kiện"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_tag_category
+msgid "Event Track Tag Category"
+msgstr "Danh mục thẻ của bài sự kiện"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_from_event
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Event Tracks"
+msgstr "Theo vết Sự kiện"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
+#: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
+msgid "Event Tracks Menus"
+msgstr "Menu bài sự kiện"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_21
+msgid "Event Wrapup"
+msgstr "Tổng kết sự kiện"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,field_description:website_event_track.field_website__events_app_name
+msgid "Events App Name"
+msgstr "Tên ứng dụng sự kiện"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Events PWA"
+msgstr "PWA sự kiện"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Favorite On"
+msgstr "Yêu thích bật"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
+msgid "Favorites"
+msgstr "Yêu thích"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Fill this form to propose your talk."
+msgstr "Điền vào mẫu dưới đây đề đăng ký bài diễn thuyết của bạn."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
+msgid "Filter Tracks..."
+msgstr "Lọc các Vết"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Finished"
+msgstr "Đã kết thúc"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_2
+msgid "First Day Wrapup"
+msgstr "Tổng kết ngày đầu tiên"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__fold
+msgid "Folded in Kanban"
+msgstr "Đóng trong Kanban"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_follower_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_follower_ids
+msgid "Followers"
+msgstr "Người theo dõi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_channel_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Người theo dõi (Kênh)"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_partner_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Người theo dõi (Đối tác)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_type_icon
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_type_icon
+msgid "Font awesome icon e.g. fa-tasks"
+msgstr "Font biểu tượng ví dụ: fa-tasks"
+
+#. module: website_event_track
+#: model:event.track.tag.category,name:website_event_track.event_track_tag_category_2
+msgid "Format"
+msgstr "Định dạng"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Future Activities"
+msgstr "Hoạt động tương lai"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "Get prepared and"
+msgstr "Hãy chuẩn bị và"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Glue tip"
+msgstr "Mẹo dùng keo"
+
+#. module: website_event_track
+#: model:event.sponsor.type,name:website_event_track.event_sponsor_type3
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__gold
+msgid "Gold"
+msgstr "Vàng"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__done
+msgid "Green"
+msgstr "Xanh lá"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__normal
+msgid "Grey"
+msgstr "Màu xám"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Group By"
+msgstr "Nhóm theo"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_4
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_5
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_6
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_7
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_8
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_9
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_1
+msgid "Happy to be Sponsor"
+msgstr "Hạnh phúc khi là nhà tài trợ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_11
+msgid "Happy with OpenWood"
+msgstr "Cuộc sống vui hơn nhờ OpenWood"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__2
+msgid "High"
+msgstr "Cao"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__3
+msgid "Highest"
+msgstr "Cao nhất"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Home page"
+msgstr "Trang chủ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track21
+msgid "House of World Cultures"
+msgstr "Ngôi nhà hội tụ văn hóa thế giới"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track18
+msgid "How to build your marketing strategy within a competitive environment"
+msgstr "Cách tạo chiến lược tiếp thị trong môi trường cạnh tranh cao"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track15
+msgid "How to communicate with your community"
+msgstr "Cách giao tiếp với cộng đồng của bạn"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track1
+msgid "How to design a new piece of furniture"
+msgstr "Cách thiết kế một món đồ nội thất mới"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track4
+msgid "How to develop automated processes"
+msgstr "Cách phát triển quá trình tự động hóa"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track16
+msgid "How to follow us on the social media"
+msgstr "Cách theo dõi chúng tôi trên mạng xã hội"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track9
+msgid "How to improve your quality processes"
+msgstr "Cách cải thiện quy trình chất lượng"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track2
+msgid "How to integrate hardware materials in your pieces of furniture"
+msgstr "Cách thêm vật liệu phần cứng vào đồ nội thất"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track8
+msgid "How to optimize your sales, from leads to sales orders"
+msgstr "Cách tối ưu hóa doanh thu, từ lead tới đơn hàng. "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__id
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__id
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__id
+#: model:ir.model.fields,field_description:website_event_track.field_website__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu__id
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__id
+msgid "ID"
+msgstr "ID"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_exception_icon
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon"
+msgstr "Biểu tượng"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_exception_icon
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr "Biểu tượng để chỉ ra một hoạt động ngoại lệ."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_needaction
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_unread
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Nếu chọn, các tin nhắn mới yêu cầu sự có mặt của bạn."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_has_sms_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "Nếu đánh dấu thì một số thông điệp có lỗi."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__mail_template_id
+msgid ""
+"If set an email will be sent to the customer when the track reaches this "
+"step."
+msgstr ""
+"Nếu đặt, một email sẽ được gửi tới khách hàng khi bài chuyển tới bước này. "
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__wishlisted_by_default
+msgid ""
+"If set, the talk will be starred for each attendee registered to the event. "
+"The attendee won't be able to un-star this talk."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
+msgid "Image 128"
+msgstr "Ảnh 128"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_256
+msgid "Image 256"
+msgstr "Hình 256"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__website_image_url
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image_url
+msgid "Image URL"
+msgstr "URL Hình ảnh"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "In"
+msgstr "Trong"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_15
+msgid "In this video we will see how lumber is made in a sawmill factory."
+msgstr "Trong video này, chúng ta sẽ xem cách sản xuất gỗ xẻ trong xưởng cưa."
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "In this video, I covered 6 tips and tricks to help out beginners:"
+msgstr "Trong video này, tôi trình bày 6 mẹo để giúp người mới bắt đầu: "
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install"
+msgstr "Cài đặt"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/xml/website_event_pwa.xml:0
+#, python-format
+msgid "Install Application"
+msgstr "Cài đặt ứng dụng"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Interactivity"
+msgstr "Tương tác "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Introduction"
+msgstr "Đầu trang"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid "Inventory and Warehouse management"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_accepted
+msgid "Is Accepted"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_website_cta_live
+msgid "Is CTA Live"
+msgstr "CTA trực tiếp"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+msgid "Is Done"
+msgstr "Đã xong"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_is_follower
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_is_follower
+msgid "Is Follower"
+msgstr "Trở thành người theo dõi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
+msgid "Is Published"
+msgstr "Được đăng"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_reminder_on
+msgid "Is Reminder On"
+msgstr "Nhắc nhở bật"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_done
+msgid "Is Track Done"
+msgstr "Bài đã xong"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_live
+msgid "Is Track Live"
+msgstr "Bài trực tiếp"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_soon
+msgid "Is Track Soon"
+msgstr "Bài sắp tới"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_today
+msgid "Is Track Today"
+msgstr "Bài hôm nay"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_track_upcoming
+msgid "Is Track Upcoming"
+msgstr "Bài tiếp theo"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_wishlisted
+msgid "Is Wishlisted"
+msgstr "Trong wishlist"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__is_blacklisted
+msgid "Is reminder off"
+msgstr "Nhắc nhở tắt"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_2
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_2
+msgid ""
+"It provides post-graduate education in fluid dynamics\n"
+"                    (research master in fluid dynamics, former \"Diploma\n"
+"                    Course\", doctoral program, stagiaire program and lecture\n"
+"                    series) and encourages \"training in research through\n"
+"                    research\"."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_2
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_2
+msgid ""
+"It undertakes and promotes research in the field of fluid\n"
+"                    dynamics. It possesses about fifty different wind tunnels,\n"
+"                    turbomachinery and other specialized test facilities, some\n"
+"                    of which are unique or the largest in the world. Extensive\n"
+"                    research on experimental, computational and theoretical\n"
+"                    aspects of gas and liquid flows is carried out under the\n"
+"                    direction of the faculty and research engineers, sponsored\n"
+"                    mainly by governmental and international agencies as well\n"
+"                    as industries."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_function
+msgid "Job Position"
+msgstr "Chức vụ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
+msgid "Kanban State"
+msgstr "Giai đoạn Kanban"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track23
+msgid "Key Success factors selling our furniture"
+msgstr "Yếu tố chính bán thành công đồ nội thất của chúng tôi"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_9
+msgid "Kitchens for the Future"
+msgstr "Căn bếp tương lai"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_event_type____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_res_config_settings____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website_menu____last_update
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor____last_update
+msgid "Last Modified on"
+msgstr "Sửa lần cuối vào"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_uid
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_uid
+msgid "Last Updated by"
+msgstr "Cập nhật lần cuối bởi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__write_date
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__write_date
+msgid "Last Updated on"
+msgstr "Cập nhật lần cuối vào"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Late Activities"
+msgstr "Hoạt động trễ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track12
+msgid "Latest trends"
+msgstr "Xu hướng mới nhất"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_26
+msgid "Less Furniture is More Furniture"
+msgstr "Ít đồ nhưng hiệu quả"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_kanban
+msgid "Level:"
+msgstr "Cấp độ"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_4
+msgid "Life at Home Around the World: William’s Story"
+msgstr "Cuộc sống ở nhà trên khắp thế giới: Câu chuyện của William"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_19
+msgid ""
+"Link to Q&amp;A here! The time has come to hide those old block walls. Love "
+"simple and transformation type projects like this! :)-"
+msgstr ""
+"Link tới phần Hỏi &amp; Đáp! Đã tới lúc che đi các bức tường cũ kỹ. Bạn sẽ "
+"thích các dự án thay đổi diện mạo căn nhà như thế này! :)-"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside_other_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Live"
+msgstr "Trực tiếp"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_cards
+msgid "Live Now"
+msgstr "Đang trực tiếp"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_10
+msgid "Live Testimonial"
+msgstr "Nhận xét trực tiếp"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_25
+msgid "Live Testimonials"
+msgstr "Nhận xét trực tiếp"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__location_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_location__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Location"
+msgstr "Địa điểm"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_13
+msgid "Log House Building"
+msgstr "Xây nhà gỗ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_512
+msgid "Logo"
+msgstr "Biểu tượng"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_15
+msgid "Logs to lumber"
+msgstr "Từ gỗ cây đến gỗ xẻ"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__0
+msgid "Low"
+msgstr "Thấp"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track31
+msgid "Lunch"
+msgstr "Bữa ăn"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta
+msgid "Magic Button"
+msgstr "Nút thần kỳ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_main_attachment_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Tệp đính kèm chính"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Making a center marking gauge"
+msgstr "Làm thước đo đánh dấu tâm "
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid "Materials Management"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__priority__1
+msgid "Medium"
+msgstr "Kênh trung gian"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
+msgid "Menu Type"
+msgstr "Loại menu"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
+msgid "Message Delivery error"
+msgstr "Thông báo gửi đi gặp lỗi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_ids
+msgid "Messages"
+msgstr "Thông báo"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track22
+msgid "Minimal but efficient design"
+msgstr "Thiết kế tối giản nhưng hiệu quả"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Minutes before CTA starts"
+msgstr "phút trước khi nút CTA bắt đầu"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_remaining
+msgid "Minutes before track starts"
+msgstr "phút trước khi bài bắt đầu"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__track_start_relative
+msgid "Minutes compare to track start"
+msgstr "phút so với bắt đầu bài "
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Miter saw tip"
+msgstr "Mẹo dùng máy cưa bàn trượt"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_mobile
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Mobile"
+msgstr "Di động"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track30
+msgid "Morning break"
+msgstr "Nghỉ giải lao buổi sáng"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track27
+msgid "My Company global presentation"
+msgstr "Giới thiệu toàn cầu của My Company"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "My Tracks"
+msgstr "Bài của tôi"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name"
+msgstr "Tên"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
+msgid "Name of your website's Events Progressive Web Application"
+msgstr "Tên của ứng dụng PWA sự kiện của website của bạn"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track20
+msgid "New Certification Program"
+msgstr "Chương trình chứng nhận mới"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_event_track
+msgid "New Track"
+msgstr "Vết Mới"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_event_track
+msgid "New Track Created"
+msgstr "Vết Mới Được tạo"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_template_new
+msgid "New track proposal"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_date_deadline
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Hạn chót cho hành động kế tiếp"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_summary
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_summary
+msgid "Next Activity Summary"
+msgstr "Tóm tắt hoạt động tiếp theo"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_type_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_type_id
+msgid "Next Activity Type"
+msgstr "Kiểu hoạt động kế tiếp"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__no_ribbon
+msgid "No Ribbon"
+msgstr "Không ruy-băng"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "No track found."
+msgstr "Không tìm thấy bài"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_action_from_visitor
+msgid "No track wishlisted by this visitor"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+msgid "Not Accepted"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_tag__color
+msgid "Note that colorless tags won't be available on the website."
+msgstr "Lưu ý rằng thẻ không màu sẽ không hiện trên website. "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction_counter
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Số lượng hành động"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error_counter
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of errors"
+msgstr "Số lỗi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_needaction_counter
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Số thông báo cần xử lý"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_has_error_counter
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "Số lượng tin gửi đi bị lỗi"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__message_unread_counter
+#: model:ir.model.fields,help:website_event_track.field_event_track__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Số tin chưa đọc"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_24
+msgid "Old is New"
+msgstr "Cũ mà mới"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_20
+msgid "Our Last Day Together !"
+msgstr "Ngày cuối cùng tham gia cùng nhau!"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid ""
+"Our experts invent, imagine and develop solutions which meet\n"
+"                your business requirements. They build a new technical\n"
+"                environment for your company, but they always take the already\n"
+"                installed IT software into account. That is why Idealis\n"
+"                Consulting delivers excellence in HR and SC Management."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__partner_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Partner"
+msgstr "Đối tác"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track14
+msgid "Partnership programs"
+msgstr "Chương trình đối tác"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid "Personnel Administration"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_phone
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_phone
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Phone"
+msgstr "Điện thoại"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Plan your experience by adding your favorites talks to your wishlist"
+msgstr "Lập kế hoạch bằng cách thêm diễn thuyết yêu thích vào wishlist"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track3
+msgid "Portfolio presentation"
+msgstr "Thuyết trình giới thiệu công ty"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_16
+msgid "Pretty. Ugly. Lovely."
+msgstr "Đẹp. Xấu. Đáng yêu. "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "Previous page"
+msgstr "Trang trước"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__priority
+msgid "Priority"
+msgstr "Độ ưu tiên"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_7
+msgid ""
+"Probably one of the most asked questions I've gotten is how I got started "
+"woodworking! In this video I share with you how/why I started building "
+"furniture!"
+msgstr ""
+"Một trong những câu mọi người hay hỏi tôi nhất là tôi bắt đầu làm mộc như "
+"thế nào! Trong video này, tôi sẽ chia sẻ với các bạn lý do và cách tôi bắt "
+"đầu tự đóng đồ nội thất!"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage0
+msgid "Proposal"
+msgstr "Đề xuất"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Proposals are closed!"
+msgstr "Đề xuất đã đóng!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track_proposal
+msgid "Proposals on Website"
+msgstr "Đề xuất trên website"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage3
+msgid "Published"
+msgstr "Đã đăng"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track10
+msgid "Raising qualitive insights from your customers"
+msgstr "Tiếp cận thông tin chi tiết về chất lượng từ khách hàng của bạn"
+
+#. module: website_event_track
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_track__kanban_state__blocked
+msgid "Red"
+msgstr "Đỏ"
+
+#. module: website_event_track
+#: model:event.track.stage,name:website_event_track.event_track_stage4
+msgid "Refused"
+msgstr "Bị từ chối"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_relative
+msgid "Relative time compared to track start (seconds)"
+msgstr "Thời gian tương đối so với khi bài bắt đầu (giây)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_cta_start_remaining
+msgid "Remaining time before CTA starts (seconds)"
+msgstr "Thời gian còn lại trước khi nút CTA bắt đầu (giây)"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__track_start_remaining
+msgid "Remaining time before track starts (seconds)"
+msgstr "Thời gian còn lại trước khi bài bắt đầu (giây)"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid "Reporting"
+msgstr "Báo cáo"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__user_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Responsible"
+msgstr "Người phụ trách"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__activity_user_id
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__activity_user_id
+msgid "Responsible User"
+msgstr "Người phụ trách"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_23
+msgid "Restoring Old Woodworking Tools"
+msgstr "Khôi phục công cụ làm mộc đã cụ"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_23
+msgid "Restoring old woodworking tools"
+msgstr "Khôi phục công cụ làm mộc đã cũ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__display_ribbon_style
+msgid "Ribbon Style"
+msgstr "Kiểu ruy-băng"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_18
+msgid "Right angle clamp jig"
+msgstr "Đồ gá kẹp góc vuông"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__is_seo_optimized
+msgid "SEO optimized"
+msgstr "Tối ưu SEO"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_sms_error
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr "Lỗi gửi SMS"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid "Sales and Distribution"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "Schedule some tracks to get started !"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_6
+msgid "Securing your Lumber during transport"
+msgstr "Buộc gỗ trong quá trình vận chuyển"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
+msgid "Seo name"
+msgstr "Tên Seo"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__sequence
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__sequence
+msgid "Sequence"
+msgstr "Trình tự"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.track_widget_reminder
+#, python-format
+msgid "Set Favorite"
+msgstr "Đặt yêu thích"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Show all records which has next action date is before today"
+msgstr "Hiển thị tất cả dữ liệu có ngày xử lý tiếp theo trước ngày hôm nay"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Showcase Tracks"
+msgstr "Trưng bày bài"
+
+#. module: website_event_track
+#: model:event.sponsor.type,name:website_event_track.event_sponsor_type2
+#: model:ir.model.fields.selection,name:website_event_track.selection__event_sponsor_type__display_ribbon_style__silver
+msgid "Silver"
+msgstr "Bạc"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
+msgid "Speaker"
+msgstr "Diễn giả"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track.py:0
+#, python-format
+msgid "Speaker Email"
+msgstr "Email diễn giả"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__image
+msgid "Speaker Photo"
+msgstr "Ảnh diễn giả"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Biography"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Email"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Name"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Phone"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Speaker(s) Picture"
+msgstr ""
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_track.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+#, python-format
+msgid "Speakers"
+msgstr "Diễn giả"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_sponsor.py:0
+#, python-format
+msgid "Sponsor"
+msgstr "Nhà tài trợ "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_count
+msgid "Sponsor Count"
+msgstr "Số lượng nhà tài trợ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__email
+msgid "Sponsor Email"
+msgstr "Email nhà tài trợ "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__mobile
+msgid "Sponsor Mobile"
+msgstr "SĐT nhà tài trợ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__name
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "Sponsor Name"
+msgstr "Tên nhà tài trợ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__phone
+msgid "Sponsor Phone"
+msgstr "Số ĐT nhà tài trợ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__name
+msgid "Sponsor Type"
+msgstr "Kiểu Tài trợ"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_sponsor_type_action
+#: model:ir.ui.menu,name:website_event_track.menu_event_sponsor_type
+msgid "Sponsor Types"
+msgstr "Kiểu Tài trợ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__url
+msgid "Sponsor Website"
+msgstr "Website Nhà tài trợ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_kanban
+msgid "Sponsor image"
+msgstr "Hình ảnh nhà tài trợ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__partner_id
+msgid "Sponsor/Customer"
+msgstr "Nhà tài trợ/Khách hàng"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__sponsor_type_id
+msgid "Sponsoring Type"
+msgstr "Kiểu Tài trợ"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__sponsor_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+msgid "Sponsors"
+msgstr "Nhà Tài trợ"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid ""
+"Sponsors might be advertised on your event pages footer.<br>\n"
+"    Exhibitors might have a dedicated page with chat room for people to connect with them."
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+msgid "Sponsorship"
+msgstr "Chương trình tài trợ "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Stage"
+msgstr "Giai đoạn"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__name
+msgid "Stage Name"
+msgstr "Tên giai đoạn"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "Starting in"
+msgstr ""
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track28
+msgid "Status & Strategy"
+msgstr "Trạng thái & Chiến thuật"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_state
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+"Trạng thái dựa trên hoạt động\n"
+"Quá hạn: Ngày đến hạn phải được chuyển\n"
+"Hôm nay: Hôm nay là ngày phải thực hiện\n"
+"Kế hoạch: Các hoạt động trong tương lai."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submission Agreement"
+msgstr "Thoả thuận Đăng ký"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Submit Proposal"
+msgstr "Đăng ký Diễn thuyết"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__name
+msgid "Tag Name"
+msgstr "Tên Từ khóa"
+
+#. module: website_event_track
+#: model:ir.model.constraint,message:website_event_track.constraint_event_track_tag_name_uniq
+msgid "Tag name already exists !"
+msgstr "Tên thẻ đã tồn tại!"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__tag_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag_category__tag_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Tags"
+msgstr "Tag"
+
+#. module: website_event_track
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_1
+#: model_terms:event.sponsor,website_description:website_event_track.event_7_sponsor_3
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_0
+#: model_terms:event.sponsor,website_description:website_event_track.event_sponsor_3
+msgid "Talent Management"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talk Introduction"
+msgstr "Giới thiệu Bài diễn thuyết"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_event.py:0
+#, python-format
+msgid "Talk Proposals"
+msgstr "Đăng ký Diễn thuyết"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talk Title"
+msgstr "Tiêu đề Diễn thuyết"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk added to your Favorites"
+msgstr "Đã thêm diễn thuyết vào yêu thích"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk already in your Favorites"
+msgstr "Diễn thuyết đã có trong yêu thích"
+
+#. module: website_event_track
+#. openerp-web
+#: code:addons/website_event_track/static/src/js/event_track_reminder.js:0
+#, python-format
+msgid "Talk removed from your Favorites"
+msgstr "Đã bỏ diễn thuyết khỏi yêu thích"
+
+#. module: website_event_track
+#: code:addons/website_event_track/models/event_event.py:0
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_aside
+#, python-format
+msgid "Talks"
+msgstr "Diễn thuyết"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "Talks Types"
+msgstr "Kiểu Diễn thuyết"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
+msgid "Thank you for your proposal."
+msgstr "Cám ơn bạn đã đăng ký."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_url
+msgid "The full URL to access the document through the website."
+msgstr "URL đầy đủ để truy cập tài liệu thông qua trang web."
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track17
+#: model:event.track,name:website_event_track.event_track29
+msgid "The new marketing strategy"
+msgstr "Chiến lược tiếp thị mới"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_track5
+msgid "The new way to promote your creations"
+msgstr "Cách mới để quảng bá sản phẩm mới"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_17
+msgid ""
+"There are a lot of ideas worth exploring so start with the 10 DIY furniture "
+"ideas for absolute beginners."
+msgstr ""
+"Có rất nhiều ý tưởng đáng thử trong bài 10 ý tưởng nội thất DIY cho người "
+"mới bắt đầu. "
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"There are several variants of wood is available in the world but we are talking about most expensive\n"
+"    ones in the world and keeping to the point we have arranged ten most expensive wood."
+msgstr ""
+"Có rất nhiều loại gỗ khác nhau trên thế giới nhưng chúng ta sẽ nói về những loại đắt nhất \n"
+"    trên thế giới và để cô đọng nội dung, chúng ta sẽ chỉ bàn về 10 loại gỗ đắt nhất."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "This event does not accept proposals."
+msgstr "Sự kiện này không cho phép đăng ký diễn thuyết."
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_website__app_icon
+msgid ""
+"This field holds the image used as mobile app icon on the website (PNG "
+"format)."
+msgstr ""
+"Trường này chứa ảnh dùng làm biểu tượng ứng dụng di động trên website (định "
+"dạng PNG). "
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_res_config_settings__events_app_name
+#: model:ir.model.fields,help:website_event_track.field_website__events_app_name
+msgid "This fields holds the Event's Progressive Web App name."
+msgstr "Trường này chứa tên ứng dụng PWA của Sự kiện. "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid ""
+"This page hasn't been saved for offline reading yet.<br/>Please check your "
+"network connection."
+msgstr ""
+"Trang này chưa được lưu để đọc offline.<br/>Vui lòng kiểm tra kết nối mạng. "
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track_stage__fold
+msgid ""
+"This stage is folded in the kanban view when there are no records in that "
+"stage to display."
+msgstr ""
+"Giai đoạn này sẽ hiện thị đóng ở giao diện Kanban khi không có bản ghi nào "
+"thuộc giai đoạn này để hiển thị."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"Timely release of presentation material (slides),\n"
+"                                    for publishing on our website."
+msgstr ""
+"Phát hành bài thuyết trình (slide) kịp thời để đăng trên website của chúng "
+"tôi."
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__name
+msgid "Title"
+msgstr "Tiêu đề"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Today Activities"
+msgstr "Các oạt động hôm nay"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_22
+msgid "Tools for the Woodworking Beginner"
+msgstr "Công cụ cho người mới học làm mộc"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_5
+msgid "Top 10 Most Expensive Wood in the World"
+msgstr "10 loại gỗ đắt nhất trên thế giới"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_5
+msgid ""
+"Top most expensive wood in the world is quite interesting topic and several people may be surprised\n"
+"    that there are hundreds of wood types exist around the globe following different properties and use."
+msgstr ""
+"Loại gỗ đắt nhất trên thế giới là một chủ đề thú vị và nhiều người có thể sẽ ngạc nhiên\n"
+"    khi biết rằng có hàng trăm loại gỗ khác nhau tùy thuộc vào đặc tính và mục đích sử dụng.  "
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__track_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Track"
+msgstr "Vết"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_event_track_visitor
+msgid "Track / Visitor Link"
+msgstr "Link bài / Khách"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_blocked
+msgid "Track Blocked"
+msgstr "Bài đã chặn"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
+msgid "Track Count"
+msgstr "Đếm bài"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date
+msgid "Track Date"
+msgstr "Ngày"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
+msgid "Track End Date"
+msgstr "Ngày cuối bài"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr "Địa điểm bài"
+
+#. module: website_event_track
+#: model:mail.message.subtype,name:website_event_track.mt_track_ready
+msgid "Track Ready"
+msgstr "Bài sẵn sàng"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_ready
+msgid "Track Ready for Next Stage"
+msgstr "Bài sẵn sàng cho giai đoạn kế tiếp"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
+msgid "Track Stage"
+msgstr "Giai đoạn bài"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
+#: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
+msgid "Track Stages"
+msgstr "Giai đoạn bài"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_tag_category_action
+#: model:ir.ui.menu,name:website_event_track.event_track_tag_category_menu
+msgid "Track Tag Categories"
+msgstr "Danh mục thẻ của bài"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_form
+msgid "Track Tag Category"
+msgstr "Danh mục thẻ của bài"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__tracks_tag_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_tag
+msgid "Track Tags"
+msgstr "Thẻ bài"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_tag_category_view_list
+msgid "Track Tags Category"
+msgstr "Danh mục thẻ bài"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_form
+msgid "Track Visitor"
+msgstr "Theo dõi khách truy cập"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_visitor_action
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__event_track_visitor_ids
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_visitor_ids
+#: model:ir.ui.menu,name:website_event_track.event_track_visitor_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_list
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Track Visitors"
+msgstr "Khách xem bài"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_track_visitor_action
+msgid ""
+"Track Visitors store statistics on track attendance, including\n"
+"              wishlist management."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_soon
+msgid "Track begins soon"
+msgstr "Bài sắp bắt đầu"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_today
+msgid "Track begins today"
+msgstr "Bài bắt đầu hôm nay"
+
+#. module: website_event_track
+#: model:mail.message.subtype,description:website_event_track.mt_track_blocked
+msgid "Track blocked"
+msgstr "Bài đã chặn"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__duration
+msgid "Track duration in hours."
+msgstr "Thời lượng bài theo giờ. "
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_live
+msgid "Track has started and is ongoing"
+msgstr "Bài đã bắt đầu và đang diễn ra"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_done
+msgid "Track is finished"
+msgstr "Bài đã hoàn tất"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_track__is_track_upcoming
+msgid "Track is not yet started"
+msgstr "Bài chưa bắt đầu"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_tag__track_ids
+#: model:ir.ui.menu,name:website_event_track.menu_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_event_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_graph
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_form
+msgid "Tracks"
+msgstr "Vết"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
+msgid "Tracks Proposals on Website"
+msgstr "Đề xuất bài trên website"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
+msgid ""
+"Tracks define the schedule of your event.<br>These can be a talk, a round "
+"table, a meeting, etc."
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_event__website_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
+msgid "Tracks on Website"
+msgstr "Bài trên website"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__activity_exception_decoration
+#: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Loại hoạt động ngoại lệ trên hồ sơ."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
+msgid "Unpublished"
+msgstr "Chưa xuất bản"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_unread
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_unread
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
+msgid "Unread Messages"
+msgstr "Tin chưa đọc"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_unread_counter
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Bộ đếm tin chưa đọc"
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Use these simple steps to easily haul LONG lumber in a short box pickup truck.  A dose of carpenter's\n"
+"    ingenuity along with a couple boards, a sturdy strap and a few screws are all I use to easily haul\n"
+"    long boards from the lumberyard to the Next Level Carpentry shop or jobsite."
+msgstr ""
+"Sử dụng các bước đơn giản sau để dễ dàng vận chuyển gỗ DÀI trong một chiếc xe bán tải thùng ngắn. Kết hợp giữa sự khéo léo\n"
+"    của thợ mộc cùng với vài tấm bảng, một dây đeo chắc chắn và một vài đinh vít là tất cả những gì tôi dùng để vận chuyển \n"
+"    các tấm gỗ dài từ xưởng gỗ đến cửa hàng hoặc công trường của  Next Level Carpentry. "
+
+#. module: website_event_track
+#: model_terms:event.track,description:website_event_track.event_7_track_6
+msgid ""
+"Using a unique wrapping method for a tie down strap (NOT Bungee cords!!!) allows lumber to be\n"
+"    cinched securely WITHOUT the need to tie and untie tricky or complicated knots."
+msgstr ""
+"Sử dụng phương pháp quấn độc đáo cho dây buộc (KHÔNG cần dây chằng) giúp chằng gỗ tấm\n"
+"    chắc chắn mà KHÔNG cần phải buộc hay gỡ các nút thắt phức tạp. "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "View Track"
+msgstr "Xem Vết"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_published
+msgid "Visible on current website"
+msgstr "Hiển thị ở website hiện tại"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_visitor__visitor_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_visitor_view_search
+msgid "Visitor"
+msgstr "Khách"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__wishlist_visitor_ids
+msgid "Visitor Wishlist"
+msgstr "Wishlist của khách"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_visitor_action_from_track
+msgid "Visitors Wishlist"
+msgstr "Wishlist của khách"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_1
+msgid "Voice from Customer"
+msgstr "Ý kiến khách hàng"
+
+#. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.website_visitor_action_from_track
+msgid "Wait for visitors to wishlist your tracks"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "We did not find any track matching your"
+msgstr "Chúng tôi không tìm thấy bài phù hợp với từ khóa "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid "We require speakers to accept an agreement in which they commit to:"
+msgstr ""
+"Chúng tôi yêu cầu các diễn giả phải chấp thuận thoả thuận mà trong trong đó "
+"họ phải cam kết:"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
+msgid ""
+"We will accept a broad range of\n"
+"                                presentations, from reports on academic and\n"
+"                                commercial projects to tutorials and case\n"
+"                                studies. As long as the presentation is\n"
+"                                interesting and potentially useful to the\n"
+"                                audience, it will be considered for\n"
+"                                inclusion in the programme."
+msgstr ""
+"Chúng tôi chấp thuận một phạm vi thuyết\n"
+"                                trình rộng lớn, từ các báo cáo về các học viện và\n"
+"                                các dự and thương mại đến các hướng dẫn và tình huống\n"
+"                                nghiên cứu. Miễn là các bài thuyết trình có thể hữu ích,\n"
+"                                thú vị với độc giả, chúng sẽ được xem xét đưa vào chương trình."
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal_success
+msgid "We will evaluate your proposition and get back to you shortly."
+msgstr "Chúng tôi sẽ đánh giá đề xuất của bạn và trả lời bạn sớm. "
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_tree
+msgid "Website"
+msgstr "Trang web"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_website__app_icon
+msgid "Website App Icon"
+msgstr "Icon ứ.dụng website"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_event_menu
+msgid "Website Event Menu"
+msgstr "Menu sự kiện website"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_image
+msgid "Website Image"
+msgstr "Ảnh website"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "Trình đơn Website"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__website_message_ids
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids
+msgid "Website Messages"
+msgstr "Thông báo Website"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_url
+msgid "Website URL"
+msgstr "Địa chỉ website"
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_visitor
+msgid "Website Visitor"
+msgstr "Khách truy cập website"
+
+#. module: website_event_track
+#: model:ir.model.fields,help:website_event_track.field_event_sponsor__website_message_ids
+#: model:ir.model.fields,help:website_event_track.field_event_track__website_message_ids
+msgid "Website communication history"
+msgstr "Lịch sử thông tin liên lạc website"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_description
+msgid "Website meta description"
+msgstr "Mô tả website dữ liệu"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_keywords
+msgid "Website meta keywords"
+msgstr "Từ khóa website dữ liệu"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_title
+msgid "Website meta title"
+msgstr "Tiêu đề website dữ liệu"
+
+#. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track__website_meta_og_img
+msgid "Website opengraph image"
+msgstr "Hình ảnh trang web"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_10
+msgid "Welcome to Day 2"
+msgstr "Chào mừng tới ngày thứ 2"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_1
+msgid "What This Event Is All About"
+msgstr "Nội dung của sự kiện"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_l3_2
+msgid "Who's OpenWood anyway ?"
+msgstr "OpenWood là ai?"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "Wishlisted By"
+msgstr "wishlist của"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.event_track_action_from_visitor
+#: model:ir.model.fields,field_description:website_event_track.field_website_visitor__event_track_wishlisted_ids
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_visitor_view_kanban
+msgid "Wishlisted Tracks"
+msgstr "Bài trong wishlist"
+
+#. module: website_event_track
+#: model:event.track,name:website_event_track.event_7_track_7
+msgid "Woodworking: How I got started!"
+msgstr "Làm mộc: Cách tôi bắt đầu!"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.pwa_offline
+msgid "You're offline!"
+msgstr "Bạn đang offline!"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_cards_track
+msgid "ago"
+msgstr "trước"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "e.g. : OpenWood Decoration"
+msgstr "vd:  Trang trí nội thất OpenWood"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+msgid "e.g. : open.wood.decoration@example.com"
+msgstr "vd. : open.wood.decoration@example.com"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Get Yours Now !"
+msgstr "vd. Nhận ngay!"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. Inspiring Business Talk"
+msgstr "vd: Diễn thuyết Truyền cảm hứng Kinh doanh"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "e.g. http://www.example.com"
+msgstr "vd. http://www.example.com"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
+msgid "hours"
+msgstr "giờ"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
+msgid "minutes after talk start"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.registration_complete
+msgid "register to your favorites talks now."
+msgstr "đăng ký tham dự buổi diễn thuyết bạn yêu thích ngay. "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+#: model_terms:ir.ui.view,arch_db:website_event_track.tracks_main
+msgid "search."
+msgstr "tìm kiếm của bạn. "
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts in"
+msgstr "bắt đầu lúc"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
+msgid "starts on"
+msgstr "bắt đầu vào"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.agenda_main
+msgid "tracks"
+msgstr "bài"

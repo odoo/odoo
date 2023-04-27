@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
+        <xpath expr="//div[hasclass('orderlines')]" position="before">
+            <t t-if="receipt.client and env.pos.company.country and env.pos.company.country.code == 'IN'">
+                <div class="pos-receipt-center-align">
+                    <div><t t-esc="receipt.client.name" /></div>
+                    <t t-if="receipt.client.phone">
+                        <div>
+                            <span>Phone: </span>
+                            <t t-esc="receipt.client.phone" />
+                        </div>
+                    </t>
+                    <br />
+                </div>
+            </t>
+        </xpath>
+        <xpath expr="//WrappedProductNameLines" position="after">
+            <t t-if="line.l10n_in_hsn_code and env.pos.company.country and env.pos.company.country.code == 'IN'">
+                <div class="pos-receipt-left-padding">
+                    <span>HSN Code: </span>
+                    <t t-esc="line.l10n_in_hsn_code"/>
+                </div>
+            </t>
+        </xpath>
+    </t>
+</templates>

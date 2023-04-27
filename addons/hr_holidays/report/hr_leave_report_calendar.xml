@@ -1,0 +1,40 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+    <record id="action_hr_holidays_dashboard" model="ir.actions.act_window">
+        <field name="name">All Time Off</field>
+        <field name="res_model">hr.leave.report.calendar</field>
+        <field name="view_mode">calendar</field>
+        <!-- YTI : Ecrabouille explicitely those fields, as this is deployed on 
+                   a stable release. -->
+        <field name="view_id"/>
+        <field name="search_view_id"/>
+        <field name="domain">[('employee_id.active','=',True)]</field>
+        <field name="context">{'hide_employee_name': 1}</field>
+    </record>
+
+    <record id="hr_leave_report_calendar_view" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.view</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="arch" type="xml">
+            <calendar string="Time Off" date_start="start_datetime" date_stop="stop_datetime" mode="month" quick_add="False" color="employee_id" event_open_popup="True" js_class="time_off_calendar_all" show_unusual_days="True">
+                <field name="name"/>
+                <field name="employee_id" filters="1" invisible="1"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="hr_leave_report_calendar_view_form" model="ir.ui.view">
+        <field name="name">hr.leave.report.calendar.view.form</field>
+        <field name="model">hr.leave.report.calendar</field>
+        <field name="arch" type="xml">
+            <form string="Time Off">
+                <group>
+                    <field name="name"/>
+                    <field name="start_datetime"/>
+                    <field name="stop_datetime"/>
+                    <field name="employee_id" />
+                </group>
+            </form>
+        </field>
+    </record>
+</odoo>

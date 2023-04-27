@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates>
+
+    <div t-name="web.PivotRenderer" class="o_pivot" owl="1">
+        <t t-if="!(props.hasData and props.measures.length) or (props.isSample and !props.isEmbedded)">
+            <t t-if="props.noContentHelp" t-call="web.ActionHelper" >
+                <t t-set="noContentHelp" t-value="props.noContentHelp"/>
+            </t>
+            <t t-else="" t-call="web.NoContentHelper"/>
+        </t>
+
+        <table t-if="props.hasData and props.measures.length" class="table-hover table-sm table-bordered" t-att-class="{ o_enable_linking: !props.disableLinking }">
+            <thead>
+                <tr t-foreach="props.table.headers" t-as="row" t-key="'header_' + row_index">
+                    <t t-foreach="row" t-as="cell" t-key="'header_row_' + cell_index">
+                        <t t-if="cell.measure" t-call="web.PivotMeasure"/>
+                        <t t-elif="cell.isLeaf !== undefined" t-call="web.PivotHeader">
+                            <t t-set="isXAxis" t-value="true"/>
+                        </t>
+                        <th t-else="1" t-att-colspan="cell.width" t-att-rowspan="cell.height"/>
+                    </t>
+                </tr>
+            </thead>
+            <tbody>
+                <tr t-foreach="props.table.rows" t-as="row" t-key="'row_' + row_index">
+                    <t t-call="web.PivotHeader">
+                        <t t-set="isXAxis" t-value="false"/>
+                        <t t-set="cell" t-value="row"/>
+                    </t>
+                    <t t-foreach="row.subGroupMeasurements" t-as="cell" t-key="'row_cell_' + cell_index">
+                        <td class="o_pivot_cell_value text-right" t-att-class="{
+                                o_empty: cell.value === undefined,
+                                'font-weight-bold': cell.isBold,
+                            }" t-on-click="trigger('open_view', cell)"
+                               t-on-mouseover="_onMouseEnter" t-on-mouseout="_onMouseLeave">
+                            <t t-if="cell.value !== undefined">
+                                <div t-if="cell.originIndexes.length > 1" class="o_variation" t-att-class="{
+                                         o_positive: cell.value &gt; 0,
+                                         o_negative: cell.value &lt; 0,
+                                         o_null: cell.value === 0,
+                                    }" t-esc="_getFormattedVariation(cell)"/>
+                                <div t-elif="props.fields and props.fields[cell.measure].type === 'boolean'" class="o_value">
+                                    <div class="custom-control custom-checkbox">
+                                        <input type="checkbox" t-attf-id="checkbox_{{cell_index}}_{{row_index}}" disabled="disabled" t-att-checked="cell.value" class="custom-control-input"/>
+                                        <label t-attf-for="checkbox_{{cell_index}}_{{row_index}}" class="custom-control-label"/>
+                                    </div>
+                                </div>
+                                <div t-else="1" class="o_value" t-esc="_getFormattedValue(cell)"/>
+                            </t>
+                        </td>
+                    </t>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <t t-name="web.PivotHeader" owl="1">
+        <th t-att-colspan="isXAxis ? cell.width : undefined" t-att-rowspan="isXAxis ? cell.height : undefined" t-att-class="{
+                o_pivot_header_cell_closed: cell.isLeaf,
+                o_pivot_header_cell_opened: !cell.isLeaf,
+            }" t-attf-style="{{ isXAxis ? undefined : 'padding-left: ' + _getPadding(cell) + 'px;' }}" t-att-title="cell.label" t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')">
+            <span t-on-click.self.prevent="_onHeaderClick(cell, isXAxis ? 'col' : 'row')" t-esc="cell.title"/>
+            <t t-if="_isClicked(cell.groupId, isXAxis)" t-call="web.PivotGroupBySelection"/>
+        </th>
+    </t>
+
+    <t t-name="web.PivotMeasure" owl="1">
+        <th class="text-muted" t-att-colspan="cell.width" t-att-rowspan="cell.height" t-att-class="{
+                o_pivot_origin_row: cell.originIndexes,
+                o_pivot_measure_row: !cell.originIndexes,
+                o_pivot_sort_order_asc: cell.order === 'asc',
+                o_pivot_sort_order_desc: cell.order === 'desc',
+            }" t-on-click.prevent="trigger('sort_rows',cell)" t-on-mouseover="_onMouseEnter" t-on-mouseout="_onMouseLeave">
+            <t t-esc="cell.title"/>
+        </th>
+    </t>
+
+    <div t-name="web.PivotGroupBySelection" class="dropdown" owl="1">
+        <div class="dropdown-menu o_pivot_field_menu show" data-display="static" role="menu">
+            <t t-foreach="props.selectionGroupBys" t-as="field" t-key="field.field.name">
+                <t t-if="(field.field.type === 'date') || (field.field.type === 'datetime')">
+                    <div role="menuitem" aria-haspopup="true" class="o_inline_dropdown">
+                        <a href="#"
+                           t-on-click.prevent="_onClickMenuGroupBy(field, 'month')"
+                           class="dropdown-item o_pivot_field_selection"
+                           t-att-class="{ disabled: field.active }"
+                           t-att-data-field="field.name"
+                        >
+                            <t t-esc="field.field.string"/>
+                        </a>
+                        <div class="dropdown-menu" role="menu">
+                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'day')">Day</a>
+                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'week')">Week</a>
+                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'month')">Month</a>
+                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'quarter')">Quarter</a>
+                            <a role="menuitem" t-att-data-field="field.name" href="#" class="dropdown-item" t-on-click.prevent="_onClickMenuGroupBy(field, 'year')">Year</a>
+                        </div>
+                    </div>
+                </t>
+                <a t-else="" href="#" role="menuitem" class="dropdown-item" t-att-data-field="field.name" t-att-class="{ disabled: field.active }" t-on-click.prevent="_onClickMenuGroupBy(field, false)">
+                    <t t-esc="field.field.string"/>
+                </a>
+            </t>
+        </div>
+    </div>
+
+</templates>

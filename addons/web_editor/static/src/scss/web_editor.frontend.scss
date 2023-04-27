@@ -1,0 +1,74 @@
+@include media-breakpoint-down(sm) {
+    img, .media_iframe_video, span.fa, i.fa {
+        transform: none !important;
+    }
+}
+
+.o_wysiwyg_loader {
+    @extend :disabled;
+    pointer-events: none;
+    min-height: 100px;
+    color: transparent;
+}
+.o_wysiwyg_loading {
+    @include o-position-absolute($top: 50%, $left: 50%);
+    transform: translate(-50%, -50%)
+}
+
+.ui-autocomplete {
+    max-height: 50vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    .ui-menu-item {
+        padding: 0;
+        > .ui-state-active {
+            border: none;
+            font-weight: normal;
+            margin: 0;
+        }
+    }
+}
+
+// Background shapes
+.o_we_shape {
+    @extend %o-we-background-layer;
+
+    @each $module, $shapes in $o-bg-shapes {
+        @each $shape, $style in $shapes {
+            $url-params: '';
+            $colors: map-get($style, 'colors');
+            @each $i in $colors {
+                // %23 is the url-encoded form of '#' which doesn't work as is in urls.
+                $color: str-replace("#{map-get($o-color-palette, "o-color-#{$i}")}", '#', '%23');
+                $url-params: '#{$url-params}&c#{$i}=#{$color}';
+            }
+
+            // eg: o_website_shape_bg_1
+            &.o_#{$module}_#{str-replace($shape, '/', '_')} {
+                // When not customized, this URL, built in SCSS, allows for the
+                // shape to be dynamic and adapted if future color changes.
+                background-image: url("/web_editor/shape/#{$module}/#{$shape}.svg?#{str-slice($url-params, 2)}");
+                background-position: map-get($style, 'position');
+                background-size: map-get($style, 'size');
+                @if map-get($style, 'repeat-y') {
+                    background-repeat: repeat-y;
+                }
+            }
+        }
+    }
+}
+@include media-breakpoint-down(sm) {
+    .o_we_shape {
+        display: none;
+    }
+}
+.o_we_flip_x {
+    transform: scaleX(-1);
+}
+.o_we_flip_y {
+    transform: scaleY(-1);
+}
+.o_we_flip_x.o_we_flip_y {
+    transform: scale(-1);
+}

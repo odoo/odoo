@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Basics of Furniture Creation Certification  -->
+        <record model="survey.survey" id="furniture_certification">
+            <field name="title">Furniture Creation Certification</field>
+            <field name="access_token">5632a4d7-48cf-4d25-8c52-2174d58cf50b</field>
+            <field name="state">open</field>
+            <field name="access_mode">public</field>
+            <field name="users_can_go_back" eval="True" />
+            <field name="users_login_required" eval="True" />
+            <field name="scoring_type" >scoring_with_answers</field>
+            <field name="certification" eval="True"></field>
+            <field name="certification_mail_template_id" ref="survey.mail_template_certification"></field>
+            <field name="is_attempts_limited" eval="True" />
+            <field name="attempts_limit">3</field>
+            <field name="description">&lt;p&gt;Test your furniture knowledge!&lt;/p&gt;</field>
+        </record>
+        <!-- Page 1 -->
+        <record model="survey.question" id="furniture_certification_page_1">
+            <field name="title">Furniture</field>
+            <field name="survey_id" ref="furniture_certification" />
+            <field name="sequence">1</field>
+            <field name="is_page" eval="True"/>
+            <field name="description">&lt;p&gt;Test your furniture knowledge!&lt;/p&gt;</field>
+        </record>
+        <!-- Question and predefined answer 1 -->
+        <record model="survey.question" id="furniture_certification_page_1_question_1">
+            <field name="survey_id" ref="furniture_certification" />
+            <field name="sequence">2</field>
+            <field name="title">What type of wood is the best for furniture?</field>
+            <field name="question_type">simple_choice</field>
+            <field name="constr_mandatory" eval="True" />
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_1_choice_1">
+            <field name="question_id" ref="furniture_certification_page_1_question_1"/>
+            <field name="sequence">1</field>
+            <field name="value">Fir</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_1_choice_2">
+            <field name="question_id" ref="furniture_certification_page_1_question_1"/>
+            <field name="sequence">2</field>
+            <field name="value">Oak</field>
+            <field name="is_correct" eval="True" />
+            <field name="answer_score">2.0</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_1_choice_3">
+            <field name="question_id" ref="furniture_certification_page_1_question_1"/>
+            <field name="sequence">3</field>
+            <field name="value">Ash</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_1_choice_4">
+            <field name="question_id" ref="furniture_certification_page_1_question_1"/>
+            <field name="sequence">4</field>
+            <field name="value">Beech</field>
+        </record>
+        <!-- Question and predefined answer 2 -->
+        <record model="survey.question" id="furniture_certification_page_1_question_2">
+            <field name="survey_id" ref="furniture_certification" />
+            <field name="sequence">3</field>
+            <field name="title">Select all the furniture shown in the video</field>
+            <field name="question_type">multiple_choice</field>
+            <field name="column_nb">4</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_2_choice_1">
+            <field name="question_id" ref="furniture_certification_page_1_question_2"/>
+            <field name="sequence">1</field>
+            <field name="value">Chair</field>
+            <field name="is_correct" eval="True" />
+            <field name="answer_score">1.0</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_2_choice_2">
+            <field name="question_id" ref="furniture_certification_page_1_question_2"/>
+            <field name="sequence">2</field>
+            <field name="value">Table</field>
+            <field name="answer_score">-1.0</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_2_choice_3">
+            <field name="question_id" ref="furniture_certification_page_1_question_2"/>
+            <field name="sequence">3</field>
+            <field name="value">Desk</field>
+            <field name="is_correct" eval="True" />
+            <field name="answer_score">1.0</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_2_choice_4">
+            <field name="question_id" ref="furniture_certification_page_1_question_2"/>
+            <field name="sequence">4</field>
+            <field name="value">Shelf</field>
+            <field name="is_correct" eval="True" />
+            <field name="answer_score">1.0</field>
+        </record>
+        <record model="survey.question.answer" id="furniture_certification_page_1_question_2_choice_5">
+            <field name="question_id" ref="furniture_certification_page_1_question_2"/>
+            <field name="sequence">5</field>
+            <field name="value">Bed</field>
+            <field name="answer_score">-1.0</field>
+        </record>
+        <!-- Question and predefined answer 5 -->
+        <record model="survey.question" id="furniture_certification_page_1_question_3">
+            <field name="survey_id" ref="furniture_certification" />
+            <field name="sequence">4</field>
+            <field name="title">What do you think about the content of the course? (not rated)</field>
+            <field name="question_type">text_box</field>
+        </record>
+
+        <record model="survey.user_input" id="furniture_certification_answer_1">
+            <field name="survey_id" ref="website_slides_survey.furniture_certification" />
+            <field name="partner_id" ref="base.res_partner_address_3"/>
+            <field name="email">douglas.fletcher51@example.com</field>
+            <field name="state">done</field>
+        </record>
+        <record model="survey.user_input" id="furniture_certification_answer_2">
+            <field name="survey_id" ref="website_slides_survey.furniture_certification" />
+            <field name="partner_id" ref="base.res_partner_address_7"/>
+            <field name="email">billy.fox45@example.com</field>
+            <field name="state">done</field>
+        </record>
+    </data>
+</odoo>

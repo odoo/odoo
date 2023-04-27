@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="survey.survey_breadcrumb_template">
+    <ol class="breadcrumb justify-content-end bg-transparent">
+        <t t-set="canGoBack" t-value="widget.canGoBack"/>
+        <t t-foreach="widget.pages" t-as="page">
+            <t t-set="isActivePage" t-value="page.id === widget.currentPageId"/>
+            <li t-att-class="'breadcrumb-item' + (isActivePage ? ' active font-weight-bold' : '')"
+                t-att-data-page-id="page.id"
+                t-att-data-page-title="page.title">
+                <t t-if="widget.currentPageId === page.id">
+                    <!-- Users can only go back and not forward -->
+                    <!-- As soon as we reach the current page, set "can_go_back" to False -->
+                    <t t-set="canGoBack" t-value="false" />
+                </t>
+                <t t-if="canGoBack">
+                    <a class="text-primary text-break" href="#">
+                        <span t-esc="page.title" />
+                    </a>
+                </t>
+                <t t-else="">
+                    <span t-att-class="'text-break ' + (isActivePage ? 'text-black' : 'text-muted')"
+                          t-esc="page.title" />
+                </t>
+            </li>
+        </t>
+    </ol>
+</t>
+
+</templates>

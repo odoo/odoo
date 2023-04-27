@@ -1,0 +1,99 @@
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  border: 0;
+}
+
+.o_datepicker {
+    position: relative;
+
+    .o_datepicker_input {
+        width: 100%;
+        cursor: pointer;
+    }
+
+    .o_datepicker_button {
+        @include o-position-absolute(2px, 4px);
+        pointer-events: none; // let click events go through the underlying input
+        &:after {
+            @include o-caret-down;
+        }
+    }
+
+    .o_datepicker_warning {
+        top: 0;
+        right: 20px;
+    }
+}
+
+
+// The 'div.dropdown-menu' part is needed to override default bootstrap rule as
+// this file is unfortunately placed in common assets.
+div.dropdown-menu.bootstrap-datetimepicker-widget{
+    // Need to put datetimepicker widget above everything else
+    z-index: $zindex-modal + 1;
+
+    // Also fix the dropdown width
+    width: 19rem;
+}
+
+.datepicker {
+    .table-sm {
+        > thead {
+            color: white;
+            background-color: $o-brand-odoo;
+
+            > tr {
+                &:first-child {
+                    th:hover {
+                        color: white;
+                        background-color: darken($o-brand-odoo, 10%);
+                    }
+                }
+
+                &:last-child {
+                    color: $o-datepicker-week-color;
+                    background-color: $o-datepicker-week-bg-color;
+                }
+                > th {
+                    border-radius: 0;
+                }
+            }
+        }
+
+        > tbody {
+            > tr {
+                > td {
+                    &.active, .active {
+                        background-color: $o-brand-primary;
+                        border-radius: 100px;
+                    }
+
+                    &.today:before {
+                        border-bottom-color: $o-brand-primary;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.picker-switch {
+    span.fa {
+        margin: 0;
+        @include transition($btn-transition);
+        &.primary {
+            background-color: $o-brand-primary;
+            color: white;
+            &:hover {
+                background-color: darken($o-brand-primary, 10%);
+            }
+        }
+    }
+}

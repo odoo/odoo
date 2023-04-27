@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="CashBoxOpening" owl="1">
+        <div style="margin-top: -20px;">
+            <br/>
+            <h1>
+                <span>
+                    Pos closed.
+                </span><br/>
+                <span>
+                    Set a cash opening
+                </span>
+
+            </h1>
+            <h1>Opening amount:</h1>
+                <input name="cashBoxValue" class="cashbox-input" t-on-change="captureChange" t-att-value="defaultValue"/>
+                <span class="currencyCashBox" t-esc="symbol"/>
+
+            <h1>Notes:</h1>
+            <textarea name="notes" style="width: 51%" t-on-change="captureChange"/><br/><br/>
+
+            <span class="control-button" t-on-click="startSession()">Open</span>
+
+        </div>
+    </t>
+
+</templates>

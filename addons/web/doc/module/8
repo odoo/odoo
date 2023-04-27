@@ -1,0 +1,14 @@
+# HG changeset patch
+# Parent d987c9edd884de1de30f2ceb70d2e554474b8dd1
+diff --git a/static/src/js/first_module.js b/static/src/js/first_module.js
+--- a/static/src/js/first_module.js
++++ b/static/src/js/first_module.js
+@@ -1,4 +1,7 @@
+ // static/src/js/first_module.js
+ openerp.web_example = function (instance) {
+-    console.log("Module loaded");
++    instance.web.client_actions.add('example.action', 'instance.web_example.action');
++    instance.web_example.action = function (parent, action) {
++        console.log("Executed the action", action);
++    };
+ };

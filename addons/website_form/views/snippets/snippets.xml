@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="remove_external_snippets" inherit_id="website.external_snippets">
+    <xpath expr="//t[@t-install='website_form']" position="replace"/>
+</template>
+
+<template id="snippets" inherit_id="website.snippets" name="Snippet Form Builder">
+    <xpath expr="//t[@id='form_form_hook']" position="replace">
+        <!-- This snippet cannot be used in sanitized fields -->
+        <!-- because it contains inputs that would be removed -->
+        <t t-snippet="website_form.s_website_form" t-thumbnail="/website/static/src/img/snippets_thumbs/s_website_form.svg" t-forbid-sanitize="form"/>
+    </xpath>
+</template>
+
+</odoo>

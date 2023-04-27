@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8'?>
+<odoo>
+    <record id="digest_digest_view_form" model="ir.ui.view">
+        <field name="name">digest.digest.view.form.inherit.account.account</field>
+        <field name="model">digest.digest</field>
+        <field name="inherit_id" ref="digest.digest_digest_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='kpi_general']" position="after">
+                <group name="kpi_account" string="Invoicing" groups="account.group_account_manager">
+                    <field name="kpi_account_total_revenue"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

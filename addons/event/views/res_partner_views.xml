@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<odoo>
+    <data>
+        <record id="res_partner_view_tree" model="ir.ui.view">
+            <field name="name">view.res.partner.form.event.inherited</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="groups_id" eval="[(5,)]"/>
+            <field name="priority" eval="6"/>
+            <field name="arch" type="xml">
+                <div name="button_box" position="inside">
+                    <button class="oe_stat_button"
+                        groups="event.group_event_user"
+                        type="object"
+                        icon="fa-ticket"
+                        name="action_event_view" attrs="{'invisible': [('event_count','=', 0)]}">
+                        <field string="Events" name="event_count" widget="statinfo"/>
+                    </button>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>

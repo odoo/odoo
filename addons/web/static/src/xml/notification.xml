@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="Notification">
+    <div t-attf-class="toast o_notification #{widget.className}"
+         role="alert" aria-live="assertive" aria-atomic="true">
+        <t t-set="closeButton">
+            <button type="button"
+                    class="close o_notification_close"
+                    data-dismiss="toast" aria-label="Close">
+                <span class="d-inline" aria-hidden="true">×</span>
+            </button>
+        </t>
+        <div t-if="widget.title" class="toast-header">
+            <span t-attf-class="fa fa-2x mr-3 #{widget.icon} o_notification_icon"
+                  role="img" t-attf-aria-label="Notification #{widget.name}"
+                  t-attf-title="Notification #{widget.name}"/>
+            <div class="d-flex align-items-center mr-auto font-weight-bold o_notification_title"
+                 t-raw="widget.title"/>
+            <t t-raw="closeButton"/>
+        </div>
+        <div t-if="widget.message or widget.subtitle or widget.buttons.length" class="toast-body">
+            <t t-if="!widget.title" t-raw="closeButton"/>
+            <strong t-if="widget.subtitle" t-raw="widget.subtitle"
+                 class="o_notification_subtitle"/>
+            <div t-if="widget.message" t-raw="widget.message"
+                 class="mr-auto o_notification_content"/>
+            <div t-if="widget.buttons.length" class="mt-2 o_notification_buttons">
+                <button t-foreach="widget.buttons" t-as="button" type="button"
+                        t-attf-class="btn btn-sm #{button.primary ? 'btn-primary' : 'btn-secondary'}">
+                    <t t-if="button.icon">
+                        <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" role="img" t-att-aria-label="button.name" t-att-title="button.name"/>
+                        <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
+                    </t>
+                    <span t-esc="button.text"/>
+                </button>
+            </div>
+        </div>
+    </div>
+</t>
+
+</templates>

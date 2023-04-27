@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<templates id="template" xml:space="preserve">
+    <!--=================-->
+    <!-- Base components -->
+    <!--=================-->
+
+    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
+    <t t-name="web_editor.editorbar">
+        <div id="web_editor-toolbars"/>
+    </t>
+
+    <!--=================-->
+    <!-- Snippet options -->
+    <!--=================-->
+
+    <!-- Background position option overlay -->
+    <t t-name="web_editor.background_position_overlay">
+        <div class="o_we_background_position_overlay oe_overlay">
+            <div class="o_we_overlay_content position-absolute">
+                <div class="o_overlay_background"/>
+                <div class="o_we_overlay_buttons position-absolute d-flex m-1" style="top: 0">
+                    <button class="btn btn-primary mr-1 o_btn_apply">Apply</button>
+                    <button class="btn btn-danger o_btn_discard">Discard</button>
+                </div>
+            </div>
+        </div>
+    </t>
+    <!-- Save Snippet Name option dialog -->
+    <t t-name="web_editor.dialog.save_snippet">
+        <div>
+            <div class="form-group form-row">
+                <label class="col-form-label col-md-3" for="snippetName">Name</label>
+                <div class="col-md-9">
+                    <input type="text"
+                           class="form-control o_we_snippet_name_input"
+                           id="snippetName"
+                           t-att-value="currentSnippetName"/>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

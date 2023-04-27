@@ -1,0 +1,143 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* website_event_sale
+# 
+# Translators:
+# Martin Trigaux, 2020
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:20+0000\n"
+"Last-Translator: ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr "לא ניתן להחיל פריט מחירון עם כמות מינימום חיובית על כרטיסי אירוע זה."
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
+msgstr "לא יחול פריט מחירון עם מינימום חיובי על מוצרי כרטיסי האירוע."
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__display_name
+#: model:ir.model.fields,field_description:website_event_sale.field_website__display_name
+msgid "Display Name"
+msgstr "הצג שם"
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
+msgid "Event Tickets"
+msgstr "כרטיסים לאירוע"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Free"
+msgstr "פנוי"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "From"
+msgstr "מ"
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item__id
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order__id
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line__id
+#: model:ir.model.fields,field_description:website_event_sale.field_website__id
+msgid "ID"
+msgstr "תעודה מזהה"
+
+#. module: website_event_sale
+#: model:ir.model.fields,field_description:website_event_sale.field_product_pricelist_item____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_product_product____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_sale_order_line____last_update
+#: model:ir.model.fields,field_description:website_event_sale.field_website____last_update
+msgid "Last Modified on"
+msgstr "שינוי אחרון ב"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr "כלל מחירון"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_product
+msgid "Product"
+msgstr "מוצר"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:0
+#, python-format
+msgid "Registration"
+msgstr "הרשמה"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order
+msgid "Sales Order"
+msgstr "הזמנת לקוח"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "שורת הזמנת לקוח"
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:0
+#, python-format
+msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
+msgstr "מצטערים, ה %(ticket)s כרטיסים ל %(event)s אירוע כבר נמכרו."
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:0
+#, python-format
+msgid ""
+"Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
+" ticket for the %(event)s event."
+msgstr ""
+"מצטערים, רק %(remaining_seats)d מושבים עדיין זמינים עבור %(ticket)s כרטיס  "
+"%(event)s לאירוע."
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/sale_order.py:0
+#, python-format
+msgid "The ticket doesn't match with this product."
+msgstr "הכרטיס אינו תואם למוצר זה."
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid "Warning"
+msgstr "אזהרה"
+
+#. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_website
+msgid "Website"
+msgstr "אתר אינטרנט"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "to"
+msgstr "ל"

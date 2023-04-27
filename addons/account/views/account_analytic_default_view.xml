@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_account_analytic_default_tree" model="ir.ui.view">
+            <field name="name">account.analytic.default.tree</field>
+            <field name="model">account.analytic.default</field>
+            <field name="arch" type="xml">
+                <tree string="Analytic Defaults">
+                    <field name="sequence" widget="handle"/>
+                    <field name="analytic_id" required="0" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="account_id"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_default_form" model="ir.ui.view">
+            <field name="name">account.analytic.default.form</field>
+            <field name="model">account.analytic.default</field>
+            <field name="arch" type="xml">
+                <form string="Analytic Defaults">
+                <sheet>
+                    <group col="4">
+                        <separator string="Analytic Default Rule" colspan="4"/>
+                        <field name="analytic_id" groups="analytic.group_analytic_accounting" string="Account"/>
+                        <field name="analytic_tag_ids" widget="many2many_tags" groups="analytic.group_analytic_tags" string="Tags"/>
+                        <separator string="Conditions" colspan="4"/>
+                        <field name="product_id"/>
+                        <field name="partner_id"/>
+                        <field name="user_id"/>
+                        <field name="account_id"/>
+                        <field name="date_start"/>
+                        <field name="date_stop"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    </group>
+                </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_default_kanban" model="ir.ui.view">
+            <field name="name">account.analytic.default.kanban</field>
+            <field name="model">account.analytic.default</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_mobile">
+                    <field name="analytic_id"/>
+                    <field name="date_start"/>
+                    <field name="date_stop"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                                <div>
+                                    <strong><span><field name="analytic_id"/></span></strong>
+                                </div>
+                                <div t-if="record.date_start.value"><i class="fa fa-calendar"></i> From <field name="date_start"/> <t t-if="record.date_stop.value">to <field name="date_stop"/></t></div>
+                                <div t-if="record.product_id.value"><strong>Product</strong> <field name="product_id"/> </div>
+                                <div t-if="record.partner_id.value"><strong>Customer</strong> <field name="partner_id"/> </div>
+                                <div class="float-right">
+                                    <field name="user_id" widget="many2one_avatar_user"/>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_account_analytic_default_form_search" model="ir.ui.view">
+            <field name="name">account.analytic.default.search</field>
+            <field name="model">account.analytic.default</field>
+            <field name="arch" type="xml">
+                <search string="Accounts">
+                    <field name="date_stop"/>
+                    <field name="analytic_id" groups="analytic.group_analytic_accounting"/>
+                    <field name="product_id"/>
+                    <field name="partner_id"/>
+                    <field name="user_id"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
+                    <group expand="0" string="Group By">
+                        <filter string="User" name="user" context="{'group_by':'user_id'}" help="User"/>
+                        <filter string="Partner" name="partner" context="{'group_by':'partner_id'}" help="Partner"/>
+                        <filter string="Product" name="product" context="{'group_by':'product_id'}" help="Product" />
+                        <filter string="Analytic Account" name="analyticacc" context="{'group_by':'analytic_id'}" help="Analytic Account" groups="analytic.group_analytic_accounting"/>
+                        <filter string="Company" name="company" context="{'group_by':'company_id'}" groups="base.group_multi_company" />
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="action_analytic_default_list" model="ir.actions.act_window">
+            <field name="name">Analytic Defaults Rules</field>
+            <field name="res_model">account.analytic.default</field>
+            <field name="view_mode">tree,kanban,form</field>
+            <field name="search_view_id" ref="view_account_analytic_default_form_search"/>
+            <field name="context">{"search_default_current":1}</field>
+        </record>
+
+
+        <menuitem id="menu_analytic_default_list"
+            action="action_analytic_default_list"
+            parent="account.menu_analytic_accounting"/>
+
+        <record id="analytic_rule_action_user" model="ir.actions.act_window">
+            <field name="name">Analytic Rules</field>
+            <field name="res_model">account.analytic.default</field>
+            <field name="context">{'search_default_user_id': [active_id], 'default_user_id': active_id}</field>
+            <field name="binding_model_id" ref="base.model_res_users"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[(4, ref('analytic.group_analytic_accounting'))]"/>
+        </record>
+</odoo>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ModerationDiscardDialog" owl="1">
+        <Dialog contentClass="'o_ModerationDiscardDialog'" title="getTitle()" size="'medium'" t-ref="dialog">
+            <p t-esc="getBody()"/>
+            <p>Do you confirm the action?</p>
+            <t t-set-slot="buttons">
+                <button class="o-discard btn btn-primary" t-on-click="_onClickDiscard">Discard</button>
+                <button class="o-cancel btn btn-secondary" t-on-click="_onClickCancel">Cancel</button>
+            </t>
+        </Dialog>
+    </t>
+</templates>

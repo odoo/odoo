@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Event Mail Scheduler-->
+        <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
+            <field name="name">Event: Mail Scheduler</field>
+            <field name="model_id" ref="model_event_mail"/>
+            <field name="state">code</field>
+            <field name="code">model.run(True)</field>
+            <field name="user_id" ref="base.user_root"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+        </record>
+
+        <!-- Event Categories -->
+        <record id="event_type_data_ticket" model="event.type">
+            <field name="name">Ticketing</field>
+            <field name="auto_confirm" eval="False"/>
+            <field name="use_ticket" eval="True"/>
+        </record>
+        <record id="event_type_data_conference" model="event.type">
+            <field name="name">Conference</field>
+            <field name="auto_confirm" eval="True"/>
+        </record>
+
+        <!-- Event stages -->
+        <record id="event_stage_new" model="event.stage">
+            <field name="name">New</field>
+            <field name="description">Freshly created</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="event_stage_booked" model="event.stage">
+            <field name="name">Booked</field>
+            <field name="description">The place has been reserved</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="event_stage_announced" model="event.stage">
+            <field name="name">Announced</field>
+            <field name="description">The event has been publicly announced</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="event_stage_done" model="event.stage">
+            <field name="name">Ended</field>
+            <field name="description">Fully ended</field>
+            <field name="sequence">5</field>
+            <field name="pipe_end" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="event_stage_cancelled" model="event.stage">
+            <field name="name">Cancelled</field>
+            <field name="description">The event has been cancelled</field>
+            <field name="sequence">6</field>
+            <field name="pipe_end" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+    </data>
+</odoo>

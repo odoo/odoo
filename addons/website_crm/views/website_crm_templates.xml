@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <template id="contactus_form" name="Contact Form (Opportunity)" inherit_id="website_form.contactus_form" customize_show="True">
+            <xpath expr="//span[@data-for='contactus_form']" position="attributes">
+                <attribute name="t-att-data-values">{
+                    'contact_name': request.params.get('contact_name', ''),
+                    'phone': request.params.get('phone', ''),
+                    'email_from': request.params.get('email_from', ''),
+                    'partner_name': request.params.get('partner_name', ''),
+                    'name': request.params.get('name', ''),
+                    'description': request.params.get('description', ''),
+                }</attribute>
+            </xpath>
+            <xpath expr="//div[@id='contactus_section']" position="replace">
+                <div id="contactus_section">
+                    <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                        <div class="container">
+                            <form id="contactus_form" action="/website_form/" method="post" enctype="multipart/form-data" data-model_name="crm.lead" data-success-mode="redirect" data-success-page="/contactus-thank-you" class="o_mark_required" data-mark="*" data-editable-form="false">
+                                <div class="s_website_form_rows row s_col_no_bgcolor">
+                                    <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity1">
+                                                <span class="s_website_form_label_content">Your Name</span>
+                                                <span class="s_website_form_mark"> *</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="opportunity1" type="text" class="form-control s_website_form_input" name="contact_name" required=""/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity2">
+                                                <span class="s_website_form_label_content">Phone Number</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="opportunity2" type="tel" class="form-control s_website_form_input" name="phone" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity3">
+                                                <span class="s_website_form_label_content">Email</span>
+                                                <span class="s_website_form_mark"> *</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="opportunity3" type="text" class="form-control s_website_form_input" name="email_from" required="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 s_website_form_field" data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity4">
+                                                <span class="s_website_form_label_content">Your Company</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="opportunity4" type="text" class="form-control s_website_form_input" name="partner_name" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 s_website_form_field s_website_form_model_required" data-type="char" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity5">
+                                                <span class="s_website_form_label_content">Subject</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <input id="opportunity5" type="text" class="form-control s_website_form_input" name="name" required="" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="text" data-name="Field">
+                                        <div class="row s_col_no_resize s_col_no_bgcolor">
+                                            <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="opportunity6">
+                                                <span class="s_website_form_label_content">Your Question</span>
+                                                <span class="s_website_form_mark"> *</span>
+                                            </label>
+                                            <div class="col-sm">
+                                                <textarea id="opportunity6" class="form-control s_website_form_input" name="description" required=""></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group col-12 s_website_form_submit" data-name="Submit Button">
+                                        <div style="width: 200px;" class="s_website_form_label"/>
+                                        <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                        <span id="s_website_form_result"></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </section>
+                </div>
+			</xpath>
+		</template>
+
+        <template id="assets_editor" name="Website CRM Assets Editor" inherit_id="website.assets_editor">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_crm/static/src/js/website_crm_editor.js"></script>
+            </xpath>
+        </template>
+
+        <template id="assets_tests" name="Website CRM Assets Tests" inherit_id="web.assets_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/website_crm/static/tests/tours/website_crm.js"></script>
+            </xpath>
+        </template>
+
+</odoo>

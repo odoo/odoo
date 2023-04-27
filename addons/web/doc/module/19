@@ -1,0 +1,52 @@
+# HG changeset patch
+# Parent 05797cc75b49634e640f44b24347f2905b464022
+diff --git a/static/src/js/first_module.js b/static/src/js/first_module.js
+--- a/static/src/js/first_module.js
++++ b/static/src/js/first_module.js
+@@ -12,11 +12,13 @@ openerp.web_example = function (instance
+             this._start = null;
+             this._watch = null;
+         },
+-        update_counter: function () {
++        current: function () {
++            // Subtracting javascript dates returns the difference in milliseconds
++            return new Date() - this._start;
++        },
++        update_counter: function (time) {
+             var h, m, s;
+-            // Subtracting javascript dates returns the difference in milliseconds
+-            var diff = new Date() - this._start;
+-            s = diff / 1000;
++            s = time / 1000;
+             m = Math.floor(s / 60);
+             s -= 60*m;
+             h = Math.floor(m / 60);
+@@ -29,18 +31,24 @@ openerp.web_example = function (instance
+                     .removeClass('oe_web_example_stopped');
+             this._start = new Date();
+             // Update the UI to the current time
+-            this.update_counter();
++            this.update_counter(this.current());
+             // Update the counter at 30 FPS (33ms/frame)
+-            this._watch = setInterval(
+-                this.proxy('update_counter'),
++            this._watch = setInterval(function () {
++                    this.update_counter(this.current());
++                }.bind(this),
+                 33);
+         },
+         watch_stop: function () {
+             clearInterval(this._watch);
+-            this.update_counter();
++            var time = this.current();
++            this.update_counter(time);
+             this._start = this._watch = null;
+             this.$el.removeClass('oe_web_example_started')
+                     .addClass('oe_web_example_stopped');
++            new instance.web.Model('web_example.stopwatch').call('create', [{
++                user_id: instance.session.uid,
++                time: time,
++            }]);
+         },
+         destroy: function () {
+             if (this._watch) {

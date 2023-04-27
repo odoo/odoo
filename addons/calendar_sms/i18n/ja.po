@@ -1,0 +1,89 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* calendar_sms
+# 
+# Translators:
+# Shunho Kin <s-kin@shonan-innovation.co.jp>, 2020
+# Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2020
+# Noma Yuki, 2022
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:11+0000\n"
+"Last-Translator: Noma Yuki, 2022\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: ja\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_event
+msgid "Calendar Event"
+msgstr "カレンダーイベント"
+
+#. module: calendar_sms
+#: model:sms.template,name:calendar_sms.sms_template_data_calendar_reminder
+msgid "Calendar Event: Reminder"
+msgstr "カレンダーイベント: リマインダ"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__display_name
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__display_name
+msgid "Display Name"
+msgstr "表示名"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm
+msgid "Event Alarm"
+msgstr "イベントアラーム"
+
+#. module: calendar_sms
+#: model:ir.model,name:calendar_sms.model_calendar_alarm_manager
+msgid "Event Alarm Manager"
+msgstr "イベントアラーム管理"
+
+#. module: calendar_sms
+#: model:sms.template,body:calendar_sms.sms_template_data_calendar_reminder
+msgid "Event reminder: ${object.name}, ${object.display_time}"
+msgstr "イベントリマインダー: ${object.name}, ${object.display_time}"
+
+#. module: calendar_sms
+#: code:addons/calendar_sms/models/calendar.py:0
+#, python-format
+msgid "Event reminder: %(name)s, %(time)s."
+msgstr "イベントリマインダー: %(name)s, %(time)s."
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager__id
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event__id
+msgid "ID"
+msgstr "ID"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm_manager____last_update
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_event____last_update
+msgid "Last Modified on"
+msgstr "最終更新日"
+
+#. module: calendar_sms
+#: model:ir.model.fields.selection,name:calendar_sms.selection__calendar_alarm__alarm_type__sms
+msgid "SMS Text Message"
+msgstr "SMSテキストメッセージ"
+
+#. module: calendar_sms
+#: model:ir.actions.act_window,name:calendar_sms.calendar_event_act_window_sms_composer_single
+msgid "Send SMS to attendees"
+msgstr "出席者にSMS配信"
+
+#. module: calendar_sms
+#: model:ir.model.fields,field_description:calendar_sms.field_calendar_alarm__alarm_type
+msgid "Type"
+msgstr "タイプ"

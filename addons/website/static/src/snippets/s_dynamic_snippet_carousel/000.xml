@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.s_dynamic_snippet.carousel">
+        <div t-att-id="uniqueId" class="carousel slide" t-att-data-interval="interval">
+            <!-- Content -->
+            <div class="carousel-inner row w-100 mx-auto" role="listbox">
+                <t t-set="colClass" t-value="'col-' + (12 / chunkSize).toString()"/>
+                <t t-set="slideIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
+                <t t-set="itemIndexGenerator" t-value="Array.from(Array(chunkSize).keys())"/>
+                <t t-foreach="slideIndexGenerator" t-as="slideIndex">
+                    <div t-attf-class="carousel-item #{slideIndex_first ? 'active' : ''}">
+                        <div class="row">
+                            <t t-foreach="itemIndexGenerator" t-as="itemIndex">
+                                <t t-if="(slideIndex * chunkSize + itemIndex) &lt; data.length">
+                                    <div t-attf-class="#{colClass}">
+                                        <t t-raw="data[slideIndex * chunkSize + itemIndex]"/>
+                                    </div>
+                                </t>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </div>
+            <!-- Controls -->
+            <a t-attf-href="##{uniqueId}" class="carousel-control-prev" data-slide="prev" role="button" aria-label="Previous" title="Previous">
+                <span class="fa fa-chevron-circle-left fa-2x"/>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a t-attf-href="##{uniqueId}" class="carousel-control-next" data-slide="next" role="button" aria-label="Next" title="Next">
+                <span class="fa fa-chevron-circle-right fa-2x"/>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+    </t>
+</templates>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- This contains the tour assets. They are included during testing. -->
+<template id="assets_tests" name="Point Of Sale Assets Tests" inherit_id="web.assets_tests">
+    <xpath expr="." position="inside">
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/utils.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/ProductScreenTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/TicketScreenTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/PaymentScreenTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/ProductConfiguratorTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/OrderManagementScreenTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/ClientListScreenTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/ReceiptScreenTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/ChromeTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/NumberPopupTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/ErrorPopupTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/SelectionPopupTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/helpers/CompositeTourMethods.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/point_of_sale.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/ProductScreen.tour.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/PaymentScreen.tour.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/ProductConfigurator.tour.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/OrderManagementScreen.tour.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/ReceiptScreen.tour.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/Chrome.tour.js"></script>
+        <script type="text/javascript" src="/point_of_sale/static/tests/tours/TicketScreen.tour.js"></script>
+    </xpath>
+</template>
+
+<template id="point_of_sale.index" name="POS Index">&lt;!DOCTYPE html&gt;
+<html>
+    <head>
+        <title>Odoo POS</title>
+
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+        <meta http-equiv="content-type" content="text/html, charset=utf-8" />
+
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>
+        <meta name="apple-mobile-web-app-capable" content="yes"/>
+        <meta name="mobile-web-app-capable" content="yes"/>
+
+        <link rel="shortcut icon"    sizes="196x196" href="/point_of_sale/static/src/img/touch-icon-196.png"/>
+        <link rel="shortcut icon"    sizes="128x128" href="/point_of_sale/static/src/img/touch-icon-128.png"/>
+        <link rel="apple-touch-icon"                 href="/point_of_sale/static/src/img/touch-icon-iphone.png"/>
+        <link rel="apple-touch-icon" sizes="76x76"   href="/point_of_sale/static/src/img/touch-icon-ipad.png"/>
+        <link rel="apple-touch-icon" sizes="120x120" href="/point_of_sale/static/src/img/touch-icon-iphone-retina.png"/>
+        <link rel="apple-touch-icon" sizes="152x152" href="/point_of_sale/static/src/img/touch-icon-ipad-retina.png"/>
+
+        <style> body { background: #222; } </style>
+
+        <link rel="shortcut icon" href="/web/static/src/img/favicon.ico" type="image/x-icon"/>
+
+        <script type="text/javascript">
+            var odoo = <t t-raw="json.dumps({
+                'csrf_token': request.csrf_token(None),
+                'session_info': session_info,
+                'login_number': login_number,
+                'debug': debug,
+            })"/>;
+        </script>
+
+        <t t-call="point_of_sale.assets_common"/>
+        <t t-call="web.conditional_assets_tests"/>
+        <script type="text/javascript" src="/point_of_sale/static/src/js/main.js"></script>
+    </head>
+    <body>
+    </body>
+</html>
+</template>
+
+</odoo>

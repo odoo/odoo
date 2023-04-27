@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="base_import assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <link rel="stylesheet" type="text/scss" href="/base_import/static/src/scss/base_import.scss"/>
+                <script type="text/javascript" src="/base_import/static/lib/javascript-state-machine/state-machine.js"></script>
+                <script type="text/javascript" src="/base_import/static/src/js/import_action.js"></script>
+                <script type="text/javascript" src="/base_import/static/src/js/import_menu.js"></script>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="base_import_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/base_import/static/tests/import_buttons_tests.js"></script>
+            </xpath>
+        </template>
+    </data>
+</odoo>

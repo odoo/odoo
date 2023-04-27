@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="sale.sale_menu_root" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_report_product_all" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sales_config" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.product_menu_catalog" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_template_action" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.prod_config_main" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_products" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.next_id_16" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_uom_form_action" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_uom_categ_form_action" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_product_pricelist_main" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_order" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_invoicing" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_order_invoice" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_order_upselling" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+    <record id="sale.menu_sale_quotations" model="ir.ui.menu">
+        <field name="active" eval="True"/>
+    </record>
+
+    <record id="res_config_settings_view_form_inherit_sale_management" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@data-key='sale_management']" position="attributes">
+                <attribute name="class">app_settings_block</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

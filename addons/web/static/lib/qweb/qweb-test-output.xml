@@ -1,0 +1,42 @@
+<templates>
+    <!-- esc, evaluates and returns @t-esc after having xml-escaped it -->
+    <t t-name="esc-literal">
+        <t t-esc="'ok'"/>
+    </t>
+    <result id="esc-literal">ok</result>
+
+    <t t-name="esc-variable">
+        <t t-esc="var"/>
+    </t>
+    <params id="esc-variable">{"var": "ok"}</params>
+    <result id="esc-variable">ok</result>
+
+    <t t-name="esc-toescape">
+        <t t-esc="var"/>
+    </t>
+    <params id="esc-toescape"><![CDATA[{"var": "<ok>"}]]></params>
+    <result id="esc-toescape"><![CDATA[&lt;ok&gt;]]></result>
+    <t t-name="esc-node">
+        <span t-esc="'ok'"/>
+    </t>
+    <result id="esc-node"><![CDATA[<span>ok</span>]]></result>
+
+
+    <!-- raw, evaluates and returns @t-raw directly (no escaping) -->
+    <t t-name="raw-literal">
+        <t t-raw="'ok'"/>
+    </t>
+    <result id="raw-literal">ok</result>
+
+    <t t-name="raw-variable">
+        <t t-raw="var"/>
+    </t>
+    <params id="raw-variable">{"var": "ok"}</params>
+    <result id="raw-variable">ok</result>
+
+    <t t-name="raw-notescaped">
+        <t t-raw="var"/>
+    </t>
+    <params id="raw-notescaped"><![CDATA[{"var": "<ok>"}]]></params>
+    <result id="raw-notescaped"><![CDATA[<ok>]]></result>
+</templates>

@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- RESOURCE.RESOURCE -->
+    <record id="view_resource_resource_search" model="ir.ui.view">
+        <field name="name">resource.resource.search</field>
+        <field name="model">resource.resource</field>
+        <field name="arch" type="xml">
+            <search string="Search Resource">
+               <field name="name" string="Resource"/>
+               <field name="resource_type"/>
+               <field name="user_id"/>
+               <field name="calendar_id"/>
+               <field name="company_id" groups="base.group_multi_company"/>
+               <filter string="Inactive" name="inactive" domain="[('active','=',False)]"/>
+               <group expand="0" string="Group By">
+                    <filter string="User" name="user" domain="[]" context="{'group_by':'user_id'}"/>
+                    <filter string="Type" name="type" domain="[]" context="{'group_by':'resource_type'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Working Period" name="working_period" domain="[]" context="{'group_by':'calendar_id'}"/>
+                </group>
+           </search>
+        </field>
+    </record>
+
+    <record id="resource_resource_form" model="ir.ui.view">
+        <field name="name">resource.resource.form</field>
+        <field name="model">resource.resource</field>
+        <field name="arch" type="xml">
+            <form string="Resource">
+            <sheet>
+                <group>
+                    <group name="user_details">
+                        <field name="name"/>
+                        <field name="user_id" attrs="{'required':[('resource_type','=','user')], 'readonly':[('resource_type','=','material')]}"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                        <field name="active" widget="boolean_toggle"/>
+                    </group>
+                    <group name="resource_details">
+                        <field name="resource_type" />
+                        <field name="calendar_id"/>
+                        <field name="tz"/>
+                        <field name="time_efficiency"/>
+                    </group>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="resource_resource_tree" model="ir.ui.view">
+        <field name="name">resource.resource.tree</field>
+        <field name="model">resource.resource</field>
+        <field name="arch" type="xml">
+            <tree string="Resources">
+                <field name="name" />
+                <field name="user_id" />
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="resource_type" />
+                <field name="calendar_id"/>
+                <field name="time_efficiency"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_resource_resource_tree" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">resource.resource</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{}</field>
+        <field name="search_view_id" ref="view_resource_resource_search"/>
+        <field name="help">Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours.</field>
+    </record>
+
+    <record id="resource_resource_action_from_calendar" model="ir.actions.act_window">
+        <field name="name">Resources</field>
+        <field name="res_model">resource.resource</field>
+        <field name="view_mode">tree,form</field>
+        <field name="context">{
+            'default_calendar_id': active_id,
+            'search_default_calendar_id': active_id}</field>
+        <field name="search_view_id" ref="view_resource_resource_search"/>
+        <field name="help">Resources allow you to create and manage resources that should be involved in a specific project phase. You can also set their efficiency level and workload based on their weekly working hours.</field>
+    </record>
+
+    <!-- RESOURCE.CALENDAR.LEAVES -->
+    <record id="view_resource_calendar_leaves_search" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.search</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="arch" type="xml">
+            <search string="Search Working Period Time Off">
+                <field name="name"/>
+                <field name="resource_id"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="calendar_id"/>
+                <group expand="0" string="Group By">
+                    <filter string="Resource" name="resource" domain="[]" context="{'group_by':'resource_id'}"/>
+                    <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
+                    <filter string="Leave Date" name="leave_month" domain="[]" context="{'group_by':'date_from'}" help="Starting Date of Leave"/>
+                </group>
+           </search>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.calendar</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="arch" type="xml">
+            <calendar date_start="date_from" date_stop="date_to" mode="month" string="Resource" color="resource_id" event_limit="5">
+                <field name="resource_id" avatar_field="image_128" filters="1"/>
+                <field name="company_id"/>
+                <field name="name"/>
+            </calendar>
+        </field>
+    </record>
+
+    <record id="resource_calendar_leave_form" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.form</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="arch" type="xml">
+            <form string="Leave Detail">
+            <sheet>
+                <group>
+                    <group name="leave_details">
+                        <field name="name" string="Reason"/>
+                        <field name="calendar_id"/>
+                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" attrs="{'invisible':[('calendar_id','=',False)]}"/>
+                        <field name="resource_id"/>
+                    </group>
+                    <group name="leave_dates">
+                       <field name="date_from"/>
+                       <field name="date_to"/>
+                    </group>
+                </group>
+            </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="resource_calendar_leave_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.leaves.tree</field>
+        <field name="model">resource.calendar.leaves</field>
+        <field name="arch" type="xml">
+            <tree string="Leave Detail">
+                <field name="name" string="Reason"/>
+                <field name="resource_id" />
+                <field name="company_id" groups="base.group_multi_company"/>
+                <field name="calendar_id" />
+                <field name="date_from" />
+                <field name="date_to" />
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_resource_calendar_leave_tree" model="ir.actions.act_window">
+        <field name="name">Resource Time Off</field>
+        <field name="res_model">resource.calendar.leaves</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
+    </record>
+
+    <record id="resource_calendar_leaves_action_from_calendar" model="ir.actions.act_window">
+        <field name="name">Resource Time Off</field>
+        <field name="res_model">resource.calendar.leaves</field>
+        <field name="view_mode">tree,form,calendar</field>
+        <field name="context">{
+            'default_calendar_id': active_id,
+            'search_default_calendar_id': active_id}</field>
+        <field name="search_view_id" ref="view_resource_calendar_leaves_search"/>
+    </record>
+
+    <record id="resource_calendar_closing_days" model="ir.actions.act_window">
+        <field name="name">Closing Days</field>
+        <field name="res_model">resource.calendar.leaves</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="domain">[('calendar_id','=',active_id), ('resource_id','=',False)]</field>
+        <field name="context">{'default_calendar_id': active_id}</field>
+        <field name="binding_model_id" ref="model_resource_calendar"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <record id="resource_calendar_resources_leaves" model="ir.actions.act_window">
+        <field name="name">Resources Time Off</field>
+        <field name="res_model">resource.calendar.leaves</field>
+        <field name="view_mode">calendar,tree,form</field>
+        <field name="domain">[('calendar_id','=',active_id), ('resource_id','!=',False)]</field>
+        <field name="context">{'default_calendar_id': active_id}</field>
+        <field name="binding_model_id" ref="model_resource_calendar"/>
+        <field name="binding_view_types">form</field>
+    </record>
+
+    <!-- RESOURCE.CALENDAR.ATTENDANCE -->
+    <record id="view_resource_calendar_attendance_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.tree</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Working Time" editable="top">
+                <field name="sequence" widget="handle"/>
+                <field name="display_type" invisible="1"/>
+                <field name="name"/>
+                <field name="dayofweek"/>
+                <field name="day_period"/>
+                <field name="hour_from" widget="float_time"/>
+                <field name="hour_to" widget="float_time"/>
+                <field name="date_from" optional="hide"/>
+                <field name="date_to" optional="hide"/>
+                <field name="week_type" readonly="1" force_save="1" groups="base.group_no_one"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_attendance_form" model="ir.ui.view">
+        <field name="name">resource.calendar.attendance.form</field>
+        <field name="model">resource.calendar.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Working Time">
+                <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="dayofweek"/>
+                    <label for="hour_from" string="Hours"/>
+                    <div class="o_row">
+                        <field name="hour_from" widget="float_time"/> -
+                        <field name="hour_to" widget="float_time"/>
+                    </div>
+                    <field name="day_period"/>
+                </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- RESOURCE.CALENDAR -->
+    <record id="view_resource_calendar_search" model="ir.ui.view">
+        <field name="name">resource.calendar.search</field>
+        <field name="model">resource.calendar</field>
+        <field name="arch" type="xml">
+            <search string="Search Working Time">
+               <field name="name" string="Working Time"/>
+               <field name="company_id" groups="base.group_multi_company"/>
+               <separator/>
+               <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+           </search>
+        </field>
+    </record>
+
+    <record id="resource_calendar_form" model="ir.ui.view">
+        <field name="name">resource.calendar.form</field>
+        <field name="model">resource.calendar</field>
+        <field name="arch" type="xml">
+            <form string="Working Time">
+                <sheet string="Working Time">
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
+                                string="Time Off" icon="fa-plane"
+                                class="oe_stat_button"
+                                groups="base.group_no_one"/>
+                        <button name="%(resource_resource_action_from_calendar)d" type="action"
+                                string="Work Resources" icon="fa-cogs"
+                                class="oe_stat_button"
+                                groups="base.group_user"/>
+                    </div>
+                    <h1>
+                        <field name="name"/>
+                    </h1>
+                    <group name="resource_details">
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="hours_per_day" widget="float_time"/>
+                            <field name="tz"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Working Hours" name="working_hours">
+                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', True)]}" string="Switch to 2 weeks calendar" type="object" confirm="Are you sure you want to switch this calendar to 2 weeks calendar ? All entries will be lost"/>
+                        <button name="switch_calendar_type" attrs="{'invisible':[('two_weeks_calendar', '=', False)]}" string="Switch to 1 week calendar" type="object" confirm="Are you sure you want to switch this calendar to 1 week calendar ? All entries will be lost"/>
+                        <field name="two_weeks_calendar" invisible="1"/>
+
+                        <group attrs="{'invisible':[('two_weeks_calendar', '=', False)]}">
+                            <field name="two_weeks_explanation" nolabel="1"/>
+                        </group>
+                            <field name="attendance_ids" widget="section_one2many"/>
+                        </page>
+                        <page string="Global Time Off" name="global_leaves">
+                            <field name="global_leave_ids">
+                                <tree editable="top">
+                                    <field name="name"/>
+                                    <field name="date_from"/>
+                                    <field name="date_to"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="view_resource_calendar_tree" model="ir.ui.view">
+        <field name="name">resource.calendar.tree</field>
+        <field name="model">resource.calendar</field>
+        <field name="arch" type="xml">
+            <tree string="Working Time">
+                <field name="name" string="Working Time"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="action_resource_calendar_form" model="ir.actions.act_window">
+        <field name="name">Working Times</field>
+        <field name="res_model">resource.calendar</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" eval="False"/>
+        <field name="search_view_id" ref="view_resource_calendar_search"/>
+        <field name="help" type="html">
+          <p class="o_view_nocontent_smiling_face">
+            Define working hours and time table that could be scheduled to your project members
+          </p>
+        </field>
+    </record>
+
+    <!-- MENU ITEMS -->
+    <menuitem id="menu_resource_config" name="Resource"
+        parent="base.menu_custom"
+        sequence="30"/>
+    <menuitem id="menu_resource_calendar"
+        parent="menu_resource_config"
+        action="action_resource_calendar_form"
+        sequence="1"/>
+    <menuitem id="menu_view_resource_calendar_leaves_search"
+        parent="menu_resource_config"
+        action="action_resource_calendar_leave_tree"
+        sequence="2"/>
+    <menuitem id="menu_resource_resource"
+        parent="menu_resource_config"
+        action="action_resource_resource_tree"
+        sequence="3"/>
+</odoo>

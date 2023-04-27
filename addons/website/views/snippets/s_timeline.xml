@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template name="Timeline" id="s_timeline">
+    <section class="s_timeline pt24 pb48">
+        <div class="container s_timeline_line">
+            <div class="s_timeline_row d-block d-md-flex flex-row" data-name="Row">
+                <div class="s_timeline_date"><span class="bg-white"><b>2019</b></span></div>
+                <div class="s_timeline_content d-flex">
+                    <div class="s_timeline_card s_card card bg-white w-100" data-name="Card" data-snippet="s_card">
+                        <div class="card-body">
+                            <h5 class="card-title">Your title</h5>
+                            <p class="card-text">A timeline is a graphical representation on which important events are marked.</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-1x fa-child bg-secondary rounded-circle s_timeline_icon"/>
+                </div>
+                <div class="s_timeline_content"/>
+            </div>
+            <div class="s_timeline_row d-block d-md-flex flex-row" data-name="Row">
+                <div class="s_timeline_date"><span class="bg-white"><b>2018</b></span></div>
+                <div class="s_timeline_content d-flex">
+                    <div class="s_timeline_card s_card card bg-white w-100" data-name="Card" data-snippet="s_card">
+                        <div class="card-body">
+                            <p class="card-text">You can edit, duplicate...</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-1x fa-graduation-cap bg-secondary rounded-circle s_timeline_icon"/>
+                </div>
+                <div class="s_timeline_content d-flex">
+                    <i class="fa fa-1x fa-asterisk bg-secondary rounded-circle s_timeline_icon"/>
+                    <div class="s_timeline_card s_card card bg-white w-100" data-name="Card" data-snippet="s_card">
+                        <div class="card-body">
+                            <p class="card-text">...and switch the timeline contents to fit your needs.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="s_timeline_row d-block d-md-flex flex-row-reverse" data-name="Row">
+                <div class="s_timeline_date"><span class="bg-white"><b>2015</b></span></div>
+                <div class="s_timeline_content d-flex">
+                    <div class="s_timeline_card s_card card bg-white w-100" data-name="Card" data-snippet="s_card">
+                        <div class="card-body">
+                            <p class="card-text">Use this timeline as a part of your resume, to show your visitors what you've done in the past.</p>
+                        </div>
+                    </div>
+                    <i class="fa fa-1x fa-bolt bg-secondary rounded-circle s_timeline_icon"/>
+                </div>
+                <div class="s_timeline_content"/>
+            </div>
+        </div>
+    </section>
+</template>
+
+<template id="s_timeline_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-selector=".s_timeline_row" data-drop-near=".s_timeline_row"/>
+        <div data-js="Timeline" data-selector=".s_timeline_card">
+            <we-button data-timeline-card="" data-no-preview="true"><i class="fa fa-fw fa-angle-left"/><i class="fa fa-fw fa-angle-right"/></we-button>
+        </div>
+    </xpath>
+    <xpath expr="//div[@data-js='SnippetMove'][contains(@data-selector,'section')]" position="attributes">
+        <attribute name="data-selector" add=".s_timeline_row" separator=","/>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_timeline_css_000" inherit_id="website.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_timeline/000.scss"/>
+    </xpath>
+</template>
+
+</odoo>

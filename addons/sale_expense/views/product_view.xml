@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_product_view_form_inherit_sale_expense" model="ir.ui.view">
+        <field name="name">product.template.expense</field>
+        <field name="model">product.product</field>
+        <field name="inherit_id" ref="hr_expense.product_product_expense_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='product_details']" position="inside">
+                <group string="Invoicing">
+                    <field name="invoice_policy" widget="radio"/>
+                    <field name="expense_policy" widget="radio"/>
+                </group>
+            </xpath>
+            <xpath expr="//field[@name='list_price']" position="replace">
+                <field name="list_price" attrs="{'invisible':[('expense_policy', '!=', 'sales_price')]}"/>
+            </xpath>
+            <xpath expr="//field[@name='taxes_id']" position="replace">
+                <field name="taxes_id" widget="many2many_tags" attrs="{'invisible':[('expense_policy', '=', 'no')]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_expense.hr_expense_product" model="ir.actions.act_window">
+        <field name="context">{"default_can_be_expensed": 1, 'default_type': 'service',
+            'default_invoice_policy':'delivery', 'default_expense_policy' : 'cost'}</field>
+    </record>
+
+</odoo>

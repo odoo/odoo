@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <record id="payment.payment_acquirer_paypal" model="payment.acquirer">
+            <field name="name">Paypal</field>
+            <field name="image_128" type="base64" file="payment_paypal/static/src/img/paypal_icon.png"/>
+            <field name="provider">paypal</field>
+            <field name="company_id" ref="base.main_company"/>
+            <field name="view_template_id" ref="paypal_form"/>
+        </record>
+
+    </data>
+</odoo>

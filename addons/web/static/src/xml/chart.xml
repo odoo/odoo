@@ -1,0 +1,10 @@
+<template>
+
+<t t-name="web.PieChart">
+    <graph type="pie" t-att-title="title">
+        <field t-att-name="modifiers.groupby.split(':')[0]" t-att-interval="modifiers.groupby.split(':')[1]"/>
+        <field t-if="modifiers.measure" t-att-name="modifiers.measure" type="measure"/>
+    </graph>
+</t>
+
+</template>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ComposerSuggestedRecipient" owl="1">
+        <div class="o_ComposerSuggestedRecipient" t-att-data-partner-id="suggestedRecipientInfo.partner and suggestedRecipientInfo.partner.id ? suggestedRecipientInfo.partner.id : false" t-att-title="ADD_AS_RECIPIENT_AND_FOLLOWER_REASON">
+            <t t-if="suggestedRecipientInfo">
+                <div class="custom-control custom-checkbox">
+                    <input t-attf-id="{{ id }}_checkbox" class="custom-control-input" type="checkbox" t-att-checked="suggestedRecipientInfo.isSelected ? 'checked' : undefined" t-on-change="_onChangeCheckbox" t-ref="checkbox" />
+                    <label class="custom-control-label" t-attf-for="{{ id }}_checkbox">
+                        <t t-if="suggestedRecipientInfo.name">
+                            <t t-esc="suggestedRecipientInfo.name"/>
+                        </t>
+                        <t t-if="suggestedRecipientInfo.email">
+                            (<t t-esc="suggestedRecipientInfo.email"/>)
+                        </t>
+                    </label>
+                </div>
+                <t t-if="!suggestedRecipientInfo.partner">
+                    <FormViewDialogComponentAdapter
+                        Component="FormViewDialog"
+                        params="{
+                            context: {
+                                active_id: suggestedRecipientInfo.thread.id,
+                                active_model: 'mail.compose.message',
+                                default_email: suggestedRecipientInfo.email,
+                                default_name: suggestedRecipientInfo.name,
+                                force_email: true,
+                                ref: 'compound_context',
+                            },
+                            disable_multiple_selection: true,
+                            on_saved: _onDialogSaved,
+                            res_id: false,
+                            res_model: 'res.partner',
+                            title: PLEASE_COMPLETE_CUSTOMER_S_INFORMATION,
+                        }"
+                        t-ref="dialog"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+</templates>

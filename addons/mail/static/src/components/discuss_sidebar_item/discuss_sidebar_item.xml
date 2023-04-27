@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.DiscussSidebarItem" owl="1">
+        <div class="o_DiscussSidebarItem"
+            t-att-class="{
+                'o-active': thread and discuss.thread === thread,
+                'o-starred-box': thread and thread === env.messaging.starred,
+                'o-unread': thread and thread.localMessageUnreadCounter > 0,
+            }" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-att-data-thread-name="thread ? thread.displayName : undefined"
+        >
+            <t t-if="thread">
+                <div class=" o_DiscussSidebarItem_activeIndicator o_DiscussSidebarItem_item" t-att-class="{ 'o-item-active': discuss.thread === thread }"/>
+                <ThreadIcon class="o_DiscussSidebarItem_item" threadLocalId="thread.localId"/>
+                <t t-if="thread.channel_type === 'chat' and discuss.renamingThreads.includes(thread)">
+                    <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name o-editable">
+                        <EditableText
+                            class="o_DiscussSidebarItem_nameInput"
+                            placeholder="thread.correspondent ? thread.correspondent.name : thread.name"
+                            value="thread.displayName"
+                            t-on-o-cancel="_onCancelRenaming"
+                            t-on-o-clicked="_onClickedEditableText"
+                            t-on-o-validate="_onValidateEditableText"
+                        />
+                    </div>
+                </t>
+                <t t-else="">
+                    <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': thread.localMessageUnreadCounter > 0 }">
+                        <t t-esc="thread.displayName"/>
+                    </div>
+                    <t t-if="thread.mass_mailing">
+                        <i class="fa fa-envelope-o" title="Messages are sent by email" role="img"/>
+                    </t>
+                </t>
+                <div class="o-autogrow o_DiscussSidebarItem_item"/>
+                <t t-if="thread.model !== 'mail.box'">
+                    <div class="o_DiscussSidebarItem_commands o_DiscussSidebarItem_item">
+                        <t t-if="thread.channel_type === 'channel'">
+                            <div class="fa fa-cog o_DiscussSidebarItem_command o_DiscussSidebarItem_commandSettings" t-on-click="_onClickSettings" title="Channel settings" role="img"/>
+                            <t t-if="!thread.message_needaction_counter and !thread.group_based_subscription">
+                                <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandLeave fa fa-times" t-on-click="_onClickLeave" title="Leave this channel" role="img"/>
+                            </t>
+                        </t>
+                        <t t-if="thread.channel_type === 'chat'">
+                            <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandRename fa fa-cog" t-on-click="_onClickRename" title="Rename conversation" role="img"/>
+                        </t>
+                        <t t-if="hasUnpin()">
+                            <t t-if="!thread.localMessageUnreadCounter">
+                                <div class="fa fa-times o_DiscussSidebarItem_command o_DiscussSidebarItem_commandUnpin" t-on-click="_onClickUnpin" title="Unpin conversation" role="img"/>
+                            </t>
+                        </t>
+                    </div>
+                </t>
+                <t t-if="counter > 0">
+                    <div class="o_DiscussSidebarItem_counter o_DiscussSidebarItem_item badge badge-pill">
+                        <t t-esc="counter"/>
+                    </div>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

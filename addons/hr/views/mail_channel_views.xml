@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <record id="mail_channel_view_form_" model="ir.ui.view">
+        <field name="name">mail.channel.view.form.inherit.hr</field>
+        <field name="model">mail.channel</field>
+        <field name="inherit_id" ref="mail.mail_channel_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='group_ids']" position="after">
+                <field name="subscription_department_ids" widget="many2many_tags"
+                    string="Auto Subscribe Departments"/>
+            </xpath>
+        </field>
+    </record>
+</data></odoo>

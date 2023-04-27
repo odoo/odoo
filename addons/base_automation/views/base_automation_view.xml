@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <!-- Automation Form View -->
+        <record id="view_base_automation_form" model="ir.ui.view">
+            <field name="name">Automations</field>
+            <field name="model">base.automation</field>
+            <field name="mode">primary</field>
+            <field name="inherit_id" ref="base.view_server_action_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='create_action']" position="replace">
+                </xpath>
+                <xpath expr="//button[@name='unlink_action']" position="replace">
+                </xpath>
+                <xpath expr="//button[@name='run']" position="replace">
+                </xpath>
+                <xpath expr="//field[@name='partner_ids']" position='attributes'>
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='channel_ids']" position='attributes'>
+                    <attribute name="options">{'no_create': True}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='template_id']" position='attributes'>
+                    <attribute name="context">{'default_model_id': model_id}</attribute>
+                </xpath>
+                <xpath expr="//page[@name='security']" position='attributes'>
+                    <attribute name='invisible'>1</attribute>
+                </xpath>
+                <xpath expr="//group[@name='action_content']" position="inside">
+                    <field name="active" widget="boolean_toggle"/>
+                    <field name="trigger"/>
+                    <field name="trigger_field_ids" domain="[('model_id', '=', model_id)]" attrs="{'invisible': [('trigger', 'not in', ['on_write', 'on_create_or_write'])]}" widget="many2many_tags"/>
+                    <field name="on_change_field_ids" string="Trigger Fields" domain="[('model_id', '=', model_id)]"
+                        attrs="{'invisible': [('trigger', '!=', 'on_change')], 'required': [('trigger', '=', 'on_change')]}"
+                        widget='many2many_tags' options="{'no_create': True}"/>
+
+                    <field name="filter_pre_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}" attrs="{'invisible': [('trigger', 'not in', ['on_write','on_create_or_write'])]}"/>
+                    <field name="filter_domain" widget="domain" options="{'model': 'model_name', 'in_dialog': True}"/>
+                    <field name="trg_date_id"
+                        attrs="{'invisible': [('trigger', '!=', 'on_time')], 'required': [('trigger', '=', 'on_time')]}"/>
+                    <label for="trg_date_range"
+                        attrs="{'invisible': [('trigger', '!=', 'on_time')]}"/>
+                    <div class="o_row" attrs="{'invisible': [('trigger', '!=', 'on_time')]}">
+                        <field name="trg_date_range" attrs="{'required': [('trigger','=','on_time')]}"/>
+                        <field name="trg_date_range_type" attrs="{'required': [('trigger','=','on_time')]}"/>
+                    </div>
+                    <field name="trg_date_calendar_id"
+                        attrs="{'invisible': ['|', ('trg_date_id','=',False), ('trg_date_range_type', '!=', 'day')]}"/>
+                </xpath>
+                <xpath expr="//group[@name='action_wrapper']" position="after">
+                    <div class="alert alert-info" role="alert" attrs="{'invisible': [('trigger', '!=', 'on_time')]}">
+                        <field name="least_delay_msg"/>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+
+        <!-- automation Tree View -->
+        <record id="view_base_automation_tree" model="ir.ui.view">
+            <field name="name">base.automation.tree</field>
+            <field name="model">base.automation</field>
+            <field name="arch" type="xml">
+                <tree string="Automation">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                    <field name="trigger"/>
+                    <field name="model_id"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_base_automation_search" model="ir.ui.view">
+            <field name="name">base.automation.search</field>
+            <field name="model">base.automation</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name"/>
+                    <field name="model_id"/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                </search>
+            </field>
+        </record>
+
+        <!-- automation Action -->
+        <record id="base_automation_act" model="ir.actions.act_window">
+            <field name="name">Automated Actions</field>
+            <field name="res_model">base.automation</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="view_base_automation_tree"/>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Setup a new automated automation
+              </p><p>
+                Use automated actions to automatically trigger actions for
+                various screens. Example: a lead created by a specific user may
+                be automatically set to a specific Sales Team, or an
+                opportunity which still has status pending after 14 days might
+                trigger an automatic reminder email.
+              </p>
+            </field>
+        </record>
+
+        <menuitem id="menu_base_automation_form"
+            parent="base.menu_automation" action="base_automation_act" sequence="1"/>
+
+        <template id="assets_backend" name="base_automation assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/base_automation/static/src/js/base_automation_error_dialog.js"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="base_automation_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/base_automation/static/tests/base_automation_error_dialog.js"/>
+            </xpath>
+        </template>
+
+</odoo>

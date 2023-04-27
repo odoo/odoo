@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_template_data_new_rank_reached" model="mail.template">
+            <field name="name">User: New rank reached</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">New rank: ${object.rank_id.name}</field>
+            <field name="email_to"></field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="html">
+<div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+<table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+    <tbody>
+        <tr>
+            <td style="padding:15px 20px 10px 20px;">
+                <p>
+                    Congratulations
+                    <span>${object.name or ''}</span>!
+                </p>
+                <p>
+                    You just reached a new rank : <strong>${object.rank_id.name}</strong>
+                </p>
+                % if object.next_rank_id.name
+                    <p>Continue your work to become a <strong>${object.next_rank_id.name}</strong> !</p>
+                % endif
+                <div style="margin: 16px 0px 16px 0px;">
+                    % set gamification_redirection_data = object.get_gamification_redirection_data()
+                    % for data in gamification_redirection_data
+                        % set url = data['url']
+                        % set label = data['label']
+                        <a href="${url}" style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">${label}</a>
+                    % endfor
+                </div>
+            </td>
+            <td style="padding:15px 20px 10px 20px;">
+                <p style="text-align: center;">
+                    <img src="/web/image/gamification.karma.rank/${object.rank_id.id}/image_128"/>
+                </p>
+            </td>
+        </tr>
+        % if user.signature
+        <tr>
+            <td style="padding:15px 20px 10px 20px;">
+                ${user.signature | safe}
+            </td>
+        </tr>
+        % endif
+    </tbody>
+ </table>
+</div></field>
+            <field name="lang">${object.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

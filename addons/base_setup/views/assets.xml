@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="dev tool assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/base_setup/static/src/scss/settings.scss"/>
+            <script type="text/javascript" src="/base_setup/static/src/js/res_config_dev_tool.js"></script>
+            <script type="text/javascript" src="/base_setup/static/src/js/res_config_edition.js"></script>
+            <script type="text/javascript" src="/base_setup/static/src/js/res_config_invite_users.js"></script>
+        </xpath>
+    </template>
+</odoo>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.coupon</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='website_sale_coupon']" position="after">
+                <div class="content-group">
+                    <div class="mt8" attrs="{'invisible': [('module_sale_coupon', '=', False)]}">
+                        <button name="%(coupon.coupon_program_action_promo_program)d" icon="fa-arrow-right" type="action" string="Promotion Programs" class="btn-link"/>
+                    </div>
+                    <div class="mt8" attrs="{'invisible': [('module_sale_coupon', '=', False)]}">
+                        <button name="%(coupon.coupon_program_action_coupon_program)d" icon="fa-arrow-right" type="action" string="Coupon Programs" class="btn-link"/>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

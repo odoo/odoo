@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="email_compose_message_wizard_form">
+            <field name="name">mail.compose.message.form</field>
+            <field name="model">mail.compose.message</field>
+            <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+            <field name="arch" type="xml">
+                <form string="Compose Email">
+                    <group>
+                        <!-- truly invisible fields for control and options -->
+                        <field name="composition_mode" invisible="1"/>
+                        <field name="model" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="is_log" invisible="1"/>
+                        <field name="parent_id" invisible="1"/>
+                        <field name="mail_server_id" invisible="1"/>
+                        <field name="active_domain" invisible="1"/>
+
+                        <!-- Various warnings -->
+                        <div colspan="2" class="oe_form_box_info bg-info oe_text_center"
+                                attrs="{'invisible': [('active_domain', '=', False)]}">
+                            <p attrs="{'invisible': [('use_active_domain', '=', False)]}">
+                                <strong>
+                                    All records matching your current search filter will be mailed,
+                                    not only the ids selected in the list view.
+                                </strong><br />
+                                The email will be sent for all the records selected in the list.<br />
+                                Confirming this wizard will probably take a few minutes blocking your browser.
+                            </p>
+                            <p attrs="{'invisible': [('use_active_domain', '=', True)]}">
+                                <strong>Only records checked in list view will be used.</strong><br />
+                                The email will be sent for all the records selected in the list.
+                            </p>
+                            <p class="mt8">
+                                <span attrs="{'invisible': [('use_active_domain', '=', True)]}">
+                                    If you want to send it for all the records matching your search criterion, check this box :
+                                </span>
+                                <span attrs="{'invisible': [('use_active_domain', '=', False)]}">
+                                    If you want to use only selected records please uncheck this selection box :
+                                </span>
+                                <field class="oe_inline" name="use_active_domain"/>
+                            </p>
+                        </div>
+                        <!-- visible wizard -->
+                        <field name="email_from"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <label for="partner_ids" string="Recipients"  attrs="{'invisible': [('is_log', '=', True)]}" groups="base.group_user"/>
+                        <div groups="base.group_user" attrs="{'invisible': [('is_log', '=', True)]}">
+                            <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
+                                <strong>Email mass mailing</strong> on
+                                <span attrs="{'invisible': [('use_active_domain', '=', True)]}">the selected records</span>
+                                <span attrs="{'invisible': [('use_active_domain', '=', False)]}">the current search filter</span>.
+                            </span>
+                            <span name="document_followers_text" attrs="{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}">Followers of the document and</span>
+                            <field name="partner_ids" widget="many2many_tags_email" placeholder="Add contacts to notify..."
+                                context="{'force_email':True, 'show_email':True}"
+                                attrs="{'invisible': [('composition_mode', '!=', 'comment')]}"/>
+                        </div>
+                        <field name="subject" placeholder="Subject..." required="True"/>
+                        <!-- mass post -->
+                        <field name="notify"
+                            attrs="{'invisible':[('composition_mode', '!=', 'mass_post')]}"/>
+                        <!-- mass mailing -->
+                        <field name="no_auto_thread" attrs="{'invisible':[('composition_mode', '!=', 'mass_mail')]}"/>
+                        <field name="reply_to" placeholder="Email address to redirect replies..."
+                            attrs="{'invisible':['|', ('no_auto_thread', '=', False), ('composition_mode', '!=', 'mass_mail')],
+                                    'required':[('no_auto_thread', '=', True), ('composition_mode', '=', 'mass_mail')]}"/>
+                    </group>
+                    <field name="body" options="{'style-inline': true}"/>
+                    <group col="4">
+                        <field name="attachment_ids" widget="many2many_binary" string="Attach a file" nolabel="1" colspan="2"/>
+                        <field name="template_id" options="{'no_create': True}"
+                               context="{'default_model': model, 'default_body_html': body, 'default_subject': subject}"/>
+                    </group>
+                    <footer>
+                        <button string="Send" attrs="{'invisible': [('is_log', '=', True)]}" name="action_send_mail" type="object" class="btn-primary o_mail_send"/>
+                        <button string="Log" attrs="{'invisible': [('is_log', '=', False)]}" name="action_send_mail" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+
+                        <button icon="fa-lg fa-save" type="object" name="save_as_template" string="Save as new template"
+                                class="float-right btn-secondary" help="Save as a new template"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_email_compose_message_wizard" model="ir.actions.act_window">
+            <field name="name">Compose Email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="binding_model_id" ref="mail.model_mail_compose_message"/>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+    </data>
+</odoo>

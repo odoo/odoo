@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- wizard view -->
+        <record model="ir.ui.view" id="mail_wizard_invite_form">
+            <field name="name">Add Followers</field>
+            <field name="model">mail.wizard.invite</field>
+            <field name="arch" type="xml">
+                <form string="Add Followers">
+                    <group>
+                        <field name="res_model" invisible="1"/>
+                        <field name="res_id" invisible="1"/>
+                        <field name="partner_ids" widget="many2many_tags_email"
+                                placeholder="Add contacts to notify..."
+                                context="{'force_email':True, 'show_email':True}"
+                                invisible="context.get('mail_invite_follower_channel_only')"/>
+                        <field name="channel_ids" widget="many2many_tags"
+                                placeholder="Add channels to notify..."
+                                invisible="not context.get('mail_invite_follower_channel_only')"
+                                options="{'no_create': True}"/>
+                        <field name="send_mail" invisible="context.get('mail_invite_follower_channel_only')"/>
+                        <field name="message" attrs="{'invisible': [('send_mail','!=',True)]}" options="{'style-inline': true, 'no-attachment': true}" class="test_message"/>
+                    </group>
+                    <footer>
+                        <button string="Add Followers"
+                            name="add_followers" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

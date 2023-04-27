@@ -1,0 +1,16 @@
+.o_view_nocontent {
+    &_barcode_scanner:before {
+        @extend %o-nocontent-init-image;
+        @include size(250px, 250px);
+        background: transparent url(/stock/static/img/barcode_scanner.png) no-repeat center;
+        background-size: 250px 250px;
+    }
+
+    &_replenishment:before {
+        @extend %o-nocontent-init-image;
+        width: 100%;
+        height: 300px;
+        max-width: 500px;
+        background: transparent url(/stock/static/img/replenishment.svg) no-repeat center;
+    }
+}

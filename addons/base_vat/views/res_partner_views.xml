@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="view_partner_form" model="ir.ui.view">
+            <field name="name">res.partner.vat.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='vat']" position="attributes">
+                    <attribute name="string">VAT</attribute>
+                </xpath>
+                <xpath expr="//span[hasclass('o_vat_label')]" position="replace">
+                    <span class="o_vat_label">VAT</span>
+                </xpath>
+            </field>
+        </record>
+</odoo>

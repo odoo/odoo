@@ -1,0 +1,164 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* payment_alipay
+# 
+# Translators:
+# Paolo Valier, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:28+0000\n"
+"PO-Revision-Date: 2020-09-07 08:15+0000\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
+"Language-Team: Italian (https://app.transifex.com/odoo/teams/41243/it/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: it\n"
+"Plural-Forms: nplurals=3; plural=n == 1 ? 0 : n != 0 && n % 1000000 == 0 ? 1 : 2;\n"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid ""
+"\n"
+"                        Only transactions in Chinese Yuan (CNY) are allowed for Alipay Express Checkout.\n"
+"\n"
+"                        If you wish to use another currency than CNY for your transactions, switch your\n"
+"                        configuration to a Cross-border account on the Alipay payment acquirer in Odoo.\n"
+"                    "
+msgstr ""
+"\n"
+"                        Per la cassa veloce Alipay sono consentite solo transazioni in yuan (CNY).\n"
+"\n"
+"                        Per utilizzare valute diverse dallo yuan (CNY) nelle transazioni, cambiare\n"
+"                        la configurazione su conto transfrontaliero nel sistema di pagamento Alipay di Odoo.\n"
+"                    "
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid ""
+"  * Cross-border: For the Overseas seller \n"
+"  * Express Checkout: For the Chinese Seller"
+msgstr ""
+"  * Transfrontaliero: per venditori esteri \n"
+"  * Cassa veloce: per venditori cinesi"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "; multiple order found"
+msgstr "; trovato ordine multiplo"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "; no order found"
+msgstr "; nessun ordine trovato"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_payment_method
+msgid "Account"
+msgstr "Conto"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__provider__alipay
+msgid "Alipay"
+msgstr "Alipay"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_seller_email
+msgid "Alipay Seller Email"
+msgstr "E-mail venditore Alipay"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "Alipay: invalid sign, received %s, computed %s, for data %s"
+msgstr "Alipay: sign non valido, ricevuto %s, elaborato %s, per i dati %s"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "Alipay: received data for reference %s"
+msgstr "Alipay: ricevuti dati con riferimento %s"
+
+#. module: payment_alipay
+#: code:addons/payment_alipay/models/payment.py:0
+#, python-format
+msgid "Alipay: received data with missing reference (%s) or txn_id (%s)"
+msgstr "Alipay: ricevuti dati con riferimento (%s) o txn_id (%s) mancante"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__standard_checkout
+msgid "Cross-border"
+msgstr "Transfrontaliero"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__display_name
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__display_name
+msgid "Display Name"
+msgstr "Nome visualizzato"
+
+#. module: payment_alipay
+#: model:ir.model.fields.selection,name:payment_alipay.selection__payment_acquirer__alipay_payment_method__express_checkout
+msgid "Express Checkout (only for Chinese Merchant)"
+msgstr "Cassa veloce (solo per commercianti cinesi)"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__id
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction__id
+msgid "ID"
+msgstr "ID"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer____last_update
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_transaction____last_update
+msgid "Last Modified on"
+msgstr "Ultima modifica il"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+msgid "MD5 Signature Key"
+msgstr "Chiave di firma MD5"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid "Merchant Partner ID"
+msgstr "ID partner commerciante"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Sistema di pagamento"
+
+#. module: payment_alipay
+#: model:ir.model,name:payment_alipay.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Transazione di pagamento"
+
+#. module: payment_alipay
+#: model:ir.model.fields,field_description:payment_alipay.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Fornitore"
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_md5_signature_key
+msgid ""
+"The MD5 private key is the 32-byte string which is composed of English "
+"letters and numbers."
+msgstr ""
+"La chiave privata MD5 è la stringa di 32 byte composta da numeri e lettere "
+"inglesi."
+
+#. module: payment_alipay
+#: model:ir.model.fields,help:payment_alipay.field_payment_acquirer__alipay_merchant_partner_id
+msgid ""
+"The Merchant Partner ID is used to ensure communications coming from Alipay "
+"are valid and secured."
+msgstr ""
+"L'ID partner commerciante è utilizzato per assicurare che le comunicazioni "
+"da Alipay siano valide e sicure."

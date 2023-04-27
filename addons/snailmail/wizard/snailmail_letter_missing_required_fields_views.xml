@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="snailmail_letter_missing_required_fields" model="ir.ui.view">
+        <field name="name">snailmail.letter.missing.required.fields.form</field>
+        <field name="model">snailmail.letter.missing.required.fields</field>
+        <field name="arch" type="xml">
+            <form>
+                <!-- Field present for correct default_get behavior -->
+                <field name="letter_id" invisible="1"/>
+                <p>The customer address is not complete. Update the address here and re-send the letter.</p>
+                <group>
+                    <label for="partner_id" string="Address"/>
+                    <div class="o_address_format">
+                        <field name="partner_id" readonly="1" options="{'no_open': True}" force_save="1"/>
+                        <field name="street" placeholder="Street..." class="o_address_street"/>
+                        <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                        <field name="city" placeholder="City" class="o_address_city"/>
+                        <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                        <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                        <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                    </div>
+                </group>
+                <footer>
+                    <button string="Update address and re-send" type="object" name="update_address_save" class="btn-primary"/>
+                    <button string="Cancel letter" type="object" name="update_address_cancel" class="btn-secondary"/>
+                    <button string="Close" special='cancel' class="btn-secondary"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="snailmail_letter_missing_required_fields_action" model="ir.actions.act_window">
+        <field name="name">Failed letter</field>
+        <field name="res_model">snailmail.letter.missing.required.fields</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</odoo>

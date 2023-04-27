@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_mail_mass_mailing_popup_form" model="ir.ui.view">
+        <field name="name">website.mass_mailing.popup.form</field>
+        <field name="model">website.mass_mailing.popup</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="mailing_list_id"/>
+                        <field name="website_id" groups="website.group_multi_website"/>
+                    </group>
+                    <label for="popup_content"/>
+                    <field name="popup_content" widget="html" options="{
+                            'snippets': 'website.snippets',
+                            'cssEdit': 'website_mass_mailing.iframe_css_assets_edit',
+                            'wrapper': 'website_mass_mailing.edition.wrapper',
+                        }"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,370 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_project
+# 
+# Translators:
+# Martin Trigaux, 2020
+# Morten Schou <ms@msteknik.dk>, 2020
+# Jesper Carstensen <jc@danodoo.dk>, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
+# lhmflexerp <lhm@flexerp.dk>, 2020
+# Mads Søndergaard, 2020
+# Mads Søndergaard, 2020
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-11-27 11:24+0000\n"
+"PO-Revision-Date: 2020-09-07 08:18+0000\n"
+"Last-Translator: Mads Søndergaard, 2020\n"
+"Language-Team: Danish (https://app.transifex.com/odoo/teams/41243/da/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: da\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__project_only
+msgid "Create a new project but no task"
+msgstr "Opret et nyt projekt men ingen opgaver"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_global_project
+msgid "Create a task in an existing project"
+msgstr "Opret en opgave i et eksisterende projekt"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
+msgid "Create a task in sales order's project"
+msgstr "Opret en opgave i salgsordrens projekt"
+
+#. module: sale_project
+#: model:ir.actions.server,name:sale_project.project_task_server_action_batch_invoice
+msgid "Create invoice"
+msgstr "Opret faktura"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__display_name
+#: model:ir.model.fields,field_description:sale_project.field_product_template__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_project__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task__display_name
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr "Vis navn"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
+msgid "Display project"
+msgstr "Vis projekt"
+
+#. module: sale_project
+#: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
+msgid "Don't create task"
+msgstr "Opret ikke opgave"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
+msgid "Generated Project"
+msgstr "Genereret projekt"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__task_id
+msgid "Generated Task"
+msgstr "Genereret sag"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__id
+#: model:ir.model.fields,field_description:sale_project.field_project_project__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__id
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__id
+msgid "ID"
+msgstr "ID"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
+msgid "Is a Service"
+msgstr "Er en service"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product____last_update
+#: model:ir.model.fields,field_description:sale_project.field_product_template____last_update
+#: model:ir.model.fields,field_description:sale_project.field_project_project____last_update
+#: model:ir.model.fields,field_description:sale_project.field_project_task____last_update
+#: model:ir.model.fields,field_description:sale_project.field_project_task_recurrence____last_update
+#: model:ir.model.fields,field_description:sale_project.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_project.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr "Sidst ændret den"
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid "New"
+msgstr "Ny"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__invoice_count
+msgid "Number of invoices"
+msgstr "Antal faktura"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
+#: model:ir.model.fields,help:sale_project.field_product_template__service_tracking
+msgid ""
+"On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
+"         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
+msgstr ""
+"På en salgsordre bekræftelse, kan dette produkt generere et projekt og/eller sag. Fra disse, kan du spore de tjenester du sælger.\n"
+"        'I salgsordres projekt': Vil bruge salgsordrens konfigurerede projekt hvis defineret, eller falder tilbage til oprettelsen på et nyt projekt baseret på den valgte skabelon."
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_product_product
+msgid "Product"
+msgstr "Produkt"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_product_template
+msgid "Product Template"
+msgstr "Produktskabelon"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__project_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__project_id
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_id
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "Project"
+msgstr "Projekt"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
+#: model:ir.model.fields,field_description:sale_project.field_product_template__project_template_id
+msgid "Project Template"
+msgstr "Projektskabelon"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order_line__project_id
+msgid "Project generated by the sales order item"
+msgstr "Projekt genereret af salgsordren"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__project_sale_order_id
+msgid "Project's sale order"
+msgstr "Projekters salgsordre"
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__project_ids
+#, python-format
+msgid "Projects"
+msgstr "Projekter"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order__project_ids
+msgid "Projects used in this sales order."
+msgstr "Projekter anvendt i denne salgsordre."
+
+#. module: sale_project
+#: model_terms:ir.ui.view,arch_db:sale_project.project_task_view_search
+msgid "Sale Order"
+msgstr "Salgsordre"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_order_id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_order_id
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid "Sales Order"
+msgstr "Salgsordre"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_project__sale_line_id
+#: model:ir.model.fields,field_description:sale_project.field_project_task__sale_line_id
+#: model_terms:ir.ui.view,arch_db:sale_project.view_sale_project_inherit_form
+msgid "Sales Order Item"
+msgstr "Salgsordre Emne"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Salgsordrelinje"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order_line__is_service
+msgid ""
+"Sales Order item should generate a task and/or a project, depending on the "
+"product settings."
+msgstr ""
+"Salgsordre bør generere en sag og/eller et projekt, afhængig af produkt "
+"indstillingerne."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_line_id
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
+msgid ""
+"Sales order item to which the project is linked. Link the timesheet entry to"
+" the sales order item defined on the project. Only applies on tasks without "
+"sale order item defined, and if the employee is not in the 'Employee/Sales "
+"Order Item Mapping' of the project."
+msgstr ""
+"Salgsordre hvortil projektet er forbundet. Forbind timeseddels posteringen "
+"til salgsordren defineret på projektet. Gælder kun opgaver uden salgsordre "
+"defineret, og hvis medarbejderen ikke er i projektets "
+"\"Medarbejder/Salgsordre Kortlægning\"."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
+#: model:ir.model.fields,help:sale_project.field_project_task__project_sale_order_id
+msgid "Sales order to which the project is linked."
+msgstr "Salgsordre som projektet er knyttet til"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_project_task__sale_order_id
+msgid "Sales order to which the task is linked."
+msgstr "Salgsordre som opgaven er knyttet til."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_product_product__project_id
+#: model:ir.model.fields,help:sale_project.field_product_template__project_id
+msgid ""
+"Select a billable project on which tasks can be created. This setting must "
+"be set for each company."
+msgstr ""
+"Vælg et fakturerbart projekt hvorpå opgaver kan oprettes. Denne indstilling "
+"skal være angivet for hver virksomhed."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_product_product__project_template_id
+#: model:ir.model.fields,help:sale_project.field_product_template__project_template_id
+msgid ""
+"Select a billable project to be the skeleton of the new created project when"
+" selling the current product. Its stages and tasks will be duplicated."
+msgstr ""
+"Vælg et fakturerbart projekt til at være skelet for nye oprettede projekt "
+"ved salg af det nuværende produkt. Dets stadier og opgaver vil blive "
+"kopieret."
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order__project_id
+msgid "Select a non billable project on which tasks can be created."
+msgstr "Vælg et ikke-fakturerbart projekt hvor sager kan oprettes."
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
+#: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
+msgid "Service Tracking"
+msgstr "Ydelsessporing"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task
+msgid "Task"
+msgstr "Opgave"
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid ""
+"Task Created (%s): <a href=# data-oe-model=project.task data-oe-id=%d>%s</a>"
+msgstr ""
+"Opgave oprettet (%s): <a href=# data-oe-model=project.task data-oe-"
+"id=%d>%s</a>"
+
+#. module: sale_project
+#: model:ir.model,name:sale_project.model_project_task_recurrence
+msgid "Task Recurrence"
+msgstr "Opgave Gentagelse"
+
+#. module: sale_project
+#: model:ir.model.fields,help:sale_project.field_sale_order_line__task_id
+msgid "Task generated by the sales order item"
+msgstr "Sag genereret ud fra salgsordren"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_count
+#: model_terms:ir.ui.view,arch_db:sale_project.view_order_form_inherit_sale_project
+msgid "Tasks"
+msgstr "Opgaver"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_sale_order__tasks_ids
+msgid "Tasks associated to this sale"
+msgstr "Opgaver tilknyttet dette salg"
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"The product %s should not have a global project since it will generate a "
+"project."
+msgstr ""
+"Produktet %s bør ikke have et globalt projekt, eftersom det vil generere et "
+"projekt."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"The product %s should not have a project nor a project template since it "
+"will not generate project."
+msgstr ""
+"Produktet %s bør ikke have et projekt, eller en projekt skabelon, siden det "
+"vil generere et projekt."
+
+#. module: sale_project
+#: code:addons/sale_project/models/product.py:0
+#, python-format
+msgid ""
+"The product %s should not have a project template since it will generate a "
+"task in a global project."
+msgstr ""
+"Produktet %s bør ikke have en produkt skabelon, eftersom det vil generere en"
+" sag i et globalt projekt."
+
+#. module: sale_project
+#: model:ir.model.constraint,message:sale_project.constraint_project_project_sale_order_required_if_sale_line
+msgid ""
+"The project should be linked to a sale order to select a sale order item."
+msgstr ""
+"Projektet bør være forbundet til en salgsordre for at vælge en salgsordre "
+"genstand."
+
+#. module: sale_project
+#: code:addons/sale_project/models/sale_order.py:0
+#, python-format
+msgid ""
+"This task has been created from: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+msgstr ""
+"Denne opgave er oprettet fra: <a href=# data-oe-model=sale.order data-oe-"
+"id=%d>%s</a> (%s)"
+
+#. module: sale_project
+#: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
+msgid "To invoice"
+msgstr "Til fakturering"
+
+#. module: sale_project
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid ""
+"You cannot link the order item %(order_id)s - %(product_id)s to this task "
+"because it is a re-invoiced expense."
+msgstr ""
+"Du kan ikke forbinde ordren varen %(order_id)s - %(product_id)s til denne "
+"opgave, fordi den er en faktureret udgift."
+
+#. module: sale_project
+#: code:addons/sale_project/models/project.py:0
+#, python-format
+msgid ""
+"You have to unlink the task from the sale order item in order to delete it."
+msgstr ""
+"Du skal fjerne forbindelsen til sagen fra salgsordren for at kunne slette "
+"den."

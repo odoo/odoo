@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="action_report_production_order" model="ir.actions.report">
+            <field name="name">Production Order</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp.report_mrporder</field>
+            <field name="report_file">mrp.report.mrp_production_templates</field>
+            <field name="print_report_name">'Production Order - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_mrp_production"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_bom_structure" model="ir.actions.report">
+            <field name="name">BoM Structure</field>
+            <field name="model">mrp.bom</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp.report_bom_structure</field>
+            <field name="report_file">mrp.report_bom_structure</field>
+            <field name="print_report_name">'Bom Structure - %s' % object.display_name</field>
+            <field name="binding_model_id" ref="model_mrp_bom"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="label_manufacture_template" model="ir.actions.report">
+            <field name="name">Finished Product Label (ZPL)</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-text</field>
+            <field name="report_name">mrp.label_production_view</field>
+            <field name="report_file">mrp.label_production_view</field>
+            <field name="binding_model_id" ref="model_mrp_production"/>
+            <field name="binding_type">report</field>
+        </record>
+        <record id="action_report_finished_product" model="ir.actions.report">
+            <field name="name">Finished Product Label (PDF)</field>
+            <field name="model">mrp.production</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">mrp.label_production_view_pdf</field>
+            <field name="report_file">mrp.label_production_view_pdf</field>
+            <field name="print_report_name">'Finished products - %s' % object.name</field>
+            <field name="binding_model_id" ref="model_mrp_production"/>
+            <field name="binding_type">report</field>
+        </record>
+    </data>
+</odoo>

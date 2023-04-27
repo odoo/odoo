@@ -1,0 +1,28 @@
+# HG changeset patch
+# Parent 43f21611dacb7c2b2f3810baeeef359ad7c329f0
+
+diff --git a/__manifest__.py b/__manifest__.py
+--- a/__manifest__.py
++++ b/__manifest__.py
+@@ -7,4 +7,5 @@
+     'data': ['web_example.xml'],
+     'js': ['static/src/js/first_module.js'],
+     'css': ['static/src/css/web_example.css'],
++    'qweb': ['static/src/xml/web_example.xml'],
+ }
+diff --git a/static/src/xml/web_example.xml b/static/src/xml/web_example.xml
+new file mode 100644
+--- /dev/null
++++ b/static/src/xml/web_example.xml
+@@ -0,0 +1,11 @@
++<templates>
++<div t-name="web_example.action" class="oe_web_example oe_web_example_stopped">
++    <h4 class="oe_web_example_timer">00:00:00</h4>
++    <p class="oe_web_example_start">
++        <button type="button">Start</button>
++    </p>
++    <p class="oe_web_example_stop">
++        <button type="button">Stop</button>
++    </p>
++</div>
++</templates>

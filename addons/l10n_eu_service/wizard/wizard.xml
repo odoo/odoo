@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record id="eu_service_view" model="ir.ui.view">
+            <field name="name">l10n_eu_service.wizard.form</field>
+            <field name="model">l10n_eu_service.wizard</field>
+            <field name="arch" type="xml">
+                <form string='Setup EU MOSS Taxes'>
+                    <p>
+                        Based on the options selected below, this wizard will create one
+                        fiscal position mapping for each EU country to which you are selling
+                        services.
+                        Each fiscal position will automatically map your national VAT tax for
+                        services to the corresponding VAT tax in the country your customer
+                        belongs to.
+                        <br/>
+                        You can use the wizard again later to add more countries.
+                    </p>
+                    <group>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                        <field name="fiscal_position_id" domain="[('company_id','=', company_id)]"
+                               options="{'no_create': True}"
+                               placeholder="Current EU B2C Fiscal Position, if any"/>
+                        <field name="tax_id"
+                               domain="[('type_tax_use', '=', 'sale'),
+                                        ('amount_type', '=', 'percent'),
+                                        ('company_id','=', company_id)]"
+                               options="{'no_create': True}"/>
+                        <field name="account_collected_id"
+                            placeholder="Keep empty to use current Service VAT account"/>
+                        <field name="done_country_ids" widget="many2many_tags" readonly="1"
+                               attrs="{'invisible': [('done_country_ids', '=', [(6, False, [])])]}"/>
+                        <field name="todo_country_ids" widget="many2many_tags"
+                               domain="[('country_group_ids', 'in', %(base.europe)d)]"/>
+                    </group>
+                    <footer>
+                        <button string="Create Fiscal Positions and Taxes"
+                                name="generate_eu_service" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                 </form>
+            </field>
+        </record>
+
+        <record id="action_eu_service" model="ir.actions.act_window">
+            <field name="name">Setup EU MOSS Taxes</field>
+            <field name="res_model">l10n_eu_service.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="view_id" ref="eu_service_view"/>
+            <field name="target">new</field>
+        </record>
+
+</odoo>

@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_edi_purchase" model="mail.template">
+            <field name="name">Purchase Order: Send RFQ</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name}
+        % if object.partner_id.parent_id:
+            (${object.partner_id.parent_id.name})
+        % endif
+        <br/><br/>
+        Here is in attachment a request for quotation <strong>${object.name}</strong>
+        % if object.partner_ref:
+            with reference: ${object.partner_ref}
+        % endif
+        from ${object.company_id.name}.
+        <br/><br/>
+        If you have any questions, please do not hesitate to contact us.
+        <br/><br/>
+        Best regards,
+    </p>
+</div></field>
+            <field name="report_template" ref="report_purchase_quotation"/>
+            <field name="report_name">RFQ_${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_edi_purchase_done" model="mail.template">
+            <field name="name">Purchase Order: Send PO</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name}
+        % if object.partner_id.parent_id:
+            (${object.partner_id.parent_id.name})
+        % endif
+        <br/><br/>
+        Here is in attachment a purchase order <strong>${object.name}</strong>
+        % if object.partner_ref:
+            with reference: ${object.partner_ref}
+        % endif
+        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
+        from ${object.company_id.name}. 
+        <br/><br/>
+        % if object.date_planned:
+            The receipt is expected for <strong>${format_date(object.date_planned)}</strong>.
+            <br/><br/>
+            Could you please acknowledge the receipt of this order?
+        % endif
+    </p>
+</div></field>
+            <field name="report_template" ref="action_report_purchase_order"/>
+            <field name="report_name">PO_${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <record id="email_template_edi_purchase_reminder" model="mail.template">
+            <field name="name">Purchase Order: Vendor Reminder</field>
+            <field name="model_id" ref="purchase.model_purchase_order"/>
+            <field name="email_from">${(object.user_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="subject">${object.company_id.name} Order (Ref ${object.name or 'n/a' })</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name}
+        % if object.partner_id.parent_id:
+            (${object.partner_id.parent_id.name})
+        % endif
+        <br/><br/>
+        Here is a reminder that the delivery of the purchase order <strong>${object.name}</strong>
+        % if object.partner_ref:
+            <strong>(${object.partner_ref})</strong>
+        % endif 
+        is expected for 
+        % if object.date_planned:
+            <strong>${format_date(object.date_planned)}</strong>.
+        % else:
+            <strong>undefined</strong>.
+        % endif
+        Could you please confirm it will be delivered on time?
+    </p>
+</div></field>
+            <field name="report_template" ref="action_report_purchase_order"/>
+            <field name="report_name">PO_${(object.name or '').replace('/','_')}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+    <template id="mail_notification_confirm" inherit_id="mail.mail_notification_paynow" name="Purchase: Confirmation mail notification template">
+        <xpath expr="//t[@t-set='access_name']" position="after">
+            <t t-if="record._name == 'purchase.order'">
+                <t t-if="record.state == 'purchase' and not record.env.context.get('is_reminder')">
+                    <t t-set="access_name">Confirm</t>
+                    <t t-set="access_url" t-value="record.get_confirm_url(confirm_type='reception')"/>
+                </t>
+            </t>
+        </xpath>
+        <xpath expr="//a[@t-att-href='access_url']" position="replace">
+            <t t-if="record._name == 'purchase.order' and record.env.context.get('is_reminder')">
+                <a t-att-href="record.get_confirm_url(confirm_type='reminder')"
+                    style="margin-right: 10px; background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                    Yes
+                </a>
+                <a t-att-href="record.get_update_url()"
+                    style="margin-left: 10px; background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                    No, Update Dates
+                </a>
+                <div>&amp;nbsp;</div>
+                <div style="margin: 0px; padding: 0px; font-size:13px; text-align: left;">
+                    If you have any questions, please do not hesitate to contact us.
+                    <div>&amp;nbsp;</div>
+                    Best regards,
+                </div>
+            </t>
+            <t t-else="">
+                <a t-att-href="access_url"
+                    style="margin-left: 10px; background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                    <t t-esc="access_name"/>
+                </a>
+            </t>
+        </xpath>
+    </template>
+
+    </data>
+</odoo>

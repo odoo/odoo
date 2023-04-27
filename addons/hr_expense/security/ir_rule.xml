@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+        <record id="ir_rule_hr_expense_manager" model="ir.rule">
+            <field name="name">Manager Expense</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('account.group_account_user')),
+                (4, ref('hr_expense.group_hr_expense_user'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_approver" model="ir.rule">
+            <field name="name">Team Approver Expense</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">['|', '|', '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id),
+                ('employee_id.parent_id.user_id', '=', user.id),
+                ('employee_id.expense_manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_employee" model="ir.rule">
+            <field name="name">Employee Expense</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="ir_rule_hr_expense_sheet_manager" model="ir.rule">
+            <field name="name">Manager Expense Sheet</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="groups" eval="[
+                (4, ref('account.group_account_user')),
+                (4, ref('hr_expense.group_hr_expense_user'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_sheet_approver" model="ir.rule">
+            <field name="name">Approver Expense Sheet</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="domain_force">['|', '|', '|',
+                ('employee_id.user_id', '=', user.id),
+                ('employee_id.department_id.manager_id.user_id', '=', user.id),
+                ('employee_id.parent_id.user_id', '=', user.id),
+                ('employee_id.expense_manager_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+        <record id="ir_rule_hr_expense_sheet_employee" model="ir.rule">
+            <field name="name">Employee Expense Sheet</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field name="domain_force">[('employee_id.user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        </record>
+
+        <record id="hr_expense_comp_rule" model="ir.rule">
+            <field name="name">Expense multi company rule</field>
+            <field name="model_id" ref="model_hr_expense"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+        <record id="hr_expense_report_comp_rule" model="ir.rule">
+            <field name="name">Expense Report multi company rule</field>
+            <field name="model_id" ref="model_hr_expense_sheet"/>
+            <field eval="True" name="global"/>
+            <field name="domain_force">['|',('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        </record>
+
+        <record id="hr_expense_team_approver_account_move_line_rule" model="ir.rule">
+            <field name="name">Expense Team Approver Account Move Line</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="domain_force">[('expense_id', '!=', False)]</field>
+            <field name="groups" eval="[(4, ref('hr_expense.group_hr_expense_team_approver'))]"/>
+        </record>
+
+</odoo>

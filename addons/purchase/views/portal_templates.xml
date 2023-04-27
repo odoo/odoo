@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+  <template id="portal_my_home_menu_purchase" name="Portal layout : purchase menu entries" inherit_id="portal.portal_breadcrumbs" priority="25">
+    <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
+      <li t-if="page_name == 'purchase' or purchase_order" t-attf-class="breadcrumb-item #{'active ' if not purchase_order else ''}">
+        <a t-if="purchase_order" t-attf-href="/my/purchase?{{ keep_query() }}">Purchase Orders</a>
+        <t t-else="">Purchase Orders</t>
+      </li>
+      <li t-if="purchase_order" class="breadcrumb-item active">
+        <t t-esc="purchase_order.name"/>
+      </li>
+    </xpath>
+  </template>
+
+  <template id="portal_my_home_purchase" name="Show Purchase Orders" customize_show="True" inherit_id="portal.portal_my_home" priority="25">
+    <xpath expr="//div[hasclass('o_portal_docs')]" position="inside">
+        <t t-call="portal.portal_docs_entry">
+            <t t-set="title">Purchase Orders</t>
+            <t t-set="url" t-value="'/my/purchase'"/>
+            <t t-set="placeholder_count" t-value="'purchase_count'"/>
+        </t>
+    </xpath>
+  </template>
+
+  <template id="portal_my_purchase_orders" name="Portal: My Purchase Orders">
+    <t t-call="portal.portal_layout">
+      <t t-set="breadcrumbs_searchbar" t-value="True"/>
+      <t t-call="portal.portal_searchbar"/>
+      <t t-if="orders" t-call="portal.portal_table">
+        <thead>
+          <tr class="active">
+            <th>Purchase Orders #</th>
+            <th class="text-right">Confirmation Date</th>
+            <th></th>
+            <th class="text-right">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          <t t-foreach="orders" t-as="order">
+            <tr>
+              <td>
+                <a t-att-href="order.get_portal_url()">
+                  <t t-esc="order.name"/>
+               </a>
+              </td>
+              <td class="text-right">
+                <span t-field="order.date_approve"/>
+              </td>
+              <td>
+                <t t-if="order.invoice_status == 'to invoice'">
+                  <span class="badge badge-info"><i class="fa fa-fw fa-file-text"/> Waiting for Bill</span>
+                </t>
+                <t t-if="order.state == 'cancel'">
+                  <span class="badge badge-secondary"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                </t>
+              </td>
+              <td class="text-right">
+                <span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+              </td>
+            </tr>
+          </t>
+        </tbody>
+      </t>
+    </t>
+  </template>
+
+  <template id="portal_my_purchase_order" name="Portal: My Purchase Order">
+    <t t-call="portal.portal_layout">
+      <t t-set="purchase_order" t-value="order"/>
+      <t t-set="o_portal_fullwidth_alert" groups="purchase.group_purchase_manager">
+        <t t-call="portal.portal_back_in_edit_mode">
+          <t t-set="backend_url" t-value="'/web#return_label=Website&amp;model=%s&amp;id=%s&amp;action=%s&amp;view_type=form' % (purchase_order._name, purchase_order.id, purchase_order.env.ref('purchase.purchase_rfq').id)"/>
+        </t>
+      </t>
+      <div id="optional_placeholder"></div>
+      <div class="container">
+        <div class="row mt16 o_portal_purchase_sidebar">
+          <!-- Sidebar -->
+          <t t-call="portal.portal_record_sidebar">
+            <t t-set="classes" t-value="'col-lg-auto d-print-none'"/>
+              <t t-set="title">
+                <h2 class="mb-0">
+                  <b t-field="purchase_order.amount_total" data-id="total_amount"/>
+                </h2>
+              </t>
+            <t t-set="entries">
+              <ul class="list-group list-group-flush flex-wrap flex-row flex-lg-column">
+                <li class="list-group-item flex-grow-1">
+                  <div class="o_download_pdf btn-toolbar flex-sm-nowrap">
+                    <div class="btn-group flex-grow-1 mr-1 mb-1">
+                      <a class="btn btn-secondary btn-block o_download_btn" t-att-href="purchase_order.get_portal_url(report_type='pdf', download=True)" title="Download"><i class="fa fa-download"/> Download</a>
+                    </div>
+                    <div class="btn-group flex-grow-1 mb-1">
+                        <a class="btn btn-secondary btn-block o_print_btn o_portal_invoice_print" t-att-href="purchase_order.get_portal_url(report_type='pdf')" id="print_invoice_report" title="Print" target="_blank"><i class="fa fa-print"/> Print</a>
+                    </div>
+                  </div>
+                </li>
+
+                <li t-if="purchase_order.user_id" class="list-group-item flex-grow-1">
+                  <div class="small mb-1">
+                    <strong class="text-muted">Purchase Representative</strong>
+                  </div>
+                  <div class="row flex-nowrap">
+                    <div class="col flex-grow-0 pr-2">
+                      <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="purchase_order.user_id.image_1024" t-att-src="image_data_uri(purchase_order.user_id.image_1024)" alt="Contact"/>
+                      <img class="rounded-circle mr4 float-left o_portal_contact_img" t-if="not purchase_order.user_id.image_1024" src="/web/static/src/img/placeholder.png" alt="Contact"/>
+                    </div>
+                    <div class="col pl-0" style="min-width: 150px">
+                      <span t-field="purchase_order.user_id" t-options='{"widget": "contact", "fields": ["name", "phone"], "no_marker": True}'/>
+                      <a href="#discussion" class="small"><i class="fa fa-comment"></i> Send message</a>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </t>
+          </t>
+          <div class=" col-lg col-12 justify-content-end w-100">
+            <div class= "card pb-5">
+              <div class="card-header bg-white pb-1">
+                <div class="row">
+                  <div class="col-lg-12">
+                    <h2 class="font-weight-normal">
+                      <t t-if="order.state in ['draft', 'sent']">Request for Quotation</t>
+                      <t t-else="1">
+                        Purchase Order
+                      </t>
+                      <span class="font-italic" t-esc="order.name"/>
+                    </h2>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <div class="mb-4">
+                  <strong class="d-block mb-1">From:</strong>
+                  <address t-field="order.company_id.partner_id" t-options='{"widget": "contact", "fields": ["address", "name"], "no_marker": True}'/>
+                  <strong>Confirmation Date:</strong> <span t-field="order.date_approve" t-options='{"widget": "date"}'/><br/>
+                  <div t-att-class="'d-inline' if order.date_planned else 'd-none'">
+                    <strong>Receipt Date:</strong><span class="ml-1" t-field="order.date_planned" t-options='{"widget": "date"}'/>
+                  </div>
+                </div>
+                <h3 class="font-weight-normal">Pricing</h3>
+                <div class="table-responsive">
+                  <table class="table table-sm">
+                    <thead class="bg-100">
+                      <tr>
+                        <th>Products</th>
+                        <th class="text-right d-none d-sm-table-cell" t-if="order.state in ['purchase', 'done']">Unit Price</th>
+                        <th class="text-right">Quantity</th>
+                        <th class="text-right" t-if="order.state in ['purchase', 'done']">Subtotal</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <t t-foreach="order.order_line" t-as="ol">
+                        <tr t-att-class="'bg-200 font-weight-bold o_line_section' if ol.display_type == 'line_section' else 'font-italic o_line_note' if ol.display_type == 'line_note' else ''">
+                          <t t-if="not ol.display_type">
+                            <td>
+                              <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
+                              <span t-esc="ol.name"/>
+                            </td>
+                            <td class="text-right d-none d-sm-table-cell" t-if="order.state in ['purchase', 'done']">
+                              <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                            </td>
+                            <td class="text-right">
+                              <span t-esc="ol.product_qty"/>
+                            </td>
+                            <td class="text-right" t-if="order.state in ['purchase', 'done']">
+                              <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                            </td>
+                          </t>
+                          <t t-if="ol.display_type == 'line_section'">
+                              <td colspan="99">
+                                  <span t-field="ol.name"/>
+                              </td>
+                              <t t-set="current_section" t-value="line"/>
+                              <t t-set="current_subtotal" t-value="0"/>
+                          </t>
+                          <t t-if="ol.display_type == 'line_note'">
+                              <td colspan="99">
+                                  <span t-field="ol.name"/>
+                              </td>
+                          </t>
+                        </tr>
+                      </t>
+                    </tbody>
+                  </table>
+                </div>
+                <div class="row" t-if="order.state in ['purchase', 'done']">
+                  <div class="col-sm-7 col-md-5 ml-auto">
+                    <table class="table table-sm">
+                      <tbody>
+                        <tr>
+                          <td>
+                            <strong>Untaxed Amount:</strong>
+                          </td>
+                          <td class="text-right">
+                            <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Taxes:</strong>
+                          </td>
+                          <td class="text-right">
+                            <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td>
+                            <strong>Total:</strong>
+                          </td>
+                          <td class="text-right">
+                            <span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div id="purchase_order_communication" class="mt-4">
+              <h2>History</h2>
+              <t t-call="portal.message_thread">
+                <t t-set="object" t-value="purchase_order"/>
+              </t>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="oe_structure mb32"/>
+    </t>
+  </template>
+
+  <template id="portal_my_purchase_order_update_date" name="Portal: My Purchase Order Update Dates" inherit_id="purchase.portal_my_purchase_order" primary="True">
+    <xpath expr="//div[hasclass('card-body')]" position="replace">
+      <div class="card-body">
+        <div class="mb-4">
+          <strong>Confirmation Date:</strong> <span t-field="order.date_approve" t-options='{"widget": "date"}'/><br/>
+          <div t-att-class="'d-inline' if order.date_planned else 'd-none'">
+            <strong>Receipt Date:</strong><span class="ml-1" t-field="order.date_planned" t-options='{"widget": "date"}'/>
+          </div>
+        </div>
+        <h3 class="font-weight-normal">Pricing</h3>
+          <div class="table-responsive">
+            <table class="table table-sm">
+              <thead class="bg-100">
+                <tr>
+                  <th>Products</th>
+                  <th class="text-right d-none d-sm-table-cell">Unit Price</th>
+                  <th class="text-right">Quantity</th>
+                  <th class="text-right">Scheduled Date</th>
+                  <th class="text-right" style="color:#3aadaa"><strong>Update Dates Here</strong></th>
+                  <th class="text-right">Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                <t t-foreach="order.order_line" t-as="ol">
+                  <t t-if="not ol.display_type">
+                    <tr>
+                      <td>
+                        <img t-att-src="image_data_uri(resize_to_48(ol.product_id.image_1024))" alt="Product" class="d-none d-lg-inline"/>
+                        <span t-esc="ol.name"/>
+                      </td>
+                      <td class="text-right d-none d-sm-table-cell">
+                        <span t-field="ol.price_unit" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                      </td>
+                      <td class="text-right">
+                        <span t-esc="ol.product_qty"/>
+                      </td>
+                      <td class="text-right">
+                        <span t-esc="ol.date_planned.date()"/>
+                      </td>
+                      <td class="text-right">
+                        <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
+                          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                          <div class="container">
+                            <div class="form-group">
+                              <div class="input-group date">
+                                  <input type="text" class="form-control datetimepicker-input o-purchase-datetimepicker" t-attf-id="datetimepicker_#{ol.id}" t-att-name="ol.id"
+                                    data-toggle="datetimepicker" data-date-format="YYYY-MM-DD" t-attf-data-target="#datetimepicker_#{ol.id}"/>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </td>
+                      <td class="text-right">
+                        <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                      </td>
+                    </tr>
+                  </t>
+                  <t t-if="ol.display_type">
+                    <tr>
+                      <td colspan="99">
+                        <span t-esc="ol.name"/>
+                      </td>
+                    </tr>
+                  </t>
+                </t>
+              </tbody>
+            </table>
+          </div>
+          <div class="row">
+            <div class="col-sm-7 col-md-5 ml-auto">
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <td>
+                      <strong>Untaxed Amount:</strong>
+                    </td>
+                    <td class="text-right">
+                      <span t-field="order.amount_untaxed" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Taxes:</strong>
+                    </td>
+                    <td class="text-right">
+                      <span t-field="order.amount_tax" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <strong>Total:</strong>
+                    </td>
+                    <td class="text-right">
+                      <span t-field="order.amount_total" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+      </div>
+    </xpath>
+  </template>
+
+</odoo>

@@ -1,0 +1,143 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_MessagingMenu_counter {
+    position: relative;
+    transform: translate(-5px, -5px);
+    margin-right: -10px; // "cancel" right padding of systray items
+}
+
+.o_MessagingMenu_dropdownMenu {
+    display: flex;
+    flex-flow: column;
+    padding-top: 0;
+    padding-bottom: 0;
+    overflow-y: auto;
+    /**
+     * Override from bootstrap .dropdown-menu to fix top alignment with other
+     * systray menu.
+     */
+    margin-top: map-get($spacers, 0);
+
+    &.o-messaging-not-initialized {
+        align-items: center;
+        justify-content: center;
+    }
+
+    &:not(.o-mobile) {
+        flex: 0 1 auto;
+        width: 350px;
+        min-height: 50px;
+        max-height: 400px;
+        z-index: 1100; // on top of chat windows
+    }
+
+    &.o-mobile {
+        flex: 1 1 auto;
+        position: fixed;
+        top: $o-mail-chat-window-header-height-mobile;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        width: 100%;
+        margin: 0;
+        max-height: none;
+    }
+}
+
+.o_MessagingMenu_dropdownMenuHeader {
+
+    &:not(.o-mobile) {
+        display: flex;
+        flex-shrink: 0; // Forces Safari to not shrink below fit content
+    }
+
+    &.o-mobile {
+        display: grid;
+        grid-template-areas:
+            "top"
+            "bottom";
+        grid-template-rows: auto auto;
+        padding: 5px
+    }
+}
+
+.o_MessagingMenu_dropdownLoadingIcon {
+    margin-right: 3px;
+}
+
+.o_MessagingMenu_icon {
+    font-size: larger
+}
+
+.o_MessagingMenu_loading {
+    font-size: small;
+    position: absolute;
+    bottom: 50%;
+    right: 0;
+}
+
+.o_MessagingMenu_newMessageButton.o-mobile {
+    grid-area: top;
+    justify-self: start;
+}
+
+.o_MessagingMenu_mobileNewMessageInput {
+    grid-area: bottom;
+    padding: 8px;
+    margin-top: 10px
+}
+
+.o_MessagingMenu_notificationList.o-mobile {
+    flex: 1 1 auto;
+    overflow-y: auto;
+}
+
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+// Make hightlight more consistent, due to messaging menu looking quite similar to discuss app in mobile
+.o_MessagingMenu.o-is-open {
+    background-color: rgba(black, 0.1);
+}
+
+.o_MessagingMenu_counter {
+    background-color: $o-enterprise-primary-color;
+}
+
+.o_MessagingMenu_dropdownMenu.o-mobile {
+    border: 0;
+}
+
+.o_MessagingMenu_dropdownMenuHeader {
+    border-bottom: 1px solid gray('400');
+    z-index: 1;
+}
+
+.o_MessagingMenu_mobileNewMessageInput {
+    appearance: none;
+    border: 1px solid gray('400');
+    border-radius: 5px;
+    outline: none;
+}
+
+.o_MessagingMenu_tabButton.o-desktop {
+
+    &.o-active {
+        font-weight: bold;
+    }
+
+    &:not(:hover) {
+
+        &:not(.o-active) {
+            color: gray('500');
+        }
+    }
+}
+
+.o_MessagingMenu_toggler.o-no-notification {
+    @include o-mail-systray-no-notification-style();
+}

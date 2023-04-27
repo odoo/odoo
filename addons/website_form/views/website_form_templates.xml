@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="contactus_form" name="Contact Form" inherit_id="website.contactus" customize_show="True">
+        <xpath expr="//div[@name='mail_button']" position="replace">
+            <span class="hidden" data-for="contactus_form" t-att-data-values="{'email_to': res_company.email}" />
+            <div id="contactus_section">
+                <section class="s_website_form" data-vcss="001" data-snippet="s_website_form">
+                    <div class="container">
+                        <form id="contactus_form" action="/website_form/" method="post" enctype="multipart/form-data" class="o_mark_required" data-mark="*" data-model_name="mail.mail" data-success-mode="redirect" data-success-page="/contactus-thank-you">
+                            <div class="s_website_form_rows row s_col_no_bgcolor">
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact1">
+                                            <span class="s_website_form_label_content">Your Name</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="contact1" type="text" class="form-control s_website_form_input" name="Name" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact2">
+                                            <span class="s_website_form_label_content">Phone Number</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="contact2" type="tel" class="form-control s_website_form_input" name="Phone"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="email" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact3">
+                                            <span class="s_website_form_label_content">Email</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="contact3" type="email" class="form-control s_website_form_input" name="email_from" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact4">
+                                            <span class="s_website_form_label_content">Your Company</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="contact4" type="text" class="form-control s_website_form_input" name="Partner Name"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_required" data-type="char" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact5">
+                                            <span class="s_website_form_label_content">Subject</span>
+                                            <span class="s_website_form_mark"> *</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="contact5" type="text" class="form-control s_website_form_input" name="subject" required=""/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_custom s_website_form_required" data-type="text" data-name="Field">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact6">
+                                            <span class="s_website_form_label_content">Your Question</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <textarea id="contact6" class="form-control s_website_form_input" name="Description" required=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_field s_website_form_dnone">
+                                    <div class="row s_col_no_resize s_col_no_bgcolor">
+                                        <label class="col-form-label col-sm-auto s_website_form_label" style="width: 200px" for="contact7">
+                                            <span class="s_website_form_label_content">Email To</span>
+                                        </label>
+                                        <div class="col-sm">
+                                            <input id="contact7" type="hidden" class="form-control s_website_form_input" name="email_to"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group col-12 s_website_form_submit" data-name="Submit Button">
+                                    <div style="width: 200px;" class="s_website_form_label"/>
+                                    <a href="#" role="button" class="btn btn-primary btn-lg s_website_form_send">Submit</a>
+                                    <span id="s_website_form_result"></span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+            </div>
+        </xpath>
+    </template>
+
+    <record id="contactus_thanks" model="website.page">
+        <field name="name">Thanks (Contact us)</field>
+        <field name="type">qweb</field>
+        <field name="url">/contactus-thank-you</field>
+        <field name="website_indexed" eval="False"/>
+        <field name="is_published">True</field>
+        <field name="key">website_form.contactus_thanks</field>
+        <field name="arch" type="xml">
+            <t name="Thanks (Contact us)" t-name="website_form.contactus_thanks">
+                <t t-call="website.layout">
+                  <div id="wrap">
+                    <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_1"/>
+                    <div class="container mt-4">
+                        <div class="row">
+                            <div class="col-lg-7 col-xl-6 mr-lg-auto oe_structure">
+                                <section class="pt40 s_text_block pb40 o_colored_level o_cc o_cc1" data-snippet="s_text_block" data-name="Text">
+                                    <div class="container">
+                                        <span class="d-block fa fa-4x fa-thumbs-up mx-auto rounded-circle bg-primary"/><br/>
+                                        <h1 class="text-center">Thank You!</h1>
+                                        <div class="pb16 pt16 s_hr" data-snippet="s_hr" data-name="Separator">
+                                            <hr class="mx-auto border-top w-50 border-dark text-center"/>
+                                        </div>
+                                        <h5 class="text-center">
+                                            <span class="fa fa-check-circle"/>
+                                            <span>Your message has been sent <b>successfully</b></span>
+                                        </h5>
+                                        <p class="text-center">We will get back to you shortly.</p>
+                                    </div>
+                                </section>
+                            </div>
+                            <div class="col-lg-4">
+                                <t t-call="website.company_description"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="oe_structure" id="oe_structure_website_form_contact_us_thanks_2"/>
+                  </div>
+                </t>
+            </t>
+        </field>
+    </record>
+
+</odoo>

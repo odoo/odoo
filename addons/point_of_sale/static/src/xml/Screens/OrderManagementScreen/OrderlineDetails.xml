@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderlineDetails" owl="1">
+        <li class="orderline">
+            <span class="product-name">
+                <t t-esc="productName" />
+            </span>
+            <span class="price">
+                <t t-esc="totalPrice" />
+            </span>
+            <li class="info">
+                <strong>
+                    <t t-esc="quantity" />
+                </strong>
+                <span><t t-esc="pricePerUnit" /></span>
+            </li>
+        </li>
+    </t>
+
+</templates>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="product_template_view_tree" model="ir.ui.view">
+            <field name="name">product.template.tree</field>
+            <field name="model">product.template</field>
+            <field name="arch" type="xml">
+                <tree string="Products" sample="1">
+                    <field name="default_code"/>
+                    <field name="name"/>
+                    <field name="lst_price"/>
+                    <field name="taxes_id" widget="many2many_tags"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="product_product_action_sellable" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="context">{'search_default_filter_to_sell': 1}</field>
+            <field name="view_id" ref="product_template_view_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Create a new sellable product
+                </p>
+            </field>
+        </record>
+
+        <record id="product_product_action_purchasable" model="ir.actions.act_window">
+            <field name="name">Products</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template</field>
+            <field name="view_mode">kanban,tree,form,activity</field>
+            <field name="context">{'search_default_filter_to_purchase': 1}</field>
+            <field name="view_id" ref="product_template_view_tree"/>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                  Create a new purchasable product
+                </p>
+            </field>
+        </record>
+
+        <record id="product_template_form_view" model="ir.ui.view">
+            <field name="name">product.template.form.inherit</field>
+            <field name="model">product.template</field>
+            <field name="priority">5</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='purchase']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
+                <page name="inventory" position="after">
+                    <page string="Accounting" name="invoicing" groups="account.group_account_readonly">
+                        <group name="properties">
+                            <group string="Receivables">
+                                <field name="property_account_income_id"
+                                    groups="account.group_account_readonly"/>
+                            </group>
+                            <group string="Payables" name="payables">
+                                <field name="property_account_expense_id"
+                                    groups="account.group_account_readonly"/>
+                            </group>
+                        </group>
+                        <group name="accounting"/>
+                    </page>
+                </page>
+                <xpath expr="//div[@name='pricing']" position="after">
+                    <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale', 'search_default_sale': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
+                </xpath>
+                <group name="bill" position="inside">
+                    <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase', 'search_default_purchase': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
+                </group>
+            </field>
+        </record>
+
+        <record id="view_category_property_form" model="ir.ui.view">
+            <field name="name">product.category.property.form.inherit</field>
+            <field name="model">product.category</field>
+            <field name="inherit_id" ref="product.product_category_form_view"/>
+            <field name="arch" type="xml">
+                <group name="first" position="after">
+                    <group name="account_property" >
+                        <group string="Account Properties" groups="account.group_account_readonly">
+                            <field name="property_account_income_categ_id"/>
+                            <field name="property_account_expense_categ_id"/>
+                        </group>
+                    </group>
+                </group>
+            </field>
+        </record>
+    </data>
+</odoo>

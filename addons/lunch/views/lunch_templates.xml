@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend" name="lunch assets" inherit_id="web.assets_backend">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/lunch/static/src/scss/lunch_view.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/lunch/static/src/scss/lunch_kanban.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/lunch/static/src/scss/lunch_list.scss"/>
+
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_controller_common.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_widget.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_mobile.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_payment_dialog.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_view.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_controller.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_renderer.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_kanban_record.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_model_extension.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_list_view.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_list_controller.js"></script>
+            <script type="text/javascript" src="/lunch/static/src/js/lunch_list_renderer.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_suite" name="lunch tests" inherit_id="web.qunit_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/lunch/static/tests/lunch_test_utils.js"></script>
+            <script type="text/javascript" src="/lunch/static/tests/lunch_kanban_tests.js"></script>
+            <script type="text/javascript" src="/lunch/static/tests/lunch_list_tests.js"></script>
+        </xpath>
+    </template>
+
+    <template id="qunit_mobile_suite" name="lunch mobile tests" inherit_id="web.qunit_mobile_suite_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/lunch/static/tests/lunch_test_utils.js"></script>
+            <script type="text/javascript" src="/lunch/static/tests/lunch_kanban_mobile_tests.js"></script>
+        </xpath>
+    </template>
+
+    <template id="lunch_payment_dialog" name="Lunch Payment Dialog">
+        To add some money to your wallet, please contact your lunch manager.
+    </template>
+</odoo>

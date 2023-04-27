@@ -1,0 +1,161 @@
+// Color tags according to assigned background color.
+
+.o_wevent_index, .o_wevent_event {
+
+    // Simple colored tags according to assigned background color
+    @for $size from 1 through length($o-colors) {
+        .o_tag_color_#{$size - 1} {
+            @if $size == 1 {
+                & {
+                    background-color: white;
+                    color: nth($o-colors, $size);
+                    box-shadow: inset 0 0 0 2px nth($o-colors, $size);
+                }
+                &::after {
+                    background-color: nth($o-colors, $size);
+                }
+            } @else {
+                &, &::after {
+                    background-color: nth($o-colors, $size);
+                    color: $white;
+                }
+            }
+        }
+    }
+
+    // Complex colored tags according to assigned background color with hover effect
+    @for $size from 1 through length($o-colors) {
+        .o_tag_color_hovered_#{$size - 1} {
+            $background-color: white;
+            // no color selected
+            @if $size == 1 {
+                & {
+                    color: black;
+                    background-color: $background-color;
+                    box-shadow: inset 0 0 0 1px nth($o-colors, $size);
+                }
+            } @else {
+                $background-color: nth($o-colors, $size);
+                & {
+                    color: white;
+                    background-color: $background-color;
+                }
+            }
+            @at-root a#{&} {
+                &:hover {
+                    background-color: darken($background-color, 20%);
+                }
+            }
+        }
+    }
+
+    /*
+     * COMMON TO ALL ONLINE-* PAGES
+     */
+
+    .o_wevent_online {
+        // unpublished badge: put opacity to distinguish form other badges
+        .o_wevent_online_badge_unpublished{
+            opacity: 0.4;
+        }
+
+        &.o_wevent_online_bg {
+            @if (color('body') == $o-portal-default-body-bg) {
+                @extend .bg-100;
+            }
+        }
+
+        // background color-based for new styling
+        .event_color_0 {
+            // bg-100 background but DO NOT extend bg-100 as it messes with text-muted colors
+            background-color: #F8F9FA;
+        }
+        .event_color_1 {
+            background-color: rgba(240, 96, 80, 0.2);
+        }
+        .event_color_2 {
+            background-color: rgba(244, 164, 96, 0.2);
+        }
+        .event_color_3 {
+            background-color: rgba(247, 205, 31, 0.2);
+        }
+        .event_color_4 {
+            background-color: rgba(108,193,237,0.2);
+        }
+        .event_color_5 {
+            background-color: rgba(129,73,104,0.2);
+        }
+        .event_color_6 {
+            background-color: rgba(235,126,127,0.2);
+        }
+        .event_color_7 {
+            background-color: rgba(44,131,151,0.2);
+        }
+        .event_color_8 {
+            background-color: rgba(71,85,119,0.2);
+        }
+        .event_color_9 {
+            background-color: rgba(214,20,95,0.2);
+        }
+        .event_color_10 {
+            background-color: rgba(48,195,129,0.2);
+        }
+        .event_color_11 {
+            background-color: rgba(147,101,184,0.2);
+        }
+
+        .o_wevent_online_page_container {
+            // Widescreen mode
+            @include media-breakpoint-up(md) {
+                &:not(.container) {
+                    padding-left: 0.5rem;
+                    padding-right: 0.5rem;
+                }
+            }
+
+            // Main panel
+            .o_wevent_online_page_main {
+                border: 1px solid $border-color;
+
+                @include media-breakpoint-up(md) {
+                    border-top-width: 0;
+                }
+
+                .o_wevent_online_page_avatar {
+                    min-width: 64px;
+
+                    img {
+                        max-width: 96px;
+                    }
+                }
+            }
+
+            // Left panel
+            .o_wevent_online_page_aside {
+
+                // Left panel: content display
+                .o_wevent_online_page_aside_content {
+                    border: 1px solid $border-color;
+
+                    @include media-breakpoint-up(md) {
+                        border-top-width: 0;
+                    }
+
+                    li:not(.nav-item) {
+                        border-bottom: 1px solid $border-color;
+                        &:first-child {
+                            border-top: 1px solid $border-color;
+                        }
+                        &:last-child {
+                            border-bottom: 0px;
+                        }
+                    }
+
+                    .o_wevent_online_page_aside_collapse:not(.collapsed) {
+                        transform: rotate(180deg);
+                    }
+                }
+            }
+        }
+    }
+}

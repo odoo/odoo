@@ -1,0 +1,227 @@
+.css_attribute_color {
+    display: inline-block;
+    border: 1px solid #999999;
+    text-align: center;
+
+    input {
+        margin: 8px;
+        height: 13px;
+        opacity: 0;
+    }
+
+    &.active {
+        border: 3px ridge #66ee66;
+    }
+
+    &.active input {
+        margin: 6px;
+    }
+
+    &.custom_value {
+        background-image: linear-gradient(to bottom right, #FF0000, #FFF200, #1E9600);
+    }
+}
+
+.css_not_available_msg {
+    display: none;
+}
+
+.css_not_available.js_product {
+    .css_quantity,
+    .product_price {
+        display: none;
+    }
+
+    .css_not_available_msg {
+        display: block;
+    }
+
+    .js_add,
+    .oe_price,
+    .oe_default_price,
+    .oe_optional {
+        display: none;
+    }
+}
+
+.css_quantity {
+    width: initial; // We don't want the quantity form to be full-width
+
+    input[name="add_qty"] {
+        max-width: 50px;
+        text-align: center;
+    }
+}
+
+option.css_not_available {
+    color: #ccc;
+}
+
+label.css_not_available {
+    opacity: 0.6;
+}
+
+label.css_attribute_color.css_not_available {
+    opacity: 1;
+    background-image: url("/website_sale/static/src/img/redcross.png");
+    background-size: cover;
+}
+
+.variant_attribute {
+    padding-bottom: 0.5rem;
+
+    .attribute_name {
+        padding-bottom: 0.5rem;
+        display: block;
+    }
+
+    .radio_input {
+        margin-right: 0.7rem;
+        vertical-align: middle;
+    }
+
+    .radio_input_value {
+        display: inline-block;
+        vertical-align: middle;
+        line-height: 1;
+    }
+
+    .variant_custom_value {
+        margin-bottom: 0.7rem;
+
+        &.custom_value_own_line {
+            display: inline-block;
+        }
+    }
+
+    .custom_value_radio {
+        margin: 0.3rem 0rem 0.3rem 1.6rem;
+    }
+
+    select {
+        margin-bottom: 0.5rem;
+    }
+}
+
+.o_product_configurator {
+    .product_detail_img {
+        max-height: 240px;
+    }
+
+    .variant_attribute {
+        .custom_value_radio {
+            margin: 0.3rem 0rem 0.3rem 2.1rem;
+        }
+    }
+}
+
+.oe_optional_products_modal {
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: rgba(0, 0, 0, 0.025);
+    }
+
+    .o_total_row {
+        font-size: 1.2rem;
+    }
+}
+
+.modal.o_technical_modal .oe_optional_products_modal .btn.js_add_cart_json {
+    padding: 0.075rem 0.75rem;
+}
+
+.js_product {
+    &.in_cart {
+        .js_add_cart_variants {
+            display: none;
+        }
+    }
+
+    select {
+        -webkit-appearance: menulist;
+        -moz-appearance: menulist;
+        appearance: menulist;
+        background-image: none;
+    }
+
+    .td-product_name {
+        word-wrap: break-word;
+    }
+
+    .td-product_name {
+        min-width: 140px;
+    }
+
+    .td-img {
+        width: 100px;
+    }
+
+    .td-qty {
+        width: 200px;
+        a.input-group-addon {
+            background-color: transparent;
+            border: 0px;
+        }
+
+        .input-group {
+            display: inline-flex;
+        }
+    }
+    .td-action {
+        width: 30px;
+    }
+
+    .td-price,
+    .td-price-total {
+        width: 120px;
+    }
+
+    @include media-breakpoint-down(sm) {
+        .td-img,
+        .td-price-total {
+            display: none;
+        }
+
+        .td-qty {
+            width: 60px;
+        }
+
+        .td-price {
+            width: 80px;
+        }
+    }
+
+    @media (max-width: 476px) {
+        .td-qty {
+            width: 60px;
+        }
+
+        #modal_optional_products table thead,
+        .oe_cart table thead {
+            display: none;
+        }
+
+        #modal_optional_products table td.td-img,
+        .oe_cart table td.td-img {
+            display: none;
+        }
+    }
+}
+
+.o_total_row {
+    height: 50px;
+}
+
+.oe_striked_price {
+    text-decoration: line-through;
+    white-space: nowrap;
+}
+
+.o_list_view {
+    .o_data_row.o_selected_row > .o_data_cell:not(.o_readonly_modifier) {
+        .o_field_widget .o_edit_product_configuration {
+            padding: 0;
+            background-color: inherit;
+            margin-left: 3px;
+        }
+    }
+}

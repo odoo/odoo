@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+        <record id="view_task_project_user_pivot" model="ir.ui.view">
+            <field name="name">report.project.task.user.pivot</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <pivot string="Tasks Analysis" display_quantity="true" disable_linking="True" sample="1">
+                    <field name="project_id" type="row"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_task_project_user_graph" model="ir.ui.view">
+            <field name="name">report.project.task.user.graph</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <graph string="Tasks Analysis" type="bar" sample="1" disable_linking="1">
+                     <field name="project_id" type="row"/>
+                     <field name="user_id" type="col"/>
+                     <field name="nbr" type="measure"/>
+                 </graph>
+             </field>
+        </record>
+
+        <record id="view_task_project_user_search" model="ir.ui.view">
+            <field name="name">report.project.task.user.search</field>
+            <field name="model">report.project.task.user</field>
+            <field name="arch" type="xml">
+                <search string="Tasks Analysis">
+                    <field name="name" />
+                    <field name="date_assign"/>
+                    <field name="date_end"/>
+                    <field name="date_deadline"/>
+                    <field name="date_last_stage_update"/>
+                    <field name="project_id"/>
+                    <field name="user_id"/>
+                    <field name="partner_id" filter_domain="[('partner_id', 'child_of', self)]"/>
+                    <field name="stage_id"/>
+                    <filter string="Unassigned" name="unassigned" domain="[('user_id', '=', False)]"/>
+                    <separator/>
+                    <filter name="filter_date_deadline" date="date_deadline"/>
+                    <filter name="filter_date_assign" date="date_assign"/>
+                    <filter name="filter_date_last_stage_update" date="date_last_stage_update"/>
+                    <group expand="0" string="Extended Filters">
+                        <field name="priority"/>
+                        <field name="company_id" groups="base.group_multi_company"/>
+                    </group>
+                    <group expand="1" string="Group By">
+                        <filter string="Project" name="project" context="{'group_by': 'project_id'}"/>
+                        <filter string="Assigned to" name="User" context="{'group_by': 'user_id'}"/>
+                        <filter string="Stage" name="Stage" context="{'group_by': 'stage_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+       <record id="action_project_task_user_tree" model="ir.actions.act_window">
+            <field name="name">Tasks Analysis</field>
+            <field name="res_model">report.project.task.user</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="search_view_id" ref="view_task_project_user_search"/>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+            <field name="help">This report allows you to analyse the performance of your projects and users. You can analyse the quantities of tasks, the hours spent compared to the planned hours, the average number of days to open or close a task, etc.</field>
+        </record>
+
+</odoo>

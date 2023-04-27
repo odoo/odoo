@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+       <template id="assets_backend" name="barcodes assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/barcodes/static/src/js/barcode_parser.js"></script>
+                <script type="text/javascript" src="/barcodes/static/src/js/barcode_events.js"></script>
+                <script type="text/javascript" src="/barcodes/static/src/js/barcode_form_view.js"></script>
+                <script type="text/javascript" src="/barcodes/static/src/js/barcode_field.js"></script>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="barcode_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/barcodes/static/tests/barcode_tests.js"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_mobile_suite" name="barcode_mobile_tests" inherit_id="web.qunit_mobile_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/barcodes/static/tests/barcode_mobile_tests.js"></script>
+            </xpath>
+        </template>
+
+</odoo>

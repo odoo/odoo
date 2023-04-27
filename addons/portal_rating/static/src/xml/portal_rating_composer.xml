@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <!--
+        Popup Rating Composer Widget
+        It can alse be used to modify a message
+    -->
+    <t t-name="portal_rating.PopupComposer">
+        <div class="d-flex flex-wrap align-items-center">
+            <div class="text-nowrap">
+                <t t-call="portal_rating.rating_stars_static">
+                    <t t-set="val" t-value="widget.rating_avg || 0"/>
+                    <t t-set="inline_mode" t-value="true"/>
+                </t>
+            </div>
+            <button t-if="widget.options['display_composer']" type="button"
+                t-att-class="'btn btn-sm mx-3 ' + widget.options['link_btn_classes'] or 'btn-primary'"
+                data-toggle="modal" data-target="#ratingpopupcomposer">
+                <t t-if="widget.options['display_composer']">
+                    <t t-if="widget.options['default_message_id']">
+                        Modify your review
+                    </t>
+                    <t t-else="">
+                        Add a review
+                    </t>
+                </t>
+            </button>
+        </div>
+
+        <div t-if="widget.options['display_composer']" class="modal fade" id="ratingpopupcomposer" tabindex="-1" role="dialog" aria-labelledby="ratingpopupcomposerlabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title o_rating_popup_composer_label" id="ratingpopupcomposerlabel">
+                            <t t-if="widget.options['default_message_id']">
+                                Modify your review
+                            </t>
+                            <t t-else="">
+                                Add a review
+                            </t>
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span>×</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="o_portal_chatter_composer"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

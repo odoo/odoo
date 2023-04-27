@@ -1,0 +1,26 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_DiscussMobileMailboxSelection {
+    display: flex;
+    flex: 0 0 auto;
+}
+
+.o_DiscussMobileMailboxSelection_button {
+    flex: 1 1 0;
+    padding: 8px;
+    z-index: 1;
+
+    &.o-active {
+        z-index: 2;
+    }
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_DiscussMobileMailboxSelection_button {
+    box-shadow: 0 2px 4px gray('400');
+}

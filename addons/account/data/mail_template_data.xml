@@ -1,0 +1,59 @@
+<?xml version="1.0" ?>
+<odoo>
+
+    <!-- Mail template are declared in a NOUPDATE block
+         so users can freely customize/delete them -->
+    <data noupdate="1">
+        <!--Email template -->
+        <record id="email_template_edi_invoice" model="mail.template">
+            <field name="name">Invoice: Send by email</field>
+            <field name="model_id" ref="account.model_account_move"/>
+            <field name="email_from">${(object.invoice_user_id.email_formatted or user.email_formatted) |safe}</field>
+            <field name="partner_to">${object.partner_id.id}</field>
+            <field name="subject">${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear
+        % if object.partner_id.parent_id:
+            ${object.partner_id.name} (${object.partner_id.parent_id.name}),
+        % else:
+            ${object.partner_id.name},
+        % endif
+        <br /><br />
+        Here is your
+        % if object.name:
+            invoice <strong>${object.name}</strong>
+        % else:
+            invoice
+        %endif
+        % if object.invoice_origin:
+            (with reference: ${object.invoice_origin})
+        % endif
+        amounting in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>
+        from ${object.company_id.name}.
+        % if object.payment_state in ('paid', 'in_payment'):
+            This invoice is already paid.
+        % else:
+            Please remit payment at your earliest convenience.
+            % if object.payment_reference:
+                <br /><br />
+                Please use the following communication for your payment: <strong>${object.payment_reference}</strong>.
+            % endif
+        % endif
+        <br /><br />
+        Do not hesitate to contact us if you have any questions.
+        % if object.invoice_user_id.signature:
+            <br />
+            ${object.invoice_user_id.signature | safe}
+        % endif
+    </p>
+</div>
+            </field>
+            <field name="report_template" ref="account_invoices"/>
+            <field name="report_name">Invoice_${(object.name or '').replace('/','_')}${object.state == 'draft' and '_draft' or ''}</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,307 @@
+// ============================
+// Mass Mailing "Theme Default"
+// ============================
+
+// ===== Default Theme palette =====
+$o-mm-def-color-1: #f5f5f5;
+$o-mm-def-color-2: #ffffff;
+$o-mm-def-color-3: #706482;
+$o-mm-def-color-4: #464646;
+$o-mm-def-color-5: darken($o-mm-def-color-3, 5%);
+$o-mm-def-color-6: #706482;
+$o-mm-def-color-7: #87a6b5;
+
+// ===== Default Theme variables =====
+$o-mm-def-body-width    : 600px;
+$o-mm-def-body-bobile   : 480px;
+$o-mm-def-b-radius      : 2px;
+$o-mm-def-body-bg       : $o-mm-def-color-2;
+
+$o-mm-def-font          : -apple-system, "HelveticaNeue", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+$o-mm-def-text-color    : $o-mm-def-color-4;
+
+$o-mm-def-btn-bg        : $o-mm-def-color-3;
+$o-mm-def-btn-text      : $o-mm-def-color-2;
+
+// ===== Colors =====
+@include bg-variant(".bg-o-color-2", $o-mm-def-color-6);
+@include text-emphasis-variant(".text-o-color-2", $o-mm-def-color-6);
+@include bg-variant(".bg-o-color-4", $o-mm-def-color-7);
+@include bg-variant(".bg-gray-lighter", $o-mm-def-color-1);
+
+td:not([align]) {
+    // Default browser style but needed so that alignment works on some mail
+    // clients (see convert_inline)
+    text-align: inherit;
+}
+
+// ===== Layout =====
+.o_layout {
+    overflow: hidden;
+    box-sizing: content-box;
+    width: 94%;
+    min-height: 100%;
+    background-color: $o-mm-def-color-1;
+    padding: 0 3%;
+
+    // Forces on <p/> and <hx/> elements as several mail clients does not
+    // correctly inherit font properties
+    &, p, ol {
+        font-size: 14px; // force bootstrap default
+    }
+    &, p, h1, h2, h3, h4, h5, h6, ol {
+        font-family: $o-mm-def-font;
+        color: lighten($o-mm-def-text-color, 20%);
+    }
+
+    > .o_mail_wrapper {
+        width: 100%;
+        border-collapse: separate; // Allow the first and last td to have the
+                                   // same width
+
+        .o_mail_wrapper_td {
+            width: $o-mm-def-body-width;
+            border: 1px solid darken($o-mm-def-color-1, 2%);
+            background-color: $o-mm-def-color-2;
+        }
+    }
+}
+
+// ===== Snippets (general) =====
+.o_mail_snippet_general {
+    width: 100%;
+    max-width: $o-mm-def-body-width; // should not be necessary thanks to mail wrapper
+    margin: 0 auto;
+
+    h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+        color: $o-mm-def-text-color;
+    }
+
+    .btn.btn-primary {
+        color: $o-mm-def-btn-text;
+        border: none;
+        text-decoration: none;
+        font-weight: normal;
+        font-family: $o-mm-def-font;
+        cursor: pointer;
+        border-radius: $o-mm-def-b-radius;
+        background-color: $o-mm-def-btn-bg;
+    }
+
+    a:not(.btn), .btn.btn-link {
+        color: $o-mm-def-color-5;
+        font-weight: bold;
+        text-decoration: none !important;
+
+        &:hover, &:focus, &:active {
+            text-decoration: none !important;
+        }
+    }
+
+    img {
+        width: 100%;
+        max-width: 100%;
+        height: auto;
+    }
+
+    .separator {
+        height: 2px;
+        background-color: $o-mm-def-color-1;
+    }
+
+    .bg-o-color-2 {
+        h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+            color: $o-mm-def-color-2;
+        }
+
+        .btn.btn-primary {
+            background-color: $o-mm-def-color-7;
+        }
+
+        a:not(.btn), .btn.btn-link {
+            color: $o-mm-def-color-7;
+        }
+    }
+
+    td, th {
+        vertical-align: top;
+    }
+}
+
+// ===== Snippets (specific) =====
+.o_mail_block_header_social, .o_mail_block_header_text_social, .o_mail_block_header_logo {
+    .o_mail_logo_container {
+        img {
+            width: auto;
+        }
+    }
+    .o_mail_header_social {
+        margin-right: 20px;
+
+        a:not(.btn), .btn.btn-link {
+            display: inline-block;
+        }
+    }
+    td {
+        vertical-align: middle;
+    }
+}
+
+.o_mail_block_header_text_social {
+    h3 {
+        font-weight: bold;
+    }
+}
+
+.o_mail_block_steps .o_mail_snippet_general{
+    background-color: $o-mm-def-color-1;
+}
+
+.o_mail_block_two_cols, .o_mail_block_three_cols {
+    // Forces on <p/> elements as several mail clients does not correctly
+    // inherit font properties
+    &, p {
+        font-size: small;
+    }
+
+    .o_mail_col_container {
+        padding: 10px 20px;
+
+        h4 {
+            margin-top: 15px;
+        }
+    }
+}
+
+.o_mail_block_image_text, .o_mail_block_text_image {
+    // Forces on <p/> elements as several mail clients does not correctly
+    // inherit font properties
+    &, p {
+        font-size: small;
+    }
+}
+
+.o_mail_block_event {
+    margin-left: 20px;
+    margin-right: 20px;
+    .o_mail_snippet_general{
+        background: darken($o-mm-def-color-1, 2%);
+    }
+}
+
+.o_mail_block_footer_separator {
+    margin-left: 20px;
+    margin-right: 20px;
+}
+
+.o_mail_block_comparison_table {
+    .separator {
+        height: 1px;
+        background-color: darken($o-mm-def-color-1, 15%);
+    }
+    table table {
+        td, th {
+            vertical-align: middle;
+        }
+        td {
+            padding: 10px 20px;
+            * {
+                margin: 0;
+                line-height: 1.3;
+            }
+        }
+    }
+}
+
+.o_mail_block_discount2 {
+    .o_code {
+        padding: 5px 10px;
+        background: $o-mm-def-color-1;
+        border-radius: 3px;
+        font-family: monospace;
+    }
+}
+
+.o_mail_block_footer_social {
+    .o_mail_table_styles {
+        border-top: 2px solid $o-mm-def-color-1;
+        padding-top: 20px;
+        padding-bottom: 20px;
+    }
+
+    .o_mail_footer_links {
+        padding-top: 10px;
+        padding-bottom: 10px;
+
+        .btn-link{
+            padding: 0;
+            font-size: 12px;
+        }
+    }
+
+    .o_mail_footer_copy {
+        font-size: 9px;
+        font-weight: bold;
+        color: lighten($o-mm-def-text-color, 30%);
+    }
+
+    &.o_mail_footer_social_center {
+        .o_mail_footer_social, .o_mail_footer_links, .o_mail_footer_copy {
+            text-align: center;
+        }
+    }
+
+    &.o_mail_footer_social_left {
+        .o_mail_footer_description {
+            padding-left: 20px;
+        }
+        .o_mail_footer_social {
+            padding-right: 20px;
+            text-align: right;
+            vertical-align: top;
+
+            .btn-link{
+                padding: 0;
+                font-size: 12px;
+            }
+        }
+    }
+    td {
+        vertical-align: middle;
+    }
+}
+
+.o_mail_display_coupon {
+    font-size: 50px;
+    line-height: 1;
+}
+
+// ===== Misc =====
+.o_mail_h_padding {
+    padding-left: 20px;
+    padding-right: 20px;
+}
+.o_mail_v_padding {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+.o_mail_no_margin {
+    margin: 0;
+
+    &.o_mail_display_coupon {
+        line-height: 1.1;
+    }
+}
+.o_mail_table_styles {
+    width: 100%;
+    border-collapse:separate;
+}
+
+// Compatibility: mb/mt classes on <td/> elements were interpreted as paddings
+// instead of margins before the introduction of pb/pt classes. As thoses mb/mt
+// classes may remain on clients' templates, <td/> are forced to 0 margin to
+// be sure (normally <td/> should not consider margin properties but some mail
+// clients might make the mistake to do so).
+td[class*="mb"], td[class*="mt"] {
+    margin: 0!important;
+}

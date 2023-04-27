@@ -1,0 +1,30 @@
+
+.s_alert {
+    margin: $grid-gutter-width/2 0;
+    border: $alert-border-width solid;
+    border-radius: $alert-border-radius;
+    p, ul, ol {
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+    &_sm {
+        padding: $grid-gutter-width/3;
+        font-size: $font-size-sm;
+    }
+    &_md {
+        padding: $grid-gutter-width/2;
+        font-size: $font-size-base;
+    }
+    &_lg {
+        padding: $grid-gutter-width;
+        font-size: $font-size-lg;
+    }
+    &_icon {
+        float: left;
+        margin-right: 10px;
+    }
+    &_content {
+        overflow: hidden;
+    }
+}

@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_exhibitor_main" name="Event Exhibitor">
+    <t t-set="no_header" t-value="option_widescreen"/>
+    <t t-set="no_footer" t-value="option_widescreen"/>
+    <t t-call="website_event.layout">
+        <div class="o_wevent_online o_wevent_online_bg o_wesponsor_index">
+            <!-- Options -->
+            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+                <div class="row mb-5 mx-0">
+                    <t t-call="website_event_track_exhibitor.exhibitor_aside"/>
+                    <t t-call="website_event_track_exhibitor.exhibitor_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_2" class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!-- ============================================================ -->
+<!-- CONTENT: MAIN TEMPLATES -->
+<!-- ============================================================ -->
+
+<template id="exhibitor_main" name="Exhibitor: Main Content">
+    <div t-att-class="'col-12 o_wevent_online_page_main o_wesponsor_exhibitor_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+        <!-- EVENT NOT STARTED ALERTS -->
+        <t t-if="not sponsor.event_id.is_ongoing">
+            <div t-if="sponsor.event_id.is_done" class="alert alert-warning rounded-0 text-center" role="alert">
+                Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/> is over.
+                <br/>
+                <span>Join us next time to meet <b t-esc="sponsor.partner_name"/>!</span>
+            </div>
+            <div t-else="" class="alert alert-warning rounded-0 text-center" role="alert">
+                Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/>
+                <span t-if="sponsor.event_id.start_today">
+                    starts in
+                    <span t-esc="sponsor.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>.
+                </span>
+                <span class="my-0" t-else="">
+                    starts on
+                    <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
+                        t-options="{'format': 'medium'}"/> (<t t-esc="sponsor.event_id.date_tz"/>).
+                </span>
+                <br/>
+                <span>Join us there to meet <b t-esc="sponsor.partner_name"/> !</span>
+            </div>
+        </t>
+        <!-- SPONSOR JITSI + CLOSED/FULL ALERTS -->
+        <div t-if="sponsor.event_id.is_ongoing and sponsor.chat_room_id" class="d-flex flex-column">
+            <t t-if="not sponsor.is_in_opening_hours">
+                <div class="col-12 alert alert-warning rounded-0 text-center" role="alert">
+                    <span>Oops! This room is currently closed</span><br />
+                    Come back between
+                    <strong>
+                        <t t-esc="sponsor.hour_from" t-options="{'widget': 'float_time'}"/>
+                        -
+                        <t t-esc="sponsor.hour_to" t-options="{'widget': 'float_time'}"/>
+                    </strong> (<span t-esc="sponsor.event_date_tz"/>)
+                    to meet them !
+                </div>
+            </t>
+            <t t-elif="sponsor.room_is_full">
+                <div class="col-12 alert alert-warning rounded-0 text-center" role="alert">
+                    <span>Oops! This room is full</span><br />Come back later to have a chat with us!
+                </div>
+            </t>
+            <t t-else="">
+                <div id="o_wsponsor_jitsi_iframe"/>
+                <div class="d-flex flex-row-reverse">
+                    <t t-call="website_jitsi.chat_room_join_button">
+                        <t t-set="_classes" t-value="'d-none'"/>
+                        <t t-set="room_name" t-value="sponsor.room_name"/>
+                        <t t-set="chat_room_id" t-value="sponsor.chat_room_id.id"/>
+                        <t t-set="auto_open" t-value="1"/>
+                        <t t-set="attach_to" t-value="'#o_wsponsor_jitsi_iframe'"/>
+                        <t t-set="max_capacity" t-value="sponsor.room_max_capacity"/>
+                        <t t-set="check_full" t-value="int(not option_can_edit)"/>
+                        <t t-set="jitsi_server_domain" t-value="sponsor.chat_room_id.jitsi_server_domain"/>
+                    </t>
+                </div>
+            </t>
+        </div>
+        <!-- SPONSOR DESCRIPTION -->
+        <span class="h5 d-inline-block mx-3 mt-3 mb-0">About <t t-esc="sponsor.name"/></span>
+        <hr class="mt-2 mb-0"/>
+        <div class="ml-3">
+            <div class="float-left pt-3">
+                <span t-if="sponsor.image_512" t-field="sponsor.image_512" class="o_wevent_online_page_avatar"
+                    t-options="{'widget': 'image', 'max-width': '96'}"/>
+                <span t-elif="sponsor.partner_id.image_512" t-field="sponsor.partner_id.image_512" class="o_wevent_online_page_avatar"
+                    t-options="{'widget': 'image', 'max-width': '96'}"/>
+            </div>
+            <div class="o_wevent_sponsor px-3 pt-3 d-flex flex-row justify-content-between position-relative">
+                <div class="d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                        <span t-field="sponsor.name" class="h4 mb-0"/>
+                        <span t-if="sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon'"
+                              t-field="sponsor.sponsor_type_id" t-attf-class="o_ribbon o_ribbon_right ribbon_#{sponsor.sponsor_type_id.display_ribbon_style}"/>
+                    </div>
+                    <span t-field="sponsor.subtitle" class="text-muted mb-3"/>
+                    <div t-if="sponsor.url" class="d-flex text-break align-items-baseline">
+                        <i class="fa fa-home mr-2"/><a t-att-href="sponsor.url"><span t-field="sponsor.url"/></a>
+                    </div>
+                    <div t-elif="sponsor.partner_id.website" class="d-flex text-break align-items-baseline">
+                        <i class="fa fa-home mr-2"/><a t-att-href="sponsor.partner_id.website"><span t-field="sponsor.partner_id.website"/></a>
+                    </div>
+                    <div t-if="sponsor.email" class="d-flex text-break align-items-baseline">
+                        <i class="fa fa-envelope mr-2"/><a t-att-mailto="sponsor.email"><span t-field="sponsor.email"/></a>
+                    </div>
+                    <div t-if="sponsor.phone" class="d-flex text-break align-items-baseline">
+                        <i class="fa fa-phone mr-2"/><span t-field="sponsor.phone"/>
+                    </div>
+                </div>
+                <a t-if="sponsor.partner_id.country_id"
+                    t-att-href="'/event/%s/exhibitors?countries=%s' % (slug(sponsor.event_id), [sponsor.partner_id.country_id.id])"
+                    t-attf-class="text-right d-none d-md-block #{'mr-5' if sponsor.sponsor_type_id.display_ribbon_style and sponsor.sponsor_type_id.display_ribbon_style != 'no_ribbon' else ''}">
+                    <img class="img"
+                        style="max-height: 36px;"
+                        t-att-src="sponsor.partner_id.country_id.image_url"
+                        t-att-alt="sponsor.partner_id.country_id.name"/>
+                </a>
+            </div>
+        </div>
+        <div t-field="sponsor.website_description" class="my-2 mx-3 oe_no_empty"/>
+    </div>
+</template>
+
+<!-- ============================================================ -->
+<!-- ASIDE: CONTROL PANEL -->
+<!-- ============================================================ -->
+
+<template id="exhibitor_aside" name="Exhibitor: Aside">
+    <div t-att-class="'col-12 pl-0 pr-0 pr-md-3 o_wevent_online_page_aside o_wesponsor_exhibitor_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+        <div class="bg-white o_wevent_online_page_aside_content">
+            <div class="d-flex align-items-center justify-content-between mx-2">
+                <span class="h5 mb-0 pt-0 pt-md-3 pb-0 pb-md-2">Other exhibitors</span>
+                <a href="#collapse_exhibitor_aside" data-toggle="collapse"
+                   class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse collapsed">
+                    <i class="fa fa-chevron-down d-lg-none"/>
+                </a>
+            </div>
+            <ul id="collapse_exhibitor_aside" class="list-unstyled collapse d-lg-block mb-0">
+                <li t-foreach="sponsors_other" t-as="sponsor_other">
+                    <a class="d-flex w-100 h-100 px-2 pt-2 pb-1 text-decoration-none"
+                        t-att-href="sponsor_other.website_url">
+                        <div class="d-flex flex-column align-items-center">
+                            <img t-if="sponsor_other.partner_id.country_id"
+                            class="mr-2 mb-1 o_wesponsor_aside_logo"
+                            t-att-src="sponsor_other.partner_id.country_id.image_url"
+                            t-att-alt="sponsor_other.partner_id.country_id.name"/>
+                            <span t-if="sponsor_other.sponsor_type_id.display_ribbon_style not in [False, 'no_ribbon']"
+                                t-att-class="'badge badge-light mr-2 ribbon_%s' % sponsor_other.sponsor_type_id.display_ribbon_style"
+                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                            <span t-else="" class="badge badge-light mr-2"
+                                t-esc="sponsor_other.sponsor_type_id.name"/>
+                        </div>
+                        <div class="flex-grow-1 overflow-auto">
+                            <span class="d-flex align-items-baseline o_wesponsor_sponsor_name">
+                                <span class="d-inline-block text-truncate" t-esc="sponsor_other.name"/>
+
+                            </span>
+
+                            <small class="text-muted" t-esc="sponsor_other.subtitle"/>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+<!-- ============================================================ -->
+<!-- MISC / MENUS -->
+<!-- ============================================================ -->
+
+<!-- User Navbar - Edit Options -->
+<template id="event_sponsor_edit_options" inherit_id="website.user_navbar" name="Edit Event Sponsor Options">
+    <xpath expr="//li[@id='edit-page-menu']" position="after">
+        <t t-if="main_object._name == 'event.sponsor'"
+            t-set="action" t-value="'website_event_track_exhibitor.event_sponsor_action'"/>
+    </xpath>
+</template>
+
+</odoo>

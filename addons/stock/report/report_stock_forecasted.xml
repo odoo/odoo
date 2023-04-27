@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<!-- Reports -->
+    <record id="stock_replenishment_report_product_product_action" model="ir.actions.report">
+        <field name="name">Forecasted Report</field>
+        <field name="model">product.product</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">stock.report_product_product_replenishment</field>
+    </record>
+
+    <record id="stock_replenishment_report_product_template_action" model="ir.actions.report">
+        <field name="name">Forecasted Report</field>
+        <field name="model">product.template</field>
+        <field name="report_type">qweb-html</field>
+        <field name="report_name">stock.report_product_template_replenishment</field>
+    </record>
+
+    <record id="stock_replenishment_product_product_action" model="ir.actions.client">
+        <field name="name">Forecasted Report</field>
+        <field name="tag">replenish_report</field>
+    </record>
+
+<!-- Templates -->
+    <template id="assets_common_replenishment_report" name="Forecasted Inventory CSS" inherit_id="web.report_assets_common">
+        <xpath expr="." position="inside">
+            <link rel="stylesheet" type="text/scss" href="/web/static/src/scss/graph_view.scss"/>
+            <link rel="stylesheet" type="text/scss" href="/stock/static/src/scss/report_stock_forecasted.scss"/>
+        </xpath>
+    </template>
+
+    <template id="report_replenishment_header">
+        <div class="d-flex justify-content-between">
+            <div class="o_product_name">
+                <h3>
+                    <t t-if="docs['product_templates']">
+                        <t t-foreach="docs['product_templates']" t-as="product_template">
+                            <a href="#" res-model="product.template" view-type="form" t-att-res-id="product_template.id">
+                                <t t-esc="product_template.display_name"/>
+                            </a>
+                        </t>
+                    </t>
+                    <t t-elif="docs['product_variants']">
+                        <t t-foreach="docs['product_variants']" t-as="product_variant">
+                            <a href="#" res-model="product.product" view-type="form" t-att-res-id="product_variant.id">
+                                <t t-esc="product_variant.display_name"/>
+                            </a>
+                        </t>
+                    </t>
+                </h3>
+                <h6 t-if="docs['product_templates'] and docs['product_variants'] and len(docs['product_templates']) != len(docs['product_variants'])">
+                    <t t-foreach="docs['product_variants']" t-as="product_variant">
+                        <a href="#" res-model="product.product" view-type="form" t-att-res-id="product_variant.id">
+                            <t t-esc="'[%s]' % product_variant.product_template_attribute_value_ids._get_combination_name()"/>
+                        </a>
+                    </t>
+                </h6>
+            </div>
+            <div class="row">
+                <div class="mx-3 text-center">
+                    <div class="h3">
+                        <t t-esc="docs['quantity_on_hand']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                        <t t-esc="docs['uom']" groups="uom.group_uom"/>
+                    </div>
+                    <div>On Hand</div>
+                </div>
+                <div t-attf-class="mx-3 text-center #{docs['virtual_available'] &lt; 0 and 'text-danger'}">
+                    <div class="h3">
+                        <t t-esc="docs['virtual_available']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                        <t t-esc="docs['uom']" groups="uom.group_uom"/>
+                    </div>
+                    <div>Forecasted</div>
+                </div>
+                <div name="pending_forecasted" t-attf-class="mx-3 text-center #{future_virtual_available &lt; 0 and 'text-danger'}">
+                    <div class="h3">
+                        <t t-esc="future_virtual_available" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                        <t t-esc="docs['uom']" groups="uom.group_uom"/>
+                    </div>
+                    <div>Forecasted<br/>+ Pending</div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="report_product_product_replenishment">
+        <t t-call="web.html_container">
+            <div class="page pt-3 o_report_replenishment_page">
+                <t t-set="future_virtual_available" t-value="docs['virtual_available'] + docs['qty']['in'] - docs['qty']['out']"/>
+                <t t-call="stock.report_replenishment_header"/>
+                <div class="o_report_graph"/>
+                <table class="o_report_replenishment table table-bordered">
+                    <thead>
+                        <tr class="bg-light">
+                            <td>Replenishment</td>
+                            <td>Expected Receipt</td>
+                            <td t-if="docs['multiple_product']">Product</td>
+                            <td class="text-right">Quantity</td>
+                            <td groups="uom.group_uom">UoM</td>
+                            <td>Used by</td>
+                            <td>Expected Delivery</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr t-if="docs['lines'] and not any(line['document_in'] or line['replenishment_filled'] for line in docs['lines'])">
+                            <td>Inventory On Hand</td>
+                            <td/>
+                            <td t-if="docs['multiple_product']"/>
+                            <td class="text-right">0</td>
+                            <td/>
+                            <td/>
+                            <td/>
+                            <td/>
+                        </tr>
+                        <tr t-foreach="docs['lines']" t-as="line">
+                            <td t-attf-class="#{line['is_late'] and 'o_grid_warning'}">
+                                <a t-if="line['document_in']"
+                                    t-attf-href="#" t-esc="line['document_in'].name"
+                                    class="font-weight-bold" view-type="form"
+                                    t-att-res-model="line['document_in']._name"
+                                    t-att-res-id="line['document_in'].id"/>
+                                <t t-elif="line['reservation']">
+                                    Reserved from stock
+                                </t>
+                                <t t-elif="line['replenishment_filled']">
+                                    <t t-if="line['document_out']">Inventory On Hand</t>
+                                    <t t-else="">Free Stock</t>
+                                </t>
+                                <span t-else="" class="text-muted">Not Available</span>
+                            </td>
+                            <td t-esc="line['receipt_date'] or ''"
+                                t-attf-class="#{line['is_late'] and 'o_grid_warning'}"/>
+                            <td t-if="docs['multiple_product']" t-esc="line['product']['display_name']"/>
+                            <td class="text-right"><t t-if="not line['replenishment_filled']">- </t><t t-esc="line['quantity']" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/></td>
+                            <td t-esc="line['uom_id'].name" groups="uom.group_uom"/>
+                            <td t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}">
+                                <a t-if="line['document_out']"
+                                    t-attf-href="#" t-esc="line['document_out'].name"
+                                    class="font-weight-bold" view-type="form"
+                                    t-att-res-model="line['document_out']._name"
+                                    t-att-res-id="line['document_out'].id"/>
+                            </td>
+                            <td t-esc="line['delivery_date'] or ''"
+                                t-attf-class="#{not line['replenishment_filled'] and 'o_grid_warning'}"/>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr class="o_forecasted_row">
+                            <td colspan="2">Forecasted Inventory</td>
+                            <td t-esc="docs['virtual_available']" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                        </tr>
+                    </thead>
+                    <tbody t-if="docs['qty']['in'] or docs['qty']['out']">
+                        <tr t-if="docs['draft_picking_qty']['in']" name="draft_picking_in">
+                            <td colspan="2">Incoming Draft Transfer</td>
+                            <td t-esc="docs['draft_picking_qty']['in']" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                        </tr>
+                        <tr t-if="docs['draft_picking_qty']['out']" name="draft_picking_out">
+                            <td colspan="2">Outgoing Draft Transfer</td>
+                            <td t-esc="-docs['draft_picking_qty']['out']" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                        </tr>
+                    </tbody>
+                    <thead>
+                        <tr class="o_forecasted_row">
+                            <td colspan="2">Forecasted with Pending</td>
+                            <td t-esc="future_virtual_available" class="text-right" t-options='{"widget": "float", "decimal_precision": "Product Unit of Measure"}'/>
+                            <td t-esc="docs['uom']" groups="uom.group_uom"/>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </t>
+    </template>
+
+    <template id="report_product_template_replenishment">
+        <t t-call="stock.report_product_product_replenishment"/>
+    </template>
+</odoo>

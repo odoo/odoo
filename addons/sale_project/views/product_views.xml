@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="product_template_form_view_invoice_policy_inherit_sale_project" model="ir.ui.view">
+        <field name="name">product.template.inherit.sale.projectform</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="sale.product_template_form_view_invoice_policy"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='service_type']" position="after">
+                <field name="service_tracking" widget="radio" attrs="{'invisible': [('type','!=','service')]}"/>
+                <field name="project_id" context="{'default_allow_billable': True, 'default_bill_type': 'customer_task'}" attrs="{'invisible':[('service_tracking','!=','task_global_project')], 'required':[('service_tracking','==','task_global_project')]}"/>
+                <field name="project_template_id" context="{'active_test': False, 'default_allow_billable': True, 'default_bill_type': 'customer_project', 'default_pricing_type': 'fixed_rate'}" attrs="{'invisible':[('service_tracking','not in',['task_in_project', 'project_only'])]}"/>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

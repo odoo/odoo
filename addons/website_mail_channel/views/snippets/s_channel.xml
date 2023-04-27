@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="s_channel" name="Discussion Group">
+    <div class="s_channel"
+         data-id="0" data-object="mail.channel" data-follow="off">
+        <div class="input-group js_mg_follow_form">
+            <input type="email" name="email" placeholder="your email..."
+                   class="js_follow_email form-control"/>
+            <span class="input-group-append">
+                <button href="#" class="btn btn-primary js_follow_btn">Subscribe</button>
+            </span>
+        </div>
+        <p class="js_mg_details d-none">
+            <span class="js_mg_email d-none"><a href="#" class="js_mg_email"><i class="fa fa-envelope-o"/> send mail</a> - </span>
+            <a href="#" class="js_mg_link"><i class="fa fa-file-o"/> archives</a> -
+            <a role="button" href="#" class="js_unfollow_btn"><i class="fa fa-times"/> unsubscribe</a>
+        </p>
+        <p class="js_mg_confirmation d-none">
+            a confirmation email has been sent.
+        </p>
+    </div>
+</template>
+
+<template id="s_channel_options" inherit_id="website.snippet_options">
+    <xpath expr="." position="inside">
+        <div data-js='Channel'
+             data-selector=".s_channel"
+             data-drop-near="p, h1, h2, h3, blockquote, .card">
+            <we-row>
+                <we-select class="select_discussion_list" data-attribute-name="id" data-no-preview="true">
+                    <!-- 'we-button' added programmatically with DB data -->
+                </we-select>
+                <we-button class="fa fa-fw fa-plus" title="Create a public discussion group in your backend"
+                           data-create-channel="" data-no-preview="true" data-name="create_mail_channel_opt"/>
+            </we-row>
+        </div>
+    </xpath>
+</template>
+
+<template id="assets_snippet_s_channel_js_000" inherit_id="website.assets_frontend">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website_mail_channel/static/src/snippets/s_channel/000.js"/>
+    </xpath>
+</template>
+
+</odoo>

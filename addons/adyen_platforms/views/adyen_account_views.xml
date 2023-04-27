@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="adyen_account_view_form" model="ir.ui.view">
+        <field name="name">adyen.account.view.form</field>
+        <field name="model">adyen.account</field>
+        <field name="arch" type="xml">
+            <form string="Adyen Account" create="false" js_class="adyen_account_form">
+                <header>
+                    <field name="kyc_status" widget="statusbar" statusbar_visible="awaiting_data,pending,passed"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_show_transactions" type="object"
+                            class="oe_stat_button" icon="fa-credit-card">
+                            <div class="o_stat_info">
+                                <field name="transactions_count" class="o_stat_value"/>
+                                <span class="o_stat_text"> Transactions</span>
+                            </div>
+                        </button>
+                    </div>
+
+                    <group>
+                        <field name="adyen_uuid" invisible="1"/>
+
+                        <group>
+                            <field name="is_business" attrs="{'readonly': [('id', '!=', False)]}"/>
+                        </group>
+
+                        <group>
+                            <field name="company_id" readonly="1"/>
+                        </group>
+
+                        <group string="Individual" attrs="{'invisible': [('is_business', '=', True)]}">
+                            <field name="first_name"
+                                attrs="{'required': [('is_business', '=', False)]}"/>
+                            <field name="last_name"
+                                attrs="{'required': [('is_business', '=', False)]}"/>
+                            <field name="date_of_birth"
+                                attrs="{'required': [('is_business', '=', False)]}"/>
+                            <field name="document_number"
+                                attrs="{'invisible': [('country_code', 'not in', ['AU', 'CA', 'GR', 'IT', 'US'])], 'required': [('is_business', '=', False), ('country_id', 'in', ['AU', 'CA', 'GR', 'IT', 'US'])]}"/>
+                            <field name="document_type"
+                                attrs="{'invisible': [('country_code', '!=', 'AU')], 'required': [('is_business', '=', False), ('country_id', '=', 'AU')]}"/>
+                            <field name="id_type" attrs="{'invisible': [('adyen_uuid', '=', False)]}"/>
+                            <field name="id_front" filename="id_front_filename" attrs="{'invisible': [('adyen_uuid', '=', False)]}"/>
+                            <field name="id_front_filename" invisible="1"/>
+                            <field name="id_back" filename="id_back_filename"
+                                attrs="{'invisible': [('id_type', 'not in', ['ID_CARD', 'DRIVING_LICENSE'])]}"/>
+                            <field name="id_back_filename" invisible="1"/> 
+                        </group>
+
+                        <group string="Business" attrs="{'invisible': [('is_business', '=', False)]}">
+                            <field name="legal_business_name"
+                                attrs="{'required': [('is_business', '=', True)]}"/>
+                            <field name="doing_business_as"
+                                attrs="{'required': [('is_business', '=', True)]}"/>
+                            <field name="registration_number"
+                                attrs="{'required': [('is_business', '=', True)]}"/>
+                        </group>
+
+                        <group string="Contact">
+                            <field name="email" widget="email"/>
+                            <field name="phone_number"/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street" class="o_address_street"/>
+                                <field name="house_number_or_name" placeholder="House number or name" class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                                    attrs="{'required': [('country_code', 'in', ['AU', 'CA', 'IT', 'US'])]}"/>
+                                <field name="state_code" invisible="1"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="country_code" invisible="1"/>
+                            </div>
+                        </group>
+                    </group>
+                    <notebook attrs="{'invisible': [('adyen_uuid', '=', False)]}">
+                        <page string="Shareholders" attrs="{'invisible': [('is_business', '=', False)], 'required': [('is_business', '=', True)]}">
+                            <field name="shareholder_ids">
+                                <tree>
+                                    <field name="first_name"/>
+                                    <field name="last_name"/>
+                                    <field name="kyc_status" widget="adyen_kyc_status_tag"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Bank Accounts">
+                            <field name="bank_account_ids">
+                                <tree>
+                                    <field name="owner_name"/>
+                                    <field name="iban"/>
+                                    <field name="account_number"/>
+                                    <field name="kyc_status" widget="adyen_kyc_status_tag"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Payouts">
+                            <field name="payout_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="payout_schedule"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="adyen_shareholder_view_form" model="ir.ui.view">
+        <field name="name">adyen.shareholder.view.form</field>
+        <field name="model">adyen.shareholder</field>
+        <field name="arch" type="xml">
+            <form string="Adyen Shareholder">
+                <header>
+                    <field name="kyc_status" widget="statusbar" statusbar_visible="awaiting_data,pending,passed"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert"
+                        attrs="{'invisible': [('kyc_status_message', '=', False)]}">
+                        <field name="kyc_status_message"/>
+                    </div>
+                    <group>
+                        <field name="shareholder_uuid" invisible="1"/>
+                        <group>
+                            <field name="first_name"/>
+                            <field name="last_name"/>
+                            <field name="date_of_birth"/>
+                        </group>
+                        <group>
+                            <field name="document_number"
+                                attrs="{'invisible': [('country_code', 'not in', ['IT', 'US'])], 'required': [('country_code', 'in', ['IT', 'US'])]}"/>
+                            <field name="id_type" attrs="{'invisible': [('shareholder_uuid', '=', False)]}"/>
+                            <field name="id_front" filename="id_front_filename" attrs="{'invisible': [('shareholder_uuid', '=', False)]}"/>
+                            <field name="id_front_filename" invisible="1"/>
+                            <field name="id_back" filename="id_back_filename"
+                                attrs="{'required': [('id_type', 'in', ['ID_CARD', 'DRIVING_LICENSE'])], 'invisible': [('id_type', 'not in', ['ID_CARD', 'DRIVING_LICENSE'])]}"/>
+                            <field name="id_back_filename" invisible="1"/> 
+                        </group>
+                        <group>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street" class="o_address_street"/>
+                                <field name="house_number_or_name" placeholder="House number or name" class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                                    attrs="{'required': [('country_code', 'in', ['AU', 'CA', 'IT', 'US'])]}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
+                                <field name="country_code" invisible="1"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="adyen_bank_account_view_form" model="ir.ui.view">
+        <field name="name">adyen.bank.account.view.form</field>
+        <field name="model">adyen.bank.account</field>
+        <field name="arch" type="xml">
+            <form string="Adyen Bank Account">
+                <header>
+                    <field name="kyc_status" widget="statusbar" statusbar_visible="awaiting_data,pending,passed"/>
+                </header>
+                <sheet>
+                    <div class="alert alert-warning" role="alert"
+                        attrs="{'invisible': [('kyc_status_message', '=', False)]}">
+                        <field name="kyc_status_message"/>
+                    </div>
+                    <group>
+                        <field name="bank_account_uuid" invisible="1"/>
+                        <group>
+                            <field name="country_id" options='{"no_open": True, "no_create": True}'/>
+                            <field name="country_code" invisible="1"/>
+                            <field name="currency_id"/>
+                            <field name="iban"
+                                attrs="{'invisible': [('country_code', 'not in', ['AT', 'BE', 'CH', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'IE', 'IT', 'LT', 'LU', 'NL', 'PL', 'PT'])],
+                                        'required': [('country_code', 'in', ['AT', 'BE', 'CH', 'CZ', 'DE', 'ES', 'FI', 'FR', 'GB', 'GR', 'HR', 'IE', 'IT', 'LT', 'LU', 'NL', 'PL', 'PT'])]}"/>
+                            <field name="account_type"
+                                attrs="{'invisible': [('country_code', '!=', 'US')], 'required': [('country_code', '=', 'US')]}"/>
+                            <field name="account_number"
+                                attrs="{'invisible': [('country_code', 'not in', ['AU', 'CA', 'US'])], 'required': [('country_code', 'in', ['AU', 'CA', 'US'])]}"/>
+                            <field name="branch_code"
+                                attrs="{'invisible': [('country_code', 'not in', ['AU', 'CA', 'US'])], 'required': [('country_code', 'in', ['AU', 'CA', 'US'])]}"/>
+                            <field name="bank_code"
+                                attrs="{'invisible': [('country_code', '!=', 'CA')], 'required': [('country_code', '=', 'CA')]}"/>
+                            <field name="bank_statement" filename="bank_statement_filename" attrs="{'invisible': [('bank_account_uuid', '=', False)]}"/>
+                            <field name="bank_statement_filename" invisible="1"/>
+                        </group>
+                        <group>
+                            <field name="owner_name"/>
+                            <label for="owner_street" string="Owner Address" attrs="{'invisible': [('country_code', 'not in', ['CA', 'US'])]}"/>
+                            <div class="o_address_format" attrs="{'invisible': [('country_code', 'not in', ['CA', 'US'])]}">
+                                <field name="owner_street" placeholder="Street" class="o_address_street" attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_house_number_or_name" placeholder="House number or name" class="o_address_street" attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_city" placeholder="City" class="o_address_city" attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
+                                    attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_zip" placeholder="ZIP" class="o_address_zip" attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                                <field name="owner_country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
+                                    attrs="{'required': [('country_code', 'in', ['CA', 'US'])]}"/>
+                            </div>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="adyen_payout_view_form" model="ir.ui.view">
+        <field name="name">adyen.payout.view.form</field>
+        <field name="model">adyen.payout</field>
+        <field name="arch" type="xml">
+            <form string="Adyen Payout">
+                <header>
+                    <button name="send_payout_request" string="Request a payout now" class="oe_highlight" type="object" attrs="{'invisible': [('code', '=', False)]}"/>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="code" invisible="1"/>
+                        <field name="name"/>
+                        <field name="payout_schedule"/>
+                        <field name="adyen_bank_account_id"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="adyen_account_action_create" model="ir.actions.act_window">
+        <field name="name">Create an Adyen Account</field>
+        <field name="res_model">adyen.account</field>
+        <field name="view_mode">form</field>
+    </record>
+</odoo>

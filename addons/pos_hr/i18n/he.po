@@ -1,0 +1,195 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* pos_hr
+# 
+# Translators:
+# Yihya Hugirat <hugirat@gmail.com>, 2020
+# שהאב חוסיין <shhab89@gmail.com>, 2020
+# ZVI BLONDER <ZVIBLONDER@gmail.com>, 2020
+# Roey Weiser <roey@laylinetech.com>, 2021
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~13.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 07:29+0000\n"
+"PO-Revision-Date: 2020-09-07 08:16+0000\n"
+"Last-Translator: Roey Weiser <roey@laylinetech.com>, 2021\n"
+"Language-Team: Hebrew (https://app.transifex.com/odoo/teams/41243/he/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: he\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n == 2 && n % 1 == 0) ? 1: (n % 10 == 0 && n % 1 == 0 && n > 10) ? 2 : 3;\n"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "<span class=\"o_form_label oe_edit_only\">Allowed Employees </span>"
+msgstr "<span class=\"o_form_label oe_edit_only\">עובדים מורשים </span>"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__cashier
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_form_inherit
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_order_list_select_inherit
+msgid "Cashier"
+msgstr "קופאי"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
+#, python-format
+msgid "Change Cashier"
+msgstr "שנה קופאי"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Close session"
+msgstr "סגור משמרת"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_hr_employee__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__display_name
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__display_name
+msgid "Display Name"
+msgstr "שם תצוגה"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_hr_employee
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__employee_id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__employee_id
+#: model_terms:ir.ui.view,arch_db:pos_hr.view_report_pos_order_search_inherit
+msgid "Employee"
+msgstr "עובד"
+
+#. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid "Employee: %s - PoS Config(s): %s \n"
+msgstr "עובדים: %s - תצורות קופה: %s \n"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__employee_ids
+msgid "Employees with access"
+msgstr "עובדים עם גישה"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_hr_employee__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config__id
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order__id
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order__id
+msgid "ID"
+msgstr "מזהה"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_config__employee_ids
+msgid "If left empty, all employees can log in to the PoS session"
+msgstr "אם נותר ריק, כל העובדים יכולים להיכנס למשמרת קופה"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
+#, python-format
+msgid "Incorrect Password"
+msgstr "סיסמה לא נכונה"
+
+#. module: pos_hr
+#: model:ir.model.fields,field_description:pos_hr.field_hr_employee____last_update
+#: model:ir.model.fields,field_description:pos_hr.field_pos_config____last_update
+#: model:ir.model.fields,field_description:pos_hr.field_pos_order____last_update
+#: model:ir.model.fields,field_description:pos_hr.field_report_pos_order____last_update
+msgid "Last Modified on"
+msgstr "שונה לאחרונה ב - "
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Log in to"
+msgstr "התחבר ל"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid ""
+"Only users with Manager access rights for PoS app can modify the product "
+"prices on orders."
+msgstr ""
+"רק משתמשים עם הרשאות מנהל עבור יישום קופה יכולים לשנות את מחירי המוצר "
+"בהזמנות."
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/js/useSelectEmployee.js:0
+#, python-format
+msgid "Password ?"
+msgstr "סיסמה ?"
+
+#. module: pos_hr
+#: model:ir.model.fields,help:pos_hr.field_pos_order__employee_id
+msgid ""
+"Person who uses the cash register. It can be a reliever, a student or an "
+"interim employee."
+msgstr "האדם המשתמש בקופה.יכול להיות מחליף, עובד זמני או מתלמד."
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_config
+msgid "Point of Sale Configuration"
+msgstr "תצורת קופה"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_pos_order
+msgid "Point of Sale Orders"
+msgstr "הזמנות קופה"
+
+#. module: pos_hr
+#: model:ir.model,name:pos_hr.model_report_pos_order
+msgid "Point of Sale Orders Report"
+msgstr "דוח הזמנות קופה"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "Price Control"
+msgstr "בקרת מחיר"
+
+#. module: pos_hr
+#: model_terms:ir.ui.view,arch_db:pos_hr.pos_config_form_view_inherit
+msgid "Restrict price modification to managers"
+msgstr "הגבל שינויים במחירים למנהלים"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Scan your badge"
+msgstr "סרוק את התג שלך"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "Select Cashier"
+msgstr "בחר קופאי"
+
+#. module: pos_hr
+#: code:addons/pos_hr/models/hr_employee.py:0
+#, python-format
+msgid ""
+"You cannot delete an employee that may be used in an active PoS session, "
+"close the session(s) first: \n"
+msgstr "אינך יכול למחוק עובד שדרוש למשמרת קופה פעילה, סגור תחילה את המשמרות: \n"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/LoginScreen.xml:0
+#, python-format
+msgid "or"
+msgstr "או"
+
+#. module: pos_hr
+#. openerp-web
+#: code:addons/pos_hr/static/src/xml/CashierName.xml:0
+#, python-format
+msgid "selectCashier"
+msgstr "בחר קופאי/ת"
