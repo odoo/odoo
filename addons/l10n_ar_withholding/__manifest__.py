@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Payments Withholdings',
+    'name': 'Argentina - Payment Withholdings',
     'version': "1.0",
     'description': """
 Functional
@@ -12,7 +12,7 @@ Technical
 ---------
 """,
     'author': 'ADHOC SA',
-    'category': 'Invoices & Payments',
+    'category': 'Accounting/Localizations',
     'depends': [
         'account',
         'l10n_ar',  # ONLY FOR CHART TEMPLATE

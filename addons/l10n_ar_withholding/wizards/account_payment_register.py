@@ -29,14 +29,11 @@ class AccountPaymentRegisterWithholding(models.TransientModel):
             if rec.tax_id.l10n_ar_withholding_amount_type == 'untaxed_amount':
                 # TODO verificar que price_subtotal sea siempre sin impuestos
                 rec.base_amount = factor * sum(tax_base_lines.mapped('price_subtotal'))
-                # rec.base_amount = factor * sum(rec.payment_register_id.line_ids.mapped('move_id.amount_untaxed'))
             elif rec.tax_id.l10n_ar_withholding_amount_type == 'tax_amount':
                 # TODO implementar. debería ser el tax base amount the un tax de mismo group o algo así? o elegimos en otro campo de que tax?
                 rec.base_amount = 0.0
-                # rec.base_amount = factor * sum(rec.payment_register_id.line_ids.mapped('move_id.amount_total')) - sum(rec.payment_register_id.line_ids.mapped('move_id.amount_untaxed'))
             else:
                 rec.base_amount = factor * sum(tax_base_lines.mapped('price_total'))
-                # rec.base_amount = factor * sum(rec.payment_register_id.line_ids.mapped('move_id.amount_total'))
 
     @api.depends('tax_id', 'base_amount')
     def _compute_amount(self):
@@ -69,19 +66,6 @@ class AccountPaymentRegister(models.TransientModel):
     def _compute_net_amount(self):
         for rec in self:
             rec.net_amount = rec.amount - sum(rec.withholding_ids.mapped('amount'))
-
-    # def _create_payment_vals_from_wizard(self, batch_result):
-    #     payment_vals = super()._create_payment_vals_from_wizard(batch_result)
-    #     import pdb; pdb.set_trace()
-    #     if self.withholding_ids:
-    #         # payment_vals['withholding_vals'] = [{
-    #         #     'name': line.name,
-    #         #     'amount': line.amount,
-    #         #     'account_id': 5,
-    #         #     'tax_base_amount': line.base_amount,
-    #         #     'tax_id': line.tax_id.id,
-    #         # } for line in self.withholding_ids]
-    #     return payment_vals
 
     # TODO implement on _create_payment_vals_from_wizard instead of here
     def _create_payments(self):
