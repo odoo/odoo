@@ -4,39 +4,24 @@
     <t t-name="Chrome" owl="1">
         <div class="pos" t-att-class="{ 'big-scrollbars': pos.hasBigScrollBars }">
             <div class="pos-receipt-print"></div>
-            <t t-if="pos.uiState === 'READY'">
-                <Navbar showCashMoveButton="showCashMoveButton"/>
-                <div class="pos-content">
-                    <div class="window">
-                        <div class="subwindow">
-                            <div class="subwindow-container">
-                                <div class="subwindow-container-fix screens">
-                                    <!-- FIXME POSREF: remove the t-key after owl 2.0.6+ is merged, see https://github.com/odoo/owl/pull/1344 -->
-                                    <!-- FIXME POSREF: better error handling in main screens (currently, a crash in owl lifecycle of a main screen blows up the application and the error can't be displayed) -->
-                                    <t isShown="!pos.tempScreen" t-component="pos.mainScreen.component"
-                                       t-props="pos.mainScreen.props" t-key="pos.mainScreen.component.name"/>
-                                    <ErrorHandler onError.bind="onTempScreenError">
-                                        <t t-if="pos.tempScreen" t-component="pos.tempScreen.component"
-                                        t-props="pos.tempScreen.props" t-key="pos.tempScreen.name" />
-                                    </ErrorHandler>
-                                </div>
+            <Navbar showCashMoveButton="showCashMoveButton"/>
+            <div class="pos-content">
+                <div class="window">
+                    <div class="subwindow">
+                        <div class="subwindow-container">
+                            <div class="subwindow-container-fix screens">
+                                <!-- FIXME POSREF: better error handling in main screens (currently, a crash in owl lifecycle of a main screen blows up the application and the error can't be displayed) -->
+                                <t isShown="!pos.tempScreen" t-component="pos.mainScreen.component"
+                                    t-props="pos.mainScreen.props"/>
+                                <ErrorHandler onError.bind="onTempScreenError">
+                                    <t t-if="pos.tempScreen" t-component="pos.tempScreen.component"
+                                    t-props="pos.tempScreen.props" t-key="pos.tempScreen.name" />
+                                </ErrorHandler>
                             </div>
                         </div>
                     </div>
                 </div>
-            </t>
-
-            <Transition visible="['LOADING', 'CLOSING'].includes(pos.uiState)" name="'o-swing'" leaveDuration="800" t-slot-scope="transition">
-                <div class="loader" t-att-class="transition.className">
-                    <div class="loader-feedback">
-                        <!-- spinner from https://loading.io/css/ -->
-                        <div class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-                        <t t-if="pos.loadingSkipButtonIsShown">
-                            <h1 class="message">Connecting to devices</h1>
-                        </t>
-                    </div>
-                </div>
-            </Transition>
+            </div>
         </div>
         <MainComponentsContainer/>
     </t>

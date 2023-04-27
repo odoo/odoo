@@ -24,13 +24,12 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
     /**
      * @override
      */
-    setup() {
-        this._super(...arguments);
-        this.globalState.ready.then(() => {
-            if (this.globalState.config.is_table_management) {
-                this.setActivityListeners();
-            }
-        });
+    async setup() {
+        await this._super(...arguments);
+        if (this.globalState.config.is_table_management) {
+            this.setActivityListeners();
+            this.showScreen("FloorScreen", { floor: this.globalState.table?.floor || null });
+        }
     },
     setActivityListeners() {
         IDLE_TIMER_SETTER = this.setIdleTimer.bind(this);
