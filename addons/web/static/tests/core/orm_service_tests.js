@@ -152,9 +152,9 @@ QUnit.test("nameGet method", async (assert) => {
     const env = await makeTestEnv();
     const context = { complete: true };
     await env.services.orm.nameGet("sale.order", [2, 5], { context });
-    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/name_get");
+    assert.strictEqual(query.route, "/web/dataset/call_kw/sale.order/read");
     assert.deepEqual(query.params, {
-        args: [[2, 5]],
+        args: [[2, 5], ['display_name']],
         kwargs: {
             context: {
                 complete: true,
@@ -163,7 +163,7 @@ QUnit.test("nameGet method", async (assert) => {
                 uid: 7,
             },
         },
-        method: "name_get",
+        method: "read",
         model: "sale.order",
     });
 });

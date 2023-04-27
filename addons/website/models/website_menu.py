@@ -52,17 +52,15 @@ class Menu(models.Model):
     mega_menu_content = fields.Html(translate=html_translate, sanitize=False, prefetch=True)
     mega_menu_classes = fields.Char()
 
-    def name_get(self):
+    def _compute_display_name(self):
         if not self._context.get('display_website') and not self.env.user.has_group('website.group_multi_website'):
-            return super(Menu, self).name_get()
+            return super()._compute_display_name()
 
-        res = []
         for menu in self:
             menu_name = menu.name
             if menu.website_id:
-                menu_name += ' [%s]' % menu.website_id.name
-            res.append((menu.id, menu_name))
-        return res
+                menu_name += f' [{menu.website_id.name}]'
+            menu.display_name = menu_name
 
     @api.model_create_multi
     def create(self, vals_list):

@@ -181,13 +181,13 @@ class Task(models.Model):
 
         return res
 
-    def name_get(self):
+    def _compute_display_name(self):
+        super()._compute_display_name()
         if self.env.context.get('hr_timesheet_display_remaining_hours'):
-            name_mapping = dict(super().name_get())
             for task in self:
                 if task.allow_timesheets and task.planned_hours > 0 and task.encode_uom_in_days:
                     days_left = _("(%s days remaining)") % task._convert_hours_to_days(task.remaining_hours)
-                    name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + days_left
+                    task.display_name = task.display_name + "\u00A0" + days_left
                 elif task.allow_timesheets and task.planned_hours > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
                     hours_left = _(
@@ -196,9 +196,7 @@ class Task(models.Model):
                         hours=hours,
                         minutes=mins,
                     )
-                    name_mapping[task.id] = name_mapping.get(task.id, '') + u"\u00A0" + hours_left
-            return list(name_mapping.items())
-        return super().name_get()
+                    task.display_name = task.display_name + "\u00A0" + hours_left
 
     @api.model
     def _get_view_cache_key(self, view_id=None, view_type='form', **options):

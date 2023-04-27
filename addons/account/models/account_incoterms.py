@@ -18,6 +18,6 @@ class AccountIncoterms(models.Model):
         'Active', default=True,
         help="By unchecking the active field, you may hide an INCOTERM you will not use.")
 
-    def name_get(self):
-        return [(incoterm.id, '%s%s' % (incoterm.code and '[%s] ' % incoterm.code or '', incoterm.name))
-                for incoterm in self]
+    def _compute_display_name(self):
+        for incoterm in self:
+            incoterm.display_name = '%s%s' % (incoterm.code and '[%s] ' % incoterm.code or '', incoterm.name)

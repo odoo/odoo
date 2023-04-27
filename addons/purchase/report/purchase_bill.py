@@ -40,8 +40,7 @@ class PurchaseBillUnion(models.Model):
                     invoice_status in ('to invoice', 'no')
             )""")
 
-    def name_get(self):
-        result = []
+    def _compute_display_name(self):
         for doc in self:
             name = doc.name or ''
             if doc.reference:
@@ -50,5 +49,4 @@ class PurchaseBillUnion(models.Model):
             if doc.purchase_order_id and doc.purchase_order_id.invoice_status == 'no':
                 amount = 0.0
             name += ': ' + formatLang(self.env, amount, monetary=True, currency_obj=doc.currency_id)
-            result.append((doc.id, name))
-        return result
+            doc.display_name = name

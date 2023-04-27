@@ -590,7 +590,7 @@ export class MockServer {
     /**
      * Converts an Object representing a record to actual return Object of the
      * python `onchange` method.
-     * Specifically, it applies `name_get` on many2one's and transforms raw id
+     * Specifically, it reads `display_name` on many2one's and transforms raw id
      * list in orm command lists for x2many's.
      * For x2m fields that add or update records (ORM commands 0 and 1), it is
      * recursive.
@@ -603,7 +603,6 @@ export class MockServer {
         Object.entries(values).forEach(([fname, val]) => {
             const field = this.models[modelName].fields[fname];
             if (field.type === "many2one" && typeof val === "number") {
-                // implicit name_get
                 const m2oRecord = this.models[field.relation].records.find((r) => r.id === val);
                 values[fname] = [val, m2oRecord.display_name];
             } else if (field.type === "one2many" || field.type === "many2many") {
@@ -671,8 +670,6 @@ export class MockServer {
                 return this.mockGetViews(args.model, args.kwargs);
             case "name_create":
                 return this.mockNameCreate(args.model, args.args[0], args.kwargs);
-            case "name_get":
-                return this.mockNameGet(args.model, args.args);
             case "name_search":
                 return this.mockNameSearch(args.model, args.args, args.kwargs);
             case "onchange":
@@ -874,30 +871,6 @@ export class MockServer {
         return [id, name];
     }
 
-    /**
-     * Simulate a 'name_get' operation
-     *
-     * @private
-     * @param {string} model
-     * @param {Array} args
-     * @returns {Array[]} a list of [id, display_name]
-     */
-    mockNameGet(model, args) {
-        var ids = args[0];
-        if (!args.length) {
-            throw new Error("name_get: expected one argument");
-        } else if (!ids) {
-            return [];
-        }
-        if (!Array.isArray(ids)) {
-            ids = [ids];
-        }
-        var records = this.models[model].records;
-        var names = ids.map((id) =>
-            id ? [id, records.find((r) => r.id === id).display_name] : [null, ""]
-        );
-        return names;
-    }
 
     /**
      * Simulate a 'name_search' operation.

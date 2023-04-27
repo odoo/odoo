@@ -705,7 +705,6 @@ class TestOnchange2(SavepointCaseWithUserDemo):
         record = form.save()
         self.assertEqual(record.name, False)
         self.assertEqual(record.display_name, "")
-        self.assertEqual(record.name_get(), [(record.id, "")])
 
     def test_reading_one2many_and_inverse_is_not_supported(self):
         # when reading a relation one2many, sometime the relation itself defines
@@ -759,7 +758,6 @@ class TestOnchange2(SavepointCaseWithUserDemo):
             'root_categ': {'id': root.id, 'display_name': root.name, 'color': root.color},
         })
 
-    @skip("read() on many2one fields currently use name_get() instead of field 'display_name'")
     def test_one2many_field_with_context_many2one(self):
         """ test many2one fields with a context on their one2many container field """
         multi = self.env['test_new_api.multi'].create({})
@@ -791,8 +789,8 @@ class TestOnchange2(SavepointCaseWithUserDemo):
             'name': 'A partner',
             'email': 'foo@example.com',
         })
-        display_name = partner.name_get()[0][1]
-        display_name_email = partner.with_context(show_email=True).name_get()[0][1]
+        display_name = partner.display_name
+        display_name_email = partner.with_context(show_email=True).display_name
         self.assertNotEqual(display_name_email, display_name)
 
         # modify 'partner'

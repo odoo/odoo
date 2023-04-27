@@ -21,15 +21,14 @@ class WebsiteVisitor(models.Model):
         search="_search_event_registered_ids",
         groups="event.group_event_registration_desk")
 
-    @api.depends('partner_id, event_registration_ids.name')
-    def name_get(self):
+    @api.depends('partner_id', 'event_registration_ids.name')
+    def _compute_display_name(self):
         """ If there is an event registration for an anonymous visitor, use that
         registered attendee name as visitor name. """
-        res_dict = dict(super().name_get())
+        super()._compute_display_name()
         # sudo is needed for `event_registration_ids`
         for visitor in self.sudo().filtered(lambda v: not v.partner_id and v.event_registration_ids):
-            res_dict[visitor.id] = visitor.event_registration_ids[-1].name
-        return list(res_dict.items())
+            visitor.display_name = visitor.event_registration_ids[-1].name
 
     @api.depends('event_registration_ids')
     def _compute_event_registration_count(self):

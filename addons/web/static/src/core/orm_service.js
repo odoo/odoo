@@ -147,7 +147,9 @@ export class ORM {
         if (!ids.length) {
             return Promise.resolve([]);
         }
-        return this.call(model, "name_get", [ids], kwargs);
+        return this.call(model, "read", [ids, ["display_name"]], kwargs).then(
+            (data) => data && data.map(({id, display_name}) => [id, display_name])
+        );
     }
 
     /**
