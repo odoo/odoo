@@ -8,7 +8,7 @@
                 <form>
                     <sheet>
                         <group>
-                            <field name="department_id"/>
+                            <field name="department_id" attrs="{'invisible': [('department_id', '=', False)]}"/>
                             <field name="plan_id"/>
                             <field name="employee_ids" invisible="1"/>
                             <field name="company_id" invisible="1"/>
