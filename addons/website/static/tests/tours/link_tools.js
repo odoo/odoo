@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import wTourUtils from 'website.tour_utils';
+import { boundariesIn, setSelection } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 
 const clickOnImgStep = {
     content: "Click somewhere else to save.",
@@ -160,7 +161,138 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: 'iframe .s_three_columns .row > :nth-child(1) div > img',
         run: () => {}, // It's a check.
     },
-    // 6. Add mega menu with Cards template and edit URL on text-selected card.
+    ...wTourUtils.clickOnSave(),
+    // 6. Create new a link from a URL-like text.
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    {
+        content: "Replace first paragraph, write a URL",
+        trigger: 'iframe #wrap .s_text_image p',
+        run: 'text odoo.com'
+    },
+    {
+        content: "Select text",
+        trigger: 'iframe #wrap .s_text_image p:contains(odoo.com)',
+        run() {
+            setSelection(...boundariesIn(this.$anchor[0]), false);
+        }
+    },
+    {
+        content: "Open link tools",
+        trigger: "#toolbar #create-link",
+    },
+    clickOnImgStep,
+    {
+        // URL transformation into link should persist, without the need for
+        // input at input[name=url]
+        content: "Check that link was created",
+        trigger: "iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
+        run: () => null,
+    },
+    {
+        content: "Click on link to open the link tools",
+        trigger: "iframe .s_text_image p a",
+    },
+    {
+        // Click on the LinkTools to make the popover close.
+        trigger: "#o_link_dialog_url_input",
+    },
+    {
+        // Wait for popover to close.
+        trigger: 'iframe html:not(:has(.popover))',
+        run: () => null,
+    },
+    // 7. Check that http links are not coerced to https and vice-versa.
+    {
+        content: "Change URL to https",
+        trigger: "#o_link_dialog_url_input",
+        run: 'text https://odoo.com',
+    },
+    {
+        content: "Check that link was updated",
+        trigger: "iframe .s_text_image p a[href='https://odoo.com']:contains('odoo.com')",
+        run: () => null,
+    },
+    {
+        content: "Change it back http",
+        trigger: "#o_link_dialog_url_input",
+        run: 'text http://odoo.com',
+    },
+    {
+        content: "Check that link was updated",
+        trigger: "iframe .s_text_image p a[href='http://odoo.com']:contains('odoo.com')",
+        run: () => null,
+    },
+    // 8. Test conversion between http and mailto links.
+    {
+        content: "Change URL into an email address",
+        trigger: "#o_link_dialog_url_input",
+        run: "text callme@maybe.com",
+    },
+    {
+        content: "Check that link was updated and link content is synced with URL",
+        trigger: "iframe .s_text_image p a[href='mailto:callme@maybe.com']:contains('callme@maybe.com')",
+        run: () => null,
+    },
+    {
+        content: "Change URL back into a http one",
+        trigger: "#o_link_dialog_url_input",
+        run: "text callmemaybe.com",
+    },
+    {
+        content: "Check that link was updated and link content is synced with URL",
+        trigger: "iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
+        run: () => null,
+    },
+    // 9.Test that UI stays up-to-date.
+    {
+        content: "Click on link to open popover",
+        trigger: "iframe .s_text_image p a[href='http://callmemaybe.com']:contains('callmemaybe.com')",
+    },
+    {
+        content: "LinkTools should be opened",
+        trigger: "#toolbar:not(.oe-floating) #o_link_dialog_url_input",
+        run: () => null,
+    },
+    {
+        content: "Popover should be shown",
+        trigger: "iframe .o_edit_menu_popover .o_we_url_link:contains('http://callmemaybe.com')",
+        run: () => null,
+    },
+    {
+        content: "Edit link label",
+        trigger: "iframe .s_text_image p a",
+        async run(actions) {
+            // Wait for the popover to finish its opening animation and turn the
+            // observer back on.
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            // This does not trigger a historyStep...
+            actions.text("callmemaybe.com/shops");
+            // ... but this does.
+            this.$anchor[0].dispatchEvent(new KeyboardEvent('keydown', { key: 'Backspace', bubbles: true }));
+        }
+    },
+    {
+        content: "Check that links's href was updated",
+        trigger: "iframe .s_text_image p a[href='http://callmemaybe.com/shop']:contains('callmemaybe.com/shop')",
+        run: () => null,
+    },
+    {
+        content: "Check popover content is up-to-date",
+        trigger: "iframe .popover div a:contains('http://callmemaybe.com/shop')",
+        run: () => null,
+    },
+    {
+        content: "Check Link tools URL input content is up-to-date",
+        trigger: "#o_link_dialog_url_input",
+        run() {
+            if (this.$anchor[0].value !== 'http://callmemaybe.com/shop') {
+                throw new Error("Tour step failed");
+            }
+        }
+    },
+    ...wTourUtils.clickOnSave(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
+    // 10. Add mega menu with Cards template and edit URL on text-selected card.
     wTourUtils.clickOnElement("menu link", "iframe header .nav-item a"),
     wTourUtils.clickOnElement("'Edit menu' icon", "iframe .o_edit_menu_popover .fa-sitemap"),
     {
@@ -199,4 +331,5 @@ wTourUtils.registerWebsitePreviewTour('link_tools', {
         trigger: "iframe header .s_mega_menu_cards a[href='https://www.odoo.com']:has(img):has(h4):has(p font)",
         run: () => {}, // This is a check.
     },
+    ...wTourUtils.clickOnSave(),
 ]);
