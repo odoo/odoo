@@ -5,7 +5,7 @@ import { Component } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { useAttachmentViewer } from "./attachment_viewer_hook";
+import { useAttachmentViewer } from "@web/core/attachment_viewer/attachment_viewer_hook";
 
 import { _t } from "@web/core/l10n/translation";
 import { url } from "@web/core/utils/urls";

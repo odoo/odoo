@@ -7,7 +7,7 @@ import { AttachmentViewer } from "./attachment_viewer";
 let id = 1;
 
 export function useAttachmentViewer() {
-    const attachmentViewerId = `mail.attachment_viewer${id++}`;
+    const attachmentViewerId = `web.attachment_viewer${id++}`;
     /**
      * @param {import("@mail/attachments/attachment_model").Attachment} attachment
      * @param {import("@mail/attachments/attachment_model").Attachment[]} attachments
