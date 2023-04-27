@@ -22,9 +22,10 @@ const userChatter = {
     },
 
     onClickAvatar() {
-        const id = this.props.record.data[this.props.name][0] ?? false
-        if (id !== false)
+        const id = this.props.record.data[this.props.name][0] ?? false;
+        if (id !== false) {
             this.openChat(id);
+        }
     },
 };
 
@@ -33,7 +34,7 @@ export class Many2OneAvatarUserField extends Many2OneAvatarField {
     static props = {
         ...Many2OneAvatarField.props,
         context: { type: Object, optional: true },
-        domain: { type: Array, optional: true },
+        domain: { type: [Array, Function], optional: true },
         withCommand: { type: Boolean, optional: true },
     };
 }
