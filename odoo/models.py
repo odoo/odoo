@@ -26,7 +26,6 @@ import contextlib
 import copy
 import datetime
 import dateutil
-import fnmatch
 import functools
 import inspect
 import itertools
@@ -4849,11 +4848,8 @@ class BaseModel(metaclass=MetaModel):
 
         def collect_from_path(model, path):
             # path is a dot-separated sequence of field names
-            for fname in path.split('.'):
-                field = model._fields.get(fname)
-                if not field:
-                    break
-                to_flush[model._name].add(fname)
+            for field in model._resolve_field_sequence(path):
+                to_flush[model._name].add(field.name)
                 if field.type == 'one2many' and field.inverse_name:
                     to_flush[field.comodel_name].add(field.inverse_name)
                     field_domain = field.get_domain_list(model)
@@ -4870,6 +4866,9 @@ class BaseModel(metaclass=MetaModel):
                     collect_from_path(model, field.related)
                 if field.relational:
                     model = self.env[field.comodel_name]
+                # Stop iterating on properties fields, as the path may contain property keys
+                if field.type == 'properties':
+                    break
             # return the model found by traversing all fields (used in collect_from_domain)
             return model
 
@@ -5605,17 +5604,98 @@ class BaseModel(metaclass=MetaModel):
             return self                 # support for an empty path of fields
         if isinstance(func, str):
             recs = self
-            for name in func.split('.'):
-                recs = recs._fields[name].mapped(recs)
+            for field in self._resolve_field_sequence(func):
+                recs = field.mapped(recs)
             return recs
-        else:
+        elif callable(func):
             return self._mapped_func(func)
+        else:
+            raise TypeError("Expected a function or a dot-separated sequence of field names")
 
-    def filtered(self, func):
+    def _filtered_domain_func(self, domain):
+        """Compile the domain as a function
+
+        :param domain: :ref:`A search domain <reference/orm/domains>`.
+        :return: a function ``f`` such that ``f(record)`` returns True if ``record``
+            satisfies the ``domain``.
+        """
+        if not domain:
+            return expression.TRUE_FUNCTION
+
+        def make_leaf_fn(leaf):
+            key, operator, value = expression.normalize_leaf(leaf)
+            # Optimization: short-circuit operator
+            if operator == "=?" and not value:
+                return expression.TRUE_FUNCTION
+            # Special case: hierarchy operators are not implemented in python
+            elif operator in ("child_of", "parent_of"):
+                if not value:
+                    return expression.FALSE_FUNCTION
+                ids = set(self._search([("id", "in", self.ids), leaf], order="id"))
+                return lambda rec: rec.id in ids
+            # Normalize values for "in" and "not in" operators as sets
+            elif operator in ("in", "not in"):
+                if isinstance(value, (list, tuple, set)):
+                    value = set(value)
+                else:
+                    value = {value}
+            # Transform value to regexp
+            elif operator in ("like", "ilike", "not like", "not ilike", "=like", "=ilike"):
+                value = expression.compile_like_regex(
+                    value,
+                    ignorecase=("ilike" in operator),
+                )
+            # Determine the field with the final type for values
+            field = tuple(self._resolve_field_sequence(key))[-1]
+            model = self.env[field.comodel_name] if field.relational else self
+            # Simulate a `name_search`` on relational fields by searching on `display_name`
+            if field.name == "id" or field.relational:
+                v = value
+                if isinstance(v, (list, tuple, set)) and v:
+                    v = next(iter(v))
+                if isinstance(v, (str, re.Pattern)):
+                    key = f"{key}.display_name" if field.relational else "display_name"
+                    field = model._fields["display_name"]
+            # Normalize values for "date" and "datetime" fields as datetimes
+            elif field.type in ("date", "datetime"):
+                if isinstance(value, (list, tuple, set)):
+                    value = {Datetime.to_datetime(v) for v in value}
+                else:
+                    value = Datetime.to_datetime(value)
+            # Convert the leaf to a function
+            fn = expression.TERM_OPERATOR_FUNCTIONS[operator]
+            if field.relational:
+                return lambda rec: fn(rec.mapped(key).ids or [False], value)
+            elif field.type in ("date", "datetime"):
+                return lambda rec: fn([Datetime.to_datetime(d) for d in rec.mapped(key)], value)
+            else:
+                return lambda rec: fn(rec.mapped(key), value)
+
+        stack = []
+        for leaf in reversed(domain):
+            if leaf == expression.OR_OPERATOR:
+                stack.append(expression.OR_FUNCTION(stack.pop(), stack.pop()))
+            elif leaf == expression.AND_OPERATOR:
+                stack.append(expression.AND_FUNCTION(stack.pop(), stack.pop()))
+            elif leaf == expression.NOT_OPERATOR:
+                stack.append(expression.NOT_FUNCTION(stack.pop()))
+            elif tuple(leaf) == expression.TRUE_LEAF:
+                stack.append(expression.TRUE_FUNCTION)
+            elif tuple(leaf) == expression.FALSE_LEAF:
+                stack.append(expression.FALSE_FUNCTION)
+            elif expression.is_leaf(leaf):
+                stack.append(make_leaf_fn(leaf))
+            else:
+                raise ValueError(f"Invalid leaf {leaf}")
+
+        return expression.AND_FUNCTION(*reversed(stack))
+
+    def filtered(self, func, limit=None):
         """Return the records in ``self`` satisfying ``func``.
 
-        :param func: a function or a dot-separated sequence of field names
-        :type func: callable or str
+        :param func: a function, a dot-separated sequence of field names, or a domain.
+        :type func: callable, str, list or tuple.
+        :param int limit: maximum number of records to return.
         :return: recordset of records satisfying func, may be empty.
 
         .. code-block:: python3
@@ -5625,11 +5705,32 @@ class BaseModel(metaclass=MetaModel):
 
             # only keep records whose partner is a company
             records.filtered("partner_id.is_company")
+
+            # only keep records whose partner is set
+            records.filtered([('partner_id', '!=', False)])
         """
         if isinstance(func, str):
             name = func
             func = lambda rec: any(rec.mapped(name))
-        return self.browse([rec.id for rec in self if func(rec)])
+        elif isinstance(func, (list, tuple)):
+            domain = func
+            func = self._filtered_domain_func(domain)
+        elif not callable(func):
+            raise TypeError("Expected a function, a dot-separated sequence of field names, or a domain")
+        if limit:
+            ids = [rec.id for rec in itertools.islice(filter(func, self), limit)]
+        else:
+            ids = [rec.id for rec in self if func(rec)]
+        return self.browse(ids)
+
+    def filtered_domain(self, domain):
+        """Return the records in ``self`` satisfying the domain and keeping the same order.
+
+        :param domain: :ref:`A search domain <reference/orm/domains>`.
+        """
+        # TODO: add this warning
+        # warnings.warn("Deprecated method filtered_domain(), use filtered() instead.", DeprecationWarning)
+        return self.filtered(domain)
 
     def grouped(self, key):
         """Eagerly groups the records of ``self`` by the ``key``, returning a
@@ -5657,120 +5758,6 @@ class BaseModel(metaclass=MetaModel):
 
         browse = functools.partial(type(self), self.env, prefetch_ids=self._prefetch_ids)
         return {key: browse(tuple(ids)) for key, ids in collator.items()}
-
-    def filtered_domain(self, domain):
-        """Return the records in ``self`` satisfying the domain and keeping the same order.
-
-        :param domain: :ref:`A search domain <reference/orm/domains>`.
-        """
-        if not domain or not self:
-            return self
-
-        stack = []
-        for leaf in reversed(domain):
-            if leaf == '|':
-                stack.append(stack.pop() | stack.pop())
-            elif leaf == '!':
-                stack.append(set(self._ids) - stack.pop())
-            elif leaf == '&':
-                stack.append(stack.pop() & stack.pop())
-            elif leaf == expression.TRUE_LEAF:
-                stack.append(set(self._ids))
-            elif leaf == expression.FALSE_LEAF:
-                stack.append(set())
-            else:
-                (key, comparator, value) = leaf
-                if comparator in ('child_of', 'parent_of'):
-                    stack.append(set(self.search([('id', 'in', self.ids), leaf], order='id')._ids))
-                    continue
-
-                if key.endswith('.id'):
-                    key = key[:-3]
-                if key == 'id':
-                    key = ''
-
-                # determine the field with the final type for values
-                field = None
-                if key:
-                    model = self.browse()
-                    for fname in key.split('.'):
-                        field = model._fields[fname]
-                        model = model[fname]
-
-                if comparator in ('like', 'ilike', '=like', '=ilike', 'not ilike', 'not like'):
-                    value_esc = value.replace('_', '?').replace('%', '*').replace('[', '?')
-                if comparator in ('in', 'not in'):
-                    if isinstance(value, (list, tuple)):
-                        value = set(value)
-                    else:
-                        value = (value,)
-                    if field and field.type in ('date', 'datetime'):
-                        value = {Datetime.to_datetime(v) for v in value}
-                elif field and field.type in ('date', 'datetime'):
-                    value = Datetime.to_datetime(value)
-
-                matching_ids = set()
-                for record in self:
-                    data = record.mapped(key)
-                    if isinstance(data, BaseModel):
-                        v = value
-                        if isinstance(value, (list, tuple, set)) and value:
-                            v = next(iter(value))
-                        if isinstance(v, str):
-                            data = data.mapped('display_name')
-                        else:
-                            data = data and data.ids or [False]
-                    elif field and field.type in ('date', 'datetime'):
-                        data = [Datetime.to_datetime(d) for d in data]
-
-                    if comparator == '=':
-                        ok = value in data
-                    elif comparator in ('!=', '<>'):
-                        ok = value not in data
-                    elif comparator == '=?':
-                        ok = not value or (value in data)
-                    elif comparator == 'in':
-                        ok = value and any(x in value for x in data)
-                    elif comparator == 'not in':
-                        ok = not (value and any(x in value for x in data))
-                    elif comparator == '<':
-                        ok = any(x is not None and x < value for x in data)
-                    elif comparator == '>':
-                        ok = any(x is not None and x > value for x in data)
-                    elif comparator == '<=':
-                        ok = any(x is not None and x <= value for x in data)
-                    elif comparator == '>=':
-                        ok = any(x is not None and x >= value for x in data)
-                    elif comparator == 'ilike':
-                        data = [(x or "").lower() for x in data]
-                        ok = fnmatch.filter(data, '*' + (value_esc or '').lower() + '*')
-                    elif comparator == 'not ilike':
-                        value = value.lower()
-                        ok = not any(value in (x or "").lower() for x in data)
-                    elif comparator == 'like':
-                        data = [(x or "") for x in data]
-                        ok = fnmatch.filter(data, value and '*' + value_esc + '*')
-                    elif comparator == 'not like':
-                        ok = not any(value in (x or "") for x in data)
-                    elif comparator == '=like':
-                        data = [(x or "") for x in data]
-                        ok = fnmatch.filter(data, value_esc)
-                    elif comparator == '=ilike':
-                        data = [(x or "").lower() for x in data]
-                        ok = fnmatch.filter(data, value and value_esc.lower())
-                    else:
-                        raise ValueError(f"Invalid term domain '{leaf}', operator '{comparator}' doesn't exist.")
-
-                    if ok:
-                        matching_ids.add(record.id)
-
-                stack.append(matching_ids)
-
-        while len(stack) > 1:
-            stack.append(stack.pop() & stack.pop())
-
-        [result_ids] = stack
-        return self.browse(id_ for id_ in self._ids if id_ in result_ids)
 
     def sorted(self, key=None, reverse=False):
         """Return the recordset ``self`` ordered by ``key``.
@@ -6376,6 +6363,38 @@ class BaseModel(metaclass=MetaModel):
         else:
             self.env.cache.invalidate([(field, records._ids)])
             self.env.remove_to_compute(field, records)
+
+    @api.model
+    def _resolve_field_sequence(self, path):
+        """Resolves a sequence of fields.
+
+        Yields :class:`Field` instances for every field name in the `path`.
+
+        .. example::
+
+            >>> for field in self._resolve_field_sequence("partner_id.country_id.code"):
+            ...     print(field)
+            res.users.partner_id
+            res.partner.country_id
+            res.country.code
+
+        :param path: a dot-separated sequence of field names
+        :return: an iterator over sorted :class:`Field` instances.
+        """
+        parts = path.split(".")
+        model = self.env[self._name]
+        for idx, fname in enumerate(parts):
+            if model is None:
+                raise ValueError(
+                    f"Non-relational field {parts[idx-1]!r} in path {path!r}."
+                )
+            field = model._fields.get(fname)
+            if field is None:
+                raise ValueError(
+                    f"Invalid field {fname!r} in path {path!r}."
+                )
+            yield field
+            model = self.env[field.comodel_name] if field.relational else None
 
     #
     # Generic onchange method

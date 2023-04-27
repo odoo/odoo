@@ -136,7 +136,7 @@ class Location(models.Model):
                 scenario_index += 1
 
         # Change 20 % the usage of some no-leaf location into 'view' (instead of 'internal')
-        to_views = locations_sample.filtered_domain([('child_ids', '!=', [])]).ids
+        to_views = locations_sample.filtered('child_ids').ids
         random = populate.Random('stock_location_views')
         view_locations = self.browse(random.sample(to_views, int(len(to_views) * 0.1)))
         view_locations.write({
