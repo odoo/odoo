@@ -51,7 +51,8 @@ class MrpProduction(models.Model):
                 continue
             origs[move.bom_line_id.id].setdefault('created_purchase_line_ids', set()).update(move.created_purchase_line_ids.ids)
         for vals in origs.values():
-            if not vals.get('created_purchase_line_ids'):
-                continue
-            vals['created_purchase_line_ids'] = [Command.set(vals['created_purchase_line_ids'])]
+            if vals.get('created_purchase_line_ids'):
+                vals['created_purchase_line_ids'] = [Command.set(vals['created_purchase_line_ids'])]
+            else:
+                vals['created_purchase_line_ids'] = []
         return origs
