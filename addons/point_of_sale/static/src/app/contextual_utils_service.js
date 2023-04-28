@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { formatMonetary } from "@web/views/fields/formatters";
+import { formatMonetary, formatFloat } from "@web/views/fields/formatters";
 import { roundDecimals } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 
@@ -12,6 +12,11 @@ export const contextualUtilsService = {
     dependencies: ["pos"],
     start(env, { pos }) {
         const currency = pos.globalState.currency;
+        const productUoMDecimals = pos.globalState.dp["Product Unit of Measure"];
+
+        const formatProductQty = (qty) => {
+            return formatFloat(qty, { digits: [true, productUoMDecimals] });
+        };
 
         const formatCurrency = (value, hasSymbol = true) => {
             return formatMonetary(value, {
@@ -27,6 +32,7 @@ export const contextualUtilsService = {
         env.utils = {
             formatCurrency,
             roundCurrency,
+            formatProductQty,
         };
     },
 };
