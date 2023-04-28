@@ -44,6 +44,7 @@ import { ViewButton } from "@web/views/view_button/view_button";
 
 import { Component, onWillRender, xml } from "@odoo/owl";
 import { SampleServer } from "@web/views/sample_server";
+import { KanbanDynamicGroupList } from "@web/views/kanban/kanban_model";
 
 const serviceRegistry = registry.category("services");
 const viewWidgetRegistry = registry.category("view_widgets");
@@ -1113,6 +1114,27 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsNone(target, ".o_pager");
+    });
+
+    QUnit.test("there should be no limit on the number of fetched groups", async (assert) => {
+        patchWithCleanup(KanbanDynamicGroupList, { DEFAULT_LIMIT: 1 });
+
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ["product_id"],
+        });
+
+        assert.containsN(target, ".o_kanban_group", 2, "there should be 2 groups");
     });
 
     QUnit.test("pager, ungrouped, with default limit", async (assert) => {

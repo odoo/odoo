@@ -352,6 +352,7 @@ export class KanbanDynamicGroupList extends DynamicGroupList {
         this.previousParams = state.previousParams || "[]";
 
         this.groupBy = this.groupBy.slice(0, 1);
+        this.limit = null;
 
         this.model.bus.addEventListener("group-updated", async ({ detail }) => {
             if (this.groups.some((g) => g.id === detail.group.id)) {
