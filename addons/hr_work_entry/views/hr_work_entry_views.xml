@@ -40,7 +40,7 @@
         <field name="arch" type="xml">
             <form string="Work Entry" >
                 <header>
-                    <field name="state" widget="statusbar" options="{'clickable': '1'}" statusbar_visible="draft,validated,conflict"/>
+                    <field name="state" widget="statusbar" readonly="1" statusbar_visible="draft,validated,conflict"/>
                 </header>
                 <sheet>
                     <div class="oe_title">
