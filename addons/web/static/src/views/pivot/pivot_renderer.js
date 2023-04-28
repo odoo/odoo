@@ -39,7 +39,7 @@ export class PivotRenderer extends Component {
         let formatType = this.model.metaData.widgets[cell.measure];
         if (!formatType) {
             const fieldType = field.type;
-            formatType = fieldType === "many2one" ? "integer" : fieldType;
+            formatType = ["many2one", "reference"].includes(fieldType) ? "integer" : fieldType;
         }
         //If the formatter is not found on the registry, search on the legacy fieldUtils.format.
         //This must be removed when all the formatters will be on the registry

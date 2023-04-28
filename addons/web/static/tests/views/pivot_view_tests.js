@@ -116,6 +116,15 @@ QUnit.module("Views", (hooks) => {
                             group_operator: undefined,
                             store: true,
                         },
+                        ref: {
+                            string: "Reference",
+                            type: "reference",
+                            selection: [
+                                ["product", "Product"],
+                                ["customer", "Customer"],
+                            ],
+                            group_operator: "count_distinct",
+                        },
                     },
                     records: [
                         {
@@ -127,6 +136,7 @@ QUnit.module("Views", (hooks) => {
                             customer: 1,
                             computed_field: 19,
                             company_type: "company",
+                            ref: "product,37",
                         },
                         {
                             id: 2,
@@ -137,6 +147,7 @@ QUnit.module("Views", (hooks) => {
                             customer: 2,
                             computed_field: 23,
                             company_type: "individual",
+                            ref: "product,41",
                         },
                         {
                             id: 3,
@@ -147,6 +158,7 @@ QUnit.module("Views", (hooks) => {
                             customer: 2,
                             computed_field: 26,
                             company_type: "company",
+                            ref: "customer,1",
                         },
                         {
                             id: 4,
@@ -157,6 +169,7 @@ QUnit.module("Views", (hooks) => {
                             customer: 1,
                             computed_field: 19,
                             company_type: "individual",
+                            ref: "customer,2",
                         },
                     ],
                 },
@@ -3215,6 +3228,28 @@ QUnit.module("Views", (hooks) => {
             target.querySelector("table tbody tr").innerText.replace(/\s/g, ""),
             "Total1122",
             "should display product_id count as measure"
+        );
+    });
+
+    QUnit.test("pivot view with reference field as a measure", async function (assert) {
+        assert.expect(1);
+
+        await makeView({
+            type: "pivot",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <pivot>
+                    <field name="ref" type="measure"/>
+                    <field name="date" interval="month" type="col"/>
+                </pivot>`,
+        });
+
+
+        assert.strictEqual(
+            target.querySelector("table tbody tr").innerText.replace(/\s/g, ""),
+            "Total1124",
+            "should display ref distinct count as measure"
         );
     });
 
