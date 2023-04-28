@@ -1215,12 +1215,13 @@ const InputUserValueWidget = UnitUserValueWidget.extend({
         await this._super(...arguments);
 
         const unit = this.el.dataset.unit;
+        const step = this.el.dataset.step;
         this.inputEl = document.createElement('input');
         this.inputEl.setAttribute('type', 'text');
         this.inputEl.setAttribute('autocomplete', 'chrome-off');
         this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
-        this.inputEl.classList.toggle('text-start', !unit);
-        this.inputEl.classList.toggle('text-end', !!unit);
+        this.inputEl.classList.toggle('text-start', !unit && !step);
+        this.inputEl.classList.toggle('text-end', !!unit || !!step);
         this.containerEl.appendChild(this.inputEl);
 
         var unitEl = document.createElement('span');
