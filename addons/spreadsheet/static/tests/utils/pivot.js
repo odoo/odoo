@@ -32,7 +32,13 @@ export async function insertPivotInSpreadsheet(model, params) {
         },
         name: "Partner Pivot",
     };
-    const dataSource = model.config.custom.dataSources.create(PivotDataSource, definition);
+    const pivotId = model.getters.getNextPivotId();
+    const dataSourceId = model.getters.getPivotDataSourceId(pivotId);
+    const dataSource = model.config.custom.dataSources.add(
+        dataSourceId,
+        PivotDataSource,
+        definition
+    );
     await dataSource.load();
     const { cols, rows, measures, rowTitle } = dataSource.getTableStructure().export();
     const table = {
@@ -48,7 +54,6 @@ export async function insertPivotInSpreadsheet(model, params) {
         col,
         row,
         table,
-        dataSourceId: "pivotData1",
         definition,
     });
     await nextTick();

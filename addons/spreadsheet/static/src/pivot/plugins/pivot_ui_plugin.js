@@ -6,9 +6,16 @@ import { getFirstPivotFunction } from "../pivot_helpers";
 import { FILTER_DATE_OPTION, monthsOptions } from "@spreadsheet/assets_backend/constants";
 import { Domain } from "@web/core/domain";
 import { NO_RECORD_AT_THIS_POSITION } from "../pivot_model";
+import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
+import PivotDataSource from "../pivot_data_source";
 
 const { astToFormula } = spreadsheet;
 const { DateTime } = luxon;
+
+/**
+ * @typedef {import("./pivot_core_plugin").PivotDefinition} PivotDefinition
+ * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
+ */
 
 /**
  * Convert pivot period to the related filter value
@@ -50,6 +57,14 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         this.selection.observe(this, {
             handleEvent: this.handleEvent.bind(this),
         });
+
+        this.dataSources = config.custom.dataSources;
+
+        globalFiltersFieldMatchers["pivot"] = {
+            ...globalFiltersFieldMatchers["pivot"],
+            waitForReady: () => this._getPivotsWaitForReady(),
+            getFields: (pivotId) => this.getPivotDataSource(pivotId).getFields(),
+        };
     }
 
     handleEvent(event) {
@@ -73,6 +88,10 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
     beforeHandle(cmd) {
         switch (cmd.type) {
             case "START":
+                for (const pivotId of this.getters.getPivotIds()) {
+                    this._setupPivotDataSource(pivotId);
+                }
+
                 // make sure the domains are correctly set before
                 // any evaluation
                 this._addDomains();
@@ -102,8 +121,19 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
                 break;
+            case "INSERT_PIVOT": {
+                const { id } = cmd;
+                this._setupPivotDataSource(id);
+                break;
+            }
+            case "UPDATE_ODOO_PIVOT_DOMAIN": {
+                const pivotDefinition = this.getters.getPivotModelDefinition(cmd.pivotId);
+                const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
+                this.dataSources.add(dataSourceId, PivotDataSource, pivotDefinition);
+                break;
+            }
             case "UNDO":
-            case "REDO":
+            case "REDO": {
                 if (
                     cmd.commands.find((command) =>
                         [
@@ -115,7 +145,21 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
                 ) {
                     this._addDomains();
                 }
+
+                const domainEditionCommands = cmd.commands.filter(
+                    (cmd) => cmd.type === "UPDATE_ODOO_PIVOT_DOMAIN" || cmd.type === "INSERT_PIVOT"
+                );
+                for (const cmd of domainEditionCommands) {
+                    if (!this.getters.isExistingPivot(cmd.pivotId)) {
+                        continue;
+                    }
+
+                    const pivotDefinition = this.getters.getPivotModelDefinition(cmd.pivotId);
+                    const dataSourceId = this.getPivotDataSourceId(cmd.pivotId);
+                    this.dataSources.add(dataSourceId, PivotDataSource, pivotDefinition);
+                }
                 break;
+            }
         }
     }
 
@@ -276,6 +320,29 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
         return matchingFilters;
     }
 
+    /**
+     * @param {string} pivotId
+     * @returns {PivotDataSource|undefined}
+     */
+    getPivotDataSource(pivotId) {
+        const dataSourceId = this.getPivotDataSourceId(pivotId);
+        return this.dataSources.get(dataSourceId);
+    }
+
+    getPivotDataSourceId(pivotId) {
+        return `pivot-${pivotId}`;
+    }
+
+    /**
+     * @param {string} pivotId
+     * @returns {Promise<PivotDataSource>}
+     */
+    async getAsyncPivotDataSource(pivotId) {
+        const dataSourceId = this.getPivotDataSourceId(pivotId);
+        await this.dataSources.load(dataSourceId);
+        return this.getPivotDataSource(pivotId);
+    }
+
     // ---------------------------------------------------------------------
     // Private
     // ---------------------------------------------------------------------
@@ -329,9 +396,33 @@ export default class PivotUIPlugin extends spreadsheet.UIPlugin {
             this._addDomain(pivotId);
         }
     }
+
+    /**
+     *
+     * @return {Promise[]}
+     */
+    _getPivotsWaitForReady() {
+        return this.getters
+            .getPivotIds()
+            .map((pivotId) => this.getPivotDataSource(pivotId).loadMetadata());
+    }
+
+    /**
+     * @param {string} pisvotId
+     * @param {PivotDefinition=} definition
+     */
+    _setupPivotDataSource(pivotId, definition) {
+        const dataSourceId = this.getPivotDataSourceId(pivotId);
+        definition = definition || this.getters.getPivotModelDefinition(pivotId);
+        if (!this.dataSources.contains(dataSourceId)) {
+            this.dataSources.add(dataSourceId, PivotDataSource, definition);
+        }
+    }
 }
 
 PivotUIPlugin.getters = [
+    "getPivotDataSource",
+    "getAsyncPivotDataSource",
     "getSelectedPivotId",
     "getPivotComputedDomain",
     "getDisplayedPivotHeaderValue",
@@ -339,4 +430,5 @@ PivotUIPlugin.getters = [
     "getPivotCellValue",
     "getPivotGroupByValues",
     "getFiltersMatchingPivot",
+    "getPivotDataSourceId",
 ];
