@@ -396,10 +396,12 @@
          data-exclude="[data-oe-xpath], a[href^='/website/social/'] > i.fa, a[class*='s_share_'] > i.fa">
         <we-row string="Media">
             <we-button class="o_we_bg_brand_primary" data-replace-media="true" data-no-preview="true">Replace</we-button>
-            <we-button class="fa fa-link"
-                data-name="media_link_opt"
-                data-set-link="true" data-no-preview="true"
-                title="Redirect the user elsewhere when he clicks on the media."/>
+            <div>
+                <we-button class="fa fa-link"
+                    data-name="media_link_opt"
+                    data-set-link="true" data-no-preview="true"
+                    title="Redirect the user elsewhere when he clicks on the media."/>
+            </div>
         </we-row>
         <we-input string="Your URL"
             class="o_we_sublevel_1 o_we_large"

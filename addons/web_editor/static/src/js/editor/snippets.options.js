@@ -6562,12 +6562,6 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
             name: 'add_size_indicator',
             data: this.$weight,
         });
-        // Hack to align on the right
-        this.$weight.css({
-            'width': '200px', // Make parent row grow by faking a width
-            'flex': '0 0 0', // But force no forced width
-            'margin-left': 'auto',
-        });
     },
     /**
      * @override
