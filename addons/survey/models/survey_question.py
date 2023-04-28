@@ -8,7 +8,7 @@ import itertools
 import operator
 
 from odoo import api, fields, models, tools, _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 
 
 class SurveyQuestion(models.Model):
@@ -406,6 +406,19 @@ class SurveyQuestion(models.Model):
             'triggering_answer_id': False,
         })
         return super().unlink()
+
+    # ------------------------------------------------------------
+    # CRUD
+    # ------------------------------------------------------------
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_except_live_sessions_in_progress(self):
+        running_surveys = self.survey_id.filtered(lambda survey: survey.session_state == 'in_progress')
+        if running_surveys:
+            raise UserError(_(
+                'You cannot delete questions from surveys "%(survey_names)s" while live sessions are in progress.',
+                survey_names=', '.join(running_surveys.mapped('title')),
+            ))
 
     # ------------------------------------------------------------
     # VALIDATION
