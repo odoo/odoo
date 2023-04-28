@@ -41,11 +41,7 @@ class TestLinkPreview(MailCommon):
             name='User 1',
             groups='base.group_user')
 
-        cls.public_channel = cls.env['discuss.channel'].create({
-            'name': 'Public channel of user 1',
-            'channel_type': 'channel',
-        })
-        cls.public_channel.channel_member_ids.unlink()
+        cls.thread = cls.env['res.partner'].create({'name': 'a partner'})
 
     def test_01_link_preview_throttle(self):
         with patch.object(requests.Session, 'get', _patched_get_html), patch.object(requests.Session, 'head', _patch_head_html):
@@ -55,8 +51,8 @@ class TestLinkPreview(MailCommon):
                 link_previews.append({'source_url': 'https://thisdomainedoentexist.nothing', 'message_id': 1})
             self.env['mail.link.preview'].create(link_previews)
             message = self.env['mail.message'].create({
-                'model': 'discuss.channel',
-                'res_id': self.public_channel.id,
+                'model': self.thread._name,
+                'res_id': self.thread.id,
                 'body': '<a href="https://thisdomainedoentexist.nothing">Nothing link</a>',
             })
             self.env['mail.link.preview']._create_link_previews(message)
@@ -66,13 +62,13 @@ class TestLinkPreview(MailCommon):
     def test_02_link_preview_create(self):
         with patch.object(requests.Session, 'get', _patched_get_html), patch.object(requests.Session, 'head', _patch_head_html):
             message = self.env['mail.message'].create({
-                'model': 'discuss.channel',
-                'res_id': self.public_channel.id,
+                'model': self.thread._name,
+                'res_id': self.thread.id,
                 'body': '<a href="https://thisdomainedoentexist.nothing">Nothing link</a>',
             })
             self.env['mail.link.preview']._create_link_previews(message)
             self.assertBusNotifications(
-                [(self.cr.dbname, 'discuss.channel', self.public_channel.id)],
+                [(self.cr.dbname, 'res.partner', self.env.user.partner_id.id)],
                 message_items=[{
                     'type': 'mail.record/insert',
                     'payload': {
