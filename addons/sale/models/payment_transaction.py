@@ -134,10 +134,17 @@ class PaymentTransaction(models.Model):
         ))
         if not template_id:
             return
+<<<<<<< HEAD
         template = self.env['mail.template'].browse(template_id).exists()
         if not template:
             return
 
+||||||| parent of 5473e784a86 (temp)
+
+=======
+        template_id = int(template_id)
+        template = self.env['mail.template'].browse(template_id)
+>>>>>>> 5473e784a86 (temp)
         for tx in self:
             tx = tx.with_company(tx.company_id).with_context(
                 company_id=tx.company_id.id,
@@ -146,7 +153,25 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
+<<<<<<< HEAD
             invoice_to_send.with_user(SUPERUSER_ID)._generate_pdf_and_send_invoice(template)
+||||||| parent of 5473e784a86 (temp)
+            for invoice in invoice_to_send.with_user(SUPERUSER_ID):
+                invoice.message_post_with_template(
+                    int(template_id),
+                    email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                )
+=======
+            for invoice in invoice_to_send:
+                lang = template._render_lang(invoice.ids)[invoice.id]
+                model_desc = invoice.with_context(lang=lang).type_name
+                invoice.with_context(model_description=model_desc).with_user(
+                    SUPERUSER_ID
+                ).message_post_with_template(
+                    template_id=template_id,
+                    email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
+                )
+>>>>>>> 5473e784a86 (temp)
 
     def _cron_send_invoice(self):
         """
