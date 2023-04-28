@@ -1,8 +1,10 @@
 /** @odoo-module */
 
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import { getFirstListFunction } from "../list_helpers";
+import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 import { Domain } from "@web/core/domain";
+import ListDataSource from "../list_data_source";
+import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 
 const { astToFormula } = spreadsheet;
 
@@ -16,11 +18,23 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
         /** @type {string} */
         this.selectedListId = undefined;
         this.env = config.custom.env;
+
+        this.dataSources = config.custom.dataSources;
+
+        globalFiltersFieldMatchers["list"] = {
+            ...globalFiltersFieldMatchers["list"],
+            getFields: (listId) => this.getListDataSource(listId).getFields(),
+            waitForReady: () => this.getListsWaitForReady(),
+        };
     }
 
     beforeHandle(cmd) {
         switch (cmd.type) {
             case "START":
+                for (const listId of this.getters.getListIds()) {
+                    this._setupListDataSource(listId, 0);
+                }
+
                 // make sure the domains are correctly set before
                 // any evaluation
                 this._addDomains();
@@ -34,6 +48,21 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      */
     handle(cmd) {
         switch (cmd.type) {
+            case "START":
+                for (const sheetId of this.getters.getSheetIds()) {
+                    const cells = this.getters.getCells(sheetId);
+                    for (const cell of Object.values(cells)) {
+                        if (cell.isFormula) {
+                            this._addListPositionToDataSource(cell.content);
+                        }
+                    }
+                }
+                break;
+            case "INSERT_ODOO_LIST": {
+                const { id, linesNumber } = cmd;
+                this._setupListDataSource(id, linesNumber);
+                break;
+            }
             case "SELECT_ODOO_LIST":
                 this._selectList(cmd.listId);
                 break;
@@ -50,8 +79,19 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
             case "CLEAR_GLOBAL_FILTER_VALUE":
                 this._addDomains();
                 break;
+            case "UPDATE_ODOO_LIST_DOMAIN": {
+                const listDefinition = this.getters.getListModelDefinition(cmd.listId);
+                const dataSourceId = this._getListDataSourceId(cmd.listId);
+                this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
+                break;
+            }
+            case "UPDATE_CELL":
+                if (cmd.content) {
+                    this._addListPositionToDataSource(cmd.content);
+                }
+                break;
             case "UNDO":
-            case "REDO":
+            case "REDO": {
                 if (
                     cmd.commands.find((command) =>
                         [
@@ -63,13 +103,39 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
                 ) {
                     this._addDomains();
                 }
+
+                const domainEditionCommands = cmd.commands.filter(
+                    (cmd) =>
+                        cmd.type === "UPDATE_ODOO_LIST_DOMAIN" || cmd.type === "INSERT_ODOO_LIST"
+                );
+                for (const cmd of domainEditionCommands) {
+                    if (!this.getters.isExistingList(cmd.listId)) {
+                        continue;
+                    }
+
+                    const listDefinition = this.getters.getListModelDefinition(cmd.listId);
+                    const dataSourceId = this._getListDataSourceId(cmd.listId);
+                    this.dataSources.add(dataSourceId, ListDataSource, listDefinition);
+                }
                 break;
+            }
         }
     }
 
     // -------------------------------------------------------------------------
     // Handlers
     // -------------------------------------------------------------------------
+
+    _setupListDataSource(listId, limit, definition) {
+        const dataSourceId = this._getListDataSourceId(listId);
+        definition = definition || this.getters.getListModelDefinition(listId);
+        if (!this.dataSources.contains(dataSourceId)) {
+            this.dataSources.add(dataSourceId, ListDataSource, {
+                ...definition,
+                limit,
+            });
+        }
+    }
 
     /**
      * Add an additional domain to a list
@@ -126,6 +192,40 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
      */
     _selectList(listId) {
         this.selectedListId = listId;
+    }
+
+    _getListDataSourceId(listId) {
+        return `list-${listId}`;
+    }
+
+    /**
+     * Extract the position of the records asked in the given formula and
+     * increase the max position of the corresponding data source.
+     *
+     * @param {string} content Odoo list formula
+     */
+    _addListPositionToDataSource(content) {
+        if (getNumberOfListFormulas(content) !== 1) {
+            return;
+        }
+        const { functionName, args } = getFirstListFunction(content);
+        if (functionName !== "ODOO.LIST") {
+            return;
+        }
+        const [listId, positionArg] = args.map((arg) => arg.value.toString());
+
+        if (!this.getters.getListIds().includes(listId)) {
+            return;
+        }
+        const position = parseInt(positionArg, 10);
+        if (isNaN(position)) {
+            return;
+        }
+        const dataSourceId = this._getListDataSourceId(listId);
+        if (!this.dataSources.get(dataSourceId)) {
+            this._setupListDataSource(listId, 0);
+        }
+        this.dataSources.get(dataSourceId).increaseMaxPosition(position);
     }
 
     // -------------------------------------------------------------------------
@@ -191,6 +291,35 @@ export default class ListUIPlugin extends spreadsheet.UIPlugin {
     getSelectedListId() {
         return this.selectedListId;
     }
+
+    /**
+     * @param {string} id
+     * @returns {import("@spreadsheet/list/list_data_source").default|undefined}
+     */
+    getListDataSource(id) {
+        const dataSourceId = this._getListDataSourceId(id);
+        return this.dataSources.get(dataSourceId);
+    }
+
+    /**
+     * @param {string} id
+     * @returns {Promise<import("@spreadsheet/list/list_data_source").default>}
+     */
+    async getAsyncListDataSource(id) {
+        const dataSourceId = this._getListDataSourceId(id);
+        await this.dataSources.load(dataSourceId);
+        return this.getListDataSource(id);
+    }
+
+    /**
+     *
+     * @return {Promise[]}
+     */
+    getListsWaitForReady() {
+        return this.getters
+            .getListIds()
+            .map((listId) => this.getListDataSource(listId).loadMetadata());
+    }
 }
 
 ListUIPlugin.getters = [
@@ -199,4 +328,6 @@ ListUIPlugin.getters = [
     "getListIdFromPosition",
     "getListCellValue",
     "getSelectedListId",
+    "getListDataSource",
+    "getAsyncListDataSource",
 ];
