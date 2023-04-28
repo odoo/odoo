@@ -136,7 +136,17 @@ class Company(models.Model):
 
     def _get_oss_tags(self):
         oss_tag = self.env.ref('l10n_eu_oss.tag_oss')
+<<<<<<< HEAD
         tag_for_country = EU_TAG_MAP.get(self.chart_template, {
+||||||| parent of 95c880ccbc0 (temp)
+        [chart_template_xml_id] = self.chart_template_id.parent_id.get_external_id().values() or self.chart_template_id.get_external_id().values()
+        tag_for_country = EU_TAG_MAP.get(chart_template_xml_id, {
+=======
+        chart_template_xml_id = ''
+        if self.chart_template_id:
+            [chart_template_xml_id] = self.chart_template_id.parent_id.get_external_id().values() or self.chart_template_id.get_external_id().values()
+        tag_for_country = EU_TAG_MAP.get(chart_template_xml_id, {
+>>>>>>> 95c880ccbc0 (temp)
             'invoice_base_tag': None,
             'invoice_tax_tag': None,
             'refund_base_tag': None,
