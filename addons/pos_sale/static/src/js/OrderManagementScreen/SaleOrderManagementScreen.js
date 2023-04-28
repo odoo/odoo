@@ -18,6 +18,15 @@ import { SaleOrderList } from "./SaleOrderList";
 import { SaleOrderManagementControlPanel } from "./SaleOrderManagementControlPanel";
 import { onMounted, useRef, useState } from "@odoo/owl";
 
+/**
+ * ID getter to take into account falsy many2one value.
+ * @param {[id: number, display_name: string] | false} fieldVal many2one field value
+ * @returns {number | false}
+ */
+function getId(fieldVal) {
+    return fieldVal && fieldVal[0];
+}
+
 export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
     static template = "SaleOrderManagementScreen";
@@ -29,6 +38,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         this.root = useRef("root");
         this.numberBuffer = useService("number_buffer");
         this.saleOrderFetcher = useService("sale_order_fetcher");
+        this.notification = useService("pos_notification");
 
         useBus(this.saleOrderFetcher, "update", this.render);
         this.orderManagementContext = useState(orderManagement);
@@ -48,6 +58,14 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         );
         this.saleOrderFetcher.setNPerPage(val);
         this.saleOrderFetcher.fetch();
+    }
+     _getSaleOrderOrigin(order) {
+        for (const line of order.get_orderlines()) {
+            if (line.sale_order_origin_id) {
+                return line.sale_order_origin_id
+            }
+        }
+        return false;
     }
     get selectedPartner() {
         const order = this.orderManagementContext.selectedOrder;
@@ -82,9 +100,25 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
         });
 
         if (confirmed) {
-            const currentPOSOrder = this.env.pos.get_order();
+            let currentPOSOrder = this.env.pos.get_order();
             const sale_order = await this._getSaleOrder(clickedOrder.id);
             clickedOrder.shipping_date = sale_order.shipping_date;
+
+            const currentSaleOrigin = this._getSaleOrderOrigin(currentPOSOrder);
+            const currentSaleOriginId = currentSaleOrigin && currentSaleOrigin.id;
+
+            if (currentSaleOriginId) {
+                const linkedSO = await this._getSaleOrder(currentSaleOriginId);
+                if (
+                    getId(linkedSO.partner_id) !== getId(sale_order.partner_id) ||
+                    getId(linkedSO.partner_invoice_id) !== getId(sale_order.partner_invoice_id) ||
+                    getId(linkedSO.partner_shipping_id) !== getId(sale_order.partner_shipping_id)
+                ) {
+                    currentPOSOrder = this.env.pos.add_new_order();
+                    this.notification.add(this.env._t("A new order has been created."), 4000);
+                }
+            }
+
             try {
                 await this.env.pos.load_new_partners();
             } catch {
@@ -318,6 +352,8 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                 "amount_untaxed",
                 "amount_unpaid",
                 "picking_ids",
+                "partner_shipping_id",
+                "partner_invoice_id"
             ]
         );
 
