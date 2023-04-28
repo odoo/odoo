@@ -9,7 +9,7 @@ export class NotificationItem extends Component {
     static components = { ActionSwiper, RelativeTime, ImStatus };
     static props = [
         "body?",
-        "count?",
+        "counter?",
         "datetime?",
         "displayName",
         "hasMarkAsReadButton?",
@@ -20,6 +20,9 @@ export class NotificationItem extends Component {
         "onSwipeRight?",
         "slots?",
     ];
+    static defaultProps = {
+        counter: 0,
+    };
     static template = "mail.NotificationItem";
 
     setup() {

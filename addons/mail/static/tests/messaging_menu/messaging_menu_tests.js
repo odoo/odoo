@@ -6,6 +6,7 @@ import {
     insertText,
     start,
     startServer,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
@@ -833,7 +834,7 @@ QUnit.test(
 );
 
 QUnit.test(
-    "two previews for channel if it has non needaction and needaction messages",
+    "single preview for channel if it has unread and needaction messages",
     async (assert) => {
         const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
@@ -859,21 +860,51 @@ QUnit.test(
         });
         pyEnv["mail.message"].create({
             author_id: partnerId,
-            body: "Message without needaction",
+            body: "Most-recent Message",
             model: "discuss.channel",
             res_id: channelId,
         });
 
         await start();
         await click(".o_menu_systray i[aria-label='Messages']");
-        assert.containsN($, ".o-mail-NotificationItem", 2);
-        const $items = $(".o-mail-NotificationItem");
-        assert.ok($items[0].textContent.includes("Test (2)"));
-        assert.ok($items[0].textContent.includes("Message without needaction"));
-        assert.ok($items[1].textContent.includes("Test"));
-        assert.ok($items[1].textContent.includes("Message with needaction"));
+        assert.containsN($, ".o-mail-NotificationItem", 1);
+        assert.ok($(".o-mail-NotificationItem").text().includes("Test (1)"));
+        assert.ok($(".o-mail-NotificationItem").text().includes("Message with needaction"));
     }
 );
+
+QUnit.test("chat should show unread counter on receiving new messages", async (assert) => {
+    // unread and needaction are conceptually the same in chat
+    // however message_needaction_counter is not updated
+    // so special care for chat to simulate needaction with unread
+    const pyEnv = await startServer();
+    const partnerId = pyEnv["res.partner"].create({ name: "Partner1" });
+    const channelId = pyEnv["discuss.channel"].create({
+        channel_type: "chat",
+        channel_member_ids: [
+            [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+            [0, 0, { partner_id: partnerId }],
+        ],
+    });
+    await start();
+    await click(".o_menu_systray i[aria-label='Messages']");
+    assert.containsOnce($, ".o-mail-NotificationItem");
+    assert.containsOnce($, ".o-mail-NotificationItem:contains(Partner1)");
+    assert.containsNone($, ".o-mail-NotificationItem:contains('Partner1 (1)')");
+    // simulate receiving a new message
+    const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
+    pyEnv["bus.bus"]._sendone(channel, "discuss.channel/new_message", {
+        id: channelId,
+        message: {
+            author_id: partnerId,
+            body: "new message",
+            id: 126,
+            model: "discuss.channel",
+            res_id: channelId,
+        },
+    });
+    await waitUntil(".o-mail-NotificationItem:contains('Partner1 (1)')");
+});
 
 QUnit.test("preview for channel should show latest non-deleted message", async (assert) => {
     const pyEnv = await startServer();

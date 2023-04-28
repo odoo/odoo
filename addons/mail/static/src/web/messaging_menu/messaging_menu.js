@@ -52,20 +52,19 @@ export class MessagingMenu extends Component {
         }
     }
 
-    onClickPreview(isMarkAsRead, preview) {
-        const { thread } = preview;
+    onClickThread(isMarkAsRead, thread) {
         if (!isMarkAsRead) {
             this.openDiscussion(thread);
             return;
         }
-        this.markAsRead(preview);
+        this.markAsRead(thread);
     }
 
-    markAsRead(preview) {
-        const { thread, isNeedaction } = preview;
-        if (isNeedaction) {
+    markAsRead(thread) {
+        if (thread.hasNeedactionMessages) {
             this.threadService.markAllMessagesAsRead(thread);
-        } else {
+        }
+        if (thread.model === "discuss.channel") {
             this.threadService.markAsRead(thread);
         }
     }
@@ -84,7 +83,7 @@ export class MessagingMenu extends Component {
 
     get hasPreviews() {
         return (
-            this.displayedPreviews.length > 0 ||
+            this.threads.length > 0 ||
             (this.store.notificationGroups.length > 0 && this.store.discuss.activeTab === "all") ||
             (this.notification.permission === "prompt" && this.store.discuss.activeTab === "all")
         );
@@ -96,14 +95,13 @@ export class MessagingMenu extends Component {
             displayName: sprintf(_t("%s has a request"), this.store.odoobot.name),
             iconSrc: this.threadService.avatarUrl(this.store.odoobot),
             partner: this.store.odoobot,
-            isLast:
-                this.displayedPreviews.length === 0 && this.store.notificationGroups.length === 0,
+            isLast: this.threads.length === 0 && this.store.notificationGroups.length === 0,
             isShown:
                 this.store.discuss.activeTab === "all" && this.notification.permission === "prompt",
         };
     }
 
-    get displayedPreviews() {
+    get threads() {
         /** @type {import("@mail/core/thread_model").Thread[]} **/
         let threads = Object.values(this.store.threads).filter(
             (thread) =>
@@ -113,47 +111,45 @@ export class MessagingMenu extends Component {
         if (tab !== "all") {
             threads = threads.filter(({ type }) => this.tabToThreadType(tab).includes(type));
         }
-        threads.sort((a, b) => {
-            if (a.correspondent === this.store.odoobot) {
+        return threads.sort((a, b) => {
+            /**
+             * Ordering:
+             * - threads with needaction
+             * - unread channels
+             * - read channels
+             * - odoobot chat
+             *
+             * In each group, thread with most recent message comes first
+             */
+            if (a.correspondent === this.store.odoobot && b.correspondent !== this.store.odoobot) {
                 return 1;
             }
-            if (!a.newestPersistentMessage?.datetime) {
+            if (b.correspondent === this.store.odoobot && a.correspondent !== this.store.odoobot) {
                 return -1;
             }
-            if (!b.newestPersistentMessage?.datetime) {
+            if (a.hasNeedactionMessages && !b.hasNeedactionMessages) {
+                return -1;
+            }
+            if (b.hasNeedactionMessages && !a.hasNeedactionMessages) {
                 return 1;
             }
-            return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
+            if (a.message_unread_counter > 0 && b.message_unread_counter === 0) {
+                return -1;
+            }
+            if (b.message_unread_counter > 0 && a.message_unread_counter === 0) {
+                return 1;
+            }
+            if (!a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
+                return 1;
+            }
+            if (!b.newestPersistentMessage?.datetime && a.newestPersistentMessage?.datetime) {
+                return -1;
+            }
+            if (a.newestPersistentMessage?.datetime && b.newestPersistentMessage?.datetime) {
+                return b.newestPersistentMessage.datetime - a.newestPersistentMessage.datetime;
+            }
+            return b.localId > a.localId ? 1 : -1;
         });
-        const previews = [];
-        for (const thread of threads) {
-            const { newestMessage, newestNeedactionMessage } = thread;
-            if (thread.is_pinned) {
-                const message = newestMessage;
-                previews.push({
-                    id: `preview-${thread.localId}`,
-                    count: thread.message_unread_counter,
-                    imgUrl: thread.imgUrl,
-                    hasMarkAsReadButton: thread.message_unread_counter > 0,
-                    message,
-                    thread,
-                    isNeedaction: false,
-                });
-            }
-            if (newestNeedactionMessage) {
-                const message = newestNeedactionMessage;
-                previews.push({
-                    id: `preview-needaction-${thread.localId}`,
-                    count: thread.needactionMessages.length,
-                    imgUrl: message.module_icon,
-                    hasMarkAsReadButton: true,
-                    message,
-                    thread,
-                    isNeedaction: true,
-                });
-            }
-        }
-        return previews;
     }
 
     /**
