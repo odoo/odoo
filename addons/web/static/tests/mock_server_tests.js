@@ -44,6 +44,10 @@ QUnit.module("MockServer", (hooks) => {
                             relation: "foo",
                             inverse_fname_by_model_name: { foo: "many2many_field" },
                         },
+                        partner_ref: {
+                            type: "reference",
+                            selection: [["partner", "Partner"]],
+                        },
                     },
                     records: [
                         {
@@ -54,6 +58,7 @@ QUnit.module("MockServer", (hooks) => {
                             name: "zzz",
                             partner_ids: [1, 2],
                             select: "dev",
+                            partner_ref: "partner,1",
                         },
                         {
                             foo: 1,
@@ -64,6 +69,7 @@ QUnit.module("MockServer", (hooks) => {
                             partner_id: 2,
                             partner_ids: [1],
                             select: "new",
+                            partner_ref: "partner,2"
                         },
                         {
                             foo: 17,
@@ -1283,6 +1289,23 @@ QUnit.module("MockServer", (hooks) => {
             {
                 __count: 0,
                 partner_id: 0,
+            },
+        ]);
+
+        const result4 = await server.performRPC("", {
+            model: "bar",
+            method: "read_group",
+            args: [[]],
+            kwargs: {
+                fields: ["partner_ref:count_distinct"],
+                domain: [],
+                groupby: [],
+            },
+        });
+        assert.deepEqual(result4, [
+            {
+                __count: 6,
+                partner_ref: 2,
             },
         ]);
     });

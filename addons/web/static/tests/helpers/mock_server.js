@@ -1079,7 +1079,7 @@ export class MockServer {
                     return;
                 }
                 if (
-                    fields[fieldName].type === "many2one" &&
+                    ["many2one", "reference"].includes(fields[fieldName].type) &&
                     !["count_distinct", "array_agg"].includes(func)
                 ) {
                     return;
@@ -1103,7 +1103,8 @@ export class MockServer {
                         }
                         break;
                     }
-                    case "many2one": {
+                    case "many2one":
+                    case "reference": {
                         const ids = records.map((r) => r[fieldName]);
                         if (func === "array_agg") {
                             group[name] = ids.map((id) => (id ? id : null));
