@@ -157,6 +157,52 @@ class Base(models.AbstractModel):
                     for values in values_list:
                         values[field_name] = [x2many_data.get(id_) or {'id': id_} for id_ in values[field_name]]
 
+            elif field.type in ('reference', 'many2one_reference'):
+                values_by_id = {
+                    vals['id']: vals
+                    for vals in values_list
+                }
+                for record in self:
+                    if not record[field_name]:
+                        continue
+
+                    if field.type == 'reference':
+                        co_record = record[field_name]
+                    else:  # field.type == 'many2one_reference'
+                        co_record = self.env[record[field.model_field]].browse(record[field_name])
+
+                    if 'context' in field_spec:
+                        co_record = co_record.with_context(**field_spec['context'])
+
+                    if 'fields' in field_spec:
+                        reference_read = co_record.web_read(field_spec['fields'])
+                        if any(fname != 'id' for fname in field_spec['fields']):
+                            # we can infer that if we can read fields for the co-record, it exists
+                            co_record_exists = bool(reference_read)
+                        else:
+                            co_record_exists = co_record.exists()
+                    else:
+                        # If there are no fields to read (field_spec.get('fields') --> None) and we web_read ids, it will
+                        # not actually read the records so we do not know if they exist.
+                        # This ensures the record actually exists
+                        co_record_exists = co_record.exists()
+
+                    record_values = values_by_id[record.id]
+
+                    if not co_record_exists:
+                        record_values[field_name] = False
+                        if field.type == 'many2one_reference':
+                            record_values[field.model_field] = False
+                        continue
+
+                    if 'fields' in field_spec:
+                        record_values[field_name] = reference_read[0]
+                        if field.type == 'reference':
+                            record_values[field_name]['id'] = {
+                                'id': co_record.id,
+                                'model': co_record._name
+                            }
+
         return values_list
 
     @api.model
