@@ -33,7 +33,7 @@ patch(FormRenderer.prototype, "mail", {
     /**
      * @returns {boolean}
      */
-    hasAttachmentViewer() {
+    hasFileViewer() {
         if (!this.threadService || this.uiService.size < SIZES.XXL || !this.props.record.resId) {
             return false;
         }

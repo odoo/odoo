@@ -2,13 +2,13 @@
 
 import { CANCEL_GLOBAL_CLICK, KanbanRecord } from "@web/views/kanban/kanban_record";
 import { useService } from "@web/core/utils/hooks";
-import { useAttachmentViewer } from "@web/core/attachment_viewer/attachment_viewer_hook";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 
 export class MrpDocumentsKanbanRecord extends KanbanRecord {
     setup() {
         super.setup();
         this.attachmentService = useService("mail.attachment");
-        this.attachmentViewer = useAttachmentViewer();
+        this.fileViewer = useFileViewer();
     }
     /**
      * @override
@@ -29,7 +29,7 @@ export class MrpDocumentsKanbanRecord extends KanbanRecord {
                 name: this.props.record.data.name,
                 mimetype: this.props.record.data.mimetype,
             });
-            this.attachmentViewer.open(attachment)
+            this.fileViewer.open(attachment)
             return;
         }
         return super.onGlobalClick(...arguments);

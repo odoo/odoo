@@ -5,7 +5,7 @@ import { Component } from "@odoo/owl";
 import { ConfirmationDialog } from "@web/core/confirmation_dialog/confirmation_dialog";
 import { useService } from "@web/core/utils/hooks";
 import { sprintf } from "@web/core/utils/strings";
-import { useAttachmentViewer } from "@web/core/attachment_viewer/attachment_viewer_hook";
+import { useFileViewer } from "@web/core/file_viewer/file_viewer_hook";
 
 import { _t } from "@web/core/l10n/translation";
 import { url } from "@web/core/utils/urls";
@@ -25,7 +25,7 @@ export class AttachmentList extends Component {
         // Arbitrary high value, this is effectively a max-width.
         this.imagesWidth = 1920;
         this.dialog = useService("dialog");
-        this.attachmentViewer = useAttachmentViewer();
+        this.fileViewer = useFileViewer();
     }
 
     /**

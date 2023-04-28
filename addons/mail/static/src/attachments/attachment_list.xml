@@ -19,7 +19,7 @@
                     aria-label="View image"
                     role="menuitem"
                     t-att-data-mimetype="attachment.mimetype"
-                    t-on-click="() => this.attachmentViewer.open(attachment, props.attachments)"
+                    t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
                 >
                     <img
                         class="img img-fluid my-0 mx-auto o-viewable"
@@ -52,7 +52,7 @@
                         'o-viewable': attachment.isViewable,
                         'o-isUploading': attachment.uploading,
                     }" t-att-title="attachment.name ? attachment.name : undefined" role="menu" t-att-aria-label="attachment.name"
-                     t-on-click="() => this.attachmentViewer.open(attachment, props.attachments)"
+                     t-on-click="() => this.fileViewer.open(attachment, props.attachments)"
                 >
                     <!-- o_image from mimetype.scss -->
                     <div class="o-mail-AttachmentCard-image o_image flex-shrink-0 m-1" role="menuitem" aria-label="Preview" t-att-tabindex="-1" t-att-aria-disabled="false" t-att-data-mimetype="attachment.mimetype"/>
