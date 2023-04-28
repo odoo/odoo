@@ -1,10 +1,26 @@
-/** @odoo-module alias=barcodes_gs1_nomenclature.barcode_parser **/
+/** @odoo-module **/
 
-import BarcodeParser from "barcodes.BarcodeParser";
-const FNC1_CHAR = String.fromCharCode(29);
+import { patch } from "@web/core/utils/patch";
+import { BarcodeParser } from "@barcodes/js/barcode_parser";
 import {_lt} from "web.core";
 
-BarcodeParser.include({
+export const FNC1_CHAR = String.fromCharCode(29);
+
+patch(BarcodeParser, "barcodes_gs1_nomenclature.BarcodeParser static", {
+    barcodeNomenclatureFields: [
+        ...BarcodeParser.barcodeNomenclatureFields,
+        "is_gs1_nomenclature",
+        "gs1_separator_fnc1",
+    ],
+    barcodeRuleFields: [
+        ...BarcodeParser.barcodeRuleFields,
+        "gs1_content_type",
+        "gs1_decimal_usage",
+        "associated_uom_id",
+    ],
+});
+
+patch(BarcodeParser.prototype, "barcodes_gs1_nomenclature.BarcodeParser", {
     /**
      * Convert YYMMDD GS1 date into a Date object
      *
@@ -123,31 +139,4 @@ BarcodeParser.include({
         }
         return this._super(...arguments);
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-    _barcodeNomenclatureFields: function () {
-        const fieldNames = this._super(...arguments);
-        fieldNames.push('is_gs1_nomenclature', 'gs1_separator_fnc1');
-        return fieldNames;
-    },
-
-    /**
-     * @override
-     */
-    _barcodeRuleFields: function () {
-        const fieldNames = this._super(...arguments);
-        fieldNames.push('gs1_content_type', 'gs1_decimal_usage', 'associated_uom_id');
-        return fieldNames;
-    },
 });
-
-export default {
-    BarcodeParser,
-    FNC1_CHAR,
-};

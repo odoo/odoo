@@ -1,51 +1,33 @@
-/** @odoo-module alias=barcodes.BarcodeParser **/
+/** @odoo-module **/
 
-import Class from "web.Class";
-import rpc from "web.rpc";
+export class BarcodeParser {
+    static barcodeNomenclatureFields = ["name", "rule_ids", "upc_ean_conv"];
+    static barcodeRuleFields = ["name", "sequence", "type", "encoding", "pattern", "alias"];
+    static async fetchNomenclature(orm, id) {
+        const [nomenclature] = await orm.read(
+            "barcode.nomenclature",
+            [id],
+            this.barcodeNomenclatureFields
+        );
+        let rules = await orm.searchRead(
+            "barcode.rule",
+            [["barcode_nomenclature_id", "=", id]],
+            this.barcodeRuleFields
+        );
+        rules = rules.sort((a, b) => {
+            return a.sequence - b.sequence;
+        });
+        nomenclature.rules = rules;
+        return nomenclature;
+    }
 
-// The BarcodeParser is used to detect what is the category
-// of a barcode (product, partner, ...) and extract an encoded value
-// (like weight, price, etc.)
-var BarcodeParser = Class.extend({
-    init: function(attributes) {
-        this.nomenclature_id = attributes.nomenclature_id;
-        this.nomenclature = attributes.nomenclature;
-        this.loaded = this.load();
-    },
+    constructor() {
+        this.setup(...arguments);
+    }
 
-    // This loads the barcode nomenclature and barcode rules which are
-    // necessary to parse the barcodes. The BarcodeParser is operational
-    // only when those data have been loaded
-    load: function(){
-        if (!this.nomenclature_id) {
-            return this.nomenclature ? Promise.resolve() : Promise.reject();
-        }
-        var id = this.nomenclature_id[0];
-        return rpc.query({
-                model: 'barcode.nomenclature',
-                method: 'read',
-                args: [[id], this._barcodeNomenclatureFields()],
-            }).then(nomenclatures => {
-                this.nomenclature = nomenclatures[0];
-                var args = [
-                    [['barcode_nomenclature_id', '=', this.nomenclature.id]],
-                    this._barcodeRuleFields(),
-                ];
-                return rpc.query({
-                    model: 'barcode.rule',
-                    method: 'search_read',
-                    args: args,
-                });
-            }).then(rules => {
-                rules = rules.sort(function(a, b){ return a.sequence - b.sequence; });
-                this.nomenclature.rules = rules;
-            });
-    },
-
-    // resolves when the barcode parser is operational.
-    is_loaded: function() {
-        return this.loaded;
-    },
+    setup({ nomenclature }) {
+        this.nomenclature = nomenclature;
+    }
 
     /**
      * This algorithm is identical for all fixed length numeric GS1 data structures.
@@ -76,7 +58,7 @@ var BarcodeParser = Class.extend({
         }
         total = evensum * 3 + oddsum;
         return (10 - total % 10) % 10;
-    },
+    }
 
     /**
      * Checks if the barcode string is encoded with the provided encoding.
@@ -85,7 +67,7 @@ var BarcodeParser = Class.extend({
      * @param {String} encoding could be 'any' (no encoding rules), 'ean8', 'upca' or 'ean13'
      * @returns {boolean}
      */
-    check_encoding: function(barcode, encoding) {
+    check_encoding(barcode, encoding) {
         if (encoding === 'any') {
             return true;
         }
@@ -96,7 +78,7 @@ var BarcodeParser = Class.extend({
         };
         return barcode.length === barcodeSizes[encoding] && /^\d+$/.test(barcode) &&
             this.get_barcode_check_digit(barcode) === parseInt(barcode[barcode.length - 1]);
-    },
+    }
 
     /**
      * Sanitizes a EAN-13 prefix by padding it with chars zero.
@@ -104,11 +86,11 @@ var BarcodeParser = Class.extend({
      * @param {String} ean
      * @returns {String}
      */
-    sanitize_ean: function(ean){
+    sanitize_ean(ean) {
         ean = ean.substr(0, 13);
         ean = "0".repeat(13 - ean.length) + ean;
         return ean.substr(0, 12) + this.get_barcode_check_digit(ean);
-    },
+    }
 
     /**
      * Sanitizes a UPC-A prefix by padding it with chars zero.
@@ -116,9 +98,9 @@ var BarcodeParser = Class.extend({
      * @param {String} upc
      * @returns {String}
      */
-    sanitize_upc: function(upc) {
+    sanitize_upc(upc) {
         return this.sanitize_ean(upc).substr(1, 12);
-    },
+    }
 
     // Checks if barcode matches the pattern
     // Additionnaly retrieves the optional numerical content in barcode
@@ -126,7 +108,7 @@ var BarcodeParser = Class.extend({
     // - value: the numerical value encoded in the barcode (0 if no value encoded)
     // - base_code: the barcode in which numerical content is replaced by 0's
     // - match: boolean
-    match_pattern: function (barcode, pattern, encoding){
+    match_pattern(barcode, pattern, encoding) {
         var match = {
             value: 0,
             base_code: barcode,
@@ -182,7 +164,7 @@ var BarcodeParser = Class.extend({
         match.match = match.base_code.match(base_pattern);
 
         return match;
-    },
+    }
 
     /**
      * Attempts to interpret a barcode (string encoding a barcode Code-128)
@@ -194,7 +176,7 @@ var BarcodeParser = Class.extend({
      *      - value: if the barcode encodes a numerical value, it will be put there
      *      - base_code: the barcode with all the encoding parts set to zero; the one put on the product in the backend
      */
-    parse_barcode: function(barcode){
+    parse_barcode(barcode) {
         var parsed_result = {
             encoding: '',
             type:'error',
@@ -250,30 +232,5 @@ var BarcodeParser = Class.extend({
             }
         }
         return parsed_result;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    _barcodeNomenclatureFields: function () {
-        return [
-            'name',
-            'rule_ids',
-            'upc_ean_conv',
-        ];
-    },
-
-    _barcodeRuleFields: function () {
-        return [
-            'name',
-            'sequence',
-            'type',
-            'encoding',
-            'pattern',
-            'alias',
-        ];
-    },
-});
-
-export default BarcodeParser;
+    }
+}
