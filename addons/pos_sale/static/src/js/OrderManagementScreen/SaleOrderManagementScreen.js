@@ -13,6 +13,15 @@ import { Orderline } from "@point_of_sale/js/models";
 
 const { onMounted, onWillUnmount, useState } = owl;
 
+/**
+ * ID getter to take into account falsy many2one value.
+ * @param {[id: number, display_name: string] | false} fieldVal many2one field value
+ * @returns {number | false}
+ */
+function getId(fieldVal) {
+    return fieldVal && fieldVal[0];
+}
+
 class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
     setup() {
         super.setup();
@@ -73,6 +82,14 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
         SaleOrderFetcher.setPage(1);
         SaleOrderFetcher.fetch();
     }
+    _getSaleOrderOrigin(order) {
+        for (const line of order.get_orderlines()) {
+            if (line.sale_order_origin_id) {
+                return line.sale_order_origin_id
+            }
+        }
+        return false;
+    }
     async _onClickSaleOrder(event) {
         const clickedOrder = event.detail;
         const { confirmed, payload: selectedOption } = await this.showPopup("SelectionPopup", {
@@ -84,9 +101,25 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
         });
 
         if (confirmed) {
-            const currentPOSOrder = this.env.pos.get_order();
+            let currentPOSOrder = this.env.pos.get_order();
             const sale_order = await this._getSaleOrder(clickedOrder.id);
             clickedOrder.shipping_date = sale_order.shipping_date
+
+            const currentSaleOrigin = this._getSaleOrderOrigin(currentPOSOrder);
+            const currentSaleOriginId = currentSaleOrigin && currentSaleOrigin.id;
+
+            if (currentSaleOriginId) {
+                const linkedSO = await this._getSaleOrder(currentSaleOriginId);
+                if (
+                    getId(linkedSO.partner_id) !== getId(sale_order.partner_id) ||
+                    getId(linkedSO.partner_invoice_id) !== getId(sale_order.partner_invoice_id) ||
+                    getId(linkedSO.partner_shipping_id) !== getId(sale_order.partner_shipping_id)
+                ) {
+                    currentPOSOrder = this.env.pos.add_new_order();
+                    this.showNotification(this.env._t("A new order has been created."));
+                }
+            }
+
             try {
                 await this.env.pos.load_new_partners();
             } catch {
@@ -312,6 +345,8 @@ class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderSc
                     "amount_total",
                     "amount_untaxed",
                     "picking_ids",
+                    "partner_shipping_id",
+                    "partner_invoice_id"
                 ],
             ],
             context: this.env.session.user_context,
