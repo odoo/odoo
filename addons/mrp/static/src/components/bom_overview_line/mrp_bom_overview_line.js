@@ -69,6 +69,10 @@ export class BomOverviewLine extends Component {
         return this.props.data;
     }
 
+    get precision() {
+        return this.props.precision;
+    }
+
     get identifier() {
         return `${this.data.type}_${this.data.index}`;
     }
@@ -160,6 +164,7 @@ BomOverviewLine.props = {
     },
     currentWarehouseId: { type: Number, optional: true },
     data: Object,
+    precision: Number,
     toggleFolded: { type: Function, optional: true },
 };
 BomOverviewLine.defaultProps = {

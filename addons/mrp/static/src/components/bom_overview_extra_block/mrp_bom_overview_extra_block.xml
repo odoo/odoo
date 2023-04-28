@@ -7,12 +7,15 @@
             isFolded="state.isFolded"
             showOptions="props.showOptions"
             data="props.data"
+            precision="props.precision"
             toggleFolded.bind="onToggleFolded"/>
 
         <t t-if="!state.isFolded" t-foreach="props.type == 'operations' ? props.data.operations : props.data.byproducts" t-as="extra_data" t-key="extra_data.index">
             <BomOverviewLine
                 showOptions="props.showOptions"
-                data="extra_data"/>
+                data="extra_data"
+                precision="props.precision"
+                />
         </t>
     </t>
 
