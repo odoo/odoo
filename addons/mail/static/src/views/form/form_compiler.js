@@ -109,12 +109,12 @@ patch(FormCompiler.prototype, "mail", {
         if (webClientViewAttachmentViewHookXml) {
             // in sheet bg (attachment viewer present)
             setAttributes(webClientViewAttachmentViewHookXml, {
-                "t-if": `__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
+                "t-if": `__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
             });
             const sheetBgChatterContainerHookXml = chatterContainerHookXml.cloneNode(true);
             sheetBgChatterContainerHookXml.classList.add("o-isInFormSheetBg");
             setAttributes(sheetBgChatterContainerHookXml, {
-                "t-if": `__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
+                "t-if": `__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL}`,
             });
             append(formSheetBgXml, sheetBgChatterContainerHookXml);
             const sheetBgChatterContainerXml = sheetBgChatterContainerHookXml.querySelector(
@@ -128,12 +128,12 @@ patch(FormCompiler.prototype, "mail", {
         // after sheet bg (standard position, either aside or below)
         if (webClientViewAttachmentViewHookXml) {
             setAttributes(chatterContainerHookXml, {
-                "t-if": `!(__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
-                "t-attf-class": `{{ __comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL}) ? "o-aside" : "" }}`,
+                "t-if": `!(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
+                "t-attf-class": `{{ __comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL}) ? "o-aside" : "" }}`,
             });
             setAttributes(chatterContainerXml, {
-                isInFormSheetBg: "__comp__.hasAttachmentViewer()",
-                hasMessageListScrollAdjust: `__comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasAttachmentViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
+                isInFormSheetBg: "__comp__.hasFileViewer()",
+                hasMessageListScrollAdjust: `__comp__.uiService.size >= ${SIZES.XXL} and !(__comp__.hasFileViewer() and __comp__.uiService.size >= ${SIZES.XXL})`,
             });
         } else {
             setAttributes(chatterContainerXml, {
