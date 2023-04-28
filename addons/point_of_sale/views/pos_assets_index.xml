@@ -38,9 +38,8 @@
             odoo.loadMenusPromise = Promise.resolve();
         </script>
 
-        <t t-call="point_of_sale.assets_common"/>
         <t t-call="web.conditional_assets_tests"/>
-        <t t-call-assets="point_of_sale.assets_backend_prod_only" />
+        <t t-call-assets="point_of_sale.assets_prod" />
     </head>
     <body class="pos">
     </body>

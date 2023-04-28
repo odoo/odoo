@@ -10,7 +10,7 @@ GCC POS Localization
     'license': 'LGPL-3',
     'depends': ['point_of_sale', 'l10n_gcc_invoice'],
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'l10n_gcc_pos/static/src/js/OrderReceipt.js',
             'l10n_gcc_pos/static/src/css/OrderReceipt.css',
             'l10n_gcc_pos/static/src/xml/OrderReceipt.xml',

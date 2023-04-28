@@ -25,7 +25,7 @@
     'installable': True,
     'auto_install': True,
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'pos_loyalty/static/src/css/Loyalty.scss',
             'pos_loyalty/static/src/app/**/*',
             'pos_loyalty/static/src/js/**/*',

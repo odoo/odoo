@@ -27,7 +27,7 @@ This module adds a custom Sales Team for the Point of Sale. This enables you to 
     'installable': True,
     'auto_install': True,
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'pos_sale/static/src/css/pos_sale.css',
             'pos_sale/static/src/js/models.js',
             'pos_sale/static/src/js/SetSaleOrderButton.js',

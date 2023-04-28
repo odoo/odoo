@@ -16,7 +16,7 @@
     ],
     'auto_install': True,
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'l10n_in_pos/static/src/js/**/*',
             'l10n_in_pos/static/src/xml/**/*',
         ],

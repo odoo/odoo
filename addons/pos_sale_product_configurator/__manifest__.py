@@ -14,7 +14,7 @@ This module adds features depending on both modules.
     'installable': True,
     'auto_install': True,
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'pos_sale_product_configurator/static/src/js/models.js',
             'pos_sale_product_configurator/static/src/css/popups/product_info_popup.css',
             'pos_sale_product_configurator/static/src/xml/**/*'

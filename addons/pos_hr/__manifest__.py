@@ -22,7 +22,7 @@ The actual till still requires one user but an unlimited number of employees can
     'installable': True,
     'auto_install': True,
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'pos_hr/static/src/css/pos.css',
             'pos_hr/static/src/js/models.js',
             'pos_hr/static/src/js/SelectCashierMixin.js',

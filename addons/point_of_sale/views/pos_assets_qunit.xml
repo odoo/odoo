@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-<template id="point_of_sale.qunit_suite_assets">
-    <t t-if="request.httprequest.cookies.get('color_scheme') == 'dark'">
-        <t t-call-assets="web.dark_mode_assets_backend" t-js="false"/>
-    </t>
-    <t t-else="">
-        <t t-call-assets="web.assets_backend" t-js="false"/>
-    </t>
-    <t t-call-assets="point_of_sale.tests_assets" t-js="false"/>
-    <t t-call-assets="point_of_sale.tests_assets" t-css="false"/>
-    <style>
-        body {
-            position: relative;
-        }
-        body:not(.debug) .modal-backdrop, body:not(.debug) .modal, body:not(.debug) .ui-autocomplete {
-            opacity: 0 !important;
-        }
-        #qunit-testrunner-toolbar label {
-            font-weight: inherit;
-            margin-bottom: inherit;
-        }
-        #qunit-testrunner-toolbar input[type=text] {
-            width: inherit;
-            display: inherit;
-        }
-    </style>
-</template>
-
 <template id="point_of_sale.qunit_suite">
     <t t-call="web.layout">
         <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
@@ -43,9 +16,7 @@
                 })"/>;
             </script>
 
-            <t t-call="point_of_sale.assets_common" />
-            <t t-call="point_of_sale.qunit_suite_assets" />
-            <t t-call-assets="point_of_sale.qunit_suite_tests" />
+            <t t-call-assets="point_of_sale.assets_qunit_tests" />
         </t>
 
         <div id="qunit"/>

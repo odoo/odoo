@@ -12,7 +12,7 @@ United Arab Emirates POS Localization
     'auto_install': True,
     'license': 'LGPL-3',
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'l10n_ae_pos/static/src/xml/Screens/ReceiptScreen/OrderReceipt.xml',
         ],
     },
