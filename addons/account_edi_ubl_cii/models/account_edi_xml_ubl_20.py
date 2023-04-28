@@ -554,10 +554,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         logs += self._import_fill_invoice_allowance_charge(tree, invoice_form, journal, qty_factor)
 
-        # ==== Down Payment (prepaid amount) ====
+        # ==== Prepaid amount ====
 
         prepaid_node = tree.find('./{*}LegalMonetaryTotal/{*}PrepaidAmount')
-        self._import_fill_invoice_down_payment(invoice_form, prepaid_node, qty_factor)
+        logs += self._import_log_prepaid_amount(invoice_form, prepaid_node, qty_factor)
 
         # ==== invoice_line_ids: InvoiceLine/CreditNoteLine ====
 
