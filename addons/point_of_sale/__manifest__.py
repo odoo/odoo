@@ -18,7 +18,6 @@
         'wizard/pos_close_session_wizard.xml',
         'wizard/pos_session_check_product_wizard.xml',
         'wizard/pos_daily_sales_reports.xml',
-        'views/pos_assets_common.xml',
         'views/pos_assets_index.xml',
         'views/pos_assets_qunit.xml',
         'views/point_of_sale_report.xml',
@@ -54,28 +53,17 @@
     'website': 'https://www.odoo.com/app/point-of-sale-shop',
     'assets': {
 
-        ## In general, you DON'T NEED to declare new assets here, just put the files in the proper directory.
-        ## NOTABLE EXCEPTION: List the new .css files in the `point_of_sale.assets` bundle taking into consideration
-        ##   the order of the .css files.
-        ##
-        ## 1. When defining new component, put the .js files in `point_of_sale/static/src/js/`
-        ##    and the corresponding .xml files in `point_of_sale/static/src/xml/`
-        ##    * POS is setup to automatically include the .xml and `.js` files in `point_of_sale.assets`.
-        ## 2. When adding new tour tests, put the .js files in `point_of_sale/static/tests/tours/`.
-        ## 3. When adding new qunit tests, put the .js files in `point_of_sale/static/tests/unit/`.
-        ##
-        ## If your use case doesn't fit anything above, you might need to properly understand each "asset bundle"
-        ## defined here and check how they are used in the following "index templates":
-        ##      1. point_of_sale.index
-        ##          ->  This is the POS UI, accessible by opening a session.
-        ##      2. point_of_sale.qunit_suite
-        ##          ->  This is the unit test, accessible by clicking the "Run Point of Sale JS Tests" button
-        ##              in the "debug" button from the backend interface.
+        # In general, you DON'T NEED to declare new assets here, just put the
+        # files in the proper directory. In rare cases, the order of scss files
+        # matter and in that case you'll need to add it to the bundle in the
+        # correct spot.
+        #
+        # Files in /static/src/backend will be loaded in the backend
+        # Files in /static/src/app will be loaded in the PoS UI and unit tests
+        # Files in /static/tests/tours will be loaded in the backend in test mode
+        # Files in /static/tests/unit will be loaded in the qunit tests (/pos/ui/tests)
 
-        #####################################
-        ## Augmentation of existing assets ##
-        #####################################
-
+        # web assets
         'web.assets_backend': [
             'point_of_sale/static/src/scss/pos_dashboard.scss',
             'point_of_sale/static/src/backend/tours/point_of_sale.js',
@@ -85,72 +73,149 @@
             'point_of_sale/static/tests/tours/**/*',
         ],
 
-        ####################################################
-        ## Exclusive POS Assets 1: For running the POS UI ##
-        ####################################################
+        # PoS assets
 
-        'point_of_sale.pos_assets_backend_style': [
-            "web/static/src/core/ui/**/*.scss",
-        ],
-        # TODO: We need to control this asset bundle.
-        # We can reduce the size of loaded assets in POS UI by selectively
-        # loading the `web` assets. We should only include what POS needs.
-        'point_of_sale.pos_assets_backend': [
-            ('include', 'web.assets_backend'),
-            ('remove', 'web/static/src/core/errors/error_handlers.js'),
-            ('remove', 'web/static/src/legacy/legacy_rpc_error_handler.js'),
-        ],
-        # This bundle includes the main pos assets.
-        'point_of_sale.assets': [
+        # Main PoS assets, they are loaded in the PoS UI and in the PoS unit tests
+        'point_of_sale._assets_pos': [
+            # scss variables and utilities
             'point_of_sale/static/src/scss/pos_variables_extra.scss',
             ('include', 'web._assets_helpers'),
-            ('include', 'web._assets_backend_helpers'),
-            ('include', 'web._assets_primary_variables'),
-            'web/static/lib/bootstrap/scss/_functions.scss',
+            'web/static/src/scss/bootstrap_overridden.scss',
+            'web/static/src/scss/pre_variables.scss',
             'web/static/lib/bootstrap/scss/_variables.scss',
             'web/static/fonts/fonts.scss',
             'web/static/src/libs/fontawesome/css/font-awesome.css',
-            'point_of_sale/static/src/scss/pos.scss',
-            'point_of_sale/static/src/css/pos_receipts.css',
-            'point_of_sale/static/src/css/popups/product_info_popup.css',
-            'point_of_sale/static/src/css/popups/common.css',
-            'point_of_sale/static/src/css/popups/cash_opening_popup.css',
-            'point_of_sale/static/src/css/popups/closing_pos_popup.css',
-            'point_of_sale/static/src/css/popups/money_details_popup.css',
-            'point_of_sale/static/src/css/popups/text_area_popup.css',
             'web/static/src/legacy/scss/fontawesome_overridden.scss',
-
-            # Here includes the lib and POS UI assets.
-            'point_of_sale/static/lib/**/*.js',
+            # JS framework
+            'web/static/src/boot.js',
+            'web/static/src/session.js',
+            'web/static/src/env.js',
+            'web/static/src/core/utils/transitions.scss', # needs to be loaded before other scss files
+            'web/static/src/core/**/*',
+            ('remove', 'web/static/src/core/errors/error_handlers.js'), # error handling in PoS is different from the webclient
+            # formatMonetary
+            'web/static/src/views/fields/formatters.js',
+            # barcode scanner
+            'barcodes/static/src/barcode_service.js',
+            'barcodes/static/src/js/barcode_parser.js',
+            'web/static/src/legacy/js/core/class.js',
+            'web/static/src/views/fields/parsers.js',
+            'web/static/src/webclient/barcode/barcode_scanner.js',
+            'web/static/src/webclient/barcode/ZXingBarcodeDetector.js',
+            'web/static/src/webclient/barcode/crop_overlay.js',
+            # report download utils
+            'web/static/src/webclient/actions/reports/utils.js',
+            # libs
+            'point_of_sale/static/lib/**/*',
+            'web/static/lib/luxon/luxon.js',
+            'web/static/lib/owl/owl.js',
+            'web/static/lib/owl/odoo_module.js',
             'web_editor/static/lib/html2canvas.js',
-            'point_of_sale/static/src/js/**/*.js',
             'web/static/lib/zxing-library/zxing-library.js',
-            'point_of_sale/static/src/xml/**/*.xml',
-            'point_of_sale/static/src/utils.js',
-            'point_of_sale/static/src/app/**/*',
+            # PoS files
+            'point_of_sale/static/src/**/*',
+            ('remove', 'point_of_sale/static/src/backend/**/*'),
+            ('remove', 'point_of_sale/static/src/entry/**/*'), # entry is only included in the prod bundle
+            # tour system FIXME: can this be added only in test mode? Are there any onboarding tours in PoS?
+            'web/static/lib/jquery/jquery.js',
+            'web_tour/static/src/tour_pointer/**/*',
+            'web_tour/static/src/tour_service/**/*',
+
+            # FIXME POSREF legacy dependencies to remove
+            'web/static/lib/moment/moment.js',
+            'web/static/lib/underscore/underscore.js',
+            'web/static/src/legacy/js/promise_extension.js',
+            'web/static/src/legacy/js/core/concurrency.js',
+            'web/static/src/legacy/js/core/owl_dialog.js', # needed by barcode_scanner
+            'web/static/src/legacy/legacy_component.js', # needed by owl_dialog
         ],
-        # This bundle contains the code responsible for starting the POS UI.
-        # It is practically the entry point.
-        'point_of_sale.assets_backend_prod_only': [
+        # Bundle that starts the pos, loaded on /pos/ui
+        'point_of_sale.assets_prod': [
+            ('include', 'point_of_sale._assets_pos'),
             'point_of_sale/static/src/entry/main.js',
-            'web/static/src/start.js',
-            'web/static/src/legacy/legacy_setup.js',
         ],
-
-        #########################################################
-        ## Exclusive POS Assets 2: For running the QUnit tests ##
-        #########################################################
-
-        # This bundle includes the helper assets for the unit testing.
-        'point_of_sale.tests_assets': [
+        # Bundle for the unit tests at /pos/ui/tests
+        'point_of_sale.assets_qunit_tests': [
+            ('include', 'point_of_sale._assets_pos'),
+            # dependencies of web.tests_assets (in the web tests, these come from assets_backend)
+            'web/static/src/owl2_compatibility/app.js',
+            'web/static/lib/jquery/jquery.js',
+            'web/static/lib/jquery/jquery.browser.js',
+            'web/static/lib/jquery.ba-bbq/jquery.ba-bbq.js',
+            'web/static/lib/qweb/qweb2.js',
+            'web/static/lib/py.js/lib/py.js',
+            'web/static/src/legacy/js/**/*',
+            ('remove', 'web/static/src/legacy/js/libs/**/*'),
+            ('remove', 'web/static/src/legacy/js/public/**/*'),
+            'web/static/src/legacy/action_adapters.js',
+            'web/static/src/legacy/backend_utils.js',
+            'web/static/src/legacy/js/views/action_model.js',
+            'web/static/src/legacy/legacy_load_views.js',
+            'web/static/src/legacy/legacy_service_provider.js',
+            'web/static/src/legacy/utils.js',
+            'web/static/src/search/**/*',
+            'web/static/src/views/fields/field_tooltip.js',
+            'web/static/src/views/fields/field.js',
+            'web/static/src/views/onboarding_banner.js',
+            'web/static/src/views/utils.js',
+            'web/static/src/views/view_hook.js',
+            'web/static/src/views/view_service.js',
+            'web/static/src/views/view.js',
+            'web/static/src/webclient/actions/action_container.js',
+            'web/static/src/webclient/actions/action_dialog.js',
+            'web/static/src/webclient/actions/action_hook.js',
+            'web/static/src/webclient/actions/action_service.js',
+            'web/static/src/webclient/actions/reports/report_action.js',
+            'web/static/src/webclient/actions/reports/report_hook.js',
+            'web/static/src/webclient/menus/menu_service.js',
+            'web/static/src/webclient/navbar/navbar.js',
+            'web/static/src/webclient/webclient.js',
+            'web/static/src/views/view_dialogs/form_view_dialog.js',
+            'web/static/src/views/view_dialogs/select_create_dialog.js',
+            'web/static/src/legacy/js/libs/download.js',
+            'web/static/src/legacy/js/libs/content-disposition.js',
+            # BEGIN copy of web.tests_assets. We don't 'include' it because other modules add their
+            # own test helpers in this module that depend on files that they add in assets_backend
             'web/static/lib/qunit/qunit-2.9.1.css',
             'web/static/lib/qunit/qunit-2.9.1.js',
             'web/static/tests/legacy/helpers/**/*',
             ('remove', 'web/static/tests/legacy/helpers/test_utils_tests.js'),
-
             'web/static/tests/legacy/legacy_setup.js',
 
+            'web/static/lib/fullcalendar/core/main.css',
+            'web/static/lib/fullcalendar/daygrid/main.css',
+            'web/static/lib/fullcalendar/timegrid/main.css',
+            'web/static/lib/fullcalendar/list/main.css',
+            'web/static/lib/fullcalendar/core/main.js',
+            'web/static/lib/fullcalendar/moment/main.js',
+            'web/static/lib/fullcalendar/interaction/main.js',
+            'web/static/lib/fullcalendar/daygrid/main.js',
+            'web/static/lib/fullcalendar/timegrid/main.js',
+            'web/static/lib/fullcalendar/list/main.js',
+            'web/static/lib/fullcalendar/luxon/main.js',
+
+            'web/static/lib/zxing-library/zxing-library.js',
+
+            'web/static/lib/ace/ace.js',
+            'web/static/lib/ace/javascript_highlight_rules.js',
+            'web/static/lib/ace/mode-python.js',
+            'web/static/lib/ace/mode-xml.js',
+            'web/static/lib/ace/mode-js.js',
+            'web/static/lib/ace/mode-qweb.js',
+            'web/static/lib/nearest/jquery.nearest.js',
+            'web/static/lib/daterangepicker/daterangepicker.js',
+            'web/static/src/legacy/js/libs/daterangepicker.js',
+            'web/static/lib/stacktracejs/stacktrace.js',
+            'web/static/lib/Chart/Chart.js',
+
+            '/web/static/lib/daterangepicker/daterangepicker.js',
+
+            # 'web/static/tests/legacy/main_tests.js',
             'web/static/tests/helpers/**/*.js',
+            'web/static/tests/views/helpers.js',
+            'web/static/tests/search/helpers.js',
+            'web/static/tests/views/calendar/helpers.js',
+            'web/static/tests/webclient/**/helpers.js',
             'web/static/tests/qunit.js',
             'web/static/tests/main.js',
             'web/static/tests/setup.js',
@@ -164,11 +229,10 @@
             'web/static/lib/bootstrap/scss/_variables.scss',
 
             ('include', 'web.frontend_legacy'),
-        ],
-        # This bundle includes the unit tests.
-        'point_of_sale.qunit_suite_tests': [
+            ("include", "web.assets_backend_legacy_lazy"),
+            ## END copy of web.tests_assets
+            # pos unit tests
             'point_of_sale/static/tests/unit/**/*',
-            'point_of_sale/static/tests/*.js',
         ],
     },
     'license': 'LGPL-3',

@@ -13,7 +13,7 @@ K.S.A. POS Localization
         'l10n_sa',
     ],
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'web/static/lib/zxing-library/zxing-library.js',
             'l10n_sa_pos/static/src/js/models.js',
             'l10n_sa_pos/static/src/xml/OrderReceipt.xml',

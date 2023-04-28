@@ -29,7 +29,7 @@ This module adds several features to the Point of Sale that are specific to rest
     ],
     'installable': True,
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'pos_restaurant/static/lib/**/*.js',
             'pos_restaurant/static/src/js/**/*.js',
             ('after', 'point_of_sale/static/src/scss/pos.scss', 'pos_restaurant/static/src/scss/restaurant.scss'),

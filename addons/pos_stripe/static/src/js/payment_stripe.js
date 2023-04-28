@@ -108,7 +108,7 @@ export class PaymentStripe extends PaymentInterface {
             }
         }
         this._showError(
-            _.str.sprintf(
+            sprintf(
                 _t("Stripe readers %s not listed in your account"),
                 this.payment_method.stripe_serial_number
             )

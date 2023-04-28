@@ -16,7 +16,7 @@
         'views/res_config_settings_views.xml'
     ],
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'l10n_co_pos/static/src/js/**/*',
             'l10n_co_pos/static/src/xml/**/*',
         ],

@@ -34,7 +34,7 @@ following:
     ],
     'installable': True,
     'assets': {
-        'point_of_sale.assets': [
+        'point_of_sale._assets_pos': [
             'pos_mercury/static/src/js/pos_mercury.js',
             'pos_mercury/static/src/js/OrderReceipt.js',
             'pos_mercury/static/src/js/PaymentScreen.js',
