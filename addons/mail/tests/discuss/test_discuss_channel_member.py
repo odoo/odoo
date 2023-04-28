@@ -14,7 +14,7 @@ class TestDiscussChannelMembers(MailCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestDiscussChannelMembers, cls).setUpClass()
+        super().setUpClass()
 
         cls.secret_group = cls.env['res.groups'].create({
             'name': 'Secret User Group',
