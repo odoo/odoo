@@ -30,6 +30,9 @@ class ProductProduct(models.Model):
         combination_info = self.with_context(website_sale_stock_get_quantity=True).product_tmpl_id._get_combination_info(product_id=self.id)
         return combination_info['product_type'] == 'product' and combination_info['free_qty'] <= 0
 
+    def _website_show_quick_add(self):
+        return (self.allow_out_of_stock_order or not self._is_sold_out()) and super()._website_show_quick_add()
+
     def _send_availability_email(self):
         for product in self.search([('stock_notification_partner_ids', '!=', False)]):
             if product._is_sold_out():

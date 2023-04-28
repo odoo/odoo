@@ -9,10 +9,10 @@ ec1102050101,1102050101,Cuentas por cobrar clientes no relacionados locales,TRUE
 ec1102050102,1102050102,Cuentas por cobrar clientes no relacionados extranjeros,TRUE,asset_receivable,l10n_ec_ifrs
 ec11020601,11020601,Documentos y cuentas por cobrar cliente relacionados locales,TRUE,asset_receivable,l10n_ec_ifrs
 ec11020602,11020602,Documentos y cuentas por cobrar cliente relacionados extranjeros,TRUE,asset_receivable,l10n_ec_ifrs
-ec11020701,11020701,Anticipo sueldos,TRUE,asset_receivable,l10n_ec_ifrs
-ec11020702,11020702,Anticipo décimo tercer sueldo,TRUE,asset_receivable,l10n_ec_ifrs
-ec11020703,11020703,Anticipo décimo cuarto sueldo,TRUE,asset_receivable,l10n_ec_ifrs
-ec11020704,11020704,Anticipo utilidades,TRUE,asset_receivable,l10n_ec_ifrs
+ec11020701,11020701,Anticipo sueldos,TRUE,asset_current,l10n_ec_ifrs
+ec11020702,11020702,Anticipo décimo tercer sueldo,TRUE,asset_current,l10n_ec_ifrs
+ec11020703,11020703,Anticipo décimo cuarto sueldo,TRUE,asset_current,l10n_ec_ifrs
+ec11020704,11020704,Anticipo utilidades,TRUE,asset_current,l10n_ec_ifrs
 ec110208,110208,Otras cuentas por cobrar relacionadas,TRUE,asset_receivable,l10n_ec_ifrs
 ec110209,110209,Otras cuentas por cobrar,TRUE,asset_receivable,l10n_ec_ifrs
 ec110210,110210,Provision por cuentas incobrables,FALSE,asset_current,l10n_ec_ifrs
@@ -113,24 +113,25 @@ ec2105010104,2105010104,Otras provisiones a favor de los empleados,TRUE,liabilit
 ec21050102,21050102,Otras provisiones locales,TRUE,liability_current,l10n_ec_ifrs
 ec210502,210502,Provisiones del exterior,TRUE,liability_current,l10n_ec_ifrs
 ec2106,2106,Porcion corriente de obligaciones emitidas,FALSE,liability_current,l10n_ec_ifrs
-ec21070101,21070101,Impuesto a la renta retenido a empleados,TRUE,liability_payable,l10n_ec_ifrs
+ec21070101,21070101,Impuesto a la renta retenido a empleados,TRUE,liability_current,l10n_ec_ifrs
 ec210702,210702,Impuesto a la renta por pagar del ejercicio,TRUE,liability_payable,l10n_ec_ifrs
-ec21070301,21070301,Prestamos quirografarios,TRUE,liability_payable,l10n_ec_ifrs
-ec21070302,21070302,Prestamos hipotecarios,TRUE,liability_payable,l10n_ec_ifrs
-ec21070303,21070303,Aportacion patronal al iess,TRUE,liability_payable,l10n_ec_ifrs
-ec21070304,21070304,Aportacion personal al iess,TRUE,liability_payable,l10n_ec_ifrs
-ec21070305,21070305,Fondos de reserva retenidos a empleados,TRUE,liability_payable,l10n_ec_ifrs
-ec21070306,21070306,Otras oblicaciones corrientes con el iess,TRUE,liability_payable,l10n_ec_ifrs
+ec21070301,21070301,Prestamos quirografarios,TRUE,liability_current,l10n_ec_ifrs
+ec21070302,21070302,Prestamos hipotecarios,TRUE,liability_current,l10n_ec_ifrs
+ec21070303,21070303,Aportacion patronal al iess,TRUE,liability_current,l10n_ec_ifrs
+ec21070304,21070304,Aportacion personal al iess,TRUE,liability_current,l10n_ec_ifrs
+ec21070305,21070305,Fondos de reserva retenidos a empleados,TRUE,liability_current,l10n_ec_ifrs
+ec21070306,21070306,Otras oblicaciones corrientes con el IESS,TRUE,liability_current,l10n_ec_ifrs
+ec21070307,21070307,Prestaciones solidarias al IESS,TRUE,liability_current,l10n_ec_ifrs
 ec21070401,21070401,Sueldos y salarios por pagar,TRUE,liability_payable,l10n_ec_ifrs
 ec21070402,21070402,Otras obligaciones corrientes por beneficios de ley a empleados,TRUE,liability_payable,l10n_ec_ifrs
 ec21070403,21070403,Décimos por pagar,TRUE,liability_payable,l10n_ec_ifrs
-ec210705,210705,Participacion trabajadores por pagar del ejercicio,TRUE,liability_payable,l10n_ec_ifrs
-ec210706,210706,Dividendos por pagar,TRUE,liability_payable,l10n_ec_ifrs
+ec210705,210705,Participacion trabajadores por pagar del ejercicio,TRUE,liability_current,l10n_ec_ifrs
+ec210706,210706,Dividendos por pagar,TRUE,liability_current,l10n_ec_ifrs
 ec2108,2108,Cuentas por pagar diversas/relacionadas,TRUE,liability_payable,l10n_ec_ifrs
-ec2109,2109,Otros pasivos financieros,TRUE,liability_payable,l10n_ec_ifrs
+ec2109,2109,Otros pasivos financieros,TRUE,liability_current,l10n_ec_ifrs
 ec2110,2110,Anticipos de clientes,TRUE,liability_payable,l10n_ec_ifrs
 ec2111,2111,Pasivos directamente asociados con los activos no corrientes y operaciones discontinuadas,FALSE,liability_current,l10n_ec_ifrs
-ec211201,211201,Otros beneficios a largo plazo para los empleados,TRUE,liability_payable,l10n_ec_ifrs
+ec211201,211201,Otros beneficios a largo plazo para los empleados,TRUE,liability_current,l10n_ec_ifrs
 ec211301,211301,Retenciones judiciales,FALSE,liability_current,l10n_ec_ifrs
 ec_sale_vat,2114010101,IVA cobrado en ventas locales,FALSE,liability_current,l10n_ec_ifrs
 ec_sale_vat_assets,2114010102,IVA cobrado en ventas de activos fijos,FALSE,liability_current,l10n_ec_ifrs
@@ -154,7 +155,7 @@ ec_vat_withhold_50,2114010304,Retenciones de IVA 50%,FALSE,liability_current,l10
 ec_vat_withhold_70,2114010305,Retenciones de IVA 70%,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_100,2114010306,Retenciones de IVA 100%,FALSE,liability_current,l10n_ec_ifrs
 ec_vat_withhold_others,2114010307,Otras retenciones,FALSE,liability_current,l10n_ec_ifrs
-ec2201,2201,Pasivos por contratos de arrendamiento financiero,TRUE,liability_payable,l10n_ec_ifrs
+ec2201,2201,Pasivos por contratos de arrendamiento financiero,TRUE,liability_current,l10n_ec_ifrs
 ec220201,220201,Cuentas y documentos por pagar locales,TRUE,liability_payable,l10n_ec_ifrs
 ec220202,220202,Cuentas y documentos por pagar del exterior,TRUE,liability_payable,l10n_ec_ifrs
 ec220301,220301,Obligaciones con instituciones financieras locales,TRUE,liability_payable,l10n_ec_ifrs
@@ -164,9 +165,9 @@ ec220402,220402,Cuentas por pagar diversas/relacionadas del exterior,TRUE,liabil
 ec2205,2205,Obligaciones emitidas,TRUE,liability_payable,l10n_ec_ifrs
 ec2206,2206,Anticipos de clientes,TRUE,liability_payable,l10n_ec_ifrs
 ec220701,220701,Otros beneficios no corrientes para los empleados,TRUE,liability_payable,l10n_ec_ifrs
-ec2208,2208,Otras provisiones,TRUE,liability_payable,l10n_ec_ifrs
-ec220901,220901,Ingresos diferidos,TRUE,liability_payable,l10n_ec_ifrs
-ec220902,220902,Pasivos por impuestos diferidos,TRUE,liability_payable,l10n_ec_ifrs
+ec2208,2208,Otras provisiones,TRUE,liability_non_current,l10n_ec_ifrs
+ec220901,220901,Ingresos diferidos,TRUE,liability_non_current,l10n_ec_ifrs
+ec220902,220902,Pasivos por impuestos diferidos,TRUE,liability_non_current,l10n_ec_ifrs
 ec2210,2210,Otros pasivos no corrientes,FALSE,liability_non_current,l10n_ec_ifrs
 ec3101,3101,Capital suscrito o asignado,FALSE,equity,l10n_ec_ifrs
 ec3102,3102,"Capital suscrito no pagado, acciones en tesoreria",FALSE,equity,l10n_ec_ifrs
@@ -193,15 +194,16 @@ ec4106,4106,Intereses,FALSE,income,l10n_ec_ifrs
 ec4107,4107,Dividendos,FALSE,income,l10n_ec_ifrs
 ec4108,4108,Ganancia por medición a valor razonable de activos biológicos,FALSE,income,l10n_ec_ifrs
 ec4109,4109,Otros ingresos de actividades ordinarias,FALSE,income,l10n_ec_ifrs
-ec4110,4110,(-) descuento en ventas,FALSE,income,l10n_ec_ifrs
-ec4111,4111,(-) devoluciones en ventas,FALSE,income,l10n_ec_ifrs
+ec_early_pay_discount_loss,4110,(-) Descuento Pronto Pago en Ventas,FALSE,income,l10n_ec_ifrs
+ec4111,4111,(-) Devoluciones en Ventas,FALSE,income,l10n_ec_ifrs
 ec42,42,Ganancia bruta,FALSE,income,l10n_ec_ifrs
 ec4301,4301,Dividendos,FALSE,income,l10n_ec_ifrs
 ec4302,4302,Intereses financieros,FALSE,income,l10n_ec_ifrs
 ec4303,4303,Ganancia en inversiones en asociadas / subsidiarias y otras,FALSE,income,l10n_ec_ifrs
 ec4304,4304,Valuacion de instrumentos financieros a valor razonable con cambio en resultados,FALSE,income,l10n_ec_ifrs
-ec430501,430501,Ingresos por diferecias de cambio,FALSE,income,l10n_ec_ifrs
-ec430502,430502,Otras rentas,FALSE,income,l10n_ec_ifrs
+ec430501,430501,Ingresos por diferencias de cambio,FALSE,income,l10n_ec_ifrs
+ec_income_cash_difference,430502,Ingresos por diferencias en efectivo,FALSE,income,l10n_ec_ifrs
+ec430503,430503,Otras rentas,FALSE,income,l10n_ec_ifrs
 ec510101,510101,Inventario inicial de bienes no producidos por la compañia,FALSE,expense_direct_cost,l10n_ec_ifrs
 ec510102,510102,Compras netas locales de bienes no producidos por la compañia,FALSE,expense_direct_cost,l10n_ec_ifrs
 ec510103,510103,Importaciones de bienes no producidos por la compañia,FALSE,expense_direct_cost,l10n_ec_ifrs
@@ -291,8 +293,8 @@ ec52010401,52010401,Seguro medico ,FALSE,expense,l10n_ec_ifrs
 ec52010402,52010402,Capacitacion,FALSE,expense,l10n_ec_ifrs
 ec52010403,52010403,Uniformes,FALSE,expense,l10n_ec_ifrs
 ec52010404,52010404,Alimentacion,FALSE,expense,l10n_ec_ifrs
-ec5201040501,5201040501,Impuesto a la renta empleados asumido por la empresa,FALSE,expense_direct_cost,l10n_ec_ifrs
-ec5201040502,5201040502,Transporte,FALSE,expense_direct_cost,l10n_ec_ifrs
+ec5201040501,5201040501,Impuesto a la renta empleados asumido por la empresa,FALSE,expense,l10n_ec_ifrs
+ec5201040502,5201040502,Transporte,FALSE,expense,l10n_ec_ifrs
 ec520105,520105,"Honorarios, comisiones y dietas a personas naturales",FALSE,expense,l10n_ec_ifrs
 ec520106,520106,Remuneraciones a otros trabajadores autonomos,FALSE,expense,l10n_ec_ifrs
 ec520107,520107,Honorarios a extranjeros por servicios ocasionales,FALSE,expense,l10n_ec_ifrs
@@ -373,8 +375,8 @@ ec52020402,52020402,Capacitacion,FALSE,expense,l10n_ec_ifrs
 ec52020403,52020403,Uniformes,FALSE,expense,l10n_ec_ifrs
 ec52020404,52020404,Alimentacion,FALSE,expense,l10n_ec_ifrs
 ec52020405,52020405,Otros gastos de planes de beneficios a empleados,FALSE,expense,l10n_ec_ifrs
-ec5202040501,5202040501,Impuesto a la renta empleados asumido por la empresa,FALSE,expense_direct_cost,l10n_ec_ifrs
-ec5202040502,5202040502,Transporte,FALSE,expense_direct_cost,l10n_ec_ifrs
+ec5202040501,5202040501,Impuesto a la renta empleados asumido por la empresa,FALSE,expense,l10n_ec_ifrs
+ec5202040502,5202040502,Transporte,FALSE,expense,l10n_ec_ifrs
 ec520205,520205,"Honorarios, comisiones y dietas a personas naturales",FALSE,expense,l10n_ec_ifrs
 ec520206,520206,Remuneraciones a otros trabajadores autonomos,FALSE,expense,l10n_ec_ifrs
 ec520207,520207,Honorarios a extranjeros por servicios ocasionales,FALSE,expense,l10n_ec_ifrs
@@ -461,6 +463,6 @@ ec520303,520303,Gastos de financiamiento de activos,FALSE,expense,l10n_ec_ifrs
 ec520304,520304,Diferencia en cambio,FALSE,expense,l10n_ec_ifrs
 ec520305,520305,Otros gastos financieros,FALSE,expense,l10n_ec_ifrs
 ec520401,520401,Perdida en inversiones en asociadas / subsidiarias y otras,FALSE,expense,l10n_ec_ifrs
-ec52040201,52040201,Otros gastos,FALSE,expense,l10n_ec_ifrs
-ec9993,9993,Cash Discount Loss,FALSE,expense,l10n_ec_ifrs
-ec9994,9994,Cash Discount Gain,FALSE,income_other,l10n_ec_ifrs
+ec_early_pay_discount_gain,52040201,(-) Descuento pronto pago en compras de servicios,FALSE,expense,l10n_ec_ifrs
+ec_expense_cash_difference,52040202,(-) Egresos por diferencias en efectivo,FALSE,expense,l10n_ec_ifrs
+ec_expense_others,52040203,Otros gastos,FALSE,expense,l10n_ec_ifrs

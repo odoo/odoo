@@ -558,6 +558,8 @@ class HolidaysAllocation(models.Model):
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
         for values in vals_list:
+            if 'state' in values and values['state'] not in ('draft', 'confirm'):
+                raise UserError(_('Incorrect state for new allocation'))
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
