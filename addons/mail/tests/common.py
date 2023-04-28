@@ -960,7 +960,6 @@ class MailCase(MockEmail):
 
         EXPECTED
         :param channels: list of expected bus channels, like [
-          (self.cr.dbname, 'discuss.channel', self.channel_1.id),
           (self.cr.dbname, 'res.partner', self.partner_employee_2.id)
         ]
         :param message_items: if given, list of expected message making a valid

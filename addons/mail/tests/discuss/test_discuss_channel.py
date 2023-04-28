@@ -20,7 +20,7 @@ class TestChannelAccessRights(MailCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestChannelAccessRights, cls).setUpClass()
+        super().setUpClass()
 
         cls.user_employee_1 = mail_new_test_user(cls.env, login='user_employee_1', groups='base.group_user', name='Tao Lee')
         cls.user_public = mail_new_test_user(cls.env, login='user_public', groups='base.group_public', name='Bert Tartignole')
@@ -217,7 +217,7 @@ class TestChannelInternals(MailCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestChannelInternals, cls).setUpClass()
+        super().setUpClass()
         cls.test_channel = cls.env['discuss.channel'].browse(cls.env['discuss.channel'].with_context(cls._test_context).channel_create(name='Channel', group_id=None)['id'])
         cls.test_partner = cls.env['res.partner'].with_context(cls._test_context).create({
             'name': 'Test Partner',
