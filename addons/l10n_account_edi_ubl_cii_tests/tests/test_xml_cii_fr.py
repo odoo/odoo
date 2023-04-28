@@ -385,4 +385,4 @@ class TestCIIFR(TestUBLCommon):
             amount_total=108, amount_tax=8, list_line_subtotals=[-5, 10, 60, 28, 7])
         # source: Facture_F20220029_EN_16931_K.pdf, credit note labelled as an invoice with negative amounts
         self._assert_imported_invoice_from_file(subfolder=subfolder, filename='facturx_invoice_negative_amounts.xml',
-            amount_total=90, amount_tax=0, list_line_subtotals=[-5, 10, 0, -10, 60, 30, 5], move_type='in_refund')
+            amount_total=100, amount_tax=0, list_line_subtotals=[-5, 10, 60, 30, 5], move_type='in_refund')
