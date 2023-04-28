@@ -64,38 +64,39 @@
                 <NotificationItem
                     t-foreach="failures" t-as="failure" t-key="failure.id"
                     body="failure.body"
-                    count="failure.notifications.length"
+                    counter="failure.notifications.length > 1 ? failure.notifications.length : undefined"
                     datetime="failure.datetime"
                     displayName="failure.modelName"
                     iconSrc="failure.iconSrc"
-                    isLast="displayedPreviews.length === 0 and failure_last"
+                    isLast="threads.length === 0 and failure_last"
                     hasMarkAsReadButton="true"
                     onClick="(isMarkAsRead) => isMarkAsRead ? this.cancelNotifications(failure) : this.onClickFailure(failure)"
                     onSwipeRight="hasTouch() ? { action: () => this.cancelNotifications(failure), icon: 'fa-times-circle', bgColor: 'bg-warning' } : undefined"
                 />
             </t>
-            <t t-foreach="displayedPreviews" t-as="preview" t-key="preview.id">
+            <t t-foreach="threads" t-as="thread" t-key="thread.localId">
+                <t t-set="message" t-value="thread.isChatChannel or (thread.type === 'channel' and !thread.hasNeedactionMessages) ? thread.newestMessage : thread.newestNeedactionMessage"/>
                 <NotificationItem
-                    body="preview.message?.inlineBody"
-                    count="preview.count"
+                    body="message?.inlineBody"
+                    counter="thread.isChatChannel ? thread.message_unread_counter : thread.hasNeedactionMessages ? thread.message_needaction_counter : undefined"
                     datetime="message?.datetime"
-                    displayName="preview.thread.displayName"
-                    iconSrc="preview.imgUrl"
-                    hasMarkAsReadButton="preview.hasMarkAsReadButton"
-                    isLast="preview_last and failures.length === 0"
-                    onClick="(isMarkAsRead) => this.onClickPreview(isMarkAsRead, preview)"
-                    onSwipeRight="hasTouch() and preview.hasMarkAsReadButton ? { action: () => this.markAsRead(preview), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
-                    onSwipeLeft="hasTouch() and threadService.canUnpin(preview.thread) ? { action: () => this.threadService.unpin(preview), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
+                    displayName="thread.displayName"
+                    iconSrc="thread.imgUrl"
+                    hasMarkAsReadButton="thread.isUnread"
+                    isLast="thread_last"
+                    onClick="(isMarkAsRead) => this.onClickThread(isMarkAsRead, thread)"
+                    onSwipeRight="hasTouch() and thread.isUnread ? { action: () => this.markAsRead(thread), icon: 'fa-check-circle', bgColor: 'bg-success' } : undefined"
+                    onSwipeLeft="hasTouch() and threadService.canUnpin(thread) ? { action: () => this.threadService.unpin(thread), icon: 'fa-times-circle', bgColor: 'bg-danger' } : undefined"
                 >
                     <t t-set-slot="icon">
-                        <ImStatus t-if="preview.thread.type === 'chat'" className="'position-absolute bottom-0 end-0'" persona="preview.thread.correspondent"/>
+                        <ImStatus t-if="thread.type === 'chat'" className="'position-absolute bottom-0 end-0'" persona="thread.correspondent"/>
                     </t>
-                    <t t-if="preview.message" t-set-slot="body-icon">
-                        <t t-if="preview.message.isSelfAuthored">
+                    <t t-if="message" t-set-slot="body-icon">
+                        <t t-if="message.isSelfAuthored">
                             <i class="fa fa-mail-reply me-1"/>You:
                         </t>
-                        <t t-elif="preview.message.author">
-                            <t t-esc="preview.message.author.name"/>:
+                        <t t-elif="message.author">
+                            <t t-esc="message.author.name"/>:
                         </t>
                     </t>
                 </NotificationItem>
