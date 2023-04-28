@@ -1060,6 +1060,8 @@ class AccountMoveLine(models.Model):
                     is_refund = True
                 elif tax_type == {'purchase'} and line.debit == 0:
                     is_refund = True
+                if line.tax_repartition_line_id.factor_percent < 0:
+                    is_refund = not is_refund
             line.is_refund = is_refund
 
     @api.depends('date_maturity')
