@@ -96,6 +96,41 @@ var AttributeTranslateDialog = weDialog.extend({
     },
 });
 
+// Used to translate the text of `<select/>` options since it should not be
+// possible to interact with the content of `.o_translation_select` elements.
+const SelectTranslateDialog = weDialog.extend({
+    /**
+     * @constructor
+     */
+    init(parent, options) {
+        this._super(parent, {
+            ...options,
+            title: _t("Translate Selection Option"),
+            buttons: [
+                {text: _t("Close"), click: this.save}
+            ],
+        });
+        this.optionEl = this.options.targetEl;
+        this.translationObject = this.optionEl.closest('[data-oe-translation-id]');
+    },
+    /**
+     * @override
+     */
+    start() {
+        const inputEl = document.createElement('input');
+        inputEl.className = 'form-control my-3';
+        inputEl.value = this.optionEl.textContent;
+        inputEl.addEventListener('keyup', () => {
+            this.optionEl.textContent = inputEl.value;
+            const translationUpdated = inputEl.value !== this.optionEl.dataset.initialTranslationValue;
+            this.translationObject.classList.toggle('o_dirty', translationUpdated);
+            this.optionEl.classList.add('o_option_translated');
+        });
+        this.el.appendChild(inputEl);
+        return this._super(...arguments);
+    },
+});
+
 const savableSelector = '[data-oe-translation-id], ' +
     '[data-oe-model][data-oe-id][data-oe-field], ' +
     '[placeholder*="data-oe-translation-id="], ' +
@@ -269,6 +304,25 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
                     }
                 });
 
+                // Hack: we add a temporary element to handle option's text
+                // translations from the linked <select/>. The final values are
+                // copied to the original element right before save.
+                self.selectTranslationEls = [];
+                $editable.filter('[data-oe-translation-id] > select').each((index, select) => {
+                    const selectTranslationEl = document.createElement('div');
+                    selectTranslationEl.className = 'o_translation_select';
+                    const optionNames = [...select.options].map(option => option.text);
+                    optionNames.forEach(option => {
+                        const optionEl = document.createElement('div');
+                        optionEl.textContent = option;
+                        optionEl.dataset.initialTranslationValue = option;
+                        optionEl.className = 'o_translation_select_option';
+                        selectTranslationEl.appendChild(optionEl);
+                    });
+                    select.before(selectTranslationEl);
+                    self.selectTranslationEls.push(selectTranslationEl);
+                });
+
                 self.translations = [];
                 self.$translations = self._getEditableArea().filter('.o_translatable_attribute, .o_translatable_text');
                 self.$editables = $('.o_editable_translatable_attribute, .o_editable_translatable_text');
@@ -370,18 +424,25 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
             });
         });
 
-        this.$translations.prependEvent('mousedown.translator click.translator mouseup.translator', function (ev) {
-            if (ev.ctrlKey) {
-                return;
-            }
-            ev.preventDefault();
-            ev.stopPropagation();
-            if (ev.type !== 'mousedown') {
-                return;
-            }
+        this.$translations
+            .add(this._getEditableArea().filter('.o_translation_select_option'))
+            .prependEvent('mousedown.translator click.translator mouseup.translator', function (ev) {
+                if (ev.ctrlKey) {
+                    return;
+                }
+                ev.preventDefault();
+                ev.stopPropagation();
+                if (ev.type !== 'mousedown') {
+                    return;
+                }
 
-            new AttributeTranslateDialog(self, {}, ev.target).open();
-        });
+                const targetEl = ev.target;
+                if (targetEl.closest('.o_translation_select')) {
+                    new SelectTranslateDialog(self, {size: 'medium', targetEl}).open();
+                } else {
+                    new AttributeTranslateDialog(self, {}, ev.target).open();
+                }
+            });
     },
 
     //--------------------------------------------------------------------------
@@ -390,6 +451,19 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
 
     _onSave: function (ev) {
         ev.stopPropagation();
+        // Adapt translation values for `select` > `options`s and remove all
+        // temporary `.o_translation_select` elements.
+        for (const optionsEl of this.selectTranslationEls) {
+            const selectEl = optionsEl.nextElementSibling;
+            const translatedOptions = optionsEl.children;
+            const selectOptions = selectEl.tagName === 'SELECT' ? [...selectEl.options] : [];
+            if (selectOptions.length === translatedOptions.length) {
+                selectOptions.map((option, i) => {
+                    option.text = translatedOptions[i].textContent;
+                });
+            }
+            optionsEl.remove();
+        }
     },
 });
 
