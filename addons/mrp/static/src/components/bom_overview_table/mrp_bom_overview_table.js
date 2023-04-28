@@ -35,6 +35,10 @@ export class BomOverviewTable extends Component {
         return this.props.data;
     }
 
+    get precision() {
+        return this.props.precision;
+    }
+
     get showAvailabilities() {
         return this.props.showOptions.availabilities;
     }
@@ -80,5 +84,6 @@ BomOverviewTable.props = {
     uomName: { type: String, optional: true },
     currentWarehouseId: { type: Number, optional: true },
     data: Object,
+    precision: Number,
     changeFolded: Function,
 };
