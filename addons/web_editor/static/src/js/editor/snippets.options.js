@@ -3731,7 +3731,7 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
                 this.$target.prepend(bgFilterEl);
             }
         } else {
-            this.$target.find('.o_we_bg_filter').remove();
+            this.$target.find('> .o_we_bg_filter').remove();
         }
     },
 

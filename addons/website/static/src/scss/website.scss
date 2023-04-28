@@ -281,6 +281,10 @@ $-header-nav-link-height: $nav-link-height;
     .o_footer_copyright {
         @include o-apply-colors('copyright', $background: o-color('footer'));
     }
+    .s_popup {
+        // The colors of the footer must not impact the "all pages" popup.
+        @include o-apply-colors(1);
+    }
 }
 
 h2, h3, h4, h5, h6 {
@@ -1549,5 +1553,20 @@ $ribbon-padding: 100px;
     &::-moz-placeholder { /* Firefox */
         color: transparent;
         opacity: 0;
+    }
+}
+[data-oe-translation-id] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        & + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
     }
 }

@@ -67,7 +67,7 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
             if xml_id:
                 _remove_xml_id(xml_id)
         _avoid_name_conflict()
-        chart_template.create_record_with_xmlid(company, template, 'account.tax', template_vals)
+        return chart_template.create_record_with_xmlid(company, template, 'account.tax', template_vals)
 
     def _update_tax_from_template(template, tax):
         """ Update the tax's tags (and only tags!) based on template values. """
@@ -153,6 +153,21 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
                     }))
         chart_template._create_records_with_xmlid('account.fiscal.position.tax', tax_template_vals, company)
 
+    def _process_taxes_translations(chart_template, new_template_x_taxes):
+        """
+        Retrieve translations for newly created taxes' name and description
+        for languages of the chart_template.
+        Those languages are the intersection of the spoken_languages of the chart_template
+        and installed languages.
+        """
+        langs = chart_template._get_langs()
+        if langs:
+            template_ids, tax_ids = zip(*new_template_x_taxes)
+            in_ids = env['account.tax.template'].browse(template_ids)
+            out_ids = env['account.tax'].browse(tax_ids)
+            chart_template.process_translations(langs, 'name', in_ids, out_ids)
+            chart_template.process_translations(langs, 'description', in_ids, out_ids)
+
     def _notify_accountant_managers(taxes_to_check):
         accountant_manager_group = env.ref("account.group_account_manager")
         partner_managers_ids = accountant_manager_group.users.partner_id.ids
@@ -173,26 +188,31 @@ def update_taxes_from_templates(cr, chart_template_xmlid):
         )
 
     env = api.Environment(cr, SUPERUSER_ID, {})
-    chart_template_id = env['ir.model.data'].xmlid_to_res_id(chart_template_xmlid)
-    companies = env['res.company'].search(['|', ('chart_template_id', '=', chart_template_id), ('chart_template_id', 'child_of', chart_template_id)])
+    chart_template = env.ref(chart_template_xmlid)
+    companies = env['res.company'].search(['|', ('chart_template_id', '=', chart_template.id), ('chart_template_id', 'child_of', chart_template.id)])
     outdated_taxes = []
     new_taxes_template = []
+    new_template2tax = []
     for company in companies:
         template_to_tax = _get_template_to_real_xmlid_mapping(company, 'account.tax')
-        templates = env['account.tax.template'].with_context(active_test=False).search([('chart_template_id', '=', chart_template_id)])
+        templates = env['account.tax.template'].with_context(active_test=False).search([('chart_template_id', '=', chart_template.id)])
         for template in templates:
             tax = env['account.tax'].browse(template_to_tax.get(template.id))
             if not tax or not _is_tax_and_template_same(template, tax):
-                _create_tax_from_template(company, template, old_tax=tax)
+                new_tax_id = _create_tax_from_template(company, template, old_tax=tax)
+                new_template2tax.append((template.id, new_tax_id))
                 if tax:
                     outdated_taxes.append(tax)
                 else:
                     new_taxes_template.append(template)
             else:
                 _update_tax_from_template(template, tax)
-        _update_fiscal_positions_from_templates(company, chart_template_id, new_taxes_template)
+        _update_fiscal_positions_from_templates(company, chart_template.id, new_taxes_template)
     if outdated_taxes:
         _notify_accountant_managers(outdated_taxes)
+    if hasattr(chart_template, 'spoken_languages') and chart_template.spoken_languages:
+        _process_taxes_translations(chart_template, new_template2tax)
+    return new_template2tax
 
 #  ---------------------------------------------------------------
 #   Account Templates: Account, Tax, Tax Code and chart. + Wizard
