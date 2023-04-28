@@ -644,7 +644,7 @@ export class BaseImportModel {
                     "gb18030",
                     "shift_jis",
                     "windows-1251",
-                    "koir8_r",
+                    "koi8_r",
                 ],
             },
             separator: {
