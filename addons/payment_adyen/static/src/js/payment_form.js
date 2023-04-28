@@ -173,7 +173,7 @@
                             showPayButton: false,
                             setStatusAutomatically: true,
                         },
-                    ).mount(`#o_adyen_dropin_container_${paymentOptionId}`);
+                    ).mount(`#o_adyen_${this.formType}_dropin_container_${paymentOptionId}`);
                     this.adyenDropin.providerId = paymentOptionId;
                 });
             }).guardedCatch((error) => {
