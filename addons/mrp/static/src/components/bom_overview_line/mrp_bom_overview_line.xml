@@ -19,7 +19,7 @@
         </td>
         <td class="text-end">
             <t t-if="data.type == 'operation'" t-esc="formatFloatTime(data.quantity)"/>
-            <t t-else="" t-esc="formatFloat(data.quantity)"/>
+            <t t-else="" t-esc="formatFloat(data.quantity, {'digits': [false, precision]})"/>
         </td>
         <td t-if="showUom" class="text-start" t-esc="data.uom_name"/>
         <td t-if="showAvailabilities" class="text-end">
@@ -27,8 +27,8 @@
         </td>
         <td t-if="showAvailabilities" class="text-end">
             <t t-if="hasQuantity">
-                <t t-esc="formatFloat(data.quantity_available)"/> /
-                <t t-esc="formatFloat(data.quantity_on_hand)"/>
+                <t t-esc="formatFloat(data.quantity_available, {'digits': [false, precision]})"/> /
+                <t t-esc="formatFloat(data.quantity_on_hand, {'digits': [false, precision]})"/>
             </t>
         </td>
         <td t-if="showAvailabilities" class="text-center">
