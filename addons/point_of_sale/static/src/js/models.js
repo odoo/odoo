@@ -1497,12 +1497,6 @@ export class PosGlobalState extends PosModel {
         });
     }
 
-    format_pr(value, precision) {
-        var decimals =
-            precision > 0 ? Math.max(0, Math.ceil(Math.log(1.0 / precision) / Math.log(10))) : 0;
-        return value.toFixed(decimals);
-    }
-
     disallowLineQuantityChange() {
         return false;
     }
