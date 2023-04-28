@@ -571,15 +571,18 @@ export class X2ManyFieldDialog extends Component {
     }
 
     async save({ saveAndNew }) {
+        const disabledButtons = this.disableButtons();
         if (await this.record.checkValidity()) {
             this.record = (await this.props.save(this.record, { saveAndNew })) || this.record;
         } else {
             this.record.openInvalidFieldsNotification();
+            this.enableButtons(disabledButtons);
             return false;
         }
         if (!saveAndNew) {
             this.props.close();
         }
+        this.enableButtons(disabledButtons);
         return true;
     }
 
@@ -589,9 +592,7 @@ export class X2ManyFieldDialog extends Component {
     }
 
     async saveAndNew() {
-        const disabledButtons = this.disableButtons();
         const saved = await this.save({ saveAndNew: true });
-        this.enableButtons(disabledButtons);
         if (saved) {
             if (this.title) {
                 this.title = this.title.replace(this.env._t("Open:"), this.env._t("New:"));
