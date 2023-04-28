@@ -1,11 +1,13 @@
-# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import models
 from odoo.tools import populate
+
 
 class ChannelMember(models.Model):
     _inherit = "discuss.channel.member"
     _populate_dependencies = ["res.partner", "discuss.channel"]
-    _populate_sizes = {'small': 10, 'medium': 100, 'large': 1000}
+    _populate_sizes = {"small": 10, "medium": 100, "large": 1000}
 
     def _populate_factories(self):
         partner_ids = self.env.registry.populated_models["res.partner"]
@@ -18,8 +20,7 @@ class ChannelMember(models.Model):
     def _populate(self, size):
         channel_ids = self.env.registry.populated_models["discuss.channel"]
         for channel_id in channel_ids:
-            self.env['discuss.channel.member'].create({
-                'partner_id': self.env.ref('base.user_admin').partner_id.id,
-                'channel_id': channel_id
-            })
+            self.env["discuss.channel.member"].create(
+                {"partner_id": self.env.ref("base.user_admin").partner_id.id, "channel_id": channel_id}
+            )
         return super()._populate(size)
