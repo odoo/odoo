@@ -72,7 +72,7 @@
     <t t-name="web.Breadcrumbs" owl="1">
         <t t-set="currentBreadcrumbs" t-value="breadcrumbs.slice(-1)"/>
         <t t-set="visiblePathBreadcrumbs" t-value="breadcrumbs.slice(-3, -1)"/>
-        <t t-set="collapsedBreadcrumbs" t-value="breadcrumbs.slice(0, -3)"/>
+        <t t-set="collapsedBreadcrumbs" t-value="breadcrumbs.slice(0, -3).reverse()"/>
         <t t-set="breadcrumb" t-value="currentBreadcrumbs[0] || {}"/>
 
         <div t-if="collapsedBreadcrumbs.length || visiblePathBreadcrumbs.length" class="d-flex flex-row flex-md-column align-self-stretch justify-content-between min-w-0">
