@@ -10,6 +10,7 @@ import { getCell, getCellContent, getCellFormula, getCells, getCellValue } from 
 import { createSpreadsheetWithList } from "../utils/list";
 import { registry } from "@web/core/registry";
 import { RPCError } from "@web/core/network/rpc_service";
+import { getBasicServerData } from "../utils/data";
 
 QUnit.module("spreadsheet > list plugin", {}, () => {
     QUnit.test("List export", async (assert) => {
@@ -46,6 +47,24 @@ QUnit.module("spreadsheet > list plugin", {}, () => {
         const { model } = await createSpreadsheetWithList({ columns: ["bar"] });
         assert.strictEqual(getCellValue(model, "A2"), "TRUE");
         assert.strictEqual(getCellValue(model, "A5"), "FALSE");
+    });
+
+    QUnit.test("properties field displays property display names", async (assert) => {
+        const serverData = getBasicServerData();
+        serverData.models.partner.records = [
+            {
+                id: 45,
+                partner_properties: [
+                    { name: "dbfc66e0afaa6a8d", type: "date", string: "prop 1", default: false },
+                    { name: "f80b6fb58d0d4c72", type: "integer", string: "prop 2", default: 0 },
+                ],
+            },
+        ];
+        const { model } = await createSpreadsheetWithList({
+            serverData,
+            columns: ["partner_properties"],
+        });
+        assert.strictEqual(getCellValue(model, "A2"), "prop 1, prop 2");
     });
 
     QUnit.test("Can display a field which is not in the columns", async function (assert) {

@@ -340,6 +340,13 @@ export function getBasicData() {
                     group_operator: "avg",
                     searchable: true,
                 },
+                partner_properties: {
+                    string: "Properties",
+                    type: "properties",
+                    store: true,
+                    sortable: true,
+                    searchable: true,
+                },
             },
             records: [
                 {
