@@ -5,7 +5,7 @@ import { Mutex } from "@web/core/utils/concurrency";
 import { session } from "@web/session";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { ErrorBarcodePopup } from "@point_of_sale/js/Popups/ErrorBarcodePopup";
-import BarcodeParser from "barcodes.BarcodeParser";
+import { BarcodeParser } from "@barcodes/js/barcode_parser";
 
 export class BarcodeReader {
     static serviceDependencies = ["popup", "hardware_proxy"];
@@ -103,14 +103,17 @@ export class BarcodeReader {
 }
 
 export const barcodeReaderService = {
-    dependencies: [...BarcodeReader.serviceDependencies, "popup", "barcode"],
+    dependencies: [...BarcodeReader.serviceDependencies, "popup", "barcode", "orm"],
     async start(env, deps) {
-        const { popup, barcode } = deps;
+        const { popup, barcode, orm } = deps;
         let barcodeReader = null;
 
         if (session.nomenclature_id) {
-            const parser = new BarcodeParser({ nomenclature_id: [session.nomenclature_id] });
-            await parser.is_loaded();
+            const nomenclature = await BarcodeParser.fetchNomenclature(
+                orm,
+                session.nomenclature_id
+            );
+            const parser = new BarcodeParser({ nomenclature });
             barcodeReader = new BarcodeReader(parser, deps);
         }
 

@@ -1,43 +1,29 @@
 /** @odoo-module **/
 
-import BarcodeParser from "barcodes.BarcodeParser";
+import { BarcodeParser } from "@barcodes/js/barcode_parser";
 
 
 QUnit.module('Barcodes', {}, function () {
-QUnit.module('Barcode Parser', {
-    beforeEach: function () {
-        this.data = {
-            'barcode.nomenclature': {
-                fields: {
-                    name: {type: 'char', string: 'Barcode Nomenclature'},
-                    rule_ids: {type: 'one2many', relation: 'barcode.rule'},
-                    upc_ean_conv: {type: 'selection', string: 'UPC/EAN Conversion'},
-                },
-                records: [
-                    {id: 1, name: "normal", upc_ean_conv: "always"},
-                ],
-            },
-            'barcode.rule': {
-                fields: {
-                    name: {type: 'char', string: 'Barcode Nomenclature'},
-                    barcode_nomenclature_id: {type: 'many2one', relation: 'barcode.nomenclature'},
-                    sequence: {type: 'integer', string: 'Sequence'},
-                    encoding: {type: 'selection', string: 'Encoding'},
-                    type: {type: 'selection', string: 'Type'},
-                    pattern: {type: 'Char', string: 'Pattern'},
-                    alias: {type: 'Char', string: 'Alias'},
-                },
-                records: [
-                    {id: 1, name: "Product Barcodes", barcode_nomenclature_id: 1, sequence: 90, type: 'product', encoding: 'any', pattern: ".*"},
-                ],
-            }
-        };
-    }
-}, function () {
-    QUnit.test('Test check digit', async function (assert) {
+QUnit.module('Barcode Parser', function () {
+    QUnit.test('Test check digit', function (assert) {
         assert.expect(6);
-        const barcodeNomenclature = new BarcodeParser({'nomenclature_id': 1});
-        await barcodeNomenclature.loaded;
+        const nomenclature = {
+            id: 1,
+            name: "normal",
+            upc_ean_conv: "always",
+            rules: [
+                {
+                    id: 1,
+                    name: "Product Barcodes",
+                    barcode_nomenclature_id: 1,
+                    sequence: 90,
+                    type: "product",
+                    encoding: "any",
+                    pattern: ".*",
+                },
+            ],
+        };
+        const barcodeNomenclature = new BarcodeParser({ nomenclature });
 
         let ean8 = "87111125";
         assert.equal(barcodeNomenclature.get_barcode_check_digit(ean8), ean8[ean8.length - 1]);
