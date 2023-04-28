@@ -3,13 +3,11 @@
 import * as spreadsheet from "@odoo/o-spreadsheet";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
 import { getMaxObjectId } from "../../helpers/helpers";
-import ListDataSource from "../list_data_source";
 import { TOP_LEVEL_STYLE } from "../../helpers/constants";
 import { _t } from "@web/core/l10n/translation";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
 import { sprintf } from "@web/core/utils/strings";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
-import { getFirstListFunction, getNumberOfListFormulas } from "../list_helpers";
 
 /**
  * @typedef {Object} ListDefinition
@@ -35,7 +33,6 @@ const { CorePlugin } = spreadsheet;
 export default class ListCorePlugin extends CorePlugin {
     constructor(config) {
         super(config);
-        this.dataSources = config.custom.dataSources;
 
         this.nextId = 1;
         /** @type {Object.<string, List>} */
@@ -46,9 +43,7 @@ export default class ListCorePlugin extends CorePlugin {
             getDisplayName: (listId) => this.getters.getListName(listId),
             getTag: (listId) => sprintf(_t("List #%s"), listId),
             getFieldMatching: (listId, filterId) => this.getListFieldMatching(listId, filterId),
-            waitForReady: () => this.getListsWaitForReady(),
             getModel: (listId) => this.getListDefinition(listId).model,
-            getFields: (listId) => this.getListDataSource(listId).getFields(),
         };
     }
 
@@ -87,10 +82,9 @@ export default class ListCorePlugin extends CorePlugin {
     handle(cmd) {
         switch (cmd.type) {
             case "INSERT_ODOO_LIST": {
-                const { sheetId, col, row, id, definition, dataSourceId, linesNumber, columns } =
-                    cmd;
+                const { sheetId, col, row, id, definition, linesNumber, columns } = cmd;
                 const anchor = [col, row];
-                this._addList(id, definition, dataSourceId, linesNumber);
+                this._addList(id, definition);
                 this._insertList(sheetId, anchor, id, linesNumber, columns);
                 this.history.update("nextId", parseInt(id, 10) + 1);
                 break;
@@ -120,19 +114,6 @@ export default class ListCorePlugin extends CorePlugin {
                     "domain",
                     cmd.domain
                 );
-                const list = this.lists[cmd.listId];
-                this.dataSources.add(list.dataSourceId, ListDataSource, list.definition);
-                break;
-            }
-            case "UNDO":
-            case "REDO": {
-                const domainEditionCommands = cmd.commands.filter(
-                    (cmd) => cmd.type === "UPDATE_ODOO_LIST_DOMAIN"
-                );
-                for (const cmd of domainEditionCommands) {
-                    const list = this.lists[cmd.listId];
-                    this.dataSources.add(list.dataSourceId, ListDataSource, list.definition);
-                }
                 break;
             }
             case "ADD_GLOBAL_FILTER":
@@ -144,63 +125,12 @@ export default class ListCorePlugin extends CorePlugin {
             case "REMOVE_GLOBAL_FILTER":
                 this._onFilterDeletion(cmd.id);
                 break;
-
-            case "START":
-                for (const sheetId of this.getters.getSheetIds()) {
-                    const cells = this.getters.getCells(sheetId);
-                    for (const cell of Object.values(cells)) {
-                        if (cell.isFormula) {
-                            this._addListPositionToDataSource(cell.content);
-                        }
-                    }
-                }
-                break;
-            case "UPDATE_CELL":
-                if (cmd.content) {
-                    this._addListPositionToDataSource(cmd.content);
-                }
-                break;
         }
-    }
-
-    /**
-     * Extract the position of the records asked in the given formula and
-     * increase the max position of the corresponding data source.
-     *
-     * @param {string} content Odoo list formula
-     */
-    _addListPositionToDataSource(content) {
-        if (getNumberOfListFormulas(content) !== 1) {
-            return;
-        }
-        const { functionName, args } = getFirstListFunction(content);
-        if (functionName !== "ODOO.LIST") {
-            return;
-        }
-        const [listId, positionArg] = args.map((arg) => arg.value.toString());
-        if (!(listId in this.lists)) {
-            return;
-        }
-        const position = parseInt(positionArg, 10);
-        if (isNaN(position)) {
-            return;
-        }
-        const dataSourceId = this.lists[listId].dataSourceId;
-        this.dataSources.get(dataSourceId).increaseMaxPosition(position);
     }
 
     // -------------------------------------------------------------------------
     // Getters
     // -------------------------------------------------------------------------
-
-    /**
-     * @param {string} id
-     * @returns {import("@spreadsheet/list/list_data_source").default|undefined}
-     */
-    getListDataSource(id) {
-        const dataSourceId = this.lists[id].dataSourceId;
-        return this.dataSources.get(dataSourceId);
-    }
 
     /**
      * @param {string} id
@@ -224,16 +154,6 @@ export default class ListCorePlugin extends CorePlugin {
      */
     getListFieldMatch(id) {
         return this.lists[id].fieldMatching;
-    }
-
-    /**
-     * @param {string} id
-     * @returns {Promise<import("@spreadsheet/list/list_data_source").default>}
-     */
-    async getAsyncListDataSource(id) {
-        const dataSourceId = this.lists[id].dataSourceId;
-        await this.dataSources.load(dataSourceId);
-        return this.getListDataSource(id);
     }
 
     /**
@@ -271,6 +191,10 @@ export default class ListCorePlugin extends CorePlugin {
         };
     }
 
+    getListModelDefinition(id) {
+        return this.lists[id].definition;
+    }
+
     /**
      * Check if an id is an id of an existing list
      *
@@ -285,14 +209,6 @@ export default class ListCorePlugin extends CorePlugin {
     // ---------------------------------------------------------------------
     // Private
     // ---------------------------------------------------------------------
-
-    /**
-     *
-     * @return {Promise[]}
-     */
-    getListsWaitForReady() {
-        return this.getListIds().map((ListId) => this.getListDataSource(ListId).loadMetadata());
-    }
 
     /**
      * Get the current FieldMatching on a list
@@ -325,21 +241,14 @@ export default class ListCorePlugin extends CorePlugin {
         }
     }
 
-    _addList(id, definition, dataSourceId, limit, fieldMatching = {}) {
+    _addList(id, definition, fieldMatching = {}) {
         const lists = { ...this.lists };
         lists[id] = {
             id,
             definition,
-            dataSourceId,
             fieldMatching,
         };
 
-        if (!this.dataSources.contains(dataSourceId)) {
-            this.dataSources.add(dataSourceId, ListDataSource, {
-                ...definition,
-                limit,
-            });
-        }
         this.history.update("lists", lists);
     }
 
@@ -471,7 +380,7 @@ export default class ListCorePlugin extends CorePlugin {
                     },
                     name: list.name,
                 };
-                this._addList(id, definition, this.uuidGenerator.uuidv4(), 0, list.fieldMatching);
+                this._addList(id, definition, list.fieldMatching);
             }
         }
         this.nextId = data.listNextId || getMaxObjectId(this.lists) + 1;
@@ -492,10 +401,9 @@ export default class ListCorePlugin extends CorePlugin {
 }
 
 ListCorePlugin.getters = [
-    "getListDataSource",
     "getListDisplayName",
-    "getAsyncListDataSource",
     "getListDefinition",
+    "getListModelDefinition",
     "getListIds",
     "getListName",
     "getNextListId",
