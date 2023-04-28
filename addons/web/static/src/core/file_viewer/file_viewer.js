@@ -4,14 +4,28 @@ import { Component, useExternalListener, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 /**
+ * @typedef {Object} File
+ * @property {string} displayName
+ * @property {string} downloadUrl
+ * @property {boolean} [isImage]
+ * @property {boolean} [isPdf]
+ * @property {boolean} [isVideo]
+ * @property {boolean} [isText]
+ * @property {string} [defaultSource]
+ * @property {boolean} [isUrlYoutube]
+ * @property {string} [mimetype]
+ * @property {boolean} [isViewable]
  * @typedef {Object} Props
- * @property {Array<T>} attachments
+ * @property {Array<File>} files
+ * @property {number} startIndex
+ * @property {function} close
+ * @property {boolean} [modal]
  * @extends {Component<Props, Env>}
  */
-export class AttachmentViewer extends Component {
-    static template = "web.AttachmentViewer";
+export class FileViewer extends Component {
+    static template = "web.FileViewer";
     static components = {};
-    static props = ["attachments", "startIndex", "close", "modal?"];
+    static props = ["files", "startIndex", "close", "modal?"];
     static defaultProps = {
         modal: true,
     };
@@ -37,7 +51,7 @@ export class AttachmentViewer extends Component {
         useExternalListener(document, "keydown", this.onKeydown);
         this.state = useState({
             index: this.props.startIndex,
-            attachment: this.props.attachments[this.props.startIndex],
+            file: this.props.files[this.props.startIndex],
             imageLoaded: false,
             scale: 1,
             angle: 0,
@@ -54,18 +68,18 @@ export class AttachmentViewer extends Component {
     }
 
     next() {
-        const last = this.props.attachments.length - 1;
-        this.activateAttachment(this.state.index === last ? 0 : this.state.index + 1);
+        const last = this.props.files.length - 1;
+        this.activateFile(this.state.index === last ? 0 : this.state.index + 1);
     }
 
     previous() {
-        const last = this.props.attachments.length - 1;
-        this.activateAttachment(this.state.index === 0 ? last : this.state.index - 1);
+        const last = this.props.files.length - 1;
+        this.activateFile(this.state.index === 0 ? last : this.state.index - 1);
     }
 
-    activateAttachment(index) {
+    activateFile(index) {
         this.state.index = index;
-        this.state.attachment = this.props.attachments[index];
+        this.state.file = this.props.files[index];
     }
 
     onKeydown(ev) {
@@ -228,7 +242,7 @@ export class AttachmentViewer extends Component {
                         </script>
                     </head>
                     <body onload='onloadImage()'>
-                        <img src="${this.state.attachment.defaultSource}" alt=""/>
+                        <img src="${this.state.file.defaultSource}" alt=""/>
                     </body>
                 </html>`);
         printWindow.document.close();

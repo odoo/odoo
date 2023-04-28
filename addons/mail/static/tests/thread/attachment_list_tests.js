@@ -115,7 +115,7 @@ QUnit.test("view attachment", async (assert) => {
     await openDiscuss(channelId);
     assert.containsOnce($, ".o-mail-AttachmentImage img");
     await click(".o-mail-AttachmentImage");
-    assert.containsOnce($, ".o-AttachmentViewer");
+    assert.containsOnce($, ".o-FileViewer");
 });
 
 QUnit.test("close attachment viewer", async (assert) => {
@@ -140,10 +140,10 @@ QUnit.test("close attachment viewer", async (assert) => {
     assert.containsOnce($, ".o-mail-AttachmentImage img");
 
     await click(".o-mail-AttachmentImage");
-    assert.containsOnce($, ".o-AttachmentViewer");
+    assert.containsOnce($, ".o-FileViewer");
 
-    await click(".o-AttachmentViewer div[aria-label='Close']");
-    assert.containsNone($, ".o-AttachmentViewer");
+    await click(".o-FileViewer div[aria-label='Close']");
+    assert.containsNone($, ".o-FileViewer");
 });
 
 QUnit.test(
@@ -177,8 +177,8 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click(".o-mail-AttachmentImage");
-        const image = $(".o-AttachmentViewer-viewImage")[0];
-        await click(".o-AttachmentViewer div[aria-label='Close']");
+        const image = $(".o-FileViewer-viewImage")[0];
+        await click(".o-FileViewer div[aria-label='Close']");
         // Simulate image becoming loaded.
         let successfulLoad;
         try {
@@ -314,10 +314,10 @@ QUnit.test(
 
         click(".o-mail-AttachmentCard:contains(test.odt)").catch(() => {});
         await nextTick();
-        assert.containsNone($, ".o-AttachmentViewer");
+        assert.containsNone($, ".o-FileViewer");
 
         await click(".o-mail-AttachmentImage[title='test.png']");
-        assert.containsOnce($, ".o-AttachmentViewer");
+        assert.containsOnce($, ".o-FileViewer");
     }
 );
 
