@@ -3252,37 +3252,20 @@ class Properties(Field):
 
         raise ValueError(f"Wrong property type {type(value)!r}")
 
-    # Record format: the value is a list, where each element is a dict
-    # containing the definition of a property, together with the property's
-    # corresponding value, like
+    # Record format: the value is either False, or a dict mapping property
+    # names to their corresponding value, like
     #
-    #       [{
-    #           'name': '3adf37f3258cfe40',
-    #           'string': 'Color Code',
-    #           'type': 'char',
-    #           'default': 'blue',
-    #           'value': 'red',
-    #       }, {
-    #           'name': 'aa34746a6851ee4e',
-    #           'string': 'Partner',
-    #           'type': 'many2one',
-    #           'comodel': 'test_new_api.partner',
-    #           'value': 1337,
-    #       }]
+    #       {
+    #           '3adf37f3258cfe40': 'red',
+    #           'aa34746a6851ee4e': 1337,
+    #       }
     #
     def convert_to_record(self, value, record):
-        # value is in cache format
-        definition = self._get_properties_definition(record)
-        if not value or not definition:
-            return definition or []
+        return False if value is None else copy.deepcopy(value)
 
-        assert isinstance(value, dict), f"Wrong type {value!r}"
-        value = self._dict_to_list(value, definition)
-
-        return value
-
-    # Read format: almost identical to the record format, except that relational
-    # field values have a display name.
+    # Read format: the value is a list, where each element is a dict containing
+    # the definition of a property, together with the property's corresponding
+    # value, where relational field values have a display name.
     #
     #       [{
     #           'name': '3adf37f3258cfe40',
@@ -3304,17 +3287,27 @@ class Properties(Field):
     def convert_to_read_multi(self, values, records, use_name_get=True):
         assert len(values) == len(records)
 
-        res_ids_per_model = self._get_res_ids_per_model(records, values, use_name_get)
+        # each value is either None or a dict
+        result = []
+        for record, value in zip(records, values):
+            definition = self._get_properties_definition(record)
+            if not value or not definition:
+                result.append(definition or [])
+            else:
+                assert isinstance(value, dict), f"Wrong type {value!r}"
+                result.append(self._dict_to_list(value, definition))
+
+        res_ids_per_model = self._get_res_ids_per_model(records, result, use_name_get)
 
         # value is in record format
-        for value in values:
+        for value in result:
             self._parse_json_types(value, records.env, res_ids_per_model)
 
         if use_name_get:
-            for value in values:
+            for value in result:
                 self._add_display_name(value, records.env)
 
-        return values
+        return result
 
     def convert_to_write(self, value, record):
         """If we write a list on the child, update the definition record."""
@@ -3326,8 +3319,14 @@ class Properties(Field):
         return super().convert_to_write(value, record)
 
     def convert_to_onchange(self, value, record, names):
-        self._add_display_name(value, record.env)
-        return value
+        # hack for method onchange(): we invalidate the cache before generating
+        # the diff, so the properties definition record is not available in
+        # cache; to get the right value, we retrieve the definition record from
+        # the onchange snapshot, and put it in the cache of record
+        snapshot = names.get('__snapshot')
+        if snapshot is not None:
+            record._cache[self.definition_record] = snapshot[self.definition_record].id or None
+        return super().convert_to_onchange(value, record, names)
 
     def _get_res_ids_per_model(self, records, values_list, use_name_get=True):
         """Read everything needed in batch for the given records.
