@@ -265,7 +265,7 @@ msgstr ""
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid ", enter to"
-msgstr ""
+msgstr ", eingeben, um"
 
 #. module: mail
 #. odoo-javascript
@@ -942,7 +942,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.constraint,message:mail.constraint_res_users_settings_volumes_partner_or_guest_exists
 msgid "A volume setting must have a partner or a guest."
-msgstr ""
+msgstr "Eine Volumeneinstellung muss einen Partner oder einen Gast haben."
 
 #. module: mail
 #. odoo-javascript
@@ -1115,6 +1115,8 @@ msgstr "Aktivitäten"
 #: model:ir.model.constraint,message:mail.constraint_mail_activity_check_res_id_is_set
 msgid "Activities have to be linked to records with a not null res_id."
 msgstr ""
+"Aktivitäten müssen mit Datensätzen verknüpft werden, deren res_id nicht null"
+" ist."
 
 #. module: mail
 #. odoo-javascript
@@ -1220,6 +1222,8 @@ msgstr "Abonnenten hinzufügen"
 #, python-format
 msgid "Add Followers can only be done on a mail thread models"
 msgstr ""
+"„Follower hinzufügen“ kann nur bei einem E-Mail-Thread-Modell ausgeführt "
+"werden"
 
 #. module: mail
 #. odoo-javascript
@@ -1561,7 +1565,7 @@ msgstr "Zuweisen an ..."
 #: code:addons/mail/static/src/views/fields/assign_user_command_hook.js:0
 #, python-format
 msgid "Assign/Unassign to me"
-msgstr ""
+msgstr "Mir zuweisen/Nicht mit zuweisen"
 
 #. module: mail
 #. odoo-javascript
@@ -2130,7 +2134,7 @@ msgstr "CC"
 #: model:ir.model.fields,field_description:mail.field_mail_activity__chaining_type
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__chaining_type
 msgid "Chaining Type"
-msgstr ""
+msgstr "Verkettungstyp"
 
 #. module: mail
 #. odoo-javascript
@@ -2948,7 +2952,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_label
 msgid "Delay Label"
-msgstr ""
+msgstr "Verzögerungsbezeichnung"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
@@ -3075,6 +3079,7 @@ msgstr "Verbindung zum RTC-Call durch den Server unterbrochen"
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -3726,7 +3731,7 @@ msgstr "Die Vorlage inline_template konnte nicht gerendert werden : %s)"
 #: code:addons/mail/models/mail_render_mixin.py:0
 #, python-format
 msgid "Failed to render template : %s"
-msgstr ""
+msgstr "Vorlage konnte nicht gerendert werden: %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__failure_reason
@@ -4211,7 +4216,7 @@ msgstr "Hat Mailaktivität"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_blacklist
 msgid "Has Mail Blacklist"
-msgstr ""
+msgstr "Hat Schwarze Liste für E-Mails"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_model__is_mail_thread
@@ -4522,6 +4527,8 @@ msgstr ""
 #: model:ir.model.fields,help:mail.field_mail_mail__to_delete
 msgid "If set, the mail will be deleted during the next Email Queue CRON run."
 msgstr ""
+"Wenn diese Option gesetzt ist, wird die E-Mail beim nächsten CRON-Lauf der "
+"E-Mail-Warteschlange gelöscht."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail__scheduled_date
@@ -4530,6 +4537,10 @@ msgid ""
 "the email will be send as soon as possible. Unless a timezone is specified, "
 "it is considered as being in UTC timezone."
 msgstr ""
+"Wenn diese Option gesetzt ist, sendet der Warteschlangenmanager die E-Mail "
+"nach diesem Datum. Wenn nicht festgelegt, wird die E-Mail so schnell wie "
+"möglich versendet. Wenn keine Zeitzone angegeben ist, wird davon "
+"ausgegangen, dass es sich um die UTC-Zeitzone handelt."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_template__scheduled_date
@@ -4569,6 +4580,10 @@ msgid ""
 "Instead, it will check for the reply_to in tracking message-id and "
 "redirected accordingly. This has an impact on the generated message-id."
 msgstr ""
+"Wenn true, werden die Antworten nicht in den ursprünglichen "
+"Diskussionsthread des Dokuments gestellt. Stattdessen wird nach der reply_to"
+" in der Verfolgungsnachricht-ID gesucht und entsprechend weitergeleitet. "
+"Dies hat Auswirkungen auf die generierte Nachricht-ID."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_res_config_settings__alias_domain
@@ -4881,7 +4896,7 @@ msgstr "Ist ein Chat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_channel_open
 msgid "Is discuss sidebar category channel open?"
-msgstr ""
+msgstr "Ist die Diskussion über die Seitenleistekategorie Kanal offen?"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__is_discuss_sidebar_category_chat_open
@@ -5247,12 +5262,12 @@ msgstr "Letztes Abholdatum"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__fetched_message_id
 msgid "Last Fetched"
-msgstr ""
+msgstr "Zuletzt abgerufen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__last_interest_dt
 msgid "Last Interest"
-msgstr ""
+msgstr "Letztes Interesse"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server____last_update
@@ -5365,7 +5380,7 @@ msgstr "Zuletzt aktualisiert am"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__last_seen_dt
 msgid "Last seen date"
-msgstr ""
+msgstr "Letztes gesehenes Datum"
 
 #. module: mail
 #. odoo-javascript
@@ -7917,7 +7932,7 @@ msgstr "Antwort an"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 msgid "Reply-to Address"
-msgstr ""
+msgstr "„Antwort an“-Adresse"
 
 #. module: mail
 #. odoo-javascript
@@ -7939,7 +7954,7 @@ msgstr "Anfordernder Partner"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__res_users_settings_ids
 msgid "Res Users Settings"
-msgstr ""
+msgstr "Res-Benutzereinstellungen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_resend_partner__resend_wizard_id
@@ -8021,7 +8036,7 @@ msgstr "Rich-text/HTML-Nachricht"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_member__rtc_inviting_session_id
 msgid "Ringing session"
-msgstr ""
+msgstr "Klingelnde Sitzung"
 
 #. module: mail
 #. odoo-javascript
@@ -8078,6 +8093,13 @@ msgstr "SSL"
 #: model:ir.model.fields,field_description:mail.field_fetchmail_server__is_ssl
 msgid "SSL/TLS"
 msgstr "SSL/TLS"
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
 
 #. module: mail
 #. odoo-javascript
@@ -8644,7 +8666,7 @@ msgstr "Nur Video-Teilnehmer anzeigen"
 #: code:addons/mail/static/src/components/channel_invitation_form/channel_invitation_form.xml:0
 #, python-format
 msgid "Showing"
-msgstr ""
+msgstr "Anzeige von"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__ref_ir_act_window
@@ -8812,7 +8834,7 @@ msgstr "Bildschirm nicht mehr teilen"
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_compose_message__reply_to_mode__update
 msgid "Store email and replies in the chatter of each record"
-msgstr ""
+msgstr "E-Mail und Antworten im Chatter jedes Eintrags speichern"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_link_preview
@@ -8879,7 +8901,7 @@ msgstr "Subtypen"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__suggested_next_type_ids
 msgid "Suggest"
-msgstr ""
+msgstr "Vorschlagen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_activity_type__chaining_type__suggest
@@ -9058,7 +9080,7 @@ msgstr "Vorlagenvorschau Sprache"
 #. module: mail
 #: model:ir.model,name:mail.model_template_reset_mixin
 msgid "Template Reset Mixin"
-msgstr ""
+msgstr "Vorlage zurücksetzen Mixin"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_template__description
@@ -9090,6 +9112,8 @@ msgstr ""
 #, python-format
 msgid "Template rendering should be called only using on a list of IDs."
 msgstr ""
+"Das Rendering von Vorlagen sollte nur anhand einer Liste von IDs aufgerufen "
+"werden."
 
 #. module: mail
 #. odoo-python
@@ -9314,7 +9338,7 @@ msgstr "Der Server „%s“ kann nicht verwendet werden, da er archiviert ist."
 #: code:addons/mail/static/src/models/blur_manager.js:0
 #, python-format
 msgid "The source stream was removed before the beginning of the blur process"
-msgstr ""
+msgstr "Der Quellstrom wurde vor Beginng des Trübungsverfahrens entfernt"
 
 #. module: mail
 #. odoo-javascript
@@ -9328,6 +9352,7 @@ msgstr "Die Abonnementeinstellungen wurden erfolgreich übernommen."
 #: model:ir.model.fields,help:mail.field_mail_message__preview
 msgid "The text-only beginning of the body used as email preview."
 msgstr ""
+"Der Nur-Text-Anfang des Textes, der als E-Mail-Vorschau verwendet wird."
 
 #. module: mail
 #. odoo-javascript
@@ -9351,7 +9376,7 @@ msgstr "Diesen"
 #: code:addons/mail/models/ir_actions_server.py:0
 #, python-format
 msgid "This action cannot be done on transient models."
-msgstr ""
+msgstr "Diese Aktion kann bei Übergangsmodellen nicht durchgeführt werden."
 
 #. module: mail
 #. odoo-javascript
@@ -9443,7 +9468,7 @@ msgstr "Beitrag"
 #: code:addons/mail/static/src/components/thread_needaction_preview/thread_needaction_preview.xml:0
 #, python-format
 msgid "Thread Image"
-msgstr ""
+msgstr "Thread Bild"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_guest__timezone
@@ -9625,7 +9650,7 @@ msgstr "Nachverfolgungswerte"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__tracking_sequence
 msgid "Tracking field sequence"
-msgstr ""
+msgstr "Verfolgungsfeldsequenz"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__tracking_value_ids
@@ -10026,7 +10051,7 @@ msgstr "Benutzereinstellungen"
 #. module: mail
 #: model:ir.model,name:mail.model_res_users_settings_volumes
 msgid "User Settings Volumes"
-msgstr ""
+msgstr "Benutzereinstellungen Volumen"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__message_type__user_notification
@@ -10225,12 +10250,12 @@ msgstr "Volumen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_users_settings_view_form
 msgid "Volume per partner"
-msgstr ""
+msgstr "Volumen pro Partner"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users_settings__volume_settings_ids
 msgid "Volumes of other partners"
-msgstr ""
+msgstr "Volumen anderer Partner"
 
 #. module: mail
 #. odoo-javascript
@@ -12832,7 +12857,7 @@ msgstr "Flasche mit Knallkorken"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "bounce"
-msgstr ""
+msgstr "bounce"
 
 #. module: mail
 #. odoo-javascript
@@ -13786,7 +13811,7 @@ msgstr "cat with wry smile"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "catchall"
-msgstr ""
+msgstr "Catch-All"
 
 #. module: mail
 #. odoo-javascript
@@ -17260,7 +17285,7 @@ msgstr "Ausbruch"
 #: code:addons/mail/static/src/components/composer/composer.xml:0
 #, python-format
 msgid "escape to"
-msgstr ""
+msgstr "escapen nach"
 
 #. module: mail
 #. odoo-javascript
@@ -24170,6 +24195,13 @@ msgstr "Medaille"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
@@ -28864,6 +28896,8 @@ msgid ""
 "reply to model %s that does not accept document update, fall back on "
 "document creation"
 msgstr ""
+"Antwort auf Modell %s, das die Dokumentaktualisierung nicht akzeptiert, "
+"Rückgriff auf Dokumentenerstellung"
 
 #. module: mail
 #. odoo-javascript

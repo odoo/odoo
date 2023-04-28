@@ -1067,11 +1067,11 @@ msgstr ""
 "você precisa colocar os intervalos de números que lhe foram atribuídos\n"
 "pelo governo em Contabilidade> Clientes> e-Faktur\n"
 "\n"
-"Quando você valida uma fatura, onde o parceiro tem o ID PKP\n"
-"campo marcado, um número de imposto será atribuído a essa fatura.\n"
+"Quando você valida uma fatura, onde o parceiro tem o campo ID PKP\n"
+"marcado, um número de imposto será atribuído a essa fatura.\n"
 "Depois, você pode filtrar as notas fiscais ainda para exportar no\n"
 "lista de faturas e clique em Ação> Baixar e-Faktur para baixar\n"
-"o csv e carregue-o no site do governo.\n"
+"o CSV e carregue-o no site do governo.\n"
 "\n"
 "Você pode substituir uma fatura já enviada por outra, indicando\n"
 "a fatura substituída e a nova e você pode redefinir uma fatura\n"
@@ -1251,9 +1251,9 @@ msgid ""
 msgstr ""
 "\n"
 "        O propósito desse módulo é implementar campos \"esparsos\" e.g,. campos que\n"
-"        são quase sempre null. Essa implementação faz contorno à limitação de números \n"
+"        são quase sempre nulos. Essa implementação contorna a limitação de números \n"
 "        de colunas em uma tabela do PostgreSQL. Esses valores são todos campos esparsos\n"
-"        armazenados em um campo \"serializado\" na forma de um mapeamento JSON.\n"
+"        armazenados em um campo \"seriado\" na forma de um mapeamento JSON.\n"
 "            "
 
 #. module: base
@@ -1333,7 +1333,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Este módulo adiciona suporte para a geração de código QR de transferência de crédito SEPA.\n"
+"        Este módulo adiciona suporte para a geração de QR code de transferência de crédito SEPA.\n"
 "    "
 
 #. module: base
@@ -2215,102 +2215,6 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
-"\n"
-"ABA Credit Transfer\n"
-"===================\n"
-"\n"
-"This module allows the generation of payment batches as ABA (Australian\n"
-"Bankers Association) text files.  The generated 'aba' file can be uploaded\n"
-"to many Australian banks.\n"
-"\n"
-"Setup\n"
-"-----\n"
-"\n"
-"- *Account > Configuration > invoicing > Journals*\n"
-"\n"
-"    If needed, create new journal or choose an existing journal with **Type**\n"
-"    set to *“Bank”*.\n"
-"\n"
-"    On **Advanced Settings**, ensure ABA Credit Transfer is ticked.\n"
-"\n"
-"    On the **Bank Account** tab, enter the **Account Number**.\n"
-"\n"
-"    On the same tab, ensure the ABA transfer information is set up.\n"
-"\n"
-"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Financial Institution Code** - Required (provided by bank or can be found\n"
-"    on Google).  It is three uppercase 3 characters.\n"
-"\n"
-"    **Supplying User Name** - Some banks allow this to be freeform, some banks\n"
-"    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
-"    cannot be longer than 26 characters.\n"
-"\n"
-"    **APCA Identification Number** - User Identification number is bank\n"
-"    allocated.  It is 6 digits.\n"
-"\n"
-"    **Include Self Balancing Transaction** - Some institutions require that the\n"
-"    last be a self balancing transaction which is used as a verification.\n"
-"\n"
-"- *Accounting > Configuration > Payments > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the journal name.\n"
-"\n"
-"    Editing will show the **Account Number**.  This is important as it is used by\n"
-"    the ABA process.\n"
-"\n"
-"    **Bank** is optional.\n"
-"\n"
-"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
-"\n"
-"    Paying account will show up in list as the account number.\n"
-"\n"
-"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
-"    validated by the banks on ABA file transfers, but may show up on the payee\n"
-"    bank statement against the payment.\n"
-"\n"
-"- Vendor bank accounts can be set up in the same place, however, it is\n"
-"  generally easier to set them up from the partner from for the Vendor.\n"
-"\n"
-"- *Accounting > Vendors > Vendors*\n"
-"\n"
-"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
-"    vendor bank account can be created or edited.\n"
-"\n"
-"    **Account Number** - Required, must be less than 9 digits.\n"
-"\n"
-"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Account Holder Name** - Optional.\n"
-"\n"
-"Use\n"
-"---\n"
-"\n"
-"- Create a vendor payment in the normal way.\n"
-"\n"
-"    Ensure the **Vendor** is one with a valid ABA payment account.\n"
-"\n"
-"    Choose the correct **Payment Journal** which is set for ABA payments.\n"
-"\n"
-"    Select **ABA Credit Transfer** radio button.\n"
-"\n"
-"    If the vendor has multiple bank account, you may need to select the\n"
-"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
-"    need the correct bank account associated with it.\n"
-"\n"
-"    Enter payment amount, etc.\n"
-"\n"
-"- *Vendors > Payments*\n"
-"\n"
-"    After payment(s) are confirmed, they will show up in the payments list.\n"
-"\n"
-"    Using filters, or sorting, select the payments to be included.  Under\n"
-"    *Actions* choose *Create batch payment*.\n"
-"\n"
-"- *Vendors > Batch Payments*\n"
-"\n"
-"    When validating a batch payment, the ABA file will be generated.  It can\n"
-"    be regenerated.  This file can then be uploaded to the bank.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -4596,7 +4500,7 @@ msgid ""
 "Enable management of UTM trackers: campaign, medium, source.\n"
 msgstr ""
 "\n"
-"Habilite o gerenciamento de rastreadores UTM: campanha, mídia, origem..\n"
+"Habilite o gerenciamento de rastreadores UTM: campanha, mídia, origem.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -5128,7 +5032,7 @@ msgstr ""
 "Hardware Poxy\n"
 "=============\n"
 "\n"
-"Este módulo permite que você use remotamente periféricos conectados a este servidor.\n"
+"Este módulo permite que você use periféricos remotamente conectados a este servidor.\n"
 "\n"
 "Este módulo contém apenas a estrutura de habilitação. Os drivers de dispositivos reais\n"
 "são encontrados em outros módulos que devem ser instalados separadamente.\n"
@@ -6704,9 +6608,6 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
-"\n"
-"Geolocalização de Parceiros\n"
-"========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_phone_validation
@@ -8472,23 +8373,6 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
-"\n"
-"This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
-"checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
-"\n"
-"Supported formats\n"
-"-----------------\n"
-"This module supports the three most common check formats and will work out of the box with the linked checks from checkdepot.net.\n"
-"\n"
-"View all checks at: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
-"\n"
-"You can choose between:\n"
-"\n"
-"- Check on top: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
-"- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
-"- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -8564,7 +8448,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Esse módulo permite aos usuários a identificar facilmente pedidos de subcontratação quando aplicados custos de desembarque,\n"
+"Esse módulo permite aos usuários identificar facilmente pedidos de subcontratação quando aplicados custos de desembarque,\n"
 "também mostrando a seleção de referência associada na visão de busca.\n"
 "    "
 
@@ -12922,7 +12806,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__params
 msgid "Arguments sent to the client along with the view tag"
-msgstr "Argumentos enviados ao cliente junto com o marcador de visualização"
+msgstr "Argumentos enviados ao cliente junto com a tag de visualização"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -13557,7 +13441,7 @@ msgstr "Propriedades Base"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
 msgid "Base View Architecture"
-msgstr "Arquitetura da Visão Base"
+msgstr "Arquitetura da Visualização Base"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
@@ -13572,7 +13456,7 @@ msgstr "Módulo base de importação"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__primary
 msgid "Base view"
-msgstr "Visão base"
+msgstr "Visualização base"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -14866,8 +14750,8 @@ msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
-"Lista separada por virgula, permite modos de visão como 'form', 'tree', "
-"'calendar', etc. (Default: tree,form)"
+"Lista separada por virgula, permite modos de visualização como 'form', "
+"'tree', 'calendar', etc. (Default: tree,form)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__comment
@@ -15731,7 +15615,7 @@ msgstr "Menus Criados"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Views"
-msgstr "Visões criadas"
+msgstr "Visualizações criadas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__create_uid
@@ -16116,7 +16000,7 @@ msgstr "Personalizações"
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr "Visões Personalizadas"
+msgstr "Visualizações Personalizadas"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
@@ -18675,7 +18559,7 @@ msgid ""
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
 "Arquivo de onde a visualização se origina.\n"
-"                                                          Útil para redefinir visões quebradas (difícil) ou para ler a arquitetura do arquivo no modo dev-xml."
+"                                                          Útil para redefinir visões quebradas (difíceis) ou para ler a arquitetura do arquivo no modo dev-xml."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
@@ -25951,8 +25835,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
-"Texto de ajuda opcional para os usuários, com uma descrição da visão de "
-"destino, e de sua utilização e finalidade."
+"Texto de ajuda opcional para os usuários, com uma descrição da visualização "
+"de destino, e de sua utilização e finalidade."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__res_model
@@ -29301,7 +29185,7 @@ msgstr "Pesquisar Indústria de Parceiro"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
 msgid "Search View"
-msgstr "Visão de Busca"
+msgstr "Visualização de Busca"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -31627,7 +31511,7 @@ msgstr "Modelo a que este campo pertence"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
-msgstr "Os modelos em view_mode não devem estar duplicados: %s"
+msgstr "Os modelos em view_mode não devem ser duplicados: %s"
 
 #. module: base
 #. odoo-python
@@ -33885,7 +33769,7 @@ msgstr "Fornecedor"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr "Vendor Bill: Release to Pay"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -33900,7 +33784,7 @@ msgstr "Venezuela"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
 msgid "Venezuela - Accounting"
-msgstr "Contabilidade - Venezuelana"
+msgstr "Venezuela - Contabilidade"
 
 #. module: base
 #. odoo-python
@@ -33925,7 +33809,7 @@ msgstr "Vietnã - Contabilidade"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_id
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
-msgstr "Ver"
+msgstr "Visualização"
 
 #. module: base
 #. odoo-python
@@ -33953,24 +33837,24 @@ msgstr "Ver Arquitetura"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_mode
 msgid "View Mode"
-msgstr "Modo de Visão"
+msgstr "Modo de Visualização"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__name
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_name
 msgid "View Name"
-msgstr "Nome da Visão"
+msgstr "Nome da Visualização"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_id
 msgid "View Ref."
-msgstr "Ref. de visão"
+msgstr "Ref. de visualização"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__type
 msgid "View Type"
-msgstr "Tipo de Visão"
+msgstr "Tipo de Visualização"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
@@ -33992,7 +33876,7 @@ msgstr "Visualizar sessões de live chat para leads"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "View: %s"
-msgstr "Vista: %s"
+msgstr "Visualização: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -34016,8 +33900,9 @@ msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
 msgstr ""
-"Visões permitem personalizar cada modo de visão do Odoo. Você pode adicionar"
-" novos campos, mover campos, renomeá-los ou apagar as que você não precisa."
+"Visualizações permitem personalizar cada modo de visualização do Odoo. Você "
+"pode adicionar novos campos, mover campos, renomear ou excluir os campos que"
+" você não precisa."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
@@ -34211,7 +34096,7 @@ msgstr "Teste Cohort Web"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Website"
-msgstr "Website"
+msgstr "Site"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment_authorize
@@ -34258,7 +34143,7 @@ msgstr "Central de Ajuda do Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr "Website IM Livechat Helpdesk"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
@@ -34305,7 +34190,7 @@ msgstr "Site Parceiro"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
 msgid "Website Payment"
-msgstr "Website Payment"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_product_configurator
@@ -34320,7 +34205,7 @@ msgstr "Configurador de Estoque de Produto de Venda em Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
 msgid "Website Sales Dashboard"
-msgstr "Website Sales Dashboard"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides_forum
@@ -34330,12 +34215,12 @@ msgstr "Slides do Fórum de Central de Ajuda do Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr "Website Slides Helpdesk"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
 msgid "Website Studio"
-msgstr "Website Studio"
+msgstr "Studio do Site"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website
@@ -34362,7 +34247,7 @@ msgstr "Perfil do site"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
 msgid "Wednesday"
-msgstr "Quarta"
+msgstr "Quarta-feira"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__weeks
@@ -34559,7 +34444,7 @@ msgstr "Ordens de Serviço, Planejamento, Relatórios de Estoque."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_worksheet
 msgid "Worksheet"
-msgstr "Folha de Desenho"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_worksheet
@@ -34611,7 +34496,7 @@ msgstr "Iêmen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Yes, I understand the risks"
-msgstr "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -34823,7 +34708,7 @@ msgstr "Você não pode criar visualizações herdadas recursivas."
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
-msgstr "You cannot deactivate the user you're currently logged in as."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -34865,8 +34750,8 @@ msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
 msgstr ""
-"Você não pode excluir a língua que está ativo! \n"
-"favor de-activar a primeira língua."
+"Você não pode excluir a língua que está ativa! \n"
+"favor desactivar a primeira língua."
 
 #. module: base
 #. odoo-python
@@ -34874,7 +34759,6 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the language which is the user's preferred language."
 msgstr ""
-"You cannot delete the language which is the user's preferred language."
 
 #. module: base
 #. odoo-python
@@ -34968,7 +34852,7 @@ msgid ""
 "created user under the Settings / Users menu."
 msgstr ""
 "Você será capaz de definir direitos de acesso adicionais editando o usuário "
-"recém-criado no menu Configurações / Users."
+"recém-criado no menu Configurações / Usuários."
 
 #. module: base
 #. odoo-python

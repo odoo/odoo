@@ -9,7 +9,7 @@ var timeout;
 
 publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
     // TODO in master: remove the second selector.
-    selector: '#top a[href$="/shop/cart"], #top_menu a[href$="/shop/cart"]',
+    selector: '#top a[href$="/shop/cart"]:not(.js_change_lang), #top_menu a[href$="/shop/cart"]:not(.js_change_lang)',
     events: {
         'mouseenter': '_onMouseEnter',
         'mouseleave': '_onMouseLeave',
@@ -141,7 +141,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
         if ('website_sale_cart_quantity' in sessionStorage) {
             this.cartQty = sessionStorage.getItem('website_sale_cart_quantity');
         }
-        if (this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
+        if (this.el.querySelector('.my_cart_quantity') && this.el.querySelector('.my_cart_quantity').innerText != this.cartQty) {
             return this._rpc({route: "/shop/cart/quantity"}).then((cartQty) => {
                 this.cartQty = cartQty;
                 sessionStorage.setItem('website_sale_cart_quantity', this.cartQty);
@@ -152,7 +152,7 @@ publicWidget.registry.websiteSaleCartLink = publicWidget.Widget.extend({
      * @private
      */
     _updateCartQuantityText() {
-        if (this.cartQty !== undefined) {
+        if (this.cartQty !== undefined && this.el.querySelector('.my_cart_quantity')) {
             this.el.querySelector('.my_cart_quantity').innerText = this.cartQty;
         }
     }

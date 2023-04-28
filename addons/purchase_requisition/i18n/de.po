@@ -159,7 +159,7 @@ msgstr "Alternativen"
 #. module: purchase_requisition
 #: model_terms:ir.actions.act_window,help:purchase_requisition.action_purchase_requisition
 msgid "An example of a purchase agreement is a blanket order."
-msgstr ""
+msgstr "Ein Beispiel für ein Kaufauftrag ist ein Rahmenvertrag."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_line__analytic_distribution
@@ -197,7 +197,7 @@ msgstr "Blankoauftrag"
 #: model:ir.actions.act_window,name:purchase_requisition.action_purchase_requisition
 #: model:ir.ui.menu,name:purchase_requisition.menu_purchase_requisition_pro_mgt
 msgid "Blanket Orders"
-msgstr ""
+msgstr "Rahmenverträge"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
@@ -209,7 +209,7 @@ msgstr "Abbrechen"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Cancel Alternatives"
-msgstr ""
+msgstr "Alternativen stornieren"
 
 #. module: purchase_requisition
 #: model:ir.model.fields.selection,name:purchase_requisition.selection__purchase_requisition__state__cancel
@@ -237,7 +237,7 @@ msgstr "Wählen Sie"
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__partner_id
 msgid "Choose a vendor for alternative PO"
-msgstr ""
+msgstr "Einen Lieferanten für alternative Kaufaufträge auswählen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
@@ -247,7 +247,7 @@ msgstr "Löschen"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_line_compare_tree
 msgid "Clear Selected"
-msgstr ""
+msgstr "Auswahl bereinigen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -318,13 +318,16 @@ msgid ""
 "                            Make your choice by selecting the best combination of lead time, OTD and/or total amount.\n"
 "                            By comparing product lines you can also decide to order some products from one vendor and others from another vendor."
 msgstr ""
+"Erstellen Sie eine Ausschreibung, indem Sie alternative Angebotsanfragen an verschiedene Lieferanten hinzufügen.\n"
+"                            Treffen Sie Ihre Wahl, indem Sie die beste Kombination aus Vorlaufzeit, OTD und/oder Gesamtbetrag auswählen.\n"
+"                            Durch den Vergleich von Produktlinien können Sie sich auch dafür entscheiden, einige Produkte bei einem Lieferanten und andere bei einem anderen Lieferanten zu bestellen."
 
 #. module: purchase_requisition
 #. odoo-python
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Create alternative"
-msgstr ""
+msgstr "Alternative erstellen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group__create_uid
@@ -425,6 +428,9 @@ msgid ""
 "            (e.g. a year) and you order products within this agreement to benefit\n"
 "            from the negotiated prices."
 msgstr ""
+"Bei einem Rahmenvertrag können Sie eine Vereinbarung für einen bestimmten Zeitraum\n"
+"            (z. B. ein Jahr) abschließen und Produkte innerhalb dieser Vereinbarung bestellen,\n"
+"            um von den ausgehandelten Preisen zu profitieren."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -487,12 +493,19 @@ msgid ""
 " normally these fields are cleared w/warning message within form view, but "
 "we cannot recreate that in this case."
 msgstr ""
+"Wenn der ausgewählte Lieferant oder eines der Produkte im ursprünglichen "
+"Kaufauftrag eine Sperrwarnung enthält, verhindern wir die Erstellung eines "
+"alternativen Kaufauftrags. Der Grund dafür ist, dass diese Felder "
+"normalerweise mit einer w/Warnmeldung in der Formularansicht gelöscht "
+"werden, aber das können wir in diesem Fall nicht nachstellen."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_requisition_create_alternative__copy_products
 msgid ""
 "If this is checked, the product quantities of the original PO will be copied"
 msgstr ""
+"Wenn diese Option aktiviert ist, werden die Produktmengen des ursprünglichen"
+" Kauftrags kopiert."
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -507,7 +520,7 @@ msgstr "Ist ein Abonnent"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_requisition_alternative_warning_form
 msgid "Keep Alternatives"
-msgstr ""
+msgstr "Alternativen behalten"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_order_group____last_update
@@ -552,7 +565,7 @@ msgstr "Zeilen"
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.purchase_order_form_inherit
 msgid "Link to Existing RfQ"
-msgstr ""
+msgstr "Link zu vorhandener Angebotsanfrage"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_main_attachment_id
@@ -619,7 +632,7 @@ msgstr "Nächster Aktivitätstyp"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Nothing to clear"
-msgstr ""
+msgstr "Nichts zu bereinigen"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__message_needaction_counter
@@ -671,12 +684,12 @@ msgstr "Bestelldatum"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_create_alternative__origin_po_id
 msgid "Origin Po"
-msgstr ""
+msgstr "Ursprungskaufauftrag"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,help:purchase_requisition.field_purchase_order__alternative_po_ids
 msgid "Other potential purchase orders for purchasing products"
-msgstr ""
+msgstr "Andere potenzielle Kaufaufträge für Einkaufsprodukte"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition_alternative_warning__po_ids
@@ -912,7 +925,7 @@ msgstr "Alle Datensätze mit vor heute geplanten Aktionen anzeigen"
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "Some not cleared"
-msgstr ""
+msgstr "Einige nicht bereinigt"
 
 #. module: purchase_requisition
 #. odoo-python
@@ -921,6 +934,8 @@ msgstr ""
 msgid ""
 "Some quantities were not cleared because their status is not a RFQ status."
 msgstr ""
+"Einige Mengen wurden nicht bereinigt, weil ihr Status kein "
+"Angebotsanfragestatus ist."
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__origin
@@ -935,7 +950,7 @@ msgstr "Beginnen Sie einen neuen Kaufvertrag"
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state_blanket_order
 msgid "State Blanket Order"
-msgstr ""
+msgstr "Status Rahmenvertrag"
 
 #. module: purchase_requisition
 #: model:ir.model.fields,field_description:purchase_requisition.field_purchase_requisition__state
@@ -970,6 +985,7 @@ msgstr "Lieferantenpreisliste"
 #: model:ir.model,name:purchase_requisition.model_purchase_order_group
 msgid "Technical model to group PO for call to tenders"
 msgstr ""
+"Technisches Modell zur Gruppierung von Kaufaufträgen für Ausschreibungen"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form
@@ -1009,7 +1025,7 @@ msgstr ""
 #: code:addons/purchase_requisition/models/purchase.py:0
 #, python-format
 msgid "There are no quantities to clear."
-msgstr ""
+msgstr "Es gibt keine zu bereinigende Mengen."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1029,7 +1045,7 @@ msgstr ""
 #: code:addons/purchase_requisition/wizard/purchase_requisition_create_alternative.py:0
 #, python-format
 msgid "This is a blocking warning!\n"
-msgstr ""
+msgstr "Dies ist eine Sperrwarnung!\n"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_filter
@@ -1128,11 +1144,15 @@ msgid ""
 "Whether or not this purchase order is linked to another purchase order as an"
 " alternative."
 msgstr ""
+"Ob dieser Kaufauftrag mit einem anderen Kaufauftrag als Alternative "
+"verknüpft ist oder nicht."
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_alternative_warning
 msgid "Wizard in case PO still has open alternative requests for quotation"
 msgstr ""
+"Assistent für den Fall, dass der Kaufauftrag offene alternative "
+"Angebotsanfragen hat"
 
 #. module: purchase_requisition
 #: model:ir.model,name:purchase_requisition.model_purchase_requisition_create_alternative
@@ -1144,7 +1164,7 @@ msgstr "Assistent zum Voreinstellen von Werten für alternative Kaufaufträge"
 #: code:addons/purchase_requisition/models/purchase_requisition.py:0
 #, python-format
 msgid "You can only delete draft or cancelled requisitions."
-msgstr ""
+msgstr "Sie können nur Entwürfe oder stornierte Anforderungen löschen."
 
 #. module: purchase_requisition
 #. odoo-python
@@ -1188,6 +1208,7 @@ msgid ""
 "alternative request for quotations are still open, do you want to cancel "
 "them?"
 msgstr ""
+"alternative Angebotsanfragen sind noch offen. Möchten Sie diese stornieren?"
 
 #. module: purchase_requisition
 #: model_terms:ir.ui.view,arch_db:purchase_requisition.view_purchase_requisition_form

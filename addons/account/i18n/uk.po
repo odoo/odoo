@@ -4,8 +4,8 @@
 # 
 # Translators:
 # Bohdan Lisnenko, 2022
-# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # Martin Trigaux, 2023
+# Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Alina Lisnenko <alina.lisnenko@erp.co.ua>, 2023\n"
 "Language-Team: Ukrainian (https://app.transifex.com/odoo/teams/41243/uk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -135,7 +135,7 @@ msgstr "%d переміщення"
 #: code:addons/account/models/account_account_tag.py:0
 #, python-format
 msgid "%s (%s)"
-msgstr ""
+msgstr "%s (%s)"
 
 #. module: account
 #. odoo-python
@@ -4422,7 +4422,7 @@ msgstr "Відповідні записи"
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Countries for which the company has a VAT number"
-msgstr ""
+msgstr "Країни для яких компанія має номер VAT"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
@@ -4964,7 +4964,7 @@ msgstr "Короткострокові зобов’язання"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
 msgid "Current Statement Balance"
-msgstr ""
+msgstr "Поточний баланс виписки"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5901,7 +5901,7 @@ msgstr "Завантажити"
 #: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
 #, python-format
 msgid "Download XSD files (XML validation)"
-msgstr ""
+msgstr "Завантажити файли XSD (валідація XML)"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_advance_tax_payment_account_id
@@ -6061,6 +6061,8 @@ msgstr "Динамічні звіти"
 #: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "Dynamic domain used for the tag that can be set on tax"
 msgstr ""
+"Динамічний домен використовується для тегів, які можуть бути встановлені на "
+"податку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6815,7 +6817,7 @@ msgstr "Закордонний ID податку"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
 msgid "Foreign VAT countries"
-msgstr ""
+msgstr "Країни іноземного ПДВ"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7119,7 +7121,7 @@ msgstr "Має дири послідовності"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
 msgid "Has Statement Lines"
-msgstr ""
+msgstr "Є рядки виписки"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
@@ -9699,7 +9701,7 @@ msgstr "Ні"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
 msgid "No Bank Matching"
-msgstr ""
+msgstr "Немає узгоджень банку"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
@@ -9748,6 +9750,8 @@ msgid ""
 "No original purchase document could be found for any of the selected "
 "purchase documents."
 msgstr ""
+"Не вдалося знайти оригінальний документ про закупівлю для жодного з вибраних"
+" документів про закупівлю."
 
 #. module: account
 #. odoo-python
@@ -10177,6 +10181,7 @@ msgstr "Лише рахунки можуть друкуватися."
 msgid ""
 "Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
+"Партнером (банком) буде створено лише один платіж замість одного за рахунок."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -11066,6 +11071,18 @@ msgstr "Період порівняння"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+"Перевірте країну фіскальної локалізації компанії %s. (Налаштування > "
+"Бухоблік > Фіскальна країна)Податки можуть оновитися лише, якщо вони в "
+"фіскальній країні компанії (%s) або країні локалізації (%s)."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
 "Please check these taxes. They might be outdated. We did not update them. "
 "Indeed, they do not exactly match the taxes of the original version of the "
 "localization module.<br/>You might want to archive or adapt them.<br/><ul>"
@@ -11363,7 +11380,7 @@ msgstr "Друк чеків на оплату вашим постачальни�
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
 msgid "Problem Description"
-msgstr ""
+msgstr "Опис проблеми"
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -16379,6 +16396,7 @@ msgstr ""
 #, python-format
 msgid "You can only print the original document for purchase documents."
 msgstr ""
+"Ви можете роздрукувати лише оригінальний документ для документів закупівлі."
 
 #. module: account
 #. odoo-python
@@ -16797,6 +16815,10 @@ msgid ""
 "already posted.                         If you are absolutely sure you want "
 "to modify the opening balance of your accounts, reset the move to draft."
 msgstr ""
+"Ви не можете імпортувати \"openning_balance\" якщо проводка відкриття (%s) "
+"вже опублікована.                         Якщо ви абсолютно впевнені, що "
+"хочете змінити початковий баланс своїх рахунків, скиньте проводку до "
+"чернетки."
 
 #. module: account
 #. odoo-python
@@ -17368,7 +17390,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
 msgid "tag domain"
-msgstr ""
+msgstr "домен тегу"
 
 #. module: account
 #. odoo-python
