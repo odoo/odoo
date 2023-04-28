@@ -1,4 +1,5 @@
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 
 
 class Bill(models.Model):
@@ -12,5 +13,9 @@ class Bill(models.Model):
 
     @api.model
     def name_create(self, name):
-        result = super().create({"name": name, "value": float(name)})
+        try:
+            value = float(name)
+        except:
+            raise UserError(_("The name of the Coins/Bills must be a number."))
+        result = super().create({"name": name, "value": value})
         return result.name_get()[0]
