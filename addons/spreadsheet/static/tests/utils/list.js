@@ -1,10 +1,7 @@
 /** @odoo-module */
 
-import * as spreadsheet from "@odoo/o-spreadsheet";
 import { generateListDefinition } from "./data";
 import { createModelWithDataSource, waitForDataSourcesLoaded } from "./model";
-
-const uuidGenerator = new spreadsheet.helpers.UuidGenerator();
 
 /** @typedef {import("@spreadsheet/o_spreadsheet/o_spreadsheet").Model} Model */
 
@@ -31,7 +28,6 @@ export function insertListInSpreadsheet(model, params) {
         id: model.getters.getNextListId(),
         col,
         row,
-        dataSourceId: uuidGenerator.uuidv4(),
     });
 }
 
