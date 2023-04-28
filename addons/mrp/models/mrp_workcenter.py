@@ -1,36 +1,37 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from collections import defaultdict
 from dateutil import relativedelta
 from datetime import timedelta, datetime
 from functools import partial
 from pytz import timezone
 from random import randint
 
-from odoo import api, exceptions, fields, models, _
+from odoo import api, exceptions, fields, models, _, Command
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons.resource.models.utils import make_aware, Intervals
+from odoo.addons.resource.models.utils import make_aware, Intervals, timezone_datetime
 from odoo.tools.float_utils import float_compare
+from odoo.addons.base.models.res_partner import _tz_get
 
 
 class MrpWorkcenter(models.Model):
     _name = 'mrp.workcenter'
     _description = 'Work Center'
     _order = "sequence, id"
-    _inherit = ['resource.mixin']
     _check_company_auto = True
 
-    # resource
-    name = fields.Char('Work Center', related='resource_id.name', store=True, readonly=False)
-    time_efficiency = fields.Float('Time Efficiency', related='resource_id.time_efficiency', default=100, store=True, readonly=False)
-    active = fields.Boolean('Active', related='resource_id.active', default=True, store=True, readonly=False)
+    name = fields.Char('Work Center', store=True, readonly=False)
+    active = fields.Boolean('Active', default=True, readonly=False)
 
     code = fields.Char('Code', copy=False)
     note = fields.Html(
         'Description')
     default_capacity = fields.Float(
         'Capacity', default=1.0,
-        help="Default number of pieces (in product UoM) that can be produced in parallel (at the same time) at this work center. For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. However, note that both time before and after production will only be counted once.")
+        help="Default number of pieces (in product UoM) that can be produced in parallel (at the same time) at this work center. " +
+        "For example: the capacity is 5 and you need to produce 10 units, then the operation time listed on the BOM will be multiplied by two. " +
+        "However, note that both time before and after production will only be counted once.")
     sequence = fields.Integer(
         'Sequence', default=1, required=True,
         help="Gives the sequence order when displaying a list of work centers.")
@@ -73,8 +74,32 @@ class MrpWorkcenter(models.Model):
         help="Alternative workcenters that can be substituted to this one in order to dispatch production"
     )
     tag_ids = fields.Many2many('mrp.workcenter.tag')
-    capacity_ids = fields.One2many('mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
-        help="Specific number of pieces that can be produced in parallel per product.", copy=True)
+    capacity_ids = fields.One2many(
+        'mrp.workcenter.capacity', 'workcenter_id', string='Product Capacities',
+        help="Specific number of pieces that can be produced in parallel per product.", copy=True
+    )
+    simultaneous_workorder = fields.Integer(
+        'Parallel Work Orders', default=1,
+        help='This is the number of work orders that can be planned simultaneously on this work center'
+    )
+    resource_ids = fields.Many2many(
+        'resource.resource', string='Resource', auto_join=True,
+        index=True, ondelete='cascade', required=True
+    )
+    time_efficiency = fields.Float(
+        'Efficiency Factor', default=100, required=True,
+        help="This field is used to calculate the expected duration of a work order at this work center. "
+        + "For example, if a work order takes one hour and the efficiency factor is 100%, then the expected duration will be one hour."
+        + "If the efficiency factor is 200%, however the expected duration will be 30 minutes.")
+    company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company)
+    resource_calendar_id = fields.Many2one(
+        "resource.calendar", string='Working Time',
+        default=lambda self: self.env.company.resource_calendar_id,
+        domain="[('company_id', '=', company_id)]")
+    tz = fields.Selection(
+        _tz_get, string='Timezone', required=True,
+        default=lambda self: self._context.get('tz') or self.env.user.tz or 'UTC')
+    ressources_name = fields.Char("Name of the ressources")
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
@@ -183,6 +208,20 @@ class MrpWorkcenter(models.Model):
         if any(workcenter.default_capacity <= 0.0 for workcenter in self):
             raise exceptions.UserError(_('The capacity must be strictly positive.'))
 
+    @api.onchange('simultaneous_workorder')
+    def _on_change_simultaneous_workorder(self):
+        if self.simultaneous_workorder < 1:
+            raise UserError(_('The number of simultaneous Work Orders on this Workcenter should be greater than 0'))
+        if self.simultaneous_workorder > 100:
+            raise UserError(_('The number of simultaneous Work Orders on this Workcenter should be smaller than 100'))
+        if self._origin.id:
+            return {
+                'warning': {
+                    'title': _('Work orders could need replan'),
+                    'message': _('Note that changing the number of simultaneous work orders on a workcenter could lead to incoherences in the planning of your work orders.'),
+                    'type': 'warning'}
+            }
+
     def unblock(self):
         self.ensure_one()
         if self.working_state != 'blocked':
@@ -195,12 +234,40 @@ class MrpWorkcenter(models.Model):
     def create(self, vals_list):
         # resource_type is 'human' by default. As we are not living in
         # /r/latestagecapitalism, workcenters are 'material'
-        records = super(MrpWorkcenter, self.with_context(default_resource_type='material')).create(vals_list)
-        return records
+
+        resources_vals_list = []
+        calendar_ids = [vals['resource_calendar_id'] for vals in vals_list if vals.get('resource_calendar_id')]
+        calendars_tz = {calendar.id: calendar.tz for calendar in self.env['resource.calendar'].browse(calendar_ids)}
+        for vals in vals_list:
+            if not vals.get('resource_ids'):
+                workorder_simultaneous = vals.get('simultaneous_workorder', 1)
+                for _i in range(workorder_simultaneous):
+                    resources_vals_list.append(self._prepare_resource_values(
+                        vals,
+                        vals.pop('tz', False) or calendars_tz.get(vals.get('resource_calendar_id'))
+                    ))
+        if resources_vals_list:
+            resources = self.env['resource.resource'].create(resources_vals_list)
+            for vals, res in zip(vals_list, resources):
+                if not vals.get('resource_ids'):
+                    vals['resource_ids'] = res
+        return super(MrpWorkcenter, self.with_context(check_idempotence=True, default_resource_type='material')).create(vals_list)
 
     def write(self, vals):
+        if vals.get('simultaneous_workorder'):
+            number_resource_to_create = vals.get('simultaneous_workorder') - len(self.resource_ids)
+            if number_resource_to_create > 0:
+                first_resource = self.resource_ids[0]
+                new_resources_vals = []
+                while len(new_resources_vals) < number_resource_to_create:
+                    copied_vals = first_resource.copy_data()[0]
+                    new_resources_vals.append(Command.create(copied_vals))
+                self.resource_ids = new_resources_vals
+            elif number_resource_to_create < 0:
+                # for now, the wo are not replan but the user will get a warning if modifying the value
+                self.env['resource.resource'].search([("id", "in", self.resource_ids.ids)], limit=-number_resource_to_create, order='id desc').unlink()
         if 'company_id' in vals:
-            self.resource_id.company_id = vals['company_id']
+            self.resource_ids.company_id = vals['company_id']
         return super(MrpWorkcenter, self).write(vals)
 
     def action_show_operations(self):
@@ -226,10 +293,38 @@ class MrpWorkcenter(models.Model):
         :param end_datetime: filter unavailability with only slots before this end_datetime
         :rtype: dict
         """
-        unavailability_ressources = self.resource_id._get_unavailable_intervals(start_datetime, end_datetime)
-        return {wc.id: unavailability_ressources.get(wc.resource_id.id, []) for wc in self}
+        unavailability_ressources = self.resource_ids._get_unavailable_intervals(start_datetime, end_datetime)
+        unavailability_intervals = {}
+
+        for wc in self:
+            for res in wc.resource_ids:
+                if not unavailability_intervals.get(wc.id):
+                    unavailability_intervals.update({wc.id: unavailability_ressources.get(res.id)})
+        return unavailability_intervals
 
     def _get_first_available_slot(self, start_datetime, duration):
+        """Get the first available interval for the workcenter in `self`.
+
+        :param start_datetime: begin the search at this datetime
+        :param duration: minutes needed to make the workorder (float)
+        :rtype: tuple (start, end, resource) or (False, error, False)
+        """
+        self.ensure_one()
+        date_start = False
+        date_end = False
+        resource_slot = False
+
+        for resource in self.resource_ids:
+            slot_date_start, slot_date_end = self._get_first_available_slot_by_resource(start_datetime, duration, resource)
+            if (not date_start and slot_date_start) or slot_date_start < date_start:
+                date_start = slot_date_start
+                date_end = slot_date_end
+                resource_slot = resource
+        if date_start:
+            return date_start, date_end, resource_slot
+        return False, 'No available slot 700 days after the planned start', False
+
+    def _get_first_available_slot_by_resource(self, start_datetime, duration, resource):
         """Get the first available interval for the workcenter in `self`.
 
         The available interval is disjoinct with all other workorders planned on this workcenter, but
@@ -241,10 +336,8 @@ class MrpWorkcenter(models.Model):
         :param duration: minutes needed to make the workorder (float)
         :rtype: tuple
         """
-        self.ensure_one()
         start_datetime, revert = make_aware(start_datetime)
 
-        resource = self.resource_id
         get_available_intervals = partial(self.resource_calendar_id._work_intervals_batch, domain=[('time_type', 'in', ['other', 'leave'])], resources=resource, tz=timezone(self.resource_calendar_id.tz))
         get_workorder_intervals = partial(self.resource_calendar_id._leave_intervals_batch, domain=[('time_type', '=', 'other')], resources=resource, tz=timezone(self.resource_calendar_id.tz))
 
@@ -274,7 +367,7 @@ class MrpWorkcenter(models.Model):
                         remaining -= interval_minutes
                         # Go to the next available interval because the possible current interval duration has been used
                         break
-        return False, 'Not available slot 700 days after the planned start'
+        return False, 'No available slot 700 days after the planned start'
 
     def action_archive(self):
         res = super().action_archive()
@@ -304,6 +397,79 @@ class MrpWorkcenter(models.Model):
         capacity = self.capacity_ids.filtered(lambda p: p.product_id == product_id)
         return capacity.time_start + capacity.time_stop if capacity else self.time_start + self.time_stop
 
+    def _prepare_resource_values(self, vals, tz):
+        resource_vals = {'name': vals.get(self._rec_name),
+                         'tz': self.tz,
+                         'company_id': self.env.company.id,
+                         'calendar_id': self.resource_calendar_id}
+        if tz:
+            resource_vals['tz'] = tz
+        company_id = vals.get('company_id')
+        if company_id:
+            resource_vals['company_id'] = company_id
+        calendar_id = vals.get('resource_calendar_id')
+        if calendar_id:
+            resource_vals['calendar_id'] = calendar_id
+        return resource_vals
+
+    def copy_data(self, default=None):
+        if default is None:
+            default = {}
+
+        resource_default = {}
+        if 'company_id' in default:
+            resource_default['company_id'] = default['company_id']
+        if 'resource_calendar_id' in default:
+            resource_default['calendar_id'] = default['resource_calendar_id']
+        resource = self.resource_ids.copy(resource_default)
+
+        default['resource_ids'] = resource.id
+        default['company_id'] = resource.company_id.id
+        default['resource_calendar_id'] = resource.calendar_id.id
+        return super().copy_data(default)
+
+    def _get_work_days_data_batch(self, from_datetime, to_datetime, compute_leaves=True, calendar=None, domain=None):
+        """
+            By default the resource calendar is used, but it can be
+            changed using the `calendar` argument.
+
+            `domain` is used in order to recognise the leaves to take,
+            None means default value ('time_type', '=', 'leave')
+
+            Returns a dict {'days': n, 'hours': h} containing the
+            quantity of working time expressed as days and as hours.
+        """
+        # resources = {self.id: res[0] for res in self.resource_ids}
+        resources = self.mapped(lambda r: r.resource_ids[0])
+        mapped_employees = {e.resource_ids[0].id: e.id for e in self}
+        result = {}
+
+        # naive datetimes are made explicit in UTC
+        from_datetime = timezone_datetime(from_datetime)
+        to_datetime = timezone_datetime(to_datetime)
+
+        mapped_resources = defaultdict(lambda: self.env['resource.resource'])
+        for record in self:
+            mapped_resources[calendar or record.resource_calendar_id] |= record.resource_ids
+
+        for calendar, calendar_resources in mapped_resources.items():
+            if not calendar:
+                for calendar_resource in calendar_resources:
+                    result[calendar_resource.id] = {'days': 0, 'hours': 0}
+                continue
+            day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
+
+            # actual hours per day
+            if compute_leaves:
+                intervals = calendar._work_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
+            else:
+                intervals = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
+
+            for calendar_resource in calendar_resources:
+                result[calendar_resource.id] = calendar._get_days_data(intervals[calendar_resource.id], day_total[calendar_resource.id])
+
+        # convert "resource: result" into "employee: result"
+        return {mapped_employees[r.id]: result[r.id] for r in resources}
 
 class WorkcenterTag(models.Model):
     _name = 'mrp.workcenter.tag'

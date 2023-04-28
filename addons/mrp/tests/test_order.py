@@ -3307,3 +3307,59 @@ class TestMrpOrder(TestMrpCommon):
         consumption.action_set_qty()
         self.assertEqual(mo.move_raw_ids[0].product_uom_qty, 30)
         self.assertEqual(mo.move_raw_ids[0].quantity_done, 30)
+
+    @freeze_time('2023-01-05 12:00')
+    def test_simultaneous_workorder_plan(self):
+        # we need here to create a workcenter with multiple capacity, then plan multiple MO/WO on it
+        # to see if it allows to have multiple WO at the same time
+        """Test when plan start time for workorders, cancelled workorders won't be taken into account.
+        """
+        workcenter_1 = self.env['mrp.workcenter'].create({
+            'name': 'wc1',
+            'default_capacity': 1,
+            'time_efficiency': 100,
+            'simultaneous_workorder': 1
+        })
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'ready_to_produce': 'asap',
+            'consumption': 'flexible',
+            'product_qty': 1.0,
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': workcenter_1.id, 'time_cycle_manual': 60, 'sequence': 1}),
+            ],
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 1})
+            ]})
+
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_6
+        mo_form.bom_id = bom
+        mo = mo_form.save()
+        mo.action_confirm()
+        mo.button_plan()
+        self.assertEqual(mo.workorder_ids[0].date_start, datetime(2023, 1, 5, 12, 0))
+
+        # plan another => should plan after this one
+        mo_form2 = Form(self.env['mrp.production'])
+        mo_form2.product_id = self.product_6
+        mo_form2.bom_id = bom
+        mo2 = mo_form2.save()
+        mo2.action_confirm()
+        mo2.button_plan()
+        self.assertEqual(mo2.workorder_ids[0].date_start, datetime(2023, 1, 5, 13, 0))
+
+        # change the number of simultaneous to 2
+        workcenter_1.simultaneous_workorder = 2
+
+        # planning a new MO should make it start at the same time as the first mo
+        mo_form3 = Form(self.env['mrp.production'])
+        mo_form3.product_id = self.product_6
+        mo_form3.bom_id = bom
+        mo3 = mo_form3.save()
+        mo3.action_confirm()
+        mo3.button_plan()
+        self.assertEqual(mo3.workorder_ids[0].date_start, datetime(2023, 1, 5, 12, 0))

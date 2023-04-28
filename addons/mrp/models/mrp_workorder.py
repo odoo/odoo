@@ -255,12 +255,13 @@ class MrpWorkorder(models.Model):
             if wo.leave_id:
                 to_write |= wo
             else:
+                dummy1, dummy2, resource = self.workcenter_id._get_first_available_slot(date_from, self.duration_expected) # we don't use the start_Date because set_Date could be done by hand by user
                 wo.leave_id = wo.env['resource.calendar.leaves'].create({
                     'name': wo.display_name,
                     'calendar_id': wo.workcenter_id.resource_calendar_id.id,
                     'date_from': date_from,
                     'date_to': date_to,
-                    'resource_id': wo.workcenter_id.resource_id.id,
+                    'resource_id': resource.id,
                     'time_type': 'other',
                 })
         to_write.leave_id.write({
@@ -439,7 +440,7 @@ class MrpWorkorder(models.Model):
                 if workorder.workcenter_id.id != values['workcenter_id']:
                     if workorder.state in ('progress', 'done', 'cancel'):
                         raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
-                    workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
+                    workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_ids[0] # not sure here if we need to take the first one or if we need to compute the most optimized one?
         if 'date_start' in values or 'date_finished' in values:
             for workorder in self:
                 date_start = fields.Datetime.to_datetime(values.get('date_start', workorder.date_start))
@@ -517,7 +518,7 @@ class MrpWorkorder(models.Model):
                 duration_expected = self.duration_expected
             else:
                 duration_expected = self._get_duration_expected(alternative_workcenter=workcenter)
-            from_date, to_date = workcenter._get_first_available_slot(date_start, duration_expected)
+            from_date, to_date, resource = workcenter._get_first_available_slot(date_start, duration_expected)
             # If the workcenter is unavailable, try planning on the next one
             if not from_date:
                 continue
@@ -526,6 +527,7 @@ class MrpWorkorder(models.Model):
                 best_date_start = from_date
                 best_date_finished = to_date
                 best_workcenter = workcenter
+                best_resource = resource
                 vals = {
                     'workcenter_id': workcenter.id,
                     'duration_expected': duration_expected,
@@ -539,7 +541,7 @@ class MrpWorkorder(models.Model):
             'calendar_id': best_workcenter.resource_calendar_id.id,
             'date_from': best_date_start,
             'date_to': best_date_finished,
-            'resource_id': best_workcenter.resource_id.id,
+            'resource_id': best_resource.id,
             'time_type': 'other'
         })
         vals['leave_id'] = leave.id
@@ -616,12 +618,13 @@ class MrpWorkorder(models.Model):
             'date_start': date_start,
         }
         if not self.leave_id:
+            dummy1, dummy2, resource = self.workcenter_id._get_first_available_slot(date_start, self.duration_expected)
             leave = self.env['resource.calendar.leaves'].create({
                 'name': self.display_name,
                 'calendar_id': self.workcenter_id.resource_calendar_id.id,
                 'date_from': date_start,
                 'date_to': date_start + relativedelta(minutes=self.duration_expected),
-                'resource_id': self.workcenter_id.resource_id.id,
+                'resource_id': resource.id,
                 'time_type': 'other'
             })
             vals['date_finished'] = leave.date_to
@@ -784,7 +787,11 @@ class MrpWorkorder(models.Model):
         res = defaultdict(list)
         for wo1, wo2 in self.env.cr.fetchall():
             res[wo1].append(wo2)
-        return res
+        res_simultaneous_wo = defaultdict(list)
+        for r in res:
+            if len(res[r]) > self.env['mrp.workorder'].browse(r).workcenter_id.simultaneous_workorder - 1:
+                res_simultaneous_wo[r] = res[r]
+        return res_simultaneous_wo
 
     def _get_operation_values(self):
         self.ensure_one()
