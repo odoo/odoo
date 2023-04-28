@@ -22,3 +22,22 @@ PaymentScreen.do.clickValidate();
 Chrome.do.clickTicketButton();
 
 registry.category("web_tour.tours").add('PosSettleOrder', { test: true, url: '/pos/ui', steps: getSteps() });
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickQuotationButton();
+// The second item in the list is the first sale.order.
+ProductScreen.do.selectNthOrder(2);
+ProductScreen.check.selectedOrderlineHas('product1', 1);
+ProductScreen.check.totalAmountIs("10.00");
+
+ProductScreen.do.clickQuotationButton();
+// The first item in the list is the second sale.order.
+// Selecting the 2nd sale.order should use a new order,
+// therefore, the total amount will change.
+ProductScreen.do.selectNthOrder(1);
+ProductScreen.check.selectedOrderlineHas('product2', 1);
+ProductScreen.check.totalAmountIs("11.00");
+
+registry.category("web_tour.tours").add('PosSettleOrderIncompatiblePartner', { test: true, url: '/pos/ui', steps: getSteps() });
