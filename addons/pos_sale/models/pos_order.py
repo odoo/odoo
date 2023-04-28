@@ -32,13 +32,16 @@ class PosOrder(models.Model):
         invoice_vals = super(PosOrder, self)._prepare_invoice_vals()
         invoice_vals['team_id'] = self.crm_team_id.id
         sale_orders = self.lines.mapped('sale_order_origin_id')
-        if sale_orders and (sale_orders.partner_invoice_id.id != sale_orders.partner_shipping_id.id):
-            invoice_vals['partner_shipping_id'] = sale_orders.partner_shipping_id.id
-        else:
-            addr = self.partner_id.address_get(['delivery'])
-            invoice_vals['partner_shipping_id'] = addr['delivery']
-        if sale_orders and sale_orders[0].payment_term_id:
-            invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id,
+        if sale_orders:
+            if sale_orders[0].partner_invoice_id.id != sale_orders[0].partner_shipping_id.id:
+                invoice_vals['partner_shipping_id'] = sale_orders[0].partner_shipping_id.id
+            else:
+                addr = self.partner_id.address_get(['delivery'])
+                invoice_vals['partner_shipping_id'] = addr['delivery']
+            if sale_orders[0].payment_term_id:
+                invoice_vals['invoice_payment_term_id'] = sale_orders[0].payment_term_id.id
+            if sale_orders[0].partner_invoice_id != sale_orders[0].partner_id:
+                invoice_vals['partner_id'] = sale_orders[0].partner_invoice_id.id
         return invoice_vals
 
     @api.model

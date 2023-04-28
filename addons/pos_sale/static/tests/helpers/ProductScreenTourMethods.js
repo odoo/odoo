@@ -25,6 +25,18 @@ class DoExt extends Do {
             }
         ];
     }
+    selectNthOrder(n) {
+        return [
+            {
+                content: `select order`,
+                trigger: `.order-list .order-row:nth-child(${n})`,
+            },
+            {
+                content: `click on select the order`,
+                trigger: `.selection-item:contains('Settle the order')`,
+            }
+        ];
+    }
 }
 class CheckExt extends Check {}
 
