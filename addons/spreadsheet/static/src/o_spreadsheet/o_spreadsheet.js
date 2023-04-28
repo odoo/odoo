@@ -25749,6 +25749,8 @@
             const xmlPreview = xmlStringArray
                 .slice(Math.max(lineNumber - 3, 0), Math.min(lineNumber + 2, xmlStringArray.length))
                 .join("\n");
+            console.log(xmlString);
+            console.log(" to string " + xmlString.toString());
             throw new Error(`XML string could not be parsed: ${errorString}\n${xmlPreview}`);
         }
         return document;
