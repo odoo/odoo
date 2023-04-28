@@ -2,10 +2,12 @@
 
 import {
     click,
+    editInput,
     getFixture,
     nextTick,
     patchWithCleanup,
     triggerHotkey,
+    makeDeferred,
 } from "@web/../tests/helpers/utils";
 import { makeViewInDialog } from "@web/../tests/views/helpers";
 import { createWebClient } from "@web/../tests/webclient/helpers";
@@ -339,6 +341,50 @@ QUnit.module("ViewDialogs", (hooks) => {
         assert.containsOnce(target, ".o_dialog .modal-footer .o_form_button_remove");
         await click(target.querySelector(".o_dialog .modal-footer .o_form_button_remove"));
         assert.verifySteps(["remove"]);
+        assert.containsNone(target, ".o_dialog .o_form_view");
+    });
+
+    QUnit.test("Buttons are set as disabled on click", async function (assert) {
+        serverData.views = {
+            "partner,false,form": `
+                    <form string="Partner">
+                        <sheet>
+                            <group>
+                                <field name="name"/>
+                            </group>
+                        </sheet>
+                    </form>
+                `,
+        };
+        const def = makeDeferred();
+        async function mockRPC(route, args) {
+            if (args.method === "write") {
+                await def;
+            }
+        }
+        const webClient = await createWebClient({ serverData, mockRPC });
+        webClient.env.services.dialog.add(FormViewDialog, {
+            resModel: "partner",
+            resId: 1,
+        });
+
+        await nextTick();
+        await editInput(
+            target.querySelector(".o_dialog .o_content .o_field_char .o_input"),
+            "",
+            "test"
+        );
+
+        await click(target.querySelector(".o_dialog .modal-footer .o_form_button_save"));
+        assert.strictEqual(
+            target
+                .querySelector(".o_dialog .modal-footer .o_form_button_save")
+                .getAttribute("disabled"),
+            ""
+        );
+
+        def.resolve();
+        await nextTick();
         assert.containsNone(target, ".o_dialog .o_form_view");
     });
 });

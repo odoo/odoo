@@ -117,8 +117,6 @@ export class FormController extends Component {
         this.canCreate = create && !this.props.preventCreate;
         this.canEdit = edit && !this.props.preventEdit;
 
-        this.disabledButtons = null;
-
         let mode = this.props.mode || "edit";
         if (!this.canEdit) {
             mode = "readonly";
@@ -413,18 +411,17 @@ export class FormController extends Component {
     }
 
     disableButtons() {
-        const btns = [...this.rootRef.el.querySelectorAll("button:not([disabled])")];
+        const btns = [...this.ui.activeElement.querySelectorAll("button:not([disabled])")];
         for (const btn of btns) {
-            btn.setAttribute("disabled", "1");
+            btn.setAttribute("disabled", "");
         }
-        this.disabledButtons = btns;
+        return btns;
     }
 
-    enableButtons() {
-        for (const btn of this.disabledButtons) {
+    enableButtons(btns) {
+        for (const btn of btns) {
             btn.removeAttribute("disabled");
         }
-        this.disabledButtons = null;
     }
 
     async beforeExecuteActionButton(clickParams) {
@@ -459,14 +456,14 @@ export class FormController extends Component {
             });
         }
         if (canProceed) {
-            this.disableButtons();
+            const btns = this.disableButtons();
             await this.model.load({ resId: null });
-            this.enableButtons();
+            this.enableButtons(btns);
         }
     }
 
     async saveButtonClicked(params = {}) {
-        this.disableButtons();
+        const btns = this.disableButtons();
         const record = this.model.root;
         let saved = false;
 
@@ -475,7 +472,7 @@ export class FormController extends Component {
         } else {
             saved = await record.save(params);
         }
-        this.enableButtons();
+        this.enableButtons(btns);
         if (saved && this.props.onSave) {
             this.props.onSave(record, params);
         }
