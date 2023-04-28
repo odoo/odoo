@@ -1491,12 +1491,6 @@ export class PosGlobalState extends PosModel {
         return floatIsZero(qty, this.dp["Product Unit of Measure"]);
     }
 
-    formatProductQty(qty) {
-        return formatFloat(qty, {
-            digits: [true, this.dp["Product Unit of Measure"]],
-        });
-    }
-
     disallowLineQuantityChange() {
         return false;
     }
@@ -2019,7 +2013,7 @@ export class Orderline extends PosModel {
                             _t(
                                 "The requested quantity to be refunded is higher than the refundable quantity of %s."
                             ),
-                            this.pos.formatProductQty(maxQtyToRefund)
+                            this.pos.env.utils.formatProductQty(maxQtyToRefund)
                         ),
                     });
                     return false;

@@ -57,7 +57,7 @@ export class OrderlineDetails extends Component {
         return !this.env.pos.isProductQtyZero(this.props.line.refunded_qty);
     }
     getFormattedRefundedQty() {
-        return this.env.pos.formatProductQty(this.props.line.refunded_qty);
+        return this.env.utils.formatProductQty(this.props.line.refunded_qty);
     }
     hasToRefundQty() {
         const toRefundDetail = this.getToRefundDetail();
@@ -65,7 +65,7 @@ export class OrderlineDetails extends Component {
     }
     getFormattedToRefundQty() {
         const toRefundDetail = this.getToRefundDetail();
-        return this.env.pos.formatProductQty(toRefundDetail && toRefundDetail.qty);
+        return this.env.utils.formatProductQty(toRefundDetail && toRefundDetail.qty);
     }
     getRefundingMessage() {
         return sprintf(this.env._t("Refunding %s in "), this.getFormattedToRefundQty());
