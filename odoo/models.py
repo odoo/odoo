@@ -6519,27 +6519,12 @@ class BaseModel(metaclass=MetaModel):
                 for name, subnames in self['<tree>'].items():
                     if name == 'id':
                         continue
-                    field = record._fields[name]
-                    if (field.type == 'properties' and field.definition_record in names
-                       and other.get(name) == self[name] == []):
-                        # TODO: The parent field on "record" can be False, if it was changed,
-                        # (even if if was changed to a not Falsy value) because of
-                        # >>> initial_values = dict(values, **dict.fromkeys(names, False))
-                        # If it's the case when we will read the properties field on this record,
-                        # it will return False as well (no parent == no definition)
-                        # So record at the following line, will always return a empty properties
-                        # because the definition record is always False if it triggered the onchange
-                        # >>> snapshot0 = Snapshot(record, nametree, fetch=(not first_call))
-                        # but we need "snapshot0" to have the old value to be able
-                        # to compare it with the new one and trigger the onchange if necessary.
-                        # In that particular case, "other.get(name)" must contains the
-                        # non empty properties value.
-                        result[name] = []
-                        continue
-
                     if not force and other.get(name) == self[name]:
                         continue
-                    if field.type not in ('one2many', 'many2many'):
+                    field = record._fields[name]
+                    if field.type == 'properties':
+                        result[name] = field.convert_to_onchange(self[name], record, {'__snapshot': self})
+                    elif field.type not in ('one2many', 'many2many'):
                         result[name] = field.convert_to_onchange(self[name], record, {})
                     else:
                         # x2many fields: serialize value as commands
