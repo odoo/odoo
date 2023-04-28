@@ -222,7 +222,7 @@ export const websiteService = {
                 if (!Wysiwyg) {
                     Wysiwyg = await getWysiwygClass({
                         moduleName: 'website.wysiwyg',
-                        additionnalAssets: ['website.assets_wysiwyg']
+                        additionalAssets: ['website.assets_wysiwyg']
                     });
                 }
                 return Wysiwyg;

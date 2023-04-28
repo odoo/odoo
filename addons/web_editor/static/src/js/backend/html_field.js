@@ -555,7 +555,10 @@ export class HtmlField extends Component {
         $editable[0].replaceChildren(...originalContents.childNodes);
     }
     async _getWysiwygClass() {
-        return getWysiwygClass();
+        return getWysiwygClass({
+            moduleName: this.props.moduleName,
+            additionalAssets: this.props.additionalAssets,
+        });
     }
     _onAttachmentChange(attachment) {
         // This only needs to happen for the composer for now
@@ -641,6 +644,8 @@ HtmlField.props = {
     wrapper: { type: String, optional: true },
     wysiwygOptions: { type: Object },
     hasReadonlyModifiers: { type: Boolean, optional: true },
+    moduleName: { type: String, optional: true },
+    additionalAssets: { type: Array, optional: true },
 };
 
 export const htmlField = {
@@ -740,6 +745,8 @@ export const htmlField = {
 
             wysiwygOptions,
             hasReadonlyModifiers: dynamicInfo.readonly,
+            moduleName: options.moduleName,
+            additionalAssets: options.additionalAssets,
         };
     },
 };

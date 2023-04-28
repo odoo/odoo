@@ -4,8 +4,8 @@ import { getBundle, loadBundle } from "@web/core/assets";
 
 const exports = {};
 
-async function loadWysiwyg(additionnalAssets=[]) {
-    const xmlids = ['web_editor.assets_wysiwyg', ...additionnalAssets];
+async function loadWysiwyg(additionalAssets=[]) {
+    const xmlids = ['web_editor.assets_wysiwyg', ...additionalAssets];
     for (const xmlid of xmlids) {
         const assets = await getBundle(xmlid);
         await loadBundle(assets);
@@ -20,16 +20,16 @@ exports.loadWysiwyg = loadWysiwyg;
  * @param {object} options
  * @param {object} options.wysiwygOptions The wysiwyg options
  * @param {string} options.moduleName The wysiwyg module name
- * @param {object} options.additionnalAssets The additional assets
+ * @param {object} options.additionalAssets The additional assets
  */
 exports.createWysiwyg = async (parent, options = {}) => {
     const Wysiwyg = await getWysiwygClass(options);
     return new Wysiwyg(parent, options.wysiwygOptions);
 };
 
-async function getWysiwygClass({moduleName = 'web_editor.wysiwyg', additionnalAssets = []} = {}) {
+async function getWysiwygClass({moduleName = 'web_editor.wysiwyg', additionalAssets = []} = {}) {
     if (!(await odoo.ready(moduleName))) {
-        await loadWysiwyg(additionnalAssets);
+        await loadWysiwyg(additionalAssets);
         await odoo.ready(moduleName);
     }
     return odoo.__DEBUG__.services[moduleName];
