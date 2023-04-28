@@ -5763,6 +5763,15 @@ X[]
         });
     });
 
+    describe('comment node', () => {
+        it('should remove comment node inside editable content during sanitize', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>ab<!-- comment -->cd</p>',
+                contentAfter: '<p>abcd</p>',
+            });
+        });
+    });
+
     describe('markdown', () => {
         describe('inline code', () => {
             it('should convert text into inline code (start)', async () => {
