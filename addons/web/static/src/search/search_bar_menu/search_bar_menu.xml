@@ -7,7 +7,7 @@
                   position="'bottom-end'"
                   t-if="this.env.searchModel.searchMenuTypes.size">
             <t t-set-slot="toggler" t-slot-scope="scope">
-                <i class="fa fa-caret-down" aria-hidden="true"/>
+                <i class="fa fa-caret-down" aria-hidden="true" data-hotkey="shift+q"/>
             </t>
             <!-- Filter -->
             <t t-if="this.env.searchModel.searchMenuTypes.has('filter')">
