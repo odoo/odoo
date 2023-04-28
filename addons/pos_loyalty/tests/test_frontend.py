@@ -831,3 +831,57 @@ class TestUi(TestPointOfSaleHttpCommon):
             "PosLoyaltyFreeProductTour2",
             login="accountman",
         )
+
+    def test_loyalty_points_correctly_computed(self):
+        """
+        - Create a loyalty program giving free product A for 30 points
+        - Trigger the condition of the program using the same product A
+        """
+        LoyaltyProgram = self.env['loyalty.program']
+        (LoyaltyProgram.search([])).write({'pos_ok': False})
+        self.product_a = self.env["product.product"].create({
+            "name": "Test Product A",
+            "type": "product",
+            "taxes_id": False,
+            "list_price": 100,
+            "available_in_pos": True,
+        })
+
+        self.loyalty_program = self.env['loyalty.program'].create({
+            'name': 'Loyalty Program Test',
+            'program_type': 'loyalty',
+            'trigger': 'auto',
+            'applies_on': 'both',
+            'pos_ok': True,
+            'rule_ids': [(0, 0, {
+                'reward_point_mode': 'money',
+                'reward_point_amount': 10,
+                'minimum_amount': 5,
+                'minimum_qty': 1,
+                'product_ids': [(6, 0, [self.product_a.id])],
+            })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'discount',
+                'discount': 10,
+                'discount_mode': 'per_order',
+                'required_points': 30,
+            })],
+        })
+
+        partner_aaa = self.env['res.partner'].create({'name': 'AAA Partner'})
+        self.env['loyalty.card'].create({
+            'partner_id': partner_aaa.id,
+            'program_id': self.loyalty_program.id,
+            'points': 30,
+        })
+
+        self.main_pos_config.open_ui()
+
+        self.start_tour(
+            "/pos/web?config_id=%d" % self.main_pos_config.id,
+            "PosLoyaltyTour6",
+            login="accountman",
+        )
+
+        card = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id)])
+        self.assertEqual(card.points, 900)

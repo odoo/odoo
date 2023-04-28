@@ -912,6 +912,15 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                         points += rule.reward_point_amount * totalProductQty;
                     }
                 }
+
+                //If the reward point mode is money, we need to take the reward discount into account for the point calculation
+                const rewardLines = orderLines.filter((line) => line.reward_id && this.pos.reward_by_id[line.reward_id].program_id.id === program.id 
+                                                        && !rule.valid_product_ids.has(line.product.id) && program.program_type !== 'gift_card');
+                if (rule.reward_point_mode === 'money' && !rule.any_product) {
+                    for (const rewardLine of rewardLines) {
+                        points += round_precision(rule.reward_point_amount * rewardLine.get_price_with_tax(), 0.01);
+                    }
+                }
             }
             const res = points ? [{points}] : [];
             if (splitPoints.length) {
