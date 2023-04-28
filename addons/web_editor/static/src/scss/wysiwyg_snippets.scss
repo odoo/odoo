@@ -274,6 +274,10 @@
                       // browser default font, we should use a SVG instead.
         display: inline-block;
         margin-right: 0.4em;
+
+        .o_rtl & {
+            transform: scaleX(-1);
+        }
     }
     @for $level from 1 through 3 {
         .o_we_sublevel_#{$level} {
@@ -1657,7 +1661,12 @@
                     content: '\f0da';
                     position: static;
                     transform: none;
+
+                    .o_rtl & {
+                        transform: scaleX(-1);
+                    }
                 }
+
                 &.active {
 
                     &::after {
