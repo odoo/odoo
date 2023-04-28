@@ -1,46 +1,13 @@
 /** @odoo-module alias=website_livechat.tour_common **/
 
-// Due to some issue with assets bundles, the current file can be loaded while
-// LivechatButtonView isn't, causing the patch to fail as the original model was
-// not registered beforehand. The following import is intended to stop the
-// execution of this file if @im_livechat/public_models/livechat_button_view is
-// not part of the current assets bundles (as trying to import it will silently
-// crash).
-import "@im_livechat/legacy/public_models/livechat_button_view";
-import { Patch } from "@im_livechat/legacy/model";
+import { patch } from "@web/core/utils/patch";
+import { LivechatService } from "@im_livechat/new/core/livechat_service";
+import { RATING } from "@im_livechat/new/feedback_panel/feedback_panel";
 
-Patch({
-    name: 'LivechatButtonView',
-    recordMethods: {
-        /**
-         * Alter this method for test purposes.
-         *
-         * Force fetch notifications after sending the message: listen/notify
-         * mechanism is not active during tests, but available messages
-         * are directly sent when updating channel subscription.
-         *
-         * Add a class to the chatter window after sendFeedback is done
-         * to force the test to wait until feedback is really done
-         * (to check afterwards if the livechat session is set to inactive)
-         *
-         * Note : this asset is loaded for tests only (rpc call done only during
-         * tests)
-         *
-         * @override
-         */
-        async sendMessage(message) {
-            await this._super(message);
-            if (message.isFeedback) {
-                $('div.o_thread_window_header').addClass('feedback_sent');
-            } else {
-                this.messaging.rpc({ route: '/bus/test_mode_activated' }).then(in_test_mode => {
-                    if (!in_test_mode) {
-                        return;
-                    }
-                    this.env.services['bus_service'].forceUpdateChannels();
-                });
-            }
-        },
+patch(LivechatService.prototype, "website_livechat", {
+    sendFeedback() {
+        document.body.classList.add("feedback_sent");
+        return this._super(...arguments);
     },
 });
 
@@ -50,103 +17,102 @@ Patch({
 
 var startStep = [{
     content: "click on livechat widget",
-    trigger: "div.o_livechat_button"
+    trigger: ".o-livechat-LivechatButton",
 }, {
     content: "Say hello!",
-    trigger: "input.o_composer_text_field",
+    trigger: ".o-mail-Composer-input",
     run: "text Hello Sir!"
 }, {
     content: "Send the message",
-    trigger: "input.o_composer_text_field",
-    run: function() {
-        $('input.o_composer_text_field').trigger($.Event('keydown', {which: $.ui.keyCode.ENTER}));
-    }
+    trigger: ".o-mail-Composer-input",
+    run() {
+        this.$anchor[0].dispatchEvent(
+            new KeyboardEvent("keydown", { key: "Enter", which: 13, bubbles: true })
+        );
+    },
 }, {
     content: "Verify your message has been typed",
-    trigger: "div.o_thread_message_content>p:contains('Hello Sir!')"
+    trigger: ".o-mail-Message:contains('Hello Sir!')"
 }, {
     content: "Verify there is no duplicates",
-    trigger: "body",
-    run: function () {
-        if ($("div.o_thread_message_content p:contains('Hello Sir!')").length === 1) {
+    trigger: ".o-mail-Thread",
+    run() {
+        if (this.$anchor.find(".o-mail-Message:contains('Hello Sir!')").length === 1) {
             $('body').addClass('no_duplicated_message');
         }
-    }
+    },
 }, {
     content: "Is your message correctly sent ?",
-    trigger: 'body.no_duplicated_message'
+    trigger: 'body.no_duplicated_message',
+    shadowDOM: false,
 }];
 
 var endDiscussionStep = [{
-    content: "Close the chatter",
-    trigger: "a.o_thread_window_close",
-    run: function() {
-        $('a.o_thread_window_close').click();
-    }
+    content: "Close the chat window",
+    trigger: ".o-mail-ChatWindow-command[title*=Close]",
+    run: "click",
 }];
 
 var feedbackStep = [{
     content: "Type a feedback",
-    trigger: "div.o_livechat_rating_reason > textarea",
+    trigger: "textarea[placeholder='Explain your note']",
     run: "text ;-) This was really helpful. Thanks ;-)!"
 }, {
     content: "Send the feedback",
-    trigger: "input[type='button'].o_rating_submit_button",
+    trigger: "button:contains(Send)",
 }, {
     content: "Check if feedback has been sent",
-    trigger: "div.o_thread_window_header.feedback_sent",
+    trigger: "body.feedback_sent",
+    shadowDOM: false,
 }, {
     content: "Thanks for your feedback",
-    trigger: "div.o_livechat_rating_box:has(div:contains('Thank you for your feedback'))",
+    trigger: "p:contains('Thank you for your feedback')",
 }];
 
 var transcriptStep = [{
     content: "Type your email",
-    trigger: "input[id='o_email']",
+    trigger: "input[placeholder='mail@example.com']",
     run: "text deboul@onner.com"
 }, {
     content: "Send the conversation to your email address",
-    trigger: "button.o_email_chat_button",
+    trigger: "button[data-action=sendTranscript]",
 }, {
-    content: "Type your email",
-    trigger: "div.o_livechat_email:has(strong:contains('Conversation Sent'))",
+    content: "Check conversation is sent",
+    trigger: ".form-text:contains(The conversation was sent)",
 }];
 
 var closeStep = [{
     content: "Close the conversation with the x button",
-    trigger: "a.o_thread_window_close",
+    trigger: ".o-mail-ChatWindow-command[title*=Close]",
+    run: "click",
 },  {
-    content: "Check that the chat window is closed",
-    trigger: 'body',
-    run: function () {
-        if ($('div.o_livechat_button').length === 1 && !$('div.o_livechat_button').is(':visible')) {
+    content: "Check that the button is not displayed anymore",
+    trigger: '.o-mail-ChatWindowContainer',
+    allowInvisible: true,
+    run() {
+        if (this.$anchor.find('.o-livechat-livechatButton').length === 0) {
             $('body').addClass('tour_success');
         }
-    }
+    },
 }, {
     content: "Is the Test succeded ?",
-    trigger: 'body.tour_success'
+    trigger: 'body.tour_success',
+    shadowDOM: false,
 }];
 
 var goodRatingStep = [{
-    content: "Send Good Rating",
-    trigger: "div.o_livechat_rating_choices > img[data-value=5]",
-}, {
-    content: "Check if feedback has been sent",
-    trigger: "div.o_thread_window_header.feedback_sent",
-}, {
-    content: "Thanks for your feedback",
-    trigger: "div.o_livechat_rating_box:has(div:contains('Thank you for your feedback'))"
+    content: "Choose Good Rating",
+    trigger: `img[src*=rating][alt=${RATING.GOOD}]`,
 }];
 
 var okRatingStep = [{
-    content: "Send ok Rating",
-    trigger: "div.o_livechat_rating_choices > img[data-value=3]",
+    content: "Choose ok Rating",
+    trigger: `img[src*=rating][alt=${RATING.OK}]`,
 }];
 
 var sadRatingStep = [{
-    content: "Send bad Rating",
-    trigger: "div.o_livechat_rating_choices > img[data-value=1]",
+    content: "Choose bad Rating",
+    trigger: `img[src*=rating][alt=${RATING.BAD}]`,
 }];
 
 export default {

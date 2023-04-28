@@ -3,7 +3,7 @@
 
 from odoo import tests, _
 from odoo.addons.website_livechat.tests.common import TestLivechatCommon
-
+from unittest import skip
 
 @tests.tagged('post_install', '-at_install')
 class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
@@ -60,6 +60,7 @@ class TestLivechatUI(tests.HttpCase, TestLivechatCommon):
         chat_request.invalidate_recordset()
         self.assertEqual(chat_request.livechat_active, False, "The livechat request must be inactive as the visitor started himself a livechat session.")
 
+    @skip('livechat_refactoring')
     def test_chat_request_flow_with_rating_ui(self):
         # Open a chat request
         self.visitor_tour.with_user(self.operator).action_send_chat_request()

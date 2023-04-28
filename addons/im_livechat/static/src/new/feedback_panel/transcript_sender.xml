@@ -5,7 +5,7 @@
     <div class="form-text" t-esc="hint"/>
     <div class="input-group has-validation mb-3">
         <input t-model="state.email" t-att-disabled="inputDisabled" type="text" class="form-control" placeholder="mail@example.com"/>
-        <button class="btn btn-primary" type="button" t-att-disabled="buttonDisabled" t-on-click="onClickSend">
+        <button class="btn btn-primary" type="button" data-action="sendTranscript" t-att-disabled="buttonDisabled" t-on-click="onClickSend">
             <i t-attf-class="fa {{ icon }}"/>
         </button>
     </div>
