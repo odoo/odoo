@@ -17,6 +17,10 @@ export class BomOverviewSpecialLine extends Component {
         return this.props.data;
     }
 
+    get precision() {
+        return this.props.precision;
+    }
+
     get hasFoldButton() {
         return ["operations", "byproducts"].includes(this.props.type);
     }
@@ -58,6 +62,7 @@ BomOverviewSpecialLine.props = {
         },
     },
     data: Object,
+    precision: Number,
     toggleFolded: { type: Function, optional: true },
 };
 BomOverviewSpecialLine.defaultProps = {
