@@ -42,7 +42,7 @@ from collections.abc import MutableMapping
 from contextlib import closing
 from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
-from typing import Set
+from typing import List
 
 import babel
 import babel.dates
@@ -3262,7 +3262,7 @@ class BaseModel(metaclass=MetaModel):
             if forbidden:
                 raise self.env['ir.rule']._make_access_error('read', forbidden)
 
-    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> Set[str]:
+    def _determine_fields_to_fetch(self, field_names, ignore_when_in_cache=False) -> List["Field"]:
         """
         Return the fields to fetch from database among the given field names,
         and following the dependencies of computed fields. The method is used
@@ -3270,12 +3270,15 @@ class BaseModel(metaclass=MetaModel):
 
         :param field_names: the list of fields requested
         :param ignore_when_in_cache: whether to ignore fields that are alreay in cache for ``self``
-        :return: the set of fields that must be fetched
+        :return: the list of fields that must be fetched
         """
+        if not field_names:
+            return []
+
         cache = self.env.cache
 
-        fields_to_fetch = OrderedSet()
-        field_names_todo = deque(field_names)
+        fields_to_fetch = []
+        field_names_todo = deque(self.check_field_access_rights('read', field_names))
         field_names_done = {'id'}  # trick: ignore 'id'
 
         while field_names_todo:
@@ -3290,7 +3293,7 @@ class BaseModel(metaclass=MetaModel):
                 # field is already in cache: don't fetch it
                 continue
             if field.store:
-                fields_to_fetch.add(field)
+                fields_to_fetch.append(field)
             else:
                 # optimization: fetch field dependencies
                 for dotname in self.pool.field_depends[field]:
