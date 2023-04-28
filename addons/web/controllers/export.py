@@ -236,6 +236,8 @@ class ExportXlsxWriter:
             cell_style = self.date_style
         elif isinstance(cell_value, float):
             cell_style.set_num_format(self.float_format)
+        elif isinstance(cell_value, list):
+            cell_value = str(cell_value)
         self.write(row, column, cell_value, cell_style)
 
 
