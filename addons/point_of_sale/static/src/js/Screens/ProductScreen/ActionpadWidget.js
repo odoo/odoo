@@ -11,6 +11,13 @@ export class ActionpadWidget extends Component {
     static defaultProps = {
         isActionButtonHighlighted: false,
     };
+    static props = {
+        partner: "object",
+        actionName: { type: String, optional: true },
+        onSwitchPane: { type: Function, optional: true },
+        actionToTrigger: { type: Function, optional: true },
+        isActionButtonHighlighted: { type: Boolean, optional: true },
+    };
 
     setup() {
         this.pos = usePos();

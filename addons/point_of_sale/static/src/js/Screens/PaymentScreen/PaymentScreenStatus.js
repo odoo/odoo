@@ -4,6 +4,9 @@ import { Component } from "@odoo/owl";
 
 export class PaymentScreenStatus extends Component {
     static template = "PaymentScreenStatus";
+    static props = {
+        order: Object,
+    };
 
     get changeText() {
         return this.env.pos.format_currency(this.props.order.get_change());

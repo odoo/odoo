@@ -5,6 +5,7 @@ import { floatIsZero } from "@web/core/utils/numbers";
 
 export class OrderSummary extends Component {
     static template = "OrderSummary";
+    static props = { order: Object };
 
     getTotal() {
         return this.env.pos.format_currency(this.props.order.get_total_with_tax());

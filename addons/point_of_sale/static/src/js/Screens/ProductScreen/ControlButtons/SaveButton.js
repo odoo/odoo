@@ -6,6 +6,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class SaveButton extends Component {
     static template = "point_of_sale.SaveButton";
+    static props = {};
 
     setup() {
         super.setup();

@@ -4,6 +4,10 @@ import { Component, useRef, useState, useSubEnv } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class BaseProductAttribute extends Component {
+    static props = {
+        attribute: Object,
+    };
+
     setup() {
         super.setup();
         this.pos = usePos();

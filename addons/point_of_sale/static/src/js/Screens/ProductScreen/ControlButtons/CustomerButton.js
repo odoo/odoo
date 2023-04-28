@@ -6,6 +6,7 @@ import { Component } from "@odoo/owl";
 
 export class CustomerButton extends Component {
     static template = "point_of_sale.CustomerButton";
+    static props = {};
 
     setup() {
         this.pos = usePos();

@@ -12,6 +12,8 @@ import { Component, useRef } from "@odoo/owl";
  * this abstract component.
  */
 export class AbstractReceiptScreen extends Component {
+    static props = { isShown: Boolean };
+
     setup() {
         super.setup();
         this.orderReceipt = useRef("order-receipt");

@@ -5,6 +5,7 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class BackToFloorButton extends Component {
     static template = "BackToFloorButton";
+    static props = {};
 
     setup() {
         super.setup();

@@ -9,11 +9,17 @@ export class ErrorBarcodePopup extends ErrorPopup {
         confirmText: _lt("Ok"),
         cancelText: _lt("Cancel"),
         title: _lt("Error"),
-        body: "",
         message: _lt(
             "The Point of Sale could not find any product, customer, employee or action associated with the scanned barcode."
         ),
     };
+    static props = Object.assign(
+        {
+            message: { type: String, optional: true },
+            code: String,
+        },
+        ErrorPopup.props
+    );
 
     get translatedMessage() {
         return this.env._t(this.props.message);

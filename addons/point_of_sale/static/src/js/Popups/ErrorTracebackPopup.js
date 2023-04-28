@@ -16,6 +16,13 @@ export class ErrorTracebackPopup extends ErrorPopup {
         exitButtonIsShown: false,
         exitButtonText: _lt("Exit Pos"),
     };
+    static props = Object.assign(
+        {
+            exitButtonIsShown: { type: Boolean, optional: true },
+            exitButtonText: { type: String, optional: true },
+        },
+        ErrorPopup.props
+    );
 
     setup() {
         this.pos = usePos();

@@ -5,6 +5,7 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class ProductItem extends Component {
     static template = "ProductItem";
+    static props = { product: Object };
 
     setup() {
         this.pos = usePos();

@@ -9,6 +9,7 @@ import { Component } from "@odoo/owl";
 
 export class eWalletButton extends Component {
     static template = "point_of_sale.eWalletButton";
+    static props = {};
 
     setup() {
         super.setup(...arguments);

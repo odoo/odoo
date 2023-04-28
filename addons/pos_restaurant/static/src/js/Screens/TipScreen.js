@@ -12,6 +12,8 @@ import { Component, useRef, onMounted } from "@odoo/owl";
 export class TipScreen extends Component {
     static template = "pos_restaurant.TipScreen";
     static showBackToFloorButton = true;
+    static props = { isShown: Boolean };
+
     setup() {
         super.setup();
         this.pos = usePos();

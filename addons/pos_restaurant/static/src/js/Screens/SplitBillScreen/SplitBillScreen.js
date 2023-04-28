@@ -10,6 +10,7 @@ import { Component, useState, onMounted } from "@odoo/owl";
 export class SplitBillScreen extends Component {
     static template = "SplitBillScreen";
     static components = { SplitOrderline };
+    static props = { isShown: Boolean };
 
     setup() {
         super.setup();

@@ -5,6 +5,7 @@ import { Component } from "@odoo/owl";
 // Previously UsernameWidget
 export class CashierName extends Component {
     static template = "CashierName";
+    static props = {};
 
     get username() {
         const { name } = this.env.pos.get_cashier();

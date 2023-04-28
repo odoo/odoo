@@ -6,6 +6,7 @@ import { Component } from "@odoo/owl";
 
 export class RefundButton extends Component {
     static template = "point_of_sale.RefundButton";
+    static props = {};
 
     setup() {
         super.setup();

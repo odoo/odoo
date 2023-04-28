@@ -7,6 +7,7 @@ import { Component } from "@odoo/owl";
 
 export class PromoCodeButton extends Component {
     static template = "PromoCodeButton";
+    static props = {};
 
     setup() {
         super.setup();

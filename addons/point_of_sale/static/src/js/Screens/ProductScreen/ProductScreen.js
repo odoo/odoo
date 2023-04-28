@@ -31,6 +31,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         OrderWidget,
         ProductsWidget,
     };
+    static props = { isShown: Boolean };
 
     setup() {
         super.setup();

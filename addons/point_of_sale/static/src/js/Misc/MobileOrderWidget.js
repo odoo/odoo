@@ -5,6 +5,10 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class MobileOrderWidget extends Component {
     static template = "MobileOrderWidget";
+    static props = {
+        pane: String,
+        onSwitchPane: Function,
+    };
 
     setup() {
         super.setup(...arguments);

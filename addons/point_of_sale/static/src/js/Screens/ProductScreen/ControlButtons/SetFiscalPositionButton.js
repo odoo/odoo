@@ -7,6 +7,7 @@ import { Component } from "@odoo/owl";
 
 export class SetFiscalPositionButton extends Component {
     static template = "SetFiscalPositionButton";
+    static props = {};
 
     setup() {
         super.setup();

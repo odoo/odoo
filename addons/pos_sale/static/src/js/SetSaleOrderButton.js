@@ -6,6 +6,7 @@ import { Component } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 export class SetSaleOrderButton extends Component {
     static template = "SetSaleOrderButton";
+    static props = {};
 
     setup() {
         super.setup();

@@ -8,6 +8,7 @@ import { Component } from "@odoo/owl";
 
 export class RewardButton extends Component {
     static template = "RewardButton";
+    static props = {};
 
     setup() {
         super.setup();

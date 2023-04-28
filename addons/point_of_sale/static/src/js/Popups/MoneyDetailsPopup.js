@@ -8,6 +8,11 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 export class MoneyDetailsPopup extends AbstractAwaitablePopup {
     static components = { CurrencyAmount };
     static template = "MoneyDetailsPopup";
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        moneyDetails: "object",
+        total: Number,
+    };
 
     setup() {
         super.setup();

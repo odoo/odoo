@@ -8,6 +8,10 @@ import { Component, onMounted, onWillUnmount } from "@odoo/owl";
 
 export class PartnerDetailsEdit extends Component {
     static template = "PartnerDetailsEdit";
+    static props = {
+        partner: "object",
+        saveChanges: Function,
+    };
 
     setup() {
         super.setup();

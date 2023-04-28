@@ -24,6 +24,7 @@ export class Chrome extends Component {
     static template = "Chrome"; // FIXME POSREF namespace templates
     static components = { Transition, MainComponentsContainer, ErrorHandler, Navbar };
     static props = { disableLoader: Function };
+
     setup() {
         this.pos = usePos();
         this.popup = useService("popup");

@@ -28,6 +28,10 @@ import { sprintf } from "@web/core/utils/strings";
 export class PartnerListScreen extends Component {
     static components = { PartnerDetailsEdit, PartnerLine };
     static template = "PartnerListScreen";
+    static props = {
+        partner: "object",
+        resolve: Function,
+    };
 
     setup() {
         super.setup();

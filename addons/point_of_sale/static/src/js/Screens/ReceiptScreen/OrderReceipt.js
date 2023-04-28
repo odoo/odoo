@@ -6,6 +6,7 @@ import { Component, onWillUpdateProps } from "@odoo/owl";
 export class OrderReceipt extends Component {
     static components = { WrappedProductNameLines };
     static template = "OrderReceipt";
+    static props = { order: Object, isBill: { type: Boolean, optional: true } };
 
     setup() {
         super.setup();

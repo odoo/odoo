@@ -12,6 +12,11 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 export class ProductInfoPopup extends AbstractAwaitablePopup {
     static template = "ProductInfoPopup";
     static defaultProps = { confirmKey: false };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        info: Object,
+        product: Object,
+    };
 
     setup() {
         super.setup();

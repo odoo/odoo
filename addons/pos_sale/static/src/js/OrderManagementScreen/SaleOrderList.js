@@ -10,6 +10,11 @@ import { SaleOrderRow } from "./SaleOrderRow";
 export class SaleOrderList extends Component {
     static components = { SaleOrderRow };
     static template = "SaleOrderList";
+    static props = {
+        onClickSaleOrder: { type: Function, optional: true },
+        orders: Array,
+        initHighlightedOrder: "object",
+    };
 
     setup() {
         super.setup();

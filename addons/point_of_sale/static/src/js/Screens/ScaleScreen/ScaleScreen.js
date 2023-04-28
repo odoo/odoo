@@ -8,6 +8,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export class ScaleScreen extends Component {
     static template = "ScaleScreen";
+    static props = { product: Object };
 
     /**
      * @param {Object} props

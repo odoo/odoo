@@ -5,6 +5,8 @@ import { registry } from "@web/core/registry";
 
 export class BillScreen extends ReceiptScreen {
     static template = "pos_restaurant.BillScreen";
+    static props = { resolve: Function };
+
     confirm() {
         this.props.resolve({ confirmed: true, payload: null });
         this.pos.closeTempScreen();

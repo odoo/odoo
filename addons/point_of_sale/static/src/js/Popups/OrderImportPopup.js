@@ -10,6 +10,12 @@ export class OrderImportPopup extends AbstractAwaitablePopup {
         cancelKey: false,
         body: "",
     };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        confirmText: { type: String, optional: true },
+        body: { type: String, optional: true },
+        report: Object,
+    };
 
     get unpaidSkipped() {
         return (

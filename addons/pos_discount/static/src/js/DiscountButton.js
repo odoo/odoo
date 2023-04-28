@@ -9,6 +9,7 @@ import { sprintf } from "@web/core/utils/strings";
 
 export class DiscountButton extends Component {
     static template = "DiscountButton";
+    static props = {};
 
     setup() {
         super.setup();

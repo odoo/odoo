@@ -7,10 +7,13 @@ export class ControlButtonPopup extends AbstractAwaitablePopup {
     static template = "ControlButtonPopup";
     static defaultProps = {
         cancelText: _lt("Back"),
-        controlButtons: [],
         confirmKey: false,
     };
-
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        controlButtons: Object,
+        cancelText: { type: String, optional: true },
+    };
     /**
      * @param {Object} props
      * @param {string} props.startingValue

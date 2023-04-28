@@ -28,10 +28,9 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
         }
     },
     isResumeVisible() {
-        if (this.env.pos.config.is_table_management &&
-            this.env.pos.table) {
-                return this.env.pos.getTableOrders(this.env.pos.table.id).length > 1;
-            }
+        if (this.env.pos.config.is_table_management && this.env.pos.table) {
+            return this.env.pos.getTableOrders(this.env.pos.table.id).length > 1;
+        }
         return this._super(...arguments);
     },
     //@override

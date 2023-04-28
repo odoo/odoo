@@ -6,6 +6,7 @@ import { Component } from "@odoo/owl";
 
 export class SplitBillButton extends Component {
     static template = "SplitBillButton";
+    static props = {};
 
     setup() {
         super.setup();

@@ -5,6 +5,7 @@ import { Component } from "@odoo/owl";
 
 export class ReprintReceiptButton extends Component {
     static template = "ReprintReceiptButton";
+    static props = { order: { type: "object", optional: true } };
 
     setup() {
         super.setup();

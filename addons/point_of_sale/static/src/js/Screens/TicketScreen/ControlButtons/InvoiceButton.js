@@ -8,6 +8,7 @@ import { Component, useRef } from "@odoo/owl";
 
 export class InvoiceButton extends Component {
     static template = "InvoiceButton";
+    static props = { onInvoiceOrder: Function, order: { type: "object", optional: true } };
 
     setup() {
         super.setup();

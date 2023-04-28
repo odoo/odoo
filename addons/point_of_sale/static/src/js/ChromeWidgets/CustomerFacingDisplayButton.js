@@ -7,6 +7,8 @@ import { _t } from "@web/core/l10n/translation";
 
 export class CustomerFacingDisplayButton extends Component {
     static template = "CustomerFacingDisplayButton";
+    static props = {};
+
     setup() {
         this.pos = usePos();
         this.customerDisplay = useState(useService("customer_display"));

@@ -10,6 +10,12 @@ import { roundPrecision as round_pr } from "@web/core/utils/numbers";
  */
 export class OrderlineDetails extends Component {
     static template = "OrderlineDetails";
+    static props = {
+        onClickOrderline: Function,
+        onClickRefundOrderUid: Function,
+        line: Object,
+        isSelected: Boolean,
+    };
 
     get line() {
         const line = this.props.line;

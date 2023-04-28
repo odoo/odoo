@@ -5,6 +5,7 @@ import { Component } from "@odoo/owl";
 
 export class BackendButton extends Component {
     static template = "BackendButton";
+    static props = {};
 
     setup() {
         super.setup(...arguments);

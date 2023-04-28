@@ -14,6 +14,14 @@ export class NumpadWidget extends Component {
         disabledModes: [],
         disableSign: false,
     };
+    static props = {
+        disabledModes: { type: Object, optional: true },
+        setNumpadMode: { type: Function, optional: true },
+        activeMode: { type: String, optional: true },
+        disableSign: { type: Boolean, optional: true },
+        updateSelectedOrderline: { type: Function, optional: true },
+    };
+
     setup() {
         this.numberBuffer = useService("number_buffer");
         this.localization = useService("localization");

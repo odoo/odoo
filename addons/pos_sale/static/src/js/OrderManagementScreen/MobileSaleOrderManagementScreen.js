@@ -5,6 +5,8 @@ import { useState } from "@odoo/owl";
 
 export class MobileSaleOrderManagementScreen extends SaleOrderManagementScreen {
     static template = "MobileSaleOrderManagementScreen";
+    static props = {};
+
     setup() {
         super.setup();
         this.mobileState = useState({ showDetails: false });

@@ -11,10 +11,16 @@ export class TextAreaPopup extends AbstractAwaitablePopup {
     static defaultProps = {
         confirmText: _lt("Add"),
         cancelText: _lt("Discard"),
-        title: "",
         body: "",
     };
-
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        confirmText: { type: String, optional: true },
+        cancelText: { type: String, optional: true },
+        title: String,
+        body: { type: String, optional: true },
+        startingValue: { type: String, optional: true },
+    };
     /**
      * @param {Object} props
      * @param {string} props.startingValue

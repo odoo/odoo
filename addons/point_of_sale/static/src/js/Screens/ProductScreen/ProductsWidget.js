@@ -9,10 +9,12 @@ import { ProductItem } from "./ProductItem";
 import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
 import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
+import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
     static template = "ProductsWidget";
+    static props = {};
 
     /**
      * @param {Object} props
@@ -149,7 +151,7 @@ export class ProductsWidget extends Component {
                 identifiedError instanceof ConnectionLostError ||
                 identifiedError instanceof ConnectionAbortedError
             ) {
-                return this.popup.add("OfflineErrorPopup", {
+                return this.popup.add(OfflineErrorPopup, {
                     title: this.env._t("Network Error"),
                     body: this.env._t(
                         "Product is not loaded. Tried loading the product from the server but there is a network error."

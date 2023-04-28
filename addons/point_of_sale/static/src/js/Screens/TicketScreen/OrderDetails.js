@@ -9,6 +9,13 @@ import { Component } from "@odoo/owl";
 export class OrderDetails extends Component {
     static components = { OrderlineDetails };
     static template = "OrderDetails";
+    static props = {
+        onClickOrderline: { type: Function, optional: true },
+        onClickRefundOrderUid: { type: Function, optional: true },
+        order: { type: "object", optional: true },
+        selectedOrderlineId: { type: Number, optional: true },
+        highlightHeaderNote: { type: Boolean, optional: true },
+    };
 
     get order() {
         return this.props.order;

@@ -12,6 +12,13 @@ export class PaymentTransactionPopup extends AbstractAwaitablePopup {
         body: "",
         cancelKey: false,
     };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        transaction: Object,
+        confirmText: { type: String, optional: true },
+        title: { type: String, optional: true },
+        body: { type: String, optional: true },
+    };
 
     setup() {
         super.setup();

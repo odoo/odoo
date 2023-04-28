@@ -28,6 +28,16 @@ import { Component, useExternalListener } from "@odoo/owl";
  * ```
  */
 export class AbstractAwaitablePopup extends Component {
+    static props = {
+        isActive: Boolean,
+        cancelKey: { type: [String, { value: false }], optional: true },
+        confirmKey: { type: [String, { value: false }], optional: true },
+        close: Function,
+        keepBehind: Boolean,
+        id: Number,
+        resolve: Function,
+    };
+
     setup() {
         super.setup(...arguments);
         useExternalListener(window, "keyup", this._onWindowKeyup);

@@ -7,6 +7,7 @@ import { Component } from "@odoo/owl";
 
 export class ProductInfoButton extends Component {
     static template = "ProductInfoButton";
+    static props = {};
 
     setup() {
         super.setup();

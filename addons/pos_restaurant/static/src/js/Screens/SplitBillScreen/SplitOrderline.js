@@ -4,6 +4,11 @@ import { Component } from "@odoo/owl";
 
 export class SplitOrderline extends Component {
     static template = "SplitOrderline";
+    static props = {
+        onClickLine: Function,
+        line: Object,
+        split: Object,
+    };
 
     setup() {
         super.setup();

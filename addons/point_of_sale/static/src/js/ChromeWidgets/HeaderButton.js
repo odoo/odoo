@@ -8,6 +8,7 @@ import { Component } from "@odoo/owl";
 // This is the close session button
 export class HeaderButton extends Component {
     static template = "HeaderButton";
+    static props = {};
 
     setup() {
         super.setup(...arguments);

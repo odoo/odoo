@@ -44,8 +44,16 @@ export class EditListPopup extends AbstractAwaitablePopup {
     static defaultProps = {
         confirmText: _lt("Add"),
         cancelText: _lt("Discard"),
-        array: [],
         isSingleItem: false,
+    };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        confirmText: { type: String, optional: true },
+        cancelText: { type: String, optional: true },
+        isSingleItem: { type: Boolean, optional: true },
+        title: String,
+        name: String,
+        array: Array,
     };
 
     /**

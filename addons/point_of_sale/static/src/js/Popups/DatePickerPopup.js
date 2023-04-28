@@ -11,6 +11,12 @@ export class DatePickerPopup extends AbstractAwaitablePopup {
         cancelText: _lt("Discard"),
         title: _lt("DatePicker"),
     };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        confirmText: { type: String, optional: true },
+        cancelText: { type: String, optional: true },
+        title: { type: String, optional: true },
+    };
 
     setup() {
         super.setup();

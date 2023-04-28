@@ -4,6 +4,11 @@ import { Component } from "@odoo/owl";
 
 export class Orderline extends Component {
     static template = "Orderline";
+    static props = {
+        editPackLotLines: Function,
+        selectLine: Function,
+        line: Object,
+    };
 
     selectLine() {
         this.props.selectLine(this.props.line);

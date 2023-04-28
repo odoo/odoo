@@ -20,7 +20,7 @@ import { sprintf } from "@web/core/utils/strings";
 export class FloorScreen extends Component {
     static components = { EditableTable, EditBar, Table };
     static template = "pos_restaurant.FloorScreen";
-    static props = { isShown: Boolean, floor: { type: true, optional: true } };
+    static props = { floor: { type: true, optional: true }, isShown: Boolean };
     static storeOnOrder = false;
 
     setup() {

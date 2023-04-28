@@ -7,6 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 export class PaymentScreenNumpad extends Component {
     static components = { PSNumpadInputButton };
     static template = "PaymentScreenNumpad";
+    static props = {};
 
     setup() {
         super.setup();

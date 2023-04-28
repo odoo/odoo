@@ -7,6 +7,8 @@ import { Component } from "@odoo/owl";
 
 export class LoginScreen extends Component {
     static template = "LoginScreen";
+    static props = { resolve: Function };
+
     setup() {
         super.setup(...arguments);
         this.selectCashier = useCashierSelector({

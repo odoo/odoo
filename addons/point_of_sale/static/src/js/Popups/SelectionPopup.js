@@ -10,10 +10,15 @@ export class SelectionPopup extends AbstractAwaitablePopup {
         cancelText: _lt("Cancel"),
         title: _lt("Select"),
         body: "",
-        list: [],
         confirmKey: false,
     };
-
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        cancelText: { type: String, optional: true },
+        title: { type: String, optional: true },
+        body: { type: String, optional: true },
+        list: Array,
+    };
     /**
      * Value of the `item` key of the selected element in the Selection
      * Array is the payload of this popup.

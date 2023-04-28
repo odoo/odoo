@@ -16,6 +16,17 @@ export class NumberPopup extends AbstractAwaitablePopup {
         startingValue: null,
         isPassword: false,
     };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        confirmText: { type: String, optional: true },
+        cancelText: { type: String, optional: true },
+        title: { type: String, optional: true },
+        body: { type: String, optional: true },
+        cheap: { type: Boolean, optional: true },
+        startingValue: { type: Number, optional: true },
+        isPassword: { type: Boolean, optional: true },
+        isInputSelected: { type: Boolean, optional: true },
+    };
 
     /**
      * @param {Object} props

@@ -13,6 +13,13 @@ export class ErrorPopup extends AbstractAwaitablePopup {
         body: "",
         cancelKey: false,
     };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        cancelText: { type: String, optional: true },
+        confirmText: { type: String, optional: true },
+        body: { type: String, optional: true },
+        title: { type: String, optional: true },
+    };
 
     setup() {
         super.setup();

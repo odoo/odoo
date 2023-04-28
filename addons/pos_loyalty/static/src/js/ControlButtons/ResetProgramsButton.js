@@ -5,6 +5,7 @@ import { Component } from "@odoo/owl";
 
 export class ResetProgramsButton extends Component {
     static template = "ResetProgramsButton";
+    static props = {};
 
     setup() {
         super.setup();

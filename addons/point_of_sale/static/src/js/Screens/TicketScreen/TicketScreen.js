@@ -41,6 +41,12 @@ export class TicketScreen extends IndependentToOrderScreen {
         reuseSavedUIState: false,
         ui: {},
     };
+    static props = {
+        isShown: Boolean,
+        ui: { type: Object, optional: true },
+        destinationOrder: { type: "object", optional: true },
+        reuseSavedUIState: { type: Boolean, optional: true },
+    };
 
     setup() {
         super.setup();

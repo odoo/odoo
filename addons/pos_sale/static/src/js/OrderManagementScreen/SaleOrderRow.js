@@ -8,6 +8,7 @@ import { Component } from "@odoo/owl";
  */
 export class SaleOrderRow extends Component {
     static template = "SaleOrderRow";
+    static props = { onClickSaleOrder: Function, order: Object, highlightedOrder: "object" };
 
     get order() {
         return this.props.order;

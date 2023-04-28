@@ -9,6 +9,7 @@ export class ReprintReceiptScreen extends AbstractReceiptScreen {
     static template = "ReprintReceiptScreen";
     static components = { OrderReceipt };
     static storeOnOrder = false;
+
     setup() {
         super.setup();
         this.pos = usePos();

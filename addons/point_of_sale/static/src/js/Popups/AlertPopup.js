@@ -8,7 +8,13 @@ export class AlertPopup extends AbstractAwaitablePopup {
     static defaultProps = {
         confirmText: _lt("Ok"),
         title: "",
-        body: "",
         cancelKey: false,
+    };
+    static props = {
+        ...AbstractAwaitablePopup.props,
+        confirmText: { type: String, optional: true },
+        cancelText: { type: String, optional: true },
+        title: { type: String, optional: true },
+        body: String,
     };
 }

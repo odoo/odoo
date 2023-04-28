@@ -8,6 +8,7 @@ import { _t } from "@web/core/l10n/translation";
 // Previously ProxyStatusWidget
 export class ProxyStatus extends Component {
     static template = "ProxyStatus";
+    static props = {};
 
     setup() {
         super.setup();

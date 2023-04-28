@@ -9,6 +9,7 @@ import { sprintf } from "@web/core/utils/strings";
 
 export class TableGuestsButton extends Component {
     static template = "TableGuestsButton";
+    static props = {};
 
     setup() {
         super.setup();

@@ -11,6 +11,16 @@ import { useService } from "@web/core/utils/hooks";
 export class ProductsWidgetControlPanel extends Component {
     static components = { CategoryButton };
     static template = "ProductsWidgetControlPanel";
+    static props = {
+        updateProductList: Function,
+        clearSearch: Function,
+        updateSearch: Function,
+        switchCategory: Function,
+        breadcrumbs: Array,
+        subcategories: Array,
+        hasNoCategories: Boolean,
+        loadProductFromServer: Function,
+    };
 
     setup() {
         super.setup();

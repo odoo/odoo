@@ -21,6 +21,7 @@ import { onMounted, useRef, useState } from "@odoo/owl";
 export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentToOrderScreen) {
     static components = { SaleOrderList, SaleOrderManagementControlPanel };
     static template = "SaleOrderManagementScreen";
+    static props = { isShown: Boolean };
 
     setup() {
         super.setup();

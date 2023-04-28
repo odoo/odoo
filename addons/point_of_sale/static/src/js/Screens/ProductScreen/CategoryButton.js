@@ -4,6 +4,10 @@ import { Component } from "@odoo/owl";
 
 export class CategoryButton extends Component {
     static template = "CategoryButton";
+    static props = {
+        switchCategory: Function,
+        category: Object,
+    };
 
     get imageUrl() {
         const category = this.props.category;

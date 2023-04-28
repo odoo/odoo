@@ -5,6 +5,10 @@ import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class IndependentToOrderScreen extends Component {
     static storeOnOrder = false;
+    static props = {
+        isShown: Boolean,
+    };
+
     setup() {
         super.setup(...arguments);
         this.pos = usePos();

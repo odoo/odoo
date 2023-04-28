@@ -9,6 +9,7 @@ import { useState } from "@odoo/owl";
 export class CashOpeningPopup extends AbstractAwaitablePopup {
     static template = "CashOpeningPopup";
     static defaultProps = { cancelKey: false };
+    static props = { ...AbstractAwaitablePopup.props, keepBehind: Boolean };
 
     setup() {
         super.setup();

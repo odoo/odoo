@@ -10,6 +10,7 @@ import { Component, useEffect, useRef } from "@odoo/owl";
 export class OrderWidget extends Component {
     static components = { Orderline, OrderSummary };
     static template = "OrderWidget";
+    static props = {};
 
     setup() {
         super.setup();
