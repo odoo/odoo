@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <button t-if="!compact or store.isSmall" class="o-mail-Composer-send btn btn-secondary o-last border-start-0"
-                    t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended}"
+                    t-att-class="{'mt-2': extended, 'rounded-0 rounded-end-3': !extended and !compact, 'align-self-stretch': !extended, 'border border-start-0': env.inDiscussApp}"
                     t-on-click="sendMessage"
                     type="button"
                     t-att-disabled="isSendButtonDisabled"
