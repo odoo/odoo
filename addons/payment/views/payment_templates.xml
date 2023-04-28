@@ -97,7 +97,7 @@
                             </label>
                         </div>
                         <!-- === Token inline form === -->
-                        <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                        <div t-attf-id="o_payment_token_inline_checkout_form_{{token.id}}"
                              name="o_payment_inline_form"
                              class="card-footer d-none">
                             <t t-set="token_inline_form_xml_id"
@@ -105,6 +105,7 @@
                             <!-- === Inline form content (filled by provider) === -->
                             <div t-if="token_inline_form_xml_id" class="clearfix">
                                 <t t-call="{{token_inline_form_xml_id}}">
+                                    <t t-set="form_type" t-value="'checkout'"/>
                                     <t t-set="token" t-value="token"/>
                                 </t>
                             </div>
@@ -158,7 +159,7 @@
                              class="text-muted ms-3"/>
                     </div>
                     <!-- === Provider inline form === -->
-                    <div t-attf-id="o_payment_provider_inline_form_{{provider.id}}"
+                    <div t-attf-id="o_payment_provider_inline_checkout_form_{{provider.id}}"
                          name="o_payment_inline_form"
                          class="card-footer px-3 d-none">
                         <t t-if="provider.sudo()._should_build_inline_form(is_validation=False)">
@@ -167,6 +168,7 @@
                             <!-- === Inline form content (filled by provider) === -->
                             <div t-if="inline_form_xml_id" class="clearfix">
                                 <t t-call="{{inline_form_xml_id}}">
+                                    <t t-set="form_type" t-value="'checkout'"/>
                                     <t t-set="provider_id" t-value="provider.id"/>
                                 </t>
                             </div>
@@ -264,7 +266,7 @@
                             </div>                      
                         </div>
                         <!-- === Token inline form === -->
-                        <div t-attf-id="o_payment_token_inline_form_{{token.id}}"
+                        <div t-attf-id="o_payment_token_inline_manage_form_{{token.id}}"
                              name="o_payment_inline_form"
                              class="card-footer d-none">
                             <t t-set="token_inline_form_xml_id"
@@ -272,6 +274,7 @@
                             <!-- === Inline form content (filled by provider) === -->
                             <div t-if="token_inline_form_xml_id" class="clearfix">
                                 <t t-call="{{token_inline_form_xml_id}}">
+                                    <t t-set="form_type" t-value="'manage'"/>
                                     <t t-set="token" t-value="token"/>
                                 </t>
                             </div>
@@ -318,7 +321,7 @@
                     </div>
                     <!-- === Provider inline form === -->
                     <t t-if="provider.sudo()._should_build_inline_form(is_validation=True)">
-                        <div t-attf-id="o_payment_provider_inline_form_{{provider.id}}"
+                        <div t-attf-id="o_payment_provider_inline_manage_form_{{provider.id}}"
                              name="o_payment_inline_form"
                              class="card-footer d-none">
                             <t t-set="inline_form_xml_id"
@@ -326,6 +329,7 @@
                             <!-- === Inline form content (filled by provider) === -->
                             <div t-if="inline_form_xml_id" class="clearfix">
                                 <t t-call="{{inline_form_xml_id}}">
+                                    <t t-set="form_type" t-value="'manage'"/>
                                     <t t-set="provider_id" t-value="provider.id"/>
                                 </t>
                             </div>

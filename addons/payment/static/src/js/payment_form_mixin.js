@@ -116,9 +116,7 @@
 
                 // Append error to inline form and center the page on the error
                 const checkedRadio = $checkedRadios[0];
-                const paymentOptionId = this._getPaymentOptionIdFromRadio(checkedRadio);
-                const formType = $(checkedRadio).data('payment-option-type');
-                const $inlineForm = this.$(`#o_payment_${formType}_inline_form_${paymentOptionId}`);
+                const $inlineForm = this._getInlineFormFromRadio(checkedRadio);
                 $inlineForm.removeClass('d-none'); // Show the inline form even if it was empty
                 $inlineForm.append(errorHtml).find('div[name="o_payment_error"]')[0]
                     .scrollIntoView({behavior: 'smooth', block: 'center'});
@@ -146,8 +144,7 @@
 
             // Prepare the inline form of the selected payment option and display it if not empty
             this._prepareInlineForm(provider, paymentOptionId, flow);
-            const formType = $(radio).data('payment-option-type');
-            const $inlineForm = this.$(`#o_payment_${formType}_inline_form_${paymentOptionId}`);
+            const $inlineForm = this._getInlineFormFromRadio(radio);
             if ($inlineForm.children().length > 0) {
                 $inlineForm.removeClass('d-none');
             }
@@ -199,6 +196,22 @@
         },
 
         /**
+         * Find and return the inline form of the selected payment option.
+         *
+         * @private
+         * @param {HTMLInputElement} radio - The radio button linked to the payment option.
+         * @return {jQuery} The inline form of the selected payment option.
+         */
+        _getInlineFormFromRadio: function (radio) {
+            const paymentOptionId = this._getPaymentOptionIdFromRadio(radio);
+            const paymentOptionType = $(radio).data('payment-option-type');
+            const $inlineForm = this.$(
+                `#o_payment_${paymentOptionType}_inline_${this.formType}_form_${paymentOptionId}`
+            );
+            return $inlineForm;
+        },
+
+        /**
          * Determine and return the online payment flow of the selected payment option.
          *
          * As some providers implement both the direct payment and the payment with redirection, the
@@ -247,23 +260,23 @@
         },
 
         /**
-         * Remove the error in the provider form.
+         * Remove the error in the inline form of the current widget.
          *
          * @private
          * @return {jQuery} The removed error
          */
         _hideError() {
-            return $('div[name="o_payment_error"]').remove();
+            return this.$('div[name="o_payment_error"]').remove();
         },
 
         /**
-         * Collapse all inline forms.
+         * Collapse all inline forms of the current widget.
          *
          * @private
          * @return {undefined}.
          */
         _hideInlineForms() {
-            return $('[name="o_payment_inline_form"]').addClass('d-none');
+            return this.$('[name="o_payment_inline_form"]').addClass('d-none');
         },
 
         /**

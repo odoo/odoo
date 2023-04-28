@@ -24,6 +24,7 @@ import { debounce } from "@web/core/utils/timing";
          * @constructor
          */
         init: function () {
+            this.formType = 'manage';
             const preventDoubleClick = handlerMethod => {
                 return debounce(handlerMethod, 500, true);
             };
@@ -136,7 +137,7 @@ import { debounce } from "@web/core/utils/timing";
                         `input[name="o_payment_radio"][data-payment-option-id="${tokenId}"]` +
                         `[data-payment-option-type="token"]`
                     ).closest('div[name="o_payment_option_card"]');
-                    $tokenCard.siblings(`#o_payment_token_inline_form_${tokenId}`).remove();
+                    $tokenCard.siblings(`#o_payment_token_inline_manage_form_${tokenId}`).remove();
                     $tokenCard.remove();
                     this._disableButton(false);
                 }).guardedCatch(error => {
