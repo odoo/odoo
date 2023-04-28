@@ -34,6 +34,10 @@ class TestUnityRead(TransactionCase):
             'teacher_id': cls.teacher.id
         })
 
+        cls.course.reference = cls.lesson_day1
+        cls.course.m2o_reference_model = cls.lesson_day1._name
+        cls.course.m2o_reference_id = cls.lesson_day1.id
+
         cls.course_no_author = cls.env['test_new_api.course'].create({'name': 'some other course without author'})
 
         cls.env.invalidate_all()
@@ -468,3 +472,194 @@ class TestUnityRead(TransactionCase):
                             'order': 'name desc'
                         }
                 })
+
+    def test_reference_fields_naked(self):
+        read = self.course.web_read({'reference': {}})
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': f"{self.lesson_day1._name},{self.lesson_day1.id}"
+            }
+        ])
+
+    def test_reference_fields(self):
+        read = self.course.web_read({'reference': {'fields': {}}})
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': {
+                    'id': {'id': self.lesson_day1.id, 'model': self.lesson_day1._name},
+                }
+            }
+        ])
+
+    def test_reference_fields_display_name(self):
+        read = self.course.web_read({'reference': {'fields': {'display_name': {}}}})
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': {
+                    'id': {'id': self.lesson_day1.id, 'model': self.lesson_day1._name},
+                    'display_name': 'first day'
+                }
+            }
+        ])
+
+    def test_reference_fields_respect_context(self):
+        read = self.course.web_read(
+            {
+                'reference':
+                    {
+                        'fields': {'display_name': {}},
+                        'context': {'special': 'yes'}
+                    }
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': {
+                    'id': {'id': self.lesson_day1.id, 'model': self.lesson_day1._name},
+                    'display_name': 'special first day'
+                }
+            }
+        ])
+
+    def test_reference_fields_extra_fields(self):
+        read = self.course.web_read(
+            {
+                'reference':
+                    {
+                        'fields': {'write_date': {}},
+                    }
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': {
+                    'id': {'id': self.lesson_day1.id, 'model': self.lesson_day1._name},
+                    'write_date': self.lesson_day1.write_date
+                }
+            }
+        ])
+
+    def test_many2one_reference_naked(self):
+        read = self.course.web_read({'m2o_reference_id': {},
+                                     'm2o_reference_model': {}})
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'm2o_reference_id': self.lesson_day1.id,
+                'm2o_reference_model': self.lesson_day1._name,
+            }
+        ])
+
+    def test_many2one_reference(self):
+        read = self.course.web_read(
+            {
+                'm2o_reference_id':
+                    {
+                        'fields':
+                            {
+                                'display_name': {},
+                                'write_date': {},
+                            },
+                        'context':
+                            {
+                                'special': 'yes',
+                            }
+                    },
+                'm2o_reference_model': {}
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'm2o_reference_id': {
+                    'id': self.lesson_day1.id,
+                    'display_name': "special first day",
+                    'write_date': self.lesson_day1.write_date
+                },
+                'm2o_reference_model': self.lesson_day1._name,
+            }
+        ])
+
+    def test_reference_without_values(self):
+        read = self.course_no_author.web_read(
+            {
+                'reference':
+                    {
+                        'fields': {'write_date': {}},
+                    },
+                'm2o_reference_id':
+                    {
+                        'fields':
+                            {
+                                'display_name': {},
+                                'write_date': {},
+                            },
+                    },
+                'm2o_reference_model': {}
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course_no_author.id,
+                'reference': False,
+                'm2o_reference_id': False,
+                'm2o_reference_model': False,
+            }
+        ])
+
+    def test_reference_with_deleted_record(self):
+        self.lesson_day1.unlink()
+        read = self.course.web_read(
+            {
+                'reference': {'fields': {}},
+                'm2o_reference_id': {'fields': {}},
+                'm2o_reference_model': {}
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': False,
+                'm2o_reference_id': False,
+                'm2o_reference_model': False,
+            }
+        ])
+
+    def test_reference_with_deleted_record_no_fields(self):
+        """
+        When no fields are asked on the reference and many2one_reference fields,
+        the raw value of those fields is returned from the database, and no test
+        for existence is made.
+        """
+        self.lesson_day1.unlink()
+        read = self.course.web_read(
+            {
+                'reference': {},
+                'm2o_reference_id': {},
+                'm2o_reference_model': {}
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': f"{self.lesson_day1._name},{self.lesson_day1.id}",
+                'm2o_reference_id': self.lesson_day1.id,
+                'm2o_reference_model': self.lesson_day1._name,
+            }
+        ])
+
+    def test_reference_with_deleted_record_extra_info(self):
+        self.lesson_day1.unlink()
+        read = self.course.web_read(
+            {
+                'reference': {'fields': {'display_name': {}}},
+                'm2o_reference_id': {'fields': {'display_name': {}}},
+                'm2o_reference_model': {}
+            })
+        self.assertEqual(read, [
+            {
+                'id': self.course.id,
+                'reference': False,
+                'm2o_reference_id': False,
+                'm2o_reference_model': False,
+            }
+        ])
