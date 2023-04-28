@@ -11,6 +11,7 @@ from freezegun import freeze_time
 from functools import reduce
 import json
 import psycopg2
+from unittest.mock import patch
 
 
 class TestSequenceMixinCommon(AccountTestInvoicingCommon):
@@ -381,6 +382,27 @@ class TestSequenceMixin(TestSequenceMixinCommon):
         with Form(move) as move_form:
             move_form.journal_id = journal
         self.assertEqual(move.name, 'AJ/2021/10/0001')
+
+    def test_sequence_move_name_related_field_well_computed(self):
+        AccountMove = type(self.env['account.move'])
+        _compute_name = AccountMove._compute_name
+        def _flushing_compute_name(self):
+            self.env['account.move.line'].flush_model(fnames=['move_name'])
+            _compute_name(self)
+
+        payments = self.env['account.payment'].create([{
+            'payment_type': 'inbound',
+            'payment_method_id': self.env.ref('account.account_payment_method_manual_in').id,
+            'partner_type': 'customer',
+            'partner_id': self.partner_a.id,
+            'amount': 500,
+        }] * 2)
+
+        with patch.object(AccountMove, '_compute_name', _flushing_compute_name):
+            payments.action_post()
+
+        for move in payments.move_id:
+            self.assertRecordValues(move.line_ids, [{'move_name': move.name}] * len(move.line_ids))
 
 
 @tagged('post_install', '-at_install')
