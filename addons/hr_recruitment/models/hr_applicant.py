@@ -137,7 +137,7 @@ class Applicant(models.Model):
         for applicant in self:
             domain = applicant._get_similar_applicants_domain()
             if domain:
-                applicant.application_count = self.env["hr.applicant"].search_count(domain) - 1
+                applicant.application_count = self.env["hr.applicant"].with_context(active_test=False).search_count(domain) - 1
             else:
                 applicant.application_count = 0
 
@@ -416,7 +416,7 @@ class Applicant(models.Model):
         other_applicants = self.env['hr.applicant']
         domain = self._get_similar_applicants_domain()
         if domain:
-            other_applicants = self.env['hr.applicant'].search(domain)
+            other_applicants = self.env['hr.applicant'].with_context(active_test=False).search(domain)
         return {
             'type': 'ir.actions.act_window',
             'name': _('Job Applications'),
