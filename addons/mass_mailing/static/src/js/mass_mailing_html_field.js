@@ -50,7 +50,10 @@ export class MassMailingHtmlField extends HtmlField {
             resizable: false,
             defaultDataForLinkTools: { isNewWindow: true },
             toolbarTemplate: 'mass_mailing.web_editor_toolbar',
-            onWysiwygBlur: () => this.wysiwyg.odooEditor.toolbarHide(),
+            onWysiwygBlur: () => {
+                this.commitChanges();
+                this.wysiwyg.odooEditor.toolbarHide();
+            },
             ...this.props.wysiwygOptions,
         };
     }
