@@ -1,13 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import logging
-import re
 
 from datetime import datetime
 from dateutil import relativedelta
 
 from odoo import api, fields, models, _, SUPERUSER_ID
-from odoo.tools import float_compare
 
 
 _logger = logging.getLogger(__name__)
@@ -110,6 +108,8 @@ class PaymentTransaction(models.Model):
         if not default_template:
             return
 
+        template_id = int(default_template)
+        template = self.env['mail.template'].browse(template_id)
         for trans in self:
             trans = trans.with_company(trans.acquirer_id.company_id).with_context(
                 company_id=trans.acquirer_id.company_id.id,
@@ -118,8 +118,13 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            for invoice in invoice_to_send.with_user(SUPERUSER_ID):
-                invoice.message_post_with_template(int(default_template), email_layout_xmlid="mail.mail_notification_paynow")
+            for invoice in invoice_to_send:
+                lang = template._render_lang(invoice.ids)[invoice.id]
+                model_desc = invoice.with_context(lang=lang).type_name
+                invoice.with_context(model_description=model_desc).with_user(
+                    SUPERUSER_ID
+                ).message_post_with_template(
+                    template_id=template_id, email_layout_xmlid='mail.mail_notification_paynow')
 
     def _cron_send_invoice(self):
         """
