@@ -142,12 +142,13 @@
     border-radius: $o-we-sidebar-content-field-border-radius;
     background-color: $o-we-sidebar-content-field-clickable-bg;
     color: $o-we-sidebar-content-field-clickable-color;
+    text-align: center;
 
     &:not([disabled]):hover, &.active:not(.o_we_no_toggle) {
         @include we-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
     }
 
-    &.active:not(.o_we_no_toggle) {
+    &.active:not(.o_we_no_toggle, .o_we_collapse_toggler) {
         background-color: $o-we-sidebar-content-field-pressed-bg;
     }
 }
@@ -731,6 +732,7 @@
         we-title {
             display: block;
             text-transform: capitalize;
+            text-align: left;
         }
 
         we-customizeblock-options {
@@ -738,14 +740,12 @@
             display: block;
             padding: 0 0 ($o-we-sidebar-content-block-spacing * 1.5) 0;
             background-color: $o-we-bg-lighter;
-            box-shadow: $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, 0.8);
 
             > we-title {
                 display: flex;
                 align-items: center;
                 padding: $o-we-sidebar-content-block-spacing * .3 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
                 background-color: $o-we-bg-light;
-                box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2), $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, .5);
                 font-size: $o-we-sidebar-content-main-title-font-size;
 
                 > span {
@@ -919,7 +919,6 @@
                     height: $o-we-sidebar-content-field-toggle-control-height;
                     border-radius: 10rem;
                     background-color: $o-we-sidebar-content-field-toggle-control-bg;
-                    box-shadow: $o-we-sidebar-content-field-toggle-control-shadow;
                 }
             }
             &.active we-checkbox {
@@ -935,6 +934,7 @@
         we-selection-items {
             .o_we_user_value_widget {
                 margin-top: 0;
+                flex-grow: 1;
             }
         }
 
@@ -1008,6 +1008,7 @@
                     background-color: $o-we-sidebar-content-field-dropdown-item-bg;
                     color: $o-we-sidebar-content-field-dropdown-item-color;
                     border-radius: 0;
+                    text-align: left;
 
                     > we-title {
                         flex-grow: 1;
@@ -1098,6 +1099,10 @@
                         width: percentage(1 / 4);
                         padding: 0;
                         justify-content: center;
+                        flex-grow: 0;
+                        border-radius: 2px;
+                        border: $o-we-item-border-width solid $o-we-bg-darkest;
+
                         img {
                             padding: $o-we-sidebar-content-field-spacing;
                         }
@@ -1124,6 +1129,7 @@
         we-button-group.o_we_user_value_widget {
             we-selection-items {
                 display: flex;
+                flex-grow: 1;
                 max-width: 100%;
 
                 we-button {
@@ -1149,9 +1155,8 @@
             we-button {
                 display: flex;
                 justify-content: center;
-                flex: 0 1 percentage(1/4);
+                flex: 1 1 percentage(1/4);
                 padding: ($o-we-sidebar-content-field-button-group-button-spacing / 4) ($o-we-sidebar-content-field-button-group-button-spacing / 3);
-                text-align: center;
             }
         }
 
@@ -1183,6 +1188,22 @@
 
         // Color Pickers
         .o_we_so_color_palette.o_we_user_value_widget {
+            &:first-of-type {
+                margin-right: $o-we-sidebar-content-field-multi-spacing * 4;
+            }
+
+            + .o_we_so_color_palette {
+                // Countering the margin of the first colorpicker and targeting
+                // the div to avoid misalignment of we-title (theme tab)
+                &:nth-of-type(2) {
+                    > div {
+                        margin-left: -$o-we-sidebar-content-field-multi-spacing * 4;
+                    }
+                    we-title + div {
+                        margin-left: 0;
+                    }
+                }
+            }
 
             .o_we_color_preview {
                 @extend %o-preview-alpha-background;
@@ -1190,7 +1211,7 @@
                 display: block;
                 width: $o-we-sidebar-content-field-colorpicker-size;
                 height: $o-we-sidebar-content-field-colorpicker-size;
-                border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+                border: $o-we-sidebar-content-field-border-width solid $o-we-bg-darkest;
                 border-radius: 10rem;
                 cursor: pointer;
 
@@ -1582,14 +1603,22 @@
                 width: 100%;
             }
             > div {
-                flex: 0 1 auto;
+                flex: 1 1 auto;
                 min-width: 0;
                 margin-top: $o-we-sidebar-content-field-spacing;
+
+                svg {
+                    margin: 0 auto;
+                }
             }
 
             &:not(.o_we_fw) {
                 flex-flow: row nowrap;
                 align-items: center;
+
+                &:not(we-input):not(.o_we_so_color_palette) {
+                    flex-grow: 1;
+                }
 
                 > we-title {
                     flex: 0 0 auto;
@@ -1649,7 +1678,6 @@
                 }
             }
             &.active {
-                box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-dark, .5), $o-we-item-standup-bottom rgba($o-we-item-standup-color-light, .2);
                 we-collapse.active {
                     &, we-toggler.o_we_collapse_toggler {
                         background-color: $o-we-bg-lighter;
@@ -1684,6 +1712,10 @@
 
         .o_we_image_weight {
             margin-left: $o-we-sidebar-content-field-label-spacing * 2;
+        }
+
+        we-button + .o_we_image_weight {
+            margin-left: $o-we-sidebar-content-field-label-spacing;
         }
 
         .o_we_tag {
@@ -2146,7 +2178,6 @@
 
                 &.o_handle_start:after {
                     background-color: rgba($o-we-sidebar-content-field-clickable-bg, .6);
-                    border-color: rgba($o-we-sidebar-content-field-border-color, .2);
                 }
 
                 &:hover,
