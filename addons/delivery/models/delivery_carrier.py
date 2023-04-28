@@ -5,7 +5,7 @@ import psycopg2
 import re
 
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
-from odoo.tools.float_utils import float_round
+from odoo.tools.float_utils import float_round, float_repr
 from odoo.tools.misc import groupby
 from odoo.exceptions import UserError
 
@@ -406,7 +406,7 @@ class DeliveryCarrier(models.Model):
                 for line in lines)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
             country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
-            unit_price = float_round(sum(line.sale_price for line in lines) / rounded_qty, precision_digits=price_unit_prec)
+            unit_price = float_repr(sum(line.sale_price for line in lines) / rounded_qty, precision_digits=price_unit_prec)
             commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
 
         return commodities
