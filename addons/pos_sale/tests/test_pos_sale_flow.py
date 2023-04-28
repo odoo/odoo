@@ -70,3 +70,35 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
         self.assertEqual(sale_order.picking_ids[0].move_ids.quantity_done, 0)
         self.assertEqual(sale_order.picking_ids[1].move_ids.product_qty, 300)
         self.assertEqual(sale_order.picking_ids[1].move_ids.quantity_done, 300) # 1 delivered => 300 * 2 = 600
+
+    def test_settle_order_with_incompatible_partner(self):
+        """ If the partner of the sale order is not compatible with the current pos order,
+            then a new pos order should be to settle the newly selected sale order.
+        """
+
+        product1 = self.env['product.product'].create({
+            'name': 'product1',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 10,
+            'taxes_id': [odoo.Command.clear()],
+        })
+        product2 = self.env['product.product'].create({
+            'name': 'product2',
+            'available_in_pos': True,
+            'type': 'product',
+            'lst_price': 11,
+            'taxes_id': [odoo.Command.clear()],
+        })
+        self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_shipping_id': self.env.ref('base.res_partner_2').id,
+            'order_line': [(0, 0, {'product_id': product1.id})],
+        })
+        self.env['sale.order'].create({
+            'partner_id': self.env.ref('base.res_partner_1').id,
+            'partner_shipping_id': self.env.ref('base.res_partner_1').id,
+            'order_line': [(0, 0, {'product_id': product2.id})],
+        })
+        self.main_pos_config.open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrderIncompatiblePartner', login="accountman")
