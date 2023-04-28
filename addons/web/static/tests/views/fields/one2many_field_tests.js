@@ -402,6 +402,73 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_many2one input");
     });
 
+    QUnit.test("O2M modal buttons are disabled on click", async function (assert) {
+        // Records in an o2m can have a m2o pointing to themselves.
+        // In that case, a domain evaluation on that field followed by name_search
+        // shouldn't send virtual_ids to the server.
+
+        patchWithCleanup(browser, {
+            setTimeout: (fn) => fn(),
+        });
+
+        serverData.models.turtle.fields.parent_id = {
+            string: "Parent",
+            type: "many2one",
+            relation: "turtle",
+        };
+        serverData.views = {
+            "turtle,false,form": `
+                <form>
+                    <field name="parent_id"/>
+                </form>`,
+        };
+        const def = makeDeferred();
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="turtles">
+                        <tree>
+                            <field name="parent_id"/>
+                        </tree>
+                        <form>
+                            <field name="parent_id"/>
+                        </form>
+                    </field>
+                </form>`,
+            async mockRPC(route, args) {
+                if (args.method === "create") {
+                    await def;
+                }
+            },
+        });
+
+        await addRow(target);
+
+        await clickOpenM2ODropdown(target, "parent_id");
+        await editInput(target, ".o_field_widget[name=parent_id] input", "ABC");
+        await clickOpenedDropdownItem(target, "parent_id", "Create and edit...");
+        await click(
+            target.querySelector(".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+        );
+        assert.strictEqual(
+            target
+                .querySelector(".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+                .getAttribute("disabled"),
+            ""
+        );
+        def.resolve();
+        await nextTick();
+        // close all dialogs
+        await click(
+            target.querySelector(".modal:not(.o_inactive_modal) .modal-footer .o_form_button_save")
+        );
+        await nextTick();
+        assert.containsNone(target, ".o_dialog .o_form_view");
+    });
+
     QUnit.test("resequence a x2m in a form view dialog from another x2m", async function (assert) {
         await makeView({
             type: "form",
