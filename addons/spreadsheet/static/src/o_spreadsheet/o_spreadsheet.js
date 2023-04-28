@@ -4270,6 +4270,8 @@
         CommandResult[CommandResult["InvalidSelectionStep"] = 83] = "InvalidSelectionStep";
         CommandResult[CommandResult["DuplicatedChartId"] = 84] = "DuplicatedChartId";
         CommandResult[CommandResult["ChartDoesNotExist"] = 85] = "ChartDoesNotExist";
+        CommandResult[CommandResult["InvalidHeaderIndex"] = 86] = "InvalidHeaderIndex";
+        CommandResult[CommandResult["InvalidQuantity"] = 87] = "InvalidQuantity";
     })(exports.CommandResult || (exports.CommandResult = {}));
 
     var DIRECTION;
@@ -29478,9 +29480,16 @@
                     const elements = cmd.dimension === "COL"
                         ? this.getters.getNumberCols(cmd.sheetId)
                         : this.getters.getNumberRows(cmd.sheetId);
-                    return (hiddenGroup || []).flat().concat(cmd.elements).length < elements
-                        ? 0 /* CommandResult.Success */
-                        : 66 /* CommandResult.TooManyHiddenElements */;
+                    const hiddenElements = new Set((hiddenGroup || []).flat().concat(cmd.elements));
+                    if (hiddenElements.size >= elements) {
+                        return 66 /* CommandResult.TooManyHiddenElements */;
+                    }
+                    else if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
+                        return 86 /* CommandResult.InvalidHeaderIndex */;
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
                 }
                 case "REMOVE_COLUMNS_ROWS":
                     if (!this.getters.tryGetSheet(cmd.sheetId)) {
@@ -30653,6 +30662,28 @@
                     return this.orderedSheetIds.length > 1
                         ? 0 /* CommandResult.Success */
                         : 9 /* CommandResult.NotEnoughSheets */;
+                case "ADD_COLUMNS_ROWS":
+                    const elements = cmd.dimension === "COL"
+                        ? this.getNumberCols(cmd.sheetId)
+                        : this.getNumberRows(cmd.sheetId);
+                    if (cmd.base < 0 || cmd.base > elements) {
+                        return 86 /* CommandResult.InvalidHeaderIndex */;
+                    }
+                    else if (cmd.quantity <= 0) {
+                        return 87 /* CommandResult.InvalidQuantity */;
+                    }
+                    return 0 /* CommandResult.Success */;
+                case "REMOVE_COLUMNS_ROWS": {
+                    const elements = cmd.dimension === "COL"
+                        ? this.getNumberCols(cmd.sheetId)
+                        : this.getNumberRows(cmd.sheetId);
+                    if (Math.min(...cmd.elements) < 0 || Math.max(...cmd.elements) > elements) {
+                        return 86 /* CommandResult.InvalidHeaderIndex */;
+                    }
+                    else {
+                        return 0 /* CommandResult.Success */;
+                    }
+                }
                 case "FREEZE_ROWS": {
                     return this.checkValidations(cmd, this.checkRowFreezeQuantity, this.checkRowFreezeOverlapMerge);
                 }
@@ -45203,9 +45234,9 @@
     Object.defineProperty(exports, '__esModule', { value: true });
 
 
-    __info__.version = '16.2.4';
-    __info__.date = '2023-04-21T08:02:02.039Z';
-    __info__.hash = '7169d69';
+    __info__.version = '16.2.5';
+    __info__.date = '2023-04-28T12:37:16.042Z';
+    __info__.hash = 'cc60a52';
 
 
 })(this.o_spreadsheet = this.o_spreadsheet || {}, owl);
