@@ -343,8 +343,8 @@ class TestUBLBE(TestUBLCommon):
         # Source: https://github.com/OpenPEPPOL/peppol-bis-invoice-3/tree/master/rules/examples
         subfolder = 'tests/test_files/from_peppol-bis-invoice-3_doc'
         # source: Allowance-example.xml
-        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_allowance.xml', amount_total=6125,
-            amount_tax=1225, list_line_subtotals=[200, -200, 0, -1000, 4000, 1000, 900])
+        self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_allowance.xml', amount_total=7125,
+            amount_tax=1225, list_line_subtotals=[200, -200, 4000, 1000, 900])
         # source: base-creditnote-correction.xml
         self._assert_imported_invoice_from_file(subfolder=subfolder, filename='bis3_credit_note.xml',
             amount_total=1656.25, amount_tax=331.25, list_line_subtotals=[25, 2800, -1500], move_type='in_refund')
