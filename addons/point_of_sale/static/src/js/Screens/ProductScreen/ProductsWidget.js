@@ -8,6 +8,7 @@ import { ConnectionLostError, ConnectionAbortedError } from "@web/core/network/r
 import { ProductItem } from "./ProductItem";
 import { ProductsWidgetControlPanel } from "./ProductsWidgetControlPanel";
 import { Component, useState } from "@odoo/owl";
+import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
 
 export class ProductsWidget extends Component {
     static components = { ProductItem, ProductsWidgetControlPanel };
@@ -137,7 +138,7 @@ export class ProductsWidget extends Component {
         } catch (error) {
             const identifiedError = identifyError(error)
             if (identifiedError instanceof ConnectionLostError || identifiedError instanceof ConnectionAbortedError) {
-                return this.popup.add("OfflineErrorPopup", {
+                return this.popup.add(OfflineErrorPopup, {
                     title: this.env._t("Network Error"),
                     body: this.env._t("Product is not loaded. Tried loading the product from the server but there is a network error."),
                 });
