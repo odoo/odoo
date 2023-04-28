@@ -33,6 +33,7 @@ class TestRecruitment(TransactionCase):
         """
         A, B, C, D, E, F, _ = self.env['hr.applicant'].create([
             {
+                'active': False,  # Refused/archived application should still count
                 'name': 'Application A',
                 'email_from': 'abc@odoo.com',
                 'partner_phone': '123',
