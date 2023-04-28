@@ -37,7 +37,7 @@ wTourUtils.registerWebsitePreviewTour('website_sale_restricted_editor_ui', {
     },
     {
         content: "Check that you landed on a form view and that the record was unpublished",
-        trigger: '.o_form_sheet [name="is_published"] .fa-globe.text-danger',
+        trigger: '.o-form-buttonbox [name="is_published"] .fa-globe.text-danger',
         run: () => {},
     },
 ]);

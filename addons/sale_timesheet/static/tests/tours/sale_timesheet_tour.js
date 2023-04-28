@@ -231,7 +231,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     // timer: 300,
     isCheck: true,
 }, {
-    trigger: ".o_rightpanel_section .oe_button_box .o_stat_text:contains('Sales Orders')",
+    trigger: ".o_rightpanel_section .o-form-buttonbox .o_stat_text:contains('Sales Orders')",
     content: 'Check the user sees Sales Orders Stat Button',
     isCheck: true,
 }, {

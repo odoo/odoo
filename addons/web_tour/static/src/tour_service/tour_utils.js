@@ -483,11 +483,11 @@ export const stepUtils = {
 
     autoExpandMoreButtons(extra_trigger) {
         return {
-            trigger: ".oe_button_box",
+            trigger: ".o-form-buttonbox",
             extra_trigger: extra_trigger,
             auto: true,
             run: (actions) => {
-                const $more = $(".oe_button_box .o_button_more");
+                const $more = $(".o-form-buttonbox .o_button_more");
                 if ($more.length) {
                     actions.click($more);
                 }
