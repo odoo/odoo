@@ -277,3 +277,43 @@ class TestSaleCouponProgramRules(TestSaleCouponCommon):
         self._auto_rewards(order, programs)
         # 872.73 - (20% of 1 iPad) = 872.73 - 58.18 = 814.55
         self.assertAlmostEqual(order.amount_untaxed, 1105.46, 2, "One large cabinet should be discounted by 20%")
+
+    def test_free_shipping_reward_last_line(self):
+        """
+            The free shipping reward cannot be removed if it is the last item in the sale order.
+            However, we calculate its sequence so that it is the last item in the sale order.
+            This can create an error if a default sequence is not determined.
+        """
+        self.immediate_promotion_program.active = False
+        # Create a loyalty program
+        loyalty_program = self.env['loyalty.program'].create({
+            'name': 'GIFT Free Shipping',
+            'program_type': 'loyalty',
+            'applies_on': 'both',
+            'trigger': 'auto',
+            'rule_ids': [(0, 0, {
+                    'reward_point_mode': 'money',
+                    'reward_point_amount': 1,
+                })],
+            'reward_ids': [(0, 0, {
+                'reward_type': 'shipping',
+                'required_points': 100,
+            })],
+        })
+        # Add points to a partner to trigger the promotion
+        loyalty_card = self.env['loyalty.card'].create({
+            'program_id': loyalty_program.id,
+            'partner_id': self.steve.id,
+            'points': 250,
+        })
+        order = self.env['sale.order'].create({
+            'partner_id': self.steve.id,
+        })
+        # Check if we can claim the free shipping reward
+        order._update_programs_and_rewards()
+        claimable_rewards = order._get_claimable_rewards()
+        self.assertEqual(len(claimable_rewards), 1)
+        # Try to apply the loyalty card to the sale order
+        self._apply_promo_code(order, loyalty_card.code)
+        # Check if there is an error in the sequence
+        # via `_apply_program_reward` in `apply_promo_code` method
