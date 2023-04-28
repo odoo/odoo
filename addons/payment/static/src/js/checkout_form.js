@@ -19,6 +19,7 @@
          * @constructor
          */
         init: function () {
+            this.formType = 'checkout';
             const preventDoubleClick = handlerMethod => {
                 return debounce(handlerMethod, 500, true);
             };
@@ -62,9 +63,8 @@
 
             // Update the tx context with the value of the "Save my payment details" checkbox
             if (flow !== 'token') {
-                const $tokenizeCheckbox = this.$(
-                    `#o_payment_provider_inline_form_${paymentOptionId}` // Only match provider radios
-                ).find('input[name="o_payment_save_as_token"]');
+                const $inlineForm = this._getInlineFormFromRadio(checkedRadio);
+                const $tokenizeCheckbox = $inlineForm.find('input[name="o_payment_save_as_token"]');
                 this.txContext.tokenizationRequested = $tokenizeCheckbox.length === 1
                     && $tokenizeCheckbox[0].checked;
             } else {
