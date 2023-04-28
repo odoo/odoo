@@ -1188,6 +1188,7 @@ class RecordSnapshot(dict):
         for field_name, field_spec in x2many_fields_spec.items():
             result[field_name] = commands = []
             # commands for removed lines
+            field = self.record._fields[field_name]
             remove = Command.delete if field.type == 'one2many' else Command.unlink
             for id_, line_snapshot in (other.get(field_name) or {}).items():
                 if id_ not in self[field_name]:
