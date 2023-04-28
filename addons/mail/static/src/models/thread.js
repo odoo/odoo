@@ -904,6 +904,9 @@ Model({
             });
             // Manage typing member relation.
             const memberOfCurrentUser = this.channel.memberOfCurrentUser;
+            if (!memberOfCurrentUser) {
+                return;
+            }
             const newOrderedTypingMembers = [
                 ...this.orderedTypingMembers.filter((member) => member !== memberOfCurrentUser),
                 memberOfCurrentUser,
