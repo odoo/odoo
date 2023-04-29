@@ -3325,10 +3325,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"No podeu eliminar el valor %s perquè s'utilitza en els següents productes:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3356,9 +3355,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "No podeu moure l'atribució %s del producte %s al producte %s."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3369,6 +3367,13 @@ msgid ""
 msgstr ""
 "No podeu deshabilitar una regla de la llista de preus, si us plau, esborreu-"
 " la o ompliu la seva llista de preus."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "No podeu moure l'atribució %s del producte %s al producte %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

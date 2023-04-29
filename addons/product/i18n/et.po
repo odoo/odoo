@@ -3298,10 +3298,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Väärtust %s ei saa kustutada, kuna seda kasutatakse järgmistes toodetes:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3328,9 +3327,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "Te ei saa teisaldada atribuuti %s tootest %s tootesse %s."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3340,6 +3338,13 @@ msgid ""
 "pricelist instead."
 msgstr ""
 "Te ei saa hinnakirjareeglit keelata, palun kustutage või arhiivige see."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "Te ei saa teisaldada atribuuti %s tootest %s tootesse %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

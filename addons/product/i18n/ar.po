@@ -3274,10 +3274,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"لا يمكنك حذف القيمة %s لأنها مستخدَمة في المنتجات التالية: \n"
-"%s "
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3303,9 +3302,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "لا يمكنك نقل الخاصية %s من المنتج %s إلى المنتج %s. "
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3316,6 +3314,13 @@ msgid ""
 msgstr ""
 "لا يمكنك تعطيل قاعدة قائمة أسعار. يرجى حذفها أو أرشفة قائمة أسعارها عوضاً عن"
 " ذلك. "
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "لا يمكنك نقل الخاصية %s من المنتج %s إلى المنتج %s. "
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

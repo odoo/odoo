@@ -590,7 +590,7 @@ msgstr "Montant d'écart autorisé"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_close_session_wizard__amount_to_balance
 msgid "Amount to balance"
-msgstr "Montant à équilibrer"
+msgstr "Montant du solde"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_tree
@@ -1791,7 +1791,7 @@ msgid ""
 "Defines the name of the payment method that will be displayed in the Point "
 "of Sale when the payments are selected."
 msgstr ""
-"Défini le nom du moyen de paiement qui sera affiché sur le Point de Vente "
+"Définit le nom du mode de paiement qui sera affiché sur le Point de Vente "
 "lors que le paiement sera sélectionné."
 
 #. module: point_of_sale
@@ -2008,7 +2008,7 @@ msgstr "Afficher les photos des catégories"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__display_name
 #: model:ir.model.fields,field_description:point_of_sale.field_report_pos_order__display_name
 msgid "Display Name"
-msgstr "Afficher Nom"
+msgstr "Nom d'affichage"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -5663,7 +5663,7 @@ msgstr "Commencer la vente à partir d'une catégorie de produits par défaut"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_balance_start
 msgid "Starting Balance"
-msgstr "Balance initiale"
+msgstr "Solde initial"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5752,7 +5752,7 @@ msgstr "Effectué avec succès un mouvement cash %s de %s."
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__cash_register_balance_end
 msgid "Sum of opening balance and transactions."
-msgstr "Somme des montants ouverts et transactions"
+msgstr "Somme du solde d'ouverture et des transactions"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_order_line
@@ -6342,11 +6342,11 @@ msgid ""
 "this maximum is reached, the user will have an error message at the closing "
 "of his session saying that he needs to contact his manager."
 msgstr ""
-"Ce champ montre la différence maximum autorisée entre la balance de fin et "
-"le cash théorique lors de la fermeture d'une session, pour des non-managers "
-"de POS. Si ce montant maximum est atteint, l'utilisateur verra apparaître un"
-" message d'erreur lors de la fermeture de sa session disant qu'il doit "
-"contacter son manager. "
+"Ce champ montre l'écart maximum autorisé entre le solde final et le solde "
+"théorique à la clôture d'une session, pour ceux qui ne sont pas managers du "
+"PdV. Si ce maximum est atteint, l'utilisateur verra apparaître un message "
+"d'erreur à la fermeture de la session lui indiquant qu'il doit contacter son"
+" manager."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__group_pos_manager_id

@@ -11,7 +11,7 @@
 # Febrasari Almania <febrasari.almania@gmail.com>, 2022
 # Dedi Santoso <dedisantoso@yahoo.com>, 2022
 # PAS IRVANUS <ipankbiz@gmail.com>, 2022
-# oon arfiandwi <oon.arfiandwi@gmail.com>, 2022
+# oon arfiandwi (OonID) <oon.arfiandwi@gmail.com>, 2022
 # Deddy Ddr <deddy.ddr@gmail.com>, 2022
 # Bonny Useful <bonny.useful@gmail.com>, 2022
 # Martin Trigaux, 2022
@@ -643,6 +643,8 @@ msgid ""
 "Consumables are physical products for which you don't manage the inventory "
 "level: they are always available."
 msgstr ""
+"Konsumi adalah produk fisik yang mana persediaan inventarisnya Anda tidak "
+"perlu kelola: mereka akan selalu tersedia."
 
 #. module: product
 #: model:ir.model,name:product.model_res_partner
@@ -1328,6 +1330,10 @@ msgid ""
 "        Used to value the product when the purchase cost is not known (e.g. inventory adjustment).\n"
 "        Used to compute margins on sale orders."
 msgstr ""
+"Di Harga Standard & AVCO: nilai dari produk (secara otomatis dihitung pada AVCO).\n"
+"        Di FIFO: nilai dari unit berikutnya yang akan keluar dari stok (secara otomatis dihitung).\n"
+"        Digunakan untuk menilai produk saat harga pembelian tidak diketahui (misalnya penyesuaiaan inventaris).\n"
+"        Digunakan untuk menghitung margin pada sale order."
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_attribute_value_view_search
@@ -1505,7 +1511,7 @@ msgstr "Baris"
 #: model_terms:product.product,website_description:product.product_product_4d
 #: model_terms:product.template,website_description:product.product_product_4_product_template
 msgid "Locally handmade"
-msgstr ""
+msgstr "Dibuat lokal"
 
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_template_form_view
@@ -3214,7 +3220,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3239,8 +3246,7 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product
@@ -3249,6 +3255,13 @@ msgstr ""
 msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
+msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
 msgstr ""
 
 #. module: product

@@ -3217,10 +3217,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"不能删除值 %s ，因为该值已经用于以下产品:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3246,9 +3245,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "不能将属性 %s 从产品 %s 调整至产品 %s."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3257,6 +3255,13 @@ msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
 msgstr "您不能禁用价目表规则，请将其删除或存档其价目表."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "不能将属性 %s 从产品 %s 调整至产品 %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

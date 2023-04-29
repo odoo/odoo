@@ -109,6 +109,8 @@ msgid ""
 " When different than 0, inventory count date for products stored at this "
 "location will be automatically set at the defined frequency."
 msgstr ""
+"Saat beda dari 0, tanggal stok opname untuk produk yang disimpan pada lokasi"
+" ini akan secara otomatis ditetapkan pada frekuensi yang sudah disetel."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -202,6 +204,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Lokasi Vendor: Lokasi virtual yang menandakan lokasi sumber untuk produk yang datang dari vendor Anda\n"
+"* Tampilan: Lokasi virtual yang dibuat untuk membuat struktur hierarki untuk gudang Anda, menjumlahkan lokasi gudang lain dibawahnya ; tidak dapat secara langsung mengandung produk ;\n"
+"* Lokasi Internal: Lokasi fisik di dalam gudang Anda,\n"
+"* Lokasi Pelanggan: Lokasi virtual yang menandakan lokasi untuk produk yang dikirim ke pelanggan Anda\n"
+"* Inventory Loss: Lokasi virtual yang berfungsi sebagai tolak belakang untuk operasional inventaris yang digunakan untuk membetulkan persediaan stok (Inventaris fisik)\n"
+"* Produk: Lokasi virtual pembanding untuk operasional produksi: lokasi ini menggunakan komponent dan membuat produk jadi\n"
+"* Lokasi Transit: Lokasi pembanding yang sebaiknya digunakan di operasi antara perusahaan atau antara gudang"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -253,6 +262,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Current Inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Inventaris Saat Ini: </strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -659,7 +670,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? Ini dapat berujung pada ketidaksamaan dalam inventaris Anda."
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_package_type_barcode_uniq
@@ -882,13 +893,13 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Annual Inventory Day and Month"
-msgstr ""
+msgstr "Inventaris Tahunan Hari dan Bulan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_month
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__annual_inventory_month
 msgid "Annual Inventory Month"
-msgstr ""
+msgstr "Inventaris Tahunan Bulan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_res_company__annual_inventory_month
@@ -897,6 +908,9 @@ msgid ""
 "Annual inventory month for products not in a location with a cyclic "
 "inventory date. Set to no month if no automatic annual inventory."
 msgstr ""
+"Inventaris tahunan bulan untuk produk yang tidak ada di lokasi dengan "
+"tanggal siklus inventaris. Tetapkan menjadi tidak ada bulan bila tidak ada "
+"stok opname tahunan otomatis."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
@@ -1554,13 +1568,13 @@ msgstr "Dikonfirmasi"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_conflict
 msgid "Conflict in Inventory"
-msgstr ""
+msgstr "Konflik dalam Inventaris"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Conflict in Inventory Adjustment"
-msgstr ""
+msgstr "Konflik dalam Inventory Adjustment"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_conflict__quant_to_fix_ids
@@ -1952,7 +1966,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__next_inventory_date
 msgid "Date for next planned inventory based on cyclic schedule."
-msgstr ""
+msgstr "Tanggal untuk stok opname berikutnya berdasarkan siklus jadwal."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -1962,7 +1976,7 @@ msgstr "Tanggal Transfer"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location__last_inventory_date
 msgid "Date of the last inventory at this location."
-msgstr ""
+msgstr "Tanggal inventaris terakhir pada lokasi ini."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__reservation_date
@@ -1972,7 +1986,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Day and month that annual inventory counts should occur."
-msgstr ""
+msgstr "Tanggal dan bulan di mana stok opname seharusnya dilakukan."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__annual_inventory_day
@@ -1987,6 +2001,8 @@ msgid ""
 "Day of the month when the annual inventory should occur. If zero or negative, then the first day of the month will be selected instead.\n"
 "        If greater than the last day of a month, then the last day of the month will be selected instead."
 msgstr ""
+"Tanggal bulan di mana stok opname terjadi. Bila 0 atau negatif, maka hari "
+"pertama bulan akan dipilih."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking_type__reservation_days_before
@@ -2507,6 +2523,8 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
+"Mengedit kuantitas dalam lokasi Inventory Adjustment dilarang,lokasi "
+"tersebut digunakan sebagai counterpart saat membetulkan kuantitas."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2550,6 +2568,11 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
+"Nikmati pengalaman serba cepat dengan aplikasi barcode Odoo. Aplikasi "
+"tersebut sangat cepat dan bekerja bahkan tanpa koneksi internet yang stabil."
+" Aplikasi mendukung semua flow: inventory adjustment, batch picking, "
+"memindahkan lot atau palet, pemeriksaan stok persediaan rendah, dsb. Pergi "
+"ke menu \"Apps\" untuk mengaktifkan antarmuka barcode."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2781,7 +2804,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Forecast Inventory"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -3455,18 +3478,18 @@ msgstr "Penyesuaian Stok Persediaan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_adjustment_name__inventory_adjustment_name
 msgid "Inventory Adjustment Name"
-msgstr ""
+msgstr "Nama Inventory Adjustment"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_stock_inventory_adjustement_name
 #: model:ir.model,name:stock.model_stock_inventory_adjustment_name
 msgid "Inventory Adjustment Reference / Reason"
-msgstr ""
+msgstr "Referensi / Alasan Inventory Adjustment"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_warning
 msgid "Inventory Adjustment Warning"
-msgstr ""
+msgstr "Peringatan Inventory Adjustment"
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -3478,7 +3501,7 @@ msgstr "Penyesuaian Stok Persediaan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 msgid "Inventory Count Sheet"
-msgstr ""
+msgstr "Lembar Stok Opname"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_request_count__inventory_date
@@ -3488,7 +3511,7 @@ msgstr "Tanggal Stock Persediaan"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__cyclic_inventory_frequency
 msgid "Inventory Frequency (Days)"
-msgstr ""
+msgstr "Frekuensi Stok Opname (Hari)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
@@ -3509,22 +3532,22 @@ msgstr "Stok Persediaan Hilang"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Inventory On Hand"
-msgstr ""
+msgstr "Persediaan yang Tersedia"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
-msgstr ""
+msgstr "Gambaran Umum Inventaris"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity_set
 msgid "Inventory Quantity Set"
-msgstr ""
+msgstr "Inventory Quantity Set"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_adjustment_name_form_view
 msgid "Inventory Reference / Reason"
-msgstr ""
+msgstr "Referensi / Alasan Inventory"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_valuation
@@ -3701,7 +3724,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__last_inventory_date
 msgid "Last Effective Inventory"
-msgstr ""
+msgstr "Inventory Efektif Terakhir"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group____last_update
@@ -4494,7 +4517,7 @@ msgstr "Tipe Aktivitas Berikutnya"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__next_inventory_date
 msgid "Next Expected Inventory"
-msgstr ""
+msgstr "Inventory Berikutnya"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_date
@@ -4738,7 +4761,7 @@ msgstr "Di tangan:"
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
-msgstr ""
+msgstr "Hanya stock manager yang dapat memvalidasi inventory adjustment."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -7193,7 +7216,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model,name:stock.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr ""
+msgstr "Permintaan Stok untuk Perhitungan Stok Barang"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -7269,6 +7292,8 @@ msgid ""
 "Storable products are physical items for which you manage the inventory "
 "level."
 msgstr ""
+"Produk yang bisa disimpan adalah barang fisik yang mana Anda kelola tingkat "
+"persediaan stoknya."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_form_view_procurement_button
@@ -7556,7 +7581,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_location_inventory_freq_nonneg
 msgid "The inventory frequency (days) for a location must be non-negative"
-msgstr ""
+msgstr "Frekuensi (hari) inventaris untuk sebuah lokasi harus non-negatif"
 
 #. module: stock
 #: code:addons/stock/models/stock_production_lot.py:0
@@ -7646,6 +7671,8 @@ msgid ""
 "The selected Inventory Frequency (Days) creates a date too far into the "
 "future."
 msgstr ""
+"Frekuensi Inventaris (hari) yang dipilih membuat tanggal yang terlalu jauh "
+"di masa depan."
 
 #. module: stock
 #: code:addons/stock/models/stock_quant.py:0
@@ -7812,6 +7839,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Menu ini memungkinkan Anda untuk menelusuri penuh operasi inventaris untuk produk tertentu.\n"
+"                    Anda dapat memfilter produk untuk melihat semua pergerakan di masa lalu untuk produk tersebut."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -7854,6 +7883,10 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Produk ini telah digunakan untuk setidaknya satu pergerakan inventaris. "
+"Tidak disarankan untuk mengganti Tipe Produk karena dapat berujung pada "
+"ketidaksamaan data. Solusi yang lebih baik adalah untuk mengarsip produk dan"
+" membuat produk baru. "
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -7921,7 +7954,7 @@ msgstr ""
 #: model:digest.tip,name:stock.digest_tip_stock_0
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid "Tip: Speed up inventory operations with barcodes"
-msgstr ""
+msgstr "Tip: Percepat operasi inventaris dengan barcode"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
@@ -8044,7 +8077,7 @@ msgstr ""
 #: code:addons/stock/models/stock_quant.py:0
 #, python-format
 msgid "Tracked Products in Inventory Adjustment"
-msgstr ""
+msgstr "Produk Terlacak dalam Inventory Adjustment"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__tracking

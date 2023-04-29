@@ -3210,10 +3210,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"%s 값이 다음 품목에 사용되기 때문에 삭제할 수 없습니다 :\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3235,9 +3234,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "%s 사양을 %s 품목에서 %s 품목으로 이동할 수 없습니다."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3246,6 +3244,13 @@ msgid ""
 "You cannot disable a pricelist rule, please delete it or archive its "
 "pricelist instead."
 msgstr ""
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "%s 사양을 %s 품목에서 %s 품목으로 이동할 수 없습니다."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

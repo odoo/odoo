@@ -6,7 +6,7 @@
 # Martin Trigaux, 2021
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2021
 # Odoo Experts Consultants <consultants@odooexperts.nl>, 2021
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2022
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
@@ -3310,10 +3310,12 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Je kunt de waarde  %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
-"%s"
+"Je kan de waarde %s niet verwijderen omdat deze wordt gebruikt voor de volgende producten:\n"
+"%s\n"
+" Als de waarde in het verleden aan een product is gekoppeld, kan je deze niet verwijderen."
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3341,10 +3343,10 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
-"Je kunt het kenmerk %s niet van het product %s naar product %s verplaatsen."
+"U kunt waarde %s niet verwijderen omdat deze in sommige producten is "
+"gebruikt."
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3355,6 +3357,14 @@ msgid ""
 msgstr ""
 "Je kunt een prijslijstregel niet uitschakelen, verwijder deze of archiveer "
 "in plaats daarvan de prijslijst."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr ""
+"Je kunt het kenmerk %s niet van het product %s naar product %s verplaatsen."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0

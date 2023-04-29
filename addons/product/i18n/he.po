@@ -3268,10 +3268,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"אינך יכול למחוק את הערך %s מכיוון שהוא בשימוש במוצרים הבאים:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3298,9 +3297,8 @@ msgstr ""
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
 #, python-format
-msgid ""
-"You cannot move the attribute %s from the product %s to the product %s."
-msgstr "אינך יכול להעביר את התכונה %s ממוצר %s למוצר %s."
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0
@@ -3311,6 +3309,13 @@ msgid ""
 msgstr ""
 "אינך יכול להשבית כלל מחירון, אנא מחק אותו או שמור את המחירון שלו בארכיון "
 "במקום זאת."
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid ""
+"You cannot move the attribute %s from the product %s to the product %s."
+msgstr "אינך יכול להעביר את התכונה %s ממוצר %s למוצר %s."
 
 #. module: product
 #: code:addons/product/models/product_attribute.py:0
