@@ -6920,7 +6920,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_mail__failure_type__mail_optout
 msgid "Opted Out"
-msgstr ""
+msgstr "Opted Out"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_force_thread_id
@@ -6964,6 +6964,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Opcjonalny język tłumaczenia (kod ISO) do wyboru podczas wysyłania "
+"wiadomości e-mail. Jeśli nie jest ustawiony, zostanie użyta wersja "
+"angielska. Powinno to być zazwyczaj wyrażenie placeholder, które zapewnia "
+"odpowiedni język, np. {{ object.partner_id.lang }}."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__reply_to_mode
@@ -9604,6 +9608,15 @@ msgid ""
 "- 'Create Next Activity': create an activity (Discuss)\n"
 "- 'Send SMS Text Message': send SMS, log them on documents (SMS)"
 msgstr ""
+"Typ działania serwera. Dostępne są następujące wartości:\n"
+"- 'Wykonaj kod Python': blok kodu python, który zostanie wykonany\n"
+"- \"Utwórz nowy rekord\": utworzenie nowego rekordu z nowymi wartościami\n"
+"- \"Aktualizacja rekordu\": aktualizacja wartości rekordu\n"
+"- \"Wykonaj kilka działań\": zdefiniowanie akcji, która uruchamia kilka innych akcji serwera\n"
+"- \"Wyślij Email': umieść wiadomość, notatkę lub wyślij email (Discuss)\n"
+"- 'Dodaj followersów': dodawanie followersów do rekordu (dyskusja)\n"
+"- Tworzenie następnej aktywności': tworzenie aktywności (Dyskusja)\n"
+"- 'Wyślij wiadomość SMS': wyślij SMS, zaloguj je na dokumentach (SMS)"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_activity_mixin__activity_exception_decoration
@@ -16775,7 +16788,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_template_form
 msgid "e.g. Contact"
-msgstr ""
+msgstr "np. Kontakt"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -17097,7 +17110,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "entry"
-msgstr ""
+msgstr "wpis"
 
 #. module: mail
 #. odoo-javascript

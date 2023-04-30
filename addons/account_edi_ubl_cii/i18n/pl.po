@@ -5,10 +5,10 @@
 # Translators:
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
 # Dariusz Żbikowski <darek@krokus.com.pl>, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Martin Trigaux, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 10:59+0000\n"
-"Last-Translator: Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,19 +27,19 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "1.0"
-msgstr ""
+msgstr "1.0"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_facturx_export_22
 msgid "42"
-msgstr ""
+msgstr "42"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "<strong>Format used to import the invoice: %s</strong>"
-msgstr ""
+msgstr "<strong>Format używany do importu faktury: %s</strong>"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -48,6 +48,7 @@ msgstr ""
 msgid ""
 "<strong>Format used to import the invoice: %s</strong> <p><li> %s </li></p>"
 msgstr ""
+"<strong>Format używany do importu faktury: %s</strong><p><li>%s</li></p>"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
@@ -67,7 +68,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "At least one of the following fields %s is required on %s."
-msgstr ""
+msgstr "Co najmniej jedno z następujących pól %s jest wymagane na %s ."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_de
@@ -79,6 +80,7 @@ msgstr ""
 msgid ""
 "Common functions for EDI documents: generate the data, the constraints, etc"
 msgstr ""
+"Wspólne funkcje dla dokumentów EDI: generowanie danych, ograniczeń, itp."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -89,6 +91,8 @@ msgid ""
 "Could not retrieve currency: %s. Did you enable the multicurrency option and"
 " activate the currency ?"
 msgstr ""
+"Nie można pobrać waluty: %s. Czy włączyłeś opcję wielowalutowości i "
+"aktywowałeś walutę ?"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -104,14 +108,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the tax: %s %% for line '%s'."
-msgstr ""
+msgstr "Nie można było pobrać podatku: %s %% dla linii '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Could not retrieve the unit of measure for line with label '%s'."
-msgstr ""
+msgstr "Nie można pobrać jednostki miary dla linii z etykietą '%s'."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -147,19 +151,19 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "Each invoice line shall have one and only one tax."
-msgstr ""
+msgstr "Każda linia faktury ma jeden i tylko jeden podatek."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Each invoice line should have at least one tax."
-msgstr ""
+msgstr "Każda linia faktury powinna mieć przynajmniej jeden podatek."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_document
 msgid "Electronic Document for an account.move"
-msgstr ""
+msgstr "Dokument elektroniczny dla account.move"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -169,13 +173,15 @@ msgid ""
 "Errors occured while creating the EDI document (format: %s). The receiver "
 "might refuse it."
 msgstr ""
+"Podczas tworzenia dokumentu EDI wystąpiły błędy (format: %s). Odbiorca może "
+"go odrzucić."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Export outside the EU"
-msgstr ""
+msgstr "Eksport poza UE"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_cii
@@ -191,25 +197,27 @@ msgid ""
 "For intracommunity supply, the actual delivery date or the invoicing period "
 "should be included."
 msgstr ""
+"W przypadku dostaw wewnątrzwspólnotowych należy uwzględnić rzeczywistą datę "
+"dostawy lub okres fakturowania."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "For intracommunity supply, the delivery address should be included."
-msgstr ""
+msgstr "W przypadku dostaw wewnątrzwspólnotowych należy podać adres dostawy."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Intra-Community supply"
-msgstr ""
+msgstr "Zaopatrzenie wewnątrzwspólnotowe"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
 msgid "Invoice generated by Odoo"
-msgstr ""
+msgstr "Faktura wygenerowana przez Odoo"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -218,13 +226,14 @@ msgstr ""
 #, python-format
 msgid "No Electronic Address Scheme (EAS) could be found for %s."
 msgstr ""
+"Nie udało się znaleźć elektronicznego systemu adresowego (EAS) dla %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "No gross price nor net price found for line in xml"
-msgstr ""
+msgstr "Nie znaleziono ceny brutto ani ceny netto dla linii w xml"
 
 #. module: account_edi_ubl_cii
 #: model_terms:ir.ui.view,arch_db:account_edi_ubl_cii.account_invoice_pdfa_3_facturx_metadata
@@ -236,14 +245,14 @@ msgstr "Odoo"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, low"
-msgstr ""
+msgstr "VAT należny, stawka obniżona, niska"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, reduced rate, middle"
-msgstr ""
+msgstr "VAT należny, stawka obniżona, średnia"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -257,7 +266,7 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Output VAT, regular rate"
-msgstr ""
+msgstr "VAT należny, stawka zwykła"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_ir_actions_report
@@ -277,6 +286,8 @@ msgid ""
 "The VAT number of the supplier does not seem to be valid. It should be of "
 "the form: NO179728982MVA."
 msgstr ""
+"Numer VAT dostawcy nie wydaje się być ważny. Powinien on mieć postać: "
+"NO179728982MVA."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -284,14 +295,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_20.py:0
 #, python-format
 msgid "The currency '%s' is not active."
-msgstr ""
+msgstr "Waluta '%s' nie jest aktywna."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The customer %s must have a KVK or OIN number."
-msgstr ""
+msgstr "Klient %s musi posiadać numer KVK lub OIN."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -299,14 +310,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The element %s is required on %s."
-msgstr ""
+msgstr "Element %s jest wymagany na %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "The field %s is required on %s."
-msgstr ""
+msgstr "Pole %s jest wymagane na %s."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -314,7 +325,7 @@ msgstr ""
 #, python-format
 msgid ""
 "The field 'Sanitized Account Number' is required on the Recipient Bank."
-msgstr ""
+msgstr "Pole 'Sanowany numer rachunku' jest wymagane na Banku Odbiorcy."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -325,6 +336,7 @@ msgid ""
 "The invoice has been converted into a credit note and the quantities have "
 "been reverted."
 msgstr ""
+"Faktura została zamieniona na notę uznaniową, a ilości zostały cofnięte."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -332,14 +344,14 @@ msgstr ""
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a Bronnoysund company registry."
-msgstr ""
+msgstr "Dostawca %s musi posiadać rejestr firm Bronnoysund."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_xml_ubl_bis3.py:0
 #, python-format
 msgid "The supplier %s must have a KVK or OIN number."
-msgstr ""
+msgstr "Dostawca %s musi posiadać numer KVK lub OIN."
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_20
@@ -364,6 +376,8 @@ msgid ""
 "When the Canary Island General Indirect Tax (IGIC) applies, the tax rate on "
 "each invoice line should be greater than 0."
 msgstr ""
+"W przypadku zastosowania kanaryjskiego ogólnego podatku pośredniego (IGIC), "
+"stawka podatku w każdej linii faktury powinna być większa niż 0."
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -374,6 +388,9 @@ msgid ""
 "Invoice line (BG-25) shall be categorized with an Invoiced item VAT category"
 " code (BT-151)."
 msgstr ""
+"Należy uwzględnić co najmniej jeden podatek w każdej linii faktury. [BR-"
+"CO-04]-Każda linia faktury (BG-25) powinna być skategoryzowana za pomocą "
+"kodu kategorii VAT pozycji fakturowanej (BT-151)."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

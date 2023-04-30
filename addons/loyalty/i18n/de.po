@@ -130,6 +130,10 @@ msgid ""
 "\n"
 "                                        <span class=\"fw-bold text-decoration-underline\">Applied to:</span>"
 msgstr ""
+"<br/>\n"
+"                                        <br/>\n"
+"\n"
+"                                        <span class=\"fw-bold text-decoration-underline\">Angewandt auf:</span>"
 
 #. module: loyalty
 #: model:mail.template,body_html:loyalty.mail_template_gift_card
@@ -256,6 +260,8 @@ msgid ""
 "<span class=\"fw-bold text-decoration-underline\">Among:</span>\n"
 "                                    <br/>"
 msgstr ""
+"<span class=\"fw-bold text-decoration-underline\">Unter:</span>\n"
+"                                    <br/>"
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_rule_view_kanban
@@ -414,14 +420,14 @@ msgstr ""
 "<tr>\n"
 "    <td valign=\"top\" style=\"text-align: center; font-size: 14px;\">\n"
 "        <t t-if=\"object._get_mail_partner().name\">\n"
-"            Herzlichen Glückwusch, <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br/>\n"
+"            Herzlichen Glückwusch <t t-out=\"object._get_mail_partner().name or ''\">Brandon Freeman</t>,<br/>\n"
 "        </t>\n"
 "\n"
-"        Hier ist Ihre Prämie von <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br/>\n"
+"        hier ist Ihre Belohnung von <t t-out=\"object.program_id.company_id.name or ''\">YourCompany</t>.<br/>\n"
 "\n"
 "        <t t-foreach=\"object.program_id.reward_ids\" t-as=\"reward\">\n"
 "            <t t-if=\"reward.required_points &lt;= object.points\">\n"
-"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">Prämienbeschreibung</span>\n"
+"                <span style=\"font-size: 50px; color: #875A7B; font-weight: bold;\" t-esc=\"reward.description\">Beschreibung der Belohnung</span>\n"
 "                <br/>\n"
 "            </t>\n"
 "        </t>\n"
@@ -558,7 +564,7 @@ msgstr "Bei Erstellung"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_attachment_count
 msgid "Attachment Count"
-msgstr "# Anhänge"
+msgstr "Anzahl Anhänge"
 
 #. module: loyalty
 #: model:ir.model.fields.selection,name:loyalty.selection__loyalty_program__trigger__auto
@@ -730,7 +736,7 @@ msgstr "Gutscheinwert"
 #. module: loyalty
 #: model:mail.template,name:loyalty.mail_template_loyalty_card
 msgid "Coupon: Coupon Information"
-msgstr "Geschenkgutschein: Informationen zum Geschenkgutschein"
+msgstr "Gutschein: Informationen zum Gutschein"
 
 #. module: loyalty
 #. odoo-python
@@ -1316,7 +1322,7 @@ msgstr "Treuepunkt(e)"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_card__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hauptanhänge"
+msgstr "Hauptanhang"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__discount_max_amount
@@ -1479,7 +1485,7 @@ msgstr "Produkt Tag"
 #. module: loyalty
 #: model:ir.model,name:loyalty.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: loyalty
 #: model:ir.model.fields,help:loyalty.field_loyalty_reward__discount_line_product_id
@@ -1487,8 +1493,8 @@ msgid ""
 "Product used in the sales order to apply the discount. Each reward has its "
 "own product for reporting purpose"
 msgstr ""
-"Produkt, das im Kundenauftrag verwendet wird, um den Rabatt anzuwenden. Jede"
-" Prämie hat ihr eigenes Produkt für Berichtszwecke"
+"Produkt, das im Verkaufsauftrag verwendet wird, um den Rabatt anzuwenden. "
+"Jede Prämie hat ihr eigenes Produkt für Berichtszwecke"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_program__trigger_product_ids
@@ -1594,7 +1600,7 @@ msgstr "Prämienprodukt Menge"
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_uom_id
 msgid "Reward Product Uom"
-msgstr "Prämienprodukt Mengeneinheit"
+msgstr "Prämienprodukt Maßeinheit"
 
 #. module: loyalty
 #: model:ir.model.fields,field_description:loyalty.field_loyalty_reward__reward_product_ids
@@ -1898,7 +1904,7 @@ msgstr "Ihre Geschenkkarte für {{ object.company_id.name }}"
 #. module: loyalty
 #: model:mail.template,subject:loyalty.mail_template_loyalty_card
 msgid "Your reward coupon from {{ object.program_id.company_id.name }} "
-msgstr "Ihr Prämiengutschein von {{ object.program_id.company_id.name }} "
+msgstr "Ihr Belohnungsgutschein von {{ object.program_id.company_id.name }} "
 
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_reward_view_kanban
@@ -1913,7 +1919,7 @@ msgstr "Rabatt"
 #. module: loyalty
 #: model_terms:ir.ui.view,arch_db:loyalty.loyalty_program_view_form
 msgid "e.g. 10% discount on laptops"
-msgstr "z.B. 10% Rabatt auf Laptops"
+msgstr "z. B. 10% Rabatt auf Laptops"
 
 #. module: loyalty
 #. odoo-python

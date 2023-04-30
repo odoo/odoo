@@ -98,7 +98,7 @@ msgid ""
 msgstr ""
 "\n"
 "Die Menge, die für das Produkt „%s“ angegeben wurde, entspricht nicht der Rundungsgenauigkeit, die für die Maßeinheit „%s“ definiert wurde.\n"
-"Bitte ändern Sie die angegebene Menge oder die Rundungsgenauigkeit Ihrer Mengeneinheit."
+"Bitte ändern Sie die angegebene Menge oder die Rundungsgenauigkeit Ihrer Maßeinheit."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__state
@@ -295,7 +295,7 @@ msgid ""
 "            Manual actions may be needed."
 msgstr ""
 ".\n"
-"         Manuelle Aktion wird möglicherweise benötigt."
+"         Manuelle Aktionen können erforderlich sein."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_orderpoint_snooze__predefined_date__day
@@ -393,9 +393,9 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,<br/><br/>\n"
-"       Wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung versandt wurde.\n"
+"       wir freuen uns, Ihnen mitteilen zu können, dass Ihre Bestellung versandt wurde.\n"
 "        <t t-if=\"hasattr(object, 'carrier_tracking_ref') and object.carrier_tracking_ref\">\n"
-"            Ihre Tracking-Referenz ist\n"
+"            Ihre Verfolgungsreferenz ist\n"
 "            <strong>\n"
 "            <t t-if=\"object.carrier_tracking_url\">\n"
 "                <t t-set=\"multiple_carrier_tracking\" t-value=\"object.get_multiple_carrier_tracking()\"/>\n"
@@ -761,8 +761,8 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
-"Ein lagerfähiges Produkt ist ein Produkt, für das Sie den Lagerbestand verwalten. Die Inventar App muss installiert sein.\n"
-"Ein Verbrauchsgut ist ein Produkt, für das der Lagerbestand nicht verwaltet wird.\n"
+"Ein lagerfähiges Produkt ist ein Produkt, für das Sie den Lagerbestand verwalten. Die Lager-App muss installiert sein.\n"
+"Ein Verbrauchsartikel ist ein Produkt, für das der Lagerbestand nicht verwaltet wird.\n"
 "Eine Dienstleistung ist ein von Ihnen bereitgestelltes immaterielles Produkt."
 
 #. module: stock
@@ -824,7 +824,7 @@ msgstr "Status der Aktivität"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_type_icon
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitäts-Typ-Icon"
+msgstr "Symbol des Aktivitätstyps"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -1154,7 +1154,7 @@ msgstr "Bei Bestätigung"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_attachment_count
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_attachment_count
 msgid "Attachment Count"
-msgstr "# Anhänge"
+msgstr "Anzahl Anhänge"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
@@ -1810,9 +1810,8 @@ msgid ""
 "Conversion between Units of Measure can only occur if they belong to the "
 "same category. The conversion will be made based on the ratios."
 msgstr ""
-"Die Umrechnung zwischen Mengeneinheiten kann nur erfolgen, wenn sie "
-"derselben Kategorie angehören. Die Umrechnung erfolgt auf Basis der "
-"Kennzahlen."
+"Die Umrechnung zwischen Maßeinheiten kann nur erfolgen, wenn sie derselben "
+"Kategorie angehören. Die Umrechnung erfolgt auf Basis der Kennzahlen."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__posx
@@ -2167,7 +2166,8 @@ msgstr "Datumsverarbeitung"
 #: model:ir.model.fields,help:stock.field_stock_picking__date_deadline
 msgid "Date Promise to the customer on the top level document (SO/PO)"
 msgstr ""
-"Dem Kunden versprochenes Datum auf Auftragsdokument (Verkauf-/Kaufauftrag)"
+"Dem Kunden versprochenes Datum auf Auftragsdokument "
+"(Verkauf-/Einkaufsauftrag)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__date
@@ -2450,7 +2450,7 @@ msgid ""
 "customer, between the confirmation of the sales order and the delivery."
 msgstr ""
 "Lieferzeit, in Tagen. Es ist die dem Kunden versprochene Anzahl von Tagen "
-"zwischen der Bestätigung des Kundenauftrags und der Lieferung."
+"zwischen der Bestätigung des Verkaufsauftrags und der Lieferung."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_lot__delivery_count
@@ -3021,7 +3021,7 @@ msgstr "Abonnenten (Partner)"
 #: model:ir.model.fields,help:stock.field_stock_lot__activity_type_icon
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome Icon, z.B. fa-tasks"
+msgstr "FontAwesome Icon, z. B. fa-tasks"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
@@ -4562,7 +4562,7 @@ msgstr "Beschaffe von Auftrag Regel (MTO)"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_main_attachment_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hauptanhänge"
+msgstr "Hauptanhang"
 
 #. module: stock
 #. odoo-python
@@ -4846,7 +4846,7 @@ msgstr "Mehrere Kapazitätsregeln für ein Produkt."
 #: model:ir.model.fields,field_description:stock.field_stock_lot__my_activity_date_deadline
 #: model:ir.model.fields,field_description:stock.field_stock_picking__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline für meine Aktivitäten"
+msgstr "Frist für meine Aktivitäten"
 
 #. module: stock
 #: model_terms:res.company,invoice_terms_html:stock.res_company_1
@@ -5934,7 +5934,7 @@ msgstr "Label drucken"
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #, python-format
 msgid "Print Labels"
-msgstr "Labels drucken"
+msgstr "Etiketten drucken"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__printed
@@ -6173,7 +6173,7 @@ msgstr "Produkteinheit"
 #. module: stock
 #: model:ir.model,name:stock.model_product_product
 msgid "Product Variant"
-msgstr "Produktvarianten"
+msgstr "Produktvariante"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_product_normal_action
@@ -6508,7 +6508,7 @@ msgstr "Bestand der noch für diese Lieferung reserviert werden kann"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__product_qty
 msgid "Quantity in the default UoM of the product"
-msgstr "Menge in der Standard Mengeneinheit"
+msgstr "Menge in der Standard Maßeinheit"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__incoming_qty
@@ -6541,7 +6541,7 @@ msgstr ""
 msgid ""
 "Quantity of products in this quant, in the default unit of measure of the "
 "product"
-msgstr "Produktmenge in Quant, in der Standard Mengeneinheit"
+msgstr "Produktmenge in Quant, in der Standard Maßeinheit"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__reserved_quantity
@@ -6959,7 +6959,7 @@ msgstr "Verantwortlich"
 #: model:ir.model.fields,field_description:stock.field_stock_lot__activity_user_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_user_id
 msgid "Responsible User"
-msgstr "Manager Veranstaltung"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
@@ -7047,7 +7047,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.act_stock_return_picking
 msgid "Reverse Transfer"
-msgstr "Rücklieferung"
+msgstr "Transfer rückgängig machen"
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_revert_inventory_adjustment
@@ -7170,7 +7170,7 @@ msgstr "SMS Bestätigung"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Zustellungsfehler"
+msgstr "SMS-Zustellungsfehler"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_package_barcode_small
@@ -7311,7 +7311,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr "Produkte in verschiedenen Mengeneinheiten verkaufen und kaufen"
+msgstr "Produkte in verschiedenen Maßeinheiten verkaufen und kaufen"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7838,7 +7838,7 @@ msgid ""
 msgstr ""
 "Status basierend auf Aktivitäten\n"
 "Überfällig: Fälligkeitsdatum bereits überschritten\n"
-"Heute: Aktivität besitzt heutiges Datum\n"
+"Heute: Aktivitätsdatum ist heute\n"
 "Geplant: anstehende Aktivitäten."
 
 #. module: stock
@@ -8357,7 +8357,7 @@ msgstr ""
 "Die Menge, die für das Produkt \"%s\" gemacht wurde, entspricht nicht der "
 "Rundungsgenauigkeit, die für die Maßeinheit \"%s\" definiert wurde. Bitte "
 "ändern Sie die geleistete Menge oder die Rundungsgenauigkeit Ihrer "
-"Mengeneinheit."
+"Maßeinheit."
 
 #. module: stock
 #. odoo-python
@@ -8661,7 +8661,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_change_product_qty__new_quantity
 msgid ""
 "This quantity is expressed in the Default Unit of Measure of the product."
-msgstr "Die Anzahl wird in der Standard Mengeneinheit dargestellt."
+msgstr "Die Anzahl wird in der Standard Maßeinheit dargestellt."
 
 #. module: stock
 #. odoo-javascript
@@ -9108,27 +9108,27 @@ msgstr "Stückpreis"
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_kanban
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_line_operation_tree
 msgid "Unit of Measure"
-msgstr "Mengeneinheit"
+msgstr "Maßeinheit"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_replenishment_option__uom
 msgid "Unit of Measure Name"
-msgstr "Name der Mengeneinheit"
+msgstr "Name der Maßeinheit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
-msgstr "Mengeneinheiten"
+msgstr "Maßeinheiten"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
 msgid "Units of Measure"
-msgstr "Mengeneinheiten"
+msgstr "Maßeinheiten"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.product_uom_menu
 msgid "Units of Measures"
-msgstr "Mengeneinheiten"
+msgstr "Maßeinheiten"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__product_uom_id
@@ -9784,9 +9784,9 @@ msgid ""
 "valuate your stock or change its rounding precision to a smaller value "
 "(example: 0.00001)."
 msgstr ""
-"Sie verwenden eine kleinere Mengeneinheit als die, die Sie für die Lagerung "
+"Sie verwenden eine kleinere Maßeinheit als die, die Sie für die Lagerung "
 "Ihres Produkts verwenden. Dies kann zu Rundungsproblemen bei der "
-"reservierten Menge führen. Sie sollten die kleinstmögliche Mengeneinheit "
+"reservierten Menge führen. Sie sollten die kleinstmögliche Maßeinheit "
 "verwenden, um Ihren Bestand zu ermitteln, oder die Rundungsgenauigkeit auf "
 "einen kleineren Wert ändern (z.B. 0,00001)."
 
@@ -9801,7 +9801,7 @@ msgstr ""
 "Hier können Sie die Hauptwege definieren, die durch\n"
 "Ihre Lager durchlaufen und die die Warenströme bestimmen. Diese\n"
 "Routen können einem Produkt oder einer Produktkategorie zugeordnet werden oder\n"
-"einen Beschaffungs- oder Kundenauftrag."
+"einen Beschaffungs- oder Verkaufsauftrag."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_conflict_form_view
@@ -9926,8 +9926,8 @@ msgstr ""
 msgid ""
 "You cannot change the UoM for a stock move that has been set to 'Done'."
 msgstr ""
-"Sie können die Mengeneinheit für eine Lagerbewegung, die auf 'Erledigt' "
-"gesetzt wurde, nicht ändern."
+"Sie können die Maßeinheit für eine Lagerbewegung, die auf 'Erledigt' gesetzt"
+" wurde, nicht ändern."
 
 #. module: stock
 #. odoo-python
@@ -9949,9 +9949,8 @@ msgid ""
 "You cannot change the ratio of this unit of measure as some products with "
 "this UoM have already been moved or are currently reserved."
 msgstr ""
-"Sie können das Verhältnis dieser Mengeneinheit nicht ändern, da einige "
-"Produkte mit dieser Mengeneinheit bereits bewegt wurden oder derzeit "
-"reserviert sind."
+"Sie können das Verhältnis dieser Maßeinheit nicht ändern, da einige Produkte"
+" mit dieser Maßeinheit bereits bewegt wurden oder derzeit reserviert sind."
 
 #. module: stock
 #. odoo-python
@@ -9962,9 +9961,9 @@ msgid ""
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
 msgstr ""
-"Sie können die Mengeneinheit nicht ändern, da es bereits Lagerbewegungen für"
-" dieses Produkt gibt. Wenn Sie die Mengeneinheit ändern möchten, sollten Sie"
-" dieses Produkt lieber archivieren und ein neues Produkt anlegen."
+"Sie können die Maßeinheit nicht ändern, da es bereits Lagerbewegungen für "
+"dieses Produkt gibt. Wenn Sie die Maßeinheit ändern möchten, sollten Sie "
+"dieses Produkt lieber archivieren und ein neues Produkt anlegen."
 
 #. module: stock
 #. odoo-python
@@ -9999,7 +9998,7 @@ msgid ""
 "You cannot perform the move because the unit of measure has a different "
 "category as the product unit of measure."
 msgstr ""
-"Sie können den Lagerbewegung nicht durchführen, da die Mengeneinheit eine "
+"Sie können den Lagerbewegung nicht durchführen, da die Maßeinheit eine "
 "andere Kategorie als die Produktmengeneinheit hat."
 
 #. module: stock
@@ -10298,27 +10297,27 @@ msgstr "Tage vor/"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. CW"
-msgstr "z.B. CW"
+msgstr "z. B. CW"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse
 msgid "e.g. Central Warehouse"
-msgstr "z.B. zentrales Lager"
+msgstr "z. B. zentrales Lager"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form
 msgid "e.g. LOT/0001/20121"
-msgstr "z.B. LOS/0001/20121"
+msgstr "z. B. LOS/0001/20121"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "e.g. PACK0000007"
-msgstr "z.B. PACK0000007"
+msgstr "z. B. PACK0000007"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "e.g. PO0032"
-msgstr "z.B. PO0032"
+msgstr "z. B. PO0032"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_form

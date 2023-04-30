@@ -50,7 +50,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                Hallo,<br/><br/>\n"
-"                Sie haben um die Abmeldung von der Mailingliste <strong t-out=\"object.name or ''\"/> gebeten.\n"
+"                Sie haben um die Anmeldung zur Mailingliste <strong t-out=\"object.name or ''\"/> gebeten.\n"
 "                <br/><br/>\n"
 "                Bitte bestätigen Sie dies über den folgenden Link: <strong t-if=\"ctx.get('token_url')\"><a t-att-href=\"ctx['token_url']\"><t t-out=\"ctx['token_url'] or ''\"/></a></strong>\n"
 "                <br/><br/>\n"
@@ -93,7 +93,7 @@ msgid ""
 msgstr ""
 "<div>\n"
 "                <p>Hallo <t t-out=\"object.partner_id.name or ''\"/>,</p>\n"
-"                <p>Unten finden Sie die Guidelines der {{ object.mail_group_id.name }} Mailing-Liste.</p>\n"
+"                <p>Unten finden Sie die Leitlinien der {{ object.mail_group_id.name }} Mailingliste.</p>\n"
 "                <p><t t-out=\"object.mail_group_id.moderation_guidelines_msg or ''\"/></p>\n"
 "            </div>\n"
 "        "
@@ -516,7 +516,7 @@ msgstr "E-Mail %s ist ungültig"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "Email Alias"
-msgstr "E-Mail Alias"
+msgstr "E-Mail-Alias"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message_reject__email_from_normalized
@@ -601,7 +601,7 @@ msgstr "Leitfaden"
 #. module: mail_group
 #: model:mail.template,subject:mail_group.mail_template_guidelines
 msgid "Guidelines of group {{ object.mail_group_id.name }}"
-msgstr "Richtlinien der Gruppe {{ object.mail_group_id.name }}"
+msgstr "Leitlinien der Gruppe {{ object.mail_group_id.name }}"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_notify_moderation
@@ -742,7 +742,7 @@ msgstr "Mailinggruppe: Abmeldung von Mailingliste"
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
 msgid "Mail Group: Send Guidelines"
-msgstr "Mailinggruppe: Anweisungen senden"
+msgstr "Mailinggruppe: Leitlinien senden"
 
 #. module: mail_group
 #: model:ir.actions.act_window,name:mail_group.mail_group_action
@@ -1248,14 +1248,15 @@ msgstr "Richtlinien an neue Abonnenten senden"
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
-"Versand an Personen, die sich bei einer Mailing-Gruppe mit "
-"Gruppenrichtlinien angemeldet haben"
+"Versand an Personen, die sich bei einer Mailinggruppe mit Gruppenleitlinien "
+"angemeldet haben"
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
 msgstr ""
-"Versand an Personen, die sich von einer Mailing-Gruppe abgemeldet haben"
+"Versand an Personen, die sich von einer Mailinggruppe mit Gruppenleitlinien "
+"abgemeldet haben"
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1287,7 +1288,7 @@ msgstr "Abonnieren"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr "Abonnementbestätigung an eine Mailing-Gruppe"
+msgstr "Anmeldebestätigung für eine Mailinggruppe"
 
 #. module: mail_group
 #. odoo-python
@@ -1355,7 +1356,7 @@ msgid ""
 msgstr ""
 "Das Odoo Datenmodell auf das sich der Alias bezieht. Jeglicher E-Mail "
 "Posteingang ohne Bezug zu einer bereits vorhandenen E-Mail  führt "
-"üblicherweise zur Erstellung eines neuen Datensatz (z.B. Projektaufgabe)."
+"üblicherweise zur Erstellung eines neuen Datensatz (z. B. Projektaufgabe)."
 
 #. module: mail_group
 #: model:ir.model.fields,help:mail_group.field_mail_group__alias_name
@@ -1363,7 +1364,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Die Bezeichnung des E-Mail-Alias, z.B. 'jobs', falls Sie E-Mails an  "
+"Die Bezeichnung des E-Mail-Alias, z. B. 'jobs', falls Sie E-Mails an  "
 "<jobs@example.odoo.com> erhalten möchten"
 
 #. module: mail_group
@@ -1514,7 +1515,7 @@ msgstr "in"
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_view_form
 msgid "e.g. \"Newsletter\""
-msgstr "z.B. \"Newsletter\""
+msgstr "z. B. \"Newsletter\""
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.mail_group_message_view_search

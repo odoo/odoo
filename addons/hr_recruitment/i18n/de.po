@@ -422,7 +422,7 @@ msgstr ""
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Wir haben uns gerade Ihren Lebenslauf angesehen und\n"
 "                er hat unsere Aufmerksamkeit erregt. Wir denken, dass Sie perfekt für die Stelle geeignet sein könnten. Ihre \n"
-"                Bewerbung wurde daher in die engere Wahl für einen \n"
+"                Bewerbung wurde daher in die engere Auswahl für einen \n"
 "                Anruf oder ein persönliches Vorstellungsgespräch genommen.\n"
 "                <br/><br/>\n"
 "                <div t-if=\"'website_url' in object.job_id and object.job_id.website_url\" style=\"padding: 16px 8px 16px 8px;\">\n"
@@ -449,7 +449,7 @@ msgstr ""
 "                <h3 style=\"color:#9A6C8E;\"><strong>Wie geht es weiter?</strong></h3>\n"
 "                Wir beantworten <strong>Bewerbungen gewöhnlich innerhalb weniger Tage</strong>.\n"
 "                <br/><br/>\n"
-"                Als nächstes erfolgt ein Telefoninterview oder ein persönliches Gespräch in unserem Büro.\n"
+"                Als nächstes erfolgt ein Anruf oder ein persönliches Gespräch in unserem Büro.\n"
 "                <br/>\n"
 "                Sie können <strong>uns gerne kontaktieren, um schneller\n"
 "                Feedback zu erhalten</strong> oder wenn Sie nicht schnell genug von\n"
@@ -528,7 +528,7 @@ msgstr ""
 "        <td valign=\"top\">\n"
 "            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
 "                Hallo,<br/><br/>\n"
-"                Wir möchten Ihnen für Ihr Interesse und Ihre Zeit danken.<br/>\n"
+"                wir möchten Ihnen für Ihr Interesse und Ihre Zeit danken.<br/>\n"
 "                Für Ihre zukünftigen Vorhaben wünschen wir Ihnen alles Gute.\n"
 "                <br/><br/>\n"
 "                Viele Grüße<br/>\n"
@@ -542,7 +542,7 @@ msgstr ""
 "                    <t t-else=\"\">\n"
 "                        -- <br/>\n"
 "                        <t t-out=\"object.company_id.name or ''\">YourCompany</t><br/>\n"
-"                        Das HR Team<br/>\n"
+"                        Die Personalabteilung<br/>\n"
 "                    </t>\n"
 "                </div>\n"
 "            </div>\n"
@@ -606,7 +606,7 @@ msgstr ""
 "                vielen Dank für Ihr Interesse, dem\n"
 "                <b><t t-out=\"object.company_id.name or ''\">YourCompany</t></b> Team beizutreten.  Obowohl\n"
 "                Ihr Lebenslauf sehr interessant ist, hat sich unsere Personalabteilung\n"
-"                dazu entschieden, ihn <b>nicht in die engere Auswahl</b> für die Stelle zu nehmen.\n"
+"                dazu entschieden, Sie <b>nicht in die engere Auswahl</b> für die Stelle zu nehmen.\n"
 "                <br/><br/>\n"
 "                Bitte beachten Sie, dass die Personalauswahl schwierig ist und wir Fehler machen können.\n"
 "Zögern Sie nicht, auf diese E-Mail zu antworten, wenn Sie\n"
@@ -675,7 +675,7 @@ msgstr "Überfällige Aktivitäten"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__activities_today
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Activities Today"
-msgstr "Aktivitäten heute"
+msgstr "Heutige Aktivitäten"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
@@ -690,7 +690,7 @@ msgstr "Status der Aktivität"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitäts-Typ-Icon"
+msgstr "Symbol des Aktivitätstyps"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.mail_activity_type_action_config_hr_applicant
@@ -937,7 +937,7 @@ msgstr "Zuweisungsdatum"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_attachment_count
 msgid "Attachment Count"
-msgstr "# Anhänge"
+msgstr "Anzahl Anhänge"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__attachment_ids
@@ -1372,7 +1372,7 @@ msgstr "E-Mail"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "E-Mail Alias"
+msgstr "E-Mail-Alias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__template_id
@@ -1393,7 +1393,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
-msgstr "E-Mail cc"
+msgstr "E-Mail-CC"
 
 #. module: hr_recruitment
 #. odoo-python
@@ -1518,7 +1518,7 @@ msgstr "Abonnenten (Partner)"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome Icon, z.B. fa-tasks"
+msgstr "FontAwesome Icon, z. B. fa-tasks"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1857,7 +1857,7 @@ msgstr "Letzte Stufe"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_last_stage_update
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Last Stage Update"
-msgstr "Aktuellste Stufenaktualisierung"
+msgstr "Letzte Phasenaktualisierung"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_applicant_get_refuse_reason__write_uid
@@ -1958,7 +1958,7 @@ msgstr "E-Mail-Vorlage"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hauptanhänge"
+msgstr "Hauptanhang"
 
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
@@ -2019,7 +2019,7 @@ msgstr "Motivation..."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline für meine Aktivitäten"
+msgstr "Frist für meine Aktivitäten"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -2259,7 +2259,7 @@ msgstr ""
 "Optionale Übersetzung (ISO Code) zur Auswahl beim E-Mailversand. Falls es "
 "keinen Eintrag gibt, wird die Englische Version verwendet. Es sollte sich "
 "normalerweise um einen Platzhalter Ausdruck handeln, der die passende "
-"Sprache enthält, z.B. {{ object.partner_id.lang }}."
+"Sprache enthält, z. B. {{ object.partner_id.lang }}."
 
 #. module: hr_recruitment
 #. odoo-javascript
@@ -2526,7 +2526,7 @@ msgstr "Verantwortlich"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_user_id
 msgid "Responsible User"
-msgstr "Manager Veranstaltung"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -2541,7 +2541,7 @@ msgstr "Laufende Bewerber"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Zustellungsfehler"
+msgstr "SMS-Zustellungsfehler"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected
@@ -2659,7 +2659,7 @@ msgid ""
 "Set this template to a recruitment stage to send it when applications reach "
 "that stage"
 msgstr ""
-"Festlegung dieser Vorlage für eine Einstellungsphase, um es zu versenden, "
+"Festlegung dieser Vorlage für eine Einstellungsphase, um sie zu versenden, "
 "wenn Bewerber diese Phase erreichen"
 
 #. module: hr_recruitment
@@ -2755,7 +2755,7 @@ msgid ""
 msgstr ""
 "Status basierend auf Aktivitäten\n"
 "Überfällig: Fälligkeitsdatum bereits überschritten\n"
-"Heute: Aktivität besitzt heutiges Datum\n"
+"Heute: Aktivitätsdatum ist heute\n"
 "Geplant: anstehende Aktivitäten."
 
 #. module: hr_recruitment
@@ -2848,7 +2848,7 @@ msgid ""
 msgstr ""
 "Das Odoo Datenmodell auf das sich der Alias bezieht. Jeglicher E-Mail "
 "Posteingang ohne Bezug zu einer bereits vorhandenen E-Mail  führt "
-"üblicherweise zur Erstellung eines neuen Datensatz (z.B. Projektaufgabe)."
+"üblicherweise zur Erstellung eines neuen Datensatz (z. B. Projektaufgabe)."
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
@@ -2861,7 +2861,7 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
-"Die Bezeichnung des E-Mail-Alias, z.B. 'jobs', falls Sie E-Mails an  "
+"Die Bezeichnung des E-Mail-Alias, z. B. 'jobs', falls Sie E-Mails an  "
 "<jobs@example.odoo.com> erhalten möchten"
 
 #. module: hr_recruitment
@@ -3087,19 +3087,19 @@ msgstr "Ihre Bewerbung: {{ object.job_id.name }}"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "e.g. LinkedIn"
-msgstr "z.B. LinkedIn"
+msgstr "z. B. LinkedIn"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr "z.B. Verkaufsleiter"
+msgstr "z. B. Verkaufsleiter"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "e.g. Sales Manager 2 year experience"
-msgstr "z.B. Sales Manager 2 Jahre Erfahrung"
+msgstr "z. B. Sales Manager 2 Jahre Erfahrung"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. sales-manager"
-msgstr "z.B. Sales-Manager"
+msgstr "z. B. Sales-Manager"

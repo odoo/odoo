@@ -133,17 +133,17 @@ msgstr ""
 "                    <span t-out=\"object.name or ''\">Joel Willis</span>!\n"
 "                </p>\n"
 "                <p>\n"
-"                    Sie haben einen neuen Rang erreicht: <strong t-out=\"object.rank_id.name or ''\">Newbie</strong>\n"
+"                    Sie haben einen neuen Rang erreicht: <strong t-out=\"object.rank_id.name or ''\">Neuling</strong>\n"
 "                </p>\n"
 "                <t t-if=\"object.next_rank_id.name\">\n"
-"                    <p>machen Sie genauso weiter, um bald ein<strong t-out=\"object.next_rank_id.name or ''\">Lehrling</strong> zu werden!</p>\n"
+"                    <p>Machen Sie genauso weiter, um bald ein<strong t-out=\"object.next_rank_id.name or ''\">Lehrling</strong> zu werden!</p>\n"
 "                </t>\n"
 "                <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                    <t t-set=\"gamification_redirection_data\" t-value=\"object.get_gamification_redirection_data()\"/>\n"
 "                    <t t-foreach=\"gamification_redirection_data\" t-as=\"data\">\n"
 "                        <t t-set=\"url\" t-value=\"data['url']\"/>\n"
 "                        <t t-set=\"label\" t-value=\"data['label']\"/>\n"
-"                        <a t-att-href=\"url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\" t-out=\"label or ''\">LABEL</a>\n"
+"                        <a t-att-href=\"url\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\" t-out=\"label or ''\">BEZEICHNUNG</a>\n"
 "                    </t>\n"
 "                </div>\n"
 "            </td>\n"
@@ -618,7 +618,7 @@ msgstr ""
 "                        <div>\n"
 "                            <t t-if=\"object.visibility_mode == 'ranking'\">\n"
 "                                <td style=\"padding:15px;\">\n"
-"                                    <p style=\"font-size:20px;color:#666666;\" align=\"center\">Leader Board</p>\n"
+"                                    <p style=\"font-size:20px;color:#666666;\" align=\"center\">Rangliste</p>\n"
 "                                </td>\n"
 "                            </t>\n"
 "                        </div>\n"
@@ -627,7 +627,7 @@ msgstr ""
 "                <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" bgcolor=\"#fff\" style=\"background-color:#fff;\">\n"
 "                    <tr><td style=\"padding: 15px;\">\n"
 "                        <t t-if=\"object.visibility_mode == 'personal'\">\n"
-"                            <span style=\"color:#666666;font-size:13px;\">Hier ist Ihr aktueller Fortschritt in der Challenge <strong t-out=\"object.name or ''\"/>.</span>\n"
+"                            <span style=\"color:#666666;font-size:13px;\">Hier ist Ihr aktueller Fortschritt in der Herausforderung <strong t-out=\"object.name or ''\"/>.</span>\n"
 "                            <table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\" style=\"margin-top:20px;\">\n"
 "                                <tr>\n"
 "                                    <td align=\"center\">\n"
@@ -639,7 +639,7 @@ msgstr ""
 "                                <thead>\n"
 "                                    <tr style=\"color:#9A6C8E; font-size:12px;\">\n"
 "                                        <th align=\"left\" style=\"padding-bottom: 0px;width:40%;text-align:left;\">Ziele</th>\n"
-"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Target</th>\n"
+"                                        <th style=\"width:20%;text-align:right;\" align=\"left\">Zielvorgabe</th>\n"
 "                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Aktuell</th>\n"
 "                                        <th style=\"width:20%;text-align:right;\" align=\"right\">Vollständigkeit</th>\n"
 "                                    </tr>\n"
@@ -777,7 +777,7 @@ msgstr ""
 "                                                        <td width=\"25%\" align=\"left\" valign=\"middle\" t-attf-style=\"background-color:{{ tdBgColor }};padding :5px 0;font-size:13px;\"><t t-out=\"goal['name'] or ''\"/></td>\n"
 "                                                        <td width=\"30%\" align=\"right\" t-attf-style=\"background-color:{{ tdBgColor }};padding:5px 0;line-height:1;\"><t t-out=\"&quot;%.2f&quot; % goal['current'] or ''\"/><br/><span t-attf-style=\"font-size:13px;color:{{ mutedColor }};\">on <t t-out=\"&quot;%.2f&quot; % line['target'] or ''\"/></span>\n"
 "                                                        </td>\n"
-"                                                        <td width=\"30%\" t-attf-style=\"color:{{ tdPercentageColor }};background-color:{{ tdBgColor }};padding-right:15px;font-size:22px;\" align=\"right\"><strong><t t-out=\"int(goal['completeness']) or ''\"/>%</strong></td>\n"
+"                                                        <td width=\"30%\" t-attf-style=\"color:{{ tdPercentageColor }};background-color:{{ tdBgColor }};padding-right:15px;font-size:22px;\" align=\"right\"><strong><t t-out=\"int(goal['completeness']) or ''\"/> %</strong></td>\n"
 "                                                    </tr>\n"
 "                                                    <tr>\n"
 "                                                        <td colspan=\"5\" style=\"height:1px;background-color:#DADADA;\"/>\n"
@@ -861,7 +861,7 @@ msgstr "Aktion"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_needaction
 msgid "Action Needed"
-msgstr "Aktion erforderlich"
+msgstr "Aktion notwendig"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__active
@@ -909,7 +909,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_attachment_count
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_attachment_count
 msgid "Attachment Count"
-msgstr "# Anhänge"
+msgstr "Anzahl Anhänge"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__rule_auth_user_ids
@@ -1504,7 +1504,7 @@ msgstr "Gamification: Konsolidierung des Karma-Trackings"
 #. module: gamification
 #: model:mail.template,name:gamification.mail_template_data_new_rank_reached
 msgid "Gamification: New Rank Reached"
-msgstr "Gamification: Neuen Rang Erreicht"
+msgstr "Gamification: Neuen Rang erreicht"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_goal_reminder
@@ -1866,7 +1866,7 @@ msgstr "Auflistung der gesetzten Einzelziele"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_main_attachment_id
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hauptanhänge"
+msgstr "Hauptanhang"
 
 #. module: gamification
 #: model:gamification.karma.rank,name:gamification.rank_master
@@ -2737,8 +2737,8 @@ msgid ""
 msgstr ""
 "Der Wert mit dem dieses spezifische Feld verglichen werden soll. Der "
 "Ausdruck kann eine Referenz auf einen 'Benutzer' enthalten. Die Datensätze "
-"des aktuellen Benutzers werden dann nach bestimmten Kriterien durchsucht, "
-"z.B. user.id, user.partner_id.id..."
+"des aktuellen Benutzers werden dann nach bestimmten Kriterien durchsucht, z."
+" B. user.id, user.partner_id.id..."
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.goals_from_challenge_act
@@ -2975,17 +2975,17 @@ msgid ""
 "e.g. A Master Chief knows quite everything on the forum! You cannot beat "
 "him!"
 msgstr ""
-"z.B. Master Chiefs wissen so ziemlich alles im Forum! Sie sind unschlagbar!"
+"z. B. Master Chiefs wissen so ziemlich alles im Forum! Sie sind unschlagbar!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. Get started"
-msgstr "z.B. Los gehts!"
+msgstr "z. B. Los gehts!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Master Chief"
-msgstr "z.B. Master Chief"
+msgstr "z. B. Master Chief"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2995,17 +2995,17 @@ msgstr "z. B. monatliche Verkaufsziele"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "e.g. Problem Solver"
-msgstr "z.B. Problemlöser"
+msgstr "z. B. Problemlöser"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_rank_view_form
 msgid "e.g. Reach this rank to gain a free mug !"
-msgstr "z.B. Mit Erreichen dieses Rangs gibt es einen tollen Becher gratis!"
+msgstr "z. B. Mit Erreichen dieses Rangs gibt es einen tollen Becher gratis!"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. Register to the platform"
-msgstr "z.B. auf der Plattform registrieren"
+msgstr "z. B. auf der Plattform registrieren"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
@@ -3015,7 +3015,7 @@ msgstr "z. B. Tage"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_form_view
 msgid "e.g. user.partner_id.id"
-msgstr "z.B. user.partner_id.id"
+msgstr "z. B. user.partner_id.id"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_kanban_view

@@ -168,7 +168,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Hallo<br/><br/>\n"
+"        Hallo<br/>,<br/>\n"
 "        Sie wurden zur Teilnahme an einem neuen Kurs eingeladen: <t t-out=\"object.channel_id.name or ''\">Grundlagen des Gärtnerns</t>.\n"
 "    </p>\n"
 "</div>\n"
@@ -202,7 +202,7 @@ msgstr ""
 "                    <div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px;\">Hallo <t t-out=\"object.partner_id.name or ''\">Brandon Freeman</t>,</p><br/>\n"
 "                        <p><b>Herzlichen Glückwunsch!</b></p>\n"
-"                        <p>Sie haben den Kurs <b t-out=\"object.channel_id.name or ''\">Basics of Gardening</b> erfolgreich absolviert</p>\n"
+"                        <p>Sie haben den Kurs <b t-out=\"object.channel_id.name or ''\">Grundlagen des Gärtnerns</b> erfolgreich absolviert</p>\n"
 "                        <p>Finden Sie andere interessante Kurse.</p><br/>\n"
 "\n"
 "                        <div style=\"padding: 16px 8px 16px 8px; text-align: center;\">\n"
@@ -245,8 +245,8 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hallo<br/><br/>\n"
-"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> hat<strong t-out=\"object.name or ''\">Dokument</strong> mit Ihnen geteilt!\n"
+"                        Hallo,<br/><br/>\n"
+"                        <t t-out=\"user.name or ''\">Mitchell Admin</t> hat <strong t-out=\"object.name or ''\">Dokument</strong> mit Ihnen geteilt!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"object.website_url\">\n"
 "                                <img t-att-alt=\"object.name\" t-attf-src=\"{{ ctx.get('base_url') }}/web/image/slide.channel/{{ object.id }}/image_256\" style=\"height:auto; width:150px; margin: 16px;\"/>\n"
@@ -289,7 +289,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hallo<br/><br/>\n"
+"                        Hallo,<br/><br/>\n"
 "                        <t t-out=\"user.name or ''\">Mitchell Admin</t> hat das <t t-out=\"object.slide_category or ''\">Dokument</t> <strong t-out=\"object.name or ''\">Bäume</strong> mit Ihnen geteilt!\n"
 "                        <div style=\"margin: 16px 8px 16px 8px; text-align: center;\">\n"
 "                            <a t-att-href=\"(object.website_share_url + '?fullscreen=1') if ctx.get('fullscreen') else object.website_share_url\">\n"
@@ -336,7 +336,7 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "                    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"                        Hallo<br/><br/>\n"
+"                        Hallo,<br/><br/>\n"
 "                        Es gibt neue Inhalte in deinem Kurs <strong t-out=\"object.channel_id.name or ''\">Bäume, Holz und Gärten</strong>:<br/><br/>\n"
 "                        <center><strong t-out=\"object.name or ''\">Bäume</strong></center>\n"
 "                        <t t-if=\"object.image_1024\">\n"
@@ -467,7 +467,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
 msgid "<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
-msgstr "<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" title=\"Ansichten\"/>"
+msgstr "<i class=\"fa fa-eye me-2\" aria-label=\"Views\" role=\"img\" title=\"Views\"/>"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_slide_view_kanban
@@ -1097,7 +1097,7 @@ msgstr "Status der Aktivität"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_type_icon
 msgid "Activity Type Icon"
-msgstr "Aktivitäts-Typ-Icon"
+msgstr "Symbol des Aktivitätstyps"
 
 #. module: website_slides
 #. odoo-javascript
@@ -1374,7 +1374,7 @@ msgstr "Artikel"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_attachment_count
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_attachment_count
 msgid "Attachment Count"
-msgstr "# Anhänge"
+msgstr "Anzahl Anhänge"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_invite__attachment_ids
@@ -1602,7 +1602,7 @@ msgstr "Kanal-Mitglied"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__share_channel_template_id
 msgid "Channel Share Template"
-msgstr ""
+msgstr "Vorlage zur Kanalfreigabe"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.mail_template_channel_shared
@@ -2496,7 +2496,7 @@ msgstr "E-Learning: Kurseinladung"
 #. module: website_slides
 #: model:mail.template,name:website_slides.slide_template_shared
 msgid "Elearning: Course Share"
-msgstr "E-Learning: Kurs veröffentlichen"
+msgstr "E-Learning: Kursfreigabe"
 
 #. module: website_slides
 #: model:mail.template,name:website_slides.slide_template_published
@@ -2742,7 +2742,7 @@ msgstr "Abonnenten (Partner)"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome Icon, z.B. fa-tasks"
+msgstr "FontAwesome Icon, z. B. fa-tasks"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_res_config_settings__module_website_slides_forum
@@ -2947,7 +2947,7 @@ msgstr "Symbol"
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icon, um eine Ausnahmeaktivität anzuzeigen."
+msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__message_needaction
@@ -3370,7 +3370,7 @@ msgstr "E-Mail-Versand"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_main_attachment_id
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Hauptanhänge"
+msgstr "Hauptanhang"
 
 #. module: website_slides
 #: model:res.groups,name:website_slides.group_website_slides_manager
@@ -3511,7 +3511,7 @@ msgstr "Beliebteste Kurse"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__my_activity_date_deadline
 msgid "My Activity Deadline"
-msgstr "Deadline für meine Aktivitäten"
+msgstr "Frist für meine Aktivitäten"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -3653,7 +3653,7 @@ msgstr "Keine Benachrichtigung"
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.slide_question_action_report
 msgid "No Quiz data yet!"
-msgstr "Noch keine Quizdaten verfügbar!"
+msgstr "Noch keine Quizdaten vorhanden!"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.rating_rating_action_slide_channel
@@ -3862,7 +3862,7 @@ msgstr ""
 "Optionale Übersetzung (ISO Code) zur Auswahl beim E-Mailversand. Falls es "
 "keinen Eintrag gibt, wird die Englische Version verwendet. Es sollte sich "
 "normalerweise um einen Platzhalter Ausdruck handeln, der die passende "
-"Sprache enthält, z.B. {{ object.partner_id.lang }}."
+"Sprache enthält, z. B. {{ object.partner_id.lang }}."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -4340,7 +4340,7 @@ msgstr "Verantwortlich"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__activity_user_id
 msgid "Responsible User"
-msgstr "Manager Veranstaltung"
+msgstr "Verantwortlicher Benutzer"
 
 #. module: website_slides
 #. odoo-javascript
@@ -4440,7 +4440,7 @@ msgstr "SEO optimiert"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_has_sms_error
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Zustellungsfehler"
+msgstr "SMS-Zustellungsfehler"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__embed_code_external
@@ -4875,7 +4875,7 @@ msgid ""
 msgstr ""
 "Status basierend auf Aktivitäten\n"
 "Überfällig: Fälligkeitsdatum bereits überschritten\n"
-"Heute: Aktivität besitzt heutiges Datum\n"
+"Heute: Aktivitätsdatum ist heute\n"
 "Geplant: anstehende Aktivitäten."
 
 #. module: website_slides
@@ -5106,7 +5106,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_slides.field_slide_slide__website_url
 msgid "The full URL to access the document through the website."
 msgstr ""
-"Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
+"Die vollständige URL, mit der das Dokument überall aufgerufen werden kann."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_slide__can_self_mark_completed
@@ -5592,7 +5592,7 @@ msgstr "Website-Nachrichten"
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel_tag_group__website_url
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__website_url
 msgid "Website URL"
-msgstr "Website URL"
+msgstr "Website-URL"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_message_ids
@@ -5824,7 +5824,7 @@ msgstr "Sie sind diesem Kanal bereits beigetreten"
 #. module: website_slides
 #: model:mail.template,subject:website_slides.mail_template_slide_channel_invite
 msgid "You have been invited to join {{ object.channel_id.name }}"
-msgstr "Sie wurden eingeladen an {{ object.channel_id.name }} teilzunehmen"
+msgstr "Sie wurden {{ object.channel_id.name }} beizutreten"
 
 #. module: website_slides
 #. odoo-python
@@ -6008,7 +6008,7 @@ msgstr "z. B. „15“"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
 msgid "e.g. \"Computer Science for kids\""
-msgstr "z.B. \"Programmieren für Kinder\""
+msgstr "z. B. \"Programmieren für Kinder\""
 
 #. module: website_slides
 #. odoo-javascript
@@ -6022,12 +6022,12 @@ msgstr "z. B. „Einleitung“"
 #: code:addons/website_slides/static/src/xml/slide_quiz_create.xml:0
 #, python-format
 msgid "e.g. \"Which animal cannot fly?\""
-msgstr "z.B. \"Welches Tier kann nicht fliegen?\""
+msgstr "z. B. \"Welches Tier kann nicht fliegen?\""
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_view_form_add
 msgid "e.g. Computer Science for kids"
-msgstr "z.B. Informatik für Kinder"
+msgstr "z. B. Informatik für Kinder"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -6035,24 +6035,24 @@ msgid ""
 "e.g. In this video, we'll give you the keys on how Odoo can help you to grow"
 " your business. At the end, we'll propose you a quiz to test your knowledge."
 msgstr ""
-"z.B. In diesem Video geben wir Ihnen die Schlüssel dazu, wie Odoo Ihnen "
+"z. B. In diesem Video geben wir Ihnen die Schlüssel dazu, wie Odoo Ihnen "
 "helfen kann, Ihr Geschäft zu entwickeln. Am Ende werden wir Ihnen ein Quiz "
 "vorschlagen, um Ihr Wissen zu testen."
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
 msgid "e.g. Setting up your computer"
-msgstr "z.B. Ihren Computer einrichten"
+msgstr "z. B. Ihren Computer einrichten"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_question_view_form
 msgid "e.g. What powers a computer ?"
-msgstr "z.B. Was treibt einen Computer an?"
+msgstr "z. B. Was treibt einen Computer an?"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_channel_tag_group_view_form
 msgid "e.g. Your Level"
-msgstr "z.B. Ihr Level"
+msgstr "z. B. Ihr Level"
 
 #. module: website_slides
 #: model:ir.ui.menu,name:website_slides.website_slides_menu_root

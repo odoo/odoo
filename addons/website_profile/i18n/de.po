@@ -258,14 +258,14 @@ msgstr ""
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
 "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
 "<tbody>\n"
-"    <!-- KOPFZEILE -->\n"
+"    <!-- HEADER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
 "                <tr>\n"
 "                    <td valign=\"middle\">\n"
 "                        <span style=\"font-size: 20px; font-weight: bold;\">\n"
-"                            <t t-out=\"object.company_id.name or ''\">YourCompany</t> Profil-Bestätigung\n"
+"                            Profilvalidierung von <t t-out=\"object.company_id.name or ''\">YourCompany</t> \n"
 "                        </span>\n"
 "                    </td>\n"
 "                    <td valign=\"middle\" align=\"right\">\n"
@@ -280,7 +280,7 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- INHALT -->\n"
+"    <!-- CONTENT -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -288,7 +288,7 @@ msgstr ""
 "                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
 "                        <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "                            Hallo <t t-out=\"object.name or ''\">Marc Demo</t>,<br/><br/>\n"
-"                            Bitte bestätigen Sie Ihre E-Mail-Adresse, um Zugang zur \"<t t-out=\"object.company_id.name or ''\">YourCompany</t>\" Website zu erhalten.\n"
+"                            bitte bestätigen Sie Ihre E-Mail-Adresse, um Zugang zur Website von „<t t-out=\"object.company_id.name or ''\">YourCompany</t>“ zu erhalten.\n"
 "                            Klicken Sie dazu einfach auf den folgenden Link:\n"
 "                            <div style=\"margin: 16px 0px 16px 0px;\">\n"
 "                                <a t-att-href=\"ctx.get('token_url')\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
@@ -307,7 +307,7 @@ msgstr ""
 "            </table>\n"
 "        </td>\n"
 "    </tr>\n"
-"    <!-- FUßZEILE -->\n"
+"    <!-- FOOTER -->\n"
 "    <tr>\n"
 "        <td align=\"center\" style=\"min-width: 590px;\">\n"
 "            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
@@ -543,13 +543,13 @@ msgstr "Benutzer suchen"
 #. module: website_profile
 #: model:mail.template,description:website_profile.validation_email
 msgid "Sent to forum visitors to confirm their mail address"
-msgstr "Versand an Forumsbesucher gesendet, um ihre Mailadresse zu bestätigen"
+msgstr "Versand an Forumsbesucher, um ihre E-Mail-Adresse zu bestätigen"
 
 #. module: website_profile
 #: model:ir.model.fields,help:website_profile.field_gamification_badge__website_url
 msgid "The full URL to access the document through the website."
 msgstr ""
-"Die vollständige URL mit der das Dokument überall aufgerufen werden kann."
+"Die vollständige URL, mit der das Dokument überall aufgerufen werden kann."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
@@ -713,7 +713,7 @@ msgstr ""
 #. module: website_profile
 #: model:mail.template,subject:website_profile.validation_email
 msgid "{{ object.company_id.name }} Profile validation"
-msgstr "{{ object.company_id.name }} Validierung des Profils"
+msgstr "Profilvalidierung von {{ object.company_id.name }}"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
