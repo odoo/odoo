@@ -10,13 +10,6 @@
             <field name="name" position="before">
                 <field name="check_number"/>
             </field>
-
-            <filter name="matched" position="after">
-                <filter name="unmatched"
-                    string="Bank Unmatched"
-                    domain="[('is_matched', '=', False)]"/>
-            </filter>
-
             <field name="journal_id" position="after">
                 <field name="l10n_latam_check_current_journal_id"/>
             </field>
@@ -58,11 +51,11 @@
                         'invisible': [('payment_method_code', 'not in', ['in_third_party_checks', 'out_third_party_checks']), ('l10n_latam_check_id', '=', False)],
                         'required': [('payment_method_code', 'in', ['in_third_party_checks', 'out_third_party_checks'])]}"
                     domain="
-                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted')]
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
                             if payment_type == 'outbound' else
-                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('state', '=', 'posted')]
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', destination_journal_id), ('state', '=', 'posted'), ('company_id', '=', company_id)]
                             if is_internal_transfer else
-                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted')]"
+                        [('payment_method_code', '=', 'new_third_party_checks'), ('l10n_latam_check_current_journal_id', '=', False), ('state', '=', 'posted'), ('company_id', '=', company_id)]"
                     options="{'no_create': True}"
                 />
             </field>

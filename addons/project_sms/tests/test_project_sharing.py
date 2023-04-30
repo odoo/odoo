@@ -44,7 +44,18 @@ class TestProjectSharingWithSms(TestProjectSharingCommon, SMSCommon):
                 'stage_id': self.task_stage_with_sms.id,
             })
         self.assertEqual(self.task_portal.stage_id, self.task_stage_with_sms)
-        self.assertSMSIapSent([self.task_portal.partner_id.mobile])
+        self.assertSMSIapSent([])  # no sms sent since the author is the recipient
+
+        self.task_portal.write({
+            'partner_id': self.user_projectuser.partner_id.id,
+            'stage_id': self.project_portal.type_ids[0].id,
+        })
+        with self.mockSMSGateway():
+            self.task_portal.with_user(self.user_portal).write({
+                'stage_id': self.task_stage_with_sms.id,
+            })
+        self.assertEqual(self.task_portal.stage_id, self.task_stage_with_sms)
+        self.assertSMSIapSent([self.user_projectuser.partner_id.mobile])
 
         with self.mockSMSGateway():
             self.project_portal.write({

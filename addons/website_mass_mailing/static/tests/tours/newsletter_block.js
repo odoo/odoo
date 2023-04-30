@@ -10,7 +10,7 @@ wTourUtils.registerWebsitePreviewTour('newsletter_block_edition', {
     // Put a Newsletter block.
     wTourUtils.dragNDrop({
         id: 's_newsletter_block',
-        name: 'Newsletter block',
+        name: 'Newsletter Block',
     }),
     {
         content: 'Wait for the list id to be set.',

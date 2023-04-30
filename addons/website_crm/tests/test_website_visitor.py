@@ -71,7 +71,6 @@ class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTests):
         self.assertEqual(visitor.email, customer.email_normalized)
         self.assertEqual(visitor.mobile, lead_2.mobile)
 
-    @tagged('website_visitor')
     def test_clean_inactive_visitors_crm(self):
         """ Visitors attached to leads should not be deleted even if not connected recently. """
         active_visitors = self.env['website.visitor'].create([{
@@ -87,7 +86,6 @@ class TestWebsiteVisitor(TestCrmCommon, WebsiteVisitorTests):
 
         self._test_unlink_old_visitors(self.env['website.visitor'], active_visitors)
 
-    @tagged('website_visitor')
     def test_link_to_visitor_crm(self):
         """ Same as parent's 'test_link_to_visitor' except we also test that leads
         are merged into main visitor. """

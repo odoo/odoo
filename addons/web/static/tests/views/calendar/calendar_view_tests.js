@@ -1328,7 +1328,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(groups[0], ".o_field_char", "should apply char widget");
         assert.strictEqual(
             groups[0].querySelector("strong").textContent,
-            "Custom Name : ",
+            "Custom Name: ",
             "label should be a 'Custom Name'"
         );
         assert.strictEqual(
@@ -1339,7 +1339,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(groups[1], ".o_form_uri", "should apply m20 widget");
         assert.strictEqual(
             groups[1].querySelector("strong").textContent,
-            "user : ",
+            "user: ",
             "label should be a 'user'"
         );
         assert.strictEqual(
@@ -2650,6 +2650,41 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Click on the "all" filter to reload all events
         await toggleFilter(target, "partner_ids", "all");
         assert.containsN(target, ".fc-event", 9, "should display 9 events on the week");
+    });
+
+    QUnit.test("dynamic filters with selection fields", async (assert) => {
+        serverData.models.event.fields.selection = {
+            name: "selection",
+            string: "Ambiance",
+            type: "selection",
+            selection: [
+                ["desert", "Desert"],
+                ["forest", "Forest"],
+            ],
+        };
+
+        serverData.models.event.records[0].selection = "forest";
+        serverData.models.event.records[1].selection = "desert";
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: /* xml */ `
+                <calendar date_start="start" date_stop="stop">
+                    <field name="selection" filters="1" />
+                </calendar>
+            `,
+        });
+
+        const section = findFilterPanelSection(target, "selection");
+        assert.deepEqual(section.querySelector(".o_cw_filter_label").textContent, "Ambiance");
+        assert.deepEqual(
+            [...section.querySelectorAll(".o_calendar_filter_item")].map((el) =>
+                el.textContent.trim()
+            ),
+            ["Forest", "Desert", "Undefined"]
+        );
     });
 
     QUnit.test("Colors: cycling through available colors", async (assert) => {
@@ -4621,7 +4656,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.strictEqual(
             target.querySelector(".o_cw_popover .o_cw_popover_fields_secondary").textContent,
-            "user : name : event 4"
+            "user: name: event 4"
         );
     });
 

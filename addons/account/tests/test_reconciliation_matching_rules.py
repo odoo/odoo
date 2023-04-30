@@ -761,7 +761,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         })
 
     def test_partner_mapping_rule(self):
-        st_line = self._create_st_line(partner_id=None, payment_ref="toto42")
+        st_line = self._create_st_line(partner_id=None, payment_ref=None)
 
         rule = self._create_reconcile_model(
             partner_mapping_line_ids=[{
@@ -769,6 +769,11 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 'payment_ref_regex': 'toto.*',
             }],
         )
+
+        # No match because the reference is not matching the regex.
+        self.assertEqual(st_line._retrieve_partner(), self.env['res.partner'])
+
+        st_line.payment_ref = "toto42"
 
         # Matching using the regex on payment_ref.
         self.assertEqual(st_line._retrieve_partner(), self.partner_1)

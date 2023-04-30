@@ -238,16 +238,16 @@ class AccountMove(models.Model):
                         lambda line: line.account_id == product_interim_account and not line.reconciled and line.move_id.state == "posted"
                     )
 
+                    stock_aml = product_account_moves.filtered(lambda aml: aml.move_id.stock_valuation_layer_ids.stock_move_id)
+                    invoice_aml = product_account_moves.filtered(lambda aml: aml.move_id == move)
+                    correction_amls = product_account_moves - stock_aml - invoice_aml
                     # Reconcile.
-                    if any(aml.amount_currency and not aml.balance for aml in product_account_moves):
-                        stock_aml = product_account_moves.filtered(lambda aml: aml.move_id.stock_valuation_layer_ids.stock_move_id)
-                        invoice_aml = product_account_moves.filtered(lambda aml: aml.move_id == move)
-                        correction_amls = product_account_moves - stock_aml - invoice_aml
+                    if correction_amls:
                         if sum(correction_amls.mapped('balance')) > 0:
                             product_account_moves.with_context(no_exchange_difference=True).reconcile()
                         else:
                             (invoice_aml | correction_amls).with_context(no_exchange_difference=True).reconcile()
-                            (invoice_aml | stock_aml).with_context(no_exchange_difference=True).reconcile()
+                            (invoice_aml.filtered(lambda aml: not aml.reconciled) | stock_aml).with_context(no_exchange_difference=True).reconcile()
                     else:
                         product_account_moves.reconcile()
 
@@ -263,7 +263,7 @@ class AccountMoveLine(models.Model):
     def _compute_account_id(self):
         super()._compute_account_id()
         input_lines = self.filtered(lambda line: (
-            line.product_id.type == 'product'
+            line._can_use_stock_accounts()
             and line.move_id.company_id.anglo_saxon_accounting
             and line.move_id.is_purchase_document()
         ))
@@ -393,6 +393,9 @@ class AccountMoveLine(models.Model):
                 break
 
         return svl_vals_list
+
+    def _can_use_stock_accounts(self):
+        return self.product_id.type == 'product' and self.product_id.categ_id.property_valuation == 'real_time'
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()

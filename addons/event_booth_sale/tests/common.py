@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import Command
 from odoo.addons.event_booth.tests.common import TestEventBoothCommon
 
 
@@ -28,4 +29,14 @@ class TestEventBoothSaleCommon(TestEventBoothCommon):
 
         cls.test_pricelist = cls.env['product.pricelist'].sudo().create({
             'name': 'Test Pricelist',
+        })
+        cls.test_pricelist_with_discount_included = cls.env['product.pricelist'].sudo().create({
+            'name': 'Test Pricelist',
+            'discount_policy': 'with_discount',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'percentage',
+                    'percent_price': '10.0',
+                })
+            ],
         })
