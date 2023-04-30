@@ -40,6 +40,7 @@ export class KanbanRenderer extends Component {
         this.state = useState({
             columnQuickCreateIsFolded:
                 !this.props.list.isGrouped || this.props.list.groups.length > 0,
+            isResequenceInprogress: false,
         });
         this.dialog = useService("dialog");
         this.exampleData = registry
@@ -221,7 +222,7 @@ export class KanbanRenderer extends Component {
     get showNoContentHelper() {
         const { model, isGrouped, groups } = this.props.list;
         if (model.useSampleModel) {
-            return true;
+            return !this.state.isResequenceInprogress;
         }
         if (isGrouped) {
             if (this.canCreateGroup() && !this.state.columnQuickCreateIsFolded) {
@@ -231,7 +232,7 @@ export class KanbanRenderer extends Component {
                 return !this.props.list.groupedBy("m2o");
             }
         }
-        return !model.hasData();
+        return !model.hasData() && !this.state.isResequenceInprogress;
     }
 
     /**
@@ -541,6 +542,7 @@ export class KanbanRenderer extends Component {
      */
     sortStart({ element }) {
         element.classList.add("o_dragged", "shadow");
+        this.state.isResequenceInprogress = true;
     }
 
     /**
@@ -553,6 +555,7 @@ export class KanbanRenderer extends Component {
         if (group) {
             group.classList.remove("o_kanban_hover");
         }
+        this.state.isResequenceInprogress = false;
     }
 
     /**

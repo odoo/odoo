@@ -13328,4 +13328,39 @@ QUnit.module("Views", (hooks) => {
             );
         }
     );
+
+    QUnit.test("Kanban: hide no content helper on resequence", async (assert) => {
+        serverData.models.partner.records = []
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+            `
+            <kanban sample="1">
+                <templates>
+                    <div t-name="kanban-box">
+                        <field name="display_name"/>
+                    </div>
+                </templates>
+            </kanban>`,
+            groupBy: ["product_id"],
+            async mockRPC(route, args) {
+                if (args.method === "web_read_group") {
+                    return {
+                        groups: [
+                            { __domain: [["product_id", "=", 3]], product_id_count: 0, product_id: [3, "hello"],},
+                            { __domain: [["product_id", "=", 5]], product_id_count: 0, product_id: [5, "xmo"], },
+                        ],
+                        length: 2,
+                    };
+                }
+            },
+        });
+        assert.containsOnce(target, ".o_view_nocontent");
+        const elements = document.querySelectorAll(".o_column_title");
+        await drag(elements[0], elements[1]);
+        await nextTick();
+        assert.containsNone(target, ".o_view_nocontent");
+    });
 });
