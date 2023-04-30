@@ -34,7 +34,7 @@ msgstr "%s (نسخة)"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.xml:0
 #, python-format
 msgid "(no accounts)"
-msgstr ""
+msgstr "(لا توجد حسابات) "
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
@@ -82,7 +82,7 @@ msgstr "إداري"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__all_account_count
 msgid "All Analytic Accounts Count"
-msgstr ""
+msgstr "عدد كافة الحسابات التحليلية "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_line__amount
@@ -122,7 +122,7 @@ msgstr "الحسابات التحليلية"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__account_count
 msgid "Analytic Accounts Count"
-msgstr ""
+msgstr "عدد الحسابات التحليلية "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__analytic_distribution
@@ -147,7 +147,7 @@ msgstr "نماذج التوزيع التحليلية "
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "Analytic Distribution Template"
-msgstr ""
+msgstr "قالب التوزيع التحليلي "
 
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.view_account_analytic_line_form
@@ -214,7 +214,7 @@ msgstr "حسابات تحليلية"
 #: code:addons/analytic/models/analytic_plan.py:0
 #, python-format
 msgid "Analytical Plans"
-msgstr ""
+msgstr "الخطط التحليلية "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_applicability__applicability
@@ -237,7 +237,7 @@ msgstr "شريك مرتبط "
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_asustek
 msgid "Asustek"
-msgstr ""
+msgstr "Asustek"
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__message_attachment_count
@@ -258,7 +258,7 @@ msgstr "الرصيد:"
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_partners_camp_to_camp
 msgid "Camp to Camp"
-msgstr ""
+msgstr "Camp to Camp"
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_integration_c2c
@@ -278,7 +278,7 @@ msgstr "مخطط الحسابات التحليلية "
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_count
 msgid "Children Plans Count"
-msgstr ""
+msgstr "عدد الخطط الفرعية "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__children_ids
@@ -288,7 +288,7 @@ msgstr "الفروع"
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_plan_action
 msgid "Click to add a new analytic account plan."
-msgstr ""
+msgstr "اضغط لإضافة خطة حساب تحليلي جديدة. "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__color
@@ -391,7 +391,7 @@ msgstr "التاريخ"
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_account__active
 msgid "Deactivate the account."
-msgstr ""
+msgstr "تعطيل الحساب. "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__debit
@@ -407,7 +407,7 @@ msgstr "Deco Addict"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_plan__default_applicability
 msgid "Default Applicability"
-msgstr ""
+msgstr "قابلية التطبيق الافتراضية "
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_deltapc
@@ -610,7 +610,7 @@ msgstr "Nebula"
 #: code:addons/analytic/static/src/components/analytic_distribution/analytic_distribution.js:0
 #, python-format
 msgid "No Analytic Accounts for this plan"
-msgstr ""
+msgstr "لا توجد حسابات تحليلية لهذه الخطة "
 
 #. module: analytic
 #: model_terms:ir.actions.act_window,help:analytic.account_analytic_line_action_entries
@@ -706,7 +706,7 @@ msgstr "الشريك"
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_distribution_model__partner_category_id
 msgid "Partner Category"
-msgstr ""
+msgstr "فئة الشريك "
 
 #. module: analytic
 #: model:ir.model.fields,field_description:analytic.field_account_analytic_account__plan_id
@@ -771,6 +771,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this company, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"اختر شركة سيتم استخدام التوزيع التحليلي من أجلها (مثال: إنشاء فاتورة عميل "
+"جديدة أو أمر بيع إذا قمنا بتحديد هذه الشركة، سيقوم تلقائياً بأخذه كحساب "
+"تحليلي) "
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_category_id
@@ -779,6 +782,9 @@ msgid ""
 "(e.g. create new customer invoice or Sales order if we select this partner, "
 "it will automatically take this as an analytic account)"
 msgstr ""
+"اختر فئة شريك سيتم استخدام التوزيع التحليلي من أجلها (مثال: إنشاء فاتورة "
+"عميل جديدة أو أمر بيع إذا قمنا بتحديد هذا الشريك، سيقوم تلقائياً بأخذه كحساب"
+" تحليلي) "
 
 #. module: analytic
 #: model:ir.model.fields,help:analytic.field_account_analytic_distribution_model__partner_id
@@ -787,6 +793,9 @@ msgid ""
 "create new customer invoice or Sales order if we select this partner, it "
 "will automatically take this as an analytic account)"
 msgstr ""
+"اختر شريكاً سيتم استخدام التوزيع التحليلي من أجله (مثال: إنشاء فاتورة عميل "
+"جديدة أو أمر بيع إذا قمنا بتحديد هذا الشريك، سيقوم تلقائياً بأخذه كحساب "
+"تحليلي) "
 
 #. module: analytic
 #: model:account.analytic.account,name:analytic.analytic_spark
@@ -796,7 +805,7 @@ msgstr "أنظمة سبارك"
 #. module: analytic
 #: model_terms:ir.ui.view,arch_db:analytic.account_analytic_plan_form_view
 msgid "Subplans"
-msgstr ""
+msgstr "الخطط الفرعية "
 
 #. module: analytic
 #. odoo-python
@@ -853,6 +862,8 @@ msgid ""
 "You can't set a different company on your analytic account since there are "
 "some analytic items linked to it."
 msgstr ""
+"لا يمكنك تعيين شركة أخرى على حسابك التحليلي نظراً لارتباط بعض العناصر "
+"التحليلية به. "
 
 #. module: analytic
 #. odoo-python
