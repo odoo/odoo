@@ -549,7 +549,7 @@ msgstr "Spalten"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_product__combination_indices
 msgid "Combination Indices"
-msgstr ""
+msgstr "Kombinationshinweise"
 
 #. module: product
 #: model:ir.model,name:product.model_res_company
@@ -2677,7 +2677,7 @@ msgstr "Werteanzahl"
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_template_attribute_value__price_extra
 msgid "Value Price Extra"
-msgstr ""
+msgstr "Preisaufschlag für Wert"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_attribute__value_ids
@@ -2977,10 +2977,9 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
-"Sie können den Wert %s nicht löschen, da er für die folgenden Produkte verwendet wird:\n"
-"%s"
 
 #. module: product
 #: code:addons/product/models/product.py:0
@@ -3004,6 +3003,12 @@ msgstr ""
 "(%s)\n"
 ", sie werden hier verwendet:\n"
 "%s"
+
+#. module: product
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
+msgstr ""
 
 #. module: product
 #: code:addons/product/models/product_pricelist.py:0

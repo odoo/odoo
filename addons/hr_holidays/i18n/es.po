@@ -153,7 +153,7 @@ msgstr "%s de ausencias: %.2f hora(s)"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s: Time Off"
-msgstr "%s: Tiempo personal"
+msgstr "%s: Ausencia"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -642,7 +642,7 @@ msgstr "<span class=\"o_stat_text\">Asignaciones</span>"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Time Off</span>"
-msgstr "<span class=\"o_stat_text\">Tiempo personal</span>"
+msgstr "<span class=\"o_stat_text\">Ausencia</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -693,8 +693,8 @@ msgid ""
 "A great way to keep track on employee’s PTOs, sick days, and approval "
 "status."
 msgstr ""
-"Una excelente manera de realizar un seguimiento del tiempo personal pagado "
-"de los empleados, los permisos por enfermedad y el estado de aprobación."
+"Una excelente manera de realizar un seguimiento de las ausencias pagadas de "
+"los empleados, los permisos por enfermedad y su estado de aprobación."
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_my
@@ -1314,7 +1314,7 @@ msgstr "Por aprobador de empleado"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__leave_validation_type__both
 msgid "By Employee's Approver and Time Off Officer"
-msgstr "Por aprobador de empleado y encargado de tiempo personal"
+msgstr "Por aprobador del empleado y por el encargado de ausencias"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__holiday_type
@@ -1373,7 +1373,7 @@ msgstr "Cancelar vacaciones"
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_departure_wizard__cancel_leaves
 msgid "Cancel all time off after this date."
-msgstr "Cancelar todo el tiempo personal después de esta fecha."
+msgstr "Cancelar todas las ausencias después de esta fecha."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -1408,8 +1408,8 @@ msgid ""
 "Choose the Time Off Officer who will be notified to approve allocation or "
 "Time Off request"
 msgstr ""
-"Elija al encargado de tiempo persona que recibirá notificación para aprobar "
-"asignaciones o solicitudes de tiempo personal"
+"Elija al encargado de ausencias que recibirá notificación para aprobar "
+"asignaciones o solicitudes de ausencias"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
@@ -1492,13 +1492,13 @@ msgid ""
 "Count of allocations for this time off type (approved or waiting for "
 "approbation) with a validity period starting this year."
 msgstr ""
-"Número de asignaciones para este tipo de tiempo personal (aprobado o en "
-"espera de aprobación) con un periodo de validez que empieza este año."
+"Número de asignaciones para este tipo de ausencia (aprobado o en espera de "
+"aprobación) con un periodo de validez que empieza este año."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "Count of plans linked to this time off type."
-msgstr "Número de planes vinculados a este tipo de tiempo personal."
+msgstr "Número de planes vinculados a este tipo de ausencia."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
@@ -1506,9 +1506,8 @@ msgid ""
 "Count of time off requests for this time off type (approved or waiting for "
 "approbation) with a start date in the current year."
 msgstr ""
-"Número de solicitudes de tiempo personal para este tipo de tiempo personal "
-"(aprobado o en espera de aprobación) con una fecha de inicio en el año "
-"actual."
+"Número de solicitudes de ausencia para este tipo de ausencia (aprobado o en "
+"espera de aprobación) con una fecha de inicio en el año actual."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__icon_id
@@ -2911,7 +2910,7 @@ msgid ""
 "employee did not take time off."
 msgstr ""
 "Solo acumule según el tiempo trabajado por el empleado. Este es el tiempo "
-"cuando el empleado no tomó tiempo personal."
+"cuando el empleado no tomó ausencias."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__time_type__other
@@ -2986,8 +2985,7 @@ msgstr "Imprimir"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_holidays_cancel_leave_form
 msgid "Provide a reason for cancellation of an approved time off"
-msgstr ""
-"Proporcione una razón para la cancelación de un tiempo personal aprobado"
+msgstr "Proporcione una razón para la cancelación de una ausencia aprobada"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.open_view_public_holiday
@@ -2998,7 +2996,7 @@ msgstr "Días festivos públicos"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.resource_calendar_form_inherit
 msgid "Public Time Off"
-msgstr "Tiempo personal público"
+msgstr "Ausencia pública"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__added_value
@@ -3128,7 +3126,7 @@ msgstr "Necesita asignación"
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.resource_calendar_global_leaves_action_from_calendar
 msgid "Resource Time Off"
-msgstr "Recurso de tiempo personal"
+msgstr "Ausencia de recurso"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_resource_calendar_leaves
@@ -3138,7 +3136,7 @@ msgstr "Detalle de las ausencias del recurso"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__responsible_id
 msgid "Responsible Time Off Officer"
-msgstr "Encargado de tiempo personal responsable"
+msgstr "Encargado de ausencias"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_user_id
@@ -3277,8 +3275,8 @@ msgid ""
 "Specify if this accrual plan can only be used with this Time Off Type.\n"
 "                Leave empty if this accrual plan can be used with any Time Off Type."
 msgstr ""
-"Especifique si este plan de acumulación solo se puede utilizar con este tipo de tiempo personal.\n"
-"                Deje vacío si este plan de acumulación solo se puede usar con este tipo de tiempo personal."
+"Especifique si este plan de acumulación solo se puede utilizar con este tipo de ausencia.\n"
+"                Deje vacío si este plan de acumulación solo se puede usar con cualquier tipo."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__date_from
@@ -3417,8 +3415,8 @@ msgstr ""
 msgid ""
 "The color selected here will be used in every screen with the time off type."
 msgstr ""
-"El color seleccionado aquí se utilizará en cada pantalla con el tipo tiempo "
-"personal."
+"El color seleccionado aquí se utilizará en cada pantalla con el tipo de "
+"ausencia."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_check_dates
@@ -3457,7 +3455,7 @@ msgid ""
 "The number of hours/days that will be incremented in the specified Time Off "
 "Type for every period"
 msgstr ""
-"El número de horas/días que se incrementarán en el tipo de tiempo personal "
+"El número de horas/días que se incrementarán en el tipo de ausencia "
 "especificado para cada periodo"
 
 #. module: hr_holidays
@@ -3523,7 +3521,7 @@ msgstr "La ausencia se ha autorizado automáticamente"
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "The time off has been canceled: %s"
-msgstr "Se canceló el tiempo personal: %s"
+msgstr "Se canceló la ausencia: %s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__sequence
@@ -3600,7 +3598,7 @@ msgstr "No se permite esta modificación en el estado actual."
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "This time off cannot be canceled."
-msgstr "Este tiempo personal no se puede cancelar."
+msgstr "Esta ausencia no se puede cancelar."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3684,7 +3682,7 @@ msgstr "Calendario de ausencias"
 #: code:addons/hr_holidays/models/hr_employee.py:0
 #, python-format
 msgid "Time Off Dashboard"
-msgstr "Tablero de Tiempo personal"
+msgstr "Tablero de ausencias"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__private_name
@@ -3736,7 +3734,7 @@ msgstr "Solicitudes de ausencia"
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_responsible
 msgid "Time Off Responsible"
-msgstr "Responsable de tiempo personal"
+msgstr "Responsable de ausencias"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_second_approval
@@ -3798,7 +3796,7 @@ msgstr "Ausencias por aprobar"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
 msgid "Time Off."
-msgstr "Tiempo libre."
+msgstr "Ausencias."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__leaves_taken
@@ -3813,12 +3811,12 @@ msgstr "Análisis de ausencias"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.action_hr_holidays_by_employee_and_type_report
 msgid "Time off Analysis by Employee and Time Off Type"
-msgstr "Análisis de tiempo personal por empleado y tipo de tiempo personal"
+msgstr "Análisis de ausencias por empleado y tipo"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Time off Taken/Total Allocated"
-msgstr "Tiempo libre tomado / total asignado"
+msgstr "Ausencias tomadas / total asignado"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3902,7 +3900,7 @@ msgstr "Asignaciones por aprobar o aprobadas"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 msgid "To Approve or Need Second Approval or Approved Time Off"
-msgstr "Tiempo personal por aprobar o necesita segunda aprobación o aprobado"
+msgstr "Ausencias por aprobar o que necesitan segunda aprobación o aprobadas"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_to
@@ -4011,7 +4009,7 @@ msgstr "No pagado"
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_unpaid
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_unpaid
 msgid "Unpaid Time Off"
-msgstr "Tiempo libre no pagado"
+msgstr "Ausencias no remuneradas"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_unread
@@ -4190,8 +4188,8 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
-"No puede establecer dos tiempos personales que se traslapen el mismo día para el mismo empleado.\n"
-"Tiempo personal existente:\n"
+"No puede establecer dos ausencias que se solapen el mismo día para el mismo empleado.\n"
+"Ausencia existente:\n"
 "%s"
 
 #. module: hr_holidays
@@ -4202,8 +4200,8 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
-"No puede establecer dos tiempos personales que se traslapen el mismo día para el mismo empleado.\n"
-"Tiempo personal existente:\n"
+"No puede establecer dos ausencias que se solapen el mismo día para el mismo empleado.\n"
+"Ausencia existente:\n"
 "%s"
 
 #. module: hr_holidays
@@ -4214,8 +4212,8 @@ msgid ""
 "Existing time off:\n"
 "%s"
 msgstr ""
-"No puede establecer dos tiempos personales que se traslapen el mismo día.\n"
-"Tiempo personal existente:\n"
+"No puede establecer dos ausencias que se solapen el mismo día.\n"
+"Ausencia existente:\n"
 "%s"
 
 #. module: hr_holidays
@@ -4233,7 +4231,7 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off assigned to several employees"
-msgstr "No puede eliminar un tiempo personal asignado a varios empleados"
+msgstr "No puede eliminar una ausencia asignada a varios empleados"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
@@ -4245,7 +4243,7 @@ msgstr "No puede eliminar una ausencia que está en estado %s "
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "You cannot delete a time off which is in the past"
-msgstr "No puede eliminar un tiempo personal en el pasado"
+msgstr "No puede eliminar una ausencia pasada"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -4322,7 +4320,7 @@ msgid ""
 "You must either be a Time off Officer or Time off Manager to approve this "
 "leave"
 msgstr ""
-"Debe ser un encargado o gerente de tiempo personal para aprobar este permiso"
+"Debe ser un encargado o responsable de ausencias para aprobar este permiso"
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_accrual_level_added_value_greater_than_zero
@@ -4357,7 +4355,7 @@ msgstr ""
 #: code:addons/hr_holidays/wizard/hr_holidays_cancel_leave.py:0
 #, python-format
 msgid "Your time off has been canceled."
-msgstr "Se canceló su tiempo personal."
+msgstr "Se canceló su ausencia."
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_level_view_form
@@ -4431,8 +4429,8 @@ msgstr "días del mes"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form_manager
 msgid "e.g. Time Off type (From validity start to validity end / no limit)"
 msgstr ""
-"ej. Tipo de tiempo personal (desde el inicio de la validez hasta el final de"
-" la validez / sin límite)"
+"ej. Tipo de ausencia (desde el inicio de la validez hasta el final de la "
+"validez / sin límite)"
 
 #. module: hr_holidays
 #. openerp-web
