@@ -28,6 +28,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                        Connect your Outlook account"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                        Yhdistä Outlook-tilisi"
 
 #. module: fetchmail_outlook
 #: model_terms:ir.ui.view,arch_db:fetchmail_outlook.fetchmail_server_view_form
@@ -47,7 +49,7 @@ msgstr ""
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
 msgid "Authentication URI"
-msgstr ""
+msgstr "Todennus URI"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__display_name
@@ -67,7 +69,7 @@ msgstr "Saapuvan sähköpostin palvelin"
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__is_microsoft_outlook_configured
 msgid "Is Outlook Credential Configured"
-msgstr ""
+msgstr "Onko Outlookin tunnukset määritetty"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server____last_update
@@ -82,12 +84,12 @@ msgstr "Outlook"
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token
 msgid "Outlook Access Token"
-msgstr ""
+msgstr "Outlook pääsytunniste"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_access_token_expiration
 msgid "Outlook Access Token Expiration Timestamp"
-msgstr ""
+msgstr "Outlook pääsytunnisteen viimeinen voimassaoloaika"
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__use_microsoft_outlook_service
@@ -97,7 +99,7 @@ msgstr ""
 #. module: fetchmail_outlook
 #: model:ir.model.fields,field_description:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_refresh_token
 msgid "Outlook Refresh Token"
-msgstr ""
+msgstr "Outlook virkistä pääsytunniste"
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
@@ -112,6 +114,8 @@ msgid ""
 "Please leave the password field empty for Outlook mail server %r. The OAuth "
 "process does not require it"
 msgstr ""
+"Jätä salasanakenttä tyhjäksi Outlookin sähköpostipalvelimelle %r. OAuth-"
+"prosessi ei vaadi sitä"
 
 #. module: fetchmail_outlook
 #: code:addons/fetchmail_outlook/models/fetchmail_server.py:0
@@ -125,8 +129,10 @@ msgid ""
 "Setup your Outlook API credentials in the general settings to link a Outlook"
 " account."
 msgstr ""
+"Määritä Outlookin API-tunnukset yleisissä asetuksissa Outlook-tilin "
+"yhdistämiseksi."
 
 #. module: fetchmail_outlook
 #: model:ir.model.fields,help:fetchmail_outlook.field_fetchmail_server__microsoft_outlook_uri
 msgid "The URL to generate the authorization code from Outlook"
-msgstr ""
+msgstr "URL-osoite, jonka avulla valtuutuskoodi luodaan Outlookista"

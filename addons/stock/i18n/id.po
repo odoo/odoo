@@ -22,8 +22,8 @@
 # whenwesober, 2021
 # Abdul Munif Hanafi <amunifhanafi@gmail.com>, 2021
 # Gradien Foundation <gradien.co@gmail.com>, 2022
-# Abe Manyo, 2023
 # Mathieu Walravens, 2023
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2021-08-16 09:00+0000\n"
 "PO-Revision-Date: 2020-09-07 08:19+0000\n"
-"Last-Translator: Mathieu Walravens, 2023\n"
+"Last-Translator: Abe Manyo, 2023\n"
 "Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -186,6 +186,13 @@ msgid ""
 "* Production: Virtual counterpart location for production operations: this location consumes the components and produces finished products\n"
 "* Transit Location: Counterpart location that should be used in inter-company or inter-warehouses operations"
 msgstr ""
+"* Lokasi Vendor: Lokasi virtual yang menandakan lokasi sumber untuk produk yang datang dari vendor Anda\n"
+"* Tampilan: Lokasi virtual yang dibuat untuk membuat struktur hierarki untuk gudang Anda, menjumlahkan lokasi gudang lain dibawahnya ; tidak dapat secara langsung mengandung produk ;\n"
+"* Lokasi Internal: Lokasi fisik di dalam gudang Anda,\n"
+"* Lokasi Pelanggan: Lokasi virtual yang menandakan lokasi untuk produk yang dikirim ke pelanggan Anda\n"
+"* Inventory Loss: Lokasi virtual yang berfungsi sebagai tolak belakang untuk operasional inventaris yang digunakan untuk membetulkan persediaan stok (Inventaris fisik)\n"
+"* Produk: Lokasi virtual pembanding untuk operasional produksi: lokasi ini menggunakan komponent dan membuat produk jadi\n"
+"* Lokasi Transit: Lokasi pembanding yang sebaiknya digunakan di operasi antara perusahaan atau antara gudang"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_stock_rule
@@ -226,6 +233,8 @@ msgid ""
 "<br/>\n"
 "                    <strong>Current Inventory: </strong>"
 msgstr ""
+"<br/>\n"
+"                    <strong>Inventaris Saat Ini: </strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -541,7 +550,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_scrap_form_view
 msgid "? This may lead to inconsistencies in your inventory."
-msgstr ""
+msgstr "? Ini dapat berujung pada ketidaksamaan dalam inventaris Anda."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -2138,6 +2147,8 @@ msgid ""
 "Editing quantities in an Inventory Adjustment location is forbidden,those "
 "locations are used as counterpart when correcting the quantities."
 msgstr ""
+"Mengedit kuantitas dalam lokasi Inventory Adjustment dilarang,lokasi "
+"tersebut digunakan sebagai counterpart saat membetulkan kuantitas."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
@@ -2185,6 +2196,11 @@ msgid ""
 " inventory adjustments, batch picking, moving lots or pallets, low inventory"
 " checks, etc. Go to the \"Apps\" menu to activate the barcode interface."
 msgstr ""
+"Nikmati pengalaman serba cepat dengan aplikasi barcode Odoo. Aplikasi "
+"tersebut sangat cepat dan bekerja bahkan tanpa koneksi internet yang stabil."
+" Aplikasi mendukung semua flow: inventory adjustment, batch picking, "
+"memindahkan lot atau palet, pemeriksaan stok persediaan rendah, dsb. Pergi "
+"ke menu \"Apps\" untuk mengaktifkan antarmuka barcode."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__tracking
@@ -2439,7 +2455,7 @@ msgstr ""
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Forecast Inventory"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -3120,12 +3136,12 @@ msgstr "Stok Persediaan Hilang"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_product_product_replenishment
 msgid "Inventory On Hand"
-msgstr ""
+msgstr "Persediaan yang Tersedia"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
 msgid "Inventory Overview"
-msgstr ""
+msgstr "Gambaran Umum Inventaris"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__name
@@ -4107,7 +4123,7 @@ msgstr "Di tangan:"
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Only a stock manager can validate an inventory adjustment."
-msgstr ""
+msgstr "Hanya stock manager yang dapat memvalidasi inventory adjustment."
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -6779,6 +6795,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Menu ini memungkinkan Anda untuk menelusuri penuh operasi inventaris untuk produk tertentu.\n"
+"                    Anda dapat memfilter produk untuk melihat semua pergerakan di masa lalu untuk produk tersebut."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6821,6 +6839,10 @@ msgid ""
 "better solution could be to archive the product and create a new one "
 "instead."
 msgstr ""
+"Produk ini telah digunakan untuk setidaknya satu pergerakan inventaris. "
+"Tidak disarankan untuk mengganti Tipe Produk karena dapat berujung pada "
+"ketidaksamaan data. Solusi yang lebih baik adalah untuk mengarsip produk dan"
+" membuat produk baru. "
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -6876,7 +6898,7 @@ msgstr ""
 #: model:digest.tip,name:stock.digest_tip_stock_0
 #: model_terms:digest.tip,tip_description:stock.digest_tip_stock_0
 msgid "Tip: Speed up inventory operations with barcodes"
-msgstr ""
+msgstr "Tip: Percepat operasi inventaris dengan barcode"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_dest_id
@@ -6988,7 +7010,7 @@ msgstr ""
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Tracked Products in Inventory Adjustment"
-msgstr ""
+msgstr "Produk Terlacak dalam Inventory Adjustment"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_track_line__tracking__lot
