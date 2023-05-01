@@ -944,7 +944,7 @@
                             </t>
                             <p t-field="product.description_sale" class="text-muted my-2" placeholder="A short description that will also appear on documents." />
                             <form t-if="product._is_add_to_cart_possible()" action="/shop/cart/update" method="POST">
-                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                 <div class="js_product js_main_product mb-3">
                                     <div>
                                         <t t-call="website_sale.product_price"/>
@@ -1161,12 +1161,14 @@
                 />
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="product.compare_list_price">
+                    <bdi dir="inherit">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
                         t-options='{
                            "widget": "monetary",
                            "display_currency": product.currency_id,
                        }'/>
+                    </bdi>
                 </del>
             </h3>
             <h3 class="css_non_editable_mode_hidden decimal_precision" t-att-data-precision="str(website.currency_id.decimal_places)">
@@ -1177,12 +1179,14 @@
                 }'/>
                 <t t-if="is_view_active('website_sale.tax_indication')" t-call="website_sale.tax_indication"/>
                 <del t-if="product.compare_list_price">
+                    <bdi dir="inherit">
                     <span t-field="product.compare_list_price"
                         groups="website_sale.group_product_price_comparison"
                         t-options='{
                             "widget": "monetary",
                             "display_currency": product.currency_id,
                         }'/>
+                    </bdi>
                 </del>
             </h3>
         </div>
@@ -1633,7 +1637,7 @@
     <template id='coupon_form' name='Coupon form'>
         <form t-att-action="'/shop/pricelist%s' % (redirect and '?r=' + redirect or '')"
             method="post" name="coupon_code">
-            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
             <div class="input-group w-100">
                 <input name="promo" class="form-control" type="text" placeholder="code..." t-att-value="website_sale_order.pricelist_id.code or None"/>
                 <a href="#" role="button" class="btn btn-secondary a-submit">Apply</a>
@@ -1687,7 +1691,7 @@
                                         <div class="row mt8">
                                             <div class="col-md-12 col-lg-12 one_kanban">
                                                 <form action="/shop/address" method="post" class=''>
-                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                                     <a role="button" href="#" class='a-submit btn btn-secondary mb-2 btn-block'>
                                                         <i class="fa fa-plus-square"/>
                                                         <span>Add an address</span>
@@ -1728,7 +1732,7 @@
 
     <template id="address_kanban" name="Kanban address">
             <form action="/shop/checkout" method="POST" class="d-none">
-                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                 <input type="hidden" name="partner_id" t-att-value="contact.id" />
                 <t t-if='edit_billing'>
                     <input type="hidden" name="callback" value="/shop/checkout?use_billing" />
@@ -1898,7 +1902,7 @@
                                         </t>
                                     </div>
 
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <input type="hidden" name="submitted" value="1" />
                                     <input type="hidden" name="partner_id" t-att-value="partner_id or '0'" />
                                     <input type="hidden" name="callback" t-att-value="callback" />
@@ -1999,7 +2003,7 @@
                             </div>
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
                                 <form target="_self" action="/shop/payment/validate" method="post">
-                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" />
+                                    <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>
                                     <t t-call="website_sale.payment_footer">
                                         <t t-set="submit_button_label">Confirm Order</t>
                                     </t>
@@ -2172,7 +2176,7 @@
                                     <tbody>
                                         <tr>
                                             <td colspan="2">
-                                                <t t-esc="payment_tx_id.provider_id.sudo().name" />
+                                                <t t-esc="payment_tx_id.provider_id.display_as or payment_tx_id.provider_id.name" />
                                             </td>
                                             <td class="text-end" width="100">
                                                 <strong>Total:</strong>

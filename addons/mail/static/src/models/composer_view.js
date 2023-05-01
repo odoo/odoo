@@ -599,7 +599,7 @@ registerModel({
                     threadView.update({ hasAutoScrollOnMessageReceived: true });
                     threadView.addComponentHint('message-posted', { message });
                 }
-                if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted) {
+                if (chatter && chatter.exists() && chatter.hasParentReloadOnMessagePosted && messageData.recipients.length) {
                     chatter.reloadParentView();
                 }
                 if (chatterThread) {

@@ -263,7 +263,7 @@
                                     <label for="legend_normal" string=" " class="o_status mt4"
                                         title="Task in progress. Click to block or set as done."
                                         aria-label="Task in progress. Click to block or set as done." role="img"/>
-                                    <div class="col-11 ps-0">
+                                    <div class="col-11 ps-2">
                                         <field name="legend_normal"/>
                                     </div>
                                 </div>
@@ -271,7 +271,7 @@
                                     <label for="legend_blocked" string=" " class="o_status o_status_red mt4"
                                         title="Task is blocked. Click to unblock or set as done."
                                         aria-label="Task is blocked. Click to unblock or set as done." role="img"/>
-                                    <div class="col-11 ps-0">
+                                    <div class="col-11 ps-2">
                                         <field name="legend_blocked"/>
                                     </div>
                                 </div>
@@ -279,7 +279,7 @@
                                     <label for="legend_done" string=" " class="o_status o_status_green mt4"
                                         title="This step is done. Click to block or set in progress."
                                         aria-label="This step is done. Click to block or set in progress." role="img"/>
-                                    <div class="col-11 ps-0">
+                                    <div class="col-11 ps-2">
                                         <field name="legend_done"/>
                                     </div>
                                 </div>
@@ -1274,9 +1274,9 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="recurrence" string="Recurrent"  groups="project.group_project_recurring_tasks">
+                        <page name="recurrence" string="Recurrent" groups="project.group_project_recurring_tasks">
                             <label for="recurring_task" />
-                            <field name="recurring_task" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
+                            <field name="recurring_task" class="ms-5" attrs="{'invisible': ['|', ('allow_recurring_tasks', '=', False), ('active', '=', False)]}"/>
                             <group attrs="{'invisible': [('recurring_task', '=', False)]}">
                                 <group>
                                     <label for="repeat_interval" />

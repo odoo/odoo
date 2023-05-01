@@ -613,11 +613,15 @@ class IrQWeb(models.AbstractModel):
         # generate the template functions and the root function name
         def generate_functions():
             code, options, def_name = self._generate_code(template)
+            profile_options = {
+                'ref': options.get('ref') and int(options['ref']) or None,
+                'ref_xml': options.get('ref_xml') and str(options['ref_xml']) or None,
+            } if self.env.context.get('profile') else None
             code = '\n'.join([
                 "def generate_functions():",
                 "    template_functions = {}",
                 indent_code(code, 1),
-                f"    template_functions['options'] = {options if self.env.context.get('profile') else None!r}",
+                f"    template_functions['options'] = {profile_options!r}",
                 "    return template_functions",
             ])
 

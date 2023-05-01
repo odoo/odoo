@@ -1733,7 +1733,8 @@ class _String(Field):
         record.flush_recordset([self.name])
         cr = record.env.cr
         cr.execute(f'SELECT "{self.name}" FROM "{record._table}" WHERE id = %s', (record.id,))
-        return cr.fetchone()[0]
+        res = cr.fetchone()
+        return res[0] if res else None
 
     def write(self, records, value):
         if not self.translate or value is False or value is None:
@@ -3343,7 +3344,7 @@ class Properties(Field):
         convert_to_record / convert_to_read.
         """
         definition_records_map = {
-            record: record[self.definition_record][self.definition_record_field]
+            record: record[self.definition_record].sudo()[self.definition_record_field]
             for record in records
         }
 

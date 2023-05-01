@@ -5,8 +5,12 @@ import { Many2OneField } from "@web/views/fields/many2one/many2one_field";
 
 class LineOpenMoveWidget extends Many2OneField {
     async openAction() {
-        const action = await this.orm.call("account.move.line", "action_open_business_doc", [this.props.value[0]], {});
-        await this.action.doAction(action);
+        this.action.doActionButton({
+            type: "object",
+            resId: this.props.value[0],
+            name: "action_open_business_doc",
+            resModel: "account.move.line",
+        });
     }
 }
 

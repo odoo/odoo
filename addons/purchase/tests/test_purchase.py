@@ -372,3 +372,49 @@ class TestPurchase(AccountTestInvoicingCommon):
         po.button_confirm()
 
         self.assertEqual(po.order_line.product_id.seller_ids.mapped('partner_id'), delivery_address)
+
+    def test_supplier_list_in_product_with_multicompany(self):
+        """
+        Check that a different supplier list can be added to a product for each company.
+        """
+        company_a = self.company_data['company']
+        company_b = self.company_data_2['company']
+        product = self.env['product.product'].create({
+            'name': 'product_test',
+        })
+        # create a purchase order in the company A
+        self.env['purchase.order'].with_company(company_a).create({
+            'partner_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'price_unit': 1,
+            })],
+        }).button_confirm()
+
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+        # switch to the company B
+        self.env['purchase.order'].with_company(company_b).create({
+            'partner_id': self.partner_b.id,
+            'order_line': [(0, 0, {
+                'product_id': product.id,
+                'product_qty': 1,
+                'product_uom': self.env.ref('uom.product_uom_unit').id,
+                'price_unit': 2,
+            })],
+        }).button_confirm()
+        product = product.with_company(company_b)
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_b)
+        self.assertEqual(product.seller_ids[0].company_id, company_b)
+
+        # Switch to the company A and check that the vendor list is still the same
+        product = product.with_company(company_a)
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids[0].company_id, company_a)
+
+        product._invalidate_cache()
+        self.assertEqual(product.seller_ids[0].partner_id, self.partner_a)
+        self.assertEqual(product.seller_ids[0].company_id, company_a)
