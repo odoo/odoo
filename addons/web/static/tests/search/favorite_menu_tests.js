@@ -3,7 +3,6 @@
 import { click, getFixture, patchDate } from "@web/../tests/helpers/utils";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
 import { SearchBar } from "@web/search/search_bar/search_bar";
 import {
@@ -16,6 +15,7 @@ import {
     toggleComparisonMenu,
     toggleFavoriteMenu,
     toggleMenuItem,
+    DropDownMenusTestComponent,
 } from "@web/../tests/search/helpers";
 
 import { Component, onWillUpdateProps, xml } from "@odoo/owl";
@@ -28,6 +28,7 @@ function getDomain(comp) {
 
 let serverData;
 let target;
+
 QUnit.module("Search", (hooks) => {
     hooks.beforeEach(async () => {
         target = getFixture();
@@ -64,7 +65,7 @@ QUnit.module("Search", (hooks) => {
             await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchMenuTypes: ["favorite"],
                 searchViewId: false,
                 config: {
@@ -97,7 +98,7 @@ QUnit.module("Search", (hooks) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
-            Component: ControlPanel,
+            Component: DropDownMenusTestComponent,
             searchMenuTypes: ["favorite"],
             searchViewId: false,
             config: {
@@ -208,7 +209,7 @@ QUnit.module("Search", (hooks) => {
             const controlPanel = await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchMenuTypes: ["favorite"],
                 searchViewId: false,
                 irFilters: [
@@ -241,7 +242,7 @@ QUnit.module("Search", (hooks) => {
             const controlPanel = await makeWithSearch({
                 serverData,
                 resModel: "foo",
-                Component: ControlPanel,
+                Component: DropDownMenusTestComponent,
                 searchMenuTypes: ["filter", "groupBy", "comparison", "favorite"],
                 searchViewId: false,
                 irFilters: [
