@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import uuid
+from ast import literal_eval
 from werkzeug.urls import url_encode
 from odoo import api, exceptions, fields, models, _
 
@@ -109,7 +110,8 @@ class PortalMixin(models.AbstractModel):
     def action_share(self):
         action = self.env["ir.actions.actions"]._for_xml_id("portal.portal_share_action")
         action['context'] = {'active_id': self.env.context['active_id'],
-                             'active_model': self.env.context['active_model']}
+                             'active_model': self.env.context['active_model'],
+                             **literal_eval(action['context'])}
         return action
 
     def get_portal_url(self, suffix=None, report_type=None, download=None, query_string=None, anchor=None):
