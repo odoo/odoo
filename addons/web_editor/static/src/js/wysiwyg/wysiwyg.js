@@ -1750,16 +1750,16 @@ const Wysiwyg = Widget.extend({
                     colorpicker.on('color_leave', null, ev => {
                         this.odooEditor.historyRevertCurrentStep();
                     });
+                    const $childElement = $dropdown.children('.dropdown-toggle');
+                    const dropdownToggle = new Dropdown($childElement);
                     colorpicker.on('enter_key_color_colorpicker', null, () => {
-                        $dropdown.children('.dropdown-toggle').dropdown('hide');
+                        dropdownToggle.hide();
                     });
                     return colorpicker.replace(hookEl).then(() => {
                         if (oldColorpicker) {
                             oldColorpicker.destroy();
                         }
                         manualOpening = true;
-                        const $childElement = $dropdown.children('.dropdown-toggle');
-                        const dropdownToggle = new Dropdown($childElement);
                         dropdownToggle.show();
                         const $colorpicker = $dropdown.find('.colorpicker');
                         const colorpickerHeight = $colorpicker.outerHeight();
