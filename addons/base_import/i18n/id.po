@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Abe Manyo, 2022
+# Abe Manyo, 2023
 # 
 msgid ""
 msgstr ""
@@ -12,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:01+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Abe Manyo, 2022\n"
-"Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
+"Last-Translator: Abe Manyo, 2023\n"
+"Language-Team: Indonesian (https://app.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -70,6 +70,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Masalah yang tidak diketahui terjadi selama impor (mungkin kehilangan "
+"koneksi, melewati batasan data atau memori). Mohon coba lagi karena ada "
+"kemungkinan masalah hanya sementara. Bila masalah masih terjadi, coba "
+"pisahkan file daripada mengimpor file semuanya sekaligus."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -336,7 +340,7 @@ msgstr "Nama Kolom"
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file
 msgid "File"
-msgstr "Berkas"
+msgstr "File"
 
 #. module: base_import
 #. openerp-web
@@ -351,12 +355,12 @@ msgstr ""
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_name
 msgid "File Name"
-msgstr "Nama Berkas"
+msgstr "Nama File"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__file_type
 msgid "File Type"
-msgstr "Jenis Berkas"
+msgstr "Tipe File"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -418,7 +422,7 @@ msgstr "Bantuan"
 #: code:addons/base_import/static/src/legacy/xml/base_import.xml:0
 #, python-format
 msgid "Here is the start of the file we could not import:"
-msgstr "Inilah awal dari bagian berkas yang tidak bisa diimpor:"
+msgstr "Inilah awal dari bagian file yang tidak bisa diimpor:"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__id
@@ -451,6 +455,10 @@ msgid ""
 "                    field corresponding to the column. This makes imports\n"
 "                    simpler especially when the file has many columns."
 msgstr ""
+"Bila file berisi\n"
+"                    nama-nama kolom, Odoo dapat mencoba mendeteksi otomatis\n"
+"                    field yang sesuai dengan kolom. Hal ini membuat impor lebih\n"
+"                    sederhana terutama ketika file memiliki banyak kolom."
 
 #. module: base_import
 #. openerp-web
@@ -460,6 +468,9 @@ msgid ""
 "If the model uses openchatter, history tracking will set up subscriptions "
 "and send notifications during the import, but lead to a slower import."
 msgstr ""
+"Bila model menggunakan openchatter, sejarah pelacakan akan membuat langganan"
+" dan mengirimkan notifikasi selama impor, tapi ini akan berujung pada impor "
+"yang lebih lambat."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -487,7 +498,7 @@ msgstr ""
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Import a File"
-msgstr "Impor Berkas"
+msgstr "Impor File"
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -614,7 +625,7 @@ msgstr "Terakhir diperbarui pada"
 #: code:addons/base_import/static/src/legacy/js/import_action.js:0
 #, python-format
 msgid "Load File"
-msgstr "Memuat Berkas"
+msgstr "Memuat File"
 
 #. module: base_import
 #. openerp-web
@@ -1020,9 +1031,7 @@ msgstr "Jenis"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Unable to load \"{extension}\" file: requires Python module \"{modname}\""
-msgstr ""
-"Tidak dapat memuat berkas \"{extension}\": requires Python module "
-"\"{modname}\""
+msgstr "Tidak dapat memuat file \"{extension}\": requires Python module \"{modname}\""
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0
@@ -1030,8 +1039,8 @@ msgstr ""
 msgid ""
 "Unsupported file format \"{}\", import only supports CSV, ODS, XLS and XLSX"
 msgstr ""
-"Format berkas tidak didukung \"{}\", impor hanya mendukung CSV, ODS, XLS dan"
-" XLSX"
+"Format file tidak didukung \"{}\", impor hanya mendukung CSV, ODS, XLS dan "
+"XLSX"
 
 #. module: base_import
 #. openerp-web

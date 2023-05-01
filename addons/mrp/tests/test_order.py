@@ -3161,6 +3161,20 @@ class TestMrpOrder(TestMrpCommon):
 
         self.assertEqual(mo.move_raw_ids.quantity_done, 1.25)
 
+    def test_clear_finished_move(self):
+        """ Test that the finished moves created by the compute are correctly
+        erased after changing the finished product"""
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = self.product_1
+        mo = mo_form.save()
+        self.assertEqual(len(mo.move_finished_ids), 1)
+        mo.product_id = self.product_2
+        self.assertEqual(len(mo.move_finished_ids), 1)
+        self.assertFalse(self.env['stock.move'].search([
+            ('product_id', '=', self.product_1.id),
+            ('state', '=', 'draft'),
+        ]))
+
     def test_compute_picking_type_id(self):
         """
         Test that the operation type set on the bom is set in the manufacturing order

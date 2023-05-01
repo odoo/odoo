@@ -623,6 +623,19 @@ class IrModelFields(models.Model):
             self.relation = field.relation
             self.readonly = True
 
+    @api.onchange('relation')
+    def _onchange_relation(self):
+        try:
+            self._check_relation()
+        except ValidationError as e:
+            return {'warning': {'title': _("Model %s does not exist", self.relation), 'message': e}}
+
+    @api.constrains('relation')
+    def _check_relation(self):
+        for rec in self:
+            if rec.state == 'manual' and rec.relation and not rec.env['ir.model']._get_id(rec.relation):
+                raise ValidationError(_("Unknown model name '%s' in Related Model", rec.relation))
+
     @api.constrains('depends')
     def _check_depends(self):
         """ Check whether all fields in dependencies are valid. """
@@ -669,12 +682,7 @@ class IrModelFields(models.Model):
     def _onchange_ttype(self):
         if self.ttype == 'many2many' and self.model_id and self.relation:
             if self.relation not in self.env:
-                return {
-                    'warning': {
-                        'title': _('Model %s does not exist', self.relation),
-                        'message': _('Please specify a valid model for the object relation'),
-                    }
-                }
+                return
             names = self._custom_many2many_names(self.model_id.model, self.relation)
             self.relation_table, self.column1, self.column2 = names
         else:

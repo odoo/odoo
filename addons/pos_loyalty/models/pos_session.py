@@ -43,7 +43,7 @@ class PosSession(models.Model):
                 'fields': ['description', 'program_id', 'reward_type', 'required_points', 'clear_wallet', 'currency_id',
                     'discount', 'discount_mode', 'discount_applicability', 'all_discount_product_ids', 'is_global_discount',
                     'discount_max_amount', 'discount_line_product_id',
-                    'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id'],
+                    'multi_product', 'reward_product_ids', 'reward_product_qty', 'reward_product_uom_id', 'reward_product_domain'],
             }
         }
 
@@ -110,3 +110,9 @@ class PosSession(models.Model):
                     product_id_to_program_ids[product['id']].append(program['id'])
 
         loaded_data['product_id_to_program_ids'] = product_id_to_program_ids
+
+    def _loader_params_product_product(self):
+        params = super()._loader_params_product_product()
+        # this is usefull to evaluate reward domain in frontend
+        params['search_params']['fields'].append('all_product_tag_ids')
+        return params

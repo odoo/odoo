@@ -619,5 +619,8 @@ MassMailingHtmlField.extractProps = (...args) => {
         iframeHtmlClass: attrs['iframeHtmlClass'],
     };
 };
+MassMailingHtmlField.fieldDependencies = {
+    body_html: { type: 'html' },
+};
 
 registry.category("fields").add("mass_mailing_html", MassMailingHtmlField);

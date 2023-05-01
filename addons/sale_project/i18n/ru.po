@@ -13,6 +13,7 @@
 # Martin Trigaux, 2022
 # valmasone, 2022
 # Alena Vlasova, 2023
+# alenafairy, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,8 +21,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-02-02 10:34+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Alena Vlasova, 2023\n"
-"Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
+"Last-Translator: alenafairy, 2023\n"
+"Language-Team: Russian (https://app.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -94,7 +95,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
 #: model:ir.model.fields,field_description:sale_project.field_project_project__allow_billable
 msgid "Billable"
-msgstr ""
+msgstr "Подлежит оплате"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_res_config_settings
@@ -275,7 +276,7 @@ msgstr ""
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Invoice your time and material to customers"
-msgstr ""
+msgstr "Выставляйте счета клиентам за потраченное время и материалы"
 
 #. module: sale_project
 #. odoo-javascript
@@ -378,7 +379,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Non-billable"
-msgstr ""
+msgstr "Оплате не подлежит"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -516,7 +517,7 @@ msgstr "Продажи"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Продажи и актирование"
 
 #. module: sale_project
 #. odoo-python
@@ -564,6 +565,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Позиция в заказе на продажу, к которой будет добавлено время, потраченное на выполнение этой задачи, для выставления счета заказчику. \n"
+"По умолчанию будет выбрана позиция в заказе на продажу, установленная в проекте. При ее отсутствии будет использоваться последняя предоплаченная позиция заказа на продажу, имеющая оставшееся время. \n"
+"Удалите позицию в заказе, чтобы сделать эту задачу не подлежащей оплате. Вы также можете изменить или удалить позицию в заказе на продажу для каждой записи табеля учета рабочего времени по отдельности."
 
 #. module: sale_project
 #. odoo-javascript
@@ -629,6 +633,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale_project.field_sale_order__project_id
 msgid "Select a non billable project on which tasks can be created."
 msgstr ""
+"Выберите проект, не подлежащий оплате, в котором могут быть созданы задания."
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_policy
