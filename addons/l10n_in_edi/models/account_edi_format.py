@@ -76,6 +76,8 @@ class AccountEdiFormat(models.Model):
                 if not move._l10n_in_edi_is_managing_invoice_negative_lines_allowed():
                     raise ValidationError(_("Invoice lines having a negative amount are not allowed to generate the IRN. "
                                   "Please create a credit note instead."))
+            if line.display_type == 'product' and line.discount < 0:
+                error_message.append(_("Negative discount is not allowed, set in line %s", line.name))
             if line.product_id:
                 hsn_code = self._l10n_in_edi_extract_digits(line.product_id.l10n_in_hsn_code)
                 if not hsn_code:
