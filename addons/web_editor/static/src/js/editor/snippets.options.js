@@ -3669,6 +3669,10 @@ const SnippetOptionWidget = Widget.extend({
         for (const el of this.$el.find('we-row')) {
             const $userValueWidget = $(el).find('> div > .o_we_user_value_widget');
             el.classList.toggle('d-none', $userValueWidget.length && !$userValueWidget.not('.d-none').length);
+            //Hide the crop button layout as soon as the cropper widget is closed
+            if (!this.$el[0].ownerDocument.querySelector('.o_we_crop_widget')) {
+                el.classList.contains('cropBtns') && el.classList.add('d-none');
+            }
         }
         for (const el of this.$el.find('we-collapse')) {
             const $el = $(el);
@@ -4262,6 +4266,17 @@ const SnippetOptionWidget = Widget.extend({
             // Set timeout needed so that the user event which triggered the
             // option can bubble first.
             }));
+
+            //Hide the floating cropbuttons as soon as the widget is added in the body.
+            const cropper = this.$el[0].ownerDocument.querySelectorAll('.o_we_crop_buttons');
+            if (cropper[0] && cropper[0].children) {
+                let a = [].slice.call(cropper[0].children);
+                a.forEach(item => {
+                    if (item.classList.contains('croptool')) {
+                        item.classList.add('d-none');
+                    }
+                });
+            }
         }});
 
         if (ev.data.isSimulatedEvent) {
@@ -5917,6 +5932,7 @@ const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl) {
  */
 registry.ImageTools = ImageHandlerOption.extend({
     MAX_SUGGESTED_WIDTH: 1920,
+    CROPPER: "",
 
     /**
      * @constructor
@@ -5950,13 +5966,20 @@ registry.ImageTools = ImageHandlerOption.extend({
      *
      * @see this.selectClass for parameters
      */
-    async crop() {
+    crop() {
+        //Remove 'd-none' from the croptools once the crop button is clicked
+        for (const el of this.$el.find('we-row')) {
+            el.classList.contains('cropBtns') && el.classList.remove('d-none');
+        }
+
         this.trigger_up('hide_overlay');
         this.trigger_up('disable_loading_effect');
         const img = this._getImg();
-        new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)}).appendTo(this.$el[0].ownerDocument.body);
-
-        await new Promise(resolve => {
+        if (!this.$el[0].ownerDocument.querySelector('.o_we_cropper_wrapper')) {
+            this.CROPPER = new weWidgets.ImageCropWidget(this, img, {mimetype: this._getImageMimetype(img)});
+            this.CROPPER.appendTo(this.$el[0].ownerDocument.body);
+        }
+        new Promise(resolve => {
             this.$target.one('image_cropper_destroyed', async () => {
                 if (isGif(this._getImageMimetype(img))) {
                     img.dataset[img.dataset.shape ? 'originalMimetype' : 'mimetype'] = 'image/png';
@@ -5966,6 +5989,14 @@ registry.ImageTools = ImageHandlerOption.extend({
             });
         });
         this.trigger_up('enable_loading_effect');
+    },
+    /**
+     * Enables applying cropping options form sideebar
+     *
+     * @see this.selectClass for parameters
+     */
+    imageTransform(previewMode, widgetValue, params) {
+        params && this.CROPPER.clickopt(params);
     },
     /**
      * Displays the image transformation tools
