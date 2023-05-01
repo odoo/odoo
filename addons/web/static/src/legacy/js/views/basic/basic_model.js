@@ -2319,7 +2319,7 @@ var BasicModel = AbstractModel.extend({
      *  field: the name of the field to override,
      *  value: the value to use for that field
      */
-    _computeOverrideDefaultFields: function (listID, position) {
+    _computeOverrideDefaultFields: function (listID, orderedBy, position) {
         var list = this.localData[listID];
         var handleField;
 
@@ -2353,10 +2353,9 @@ var BasicModel = AbstractModel.extend({
 
         // We don't want to override the default value
         // if the list is not ordered by the handle field.
-        var isOrderedByHandle = list.orderedBy
-            && list.orderedBy.length
-            && list.orderedBy[0].asc === true
-            && list.orderedBy[0].name === handleField;
+        var isOrderedByHandle = orderedBy
+            && orderedBy.length
+            && orderedBy[0].asc === true;
 
         if (!isOrderedByHandle) {
             return {};
@@ -4173,7 +4172,7 @@ var BasicModel = AbstractModel.extend({
             fieldsInfo[targetView] = _.defaults({}, fieldsInfo[targetView], parentRecord.fieldsInfo[originView]);
             fields = _.defaults({}, fields, parentRecord.fields);
         }
-
+        let orderedBy = Array.of({asc: true})
         var record = this._makeDataPoint({
             modelName: modelName,
             fields: fields,
@@ -4200,7 +4199,7 @@ var BasicModel = AbstractModel.extend({
         // in order for new lines to be added at the correct position.
         // -> This is a rare case where the defaul_get from the server
         //    will be ignored by the view for a certain field (usually "sequence").
-        var overrideDefaultFields = this._computeOverrideDefaultFields(params.parentID, params.position);
+        var overrideDefaultFields = this._computeOverrideDefaultFields(params.parentID, orderedBy, params.position);
         if (overrideDefaultFields.field) {
             record._changes[overrideDefaultFields.field] = overrideDefaultFields.value;
         }
