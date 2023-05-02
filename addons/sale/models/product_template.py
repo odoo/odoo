@@ -1,48 +1,47 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import json
-import logging
 
 from odoo import api, fields, models, _
 from odoo.addons.base.models.res_partner import WARNING_MESSAGE, WARNING_HELP
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_round
 
-_logger = logging.getLogger(__name__)
-
 
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
 
     service_type = fields.Selection(
-        [('manual', 'Manually set quantities on order')], string='Track Service',
+        selection=[('manual', "Manually set quantities on order")],
+        string="Track Service",
         compute='_compute_service_type', store=True, readonly=False, precompute=True,
         help="Manually set quantities on order: Invoice based on the manually entered quantity, without creating an analytic account.\n"
              "Timesheets on contract: Invoice based on the tracked hours on the related timesheet.\n"
              "Create a task and track hours: Create a task on the sales order validation and track the work hours.")
-    sale_line_warn = fields.Selection(WARNING_MESSAGE, 'Sales Order Line', help=WARNING_HELP, required=True, default="no-message")
-    sale_line_warn_msg = fields.Text('Message for Sales Order Line')
+    sale_line_warn = fields.Selection(
+        WARNING_MESSAGE, string="Sales Order Line",
+        help=WARNING_HELP, required=True, default="no-message")
+    sale_line_warn_msg = fields.Text(string="Message for Sales Order Line")
     expense_policy = fields.Selection(
-        [('no', 'No'),
-         ('cost', 'At cost'),
-         ('sales_price', 'Sales price')
-        ], string='Re-Invoice Expenses', default='no',
+        selection=[
+            ('no', "No"),
+            ('cost', "At cost"),
+            ('sales_price', "Sales price"),
+        ],
+        string="Re-Invoice Expenses", default='no',
         compute='_compute_expense_policy', store=True, readonly=False,
         help="Validated expenses and vendor bills can be re-invoiced to a customer at its cost or sales price.")
-    visible_expense_policy = fields.Boolean("Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
-    sales_count = fields.Float(compute='_compute_sales_count', string='Sold', digits='Product Unit of Measure')
-    visible_qty_configurator = fields.Boolean("Quantity visible in configurator", compute='_compute_visible_qty_configurator')
+    visible_expense_policy = fields.Boolean(
+        string="Re-Invoice Policy visible", compute='_compute_visible_expense_policy')
+    sales_count = fields.Float(
+        string="Sold", compute='_compute_sales_count', digits='Product Unit of Measure')
     invoice_policy = fields.Selection(
-        [('order', 'Ordered quantities'),
-         ('delivery', 'Delivered quantities')], string='Invoicing Policy',
+        selection=[
+            ('order', "Ordered quantities"),
+            ('delivery', "Delivered quantities"),
+        ],
+        string="Invoicing Policy",
         compute='_compute_invoice_policy', store=True, readonly=False, precompute=True,
-        help='Ordered Quantity: Invoice quantities ordered by the customer.\n'
-             'Delivered Quantity: Invoice quantities delivered to the customer.')
-
-    def _compute_visible_qty_configurator(self):
-        for product_template in self:
-            product_template.visible_qty_configurator = True
+        help="Ordered Quantity: Invoice quantities ordered by the customer.\n"
+             "Delivered Quantity: Invoice quantities delivered to the customer.")
 
     @api.depends('name')
     def _compute_visible_expense_policy(self):
@@ -80,7 +79,7 @@ class ProductTemplate(models.Model):
                                         'shared product.') % (target_company.name, ', '.join(used_products)))
 
     def action_view_sales(self):
-        action = self.env["ir.actions.actions"]._for_xml_id("sale.report_all_channels_sales_action")
+        action = self.env['ir.actions.actions']._for_xml_id('sale.report_all_channels_sales_action')
         action['domain'] = [('product_tmpl_id', 'in', self.ids)]
         action['context'] = {
             'pivot_measures': ['product_uom_qty'],
@@ -115,7 +114,7 @@ class ProductTemplate(models.Model):
         if self.env.context.get('sale_multi_pricelist_product_template'):
             if self.user_has_groups('product.group_sale_pricelist'):
                 return [{
-                    'label': _('Import Template for Products'),
+                    'label': _("Import Template for Products"),
                     'template': '/product/static/xls/product_template.xls'
                 }]
         return res
