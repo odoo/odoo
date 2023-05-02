@@ -122,4 +122,17 @@ PaymentScreen.do.clickPaymentMethod("Cash");
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.isShown();
 
+// order 5
+// Click directly on "settle" without selecting a Tip
+ReceiptScreen.do.clickNextOrder();
+FloorScreen.do.clickTable("2");
+ProductScreen.exec.addOrderline("Minute Maid", "3", "2");
+ProductScreen.check.totalAmountIs("6.0");
+ProductScreen.do.clickPayButton();
+PaymentScreen.do.clickPaymentMethod("Bank");
+PaymentScreen.do.clickValidate();
+TipScreen.check.isShown();
+TipScreen.do.clickSettle();
+FloorScreen.check.isShown();
+
 registry.category("web_tour.tours").add("PosResTipScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });

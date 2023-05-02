@@ -198,10 +198,13 @@ class TestFrontend(odoo.tests.HttpCase):
         order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')])
         order3 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0003')])
         order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')])
+        order5 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0005')])
+
         self.assertTrue(order1.is_tipped and order1.tip_amount == 0.40)
         self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
         self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
         self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
+        self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
 
     def test_06_split_bill_screen(self):
         self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
