@@ -2,7 +2,6 @@
 
 import { Component, xml } from "@odoo/owl";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
-import { MainComponentsContainer } from "@web/core/main_components_container";
 import {
     click,
     editInput,
@@ -38,10 +37,9 @@ async function makeTestComponent(props) {
             this.id = 1; // used for t-key. We want to be sure that the control panel is rendered.
         }
     }
-    TestComponent.components = { ControlPanel, MainComponentsContainer };
+    TestComponent.components = { ControlPanel };
     TestComponent.template = xml`
         <div class="o_test_component">
-            <MainComponentsContainer/>
             <ControlPanel t-key="id++"/>
         </div>
     `;

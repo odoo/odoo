@@ -2,27 +2,20 @@
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
-import { ormService } from "@web/core/orm_service";
-import { registry } from "@web/core/registry";
 import { FilterMenu } from "@web/search/filter_menu/filter_menu";
 import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
 import { WithSearch } from "@web/search/with_search/with_search";
-import { viewService } from "@web/views/view_service";
 import { mount } from "../helpers/utils";
 import {
     getMenuItemTexts,
     makeWithSearch,
+    setupControlPanelServiceRegistry,
     toggleFilterMenu,
     toggleGroupByMenu,
     toggleMenuItem,
 } from "./helpers";
 
 import { Component, onWillUpdateProps, onWillStart, useState, xml } from "@odoo/owl";
-import { dialogService } from "@web/core/dialog/dialog_service";
-import { notificationService } from "@web/core/notifications/notification_service";
-
-const serviceRegistry = registry.category("services");
 
 let target;
 let serverData;
@@ -57,10 +50,7 @@ QUnit.module("Search", (hooks) => {
         `,
             },
         };
-        serviceRegistry.add("hotkey", hotkeyService);
-        serviceRegistry.add("notification", notificationService);
-        serviceRegistry.add("orm", ormService);
-        serviceRegistry.add("view", viewService);
+        setupControlPanelServiceRegistry();
         target = getFixture();
     });
 
@@ -244,8 +234,6 @@ QUnit.module("Search", (hooks) => {
         async function (assert) {
             assert.expect(3);
 
-            serviceRegistry.add("dialog", dialogService);
-
             class TestComponent extends Component {}
             TestComponent.components = { FilterMenu, GroupByMenu };
             TestComponent.template = xml`
@@ -278,8 +266,6 @@ QUnit.module("Search", (hooks) => {
         "toggle a filter render the underlying component with an updated domain",
         async function (assert) {
             assert.expect(2);
-
-            serviceRegistry.add("dialog", dialogService);
 
             class TestComponent extends Component {
                 setup() {
