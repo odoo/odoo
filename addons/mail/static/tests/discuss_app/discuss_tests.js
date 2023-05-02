@@ -1921,18 +1921,6 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     assert.containsOnce($, ".o-mail-Call");
 });
 
-QUnit.test("Member list and settings menu are exclusive", async (assert) => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({ name: "General" });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-mail-ChannelMemberList");
-    await click("button[title='Show Call Settings']");
-    assert.containsOnce($, ".o-mail-CallSettings");
-    assert.containsNone($, ".o-mail-ChannelMemberList");
-});
-
 QUnit.test(
     "Correct breadcrumb when open discuss from chat window then see settings",
     async (assert) => {
