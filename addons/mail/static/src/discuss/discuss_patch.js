@@ -1,5 +1,6 @@
 /* @odoo-module */
 
+import { CallSettings } from "@mail/discuss/call_settings";
 import { ChannelInvitation } from "@mail/discuss/channel_invitation";
 import { ChannelMemberList } from "@mail/discuss/channel_member_list";
 import { Discuss } from "@mail/discuss_app/discuss";
@@ -8,7 +9,7 @@ import { usePopover } from "@web/core/popover/popover_hook";
 import { patch } from "@web/core/utils/patch";
 
 patch(Discuss, "discuss", {
-    components: { ...Discuss.components, ChannelMemberList },
+    components: { ...Discuss.components, CallSettings, ChannelMemberList },
 });
 
 patch(Discuss.prototype, "discuss", {
@@ -36,5 +37,9 @@ patch(Discuss.prototype, "discuss", {
             this.state.activeMode === this.MODES.MEMBER_LIST
                 ? this.MODES.NONE
                 : this.MODES.MEMBER_LIST;
+    },
+    toggleSettings() {
+        this.state.activeMode =
+            this.state.activeMode === this.MODES.SETTINGS ? this.MODES.NONE : this.MODES.SETTINGS;
     },
 });

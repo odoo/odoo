@@ -32,7 +32,7 @@ QUnit.test("Renders the call settings", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header .fa-gear");
-    assert.containsOnce($, ".o-mail-CallSettings", "Should have a call settings menu");
+    assert.containsOnce($, ".o-discuss-CallSettings", "Should have a call settings menu");
     assert.containsOnce($, "label[aria-label='Input device']");
     assert.containsOnce($, "option[value=mockAudioDeviceId]");
     assert.containsNone($, "option[value=mockVideoDeviceId]");
@@ -106,6 +106,6 @@ QUnit.test(
         await click("button[title='Show Call Settings']");
         await click("button:contains(Inbox)");
         assert.containsNone($, "button[title='Hide Call Settings']");
-        assert.containsNone($, ".o-mail-CallSettings");
+        assert.containsNone($, ".o-discuss-CallSettings");
     }
 );

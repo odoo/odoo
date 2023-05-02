@@ -12,6 +12,6 @@ QUnit.test("Member list and settings menu are exclusive", async (assert) => {
     await click("button[title='Show Member List']");
     assert.containsOnce($, ".o-discuss-ChannelMemberList");
     await click("button[title='Show Call Settings']");
-    assert.containsOnce($, ".o-mail-CallSettings");
+    assert.containsOnce($, ".o-discuss-CallSettings");
     assert.containsNone($, ".o-discuss-ChannelMemberList");
 });

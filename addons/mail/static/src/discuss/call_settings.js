@@ -1,13 +1,13 @@
 /* @odoo-module */
 
-import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { useRtc } from "@mail/rtc/rtc_hook";
-import { useService } from "@web/core/utils/hooks";
+import { Component, onWillStart, useExternalListener, useState } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { _t } from "@web/core/l10n/translation";
+import { useService } from "@web/core/utils/hooks";
 
 export class CallSettings extends Component {
-    static template = "mail.CallSettings";
+    static template = "discuss.CallSettings";
     static props = ["thread", "className?"];
 
     setup() {

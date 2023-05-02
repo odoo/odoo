@@ -34,9 +34,6 @@
                     <button t-if="thread.allowCalls and thread.type !== 'mailbox' and thread !== rtc.state.channel" class="btn rounded px-2 shadow-none" title="Start a Call" t-on-click="() => this.rtc.toggleCall(this.thread)" t-ref="startCall">
                         <i class="fa fa-lg fa-phone text-700"/>
                     </button>
-                    <button t-if="thread.allowCalls" class="btn rounded px-2 shadow-none" t-att-class="{ 'o-isActive': state.activeMode === MODES.SETTINGS }" t-att-title="state.activeMode === MODES.SETTINGS ? 'Hide Call Settings' : 'Show Call Settings'" t-on-click="toggleSettings">
-                        <i class="fa fa-lg fa-gear text-700"/>
-                    </button>
                     <div t-if="props.public and !store.isSmall" class="d-flex align-items-center">
                         <img class="o-mail-Discuss-selfAvatar mx-1 rounded-circle o_object_fit_cover flex-shrink-0" alt="Avatar" t-att-src="threadService.avatarUrl(store.self, thread)"/>
                         <div class="lead fw-bold flex-shrink-1 text-dark">
@@ -58,7 +55,6 @@
                     <Composer t-if="thread.type !== 'mailbox' or messageToReplyTo.thread === thread" t-key="thread.localId" composer="thread.composer" autofocus="true" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo" onDiscardCallback="() => messageToReplyTo.cancel()" dropzoneRef="contentRef"/>
                 </div>
                 <PinnedMessagesPanel t-if="state.activeMode === MODES.PINNED_MESSAGES and thread.model === 'discuss.channel'" thread="thread"/>
-                <CallSettings t-if="thread.allowCalls and state.activeMode === MODES.SETTINGS" thread="thread" className="'o-mail-Discuss-callSettings border-start'"/>
             </div>
         </div>
         <div t-if="!thread and (!store.isSmall or store.discuss.activeTab === 'mailbox')" class="d-flex flex-grow-1 align-items-center justify-content-center w-100 bg-view">

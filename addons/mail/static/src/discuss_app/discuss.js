@@ -18,7 +18,6 @@ import {
     useState,
     useEffect,
 } from "@odoo/owl";
-import { CallSettings } from "../rtc/call_settings";
 import { useService } from "@web/core/utils/hooks";
 import { _t } from "@web/core/l10n/translation";
 import { PinnedMessagesPanel } from "./pinned_messages_panel";
@@ -30,7 +29,6 @@ export class Discuss extends Component {
         ThreadIcon,
         Composer,
         Call,
-        CallSettings,
         PinnedMessagesPanel,
     };
     static props = {
@@ -107,11 +105,6 @@ export class Discuss extends Component {
             this.state.activeMode === this.MODES.PINNED_MESSAGES
                 ? this.MODES.NONE
                 : this.MODES.PINNED_MESSAGES;
-    }
-
-    toggleSettings() {
-        this.state.activeMode =
-            this.state.activeMode === this.MODES.SETTINGS ? this.MODES.NONE : this.MODES.SETTINGS;
     }
 
     async renameThread({ value: name }) {
