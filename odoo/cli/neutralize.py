@@ -13,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 
 class Neutralize(Command):
-    """neutralize a database"""
+    """Neutralize a production database for testing: no emails sent, etc."""
 
     def run(self, args):
         parser = odoo.tools.config.parser
