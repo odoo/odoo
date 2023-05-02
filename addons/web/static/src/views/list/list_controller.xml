@@ -36,7 +36,14 @@
                 </t>
 
                 <t t-set-slot="control-panel-additional-actions">
-                    <div t-if="nbSelected" class="d-flex ms-3 gap-1">
+                    <CogMenu t-if="!nbSelected">
+                        <DropdownItem t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable" onSelected.bind="onDirectExportData">
+                            Export All
+                        </DropdownItem>
+                    </CogMenu>
+                </t>
+                <t t-set-slot="control-panel-selection-actions">
+                    <div t-if="nbSelected" class="d-flex gap-1">
                         <t t-call="web.ListView.Selection"/>
                         <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
                             <MultiRecordViewButton
@@ -62,23 +69,6 @@
                                 onActionExecuted="() => model.load()"/>
                         </t>
                     </div>
-                    <t t-else="">
-                        <CogMenu>
-                            <DropdownItem t-if="nbTotal and !nbSelected and activeActions.exportXlsx and isExportEnable" onSelected.bind="onDirectExportData">
-                                Export All
-                            </DropdownItem>
-                            <t t-if="props.info.actionMenus">
-                                <ActionMenusItems
-                                    getActiveIds="() => model.root.selection.map((r) => r.resId)"
-                                    context="props.context"
-                                    domain="props.domain"
-                                    items="actionMenuItems"
-                                    isDomainSelected="model.root.isDomainSelected"
-                                    resModel="model.root.resModel"
-                                    onActionExecuted="() => model.load()"/>
-                            </t>
-                        </CogMenu>
-                    </t>
                 </t>
                 <t t-component="props.Renderer" list="model.root" activeActions="activeActions" archInfo="archInfo" allowSelectors="props.allowSelectors" editable="editable" openRecord.bind="openRecord" noContentHelp="props.info.noContentHelp" onAdd.bind="createRecord"/>
             </Layout>
