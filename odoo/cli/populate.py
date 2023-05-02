@@ -1,11 +1,11 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-from contextlib import nullcontext
-import time
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import fnmatch
 import logging
 import optparse
+import sys
+import time
+from contextlib import nullcontext
+from pathlib import Path
 from unittest.mock import patch
 import odoo
 
@@ -14,9 +14,11 @@ _logger = logging.getLogger(__name__)
 
 
 class Populate(Command):
+    """ Inject fake data inside a database for testing """
 
     def run(self, cmdargs):
         parser = odoo.tools.config.parser
+        parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
         group = optparse.OptionGroup(parser, "Populate Configuration")
         group.add_option("--size", dest="population_size",
                         help="Populate database with auto-generated data. Value should be the population size: small, medium or large",
