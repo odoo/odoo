@@ -10,11 +10,13 @@ import psycopg2
 
 from odoo import api, exceptions, fields, models, _, SUPERUSER_ID
 from odoo.tools import consteq, float_round, image_process, ustr
-from odoo.exceptions import ValidationError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.http import request
 from odoo.osv import expression
+
+from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 
 _logger = logging.getLogger(__name__)
 
@@ -335,6 +337,19 @@ class PaymentAcquirer(models.Model):
         result = super(PaymentAcquirer, self).write(vals)
         self._check_required_if_provider()
         return result
+
+    def unlink(self):
+        """ Prevent the deletion of the payment acquirer if it has an xmlid. """
+        external_ids = self.get_external_id()
+        for acquirer in self:
+            external_id = external_ids[acquirer.id]
+            if external_id \
+               and not external_id.startswith('__export__') \
+               and not self._context.get(MODULE_UNINSTALL_FLAG):
+                raise UserError(
+                    _("You cannot delete the payment acquirer %s; archive it instead.", acquirer.name)
+                )
+        return super().unlink()
 
     def get_acquirer_extra_fees(self, amount, currency_id, country_id):
         extra_fees = {
