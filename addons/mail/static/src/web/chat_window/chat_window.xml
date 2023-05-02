@@ -33,10 +33,7 @@
                 <i class="fa fa-phone"/>
             </div>
             <t t-if="thread">
-                <div t-if="thread.allowCalls and !props.chatWindow.hidden and !props.chatWindow.folded" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Show Call Settings" t-on-click.stop="toggleSettings" t-ref="toggleSettings">
-                    <i class="fa fa-gear"/>
-                </div>
-                <div t-if="!env.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Open in Discuss" t-on-click.stop="expand">
+                <div t-if="!env.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Open in Discuss" t-on-click.stop="expand" t-ref="expand">
                     <i class="fa fa-expand"/>
                 </div>
             </t>
@@ -47,7 +44,6 @@
         <div t-if="!props.chatWindow.folded" class="o-mail-ChatWindow-content bg-view d-flex flex-column h-100 overflow-auto border-start border-end" t-ref="content">
             <t t-if="thread">
                 <PinnedMessagesPanel t-if="state.activeMode === 'pinned-messages'" thread="thread"/>
-                <CallSettings t-elif="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
                 <t t-else="">
                     <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread" compact="true"/>
                     <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>

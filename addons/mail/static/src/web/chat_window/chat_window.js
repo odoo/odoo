@@ -9,7 +9,6 @@ import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@ma
 import { Component, useChildSubEnv, useRef, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 import { localization } from "@web/core/l10n/localization";
-import { CallSettings } from "@mail/rtc/call_settings";
 import { ThreadIcon } from "@mail/discuss_app/thread_icon";
 import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss_app/channel_selector";
@@ -28,7 +27,6 @@ export class ChatWindow extends Component {
         Thread,
         ChannelSelector,
         Composer,
-        CallSettings,
         ThreadIcon,
         PinnedMessagesPanel,
     };
@@ -126,10 +124,6 @@ export class ChatWindow extends Component {
     togglePinMenu() {
         this.state.activeMode =
             this.state.activeMode === "pinned-messages" ? "" : "pinned-messages";
-    }
-
-    toggleSettings() {
-        this.state.activeMode = this.state.activeMode === "in-settings" ? "" : "in-settings";
     }
 
     expand() {

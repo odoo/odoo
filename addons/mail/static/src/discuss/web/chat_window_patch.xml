@@ -6,12 +6,16 @@
                 <i class="fa fa-lg fa-user-plus"/>
             </div>
         </xpath>
-        <xpath expr="//*[@t-ref='toggleSettings']" position="before">
+        <xpath expr="//*[@t-ref='expand']" position="before">
             <div t-if="thread and thread.hasMemberList and !props.chatWindow.hidden and !props.chatWindow.folded" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" t-att-title="state.activeMode === 'member-list' ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
                 <i class="fa fa-users"/>
             </div>
+            <div t-if="thread.allowCalls and !props.chatWindow.hidden and !props.chatWindow.folded" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Show Call Settings" t-on-click.stop="toggleSettings">
+                <i class="fa fa-gear"/>
+            </div>
         </xpath>
-        <xpath expr="//CallSettings" position="after">
+        <xpath expr="//PinnedMessagesPanel" position="after">
+            <CallSettings t-elif="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
             <ChannelMemberList t-elif="state.activeMode === 'member-list'" thread="thread" className="'flex-shrink-0 border-start w-100 h-100'"/>
             <ChannelInvitation t-elif="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
         </xpath>

@@ -8,9 +8,13 @@
             <button t-if="thread.hasMemberList" class="btn rounded px-2 shadow-none" t-att-class="{ 'o-isActive': state.activeMode === MODES.MEMBER_LIST }" t-att-title="state.activeMode === MODES.MEMBER_LIST ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
                 <i class="fa fa-lg fa-users text-700"/>
             </button>
+            <button t-if="thread.allowCalls" class="btn rounded px-2 shadow-none" t-att-class="{ 'o-isActive': state.activeMode === MODES.SETTINGS }" t-att-title="state.activeMode === MODES.SETTINGS ? 'Hide Call Settings' : 'Show Call Settings'" t-on-click="toggleSettings">
+                <i class="fa fa-lg fa-gear text-700"/>
+            </button>
         </xpath>
         <xpath expr="//PinnedMessagesPanel" position="after">
             <ChannelMemberList t-if="thread.hasMemberList and state.activeMode === MODES.MEMBER_LIST" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start'"/>
+            <CallSettings t-if="thread.allowCalls and state.activeMode === MODES.SETTINGS" thread="thread" className="'o-mail-Discuss-callSettings border-start'"/>
         </xpath>
     </t>
 </templates>
