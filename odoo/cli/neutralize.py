@@ -1,9 +1,8 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 import logging
 import optparse
 import sys
+from pathlib import Path
 
 import odoo
 
@@ -13,10 +12,11 @@ _logger = logging.getLogger(__name__)
 
 
 class Neutralize(Command):
-    """neutralize a database"""
+    """Neutralize a production database for testing: no emails sent, etc."""
 
     def run(self, args):
         parser = odoo.tools.config.parser
+        parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
         group = optparse.OptionGroup(parser, "Neutralize", "Neutralize the database specified by the `-d` argument.")
         group.add_option("--stdout", action="store_true", dest="to_stdout",
                          help="Output the neutralization SQL instead of applying it")
