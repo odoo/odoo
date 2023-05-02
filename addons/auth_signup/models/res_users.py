@@ -2,12 +2,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import uuid
 
 from ast import literal_eval
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
 
 from odoo import api, fields, models, _
+from odoo.addons.base.models.res_users import check_identity
 from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.misc import ustr
@@ -223,6 +225,28 @@ class ResUsers(models.Model):
         for user in invited_users:
             template = self.env.ref('auth_signup.mail_template_data_unregistered_users').with_context(dbname=self._cr.dbname, invited_users=invited_users[user])
             template.send_mail(user, email_layout_xmlid='mail.mail_notification_light', force_send=False)
+
+    @check_identity
+    def action_admin_revoke_sessions(self):
+        self._change_password(uuid.uuid4().hex)
+        template = self.env.ref('auth_signup.admin_revoke_sessions_email')
+        assert template._name == 'mail.template'
+
+        email_values = {
+            'email_cc': False,
+            'auto_delete': True,
+            'message_type': 'user_notification',
+            'recipient_ids': [],
+            'partner_ids': [],
+            'scheduled_date': False,
+        }
+
+        for user in self:
+            if not user.email:
+                raise UserError(_("Cannot send email: user %s has no email address.", user.name))
+            email_values['email_to'] = user.email
+            template.send_mail(user.id, raise_exception=True, email_values=email_values)
+            _logger.info("Password reset request email sent for user <%s> to <%s>", user.login, user.email)
 
     @api.model
     def web_create_users(self, emails):

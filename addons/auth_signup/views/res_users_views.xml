@@ -29,7 +29,20 @@
                         <div><field name="signup_url" widget="url"/></div>
                          <field name="signup_valid" invisible="1"/>
                      </div>
-                 </xpath>
+                </xpath>
+
+                <xpath expr="//page[@name='security']" position="inside">
+                    <div class="o_horizontal_separator d-flex align-items-center mt-2 mb-4 text-uppercase fw-bolder small">Revoke all active sessions
+                        <button name="action_admin_revoke_sessions" type="object" string="Revoke sessions" class="btn btn-secondary"/>
+                    </div>
+                    <div>
+                        <span class="d-flex align-items-center mt-4 text-muted">
+                            This button will revoke all active sessions for the user.
+                            Becareful! This action will reset the user's password and send an email to ask him to reset it.
+                        </span>
+                        <strong>Please do not spam.</strong>
+                    </div>
+                </xpath>
             </field>
         </record>
 
