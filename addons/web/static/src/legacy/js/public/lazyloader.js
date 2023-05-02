@@ -103,6 +103,7 @@ function _loadScripts(scripts, index) {
     }
     var script = scripts[index];
     script.addEventListener('load', _loadScripts.bind(this, scripts, index + 1));
+    script.setAttribute('defer', 'defer');
     script.src = script.dataset.src;
     script.removeAttribute('data-src');
 }
