@@ -377,7 +377,7 @@ class SaleOrderLine(models.Model):
             if not line.product_uom or (line.product_id.uom_id.id != line.product_uom.id):
                 line.product_uom = line.product_id.uom_id
 
-    @api.depends('product_id')
+    @api.depends('product_id', 'company_id')
     def _compute_tax_id(self):
         taxes_by_product_company = defaultdict(lambda: self.env['account.tax'])
         lines_by_company = defaultdict(lambda: self.env['sale.order.line'])
