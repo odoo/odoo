@@ -1227,7 +1227,7 @@ class WebsiteSlides(WebsiteProfile):
 
         try:
             slide = request.env['slide.slide'].browse(slide_id)
-            if not slide.exists():
+            if not slide.exists() or not slide.sudo().active:
                 raise werkzeug.exceptions.NotFound()
 
             referer_url = request.httprequest.headers.get('Referer', '')
