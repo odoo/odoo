@@ -103,10 +103,10 @@ export class Attachment {
         if (this.isPdf) {
             const pdf_lib = "/web/static/lib/pdfjs/web/viewer.html?file=";
             if (!this.accessToken && this.originThread?.model === "discuss.channel") {
-                return `${pdf_lib}/discuss/channel/${this.originThread.id}/attachment/${this.id}`;
+                return `${pdf_lib}/discuss/channel/${this.originThread.id}/attachment/${this.id}#pagemode=none`;
             }
             const accessToken = this.accessToken ? `?access_token%3D${this.accessToken}` : "";
-            return `${pdf_lib}/web/content/${this.id}${accessToken}`;
+            return `${pdf_lib}/web/content/${this.id}${accessToken}#pagemode=none`;
         }
         if (this.isUrlYoutube) {
             const urlArr = this.url.split("/");
