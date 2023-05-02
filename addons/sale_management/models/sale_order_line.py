@@ -35,3 +35,11 @@ class SaleOrderLine(models.Model):
         # used in the optional product line.
         optional_product_lines = self.filtered('sale_order_option_ids')
         super(SaleOrderLine, self - optional_product_lines)._compute_price_unit()
+
+    #=== TOOLING ===#
+
+    def _can_be_edited_on_portal(self):
+        return self.state in ('draft', 'sent') and (
+            self.sale_order_option_ids
+            or self.product_id in self.order_id.sale_order_option_ids.product_id
+        )
