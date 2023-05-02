@@ -159,14 +159,14 @@ class MergePartnerAutomatic(models.TransientModel):
                         if column == Partner._parent_name and table == 'res_partner':
                             query = """
                                 WITH RECURSIVE cycle(id, parent_id) AS (
-                                        SELECT id, parent_id FROM res_partner
+                                        SELECT id, parent_id FROM res_partner WHERE id = %s
                                     UNION
                                         SELECT  cycle.id, res_partner.parent_id
-                                        FROM    res_partner, cycle
-                                        WHERE   res_partner.id = cycle.parent_id AND
-                                                cycle.id != cycle.parent_id
+                                        FROM    res_partner
+                                        JOIN    cycle ON res_partner.id = cycle.parent_id
+                                        WHERE   cycle.id != cycle.parent_id
                                 )
-                                SELECT id FROM cycle WHERE id = parent_id AND id = %s
+                                SELECT id FROM cycle WHERE id = parent_id
                             """
                             self._cr.execute(query, (dst_partner.id,))
                             # NOTE JEM : shouldn't we fetch the data ?
