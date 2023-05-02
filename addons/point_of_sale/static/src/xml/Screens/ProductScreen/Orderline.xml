@@ -37,7 +37,7 @@
                         <span> </span><t t-esc="props.line.get_unit().name" />
                         at
                         <t t-if="props.line.display_discount_policy() == 'without_discount' and
-                            env.pos.round_decimals_currency(props.line.get_unit_display_price()) &lt; env.pos.round_decimals_currency(props.line.get_taxed_lst_unit_price())">
+                            env.utils.roundCurrency(props.line.get_unit_display_price()) lt env.utils.roundCurrency(props.line.get_taxed_lst_unit_price())">
                             <s>
                                 <t t-esc="env.utils.formatCurrency(props.line.get_taxed_lst_unit_price())" />
                             </s>

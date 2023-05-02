@@ -886,7 +886,7 @@ export class PosGlobalState extends PosModel {
             otherPaymentMethods.forEach((pm) => {
                 if (pm.type === "bank") {
                     state.payments[pm.id] = {
-                        counted: this.round_decimals_currency(pm.amount),
+                        counted: this.env.utils.roundCurrency(pm.amount),
                         difference: 0,
                         number: pm.number,
                     };
@@ -1501,11 +1501,6 @@ export class PosGlobalState extends PosModel {
         var decimals =
             precision > 0 ? Math.max(0, Math.ceil(Math.log(1.0 / precision) / Math.log(10))) : 0;
         return value.toFixed(decimals);
-    }
-
-    round_decimals_currency(value) {
-        const decimals = this.currency.decimal_places;
-        return parseFloat(round_di(value, decimals).toFixed(decimals));
     }
 
     disallowLineQuantityChange() {
