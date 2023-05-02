@@ -1,7 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
-        <field name="domain">['|', ('res_model', '=', False), ('res_model', 'in', ['crm.lead', 'res.partner'])]</field>
+        <field name="name">Sales Activity Type Configuration</field>
+        <field name="res_model">crm.lead</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
         <field name="context">{'default_res_model': 'crm.lead'}</field>
+        <field name="arch" type="xml">
+            <form string="Sales Activity Type Configuration">
+                <field name="name" placeholder="Name"/>
+                <field name="description" placeholder="Description"/>
+                <field name="color" widget="colorpicker"/>
+                <field name="sequence" widget="number"/>
+                <field name="model_ids" widget="many2many"/>
+            </form>
+        </field>
     </record>
 </odoo>
