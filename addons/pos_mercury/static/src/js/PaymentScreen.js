@@ -245,7 +245,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         // the transaction deferred is used to update transaction status
         // if we have a previous deferred it indicates that this is a retry
         if (!old_deferred) {
-            self.showPopup(PaymentTransactionPopup, {
+            this.popup.add(PaymentTransactionPopup, {
                 transaction: def,
             });
             def.notify({
