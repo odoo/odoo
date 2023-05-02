@@ -62,6 +62,9 @@
             <field name="emp_id" invisible="1"/>
             <field name="meeting_ids" invisible="1"/>
             <field name="refuse_reason_id" invisible="1"/>
+            <field name="email_normalized" invisible="1"/>
+            <field name="partner_phone_sanitized" invisible="1"/>
+            <field name="partner_mobile_sanitized" invisible="1"/>
             <header>
                 <button string="Create Employee" name="create_employee_from_applicant" type="object" data-hotkey="q" groups="hr_recruitment.group_hr_recruitment_user"
                         class="o_create_employee" invisible="emp_id or not active or not date_closed"/>
