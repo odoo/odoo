@@ -456,7 +456,7 @@ export class HtmlField extends Component {
                         '<!DOCTYPE html><html>' +
                         '<head>' +
                             '<meta charset="utf-8"/>' +
-                            '<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>\n' +
+                            '<meta http-equiv="X-UA-Compatible" content="IE=edge"/>\n' +
                             '<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no"/>\n' +
                         '</head>\n' +
                         '<body class="o_in_iframe o_readonly" style="overflow: hidden;">\n' +
