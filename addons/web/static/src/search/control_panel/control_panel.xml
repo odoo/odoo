@@ -3,26 +3,24 @@
 
     <t t-name="web.ControlPanel" owl="1">
         <div class="o_control_panel d-flex flex-column gap-3 gap-lg-1 px-3 pt-2 pb-3" t-ref="root">
-            <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3">
-                <div class="o_control_panel_breadcrumbs d-flex align-items-center justify-content-between w-100 w-md-50 w-lg-auto">
-                    <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none me-md-2 order-1 order-md-0" t-ref="mainButtons">
-                        <t t-if="env.isSmall">
-                            <div class="btn-group">
-                                <t t-slot="control-panel-create-button"/>
-                                <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <span class="visually-hidden">Toggle Dropdown</span>
-                                </button>
-                                <ul class="dropdown-menu">
-                                    <t t-slot="layout-buttons"/>
-                                    <t t-slot="control-panel-always-buttons"/>
-                                </ul>
-                            </div>
-                        </t>
-                        <t t-else="">
+            <div class="o_control_panel_main d-flex flex-wrap flex-lg-nowrap justify-content-between align-items-lg-start gap-3 flex-grow-1">
+                <div class="o_control_panel_breadcrumbs d-flex align-items-center gap-1 order-0 h-lg-100">
+                    <div class="o_control_panel_main_buttons d-flex gap-1 d-empty-none d-print-none" t-ref="mainButtons">
+                        <div class="btn-group d-xl-none o_control_panel_collapsed_create">
+                            <t t-slot="control-panel-create-button"/>
+                            <button type="button" class="btn btn-primary dropdown-toggle dropdown-toggle-split o_control_panel_collapsed_create" data-bs-toggle="dropdown" aria-expanded="false">
+                                 <span class="visually-hidden">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu o_control_panel_collapsed_create">
+                                <t t-slot="layout-buttons"/>
+                                <t t-slot="control-panel-always-buttons"/>
+                            </ul>
+                        </div>
+                        <div class="d-none d-xl-inline-flex gap-1">
                             <t t-slot="control-panel-create-button"/>
                             <t t-slot="layout-buttons"/>
                             <t t-slot="control-panel-always-buttons"/>
-                        </t>
+                        </div>
                     </div>
                     <t t-if="env.config.noBreadcrumbs">
                         <section class="o_control_panel_breadcrumbs_actions d-contents">
@@ -36,41 +34,36 @@
                     <span class="d-none d-xl-block me-auto"/> <!-- Spacer -->
                 </div>
 
-                <div t-if="display.layoutActions" class="o_control_panel_actions d-flex align-items-center justify-content-around w-100 w-lg-auto order-3 order-lg-2">
+                <div t-if="display.layoutActions" class="o_control_panel_actions d-empty-none d-flex align-items-center justify-content-around order-2 order-lg-1 w-100 w-lg-auto">
                     <t t-slot="layout-actions"/>
                 </div>
 
-                <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap align-items-center justify-content-end w-100 w-md-auto gap-3 gap-lg-1 gap-xl-3 order-2 order-lg-3">
-                    <span class="d-none d-xl-block ms-auto"/> <!-- Spacer -->
-                    <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap order-2 order-md-1" role="search">
+                <div class="o_control_panel_navigation d-flex flex-wrap flex-md-nowrap align-items-center justify-content-end gap-3 gap-lg-1 gap-xl-3 order-1 order-lg-2 flex-grow-1">
+                    <div t-if="pagerProps and pagerProps.total > 0" class="o_cp_pager text-nowrap " role="search">
                         <Pager t-props="pagerProps"/>
                     </div>
                     <t t-if="env.config.viewSwitcherEntries?.length > 1">
-                        <t t-if="env.isSmall">
-                            <Dropdown class="'o_cp_switch_buttons order-1 order-md-2'" togglerClass="'btn btn-secondary'" showCaret="true">
-                                <t t-set-slot="toggler">
-                                    <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
-                                    <i class="oi-fw" t-att-class="activeView.icon"/>
-                                </t>
-                                <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                    <DropdownItem onSelected="() => this.onViewClicked(view.type)" class="view.active ? 'selected' : ''">
-                                        <i class="oi-fw" t-att-class="view.icon"/>
-                                        <span class="ms-1" t-out="view.name"/>
-                                    </DropdownItem>
-                                </t>
-                            </Dropdown>
-                        </t>
-                        <t t-else="">
-                            <nav class="o_cp_switch_buttons d-print-none btn-group order-1 order-md-2">
-                                <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
-                                    <button class="btn btn-secondary o_switch_view "
-                                        t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
-                                        t-att-data-tooltip="view.name"
-                                        t-on-click="() => this.onViewClicked(view.type)"
-                                        />
-                                </t>
-                            </nav>
-                        </t>
+                        <Dropdown class="'o_cp_switch_buttons d-xl-none btn-group'" togglerClass="'btn btn-secondary'" showCaret="true">
+                            <t t-set-slot="toggler">
+                                <t t-set="activeView" t-value="env.config.viewSwitcherEntries.find((view) => view.active)"/>
+                                <i class="oi-fw" t-att-class="activeView.icon"/>
+                            </t>
+                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                <DropdownItem onSelected="() => this.onViewClicked(view.type)" class="view.active ? 'selected' : ''">
+                                    <i class="oi-fw" t-att-class="view.icon"/>
+                                    <span class="ms-1" t-out="view.name"/>
+                                </DropdownItem>
+                            </t>
+                        </Dropdown>
+                        <nav class="o_cp_switch_buttons d-print-none d-none d-xl-inline-flex btn-group">
+                            <t t-foreach="env.config.viewSwitcherEntries" t-as="view" t-key="view.type">
+                                <button class="btn btn-secondary o_switch_view "
+                                    t-attf-class="o_{{view.type}} {{view.icon}} {{view.active ? 'active' : ''}}"
+                                    t-att-data-tooltip="view.name"
+                                    t-on-click="() => this.onViewClicked(view.type)"
+                                    />
+                            </t>
+                        </nav>
                     </t>
                 </div>
             </div>
@@ -120,7 +113,7 @@
         </div>
 
         <div t-else="" class="d-flex gap-1">
-            <div class="active d-flex fs-4 min-w-0">
+            <div class="active d-flex fs-4 min-w-0 align-items-center">
                 <span class="min-w-0 text-truncate" t-call="web.Breadcrumb.Name"/>
             </div>
             <t t-call="web.Breadcrumb.Actions"/>
