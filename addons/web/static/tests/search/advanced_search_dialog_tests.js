@@ -539,6 +539,7 @@ QUnit.module("Search", (hooks) => {
     });
 
     QUnit.test("Several date filters and a comparison", async function (assert) {
+        patchDate(2023, 3, 1, 0, 0, 0);
         serverData.views["foo,1,search"] = `
             <search>
                 <filter name="date_filter" string="Date" date="date_field"/>
