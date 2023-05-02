@@ -7,7 +7,10 @@ from odoo import fields, models
 class LoyaltyCard(models.Model):
     _inherit = 'loyalty.card'
 
-    order_id = fields.Many2one('sale.order', 'Order Reference', readonly=True,
+    order_id = fields.Many2one(
+        comodel_name='sale.order',
+        string="Order Reference",
+        readonly=True,
         help="The sales order from which coupon is generated")
 
     def _get_default_template(self):
