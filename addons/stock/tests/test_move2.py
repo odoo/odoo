@@ -305,8 +305,9 @@ class TestPickShip(TestStockCommon):
 
     def test_mto_moves_extra_qty(self):
         """ Ensure that a move in MTO will support an extra quantity. The extra
-        move should be created in MTS and should not be merged in the initial
-        move if it's in MTO. It should also avoid to trigger the rules.
+        move should be created in MTS even if the initial move is in MTO so that
+        it won't trigger the rules. The extra move will then be merge back to the
+        initial move.
         """
         picking_pick, picking_client = self.create_pick_ship()
         stock_location = self.env['stock.location'].browse(self.stock_location)
@@ -320,10 +321,11 @@ class TestPickShip(TestStockCommon):
 
         picking_client.move_ids[0].move_line_ids[0].qty_done = 15.0
         picking_client.move_ids._action_done()
-        self.assertEqual(len(picking_client.move_ids), 2)
-        move_ids = picking_client.move_ids.sorted()
-        self.assertEqual(move_ids.mapped('procure_method'), ['make_to_order', 'make_to_stock'])
-        self.assertEqual(move_ids.mapped('product_uom_qty'), [10.0, 5.0])
+        self.assertEqual(len(picking_client.move_ids), 1)
+        move = picking_client.move_ids
+        self.assertEqual(move.procure_method, 'make_to_order')
+        self.assertEqual(move.product_uom_qty, 10.0)
+        self.assertEqual(move.quantity_done, 15.0)
 
     def test_mto_moves_return_extra(self):
         picking_pick, picking_client = self.create_pick_ship()
@@ -1370,41 +1372,7 @@ class TestSinglePicking(TestStockCommon):
         delivery._action_done()
         self.assertEqual(len(delivery.move_ids), 2, 'Move should not be merged together')
         for move in delivery.move_ids:
-            self.assertEqual(move.quantity_done, move.product_uom_qty, 'Initial demand should be equals to quantity done')
-
-    def test_extra_move_5(self):
-        """ Create a picking a move that is problematic with
-        rounding (5.95 - 5.5 = 0.4500000000000002). Ensure that
-        initial demand is corrct afer action_done and backoder
-        are not created.
-        """
-        delivery = self.env['stock.picking'].create({
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
-            'picking_type_id': self.picking_type_out,
-            'state': 'draft',
-            'immediate_transfer': False,
-        })
-        product = self.kgB
-        self.MoveObj.create({
-            'name': product.name,
-            'product_id': product.id,
-            'product_uom_qty': 5.5,
-            'quantity_done': 5.95,
-            'product_uom': product.uom_id.id,
-            'picking_id': delivery.id,
-            'location_id': self.stock_location,
-            'location_dest_id': self.customer_location,
-        })
-        stock_location = self.env['stock.location'].browse(self.stock_location)
-        self.env['stock.quant']._update_available_quantity(product, stock_location, 5.5)
-        delivery.action_confirm()
-        delivery.action_assign()
-        delivery._action_done()
-        self.assertEqual(delivery.move_ids.product_uom_qty, 5.95, 'Move initial demand should be 5.95')
-
-        back_order = self.env['stock.picking'].search([('backorder_id', '=', delivery.id)])
-        self.assertFalse(back_order, 'There should be no back order')
+            self.assertNotEqual(move.quantity_done, move.product_uom_qty, 'Initial demand shouldn\'t be modified')
 
     def test_recheck_availability_1(self):
         """ Check the good behavior of check availability. I create a DO for 2 unit with

@@ -1919,7 +1919,6 @@ class MrpProduction(models.Model):
         for production in self:
             production.write({
                 'date_finished': fields.Datetime.now(),
-                'product_qty': production.qty_produced,
                 'priority': '0',
                 'is_locked': True,
                 'state': 'done',

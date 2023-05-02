@@ -44,9 +44,10 @@
                     <field name="product_packaging_id" groups="product.group_stock_packaging"
                         optional="hide" context="{'default_product_id': product_id}"
                         readonly="not product_id"/>
-                    <field name="product_uom_qty" string="Quantity" sum="Total Quantity"
+                    <field name="product_uom_qty" sum="Total Demand" readonly="state == 'done'"/>
+                    <field name="quantity_done" string="Done" sum="Total Done"
                         decoration-danger="(location_usage in ('internal','transit')) and (location_dest_usage not in ('internal','transit'))"
-                        decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))" readonly="state == 'done'"/>
+                        decoration-success="(location_usage not in ('internal','transit')) and (location_dest_usage in ('internal','transit'))"/>
                     <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit" groups="uom.group_uom"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="state" widget='badge' optional="show"

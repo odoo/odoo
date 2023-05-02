@@ -374,8 +374,8 @@
                                     <button type="object" name="action_product_forecast_report" title="Forecast Report" icon="fa-area-chart text-danger" column_invisible="parent.state != 'draft'" invisible="forecast_availability &gt;= 0"/>
                                     <field name="forecast_availability" string="Reserved" column_invisible="parent.state in ('draft', 'done')" widget="forecast_widget"/>
                                     <field name="quantity_done" string="Consumed"
-                                        decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
-                                        decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
+                                        decoration-success="product_uom_qty - quantity_done &gt; 0.0001"
+                                        decoration-warning="quantity_done - product_uom_qty &gt; 0.0001"
                                         column_invisible="parent.state == 'draft'"
                                         readonly="has_tracking != 'none'"
                                         force_save="1" widget="mrp_consumed"/>
