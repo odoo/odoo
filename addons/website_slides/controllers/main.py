@@ -1148,6 +1148,8 @@ class WebsiteSlides(WebsiteProfile):
             referrer_url = request.httprequest.headers.get('Referer', '')
             base_url = slide.get_base_url()
             is_embedded = referrer_url and not bool(base_url in referrer_url) or False
+            if not slide.active:
+                raise werkzeug.exceptions.NotFound()
             if is_embedded:
                 request.env['slide.embed'].sudo()._add_embed_url(slide.id, referrer_url)
             values = self._get_slide_detail(slide)
