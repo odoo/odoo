@@ -23,14 +23,21 @@ class Applicant(models.Model):
     _name = "hr.applicant"
     _description = "Applicant"
     _order = "priority desc, id desc"
-    _inherit = ['mail.thread.cc', 'mail.thread.main.attachment', 'mail.activity.mixin', 'utm.mixin']
+    _inherit = ['mail.thread.cc',
+               'mail.thread.main.attachment',
+               'mail.thread.blacklist',
+               'mail.thread.phone',
+               'mail.activity.mixin',
+               'utm.mixin']
     _mailing_enabled = True
+    _primary_email = 'email_from'
 
     name = fields.Char("Subject / Application", required=True, help="Email subject for applications sent via email", index='trigram')
     active = fields.Boolean("Active", default=True, help="If the active field is set to false, it will allow you to hide the case without removing it.")
     description = fields.Html("Description")
     email_from = fields.Char("Email", size=128, compute='_compute_partner_phone_email',
         inverse='_inverse_partner_email', store=True, index='trigram')
+    email_normalized = fields.Char(index='trigram')  # inherited via mail.thread.blacklist
     probability = fields.Float("Probability")
     partner_id = fields.Many2one('res.partner', "Contact", copy=False)
     create_date = fields.Datetime("Applied on", readonly=True)
@@ -59,8 +66,10 @@ class Applicant(models.Model):
     partner_name = fields.Char("Applicant's Name")
     partner_phone = fields.Char("Phone", size=32, compute='_compute_partner_phone_email',
         store=True, readonly=False, index='btree_not_null')
+    partner_phone_sanitized = fields.Char(string='Sanitized Phone Number', compute='_compute_partner_phone_sanitized', store=True, index='btree_not_null')
     partner_mobile = fields.Char("Mobile", size=32, compute='_compute_partner_phone_email',
         store=True, readonly=False, index='btree_not_null')
+    partner_mobile_sanitized = fields.Char(string='Sanitized Mobile Number', compute='_compute_partner_mobile_sanitized', store=True, index='btree_not_null')
     type_id = fields.Many2one('hr.recruitment.degree', "Degree")
     department_id = fields.Many2one(
         'hr.department', "Department", compute='_compute_department', store=True, readonly=False,
@@ -151,12 +160,12 @@ class Applicant(models.Model):
         if not self:
             return None
         domain = []
-        if self.email_from:
-            domain = expression.OR([domain, [('email_from', '=ilike', self.email_from)]])
-        if self.partner_phone:
-            domain = expression.OR([domain, ['|', ('partner_phone', '=', self.partner_phone), ('partner_mobile', '=', self.partner_phone)]])
-        if self.partner_mobile:
-            domain = expression.OR([domain, ['|', ('partner_mobile', '=', self.partner_mobile), ('partner_phone', '=', self.partner_mobile)]])
+        if self.email_normalized:
+            domain = expression.OR([domain, [('email_normalized', '=', self.email_normalized)]])
+        if self.partner_phone_sanitized:
+            domain = expression.OR([domain, ['|', ('partner_phone_sanitized', '=', self.partner_phone_sanitized), ('partner_mobile_sanitized', '=', self.partner_phone_sanitized)]])
+        if self.partner_mobile_sanitized:
+            domain = expression.OR([domain, ['|', ('partner_mobile_sanitized', '=', self.partner_mobile_sanitized), ('partner_phone_sanitized', '=', self.partner_mobile_sanitized)]])
         return domain if domain else None
 
     @api.depends_context('lang')
@@ -265,6 +274,21 @@ class Applicant(models.Model):
     def _inverse_partner_email(self):
         for applicant in self.filtered(lambda a: a.partner_id and a.email_from and not a.partner_id.email):
             applicant.partner_id.email = applicant.email_from
+
+    @api.depends('partner_phone')
+    def _compute_partner_phone_sanitized(self):
+        for applicant in self:
+            applicant.partner_phone_sanitized = applicant._phone_format(fname='partner_phone') or applicant.partner_phone
+
+    @api.depends('partner_mobile')
+    def _compute_partner_mobile_sanitized(self):
+        for applicant in self:
+            applicant.partner_mobile_sanitized = applicant._phone_format(fname='partner_mobile') or applicant.partner_mobile
+
+    def _phone_get_number_fields(self):
+        """ This method returns the fields to use to find the number to use to
+        send an SMS on a record. """
+        return ['partner_mobile', 'partner_phone']
 
     @api.depends('stage_id.hired_stage')
     def _compute_date_closed(self):
