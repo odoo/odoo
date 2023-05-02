@@ -259,6 +259,9 @@
                                         <h3 class="mb24">Pay with</h3>
                                         <t t-call="payment.checkout"/>
                                     </div>
+                                    <div t-elif="not sale_order._has_to_be_paid()" class="alert alert-danger">
+                                        The order is not in a state requiring customer payment.
+                                    </div>
                                     <div t-else="" class="alert alert-warning">
                                         <strong>No suitable payment option could be found.</strong><br/>
                                         If you believe that it is an error, please contact the website administrator.
