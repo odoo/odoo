@@ -62,6 +62,8 @@ export const standardActionServiceProps = {
     action: Object, // prop added by _getActionInfo
     actionId: { type: Number, optional: true }, // prop added by _getActionInfo
     className: String, // prop added by the ActionContainer
+    globalState: { type: Object, optional: true }, // prop added by _updateUI
+    state: { type: Object, optional: true }, // prop added by _updateUI
 };
 
 function parseActiveIds(ids) {
@@ -819,8 +821,9 @@ function makeActionManager(env) {
      */
     function _executeActURLAction(action, options) {
         let url = action.url;
-        if (url && !(url.startsWith('http') || url.startsWith('/')))
-            url = '/' + url;
+        if (url && !(url.startsWith("http") || url.startsWith("/"))) {
+            url = "/" + url;
+        }
         if (action.target === "self") {
             let willUnload = false;
             const onUnload = () => {

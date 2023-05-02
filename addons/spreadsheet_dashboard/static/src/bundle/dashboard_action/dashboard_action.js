@@ -10,6 +10,7 @@ import { MobileFigureContainer } from "./mobile_figure_container/mobile_figure_c
 import { FilterValue } from "@spreadsheet/global_filters/components/filter_value/filter_value";
 import { loadSpreadsheetDependencies } from "@spreadsheet/helpers/helpers";
 import { useService } from "@web/core/utils/hooks";
+import { standardActionServiceProps } from "@web/webclient/actions/action_service";
 
 import { Component, onWillStart, useState, useEffect } from "@odoo/owl";
 
@@ -144,6 +145,7 @@ SpreadsheetDashboardAction.components = {
     DashboardMobileSearchPanel,
     MobileFigureContainer,
 };
+SpreadsheetDashboardAction.props = { ...standardActionServiceProps };
 
 registry
     .category("actions")
