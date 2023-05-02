@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <odoo>
 
-    <template id="sale_loyalty.used_gift_card">
+    <template id="used_gift_card">
         <div class="text-muted d-md-block small"
             t-if="line.coupon_id and line.order_id != line.coupon_id.order_id and not line.coupon_id.program_id.is_nominative">
             <span>
@@ -18,18 +18,6 @@
         </div>
     </template>
 
-    <template id="sale_order_portal_content_inherit" name="Gift Card Products Portal" inherit_id="sale.sale_order_portal_content">
-        <xpath expr="//section[@id='details']//td[@id='product_name']/*[last()]" position="after">
-            <t t-if="line.coupon_id and line.coupon_id.program_id.program_type == 'gift_card'" t-call="sale_loyalty.used_gift_card"/>
-        </xpath>
-        <xpath expr="//div[@id='total']" position="after">
-            <t t-call="sale_loyalty.sale_purchased_gift_card">
-                <t t-set="order" t-value="sale_order"/>
-                <t t-set="hide_intro" t-value="1"/>
-            </t>
-        </xpath>
-    </template>
-    
     <template id="sale_purchased_gift_card">
         <t t-set="gift_cards" t-value="order.coupon_point_ids.filtered(lambda pe: pe.coupon_id.program_id.program_type == 'gift_card').coupon_id"/>
         <div class="card mt-3 " t-if="gift_cards">
@@ -58,4 +46,20 @@
             </div>
         </div>
     </template>
+
+    <template id="sale_order_portal_content_inherit"
+              name="Gift Card Products Portal"
+              inherit_id="sale.sale_order_portal_content">
+        <xpath expr="//section[@id='details']//td[@id='product_name']/*[last()]" position="after">
+            <t t-if="line.coupon_id and line.coupon_id.program_id.program_type == 'gift_card'"
+               t-call="sale_loyalty.used_gift_card"/>
+        </xpath>
+        <xpath expr="//div[@id='total']" position="after">
+            <t t-call="sale_loyalty.sale_purchased_gift_card">
+                <t t-set="order" t-value="sale_order"/>
+                <t t-set="hide_intro" t-value="1"/>
+            </t>
+        </xpath>
+    </template>
+
 </odoo>
