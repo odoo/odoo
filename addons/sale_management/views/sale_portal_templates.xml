@@ -4,7 +4,7 @@
     <template id="sale_order_portal_content_inherit_sale_management" name="Order Options" inherit_id="sale.sale_order_portal_content">
 
         <xpath expr="//section[@id='details']//t[@t-set='display_discount']" position="after">
-            <t t-set="display_remove" t-value="sale_order.state in ('draft', 'sent') and any(line.sale_order_option_ids for line in sale_order.order_line)"/>
+            <t t-set="display_remove" t-value="sale_order.state in ('draft', 'sent') and any(line._can_be_edited_on_portal() for line in sale_order.order_line)"/>
         </xpath>
 
         <xpath expr="//section[@id='details']//table[@id='sales_order_table']/thead/tr" position="inside">
@@ -15,7 +15,13 @@
 
         <xpath expr="//section[@id='details']//t[@t-if='not line.display_type']" position="inside">
             <td class="text-center" t-if="display_remove">
-                <a t-att-data-line-id="line.id" t-att-data-unlink="True" href="#" class="mb8 js_update_line_json d-print-none" t-if="sale_order.state in ('draft', 'sent') and line.sale_order_option_ids" aria-label="Remove" title="Remove">
+                <a t-if="line._can_be_edited_on_portal()"
+                   t-att-data-line-id="line.id"
+                   t-att-data-unlink="True"
+                   href="#"
+                   class="mb8 js_update_line_json d-print-none"
+                   aria-label="Remove"
+                   title="Remove">
                     <span class="fa fa-trash-o"></span>
                 </a>
             </td>
@@ -72,7 +78,7 @@
         </xpath>
 
         <xpath expr="//section[@id='details']//div[@id='quote_qty']" position="replace">
-            <t t-if="sale_order.state in ['draft', 'sent'] and line.sale_order_option_ids">
+            <t t-if="line._can_be_edited_on_portal()">
                 <div class="input-group js_quantity_container pull-right">
 
                     <span class="d-print-none input-group-text d-none d-md-inline-block">
