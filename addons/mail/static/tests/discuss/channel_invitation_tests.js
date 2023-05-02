@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
 
@@ -24,7 +24,7 @@ QUnit.test(
         const { openDiscuss } = await start({ hasTimeControl: true });
         await openDiscuss(channelId);
         await click(".o-mail-Discuss-header button[title='Add Users']");
-        assert.containsOnce($, ".o-mail-ChannelInvitation");
+        assert.containsOnce($, ".o-discuss-ChannelInvitation");
     }
 );
 
@@ -53,8 +53,8 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click(".o-mail-Discuss-header button[title='Add Users']");
-        await insertText(".o-mail-ChannelInvitation-search", "TestPartner2");
-        assert.strictEqual($(".o-mail-ChannelInvitation-selectable").text(), "TestPartner2");
+        await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
+        assert.strictEqual($(".o-discuss-ChannelInvitation-selectable").text(), "TestPartner2");
     }
 );
 
@@ -79,7 +79,7 @@ QUnit.test("Invitation form should display channel group restriction", async (as
     await click(".o-mail-Discuss-header button[title='Add Users']");
     assert.containsOnce(
         $,
-        '.o-mail-ChannelInvitation:contains(Access restricted to group "testGroup")'
+        '.o-discuss-ChannelInvitation:contains(Access restricted to group "testGroup")'
     );
 });
 
@@ -106,7 +106,7 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click(".o-mail-Discuss-header button[title='Add Users']");
-    await insertText(".o-mail-ChannelInvitation-search", "TestPartner2");
+    await insertText(".o-discuss-ChannelInvitation-search", "TestPartner2");
     await click(".form-check-input");
     await click("button[title='Create Group Chat']");
     assert.strictEqual(
