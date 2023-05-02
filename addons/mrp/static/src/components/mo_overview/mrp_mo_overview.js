@@ -147,9 +147,6 @@ MoOverview.components = {
     MoOverviewDisplayFilter,
     MoOverviewComponentsBlock,
 };
-MoOverview.props = {
-    ...standardActionServiceProps,
-    globalState: { type: Object, optional: true },  // Appears when coming back from the breadcrumb
-};
+MoOverview.props = {...standardActionServiceProps };
 
 registry.category("actions").add("mrp_mo_overview", MoOverview);
