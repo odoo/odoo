@@ -52,11 +52,11 @@
             <t t-if="!isTaxIncluded">
                 <div class="pos-receipt-right-align">--------</div>
                 <br/>
-                <div>Subtotal<span t-esc="env.pos.format_currency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
+                <div>Subtotal<span t-esc="env.utils.formatCurrency(receipt.subtotal)" class="pos-receipt-right-align"/></div>
                 <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
                     <div class="responsive-price">
                         <t t-esc="tax.name" />
-                        <span t-esc='env.pos.format_currency_no_symbol(tax.amount)' class="pos-receipt-right-align"/>
+                        <span t-esc='env.utils.formatCurrency(tax.amount, false)' class="pos-receipt-right-align"/>
                     </div>
                 </t>
             </t>
@@ -66,16 +66,16 @@
             <br/>
             <div class="pos-receipt-amount">
                 TOTAL
-                <span t-esc="env.pos.format_currency(receipt.total_with_tax)" class="pos-receipt-right-align"/>
+                <span t-esc="env.utils.formatCurrency(receipt.total_with_tax)" class="pos-receipt-right-align"/>
             </div>
             <t t-if="receipt.total_rounded != receipt.total_with_tax">
                 <div class="pos-receipt-amount">
                   Rounding
-                <span t-esc='env.pos.format_currency(receipt.rounding_applied)' class="pos-receipt-right-align"/>
+                <span t-esc='env.utils.formatCurrency(receipt.rounding_applied)' class="pos-receipt-right-align"/>
                 </div>
                 <div class="pos-receipt-amount">
                   To Pay
-                 <span t-esc='env.pos.format_currency(receipt.total_rounded)' class="pos-receipt-right-align"/>
+                 <span t-esc='env.utils.formatCurrency(receipt.total_rounded)' class="pos-receipt-right-align"/>
               </div>
             </t>
             <br/><br/>
@@ -85,14 +85,14 @@
             <t t-foreach="receipt.paymentlines" t-as="line" t-key="line.cid">
                 <div>
                     <t t-esc="line.name" />
-                    <span t-esc="env.pos.format_currency_no_symbol(line.amount)" class="pos-receipt-right-align"/>
+                    <span t-esc="env.utils.formatCurrency(line.amount, false)" class="pos-receipt-right-align"/>
                 </div>
             </t>
             <br/>
 
             <div class="pos-receipt-amount receipt-change">
                 CHANGE
-                <span t-esc="env.pos.format_currency(receipt.change)" class="pos-receipt-right-align"/>
+                <span t-esc="env.utils.formatCurrency(receipt.change)" class="pos-receipt-right-align"/>
             </div>
             <br/>
 
@@ -101,19 +101,19 @@
             <t t-if="receipt.total_discount">
                 <div>
                     Discounts
-                    <span t-esc="env.pos.format_currency(receipt.total_discount)" class="pos-receipt-right-align"/>
+                    <span t-esc="env.utils.formatCurrency(receipt.total_discount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
             <t t-if="isTaxIncluded">
                 <t t-foreach="receipt.tax_details" t-as="tax" t-key="tax.name">
                     <div>
                         <t t-esc="tax.name" />
-                        <span t-esc="env.pos.format_currency_no_symbol(tax.amount)" class="pos-receipt-right-align"/>
+                        <span t-esc="env.utils.formatCurrency(tax.amount, false)" class="pos-receipt-right-align"/>
                     </div>
                 </t>
                 <div id="post_receipt_taxes_container">
                     Total Taxes
-                    <span t-esc="env.pos.format_currency(receipt.total_tax)" class="pos-receipt-right-align"/>
+                    <span t-esc="env.utils.formatCurrency(receipt.total_tax)" class="pos-receipt-right-align"/>
                 </div>
             </t>
 
@@ -181,7 +181,7 @@
             <t t-if="isSimple(line)">
                 <div class="responsive-price">
                     <t t-esc="line.product_name_wrapped[0]" />
-                    <span t-esc="env.pos.format_currency_no_symbol(line.price_display)" class="price_display pos-receipt-right-align"/>
+                    <span t-esc="env.utils.formatCurrency(line.price_display, false)" class="price_display pos-receipt-right-align"/>
                 </div>
                 <WrappedProductNameLines line="line" />
             </t>
@@ -190,18 +190,18 @@
                 <WrappedProductNameLines line="line" />
                 <t t-if="line.display_discount_policy == 'without_discount' and line.price != line.price_lst">
                     <div class="pos-receipt-left-padding">
-                        <t t-esc="env.pos.format_currency_no_symbol(line.price_lst)" />
+                        <t t-esc="env.utils.formatCurrency(line.price_lst, false)" />
                         ->
-                        <t t-esc="env.pos.format_currency_no_symbol(line.price)" />
+                        <t t-esc="env.utils.formatCurrency(line.price, false)" />
                     </div>
                 </t>
                 <t t-elif="line.discount !== 0">
                     <div class="pos-receipt-left-padding">
                         <t t-if="env.pos.config.iface_tax_included === 'total'">
-                            <t t-esc="env.pos.format_currency_no_symbol(line.price_with_tax_before_discount)"/>
+                            <t t-esc="env.utils.formatCurrency(line.price_with_tax_before_discount, false)"/>
                         </t>
                         <t t-else="">
-                            <t t-esc="env.pos.format_currency_no_symbol(line.price)"/>
+                            <t t-esc="env.utils.formatCurrency(line.price, false)"/>
                         </t>
                     </div>
                 </t>
@@ -214,9 +214,9 @@
                     <t t-esc="Math.round(line.quantity * Math.pow(10, env.pos.dp['Product Unit of Measure'])) / Math.pow(10, env.pos.dp['Product Unit of Measure'])"/>
                     <t t-if="!line.is_in_unit" t-esc="line.unit_name" />
                     x
-                    <t t-esc="env.pos.format_currency(line.price_display_one)" />
+                    <t t-esc="env.utils.formatCurrency(line.price_display_one)" />
                     <span class="price_display pos-receipt-right-align">
-                        <t t-esc="env.pos.format_currency_no_symbol(line.price_display)" />
+                        <t t-esc="env.utils.formatCurrency(line.price_display, false)" />
                     </span>
                 </div>
             </t>

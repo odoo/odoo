@@ -19,7 +19,7 @@
                     </div>
                     <div class="product-price">
                         <t
-                           t-esc="env.pos.format_currency(productPrice) + '/' + productUom" />
+                           t-esc="env.utils.formatCurrency(productPrice) + '/' + productUom" />
                     </div>
                     <div class="computed-price">
                         <t t-esc="computedPriceString" />

@@ -7,6 +7,7 @@ import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods"
 import { NumberPopup } from "@point_of_sale/../tests/tours/helpers/NumberPopupTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
+import { nbsp } from "@web/core/utils/strings";
 
 startSteps();
 
@@ -54,7 +55,7 @@ PaymentScreen.check.emptyPaymentlines("31.0");
 PaymentScreen.do.clickPaymentMethod("Cash");
 PaymentScreen.do.clickValidate();
 ReceiptScreen.check.receiptIsThere();
-ReceiptScreen.check.totalAmountContains("$ 30.00 + $ 1.00 tip");
+ReceiptScreen.check.totalAmountContains(`$${nbsp}30.00 + $${nbsp}1.00 tip`);
 ReceiptScreen.do.clickNextOrder();
 
 // Test customer note in receipt

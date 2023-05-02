@@ -39,7 +39,7 @@
                     </div>
                     <div t-if="value.price_extra" class="price-extra-cell">
                         <span class="price_extra">
-                            + <t t-esc="pos.globalState.format_currency(value.price_extra)"/>
+                            + <t t-esc="env.utils.formatCurrency(value.price_extra)"/>
                         </span>
                     </div>
                     <div t-if="value.id == state.selected_value &amp;&amp; value.is_custom" class="custom-value-cell">
@@ -59,7 +59,7 @@
                     <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra">
-                        + <t t-esc="pos.globalState.format_currency(value.price_extra)"/>
+                        + <t t-esc="env.utils.formatCurrency(value.price_extra)"/>
                     </t>
                 </option>
             </select>

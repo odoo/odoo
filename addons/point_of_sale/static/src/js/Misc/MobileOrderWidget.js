@@ -15,7 +15,7 @@ export class MobileOrderWidget extends Component {
     }
     get total() {
         const _total = this.order ? this.order.get_total_with_tax() : 0;
-        return this.env.pos.format_currency(_total);
+        return this.env.utils.formatCurrency(_total);
     }
     get items_number() {
         return this.order

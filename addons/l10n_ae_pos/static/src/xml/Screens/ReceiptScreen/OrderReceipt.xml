@@ -5,7 +5,7 @@
             <div id='post_receipt_taxes_container'>
                 <t t-if="env.pos.company.country.code == 'AE'">VAT</t>
                 <t t-else="">Total Taxes</t>
-                <span t-esc="env.pos.format_currency(receipt.total_tax)" class="pos-receipt-right-align"/>
+                <span t-esc="env.utils.formatCurrency(receipt.total_tax)" class="pos-receipt-right-align"/>
             </div>
         </xpath>
     </t>

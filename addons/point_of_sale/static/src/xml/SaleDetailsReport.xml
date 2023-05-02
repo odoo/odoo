@@ -28,7 +28,7 @@
                                     <t t-esc="line.uom" />
                                 </t>
                                 x
-                                <t t-esc="pos.format_currency_no_symbol(line.price_unit)" />
+                                <t t-esc="formatCurrency(line.price_unit, false)" />
                             </span>
                         </div>
                         <t t-if="line.discount !== 0">
@@ -57,7 +57,7 @@
                                     <t t-esc="line.uom" />
                                 </t>
                                 x
-                                <t t-esc="pos.format_currency_no_symbol(line.price_unit)" />
+                                <t t-esc="formatCurrency(line.price_unit, false)" />
                             </span>
                         </div>
                         <t t-if="line.discount !== 0">
@@ -76,7 +76,7 @@
             </div>
             <div t-foreach="payments" t-as="payment" t-key="payment_index">
                 <t t-esc="payment['name']" />
-                <span t-esc="pos.format_currency_no_symbol(payment['total'])" class="pos-receipt-right-align"/>
+                <span t-esc="formatCurrency(payment['total'], false)" class="pos-receipt-right-align"/>
             </div>
 
             <br/>
@@ -88,7 +88,7 @@
             </div>
             <div t-foreach="taxes" t-as="tax" t-key="tax_index">
                 <t t-esc="tax.name" />
-                <span t-esc="pos.format_currency_no_symbol(tax.tax_amount)" class="pos-receipt-right-align"/>
+                <span t-esc="formatCurrency(tax.tax_amount, false)" class="pos-receipt-right-align"/>
             </div>
 
             <br/>
@@ -97,7 +97,7 @@
 
             <div>
                 Total:
-                <span t-esc="pos.format_currency_no_symbol(total_paid)" class="pos-receipt-right-align"/>
+                <span t-esc="formatCurrency(total_paid, false)" class="pos-receipt-right-align"/>
             </div>
 
             <br/>

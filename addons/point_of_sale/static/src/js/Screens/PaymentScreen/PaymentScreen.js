@@ -430,11 +430,11 @@ export class PaymentScreen extends Component {
                     body:
                         this.env._t("Are you sure that the customer wants to  pay") +
                         " " +
-                        this.env.pos.format_currency(this.currentOrder.get_total_paid()) +
+                        this.env.utils.formatCurrency(this.currentOrder.get_total_paid()) +
                         " " +
                         this.env._t("for an order of") +
                         " " +
-                        this.env.pos.format_currency(this.currentOrder.get_total_with_tax()) +
+                        this.env.utils.formatCurrency(this.currentOrder.get_total_with_tax()) +
                         " " +
                         this.env._t('? Clicking "Confirm" will validate the payment.'),
                 })

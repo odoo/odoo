@@ -83,7 +83,7 @@ export class ScaleScreen extends Component {
         return weightstr;
     }
     get computedPriceString() {
-        return this.env.pos.format_currency(this.productPrice * this.state.weight);
+        return this.env.utils.formatCurrency(this.productPrice * this.state.weight);
     }
     get productPrice() {
         const product = this.props.product;

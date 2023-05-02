@@ -3,6 +3,7 @@
 
 import { registry } from "@web/core/registry";
 import { roundDecimals as round_di } from "@web/core/utils/numbers";
+import { nbsp } from "@web/core/utils/strings";
 
 function assert(condition, message) {
     if (!condition) {
@@ -192,7 +193,7 @@ steps = steps.concat([
     },
     {
         content: "verify that unit price of shelf changed to $1",
-        trigger: ".total > .value:contains('$ 2.00')",
+        trigger: `.total > .value:contains('$${nbsp}2.00')`,
         run: function () {},
     },
     {
@@ -247,7 +248,7 @@ steps = steps.concat([
     {
         content:
             "verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)",
-        trigger: ".total > .value:contains('$ 8.96')",
+        trigger: `.total > .value:contains('$${nbsp}8.96')`,
     },
     {
         content: "click pricelist button",

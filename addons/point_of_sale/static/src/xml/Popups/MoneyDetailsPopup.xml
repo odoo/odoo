@@ -18,7 +18,7 @@
                 </div>
                 <div class="total-section">
                     <span>Total </span>
-                    <CurrencyAmount currency="currency" amount="pos.globalState.format_currency_no_symbol(state.total)"/>
+                    <CurrencyAmount currency="currency" amount="env.utils.formatCurrency(state.total, false)"/>
                 </div>
             </main>
             <footer class="footer footer-flex">

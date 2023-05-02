@@ -160,7 +160,7 @@ export class TipCell extends Component {
         useAutofocus();
     }
     get tipAmountStr() {
-        return this.env.pos.format_currency(parseFloat(this.orderUiState.inputTipAmount || "0"));
+        return this.env.utils.formatCurrency(parseFloat(this.orderUiState.inputTipAmount || "0"));
     }
     onBlur() {
         this.state.isEditing = false;

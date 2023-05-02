@@ -33,7 +33,7 @@
                             <span class="total-amount-formatting">TOTAL</span>
                         </div>
                         <div>
-                            <span class="pos_total-amount" t-esc="pos.format_currency(order and order.get_total_with_tax() || 0)"/>
+                            <span class="pos_total-amount" t-esc="formatCurrency(order and order.get_total_with_tax() || 0)"/>
                         </div>
                     </div>
 
@@ -63,7 +63,7 @@
                         <div><div t-attf-style="background-image:url(#{productImages[orderline.product.id]})"/></div>
                         <div t-esc="orderline.get_full_product_name()"/>
                         <div t-esc="orderline.get_quantity_str()"/>
-                        <div t-esc="pos.format_currency(orderline.get_display_price())"/>
+                        <div t-esc="formatCurrency(orderline.get_display_price())"/>
                     </div>
                 </t>
             </div>
@@ -78,7 +78,7 @@
                         <span><t t-esc="paymentline.name"/>:</span>
                     </div>
                     <div>
-                        <span t-esc="pos.format_currency(paymentline.get_amount())"/>
+                        <span t-esc="formatCurrency(paymentline.get_amount())"/>
                     </div>
                 </t>
             </t>
@@ -87,7 +87,7 @@
                 <span class="pos-change_title">Change</span>
             </div>
             <div>
-                <span class="pos-change_amount" t-esc="pos.format_currency(order and order.get_change() || 0)"/>
+                <span class="pos-change_amount" t-esc="formatCurrency(order and order.get_change() || 0)"/>
             </div>
         </div>
     </t>

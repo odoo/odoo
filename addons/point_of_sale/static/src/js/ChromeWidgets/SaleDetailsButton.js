@@ -29,6 +29,7 @@ export class SaleDetailsButton extends Component {
             Object.assign({}, saleDetails, {
                 date: new Date().toLocaleString(),
                 pos: this.env.pos,
+                formatCurrency: this.env.utils.formatCurrency,
             })
         );
         const { successful, message } = await this.hardwareProxy.printer.printReceipt(report);

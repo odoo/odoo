@@ -12,9 +12,9 @@
                             <span><t t-if="props.product.default_code" t-esc="props.product.default_code"/> <t t-if="props.product.default_code and props.product.barcode"> - </t> <t t-if="props.product.barcode" t-esc="props.product.barcode"/></span>
                         </div>
                         <div class="column flex-end">
-                            <span t-esc="pos.globalState.format_currency(productInfo.all_prices.price_with_tax)" class="global-info-title" />
+                            <span t-esc="env.utils.formatCurrency(productInfo.all_prices.price_with_tax)" class="global-info-title" />
                             <t t-foreach="productInfo.all_prices.tax_details" t-as="tax" t-key="tax.name">
-                                <div><t t-esc="tax.name"/>: <t t-esc="pos.globalState.format_currency(tax.amount)"/></div>
+                                <div><t t-esc="tax.name"/>: <t t-esc="env.utils.formatCurrency(tax.amount)"/></div>
                             </t>
                         </div>
                     </div>
@@ -27,7 +27,7 @@
                             <table>
                                 <tr>
                                     <td>Price excl. VAT:</td>
-                                    <td><t t-esc="pos.globalState.format_currency(productInfo.all_prices.price_without_tax)"/></td>
+                                    <td><t t-esc="env.utils.formatCurrency(productInfo.all_prices.price_without_tax)"/></td>
                                 </tr>
                                 <tr t-if="_hasMarginsCostsAccessRights()">
                                     <td>Cost:</td>
@@ -42,7 +42,7 @@
                                 <t t-foreach="productInfo.pricelists" t-as="pricelist" t-key="pricelist.name">
                                     <tr>
                                         <td t-esc="pricelist.name"/>
-                                        <td t-esc="pos.globalState.format_currency(pricelist.price)"/>
+                                        <td t-esc="env.utils.formatCurrency(pricelist.price)"/>
                                     </tr>
                                 </t>
                             </table>
@@ -77,7 +77,7 @@
                                         <td><span t-esc="supplier.name" class="table-name"/>:</td>
                                         <div class="mobile-line">
                                             <td><t t-esc="supplier.delay"/> Days</td>
-                                            <td t-if="_hasMarginsCostsAccessRights()"><t t-esc="pos.globalState.format_currency(supplier.price)"/></td>
+                                            <td t-if="_hasMarginsCostsAccessRights()"><t t-esc="env.utils.formatCurrency(supplier.price)"/></td>
                                         </div>
                                     </tr>
                                 </t>

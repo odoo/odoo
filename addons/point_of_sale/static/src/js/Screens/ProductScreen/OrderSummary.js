@@ -7,7 +7,7 @@ export class OrderSummary extends Component {
     static template = "OrderSummary";
 
     getTotal() {
-        return this.env.pos.format_currency(this.props.order.get_total_with_tax());
+        return this.env.utils.formatCurrency(this.props.order.get_total_with_tax());
     }
     getTax() {
         const total = this.props.order.get_total_with_tax();
@@ -15,7 +15,7 @@ export class OrderSummary extends Component {
         const taxAmount = total - totalWithoutTax;
         return {
             hasTax: !floatIsZero(taxAmount, this.env.pos.currency.decimal_places),
-            displayAmount: this.env.pos.format_currency(taxAmount),
+            displayAmount: this.env.utils.formatCurrency(taxAmount),
         };
     }
 }

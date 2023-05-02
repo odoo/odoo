@@ -16,7 +16,7 @@
                     Old unit price:
                     <span class="oldPrice">
                         <s>
-                            <t t-out="env.pos.format_currency(line.taxed_lst_unit_price, 'Product Price')" /> / Units
+                            <t t-out="env.utils.formatCurrency(line.taxed_lst_unit_price)" /> / Units
                         </s>
                     </span>
                 </div>
