@@ -28,7 +28,7 @@ class RibbonWidget extends Component {
     };
     static defaultProps = {
         title: "",
-        bgClass: "bg-success",
+        bgClass: "text-bg-success",
     };
 
     get classes() {

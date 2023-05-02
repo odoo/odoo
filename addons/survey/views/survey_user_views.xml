@@ -53,9 +53,9 @@
                         </button>
                     </div>
                     <field name="test_entry" invisible="1"/>
-                    <widget name="web_ribbon" title="Test Entry" bg_color="bg-info"
+                    <widget name="web_ribbon" title="Test Entry" bg_color="text-bg-info"
                         attrs="{'invisible': [('test_entry', '!=', True)]}"/>
-                    <widget name="web_ribbon" title="Failed" bg_color="bg-danger"
+                    <widget name="web_ribbon" title="Failed" bg_color="text-bg-danger"
                         attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', True)]}"/>
                     <widget name="web_ribbon" title="Passed"
                         attrs="{'invisible': ['|', '|', ('test_entry', '=', True), ('scoring_type', '=', 'no_scoring'), ('scoring_success', '=', False)]}"/>
