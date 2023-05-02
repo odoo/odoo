@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { formatMonetary } from "@web/views/fields/formatters";
+import { roundDecimals } from "@web/core/utils/numbers";
 import { registry } from "@web/core/registry";
 
 /**
@@ -19,8 +20,13 @@ export const contextualUtilsService = {
             });
         };
 
+        const roundCurrency = (value) => {
+            return roundDecimals(value, currency.decimal_places);
+        };
+
         env.utils = {
             formatCurrency,
+            roundCurrency,
         };
     },
 };
