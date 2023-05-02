@@ -1508,16 +1508,6 @@ export class PosGlobalState extends PosModel {
         return parseFloat(round_di(value, decimals).toFixed(decimals));
     }
 
-    /**
-     * (value = 1.0000, decimals = 2) => '1'
-     * (value = 1.1234, decimals = 2) => '1.12'
-     * @param {number} value amount to format
-     */
-    formatFixed(value) {
-        const currency = this.currency || { decimal_places: 2 };
-        return `${Number(value.toFixed(currency.decimal_places || 0))}`;
-    }
-
     disallowLineQuantityChange() {
         return false;
     }
