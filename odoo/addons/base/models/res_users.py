@@ -1437,6 +1437,8 @@ class GroupsView(models.Model):
                             dest_group.append(E.field(name=field_name, invisible="1", **attrs))
                         else:
                             dest_group.append(E.field(name=field_name, **attrs))
+                        # add duplicate invisible field so default values are saved on create
+                        xml0.append(E.field(name=field_name, **dict(attrs, invisible="1", groups='!base.group_no_one')))
                         group_count += 1
                     xml4.append(E.group(*left_group))
                     xml4.append(E.group(*right_group))
