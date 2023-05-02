@@ -18,6 +18,13 @@ class Do {
             },
         ];
     }
+    clickSettle() {
+        return [
+            {
+                trigger: `.button.highlight.next`,
+            },
+        ];
+    }
 }
 
 class Check {
