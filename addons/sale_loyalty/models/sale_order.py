@@ -16,13 +16,17 @@ from odoo.osv import expression
 def _generate_random_reward_code():
     return str(random.getrandbits(32))
 
+
 class SaleOrder(models.Model):
-    _inherit = "sale.order"
+    _inherit = 'sale.order'
 
     # Contains how much points should be given to a coupon upon validating the order
-    applied_coupon_ids = fields.Many2many('loyalty.card', string="Manually Applied Coupons", copy=False)
-    code_enabled_rule_ids = fields.Many2many('loyalty.rule', string="Manually Triggered Rules", copy=False)
-    coupon_point_ids = fields.One2many('sale.order.coupon.points', 'order_id', copy=False)
+    applied_coupon_ids = fields.Many2many(
+        comodel_name='loyalty.card', string="Manually Applied Coupons", copy=False)
+    code_enabled_rule_ids = fields.Many2many(
+        comodel_name='loyalty.rule', string="Manually Triggered Rules", copy=False)
+    coupon_point_ids = fields.One2many(
+        comodel_name='sale.order.coupon.points', inverse_name='order_id', copy=False)
     reward_amount = fields.Float(compute='_compute_reward_total')
 
     @api.depends('order_line')

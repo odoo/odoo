@@ -3,16 +3,19 @@
 
 from odoo import api, fields, models
 
-class SaleOrderLine(models.Model):
-    _inherit = "sale.order.line"
 
-    is_reward_line = fields.Boolean('Is a program reward line', compute='_compute_is_reward_line')
-    reward_id = fields.Many2one('loyalty.reward', ondelete='restrict', readonly=True)
-    coupon_id = fields.Many2one('loyalty.card', ondelete='restrict', readonly=True)
-    reward_identifier_code = fields.Char(help="""
-        Technical field used to link multiple reward lines from the same reward together.
-    """)
-    points_cost = fields.Float(help='How much point this reward cost on the loyalty card.')
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    is_reward_line = fields.Boolean(
+        string="Is a program reward line", compute='_compute_is_reward_line')
+    reward_id = fields.Many2one(
+        comodel_name='loyalty.reward', ondelete='restrict', readonly=True)
+    coupon_id = fields.Many2one(
+        comodel_name='loyalty.card', ondelete='restrict', readonly=True)
+    reward_identifier_code = fields.Char(
+        help="Technical field used to link multiple reward lines from the same reward together.")
+    points_cost = fields.Float(help="How much point this reward costs on the loyalty card.")
 
     def _compute_name(self):
         # Avoid computing the name for reward lines
