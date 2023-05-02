@@ -235,10 +235,10 @@
                             <div class="col-lg-2 col-sm-8 py-0 my-2 my-lg-0 col-12">
                                 <div class="d-flex flex-grow-1 flex-column my-0 my-lg-2">
                                     <span class="fw-bold"><field name="title"/></span>
-                                    <span t-if="!selection_mode">
+                                    <span t-if="!selection_mode" class="d-flex align-items-center">
                                         <field name="user_id" widget="many2one_avatar_user"
                                             options="{'display_avatar_name': True}"/>
-                                        -
+                                            <span class="mx-1">-</span>
                                         <t t-esc="luxon.DateTime.fromISO(record.create_date.raw_value).toFormat('MMM yyyy')"/>
                                     </span>
                                 </div>
@@ -283,34 +283,34 @@
                                     <span class="text-muted" t-else="">Certified</span>
                                 </a>
                             </div>
-                            <div t-if="!selection_mode" class="col-lg-3 col-sm-12 d-none d-sm-block py-0 my-2 pb-lg-3 ms-auto text-lg-end">
+                            <div t-if="!selection_mode" class="col-lg-3 col-sm-12 d-none d-sm-flex justify-content-end gap-2 my-2 ms-auto pb-lg-3 py-0">
                                 <button name="action_send_survey"
                                         string="Share" type="object"
-                                        class="btn btn-secondary border"
+                                        class="btn btn-secondary"
                                         attrs="{'invisible': [('active', '=', False)]}">
                                     Share
                                 </button>
                                 <button name="action_test_survey"
                                         string="Test" type="object"
-                                        class="btn btn-secondary border"
+                                        class="btn btn-secondary"
                                         attrs="{'invisible': [('active', '=', False)]}">
                                     Test
                                 </button>
                                 <button name="action_result_survey"
                                         string="See results" type="object"
-                                        class="btn btn-secondary border"
+                                        class="btn btn-secondary"
                                         attrs="{'invisible': [('active', '=', False)]}">
                                     See results
                                 </button>
                                 <button name="action_start_session"
                                         string="Start Live Session" type="object"
-                                        class="btn btn-secondary border"
+                                        class="btn btn-secondary"
                                         attrs="{'invisible': ['|', '|', ('session_state', '!=', False), ('certification', '=', True), ('active', '=', False)]}">
                                     Start Live Session
                                 </button>
                                 <button name="action_end_session"
                                         string="End Live Session" type="object"
-                                        class="btn btn-secondary border"
+                                        class="btn btn-secondary"
                                         attrs="{'invisible': ['|', ('session_state', 'not in', ['ready', 'in_progress']), ('active', '=', False)]}">
                                     End Live Session
                                 </button>
