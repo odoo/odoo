@@ -8,8 +8,8 @@
         <field name="arch" type="xml">
             <xpath expr="//group[@name='kpis']/group[last()]" position="before">
                 <group name="kpi_crm" string="CRM" groups="sales_team.group_sale_salesman_all_leads">
-                    <field name="kpi_crm_lead_created"/>
-                    <field name="kpi_crm_opportunities_won"/>
+                    <field name="kpi_crm_lead_created" widget="progressbar" options="{'label': 'Leads Created'}"/>
+                    <field name="kpi_crm_opportunities_won" widget="progressbar" options="{'label': 'Opportunities Won'}"/>
                 </group>
             </xpath>
         </field>
