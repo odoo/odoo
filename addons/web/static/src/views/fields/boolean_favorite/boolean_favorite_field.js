@@ -12,13 +12,17 @@ export class BooleanFavoriteField extends Component {
     static props = {
         ...standardFieldProps,
         noLabel: { type: Boolean, optional: true },
+        autosave: { type: Boolean, optional: true },
     };
     static defaultProps = {
         noLabel: false,
     };
 
-    update() {
-        this.props.record.update({ [this.props.name]: !this.props.record.data[this.props.name] });
+    async update() {
+        await this.props.record.update({ [this.props.name]: !this.props.record.data[this.props.name] });
+        if (this.props.autosave) {
+            await this.props.record.save();
+        }
     }
 }
 
@@ -27,8 +31,9 @@ export const booleanFavoriteField = {
     displayName: _lt("Favorite"),
     supportedTypes: ["boolean"],
     isEmpty: () => false,
-    extractProps: ({ attrs }) => ({
+    extractProps: ({ attrs, options }) => ({
         noLabel: archParseBoolean(attrs.nolabel),
+        autosave: "autosave" in options ? Boolean(options.autosave) : true,
     }),
 };
 
