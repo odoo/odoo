@@ -14,25 +14,21 @@
                         <div id="wrap" class="oe_structure">
                             <section class="py-2">
                                 <div class="container">
-                                    <h1>Components</h1>
+                                    <h1 class="mt-4 mb-3">Components</h1>
                                     <div class="row">
-                                        <div class="col-md">
+                                        <div class="col-8">
                                             <h2>Badge</h2>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></span>
-                                            </t>
-                                            <h3 class="mt-2 h6">Pill</h3>
-                                            <t t-foreach="bs_theme_colors" t-as="color">
-                                                <span t-attf-class="badge mb-1 rounded-pill bg-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                <span t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                             </t>
                                             <h3 class="mt-2 h6">Link</h3>
                                             <t t-foreach="bs_theme_colors" t-as="color">
-                                                <a href="#" t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></a>
+                                                <a href="#" t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></a>
                                             </t>
                                             <h3 class="mt-2 h6">Autosizing</h3>
                                             <div class="h3">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
-                                                    <span t-attf-class="badge mb-1 bg-#{color[0]}"><t t-esc="color[1]"/></span>
+                                                    <span t-attf-class="badge mb-1 text-bg-#{color[0]}"><t t-esc="color[1]"/></span>
                                                 </t>
                                             </div>
 
@@ -40,18 +36,29 @@
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
-                                            <h3 class="mt-2 h6">Outline</h3>
+                                            <h6 class="mt-2">Outline</h6>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-outline-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
-                                            <h3 class="mt-2 h6">Small</h3>
+                                            <h6 class="mt-2">Small</h6>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-sm btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
-                                            <h3 class="mt-2 h6">Large</h3>
+                                            <h6 class="mt-2">Large</h6>
                                             <t t-foreach="bs_theme_colors" t-as="color">
                                                 <button type="button" t-attf-class="btn mb-1 btn-lg btn-#{color[0]}"><t t-esc="color[1]"/></button>
                                             </t>
+                                            <h6 class="mt-2">Group</h6>
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-primary active">Left</button>
+                                                <button type="button" class="btn btn-primary">Middle</button>
+                                                <button type="button" class="btn btn-primary">Right</button>
+                                            </div>
+                                            <div class="btn-group" role="group" aria-label="Basic example">
+                                                <button type="button" class="btn btn-light active">Left</button>
+                                                <button type="button" class="btn btn-light">Middle</button>
+                                                <button type="button" class="btn btn-light">Right</button>
+                                            </div>
 
                                             <h2 class="mt-4">Dropdown</h2>
                                             <div class="dropdown">
@@ -65,6 +72,37 @@
                                                 </div>
                                             </div>
 
+                                            <h2 class="mt-4">Nav and tabs</h2>
+                                            <h6 class="mt-2">Default</h6>
+                                            <ul class="nav">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" aria-current="page" href="#">Active</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#">Link</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#">Link</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                                                </li>
+                                            </ul>
+                                            <h6 class="mt-2">Tabs</h6>
+                                            <ul class="nav nav-tabs">
+                                                <li class="nav-item">
+                                                    <a class="nav-link active" aria-current="page" href="#">Active</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#">Link</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link" href="#">Link</a>
+                                                </li>
+                                                <li class="nav-item">
+                                                    <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+                                                </li>
+                                            </ul>
                                             <h2 class="mt-4">Navbar</h2>
                                             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                                                 <a class="navbar-brand" href="#">Navbar</a>
@@ -93,10 +131,46 @@
 
                                             <h2 class="mt-4">Form</h2>
                                             <form>
-                                                <div class="mb-3">
-                                                    <label for="exampleInputEmail1">Email address</label>
-                                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
-                                                    <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                <div class="row mb-3">
+                                                    <div class="col">
+                                                        <label for="exampleInputEmail1">Email address</label>
+                                                        <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"/>
+                                                        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+                                                    </div>
+                                                    <div class="col">
+                                                        <label for="exampleSelect">Email address</label>
+                                                        <select id="exampleSelect" class="form-select">
+                                                            <option selected="true">Open this select menu</option>
+                                                            <option value="1">One</option>
+                                                            <option value="2">Two</option>
+                                                            <option value="3">Three</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-check mb-3 form-switch">
+                                                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"/>
+                                                    <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="checkbox" value="" id="defaultCheck1"/>
+                                                    <label class="form-check-label" for="defaultCheck1">
+                                                        Default checkbox
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked="true" />
+                                                    <label class="form-check-label" for="exampleRadios1">
+                                                        Default radio
+                                                    </label>
+                                                </div>
+                                                <div class="form-check mb-3">
+                                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2"/>
+                                                    <label class="form-check-label" for="exampleRadios2">
+                                                        Second default radio
+                                                    </label>
+                                                </div>
+                                                <div>
+                                                    <input class="form-control" type="file" id="formFile"/>
                                                 </div>
                                             </form>
 
@@ -121,15 +195,8 @@
                                                 </ul>
                                             </nav>
                                         </div>
-                                        <div class="col-md-auto">
-                                            <h2>Alert</h2>
-                                            <t t-foreach="bs_theme_colors" t-as="color">
-                                                <div t-attf-class="alert alert-#{color[0]}">
-                                                    This is a "<t t-esc="color[1]"/>" alert with a <a href="#" class="alert-link">link</a>.
-                                                </div>
-                                            </t>
-
-                                            <h2 class="mt-4">Breadcrumb</h2>
+                                        <div class="col-4">
+                                            <h2>Breadcrumb</h2>
                                             <nav aria-label="breadcrumb">
                                                 <ol class="breadcrumb">
                                                     <li class="breadcrumb-item"><a href="#">Home</a></li>
@@ -138,27 +205,157 @@
                                                 </ol>
                                             </nav>
 
-                                            <h2 class="mt-4">Card</h2>
-                                            <div class="card">
-                                                <div class="card-header">
-                                                    Card Header
+                                            <h2 class="mt-4">List-group</h2>
+                                            <ol class="list-group list-group-numbered">
+                                                <li class="list-group-item d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-primary d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-success d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-danger d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-warning d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-info d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-light d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                                <li class="list-group-item list-group-item-dark d-flex justify-content-between align-items-start">
+                                                    <div class="ms-2 me-auto">
+                                                        <div class="fw-bold">Subheading</div>
+                                                        Cras justo odio
+                                                    </div>
+                                                    <span class="badge bg-primary rounded-pill">14</span>
+                                                </li>
+                                            </ol>
+                                        </div>
+                                        <h2 class="mt-4">Card</h2>
+                                        <div class="row align-items-top">
+                                            <div class="col-4">
+                                                <div class="card">
+                                                    <img src="https://images.unsplash.com/photo-1659292553629-ca0fe1d3b538?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1171&amp;q=80" class="card-img-top" alt="..."/>
+                                                    <div class="card-body">
+                                                        <h5 class="card-title">Card title</h5>
+                                                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                                                    </div>
+                                                    <ul class="list-group list-group-flush">
+                                                        <li class="list-group-item">An item</li>
+                                                        <li class="list-group-item">A second item</li>
+                                                        <li class="list-group-item">A third item</li>
+                                                    </ul>
+                                                    <div class="card-body">
+                                                        <a href="#" class="card-link btn btn-primary">Card link</a>
+                                                        <a href="#" class="card-link">Another link</a>
+                                                    </div>
                                                 </div>
-                                                <div class="card-body">
-                                                    Card Body
+                                            </div>
+                                            <div class="col-6">
+                                                <div class="card mb-3">
+                                                    <div class="row g-0">
+                                                        <div class="col-md-4">
+                                                            <img src="https://images.unsplash.com/photo-1659292553629-ca0fe1d3b538?ixlib=rb-4.0.3&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1171&amp;q=80" class="img-fluid h-100 rounded-start" style="object-fit:cover;" alt="..."/>
+                                                        </div>
+                                                        <div class="col-md-8">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title">Card title</h5>
+                                                                <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                                <ul class="list-group list-group-flush">
-                                                    <li class="list-group-item">Item 1</li>
-                                                    <li class="list-group-item">Item 2</li>
-                                                </ul>
-                                                <div class="card-footer">
-                                                    Card Footer
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <h2>Alerts</h2>
+                                            <div class="col-6">
+                                                <t t-foreach="bs_theme_colors" t-as="color">
+                                                    <div t-attf-class="alert alert-#{color[0]}">
+                                                        This is a "<t t-esc="color[1]"/>" alert with a <a href="#" class="alert-link">link</a>.
+                                                    </div>
+                                                </t>
+                                            </div>
+                                            <div class="col-6">
+                                                <t t-foreach="bs_theme_colors" t-as="color">
+                                                    <div t-attf-class="alert alert-#{color[0]} d-flex align-items-center" role="alert">
+                                                        <i class="fa fa-info-circle fa-lg fa-stack d-flex align-items-center justify-content-center me-3 p-2 rounded-1"/>
+                                                        <div>
+                                                            An example alert with an icon
+                                                        </div>
+                                                    </div>
+                                                </t>
+                                            </div>
+                                        </div>
+                                        <div class="row mt-4">
+                                            <div class="col-6">
+                                                <h2 class="mt-4">Modal</h2>
+                                                <div class="modal position-relative d-block p-5 h-auto rounded-3 z-index-0">
+                                                    <div class="modal-dialog p-0">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">Modal title</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p>This is a paragraph. Ambitioni dedisse scripsisse iudicaretur. Nihilne te nocturnum praesidium Palati, nihil urbis vigiliae. Unam incolunt Belgae, aliam Aquitani, tertiam. Integer legentibus erat a ante historiarum dapibus. Phasellus laoreet lorem vel dolor tempus vehicula.</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
+                                                                <button type="button" class="btn btn-primary">Save changes</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </section>
-                            <section class="py-2">
+                            <hr class="my-5"/>
+                            <section class="pb-5">
                                 <div class="container">
                                     <h1>Utilities &amp; Typography</h1>
                                     <div class="row">
@@ -172,7 +369,7 @@
                                             </div>
                                             <div class="row g-0 mt-2">
                                                 <t t-foreach="bs_theme_colors" t-as="color">
-                                                    <div t-attf-class="col-auto bg-#{color[0]}">
+                                                    <div t-attf-class="col-auto text-bg-#{color[0]}">
                                                         <div class="py-1 px-3"><t t-esc="color[1]"/></div>
                                                     </div>
                                                 </t>
@@ -205,6 +402,46 @@
                                                     </div>
                                                 </t>
                                             </div>
+                                            <div class="row gap-4 mt-4">
+                                                <div class="col p-4 text-center shadow-sm ">
+                                                    <p class="mb-1">Shadow small</p>
+                                                    <small class="text-muted">(shadow-sm)</small>
+                                                </div>
+                                                <div class="col p-4 text-center shadow ">
+                                                    <p class="mb-1">Shadow medium</p>
+                                                    <small class="text-muted">(shadow)</small>
+                                                </div>
+                                                <div class="col p-4 text-center shadow-lg ">
+                                                    <p class="mb-1">Shadow large</p>
+                                                    <small class="text-muted">(shadow-lg)</small>
+                                                </div>
+                                            </div>
+                                            <div class="row gap-4 mt-4">
+                                                <div class="col p-4 border text-center rounded-0">
+                                                    <p class="mb-1">Border radius none</p>
+                                                    <small class="text-muted">(rounded-0)</small>
+                                                </div>
+                                                <div class="col p-4 border text-center rounded-1">
+                                                    <p class="mb-1">Border radius small</p>
+                                                    <small class="text-muted">(rounded-1)</small>
+                                                </div>
+                                                <div class="col p-4 border text-center rounded-2">
+                                                    <p class="mb-1">Border radius medium</p>
+                                                    <small class="text-muted">(rounded-2)</small>
+                                                </div>
+                                                <div class="col p-4 border text-center rounded-3">
+                                                    <p class="mb-1">Border radius large</p>
+                                                    <small class="text-muted">(rounded-3)</small>
+                                                </div>
+                                            </div>
+                                            <div class="row mt-2">
+                                                <p class="display-1">Display 1</p>
+                                                <p class="display-2">Display 2</p>
+                                                <p class="display-3">Display 3</p>
+                                                <p class="display-4">Display 4</p>
+                                                <p class="display-5">Display 5</p>
+                                                <p class="display-6">Display 6</p>
+                                            </div>
                                         </div>
                                         <div class="col-md-auto">
                                             <h1>Headings 1</h1>
@@ -213,6 +450,7 @@
                                             <h4>Headings 4</h4>
                                             <h5>Headings 5</h5>
                                             <h6>Headings 6</h6>
+                                            <p class="lead">Lead text</p>
                                             <p>Paragraph with <strong>bold</strong>, <span class="text-muted">muted</span> and <em>italic</em> texts</p>
                                             <p><a href="#">Link</a></p>
                                             <p><button type="button" class="btn btn-link">Link button</button></p>
