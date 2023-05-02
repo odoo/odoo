@@ -13,7 +13,7 @@ from odoo.tests.common import Form, TransactionCase, users
 from odoo.tools import mute_logger
 
 
-class PropertiesCase(TransactionCase):
+class TestPropertiesMixin(TransactionCase):
 
     @classmethod
     def setUpClass(cls):
@@ -80,6 +80,37 @@ class PropertiesCase(TransactionCase):
             'discussion': cls.discussion_2.id,
             'author': cls.user.id,
         })
+
+    def _get_sql_properties(self, message):
+        self.env.flush_all()
+
+        self.env.cr.execute(
+            """
+            SELECT attributes
+              FROM test_new_api_message
+             WHERE id = %s
+            """, (message.id, ),
+        )
+        value = self.env.cr.fetchone()
+        self.assertTrue(value and value[0])
+        return value[0]
+
+    def _get_sql_definition(self, discussion):
+        self.env.flush_all()
+
+        self.env.cr.execute(
+            """
+            SELECT attributes_definition
+              FROM test_new_api_discussion
+             WHERE id = %s
+            """, (discussion.id, ),
+        )
+        value = self.env.cr.fetchone()
+        self.assertTrue(value and value[0])
+        return value[0]
+
+
+class PropertiesCase(TestPropertiesMixin):
 
     def test_properties_field(self):
         self.assertTrue(isinstance(self.message_1.attributes, list))
@@ -1419,36 +1450,8 @@ class PropertiesCase(TransactionCase):
             values = message.read(['attributes'])[0]['attributes'][0]
         self.assertEqual(values['value'], (tag.id, 'Test Tag'))
 
-    def _get_sql_properties(self, message):
-        self.env.flush_all()
 
-        self.env.cr.execute(
-            """
-            SELECT attributes
-              FROM test_new_api_message
-             WHERE id = %s
-            """, (message.id, ),
-        )
-        value = self.env.cr.fetchone()
-        self.assertTrue(value and value[0])
-        return value[0]
-
-    def _get_sql_definition(self, discussion):
-        self.env.flush_all()
-
-        self.env.cr.execute(
-            """
-            SELECT attributes_definition
-              FROM test_new_api_discussion
-             WHERE id = %s
-            """, (discussion.id, ),
-        )
-        value = self.env.cr.fetchone()
-        self.assertTrue(value and value[0])
-        return value[0]
-
-
-class PropertiesSearchCase(PropertiesCase):
+class PropertiesSearchCase(TestPropertiesMixin):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
