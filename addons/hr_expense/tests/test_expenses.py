@@ -432,3 +432,69 @@ class TestExpenses(TestExpenseCommon):
             'amount_paid': formatLang(self.env, 11.0, currency_obj=self.env.company.currency_id),
             'currency': self.env.company.currency_id
         })
+
+    def test_reset_move_to_draft(self):
+        """
+        Test the state of an expense and its report
+        after resetting the paid move to draft
+        """
+        expense_sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.env.company.id,
+            'employee_id': self.expense_employee.id,
+            'name': 'test sheet',
+            'expense_line_ids': [
+                (0, 0, {
+                    'name': 'expense_1',
+                    'employee_id': self.expense_employee.id,
+                    'product_id': self.product_a.id,
+                    'unit_amount': 1000.00,
+                }),
+            ],
+        })
+
+        expense = expense_sheet.expense_line_ids
+
+        self.assertEqual(expense.state, 'draft', 'Expense state must be draft before sheet submission')
+        self.assertEqual(expense_sheet.state, 'draft', 'Sheet state must be draft before submission')
+
+        # Submit report
+        expense_sheet.action_submit_sheet()
+
+        self.assertEqual(expense.state, 'reported', 'Expense state must be reported after sheet submission')
+        self.assertEqual(expense_sheet.state, 'submit', 'Sheet state must be submit after submission')
+
+        # Approve report
+        expense_sheet.approve_expense_sheets()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be draft after sheet approval')
+        self.assertEqual(expense_sheet.state, 'approve', 'Sheet state must be draft after approval')
+
+        # Create move
+        expense_sheet.action_sheet_move_create()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be draft after posting move')
+        self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be draft after posting move')
+
+        # Pay move
+        move = expense_sheet.account_move_id
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+            'amount': 1000.0,
+        })._create_payments()
+
+        self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
+        self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
+
+        # Reset move to draft
+        move.button_draft()
+
+        self.assertEqual(expense.state, 'approved', 'Expense state must be approved after resetting move to draft')
+        self.assertEqual(expense_sheet.state, 'post', 'Sheet state must be done after resetting move to draft')
+
+        # Post and pay move again
+        move.action_post()
+        self.env['account.payment.register'].with_context(active_model='account.move', active_ids=move.ids).create({
+            'amount': 1000.0,
+        })._create_payments()
+
+        self.assertEqual(expense.state, 'done', 'Expense state must be done after payment')
+        self.assertEqual(expense_sheet.state, 'done', 'Sheet state must be done after payment')
