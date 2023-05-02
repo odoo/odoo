@@ -525,11 +525,11 @@ function enforceTablesResponsivity(editable) {
             const div = document.createElement('div');
             div.style.display = 'inline-block';
             div.style.verticalAlign = 'top';
-            div.classList.toggle('o_stacking_wrapper', true);
+            div.classList.add('o_stacking_wrapper');
             commonTd.appendChild(div);
             const newTable = _createTable();
             newTable.style.width = width;
-            newTable.classList.toggle('o_stacking_wrapper', true);
+            newTable.classList.add('o_stacking_wrapper');
             div.appendChild(newTable);
             const newTr = document.createElement('tr');
             newTable.appendChild(newTr);
@@ -565,7 +565,7 @@ function handleMasonry(editable) {
             // TODO: this seems a duplicate of the other o_desktop_h100 set below.
             // Set the cells' heights to fill their parents.
             for (const tdWithTable of tdsWithTable) {
-                tdWithTable.classList.toggle('o_desktop_h100', true);
+                tdWithTable.classList.add('o_desktop_h100');
                 tdWithTable.style.setProperty('height', '100%');
             }
             // We also have to set the same height on the cells' sibling TDs.
@@ -582,10 +582,10 @@ function handleMasonry(editable) {
     }
     for (const tr of masonryTrs) {
         const height = tr.style.height.includes('px') ? parseFloat(tr.style.height.replace('px', '').trim()) : _getHeight(tr);
-        tr.closest('table').classList.toggle('o_desktop_h100', true);
-        tr.classList.toggle('o_desktop_h100', true);
+        tr.closest('table').classList.add('o_desktop_h100');
+        tr.classList.add('o_desktop_h100');
         for (const td of [...tr.children].filter(child => child.nodeName === 'TD')) {
-            td.classList.toggle('o_desktop_h100', true);
+            td.classList.add('o_desktop_h100');
             td.style.setProperty('height', '100%');
             const childrenNames = [...td.children].map(child => child.nodeName);
             if (!childrenNames.includes('TABLE')) {
@@ -646,7 +646,7 @@ function enforceImagesResponsivity(editable) {
     // responsively, but leave it for Outlook.
     for (const image of editable.querySelectorAll('img[width="100%"][height]')) {
         image.before(_createMso(image.outerHTML));
-        image.classList.toggle('mso-hide', true);
+        image.classList.add('mso-hide');
         image.removeAttribute('height');
     }
 }
@@ -1249,7 +1249,7 @@ function _applyColspan(element, colspan, tableWidth) {
     // Round to 2 decimal places.
     const width = Math.round(tableWidth * widthPercentage * 100) / 100;
     element.style.setProperty('max-width', width + 'px');
-    element.classList.toggle('o_converted_col', true);
+    element.classList.add('o_converted_col');
 }
 /**
  * Take an element with a background image and return a string containing the
