@@ -732,3 +732,24 @@ class TestTaxTotals(AccountTestInvoicingCommon):
         ]
         run_case('round_per_line', lines, [16.60])
         run_case('round_globally', lines, [16.59])
+
+    def test_cash_rounding_amount_total_rounded(self):
+        tax_15 = self.env['account.tax'].create({
+            'name': "tax_15",
+            'amount_type': 'percent',
+            'amount': 15.0,
+        })
+        cash_rounding = self.env['account.cash.rounding'].create({
+            'name': 'Rounding HALF-UP',
+            'rounding': 1,
+            'strategy': 'biggest_tax',
+            'rounding_method': 'HALF-UP',
+        })
+
+        invoice = self.init_invoice('out_invoice', amounts=[378], taxes=tax_15)
+        invoice.invoice_cash_rounding_id = cash_rounding
+        self.assertEqual(invoice.tax_totals['amount_total_rounded'], 435)
+
+        bill = self.init_invoice('in_invoice', amounts=[378], taxes=tax_15)
+        bill.invoice_cash_rounding_id = cash_rounding
+        self.assertEqual(bill.tax_totals['amount_total_rounded'], 435)
