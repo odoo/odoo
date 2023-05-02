@@ -4,6 +4,7 @@ import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitab
 import { useState } from "@odoo/owl";
 import { CurrencyAmount } from "../Misc/CurrencyAmount";
 import { usePos } from "@point_of_sale/app/pos_hook";
+import { floatIsZero } from "@web/core/utils/numbers";
 
 export class MoneyDetailsPopup extends AbstractAwaitablePopup {
     static components = { CurrencyAmount };
@@ -32,15 +33,16 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
         );
     }
     updateMoneyDetailsAmount() {
-        const total = Object.entries(this.state.moneyDetails).reduce(
+        this.state.total = Object.entries(this.state.moneyDetails).reduce(
             (total, money) => total + money[0] * money[1],
             0
         );
-        this.state.total = this.pos.globalState.round_decimals_currency(total);
     }
     //@override
     async getPayload() {
-        let moneyDetailsNotes = this.state.total ? "Money details: \n" : null;
+        let moneyDetailsNotes = !floatIsZero(this.state.total, this.currency.decimal_places)
+            ? "Money details: \n"
+            : null;
         this.pos.globalState.bills.forEach((bill) => {
             if (this.state.moneyDetails[bill.value]) {
                 moneyDetailsNotes += `  - ${
