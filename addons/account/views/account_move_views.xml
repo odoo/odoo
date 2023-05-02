@@ -1152,7 +1152,7 @@
                                                 aria-label="Change Period"
                                                 class="float-end"
                                                 attrs="{'invisible': [('account_internal_group', 'not in', ('income', 'expense'))], 'column_invisible': ['|', ('parent.move_type', '=', 'entry'), ('parent.state', '!=', 'posted')]}"
-                                                context="{'hide_automatic_options': 1, 'default_action': 'change_period'}"/>
+                                                context="{'default_action': 'change_period'}"/>
 
                                         <!-- Others fields -->
                                         <field name="tax_line_id" invisible="1"/>
@@ -1368,13 +1368,22 @@
             <field name="context">{'search_default_account_id': [active_id], 'search_default_posted': 1}</field>
         </record>
 
-        <record id="action_automatic_entry" model="ir.actions.server">
-            <field name="name">Automatic Entries</field>
+        <record id="action_automatic_entry_change_account" model="ir.actions.server">
+            <field name="name">Move to Account</field>
             <field name="model_id" ref="account.model_account_move_line"/>
             <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
             <field name="binding_model_id" ref="account.model_account_move_line"/>
             <field name="state">code</field>
-            <field name="code">action = records.action_automatic_entry()</field>
+            <field name="code">action = records.action_automatic_entry('change_account')</field>
+        </record>
+
+        <record id="action_automatic_entry_change_period" model="ir.actions.server">
+            <field name="name">Change Period</field>
+            <field name="model_id" ref="account.model_account_move_line"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
+            <field name="binding_model_id" ref="account.model_account_move_line"/>
+            <field name="state">code</field>
+            <field name="code">action = records.action_automatic_entry('change_period')</field>
         </record>
 
         <record id="action_account_moves_all_a" model="ir.actions.act_window">

@@ -3941,15 +3941,7 @@ class AccountMove(models.Model):
         :param has_tax: If any taxes are involved in the lines of the invoice
         :return: a list of tuples containing the lock dates affecting this move, ordered chronologically.
         """
-        locks = []
-        user_lock_date = self.company_id._get_user_fiscal_lock_date()
-        if invoice_date and user_lock_date and invoice_date <= user_lock_date:
-            locks.append((user_lock_date, _('user')))
-        tax_lock_date = self.company_id.tax_lock_date
-        if invoice_date and tax_lock_date and has_tax and invoice_date <= tax_lock_date:
-            locks.append((tax_lock_date, _('tax')))
-        locks.sort()
-        return locks
+        return self.company_id._get_violated_lock_dates(invoice_date, has_tax)
 
     @api.model
     def _move_dict_to_preview_vals(self, move_vals, currency_id=None):
