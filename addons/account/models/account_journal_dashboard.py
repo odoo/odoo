@@ -194,7 +194,7 @@ class account_journal(models.Model):
                 #(graph is drawn backward)
                 for val in journal_result:
                     date = val['date']
-                    if date != today.strftime(DF):  # make sure the last point in the graph is today
+                    if date.strftime(DF) != today.strftime(DF):  # make sure the last point in the graph is today
                         data[:0] = [build_graph_data(date, amount, currency)]
                     amount -= val['amount']
 
