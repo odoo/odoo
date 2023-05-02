@@ -184,6 +184,7 @@ class account_journal(models.Model):
                 for i in range(30, 0, -5):
                     current_date = today + timedelta(days=-i)
                     data.append(build_graph_data(current_date, random.randint(-5, 15), currency))
+                    graph_key = _('Sample data')
             else:
                 last_balance = journal.current_statement_balance
                 data.append(build_graph_data(today, last_balance, currency))
