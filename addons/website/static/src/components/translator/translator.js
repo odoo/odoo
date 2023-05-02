@@ -4,7 +4,7 @@ import { WebsiteEditorComponent } from '../editor/editor';
 import { WebsiteDialog } from '../dialog/dialog';
 import localStorage from 'web.local_storage';
 
-const { useEffect, useRef, Component } = owl;
+const { useEffect, useRef, Component, xml } = owl;
 
 const localStorageNoDialogKey = 'website_translator_nodialog';
 
@@ -44,6 +44,37 @@ export class AttributeTranslateDialog extends Component {
 }
 AttributeTranslateDialog.components = { WebsiteDialog };
 AttributeTranslateDialog.template = 'website.AttributeTranslateDialog';
+
+// Used to translate the text of `<select/>` options since it should not be
+// possible to interact with the content of `.o_translation_select` elements.
+export class SelectTranslateDialog extends Component {
+    setup() {
+        this.title = this.env._t("Translate Selection Option");
+        this.inputEl = useRef('input');
+        this.optionEl = this.props.node;
+    }
+
+    onInputKeyup() {
+        const value = this.inputEl.el.value;
+        this.optionEl.textContent = value;
+        this.optionEl.classList.toggle(
+            'o_option_translated',
+            value !== this.optionEl.dataset.initialTranslationValue
+        );
+    }
+}
+SelectTranslateDialog.components = {WebsiteDialog};
+SelectTranslateDialog.template = xml`
+<WebsiteDialog close="props.close"
+    title="title"
+    showSecondaryButton="false">
+    <input
+        t-ref="input"
+        type="text" class="form-control my-3"
+        t-att-value="optionEl.textContent or ''"
+        t-on-keyup="onInputKeyup"/>
+</WebsiteDialog>
+`;
 
 export class TranslatorInfoDialog extends Component {
     setup() {
@@ -187,6 +218,23 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             }
         });
 
+        // Hack: we add a temporary element to handle option's text
+        // translations from the linked <select/>. The final values are
+        // copied to the original element right before save.
+        $editable.filter('[data-oe-translation-initial-sha] > select').each((index, select) => {
+            const selectTranslationEl = document.createElement('div');
+            selectTranslationEl.className = 'o_translation_select';
+            const optionNames = [...select.options].map(option => option.text);
+            optionNames.forEach(option => {
+                const optionEl = document.createElement('div');
+                optionEl.textContent = option;
+                optionEl.dataset.initialTranslationValue = option;
+                optionEl.className = 'o_translation_select_option';
+                selectTranslationEl.appendChild(optionEl);
+            });
+            select.before(selectTranslationEl);
+        });
+
         this.translations = [];
         this.$translations = this.getEditableArea().filter('.o_translatable_attribute, .o_translatable_text');
         this.$editables = $(this.websiteService.pageDocument).find('.o_editable_translatable_attribute, .o_editable_translatable_text');
@@ -276,9 +324,14 @@ export class WebsiteTranslator extends WebsiteEditorComponent {
             });
         });
 
-        this.$translations.prependEvent('click.translator', (ev) => {
-            this.dialogService.add(AttributeTranslateDialog, { node: ev.target });
-        });
+        this.$translations
+            .add(this.getEditableArea().filter('.o_translation_select_option'))
+            .prependEvent('click.translator', (ev) => {
+                const node = ev.target;
+                const isSelectTranslation = !!node.closest('.o_translation_select');
+                this.dialogService.add(isSelectTranslation ?
+                    SelectTranslateDialog : AttributeTranslateDialog, {node});
+            });
     }
 
     _onSave(ev) {
