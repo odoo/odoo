@@ -2758,7 +2758,7 @@ class StockMove(TransactionCase):
         backorder_move = backorder.move_ids
         self.assertEqual(backorder_move.state, 'done')
         self.assertEqual(backorder_move.quantity_done, 12.0)
-        self.assertEqual(backorder_move.product_uom_qty, 12.0)
+        self.assertEqual(backorder_move.product_uom_qty, 6.0)
         self.assertEqual(backorder_move.product_uom, self.uom_unit)
 
         # the second move should now be reservable

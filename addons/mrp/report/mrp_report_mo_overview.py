@@ -86,7 +86,7 @@ class ReportMoOverview(models.AbstractModel):
             'product_id': production.product_id.id,
             'state': production.state,
             'formatted_state': self._format_state(production),
-            'quantity': production.product_qty,
+            'quantity': production.product_qty if production.state != 'done' else production.qty_produced,
             'uom_name': production.product_uom_id.display_name,
             'uom_precision': self._get_uom_precision(production.product_uom_id.rounding),
             'quantity_free': product.uom_id._compute_quantity(product.free_qty, production.product_uom_id) if product.type == 'product' else False,
@@ -186,9 +186,10 @@ class ReportMoOverview(models.AbstractModel):
 
     def _format_component_move(self, production, move_raw, replenishments, company, replenish_data, level, index):
         product = move_raw.product_id
+        quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity_done
         replenish_mo_cost = sum(rep.get('summary', {}).get('mo_cost', 0.0) for rep in replenishments)
         replenish_quantity = sum(rep.get('summary', {}).get('quantity', 0.0) for rep in replenishments)
-        missing_quantity = move_raw.product_uom_qty - replenish_quantity
+        missing_quantity = quantity - replenish_quantity
         mo_cost = replenish_mo_cost + (product.standard_price * move_raw.product_uom._compute_quantity(missing_quantity, product.uom_id))
         component = {
             'level': level,
@@ -198,7 +199,7 @@ class ReportMoOverview(models.AbstractModel):
             'name': product.display_name,
             'product_model': product._name,
             'product_id': product.id,
-            'quantity': move_raw.product_uom_qty,
+            'quantity': quantity,
             'uom_name': move_raw.product_uom.display_name,
             'uom_precision': self._get_uom_precision(move_raw.product_uom.rounding),
             'quantity_free': product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom) if product.type == 'product' else False,
@@ -253,6 +254,7 @@ class ReportMoOverview(models.AbstractModel):
 
     def _get_replenishment_lines(self, production, move_raw, replenish_data, level, current_index):
         product = move_raw.product_id
+        quantity = move_raw.product_uom_qty if move_raw.state != 'done' else move_raw.quantity_done
         currency = (production.company_id or self.env.company).currency_id
         forecast = replenish_data['products'][product.id].get('forecast', [])
         current_lines = filter(lambda line: line.get('document_in', False) and line.get('document_out', False)
@@ -260,7 +262,7 @@ class ReportMoOverview(models.AbstractModel):
         total_ordered = 0
         replenishments = []
         for count, forecast_line in enumerate(current_lines):
-            if float_compare(total_ordered, move_raw.product_uom_qty, precision_rounding=move_raw.product_uom.rounding) == 0:
+            if float_compare(total_ordered, quantity, precision_rounding=move_raw.product_uom.rounding) == 0:
                 # If a same product is used twice in the same MO, don't duplicate the replenishment lines
                 break
             doc_in = self.env[forecast_line['document_in']['_name']].browse(forecast_line['document_in']['id'])
@@ -277,7 +279,7 @@ class ReportMoOverview(models.AbstractModel):
                 'product_id': product.id,
                 'state': doc_in.state,
                 'formatted_state': self._format_state(doc_in),
-                'quantity': min(move_raw.product_uom_qty, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.product_uom)),  # Avoid over-rounding
+                'quantity': min(quantity, forecast_uom_id._compute_quantity(forecast_line['quantity'], move_raw.product_uom)),  # Avoid over-rounding
                 'uom_name': move_raw.product_uom.display_name,
                 'uom_precision': self._get_uom_precision(forecast_line['uom_id']['rounding']),
                 'mo_cost': forecast_line.get('cost', self._get_replenishment_cost(product, forecast_line['quantity'], forecast_uom_id, currency, forecast_line.get('move_in'))),
@@ -303,7 +305,7 @@ class ReportMoOverview(models.AbstractModel):
         reserved_quantity = self._get_reserved_qty(move_raw, production.warehouse_id, replenish_data)
         # Avoid creating a "to_order" line to compensate for missing stock (i.e. negative free_qty).
         free_qty = max(0, product.uom_id._compute_quantity(product.free_qty, move_raw.product_uom))
-        missing_quantity = move_raw.product_uom_qty - (reserved_quantity + free_qty + total_ordered)
+        missing_quantity = quantity - (reserved_quantity + free_qty + total_ordered)
         if product.type == 'product' and float_compare(missing_quantity, 0, precision_rounding=move_raw.product_uom.rounding) > 0:
             # Need to order more products to fulfill the need
             resupply_rules = replenish_data['products'][product.id].get('resupply_rules', [])
