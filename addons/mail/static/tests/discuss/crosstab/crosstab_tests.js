@@ -12,11 +12,11 @@ QUnit.test("Add member to channel", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-mail-ChannelMember:contains(Mitchell Admin)");
+    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Mitchell Admin)");
     await click("button[title='Add Users']");
     await click(".o-discuss-ChannelInvitation-selectable:contains(Harry)");
     await click("button[title='Invite to Channel']");
-    assert.containsOnce($, ".o-mail-ChannelMember:contains(Harry)");
+    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Harry)");
 });
 
 QUnit.test("Remove member from channel", async (assert) => {
@@ -36,7 +36,7 @@ QUnit.test("Remove member from channel", async (assert) => {
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsOnce($, ".o-mail-ChannelMember:contains(Harry)");
+    assert.containsOnce($, ".o-discuss-ChannelMember:contains(Harry)");
     env.services.orm.call("discuss.channel", "action_unfollow", [channelId], {
         context: { mockedUserId: userId },
     });

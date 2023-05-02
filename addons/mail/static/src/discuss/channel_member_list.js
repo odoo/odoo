@@ -1,8 +1,8 @@
 /* @odoo-module */
 
-import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
 import { useMessaging, useStore } from "@mail/core/messaging_hook";
-import { ImStatus } from "./im_status";
+import { ImStatus } from "@mail/discuss_app/im_status";
+import { Component, onWillUpdateProps, onWillStart, useState } from "@odoo/owl";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChannelMemberList extends Component {

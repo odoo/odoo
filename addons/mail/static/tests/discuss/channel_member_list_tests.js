@@ -1,4 +1,4 @@
-/** @odoo-module **/
+/* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
 import { createLocalId } from "@mail/utils/misc";
@@ -41,7 +41,7 @@ QUnit.test(
         const { openDiscuss } = await start();
         await openDiscuss(channelId);
         await click("button[title='Show Member List']");
-        assert.containsOnce($, ".o-mail-ChannelMemberList");
+        assert.containsOnce($, ".o-discuss-ChannelMemberList");
     }
 );
 
@@ -59,9 +59,9 @@ QUnit.test("should have correct members in member list", async (assert) => {
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    assert.containsN($, ".o-mail-ChannelMember", 2);
-    assert.containsOnce($, `.o-mail-ChannelMember:contains("${pyEnv.currentPartner.name}")`);
-    assert.containsOnce($, ".o-mail-ChannelMember:contains('Demo')");
+    assert.containsN($, ".o-discuss-ChannelMember", 2);
+    assert.containsOnce($, `.o-discuss-ChannelMember:contains("${pyEnv.currentPartner.name}")`);
+    assert.containsOnce($, ".o-discuss-ChannelMember:contains('Demo')");
 });
 
 QUnit.test(
@@ -99,7 +99,7 @@ QUnit.test("chat with member should be opened after clicking on channel member",
     const { openDiscuss } = await start();
     await openDiscuss(channelId);
     await click("button[title='Show Member List']");
-    await click(".o-mail-ChannelMember.cursor-pointer");
+    await click(".o-discuss-ChannelMember.cursor-pointer");
     assert.containsOnce($, ".o-mail-AutoresizeInput[title='Demo']");
 });
 
@@ -142,7 +142,7 @@ QUnit.test("Load more button should load more members", async (assert) => {
     pyEnv["discuss.channel"].write([channelId], { channel_member_ids });
     await click("button[title='Show Member List']");
     await click("button[title='Load more']");
-    assert.containsN($, ".o-mail-ChannelMember", 102);
+    assert.containsN($, ".o-discuss-ChannelMember", 102);
 });
 
 QUnit.test("Channel member count update after user joined", async (assert) => {

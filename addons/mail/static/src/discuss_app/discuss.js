@@ -8,7 +8,6 @@ import { useRtc } from "../rtc/rtc_hook";
 import { useMessageEdition, useMessageHighlight, useMessageToReplyTo } from "@mail/utils/hooks";
 import { Composer } from "../composer/composer";
 import { Call } from "../rtc/call";
-import { ChannelMemberList } from "./channel_member_list";
 import {
     Component,
     onWillStart,
@@ -32,7 +31,6 @@ export class Discuss extends Component {
         Composer,
         Call,
         CallSettings,
-        ChannelMemberList,
         PinnedMessagesPanel,
     };
     static props = {
@@ -114,13 +112,6 @@ export class Discuss extends Component {
     toggleSettings() {
         this.state.activeMode =
             this.state.activeMode === this.MODES.SETTINGS ? this.MODES.NONE : this.MODES.SETTINGS;
-    }
-
-    toggleMemberList() {
-        this.state.activeMode =
-            this.state.activeMode === this.MODES.MEMBER_LIST
-                ? this.MODES.NONE
-                : this.MODES.MEMBER_LIST;
     }
 
     async renameThread({ value: name }) {

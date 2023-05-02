@@ -6,7 +6,13 @@
                 <i class="fa fa-lg fa-user-plus"/>
             </div>
         </xpath>
-        <xpath expr="//ChannelMemberList" position="after">
+        <xpath expr="//*[@t-ref='toggleSettings']" position="before">
+            <div t-if="thread and thread.hasMemberList and !props.chatWindow.hidden and !props.chatWindow.folded" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" t-att-title="state.activeMode === 'member-list' ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
+                <i class="fa fa-users"/>
+            </div>
+        </xpath>
+        <xpath expr="//CallSettings" position="after">
+            <ChannelMemberList t-elif="state.activeMode === 'member-list'" thread="thread" className="'flex-shrink-0 border-start w-100 h-100'"/>
             <ChannelInvitation t-elif="state.activeMode === 'add-users'" thread="thread" chatState="state"/>
         </xpath>
     </t>

@@ -33,10 +33,7 @@
                 <i class="fa fa-phone"/>
             </div>
             <t t-if="thread">
-                <div t-if="thread and thread.hasMemberList and !props.chatWindow.hidden and !props.chatWindow.folded" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" t-att-title="state.activeMode === 'member-list' ? 'Hide Member List' : 'Show Member List'" t-on-click.stop="toggleMemberList">
-                    <i class="fa fa-users"/>
-                </div>
-                <div t-if="thread.allowCalls and !props.chatWindow.hidden and !props.chatWindow.folded" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Show Call Settings" t-on-click.stop="toggleSettings">
+                <div t-if="thread.allowCalls and !props.chatWindow.hidden and !props.chatWindow.folded" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Show Call Settings" t-on-click.stop="toggleSettings" t-ref="toggleSettings">
                     <i class="fa fa-gear"/>
                 </div>
                 <div t-if="!env.isSmall" class="o-mail-ChatWindow-command d-flex align-items-center h-100 px-3 py-0 m-0 opacity-50 opacity-100-hover" title="Open in Discuss" t-on-click.stop="expand">
@@ -51,7 +48,6 @@
             <t t-if="thread">
                 <PinnedMessagesPanel t-if="state.activeMode === 'pinned-messages'" thread="thread"/>
                 <CallSettings t-elif="state.activeMode === 'in-settings'" thread="thread" className="'flex-grow-1'"/>
-                <ChannelMemberList t-elif="state.activeMode === 'member-list'" thread="thread" className="'o-mail-Discuss-channelMemberList flex-shrink-0 border-start w-100 h-100'"/>
                 <t t-else="">
                     <Call t-if="Object.keys(thread.rtcSessions).length > 0" thread="thread" compact="true"/>
                     <Thread isInChatWindow="true" thread="thread" t-key="thread.localId" messageEdition="messageEdition" messageToReplyTo="messageToReplyTo"/>
