@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import uuid
 
 from ast import literal_eval
 from collections import defaultdict
@@ -228,7 +227,10 @@ class ResUsers(models.Model):
 
     @check_identity
     def action_admin_revoke_sessions(self):
-        self._change_password(uuid.uuid4().hex)
+        self.write({
+            'password': ''
+        })
+
         template = self.env.ref('auth_signup.admin_revoke_sessions_email')
         assert template._name == 'mail.template'
 
