@@ -1,9 +1,6 @@
 /** @odoo-module */
 import * as spreadsheet from "@odoo/o-spreadsheet";
-import ChartDataSource from "../data_source/chart_data_source";
 import { globalFiltersFieldMatchers } from "@spreadsheet/global_filters/plugins/global_filters_core_plugin";
-import { sprintf } from "@web/core/utils/strings";
-import { _t } from "@web/core/l10n/translation";
 import { checkFilterFieldMatching } from "@spreadsheet/global_filters/helpers";
 import CommandResult from "../../o_spreadsheet/cancelled_reason";
 
@@ -11,7 +8,6 @@ const { CorePlugin } = spreadsheet;
 
 /**
  * @typedef {Object} Chart
- * @property {string} dataSourceId
  * @property {Object} fieldMatching
  *
  * @typedef {import("@spreadsheet/global_filters/plugins/global_filters_core_plugin").FieldMatching} FieldMatching
@@ -20,7 +16,6 @@ const { CorePlugin } = spreadsheet;
 export default class OdooChartCorePlugin extends CorePlugin {
     constructor(config) {
         super(config);
-        this.dataSources = config.custom.dataSources;
 
         /** @type {Object.<string, Chart>} */
         this.charts = {};
@@ -28,16 +23,10 @@ export default class OdooChartCorePlugin extends CorePlugin {
         globalFiltersFieldMatchers["chart"] = {
             geIds: () => this.getters.getOdooChartIds(),
             getDisplayName: (chartId) => this.getters.getOdooChartDisplayName(chartId),
-            getTag: async (chartId) => {
-                const model = await this.getChartDataSource(chartId).getModelLabel();
-                return sprintf(_t("Chart - %s"), model);
-            },
             getFieldMatching: (chartId, filterId) =>
                 this.getOdooChartFieldMatching(chartId, filterId),
-            waitForReady: () => this.getOdooChartsWaitForReady(),
             getModel: (chartId) =>
                 this.getters.getChart(chartId).getDefinitionForDataSource().metaData.resModel,
-            getFields: (chartId) => this.getChartDataSource(chartId).getFields(),
         };
     }
 
@@ -65,16 +54,6 @@ export default class OdooChartCorePlugin extends CorePlugin {
                     case "odoo_bar":
                     case "odoo_line":
                         this._addOdooChart(cmd.id);
-                        break;
-                }
-                break;
-            }
-            case "UPDATE_CHART": {
-                switch (cmd.definition.type) {
-                    case "odoo_pie":
-                    case "odoo_bar":
-                    case "odoo_line":
-                        this._setChartDataSource(cmd.id);
                         break;
                 }
                 break;
@@ -126,15 +105,6 @@ export default class OdooChartCorePlugin extends CorePlugin {
     }
 
     /**
-     * @param {string} id
-     * @returns {ChartDataSource|undefined}
-     */
-    getChartDataSource(id) {
-        const dataSourceId = this.charts[id].dataSourceId;
-        return this.dataSources.get(dataSourceId);
-    }
-
-    /**
      *
      * @param {string} chartId
      * @returns {string}
@@ -180,16 +150,6 @@ export default class OdooChartCorePlugin extends CorePlugin {
     // -------------------------------------------------------------------------
 
     /**
-     *
-     * @return {Promise[]}
-     */
-    getOdooChartsWaitForReady() {
-        return this.getOdooChartIds().map((chartId) =>
-            this.getChartDataSource(chartId).loadMetadata()
-        );
-    }
-
-    /**
      * Get the current pivotFieldMatching of a chart
      *
      * @param {string} chartId
@@ -222,35 +182,18 @@ export default class OdooChartCorePlugin extends CorePlugin {
 
     /**
      * @param {string} chartId
-     * @param {string} dataSourceId
+     * @param {Object} fieldMatching
      */
     _addOdooChart(chartId, fieldMatching = {}) {
-        const dataSourceId = this.uuidGenerator.uuidv4();
         const charts = { ...this.charts };
         charts[chartId] = {
-            dataSourceId,
             fieldMatching,
         };
-        const definition = this.getters.getChart(chartId).getDefinitionForDataSource();
-        if (!this.dataSources.contains(dataSourceId)) {
-            this.dataSources.add(dataSourceId, ChartDataSource, definition);
-        }
         this.history.update("charts", charts);
-        this._setChartDataSource(chartId);
-    }
-
-    /**
-     * Sets the catasource on the corresponding chart
-     * @param {string} chartId
-     */
-    _setChartDataSource(chartId) {
-        const chart = this.getters.getChart(chartId);
-        chart.setDataSource(this.getters.getChartDataSource(chartId));
     }
 }
 
 OdooChartCorePlugin.getters = [
-    "getChartDataSource",
     "getOdooChartIds",
     "getChartFieldMatch",
     "getOdooChartDisplayName",
