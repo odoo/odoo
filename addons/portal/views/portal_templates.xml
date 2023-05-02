@@ -154,7 +154,7 @@
                                     <div t-field="user_id.partner_id" t-options='{"widget": "contact", "fields": ["email", "phone", "address"]}'/>
                                 </div>
                                 <a role="button" href="/my/account" class="btn btn-link p-0 mt-3 fw-bolder"><i class="fa fa-pencil me-3"/> Edit informations</a>
-                                <hr />
+                                <hr t-if="sales_user"/>
                                  <div class="o_my_contact" t-if="sales_user">
                                     <t t-call="portal.portal_contact"/>
                                 </div>
@@ -197,13 +197,13 @@
     </template>
 
     <template id="portal_docs_entry" name="My Portal Docs Entry">     
-    <div t-att-class="'col-md-6 ' + ('order-0' if bg_color else 'order-1')">
-        <a t-att-href="url" t-att-title="title" t-attf-class="card d-flex justify-content-center h-100 border-0 #{bg_color if bg_color else 'bg-light'}" style="max-width: 540px;">
-            <div t-attf-class="row g-0 #{'h-100' if bg_color else 'bg-light'}">
-                <div t-if="icon" class="col col-md-3 d-flex justify-content-center align-items-center">
-                    <img t-attf-src="#{icon}" width="50"/>
+    <div t-att-class="' ' + ('col-12 order-0' if bg_color else 'col-md-6 order-1')">
+        <a t-att-href="url" t-att-title="title" t-attf-class="card d-flex justify-content-center h-100 border-0 #{bg_color if bg_color else 'px-2 bg-light'} text-decoration-none">
+            <div t-attf-class="#{'h-100' if bg_color else 'd-flex justify-content-start gap-3 align-items-center bg-light'}">
+                <div t-if="icon" class="o_portal_icon">
+                    <img t-attf-src="#{icon}"/>
                 </div>
-                <div t-attf-class="#{'col-7' if icon else 'col-12'}">
+                <div>
                     <div t-attf-class="card-body #{'d-flex align-items-center h-100' if bg_color else 'bg-light'}">
                         <div t-attf-class="#{'d-flex gap-3' if placeholder_count or count else ''}">
                             <t t-if='count'>
@@ -217,7 +217,7 @@
                                 <t t-out="title"/>
                             </h5>
                         </div>
-                        <p class="card-text">
+                        <p class="card-text text-muted">
                             <t t-out="text"/>
                         </p>
                     </div>
