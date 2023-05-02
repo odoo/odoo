@@ -355,6 +355,7 @@ class AccountMoveSend(models.Model):
             body = self.mail_body or self._get_default_mail_body(mail_template, mail_lang, move)
             subject = self.mail_subject or self._get_default_mail_subject(mail_template, mail_lang, move)
             email_from = self._get_default_email_from(mail_template, mail_lang, move)
+            model_description = move.with_context(lang=mail_lang).type_name
 
             self._send_mail(
                 mail_template,
@@ -365,6 +366,7 @@ class AccountMoveSend(models.Model):
                 subtype_id=subtype.id,
                 partner_ids=partners.ids,
                 attachment_ids=attachment_ids,
+                model_description=model_description,
             )
 
     def _generate_documents_success_hook(self, moves, from_cron):
