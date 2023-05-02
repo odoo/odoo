@@ -55,12 +55,9 @@ class StockMove(models.Model):
         'Demand',
         digits='Product Unit of Measure',
         default=0, required=True,
-        help="This is the quantity of products from an inventory "
-             "point of view. For moves in the state 'done', this is the "
-             "quantity of products that were actually moved. For other "
-             "moves, this is the quantity of product that is planned to "
-             "be moved. Lowering this quantity does not generate a "
-             "backorder. Changing this quantity on assigned moves affects "
+        help="This is the quantity of product that is planned to be moved."
+             "Lowering this quantity does not generate a backorder."
+             "Changing this quantity on assigned moves affects "
              "the product reservation, and should be done with care.")
     product_uom = fields.Many2one(
         'uom.uom', "UoM", required=True, domain="[('category_id', '=', product_uom_category_id)]",
@@ -294,11 +291,15 @@ class StockMove(models.Model):
         for move in self:
             move.move_lines_count = len(move.move_line_ids)
 
-    @api.depends('product_id', 'product_uom', 'product_uom_qty')
+    @api.depends('product_id', 'product_uom', 'product_uom_qty', 'quantity_done', 'state')
     def _compute_product_qty(self):
         for move in self:
-            move.product_qty = move.product_uom._compute_quantity(
-                move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+            if move.state != 'done':
+                move.product_qty = move.product_uom._compute_quantity(
+                    move.product_uom_qty, move.product_id.uom_id, rounding_method='HALF-UP')
+            else:
+                move.product_qty = move.product_uom._compute_quantity(
+                    move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
 
     @api.depends('picking_id.partner_id')
     def _compute_partner_id(self):
@@ -989,10 +990,11 @@ Please change the quantity done or the rounding precision of your unit of measur
 
     def _merge_moves_fields(self):
         """ This method will return a dict of stock move’s values that represent the values of all moves in `self` merged. """
+        merge_extra = self.env.context.get('merge_extra')
         state = self._get_relevant_state_among_moves()
         origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
         return {
-            'product_uom_qty': sum(self.mapped('product_uom_qty')),
+            'product_uom_qty': sum(self.mapped('product_uom_qty')) if not merge_extra else self[0].product_uom_qty,
             'date': min(self.mapped('date')) if all(p.move_type == 'direct' for p in self.picking_id) else max(self.mapped('date')),
             'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
             'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
@@ -1010,6 +1012,8 @@ Please change the quantity done or the rounding precision of your unit of measur
         ]
         if self.env['ir.config_parameter'].sudo().get_param('stock.merge_only_same_date'):
             fields.append('date')
+        if self.env.context.get('merge_extra'):
+            fields.pop(fields.index('procure_method'))
         return fields
 
     @api.model
@@ -1799,15 +1803,8 @@ Please change the quantity done or the rounding precision of your unit of measur
                 rounding_method='HALF-UP')
             extra_move_vals = self._prepare_extra_move_vals(extra_move_quantity)
             extra_move = self.copy(default=extra_move_vals).with_context(avoid_putaway_rules=True)
-
-            merge_into_self = all(self[field] == extra_move[field] for field in self._prepare_merge_moves_distinct_fields())
-
-            if merge_into_self:
-                extra_move = extra_move._action_confirm(merge_into=self)
-                return extra_move
-            else:
-                extra_move = extra_move._action_confirm()
-        return extra_move | self
+            return extra_move.with_context(merge_extra=True)._action_confirm(merge_into=self)
+        return self
 
     def _check_unlink_move_dest(self):
         """ For each move in self, check if the location_dest_id of move is outside
@@ -1851,23 +1848,22 @@ Please change the quantity done or the rounding precision of your unit of measur
 
         moves_todo = self.browse(moves_ids_todo)
         moves_todo._check_company()
-        # Split moves where necessary and move quants
-        backorder_moves_vals = []
-        for move in moves_todo:
-            # To know whether we need to create a backorder or not, round to the general product's
-            # decimal precision and not the product's UOM.
-            rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
-            if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0:
-                # Need to do some kind of conversion here
-                qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
-                new_move_vals = move._split(qty_split)
-                backorder_moves_vals += new_move_vals
-        backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
-        # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
-        # ones as it could messed up the result_package_id of the moves being currently validated
-        backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
-        if cancel_backorder:
-            backorder_moves.with_context(moves_todo=moves_todo)._action_cancel()
+        if not cancel_backorder:
+            # Split moves where necessary and move quants
+            backorder_moves_vals = []
+            for move in moves_todo:
+                # To know whether we need to create a backorder or not, round to the general product's
+                # decimal precision and not the product's UOM.
+                rounding = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+                if float_compare(move.quantity_done, move.product_uom_qty, precision_digits=rounding) < 0:
+                    # Need to do some kind of conversion here
+                    qty_split = move.product_uom._compute_quantity(move.product_uom_qty - move.quantity_done, move.product_id.uom_id, rounding_method='HALF-UP')
+                    new_move_vals = move._split(qty_split)
+                    backorder_moves_vals += new_move_vals
+            backorder_moves = self.env['stock.move'].create(backorder_moves_vals)
+            # The backorder moves are not yet in their own picking. We do not want to check entire packs for those
+            # ones as it could messed up the result_package_id of the moves being currently validated
+            backorder_moves.with_context(bypass_entire_pack=True)._action_confirm(merge=False)
         moves_todo.mapped('move_line_ids').sorted()._action_done()
         # Check the consistency of the result packages; there should be an unique location across
         # the contained quants.

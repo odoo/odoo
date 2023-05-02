@@ -36,13 +36,9 @@ class TestReportStockQuantity(tests.TransactionCase):
             'product_id': cls.product1.id,
             'product_uom': cls.uom_unit.id,
             'product_uom_qty': 100.0,
+            'quantity_done': 100.0,
             'state': 'done',
             'date': fields.Datetime.now(),
-        })
-        cls.quant1 = cls.env['stock.quant'].create({
-            'product_id': cls.product1.id,
-            'location_id': cls.wh.lot_stock_id.id,
-            'quantity': 100.0,
         })
         # ship
         cls.move2 = cls.env['stock.move'].create({

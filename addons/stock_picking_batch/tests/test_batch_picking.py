@@ -645,8 +645,7 @@ class TestBatchPicking(TransactionCase):
         self.assertEqual(self.batch.picking_ids, self.picking_client_1 | self.picking_client_2)
         self.assertRecordValues(self.batch.move_ids.sorted('id'), [
             {'product_id': self.productA.id, 'product_uom_qty': 10.0, 'quantity_done': 10.0, 'state': 'done'},
-            {'product_id': self.productB.id, 'product_uom_qty': 7.0, 'quantity_done': 7.0, 'state': 'done'},
-            {'product_id': self.productB.id, 'product_uom_qty': 3.0, 'quantity_done': 0.0, 'state': 'cancel'},
+            {'product_id': self.productB.id, 'product_uom_qty': 10.0, 'quantity_done': 7.0, 'state': 'done'},
         ])
 
 @tagged('-at_install', 'post_install')
