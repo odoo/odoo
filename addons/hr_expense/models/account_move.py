@@ -25,3 +25,9 @@ class AccountMove(models.Model):
         if self.line_ids.expense_id:
             return True
         return super()._payment_state_matters()
+
+    def button_draft(self):
+        for line in self.line_ids:
+            if line.expense_id:
+                line.expense_id.sheet_id.write({'state': 'post'})
+        return super().button_draft()
