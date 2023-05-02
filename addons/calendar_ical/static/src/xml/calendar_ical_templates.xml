@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <form t-name="calendar_ical.CalendarSubscribe" name="calendar_subscribe" method="POST" aria-atomic="true">
+        <div class="o_form_view">
+            Google
+            <ol>
+                <li>Click the "+" to the right of "Other calendars"</li>
+                <li>Select "From URL"</li>
+                <li>This URL grants access to your calendar. Do not write it down or share it.</li>
+                <li>Set URL of Calendar to <a t-att-href="widget.calendar_url" t-esc="widget.calendar_url"/></li>
+                <li><b>DO NOT</b> "Make the calendar publicly accessible"</li>
+                <li>Select "Add calendar"</li>
+            </ol>
+            Apple
+            <ol>
+                <li>Open the Calendar app on your iPhone</li>
+                <li>Select "Calendars"</li>
+                <li>Select "Add Calendar", then "Add Subscription Calendar"</li>
+                <li>Set Subscription URL to <a t-att-href="widget.calendar_url" t-esc="widget.calendar_url"/></li>
+                <li>Select "Subscribe"</li>
+            </ol>
+        </div>
+    </form>
+</templates>
