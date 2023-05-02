@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 """
@@ -17,6 +16,7 @@ import logging
 import os
 import re
 import sys
+from pathlib import Path
 
 from psycopg2 import ProgrammingError, errorcodes
 
@@ -175,4 +175,5 @@ def main(args):
 class Server(Command):
     """Start the odoo server (default command)"""
     def run(self, args):
+        odoo.tools.config.parser.prog = f'{Path(sys.argv[0]).name} {self.name}'
         main(args)
