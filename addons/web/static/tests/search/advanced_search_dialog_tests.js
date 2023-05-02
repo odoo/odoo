@@ -1,6 +1,8 @@
 /** @odoo-module **/
 
 import { Component, xml } from "@odoo/owl";
+import { SearchBar } from "@web/search/search_bar/search_bar";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 import {
     click,
     editInput,
@@ -12,7 +14,6 @@ import {
 import { browser } from "@web/core/browser/browser";
 import { fieldService } from "@web/core/field_service";
 import { registry } from "@web/core/registry";
-import { ControlPanel } from "@web/search/control_panel/control_panel";
 import {
     editFavoriteName,
     getFacetTexts,
@@ -21,10 +22,7 @@ import {
     saveFavorite,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
-    toggleComparisonMenu,
-    toggleFavoriteMenu,
-    toggleFilterMenu,
-    toggleGroupByMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
@@ -36,10 +34,11 @@ async function makeTestComponent(props) {
             this.id = 1; // used for t-key. We want to be sure that the control panel is rendered.
         }
     }
-    TestComponent.components = { ControlPanel };
+    TestComponent.components = { MainComponentsContainer, SearchBar };
     TestComponent.template = xml`
         <div class="o_test_component">
-            <ControlPanel t-key="id++"/>
+            <MainComponentsContainer/>
+            <SearchBar t-key="id++"/>
         </div>
     `;
     return makeWithSearch({
@@ -159,9 +158,9 @@ QUnit.module("Search", (hooks) => {
 
     QUnit.test("basic rendering", async function (assert) {
         await makeTestComponent();
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         assert.containsNone(target, ".modal");
-        assert.containsOnce(target, ".o_filter_menu .dropdown-menu");
+        assert.containsOnce(target, ".o_searchview_dropdown_toggler");
 
         await openAdvancedSearchDialog(target);
         assert.containsNone(target, ".o_filter_menu .dropdown-menu");
@@ -177,7 +176,7 @@ QUnit.module("Search", (hooks) => {
         await click(target, ".modal footer button:nth-child(2)");
         assert.containsNone(target, ".modal");
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
         assert.containsOnce(target, ".modal");
 
@@ -187,7 +186,7 @@ QUnit.module("Search", (hooks) => {
 
     QUnit.test("start with an empty query", async function (assert) {
         await makeTestComponent();
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
         assert.containsOnce(target, ".modal");
         assert.containsOnce(target, ".modal .modal-body .o_domain_selector");
@@ -204,7 +203,7 @@ QUnit.module("Search", (hooks) => {
 
     QUnit.test("start with an empty query and a global domain", async function (assert) {
         await makeTestComponent({ domain: [[0, "=", 1]] });
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
         // the global domain should not be part of the domain passed to domain selector
         assert.containsOnce(target, ".modal");
@@ -224,7 +223,7 @@ QUnit.module("Search", (hooks) => {
         const testComponent = await makeTestComponent({
             context: { search_default_simple_filter: true },
         });
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         assert.deepEqual(getFacetTexts(target), ["Simple Filter"]);
         assert.containsNone(target, ".o_domain_selector");
 
@@ -266,7 +265,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), ["Dynamic Filter"]);
         assert.deepEqual(testComponent.props.domain, [["user_id", "=", 7]]);
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
 
         assert.strictEqual(target.querySelector(".o_model_field_selector").innerText, "User");
@@ -285,7 +284,7 @@ QUnit.module("Search", (hooks) => {
             });
             assert.deepEqual(getFacetTexts(target), ["Simple Filter", "Simple GroupBy"]);
 
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await openAdvancedSearchDialog(target);
             assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "2");
             assert.deepEqual(testComponent.props.domain, [["float_field", "=", 2]]);
@@ -319,7 +318,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(testComponent.props.groupBy, ["color"]);
         assert.strictEqual(testComponent.props.context.some_key, "some_value");
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
         await editInput(target.querySelector(".o_domain_leaf_value_input"), null, "xyz");
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "xyz");
@@ -347,11 +346,11 @@ QUnit.module("Search", (hooks) => {
             irFilters,
         });
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Simple GroupBy");
         assert.deepEqual(getFacetTexts(target), ["My favorite", "Simple GroupBy"]);
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Simple Filter");
         assert.deepEqual(getFacetTexts(target), ["My favorite", "Simple GroupBy", "Simple Filter"]);
         assert.deepEqual(testComponent.props.domain, [
@@ -362,13 +361,13 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(testComponent.props.groupBy, ["color", "boolean_field"]);
         assert.strictEqual(testComponent.props.context.some_key, "some_value");
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
         await editInput(target.querySelector(".o_domain_leaf_value_input"), null, "xyz");
         assert.strictEqual(target.querySelector(".o_domain_leaf_value_input").value, "xyz");
 
         await click(target, ".modal footer button:nth-child(1)");
-        assert.deepEqual(getFacetTexts(target), ["Color>Simple GroupBy", "Advanced Search"]);
+        assert.deepEqual(getFacetTexts(target), ["Color\n>\nSimple GroupBy", "Advanced Search"]);
         assert.deepEqual(testComponent.props.domain, [
             "&",
             ["char_field", "ilike", "xyz"],
@@ -389,14 +388,14 @@ QUnit.module("Search", (hooks) => {
                     }
                 },
             });
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "Date Filter");
             await toggleMenuItemOption(target, "Date Filter", "March");
 
-            await toggleComparisonMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "Date Filter: Previous Period");
 
-            await toggleFavoriteMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleSaveFavorite(target);
             await editFavoriteName(target, "My new favorite");
             await saveFavorite(target, "My new favorite");
@@ -427,7 +426,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(testComponent.props.groupBy, []);
             assert.strictEqual(testComponent.props.context.comparison, undefined);
 
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await openAdvancedSearchDialog(target);
             await click(target, ".modal footer button:nth-child(1)");
 
@@ -476,7 +475,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(testComponent.props.groupBy, []);
             assert.strictEqual(testComponent.props.context.comparison, undefined);
 
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await openAdvancedSearchDialog(target);
             await click(target, ".modal footer button:nth-child(1)");
 
@@ -506,12 +505,10 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(testComponent.props.domain, []);
         assert.deepEqual(testComponent.props.groupBy, ["color"]);
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         const visibleGroupBys = getNodesTextContent(
             target.querySelectorAll(".o_group_by_menu .dropdown-item")
         );
-
-        await toggleFilterMenu(target);
         const visibleFilters = getNodesTextContent(
             target.querySelectorAll(".o_filter_menu .dropdown-item")
         );
@@ -521,13 +518,12 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(testComponent.props.domain, []);
         assert.deepEqual(testComponent.props.groupBy, ["color"]);
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_group_by_menu .dropdown-item")),
             visibleGroupBys
         );
 
-        await toggleFilterMenu(target);
         assert.deepEqual(
             getNodesTextContent(target.querySelectorAll(".o_filter_menu .dropdown-item")),
             visibleFilters
@@ -549,11 +545,11 @@ QUnit.module("Search", (hooks) => {
                 search_default_date_time_filter: true,
             },
         });
-        await toggleComparisonMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Date: Previous Period");
 
         assert.deepEqual(getFacetTexts(target), [
-            "Date: April 2023orDatetime: April 2023",
+            "Date: April 2023\nor\nDatetime: April 2023",
             "Date: Previous Period",
         ]);
         assert.deepEqual(testComponent.props.domain, [
@@ -597,7 +593,7 @@ QUnit.module("Search", (hooks) => {
             fieldName: "date_field",
         });
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
 
         assert.deepEqual(
@@ -644,7 +640,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getFacetTexts(target), []);
         assert.containsNone(target, ".modal");
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await openAdvancedSearchDialog(target);
         assert.containsOnce(target, ".modal");
 
