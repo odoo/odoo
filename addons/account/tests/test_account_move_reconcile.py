@@ -19,6 +19,10 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.receivable_account = cls.company_data['default_account_receivable']
+        cls.payable_account = cls.company_data['default_account_payable']
+        cls.expense_account = cls.company_data['default_account_expense']
+        cls.revenue_account = cls.company_data['default_account_revenue']
+
         cls.extra_receivable_account_1 = cls.copy_account(cls.receivable_account)
         cls.extra_receivable_account_2 = cls.copy_account(cls.receivable_account)
         cls.extra_payable_account_1 = cls.copy_account(cls.company_data['default_account_payable'])
@@ -26,6 +30,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         cls.exch_income_account = cls.env.company.income_currency_exchange_account_id
         cls.exch_expense_account = cls.env.company.expense_currency_exchange_account_id
+
 
         # ==== Multi-currency setup ====
 
@@ -207,38 +212,6 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def _get_caba_moves(self, moves):
         return moves.search([('tax_cash_basis_origin_move_id', 'in', moves.ids)])
 
-    def _create_line_for_reconciliation(self, balance, amount_currency, currency, move_date):
-        move = self.env['account.move'].create({
-            'move_type': 'entry',
-            'date': move_date,
-            'line_ids': [
-                Command.create({
-                    'debit': balance if balance > 0.0 else 0.0,
-                    'credit': -balance if balance < 0.0 else 0.0,
-                    'amount_currency': amount_currency,
-                    'account_id': self.receivable_account.id,
-                    'currency_id': currency.id,
-                }),
-                Command.create({
-                    'debit': -balance if balance < 0.0 else 0.0,
-                    'credit': balance if balance > 0.0 else 0.0,
-                    'amount_currency': -amount_currency,
-                    'account_id': self.company_data['default_account_revenue'].id,
-                    'currency_id': currency.id,
-                }),
-            ],
-        })
-        move.action_post()
-        line = move.line_ids.filtered(lambda x: x.account_id == self.receivable_account)
-
-        self.assertRecordValues(line, [{
-            'amount_residual': balance,
-            'amount_residual_currency': amount_currency,
-            'reconciled': False,
-        }])
-
-        return line
-
     def test_full_reconcile_bunch_lines(self):
         """ Test the reconciliation with multiple lines at the same time and ensure the result is always a full
         reconcile whatever the number of involved currencies.
@@ -247,25 +220,25 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         foreign_curr1 = self.currency_data['currency']
         foreign_curr2 = self.currency_data_2['currency']
 
-        line_1 = self._create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-300.0, -300.0, comp_curr, '2016-01-01')
-        line_3 = self._create_line_for_reconciliation(-400.0, -400.0, comp_curr, '2016-01-01')
-        line_4 = self._create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2016-01-01')
-        line_5 = self._create_line_for_reconciliation(200.0, 200.0, comp_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(1000.0, 1000.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-300.0, -300.0, comp_curr, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(-400.0, -400.0, comp_curr, '2016-01-01')
+        line_4 = self.create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2016-01-01')
+        line_5 = self.create_line_for_reconciliation(200.0, 200.0, comp_curr, '2016-01-01')
         comp_curr_batch = line_1 + line_2 + line_3 + line_4 + line_5
 
-        line_1 = self._create_line_for_reconciliation(1200.0, 3600.0, foreign_curr1, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-240.0, -480.0, foreign_curr1, '2017-01-01')
-        line_3 = self._create_line_for_reconciliation(-720.0, -1440.0, foreign_curr1, '2017-01-01')
-        line_4 = self._create_line_for_reconciliation(-1020.0, -2040.0, foreign_curr1, '2017-01-01')
-        line_5 = self._create_line_for_reconciliation(120.0, 360.0, foreign_curr1, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(1200.0, 3600.0, foreign_curr1, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-240.0, -480.0, foreign_curr1, '2017-01-01')
+        line_3 = self.create_line_for_reconciliation(-720.0, -1440.0, foreign_curr1, '2017-01-01')
+        line_4 = self.create_line_for_reconciliation(-1020.0, -2040.0, foreign_curr1, '2017-01-01')
+        line_5 = self.create_line_for_reconciliation(120.0, 360.0, foreign_curr1, '2016-01-01')
         same_curr_batch = line_1 + line_2 + line_3 + line_4 + line_5
 
-        line_1 = self._create_line_for_reconciliation(1200.0, 3600.0, foreign_curr1, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(780.0, 2340.0, foreign_curr1, '2016-01-01')
-        line_3 = self._create_line_for_reconciliation(-240.0, -960.0, foreign_curr2, '2017-01-01')
-        line_4 = self._create_line_for_reconciliation(-720.0, -2880.0, foreign_curr2, '2017-01-01')
-        line_5 = self._create_line_for_reconciliation(-1020.0, -4080.0, foreign_curr2, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(1200.0, 3600.0, foreign_curr1, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(780.0, 2340.0, foreign_curr1, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(-240.0, -960.0, foreign_curr2, '2017-01-01')
+        line_4 = self.create_line_for_reconciliation(-720.0, -2880.0, foreign_curr2, '2017-01-01')
+        line_5 = self.create_line_for_reconciliation(-1020.0, -4080.0, foreign_curr2, '2017-01-01')
         multi_curr_batch = line_1 + line_2 + line_3 + line_4 + line_5
 
         for batch, sub_test_name in (
@@ -292,9 +265,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             for rate2 in rates:
                 for rate3 in rates:
                     with self.subTest(rate1=rate1, rate2=rate2, rate3=rate3):
-                        line_1 = self._create_line_for_reconciliation(120.0 * rate1, 120.0, currency, '2017-01-01')
-                        line_2 = self._create_line_for_reconciliation(120.0 * rate2, 120.0, currency, '2017-01-01')
-                        line_3 = self._create_line_for_reconciliation(-240.0 * rate3, -240.0, currency, '2017-01-01')
+                        line_1 = self.create_line_for_reconciliation(120.0 * rate1, 120.0, currency, '2017-01-01')
+                        line_2 = self.create_line_for_reconciliation(120.0 * rate2, 120.0, currency, '2017-01-01')
+                        line_3 = self.create_line_for_reconciliation(-240.0 * rate3, -240.0, currency, '2017-01-01')
 
                         (line_1 + line_2 + line_3).reconcile()
                         self.assertTrue(line_1.full_reconcile_id)
@@ -312,8 +285,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 ((60.0, 60.0, comp_curr, '2017-01-01'), (-40.0, -120.0, foreign_curr, '2016-01-01')),
                 ((-60.0, -60.0, comp_curr, '2017-01-01'), (40.0, 120.0, foreign_curr, '2016-01-01')),
         ):
-            line1 = self._create_line_for_reconciliation(*line1_vals)
-            line2 = self._create_line_for_reconciliation(*line2_vals)
+            line1 = self.create_line_for_reconciliation(*line1_vals)
+            line2 = self.create_line_for_reconciliation(*line2_vals)
             with self.subTest(line1_vals=line1_vals, line2_vals=line2_vals):
                 (line1 + line2).reconcile()
 
@@ -368,13 +341,13 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         an additional move is added with the right foreign currency amount. """
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(0.0, -0.02, currency, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(0.0, 0.01, currency, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(0.0, -0.02, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(0.0, 0.01, currency, '2017-01-01')
         (line_1 + line_2).reconcile()
 
         self.assertFalse(line_1.full_reconcile_id + line_2.full_reconcile_id, "The reconciliation should not be considered full, as 0.01 still remain open in foreign currency.")
 
-        line_3 = self._create_line_for_reconciliation(0.0, 0.01, currency, '2017-01-01')
+        line_3 = self.create_line_for_reconciliation(0.0, 0.01, currency, '2017-01-01')
         (line_1 + line_3).reconcile()
 
         self.assertTrue(line_1.full_reconcile_id)
@@ -393,8 +366,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
             'currency_subunit_label': 'Bretonnian Denier',
         })['currency']
 
-        line_1 = self._create_line_for_reconciliation(0.0, -0.01, currency_1, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(0.0, 0.02, currency_2, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(0.0, -0.01, currency_1, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(0.0, 0.02, currency_2, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -412,8 +385,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-0.01, 0.0, currency, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(0.02, 0.0, currency, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-0.01, 0.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(0.02, 0.0, currency, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -467,8 +440,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-0.01, -0.01, comp_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(0.0, 0.03, foreign_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-0.01, -0.01, comp_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(0.0, 0.03, foreign_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -542,8 +515,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         foreign_curr1 = self.currency_data['currency']
         foreign_curr2 = self.currency_data_2['currency']
 
-        line_1 = self._create_line_for_reconciliation(-0.01, 0.0, foreign_curr2, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(0.01, 0.03, foreign_curr1, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-0.01, 0.0, foreign_curr2, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(0.01, 0.03, foreign_curr1, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -572,8 +545,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         """
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-0.06, 0.0, currency, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(0.12, 0.24, currency, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(-0.06, 0.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(0.12, 0.24, currency, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -596,8 +569,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_expense_partial_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(60.0, 120.0, currency, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-80.0, -240.0, currency, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(60.0, 120.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-80.0, -240.0, currency, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -644,8 +617,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_income_partial_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(40.0, 120.0, currency, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-120.0, -240.0, currency, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(40.0, 120.0, currency, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-120.0, -240.0, currency, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -692,8 +665,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_credit_expense_partial_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(120.0, 240.0, currency, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(120.0, 240.0, currency, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -740,8 +713,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_credit_income_partial_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-60.0, -120.0, currency, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(80.0, 240.0, currency, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-60.0, -120.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(80.0, 240.0, currency, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -789,8 +762,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(60.0, 120.0, foreign_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-80.0, -80.0, comp_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(60.0, 120.0, foreign_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-80.0, -80.0, comp_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -838,8 +811,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(60.0, 60.0, comp_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-80.0, -240.0, foreign_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(60.0, 60.0, comp_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-80.0, -240.0, foreign_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -887,8 +860,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(40.0, 120.0, foreign_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-120.0, -120.0, comp_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(40.0, 120.0, foreign_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-120.0, -120.0, comp_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -936,8 +909,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-120.0, -240.0, foreign_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-120.0, -240.0, foreign_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -985,8 +958,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-40.0, -120.0, foreign_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(120.0, 120.0, comp_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(-40.0, -120.0, foreign_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(120.0, 120.0, comp_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1034,8 +1007,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-40.0, -40.0, comp_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(120.0, 240.0, foreign_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(-40.0, -40.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(120.0, 240.0, foreign_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1083,8 +1056,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-60.0, -60.0, comp_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(80.0, 240.0, foreign_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-60.0, -60.0, comp_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(80.0, 240.0, foreign_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1132,8 +1105,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(80.0, 80.0, comp_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(80.0, 80.0, comp_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1180,8 +1153,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_expense_full_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(60.0, 120.0, currency, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(60.0, 120.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1231,8 +1204,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_debit_income_full_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(40.0, 120.0, currency, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-60.0, -120.0, currency, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(40.0, 120.0, currency, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-60.0, -120.0, currency, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1282,8 +1255,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_credit_expense_full_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(60.0, 120.0, currency, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(-40.0, -120.0, currency, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(60.0, 120.0, currency, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1333,8 +1306,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_reconcile_exchange_difference_on_partial_same_foreign_currency_credit_income_full_payment(self):
         currency = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-60.0, -120.0, currency, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(40.0, 120.0, currency, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-60.0, -120.0, currency, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(40.0, 120.0, currency, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1385,8 +1358,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(60.0, 120.0, foreign_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-40.0, -40.0, comp_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(60.0, 120.0, foreign_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-40.0, -40.0, comp_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1437,8 +1410,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(60.0, 60.0, comp_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-40.0, -120.0, foreign_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(60.0, 60.0, comp_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-40.0, -120.0, foreign_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1489,8 +1462,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(40.0, 120.0, foreign_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-60.0, -60.0, comp_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(40.0, 120.0, foreign_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-60.0, -60.0, comp_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1541,8 +1514,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1593,8 +1566,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-40.0, -40.0, comp_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(60.0, 120.0, foreign_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(-40.0, -40.0, comp_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(60.0, 120.0, foreign_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1645,8 +1618,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-40.0, -120.0, foreign_curr, '2016-01-01')
-        line_2 = self._create_line_for_reconciliation(60.0, 60.0, comp_curr, '2017-01-01')
+        line_1 = self.create_line_for_reconciliation(-40.0, -120.0, foreign_curr, '2016-01-01')
+        line_2 = self.create_line_for_reconciliation(60.0, 60.0, comp_curr, '2017-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1697,8 +1670,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-60.0, -60.0, comp_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(40.0, 120.0, foreign_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-60.0, -60.0, comp_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(40.0, 120.0, foreign_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -1749,8 +1722,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(40.0, 40.0, comp_curr, '2016-01-01')
         amls = line_1 + line_2
 
         amls.reconcile()
@@ -2459,8 +2432,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
     def test_migration_to_new_reconciliation_same_foreign_currency(self):
         foreign_curr = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(80.0, 240.0, foreign_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(-60.0, -120.0, foreign_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(80.0, 240.0, foreign_curr, '2016-01-01')
 
         # Create the partial as it should be created in previous version.
         self.env['account.partial.reconcile'].create({
@@ -2476,14 +2449,14 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         ])
 
         # Reconcile using the "new" reconciliation.
-        line_3 = self._create_line_for_reconciliation(-15.0, -30.0, foreign_curr, '2017-01-01')
+        line_3 = self.create_line_for_reconciliation(-15.0, -30.0, foreign_curr, '2017-01-01')
         (line_2 + line_3).reconcile()
         self.assertRecordValues(line_2 + line_3, [
             {'amount_residual': 10.0,       'amount_residual_currency': 90.0,       'reconciled': False},
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
         ])
 
-        line_4 = self._create_line_for_reconciliation(-30.0, -90.0, foreign_curr, '2016-01-01')
+        line_4 = self.create_line_for_reconciliation(-30.0, -90.0, foreign_curr, '2016-01-01')
         (line_2 + line_4).reconcile()
         self.assertRecordValues(line_2 + line_4, [
             {'amount_residual': 0.0,        'amount_residual_currency': 0.0,        'reconciled': True},
@@ -2494,9 +2467,9 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         comp_curr = self.company_data['currency']
         foreign_curr1 = self.currency_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(600.0, 1200.0, foreign_curr1, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-800.0, -2400.0, foreign_curr1, '2016-01-01')
-        line_3 = self._create_line_for_reconciliation(400.0, 400.0, comp_curr, '2016-01-01')
+        line_1 = self.create_line_for_reconciliation(600.0, 1200.0, foreign_curr1, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-800.0, -2400.0, foreign_curr1, '2016-01-01')
+        line_3 = self.create_line_for_reconciliation(400.0, 400.0, comp_curr, '2016-01-01')
 
         # Create the partials as it should be created in previous version.
         self.env['account.partial.reconcile'].create([
@@ -2522,8 +2495,8 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
         ])
 
         # Fix 'line_2' & 'line_4' using the "new" reconciliation.
-        line_4 = self._create_line_for_reconciliation(0.0, 600.0, foreign_curr1, '2016-01-01')
-        line_5 = self._create_line_for_reconciliation(-200.0, -200.0, comp_curr, '2016-01-01')
+        line_4 = self.create_line_for_reconciliation(0.0, 600.0, foreign_curr1, '2016-01-01')
+        line_5 = self.create_line_for_reconciliation(-200.0, -200.0, comp_curr, '2016-01-01')
         (line_2 + line_3 + line_4 + line_5).reconcile()
 
         self.assertRecordValues(line_1 + line_2 + line_3 + line_4 + line_5, [
@@ -2576,11 +2549,11 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
 
         comp_curr = self.company_data['currency']
 
-        line_1 = self._create_line_for_reconciliation(600.0, 600.0, comp_curr, '2017-01-01')
-        line_2 = self._create_line_for_reconciliation(-100.0, -100.0, comp_curr, '2017-01-02')
-        line_3 = self._create_line_for_reconciliation(700.0, 700.0, comp_curr, '2017-01-03')
-        line_5 = self._create_line_for_reconciliation(-700.0, -700.0, comp_curr, '2017-01-04')
-        line_4 = self._create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2017-01-05')
+        line_1 = self.create_line_for_reconciliation(600.0, 600.0, comp_curr, '2017-01-01')
+        line_2 = self.create_line_for_reconciliation(-100.0, -100.0, comp_curr, '2017-01-02')
+        line_3 = self.create_line_for_reconciliation(700.0, 700.0, comp_curr, '2017-01-03')
+        line_5 = self.create_line_for_reconciliation(-700.0, -700.0, comp_curr, '2017-01-04')
+        line_4 = self.create_line_for_reconciliation(-500.0, -500.0, comp_curr, '2017-01-05')
 
         with rollback():
             # 5 batches of 1 aml. This won't reconcile anything.
