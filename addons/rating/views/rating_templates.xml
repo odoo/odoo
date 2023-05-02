@@ -55,4 +55,25 @@
                 </div>
             </t>
         </template>
+
+        <template id="mail_notification_project_rating" inherit_id="mail.mail_notification_light" primary="True">
+            <xpath expr="//t[@name='mail_notification_body']" position="replace">
+                <t t-if="notification_group_name in ['group_project_user' , 'user']">
+                    <table border="0" cellpadding="0" cellspacing="0" width="590" style="width:100%; margin:0px auto;">
+                        <tbody>
+                            <tr>
+                                <td valign="top" style="font-size: 13px;">
+                                    Hello,<br/><br/>
+                                    Rating has been requested to <t t-out="record.partner_id.name"/>
+                                    for the task "<t t-out="record.name"/>" assigned to <t t-esc="', '.join(user.name for user in record.user_ids)"/>.
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </t>
+                <t t-else="">
+                    <t t-out="message.body"/>
+                </t>
+            </xpath>
+        </template>
 </odoo>

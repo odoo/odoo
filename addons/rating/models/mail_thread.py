@@ -100,7 +100,7 @@ class MailThread(models.AbstractModel):
             template = template.with_context(lang=lang)
         self.with_context(mail_notify_force_send=force_send).message_post_with_source(
             template,
-            email_layout_xmlid='mail.mail_notification_light',
+            email_layout_xmlid='rating.mail_notification_project_rating',
             force_send=force_send,
             subtype_xmlid='mail.mt_note',
         )
