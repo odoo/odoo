@@ -225,7 +225,7 @@
                 <field name="state" widget="statusbar" statusbar_visible="confirm,validate" attrs="{'invisible': [('active', '=', False)]}"/>
             </header>
             <sheet>
-                <widget name="web_ribbon" title="Canceled" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Canceled" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <div class="alert alert-info" role="alert" attrs="{'invisible': ['|', ('request_unit_hours', '=', False), '|', ('tz_mismatch', '=', False), ('holiday_type', '=', 'category')]}">
                     <span attrs="{'invisible': [('holiday_type', '!=', 'employee')]}">
                         The employee has a different timezone than yours! Here dates and times are displayed in the employee's timezone

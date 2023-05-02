@@ -97,8 +97,8 @@
                         </div>
                     </button>
                 </div>
-                <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': [('application_status', '!=', 'refused')]}"/>
-                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('application_status', '!=', 'archived')]}"/>
+                <widget name="web_ribbon" title="Refused" bg_color="text-bg-danger" attrs="{'invisible': [('application_status', '!=', 'refused')]}"/>
+                <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('application_status', '!=', 'archived')]}"/>
                 <widget name="web_ribbon" title="Hired" attrs="{'invisible': [('application_status', '!=', 'hired')]}" />
                 <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
@@ -332,7 +332,7 @@
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
                             <field name="date_closed" invisible="1"/>
                             <div class="ribbon ribbon-top-right pe-none" attrs="{'invisible': [('date_closed', '=', False)]}">
-                                <span class="bg-success">Hired</span>
+                                <span class="text-bg-success">Hired</span>
                             </div>
                             <span class="badge rounded-pill text-bg-danger float-end me-4" attrs="{'invisible': [('application_status', '!=', 'refused')]}">Refused</span>
                             <span class="badge rounded-pill text-bg-secondary float-end me-4" attrs="{'invisible': [('application_status', '!=', 'archived')]}">Archived</span>

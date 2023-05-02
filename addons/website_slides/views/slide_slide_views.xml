@@ -85,7 +85,7 @@
                             <field name="is_published" class="ms-1" widget="website_redirect_button"
                                    attrs="{'invisible': ['|',('is_category', '=', True), ('channel_id', '=', False)]}"/>
                         </div>
-                        <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                         <field name="image_1920" widget="image" class="oe_avatar" options='{"preview_image": "image_256"}'
                             attrs="{'invisible': [('is_category', '=', True)]}"/>
                         <div class="oe_title pe-xl-0">

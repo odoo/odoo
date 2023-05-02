@@ -47,7 +47,7 @@
                             <field string="Participations" name="answer_done_count" widget="statinfo"/>
                         </button>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="background_image" widget="image" class="oe_avatar"/>
                     <field name="survey_type" widget="radio" options="{'horizontal': True}"/>
                     <div class="oe_title" style="width: 100%;">
@@ -325,13 +325,13 @@
                                 </button>
                             </div>
                             <widget name="web_ribbon" title="Archived"
-                                bg_color="bg-danger"
+                                bg_color="text-bg-danger"
                                 attrs="{'invisible': [('active', '=', True)]}"/>
                         </div>
                         <!-- displayed in grouped mode -->
                         <div class="o_survey_kanban_card_grouped">
                             <widget name="web_ribbon" title="Archived"
-                                bg_color="bg-danger"
+                                bg_color="text-bg-danger"
                                 attrs="{'invisible': [('active', '=', True)]}"/>
                             <div class="o_kanban_record_top">
                                 <h4 class="o_kanban_record_title p-0 mb4"><field name="title" /></h4>
