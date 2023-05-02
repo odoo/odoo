@@ -7,9 +7,8 @@
             <p class="o-mail-PinnedMessagesPanel-title position-sticky top-0 py-3 mb-0 fw-bolder text-center text-uppercase text-700 bg-100">
                 Pinned messages
             </p>
-            <t t-set="pinnedMessages" t-value="props.thread.pinnedMessages"/>
-            <div class="d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': pinnedMessages.length === 0 }" t-ref="message-list">
-                <div class="card m-3 mt-0" t-foreach="pinnedMessages" t-as="message" t-key="message.id">
+            <div class="d-flex flex-column" t-att-class="{ 'justify-content-center flex-grow-1': props.thread.pinnedMessages.length === 0 }" t-ref="message-list">
+                <div class="card m-3 mt-0" t-foreach="props.thread.pinnedMessages" t-as="message" t-key="message.id">
                     <div class="card-body">
                         <div class="d-flex justify-content-end">
                             <button class="o-mail-PinnedMessagesPanel-jump btn rounded bg-400 badge opacity-0 flex-shrink-0" t-att-class="{ 'opacity-100 py-1 px-2': env.isSmall }" t-on-click="() => this.onClickJump(message)">Jump</button>
@@ -21,7 +20,7 @@
                         <Message hasActions="false" message="message" thread="props.thread"/>
                     </div>
                 </div>
-                <p t-if="pinnedMessages.length === 0" t-esc="emptyMessage" class="text-center fst-italic text-500 fs-6"/>
+                <p t-if="props.thread.pinnedMessages.length === 0" t-esc="emptyMessage" class="text-center fst-italic text-500 fs-6"/>
             </div>
         </div>
     </t>
