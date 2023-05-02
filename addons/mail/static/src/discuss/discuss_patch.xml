@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.Discuss" t-inherit-mode="extension">
+        <xpath expr="//*[@t-ref='startCall']" position="after">
+            <button t-if="thread.model === 'discuss.channel'" class="btn rounded px-2 shadow-none" t-att-class="{ 'o-isActive': state.isAddingUsers }" title="Add Users" t-on-click.stop="toggleInviteForm" t-ref="addUsers">
+                <i class="fa fa-lg fa-user-plus text-700"/>
+            </button>
+        </xpath>
+    </t>
+</templates>

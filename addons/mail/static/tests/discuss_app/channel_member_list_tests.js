@@ -156,7 +156,7 @@ QUnit.test("Channel member count update after user joined", async (assert) => {
     assert.strictEqual(thread.memberCount, 1);
     await click("button[title='Show Member List']");
     await click("button[title='Add Users']");
-    await click(".o-mail-ChannelInvitation-selectable:contains(Harry)");
+    await click(".o-discuss-ChannelInvitation-selectable:contains(Harry)");
     await click("button[title='Invite to Channel']");
     assert.strictEqual(thread.memberCount, 2);
 });
