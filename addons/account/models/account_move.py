@@ -1533,6 +1533,7 @@ class AccountMove(models.Model):
         for invoice in self:
             if invoice.journal_id.currency_id and invoice.journal_id.currency_id != invoice.currency_id:
                 self.env.add_to_compute(self._fields['journal_id'], invoice)
+            self.env.add_to_compute(invoice.invoice_line_ids._fields['currency_id'], invoice.invoice_line_ids)
 
     def _inverse_payment_reference(self):
         self.line_ids._conditional_add_to_compute('name', lambda line: (
