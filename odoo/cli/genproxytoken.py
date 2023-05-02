@@ -1,8 +1,10 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
 import os
 import secrets
 import sys
 import textwrap
+from pathlib import Path
 
 from passlib.hash import pbkdf2_sha512
 
@@ -11,8 +13,7 @@ from odoo.tools import config
 
 
 class GenProxyToken(Command):
-    def __init__(self):
-        self.command_name = "genproxytoken"
+    """ Generate and (re)set proxy access token in config file """
 
     def generate_token(self, length=16):
         token = secrets.token_hex(int(length / 2))
@@ -21,8 +22,8 @@ class GenProxyToken(Command):
 
     def run(self, cmdargs):
         parser = argparse.ArgumentParser(
-            prog="%s %s" % (sys.argv[0].split(os.path.sep)[-1], self.command_name),
-            description="Generate and (re)set proxy access token in config file"
+            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            description=self.__doc__.strip()
         )
         parser.add_argument('-c', '--config', type=str, help="Specify an alternate config file")
         parser.add_argument('--token-length', type=int, help="Token Length", default=16)
