@@ -1125,6 +1125,8 @@ class WebsiteSlides(WebsiteProfile):
         # try accessing slide, and display to corresponding template
         try:
             slide = request.env['slide.slide'].browse(slide_id)
+            if not slide.active:
+                raise werkzeug.exceptions.NotFound()
             if is_embedded:
                 request.env['slide.embed'].sudo()._add_embed_url(slide.id, referrer_url)
             values = self._get_slide_detail(slide)
