@@ -7,13 +7,13 @@ import {
     insertText,
     afterNextRender,
     nextAnimationFrame,
+    waitUntil,
 } from "@mail/../tests/helpers/test_utils";
 import { deserializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 import {
     editInput,
     makeDeferred,
-    nextTick,
     patchWithCleanup,
     triggerEvent,
     triggerHotkey,
@@ -376,7 +376,7 @@ QUnit.test(
         await click(".o-mail-Message [title='Edit']");
         await editInput(document.body, ".o-mail-Message .o-mail-Composer-input", "Goodbye World");
         await triggerHotkey("Enter", false);
-        await nextTick();
+        await waitUntil(".o-mail-MessageInReply-message:contains(Goodbye World)");
         assert.strictEqual($(".o-mail-MessageInReply-message")[0].innerText, "Goodbye World");
     }
 );
