@@ -129,7 +129,7 @@ class LoyaltyReward(models.Model):
 
     @api.depends('discount_product_domain')
     def _compute_reward_product_domain(self):
-        compute_all_discount_product = self.env['ir.config_parameter'].get_param('loyalty.compute_all_discount_product_ids', 'enabled')
+        compute_all_discount_product = self.env['ir.config_parameter'].sudo().get_param('loyalty.compute_all_discount_product_ids', 'enabled')
         for reward in self:
             if compute_all_discount_product == 'enabled':
                 reward.reward_product_domain = "null"
@@ -138,7 +138,7 @@ class LoyaltyReward(models.Model):
 
     @api.depends('discount_product_ids', 'discount_product_category_id', 'discount_product_tag_id', 'discount_product_domain')
     def _compute_all_discount_product_ids(self):
-        compute_all_discount_product = self.env['ir.config_parameter'].get_param('loyalty.compute_all_discount_product_ids', 'enabled')
+        compute_all_discount_product = self.env['ir.config_parameter'].sudo().get_param('loyalty.compute_all_discount_product_ids', 'enabled')
         for reward in self:
             if compute_all_discount_product == 'enabled':
                 reward.all_discount_product_ids = self.env['product.product'].search(reward._get_discount_product_domain())
