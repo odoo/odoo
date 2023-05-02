@@ -33,13 +33,13 @@ export class OrderlineDetails extends Component {
         return this.line.productName;
     }
     get totalPrice() {
-        return this.env.pos.format_currency(this.line.totalPrice);
+        return this.env.utils.formatCurrency(this.line.totalPrice);
     }
     get quantity() {
         return this.line.quantity;
     }
     get unitPrice() {
-        return this.env.pos.format_currency(this.line.unitPrice);
+        return this.env.utils.formatCurrency(this.line.unitPrice);
     }
     get unit() {
         return this.line.unit;

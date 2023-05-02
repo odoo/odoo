@@ -35,7 +35,7 @@
                                         <t t-esc="tip.percentage"></t>
                                     </div>
                                     <div class="amount">
-                                        <t t-esc="env.pos.format_currency(tip.amount)" />
+                                        <t t-esc="env.utils.formatCurrency(tip.amount)" />
                                     </div>
                                 </div>
                             </t>

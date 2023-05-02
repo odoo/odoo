@@ -57,7 +57,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
                         "The maximum difference allowed is %s.\n\
                         Please contact your manager to accept the closing difference."
                     ),
-                    this.pos.globalState.format_currency(this.amountAuthorizedDiff)
+                    this.env.utils.formatCurrency(this.amountAuthorizedDiff)
                 ),
                 confirmText: this.env._t("OK"),
             });
@@ -80,7 +80,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             const { total, moneyDetailsNotes, moneyDetails } = payload;
             this.state.payments[this.defaultCashDetails.id].counted = total;
             this.state.payments[this.defaultCashDetails.id].difference =
-                this.pos.globalState.round_decimals_currency(
+                this.env.utils.roundCurrency(
                     this.state.payments[[this.defaultCashDetails.id]].counted -
                         this.defaultCashDetails.amount
                 );
@@ -106,7 +106,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         } else {
             expectedAmount = this.otherPaymentMethods.find((pm) => paymentId === pm.id).amount;
         }
-        this.state.payments[paymentId].difference = this.pos.globalState.round_decimals_currency(
+        this.state.payments[paymentId].difference = this.env.utils.roundCurrency(
             this.state.payments[paymentId].counted - expectedAmount
         );
     }

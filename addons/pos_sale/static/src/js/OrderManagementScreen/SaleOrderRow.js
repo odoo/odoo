@@ -32,7 +32,7 @@ export class SaleOrderRow extends Component {
         return partner ? partner[1] : null;
     }
     get total() {
-        return this.env.pos.format_currency(this.order.amount_total);
+        return this.env.utils.formatCurrency(this.order.amount_total);
     }
     /**
      * Returns true if the order has unpaid amount, but the unpaid amount
@@ -43,7 +43,7 @@ export class SaleOrderRow extends Component {
         return this.order.amount_total != this.order.amount_unpaid;
     }
     get amountUnpaidRepr() {
-        return this.env.pos.format_currency(this.order.amount_unpaid);
+        return this.env.utils.formatCurrency(this.order.amount_unpaid);
     }
     get state() {
         const state_mapping = {

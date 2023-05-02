@@ -26,19 +26,19 @@
                         <div class="option">
                             <div>15%</div>
                             <div class="amount">
-                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.15)"></t>
+                                <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.15)"></t>
                             </div>
                         </div>
                         <div class="option">
                             <div>20%</div>
                             <div class="amount">
-                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.20)"></t>
+                                <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.20)"></t>
                             </div>
                         </div>
                         <div class="option">
                             <div>25%</div>
                             <div class="amount">
-                                <t t-esc="env.pos.format_currency(receipt.total_with_tax * 0.25)"></t>
+                                <t t-esc="env.utils.formatCurrency(receipt.total_with_tax * 0.25)"></t>
                             </div>
                         </div>
                     </div>

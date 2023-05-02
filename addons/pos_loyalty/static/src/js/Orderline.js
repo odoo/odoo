@@ -24,8 +24,8 @@ patch(Orderline.prototype, "pos_loyalty.Orderline", {
     _getGiftCardOrEWalletBalance() {
         const coupon = this.env.pos.couponCache[this.props.line.coupon_id];
         if (coupon) {
-            return this.env.pos.format_currency(coupon.balance);
+            return this.env.utils.formatCurrency(coupon.balance);
         }
-        return this.env.pos.format_currency(0);
+        return this.env.utils.formatCurrency(0);
     },
 });

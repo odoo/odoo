@@ -98,11 +98,11 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             .get_orderlines()
             .find((line) => tip_product_id && line.product.id === tip_product_id);
         const tipAmount = tipLine ? tipLine.get_all_prices().priceWithTax : 0;
-        const orderAmountStr = this.env.pos.format_currency(orderTotalAmount - tipAmount);
+        const orderAmountStr = this.env.utils.formatCurrency(orderTotalAmount - tipAmount);
         if (!tipAmount) {
             return orderAmountStr;
         }
-        const tipAmountStr = this.env.pos.format_currency(tipAmount);
+        const tipAmountStr = this.env.utils.formatCurrency(tipAmount);
         return `${orderAmountStr} + ${tipAmountStr} tip`;
     }
     get nextScreen() {

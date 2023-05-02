@@ -8,7 +8,7 @@ patch(PartnerLine.prototype, "pos_loyalty.PartnerLine", {
     _getLoyaltyPointsRepr(loyaltyCard) {
         const program = this.env.pos.program_by_id[loyaltyCard.program_id];
         if (program.program_type === "ewallet") {
-            return `${program.name}: ${this.env.pos.format_currency(loyaltyCard.balance)}`;
+            return `${program.name}: ${this.env.utils.formatCurrency(loyaltyCard.balance)}`;
         }
         const balanceRepr = this.env.pos.format_pr(loyaltyCard.balance, 0.01);
         if (program.portal_visible) {

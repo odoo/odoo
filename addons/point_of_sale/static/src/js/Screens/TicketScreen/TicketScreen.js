@@ -334,7 +334,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         return moment(order.validation_date).format("YYYY-MM-DD hh:mm A");
     }
     getTotal(order) {
-        return this.env.pos.format_currency(order.get_total_with_tax());
+        return this.env.utils.formatCurrency(order.get_total_with_tax());
     }
     getPartner(order) {
         return order.get_partner_name();

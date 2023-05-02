@@ -45,7 +45,7 @@ export class CashMovePopup extends AbstractAwaitablePopup {
             this.state.errorMessage = this.env._t("Insert a positive amount");
             return;
         }
-        const formattedAmount = this.pos.globalState.format_currency(amount);
+        const formattedAmount = this.env.utils.formatCurrency(amount);
         if (!amount) {
             this.notification.add(
                 sprintf(_t("Cash in/out of %s is ignored."), formattedAmount),
