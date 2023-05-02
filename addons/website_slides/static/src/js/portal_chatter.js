@@ -19,7 +19,7 @@ PortalChatter.include({
     _reloadChatterContent: async function (data) {
         await this._super(...arguments);
         if (this.options.res_model === "slide.channel") {
-            $('#review-tab').text(sprintf(_t('Reviews (%d)'), data.rating_count));
+            $('#review-tab').text(sprintf(_t('Reviews (%s)'), data.rating_count));
         }
     },
 });
