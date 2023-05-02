@@ -22,6 +22,7 @@ import { WithSearch } from "@web/search/with_search/with_search";
 import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
+import { MainComponentsContainer } from "@web/core/main_components_container";
 
 const serviceRegistry = registry.category("services");
 const favoriteMenuRegistry = registry.category("favoriteMenu");
@@ -82,8 +83,10 @@ export async function makeWithSearch(params) {
     Parent.template = xml`
         <WithSearch t-props="withSearchProps" t-slot-scope="search">
             <Component t-props="getProps(search)"/>
-        </WithSearch>`;
-    Parent.components = { Component: params.Component, WithSearch };
+        </WithSearch>
+        <MainComponentsContainer />
+    `;
+    Parent.components = { Component: params.Component, WithSearch, MainComponentsContainer };
 
     const env = await makeTestEnv({ serverData, mockRPC });
     const searchEnv = Object.assign(Object.create(env), { config });
