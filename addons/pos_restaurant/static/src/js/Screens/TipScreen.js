@@ -61,7 +61,7 @@ export class TipScreen extends Component {
         }
 
         if (!amount) {
-            await this.orm.call("set_no_tip", "pos.order", [serverId]);
+            await this.orm.call("pos.order", "set_no_tip", [serverId]);
             this.goNextScreen();
             return;
         }
