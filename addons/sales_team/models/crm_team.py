@@ -20,7 +20,7 @@ class CrmTeam(models.Model):
     _order = "sequence ASC, create_date DESC, id DESC"
     _check_company_auto = True
 
-    def _get_default_team_id(self, user_id=None, domain=None):
+    def _get_default_team_id(self, user_id=False, domain=False):
         """ Compute default team id for sales related documents. Note that this
         method is not called by default_get as it takes some additional
         parameters and is meant to be called by other default methods.
@@ -44,7 +44,7 @@ class CrmTeam(models.Model):
         :param user_id: salesperson to target, fallback on env.uid;
         :domain: optional domain to filter teams (like use_lead = True);
         """
-        if user_id is None:
+        if not user_id:
             user = self.env.user
         else:
             user = self.env['res.users'].sudo().browse(user_id)
