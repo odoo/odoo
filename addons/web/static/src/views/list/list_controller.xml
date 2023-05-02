@@ -36,7 +36,7 @@
                 </t>
 
                 <t t-set-slot="control-panel-additional-actions">
-                    <div t-if="nbSelected" class="d-flex ms-3">
+                    <div t-if="nbSelected" class="d-flex ms-3 gap-1">
                         <t t-call="web.ListView.Selection"/>
                         <t t-foreach="archInfo.headerButtons" t-as="button" t-key="button.id">
                             <MultiRecordViewButton

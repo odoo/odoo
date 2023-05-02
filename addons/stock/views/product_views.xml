@@ -263,9 +263,9 @@
                                 type="object"
                                 attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}">
                                 <div class="o_field_widget o_stat_info">
-                                        <span class="o_stat_value">
-                                            <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
-                                            <field name="uom_name"/>
+                                        <span class="o_stat_value d-flex gap-1">
+                                            <field name="qty_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                            <field name="uom_name" class="oe_inline"/>
                                         </span>
                                         <span class="o_stat_text">On Hand</span>
                                 </div>
@@ -276,9 +276,9 @@
                                 context="{'default_product_id': id, 'active_model': 'product.template'}"
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value">
-                                        <field name="virtual_available" widget="statinfo" nolabel="1" class="mr4"/>
-                                        <field name="uom_name"/>
+                                    <span class="o_stat_value d-flex gap-1">
+                                        <field name="virtual_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                        <field name="uom_name" class="oe_inline"/>
                                     </span>
                                     <span class="o_stat_text">Forecasted</span>
                                 </div>
@@ -370,9 +370,9 @@
                                 attrs="{'invisible':[('show_on_hand_qty_status_button', '=', False)]}"
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value" widget="statinfo">
-                                        <field name="qty_available" widget="statinfo" nolabel="1" class="mr4"/>
-                                        <field name="uom_name"/>
+                                    <span class="o_stat_value d-flex gap-1">
+                                        <field name="qty_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                        <field name="uom_name" class="oe_inline"/>
                                     </span>
                                     <span class="o_stat_text">On Hand</span>
                                 </div>
@@ -383,9 +383,9 @@
                                 context="{'default_product_tmpl_id': id}"
                                 class="oe_stat_button" icon="fa-cubes">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value">
-                                        <field name="virtual_available" widget="statinfo" nolabel="1" class="mr4"/>
-                                        <field name="uom_name"/>
+                                    <span class="o_stat_value d-flex gap-1">
+                                        <field name="virtual_available" widget="statinfo" nolabel="1" class="oe_inline"/>
+                                        <field name="uom_name" class="oe_inline"/>
                                     </span>
                                     <span class="o_stat_text">Forecasted</span>
                                 </div>

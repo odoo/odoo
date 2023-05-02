@@ -2,14 +2,16 @@
 <templates xml:space="preserve">
 
     <div t-name="mrp.MoOverview" class="o_action" owl="1">
-        <Layout display="{ controlPanel: { 'top-right': false } }">
-            <t t-set-slot="control-panel-bottom-right">
+        <Layout display="{ controlPanel: {} }">
+            <t t-set-slot="layout-actions">
                 <MoOverviewDisplayFilter showOptions="state.showOptions" limited="state.isDone" changeDisplay.bind="onChangeDisplay"/>
             </t>
 
-            <t t-set-slot="control-panel-bottom-left">
-                <button class="btn btn-primary" t-on-click="onPrint">Print</button>
-                <button class="btn btn-primary" t-on-click="onUnfold">Unfold</button>
+            <t t-set-slot="control-panel-create-button">
+                <div class="d-flex gap-1">
+                    <button class="btn btn-primary" t-on-click="onPrint">Print</button>
+                    <button class="btn btn-primary" t-on-click="onUnfold">Unfold</button>
+                </div>
             </t>
 
             <div class="py-3 py-lg-5 overflow-auto border-bottom bg-view">

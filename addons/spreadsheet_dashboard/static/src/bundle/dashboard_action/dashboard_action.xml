@@ -2,7 +2,7 @@
 <templates>
     <div t-name="spreadsheet_dashboard.DashboardAction" owl="1" class="o_action o_spreadsheet_dashboard_action o_field_highlight">
         <ControlPanel display="controlPanelDisplay">
-            <t t-set-slot="control-panel-top-right">
+            <t t-set-slot="layout-actions">
                 <t t-set="status" t-value="state.activeDashboard and state.activeDashboard.status"/>
                 <FilterValue
                     t-if="status === Status.Loaded"
