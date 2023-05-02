@@ -12,10 +12,10 @@ const VIDEO_URL = 'https://www.youtube.com/watch?v=Dpq87YCHmJc';
 wTourUtils.registerWebsitePreviewTour('test_replace_media', {
     url: '/',
     test: true,
+    edition: true,
 }, [
-    wTourUtils.clickOnEdit(),
     {
-        trigger: '.editor_enable.editor_has_snippets',
+        trigger: "body",
         run: function () {
             // Patch the VideoDialog so that it does not do external calls
             // during the test (note that we don't unpatch but as the patch

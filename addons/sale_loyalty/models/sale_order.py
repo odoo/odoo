@@ -492,7 +492,7 @@ class SaleOrder(models.Model):
         """
         self.ensure_one()
         points = coupon.points
-        if (coupon.program_id.applies_on != 'future' and self.state not in ('sale', 'done')) or post_confirm:
+        if coupon.program_id.applies_on != 'future' and self.state not in ('sale', 'done'):
             # Points that will be given by the order upon confirming the order
             points += self.coupon_point_ids.filtered(lambda p: p.coupon_id == coupon).points
         # Points already used by rewards
