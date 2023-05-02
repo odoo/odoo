@@ -238,6 +238,10 @@ class TestUsers2(TransactionCase):
 
         self.assertIn(self.env.ref('base.group_user'), user.groups_id)
 
+        # all template user groups are copied
+        default_user = self.env.ref('base.default_user')
+        self.assertEqual(default_user.groups_id, user.groups_id)
+
     def test_selection_groups(self):
         # create 3 groups that should be in a selection
         app = self.env['ir.module.category'].create({'name': 'Foo'})
