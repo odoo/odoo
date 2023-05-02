@@ -130,6 +130,9 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/src/public/**/*'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
             ('remove', 'mail/static/src/emoji_picker/emoji_data.js'),
+            # discuss (loaded last to fix dependencies)
+            ('remove', 'mail/static/src/discuss/**/*'),
+            'mail/static/src/discuss/**/*',
         ],
         "web.dark_mode_assets_backend": [
             'mail/static/src/**/*.dark.scss',
@@ -184,6 +187,10 @@ For more specific needs, you may also assign custom-defined actions
             ('remove', 'mail/static/src/web/**/*'),
             ('remove', 'mail/static/src/emoji_picker/emoji_data.js'),
             ('remove', 'mail/static/src/**/*.dark.scss'),
+            # discuss (loaded last to fix dependencies)
+            ('remove', 'mail/static/src/discuss/**/*'),
+            'mail/static/src/discuss/**/*',
+            ('remove', 'mail/static/src/discuss/web/**/*'),
         ]
     },
     'license': 'LGPL-3',

@@ -20,9 +20,7 @@ import {
     useEffect,
 } from "@odoo/owl";
 import { CallSettings } from "../rtc/call_settings";
-import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
-import { ChannelInvitation } from "./channel_invitation";
 import { _t } from "@web/core/l10n/translation";
 import { PinnedMessagesPanel } from "./pinned_messages_panel";
 
@@ -60,14 +58,7 @@ export class Discuss extends Component {
         this.messageEdition = useMessageEdition();
         this.messageToReplyTo = useMessageToReplyTo();
         this.contentRef = useRef("content");
-        this.popover = usePopover(ChannelInvitation, {
-            onClose: () => (this.state.isAddingUsers = false),
-        });
-        this.addUsersRef = useRef("addUsers");
-        this.state = useState({
-            activeMode: this.MODES.NONE,
-            isAddingUsers: false,
-        });
+        this.state = useState({ activeMode: this.MODES.NONE });
         this.orm = useService("orm");
         this.effect = useService("effect");
         this.prevInboxCounter = this.store.discuss.inbox.counter;
@@ -118,15 +109,6 @@ export class Discuss extends Component {
             this.state.activeMode === this.MODES.PINNED_MESSAGES
                 ? this.MODES.NONE
                 : this.MODES.PINNED_MESSAGES;
-    }
-
-    toggleInviteForm() {
-        if (this.popover.isOpen) {
-            this.popover.close();
-        } else {
-            this.state.isAddingUsers = true;
-            this.popover.open(this.addUsersRef.el, { thread: this.thread });
-        }
     }
 
     toggleSettings() {

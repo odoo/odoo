@@ -2,14 +2,15 @@
 
 import { Component, useRef, useState, onMounted, onWillStart } from "@odoo/owl";
 import { useMessaging, useStore } from "@mail/core/messaging_hook";
-import { ImStatus } from "./im_status";
+import { ImStatus } from "@mail/discuss_app/im_status";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 
 export class ChannelInvitation extends Component {
     static components = { ImStatus };
-    static props = ["thread", "close?", "chatState?"];
+    static defaultProps = { hasSizeConstraints: false };
+    static props = ["hasSizeConstraints?", "thread", "close?", "chatState?"];
     static template = "discuss.ChannelInvitation";
 
     setup() {

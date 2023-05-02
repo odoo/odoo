@@ -12,7 +12,6 @@ import { localization } from "@web/core/l10n/localization";
 import { CallSettings } from "@mail/rtc/call_settings";
 import { ChannelMemberList } from "@mail/discuss_app/channel_member_list";
 import { ThreadIcon } from "@mail/discuss_app/thread_icon";
-import { ChannelInvitation } from "@mail/discuss_app/channel_invitation";
 import { isEventHandled } from "@mail/utils/misc";
 import { ChannelSelector } from "@mail/discuss_app/channel_selector";
 import { PinnedMessagesPanel } from "@mail/discuss_app/pinned_messages_panel";
@@ -33,7 +32,6 @@ export class ChatWindow extends Component {
         CallSettings,
         ChannelMemberList,
         ThreadIcon,
-        ChannelInvitation,
         PinnedMessagesPanel,
     };
     static props = ["chatWindow", "right?"];
@@ -138,10 +136,6 @@ export class ChatWindow extends Component {
 
     toggleMemberList() {
         this.state.activeMode = this.state.activeMode === "member-list" ? "" : "member-list";
-    }
-
-    toggleAddUsers() {
-        this.state.activeMode = this.state.activeMode === "add-users" ? "" : "add-users";
     }
 
     expand() {
