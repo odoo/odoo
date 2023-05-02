@@ -1346,12 +1346,6 @@ class Task(models.Model):
             self.description = message.body
         return super(Task, self)._message_post_after_hook(message, msg_vals)
 
-    def action_assign_to_me(self):
-        self.write({'user_ids': [(4, self.env.user.id)]})
-
-    def action_unassign_me(self):
-        self.write({'user_ids': [Command.unlink(self.env.uid)]})
-
     def _get_all_subtasks(self):
         return self.browse(set.union(set(), *self._get_subtask_ids_per_task_id().values()))
 
