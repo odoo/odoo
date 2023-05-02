@@ -74,6 +74,85 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
+    QUnit.test("FavoriteField saves changes by default", async function (assert) {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="bar" widget="boolean_favorite" />
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                if (args.method === "write" && args.model === "partner") {
+                    assert.step("save");
+                    assert.deepEqual(args.args, [[1], { bar: false }]);
+                }
+            },
+            domain: [["id", "=", 1]],
+        });
+
+        // click on favorite
+        await click(target, ".o_field_widget .o_favorite");
+        assert.containsNone(
+            target,
+            ".o_kanban_record  .o_field_widget .o_favorite > a i.fa.fa-star",
+            "should not be favorite"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_kanban_record .o_field_widget .o_favorite > a").textContent,
+            " Add to Favorites",
+            'the label should say "Add to Favorites"'
+        );
+
+        assert.verifySteps(["save"]);
+    });
+
+    QUnit.test("FavoriteField does not save if autosave option is set to false", async function (assert) {
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="bar" widget="boolean_favorite" options="{'autosave': False}"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            mockRPC(route, args) {
+                if (args.method === "write" && args.model === "partner") {
+                    assert.step("save");
+                }
+            },
+            domain: [["id", "=", 1]],
+        });
+
+        // click on favorite
+        await click(target, ".o_field_widget .o_favorite");
+        assert.containsNone(
+            target,
+            ".o_kanban_record  .o_field_widget .o_favorite > a i.fa.fa-star",
+            "should not be favorite"
+        );
+        assert.strictEqual(
+            target.querySelector(".o_kanban_record .o_field_widget .o_favorite > a").textContent,
+            " Add to Favorites",
+            'the label should say "Add to Favorites"'
+        );
+
+        assert.verifySteps([]);
+    });
+
     QUnit.test("FavoriteField in form view", async function (assert) {
         await makeView({
             type: "form",
@@ -159,7 +238,7 @@ QUnit.module("Fields", (hooks) => {
             serverData,
             arch: `
                 <tree editable="bottom">
-                    <field name="bar" widget="boolean_favorite" nolabel="1" />
+                    <field name="bar" widget="boolean_favorite" nolabel="1" options="{'autosave': False}"/>
                 </tree>`,
         });
 
