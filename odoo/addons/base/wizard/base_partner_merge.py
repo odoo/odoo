@@ -170,6 +170,8 @@ class MergePartnerAutomatic(models.TransientModel):
                             """
                             self._cr.execute(query, (dst_partner.id,))
                             # NOTE JEM : shouldn't we fetch the data ?
+                            if self._cr.rowcount:
+                                raise UserError(_('Error! A partner is its own ancestor.'))
                 except psycopg2.Error:
                     # updating fails, most likely due to a violated unique constraint
                     # keeping record with nonexistent partner_id is useless, better delete it
