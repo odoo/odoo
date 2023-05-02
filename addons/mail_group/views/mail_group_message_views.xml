@@ -63,9 +63,9 @@
                         attrs="{'invisible': ['|', ('moderation_status', '!=', 'pending_moderation'), ('is_group_moderated', '=', True)]}"/>
                 </header>
                 <sheet>
-                    <widget name="web_ribbon" title="Rejected" bg_color="bg-danger"
+                    <widget name="web_ribbon" title="Rejected" bg_color="text-bg-danger"
                         attrs="{'invisible': [('moderation_status', '!=', 'rejected')]}"/>
-                    <widget name="web_ribbon" title="Accepted" bg_color="bg-success"
+                    <widget name="web_ribbon" title="Accepted" bg_color="text-bg-success"
                         attrs="{'invisible': [('moderation_status', '!=', 'accepted')]}"/>
                     <group>
                         <field name="mail_message_id" invisible="1"/>

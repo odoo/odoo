@@ -56,7 +56,7 @@
                     <t t-name="kanban-box">
                         <div class="oe_kanban_card oe_kanban_global_click">
                             <div class="ribbon ribbon-top-right" attrs="{'invisible': [('active', '=', True)]}">
-                                <span class="bg-danger">Archived</span>
+                                <span class="text-bg-danger">Archived</span>
                             </div>
                             <div class="o_kanban_card_content d-flex">
                                 <div>
@@ -105,7 +105,7 @@
                         attrs="{'invisible': [('member_warning', '=', False)]}">
                         <field name="member_warning"/>
                     </div>
-                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <field name="image_1920" widget='image' class="oe_avatar"
                         attrs="{'invisible': [('user_id', '=', False)]}"
                         options='{"preview_image": "image_128"}'/>

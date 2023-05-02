@@ -44,7 +44,7 @@
             </xpath>
             <xpath expr="//group" position="before">
                 <field name="is_paid" invisible="1"/>
-                <widget name="web_ribbon" title="Paid" bg_color="bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
+                <widget name="web_ribbon" title="Paid" bg_color="text-bg-success" attrs="{'invisible': [('is_paid', '=', False)]}"/>
             </xpath>
             <group name="utm_link" position="before">
                 <group string="Transaction" groups="base.group_no_one">

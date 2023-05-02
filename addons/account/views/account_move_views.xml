@@ -710,10 +710,10 @@
                         <widget name="web_ribbon" title="Partial"
                                 attrs="{'invisible': ['|', ('payment_state', '!=', 'partial'), ('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                         <widget name="web_ribbon" title="Reversed"
-                                bg_color="bg-danger"
+                                bg_color="text-bg-danger"
                                 attrs="{'invisible': [('payment_state', '!=', 'reversed')]}"/>
                          <widget name="web_ribbon" text="Invoicing App Legacy"
-                                bg_color="bg-info"
+                                bg_color="text-bg-info"
                                 attrs="{'invisible': [('payment_state', '!=', 'invoicing_legacy')]}"
                                 tooltip="This entry has been generated through the Invoicing app, before installing Accounting. It has been disabled by the 'Invoicing Switch Threshold Date' setting so that it does not impact your accounting."/>
 

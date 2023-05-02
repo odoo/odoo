@@ -46,7 +46,7 @@
                                 </div>
                             </button>
                         </div>
-                        <widget name="web_ribbon" title="Lost" bg_color="bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
+                        <widget name="web_ribbon" title="Lost" bg_color="text-bg-danger" attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}"/>
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
                             <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/></h1>
@@ -561,7 +561,7 @@
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} #{lost_ribbon ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click oe_kanban_card d-flex flex-column">
                                 <div class="ribbon ribbon-top-right"
                                     attrs="{'invisible': ['|', ('probability', '&gt;', 0), ('active', '=', True)]}">
-                                    <span class="bg-danger">Lost</span>
+                                    <span class="text-bg-danger">Lost</span>
                                 </div>
 
                                 <div class="oe_kanban_content flex-grow-1">
@@ -643,8 +643,8 @@
                     <div class="ribbon ribbon-top-right"
                         attrs="{'invisible': ['&amp;', '|', ('probability', '&gt;', 0), ('active', '=', True),
                             '|', ('probability', '&lt;', 100), ('active', '=', False)]}">
-                        <span t-if="won_ribbon" class="bg-success">Won</span>
-                        <span t-elif="lost_ribbon" class="bg-danger">Lost</span>
+                        <span t-if="won_ribbon" class="text-bg-success">Won</span>
+                        <span t-elif="lost_ribbon" class="text-bg-danger">Lost</span>
                     </div>
                 </xpath>
                 <xpath expr="//div[hasclass('o_kanban_record_subtitle')]" position="replace">

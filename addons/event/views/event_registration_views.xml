@@ -58,7 +58,7 @@
                 </header>
                 <sheet string="Registration">
                     <div class="oe_button_box" name="button_box"/>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <widget name="web_ribbon" text="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>
                         <group string="Attendee" name="attendee">
                             <field class="o_text_overflow" name="name"/>
@@ -143,7 +143,7 @@
                     <t t-name="kanban-box">
                         <div t-attf-class="#{!record.active.raw_value ? 'oe_kanban_card_ribbon' : ''} oe_kanban_global_click o_event_registration_kanban container-fluid p-0">
                             <div t-if="!record.active.raw_value" class="ribbon ribbon-top-right">
-                                <span class="bg-danger">Archived</span>
+                                <span class="text-bg-danger">Archived</span>
                             </div>
                             <div class="row h-100">
                                 <div class="col-9 pe-0">

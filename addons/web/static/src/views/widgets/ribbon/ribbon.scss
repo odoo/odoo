@@ -4,14 +4,6 @@
     overflow: hidden;
     position: absolute;
 
-    &::before, &::after {
-        position: absolute;
-        z-index: -1;
-        content: '';
-        display: block;
-        border: 5px solid #2980b9;
-    }
-
     & span {
         z-index: 1;
         position: absolute;
@@ -39,11 +31,6 @@
     &-top-right {
         margin-top: -$o-sheet-vpadding;
         right: 0;
-
-        &::before, &::after {
-            border-top-color: black;
-            border-right-color: black;
-        }
 
         &::before {
             top: 0;
