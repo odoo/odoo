@@ -191,7 +191,9 @@ class AssetsBundle(object):
             src = self.get_debug_asset_url(name=js_attachment.name, extension='') if is_debug_assets else js_attachment[0].url
             attr = dict([
                 ["async", "async" if async_load else None],
-                ["defer", "defer" if defer_load or lazy_load else None],
+                # lazy_load will add defer in JS otherwise this is not W3C valid
+                # (defer is probably not needed there anyways)
+                ["defer", "defer" if defer_load else None],
                 ["type", "text/javascript"],
                 ["data-src" if lazy_load else "src", src],
                 ['data-asset-bundle', self.name],

@@ -2512,7 +2512,9 @@ class IrQWeb(models.AbstractModel):
                         "type": mimetype,
                     }
                     attributes["data-src" if lazy_load else "src"] = path
-                    if defer_load or lazy_load:
+                    if defer_load:
+                        # lazy_load will add defer in JS otherwise this is not
+                        # W3C valid (defer is probably not needed there anyways)
                         attributes["defer"] = "defer"
                 elif is_css:
                     tag = 'link'
