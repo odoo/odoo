@@ -470,7 +470,7 @@ export class ListController extends Component {
             this.notificationService.add(
                 sprintf(
                     this.env._t(
-                        "Of the %d records selected, only the first %d have been archived/unarchived."
+                        "Of the %s records selected, only the first %s have been archived/unarchived."
                     ),
                     resIds.length,
                     total
