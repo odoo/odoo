@@ -1,41 +1,55 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<odoo><data>
+<odoo>
+  <data>
 
     <record id="crm_recurring_plan_view_tree" model="ir.ui.view">
-        <field name="name">crm.recurring.plan.view.tree</field>
-        <field name="model">crm.recurring.plan</field>
-        <field name="arch" type="xml">
-            <tree editable="bottom">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="number_of_months"/>
-            </tree>
-        </field>
+      <field name="name">crm.recurring.plan.view.tree</field>
+      <field name="model">crm.recurring.plan</field>
+      <field name="arch" type="xml">
+        <tree editable="bottom">
+          <field name="sequence" widget="handle"/>
+          <field name="name"/>
+          <field name="number_of_months"/>
+          <field name="start_date"/>
+          <field name="end_date"/>
+          <field name="active"/>
+        </tree>
+      </field>
     </record>
 
     <record id="crm_recurring_plan_view_search" model="ir.ui.view">
-        <field name="name">crm.recurring.plan.view.search</field>
-        <field name="model">crm.recurring.plan</field>
-        <field name="arch" type="xml">
-            <search>
-                <field name="name"/>
-                <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
-            </search>
-        </field>
+      <field name="name">crm.recurring.plan.view.search</field>
+      <field name="model">crm.recurring.plan</field>
+      <field name="arch" type="xml">
+        <search>
+          <field name="name"/>
+          <filter name="active" string="Archived" domain="[('active', '=', False)]"/>
+          <filter name="start_date" string="Start Date"/>
+          <filter name="end_date" string="End Date"/>
+        </search>
+      </field>
     </record>
 
     <record id="crm_recurring_plan_action" model="ir.actions.act_window">
-        <field name="name">Recurring Plans</field>
-        <field name="res_model">crm.recurring.plan</field>
-        <field name="view_mode">tree</field>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_smiling_face">
-                Create a Recurring Plan
-            </p>
-            <p>
-                Set Recurring Plans on Opportunities to display the contracts' renewal periodicity<br/>(e.g: Monthly, Yearly).
-            </p>
-        </field>
+      <field name="name">Recurring Plans</field>
+      <field name="res_model">crm.recurring.plan</field>
+      <field name="view_mode">tree</field>
+      <field name="help" type="html">
+        <p class="o_view_nocontent_smiling_face">
+          Create a Recurring Plan
+        </p>
+        <p>
+          Set Recurring Plans on Opportunities to display the contracts' renewal periodicity<br/>(e.g: Monthly, Yearly).
+        </p>
+      </field>
     </record>
 
-</data></odoo>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  </data>
+</odoo>
