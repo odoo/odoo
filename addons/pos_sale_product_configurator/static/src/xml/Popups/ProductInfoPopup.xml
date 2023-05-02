@@ -13,7 +13,7 @@
                             <tr>
                                 <td><span class="searchable" t-esc="optional.name" t-on-click="() => this.searchProduct(optional.name)"/></td>
                                 <td class="table-value">
-                                    from <t t-esc="pos.globalState.format_currency(optional.price)"/>
+                                    from <t t-esc="env.utils.formatCurrency(optional.price)"/>
                                 </td>
                             </tr>
                         </t>

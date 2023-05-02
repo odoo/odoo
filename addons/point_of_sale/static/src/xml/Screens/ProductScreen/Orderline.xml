@@ -26,7 +26,7 @@
                 </t>
             </span>
             <span class="price">
-                <t t-esc="env.pos.format_currency(props.line.get_display_price())"/>
+                <t t-esc="env.utils.formatCurrency(props.line.get_display_price())"/>
             </span>
             <ul class="info-list">
                 <t t-if="props.line.get_quantity_str() !== '1' || props.line.selected ">
@@ -39,12 +39,12 @@
                         <t t-if="props.line.display_discount_policy() == 'without_discount' and
                             env.pos.round_decimals_currency(props.line.get_unit_display_price()) &lt; env.pos.round_decimals_currency(props.line.get_taxed_lst_unit_price())">
                             <s>
-                                <t t-esc="env.pos.format_currency(props.line.get_taxed_lst_unit_price(),'Product Price')" />
+                                <t t-esc="env.utils.formatCurrency(props.line.get_taxed_lst_unit_price())" />
                             </s>
-                            <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
+                            <t t-esc="env.utils.formatCurrency(props.line.get_unit_display_price())" />
                         </t>
                         <t t-else="">
-                            <t t-esc="env.pos.format_currency(props.line.get_unit_display_price(),'Product Price')" />
+                            <t t-esc="env.utils.formatCurrency(props.line.get_unit_display_price())" />
                         </t>
                         /
                         <t t-esc="props.line.get_unit().name" />

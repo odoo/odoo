@@ -7,7 +7,7 @@
                 <div class="title">Closing Session</div>
                 <div class="total-orders">
                     Total <t t-esc="ordersDetails.quantity"/> orders:
-                    <span class="amount" t-esc="pos.globalState.format_currency(ordersDetails.amount)"/>
+                    <span class="amount" t-esc="env.utils.formatCurrency(ordersDetails.amount)"/>
                 </div>
             </header>
             <main class="body">
@@ -25,20 +25,20 @@
                             <tbody>
                                 <tr>
                                     <td t-esc="defaultCashDetails.name"/>
-                                    <td t-esc="pos.globalState.format_currency(defaultCashDetails.amount)"/>
+                                    <td t-esc="env.utils.formatCurrency(defaultCashDetails.amount)"/>
                                     <td class="flex" t-on-input="() => this.handleInputChange(defaultCashDetails.id)">
                                         <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted"/>
                                         <div class="button icon" t-on-click="openDetailsPopup">
                                             <i class="fa fa-calculator" role="img" title="Open the money details popup"/>
                                         </div>
                                     </td>
-                                    <td t-esc="pos.globalState.format_currency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning': state.payments[defaultCashDetails.id].difference}"/>
+                                    <td t-esc="env.utils.formatCurrency(state.payments[defaultCashDetails.id].difference)" t-att-class="{'warning': state.payments[defaultCashDetails.id].difference}"/>
                                 </tr>
                             </tbody>
                             <tbody class="cash-overview">
                                 <tr>
                                     <td>Opening</td>
-                                    <td t-esc="pos.globalState.format_currency(defaultCashDetails.opening)"/>
+                                    <td t-esc="env.utils.formatCurrency(defaultCashDetails.opening)"/>
                                 </tr>
                                 <tr t-foreach="defaultCashDetails.moves" t-as="move" t-key="move_index">
                                     <td>
@@ -47,7 +47,7 @@
                                             <t t-esc="move.name"/>
                                         </div>
                                     </td>
-                                    <td t-esc="pos.globalState.format_currency(Math.abs(move.amount))"/>
+                                    <td t-esc="env.utils.formatCurrency(Math.abs(move.amount))"/>
                                 </tr>
                                 <tr t-if="defaultCashDetails.payment_amount">
                                     <td>
@@ -56,17 +56,17 @@
                                             Payments in <t t-esc="defaultCashDetails.name"/>
                                         </div>
                                     </td>
-                                    <td t-esc="pos.globalState.format_currency(Math.abs(defaultCashDetails.payment_amount))"/>
+                                    <td t-esc="env.utils.formatCurrency(Math.abs(defaultCashDetails.payment_amount))"/>
                                 </tr>
                             </tbody>
                         </t>
                         <tbody t-if="otherPaymentMethods.length &gt; 0">
                             <tr t-foreach="otherPaymentMethods" t-as="pm" t-key="pm.id">
                                 <td t-esc="pm.name"/>
-                                <td t-esc="pos.globalState.format_currency(pm.amount)"/>
+                                <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
                                 <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted"/></td>
-                                <td t-if="_showDiff" t-esc="pos.globalState.format_currency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
+                                <td t-if="_showDiff" t-esc="env.utils.formatCurrency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
                             </tr>
                         </tbody>
                     </table>

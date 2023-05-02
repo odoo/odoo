@@ -285,7 +285,7 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                     const { confirmed, payload } = await this.popup.add(NumberPopup, {
                         title: sprintf(
                             this.env._t("Percentage of %s"),
-                            this.env.pos.format_currency(sale_order.amount_total)
+                            this.env.utils.formatCurrency(sale_order.amount_total)
                         ),
                         startingValue: 0,
                     });
@@ -298,11 +298,11 @@ export class SaleOrderManagementScreen extends ControlButtonsMixin(IndependentTo
                             this.env._t(
                                 "You have tried to charge a down payment of %s but only %s remains to be paid, %s will be applied to the purchase order line."
                             ),
-                            this.env.pos.format_currency(down_payment),
-                            this.env.pos.format_currency(sale_order.amount_unpaid),
+                            this.env.utils.formatCurrency(down_payment),
+                            this.env.utils.formatCurrency(sale_order.amount_unpaid),
                             sale_order.amount_unpaid > 0
-                                ? this.env.pos.format_currency(sale_order.amount_unpaid)
-                                : this.env.pos.format_currency(0)
+                                ? this.env.utils.formatCurrency(sale_order.amount_unpaid)
+                                : this.env.utils.formatCurrency(0)
                         );
                         await this.popup.add(ErrorPopup, {
                             title: "Error amount too high",

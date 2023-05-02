@@ -45,7 +45,7 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
             if (this.state.moneyDetails[bill.value]) {
                 moneyDetailsNotes += `  - ${
                     this.state.moneyDetails[bill.value]
-                } x ${this.pos.globalState.format_currency(bill.value)}\n`;
+                } x ${this.env.utils.formatCurrency(bill.value)}\n`;
             }
         });
         return {
