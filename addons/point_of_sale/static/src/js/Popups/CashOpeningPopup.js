@@ -5,6 +5,7 @@ import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
 import { useState } from "@odoo/owl";
+import { _t } from "@web/core/l10n/translation";
 
 export class CashOpeningPopup extends AbstractAwaitablePopup {
     static template = "CashOpeningPopup";
@@ -22,6 +23,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         this.popup = useService("popup");
         this.orm = useService("orm");
         useAutofocus({ refName: "cash-input" });
+        this.hardwareProxy = useService("hardware_proxy");
     }
     //@override
     async confirm() {
@@ -35,9 +37,12 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         super.confirm();
     }
     async openDetailsPopup() {
+        const action = _t("Cash control - opening");
+        this.hardwareProxy.openCashbox(action);
         const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount ? 0 : this.state.openingCash,
+            action: action,
         });
         if (confirmed) {
             const { total, moneyDetails, moneyDetailsNotes } = payload;
