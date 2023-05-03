@@ -71,7 +71,7 @@ class ProjectCustomerPortal(CustomerPortal):
         url = "/my/project/%s" % project.id
         pager = portal_pager(
             url=url,
-            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search},
+            url_args={'date_begin': date_begin, 'date_end': date_end, 'sortby': sortby, 'groupby': groupby, 'search_in': search_in, 'search': search, 'access_token': access_token},
             total=task_count,
             page=page,
             step=self._items_per_page
