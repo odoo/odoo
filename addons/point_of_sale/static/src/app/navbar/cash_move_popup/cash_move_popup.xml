@@ -12,7 +12,7 @@
                         <span t-on-click="() => this.onClickButton('out')" class="input-type" t-att-class="{ 'red-highlight': state.type === 'out' }">
                             Cash Out
                         </span>
-                        <div class="popup-input input-container" >
+                        <div class="popup-input input-container" t-on-input="handleInputChange">
                             <span class="currency" t-esc="env.pos.currency.symbol" t-if="env.pos.currency.position=='before'"/>
                             <input class="input-field" type="text" name="amount" t-model="state.amount" t-ref="amountInput" t-on-keypress="_onAmountKeypress"/>
                             <span class="currency" t-esc="env.pos.currency.symbol" t-if="env.pos.currency.position=='after'"/>
@@ -25,8 +25,8 @@
                 </div>
             </main>
             <footer class="footer cash-move">
-                <div class="button confirm disable highlight" t-on-click="confirm">
-                    Confirm
+                <div class="button confirm disable highlight dynamic-size" t-on-click="confirm">
+                    Confirm <span t-esc="env.pos.format_currency(state.parsedAmount)"/>
                 </div>
                 <div class="button cancel" t-on-click="cancel">
                     Discard
