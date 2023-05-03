@@ -45,11 +45,9 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
      *
      * @private
      * @param {Object} providerData - The provider-specific data.
-     * @return {Promise}
+     * @return {void}
      */
-    async _prepareExpressCheckoutForm(providerData) {
-        return Promise.resolve();
-    },
+    async _prepareExpressCheckoutForm(providerData) {},
 
     /**
      * Prepare the params to send to the transaction route.
@@ -85,7 +83,7 @@ publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({
      * @private
      * @param {number} newAmount - The new amount.
      * @param {number} newMinorAmount - The new minor amount.
-     * @return {undefined}
+     * @return {void}
      */
     _updateAmount(newAmount, newMinorAmount) {
         this.txContext.amount = parseFloat(newAmount);

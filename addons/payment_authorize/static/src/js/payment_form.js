@@ -71,24 +71,25 @@ const authorizeMixin = {
      *
      * @override method from @payment/js/payment_form_mixin
      * @private
-     * @param {string} provider - The provider of the selected payment option's provider
+     * @param {string} code - The code of the selected payment option's provider
      * @param {number} paymentOptionId - The id of the selected payment option
      * @param {string} flow - The online payment flow of the selected payment option
-     * @return {Promise}
+     * @return {void}
      */
     _prepareInlineForm: function (code, paymentOptionId, flow) {
         if (code !== 'authorize') {
-            return this._super(...arguments);
+            this._super(...arguments);
+            return;
         }
 
         if (flow === 'token') {
-            return Promise.resolve(); // Don't show the form for tokens
+            return; // Don't show the form for tokens
         }
 
         this._setPaymentFlow('direct');
 
         let acceptJSUrl = 'https://js.authorize.net/v1/Accept.js';
-        return this._rpc({
+        this._rpc({
             route: '/payment/authorize/get_provider_info',
             params: {
                 'provider_id': paymentOptionId,
@@ -118,17 +119,18 @@ const authorizeMixin = {
      * @param {string} code - The code of the payment option's provider
      * @param {number} paymentOptionId - The id of the payment option handling the transaction
      * @param {string} flow - The online payment flow of the transaction
-     * @return {Promise}
+     * @return {void}
      */
     _processPayment: function (code, paymentOptionId, flow) {
         if (code !== 'authorize' || flow === 'token') {
-            return this._super(...arguments); // Tokens are handled by the generic flow
+            this._super(...arguments); // Tokens are handled by the generic flow
+            return;
         }
 
         if (!this._validateFormInputs(paymentOptionId)) {
             this._enableButton(); // The submit button is disabled at this point, enable it
             this.call('ui', 'unblock'); // The page is blocked at this point, unblock it
-            return Promise.resolve();
+            return;
         }
 
         // Build the authentication and card data objects to be dispatched to Authorized.Net
@@ -141,7 +143,7 @@ const authorizeMixin = {
         };
 
         // Dispatch secure data to Authorize.Net to get a payment nonce in return
-        return Accept.dispatchData(
+        Accept.dispatchData(
             secureData, response => this._responseHandler(paymentOptionId, response)
         );
     },
@@ -152,7 +154,7 @@ const authorizeMixin = {
      * @private
      * @param {number} providerId - The id of the selected provider
      * @param {object} response - The payment nonce returned by Authorized.Net
-     * @return {Promise}
+     * @return {void}
      */
     _responseHandler: function (providerId, response) {
         if (response.messages.resultCode === 'Error') {
@@ -163,11 +165,11 @@ const authorizeMixin = {
                 _t("We are not able to process your payment."),
                 error
             );
-            return Promise.resolve();
+            return;
         }
 
         // Create the transaction and retrieve the processing values
-        return this._rpc({
+        this._rpc({
             route: this.txContext.transactionRoute,
             params: this._prepareTransactionRouteParams('authorize', providerId, 'direct'),
         }).then(processingValues => {
@@ -180,7 +182,9 @@ const authorizeMixin = {
                     'opaque_data': response.opaqueData,
                     'access_token': processingValues.access_token,
                 }
-            }).then(() => window.location = '/payment/status');
+            });
+        }).then(() => {
+            window.location = '/payment/status';
         }).guardedCatch((error) => {
             error.event.preventDefault();
             this._displayError(

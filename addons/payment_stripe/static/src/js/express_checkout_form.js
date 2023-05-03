@@ -47,7 +47,7 @@ paymentExpressCheckoutForm.include({
      * @override method from payment.express_form
      * @private
      * @param {Object} providerData - The provider-specific data.
-     * @return {Promise}
+     * @return {void}
      */
     async _prepareExpressCheckoutForm(providerData) {
         /*
@@ -56,7 +56,8 @@ paymentExpressCheckoutForm.include({
          * the value when it equals '0'.
          */
         if (providerData.providerCode !== 'stripe' || !this.txContext.amount) {
-            return this._super(...arguments);
+            this._super(...arguments);
+            return;
         }
 
         const stripeJS = Stripe(
@@ -200,7 +201,7 @@ paymentExpressCheckoutForm.include({
      * @private
      * @param {number} newAmount - The new amount.
      * @param {number} newMinorAmount - The new minor amount.
-     * @return {undefined}
+     * @return {void}
      */
     _updateAmount(newAmount, newMinorAmount) {
         this._super(...arguments);

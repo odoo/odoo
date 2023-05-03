@@ -17,7 +17,7 @@ const adyenMixin = {
      * @private
      * @param {object} state - The state of the drop-in
      * @param {object} dropin - The drop-in
-     * @return {Promise}
+     * @return {void}
      */
     _dropinOnAdditionalDetails: function (state, dropin) {
         return this._rpc({
@@ -48,7 +48,7 @@ const adyenMixin = {
      *
      * @private
      * @param {object} error - The error in the drop-in
-     * @return {undefined}
+     * @return {void}
      */
     _dropinOnError: function (error) {
         if (!this.$('div[name="o_payment_error"]')) { // Don't replace a specific server error.
@@ -68,7 +68,7 @@ const adyenMixin = {
      * @private
      * @param {object} state - The state of the drop-in
      * @param {object} dropin - The drop-in
-     * @return {Promise}
+     * @return {void}
      */
     _dropinOnSubmit: function (state, dropin) {
         // Create the transaction and retrieve the processing values
@@ -117,26 +117,27 @@ const adyenMixin = {
      * @param {string} code - The code of the selected payment option's provider
      * @param {number} paymentOptionId - The id of the selected payment option
      * @param {string} flow - The online payment flow of the selected payment option
-     * @return {Promise}
+     * @return {void}
      */
     _prepareInlineForm: function (code, paymentOptionId, flow) {
         if (code !== 'adyen') {
-            return this._super(...arguments);
+            this._super(...arguments);
+            return;
         }
 
         // Check if instantiation of the drop-in is needed
         if (flow === 'token') {
-            return Promise.resolve(); // No drop-in for tokens
+            return; // No drop-in for tokens
         } else if (this.adyenDropin && this.adyenDropin.providerId === paymentOptionId) {
             this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation
-            return Promise.resolve(); // Don't re-instantiate if already done for this provider
+            return; // Don't re-instantiate if already done for this provider
         }
 
         // Overwrite the flow of the select payment option
         this._setPaymentFlow('direct');
 
         // Get public information on the provider (state, client_key)
-        return this._rpc({
+        this._rpc({
             route: '/payment/adyen/provider_info',
             params: {
                 'provider_id': paymentOptionId,
@@ -197,18 +198,19 @@ const adyenMixin = {
      * @param {string} provider - The provider of the payment option's provider
      * @param {number} paymentOptionId - The id of the payment option handling the transaction
      * @param {string} flow - The online payment flow of the transaction
-     * @return {Promise}
+     * @return {void}
      */
-    async _processPayment(provider, paymentOptionId, flow) {
+    _processPayment(provider, paymentOptionId, flow) {
         if (provider !== 'adyen' || flow === 'token') {
-            return this._super(...arguments); // Tokens are handled by the generic flow
+            this._super(...arguments); // Tokens are handled by the generic flow
+            return;
         }
         if (this.adyenDropin === undefined) { // The drop-in has not been properly instantiated
             this._displayError(
                 _t("Server Error"), _t("We are not able to process your payment.")
             );
         } else {
-            return await this.adyenDropin.submit();
+            this.adyenDropin.submit();
         }
     },
 
