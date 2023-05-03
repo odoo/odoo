@@ -1,13 +1,19 @@
 /** @odoo-module **/
 
-import { afterNextRender, start } from "@mail/../tests/helpers/test_utils";
+import {
+    afterNextRender,
+    click,
+    insertText,
+    start,
+    startServer,
+} from "@mail/../tests/helpers/test_utils";
 
 QUnit.module("messaging");
 
 QUnit.test(
-    "Posting a message to a partner out of discuss should open a chat window",
+    "Receiving a new message out of discuss app should open a chat window",
     async (assert) => {
-        const { env, pyEnv } = await start();
+        const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
         const channelId = pyEnv["discuss.channel"].create({
@@ -17,6 +23,8 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
+        const { env } = await start();
+        // simulate receving new message
         await afterNextRender(() =>
             env.services.rpc("/mail/message/post", {
                 context: { mockedUserId: userId },
@@ -30,10 +38,9 @@ QUnit.test(
 );
 
 QUnit.test(
-    "Posting a message to a partner should open a chat window after leaving discuss",
+    "Receiving a new message in discuss app should open a chat window after leaving discuss app",
     async (assert) => {
-        const { env, openDiscuss, openFormView, pyEnv } = await start();
-        await openDiscuss();
+        const pyEnv = await startServer();
         const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
         const channelId = pyEnv["discuss.channel"].create({
@@ -43,6 +50,9 @@ QUnit.test(
             ],
             channel_type: "chat",
         });
+        const { env, openDiscuss, openFormView } = await start();
+        await openDiscuss();
+        // simulate receiving new message
         env.services.rpc("/mail/message/post", {
             context: { mockedUserId: userId },
             post_data: { body: "new message", message_type: "comment" },
@@ -52,5 +62,27 @@ QUnit.test(
         // leaving discuss.
         await openFormView("res.partner", partnerId);
         assert.containsOnce($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
+    }
+);
+
+QUnit.test(
+    "Posting a message in discuss app should not open a chat window after leaving discuss app",
+    async (assert) => {
+        const pyEnv = await startServer();
+        const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
+        const channelId = pyEnv["discuss.channel"].create({
+            channel_member_ids: [
+                [0, 0, { partner_id: pyEnv.currentPartnerId }],
+                [0, 0, { partner_id: partnerId }],
+            ],
+            channel_type: "chat",
+        });
+        const { openDiscuss, openFormView } = await start();
+        await openDiscuss(channelId);
+        await insertText(".o-mail-Composer-input", "test https://www.odoo.com/");
+        await click(".o-mail-Composer-send");
+        // leaving discuss.
+        await openFormView("res.partner", partnerId);
+        assert.containsNone($, ".o-mail-ChatWindow-header:contains(Dumbledore)");
     }
 );
