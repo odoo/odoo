@@ -70,7 +70,7 @@ QUnit.module("Views", (hooks) => {
         class ToyComponent extends Component {}
         ToyComponent.template = xml`
             <Layout display="props.display">
-                <t t-set-slot="control-panel-top-right">
+                <t t-set-slot="layout-actions">
                     <div class="toy_search_bar" />
                 </t>
                 <div class="toy_content" />
