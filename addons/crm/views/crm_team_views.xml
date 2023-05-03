@@ -138,6 +138,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//sheet" position="before">
                     <field name="use_leads" invisible="1"/>
+                    <field name="use_opportunities" invisible="1"/>
                     <header>
                         <button name="action_assign_leads" type="object"
                             string="Assign Leads"
@@ -147,16 +148,14 @@
                     </header>
                 </xpath>
                 <xpath expr="//div[@name='options_active']" position="inside">
-                    <div class="o_row">
-                        <span name="opportunities">
-                            <field name="use_opportunities"/>
-                            <label for="use_opportunities"/>
-                        </span>
-                        <span class="o_row" groups="crm.group_use_lead">
-                            <field name="use_leads"/>
-                            <label for="use_leads" string="Leads"/>
-                        </span>
-                    </div>
+                    <span name="opportunities" groups="crm.group_use_lead">
+                        <field name="use_opportunities"/>
+                        <label for="use_opportunities"/>
+                    </span>
+                    <span name="leads" groups="crm.group_use_lead">
+                        <field name="use_leads"/>
+                        <label for="use_leads" string="Leads"/>
+                    </span>
                 </xpath>
                 <xpath expr="//field[@name='user_id']" position="after">
                     <label for="alias_name" string="Email Alias"
@@ -184,15 +183,13 @@
                 <xpath expr="//group[@name='right']" position="inside">
                     <field name="assignment_enabled" invisible="1"/>
                     <field name="assignment_auto_enabled" invisible="1"/>
+                    <div class="text-muted" colspan="2" attrs="{'invisible': [('assignment_enabled', '=', False)]}">
+                        <field name="lead_all_assigned_month_count" class="oe_inline"/><span> leads assigned this month
+                        on a maximum of </span><field name="assignment_max" class="oe_inline"/>
+                    </div>
                     <field name="assignment_domain" widget="domain" string="Domain"
                         options="{'model': 'crm.lead', 'in_dialog': True}"
                         attrs="{'invisible': [('assignment_enabled', '=', False)]}"/>
-                    <label for="lead_all_assigned_month_count" string="Assigned Leads Count"
-                        attrs="{'invisible': [('assignment_enabled', '=', False)]}"/>
-                    <div attrs="{'invisible': [('assignment_enabled', '=', False)]}">
-                        <field name="lead_all_assigned_month_count" class="oe_inline"/> /
-                        <field name="assignment_max" class="oe_inline"/>
-                    </div>
                     <field name="assignment_optout" attrs="{'invisible': [('assignment_auto_enabled', '=', False)]}"/>
                 </xpath>
                 <xpath expr="//field[@name='member_ids']" position="attributes">

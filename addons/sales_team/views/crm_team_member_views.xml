@@ -120,7 +120,7 @@
                         <group name="group_owner">
                             <field name="crm_team_id" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
                         </group>
-                        <group name="group_user">
+                        <group class="ps-0" name="group_user">
                             <field name="company_id" attrs="{'invisible': [('user_id', '=', False)]}"
                                 groups="base.group_multi_company"/>
                             <field name="email" attrs="{'invisible': [('user_id', '=', False)]}"/>
