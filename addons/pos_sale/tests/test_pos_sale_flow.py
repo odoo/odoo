@@ -61,8 +61,14 @@ class TestPoSSale(TestPointOfSaleHttpCommon):
 
         self.assertEqual(sale_order.order_line.qty_delivered, 1)
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder', login="accountman")
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+                (4, self.env.ref('sales_team.group_sale_salesman_all_leads').id),
+            ]
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PosSettleOrder', login="pos_user")
 
         #assert that sales order qty are correctly updated
         self.assertEqual(sale_order.order_line.qty_delivered, 3)

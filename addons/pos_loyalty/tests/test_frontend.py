@@ -17,7 +17,6 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         # Disable any programs during the test
         cls.env['loyalty.program'].search([]).write({'active': False})
-
         cls.promo_programs = cls.env["loyalty.program"]
 
         # code promo program -> discount on specific products
@@ -115,7 +114,7 @@ class TestUi(TestPointOfSaleHttpCommon):
             'tax_regime_selection': False,
             'use_pricelist': False,
         })
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
 
     def create_programs(self, details):
         """
@@ -138,11 +137,15 @@ class TestUi(TestPointOfSaleHttpCommon):
         # This part will generate coupons for `auto_promo_program_next`
         # that will be used in the second part of the tour.
         #
-
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyTour1",
-            login="accountman",
+            login="pos_user"
         )
 
         # check coupon usage
@@ -187,7 +190,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyTour2",
-            login="accountman",
+            login="pos_user",
         )
         # check pos_order_count in each program
         self.assertEqual(self.auto_promo_program_current.pos_order_count, 6)
@@ -202,11 +205,18 @@ class TestUi(TestPointOfSaleHttpCommon):
             'limit_usage': True,
             'max_usage': 1,
         })
+
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+
         # First tour check that the promotion is not applied
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyValidity1",
-            login="accountman",
+            login="pos_user",
         )
 
         self.auto_promo_program_current.write({
@@ -217,7 +227,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyValidity2",
-            login="accountman",
+            login="pos_user",
         )
 
     def test_loyalty_free_product_rewards(self):
@@ -278,10 +288,15 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         (self.promo_programs | self.coupon_program).write({'active': False})
 
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyFreeProductTour",
-            login="accountman",
+            login="pos_user",
         )
 
         # Keep the tour to generate 4 orders for the free_product and free_other_product programs.
@@ -301,6 +316,12 @@ class TestUi(TestPointOfSaleHttpCommon):
     def test_loyalty_free_product_loyalty_program(self):
         # In this program, each whiteboard pen gives 1 point.
         # 4 points can be used to get a free whiteboard pen.
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+
         loyalty_program = self.env['loyalty.program'].create({
             'name': 'Buy 4 whiteboard_pen, Take 1 whiteboard_pen',
             'program_type': 'loyalty',
@@ -329,7 +350,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyLoyaltyProgram1",
-            login="accountman",
+            login="pos_user",
         )
 
         aaa_loyalty_card = loyalty_program.coupon_ids.filtered(lambda coupon: coupon.partner_id.id == partner_aaa.id)
@@ -341,7 +362,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyLoyaltyProgram2",
-            login="accountman",
+            login="pos_user",
         )
 
         self.assertEqual(loyalty_program.pos_order_count, 2, msg='Only 2 orders should have reward lines.')
@@ -424,13 +445,18 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyTour3",
-            login="accountman",
+            login="pos_user",
         )
 
     def test_gift_card_program_create_set(self):
         """
         Test for gift card program when pos.config.gift_card_settings == 'create_set'.
         """
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
@@ -444,7 +470,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "GiftCardProgramCreateSetTour1",
-            login="accountman",
+            login="pos_user",
         )
         # Check that gift cards are created
         self.assertEqual(len(gift_card_program.coupon_ids), 1)
@@ -455,7 +481,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "GiftCardProgramCreateSetTour2",
-            login="accountman",
+            login="pos_user",
         )
         # Check that gift cards are used
         self.assertEqual(gift_card_program.coupon_ids.points, 46.8)
@@ -468,6 +494,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             - Meaning, it's paid.
         - Then it will be scanned for usage.
         """
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+
         LoyaltyProgram = self.env['loyalty.program']
         # Deactivate all other programs to avoid interference
         (LoyaltyProgram.search([])).write({'pos_ok': False})
@@ -487,7 +519,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "GiftCardProgramScanUseTour",
-            login="accountman",
+            login="pos_user",
         )
         # Check that gift cards are used
         self.assertAlmostEqual(gift_card_program.coupon_ids.points, 0, places=2)
@@ -510,11 +542,17 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Create test partners
         partner_aaa = self.env['res.partner'].create({'name': 'AAAAAAA'})
         partner_bbb = self.env['res.partner'].create({'name': 'BBBBBBB'})
+
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
         # Run the tour to topup ewallets.
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "EWalletProgramTour1",
-            login="accountman",
+            login="pos_user",
         )
         # Check that ewallets are created for partner_aaa.
         ewallet_aaa = self.env['loyalty.card'].search([('partner_id', '=', partner_aaa.id), ('program_id', '=', ewallet_program.id)])
@@ -528,7 +566,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "EWalletProgramTour2",
-            login="accountman",
+            login="pos_user",
         )
         # Check that ewallets are consumed for partner_aaa.
         self.assertAlmostEqual(ewallet_aaa.points, 0, places=2)
@@ -557,11 +595,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Create test partners
         partner_aaa = self.env['res.partner'].create({'name': 'AAAAAAA'})
         partner_bbb = self.env['res.partner'].create({'name': 'BBBBBBB'})
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
         # Run the tour to topup ewallets.
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "MultipleGiftWalletProgramsTour",
-            login="accountman",
+            login="pos_user",
         )
         # Check the created gift cards.
         self.assertEqual(len(programs['gift_card_1'].coupon_ids), 1)
@@ -674,11 +717,17 @@ class TestUi(TestPointOfSaleHttpCommon):
             'pricelist_id': pricelist.id,
         })
 
-        self.main_pos_config2.open_ui()
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('stock.group_stock_user').id),
+            ]
+        })
+
+        self.main_pos_config2.with_user(self.pos_user).open_ui()
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config2.id,
             "PosLoyaltyTour4",
-            login="accountman",
+            login="pos_user",
         )
 
     def test_promotion_program_with_global_discount(self):
@@ -758,12 +807,12 @@ class TestUi(TestPointOfSaleHttpCommon):
             }
         )
 
-        self.main_pos_config2.open_ui()
+        self.main_pos_config2.with_user(self.pos_user).open_ui()
 
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config2.id,
             "PosCouponTour5",
-            login="accountman",
+            login="pos_user",
         )
 
     def test_loyalty_program_using_same_product(self):
@@ -813,7 +862,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "PosLoyaltyFreeProductTour2",
-            login="accountman",
+            login="pos_user",
         )
 
     def test_refund_with_gift_card(self):
@@ -831,5 +880,5 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour(
             "/pos/web?config_id=%d" % self.main_pos_config.id,
             "GiftCardWithRefundtTour",
-            login="accountman"
+            login="pos_user",
         )
