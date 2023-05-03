@@ -119,7 +119,6 @@ class AccountChartTemplate(models.AbstractModel):
             (template_code, template['name'])
             for template_code, template in sorted(chart_template_mapping.items(), key=(lambda t: (
                 t[1]['name'] != 'generic_coa' if not country
-                else t[1]['name'] != 'syscohada' if country.code in SYSCOHADA_LIST
                 else t[1]['country_id'] != country.id
             )))
         ]
