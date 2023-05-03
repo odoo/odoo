@@ -5,7 +5,7 @@ import { browser } from "../browser/browser";
 import { registry } from "../registry";
 import { strftimeToLuxonFormat } from "./dates";
 import { localization } from "./localization";
-import { translatedTerms, _t } from "./translation";
+import { _t, translatedTerms } from "./translation";
 
 const { Settings } = luxon;
 
@@ -57,17 +57,16 @@ export const localizationService = {
         Object.setPrototypeOf(translatedTerms, terms);
         env._t = _t;
 
-        if (lang) {
-            // Setup lang inside luxon. The locale codes received from the server contain "_",
-            // whereas the Intl codes use "-" (Unicode BCP 47). There's only one exception, which
-            // is locale "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
-            const locale = lang === "sr@latin" ? "sr-Latn-RS" : lang.replace(/_/g, "-");
-            Settings.defaultLocale = locale;
-            for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
-                if (re.test(locale)) {
-                    Settings.defaultNumberingSystem = numberingSystem;
-                    break;
-                }
+        // Setup lang inside luxon. The locale codes received from the server contain "_",
+        // whereas the Intl codes use "-" (Unicode BCP 47). There's only one exception, which
+        // is locale "sr@latin", for which we manually fallback to the "sr-Latn-RS" locale.
+        const language = lang || browser.navigator.language;
+        const locale = language === "sr@latin" ? "sr-Latn-RS" : language.replace(/_/g, "-");
+        Settings.defaultLocale = locale;
+        for (const [re, numberingSystem] of NUMBERING_SYSTEMS) {
+            if (re.test(locale)) {
+                Settings.defaultNumberingSystem = numberingSystem;
+                break;
             }
         }
 

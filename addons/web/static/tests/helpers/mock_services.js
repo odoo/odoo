@@ -1,21 +1,20 @@
 /** @odoo-module **/
 
+import { Component, status } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { routerService } from "@web/core/browser/router_service";
+import { effectService } from "@web/core/effects/effect_service";
 import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { rpcService } from "@web/core/network/rpc_service";
+import { ormService } from "@web/core/orm_service";
+import { overlayService } from "@web/core/overlay/overlay_service";
+import { uiService } from "@web/core/ui/ui_service";
 import { userService } from "@web/core/user_service";
-import { effectService } from "@web/core/effects/effect_service";
 import { objectToUrlEncodedString } from "@web/core/utils/urls";
+import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
 import { registerCleanup } from "./cleanup";
 import { patchWithCleanup } from "./utils";
-import { uiService } from "@web/core/ui/ui_service";
-import { ConnectionAbortedError } from "../../src/core/network/rpc_service";
-import { overlayService } from "@web/core/overlay/overlay_service";
-
-import { Component, status } from "@odoo/owl";
-import { ormService } from "@web/core/orm_service";
 
 // -----------------------------------------------------------------------------
 // Mock Services
@@ -37,7 +36,8 @@ export const defaultLocalization = {
  * @param {Partial<typeof defaultLocalization>} [config]
  */
 export function makeFakeLocalizationService(config = {}) {
-    patchWithCleanup(localization, Object.assign({}, defaultLocalization, config));
+    patchWithCleanup(localization, { ...defaultLocalization, ...config });
+    patchWithCleanup(luxon.Settings, { defaultNumberingSystem: "latn" });
 
     return {
         name: "localization",
