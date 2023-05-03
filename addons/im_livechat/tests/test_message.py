@@ -52,6 +52,7 @@ class TestImLivechatMessage(TransactionCase):
                 'name': "test1",
             },
             'body': message.body,
+            'bypassed_blacklist': False,
             'date': message.date,
             'write_date': message.write_date,
             'create_date': message.create_date,

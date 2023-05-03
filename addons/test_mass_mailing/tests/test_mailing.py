@@ -14,6 +14,7 @@ class TestMassMailing(TestMassMailCommon):
     @classmethod
     def setUpClass(cls):
         super(TestMassMailing, cls).setUpClass()
+        cls.user_portal = cls._create_portal_user()
 
     @users('user_marketing')
     @mute_logger('odoo.addons.mail.models.mail_thread')
@@ -253,6 +254,10 @@ class TestMassMailing(TestMassMailCommon):
             mailing, recipients, check_mail=True
         )
         self.assertEqual(mailing.canceled, 2)
+        messages_sent = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)]).mail_message_id
+        self.assertFalse(any(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
+        self.assertTrue(all('bypassed_blacklist' not in message
+                            for message in messages_sent.with_user(self.user_portal).sudo().message_format()))
 
         # Same test but with the option bypass_blacklist set to True
         mailing = mailing.copy()
@@ -270,6 +275,10 @@ class TestMassMailing(TestMassMailCommon):
             mailing, recipients, check_mail=True
         )
         self.assertEqual(mailing.canceled, 0)
+        messages_sent = self.env['mail.mail'].sudo().search([('mailing_id', '=', mailing.id)]).mail_message_id
+        self.assertTrue(all(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
+        self.assertTrue(all('bypassed_blacklist' not in message
+                            for message in messages_sent.with_user(self.user_portal).sudo().message_format()))
 
 
     @users('user_marketing')

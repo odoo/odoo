@@ -19,6 +19,8 @@ export class Message {
     author;
     /** @type {string} */
     body;
+    /** @type {boolean} */
+    bypassed_blacklist;
     /** @type {string} */
     defaultSubject;
     /** @type {number|string} */

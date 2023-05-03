@@ -832,6 +832,7 @@ class MailComposer(models.TransientModel):
 
         values = {
             'author_id': self.author_id.id,
+            'bypassed_blacklist': self.bypass_blacklist,
             'mail_activity_type_id': self.mail_activity_type_id.id,
             'mail_server_id': self.mail_server_id.id,
             'message_type': 'email' if email_mode else self.message_type,

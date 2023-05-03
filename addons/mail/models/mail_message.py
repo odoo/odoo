@@ -141,6 +141,7 @@ class Message(models.Model):
         'Need Action', compute='_compute_needaction', search='_search_needaction')
     has_error = fields.Boolean(
         'Has error', compute='_compute_has_error', search='_search_has_error')
+    bypassed_blacklist = fields.Boolean('Blacklist Included')
     # notifications
     notification_ids = fields.One2many(
         'mail.notification', 'mail_message_id', 'Notifications',
@@ -1035,12 +1036,15 @@ class Message(models.Model):
         return vals_list
 
     def _get_message_format_fields(self):
-        return [
+        res = [
             'id', 'body', 'date', 'email_from',  # base message fields
             'message_type', 'subtype_id', 'subject',  # message specific
             'model', 'res_id', 'record_name',  # document related
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ]
+        if self.env.user._is_internal():  # Only display that the blacklist was bypassed to internal user
+            res.append('bypassed_blacklist')
+        return res
 
     def _message_notification_format(self):
         """Returns the current messages and their corresponding notifications in

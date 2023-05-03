@@ -54,6 +54,9 @@
                                 <t t-if="shouldDisplayAuthorName">- </t>
                                 <RelativeTime datetime="message.datetime"/>
                             </small>
+                            <small t-if="message.bypassed_blacklist" class="mt-3 mx-1 text-muted opacity-50">
+                                (Blacklist Included)
+                            </small>
                             <MessageSeenIndicator
                                 t-if="props.message.isSelfAuthored and !props.squashed and props.thread"
                                 className="'ms-1'"
