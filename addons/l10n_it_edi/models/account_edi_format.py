@@ -288,11 +288,8 @@ class AccountEdiFormat(models.Model):
     def _cron_receive_fattura_pa(self):
         ''' Check the proxy for incoming invoices for all companies.
         '''
-        for proxy_user in self.env['account_edi_proxy_client.user'].search([
-            ('proxy_type', '=', 'l10n_it_edi'),
-            ('edi_mode', '!=', 'demo'),
-        ]):
-            self._receive_fattura_pa(proxy_user)
+        for company in self.env['res.company'].search([('l10n_it_active_proxy_user_id', '!=', False), ('l10n_it_edi_mode', 'in', ('test', 'prod'))]):
+            self._receive_fattura_pa(company.l10n_it_active_proxy_user_id)
 
     def _receive_fattura_pa(self, proxy_user):
         ''' Check the proxy for incoming invoices for a specified proxy user.
@@ -827,7 +824,7 @@ class AccountEdiFormat(models.Model):
 
         res.extend(self._l10n_it_edi_check_invoice_configuration(move))
 
-        if not self.env['account_edi_proxy_client.user']._get_proxy_users(move.company_id, 'l10n_it_edi'):
+        if not move.company_id.l10n_it_active_proxy_user_id:
             res.append(_("You must accept the terms and conditions in the settings to use FatturaPA."))
 
         return res
@@ -866,7 +863,7 @@ class AccountEdiFormat(models.Model):
                     'data': {'filename': filename, 'xml': base64.b64encode(xml.encode()).decode()}}
 
         company = invoices.company_id
-        proxy_user = self.env['account_edi_proxy_client.user']._get_proxy_users(company, 'l10n_it_edi')
+        proxy_user = company.l10n_it_active_proxy_user_id
         if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
             return {invoice: {
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),
@@ -898,7 +895,7 @@ class AccountEdiFormat(models.Model):
         to_return = {}
         company = invoices.company_id
 
-        proxy_user = self.env['account_edi_proxy_client.user']._get_proxy_users(company, 'l10n_it_edi')
+        proxy_user = company.l10n_it_active_proxy_user_id
         if not proxy_user:  # proxy user should exist, because there is a check in _check_move_configuration
             return {invoice: {
                 'error': _("You must accept the terms and conditions in the settings to use FatturaPA."),

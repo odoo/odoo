@@ -33,6 +33,9 @@ class ResCompany(models.Model):
         store=True, readonly=False, help="Fiscal code of your company")
     l10n_it_tax_system = fields.Selection(selection=TAX_SYSTEM, string="Tax System",
         help="Please select the Tax system to which you are subjected.")
+    l10n_it_active_proxy_user_id = fields.Many2one('account_edi_proxy_client.user',
+        string="Active EDI Proxy User (Italy)")
+    l10n_it_edi_mode = fields.Selection(related='l10n_it_active_proxy_user_id.edi_mode')
 
     # Economic and Administrative Index
     l10n_it_has_eco_index = fields.Boolean(default=False,
@@ -60,7 +63,6 @@ class ResCompany(models.Model):
             ("LS", "The company is in a state of liquidation"),
             ("LN", "The company is not in a state of liquidation")],
         string="Liquidation state")
-
 
     # Tax representative
     l10n_it_has_tax_representative = fields.Boolean(default=False,
@@ -107,3 +109,38 @@ class ResCompany(models.Model):
                 raise ValidationError(_("Your tax representative partner must have a tax number."))
             if not record.l10n_it_tax_representative_partner_id.country_id:
                 raise ValidationError(_("Your tax representative partner must have a country."))
+
+    def register_proxy_user(self, new_edi_mode):
+        fattura_pa = self.env.ref('l10n_it_edi.edi_fatturaPA')
+        ProxyUser = self.env['account_edi_proxy_client.user']
+        for company in self:
+            # Reset moves sent with demo
+            if company.l10n_it_active_proxy_user_id.edi_mode == 'demo':
+                moves_sent_with_demo = self.env['account.move'].search([
+                    ('company_id', '=', company.id),
+                    ('l10n_it_edi_transaction', '=', 'demo')])
+                edi_demo_docs = moves_sent_with_demo.mapped("edi_document_ids").filtered(lambda x: x.edi_format_id == fattura_pa)
+                attachments = moves_sent_with_demo.mapped("l10n_it_edi_attachment_id")
+
+                with self.env.cr.savepoint():
+                    moves_sent_with_demo.write({
+                        'edi_state': 'to_send',
+                        'l10n_it_edi_transaction': False,
+                        'l10n_it_edi_attachment_id': False,
+                    })
+                    edi_demo_docs.unlink()
+                    attachments.unlink()
+
+                    for move in moves_sent_with_demo:
+                        move.message_post(body=_(
+                            "E-invoicing state (Italy) has been reset by changing the EDI mode from 'demo' mode.")
+                        )
+
+            # Find or register the wanted proxy user
+            proxy_user = ProxyUser.search([('edi_mode', '=', new_edi_mode), ('company_id', '=', company.id)])
+            if not proxy_user:
+                edi_identification = fattura_pa._get_proxy_identification(company)
+                proxy_user = ProxyUser._register_proxy_user(company, 'l10n_it_edi', new_edi_mode, edi_identification)
+
+            # Set the active proxy user
+            company.l10n_it_active_proxy_user_id = proxy_user
