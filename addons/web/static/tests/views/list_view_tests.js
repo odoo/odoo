@@ -3231,7 +3231,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     // TODO
-    QUnit.debug("selection is reset on reload", async function (assert) {
+    QUnit.test("selection is reset on reload", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
