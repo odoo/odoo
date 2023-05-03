@@ -1,7 +1,8 @@
 odoo.define('point_of_sale.custom_hooks', function (require) {
     'use strict';
 
-    const { Component, onMounted, onPatched, onWillUnmount } = owl;
+    const { Component, onMounted, onPatched, onWillUnmount, useRef } = owl;
+    const { escapeRegExp } = require('@web/core/utils/strings');
 
     /**
      * Introduce error handlers in the component.
@@ -130,5 +131,38 @@ odoo.define('point_of_sale.custom_hooks', function (require) {
         };
     }
 
-    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader, useAsyncLockedMethod };
+    function useValidateCashInput(inputRef, startingValue) {
+        const cashInput = useRef(inputRef);
+        const current = Component.current;
+        const decimalPoint = current.env._t.database.parameters.decimal_point;
+        // Replace the thousands separator and decimal point with regex-escaped versions
+        const escapedThousandsSep = escapeRegExp(current.env._t.database.parameters.thousands_sep);
+        const escapedDecimalPoint = escapeRegExp(decimalPoint);
+        const floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+        function isValidFloat(inputValue) {
+            return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
+        }
+        function handleCashInputChange(event) {
+            let inputValue = (event.target.value || "").trim();
+
+            // Check if the current input value is a valid float
+            if (!isValidFloat(inputValue)) {
+                event.target.classList.add('invalid-cash-input');
+            } else {
+                event.target.classList.remove('invalid-cash-input');
+            }
+        }
+        
+
+        onMounted(() => {
+            cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+            cashInput.el.addEventListener("input", handleCashInputChange);
+        });
+
+        onWillUnmount(() => {
+            cashInput.el.removeEventListener("input", handleCashInputChange);
+        })
+    }
+
+    return { useErrorHandlers, useAutoFocusToLast, useBarcodeReader, useAsyncLockedMethod, useValidateCashInput };
 });
