@@ -13,6 +13,7 @@ class AccountBankStatement(models.Model):
 
     name = fields.Char(
         string='Reference',
+        compute='_compute_name', store=True, readonly=False,
         copy=False,
     )
 
@@ -34,6 +35,10 @@ class AccountBankStatement(models.Model):
     first_line_index = fields.Char(
         comodel_name='account.bank.statement.line',
         compute='_compute_date_index', store=True, index=True,
+    )
+
+    last_line_index = fields.Char(
+        compute='_compute_date_index', store=True,
     )
 
     balance_start = fields.Monetary(
@@ -104,11 +109,17 @@ class AccountBankStatement(models.Model):
     # -------------------------------------------------------------------------
     # COMPUTE METHODS
     # -------------------------------------------------------------------------
+    @api.depends('create_date')
+    def _compute_name(self):
+        for stmt in self:
+            stmt.name = _("Statement %s", stmt.date)
+
     @api.depends('line_ids.internal_index', 'line_ids.state')
     def _compute_date_index(self):
         for stmt in self:
             sorted_lines = stmt.line_ids.sorted('internal_index')
             stmt.first_line_index = sorted_lines[:1].internal_index
+            stmt.last_line_index = sorted_lines[-1:].internal_index
             stmt.date = sorted_lines.filtered(lambda l: l.state == 'posted')[-1:].date
 
     @api.depends('create_date')

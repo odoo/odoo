@@ -140,6 +140,20 @@ class AccountBankStatementLine(models.Model):
     statement_valid = fields.Boolean(
         related='statement_id.is_valid',
     )
+    statement_balance_end_real = fields.Monetary(
+        related='statement_id.balance_end_real',
+    )
+    statement_name = fields.Char(
+        string="Statement Name",
+        related='statement_id.name',
+    )
+    statement_date = fields.Date(
+        string="Statement Date",
+        related='statement_id.date',
+    )
+    statement_last_line_index = fields.Char(
+        related='statement_id.last_line_index',
+    )
 
     # Technical field to store details about the bank statement line
     transaction_details = fields.Json(readonly=True)
@@ -423,6 +437,21 @@ class AccountBankStatementLine(models.Model):
                 'line_ids': [Command.clear()] + [
                     Command.create(line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
             })
+
+    def action_open_statement(self):
+        self.ensure_one()
+        return {
+            'name': _("Edit Statement"),
+            'type': 'ir.actions.act_window',
+            'target': "new",
+            'views': [[self.env.ref('account_accountant.view_bank_statement_form_bank_rec_widget').id, 'form']],
+            'res_model': 'account.bank.statement',
+            'res_id': self.statement_id.id,
+        }
+
+    def action_delete_statement(self):
+        self.ensure_one()
+        self.statement_id.unlink()
 
     # -------------------------------------------------------------------------
     # HELPERS
