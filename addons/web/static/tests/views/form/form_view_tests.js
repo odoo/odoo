@@ -3898,13 +3898,13 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "first record",
             "should have the display name of the record as  title"
         );
         await click(target.querySelector(".o_form_button_create"));
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "New",
             "should have the display name of the record as title"
         );
