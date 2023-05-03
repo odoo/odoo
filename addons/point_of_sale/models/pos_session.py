@@ -1822,7 +1822,7 @@ class PosSession(models.Model):
         return {
             'search_params': {
                 'domain': [('id', '=', self.env.user.id)],
-                'fields': ['name', 'groups_id'],
+                'fields': ['name', 'groups_id', 'partner_id'],
             },
         }
 
@@ -2126,6 +2126,13 @@ class PosSession(models.Model):
             fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
 
         return fps
+
+    def log_partner_message(self, partner_id, action, message_type):
+        if message_type == 'ACTION_CANCELLED':
+            body = 'Action cancelled ({ACTION})'.format(ACTION=action)
+        elif message_type == 'CASH_DRAWER_ACTION':
+            body = 'Cash drawer opened ({ACTION})'.format(ACTION=action)
+        self.message_post(body=body, author_id=partner_id)
 
     def load_product_frontend(self):
         convert.convert_file(self.env, 'point_of_sale', 'data/point_of_sale_onboarding.xml', None, mode='init',

@@ -17,6 +17,7 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
                 ? { ...this.props.moneyDetails }
                 : Object.fromEntries(this.pos.globalState.bills.map((bill) => [bill.value, 0])),
             total: this.props.total ? this.props.total : 0,
+            action: this.props.action ? this.props.action : null,
         });
     }
     get firstHalfMoneyDetails() {
@@ -52,6 +53,16 @@ export class MoneyDetailsPopup extends AbstractAwaitablePopup {
             total: this.state.total,
             moneyDetailsNotes,
             moneyDetails: { ...this.state.moneyDetails },
+            action: this.state.action,
         };
+    }
+    async cancel() {
+        super.cancel();
+        if (
+            this.pos.globalState.config.iface_cashdrawer &&
+            this.pos.globalState.hardwareProxy.connectionInfo.status === "connected"
+        ) {
+            this.pos.globalState.logEmployeeMessage(this.state.action, "ACTION_CANCELLED");
+        }
     }
 }

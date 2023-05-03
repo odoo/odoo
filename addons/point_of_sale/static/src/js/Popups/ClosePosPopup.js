@@ -70,11 +70,14 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async openDetailsPopup() {
+        const action = _t("Cash control - closing");
+        this.hardwareProxy.openCashbox(action);
         const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount
                 ? 0
                 : this.state.payments[this.defaultCashDetails.id].counted,
+            action: action,
         });
         if (confirmed) {
             const { total, moneyDetailsNotes, moneyDetails } = payload;
