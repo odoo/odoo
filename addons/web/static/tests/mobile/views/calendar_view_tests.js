@@ -356,7 +356,6 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Should display year view
         assert.containsOnce(target, ".fc-dayGridYear-view");
         assert.containsN(target, ".fc-month-container", 12);
-        assert.equal(target.querySelector(".breadcrumb-item").textContent, "undefined (2016)");
 
         // Tap on a date
         await tap(target, ".fc-day-top[data-date='2016-02-05']");
@@ -366,19 +365,14 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Should display day view
         assert.containsNone(target, ".fc-dayGridYear-view");
         assert.containsOnce(target, ".fc-timeGridDay-view");
-        assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (February 5, 2016)"
-        );
+        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-05");
 
         // Change scale to month
+        await click(target, ".o_calendar_container .o_other_calendar_panel");
         await changeScale(target, "month");
+        await click(target, ".o_calendar_container .o_other_calendar_panel");
         assert.containsNone(target, ".fc-timeGridDay-view");
         assert.containsOnce(target, ".fc-dayGridMonth-view");
-        assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (February 2016)"
-        );
 
         // Tap on a date
         await tap(target, ".fc-day-top[data-date='2016-02-10']");
@@ -387,9 +381,6 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.containsNone(target, ".fc-dayGridMonth-view");
         assert.containsOnce(target, ".fc-timeGridDay-view");
-        assert.equal(
-            target.querySelector(".breadcrumb-item").textContent,
-            "undefined (February 10, 2016)"
-        );
+        assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-02-10");
     });
 });
