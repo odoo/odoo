@@ -173,6 +173,10 @@ class MassMailing(models.Model):
         domain="[('mailing_model_name', '=', mailing_model_name)]")
     mailing_filter_domain = fields.Char('Favorite filter domain', related='mailing_filter_id.mailing_domain')
     mailing_filter_count = fields.Integer('# Favorite Filters', compute='_compute_mailing_filter_count')
+    bypass_blacklist = fields.Boolean('Include Blacklist',
+                                      help='Include all recipients, even the blacklisted ones. '
+                                           'To use with caution and for non-marketing-related issues '
+                                           '(shortage of service, emergencies, …)')
     # A/B Testing
     ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed')
     ab_testing_description = fields.Html('A/B Testing Description', compute="_compute_ab_testing_description")
@@ -1076,6 +1080,7 @@ class MassMailing(models.Model):
                 'reply_to_force_new': mailing.reply_to_mode == 'new',
                 'subject': mailing.subject,
                 'template_id': False,
+                'bypass_blacklist': mailing.bypass_blacklist,
             }
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
