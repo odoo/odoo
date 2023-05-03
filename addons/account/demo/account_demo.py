@@ -139,20 +139,15 @@ class AccountChartTemplate(models.AbstractModel):
         )
         return {
             'demo_bank_statement_1': {
-                'journal_id': self.env['account.journal'].search([
-                    ('type', '=', 'bank'),
-                    ('company_id', '=', cid),
-                ], limit=1).id,
-                'date': time.strftime('%Y')+'-01-01',
-                'balance_end_real': 9944.87,
-                'balance_start': 5103.0,
+                'name': f'{bnk_journal.name} - {time.strftime("%Y")}-01-01/1',
+                'balance_end_real': 6378.0,
+                'balance_start': 0.0,
                 'line_ids': [
                     Command.create({
                         'journal_id': bnk_journal.id,
                         'payment_ref': 'Initial balance',
                         'amount': 5103.0,
                         'date': time.strftime('%Y-01-01'),
-                        'partner_id': 'base.res_partner_12',
                     }),
                     Command.create({
                         'journal_id': bnk_journal.id,
