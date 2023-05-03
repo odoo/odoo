@@ -4,6 +4,8 @@ import { AbstractAwaitablePopup } from "@point_of_sale/js/Popups/AbstractAwaitab
 import { useService } from "@web/core/utils/hooks";
 import { MoneyDetailsPopup } from "./MoneyDetailsPopup";
 import { useState } from "@odoo/owl";
+import { parse } from "web.field_utils";
+import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
 
 export class CashOpeningPopup extends AbstractAwaitablePopup {
     static template = "CashOpeningPopup";
@@ -19,6 +21,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         });
         this.popup = useService("popup");
         this.orm = useService("orm");
+        useValidateCashInput("openingCashInput", this.env.pos.pos_session.cash_register_balance_start);
     }
     //@override
     async confirm() {
@@ -46,12 +49,9 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
             this.moneyDetails = moneyDetails;
         }
     }
-    handleInputChange() {
+    handleInputChange(event) {
+        if (event.target.classList.contains('invalid-cash-input')) return;
         this.manualInputCashCount = true;
-        this.moneyDetails = null;
-        this.state.notes = "";
-        if (typeof this.state.openingCash !== "number") {
-            this.state.openingCash = 0;
-        }
+        this.state.openingCash = parse.float(event.target.value);
     }
 }
