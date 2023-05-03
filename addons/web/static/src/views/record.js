@@ -15,6 +15,8 @@ class _Record extends Component {
             viewMode: "form",
             rootType: "record",
             activeFields: this.getActiveFields(),
+            onRecordSaved: this.props.info.onRecordSaved || (() => {}),
+            onWillSaveRecord: this.props.info.onWillSaveRecord || (() => {}),
         };
         const modelServices = Object.fromEntries(
             RelationalModel.services.map((servName) => {
@@ -107,4 +109,6 @@ Record.props = [
     "mode?",
     "values?",
     "onRecordChanged?",
+    "onRecordSaved?",
+    "onWillSaveRecord?",
 ];
