@@ -122,6 +122,49 @@ def check_identity(fn):
     wrapped.__has_check_identity = True
     return wrapped
 
+def check_mfa(fn):
+    """ Wrapped method should be an *action method* (called from a button
+    type=object), and requires extra security to be executed. This decorator
+    checks if the identity (MFA) has been checked in the last 10mn, and
+    pops up an identity check wizard if not.
+
+    Prevents access outside of interactive contexts (aka with a request)
+    """
+    @wraps(fn)
+    def wrapped(self):
+        if not request:
+            raise UserError(_("This method can only be accessed over HTTP"))
+
+        if request.session.get('mfa-check-last', 0) > time.time() - 10 * 60:
+            # update mfa-check-last like github?
+            return fn(self)
+
+        w = self.sudo().env['res.users.mfacheck'].create({
+            'request': json.dumps([
+                { # strip non-jsonable keys (e.g. mapped to recordsets like binary_field_real_user)
+                    k: v for k, v in self.env.context.items()
+                    if _jsonable(v)
+                },
+                self._name,
+                self.ids,
+                fn.__name__
+            ])
+        })
+        if self._mfa_type() != None:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.users.mfacheck',
+                'res_id': w.id,
+                'name': _("Security Control"),
+                'target': 'new',
+                'views': [(False, 'form')],
+            }
+        else:
+            w.run_check()
+            return fn(self)
+    wrapped.__has_check_mfa = True
+    return wrapped
+
 #----------------------------------------------------------
 # Basic res.groups and res.users
 #----------------------------------------------------------
@@ -933,6 +976,7 @@ class Users(models.Model):
         }
 
     @check_identity
+    @check_mfa
     def preference_change_password(self):
         return {
             'type': 'ir.actions.act_window',
@@ -1838,6 +1882,28 @@ class CheckIdentity(models.TransientModel):
         assert getattr(method, '__has_check_identity', False)
         return method()
 
+class CheckMFA(models.TransientModel):
+    """ Wizard used to re-check the user's MFA
+
+    Might be useful before the more security-sensitive operations, users might be
+    leaving their computer unlocked & unattended. Re-checking identity mitigates
+    some of the risk of a third party using such an unattended device to manipulate
+    the account.
+    """
+    _name = 'res.users.mfacheck'
+    _description = "MFA Check Wizard"
+
+    request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
+
+    def run_check(self):
+        assert request, "This method can only be accessed over HTTP"
+
+        request.session['mfa-check-last'] = time.time()
+        ctx, model, ids, method = json.loads(self.sudo().request)
+        method = getattr(self.env(context=ctx)[model].browse(ids), method)
+        assert getattr(method, '__has_check_mfa', False)
+        return method()
+
 #----------------------------------------------------------
 # change password wizard
 #----------------------------------------------------------
@@ -1895,6 +1961,7 @@ class ChangePasswordOwn(models.TransientModel):
             raise ValidationError(_("The new password and its confirmation must be identical."))
 
     @check_identity
+    @check_mfa
     def change_password(self):
         self.env.user._change_password(self.new_password)
         self.unlink()
@@ -1952,6 +2019,7 @@ class APIKeysUser(models.Model):
         raise AccessDenied()
 
     @check_identity
+    @check_mfa
     def api_key_wizard(self):
         return {
             'type': 'ir.actions.act_window',
