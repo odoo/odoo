@@ -29,7 +29,7 @@
                 </span>
             </t>
         </div>
-        <div t-if="state.showCodeView || containsComplexHTML" t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
+        <div t-if="state.showCodeView || (containsComplexHTML and !props.readonly and !props.notEditable)" t-ref="codeViewButton" id="codeview-btn-group" class="btn-group" t-on-click="toggleCodeView">
             <button class="o_codeview_btn btn btn-primary">
                 <i class="fa fa-code" />
             </button>
