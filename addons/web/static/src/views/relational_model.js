@@ -1494,8 +1494,21 @@ class DynamicList extends DataPoint {
     setup(params, state) {
         this.groupBy = params.groupBy || [];
         this.domain = markRaw(params.domain || []);
-        this.orderBy =
-            params.orderBy && params.orderBy.length ? params.orderBy : state.orderBy || []; // rename orderBy
+
+        // restore the previously exported initialOrderBy or initialize it to `params.orderBy`
+        // this is what will be exported as `state.initialOrderBy`
+        this.initialOrderBy = state.initialOrderBy || params.orderBy || [];
+
+        if (
+            params.orderBy &&
+            params.orderBy.length &&
+            JSON.stringify(params.orderBy) !== JSON.stringify(state.initialOrderBy)
+        ) {
+            this.orderBy = params.orderBy;
+        } else {
+            this.orderBy = state.orderBy || [];
+        }
+
         this.offset = state.offset || 0;
         this.count = 0;
         this.initialLimit = state.initialLimit || params.limit || this.constructor.DEFAULT_LIMIT;
@@ -1606,6 +1619,7 @@ class DynamicList extends DataPoint {
             limit: this.limit,
             initialLimit: this.initialLimit,
             orderBy: this.orderBy,
+            initialOrderBy: this.initialOrderBy,
         };
     }
 
