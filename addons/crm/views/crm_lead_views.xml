@@ -50,43 +50,37 @@
                         <widget name="web_ribbon" title="Won" attrs="{'invisible': [('probability', '&lt;', 100)]}" />
                         <div class="oe_title">
                             <h1><field class="text-break" options="{'line_breaks': False}" widget="text" name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <h2 class="d-flex gap-2 g-0 align-items-end pb-3">
-                                <div attrs="{'invisible': [('type', '=', 'lead')]}">
-                                    <label for="expected_revenue" class="oe_edit_only pb-1" />
-                                    <div class="d-flex align-items-end">
+                            <h2 class="row g-0 pb-3 pb-sm-4">
+                                <div class="col-auto pb-2 pb-md-0" attrs="{'invisible': [('type', '=', 'lead')]}">
+                                    <label for="expected_revenue" class="oe_edit_only"/>
+                                    <div class="d-flex align-items-baseline">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="expected_revenue" class="oe_inline o_input_8ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="expected_revenue" class="o_input_13ch" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey p-2" groups="crm.group_use_recurring_revenues"> + </span>
                                         <span class="oe_grey p-2" groups="!crm.group_use_recurring_revenues"> at </span>
-                                    </div>
-                                </div>
-                                <div attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
-                                    <field name="recurring_revenue" class="oe_inline o_input_10ch" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                </div>
-                                <div attrs="{'invisible': [('type', '=', 'lead')]}" groups="crm.group_use_recurring_revenues">
-                                    <div class="d-flex align-items-end ps-2">
-                                        <field name="recurring_plan" class="oe_inline o_input_12ch" placeholder="E.g. Monthly"
-                                               attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
-                                        <span class="oe_grey p-2"> at </span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div class="oe_edit_only d-md-flex align-items-center">
-                                        <label for="probability"/>
-                                        <div class="d-flex align-items-center">
-                                            <button class="ps-0 ps-md-2 btn btn-link" name="action_set_automated_probability" type="object"
-                                                    attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                                <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
-                                            </button>
-                                            <small class="oe_grey h6 mb0 d-flex" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
-                                                <field class="mb0" name="automated_probability" force_save="1"/> %
-                                            </small>
+                                        <div class="d-flex align-items-baseline gap-3" groups="crm.group_use_recurring_revenues">
+                                            <field name="recurring_revenue" class="o_input_10ch" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                            <div class="d-flex align-items-baseline">
+                                                <field name="recurring_plan" class="oe_inline o_input_13ch" placeholder='e.g. "Monthly"'
+                                                    attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
+                                                <span class="oe_grey p-2 text-nowrap"> at </span>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div id="probability" class="d-inline-block">
+                                </div>
+                                <div class="col-auto">
+                                    <label for="probability" class="d-inline-block"/>
+                                    <button class="d-inline-block px-2 py-0 btn btn-link" name="action_set_automated_probability" type="object"
+                                            attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                        <i class="fa fa-gear" role="img" title="Switch to automatic probability" aria-label="Switch to automatic probability"></i>
+                                    </button>
+                                    <small class="d-inline-block oe_grey h6 mb-0" attrs="{'invisible': [('is_automated_probability', '=', True)]}">
+                                        <field class="mb-0" name="automated_probability" force_save="1"/> %
+                                    </small>
+                                    <div id="probability" class="d-flex align-items-baseline">
                                         <field name="is_automated_probability" invisible="1"/>
                                         <field name="probability" widget="float" class="oe_inline o_input_6ch"/>
-                                        <span class="oe_grey"> %</span>
+                                        <span class="oe_grey p-2"> %</span>
                                     </div>
                                 </div>
                             </h2>
@@ -460,6 +454,7 @@
                 <form>
                     <group>
                         <field name="partner_id" widget="res_partner_many2one"
+                            class="o_field_highlight"
                             string='Organization / Contact'
                             context="{
                             'res_partner_search_mode': type == 'opportunity' and 'customer' or False,
@@ -472,17 +467,17 @@
                             'default_team_id': team_id,
                             'show_vat': True}"/>
                         <field name="name" placeholder="e.g. Product Pricing" />
-                        <field name="email_from" string="Email" />
-                        <field name="phone" string="Phone" />
+                        <field name="email_from" string="Email" placeholder='e.g. "email@address.com"' />
+                        <field name="phone" string="Phone" placeholder='e.g. "0123456789"' />
                         <label for="expected_revenue"/>
                         <div>
                             <div class="o_row">
-                                <field name="expected_revenue" class="oe_inline me-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="expected_revenue" class="oe_inline me-5 o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                 <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
                             </div>
                             <div class="o_row" groups="crm.group_use_recurring_revenues">
-                                <field name="recurring_revenue" class="oe_inline" widget="monetary" options="{'currency_field': 'company_currency'}"/>
-                                <field name="recurring_plan" class="oe_inline" placeholder="E.g. Monthly"
+                                <field name="recurring_revenue" class="oe_inline o_field_highlight" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                <field name="recurring_plan" class="oe_inline" placeholder='e.g. "Monthly"'
                                     attrs="{'required': [('recurring_revenue', '!=', 0)]}" options="{'no_create': True, 'no_open': True}"/>
                             </div>
                         </div>
@@ -786,9 +781,9 @@
                         domain="[('share', '=', False)]"/>
                     <field name="team_id" optional="hide"/>
                     <field name="priority" optional="hide" widget="priority"/>
-                    <field name="activity_ids" widget="list_activity"/>
+                    <field name="activity_ids" optional="hide" widget="list_activity"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
-                    <field name="my_activity_date_deadline" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
+                    <field name="my_activity_date_deadline" optional="hide" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
                     <field name="activity_calendar_event_id" invisible="1"/>
                     <field name="campaign_id" optional="hide"/>
                     <field name="medium_id" optional="hide"/>
@@ -804,6 +799,7 @@
                     <field name="stage_id" optional="show" decoration-bf="1"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" string="Probability (%)" optional="hide"/>
+                    <field name="lost_reason_id" optional="hide"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>
@@ -994,7 +990,7 @@
                     <filter string="Unassigned" name="unassigned"
                         domain="[('user_id', '=', False)]" help="No salesperson"/>
                     <filter string="Open Opportunities" name="open_opportunities"
-                        domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity')]"
+                        domain="[('probability', '&lt;', 100), ('type', '=', 'opportunity'), ('active', '=', True)]"
                         help="Open Opportunities"/>
                     <separator/>
                     <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]" groups="mail.group_mail_notification_type_inbox"/>

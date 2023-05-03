@@ -142,6 +142,9 @@
                     <field name="type" groups="crm.group_use_lead" optional="show"/>
                     <field name="stage_id" optional="show"/>
                 </xpath>
+                <xpath expr="field[@name='probability']" position="after">
+                    <field name="lost_reason_id" optional="hide"/>
+                </xpath>
             </field>
         </record>
 
