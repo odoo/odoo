@@ -392,15 +392,27 @@ class AccountChartTemplate(models.AbstractModel):
                 to_delay = defaultdict(dict)
                 for xml_id, vals in data.items():
                     to_be_removed = []
-                    for field_name in vals:
+                    for field_name, field_val in vals.items():
                         field = self.env[model]._fields.get(field_name, None)
-                        if (field and
-                            field.relational and
-                            field.comodel_name not in created_models and
-                            (field.comodel_name in dict(all_data) or field.comodel_name == model)
+                        if (
+                            field
+                            and field.relational
+                            and field_val
+                            and (  # allow create commands but delay all other related fields
+                                not isinstance(field_val, (list, tuple))
+                                or (
+                                    isinstance(field_val[0], (list, tuple))
+                                    and {command for command, *dummy in field_val} != {Command.CREATE}
+                                )
+                            )
+                            and field.comodel_name not in created_models
+                            and (
+                                field.comodel_name in dict(all_data)
+                                or field.comodel_name == model
+                            )
                         ):
                             to_be_removed.append(field_name)
-                            to_delay[xml_id][field_name] = vals.get(field_name)
+                            to_delay[xml_id][field_name] = field_val
                     for field_name in to_be_removed:
                         del vals[field_name]
                 if any(to_delay.values()):
