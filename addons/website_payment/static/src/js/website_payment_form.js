@@ -64,6 +64,7 @@ checkoutForm.include({
         }
         return this._super(...arguments);
     },
+
     /**
      * Add params used by the donation snippet to the transaction route params.
      *
@@ -103,6 +104,7 @@ checkoutForm.include({
      _updateShippingCost: function (amount) {
         this.txContext.amount = amount;
      },
+
     /**
      * Update the fees associated to each provider.
      *
@@ -159,4 +161,5 @@ checkoutForm.include({
             });
         }
     },
+
 });
