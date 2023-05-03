@@ -596,7 +596,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsOnce(target, ".o_form_view", "The form view should be displayed");
 
         // Delete the current record
-        await testUtils.controlPanel.toggleActionMenu(target);
+        await click(target, ".o_cp_action_menus .fa-cog");
         await testUtils.dom.click(
             Array.from(document.querySelectorAll(".o_menu_item")).find(
                 (e) => e.textContent === "Delete"
