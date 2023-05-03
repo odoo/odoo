@@ -7027,7 +7027,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
-    QUnit.test("diplay something else than a button in a buttonbox", async function (assert) {
+    QUnit.test("display something else than a button in a buttonbox", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -7045,18 +7045,18 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".oe_button_box").children.length,
+            target.querySelector(".o-form-buttonbox").children.length,
             2,
             "button box should contain two children"
         );
         assert.containsOnce(
             target,
-            ".oe_button_box > .oe_stat_button",
+            ".o-form-buttonbox > .oe_stat_button",
             "button box should only contain one button"
         );
         assert.containsOnce(
             target,
-            ".oe_button_box > label",
+            ".o-form-buttonbox > label",
             "button box should only contain one label"
         );
     });
@@ -7086,12 +7086,12 @@ QUnit.module("Views", (hooks) => {
             });
 
             assert.strictEqual(
-                target.querySelector(".oe_button_box").children.length,
+                target.querySelector(".o-form-buttonbox").children.length,
                 1,
                 "button box should contain only one child"
             );
             assert.hasClass(
-                target.querySelector(".oe_button_box"),
+                target.querySelector(".o-form-buttonbox"),
                 "o_not_full",
                 "the buttonbox should not be full"
             );
@@ -7136,7 +7136,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".oe_button_box").children.length,
+            target.querySelector(".o-form-buttonbox").children.length,
             2,
             "button box should contain two children"
         );
@@ -7648,11 +7648,9 @@ QUnit.module("Views", (hooks) => {
                     </sheet>
                 </form>`,
         });
-        var $button = target.querySelector(
-            ".o_form_view .o_form_sheet .oe_button_box .oe_stat_button"
-        );
+        const button = target.querySelector(".o_form_view .o-form-buttonbox .oe_stat_button");
         assert.strictEqual(
-            $button.textContent,
+            button.textContent,
             "Inventory Moves",
             "the stat button should contain a span with the string attribute value"
         );
@@ -7917,7 +7915,6 @@ QUnit.module("Views", (hooks) => {
                 <field name="bar"/>
             </button>`);
 
-        // legacySelector = ".oe_stat_button:not(.dropdown-item, .dropdown-toggle)";
         const statButtonSelector = ".o-form-buttonbox .oe_stat_button:not(.o-dropdown)";
 
         const formView = await makeView({
@@ -7945,12 +7942,12 @@ QUnit.module("Views", (hooks) => {
             );
         };
 
-        await assertFormContainsNButtonsWithSizeClass(0, 2);
-        await assertFormContainsNButtonsWithSizeClass(1, 2);
-        await assertFormContainsNButtonsWithSizeClass(2, 2);
-        await assertFormContainsNButtonsWithSizeClass(3, 4);
-        await assertFormContainsNButtonsWithSizeClass(4, 7);
-        await assertFormContainsNButtonsWithSizeClass(5, 7);
+        await assertFormContainsNButtonsWithSizeClass(0, 3);
+        await assertFormContainsNButtonsWithSizeClass(1, 3);
+        await assertFormContainsNButtonsWithSizeClass(2, 3);
+        await assertFormContainsNButtonsWithSizeClass(3, 7);
+        await assertFormContainsNButtonsWithSizeClass(4, 3);
+        await assertFormContainsNButtonsWithSizeClass(5, 4);
         await assertFormContainsNButtonsWithSizeClass(6, 7);
     });
 
@@ -9222,7 +9219,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".oe_button_box button:not(:disabled)",
+            ".o-form-buttonbox button:not(:disabled)",
             "stat buttons should be enabled"
         );
 
@@ -9243,7 +9240,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".oe_button_box button:disabled",
+            ".o-form-buttonbox button:disabled",
             "stat buttons should be disabled"
         );
 
@@ -9263,7 +9260,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".oe_button_box button:not(:disabled)",
+            ".o-form-buttonbox button:not(:disabled)",
             "stat buttons should be enabled"
         );
     });
@@ -9319,11 +9316,11 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".oe_button_box button:not(:disabled)",
+            ".o-form-buttonbox button:not(:disabled)",
             "stat buttons should be enabled"
         );
 
-        await click(target.querySelector(".oe_button_box button"));
+        await click(target.querySelector(".o-form-buttonbox button"));
 
         // The unresolved promise lets us check the state of the buttons
         assert.containsN(
@@ -9340,7 +9337,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".oe_button_box button:disabled",
+            ".o-form-buttonbox button:disabled",
             "stat buttons should be disabled"
         );
 
@@ -9360,7 +9357,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsOnce(
             target,
-            ".oe_button_box button:not(:disabled)",
+            ".o-form-buttonbox button:not(:disabled)",
             "stat buttons should be enabled"
         );
     });
@@ -9539,14 +9536,14 @@ QUnit.module("Views", (hooks) => {
             });
 
             await click(target.querySelector(".o_external_button"));
-            assert.notOk(target.querySelector(".modal .oe_button_box button").disabled);
+            assert.notOk(target.querySelector(".modal .o-form-buttonbox button").disabled);
 
-            await click(target.querySelector(".modal .oe_button_box button"));
-            assert.ok(target.querySelector(".modal .oe_button_box button").disabled);
+            await click(target.querySelector(".modal .o-form-buttonbox button"));
+            assert.ok(target.querySelector(".modal .o-form-buttonbox button").disabled);
 
             def.resolve();
             await nextTick();
-            assert.notOk(target.querySelector(".modal .oe_button_box button").disabled);
+            assert.notOk(target.querySelector(".modal .o-form-buttonbox button").disabled);
         }
     );
 
