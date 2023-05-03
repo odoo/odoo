@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+        <record id="crm_lead_view_tree_opportunity_reporting" model="ir.ui.view">
+            <field name="name">crm.lead.tree.opportunity.reporting</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='%(crm.action_lead_mail_compose)d']" position="replace"/>
+                <xpath expr="//button[@name='action_snooze']" position="replace"/>
+            </field>
+        </record>
+
         <!-- Opportunities by user and team pivot View -->
         <record id="crm_opportunity_report_view_pivot" model="ir.ui.view">
             <field name="name">crm.opportunity.report.pivot</field>
@@ -158,7 +169,7 @@
                    eval="[(5, 0, 0),
                           (0, 0, {'view_mode': 'graph', 'view_id': ref('crm_opportunity_report_view_graph')}),
                           (0, 0, {'view_mode': 'pivot', 'view_id': ref('crm_opportunity_report_view_pivot')}),
-                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_case_tree_view_oppor')})]"/>
+                          (0, 0, {'view_mode': 'tree', 'view_id': ref('crm_lead_view_tree_opportunity_reporting')})]"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
                     No data found!
