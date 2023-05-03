@@ -17,6 +17,16 @@ body {
   -webkit-line-clamp: 2;
 }
 
+.o_self_order_main {
+  height: calc(100vh - 200px);
+  padding-bottom: 150px;
+}
+
+.o_self_order_cart {
+  height: calc(100vh - 224px);
+  padding-bottom: 125px;
+}
+
 .o_self_order_item_card_image {
   width: 110px !important;
   min-width: 110px;
@@ -50,23 +60,8 @@ body {
     }
   }
 }
-.o_self_order_floating_button {
-  @extend .o_self_order_responsive_width_button;
-  @extend .position-fixed;
-  @extend .bottom-0;
-  @extend .mb-3;
-  @extend .start-50;
-  @extend .translate-middle;
-}
-.o_self_order_floating {
-  @extend .position-fixed;
-  @extend .bottom-0;
-  @extend .mb-3;
-  @extend .start-50;
-  @extend .translate-middle;
-}
 
-.o_self_order_responsive_width_button {
+/* .o_self_order_responsive_width_button {
   @extend .o_self_order_button;
   @extend .o_self_order_responsive_width;
 }
@@ -75,10 +70,9 @@ body {
   @extend .w-md-50;
   @extend .w-xxl-25;
 }
+ */
 
-.o_self_order_button {
-  @extend .btn;
-  @extend .btn-primary;
-  @extend .btn-lg;
-  @extend .text-white;
-}
+.o_self_order_incr_button button {
+    width: 40px;
+    height: 40px;
+  }

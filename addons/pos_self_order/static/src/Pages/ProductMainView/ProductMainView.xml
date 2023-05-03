@@ -2,75 +2,75 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductMainView" owl="1">
         <NavBar/>
-        <div class="bg-white d-flex flex-column h-100 py-3 overflow-auto">
+        <div class="o_self_order_main bg-white d-flex flex-column pt-3 overflow-auto">
             <div class="px-3 border-bottom">
                 <img t-if="props.product.has_image"
-                    class="w-100 h-100 rounded-3" 
+                    class="w-100 rounded-3" 
                     style="max-height: 400px; object-fit: cover;" 
                     t-attf-src="/menu/get-image/{{ props.product.product_id }}/1920" 
                     alt="Product image"/>
-                <div class="d-flex flex-column py-3">
+                <div class="py-3">
                     <h3 t-esc="props.product.name"/>
                     <h4 class="text-primary"
                         t-esc="selfOrder.formatMonetary(props.product.price_info.list_price)"/>
                 </div>
             </div>
-            <div t-if="props.product.description_sale"
-                class="px-3 py-3">
-                    <t t-esc="props.product.description_sale"/>    
+            <div class="o_self_order_main_options px-3 py-4 border-bottom bg-100">
+                <t t-if="props.product.attributes"
+                    t-foreach="props.product.attributes" 
+                    t-as="attribute" 
+                    t-key="attribute.id">
+                    <div class="mb-3">
+                        <div class="attribute_name py-1 fs-5 fw-bold" t-esc="attribute.name"/>
+                        <t t-call="pos_self_order.RadioProductAttribute" t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" />
+                        <t t-call="pos_self_order.SelectProductAttribute" t-elif="attribute.display_type === 'select'" />
+                        <t t-call="pos_self_order.ColorProductAttribute" t-elif="attribute.display_type === 'color'" />
+                    </div>
+                </t>
+                <div t-if="selfOrder.table">
+                    <label class="form-label fw-bold" for="note">Add a note for the chef:</label>
+                    <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="3" placeholder="No onions please" t-model="this.privateState.customer_note"/>
+                </div>
             </div>
-            <t t-if="props.product.attributes"
-                t-foreach="props.product.attributes" 
-                t-as="attribute" 
-                t-key="attribute.id">
-                <div class="attribute_name px-3 py-2 fs-5 fw-bold" t-esc="attribute.name"/>
-                <t t-call="pos_self_order.RadioProductAttribute" t-if="attribute.display_type === 'radio' or attribute.display_type === 'pills'" />
-                <t t-call="pos_self_order.SelectProductAttribute" t-elif="attribute.display_type === 'select'" />
-                <t t-call="pos_self_order.ColorProductAttribute" t-elif="attribute.display_type === 'color'" />
-            </t>
-            <div t-if="selfOrder.table">
-                <p>Add a note for the chef:</p>
-                <input class="form-control" type="text" placeholder="no onions please" t-model="this.privateState.customer_note"/>
+            <div t-if="props.product.description_sale"
+                class="o_self_order_main_desc px-3 py-4 text-muted">
+                    <t t-esc="props.product.description_sale"/>    
             </div>
         </div>
         <t t-if="selfOrder.table" t-call="pos_self_order.AddToCartButton"/>
     </t>
 
     <t t-name="pos_self_order.RadioProductAttribute" owl="1">
-        <div class="px-3">
-            <t t-foreach="attribute.values" t-as="value" t-key="value.id">
-                <div class="d-flex align-items-center justify-content-between py-2">
-                    <input 
-                        type="radio" 
-                        class="form-check-input my-1 me-2" 
-                        t-att-name="attribute.id" 
-                        t-att-value="value.name"
-                        t-attf-id="{{ attribute.id }}_{{ value.id }}" 
-                        t-model="this.privateState.selectedVariants[attribute.name]"
-                        />
-                    <span class="flex-grow-1">
-                        <t t-esc="value.name"/>
-                        <t t-if="value.price_extra.list_price">
-                            + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
-                        </t>
-                    </span>
-                </div>
-            </t>
-        </div>
-    </t>
-
-    <t t-name="pos_self_order.SelectProductAttribute" owl="1">
-        <div class="px-3">
-            <select class="configurator_select form-select"
-                t-model="this.privateState.selectedVariants[attribute.name]">
-                <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name">
+        <t t-foreach="attribute.values" t-as="value" t-key="value.id">
+            <div class="d-flex align-items-center justify-content-between py-2">
+                <input 
+                    type="radio" 
+                    class="form-check-input my-1 me-2" 
+                    t-att-name="attribute.id" 
+                    t-att-value="value.name"
+                    t-attf-id="{{ attribute.id }}_{{ value.id }}" 
+                    t-model="this.privateState.selectedVariants[attribute.name]"
+                    />
+                <span class="flex-grow-1">
                     <t t-esc="value.name"/>
                     <t t-if="value.price_extra.list_price">
                         + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
                     </t>
-                </option>
-            </select>
-        </div>
+                </span>
+            </div>
+        </t>
+    </t>
+
+    <t t-name="pos_self_order.SelectProductAttribute" owl="1">
+        <select class="configurator_select form-select"
+            t-model="this.privateState.selectedVariants[attribute.name]">
+            <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name">
+                <t t-esc="value.name"/>
+                <t t-if="value.price_extra.list_price">
+                    + <t t-esc="selfOrder.formatMonetary(value.price_extra.list_price)" />
+                </t>
+            </option>
+        </select>
     </t>
 
     <t t-name="pos_self_order.ColorProductAttribute" owl="1">
@@ -100,10 +100,9 @@
         </div>
     </t>
     <t t-name="pos_self_order.AddToCartButton" owl="1">
-        <div class="o_self_order_floating">
+        <div class="o_self_order_floating fixed-bottom d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg">
             <IncrementCounter onClick="incrementQty" value="this.privateState.qty"/>
-            <button t-on-click="addToCartButtonClicked"
-                class="o_self_order_responsive_width_button">
+            <button t-on-click="addToCartButtonClicked" class="o_self_order_floating_button btn btn-primary w-100 px-2 py-3 mt-2 rounded">
                     <t t-if="selfOrder.cart.some(item => item.product_id === selfOrder.currentProduct)">
                         Update Cart
                     </t>

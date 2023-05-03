@@ -12,16 +12,19 @@
                     <a type="button" 
                         t-attf-href="{{!link.url.startsWith('/') and link.url}}"
                         t-on-click="(event)=> link.url.startsWith('/') and env.navigate(link.url, event)"
-                        t-attf-class="o_self_order_responsive_width_button mx-auto my-2  btn-{{link.style}}">
+                        t-attf-class="btn btn-{{link.style}} py-3 my-1 rounded">
                         <t t-esc="link.name"/>
                     </a>
                 </t>
-                <a  t-if="selfOrder.orders.length"
-                    type="button" 
-                    t-on-click="()=> env.navigate('/orders')"
-                    t-attf-class="o_self_order_responsive_width_button mx-auto my-2">
-                    My orders
-                </a>
+                <t t-if="selfOrder.orders.length">
+                    <hr class="bg-500"/>
+                    <a 
+                        type="button" 
+                        t-on-click="()=> env.navigate('/orders')"
+                        t-attf-class="btn btn-outline-light py-3 my-2">
+                        My orders
+                    </a>
+                </t>
             </div>
             <t t-call="pos_self_order.LandingPageFooter"/>
         </div>

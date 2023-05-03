@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.NavBar" owl="1">
-        <nav t-attf-class="o_self_order_navbar d-flex align-items-center p-2 border-bottom">
+        <nav t-attf-class="o_self_order_navbar d-flex align-items-center p-2 border-bottom bg-white">
             <button class="btn btn-link text-dark"
                     t-on-click="() => window.history.back()">
                 <i class="fa fa-fw fa-chevron-left"/>
@@ -9,7 +9,7 @@
             <div class="mx-auto overflow-hidden">
                 <h3 class="m-0 text-primary text-truncate" t-esc="props.customText or selfOrder.company_name"/>
             </div>
-            <span class="me-4" t-esc="selfOrder?.table?.name"/>
+            <span class="px-3 text-center" t-esc="selfOrder?.table?.name"/>
         </nav>
     </t>
 </templates>

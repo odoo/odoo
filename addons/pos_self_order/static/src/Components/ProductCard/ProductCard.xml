@@ -1,38 +1,39 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductCard" owl="1">
-        <div class="o_self_order_item_card d-flex align-items-center w-100 w-md-50 w-xl-25 p-2 overflow-hidden" 
+        <div class="o_self_order_item_card d-flex align-items-start w-100 w-md-50 w-xl-25 px-3 py-2 bg-white overflow-hidden" 
             t-on-click="() => this.clickOnProduct(props.product)"
             t-ref="currentProductCard">
+            <div class="d-flex flex-column w-100 py-1">
+                <h3 t-attf-class="mb-0 text-900 fw-bold fs-6" 
+                    t-esc="props.product.name" />
+                <!-- this description represents the list of attributes of the product  -->
+                <span t-if="props.cartItem?.description" class="m-0 text-muted small break-line"
+                    t-esc="props.cartItem.description" />
+                
+                <div t-if="props.cartItem?.customer_note" class="d-inline-block m-0 text-muted small break-line">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" />
+                    <span t-esc="props.cartItem.customer_note" class="ms-1" />
+                </div>
+
+                <span t-if="props.cartItem?.qty" class="m-0 text-muted small break-line"
+                    t-esc="`${props.cartItem.qty} x ${selfOrder.formatMonetary(props.product.price_info.list_price + (props.cartItem?.price_extra.list_price or 0))}`" />
+
+                <span t-attf-class="card-text small" 
+                    t-esc="selfOrder.formatMonetary( 
+                        (props.cartItem?.qty or 1) * 
+                        (props.product.price_info.list_price + (props.cartItem?.price_extra.list_price or 0)) 
+                        )" 
+                />
+
+                <p t-if="props.product.description_sale" class="m-0 text-muted small break-line" t-esc="props.product.description_sale" />
+            </div>
             <img t-if="props.product.has_image"
-                class="o_self_order_item_card_image h-100 w-100 rounded-3 border border-light bg-light" 
+                class="o_self_order_item_card_image h-100 w-100 ms-2 rounded-3 border border-light bg-light" 
                 t-attf-src="/menu/get-image/{{ props.product.product_id }}" 
                 alt="Product image" 
                 loading="lazy" 
                 onerror="this.remove()" />
-            <div class="d-flex flex-column w-100 ms-2">
-                <h3 t-attf-class="mb-0 text-900 fw-bold fs-6" 
-                    t-esc="props.product.name" />
-                <!-- this description represents the list of attributes of the product  -->
-                <p t-if="props.cartItem?.description" class="m-0 text-muted small break-line"
-                    t-esc="props.cartItem.description" />
-
-                <p t-if="props.cartItem?.qty" class="m-0 text-muted small break-line"
-                    t-esc="`${props.cartItem.qty} x ${selfOrder.formatMonetary(props.product.price_info.list_price + (props.cartItem?.price_extra.list_price or 0))}`" />
-
-                <t t-if="props.cartItem?.customer_note" class="m-0 text-muted small break-line">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true" t-esc="props.cartItem.customer_note"/>
-                </t>
-
-                <p t-if="props.product.description_sale" class="m-0 text-muted small break-line"
-                   t-esc="props.product.description_sale" />
-            </div>
-            <p t-attf-class="card-text small ms-auto" 
-                t-esc="selfOrder.formatMonetary( 
-                        (props.cartItem?.qty or 1) * 
-                        (props.product.price_info.list_price + (props.cartItem?.price_extra.list_price or 0)) 
-                        )" 
-            />
         </div>
     </t>
 </templates>
