@@ -254,7 +254,7 @@ export class Message extends Component {
     }
 
     get hasAuthorClickable() {
-        return this.hasOpenChatFeature;
+        return this.hasOpenChatFeature && !this.message.isSelfAuthored;
     }
 
     get isActive() {
