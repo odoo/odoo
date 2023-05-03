@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="account_tax_report_cm" model="account.report">
+        <field name="name">VAT Report</field>
+        <field name="root_report_id" ref="account.generic_tax_report"/>
+        <field name="country_id" ref="base.cm"/>
+        <field name="filter_fiscal_position" eval="True"/>
+        <field name="availability_condition">country</field>
+        <field name="column_ids">
+            <record id="account_tax_report_cm_balance" model="account.report.column">
+                <field name="name">Base</field>
+                <field name="expression_label">base</field>
+            </record>
+            <record id="account_tax_report_cm_tax" model="account.report.column">
+                <field name="name">Tax</field>
+                <field name="expression_label">tax</field>
+            </record>
+        </field>
+        <field name="line_ids">
+            <record id="account_tax_report_line_cm_turnover" model="account.report.line">
+                <field name="name">2-Turnover achieved</field>
+                <field name="code">CM_TURNOVER</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_cm_turnover_normal" model="account.report.line">
+                        <field name="name">10. Taxable operations at normal rate</field>
+                        <field name="code">CM_NORMAL</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_turnover_normal_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_10_base</field>
+                            </record>
+                            <record id="account_tax_report_line_cm_turnover_normal_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_10_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_turnover_excises" model="account.report.line">
+                        <field name="name">11. Amount of Excise Duty</field>
+                        <field name="code">CM_EXCISE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_turnover_excises_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                            <record id="account_tax_report_line_cm_turnover_excises_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_turnover_other" model="account.report.line">
+                        <field name="name">12. Other taxable operations</field>
+                        <field name="code">CM_OTHER</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_turnover_other_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_12_base</field>
+                            </record>
+                            <record id="account_tax_report_line_cm_turnover_other_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_12_tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_turnover_export" model="account.report.line">
+                        <field name="name">13. Exports</field>
+                        <field name="code">CM_EXPORT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_turnover_export_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_13</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_turnover_exempt" model="account.report.line">
+                        <field name="name">14. Exempted turnover</field>
+                        <field name="code">CM_EXEMPT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_turnover_exempt_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_14</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_turnover_global" model="account.report.line">
+                        <field name="name">15. Global turnover</field>
+                        <field name="code">CM_GLOBAL</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_turnover_global_base" model="account.report.expression">
+                                <field name="label">base</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_NORMAL.base + CM_EXCISE.base + CM_OTHER.base + CM_EXPORT.base + CM_EXEMPT.base</field>
+                            </record>
+                            <record id="account_tax_report_line_cm_turnover_global_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_NORMAL.tax + CM_EXCISE.tax + CM_OTHER.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_cm_deductible" model="account.report.line">
+                <field name="name">3-Deductible VAT</field>
+                <field name="code">CM_DEDUCTIBLE</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_cm_credit_report" model="account.report.line">
+                        <field name="name">17. Previous credit's report</field>
+                        <field name="code">CM_CREDIT_REPORTED</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_credit_report_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">most_recent</field>
+                                <field name="date_scope">previous_tax_period</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_credit_deductible_local_purchase" model="account.report.line">
+                        <field name="name">18. Deductible VAT on local purchases</field>
+                        <field name="code">CM_LOCAL_PURCHASE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_credit_deductible_local_purchase_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_18</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_credit_deductible_local_service" model="account.report.line">
+                        <field name="name">19. Deductible VAT on local services</field>
+                        <field name="code">CM_LOCAL_SERVICE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_credit_deductible_local_service_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_19</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_credit_deductible_foreign_purchase" model="account.report.line">
+                        <field name="name">20. Deductible VAT on foreign purchases</field>
+                        <field name="code">CM_FOREIGN_PURCHASE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_credit_deductible_foreign_purchase_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_20</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_credit_deductible_foreign_service" model="account.report.line">
+                        <field name="name">21. Deductible VAT on services and other remuneration paid abroad</field>
+                        <field name="code">CM_FOREIGN_SERVICE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_credit_deductible_foreign_service_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">tax_tags</field>
+                                <field name="formula">CM_21</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_credit_deductible_total" model="account.report.line">
+                        <field name="name">22. Total VAT deductible (L17+L18+L19+L20+L21)</field>
+                        <field name="code">CM_DEDUCTIBLE_VAT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_credit_deductible_total_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_CREDIT_REPORTED.tax + CM_LOCAL_PURCHASE.tax + CM_LOCAL_SERVICE.tax + CM_FOREIGN_PURCHASE.tax + CM_FOREIGN_SERVICE.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_cm_adjustment" model="account.report.line">
+                <field name="name">4-Exceptional adjustments</field>
+                <field name="code">CM_ADJUSTMENTS</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_cm_adjustment_deductible" model="account.report.line">
+                        <field name="name">24. Adjustment of deductible VAT or VAT already withheld at source</field>
+                        <field name="code">CM_ADJUSTMENT_DEDUCTIBLE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_adjustment_deductible_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_adjustment_state" model="account.report.line">
+                        <field name="name">25. Adjustment of VAT borne by the State</field>
+                        <field name="code">CM_ADJUSTMENT_STATE</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_adjustment_state_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_adjustment_fixed" model="account.report.line">
+                        <field name="name">26. Adjustment on disposal of fixed assets to be repaid</field>
+                        <field name="code">CM_ADJUSTMENT_FIXED</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_adjustment_fixed_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_adjustment_other" model="account.report.line">
+                        <field name="name">27. Adjustment of VAT to be repaid and others</field>
+                        <field name="code">CM_ADJUSTMENT_OTHER</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_adjustment_other_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+            <record id="account_tax_report_line_cm_to_pay" model="account.report.line">
+                <field name="name">5-VAT payable or VAT credit</field>
+                <field name="code">CM_TO_PAY</field>
+                <field name="hierarchy_level">0</field>
+                <field name="children_ids">
+                    <record id="account_tax_report_line_cm_collected" model="account.report.line">
+                        <field name="name">28. Collected VAT (L10+L11+L12)</field>
+                        <field name="code">CM_COLLECTED</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_collected_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_GLOBAL.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_deductible_vat" model="account.report.line">
+                        <field name="name">29. Deductible VAT (L22)</field>
+                        <field name="code">CM_DEDUCTIBLE_VAT_29</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_deductible_vat_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_DEDUCTIBLE_VAT.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_adjustment_to_deduct" model="account.report.line">
+                        <field name="name">30. Adjustment of VAT to be deducted (L24+L25)</field>
+                        <field name="code">CM_ADJUSTMENT_TO_DEDUCT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_adjustment_to_deduct_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_ADJUSTMENT_DEDUCTIBLE.tax + CM_ADJUSTMENT_STATE.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_adjustment_to_pay" model="account.report.line">
+                        <field name="name">31. VAT adjustment to be repaid (L26+L27)</field>
+                        <field name="code">CM_ADJUSTMENT_TO_PAY</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_adjustment_to_pay_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_ADJUSTMENT_FIXED.tax + CM_ADJUSTMENT_OTHER.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_vat_to_pay" model="account.report.line">
+                        <field name="name">32. VAT to pay (L28-L29-L30+L31)</field>
+                        <field name="code">CM_VAT_TO_PAY</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_vat_to_pay_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_COLLECTED.tax - CM_DEDUCTIBLE_VAT_29.tax - CM_ADJUSTMENT_TO_DEDUCT.tax + CM_ADJUSTMENT_TO_PAY.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_vat_credit" model="account.report.line">
+                        <field name="name">33. VAT credit</field>
+                        <field name="code">CM_CREDIT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_vat_credit_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_DEDUCTIBLE_VAT_29.tax + CM_ADJUSTMENT_TO_DEDUCT.tax - CM_COLLECTED.tax - CM_ADJUSTMENT_TO_PAY.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_reimbursement" model="account.report.line">
+                        <field name="name">34. Reimbursement asked</field>
+                        <field name="code">CM_REIMBURSEMENT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_reimbursement_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">external</field>
+                                <field name="formula">sum</field>
+                                <field name="subformula">editable;rounding=2</field>
+                            </record>
+                        </field>
+                    </record>
+                    <record id="account_tax_report_line_cm_credit_to_report" model="account.report.line">
+                        <field name="name">35. Credit to report (L33-L34)</field>
+                        <field name="code">CM_CREDIT_REPORT</field>
+                        <field name="expression_ids">
+                            <record id="account_tax_report_line_cm_vat_credit_to_report_tax" model="account.report.expression">
+                                <field name="label">tax</field>
+                                <field name="engine">aggregation</field>
+                                <field name="formula">CM_CREDIT.tax - CM_REIMBURSEMENT.tax</field>
+                                <field name="subformula">if_above(EUR(0))</field>
+                                <field name="carryover_target">CM_CREDIT_REPORTED.tax</field>
+                            </record>
+                        </field>
+                    </record>
+                </field>
+            </record>
+        </field>
+    </record>
+</odoo>
