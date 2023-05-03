@@ -49,7 +49,7 @@
                         <field name="body" widget="sms_widget" attrs="{'invisible': [('comment_single_recipient', '=', True), ('recipient_single_valid', '=', False)]}" default_focus="1"/>
                         <group string="Advanced" groups="base.group_no_one"
                                attrs="{'invisible':[('composition_mode', '!=', 'mass')]}">
-                            <field name="mass_use_blacklist"/>
+                            <field name="mass_bypass_blacklist"/>
                         </group>
                         <field name="mass_keep_log" invisible="1"/>
                     </group>

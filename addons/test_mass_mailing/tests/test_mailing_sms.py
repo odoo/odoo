@@ -147,6 +147,22 @@ class TestMassSMSInternals(TestMassSMSCommon):
              for record in falsy_record_1 + falsy_record_2],
             mailing, falsy_record_1 + falsy_record_2,
         )
+        self.assertEqual(mailing.canceled, 5)
+
+        # Same test using bypass_blacklist = True
+        mailing = mailing.copy()
+        mailing.bypass_blacklist = True
+        with self.with_user('user_marketing'):
+            with self.mockSMSGateway():
+                mailing.action_send_sms()
+
+        self.assertSMSTraces(
+            [{'partner': bl_record_1.customer_id,
+              'number': phone_validation.phone_format(bl_record_1.phone_nbr, 'BE', '32', force_format='E164'),
+              'content': 'Dear %s this is a mass SMS' % bl_record_1.display_name}],
+            mailing, bl_record_1,
+        )
+        self.assertEqual(mailing.canceled, 4)
 
     @users('user_marketing')
     def test_mass_sms_internals_done_ids(self):

@@ -236,7 +236,7 @@ class Mailing(models.Model):
             'mailing_id': self.id,
             'mass_keep_log': self.keep_archives,
             'mass_force_send': self.sms_force_send,
-            'mass_use_blacklist': not self.bypass_blacklist,
+            'mass_bypass_blacklist': self.bypass_blacklist,
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
         }
 
