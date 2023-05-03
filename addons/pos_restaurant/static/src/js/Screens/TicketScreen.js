@@ -88,6 +88,9 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         }
         await _super(...arguments);
     },
+    shouldAddDefaultOrder() {
+        return (this._super() || (this.env.pos.config.module_pos_restaurant && !this.env.pos.config.is_table_management));
+    },
     async setTip(order, serverId, amount) {
         try {
             const paymentline = order.get_paymentlines()[0];

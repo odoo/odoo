@@ -147,10 +147,18 @@ export class TicketScreen extends IndependentToOrderScreen {
                 this._selectNextOrder(order);
             }
             this.env.pos.removeOrder(order);
+
+            if (!this.env.pos.get_order_list().length && this.shouldAddDefaultOrder()) {
+                // Make sure that there is at least one order when we leave the ticket screen
+                this.env.pos.add_new_order();
+            }
         }
         if (this.env.pos.isOpenOrderShareable()) {
             this.env.pos._removeOrdersFromServer();
         }
+    }
+    shouldAddDefaultOrder() {
+        return !this.env.pos.config.module_pos_restaurant;
     }
     async onNextPage() {
         if (this._state.syncedOrders.currentPage < this._getLastPage()) {
