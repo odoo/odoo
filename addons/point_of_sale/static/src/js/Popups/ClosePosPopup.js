@@ -34,6 +34,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             displayMoneyDetailsPopup: false,
         });
         Object.assign(this.state, this.props.info.state);
+        this.action = "Cash control - closing";
     }
     //@override
     async confirm() {
@@ -70,11 +71,15 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async openDetailsPopup() {
+        if (this.env.pos.config.iface_cashdrawer) {
+            this.posOpenCashbox();
+        }
         const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount
                 ? 0
                 : this.state.payments[this.defaultCashDetails.id].counted,
+            action: this.action,
         });
         if (confirmed) {
             const { total, moneyDetailsNotes, moneyDetails } = payload;
@@ -90,6 +95,14 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
         }
+    }
+    async posOpenCashbox() {
+        this.hardwareProxy.printer.openCashbox();
+        await this.orm.call("pos.session", "cash_drawer_open_log", [
+            this.pos.globalState.pos_session.id,
+            this.env.pos.cashier ? this.env.pos.cashier.id : this.env.pos.user.id,
+            this.action,
+        ]);
     }
     async downloadSalesReport() {
         return this.report.download("point_of_sale.sale_details_report", [

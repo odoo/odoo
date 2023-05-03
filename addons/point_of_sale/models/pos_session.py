@@ -2124,6 +2124,12 @@ class PosSession(models.Model):
             fiscal_position['fiscal_position_taxes_by_id'] = {tax_id: fiscal_position_by_id[tax_id] for tax_id in fiscal_position['tax_ids']}
 
         return fps
+    def cash_drawer_open_log(self, employee, action):
+        partner_id = self.env['hr.employee'].browse(employee).work_contact_id.id
+        self.message_post(body='Cash drawer opened ({ACTION})'.format(ACTION = action), author_id=partner_id)
+    def cash_drawer_close_log(self, employee, action):
+        partner_id = self.env['hr.employee'].browse(employee).work_contact_id.id
+        self.message_post(body='Action cancelled ({ACTION})'.format(ACTION = action), author_id=partner_id)
 
 class ProcurementGroup(models.Model):
     _inherit = 'procurement.group'

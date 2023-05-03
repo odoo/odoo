@@ -21,6 +21,8 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         });
         this.popup = useService("popup");
         this.orm = useService("orm");
+        this.hardwareProxy = useService("hardware_proxy");
+        this.action = "Cash control - opening";
     }
     //@override
     async confirm() {
@@ -34,9 +36,13 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         super.confirm();
     }
     async openDetailsPopup() {
+        if (this.env.pos.config.iface_cashdrawer) {
+            this.posOpenCashbox();
+        }
         const { confirmed, payload } = await this.popup.add(MoneyDetailsPopup, {
             moneyDetails: this.moneyDetails,
             total: this.manualInputCashCount ? 0 : this.state.openingCash,
+            action: this.action,
         });
         if (confirmed) {
             const { total, moneyDetails, moneyDetailsNotes } = payload;
@@ -47,6 +53,14 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
             this.manualInputCashCount = false;
             this.moneyDetails = moneyDetails;
         }
+    }
+    async posOpenCashbox() {
+        this.hardwareProxy.printer.openCashbox();
+        await this.orm.call("pos.session", "cash_drawer_open_log", [
+            this.pos.globalState.pos_session.id,
+            this.env.pos.cashier ? this.env.pos.cashier.id : this.env.pos.user.id,
+            this.action,
+        ]);
     }
     handleInputChange() {
         this.manualInputCashCount = true;

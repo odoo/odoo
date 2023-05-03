@@ -101,4 +101,14 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         this.state.errorMessage = "";
         this.amountInput.el.focus();
     }
+    async cancel() {
+        if (this.env.pos.config.iface_cashdrawer) {
+            await this.orm.call("pos.session", "cash_drawer_close_log", [
+                this.pos.globalState.pos_session.id,
+                this.env.pos.cashier ? this.env.pos.cashier.id : this.env.pos.user.id,
+                "Cash in / out",
+            ]);
+        }
+        super.cancel();
+    }
 }

@@ -37,6 +37,7 @@ export class Navbar extends Component {
         this.hardwareProxy = useService("hardware_proxy");
         this.state = useState({ isMenuOpened: false });
         useExternalListener(window, "mouseup", this.onOutsideClick);
+        this.orm = useService("orm");
     }
 
     onOutsideClick() {
@@ -50,9 +51,19 @@ export class Navbar extends Component {
     }
 
     onCashMoveButtonClick() {
+        if (this.env.pos.config.iface_cashdrawer) {
+            this.onCashMoveButtonClickLog();
+        }
         this.popup.add(CashMovePopup);
     }
-
+    async onCashMoveButtonClickLog() {
+        this.hardwareProxy.printer.openCashbox();
+        await this.orm.call("pos.session", "cash_drawer_open_log", [
+            this.pos.globalState.pos_session.id,
+            this.env.pos.cashier ? this.env.pos.cashier.id : this.env.pos.user.id,
+            "Cash in / out",
+        ]);
+    }
     async onTicketButtonClick() {
         if (this.isTicketScreenShown) {
             this.pos.closeScreen();
