@@ -21,12 +21,17 @@ class ResPartner(models.Model):
             ('partner_id', 'in', self.ids),
             ('date_order', '>', fields.Date.today() - timedelta(365)),
             ('qty_received', '!=', 0),
-            ('order_id.state', 'in', ['done', 'purchase'])
-        ]).filtered(lambda l: l.product_id.sudo().product_tmpl_id.type != 'service')
+            ('order_id.state', 'in', ['done', 'purchase']),
+            ('product_id', 'in', self.env['product.product'].sudo()._search([('type', '!=', 'service')]))
+        ])
         lines_qty_done = defaultdict(lambda: 0)
         moves = self.env['stock.move'].search([
             ('purchase_line_id', 'in', order_lines.ids),
-            ('state', '=', 'done')]).filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
+            ('state', '=', 'done')])
+        # Fetch fields from db and put them in cache.
+        order_lines.read(['date_planned', 'partner_id', 'product_uom_qty'], load='')
+        moves.read(['purchase_line_id', 'date'], load='')
+        moves = moves.filtered(lambda m: m.date.date() <= m.purchase_line_id.date_planned.date())
         for move, qty_done in zip(moves, moves.mapped('quantity_done')):
             lines_qty_done[move.purchase_line_id.id] += qty_done
         partner_dict = {}
