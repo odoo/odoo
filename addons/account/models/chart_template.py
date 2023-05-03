@@ -14,7 +14,6 @@ from psycopg2.extras import Json
 
 from odoo import Command, _, models, api
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
-from odoo.addons.account import SYSCOHADA_LIST
 from odoo.exceptions import AccessError, UserError
 from odoo.modules import get_resource_from_path
 from odoo.tools import file_open, get_lang, groupby, SQL
@@ -117,7 +116,6 @@ class AccountChartTemplate(models.AbstractModel):
             (template_code, template['name'])
             for template_code, template in sorted(chart_template_mapping.items(), key=(lambda t: (
                 t[1]['name'] != 'generic_coa' if not country
-                else t[1]['name'] != 'syscohada' if country.code in SYSCOHADA_LIST
                 else t[1]['country_id'] != country.id
             )))
         ]
