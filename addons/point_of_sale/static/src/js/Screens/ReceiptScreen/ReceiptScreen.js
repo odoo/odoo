@@ -5,7 +5,7 @@ import { AbstractReceiptScreen } from "@point_of_sale/js/Misc/AbstractReceiptScr
 import { OfflineErrorPopup } from "@point_of_sale/js/Popups/OfflineErrorPopup";
 import { registry } from "@web/core/registry";
 import { OrderReceipt } from "./OrderReceipt";
-import { onMounted, useRef, status, useState } from "@odoo/owl";
+import { onMounted, useRef, status, useState, onWillStart } from "@odoo/owl";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { useService } from "@web/core/utils/hooks";
 import { BasePrinter } from "@point_of_sale/app/printer/base_printer";
@@ -44,11 +44,13 @@ export class ReceiptScreen extends AbstractReceiptScreen {
                     await this.handleAutoPrint();
                 }
             }, 0);
+        });
 
+        onWillStart(async () => {
             // When the order is paid, if there is still a part of the order
             // to send in preparation it is automatically sent
             if (this.pos.globalState.orderPreparationCategories.size) {
-                this.pos.sendOrderInPreparation(this.currentOrder);
+                await this.pos.sendOrderInPreparation(this.currentOrder);
             }
         });
     }
