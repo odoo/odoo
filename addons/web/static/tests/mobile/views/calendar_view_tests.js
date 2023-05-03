@@ -182,7 +182,9 @@ QUnit.module("Views", ({ beforeEach }) => {
         await swipeRight(target, ".o_calendar_widget");
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-11");
 
+        await click(target, ".o_other_calendar_panel");
         await click(target, ".o_calendar_button_today");
+        await click(target, ".o_other_calendar_panel");
         assert.equal(target.querySelector(".fc-day-header[data-date]").dataset.date, "2016-12-12");
     });
 
