@@ -258,6 +258,7 @@ class TestMassMailing(TestMassMailCommon):
         self.assertFalse(any(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
         self.assertTrue(all('bypassed_blacklist' not in message
                             for message in messages_sent.with_user(self.user_portal).sudo().message_format()))
+        self.assertTrue(all(message.get('mass_mode', False) for message in messages_sent.message_format()))
 
         # Same test but with the option bypass_blacklist set to True
         mailing = mailing.copy()
@@ -279,6 +280,7 @@ class TestMassMailing(TestMassMailCommon):
         self.assertTrue(all(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
         self.assertTrue(all('bypassed_blacklist' not in message
                             for message in messages_sent.with_user(self.user_portal).sudo().message_format()))
+        self.assertTrue(all(message.get('mass_mode', False) for message in messages_sent.message_format()))
 
 
     @users('user_marketing')

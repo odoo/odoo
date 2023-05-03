@@ -142,6 +142,7 @@ class Message(models.Model):
     has_error = fields.Boolean(
         'Has error', compute='_compute_has_error', search='_search_has_error')
     bypassed_blacklist = fields.Boolean('Blacklist Included')
+    mass_mode = fields.Boolean('Mass send mode enabled')
     # notifications
     notification_ids = fields.One2many(
         'mail.notification', 'mail_message_id', 'Notifications',
@@ -1038,7 +1039,7 @@ class Message(models.Model):
     def _get_message_format_fields(self):
         res = [
             'id', 'body', 'date', 'email_from',  # base message fields
-            'message_type', 'subtype_id', 'subject',  # message specific
+            'message_type', 'subtype_id', 'subject', 'mass_mode',  # message specific
             'model', 'res_id', 'record_name',  # document related
             'starred_partner_ids',  # list of partner ids for whom the message is starred
         ]

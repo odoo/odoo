@@ -2596,7 +2596,7 @@ class MailThread(models.AbstractModel):
                            author_id=None, email_from=None,
                            message_type='notification',
                            attachment_ids=False, tracking_value_ids=False,
-                           bypassed_blacklist=False):
+                           bypassed_blacklist=False, mass_mode=False):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2631,6 +2631,7 @@ class MailThread(models.AbstractModel):
             # recipients
             'bypassed_blacklist': bypassed_blacklist,
             'email_add_signature': False,  # False as no notification -> no need to compute signature
+            'mass_mode': mass_mode,
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
         }
@@ -2753,6 +2754,7 @@ class MailThread(models.AbstractModel):
             'is_internal',
             'mail_activity_type_id',
             'mail_server_id',
+            'mass_mode',
             'message_id',
             'message_type',
             'model',

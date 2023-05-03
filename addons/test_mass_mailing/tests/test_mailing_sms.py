@@ -153,6 +153,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
         self.assertEqual(mailing.canceled, 5)
         messages_sent = self.env['sms.sms'].sudo().search([('mailing_id', '=', mailing.id)]).mail_message_id
         self.assertFalse(any(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
+        self.assertTrue(all(message.get('mass_mode', False) for message in messages_sent.message_format()))
 
         # Same test using bypass_blacklist = True
         mailing = mailing.copy()
@@ -170,6 +171,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
         self.assertEqual(mailing.canceled, 4)
         messages_sent = self.env['sms.sms'].sudo().search([('mailing_id', '=', mailing.id)]).mail_message_id
         self.assertTrue(all(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
+        self.assertTrue(all(message.get('mass_mode', False) for message in messages_sent.message_format()))
 
     @users('user_marketing')
     def test_mass_sms_internals_done_ids(self):

@@ -43,6 +43,8 @@ export class Message {
     parentMessage;
     /** @type {MessageReactions[]} */
     reactions = [];
+    /** @type {boolean} */
+    mass_mode;
     /** @type {Notification[]} */
     notifications = [];
     /** @type {import("@mail/core/persona_model").Persona[]} */
