@@ -5,6 +5,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
     const Registries = require('point_of_sale.Registries');
     const { _lt } = require('@web/core/l10n/translation');
     const { parse } = require('web.field_utils');
+    const { useValidateCashInput } = require('point_of_sale.custom_hooks');
 
     const { useRef, useState } = owl;
 
@@ -16,8 +17,10 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
                 inputAmount: '',
                 inputReason: '',
                 inputHasError: false,
+                parsedAmount: 0,
             });
             this.inputAmountRef = useRef('input-amount-ref');
+            useValidateCashInput('input-amount-ref');
         }
         confirm() {
             try {
@@ -52,6 +55,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
                 event.preventDefault();
                 this.state.inputAmount = this.state.inputType === 'out' ? this.state.inputAmount.substring(1) : `-${this.state.inputAmount}`;
                 this.state.inputType = this.state.inputType === 'out' ? 'in' : 'out';
+                this.handleInputChange();
             }
         }
         onClickButton(type) {
@@ -64,6 +68,7 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
             this.state.inputType = type;
             this.state.inputHasError = false;
             this.inputAmountRef.el && this.inputAmountRef.el.focus();
+            this.handleInputChange();
         }
         getPayload() {
             return {
@@ -71,6 +76,10 @@ odoo.define('point_of_sale.CashMovePopup', function (require) {
                 reason: this.state.inputReason.trim(),
                 type: this.state.inputType,
             };
+        }
+        handleInputChange() {
+            if (this.inputAmountRef.el.classList.contains('invalid-cash-input')) return;
+            this.state.parsedAmount = parse.float(this.state.inputAmount);
         }
     }
     CashMovePopup.template = 'point_of_sale.CashMovePopup';
