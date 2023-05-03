@@ -1301,10 +1301,6 @@ class MassMailing(models.Model):
         mailing_domain = []
         if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
             mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
-
-        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
-
         return mailing_domain
 
     def _parse_mailing_domain(self):

@@ -78,8 +78,7 @@ class TestMassMailValues(MassMailCommon):
         self.assertEqual(mailing.mailing_model_real, 'res.partner')
         self.assertEqual(mailing.reply_to_mode, 'new')
         self.assertEqual(mailing.reply_to, self.user_marketing.email_formatted)
-        # default for partner: remove blacklisted
-        self.assertEqual(literal_eval(mailing.mailing_domain), [('is_blacklisted', '=', False)])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [])
         # update domain
         mailing.write({
             'mailing_domain': [('email', 'ilike', 'test.example.com')]
@@ -122,8 +121,7 @@ class TestMassMailValues(MassMailCommon):
             'body_html': '<p>Hello <t t-out="object.name"/></p>',
             'mailing_model_id': self.env['ir.model']._get('res.partner').id,
         })
-        # default for partner: remove blacklisted
-        self.assertEqual(literal_eval(mailing.mailing_domain), [('is_blacklisted', '=', False)])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [])
 
         # prepare initial data
         filter_1, filter_2, filter_3 = self.env['mailing.filter'].create([

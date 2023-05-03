@@ -30,7 +30,7 @@ class TestMassSMSInternals(TestMassSMSCommon):
             'mailing_model_id': self.env['ir.model']._get('mail.test.sms.bl').id,
             'mailing_type': 'sms',
         })
-        self.assertEqual(literal_eval(mailing.mailing_domain), [('phone_sanitized_blacklisted', '=', False)])
+        self.assertEqual(literal_eval(mailing.mailing_domain), [])
 
     @users('user_marketing')
     def test_mass_sms_internals(self):
