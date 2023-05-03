@@ -3900,7 +3900,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "first record",
-            "should have the display name of the record as  title"
+            "should have the display name of the record as title"
         );
         await click(target.querySelector(".o_form_button_create"));
         assert.strictEqual(
@@ -4187,16 +4187,16 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "first record",
-            "should have the display name of the record as  title"
+            "should have the display name of the record as title"
         );
 
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Duplicate");
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "first record (copy)",
             "should have duplicated the record"
         );
@@ -4237,9 +4237,9 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "first record",
-            "should have the display name of the record as  title"
+            "should have the display name of the record as title"
         );
         assert.containsOnce(target, ".o_cp_action_menus");
         await toggleActionMenu(target);
@@ -4343,15 +4343,14 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "second record",
             "should have correct display_name"
         );
         await editInput(target, ".o_field_widget[name=name] input", "some other name");
-
         await click(target.querySelector(".oe_stat_button"));
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb").textContent,
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "GOLDORAK",
             "should have correct display_name"
         );
@@ -5042,20 +5041,17 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
 
         await editInput(target, ".o_field_widget[name=foo] input", "");
         await click(target.querySelector(".o_pager_next"));
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.strictEqual(
-            target.querySelector(".breadcrumb-item > span").innerText,
-            "first record"
-        );
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item > .o_form_status_indicator").innerText.trim(),
-            "Unable to save"
+            target.querySelector(".o_form_status_indicator .text-danger").dataset.tooltip,
+            "Unable to save. Correct the issue or discard changes"
         );
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
@@ -11406,24 +11402,24 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
 
         await click(target.querySelector(".o_data_row td.o_data_cell"));
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "first record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnerfirst record"
+        );
 
         await editInput(target, ".o_field_widget[name='name'] input", "aaa");
 
         await click(target.querySelector(".breadcrumb-item.o_back_button"));
 
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partner");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").textContent, "Partner");
         assert.strictEqual(target.querySelector(".o_field_cell").textContent, "aaa");
 
         await click(target.querySelector(".o_data_row td.o_data_cell"));
         assert.containsOnce(target, ".o_form_editable");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "first record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnerfirst record"
+        );
         assert.strictEqual(target.querySelector('.o_field_widget[name="name"] input').value, "aaa");
     });
 
@@ -11549,7 +11545,7 @@ QUnit.module("Views", (hooks) => {
 
         await doAction(webClient, 2, { clearBreadcrumbs: true });
 
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Other action");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").textContent, "Other action");
 
         await doAction(webClient, 1, { clearBreadcrumbs: true });
 
@@ -11766,7 +11762,7 @@ QUnit.module("Views", (hooks) => {
 
         // Return in the list view to detach the form view
         await click(target.querySelector(".o_back_button"));
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partner");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").textContent, "Partner");
 
         // Simulate tab/browser close in the list
         window.dispatchEvent(new Event("beforeunload"));
