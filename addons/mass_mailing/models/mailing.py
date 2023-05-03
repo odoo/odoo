@@ -1052,7 +1052,12 @@ class MassMailing(models.Model):
         return url
 
     def action_send_mail(self, res_ids=None):
-        author_id = self.env.user.partner_id.id
+        current_partner_id = self.env.user.partner_id.id
+        if self.env['ir.model.data']._xmlid_to_res_id('base.partner_root') == current_partner_id:
+            # If current user is odoobot, take mailing responsible as author
+            author_id = self.user_id.partner_id.id
+        else:
+            author_id = current_partner_id
 
         for mailing in self:
             context_user = mailing.user_id or mailing.write_uid or self.env.user
