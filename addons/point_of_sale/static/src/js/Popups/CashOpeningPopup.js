@@ -2,6 +2,8 @@
 
 import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePopup";
 import Registries from "@point_of_sale/js/Registries";
+import { parse } from "web.field_utils";
+import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
 
 const { useState } = owl;
 
@@ -14,6 +16,7 @@ class CashOpeningPopup extends AbstractAwaitablePopup {
             notes: "",
             openingCash: this.env.pos.pos_session.cash_register_balance_start || 0,
         });
+        useValidateCashInput("openingCashInput", this.env.pos.pos_session.cash_register_balance_start);
     }
     //@override
     async confirm() {
@@ -41,13 +44,10 @@ class CashOpeningPopup extends AbstractAwaitablePopup {
             this.moneyDetails = moneyDetails;
         }
     }
-    handleInputChange() {
+    handleInputChange(event) {
+        if (event.target.classList.contains('invalid-cash-input')) return;
         this.manualInputCashCount = true;
-        this.moneyDetails = null;
-        this.state.notes = "";
-        if (typeof this.state.openingCash !== "number") {
-            this.state.openingCash = 0;
-        }
+        this.state.openingCash = parse.float(event.target.value);
     }
 }
 

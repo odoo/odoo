@@ -4,6 +4,8 @@ import AbstractAwaitablePopup from "@point_of_sale/js/Popups/AbstractAwaitablePo
 import Registries from "@point_of_sale/js/Registries";
 import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers";
 import { ConnectionLostError } from "@web/core/network/rpc_service";
+import { parse } from "web.field_utils";
+import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
 const { useState } = owl;
 
 class ClosePosPopup extends AbstractAwaitablePopup {
@@ -18,6 +20,14 @@ class ClosePosPopup extends AbstractAwaitablePopup {
             displayMoneyDetailsPopup: false,
         });
         Object.assign(this.state, this.props.info.state);
+        useValidateCashInput("closingCashInput");
+        if (this.otherPaymentMethods.length > 0) {
+            this.otherPaymentMethods.forEach(pm => {
+                if (this._getShowDiff(pm)) {
+                    useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
+                }
+            })
+        }
     }
     //@override
     async confirm() {
@@ -82,7 +92,8 @@ class ClosePosPopup extends AbstractAwaitablePopup {
             },
         });
     }
-    handleInputChange(paymentId) {
+    handleInputChange(paymentId, event) {
+        if (event.target.classList.contains('invalid-cash-input')) return;
         let expectedAmount;
         if (paymentId === this.defaultCashDetails.id) {
             this.manualInputCashCount = true;
@@ -92,6 +103,7 @@ class ClosePosPopup extends AbstractAwaitablePopup {
         } else {
             expectedAmount = this.otherPaymentMethods.find((pm) => paymentId === pm.id).amount;
         }
+        this.state.payments[paymentId].counted = parse.float(event.target.value);
         this.state.payments[paymentId].difference = this.env.pos.round_decimals_currency(
             this.state.payments[paymentId].counted - expectedAmount
         );
