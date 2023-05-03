@@ -8,7 +8,7 @@ from odoo.exceptions import AccessError
 class DiscussChannel(models.Model):
     _inherit = 'discuss.channel'
 
-    livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor')
+    livechat_visitor_id = fields.Many2one('website.visitor', string='Visitor', index='btree_not_null')
 
     def channel_pin(self, pinned=False):
         """ Override to clean an empty livechat channel.
