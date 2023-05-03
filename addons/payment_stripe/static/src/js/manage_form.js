@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import manageForm from "@payment/js/manage_form";
+import manageForm from '@payment/js/manage_form';
 import stripeMixin from '@payment_stripe/js/stripe_mixin';
 
 manageForm.include(stripeMixin);

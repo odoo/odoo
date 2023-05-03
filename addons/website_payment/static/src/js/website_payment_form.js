@@ -1,6 +1,6 @@
 /** @odoo-module **/
 
-import core from "@web/legacy/js/services/core";
+import core, from '@web/legacy/js/services/core';
 import checkoutForm from '@payment/js/checkout_form';
 import { _t } from "@web/core/l10n/translation";
 
@@ -61,6 +61,7 @@ checkoutForm.include({
         }
         return this._super(...arguments);
     },
+
     /**
      * Add params used by the donation snippet to the transaction route params.
      *
