@@ -168,33 +168,33 @@ class TestFrontend(odoo.tests.HttpCase):
 
     def test_01_pos_restaurant(self):
 
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
+        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
 
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync', login="demo")
 
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="admin")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'pos_restaurant_sync_second_login', login="demo")
 
         self.assertEqual(0, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'draft')]))
         self.assertEqual(1, self.env['pos.order'].search_count([('amount_total', '=', 2.2), ('state', '=', 'draft')]))
         self.assertEqual(2, self.env['pos.order'].search_count([('amount_total', '=', 4.4), ('state', '=', 'paid')]))
 
     def test_02_others(self):
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin")
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin")
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin")
+        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="demo")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="demo")
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="demo")
 
     def test_04_ticket_screen(self):
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="admin")
+        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="demo")
 
     def test_05_tip_screen(self):
         self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="admin")
+        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="demo")
 
         order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')])
         order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')])
@@ -209,5 +209,5 @@ class TestFrontend(odoo.tests.HttpCase):
         self.assertTrue(order5.is_tipped and order5.tip_amount == 0.00)
 
     def test_06_split_bill_screen(self):
-        self.pos_config.with_user(self.env.ref('base.user_admin')).open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="admin")
+        self.pos_config.with_user(self.env.ref('base.user_demo')).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour2', login="demo")
