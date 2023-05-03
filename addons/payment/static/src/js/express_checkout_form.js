@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import core from "@web/legacy/js/services/core";
+import core from '@web/legacy/js/services/core';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
 publicWidget.registry.PaymentExpressCheckoutForm = publicWidget.Widget.extend({

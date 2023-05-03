@@ -1,7 +1,7 @@
 /** @odoo-module */
 /* global Stripe */
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from '@web/core/l10n/translation';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 
 export default {
@@ -63,7 +63,7 @@ export default {
 
         const tokenizationCheckbox = document.getElementById(
             `o_payment_provider_inline_${this.formType}_form_${paymentOptionId}`
-        ).querySelector("input[name='o_payment_save_as_token']");
+        ).querySelector('input[name="o_payment_save_as_token"]');
         if (this.formType === 'checkout' && tokenizationCheckbox) {
             // Disable the tokenization checkbox for non-compatible payment methods.
             paymentElement.addEventListener('change', ev => {
