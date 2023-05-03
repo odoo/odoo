@@ -1,37 +1,29 @@
-# -*- coding: utf-8 -*-
-from odoo import http
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo.addons.website_sale.controllers.delivery import WebsiteSaleDelivery
-from odoo.http import request
+from odoo.http import request, route
 
 
 class WebsiteSaleLoyaltyDelivery(WebsiteSaleDelivery):
 
-    @http.route()
-    def update_eshop_carrier(self, **post):
-        Monetary = request.env['ir.qweb.field.monetary']
-        result = super().update_eshop_carrier(**post)
-        order = request.website.sale_get_order()
-        free_shipping_lines = None
-
+    def _update_website_sale_delivery_return(self, order, **post):
         if order:
             order._update_programs_and_rewards()
             order.validate_taxes_on_sales_order()
+        result = super()._update_website_sale_delivery_return(order, **post)
+        if order:
             free_shipping_lines = order._get_free_shipping_lines()
-
-        if free_shipping_lines:
-            currency = order.currency_id
-            amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
-            result.update({
-                'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
-                'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
-                'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
-                'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
-                'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
-                'new_amount_total_raw': order.amount_total,
-            })
+            if free_shipping_lines:
+                Monetary = request.env['ir.qweb.field.monetary']
+                currency = order.currency_id
+                amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))
+                result.update({
+                    'new_amount_delivery': Monetary.value_to_html(0.0, {'display_currency': currency}),
+                    'new_amount_order_discounted': Monetary.value_to_html(order.reward_amount - amount_free_shipping, {'display_currency': currency}),
+                })
         return result
 
-    @http.route()
+    @route()
     def cart_carrier_rate_shipment(self, carrier_id, **kw):
         Monetary = request.env['ir.qweb.field.monetary']
         order = request.website.sale_get_order(force_create=True)
