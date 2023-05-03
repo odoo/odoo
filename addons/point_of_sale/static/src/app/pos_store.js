@@ -57,11 +57,13 @@ export class PosStore extends Reactive {
     }
 
     // Now the printer should work in PoS without restaurant
-    async sendOrderInPreparation(order) {
+    async sendOrderInPreparation(order, cancelled = false) {
         if (this.globalState.printers_category_ids_set.size) {
             try {
-                if (order.hasChangesToPrint()) {
-                    const isPrintSuccessful = await order.printChanges();
+                const changes = order.changesToOrder(cancelled);
+
+                if (changes.cancelled.length > 0 || changes.new.length > 0) {
+                    const isPrintSuccessful = await order.printChanges(cancelled);
                     if (!isPrintSuccessful) {
                         this.popup.add(ErrorPopup, {
                             title: _t("Printing failed"),

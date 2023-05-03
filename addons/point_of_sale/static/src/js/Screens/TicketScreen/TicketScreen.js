@@ -148,6 +148,9 @@ export class TicketScreen extends IndependentToOrderScreen {
         }
         const { globalState } = this.pos;
         if (order && (await this._onBeforeDeleteOrder(order))) {
+            if (Object.keys(order.lastOrderPrepaChange).length > 0) {
+                await this.pos.sendOrderInPreparation(order, true);
+            }
             if (order === globalState.get_order()) {
                 this._selectNextOrder(order);
             }
