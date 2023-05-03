@@ -190,6 +190,14 @@ export class HardwareProxy extends EventBus {
     log() {
         return this.message("log", { arguments: [...arguments] });
     }
+    async openCashbox(action = false) {
+        if (this.pos.config.iface_cashdrawer && this.connectionInfo.status === "connected") {
+            this.printer.openCashbox();
+            if (action) {
+                this.pos.logEmployeeMessage(action, "CASH_DRAWER_ACTION");
+            }
+        }
+    }
 }
 
 export const hardwareProxyService = {

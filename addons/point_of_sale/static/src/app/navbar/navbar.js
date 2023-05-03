@@ -13,6 +13,7 @@ import { TicketScreen } from "@point_of_sale/js/Screens/TicketScreen/TicketScree
 import { BackButton } from "@point_of_sale/app/navbar/BackButton";
 import { Component, useState, useExternalListener } from "@odoo/owl";
 import { ClosePosPopup } from "@point_of_sale/js/Popups/ClosePosPopup";
+import { _t } from "@web/core/l10n/translation";
 
 export class Navbar extends Component {
     static template = "point_of_sale.Navbar";
@@ -50,9 +51,9 @@ export class Navbar extends Component {
     }
 
     onCashMoveButtonClick() {
+        this.hardwareProxy.openCashbox(_t("Cash in / out"));
         this.popup.add(CashMovePopup);
     }
-
     async onTicketButtonClick() {
         if (this.isTicketScreenShown) {
             this.pos.closeScreen();

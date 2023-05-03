@@ -108,4 +108,13 @@ export class CashMovePopup extends AbstractAwaitablePopup {
         this.state.errorMessage = "";
         this.amountInput.el.focus();
     }
+    async cancel() {
+        super.cancel();
+        if (
+            this.pos.globalState.config.iface_cashdrawer &&
+            this.pos.globalState.hardwareProxy.connectionInfo.status === "connected"
+        ) {
+            this.pos.globalState.logEmployeeMessage(_t("Cash in / out"), "ACTION_CANCELLED");
+        }
+    }
 }

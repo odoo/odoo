@@ -147,7 +147,7 @@ export class PaymentScreen extends Component {
         this.currentOrder.set_to_invoice(!this.currentOrder.is_to_invoice());
     }
     openCashbox() {
-        this.hardwareProxy.printer.openCashbox();
+        this.hardwareProxy.openCashbox();
     }
     async addTip() {
         // click_tip
@@ -227,11 +227,8 @@ export class PaymentScreen extends Component {
     }
     async _finalizeValidation() {
         const { globalState } = this.pos;
-        if (
-            (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) &&
-            globalState.config.iface_cashdrawer
-        ) {
-            this.hardwareProxy.printer.openCashbox();
+        if (this.currentOrder.is_paid_with_cash() || this.currentOrder.get_change()) {
+            this.hardwareProxy.openCashbox();
         }
 
         this.currentOrder.initialize_validation_date();

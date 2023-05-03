@@ -56,6 +56,18 @@ patch(PosGlobalState.prototype, "pos_hr.PosGlobalState", {
         }
         return this._super(...arguments);
     },
+    async logEmployeeMessage(action, message) {
+        if (!this.config.module_pos_hr) {
+            this._super(...arguments);
+            return;
+        }
+        await this.orm.call("pos.session", "log_partner_message", [
+            this.pos_session.id,
+            this.cashier.work_contact_id,
+            action,
+            message,
+        ]);
+    },
 });
 
 patch(Order.prototype, "pos_hr.Order", {

@@ -1532,6 +1532,14 @@ export class PosGlobalState extends PosModel {
     switchPane() {
         this.mobile_pane = this.mobile_pane === "left" ? "right" : "left";
     }
+    async logEmployeeMessage(action, message) {
+        await this.orm.call("pos.session", "log_partner_message", [
+            this.pos_session.id,
+            this.user.partner_id.id,
+            action,
+            message,
+        ]);
+    }
 }
 PosGlobalState.prototype.electronic_payment_interfaces = {};
 

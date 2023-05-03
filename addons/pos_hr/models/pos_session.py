@@ -25,7 +25,7 @@ class PosSession(models.Model):
             domain = ['&', ('company_id', '=', self.config_id.company_id.id), '|', ('user_id', '=', self.user_id.id), ('id', 'in', self.config_id.employee_ids.ids)]
         else:
             domain = [('company_id', '=', self.config_id.company_id.id)]
-        return {'search_params': {'domain': domain, 'fields': ['name', 'id', 'user_id'], 'load': False}}
+        return {'search_params': {'domain': domain, 'fields': ['name', 'id', 'user_id', 'work_contact_id'], 'load': False}}
 
     def _get_pos_ui_hr_employee(self, params):
         employees = self.env['hr.employee'].search_read(**params['search_params'])
