@@ -3442,7 +3442,7 @@ class Properties(Field):
 
         if not values.get(self.definition_record):
             # container is not given in the value, can not find properties definition
-            return properties_values
+            return {}
 
         container_id = values[self.definition_record]
         if not isinstance(container_id, (int, BaseModel)):
@@ -3456,8 +3456,14 @@ class Properties(Field):
             container_id = env[container_model_name].browse(container_id)
 
         properties_definition = container_id[self.definition_record_field]
-        if not properties_definition:
-            return properties_values
+        if not (properties_definition or (
+            isinstance(properties_values, list)
+            and any(d.get('definition_changed') for d in properties_values)
+        )):
+            # If a parent is set without properties, we might want to change its definition
+            # when we create the new record. But if we just set the value without changing
+            # the definition, in that case we can just ignored the passed values
+            return {}
 
         assert isinstance(properties_values, (list, dict))
         if isinstance(properties_values, list):
