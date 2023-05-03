@@ -18,7 +18,7 @@ patch(Message.prototype, "mail/web", {
     },
 
     onClickAuthor(ev) {
-        if (this.message.author && !this.hasAuthorClickable && !this.hasOpenChatFeature) {
+        if (this.message.author && this.hasAuthorClickable && !this.hasOpenChatFeature) {
             this.messaging.openDocument({
                 model: "res.partner",
                 id: this.message.author.id,
