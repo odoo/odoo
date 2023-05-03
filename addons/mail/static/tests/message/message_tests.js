@@ -663,6 +663,33 @@ QUnit.test("redirect to author (open chat)", async (assert) => {
     assert.containsOnce($, ".o-mail-DiscussCategoryItem.o-active:contains(Demo)");
 });
 
+QUnit.test("open chat from avatar should not work on self-authored messages", async (assert) => {
+    const pyEnv = await startServer();
+    const [channelId] = pyEnv["discuss.channel"].create([
+        { name: "General" },
+        {
+            channel_member_ids: [[0, 0, { partner_id: pyEnv.currentPartnerId }]],
+            channel_type: "chat",
+        },
+    ]);
+    pyEnv["mail.message"].create({
+        author_id: pyEnv.currentPartnerId,
+        body: "not empty",
+        model: "discuss.channel",
+        res_id: channelId,
+    });
+    const { openDiscuss } = await start();
+    await openDiscuss(channelId);
+    assert.doesNotHaveClass($(".o-mail-Message-avatar"), "cursor-pointer");
+    assert.doesNotHaveClass($(".o-mail-Message-author"), "cursor-pointer");
+
+    // try to click on self, to test it doesn't work
+    click(".o-mail-Message-avatar").catch(() => {});
+    await nextAnimationFrame();
+    assert.containsNone($, ".o-mail-DiscussCategoryItem.o-active:contains(Mitchell Admin)");
+    assert.containsNone($, ".breadcrumb:contains(Mitchell Admin)"); // should not open form view neither
+});
+
 QUnit.test("toggle_star message", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({ name: "general" });
