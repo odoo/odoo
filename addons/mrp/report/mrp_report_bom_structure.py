@@ -351,7 +351,8 @@ class ReportBomStructure(models.AbstractModel):
                 continue
             capacity = operation.workcenter_id._get_capacity(product)
             operation_cycle = float_round(qty / capacity, precision_rounding=1, rounding_method='UP')
-            duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + (operation.workcenter_id.time_stop + operation.workcenter_id.time_start)
+            duration_expected = (operation_cycle * operation.time_cycle * 100.0 / operation.workcenter_id.time_efficiency) + \
+                                operation.workcenter_id._get_expected_duration(product)
             total = ((duration_expected / 60.0) * operation.workcenter_id.costs_hour)
             operations.append({
                 'type': 'operation',
