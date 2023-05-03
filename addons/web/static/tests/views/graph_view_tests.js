@@ -13,14 +13,11 @@ import {
     editFavoriteName,
     saveFavorite,
     switchView,
-    toggleComparisonMenu,
-    toggleFavoriteMenu,
-    toggleFilterMenu,
-    toggleGroupByMenu,
     toggleMenu,
     toggleMenuItem,
     toggleMenuItemOption,
     toggleSaveFavorite,
+    toggleSearchBarMenu,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
@@ -2289,7 +2286,7 @@ QUnit.module("Views", (hooks) => {
         await toggleMenuItem(target, "Revenue");
         assert.strictEqual(getYAxeLabel(graph), "Revenue");
         assert.ok(true, "Message");
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Color");
         checkModeIs(assert, graph, "line");
         assert.strictEqual(getXAxeLabel(graph), "Color");
@@ -2456,7 +2453,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         assert.containsNone(target, "div.o_view_nocontent");
         assert.containsNone(target, ".abc");
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "False Domain");
         assert.containsOnce(target, "div.o_graph_canvas_container canvas");
         assert.containsNone(target, "div.o_view_nocontent");
@@ -2481,7 +2478,7 @@ QUnit.module("Views", (hooks) => {
             `,
         });
         checkLabels(assert, graph, ["xphone", "xpad"]);
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Color");
         checkLabels(assert, graph, ["Undefined", "red"]);
     });
@@ -2557,7 +2554,7 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "First Favorite");
         await saveFavorite(target);
@@ -2565,23 +2562,21 @@ QUnit.module("Views", (hooks) => {
         await toggleMenu(target, "Measures");
         await toggleMenuItem(target, "Foo");
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "Second Favorite");
         await saveFavorite(target);
 
         await selectMode(target, "line");
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "Third Favorite");
         await saveFavorite(target);
 
-        await toggleGroupByMenu(target);
         await toggleMenuItem(target, "Product");
         await toggleMenuItem(target, "Color");
 
-        await toggleFavoriteMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "Fourth Favorite");
         await saveFavorite(target);
@@ -2748,7 +2743,7 @@ QUnit.module("Views", (hooks) => {
         checkLegend(assert, graph, "Count");
         assert.strictEqual(getYAxeLabel(graph), "Count");
         checkModeIs(assert, graph, "bar");
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Context");
         checkLegend(assert, graph, "Foo");
         assert.strictEqual(getYAxeLabel(graph), "Foo");
@@ -2777,7 +2772,7 @@ QUnit.module("Views", (hooks) => {
                 </search>
             `,
         });
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "False Domain");
     });
 
@@ -2809,7 +2804,7 @@ QUnit.module("Views", (hooks) => {
         checkDatasets(assert, graph, "data", { data: [82, 157] });
         assert.strictEqual(getXAxeLabel(graph), "Product");
         assert.strictEqual(getYAxeLabel(graph), "Foo");
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "False Domain");
         checkLabels(assert, graph, []);
         checkLegend(assert, graph, []);
@@ -2905,9 +2900,7 @@ QUnit.module("Views", (hooks) => {
         });
         await toggleMenu(target, "Measures");
         assert.deepEqual(
-            [...target.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
-                (el) => el.innerText
-            ),
+            [...target.querySelectorAll(".o-dropdown .o_menu_item")].map((el) => el.innerText),
             ["Foo", "Revenue", "Count"]
         );
     });
@@ -2950,9 +2943,7 @@ QUnit.module("Views", (hooks) => {
             });
             await toggleMenu(target, "Measures");
             assert.deepEqual(
-                [...target.querySelectorAll(".o_cp_bottom_left .o_menu_item")].map(
-                    (el) => el.innerText
-                ),
+                [...target.querySelectorAll(".o-dropdown .o_menu_item")].map((el) => el.innerText),
                 ["Bouh", "Foo", "Revenue", "Count"]
             );
         }
@@ -3119,7 +3110,7 @@ QUnit.module("Views", (hooks) => {
             views: [[false, "graph"]],
         });
         assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item.active").innerText,
+            target.querySelector(".o_control_panel .o_breadcrumb .active:first-child").innerText,
             "Glou glou"
         );
     });
@@ -3616,7 +3607,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "False Domain");
 
         assert.doesNotHaveClass(
@@ -3649,7 +3640,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsNone(target, ".o_view_nocontent");
         assert.containsOnce(target, ".o_graph_canvas_container canvas");
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "False Domain");
 
         assert.doesNotHaveClass(target, "o_view_sample_data");
@@ -3701,7 +3692,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
             checkLabels(assert, graph, ["2", "3", "4", "24", "42", "48", "53", "63"]);
-            await toggleGroupByMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "Foo");
             checkLabels(assert, graph, ["xphone", "xpad"]);
         }
@@ -3783,7 +3774,7 @@ QUnit.module("Views", (hooks) => {
 
             // Set a domain (this reload is delayed)
             def = makeDeferred();
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "My Filter");
 
             checkDatasets(assert, graph, ["data", "label"], {
@@ -3839,7 +3830,7 @@ QUnit.module("Views", (hooks) => {
 
         // Set a domain (this reload is delayed)
         def = makeDeferred();
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "My Filter");
 
         checkDatasets(assert, graph, ["data", "label"], {
@@ -3896,7 +3887,7 @@ QUnit.module("Views", (hooks) => {
         checkDatasets(assert, graph, "data", { data: [82, 157] });
 
         def = makeDeferred();
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Color");
         await toggleMenuItem(target, "Color");
         await toggleMenuItem(target, "Date");
@@ -3981,7 +3972,7 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        await toggleComparisonMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Date: Previous period");
 
         checkLabels(assert, graph, ["", ""]);
@@ -4015,7 +4006,7 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        await toggleComparisonMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Date: Previous period");
 
         checkDatasets(assert, graph, "backgroundColor", {
@@ -4072,7 +4063,7 @@ QUnit.module("Views", (hooks) => {
         checkLabels(assert, graph, ["Q1 2016", "Q2 2016", "Undefined"]);
         checkLegend(assert, graph, "Count");
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Favorite");
 
         checkModeIs(assert, graph, "bar");

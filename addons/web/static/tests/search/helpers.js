@@ -194,7 +194,7 @@ export function getMenuItemTexts(target) {
 }
 
 export function getButtons(el) {
-    return [...el.querySelector(`div.o_cp_bottom div.o_cp_buttons`).children];
+    return [...el.querySelectorAll(`div.o_control_panel_breadcrumbs button`)];
 }
 
 /** Filter menu */
@@ -278,7 +278,7 @@ export async function applyGroup(el) {
 }
 
 export async function groupByMenu(el, fieldName) {
-    await toggleGroupByMenu(el);
+    await toggleSearchBarMenu(el);
     await toggleAddCustomGroup(el);
     await selectGroup(el, fieldName);
     await applyGroup(el);

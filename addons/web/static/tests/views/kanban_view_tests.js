@@ -24,7 +24,7 @@ import {
     getPagerLimit,
     getPagerValue,
     pagerNext,
-    toggleFilterMenu,
+    toggleSearchBarMenu,
     validateSearch,
 } from "@web/../tests/search/helpers";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
@@ -431,7 +431,7 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("basic grouped rendering", async (assert) => {
-        assert.expect(14);
+        assert.expect(13);
 
         await makeView({
             type: "kanban",
@@ -457,12 +457,6 @@ QUnit.module("Views", (hooks) => {
                 }
             },
         });
-
-        assert.hasClass(
-            target.querySelector(".o_kanban_group"),
-            "bg-200",
-            "o_kanban_group should have a background"
-        );
         assert.hasClass(target.querySelector(".o_kanban_view"), "o_kanban_test");
         assert.hasClass(target.querySelector(".o_kanban_renderer"), "o_kanban_grouped");
         assert.containsN(target, ".o_kanban_group", 2);
@@ -711,7 +705,7 @@ QUnit.module("Views", (hooks) => {
                 [...target.querySelectorAll(".o_kanban_group")].map((el) =>
                     el.innerText.replace(/\s/g, " ")
                 ),
-                ["None (1)", "gold yop blip", "silver yop gnap"]
+                ["None 1", "gold yop blip", "silver yop gnap"]
             );
 
             await click(getColumn(0));
@@ -5432,7 +5426,7 @@ QUnit.module("Views", (hooks) => {
         assert.deepEqual(getFacetTexts(target), []);
 
         // validate presence of the search arch info
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         assert.containsOnce(target, ".o_filter_menu .o_menu_item");
     });
 
@@ -5891,7 +5885,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2, "should still have two columns");
         assert.strictEqual(
             getColumn(0).querySelector(".o_column_title").innerText,
-            "None (2)",
+            "None\n2",
             "first column should have no id (Undefined column)"
         );
 
@@ -6453,7 +6447,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsOnce(target, ".o_kanban_group.o_column_folded");
         assert.deepEqual(
             [...target.querySelectorAll(".o_kanban_group")].map((e) => e.textContent),
-            ["not folded", "folded (0)"]
+            ["not folded", "folded0"]
         );
     });
 
@@ -10100,14 +10094,15 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("keyboard navigation on kanban when the kanban has a oe_kanban_global_click class", async (assert) => {
-        assert.expect(1);
-        await makeView({
-            type: "kanban",
-            resModel: "partner",
-            serverData,
-            arch:
-                `<kanban>
+    QUnit.test(
+        "keyboard navigation on kanban when the kanban has a oe_kanban_global_click class",
+        async (assert) => {
+            assert.expect(1);
+            await makeView({
+                type: "kanban",
+                resModel: "partner",
+                serverData,
+                arch: `<kanban>
                     <templates>
                         <t t-name="kanban-box">
                             <div class="oe_kanban_global_click">
@@ -10117,18 +10112,19 @@ QUnit.module("Views", (hooks) => {
                         </t>
                     </templates>
                 </kanban>`,
-            selectRecord(recordId) {
-                assert.strictEqual(
-                    recordId,
-                    1,
-                    "should call its selectRecord prop with the selected record"
-                );
-            },
-        });
-        const firstCard = getCard(0);
-        firstCard.focus();
-        await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
-    });
+                selectRecord(recordId) {
+                    assert.strictEqual(
+                        recordId,
+                        1,
+                        "should call its selectRecord prop with the selected record"
+                    );
+                },
+            });
+            const firstCard = getCard(0);
+            firstCard.focus();
+            await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
+        }
+    );
 
     QUnit.test("set cover image", async (assert) => {
         assert.expect(10);
@@ -12194,13 +12190,13 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(getColumn(0), ".o_kanban_record", 2);
         assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo (2)");
+        assert.strictEqual(getColumn(1).innerText, "xmo\n2");
 
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
 
         assert.containsN(getColumn(0), ".o_kanban_record", 1);
         assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo (3)");
+        assert.strictEqual(getColumn(1).innerText, "xmo\n3");
     });
 
     QUnit.test("drag record on initially folded column should not unfold it", async (assert) => {
@@ -12228,13 +12224,13 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(getColumn(0), ".o_kanban_record", 2);
         assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo (2)");
+        assert.strictEqual(getColumn(1).innerText, "xmo\n2");
 
         await dragAndDrop(".o_kanban_group:first-child .o_kanban_record", ".o_column_folded");
 
         assert.containsN(getColumn(0), ".o_kanban_record", 1);
         assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "xmo (3)");
+        assert.strictEqual(getColumn(1).innerText, "xmo\n3");
     });
 
     QUnit.test("drag record to folded column, with progressbars", async (assert) => {
@@ -12274,7 +12270,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(getColumn(0), ".o_kanban_record", 2);
         assert.hasClass(getColumn(1), "o_column_folded");
-        assert.strictEqual(getColumn(1).innerText, "Yes (2)");
+        assert.strictEqual(getColumn(1).innerText, "Yes\n2");
 
         await dragAndDrop(
             ".o_kanban_group:first-child .o_kanban_record",
@@ -12282,7 +12278,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.containsOnce(getColumn(0), ".o_kanban_record");
-        assert.strictEqual(getColumn(1).innerText, "Yes (3)");
+        assert.strictEqual(getColumn(1).innerText, "Yes\n3");
         assert.deepEqual(
             getProgressBars(0).map((pb) => pb.style.width),
             ["100%"]
@@ -12493,8 +12489,8 @@ QUnit.module("Views", (hooks) => {
             assert.containsN(target, ".o_column_folded", 2);
 
             assert.strictEqual(
-                getNodesTextContent(target.querySelectorAll("span.o_column_title")).join(" "),
-                "hello (2) xmo (2)"
+                getNodesTextContent(target.querySelectorAll(".o_column_title")).join(" "),
+                "hello2 xmo2"
             );
 
             assert.containsNone(target, ".o_nocontent_help");
