@@ -26,8 +26,8 @@
                                 <tr>
                                     <td t-esc="defaultCashDetails.name"/>
                                     <td t-esc="env.utils.formatCurrency(defaultCashDetails.amount)"/>
-                                    <td class="flex" t-on-input="() => this.handleInputChange(defaultCashDetails.id)">
-                                        <input class="pos-input" type="number" t-model.number="state.payments[defaultCashDetails.id].counted" t-on-focus="ev=>ev.target.select()"/>
+                                    <td class="flex" t-on-input="(event) => this.handleInputChange(defaultCashDetails.id, event)">
+                                        <input class="pos-input" t-ref="closingCashInput" t-on-focus="ev=>ev.target.select()"/>
                                         <div class="button icon ClosePosPopup" t-on-click="openDetailsPopup">
                                             <i class="fa fa-money" role="img" title="Open the money details popup"/>
                                         </div>
@@ -65,7 +65,9 @@
                                 <td t-esc="pm.name"/>
                                 <td t-esc="env.utils.formatCurrency(pm.amount)"/>
                                 <t t-set="_showDiff" t-value="_getShowDiff(pm)" />
-                                <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)"><input class="pos-input" type="number" t-model.number="state.payments[pm.id].counted" t-on-focus="ev=>ev.target.select()"/></td>
+                                <td t-if="_showDiff" t-on-input="() => this.handleInputChange(pm.id)">
+                                    <input class="pos-input" t-ref="closingCashInput_{{pm.id}}" t-on-focus="ev=>ev.target.select()"/>
+                                </td>
                                 <td t-if="_showDiff" t-esc="env.utils.formatCurrency(state.payments[pm.id].difference)" t-att-class="{'warning': state.payments[pm.id].difference}"/>
                             </tr>
                         </tbody>

@@ -6,6 +6,8 @@ import { usePos } from "@point_of_sale/app/store/pos_hook";
 import { MoneyDetailsPopup } from "@point_of_sale/app/utils/money_details_popup/money_details_popup";
 import { useState } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
+import { parseFloat } from "@web/views/fields/parsers";
+import { useValidateCashInput } from "@point_of_sale/app/utils/hooks";
 
 export class CashOpeningPopup extends AbstractAwaitablePopup {
     static template = "point_of_sale.CashOpeningPopup";
@@ -24,6 +26,7 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
         this.orm = useService("orm");
         useAutofocus({ refName: "cash-input" });
         this.hardwareProxy = useService("hardware_proxy");
+        useValidateCashInput("cash-input", this.pos.pos_session.cash_register_balance_start);
     }
     //@override
     async confirm() {
@@ -54,12 +57,9 @@ export class CashOpeningPopup extends AbstractAwaitablePopup {
             this.moneyDetails = moneyDetails;
         }
     }
-    handleInputChange() {
+    handleInputChange(event) {
+        if (event.target.classList.contains('invalid-cash-input')) return;
         this.manualInputCashCount = true;
-        this.moneyDetails = null;
-        this.state.notes = "";
-        if (typeof this.state.openingCash !== "number") {
-            this.state.openingCash = 0;
-        }
+        this.state.openingCash = parseFloat(event.target.value);
     }
 }

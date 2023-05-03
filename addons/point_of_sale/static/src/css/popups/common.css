@@ -30,3 +30,24 @@
 .pos .popup .footer-flex .button {
     margin-right: 0;
 }
+
+.pos .popup .invalid-cash-input {
+    color: red;
+    animation: blink 0.5s linear;
+    animation-iteration-count: 2;
+    border: 1px solid red;
+    box-shadow: none !important;
+}
+
+.pos .popup .invalid-cash-input:focus {
+    border-color: red;
+}
+
+@keyframes blink {
+    0%, 100% {
+        border-color: red;
+    }
+    50% {
+        border-color: transparent;
+    }
+}
