@@ -240,6 +240,43 @@ QUnit.module("Record Component", (hooks) => {
         assert.strictEqual(target.querySelector("[name='foo'] input").value, "753");
     });
 
+    QUnit.test("provides a way to handle before/after saved the record", async function (assert) {
+        class Parent extends Component {
+            onRecordSaved(record) {
+                assert.step("onRecordSaved");
+            }
+
+            onWillSaveRecord(record) {
+                assert.step("onWillSaveRecord");
+            }
+        }
+        Parent.components = { Record, Field };
+        Parent.template = xml`
+            <Record resModel="'partner'" resId="1" fieldNames="['foo']" mode="'edit'" t-slot-scope="data" onRecordSaved="onRecordSaved" onWillSaveRecord="onWillSaveRecord">
+                <button class="save" t-on-click="() => data.record.save()">Save</button>
+                <Field name="'foo'" record="data.record"/>
+            </Record>`;
+
+        const env = await makeTestEnv({
+            serverData,
+            mockRPC(route, args) {
+                assert.step(args.method);
+            },
+        });
+        await mount(Parent, target, { env });
+
+        await editInput(target, "[name='foo'] input", "abc");
+        await click(target, "button.save");
+        assert.verifySteps([
+            "fields_get",
+            "read",
+            "onWillSaveRecord",
+            "write",
+            "read",
+            "onRecordSaved",
+        ]);
+    });
+
     QUnit.test("handles many2one fields", async function (assert) {
         patchWithCleanup(browser, {
             setTimeout: (fn) => fn(),
