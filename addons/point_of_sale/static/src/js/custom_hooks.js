@@ -3,7 +3,9 @@ import { OfflineErrorPopup } from "./Popups/OfflineErrorPopup";
 import { ConfirmPopup } from "./Popups/ConfirmPopup";
 import { ErrorTracebackPopup } from "./Popups/ErrorTracebackPopup";
 import { ErrorPopup } from "./Popups/ErrorPopup";
-import { useEnv, onMounted, onPatched, useComponent, useRef } from "@odoo/owl";
+import { useEnv, onMounted, onPatched, onWillUnmount, useComponent, useRef } from "@odoo/owl";
+import { useService } from "@web/core/utils/hooks";
+import { escapeRegExp } from '@web/core/utils/strings';
 
 /**
  * Introduce error handlers in the component.
@@ -92,4 +94,44 @@ export function useAutoFocusToLast() {
     }
     onMounted(autofocus);
     onPatched(autofocus);
+}
+
+export function useValidateCashInput(inputRef, startingValue) {
+    const cashInput = useRef(inputRef);
+    const localization = useService("localization");
+    const decimalPoint = localization.decimalPoint;
+    const thousandsSep = localization.thousandsSep;
+    // Replace the thousands separator and decimal point with regex-escaped versions
+    const escapedDecimalPoint = escapeRegExp(decimalPoint);
+    let floatRegex;
+    if (thousandsSep) {
+        const escapedThousandsSep = escapeRegExp(thousandsSep);
+        floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+    } else {
+        floatRegex = new RegExp(`^-?(?:\\d+)?(?:${escapedDecimalPoint}\\d*)?$`);
+    }
+    function isValidFloat(inputValue) {
+        return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
+    }
+    function handleCashInputChange(event) {
+        let inputValue = (event.target.value || "").trim();
+
+        // Check if the current input value is a valid float
+        if (!isValidFloat(inputValue)) {
+            event.target.classList.add('invalid-cash-input');
+        } else {
+            event.target.classList.remove('invalid-cash-input');
+        }
+    }
+    onMounted(() => {
+        if (cashInput.el) {
+            cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+            cashInput.el.addEventListener("input", handleCashInputChange);
+        }
+    });
+    onWillUnmount(() => {
+        if (cashInput.el) {
+            cashInput.el.removeEventListener("input", handleCashInputChange);
+        }
+    })
 }

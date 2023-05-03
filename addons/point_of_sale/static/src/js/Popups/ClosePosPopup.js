@@ -13,6 +13,8 @@ import { identifyError } from "@point_of_sale/app/error_handlers/error_handlers"
 import { _t } from "@web/core/l10n/translation";
 import { usePos } from "@point_of_sale/app/pos_hook";
 import { sprintf } from "@web/core/utils/strings";
+import { parseFloat } from "@web/views/fields/parsers";
+import { useValidateCashInput } from "@point_of_sale/js/custom_hooks";
 
 export class ClosePosPopup extends AbstractAwaitablePopup {
     static components = { SaleDetailsButton };
@@ -34,6 +36,14 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             displayMoneyDetailsPopup: false,
         });
         Object.assign(this.state, this.props.info.state);
+        useValidateCashInput("closingCashInput");
+        if (this.otherPaymentMethods && this.otherPaymentMethods.length > 0) {
+            this.otherPaymentMethods.forEach(pm => {
+                if (this._getShowDiff(pm)) {
+                    useValidateCashInput("closingCashInput_" + pm.id, this.state.payments[pm.id].counted);
+                }
+            })
+        }
     }
     //@override
     async confirm() {
@@ -96,7 +106,8 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
             this.pos.globalState.pos_session.id,
         ]);
     }
-    handleInputChange(paymentId) {
+    handleInputChange(paymentId, event) {
+        if (event.target.classList.contains('invalid-cash-input')) return;
         let expectedAmount;
         if (paymentId === this.defaultCashDetails.id) {
             this.manualInputCashCount = true;
@@ -106,6 +117,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         } else {
             expectedAmount = this.otherPaymentMethods.find((pm) => paymentId === pm.id).amount;
         }
+        this.state.payments[paymentId].counted = parseFloat(event.target.value);
         this.state.payments[paymentId].difference = this.env.utils.roundCurrency(
             this.state.payments[paymentId].counted - expectedAmount
         );
