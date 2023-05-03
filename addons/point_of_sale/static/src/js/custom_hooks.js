@@ -1,5 +1,6 @@
 /** @odoo-module */
-const { onMounted, onPatched, onWillUnmount, useComponent } = owl;
+const { onMounted, onPatched, onWillUnmount, useComponent, useRef } = owl;
+import { escapeRegExp } from '@web/core/utils/strings';
 
 /**
  * Introduce error handlers in the component.
@@ -113,4 +114,37 @@ export function useBarcodeReader(callbackMap, exclusive = false) {
             }
         }
     });
+}
+
+export function useValidateCashInput(inputRef, startingValue) {
+    const cashInput = useRef(inputRef);
+    const current = useComponent();
+    const decimalPoint = current.env._t.database.parameters.decimal_point;
+    // Replace the thousands separator and decimal point with regex-escaped versions
+    const escapedThousandsSep = escapeRegExp(current.env._t.database.parameters.thousands_sep);
+    const escapedDecimalPoint = escapeRegExp(decimalPoint);
+    const floatRegex = new RegExp(`^-?(?:\\d+(${escapedThousandsSep}\\d+)*)?(?:${escapedDecimalPoint}\\d*)?$`);
+    function isValidFloat(inputValue) {
+        return ![decimalPoint, '-'].includes(inputValue) && floatRegex.test(inputValue);
+    }
+    function handleCashInputChange(event) {
+        let inputValue = (event.target.value || "").trim();
+
+        // Check if the current input value is a valid float
+        if (!isValidFloat(inputValue)) {
+            event.target.classList.add('invalid-cash-input');
+        } else {
+            event.target.classList.remove('invalid-cash-input');
+        }
+    }
+    
+
+    onMounted(() => {
+        cashInput.el.value = (startingValue || 0).toString().replace('.', decimalPoint);
+        cashInput.el.addEventListener("input", handleCashInputChange);
+    });
+
+    onWillUnmount(() => {
+        cashInput.el.removeEventListener("input", handleCashInputChange);
+    })
 }
