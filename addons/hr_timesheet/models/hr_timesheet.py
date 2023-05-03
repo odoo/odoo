@@ -208,11 +208,29 @@ class AccountAnalyticLine(models.Model):
                     '|',
                         ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
                         ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+<<<<<<< HEAD
+||||||| parent of 4b88c51fe86 (temp)
+                        ('task_id.project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
+                        ('task_id.allowed_user_ids', 'in', [self.env.user.id]),
+=======
+                        ('task_id.project_id.allowed_portal_user_ids', 'in', [self.env.user.id]),
+                        ('task_id.allowed_user_ids', 'in', [self.env.user.id]),
+>>>>>>> 4b88c51fe86 (temp)
                     ('task_id.project_id.privacy_visibility', '=', 'portal'),
                 '&',
                     ('task_id', '=', False),
                     '&',
+<<<<<<< HEAD
                         ('project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+||||||| parent of 4b88c51fe86 (temp)
+                        '|',
+                            ('project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                            ('project_id.allowed_portal_user_ids', 'child_of', [self.env.user.id]),
+=======
+                        '|',
+                            ('project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
+                            ('project_id.allowed_portal_user_ids', 'in', [self.env.user.id]),
+>>>>>>> 4b88c51fe86 (temp)
                         ('project_id.privacy_visibility', '=', 'portal')
         ]
 
