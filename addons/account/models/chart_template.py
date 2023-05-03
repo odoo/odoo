@@ -269,7 +269,7 @@ class AccountChartTemplate(models.AbstractModel):
                         if (
                             command not in (Command.UPDATE, Command.CREATE)
                             or not self.ref(vals['tax_src_id'], raise_if_not_found=False)
-                            or not self.ref(vals['tax_dest_id'], raise_if_not_found=False)
+                            or (vals.get('tax_dest_id') and not self.ref(vals['tax_dest_id'], raise_if_not_found=False))
                         )
                     ]
                 elif model_name == 'account.tax':
