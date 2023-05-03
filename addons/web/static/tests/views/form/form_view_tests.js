@@ -5078,7 +5078,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
@@ -5086,13 +5086,10 @@ QUnit.module("Views", (hooks) => {
         await editInput(target, ".o_field_widget[name=foo] input", "");
         triggerHotkey("alt+n");
         await nextTick();
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.strictEqual(
-            target.querySelector(".breadcrumb-item > span").innerText,
-            "first record"
-        );
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item > .o_form_status_indicator").innerText.trim(),
-            "Unable to save"
+            target.querySelector(".o_form_status_indicator .text-danger").dataset.tooltip,
+            "Unable to save. Correct the issue or discard changes"
         );
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
@@ -5117,17 +5114,17 @@ QUnit.module("Views", (hooks) => {
             resId: 1,
         });
 
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
 
         await click(target.querySelector(".o_pager_next"));
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "second record");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "second record");
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "2");
 
         await click(target.querySelector(".o_pager_previous"));
-        assert.strictEqual(target.querySelector(".breadcrumb").innerText, "first record");
+        assert.strictEqual(target.querySelector(".o_breadcrumb").innerText, "first record");
         assert.hasClass(target.querySelector(".o_field_widget[name=foo]"), "o_required_modifier");
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
     });
