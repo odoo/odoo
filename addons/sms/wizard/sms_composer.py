@@ -239,11 +239,12 @@ class SendSMS(models.TransientModel):
         records = records if records is not None else self._get_records()
 
         sms_record_values = self._prepare_mass_sms_values(records)
-        sms_all = self._prepare_mass_sms(records, sms_record_values)
-
-        if sms_all and self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
+        if sms_record_values and self.mass_keep_log and records and issubclass(type(records), self.pool['mail.thread']):
             log_values = self._prepare_mass_log_values(records, sms_record_values)
-            records._message_log_batch(**log_values)
+            messages = records._message_log_batch(**log_values)
+            for record, message in zip(records, messages):
+                sms_record_values[record.id]['mail_message_id'] = message.id
+        sms_all = self._prepare_mass_sms(records, sms_record_values)
 
         if sms_all and self.mass_force_send:
             sms_all.filtered(lambda sms: sms.state == 'outgoing').send(auto_commit=False, raise_exception=False)
@@ -340,6 +341,7 @@ class SendSMS(models.TransientModel):
         return {
             'bodies': self._prepare_log_body_values(sms_records_values),
             'message_type': 'sms',
+            'bypassed_blacklist': self.mass_bypass_blacklist,
         }
 
     # ------------------------------------------------------------

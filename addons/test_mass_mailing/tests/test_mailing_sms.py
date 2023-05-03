@@ -107,7 +107,10 @@ class TestMassSMSInternals(TestMassSMSCommon):
         records_numbers = self.records_numbers + ['+32456999999']
 
         mailing = self.env['mailing.mailing'].browse(self.mailing_sms.ids)
-        mailing.write({'sms_force_send': False})  # force outgoing sms, not sent
+        mailing.write({
+            'sms_force_send': False,  # force outgoing sms, not sent
+            'keep_archives': True,
+        })
         with self.with_user('user_marketing'):
             with self.mockSMSGateway():
                 mailing.action_send_sms()
@@ -148,6 +151,8 @@ class TestMassSMSInternals(TestMassSMSCommon):
             mailing, falsy_record_1 + falsy_record_2,
         )
         self.assertEqual(mailing.canceled, 5)
+        messages_sent = self.env['sms.sms'].sudo().search([('mailing_id', '=', mailing.id)]).mail_message_id
+        self.assertFalse(any(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
 
         # Same test using bypass_blacklist = True
         mailing = mailing.copy()
@@ -163,6 +168,8 @@ class TestMassSMSInternals(TestMassSMSCommon):
             mailing, bl_record_1,
         )
         self.assertEqual(mailing.canceled, 4)
+        messages_sent = self.env['sms.sms'].sudo().search([('mailing_id', '=', mailing.id)]).mail_message_id
+        self.assertTrue(all(message.get('bypassed_blacklist', False) for message in messages_sent.message_format()))
 
     @users('user_marketing')
     def test_mass_sms_internals_done_ids(self):

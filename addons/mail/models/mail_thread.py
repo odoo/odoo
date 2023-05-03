@@ -2595,7 +2595,8 @@ class MailThread(models.AbstractModel):
     def _message_log_batch(self, bodies, subject=False,
                            author_id=None, email_from=None,
                            message_type='notification',
-                           attachment_ids=False, tracking_value_ids=False):
+                           attachment_ids=False, tracking_value_ids=False,
+                           bypassed_blacklist=False):
         """ Shortcut allowing to post notes on a batch of documents. It does not
         perform any notification and pre-computes some values to have a short code
         as optimized as possible. This method is private as it does not check
@@ -2628,6 +2629,7 @@ class MailThread(models.AbstractModel):
             'subtype_id': self.env['ir.model.data']._xmlid_to_res_id('mail.mt_note'),
             'tracking_value_ids': tracking_value_ids,
             # recipients
+            'bypassed_blacklist': bypassed_blacklist,
             'email_add_signature': False,  # False as no notification -> no need to compute signature
             'message_id': tools.generate_tracking_message_id('message-notify'),  # why? this is all but a notify
             'reply_to': self.env['mail.thread']._notify_get_reply_to(default=email_from)[False],
@@ -2742,6 +2744,7 @@ class MailThread(models.AbstractModel):
             'author_guest_id',
             'author_id',
             'body',
+            'bypassed_blacklist',
             'create_date',  # anyway limited to admins
             'date',
             'email_add_signature',
