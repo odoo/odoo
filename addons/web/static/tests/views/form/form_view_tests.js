@@ -11326,29 +11326,29 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
 
         await click(target.querySelector(".o_data_row td.o_data_cell"));
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "first record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnerfirst record"
+        );
 
         await editInput(target, ".o_field_widget[name='name'] input", "aaa");
 
         await click(target.querySelector(`.o_pager button.o_pager_next`));
         assert.containsOnce(target, ".o_form_editable");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "second record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnersecond record"
+        );
         assert.strictEqual(
             target.querySelector('.o_field_widget[name="name"] input').value,
             "name"
         );
 
         await clickDiscard(target);
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "second record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnersecond record"
+        );
         assert.strictEqual(
             target.querySelector('.o_field_widget[name="name"] input').value,
             "name"
@@ -11356,10 +11356,10 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(`.o_pager button.o_pager_previous`));
         assert.containsOnce(target, ".o_form_saved");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "first record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnerfirst record"
+        );
         assert.strictEqual(target.querySelector('.o_field_widget[name="name"] input').value, "aaa");
     });
 
@@ -11536,10 +11536,10 @@ QUnit.module("Views", (hooks) => {
         await doAction(webClient, 1);
 
         await click(target.querySelector(".o_data_row td.o_data_cell"));
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "first record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnerfirst record"
+        );
 
         await editInput(target, ".o_field_widget[name='name'] input", "aaa");
 
@@ -11551,10 +11551,10 @@ QUnit.module("Views", (hooks) => {
 
         await click(target.querySelector(".o_data_row td.o_data_cell"));
         assert.containsOnce(target, ".o_form_editable");
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "first record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnerfirst record"
+        );
         assert.strictEqual(target.querySelector('.o_field_widget[name="name"] input').value, "aaa");
     });
 
@@ -11755,10 +11755,10 @@ QUnit.module("Views", (hooks) => {
 
         // Click on a row to open a record
         await click(target.querySelector(".o_data_row td.o_data_cell"));
-        assert.deepEqual(getNodesTextContent(target.querySelectorAll(".breadcrumb li")), [
-            "Partner",
-            "first record",
-        ]);
+        assert.strictEqual(
+            target.querySelector(".o_breadcrumb").textContent,
+            "Partnerfirst record"
+        );
 
         // Return in the list view to detach the form view
         await click(target.querySelector(".o_back_button"));
@@ -12100,7 +12100,7 @@ QUnit.module("Views", (hooks) => {
             target.querySelector(".o_field_widget[name='foo'] input").value,
             "My little Foo Value"
         );
-        assert.strictEqual(target.querySelector(".breadcrumb-item.active").textContent, "New");
+        assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "New");
     });
 
     QUnit.test("Auto save: error on save when create button clicked", async function (assert) {
