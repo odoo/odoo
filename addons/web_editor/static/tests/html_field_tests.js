@@ -127,4 +127,48 @@ QUnit.module("WebEditor.HtmlField", ({ beforeEach }) => {
         await click(saveButton);
         await writePromise;
     });
+
+    /**
+     * Check that documents with data in a <head> node and with the readonly prop
+     * do not display the codeview button
+     */
+    QUnit.test("html fields with complete HTML document in readonly mode", async (assert) => {
+        serverData.models.partner.records = [{
+            id: 1,
+            txt: `
+            <!DOCTYPE HTML>
+            <html xml:lang="en" lang="en">
+                <head>
+
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+                    <meta name="format-detection" content="telephone=no"/>
+                    <style type="text/css">
+                        body {
+                            color: blue;
+                        }
+                    </style>
+                </head>
+                <body>
+                    Hello
+                </body>
+            </html>`,
+        }];
+        await makeView({
+            type: "form",
+            resId: 1,
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form string="Partner">
+                    <field name="txt" widget="html" readonly="1"/>
+                </form>`,
+        });
+
+        const readonlyElement = target.querySelector('.o_field_html .o_readonly');
+        assert.ok(readonlyElement);
+        assert.strictEqual(readonlyElement.innerText, 'Hello');
+        assert.strictEqual(window.getComputedStyle(readonlyElement).color, 'rgb(0, 0, 255)');
+
+        assert.containsN(target, '.o_codeview_btn', 0, 'Codeview toggle should not be possible in readonly mode.');
+    });
 });
