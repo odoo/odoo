@@ -43,9 +43,9 @@ publicWidget.registry.PaymentCheckoutForm = publicWidget.Widget.extend(paymentFo
      *
      * @private
      * @param {Event} ev
-     * @return {undefined}
+     * @return {void}
      */
-    _onClickPay: async function (ev) {
+    _onClickPay: function (ev) {
         ev.stopPropagation();
         ev.preventDefault();
 
@@ -88,7 +88,7 @@ publicWidget.registry.PaymentCheckoutForm = publicWidget.Widget.extend(paymentFo
      *
      * @private
      * @param {Event} ev
-     * @return {undefined}
+     * @return {void}
      */
     _onSubmit: function (ev) {
         ev.stopPropagation();

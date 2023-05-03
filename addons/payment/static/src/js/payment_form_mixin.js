@@ -43,7 +43,7 @@ const _t = core._t;
      *
      * @private
      * @param {boolean} showLoadingAnimation - Whether a spinning loader should be shown
-     * @return {undefined}
+     * @return {void}
      */
     _disableButton(showLoadingAnimation = true) {
         const $submitButton = $('button[name="o_payment_submit_button"]');
@@ -68,8 +68,7 @@ const _t = core._t;
      * @param {string} title - The title of the error
      * @param {string} description - The description of the error
      * @param {string} error - The raw error message
-     * @return {(Dialog|undefined)} A dialog showing the error if no payment option is selected,
-     *                              undefined otherwise.
+     * @return {(Dialog|void)} A dialog showing the error, only when no payment option is selected.
      */
     _displayError: function (title, description = '', error = '') {
         const $checkedRadios = this.$('input[name="o_payment_radio"]:checked');
@@ -110,7 +109,7 @@ const _t = core._t;
      *
      * @private
      * @param {HTMLInputElement} radio - The radio button linked to the payment option
-     * @return {undefined}
+     * @return {void}
      */
     _displayInlineForm: function (radio) {
         this._hideInlineForms(); // Collapse previously opened inline forms
@@ -253,10 +252,10 @@ const _t = core._t;
      * Collapse all inline forms of the current widget.
      *
      * @private
-     * @return {undefined}.
+     * @return {void}.
      */
     _hideInlineForms() {
-        return this.$('[name="o_payment_inline_form"]').addClass('d-none');
+        this.$('[name="o_payment_inline_form"]').addClass('d-none');
     },
 
     /**
@@ -267,7 +266,7 @@ const _t = core._t;
      * another inline form.
      *
      * @private
-     * @return {undefined}
+     * @return {void}
      */
     _hideInputs: function () {
         const $submitButton = this.$('button[name="o_payment_submit_button"]');
@@ -334,18 +333,16 @@ const _t = core._t;
      * Prepare the provider-specific inline form of the selected payment option.
      *
      * For a provider to manage an inline form, it must override this method. When the override
-     * is called, it must lookup the parameters to decide whether it is necessary to prepare its
-     * inline form. Otherwise, the call must be sent back to the parent method.
+     * is called, it must determine whether it is necessary to prepare its inline form. Otherwise,
+     * the call must be sent back to the parent method.
      *
      * @private
      * @param {string} code - The code of the selected payment option's provider
      * @param {number} paymentOptionId - The id of the selected payment option
      * @param {string} flow - The online payment flow of the selected payment option
-     * @return {Promise}
+     * @return {void}
      */
-    _prepareInlineForm(code, paymentOptionId, flow) {
-        return Promise.resolve();
-    },
+    _prepareInlineForm(code, paymentOptionId, flow) {},
 
     /**
      * Process the payment.
@@ -360,22 +357,20 @@ const _t = core._t;
      * @param {string} code - The code of the payment option's provider
      * @param {number} paymentOptionId - The id of the payment option handling the transaction
      * @param {string} flow - The online payment flow of the transaction
-     * @return {Promise}
+     * @return {void}
      */
     _processPayment: function (code, paymentOptionId, flow) {
         // Call the transaction route to create a tx and retrieve the processing values
-        return this._rpc({
+        this._rpc({
             route: this.txContext.transactionRoute,
             params: this._prepareTransactionRouteParams(code, paymentOptionId, flow),
         }).then(processingValues => {
             if (flow === 'redirect') {
-                return this._processRedirectPayment(
-                    code, paymentOptionId, processingValues
-                );
+                this._processRedirectPayment(code, paymentOptionId, processingValues);
             } else if (flow === 'direct') {
-                return this._processDirectPayment(code, paymentOptionId, processingValues);
+                this._processDirectPayment(code, paymentOptionId, processingValues);
             } else if (flow === 'token') {
-                return this._processTokenPayment(code, paymentOptionId, processingValues);
+                this._processTokenPayment(code, paymentOptionId, processingValues);
             }
         }).guardedCatch(error => {
             error.event.preventDefault();
@@ -397,11 +392,9 @@ const _t = core._t;
      * @param {string} code - The code of the provider
      * @param {number} providerId - The id of the provider handling the transaction
      * @param {object} processingValues - The processing values of the transaction
-     * @return {Promise}
+     * @return {void}
      */
-    _processDirectPayment(code, providerId, processingValues) {
-        return Promise.resolve();
-    },
+    _processDirectPayment(code, providerId, processingValues) {},
 
     /**
      * Redirect the customer by submitting the redirect form included in the processing values.
@@ -413,7 +406,7 @@ const _t = core._t;
      * @param {string} code - The code of the provider
      * @param {number} providerId - The id of the provider handling the transaction
      * @param {object} processingValues - The processing values of the transaction
-     * @return {undefined}
+     * @return {void}
      */
     _processRedirectPayment(code, providerId, processingValues) {
         // Append the redirect form to the body
@@ -438,7 +431,7 @@ const _t = core._t;
      * @param {string} provider_code - The code of the token's provider
      * @param {number} tokenId - The id of the token handling the transaction
      * @param {object} processingValues - The processing values of the transaction
-     * @return {undefined}
+     * @return {void}
      */
     _processTokenPayment(provider_code, tokenId, processingValues) {
         // The flow is already completed as payments by tokens are immediately processed
@@ -455,7 +448,7 @@ const _t = core._t;
      * @private
      * @param {string} flow - The flow for the selected payment option. Either 'redirect',
      *                        'direct' or 'token'
-     * @return {undefined}
+     * @return {void}
      */
     _setPaymentFlow: function (flow = 'redirect') {
         if (flow !== 'redirect' && flow !== 'direct' && flow !== 'token') {
@@ -473,7 +466,7 @@ const _t = core._t;
      * Show the "Save my payment details" label and checkbox, and the submit button.
      *
      * @private
-     * @return {undefined}.
+     * @return {void}.
      */
     _showInputs: function () {
         const $submitButton = this.$('button[name="o_payment_submit_button"]');
@@ -493,7 +486,7 @@ const _t = core._t;
      *
      * @private
      * @param {Event} ev
-     * @return {undefined}
+     * @return {void}
      */
     _onClickLessPaymentIcons(ev) {
         ev.preventDefault();
@@ -513,7 +506,7 @@ const _t = core._t;
      *
      * @private
      * @param {Event} ev
-     * @return {undefined}
+     * @return {void}
      */
     _onClickMorePaymentIcons(ev) {
         ev.preventDefault();
@@ -531,7 +524,7 @@ const _t = core._t;
      *
      * @private
      * @param {Event} ev
-     * @return {undefined}
+     * @return {void}
      */
     _onClickPaymentOption: function (ev) {
         // Uncheck all radio buttons

@@ -17,11 +17,11 @@ const websiteSalePaymentMixin = {
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         this.$checkbox = this.$('#checkbox_tc');
         this.$submitButton = this.$('button[name="o_payment_submit_button"]');
         this._adaptConfirmButton();
-        return this._super(...arguments);
+        return await this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -32,7 +32,7 @@ const websiteSalePaymentMixin = {
      * Update the data on the submit button with the status of the Terms and Conditions input.
      *
      * @private
-     * @return {undefined}
+     * @return {void}
      */
     _adaptConfirmButton: function () {
         if (this.$checkbox.length > 0) {
@@ -75,7 +75,7 @@ checkoutForm.include(Object.assign({}, websiteSalePaymentMixin, {
      * Enable the submit button if it all conditions are met.
      *
      * @private
-     * @return {undefined}
+     * @return {void}
      */
     _onClickTCCheckbox: function () {
         this._adaptConfirmButton();
@@ -97,11 +97,11 @@ publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend(
         /**
          * @override
          */
-        start: function () {
+        start: async function () {
             this.$checkbox = this.$('#checkbox_tc');
             this.$submitButton = this.$('button[name="o_payment_submit_button"]');
             this._onClickTCCheckbox();
-            return this._super(...arguments);
+            return await this._super(...arguments);
         },
 
         //--------------------------------------------------------------------------
@@ -112,7 +112,7 @@ publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend(
          * Enable the submit button if it all conditions are met.
          *
          * @private
-         * @return {undefined}
+         * @return {void}
          */
         _onClickTCCheckbox: function () {
             this._adaptConfirmButton();

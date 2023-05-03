@@ -15,11 +15,12 @@ const stripeMixin = {
      * @param {string} code - The code of the payment option
      * @param {number} paymentOptionId - The id of the payment option handling the transaction
      * @param {object} processingValues - The processing values of the transaction
-     * @return {undefined}
+     * @return {void}
      */
     _processRedirectPayment: function (code, paymentOptionId, processingValues) {
         if (code !== 'stripe') {
-            return this._super(...arguments);
+            this._super(...arguments);
+            return;
         }
 
         const stripeJS = Stripe(

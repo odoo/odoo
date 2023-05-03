@@ -12,7 +12,7 @@ checkoutForm.include({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         core.bus.on('update_shipping_cost', this, this._updateShippingCost);
         return this._super.apply(this, arguments);
     },
@@ -29,7 +29,7 @@ checkoutForm.include({
      * @param {string} code - The code of the payment option's provider
      * @param {number} paymentOptionId - The id of the payment option handling the transaction
      * @param {string} flow - The online payment flow of the transaction
-     * @return {Promise}
+     * @return {void}
      */
     _processPayment: function (code, paymentOptionId, flow) {
         if ($('.o_donation_payment_form').length) {
@@ -59,10 +59,10 @@ checkoutForm.include({
                     _t("Validation Error"),
                     _t("Some information is missing to process your payment.")
                 );
-                return Promise.resolve();
+                return;
             }
         }
-        return this._super(...arguments);
+        this._super(...arguments);
     },
 
     /**
@@ -113,7 +113,7 @@ checkoutForm.include({
      *
      * @private
      * @param {Event} ev
-     * @return {undefined}
+     * @return {void}
      */
     _onFeeParameterChange: function (ev) {
         const targetId = ev.target.id;
