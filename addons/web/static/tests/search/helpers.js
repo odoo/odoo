@@ -329,7 +329,7 @@ export function getFacetTexts(target) {
 
 export async function removeFacet(el, facetFinder = 0) {
     const facet = findItem(el, `div.o_searchview_facet`, facetFinder);
-    await click(facet.querySelector("i.o_facet_remove"));
+    await click(facet.querySelector(".o_facet_remove"));
 }
 
 export async function editSearch(el, value) {
@@ -385,4 +385,9 @@ export async function editPager(el, value) {
 export async function toggleActionMenu(el, menuFinder = "Action") {
     const dropdown = findItem(el, `.o_cp_action_menus button`, menuFinder);
     await click(dropdown);
+}
+
+/** SearchBarMenu */
+export async function toggleSearchBarMenu(el) {
+    await click(findItem(el, `.o_searchview_dropdown_toggler`));
 }
