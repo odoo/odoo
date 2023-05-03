@@ -1,7 +1,7 @@
 /** @odoo-module **/
 /* global Stripe */
 
-import { _t } from "@web/core/l10n/translation";
+import { _t } from '@web/core/l10n/translation';
 import { paymentExpressCheckoutForm } from '@payment/js/express_checkout_form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 
@@ -175,7 +175,7 @@ paymentExpressCheckoutForm.include({
                         shippingOptions: availableCarriers.map(carrier => ({
                             id: String(carrier.id),
                             label: carrier.name,
-                            detail: carrier.description ? carrier.description:"",
+                            detail: carrier.description ? carrier.description:'',
                             amount: carrier.minorAmount,
                         })),
                         ...this._getOrderDetails(availableCarriers[0].minorAmount),

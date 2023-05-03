@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import checkoutForm from "@payment/js/checkout_form";
+import checkoutForm from '@payment/js/checkout_form';
 import stripeMixin from '@payment_stripe/js/stripe_mixin';
 
 checkoutForm.include(stripeMixin);
