@@ -16,7 +16,6 @@
         'im_livechat',
         'mail',
         'mail_bot',
-        'note',
         'project_todo',
         'website_livechat',
     ],
