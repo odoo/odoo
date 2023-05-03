@@ -384,15 +384,15 @@ QUnit.module("Views", (hooks) => {
             type: "form",
             resModel: "partner",
             serverData,
-            arch: `<form><sheet><div name="button_box"><button id="btn1">MyButton</button><button id="btn2">MyButton2</button><button id="btn3">MyButton3</button></div></sheet></form>`,
+            arch: `<form><sheet><div name="button_box"><button id="btn1">MyButton</button><button id="btn2">MyButton2</button><button id="btn3">MyButton3</button><button id="btn4">MyButton4</button></div></sheet></form>`,
             resId: 2,
         });
 
-        assert.containsN(target, ".o-form-buttonbox > button", 2);
+        assert.containsN(target, ".o-form-buttonbox > button", 3);
         assert.containsOnce(target, ".o-dropdown.oe_stat_button .o_button_more");
-        await click(target, ".o-dropdown.oe_stat_button .o_button_more");
 
-        assert.containsOnce(target, ".o-dropdown--menu #btn3");
+        await click(target, ".o-dropdown.oe_stat_button .o_button_more");
+        assert.containsOnce(target, ".o-dropdown--menu #btn4");
     });
 
     QUnit.test("button box rendering on big screen", async (assert) => {
