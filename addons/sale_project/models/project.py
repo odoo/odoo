@@ -615,7 +615,7 @@ class Project(models.Model):
 class ProjectTask(models.Model):
     _inherit = "project.task"
 
-    sale_order_id = fields.Many2one('sale.order', 'Sales Order', compute='_compute_sale_order_id', store=True, help="Sales order to which the task is linked.")
+    sale_order_id = fields.Many2one('sale.order', 'Sales Order', related="sale_line_id.order_id", store=True, help="Sales order to which the task is linked.")
     sale_line_id = fields.Many2one(
         'sale.order.line', 'Sales Order Item',
         copy=True, tracking=True, index='btree_not_null', recursive=True,
@@ -634,23 +634,6 @@ class ProjectTask(models.Model):
     @property
     def SELF_READABLE_FIELDS(self):
         return super().SELF_READABLE_FIELDS | {'allow_billable', 'sale_order_id', 'sale_line_id', 'display_sale_order_button'}
-
-    @api.depends('sale_line_id', 'project_id', 'partner_id.commercial_partner_id', 'allow_billable')
-    def _compute_sale_order_id(self):
-        for task in self:
-            if not task.allow_billable:
-                task.sale_order_id = False
-                continue
-            sale_order_id = task.sale_order_id or self.env["sale.order"]
-            if task.sale_line_id:
-                sale_order_id = task.sale_line_id.sudo().order_id
-            elif task.project_id.sale_order_id:
-                sale_order_id = task.project_id.sale_order_id
-            if task.partner_id.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
-                sale_order_id = False
-            if sale_order_id and not task.partner_id:
-                task.partner_id = sale_order_id.partner_id
-            task.sale_order_id = sale_order_id
 
     @api.depends('allow_billable')
     def _compute_partner_id(self):
