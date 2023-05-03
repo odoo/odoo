@@ -135,12 +135,12 @@ publicWidget.registry.websiteSaleDelivery = publicWidget.Widget.extend({
             var amountDelivery = document.querySelector('#order_delivery .monetary_field');
             var amountUntaxed = document.querySelector('#order_total_untaxed .monetary_field');
             var amountTax = document.querySelector('#order_total_taxes .monetary_field');
-            var amountTotal = document.querySelector('#order_total .monetary_field, #amount_total_summary.monetary_field');
+            var amountTotal = document.querySelectorAll('#order_total .monetary_field, #amount_total_summary.monetary_field');
 
             amountDelivery.innerHTML = result.new_amount_delivery;
             amountUntaxed.innerHTML = result.new_amount_untaxed;
             amountTax.innerHTML = result.new_amount_tax;
-            amountTotal.innerHTML = result.new_amount_total;
+            amountTotal.forEach(total => total.innerHTML = result.new_amount_total);
             // we need to check if it's the carrier that is selected
             if (result.new_amount_total_raw !== undefined) {
                 this._updateShippingCost(result.new_amount_total_raw);
