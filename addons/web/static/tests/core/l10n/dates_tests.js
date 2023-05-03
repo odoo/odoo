@@ -1,17 +1,15 @@
 /** @odoo-module **/
 
 import {
+    deserializeDate,
+    deserializeDateTime,
     formatDate,
     formatDateTime,
     parseDate,
     parseDateTime,
-    strftimeToLuxonFormat,
     serializeDate,
     serializeDateTime,
-    deserializeDate,
-    deserializeDateTime,
-    momentToLuxon,
-    luxonToMoment,
+    strftimeToLuxonFormat,
 } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
 import { patch, unpatch } from "@web/core/utils/patch";
@@ -73,10 +71,10 @@ function runTestSet(assert, testSet, options) {
 QUnit.module(
     "utils",
     {
-        before() {
+        beforeEach() {
             moment.suppressDeprecationWarnings = true;
         },
-        after() {
+        afterEach() {
             moment.suppressDeprecationWarnings = false;
         },
     },
@@ -530,70 +528,6 @@ QUnit.module(
                 parseDateTime("20-10-20 8:5:3", { format: "yyyy-MM-dd hh:mm:ss" }).toISO(),
                 "2020-10-20T08:05:03.000+01:00"
             );
-        });
-
-        QUnit.test("luxonToMoment", async (assert) => {
-            // Timezone is only patched for luxon, as we do not use the lib moment-timezone anyway.
-            patchTimeZone(330);
-            patchDate(2022, 1, 21, 15, 30, 0);
-
-            const luxonDate = DateTime.local().set({
-                millisecond: 0, // force 0ms due to test execution time
-            });
-            assert.strictEqual(luxonDate.toISO(), "2022-02-21T15:30:00.000+05:30");
-
-            const momentDate = luxonToMoment(luxonDate);
-            // Here we only assert the values of the moment object, as it may be
-            // in another timezone than the user's timezone (the patched one) anyway.
-            assert.deepEqual(momentDate.toObject(), {
-                years: 2022,
-                months: 1, // 0-based
-                date: 21,
-                hours: 15,
-                minutes: 30,
-                seconds: 0,
-                milliseconds: 0,
-            });
-        });
-
-        QUnit.test("momentToLuxon", async (assert) => {
-            // Timezone is only patched for luxon, as we do not use the lib moment-timezone anyway.
-            patchTimeZone(330);
-
-            // Patching the date after the having patched the timezone is important,
-            // as it will allow the native Date object to apply the correct timezone offset.
-            // BUT the native dates will still be in the browser's timezone...
-            patchDate(2022, 1, 21, 15, 30, 0);
-
-            // ...thus the created moment object will be in the browser's timezone.
-            const momentDate = moment().millisecond(0); // force 0ms due to test execution time
-            const momentHourOffset = momentDate.utcOffset() / 60;
-            // NB: asserting the moment offset is not relevant as it comes from the browser's TZ.
-            assert.deepEqual(momentDate.toObject(), {
-                years: 2022,
-                months: 1, // 0-based
-                date: 21,
-                hours: 10 + momentHourOffset,
-                minutes: 0,
-                seconds: 0,
-                milliseconds: 0,
-            });
-
-            // momentToluxon uses the moment object as is and outputs the same values in a luxon's
-            // DateTime object in the user's timezone...
-            const luxonDate = momentToLuxon(momentDate);
-            // ...so the below assert is correct even if we would have naturally
-            // expected something like "2022-02-21T15:30:00.000+05:30"
-            assert.deepEqual(luxonDate.toObject(), {
-                year: 2022,
-                month: 2, // 1-based
-                day: 21,
-                hour: 10 + momentHourOffset,
-                minute: 0,
-                second: 0,
-                millisecond: 0,
-            });
-            assert.strictEqual(luxonDate.offset, 330, "should be in user's timezone");
         });
 
         // -----------------------------------------------------------------------------------------
