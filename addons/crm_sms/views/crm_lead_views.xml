@@ -41,4 +41,13 @@
         </field>
     </record>
 
+    <record id="crm_lead_view_tree_opportunity_reporting" model="ir.ui.view">
+        <field name="name">crm.lead.tree.opportunity.reporting.inherit.sms</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_tree_opportunity_reporting"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='%(crm_sms.crm_lead_act_window_sms_composer_multi)d']" position="replace"/>
+        </field>
+    </record>
+
 </odoo>
