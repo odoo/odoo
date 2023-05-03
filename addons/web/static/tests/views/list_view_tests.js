@@ -18435,4 +18435,54 @@ QUnit.module("Views", (hooks) => {
         await click(document, "body .modal footer button.btn-primary");
         assert.verifySteps(["a"]);
     });
+
+    QUnit.test("restore orderBy from state when using default order", async (assert) => {
+        serverData.models.foo.fields.amount.sortable = true;
+        serverData.models.foo.fields.foo.sortable = true;
+        serverData.actions = {
+            1: {
+                id: 1,
+                name: "Foo",
+                res_model: "foo",
+                type: "ir.actions.act_window",
+                views: [
+                    [false, "list"],
+                    [false, "form"],
+                ],
+            },
+        };
+        serverData.views = {
+            "foo,false,list": `
+                <tree default_order="foo">
+                    <field name="foo"/>
+                    <field name="amount"/>
+                </tree>`,
+            "foo,false,form": `
+                <form>
+                    <field name="amount"/>
+                    <field name="foo"/>
+                </form>`,
+            "foo,false,search": "<search/>",
+        };
+        const webclient = await createWebClient({
+            serverData,
+            async mockRPC(route, { kwargs, method }) {
+                if (method === "web_search_read") {
+                    assert.step("order:" + kwargs.order);
+                }
+            },
+        });
+        await doAction(webclient, 1);
+
+        await click(target.querySelector("th[data-name=amount]")); // order by amount
+        await click(target.querySelector(".o_data_row .o_data_cell")); // switch to the form view
+        await click(target.querySelector(".breadcrumb-item")); // go back to the list view
+
+        assert.verifySteps([
+            "order:foo ASC", // initial list view
+            "order:amount ASC, foo ASC", // order by amount
+            "order:amount ASC, foo ASC", // go back to the list view, it should still be ordered by amount
+        ]);
+    });
+
 });
