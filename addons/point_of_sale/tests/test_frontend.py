@@ -31,6 +31,28 @@ class TestPointOfSaleHttpCommon(AccountTestInvoicingHttpCommon):
         # Pricelists are set below, do not take demo data into account
         env['ir.property'].sudo().search([('name', '=', 'property_product_pricelist')]).unlink()
 
+        # Create user.
+        cls.pos_user = cls.env['res.users'].create({
+            'name': 'A simple PoS man!',
+            'login': 'pos_user',
+            'password': 'pos_user',
+            'groups_id': [
+                (4, cls.env.ref('base.group_user').id),
+                (4, cls.env.ref('point_of_sale.group_pos_user').id),
+            ],
+        })
+        cls.pos_admin = cls.env['res.users'].create({
+            'name': 'A powerfull PoS man!',
+            'login': 'pos_admin',
+            'password': 'pos_admin',
+            'groups_id': [
+                (4, cls.env.ref('point_of_sale.group_pos_manager').id),
+            ],
+        })
+
+        cls.pos_user.partner_id.email = 'pos_user@test.com'
+        cls.pos_admin.partner_id.email = 'pos_admin@test.com'
+
         cls.bank_journal = journal_obj.create({
             'name': 'Bank Test',
             'type': 'bank',
@@ -487,7 +509,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         })
 
         # open a session, the /pos/ui controller will redirect to it
-        self.main_pos_config.open_ui()
+        self.main_pos_config.with_user(self.pos_user).open_ui()
 
         # needed because tests are run before the module is marked as
         # installed. In js web will only load qweb coming from modules
@@ -495,11 +517,11 @@ class TestUi(TestPointOfSaleHttpCommon):
         # this you end up with js, css but no qweb.
         self.env['ir.module.module'].search([('name', '=', 'point_of_sale')], limit=1).state = 'installed'
 
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="accountman")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="accountman")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="accountman")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="accountman")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="accountman")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_pricelist', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'pos_basic_order', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="pos_user")
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
@@ -509,8 +531,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.assertEqual(email_count, 1)
 
     def test_02_pos_with_invoiced(self):
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="accountman")
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('account.group_account_invoice').id),
+            ]
+        })
+
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="pos_user")
         n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
@@ -518,12 +546,17 @@ class TestUi(TestPointOfSaleHttpCommon):
 
     def test_04_product_configurator(self):
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="pos_user")
 
     def test_05_ticket_screen(self):
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="accountman")
+        self.pos_user.write({
+            'groups_id': [
+                (4, self.env.ref('account.group_account_invoice').id),
+            ]
+        })
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="pos_user")
 
     def test_fixed_tax_negative_qty(self):
         """ Assert the negative amount of a negative-quantity orderline
@@ -559,8 +592,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         # Make an order with the zero-amount product from the frontend.
         # We need to do this because of the fix in the "compute_all" port.
         self.main_pos_config.write({'iface_tax_included': 'total'})
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FixedTaxNegativeQty', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FixedTaxNegativeQty', login="pos_user")
         pos_session = self.main_pos_config.current_session_id
 
         # Close the session and check the session journal entry.
@@ -588,8 +621,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'company_id': self.env.company.id,
         })
         self.main_pos_config.write({'payment_method_ids': [(6, 0, bank_pm.ids)]})
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour2', login="pos_user")
 
     def test_rounding_up(self):
         rouding_method = self.env['account.cash.rounding'].create({
@@ -610,8 +643,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'cash_rounding': True,
         })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingUp', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingUp', login="pos_user")
 
     def test_rounding_down(self):
         rouding_method = self.env['account.cash.rounding'].create({
@@ -632,9 +665,9 @@ class TestUi(TestPointOfSaleHttpCommon):
             'cash_rounding': True,
         })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="accountman")
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTotalDueWithOverPayment', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingDown', login="pos_user")
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTotalDueWithOverPayment', login="pos_user")
 
     def test_rounding_half_up(self):
         rouding_method = self.env['account.cash.rounding'].create({
@@ -669,8 +702,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'cash_rounding': True,
         })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'PaymentScreenRoundingHalfUp', login="pos_user")
 
     def test_pos_closing_cash_details(self):
         """Test if the cash closing details correctly show the cash difference
@@ -684,16 +717,16 @@ class TestUi(TestPointOfSaleHttpCommon):
         current_session.post_closing_cash_details(100)
         current_session.close_session_from_ui()
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashClosingDetails', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'CashClosingDetails', login="pos_user")
         #check accounting move for the pos opening cash difference
         pos_session = self.main_pos_config.current_session_id
         self.assertEqual(len(pos_session.statement_line_ids), 1)
         self.assertEqual(pos_session.statement_line_ids[0].amount, -10)
 
     def test_cash_payments_should_reflect_on_next_opening(self):
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'OrderPaidInCash', login="pos_user")
 
     def test_fiscal_position_no_tax(self):
         #create a tax of 15% with price included
@@ -733,8 +766,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_pricelist_ids': [(6, 0, [pricelist.id])],
             'pricelist_id': pricelist.id,
         })
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'FiscalPositionNoTax', login="pos_user")
 
     def test_06_pos_discount_display_with_multiple_pricelist(self):
         """ Test the discount display on the POS screen when multiple pricelists are used."""
@@ -776,8 +809,8 @@ class TestUi(TestPointOfSaleHttpCommon):
             'available_pricelist_ids': [(6, 0, [base_pricelist.id, special_pricelist.id])],
         })
 
-        self.main_pos_config.open_ui()
-        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="accountman")
+        self.main_pos_config.with_user(self.pos_user).open_ui()
+        self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="pos_user")
 
 # This class just runs the same tests as above but with mobile emulation
 class MobileTestUi(TestUi):
