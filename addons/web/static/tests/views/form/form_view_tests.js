@@ -12747,8 +12747,8 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_form_status_indicator").textContent, "");
         await clickSave(target);
         assert.strictEqual(
-            target.querySelector(".o_form_status_indicator").textContent.trim(),
-            "Unable to save"
+            target.querySelector(".o_form_status_indicator .text-danger").dataset.tooltip,
+            "Unable to save. Correct the issue or discard changes"
         );
     });
 
