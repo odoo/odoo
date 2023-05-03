@@ -1,24 +1,14 @@
 /** @odoo-module **/
 
-import { constructDateDomain } from "@web/search/utils/dates";
 import { defaultLocalization } from "@web/../tests/helpers/mock_services";
+import { patchDate, patchTimeZone } from "@web/../tests/helpers/utils";
 import { Domain } from "@web/core/domain";
 import { localization } from "@web/core/l10n/localization";
-import { patch, unpatch } from "@web/core/utils/patch";
-import { patchDate } from "@web/../tests/helpers/utils";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import { translatedTerms } from "@web/core/l10n/translation";
+import { patch, unpatch } from "@web/core/utils/patch";
+import { constructDateDomain } from "@web/search/utils/dates";
 
 const { DateTime } = luxon;
-
-function patchTimeZone(offset) {
-    const fixedZone = new luxon.FixedOffsetZone.instance(offset);
-    const originalZone = luxon.Settings.defaultZone;
-    luxon.Settings.defaultZone = fixedZone.name;
-    registerCleanup(() => {
-        luxon.Settings.defaultZone = originalZone;
-    });
-}
 
 QUnit.module("Search", () => {
     QUnit.module("SearchUtils", {

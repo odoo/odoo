@@ -114,11 +114,7 @@ export function patchDate(year, month, day, hours, minutes, seconds) {
  *                          -120 => UTC-2
  */
 export function patchTimeZone(offset) {
-    const originalZone = luxon.Settings.defaultZone;
-    luxon.Settings.defaultZone = new luxon.FixedOffsetZone.instance(offset);
-    registerCleanup(() => {
-        luxon.Settings.defaultZone = originalZone;
-    });
+    patchWithCleanup(luxon.Settings, { defaultZone: new luxon.FixedOffsetZone.instance(offset) });
 }
 
 let nextId = 1;
@@ -382,7 +378,7 @@ export function click(el, selector, skipVisibilityCheck = false) {
     return triggerEvents(
         el,
         selector,
-        ["pointerdown", "mousedown", "pointerup", "mouseup", "click"],
+        ["pointerdown", "mousedown", "focus", "pointerup", "mouseup", "click"],
         { skipVisibilityCheck }
     );
 }
@@ -512,9 +508,8 @@ export async function editSelectMenu(el, selector, value) {
  * @param {string} hotkey
  * @param {boolean} addOverlayModParts
  * @param {KeyboardEventInit} eventAttrs
- * @returns {{ keydownEvent: KeyboardEvent, keyupEvent: KeyboardEvent }}
  */
-export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
+export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {}) {
     eventAttrs.key = hotkey.split("+").pop();
 
     if (/shift/i.test(hotkey)) {
@@ -545,6 +540,7 @@ export function triggerHotkey(hotkey, addOverlayModParts = false, eventAttrs = {
     const keyupEvent = new KeyboardEvent("keyup", eventAttrs);
     document.activeElement.dispatchEvent(keydownEvent);
     document.activeElement.dispatchEvent(keyupEvent);
+    await nextTick();
     return { keydownEvent, keyupEvent };
 }
 

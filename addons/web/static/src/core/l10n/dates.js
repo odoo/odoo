@@ -4,20 +4,42 @@ import { localization } from "@web/core/l10n/localization";
 import { _t } from "@web/core/l10n/translation";
 import { memoize } from "@web/core/utils/functions";
 import { sprintf } from "@web/core/utils/strings";
+import { ensureArray } from "../utils/arrays";
 
 const { DateTime, Settings } = luxon;
+
+/**
+ * @typedef ConversionOptions
+ *  This is a list of the available options to either:
+ *  - convert a DateTime to a string (format)
+ *  - convert a string to a DateTime (parse)
+ *  All of these are optional and the default values are issued by the Localization service.
+ *
+ * @property {string} [format]
+ *  Format used to format a DateTime or to parse a formatted string.
+ *  > Default: the session localization format.
+ *
+ * @typedef {luxon.DateTime} DateTime
+ *
+ * @typedef {[NullableDateTime, NullableDateTime]} NullableDateRange
+ *
+ * @typedef {DateTime | false | null | undefined} NullableDateTime
+ */
+
+/**
+ * Limits defining a valid date.
+ * This is needed because the server only understands 4-digit years.
+ * Note: both of these are in the local timezone
+ */
+export const MIN_VALID_DATE = DateTime.fromObject({ year: 1000 });
+export const MAX_VALID_DATE = DateTime.fromObject({ year: 9999 }).endOf("year");
 
 const SERVER_DATE_FORMAT = "yyyy-MM-dd";
 const SERVER_TIME_FORMAT = "HH:mm:ss";
 const SERVER_DATETIME_FORMAT = `${SERVER_DATE_FORMAT} ${SERVER_TIME_FORMAT}`;
 
-// -----------------------------------------------------------------------------
-// Helpers
-// -----------------------------------------------------------------------------
-
-const alphaRegex = /[a-zA-Z]/g;
-const nonAlphaRegex = /[^a-zA-Z]/g;
-const nonDigitsRegex = /[^0-9]/g;
+const nonAlphaRegex = /[^a-z]/gi;
+const nonDigitRegex = /[^\d]/g;
 
 const normalizeFormatTable = {
     // Python strftime to luxon.js conversion table
@@ -44,29 +66,129 @@ const normalizeFormatTable = {
     X: "HH:mm:ss",
 };
 
-const luxonToMomentFormatTable = {
-    c: "d",
-    d: "D",
-    o: "DDDD",
-    a: "A",
-    y: "Y",
-};
-
 const smartDateUnits = {
     d: "days",
     m: "months",
     w: "weeks",
     y: "years",
 };
-const smartDateRegex = new RegExp(`^([+-])(\\d+)([${Object.keys(smartDateUnits).join("")}]?)$`);
+const smartDateRegex = new RegExp(
+    ["^", "([+-])", "(\\d+)", `([${Object.keys(smartDateUnits).join("")}]?)`, "$"].join("\\s*"),
+    "i"
+);
+
+/** @type {WeakMap<DateTime, string>} */
+const dateCache = new WeakMap();
+/** @type {WeakMap<DateTime, string>} */
+const dateTimeCache = new WeakMap();
+
+class ConversionError extends Error {
+    name = "ConversionError";
+}
+
+//-----------------------------------------------------------------------------
+// Helpers
+//-----------------------------------------------------------------------------
 
 /**
- * @param {any} d1
- * @param {any} d2
+ * Checks whether 2 given dates or date ranges are equal. Both values are allowed
+ * to be falsy or to not be of the same type (which will return false).
+ *
+ * @param {NullableDateTime | NullableDateRange} d1
+ * @param {NullableDateTime | NullableDateRange} d2
  * @returns {boolean}
  */
-export function areDateEquals(d1, d2) {
-    return d1 instanceof DateTime && d2 instanceof DateTime ? d1.equals(d2) : d1 === d2;
+export function areDatesEqual(d1, d2) {
+    if (Array.isArray(d1) || Array.isArray(d2)) {
+        // One of the values is a date range -> checks deep equality between the ranges
+        d1 = ensureArray(d1);
+        d2 = ensureArray(d2);
+        return d1.length === d2.length && d1.every((d1Val, i) => areDatesEqual(d1Val, d2[i]));
+    }
+    if (d1 instanceof DateTime && d2 instanceof DateTime && d1 !== d2) {
+        // Both values are DateTime objects -> use Luxon's comparison
+        return d1.equals(d2);
+    } else {
+        // One of the values is not a DateTime object -> fallback to strict equal
+        return d1 === d2;
+    }
+}
+
+/**
+ * @param {DateTime} desired
+ * @param {DateTime} minDate
+ * @param {DateTime} maxDate
+ */
+export function clampDate(desired, minDate, maxDate) {
+    if (_fastLocalDateCompare(maxDate, "<", desired)) {
+        return maxDate;
+    }
+    if (_fastLocalDateCompare(minDate, ">", desired)) {
+        return minDate;
+    }
+    return desired;
+}
+
+/**
+ * Returns whether the given format is a 24-hour format.
+ * Falls back to localization time format if none is given.
+ *
+ * @param {string} format
+ */
+export function is24HourFormat(format) {
+    return /H/.test(format || localization.timeFormat);
+}
+
+/**
+ * @param {NullableDateTime | NullableDateRange} value
+ * @param {NullableDateRange} range
+ */
+export function isInRange(value, range) {
+    if (!value || !range) {
+        return false;
+    }
+    if (Array.isArray(value)) {
+        const actualValues = value.filter(Boolean);
+        if (actualValues.length < 2) {
+            return isInRange(actualValues[0], range);
+        }
+        return (
+            (_fastLocalDateCompare(value[0], "<=", range[0]) &&
+                _fastLocalDateCompare(range[0], "<=", value[1])) ||
+            (_fastLocalDateCompare(range[0], "<=", value[0]) &&
+                _fastLocalDateCompare(value[0], "<=", range[1]))
+        );
+    } else {
+        return (
+            _fastLocalDateCompare(range[0], "<=", value) &&
+            _fastLocalDateCompare(value, "<=", range[1])
+        );
+    }
+}
+
+/**
+ * Returns whether the given format uses a meridiem suffix (AM/PM).
+ * Falls back to localization time format if none is given.
+ *
+ * @param {string} format
+ */
+export function isMeridiemFormat(format) {
+    return /a/.test(format || localization.timeFormat);
+}
+
+/**
+ * Returns whether the given DateTime is valid.
+ * The date is considered valid if it:
+ * - is a DateTime object
+ * - has the "isValid" flag set to true
+ * - is between 1000-01-01 and 9999-12-31 (both included)
+ * @see MIN_VALID_DATE
+ * @see MAX_VALID_DATE
+ *
+ * @param {NullableDateTime} date
+ */
+function isValidDate(date) {
+    return date && date.isValid && isInRange(date, [MIN_VALID_DATE, MAX_VALID_DATE]);
 }
 
 /**
@@ -80,14 +202,14 @@ export function areDateEquals(d1, d2) {
  *   "-4y" will return now + 4 years
  *
  * @param {string} value
- * @returns {DateTime|false} Luxon datetime object (in the user's local timezone)
+ * @returns {NullableDateTime} Luxon datetime object (in the user's local timezone)
  */
 function parseSmartDateInput(value) {
-    const match = smartDateRegex.exec(value);
+    const match = value.match(smartDateRegex);
     if (match) {
         let date = DateTime.local();
         const offset = parseInt(match[2], 10);
-        const unit = smartDateUnits[match[3] || "d"];
+        const unit = smartDateUnits[(match[3] || "d").toLowerCase()];
         if (match[1] === "+") {
             date = date.plus({ [unit]: offset });
         } else {
@@ -99,46 +221,32 @@ function parseSmartDateInput(value) {
 }
 
 /**
- * Enforces some restrictions to a Luxon DateTime object.
- * Returns it if within those restrictions.
- * Returns false otherwise.
+ * Removes any duplicate *subsequent* alphabetic characters in a given string.
+ * Example: "aa-bb-CCcc-ddD-c xxxx-Yy-ZZ" -> "a-b-Cc-dD-c x-Yy-Z"
  *
- * @param {DateTime | false} date
- * @returns {boolean}
- */
-function isValidDateTime(dt) {
-    return dt && dt.isValid && dt.year >= 1000 && dt.year < 10000;
-}
-
-/**
- * Removes any duplicated alphabetic characters in a given string.
- * Example: "aa-bb-CCcc-ddD xxxx-Yy-ZZ" -> "a-b-Cc-dD x-Yy-Z"
- *
- * @param {string} str
- * @returns {string}
+ * @type {(str: string) => string}
  */
 const stripAlphaDupes = memoize(function stripAlphaDupes(str) {
-    return str.replace(alphaRegex, (letter, index, str) => {
-        return letter === str[index - 1] ? "" : letter;
-    });
+    return str.replace(/[a-z]/gi, (letter, index, str) =>
+        letter === str[index - 1] ? "" : letter
+    );
 });
 
 /**
  * Convert Python strftime to escaped luxon.js format.
  *
- * @param {string} value original format
- * @returns {string} valid Luxon format
+ * @type {(format: string) => string}
  */
-export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(value) {
+export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(format) {
     const output = [];
     let inToken = false;
-    for (let index = 0; index < value.length; ++index) {
-        let character = value[index];
+    for (let index = 0; index < format.length; ++index) {
+        let character = format[index];
         if (character === "%" && !inToken) {
             inToken = true;
             continue;
         }
-        if (character.match(alphaRegex)) {
+        if (/[a-z]/gi.test(character)) {
             if (inToken && normalizeFormatTable[character] !== undefined) {
                 character = normalizeFormatTable[character];
             } else {
@@ -152,133 +260,123 @@ export const strftimeToLuxonFormat = memoize(function strftimeToLuxonFormat(valu
 });
 
 /**
- * Converts a Luxon format to a moment.js format.
- * NB: this is not a complete conversion, only the supported tokens are converted.
- *
- * @param {string} value original format
- * @returns {string} valid moment.js format
+ * Lazy getter returning the start of the current day.
  */
-export const luxonToMomentFormat = memoize(function luxonToMomentFormat(format) {
-    return format.replace(alphaRegex, (match) => {
-        return luxonToMomentFormatTable[match] || match;
-    });
-});
+export function today() {
+    return DateTime.local().startOf("day");
+}
 
 /**
- * Converts a luxon's DateTime object into a moment.js object.
- * NB: the passed object's values will be utilized as is, regardless of its corresponding timezone.
- * So passing a luxon's DateTime having 8 as hours value will result in a moment.js object having
- * also 8 as hours value. But the moment.js object will be in the browser's timezone.
+ * Fast comparison of local dates.
+ * This is faster than Luxon's internal number conversions but only works on DateTime
+ * objects sharing the exact same locale and timezone.
  *
- * @param {DateTime} dt a luxon's DateTime object
- * @returns {moment} a moment.js object in the browser's timezone
+ * @private
+ * @param {NullableDateTime} d1
+ * @param {"<" | "<=" | ">" | ">=" | "=" | "!="} operator
+ * @param {NullableDateTime} d2
  */
-export function luxonToMoment(dt) {
-    if (dt.isValid) {
-        const o = dt.toObject();
-        // Note: the month is 0-based in moment.js, but 1-based in luxon.js
-        return moment({ ...o, month: o.month - 1 });
-    } else {
-        return moment.invalid();
+function _fastLocalDateCompare(d1, operator, d2) {
+    if (!d1 || !d2) {
+        return false;
+    }
+    const a = d1.ts;
+    const b = d2.ts;
+    switch (operator) {
+        case "<": {
+            return a < b;
+        }
+        case "<=": {
+            return a <= b;
+        }
+        case ">": {
+            return a > b;
+        }
+        case ">=": {
+            return a >= b;
+        }
+        case "=": {
+            return a === b;
+        }
+        case "!=": {
+            return a !== b;
+        }
     }
 }
 
-/**
- * Converts a moment.js object into a luxon's DateTime object.
- * NB: the passed object's values will be utilized as is, regardless of its corresponding timezone.
- * So passing a moment.js object having 8 as hours value will result in a luxon's DateTime object
- * having also 8 as hours value. But the luxon's DateTime object will be in the user's timezone.
- *
- * @param {moment} dt a moment.js object
- * @returns {DateTime} a luxon's DateTime object in the user's timezone
- */
-export function momentToLuxon(dt) {
-    const o = dt.toObject();
-    // Note: the month is 0-based in moment.js, but 1-based in luxon.js
-    return DateTime.fromObject({
-        year: o.years,
-        month: o.months + 1,
-        day: o.date,
-        hour: o.hours,
-        minute: o.minutes,
-        second: o.seconds,
-        millisecond: o.milliseconds,
-    });
-}
-
-// -----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 // Formatting
-// -----------------------------------------------------------------------------
-
-/**
- * Returns true if the given format is a 24-hour format.
- * Returns false otherwise.
- *
- * @param {string} [format=localization.timeFormat]
- * @returns true if the format contains a 24 hour format
- */
-export function is24HourFormat(format) {
-    return (format || localization.timeFormat).indexOf("H") !== -1;
-}
+//-----------------------------------------------------------------------------
 
 /**
  * Formats a DateTime object to a date string
  *
- * @see formatDateTime
- * @returns {string}
+ * @param {NullableDateTime} value
+ * @param {ConversionOptions} [options={}]
  */
 export function formatDate(value, options = {}) {
-    if (value === false) {
+    if (!value) {
         return "";
     }
     const format = options.format || localization.dateFormat;
-    const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
-    return value.toFormat(format, { numberingSystem });
+    return value.toFormat(format);
 }
 
 /**
  * Formats a DateTime object to a datetime string
  *
- * @param {DateTime | false} value
- * @param {Object} options
- * @param {string} [options.format]
- *  Provided format used to format the input DateTime object.
- *
- *  Default=the session localization format.
- *
- * @param {string} [options.numberingSystem]
- *  Provided numbering system used to parse the input value.
- *
- * Default=the default numbering system assigned to luxon
- * @see localization_service.js
- *
- * @returns {string}
+ * @param {NullableDateTime} value
+ * @param {ConversionOptions} [options={}]
  */
 export function formatDateTime(value, options = {}) {
-    if (value === false) {
+    if (!value) {
         return "";
     }
     const format = options.format || localization.dateTimeFormat;
-    const numberingSystem = options.numberingSystem || Settings.defaultNumberingSystem || "latn";
-    return value.setZone("default").toFormat(format, { numberingSystem });
+    return value.setZone("default").toFormat(format);
 }
 
-// -----------------------------------------------------------------------------
+/**
+ * Formats the given DateTime to the server date format.
+ * @param {DateTime} value
+ */
+export function serializeDate(value) {
+    if (!dateCache.has(value)) {
+        dateCache.set(value, value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" }));
+    }
+    return dateCache.get(value);
+}
+
+/**
+ * Formats the given DateTime to the server datetime format.
+ * @param {DateTime} value
+ */
+export function serializeDateTime(value) {
+    if (!dateTimeCache.has(value)) {
+        dateTimeCache.set(
+            value,
+            value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" })
+        );
+    }
+    return dateTimeCache.get(value);
+}
+
+//-----------------------------------------------------------------------------
 // Parsing
-// -----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 /**
  * Parses a string value to a Luxon DateTime object.
  *
+ * @param {string} value
+ * @param {ConversionOptions} [options={}]
+ *
  * @see parseDateTime (Note: since we're only interested by the date itself, the
  *  returned value will always be set at the start of the day)
- * @returns {DateTime | false} Luxon DateTime object in user's timezone
  */
 export function parseDate(value, options = {}) {
-    if (!value) {
-        return false;
-    }
-    return parseDateTime(value, { format: localization.dateFormat, ...options }).startOf("day");
+    const parsed = parseDateTime(value, { format: localization.dateFormat, ...options });
+    return parsed && parsed.startOf("day");
 }
 
 /**
@@ -296,24 +394,9 @@ export function parseDate(value, options = {}) {
  *    e.g. "2020-01-01T12:00:00+06:00" with the user's timezone being UTC+1,
  *         the returned value will express the same timestamp but in UTC+1 (here time will be 7:00).
  *
- * @param {object} options
- * @param {string} [options.format]
- *  Provided format used to parse the input value.
+ * @param {ConversionOptions} options
  *
- *  Default=the session localization format
- *
- * @param {string} [options.locale]
- *  Provided locale used to parse the input value.
- *
- * Default=the session localization locale
- *
- * @param {string} [options.numberingSystem]
- *  Provided numbering system used to parse the input value.
- *
- * Default=the default numbering system assigned to luxon
- * @see localization_service.js
- *
- * @returns {DateTime | false} Luxon DateTime object in user's timezone
+ * @returns {NullableDateTime} Luxon DateTime object in user's timezone
  */
 export function parseDateTime(value, options = {}) {
     if (!value) {
@@ -324,30 +407,28 @@ export function parseDateTime(value, options = {}) {
     const parseOpts = {
         setZone: true,
         zone: "default",
-        locale: options.locale,
-        numberingSystem: options.numberingSystem || Settings.defaultNumberingSystem || "latn",
     };
 
     // Base case: try parsing with the given format and options
     let result = DateTime.fromFormat(value, fmt, parseOpts);
 
     // Try parsing as a smart date
-    if (!isValidDateTime(result)) {
+    if (!isValidDate(result)) {
         result = parseSmartDateInput(value);
     }
 
     // Try parsing with partial date parts
-    if (!isValidDateTime(result)) {
+    if (!isValidDate(result)) {
         const fmtWoZero = stripAlphaDupes(fmt);
         result = DateTime.fromFormat(value, fmtWoZero, parseOpts);
     }
 
     // Try parsing with custom shorthand date parts
-    if (!isValidDateTime(result)) {
+    if (!isValidDate(result)) {
         // Luxon is not permissive regarding delimiting characters in the format.
         // So if the value to parse has less characters than the format, we would
         // try to parse without the delimiting characters.
-        const digitList = value.split(nonDigitsRegex).filter(Boolean);
+        const digitList = value.split(nonDigitRegex).filter(Boolean);
         const fmtList = fmt.split(nonAlphaRegex).filter(Boolean);
         const valWoSeps = digitList.join("");
 
@@ -374,22 +455,22 @@ export function parseDateTime(value, options = {}) {
     }
 
     // Try with defaul ISO or SQL formats
-    if (!isValidDateTime(result)) {
+    if (!isValidDate(result)) {
         // Also try some fallback formats, but only if value counts more than
         // four digit characters as this could get misinterpreted as the time of
         // the actual date.
-        const valueDigits = value.replace(nonDigitsRegex, "");
+        const valueDigits = value.replace(nonDigitRegex, "");
         if (valueDigits.length > 4) {
             result = DateTime.fromISO(value, parseOpts); // ISO8601
-            if (!isValidDateTime(result)) {
+            if (!isValidDate(result)) {
                 result = DateTime.fromSQL(value, parseOpts); // last try: SQL
             }
         }
     }
 
     // No working parsing methods: throw an error
-    if (!isValidDateTime(result)) {
-        throw new Error(sprintf(_t("'%s' is not a correct date or datetime"), value));
+    if (!isValidDate(result)) {
+        throw new ConversionError(sprintf(_t("'%s' is not a correct date or datetime"), value));
     }
 
     return result.setZone("default");
@@ -398,46 +479,21 @@ export function parseDateTime(value, options = {}) {
 /**
  * Returns a date object parsed from the given serialized string.
  * @param {string} value serialized date string, e.g. "2018-01-01"
- * @returns {DateTime} parsed date object in user's timezone
  */
 export function deserializeDate(value) {
-    return DateTime.fromSQL(value, { zone: "default", numberingSystem: "latn" });
+    return DateTime.fromSQL(value, { numberingSystem: "latn", zone: "default" }).reconfigure({
+        numberingSystem: Settings.defaultNumberingSystem,
+    });
 }
 
 /**
  * Returns a datetime object parsed from the given serialized string.
  * @param {string} value serialized datetime string, e.g. "2018-01-01 00:00:00", expressed in UTC
- * @returns {DateTime} parsed datetime object in user's timezone
  */
 export function deserializeDateTime(value) {
-    return DateTime.fromSQL(value, { zone: "utc", numberingSystem: "latn" }).setZone("default");
-}
-
-const dateCache = new WeakMap();
-/**
- * Returns a serialized string representing the given date.
- * @param {DateTime} value DateTime object, its timezone does not matter
- * @returns {string} serialized date, ready to be sent to the server
- */
-export function serializeDate(value) {
-    if (!dateCache.has(value)) {
-        dateCache.set(value, value.toFormat(SERVER_DATE_FORMAT, { numberingSystem: "latn" }));
-    }
-    return dateCache.get(value);
-}
-
-const dateTimeCache = new WeakMap();
-/**
- * Returns a serialized string representing the given datetime.
- * @param {DateTime} value DateTime object, its timezone does not matter
- * @returns {string} serialized datetime, ready to be sent to the server
- */
-export function serializeDateTime(value) {
-    if (!dateTimeCache.has(value)) {
-        dateTimeCache.set(
-            value,
-            value.setZone("utc").toFormat(SERVER_DATETIME_FORMAT, { numberingSystem: "latn" })
-        );
-    }
-    return dateTimeCache.get(value);
+    return DateTime.fromSQL(value, { numberingSystem: "latn", zone: "utc" })
+        .setZone("default")
+        .reconfigure({
+            numberingSystem: Settings.defaultNumberingSystem,
+        });
 }
