@@ -15,11 +15,8 @@ import atexit
 import csv # pylint: disable=deprecated-module
 import logging
 import os
-import signal
+import re
 import sys
-import threading
-import traceback
-import time
 
 from psycopg2 import ProgrammingError, errorcodes
 
@@ -32,6 +29,8 @@ __version__ = odoo.release.version
 
 # Also use the `odoo` logger for the main script.
 _logger = logging.getLogger('odoo')
+
+re._MAXCACHE = 4096  # default is 512, a little too small for odoo
 
 def check_root_user():
     """Warn if the process's user is 'root' (on POSIX system)."""
