@@ -83,11 +83,13 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         const { globalState } = this.pos;
         if (globalState.config.module_pos_restaurant) {
             globalState.setOrderToRemove(order);
+            await _super(...arguments);
             if (!globalState.table) {
                 await globalState._removeOrdersFromServer();
             }
+        } else {
+            await _super(...arguments);
         }
-        await _super(...arguments);
     },
     async setTip(order, serverId, amount) {
         const { globalState } = this.pos;
