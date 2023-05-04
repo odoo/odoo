@@ -9,9 +9,7 @@ import { nbsp } from "@web/core/utils/strings";
 patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     get swapButton() {
         return (
-            this.props.actionType === "payment" &&
-            this.pos.globalState.config.module_pos_restaurant &&
-            this.pos.globalState.orderPreparationCategories.size
+            this.props.actionType === "payment" && this.pos.globalState.config.module_pos_restaurant
         );
     },
     get currentOrder() {
@@ -50,7 +48,6 @@ patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     get highlightPay() {
         return (
             this._super(...arguments) &&
-            this.pos.globalState.orderPreparationCategories.size &&
             !this.currentOrder.hasChangesToPrint() &&
             this.hasQuantity(this.currentOrder)
         );

@@ -123,7 +123,7 @@ class Do {
     confirmRefund() {
         return [
             {
-                trigger: ".ticket-screen .button.pay",
+                trigger: ".ticket-screen .button.pay-order-button",
             },
         ];
     }
