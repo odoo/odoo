@@ -242,7 +242,9 @@ export class MediaDialogWrapper extends Component {
         this.dialogs = useWowlService('dialog');
 
         onRendered(() => {
-            this.dialogs.add(MediaDialog, this.props);
+            this.dialogs.add(MediaDialog, this.props, {
+                onClose: this.props.close,
+            });
         });
     }
 }

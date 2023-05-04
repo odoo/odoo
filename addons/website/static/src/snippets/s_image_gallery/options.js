@@ -4,6 +4,7 @@ import { MediaDialogWrapper } from "@web_editor/components/media_dialog/media_di
 import { ComponentWrapper } from "web.OwlCompatibility";
 import core from "web.core";
 import options from "web_editor.snippets.options";
+import wUtils from "website.utils";
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -66,9 +67,9 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * Displays the images with the "masonry" layout.
      *
      * @private
+     * @returns {Promise}
      */
     _masonry() {
-        var self = this;
         const imgs = this._getItemsGallery();
         var columns = this._getColumns();
         var colClass = 'col-lg-' + (12 / columns);
@@ -86,32 +87,36 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
 
         // Dispatch images in columns by always putting the next one in the
         // smallest-height column
-        while (imgs.length) {
-            var min = Infinity;
-            var $lowest;
-            cols.forEach((col) => {
-                var $col = $(col);
-                var height = $col.is(':empty') ? 0 : $col.find('img').last().offset().top + $col.find('img').last().height() - self.$target.offset().top;
-                // Neutralize invisible sub-pixel height differences.
-                height = Math.round(height);
-                if (height < min) {
-                    min = height;
-                    $lowest = $col;
+        return new Promise(async resolve => {
+            for (const imgEl of imgs) {
+                let min = Infinity;
+                let smallestColEl;
+                for (const colEl of cols) {
+                    const imgEls = colEl.querySelectorAll("img");
+                    const lastImgRect = imgEls.length && imgEls[imgEls.length - 1].getBoundingClientRect();
+                    const height = lastImgRect ? Math.round(lastImgRect.top + lastImgRect.height) : 0;
+                    if (height < min) {
+                        min = height;
+                        smallestColEl = colEl;
+                    }
                 }
-            });
-            // Only on Chrome: appended images are sometimes invisible and not
-            // correctly loaded from cache, we use a clone of the image to force
-            // the loading.
-            $lowest.append(imgs.shift().cloneNode());
-        }
+                // Only on Chrome: appended images are sometimes invisible
+                // and not correctly loaded from cache, we use a clone of the
+                // image to force the loading.
+                smallestColEl.append(imgEl.cloneNode());
+                await wUtils.onceAllImagesLoaded(this.$target);
+            }
+            resolve();
+        });    
     },
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
      *
      * @private
      * @param {string} modeName
+     * @returns {Promise}
      */
-    _setMode(modeName) {
+    async _setMode(modeName) {
         modeName = modeName || 'slideshow'; // FIXME should not be needed
         this.$target.css('height', '');
         this.$target
@@ -124,9 +129,9 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         if (this.options.wysiwyg) {
             this.options.wysiwyg.odooEditor.unbreakableStepUnactive();
         }
-        this[`_${modeName}`]();
+        await this[`_${modeName}`]();
         this.trigger_up('cover_update');
-        this._refreshPublicWidgets();
+        await this._refreshPublicWidgets();
     },
     /**
      * Displays the images with the standard layout: floating images.
@@ -216,16 +221,18 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
         itemsEls.forEach((img, index) => {
             img.dataset.index = index;
         });
-        const currentMode = this._getMode();
-        this._relayout();
-        if (currentMode === "slideshow") {
-            this._updateIndicatorAndActivateSnippet(newItemPosition);
-        } else {
-            this.trigger_up("activate_snippet", {
-                $snippet: $(itemsEls[newItemPosition]),
-                ifInactiveOptions: true,
-            });
-        }
+        this.trigger_up('snippet_edition_request', {exec: async () => {
+            await this._relayout();
+            if (this._getMode() === "slideshow") {
+                this._updateIndicatorAndActivateSnippet(newItemPosition);
+            } else {
+                const imageEl = this.$target[0].querySelector(`[data-index='${newItemPosition}']`);
+                this.trigger_up("activate_snippet", {
+                    $snippet: $(imageEl),
+                    ifInactiveOptions: true,
+                });
+            }
+        }});
     },
     /**
      * Empties the container, adds the given content and returns the container.
@@ -245,7 +252,7 @@ options.registry.GalleryLayout = options.registry.CarouselHandler.extend({
      * @private
      */
     _relayout() {
-        this._setMode(this._getMode());
+        return this._setMode(this._getMode());
     },
 });
 
@@ -254,11 +261,15 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
      * @override
      */
     start() {
+        const _super = this._super.bind(this);
+        let layoutPromise;
         const containerEl = this.$target[0].querySelector(":scope > .container, :scope > .container-fluid, :scope > .o_container_small");
         if (containerEl.querySelector(":scope > *:not(div)")) {
-            this._relayout();
+            layoutPromise = this._relayout();
+        } else {
+            layoutPromise = Promise.resolve();
         }
-        return this._super.apply(this, arguments);
+        return layoutPromise.then(() => _super.apply(this, arguments));
     },
     /**
      * @override
@@ -283,7 +294,7 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
         const nbColumns = parseInt(widgetValue || '1');
         this.$target.attr('data-columns', nbColumns);
 
-        this._relayout();
+        return this._relayout();
     },
     /**
      * Allows to change the images layout. @see grid, masonry, nomode, slideshow
@@ -291,7 +302,7 @@ options.registry.gallery = options.registry.GalleryLayout.extend({
      * @see this.selectClass for parameters
      */
     mode(previewMode, widgetValue, params) {
-        this._setMode(widgetValue);
+        return this._setMode(widgetValue);
     },
 
     //--------------------------------------------------------------------------
@@ -367,10 +378,10 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
     /**
      * @override
      */
-    onBuilt() {
-        this._super(...arguments);
+    async onBuilt() {
+        await this._super(...arguments);
         if (this.$target.find('.o_add_images').length) {
-            this.addImages(false);
+            await this.addImages(false);
         }
         // TODO should consider the async parts
         this._adaptNavigationIDs();
@@ -403,34 +414,39 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
         const $container = this.$('> .container, > .container-fluid, > .o_container_small');
         const lastImage = this._getItemsGallery().at(-1);
         let index = lastImage ? this._getIndex(lastImage) : -1;
-        const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
-            multiImages: true,
-            onlyImages: true,
-            save: images => {
-                let $newImageToSelect;
-                for (const image of images) {
-                    const $img = $('<img/>', {
-                        class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
-                        src: image.src,
-                        'data-index': ++index,
-                        alt: image.alt || '',
-                        'data-name': _t('Image'),
-                        style: $images.length > 0 ? $images[0].style.cssText : '',
-                    }).appendTo($container);
-                    if (!$newImageToSelect) {
-                        $newImageToSelect = $img;
+        return new Promise(resolve => {
+            let savedPromise = Promise.resolve();
+            const dialog = new ComponentWrapper(this, MediaDialogWrapper, {
+                multiImages: true,
+                onlyImages: true,
+                save: images => {
+                    let $newImageToSelect;
+                    for (const image of images) {
+                        const $img = $('<img/>', {
+                            class: $images.length > 0 ? $images[0].className : 'img img-fluid d-block ',
+                            src: image.src,
+                            'data-index': ++index,
+                            alt: image.alt || '',
+                            'data-name': _t('Image'),
+                            style: $images.length > 0 ? $images[0].style.cssText : '',
+                        }).appendTo($container);
+                        if (!$newImageToSelect) {
+                            $newImageToSelect = $img;
+                        }
                     }
-                }
-                if (images.length > 0) {
-                    this._relayout();
-                    this.trigger_up('cover_update');
-                    // Triggers the re-rendering of the thumbnail
-                    $newImageToSelect.trigger('image_changed');
-
-                }
-            },
+                    if (images.length > 0) {
+                        savedPromise = this._relayout();
+                        this.trigger_up('cover_update');
+                        // Triggers the re-rendering of the thumbnail
+                        $newImageToSelect.trigger('image_changed');
+                    }
+                },
+                close: () => {
+                    savedPromise.then(resolve);
+                },
+            });
+            dialog.mount(this.el);
         });
-        dialog.mount(this.el);
     },
     /**
      * Allows to remove all images. Restores the snippet to the way it was when
@@ -466,7 +482,9 @@ options.registry.GalleryImageList = options.registry.GalleryLayout.extend({
         this._super(...arguments);
         if (name === 'image_removed') {
             data.$image.remove(); // Force the removal of the image before reset
-            this._relayout();
+            this.trigger_up('snippet_edition_request', {exec: () => {
+                return this._relayout();
+            }});
         }
     },
 
