@@ -1525,6 +1525,11 @@ export class PivotModel extends Model {
             }
         });
     }
+
+    _getEmptyGroupLabel(fieldName) {
+        return this.env._t("None");
+    }
+
     /**
      * Extract from a groupBy value a label.
      *
@@ -1549,7 +1554,7 @@ export class PivotModel extends Model {
                 : this.env._t("No");
         }
         if (value === false) {
-            return this.env._t("None");
+            return this._getEmptyGroupLabel(groupBy);
         }
         if (value instanceof Array) {
             return this._getNumberedLabel(value, fieldName, config);

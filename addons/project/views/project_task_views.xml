@@ -19,6 +19,7 @@
                     <filter string="Favorite Projects" name="favorite_projects" domain="[('project_id.is_favorite', '=', True)]" invisible="context.get('default_project_id')"/>
                     <separator/>
                     <filter string="Starred Tasks" name="starred_tasks" domain="[('priority', '=', '1')]"/>
+                    <filter string="Private Tasks" name="private_tasks" domain="[('project_id', '=', False)]" invisible="context.get('default_project_id')"/>
                     <separator groups="project.group_project_task_dependencies"/>
                     <filter string="Blocked" name="blocked" domain="[('state', '=', '04_waiting_normal')]" groups="project.group_project_task_dependencies"/>
                     <filter string="Blocking" name="blocking" domain="[('state', 'not in', ['1_done','1_canceled']), ('dependent_ids', '!=', False)]" groups="project.group_project_task_dependencies"/>
