@@ -722,11 +722,13 @@ class AccountEdiFormat(models.Model):
                     general_discount = discounted_amount - taxable_amount
                     sequence = len(elements) + 1
 
-                    with invoice_form.invoice_line_ids.new() as invoice_line_global_discount:
-                        invoice_line_global_discount.tax_ids.clear()
-                        invoice_line_global_discount.sequence = sequence
-                        invoice_line_global_discount.name = 'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE'
-                        invoice_line_global_discount.price_unit = general_discount
+                    invoice_form.invoice_line_ids.create({
+                        'move_id': invoice_form.id,
+                        'tax_ids': [fields.Command.clear()],
+                        'name':'SCONTO' if general_discount < 0 else 'MAGGIORAZIONE',
+                        'sequence': sequence,
+                        'price_unit': general_discount
+                    })
 
             new_invoice = invoice_form
 

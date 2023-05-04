@@ -52,8 +52,10 @@ class TestItEdiImport(TestItEdi):
         cls.invoice_filename1 = 'IT01234567890_FPR01.xml'
         cls.invoice_filename2 = 'IT01234567890_FPR02.xml'
         cls.signed_invoice_filename = 'IT01234567890_FPR01.xml.p7m'
+        cls.invoice_discount_file = 'IT00470550013_simpl_discount.xml'
         cls.invoice_content = cls._get_test_file_content(cls.invoice_filename1)
         cls.signed_invoice_content = cls._get_test_file_content(cls.signed_invoice_filename)
+        cls.invoice_discount_content = cls._get_test_file_content(cls.invoice_discount_file)
         cls.invoice = cls.env['account.move'].create({
             'move_type': 'in_invoice',
             'ref': '01234567890'
@@ -129,3 +131,11 @@ class TestItEdiImport(TestItEdi):
         self.assertEqual(len(attachments), 1)
         invoices = self.env['account.move'].search([('payment_reference', '=', 'TWICE_TEST')])
         self.assertEqual(len(invoices), 1)
+
+    def test_discount_line(self):
+        """Test discount line addition after bill import"""
+
+        content = etree.fromstring(self.invoice_discount_content)
+        invoices = self.edi_format._create_invoice_from_xml_tree(self.invoice_discount_file, content)
+
+        self.assertEqual(invoices.line_ids.name, 'SCONTO')
