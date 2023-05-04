@@ -76,6 +76,7 @@ class PosOrder(models.Model):
         """
         order_line = super()._prepare_order_line(order_line)
         order_line["product_id"] = order_line["product_id"][0]
+        order_line["refunded_orderline_id"] = order_line["refunded_orderline_id"] and order_line["refunded_orderline_id"][0]
         order_line["server_id"] = order_line["id"]
 
         del order_line["id"]
