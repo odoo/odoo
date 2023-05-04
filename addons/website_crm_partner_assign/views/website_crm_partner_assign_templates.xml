@@ -228,17 +228,21 @@
                 <thead>
                     <tr>
                         <th>Date</th>
-                        <th class="w-75">Name</th>
+                        <th class="w-25">Lead</th>
                         <th>Contact Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr t-foreach="leads" t-as="lead">
                         <td><span t-field="lead.create_date" t-options='{"widget": "date"}' /></td>
-                        <td>
+                        <td class="text-wrap">
                             <a t-attf-href="/my/lead/#{lead.id}"><span t-field="lead.name"/></a>
                         </td>
-                        <td><span t-field="lead.contact_name" /></td>
+                        <td><span t-field="lead.contact_name"/></td>
+                        <td><span t-field="lead.email_from"/></td>
+                        <td><span t-field="lead.phone"/></td>
                     </tr>
                 </tbody>
             </t>
@@ -297,8 +301,10 @@
                 <thead>
                     <tr class="active">
                         <th>Date</th>
-                        <th class="w-50">Name</th>
+                        <th class="w-25">Opportunity</th>
                         <th>Contact</th>
+                        <th>Email</th>
+                        <th>Phone</th>
                         <th>Expected</th>
                         <th>Stage</th>
                     </tr>
@@ -306,10 +312,12 @@
                 <tbody>
                     <tr t-foreach="opportunities" t-as="opp">
                         <td><span t-field="opp.create_date" t-options='{"widget": "date"}' /></td>
-                        <td>
+                        <td class="text-wrap">
                             <a t-attf-href="/my/opportunity/#{opp.id}"><span t-field="opp.name"/></a>
                         </td>
-                        <td><span t-field="opp.contact_name" /></td>
+                        <td><span t-field="opp.contact_name"/></td>
+                        <td><span t-field="opp.email_from"/></td>
+                        <td><span t-field="opp.phone"/></td>
                         <td>
                             <span t-if="opp.company_currency" class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/>
                             <span t-else="" class="text-nowrap" t-esc="opp.expected_revenue"/>
