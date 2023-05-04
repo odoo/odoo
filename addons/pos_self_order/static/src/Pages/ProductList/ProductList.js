@@ -46,13 +46,25 @@ export class ProductList extends Component {
         this.tagList = useRef("tagList");
         this.header = useRef("header");
         this.productPage = useRef("productPage");
+        this.main = useRef("main");
+        this.orderButton = useRef("orderButton");
 
         onMounted(() => {
+            // TODO: replace this logic with dvh once it is supported
+            this.main.el.style.height = `${window.innerHeight}px`;
+            // this.main.el.style.height = `100%`;
+
             this.headerHeight = this.header.el.offsetHeight;
             this.navbarHeight = this.header.el.querySelector("nav").offsetHeight;
             // TODO: add dvh once it is supported
-            this.productsList.el.style.height = `calc(100vh - ${this.navbarHeight}px)`;
-            this.productsList.el.style.paddingBottom = `100px`;
+            // this.productsList.el.style.height = `calc(${window.innerHeight}px - ${this.navbarHeight}px)`;
+            this.productsList.el.style.height = `${
+                window.innerHeight - this.headerHeight - this.orderButton?.el?.offsetHeight
+            }px`;
+            // this.productsList.el.style.height = `100%`;
+            // this.productsList.el.style.paddingBottom = `100px`;
+            this.productsList.el.style.paddingBottom = `0px`;
+            console.log("productsList", this.productsList.el.innerHeight);
 
             // if the user is coming from the product page
             // we scroll back to the product card that he was looking at before
@@ -132,6 +144,11 @@ export class ProductList extends Component {
                             parseInt(this.productsList.el.style.paddingBottom) -
                             OBSERVING_WINDOW_HEIGHT
                         }px 0px`,
+                        // rootMargin: `0px 0px -${
+                        //     this.productsList.el.height -
+                        //     parseInt(this.productsList.el.style.paddingBottom) -
+                        //     OBSERVING_WINDOW_HEIGHT
+                        // }px 0px`,
                     }
                 );
                 Object.keys(this.productGroup).forEach((tag) => {
@@ -157,6 +174,12 @@ export class ProductList extends Component {
             fill: "forwards",
         });
         this.privateState.navbarIsShown = !this.privateState.navbarIsShown;
+        this.productsList.el.style.height = `${
+            window.innerHeight -
+            this.headerHeight -
+            // this.orderButton.el.offsetHeight +
+            this.navbarHeight * !this.privateState.navbarIsShown
+        }px`;
     }
 
     scrollToTop() {

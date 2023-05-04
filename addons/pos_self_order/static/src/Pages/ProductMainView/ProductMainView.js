@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, useState } from "@odoo/owl";
+import { Component, onMounted, useRef, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { NavBar } from "@pos_self_order/Components/NavBar/NavBar";
 import { FloatingButton } from "@pos_self_order/Components/FloatingButton/FloatingButton";
@@ -15,6 +15,11 @@ export class ProductMainView extends Component {
     };
     setup() {
         this.selfOrder = useSelfOrder();
+        this.main = useRef("main");
+        onMounted(() => {
+            // TODO: replace this logic with dvh once it is supported
+            this.main.el.style.height = `${window.innerHeight}px`;
+        });
 
         // we want to keep track of the last product that was viewed
         this.selfOrder.currentProduct = this.props.product.product_id;

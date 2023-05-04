@@ -2,6 +2,8 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_self_order.ProductList" owl="1">
+    <div t-ref="main" class="d-flex flex-column">
+        <!-- <div t-ref="productPage" class="position-relative h-100"> -->
         <div t-ref="productPage" class="position-relative">
             <header t-ref="header" class="bg-white shadow-sm">
                 <NavBar/>
@@ -21,8 +23,9 @@
             </main>
         </div>
         <t t-if="selfOrder.table and selfOrder.cart.length" t-call="pos_self_order.GoToCartButton"/>
-
+    </div>
     </t>
+
 
     <t t-name="pos_self_order.NoProductsMessage" owl="1">
         <p class="mx-auto mt-3 text-center">
@@ -87,20 +90,21 @@
     </t>
 
     <t t-name="pos_self_order.GoToCartButton" owl="1">
-    <div class="fixed-bottom d-flex align-items-center w-100 p-3 bg-white shadow-lg">
-        <button t-on-click="() => env.navigate('/cart')" class="o_self_order_floating_button btn btn-primary w-100 p-2 py-3 rounded">
-            <div class="d-flex align-items-center justify-content-between mx-2">
-                <i class="fa fa-shopping-cart pe-2" aria-hidden="true"/>
-                <p class="m-0">
-                    Review (
-                    <t t-esc="selfOrder.getTotalCartQty()" />
-                    )
-                </p>
-                <span class="ms-auto">
-                    <t t-esc="selfOrder.formatMonetary(selfOrder.getTotalCartCost())" />
-                </span>
-            </div>
-        </button>
+    <!-- <div class="d-flex align-items-center w-100 p-3 bg-white shadow-lg"> -->
+        <div t-ref="orderButton" class="d-flex align-items-center w-100 bg-white shadow-lg h-100">
+            <button t-on-click="() => env.navigate('/cart')" class="btn btn-primary w-100 p-2 py-3 rounded">
+                <div class="d-flex align-items-center justify-content-between mx-2">
+                    <i class="fa fa-shopping-cart pe-2" aria-hidden="true"/>
+                    <p class="m-0">
+                        Review (
+                        <t t-esc="selfOrder.getTotalCartQty()" />
+                        )
+                    </p>
+                    <span class="ms-auto">
+                        <t t-esc="selfOrder.formatMonetary(selfOrder.getTotalCartCost())" />
+                    </span>
+                </div>
+            </button>
+        </div>
     </t>
-    </div>
 </templates>

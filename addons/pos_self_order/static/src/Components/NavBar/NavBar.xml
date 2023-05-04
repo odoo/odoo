@@ -7,7 +7,9 @@
                 <i class="fa fa-fw fa-chevron-left"/>
             </button>
             <div class="mx-auto overflow-hidden">
-                <h3 class="m-0 text-primary text-truncate" t-esc="props.customText or selfOrder.company_name"/>
+                <h3 class="m-0 text-primary text-truncate" t-esc="props.customText or selfOrder.company_name"
+                    t-on-click="() => env.navigate('/')"
+                    />
             </div>
             <span class="px-3 text-center" t-esc="selfOrder?.table?.name"/>
         </nav>
