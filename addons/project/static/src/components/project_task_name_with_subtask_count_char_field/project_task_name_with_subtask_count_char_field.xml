@@ -3,11 +3,11 @@
 
     <t t-name="project.ProjectTaskNameWithSubtaskCountCharField" t-inherit="web.CharField" t-inherit-mode="primary" owl="1">
         <xpath expr="//span[@t-esc='formattedValue']" position="after">
-            <span
-                class="text-muted ms-2"
-                t-out="formattedSubtaskCount"
-                style="font-weight: normal;"
-            />
+            <span class="text-muted ms-2 fw-normal">
+                <t t-if="props.record.data.subtask_count">
+                    (<t t-out="props.record.data.closed_subtask_count"/>/<t t-out="props.record.data.subtask_count"/> sub-tasks)
+                </t>
+            </span>
         </xpath>
     </t>
 
