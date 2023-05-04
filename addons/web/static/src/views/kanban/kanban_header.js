@@ -75,6 +75,10 @@ export class KanbanHeader extends Component {
         return this.props.group;
     }
 
+    _getEmptyGroupLabel(fieldName) {
+        return this.env._t("None");
+    }
+
     get groupName() {
         const { groupByField, displayName } = this.group;
         let name = displayName;
@@ -87,7 +91,7 @@ export class KanbanHeader extends Component {
                 groupByField.type === "datetime" ||
                 isNull(name)
             ) {
-                name = this.env._t("None");
+                name = this._getEmptyGroupLabel(groupByField.name);
             }
         }
         return name;

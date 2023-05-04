@@ -63,4 +63,17 @@ export class ProjectTaskKanbanHeader extends KanbanHeader {
     canDeleteGroup(group) {
         return super.canDeleteGroup(group) && (!this.props.list.isGroupedByStage || this.isProjectManager) || this.props.list.isGroupedByPersonalStages;
     }
+
+    /**
+     * @override
+     */
+    _getEmptyGroupLabel(fieldName) {
+        if (fieldName === "project_id") {
+            return this.env._t("🔒 Private");
+        } else if (fieldName === "user_ids") {
+            return this.env._t("👤 Unassigned");
+        } else {
+            return super._getEmptyGroupLabel(fieldName);
+        }
+    }
 }

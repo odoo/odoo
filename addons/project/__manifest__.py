@@ -70,6 +70,7 @@
             'project/static/src/components/**/*',
             'project/static/src/views/**/*',
             'project/static/src/js/project_graph_view.js',
+            'project/static/src/js/project_pivot_model.js',
             'project/static/src/js/project_pivot_view.js',
             'project/static/src/js/project_rating_graph_view.js',
             'project/static/src/js/project_rating_pivot_view.js',

@@ -15,4 +15,15 @@ export class ProjectTaskListRenderer extends ListRenderer {
         }
         return readonly || super.isCellReadonly(column, record);
     }
+
+    getGroupDisplayName(group) {
+        const { _t } = this.env;
+        if (group.groupByField.name === "project_id" && !group.value) {
+            return _t("🔒 Private");
+        } else if (group.groupByField.name === "user_ids" && !group.value) {
+            return _t("👤 Unassigned");
+        } else {
+            return super.getGroupDisplayName(group);
+        }
+    }
 }
