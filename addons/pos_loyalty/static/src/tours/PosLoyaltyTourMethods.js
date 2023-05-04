@@ -161,7 +161,7 @@ class Check {
     customerIs(name) {
         return [
             {
-                trigger: `.actionpad button.set-partner:contains("${name}")`,
+                trigger: `.product-screen .set-partner:contains("${name}")`,
                 run: function () {},
             },
         ];
