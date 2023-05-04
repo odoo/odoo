@@ -2,6 +2,7 @@ from unittest.mock import patch
 
 from odoo import Command
 from odoo.addons.account.models.chart_template import AccountChartTemplate
+from odoo.addons.account.tests.common import instantiate_accountman
 from odoo.tests import tagged
 from odoo.tests.common import TransactionCase
 
@@ -104,25 +105,14 @@ class TestChartTemplate(TransactionCase):
             We need to add xml_ids to the templates because they are loaded from their xml_ids
         """
         super().setUpClass()
-
-        # Create user.
-        user = cls.env['res.users'].create({
-            'name': 'Because I am accountman!',
-            'login': 'accountman',
-            'password': 'accountman',
-            'groups_id': [Command.set(cls.env.user.groups_id.ids), Command.link(cls.env.ref('account.group_account_user').id)],
-        })
-        user.partner_id.email = 'accountman@test.com'
+        instantiate_accountman(cls)
 
         cls.company_1 = cls.env['res.company'].create({
             'name': 'TestCompany1',
             'country_id': cls.env.ref('base.be').id,
         })
 
-        cls.env = cls.env(user=user)
-        cls.cr = cls.env.cr
-
-        user.write({
+        cls.user.write({
             'company_ids': [Command.set(cls.company_1.ids)],
             'company_id': cls.company_1.id,
         })
