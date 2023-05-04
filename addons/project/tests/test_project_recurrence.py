@@ -539,3 +539,18 @@ class TestProjectrecurrence(SavepointCase):
         self.assertEqual(dates[2], datetime(2023, 11, 30))
         self.assertEqual(dates[3], datetime(2024, 11, 30))
         self.assertEqual(dates[4], datetime(2025, 11, 30))
+
+    def test_compute_recurrence_message_with_lang_not_set(self):
+        task = self.env['project.task'].create({
+            'name': 'Test task with user language not set',
+            'project_id': self.project_recurring.id,
+            'recurring_task': True,
+            'repeat_interval': 1,
+            'repeat_unit': 'week',
+            'repeat_type': 'after',
+            'repeat_number': 2,
+            'mon': True,
+        })
+
+        self.env.user.lang = None
+        task._compute_recurrence_message()
