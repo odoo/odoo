@@ -27,15 +27,13 @@ export class ProductMainView extends Component {
         this.privateState = useState({
             // we look in the cart too see if the current product is already in it
             // if it is, we set the qty to the qty in the cart
-            qty:
-                this.selfOrder.cart.filter(
-                    (item) => item.product_id === this.props.product.product_id
-                )?.[0]?.qty || 1,
-            customer_note: "",
+            qty: this.selfOrder?.cartItem?.qty || 1,
+            customer_note: this.selfOrder?.cartItem?.customer_note || "",
             selectedVariants: Object.fromEntries(
-                this.props.product.attributes.map((attribute) => [
+                this.props.product.attributes.map((attribute, key) => [
                     attribute.name,
-                    attribute.values[0].name,
+                    this.selfOrder?.cartItem?.description?.split(", ")?.[key] ||
+                        attribute.values[0].name,
                 ])
             ),
         });
@@ -79,6 +77,14 @@ export class ProductMainView extends Component {
             price_with_tax: this.getPriceExtra(selectedVariants, attributes, "price_with_tax"),
         };
     }
+    findQty() {
+        const cartItem = this.selfOrder.cartItem;
+        if (cartItem) {
+            return this.privateState.qty;
+        }
+        return this.selfOrder.cart.filter((item) => this.isSameProduct(item, {}))?.qty;
+    }
+    
 
     addToCartButtonClicked() {
         this.selfOrder.updateCart({

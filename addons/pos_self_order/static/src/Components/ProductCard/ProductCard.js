@@ -12,14 +12,23 @@ export class ProductCard extends Component {
         useForwardRefToParent("currentProductCard");
     }
     clickOnProduct(product) {
-        if (
+        const cartItem = this.props?.cartItem;
+        if (cartItem) {
+            this.selfOrder.cartItem = cartItem;
+            return;
+        }
+        if (!this.canOpenProductMainView(product)) {
+            return;
+        }
+        this.env.navigate("/products/" + product.product_id);
+    }
+    canOpenProductMainView(product) {
+        return (
             this.selfOrder.table ||
             product.has_image ||
             product.description_sale ||
             product.attributes.length
-        ) {
-            this.env.navigate("/products/" + product.product_id);
-        }
+        );
     }
     qtyInCart() {
         const cart = this.selfOrder.cart;

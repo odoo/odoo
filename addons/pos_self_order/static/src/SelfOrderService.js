@@ -97,15 +97,18 @@ export class SelfOrder {
      */
     getUpdatedCart(cart, orderline) {
         return cart
-            .filter((item) => !this.is_same_product(item, orderline))
+            .filter((item) => !this.isSameProduct(item, orderline))
             .concat((orderline.qty && [orderline]) || []);
     }
 
-    is_same_product(item, orderline) {
+    isSameProduct(item, orderline) {
         return (
-            item.is_pos_groupable &&
+            this.getProductWithId(item.product_id).is_pos_groupable &&
             this.product_uniqueness_keys.every((key) => item[key] === orderline[key])
         );
+    }
+    getProductWithId(id) {
+        return this.products.find((product) => product.product_id === id);
     }
 
     combineOrders(orders, new_order) {
@@ -188,6 +191,9 @@ export class SelfOrder {
             console.log(error);
             return (({ state, ...rest }) => ({ state: "not found", ...rest }))(order);
         }
+    }
+    showProductMainView(cartItem) {
+        this.cartItem = cartItem;
     }
 }
 

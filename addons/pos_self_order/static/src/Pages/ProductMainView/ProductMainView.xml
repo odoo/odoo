@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.ProductMainView" owl="1">
 
     <div t-ref="main" class="d-flex flex-column">
-        <NavBar/>
+        <NavBar t-on-click="() => {selfOrder.cartItem = false}"/>
         <div class="bg-white d-flex flex-column pt-3 overflow-auto h-100">
             <div class="px-3 border-bottom">
                 <img t-if="props.product.has_image"
