@@ -777,6 +777,12 @@ class TestExpression(SavepointCaseWithUserDemo):
         with self.assertRaisesRegex(ValueError, r"^Invalid field res\.country\.does_not_exist in leaf \('does_not_exist', '=', 'foo'\)$"):
             Country.search([('does_not_exist', '=', 'foo')])
 
+        with self.assertRaisesRegex(AssertionError, "^Invalid field 'name.\"Et plouf\"'"):
+            Country.search([('name."Et plouf"', 'ilike', 'foo')])
+
+        with self.assertRaisesRegex(AssertionError, "^Invalid field 'name.\"Et plouf\"'"):
+            Country.search([('name."Et plouf"', 'in', ['foo'])])
+
         with self.assertRaisesRegex(KeyError, r"^'does_not_exist'$"):
             Country.search([]).filtered_domain([('does_not_exist', '=', 'foo')])
 
