@@ -4,6 +4,7 @@
 from unittest.mock import patch
 
 from odoo.addons.mail.tests.common import MailCommon
+from odoo.addons.test_mail.data.test_mail_data import MAIL_TEMPLATE
 from odoo.tests.common import tagged
 from odoo.tests import Form
 
@@ -147,6 +148,43 @@ class TestTracking(MailCommon):
         self.assertEqual(record.message_ids[0].body, '<p>Hello Test</p>')
         # one email send due to template
         self.assertSentEmail(self.record.env.user.partner_id, [self.partner_admin], body='<p>Hello Test</p>')
+
+    def test_message_track_template_at_create_from_message(self):
+        """Make sure records created through aliasing show the original message before the template"""
+        # setup
+        test_model = self.env['ir.model']._get('mail.test.ticket')
+        original_sender = self.user_admin.partner_id
+        custom_values = {'name': 'Test', 'customer_id': original_sender.id,
+                         'mail_template': self.env.ref('test_mail.mail_test_ticket_tracking_tpl').id}
+        self.env['mail.alias'].create({
+            'alias_name': 'groups',
+            'alias_user_id': False,
+            'alias_model_id': test_model.id,
+            'alias_contact': 'everyone',
+            'alias_defaults': custom_values})
+        record = self.format_and_process(MAIL_TEMPLATE, '"Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>',
+                                         'groups@test.com', target_field='customer_id', subject=custom_values['customer_id'],
+                                         target_model='mail.test.ticket')
+
+        with self.mock_mail_gateway(mail_unlink_sent=False):
+            self.flush_tracking()
+
+        # Should be trigger message and response template
+        self.assertEqual(len(record.message_ids), 2)
+        messages = list(record.message_ids)
+        messages.sort(key=lambda msg: msg.id)
+        trigger = messages[0]
+        template = messages[1]
+        self.assertIn('Please call me as soon as possible this afternoon!', trigger.body)
+        self.assertIn(f"Hello {custom_values['name']}", template.body)
+        self.assertMailMail(
+            original_sender,
+            'sent',
+            author=self.env.ref('base.partner_root'),
+            email_values={
+                'body_content': f"<p>Hello {custom_values['name']}</p>",
+            }
+        )
 
     def test_create_partner_from_tracking_multicompany(self):
         company1 = self.env['res.company'].create({'name': 'company1'})
