@@ -32,3 +32,6 @@ class TestSnippets(odoo.tests.HttpCase):
             'url': base + '/web/image/website.s_banner_default_image.jpg',
         })
         self.start_tour("/", "snippet_image_gallery", login='admin')
+
+    def test_04_parallax(self):
+        self.start_tour('/', 'test_parallax', login='admin')
