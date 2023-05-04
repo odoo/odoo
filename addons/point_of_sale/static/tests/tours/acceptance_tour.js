@@ -186,7 +186,7 @@ function goto_payment_screen_and_select_payment_method() {
     return [
         {
             content: "go to payment screen",
-            trigger: ".button.pay",
+            trigger: ".button.pay-order-button",
             mobile: false,
         },
         {

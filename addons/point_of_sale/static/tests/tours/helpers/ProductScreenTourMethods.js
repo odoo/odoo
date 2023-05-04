@@ -131,7 +131,10 @@ class Do {
                 trigger: ".btn-switchpane:contains('Review')",
                 mobile: true,
             },
-            { content: "click customer button", trigger: ".actionpad .button.set-partner" },
+            {
+                content: "click customer button",
+                trigger: ".product-screen .set-partner",
+            },
             {
                 content: "partner screen is shown",
                 trigger: ".pos-content .partnerlist-screen",

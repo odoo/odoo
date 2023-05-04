@@ -3083,21 +3083,16 @@ export class Order extends PosModel {
         const changes = {};
         let changesCount = 0;
 
-        if (!skipped && !prepaCategoryIds.size) {
-            return {};
-        }
-
         // Compares the orderlines of the order with the last ones sent.
         // When one of them has changed, we add the change.
         for (const orderlineIdx in this.orderlines) {
             const orderline = this.orderlines[orderlineIdx];
-
             const product = orderline.get_product();
             const note = orderline.getNote();
             const productKey = `${product.id} - ${orderline.get_full_product_name()} - ${note}`;
             const lineKey = `${orderline.uuid} - ${note}`;
 
-            if (prepaCategoryIds.has(product.pos_categ_id[0])) {
+            if (prepaCategoryIds.has(product.pos_categ_id[0]) || prepaCategoryIds.size === 0) {
                 const quantity = orderline.get_quantity();
                 const quantityDiff = oldChanges[lineKey]
                     ? quantity - oldChanges[lineKey].quantity
