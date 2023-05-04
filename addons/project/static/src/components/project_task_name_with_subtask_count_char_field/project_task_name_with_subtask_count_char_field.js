@@ -3,17 +3,16 @@
 import { registry } from '@web/core/registry';
 import { CharField, charField } from '@web/views/fields/char/char_field';
 
-class ProjectTaskNameWithSubtaskCountCharField extends CharField {
-    get formattedSubtaskCount() {
-            return this.props.record.data.subtask_count
-                ? `(${this.props.record.data.closed_subtask_count}/${this.props.record.data.subtask_count} subtasks)`
-                : "";
-    }
+export class ProjectTaskNameWithSubtaskCountCharField extends CharField {
+    static template = "project.ProjectTaskNameWithSubtaskCountCharField";
 }
 
-ProjectTaskNameWithSubtaskCountCharField.template = 'project.ProjectTaskNameWithSubtaskCountCharField';
-
-registry.category("fields").add("name_with_subtask_count", {
+export const projectTaskNameWithSubtaskCountCharField = {
     ...charField,
     component: ProjectTaskNameWithSubtaskCountCharField,
-});
+    fieldsDependencies: [
+        { name: "subtask_count", type: "integer" },
+        { name: "closed_subtask_count", type: "integer" },
+    ],
+}
+registry.category("fields").add("name_with_subtask_count", projectTaskNameWithSubtaskCountCharField);
