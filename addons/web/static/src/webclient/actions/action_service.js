@@ -3,7 +3,6 @@
 import { browser } from "@web/core/browser/browser";
 import { makeContext } from "@web/core/context";
 import { useDebugCategory } from "@web/core/debug/debug_context";
-import { download } from "@web/core/network/download";
 import { evaluateExpr } from "@web/core/py_js/py";
 import { registry } from "@web/core/registry";
 import { KeepLast } from "@web/core/utils/concurrency";
@@ -26,6 +25,7 @@ import {
     xml,
     reactive,
 } from "@odoo/owl";
+import { downloadReport, getReportUrl } from "./reports/utils";
 
 const actionHandlersRegistry = registry.category("action_handlers");
 const actionRegistry = registry.category("actions");
@@ -819,8 +819,9 @@ function makeActionManager(env) {
      */
     function _executeActURLAction(action, options) {
         let url = action.url;
-        if (url && !(url.startsWith('http') || url.startsWith('/')))
-            url = '/' + url;
+        if (url && !(url.startsWith("http") || url.startsWith("/"))) {
+            url = "/" + url;
+        }
         if (action.target === "self") {
             let willUnload = false;
             const onUnload = () => {
@@ -984,92 +985,6 @@ function makeActionManager(env) {
     // ir.actions.report
     // ---------------------------------------------------------------------------
 
-    // messages that might be shown to the user dependening on the state of wkhtmltopdf
-    const link = '<br><br><a href="http://wkhtmltopdf.org/" target="_blank">wkhtmltopdf.org</a>';
-    const WKHTMLTOPDF_MESSAGES = {
-        broken:
-            env._t(
-                "Your installation of Wkhtmltopdf seems to be broken. The report will be shown " +
-                    "in html."
-            ) + link,
-        install:
-            env._t(
-                "Unable to find Wkhtmltopdf on this system. The report will be shown in " + "html."
-            ) + link,
-        upgrade:
-            env._t(
-                "You should upgrade your version of Wkhtmltopdf to at least 0.12.0 in order to " +
-                    "get a correct display of headers and footers as well as support for " +
-                    "table-breaking between pages."
-            ) + link,
-        workers: env._t(
-            "You need to start Odoo with at least two workers to print a pdf version of " +
-                "the reports."
-        ),
-    };
-
-    // only check the wkhtmltopdf state once, so keep the rpc promise
-    let wkhtmltopdfStateProm;
-
-    /**
-     * Generates the report url given a report action.
-     *
-     * @private
-     * @param {ReportAction} action
-     * @param {ReportType} type
-     * @returns {string}
-     */
-    function _getReportUrl(action, type) {
-        let url = `/report/${type}/${action.report_name}`;
-        const actionContext = action.context || {};
-        if (action.data && JSON.stringify(action.data) !== "{}") {
-            // build a query string with `action.data` (it's the place where reports
-            // using a wizard to customize the output traditionally put their options)
-            const options = encodeURIComponent(JSON.stringify(action.data));
-            const context = encodeURIComponent(JSON.stringify(actionContext));
-            url += `?options=${options}&context=${context}`;
-        } else {
-            if (actionContext.active_ids) {
-                url += `/${actionContext.active_ids.join(",")}`;
-            }
-            if (type === "html") {
-                const context = encodeURIComponent(JSON.stringify(env.services.user.context));
-                url += `?context=${context}`;
-            }
-        }
-        return url;
-    }
-
-    /**
-     * Launches download action of the report
-     *
-     * @private
-     * @param {ReportAction} action
-     * @param {ActionOptions} options
-     * @returns {Promise}
-     */
-    async function _triggerDownload(action, options, type) {
-        const url = _getReportUrl(action, type);
-        env.services.ui.block();
-        try {
-            await download({
-                url: "/report/download",
-                data: {
-                    data: JSON.stringify([url, action.report_type]),
-                    context: JSON.stringify(env.services.user.context),
-                },
-            });
-        } finally {
-            env.services.ui.unblock();
-        }
-        const onClose = options.onClose;
-        if (action.close_on_report_download) {
-            return doAction({ type: "ir.actions.act_window_close" }, { onClose });
-        } else if (onClose) {
-            onClose();
-        }
-    }
-
     function _executeReportClientAction(action, options) {
         const props = Object.assign({}, options.props, {
             data: action.data,
@@ -1077,7 +992,7 @@ function makeActionManager(env) {
             name: action.name,
             report_file: action.report_file,
             report_name: action.report_name,
-            report_url: _getReportUrl(action, "html"),
+            report_url: getReportUrl(action, "html", env.services.user.context),
             context: Object.assign({}, action.context),
         });
 
@@ -1112,28 +1027,35 @@ function makeActionManager(env) {
         }
         if (action.report_type === "qweb-html") {
             return _executeReportClientAction(action, options);
-        } else if (action.report_type === "qweb-pdf") {
-            // check the state of wkhtmltopdf before proceeding
-            if (!wkhtmltopdfStateProm) {
-                wkhtmltopdfStateProm = env.services.rpc("/report/check_wkhtmltopdf");
+        } else if (action.report_type === "qweb-pdf" || action.report_type === "qweb-text") {
+            const type = action.report_type.slice(5);
+            let success, message;
+            env.services.ui.block();
+            try {
+                ({ success, message } = await downloadReport(
+                    env.services.rpc,
+                    action,
+                    type,
+                    env.services.user.context
+                ));
+            } finally {
+                env.services.ui.unblock();
             }
-            const state = await wkhtmltopdfStateProm;
-            // display a notification according to wkhtmltopdf's state
-            if (state in WKHTMLTOPDF_MESSAGES) {
-                env.services.notification.add(WKHTMLTOPDF_MESSAGES[state], {
+            if (message) {
+                env.services.notification.add(message, {
                     sticky: true,
                     title: env._t("Report"),
                 });
             }
-            if (state === "upgrade" || state === "ok") {
-                // trigger the download of the PDF report
-                return _triggerDownload(action, options, "pdf");
-            } else {
-                // open the report in the client action if generating the PDF is not possible
+            if (!success) {
                 return _executeReportClientAction(action, options);
             }
-        } else if (action.report_type === "qweb-text") {
-            return _triggerDownload(action, options, "text");
+            const { onClose } = options;
+            if (action.close_on_report_download) {
+                return doAction({ type: "ir.actions.act_window_close" }, { onClose });
+            } else if (onClose) {
+                onClose();
+            }
         } else {
             console.error(
                 `The ActionManager can't handle reports of type ${action.report_type}`,
