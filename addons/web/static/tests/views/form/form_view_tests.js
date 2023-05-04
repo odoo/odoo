@@ -20,7 +20,11 @@ import {
     triggerEvent,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import { toggleActionMenu, toggleGroupByMenu, toggleMenuItem } from "@web/../tests/search/helpers";
+import {
+    toggleActionMenu,
+    toggleSearchBarMenu,
+    toggleMenuItem,
+} from "@web/../tests/search/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { browser } from "@web/core/browser/browser";
@@ -10369,7 +10373,7 @@ QUnit.module("Views", (hooks) => {
             "yop",
         ]);
 
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "bar");
         assert.containsN(target, ".o_group_header", 2);
         assert.containsNone(target, ".o_data_row");
