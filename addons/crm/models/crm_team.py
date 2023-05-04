@@ -43,6 +43,9 @@ class Team(models.Model):
     lead_all_assigned_month_count = fields.Integer(
         string='# Leads/Opps assigned this month', compute='_compute_lead_all_assigned_month_count',
         help="Number of leads and opportunities assigned this last month.")
+    lead_all_assigned_month_exceeded = fields.Boolean('Exceed monthly lead assignement', compute="_compute_lead_all_assigned_month_count",
+        help="True if the monthly lead assignment count is greater than the maximum assignment limit, false otherwise."
+    )
     opportunities_count = fields.Integer(
         string='# Opportunities', compute='_compute_opportunities_data')
     opportunities_amount = fields.Monetary(
@@ -82,10 +85,11 @@ class Team(models.Model):
         for team in self:
             team.lead_unassigned_count = counts.get(team.id, 0)
 
-    @api.depends('crm_team_member_ids.lead_month_count')
+    @api.depends('crm_team_member_ids.lead_month_count', 'assignment_max')
     def _compute_lead_all_assigned_month_count(self):
         for team in self:
             team.lead_all_assigned_month_count = sum(member.lead_month_count for member in team.crm_team_member_ids)
+            team.lead_all_assigned_month_exceeded = team.lead_all_assigned_month_count > team.assignment_max
 
     def _compute_opportunities_data(self):
         opportunity_data = self.env['crm.lead']._read_group([

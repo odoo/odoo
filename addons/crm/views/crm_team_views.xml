@@ -183,9 +183,14 @@
                 <xpath expr="//group[@name='right']" position="inside">
                     <field name="assignment_enabled" invisible="1"/>
                     <field name="assignment_auto_enabled" invisible="1"/>
-                    <div class="text-muted" colspan="2" attrs="{'invisible': [('assignment_enabled', '=', False)]}">
-                        <field name="lead_all_assigned_month_count" class="oe_inline"/><span> leads assigned this month
-                        on a maximum of </span><field name="assignment_max" class="oe_inline"/>
+                    <field name="lead_all_assigned_month_exceeded" invisible="1"/>
+                    <div colspan="2">
+                        <div class="o_crm_lead_all_assigned_month_exceeded" attrs="{'invisible': [('lead_all_assigned_month_exceeded', '=', False)]}"/>
+                        <div class="o_crm_lead_month_assignment text-muted" attrs="{'invisible': [('assignment_enabled', '=', False)]}">
+                            <i class="fa fa-info-circle me-2" title="Assigned Lead Count"/>
+                            <field name="lead_all_assigned_month_count" class="oe_inline"/><span> leads assigned this month
+                            on a maximum of </span><field name="assignment_max" class="oe_inline"/>
+                        </div>
                     </div>
                     <field name="assignment_domain" widget="domain" string="Domain"
                         options="{'model': 'crm.lead', 'in_dialog': True}"
