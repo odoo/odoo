@@ -58,6 +58,7 @@ import {
     isZWS,
     getDeepestPosition,
     leftPos,
+    childNodeIndex,
 } from './utils/utils.js';
 import { editorCommands } from './commands/commands.js';
 import { Powerbox } from './powerbox/Powerbox.js';
@@ -2471,6 +2472,7 @@ export class OdooEditor extends EventTarget {
                 this._compositionStep();
                 this.historyRollback();
                 ev.preventDefault();
+                this._handleAutomaticLinkInsertion();
                 if (this._applyCommand('oEnter') === UNBREAKABLE_ROLLBACK_CODE) {
                     const brs = this._applyCommand('oShiftEnter');
                     const anchor = brs[0].parentElement;
@@ -2514,41 +2516,6 @@ export class OdooEditor extends EventTarget {
                     // When the spellcheck of Safari modify text, ev.data is
                     // null and the string can be found within ev.dataTranser.
                     insertText(selection, ev.data === null ? ev.dataTransfer.getData('text/plain') : ev.data);
-                    selection.collapseToEnd();
-                }
-                // Check for url after user insert a space so we won't transform an incomplete url.
-                if (
-                    ev.data &&
-                    ev.data === ' ' &&
-                    selection &&
-                    selection.anchorNode &&
-                    !closestElement(selection.anchorNode).closest('a') &&
-                    selection.anchorNode.nodeType === Node.TEXT_NODE &&
-                    (!this.commandBar._active ||
-                        this.commandBar._currentOpenOptions.closeOnSpace !== true)
-                ) {
-                    const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
-                    const textNodeSplitted = textSliced.split(/\s/);
-
-                    // Remove added space
-                    textNodeSplitted.pop();
-                    const potentialUrl = textNodeSplitted.pop();
-                    const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS);
-
-                    if (lastWordMatch) {
-                        const matches = getUrlsInfosInString(textSliced);
-                        const match = matches[matches.length - 1];
-                        const cloneRange = selection.getRangeAt(0).cloneRange();
-                        const range = this.document.createRange();
-                        range.setStart(selection.anchorNode, match.index);
-                        range.setEnd(selection.anchorNode, match.index + match.length);
-                        const link = this._createLink(range.extractContents().textContent, match.url);
-                        range.insertNode(link);
-                        // Inserting an element into a range clears the selection in Safari
-                        // Hence, use the cloned range to reselect it.
-                        selection.removeAllRanges();
-                        selection.addRange(cloneRange);
-                    }
                     selection.collapseToEnd();
                 }
                 this.historyStep();
@@ -2607,7 +2574,14 @@ export class OdooEditor extends EventTarget {
             ev.stopPropagation();
         } else if (ev.shiftKey && ev.key === "Enter") {
             ev.preventDefault();
+            this._handleAutomaticLinkInsertion();
             this._applyCommand('oShiftEnter');
+        } else if (
+            ev.key === ' ' && 
+            (!this.commandBar._active ||
+            this.commandBar._currentOpenOptions.closeOnSpace !== true)
+        ) {
+            this._handleAutomaticLinkInsertion();
         } else if (IS_KEYBOARD_EVENT_UNDO(ev)) {
             // Ctrl-Z
             ev.preventDefault();
@@ -3170,6 +3144,39 @@ export class OdooEditor extends EventTarget {
     _onDoumentMouseup() {
         if (this.toolbar) {
             this.toolbar.style.pointerEvents = 'auto';
+        }
+    }
+
+    /**
+     * Inserts a link in the editor. Called after pressing space or (shif +) enter.
+     * Performs a regex check to determine if the url has correct syntax.
+     */
+    _handleAutomaticLinkInsertion() {
+        const selection = this.document.getSelection();
+        if (
+            selection &&
+            selection.anchorNode &&
+            !closestElement(selection.anchorNode).closest('a') &&
+            selection.anchorNode.nodeType === Node.TEXT_NODE
+        ) {
+            const textSliced = selection.anchorNode.textContent.slice(0, selection.anchorOffset);
+            const textNodeSplitted = textSliced.split(/\s/);
+            let potentialUrl = textNodeSplitted.pop();
+            const lastWordMatch = potentialUrl.match(URL_REGEX_WITH_INFOS);
+
+            if (lastWordMatch) {
+                const matches = getUrlsInfosInString(textSliced);
+                const match = matches[matches.length - 1];
+                const range = this.document.createRange();
+                range.setStart(selection.anchorNode, match.index);
+                range.setEnd(selection.anchorNode, match.index + match.length);
+                const link = this._createLink(range.extractContents().textContent, match.url);
+                range.insertNode(link);
+                const container = link.parentElement;
+                const offset = childNodeIndex(link) + 1;
+                setSelection(container, offset, container, offset, false);
+            }
+            selection.collapseToEnd();
         }
     }
 
