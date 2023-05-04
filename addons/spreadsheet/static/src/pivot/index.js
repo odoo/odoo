@@ -38,6 +38,7 @@ cellMenuRegistry.add("pivot_see_records", {
         const position = env.model.getters.getActivePosition();
         return SEE_RECORDS_PIVOT_VISIBLE(position, env);
     },
+    icon: "o-spreadsheet-Icon.SEE_RECORDS",
 });
 
 inverseCommandRegistry
