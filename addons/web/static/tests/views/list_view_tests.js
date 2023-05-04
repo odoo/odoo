@@ -1,5 +1,6 @@
 /** @odoo-module **/
 
+import { Component, onWillStart, xml } from "@odoo/owl";
 import { browser } from "@web/core/browser/browser";
 import { Domain } from "@web/core/domain";
 import { errorService } from "@web/core/errors/error_service";
@@ -10,18 +11,19 @@ import { uiService } from "@web/core/ui/ui_service";
 import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { FloatField } from "@web/views/fields/float/float_field";
+import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import { textField } from "@web/views/fields/text/text_field";
 import { ListController } from "@web/views/list/list_controller";
-import { DynamicRecordList, DynamicGroupList } from "@web/views/relational_model";
+import { DynamicGroupList, DynamicRecordList } from "@web/views/relational_model";
 import { actionService } from "@web/webclient/actions/action_service";
+import { getPickerApplyButton, getPickerCell } from "../core/datetime/datetime_test_helpers";
 import { makeFakeLocalizationService, makeFakeUserService } from "../helpers/mock_services";
-import { Many2XAutocomplete } from "@web/views/fields/relational_utils";
 import {
     addRow,
     click,
     clickDiscard,
-    clickOpenedDropdownItem,
     clickOpenM2ODropdown,
+    clickOpenedDropdownItem,
     clickSave,
     drag,
     dragAndDrop,
@@ -62,8 +64,6 @@ import {
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "./helpers";
-
-import { Component, onWillStart, xml } from "@odoo/owl";
 
 const fieldRegistry = registry.category("fields");
 const serviceRegistry = registry.category("services");
@@ -1611,13 +1611,8 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
-        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
-        triggerHotkey("Escape");
-        await nextTick();
-
-        assert.containsOnce(target, ".o_selected_row");
-        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+        await click(target, ".o_field_date input");
+        assert.containsOnce(target, ".o_datetime_picker");
 
         triggerHotkey("Escape");
         await nextTick();
@@ -1639,20 +1634,8 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_button_add"));
         assert.containsOnce(target, ".o_selected_row");
 
-        await click(target, ".o_datepicker input");
-        assert.containsOnce(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be opened"
-        );
-        await triggerEvent(document.activeElement, null, "keydown", { key: "Escape" });
-
-        assert.containsOnce(target, ".o_selected_row", "the row is still in edition");
-        assert.containsNone(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "the datepicker is no longer visible"
-        );
+        await click(target, ".o_field_date input");
+        assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
         await triggerEvent(document.activeElement, null, "keydown", { key: "Escape" });
 
         assert.containsNone(target, ".o_selected_row", "the row is no longer in edition");
@@ -7961,13 +7944,11 @@ QUnit.module("Views", (hooks) => {
             document.activeElement,
             target.querySelector(".o_field_widget[name=date] input")
         );
-        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+        assert.containsOnce(target, ".o_datetime_picker");
 
-        await click(
-            document.body,
-            ".bootstrap-datetimepicker-widget [data-action=selectDay][data-day='02/15/2017']"
-        );
-        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+        await click(getPickerCell("15"));
+
+        assert.containsNone(target, ".o_datetime_picker");
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=date] input").value,
             "02/15/2017"
@@ -7976,8 +7957,6 @@ QUnit.module("Views", (hooks) => {
             document.activeElement,
             target.querySelector(".o_field_widget[name=date] input")
         );
-        assert.strictEqual(document.activeElement.selectionStart, 0);
-        assert.strictEqual(document.activeElement.selectionEnd, 10);
     });
 
     QUnit.test("click on a button in a list view", async function (assert) {
@@ -10705,8 +10684,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                 <tree multi_edit="1">
-                    <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
-                    <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                    <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}" />
                 </tree>`,
             mockRPC(route, args) {
                 if (args.method === "write") {
@@ -10720,23 +10698,14 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_list_record_selector input"));
         await click(target.querySelector(".o_data_row .o_data_cell")); // edit first row
         await click(target.querySelector(".o_data_row .o_data_cell .o_field_daterange input"));
+
         // change dates via the daterangepicker
-        const datepicker = document.querySelector(`.daterangepicker[data-name="date_start"]`);
-        await triggerEvent(
-            datepicker,
-            ".drp-calendar.left .available[data-title='r3c1']",
-            "mousedown"
-        );
-        await triggerEvent(
-            datepicker,
-            ".drp-calendar.right .available[data-title='r2c0']",
-            "mousedown"
-        );
-        const applyBtn = datepicker.querySelector(".applyBtn");
-        assert.notOk(applyBtn.disabled);
+        await click(getPickerCell("16").at(0));
+        await click(getPickerCell("12").at(1));
+        assert.notOk(getPickerApplyButton().disabled);
 
         // Apply the changes
-        await click(applyBtn);
+        await click(getPickerApplyButton());
         assert.containsOnce(
             target,
             ".modal",
@@ -10785,8 +10754,7 @@ QUnit.module("Views", (hooks) => {
                 serverData,
                 arch: `
                     <tree multi_edit="1">
-                        <field name="date_start" widget="daterange" options="{'related_end_date': 'date_end'}" />
-                        <field name="date_end" widget="daterange" options="{'related_start_date': 'date_start'}"/>
+                        <field name="date_start" widget="daterange" options="{'end_date_field': 'date_end'}" />
                     </tree>`,
                 mockRPC(route, args) {
                     if (args.method === "write") {
@@ -10802,9 +10770,11 @@ QUnit.module("Views", (hooks) => {
             // Change the date in the first datetime
             await editInput(
                 target,
-                ".o_data_row .o_data_cell .o_field_daterange[name='date_start'] input",
+                ".o_data_row .o_data_cell .o_field_daterange[name='date_start'] input[data-field='date_start']",
                 "2021-04-01 11:00:00"
             );
+            triggerHotkey("Enter");
+            await nextTick();
             assert.containsOnce(
                 target,
                 ".modal",
@@ -17867,8 +17837,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_field_cell.o_date_cell", 3);
 
         await click(target.querySelector(".o_field_cell.o_date_cell"));
-        await click(target, ".o_datepicker input");
-        await click(document.querySelector(".datepicker-days td[data-day='12/19/2022']"));
+        await click(target, ".o_field_date input");
+        await click(getPickerCell("19"));
         await clickSave(target);
 
         assert.strictEqual(
@@ -17926,9 +17896,8 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_field_cell.o_datetime_cell", 3);
 
         await click(target.querySelector(".o_field_cell.o_datetime_cell"));
-        await click(target, ".o_datepicker input");
-        await click(document.querySelector(".datepicker-days td[data-day='12/19/2022']"));
-        await click(document, ".bootstrap-datetimepicker-widget a[data-action='close']");
+        await click(target, ".o_field_datetime input");
+        await click(getPickerCell("19"));
         await clickSave(target);
 
         assert.strictEqual(

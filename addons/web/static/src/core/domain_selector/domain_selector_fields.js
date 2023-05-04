@@ -1,7 +1,6 @@
 /** @odoo-module **/
 
 import { Component, useRef } from "@odoo/owl";
-import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
 import { selectOperators } from "@web/core/domain_selector/domain_selector_operators";
 import {
     deserializeDate,
@@ -13,6 +12,9 @@ import { _lt } from "@web/core/l10n/translation";
 import { evaluateExpr, formatAST } from "@web/core/py_js/py";
 import { toPyValue } from "@web/core/py_js/py_utils";
 import { registry } from "@web/core/registry";
+import { DateTimeInput } from "../datetime/datetime_input";
+
+const { DateTime } = luxon;
 
 // ============================================================================
 
@@ -78,6 +80,20 @@ function makeEditor(component, props) {
     };
 }
 
+/**
+ * @param {"date" | "datetime"} type
+ * @param  {Parameters<serializeDate>} args
+ */
+const genericSerializeDate = (type, ...args) =>
+    type === "date" ? serializeDate(...args) : serializeDateTime(...args);
+
+/**
+ * @param {"date" | "datetime"} type
+ * @param  {Parameters<deserializeDate>} args
+ */
+const genericDeserializeDate = (type, ...args) =>
+    type === "date" ? deserializeDate(...args) : deserializeDateTime(...args);
+
 const DEFAULT = {
     operators: [
         "equal",
@@ -122,33 +138,6 @@ const BOOLEAN = {
 
 // ----------------------------------------------------------------------------
 
-const DATE = {
-    operators: [
-        "equal",
-        "not_equal",
-        "greater_than",
-        "greater_equal",
-        "less_than",
-        "less_equal",
-        "set",
-        "not_set",
-    ],
-    editors: {
-        default: makeEditor(DatePicker, ({ value, update }) => ({
-            date: deserializeDate(value),
-            onDateTimeChanged: (value) => {
-                if (!value.isValid) {
-                    return;
-                }
-                return update(value ? serializeDate(value) : luxon.DateTime.local());
-            },
-        })),
-    },
-    defaultValue: () => serializeDate(luxon.DateTime.local()),
-};
-
-// ----------------------------------------------------------------------------
-
 const DATETIME = {
     operators: [
         "equal",
@@ -161,17 +150,14 @@ const DATETIME = {
         "not_set",
     ],
     editors: {
-        default: makeEditor(DateTimePicker, ({ value, update }) => ({
-            date: deserializeDateTime(value),
-            onDateTimeChanged: (value) => {
-                if (!value.isValid) {
-                    return;
-                }
-                return update(value ? serializeDateTime(value) : luxon.DateTime.local());
-            },
+        default: makeEditor(DateTimeInput, ({ field, value, update }) => ({
+            value: genericDeserializeDate(field.type, value),
+            type: field.type,
+            onApply: (value) =>
+                update(value ? genericSerializeDate(field.type, value) : DateTime.local()),
         })),
     },
-    defaultValue: () => serializeDateTime(luxon.DateTime.local()),
+    defaultValue: ({ type }) => genericSerializeDate(type, DateTime.local()),
 };
 
 // ----------------------------------------------------------------------------
@@ -269,7 +255,7 @@ const PROPERTIES_RELATIONAL = {
 export const FIELD_DESCRIPTIONS = {
     boolean: BOOLEAN,
     char: TEXT,
-    date: DATE,
+    date: DATETIME,
     datetime: DATETIME,
     float: NUMBER,
     html: TEXT,

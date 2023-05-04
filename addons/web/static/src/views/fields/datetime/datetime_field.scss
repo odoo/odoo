@@ -1,0 +1,14 @@
+.o_field_date,
+.o_field_datetime,
+.o_field_daterange {
+    .o_add_date {
+        visibility: hidden;
+    }
+
+    &:focus-within,
+    &:hover {
+        .o_add_date {
+            visibility: visible;
+        }
+    }
+}

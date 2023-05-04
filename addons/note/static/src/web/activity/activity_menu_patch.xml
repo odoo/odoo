@@ -10,9 +10,10 @@
                 <div class="flex-grow-1">
                     <div class="d-flex px-2">
                         <span class="o-mail-ActivityMenu-text flex-grow-1"><strong>Add a note</strong></span>
-                        <DatePicker
-                            date="addingNoteDate"
-                            onDateTimeChanged="date => this.addingNoteDate = date ? date : false"
+                        <DateTimeInput
+                            type="'date'"
+                            value="addingNoteDate"
+                            onChange="(value) => (this.addingNoteDate = value || false)"
                             placeholder="'Today'"
                         />
                     </div>

@@ -13,10 +13,13 @@
                 </option>
             </t>
         </select>
-        <YearPicker
-            date="date"
-            onDateTimeChanged.bind="onYearChanged"
-            placeholder="env._t('Select year...')"
+        <DateTimeInput
+            value="date"
+            format="'yyyy'"
+            minPrecision="'years'"
+            type="'date'"
+            placeholder="'Select year...'"
+            onChange.bind="onYearChanged"
         />
     </div>
 </templates>

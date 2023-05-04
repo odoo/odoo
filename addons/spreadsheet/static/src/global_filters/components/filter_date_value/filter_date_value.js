@@ -1,10 +1,10 @@
 /** @odoo-module */
 
-import { YearPicker } from "../year_picker";
+import { Component, onWillUpdateProps } from "@odoo/owl";
 import { dateOptions } from "@spreadsheet/global_filters/helpers";
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
 
 const { DateTime } = luxon;
-import { Component, onWillUpdateProps } from "@odoo/owl";
 
 export class DateFilterValue extends Component {
     setup() {
@@ -57,7 +57,7 @@ export class DateFilterValue extends Component {
     }
 }
 DateFilterValue.template = "spreadsheet_edition.DateFilterValue";
-DateFilterValue.components = { YearPicker };
+DateFilterValue.components = { DateTimeInput };
 
 DateFilterValue.props = {
     // See @spreadsheet_edition/bundle/global_filters/filters_plugin.RangeType

@@ -91,9 +91,9 @@ class KanbanQuickCreateController extends Component {
                     return;
                 }
                 const target = this.mousedownTarget || ev.target;
-                // accounts for clicking on legacy daterangepicker and legacy autocomplete
+                // accounts for clicking on datetime picker and legacy autocomplete
                 const gotClickedInside =
-                    target.closest(".daterangepicker") ||
+                    target.closest(".o_datetime_picker") ||
                     target.closest(".ui-autocomplete") ||
                     this.rootRef.el.contains(target);
                 if (!gotClickedInside) {

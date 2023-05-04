@@ -1,14 +1,15 @@
 /** @odoo-module **/
 
+import { registerCleanup } from "@web/../tests/helpers/cleanup";
 import {
     addRow,
     click,
     clickCreate,
     clickDiscard,
-    clickSave,
     clickM2OHighlightedItem,
-    clickOpenedDropdownItem,
     clickOpenM2ODropdown,
+    clickOpenedDropdownItem,
+    clickSave,
     dragAndDrop,
     editInput,
     getFixture,
@@ -22,17 +23,17 @@ import {
     triggerEvents,
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
-import BasicModel from "web.BasicModel";
-import { browser } from "@web/core/browser/browser";
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
-import { getNextTabableElement } from "@web/core/utils/ui";
 import { makeView, makeViewInDialog, setupViewRegistries } from "@web/../tests/views/helpers";
-import { registerCleanup } from "@web/../tests/helpers/cleanup";
+import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
+import { getNextTabableElement } from "@web/core/utils/ui";
 import { session } from "@web/session";
 import { RelationalModel } from "@web/views/relational_model";
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { rpcService } from "@web/core/network/rpc_service";
+import BasicModel from "web.BasicModel";
+import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 
 let serverData;
 let target;
@@ -4395,19 +4396,8 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(td.textContent, "01/25/2017");
 
         await click(td);
-        await click(target.querySelector(".o_datepicker_input"));
-        await nextTick();
-        await click(document.body.querySelector(".bootstrap-datetimepicker-widget .picker-switch"));
-        await click(
-            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
-        );
-        await click(
-            [...document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")].filter(
-                (el) => el.textContent === "2017"
-            )[0]
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[1]);
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .day")[22]);
+        await nextTick(); // wait for picker to open
+        await click(getPickerCell("1").at(0));
         await clickSave(target);
 
         assert.verifySteps(["get_views", "read", "read", "onchange", "write", "read", "read"]);
@@ -7003,7 +6993,7 @@ QUnit.module("Fields", (hooks) => {
 
             await click(target, ".o_data_row td:first-child");
             assert.containsOnce(target, ".o_selected_row", "should have selected row");
-            const { keydownEvent } = triggerHotkey("Shift+Tab");
+            const { keydownEvent } = await triggerHotkey("Shift+Tab");
             await nextTick();
             assert.containsNone(target, ".o_selected_row", "list should not be in edition");
             // We also check the event is not default prevented, to make sure that the
@@ -7462,8 +7452,7 @@ QUnit.module("Fields", (hooks) => {
         await addRow(target);
         await editInput(target, ".o_data_row .o_field_widget input", "a name");
         def = makeDeferred();
-        await click(target, ".o_datepicker_input");
-        await editInput(target, ".o_datepicker_input", "04/27/2022 14:08:52");
+        await editInput(target, ".o_field_datetime .o_input", "04/27/2022 14:08:52");
 
         // resolve the onchange promise
         def.resolve();
@@ -13093,7 +13082,7 @@ QUnit.module("Fields", (hooks) => {
                 if (method === "onchange") {
                     return {
                         value: {
-                            line_ids: [[0, 0, {date: "2020-01-01"}]],
+                            line_ids: [[0, 0, { date: "2020-01-01" }]],
                         },
                     };
                 }
@@ -13109,7 +13098,7 @@ QUnit.module("Fields", (hooks) => {
                 rootType: "record",
                 activeFields: serverData.models.turlututu.fields,
             },
-            env.services,
+            env.services
         );
 
         await model.load({
@@ -13131,7 +13120,6 @@ QUnit.module("Fields", (hooks) => {
         // The one2many orm commands should be parsed correctly and then, the date value is now a Datetime
         // and not no longer a string.
         const record = model.root.data.line_ids.records[0];
-        assert.strictEqual(typeof(record.data.date), "object");
+        assert.strictEqual(typeof record.data.date, "object");
     });
-
 });

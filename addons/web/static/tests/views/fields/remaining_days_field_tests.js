@@ -8,6 +8,7 @@ import {
     patchTimeZone,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 
 let serverData;
 let target;
@@ -116,22 +117,18 @@ QUnit.module("Fields", (hooks) => {
             await click(rows[1], ".o_list_record_selector input");
 
             await click(rows[0], ".o_data_cell");
-            assert.containsOnce(
-                target,
-                "input.o_datepicker_input",
-                "should have date picker input"
-            );
+            assert.containsOnce(target, ".o_field_remaining_days input");
 
-            await editInput(target, ".o_datepicker_input", "10/10/2017");
+            await editInput(target, ".o_field_remaining_days input", "10/10/2017");
             await click(target);
 
-            assert.containsOnce(document.body, ".modal");
+            assert.containsOnce(target, ".modal");
             assert.strictEqual(
                 document.querySelector(".modal .o_field_widget").textContent,
                 "In 2 days",
                 "should have 'In 2 days' value to change"
             );
-            await click(document.body, ".modal .modal-footer .btn-primary");
+            await click(target, ".modal .modal-footer .btn-primary");
 
             assert.strictEqual(
                 rows[0].querySelector(".o_data_cell").textContent,
@@ -177,15 +174,11 @@ QUnit.module("Fields", (hooks) => {
             await click(rows[1], ".o_list_record_selector input");
 
             await click(rows[0], ".o_data_cell");
-            assert.containsOnce(
-                target,
-                "input.o_datepicker_input",
-                "should have date picker input"
-            );
+            assert.containsOnce(target, ".o_field_remaining_days input");
 
-            await editInput(target, ".o_datepicker_input", "blabla");
+            await editInput(target, ".o_field_remaining_days input", "blabla");
             await click(target);
-            assert.containsNone(document.body, ".modal");
+            assert.containsNone(target, ".modal");
             assert.strictEqual(cells[0].textContent, "Today");
             assert.strictEqual(cells[1].textContent, "Tomorrow");
         }
@@ -211,16 +204,12 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "10/08/2017");
 
         assert.containsOnce(target, ".o_form_editable");
-        assert.containsOnce(target, "div.o_field_widget[name='date'] .o_datepicker");
+        assert.containsOnce(target, "div.o_field_widget[name='date'] input");
 
-        await click(target.querySelector(".o_datepicker .o_datepicker_input"));
-        assert.containsOnce(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be opened"
-        );
+        await click(target, ".o_field_remaining_days input");
+        assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
 
-        await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
+        await click(getPickerCell("9").at(0));
         await click(target, ".o_form_button_save");
         assert.strictEqual(target.querySelector(".o_field_widget input").value, "10/09/2017");
     });
@@ -238,12 +227,9 @@ QUnit.module("Fields", (hooks) => {
                 </form>`,
             });
 
-            assert.containsOnce(
-                target,
-                ".o_form_editable .o_field_widget[name='date'] .o_datepicker"
-            );
-            await click(target.querySelector(".o_field_widget[name='date'] .o_datepicker input"));
-            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+            assert.containsOnce(target, ".o_form_editable .o_field_widget[name='date'] input");
+            await click(target, ".o_field_widget[name='date'] input");
+            assert.containsOnce(target, ".o_datetime_picker");
         }
     );
 
@@ -303,17 +289,12 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget input").value,
             "10/08/2017 11:00:00"
         );
-        assert.containsOnce(target, "div.o_field_widget[name='datetime'] .o_datepicker");
+        assert.containsOnce(target, "div.o_field_widget[name='datetime'] input");
 
-        await click(target.querySelector(".o_datepicker .o_datepicker_input"));
-        assert.containsOnce(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be opened"
-        );
+        await click(target, ".o_field_widget input");
+        assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
 
-        await click(document.body, ".bootstrap-datetimepicker-widget .day[data-day='10/09/2017']");
-        await click(document.body, "a[data-action='close']");
+        await click(getPickerCell("9").at(0));
         await click(target, ".o_form_button_save");
         assert.strictEqual(
             target.querySelector(".o_field_widget input").value,

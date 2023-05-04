@@ -15,6 +15,7 @@ import {
 import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
 import { fieldService } from "@web/core/field_service";
 import { registry } from "@web/core/registry";
+import { getPickerCell } from "../../core/datetime/datetime_test_helpers";
 
 let serverData;
 let target;
@@ -145,26 +146,18 @@ QUnit.module("Fields", (hooks) => {
             });
 
             // The input field should display that the date is invalid
-            assert.equal(target.querySelector(".o_datepicker_input").value, "Invalid DateTime");
+            assert.equal(target.querySelector(".o_datetime_input").value, "Invalid DateTime");
 
             // Change the date in the datepicker
-            await click(target, ".o_datepicker_input");
+            await click(target, ".o_datetime_input");
             // Select a date in the datepicker
-            await click(
-                document.body.querySelector(
-                    `.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]`
-                )
-            );
+            await click(getPickerCell("15"));
             // Close the datepicker
-            await click(
-                document.body.querySelector(
-                    `.bootstrap-datetimepicker-widget a[data-action="close"]`
-                )
-            );
+            await click(target);
             await clickDiscard(target);
 
             // Open the datepicker again
-            await click(target, ".o_datepicker_input");
+            await click(target, ".o_datetime_input");
         }
     );
 
@@ -825,19 +818,19 @@ QUnit.module("Fields", (hooks) => {
         assert.verifySteps(["/web/action/load", "get_views", "read", "search_count", "fields_get"]);
 
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
-        assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
+        assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker input");
 
         // Open and close the datepicker
-        await click(target, ".o_datepicker_input");
-        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+        await click(target, ".o_datetime_input");
+        assert.containsOnce(target, ".o_datetime_picker");
         await triggerEvent(window, null, "scroll");
-        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+        assert.containsOnce(target, ".o_datetime_picker");
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
         assert.verifySteps([]);
 
         // Manually input a date
         rawDomain = `[("date", ">=", "2020-09-09")]`;
-        await editInput(target, ".o_datepicker_input", "09/09/2020");
+        await editInput(target, ".o_datetime_input", "09/09/2020");
         assert.verifySteps(["search_count"]);
         assert.strictEqual(target.querySelector(".o_domain_debug_input").value, rawDomain);
 

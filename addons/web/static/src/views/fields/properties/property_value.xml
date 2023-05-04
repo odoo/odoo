@@ -13,18 +13,12 @@
                     onChange.bind="onValueChange"
                 />
             </t>
-            <t t-elif="props.type === 'datetime'">
-                <DateTimePicker
-                    inputId="props.id"
-                    date="propertyValue"
-                    onDateTimeChanged.bind="onValueChange"
-                />
-            </t>
-            <t t-elif="props.type === 'date'">
-                <DatePicker
-                    inputId="props.id"
-                    date="propertyValue"
-                    onDateTimeChanged.bind="onValueChange"
+            <t t-elif="['date', 'datetime'].includes(props.type)">
+                <DateTimeInput
+                    id="props.id"
+                    type="props.type"
+                    value="propertyValue"
+                    onChange.bind="onValueChange"
                 />
             </t>
             <t t-elif="props.type === 'integer'">

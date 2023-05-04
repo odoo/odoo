@@ -1,7 +1,9 @@
 /** @odoo-module **/
 
+import { App, Component, xml } from "@odoo/owl";
+import { templates } from "@web/core/assets";
 import { browser } from "@web/core/browser/browser";
-import { DateTimePicker } from "@web/core/datepicker/datepicker";
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
 import { Dropdown } from "@web/core/dropdown/dropdown";
 import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { hotkeyService } from "@web/core/hotkeys/hotkey_service";
@@ -21,9 +23,8 @@ import {
     triggerHotkey,
 } from "../helpers/utils";
 import { makeParent } from "./tooltip/tooltip_service_tests";
-import { templates } from "@web/core/assets";
+import { getPickerCell } from "./datetime/datetime_test_helpers";
 
-import { App, Component, xml } from "@odoo/owl";
 const serviceRegistry = registry.category("services");
 
 let env;
@@ -1146,10 +1147,10 @@ QUnit.module("Components", ({ beforeEach }) => {
                     <t t-set-slot="toggler">
                         Dropdown toggler
                     </t>
-                    <DateTimePicker onDateTimeChanged="() => {}" date="false"/>
+                    <DateTimeInput />
                 </Dropdown>
             `;
-            MyComponent.components = { Dropdown, DateTimePicker };
+            MyComponent.components = { DateTimeInput, Dropdown };
 
             await makeParent(MyComponent);
 
@@ -1158,20 +1159,20 @@ QUnit.module("Components", ({ beforeEach }) => {
             await click(target, ".dropdown-toggle");
 
             assert.containsOnce(target, ".o-dropdown--menu");
-            assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
-            assert.strictEqual(target.querySelector(".o_datepicker_input").value, "");
+            assert.containsNone(target, ".o_datetime_picker");
+            assert.strictEqual(target.querySelector(".o_datetime_input").value, "");
 
-            await click(target, ".o_datepicker_input");
-
-            assert.containsOnce(target, ".o-dropdown--menu");
-            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
-            assert.strictEqual(target.querySelector(".o_datepicker_input").value, "");
-
-            await click(document.querySelectorAll(".datepicker table td")[15]); // select some day
+            await click(target, ".o_datetime_input");
 
             assert.containsOnce(target, ".o-dropdown--menu");
-            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
-            assert.notOk(target.querySelector(".o_datepicker_input").value === "");
+            assert.containsOnce(target, ".o_datetime_picker");
+            assert.strictEqual(target.querySelector(".o_datetime_input").value, "");
+
+            await click(getPickerCell("15")); // select some day
+
+            assert.containsOnce(target, ".o-dropdown--menu");
+            assert.containsOnce(target, ".o_datetime_picker");
+            assert.notOk(target.querySelector(".o_datetime_input").value === "");
         }
     );
 

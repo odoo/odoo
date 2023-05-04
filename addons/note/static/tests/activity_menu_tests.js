@@ -55,7 +55,7 @@ QUnit.test("create note from activity menu with date", async function (assert) {
     await editInput(target, "input.o-mail-ActivityMenu-input", "New Note");
     await editInput(
         target,
-        "input.o_datepicker_input",
+        "input.o_datetime_input",
         futureDay.toString(luxon.DateTime.DATE_SHORT)
     );
     await click("button:contains(SAVE)");

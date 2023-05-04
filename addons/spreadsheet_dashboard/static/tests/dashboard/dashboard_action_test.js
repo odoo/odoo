@@ -174,12 +174,10 @@ QUnit.test(
         const serverData = getServerData(spreadsheetData);
         const fixture = getFixture();
         await createSpreadsheetDashboard({ serverData });
-        const year = fixture.querySelector(".o_cp_top_right input.o_datepicker_input");
+        const year = fixture.querySelector(".o_cp_top_right input.o_datetime_input");
         const this_year = luxon.DateTime.local().year;
         assert.equal(year.value, String(this_year));
-        const input = fixture.querySelector(
-            "input.o_datepicker_input.o_input.datetimepicker-input"
-        );
+        const input = fixture.querySelector("input.o_datetime_input");
         await click(input);
         await editInput(input, null, String(this_year - 1));
         await nextTick();
@@ -189,6 +187,6 @@ QUnit.test(
         await click(fixture.querySelector(".o_cp_top_right .fa-times"));
 
         assert.containsNone(fixture, ".o_cp_top_right .fa-times");
-        assert.equal(year.value, "Select year...");
+        assert.equal(year.placeholder, "Select year...");
     }
 );

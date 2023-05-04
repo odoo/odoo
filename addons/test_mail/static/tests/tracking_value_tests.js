@@ -228,7 +228,7 @@ QUnit.test(
         });
         await this.start({ res_id: mailTestTrackAllId1 });
         await testUtils.fields.editAndTrigger(
-            target.querySelector("div[name=date_field] .o_datepicker .o_datepicker_input"),
+            target.querySelector("div[name=date_field] input"),
             "12/14/2018",
             ["change"]
         );
@@ -249,7 +249,7 @@ QUnit.test(
         });
         await this.start({ res_id: mailTestTrackAllId1 });
         await testUtils.fields.editAndTrigger(
-            target.querySelector("div[name=date_field] .o_datepicker .o_datepicker_input"),
+            target.querySelector("div[name=date_field] input"),
             "",
             ["change"]
         );
@@ -271,7 +271,7 @@ QUnit.test(
         });
         await this.start({ res_id: mailTestTrackAllId1 });
         await testUtils.fields.editAndTrigger(
-            target.querySelector("div[name=datetime_field] .o_datepicker .o_datepicker_input"),
+            target.querySelector("div[name=datetime_field] input"),
             "12/14/2018 13:42:28",
             ["change"]
         );
@@ -297,7 +297,7 @@ QUnit.test(
         });
         await this.start({ res_id: mailTestTrackAllId1 });
         await testUtils.fields.editAndTrigger(
-            target.querySelector("div[name=datetime_field] .o_datepicker .o_datepicker_input"),
+            target.querySelector("div[name=datetime_field] input"),
             "",
             ["change"]
         );
