@@ -220,6 +220,78 @@ exports.PosModel = Backbone.Model.extend({
         });
     },
 
+    _updatePaginationLoadingMessage(params, page, total_records) {
+        const record_model = _.find(this.models, (model) => model.model === params.model);
+        const pageSize = params.pageSize;
+        this.setLoadingMessage(_t('Loading')+' '+(record_model.label || record_model.model || '')+' '+page+'/'+Math.ceil(total_records/pageSize));
+    },
+
+    async _paginatedSearchRead(params, shadow = false) {
+        let page = 0;
+        let records = [];
+        const pageSize = params.pageSize;
+        let total_records = await this.rpc({
+            model: params.model,
+            method: 'search_count',
+            args: [params.domain],
+            context: params.context,
+        });
+        this._updatePaginationLoadingMessage(params, page, total_records);
+        do {
+            records.push(...await this.rpc({
+                model: params.model,
+                method: 'search_read',
+                kwargs: {
+                    'domain': params.domain,
+                    'fields': params.fields,
+                    'offset': page * pageSize,
+                    'limit': pageSize,
+                    'order': params.orderBy,
+                    ...params.kwargs,
+                },
+                context: params.context,
+            }, { shadow: shadow }));
+            page += 1;
+            this._updatePaginationLoadingMessage(params, page, total_records);
+        } while(records.length == pageSize*page);
+        return records;
+    },
+
+    async _paginatedRead(params, shadow = false) {
+        let page = 0;
+        let records = [];
+        const pageSize = params.pageSize;
+        const record_ids = params.args[0];
+        if (record_ids) {
+            this._updatePaginationLoadingMessage(params, page, record_ids.length);
+            for (let startIndex = 0; startIndex <= record_ids.length; startIndex += pageSize) {
+                records.push(...await this.rpc({
+                    model: params.model,
+                    method: 'read',
+                    args: [record_ids.slice(startIndex, startIndex+pageSize), ...params.args.slice(1)],
+                    context: params.context,
+                }, { shadow: shadow }));
+                page += 1;
+                this._updatePaginationLoadingMessage(params, page, record_ids.length);
+            }
+        }
+        return records;
+    },
+
+    async _paginatedRPC(params, shadow = false) {
+        let records = [];
+        if (params.pageSize) {
+            if (params.method === 'read') {
+                records = await this._paginatedRead(params, shadow);
+            } else {
+                records = await this._paginatedSearchRead(params, shadow);
+            }
+        } else {
+            records = await this.rpc(params, { shadow: shadow });
+        }
+        return records;
+    },
+
     // Server side model loaders. This is the list of the models that need to be loaded from
     // the server. The models are loaded one by one by this list's order. The 'loaded' callback
     // is used to store the data in the appropriate place once it has been loaded. This callback
@@ -437,10 +509,11 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.pricelist.item',
-        fields: ['product_tmpl_id', 'product_id', 'categ_id', 'min_quantity', 'base', 'base_pricelist_id', 
+        fields: ['product_tmpl_id', 'product_id', 'categ_id', 'min_quantity', 'base', 'base_pricelist_id',
         'pricelist_id', 'price_surcharge', 'price_discount', 'price_round', 'price_min_margin',
         'price_max_margin', 'date_start', 'date_end', 'compute_price', 'fixed_price', 'percent_price'],
         domain: function(self) { return [['pricelist_id', 'in', _.pluck(self.pricelists, 'id')]]; },
+        pageSize: 30000,
         readLoad: '_no_display_name',
         loaded: function(self, pricelist_items){
             var pricelist_by_id = {};
@@ -730,6 +803,7 @@ exports.PosModel = Backbone.Model.extend({
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                     var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
+                    var pageSize = typeof model.pageSize === 'function' ? model.pageSize(self, tmp): model.pageSize;
                     var readLoad = (typeof model.readLoad === 'function' ? model.readLoad(self, tmp): model.readLoad) || '_classic_read';
                     progress += progress_step;
 
@@ -749,8 +823,11 @@ exports.PosModel = Backbone.Model.extend({
                             params.orderBy = order;
                             params.kwargs = {'load': readLoad};
                         }
+                        if (pageSize) {
+                            params.pageSize = pageSize;
+                        }
 
-                        self.rpc(params).then(function (result) {
+                        self._paginatedRPC(params).then(function (result) {
                             try { // catching exceptions in model.loaded(...)
                                 Promise.resolve(model.loaded(self, result, tmp))
                                     .then(function () { load_model(index + 1); },
@@ -1968,6 +2045,7 @@ exports.load_fields = function(model_name, fields) {
 //  context: [Dict|function] the openerp context for the model read
 //  condition: [function] do not load the models if it evaluates to
 //             false.
+//  pageSize: [[number]|function] the pagination size of rpc calls.
 //  readLoad: [[string]|function] the load method of _read_format.
 //            either '_classic_read' or an arbitrary string.
 //            The former returns (id, display_name) for many2one, the
