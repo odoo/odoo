@@ -648,8 +648,11 @@ export class FormCompiler extends ViewCompiler {
         append(sheetBG, sheetFG);
         for (const child of el.childNodes) {
             const compiled = this.compileNode(child, params);
-            if (!compiled || compiled.nodeName === "ButtonBox") {
+            if (!compiled) {
                 continue;
+            }
+            if (compiled.nodeName === "ButtonBox") {
+                compiled.setAttribute("t-if", "__comp__.env.inDialog");
             }
             if (getTag(child, true) === "field") {
                 compiled.setAttribute("showTooltip", true);

@@ -9204,7 +9204,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             target,
             ".o_control_panel button:not(.fa):not(:disabled)",
-            3,
+            4,
             "control panel buttons should be enabled"
         );
         assert.containsN(
@@ -9225,7 +9225,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             target,
             ".o_control_panel button:not(.fa):disabled",
-            3,
+            4,
             "control panel buttons should be disabled"
         );
         assert.containsN(
@@ -9245,7 +9245,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             target,
             ".o_control_panel button:not(.fa):not(:disabled)",
-            3,
+            4,
             "control panel buttons should be enabled"
         );
         assert.containsN(
@@ -9301,7 +9301,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             target,
             ".o_control_panel button:not(.fa):not(:disabled)",
-            3,
+            4,
             "control panel buttons should be enabled"
         );
         assert.containsN(
@@ -9322,7 +9322,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             target,
             ".o_control_panel button:not(.fa):disabled",
-            3,
+            4,
             "control panel buttons should be disabled"
         );
         assert.containsN(
@@ -9342,7 +9342,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(
             target,
             ".o_control_panel button:not(.fa):not(:disabled)",
-            3,
+            4,
             "control panel buttons should be enabled"
         );
         assert.containsN(
