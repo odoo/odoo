@@ -15,11 +15,13 @@ class TestFrontend(odoo.tests.HttpCase):
                                                  'account_type': 'asset_receivable',
                                                  'reconcile': True})
 
+        drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
+
         printer = self.env['restaurant.printer'].create({
             'name': 'Kitchen Printer',
             'proxy_ip': 'localhost',
+            'product_categories_ids': [drinks_category.id]
         })
-        drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
 
         main_company = self.env.ref('base.main_company')
 

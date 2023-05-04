@@ -52,9 +52,44 @@ class DoExt extends Do {
             },
         ];
     }
+    clickOrderButton() {
+        return [
+            {
+                content: "click order button",
+                trigger: ".actionpad .submit-order",
+            },
+        ];
+    }
 }
 
 class CheckExt extends Check {
+    orderlinesHaveNoChange() {
+        return [
+            {
+                content: "Orderlines have no change",
+                trigger: ".orderlines .orderline:not(.dirty)",
+                run: function () {},
+            },
+        ];
+    }
+    isPrintingError() {
+        // because we don't have printer in the test.
+        return [
+            {
+                content: "Cancel printing changes",
+                trigger: ".modal-dialog .cancel",
+            },
+        ];
+    }
+    orderlineIsToOrder(name) {
+        return [
+            {
+                content: `Line is to order`,
+                trigger: `.order .orderline.dirty .product-name:contains("${name}")`,
+                run: function () {}, // it's a check
+            },
+        ];
+    }
     orderlineHasNote(name, quantity, note) {
         return [
             {
@@ -74,6 +109,15 @@ class CheckExt extends Check {
             {
                 content: `guest number is ${numberInString}`,
                 trigger: `.control-buttons .control-button span.control-button-number:contains(${numberInString})`,
+                run: function () {}, // it's a check
+            },
+        ];
+    }
+    orderBtnIsPresent() {
+        return [
+            {
+                content: "Order button is here",
+                trigger: ".actionpad .button.submit-order",
                 run: function () {}, // it's a check
             },
         ];
