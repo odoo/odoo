@@ -9220,6 +9220,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await click(target.querySelector(".o_form_statusbar button"));
+        await nextTick();
 
         // The unresolved promise lets us check the state of the buttons
         assert.containsN(
