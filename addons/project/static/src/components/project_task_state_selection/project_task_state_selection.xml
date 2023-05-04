@@ -1,6 +1,9 @@
 <templates>
     <t t-name="project.ProjectTaskStateSelection" t-inherit="web.StateSelectionField" t-inherit-mode="primary" owl="1">
         <!-- Readonly button -->
+        <xpath expr="//t[@t-if='props.readonly']/button" position="attributes">
+            <attribute name="tabindex">-1</attribute>
+        </xpath>
         <xpath expr="//t[@t-if='props.readonly']/button/span[1]" position="attributes">
             <attribute name="t-attf-class">{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }}</attribute>
         </xpath>
@@ -15,10 +18,15 @@
         <!-- The toggle mark as done button -->
         <xpath expr="//t[@t-if='props.readonly']" position="after">
             <t t-elif="isToggleMode and currentValue == '01_in_progress'">
-                <button t-if="isView(['kanban', 'list']) or this.env.isSmall" class="d-flex align-items-center btn fw-normal p-0" t-on-click.stop="toggleState" t-att-class="{'o_task_state_list_view': isView(['list'])}">
+                <button t-if="isView(['kanban', 'list']) or this.env.isSmall"
+                        class="d-flex align-items-center btn fw-normal p-0"
+                        tabindex="-1"
+                        t-att-class="{'o_task_state_list_view': isView(['list'])}"
+                        t-on-click.stop="toggleState"
+                >
                     <i t-attf-class="{{ stateIcon(currentValue) }} {{ statusColor(currentValue) }} {{ ['1_done', '1_canceled'].includes(currentValue) and isView(['kanban']) ? 'opacity-50' : '' }}"></i>
                 </button>
-                <button t-else="" class="o_state_button btn oe_highlight rounded-pill" style="white-space: nowrap;"
+                <button t-else="" class="o_state_button btn oe_highlight rounded-pill" style="white-space: nowrap;" tabindex="-1"
                     t-att-class="currentValue == '1_done' ? 'btn-success' : 'btn-light border-2 border-dark'"
                     t-on-click="toggleState" t-on-mouseenter="onMouseEnterStateButton"
                     t-on-mouseleave="onMouseLeaveStateButton">
