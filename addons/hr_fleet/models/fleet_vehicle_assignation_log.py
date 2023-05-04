@@ -12,10 +12,10 @@ class FleetVehicleAssignationLog(models.Model):
 
     @api.depends('driver_id')
     def _compute_driver_employee_id(self):
-        employees = self.env['hr.employee'].search([('address_home_id', 'in', self.driver_id.ids)])
+        employees = self.env['hr.employee'].search([('work_contact_id', 'in', self.driver_id.ids)])
 
         for log in self:
-            employee = employees.filtered(lambda e: e.address_home_id.id == log.driver_id.id)
+            employee = employees.filtered(lambda e: e.work_contact_id.id == log.driver_id.id)
             log.driver_employee_id = employee and employee[0] or False
 
     def _compute_attachment_number(self):

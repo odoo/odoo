@@ -614,7 +614,7 @@ class HrExpense(models.Model):
             'product_uom_id': self.product_uom_id.id,
             'analytic_distribution': self.analytic_distribution,
             'expense_id': self.id,
-            'partner_id': False if self.payment_mode == 'company_account' else self.employee_id.sudo().address_home_id.commercial_partner_id.id,
+            'partner_id': False if self.payment_mode == 'company_account' else self.employee_id.sudo().work_contact_id.id,
             'tax_ids': [Command.set(self.tax_ids.ids)],
         }
 
@@ -1023,7 +1023,7 @@ class HrExpenseSheet(models.Model):
     @api.depends('employee_id', 'employee_id.department_id')
     def _compute_from_employee_id(self):
         for sheet in self:
-            sheet.address_id = sheet.employee_id.sudo().address_home_id
+            sheet.address_id = sheet.employee_id.sudo().work_contact_id
             sheet.department_id = sheet.employee_id.department_id
             sheet.user_id = sheet.employee_id.expense_manager_id or sheet.employee_id.parent_id.user_id
 
@@ -1399,7 +1399,7 @@ class HrExpenseSheet(models.Model):
             # to set it to '' which cause no number to be given to the account.move when posted.
             'journal_id': self.journal_id.id,
             'move_type': 'in_invoice',
-            'partner_id': self.employee_id.sudo().address_home_id.commercial_partner_id.id,
+            'partner_id': self.employee_id.sudo().work_contact_id.id,
             'currency_id': self.currency_id.id,
             'line_ids':[Command.create(expense._prepare_move_line_vals()) for expense in self.expense_line_ids],
         }
@@ -1441,8 +1441,8 @@ class HrExpenseSheet(models.Model):
                 or journal.company_id.account_journal_payment_credit_account_id
             )
         else:
-            if not self.employee_id.sudo().address_home_id:
-                raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))
-            partner = self.employee_id.sudo().address_home_id.with_company(self.company_id)
+            if not self.employee_id.sudo().work_contact_id:
+                raise UserError(_("No work contact found for the employee %s, please configure one.") % (self.employee_id.name))
+            partner = self.employee_id.sudo().work_contact_id.with_company(self.company_id)
             account_dest = partner.property_account_payable_id or partner.parent_id.property_account_payable_id
         return account_dest.id

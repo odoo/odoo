@@ -14,9 +14,6 @@
                     <xpath expr="//page[@name='hr_settings']//field[@name='employee_type']" position="after">
                         <field name="first_contract_date" invisible="1"/>
                     </xpath>
-                    <xpath expr="//field[@name='bank_account_id']" position="replace">
-                        <field name="bank_account_id" context="{'display_partner':True}" attrs="{'invisible' : [('address_home_id', '=', False)]}"/>
-                    </xpath>
                     <xpath expr="//field[@name='resource_calendar_id']" position="replace">
                         <field name="calendar_mismatch" invisible="1"/>
                         <label for="resource_calendar_id"/>
