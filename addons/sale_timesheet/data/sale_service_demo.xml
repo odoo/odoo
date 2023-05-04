@@ -1142,6 +1142,7 @@
             <field name="project_id" search="[('sale_order_id', '=', ref('sale_timesheet.sale_order_2'))]"/>
             <field name="stage_id" ref="project.project_stage_0"/>
             <field name="state">02_changes_requested</field>
+            <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
             <field name="sale_line_id" ref="sale_timesheet.sale_line_22"/>
             <field name="sale_order_id" ref="sale_timesheet.sale_order_2"/>
             <field name="partner_id" ref="base.res_partner_4"/>
@@ -1174,6 +1175,7 @@
             <field name="stage_id" ref="project.project_stage_2"/>
             <field name="sale_line_id" ref="sale_timesheet.sale_line_22"/>
             <field name="sale_order_id" ref="sale_timesheet.sale_order_2"/>
+            <field name="create_date" eval="DateTime.now() - relativedelta(days=4)"/>
             <field name="partner_id" ref="base.res_partner_4"/>
             <field name="user_ids" eval="[Command.link(ref('base.user_demo'))]"/>
         </record>
@@ -2578,5 +2580,16 @@
             <field name="progress" eval="30"/>
             <field name="status">at_risk</field>
         </record>
+
+        <!-- Change task creation notifications date -->
+        <function model="mail.message" name="write">
+           <value model="mail.message"
+                eval="obj().env['mail.message'].search([
+                    ('subtype_id', '=', ref('project.mt_task_new')),
+                    ('res_id', 'in', [ref('sale_timesheet.project_dpc_task_4'), ref('sale_timesheet.project_dpc_task_5')]),
+                ]).ids"
+            />
+            <value eval="{'date': DateTime.now() - relativedelta(days=4)}"/>
+        </function>
     </data>
 </odoo>
