@@ -2,6 +2,7 @@ import base64
 import json
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 from odoo.addons.spreadsheet.utils import empty_spreadsheet_data_base64
 
@@ -22,3 +23,12 @@ class SpreadsheetDashboard(models.Model):
     def _compute_raw(self):
         for dashboard in self:
             dashboard.raw = base64.decodebytes(dashboard.data)
+
+    @api.onchange('data')
+    def _onchange_data_(self):
+        if self.data:
+            try:
+                data_str = base64.b64decode(self.data).decode('utf-8')
+                json.loads(data_str)
+            except:
+                raise ValidationError(_('Invalid JSON Data'))
