@@ -278,8 +278,8 @@ QUnit.module("Views", (hooks) => {
             "right",
             "integer cells should be right aligned"
         );
-
-        assert.isVisible(target.querySelector(".o_list_button_add"));
+        assert.isNotVisible(target.querySelector(".d-xl-none .o_list_button_add"));
+        assert.isVisible(target.querySelector(".d-xl-inline-flex .o_list_button_add"));
         assert.isNotVisible(target.querySelector(".o_list_button_save"));
         assert.isNotVisible(target.querySelector(".o_list_button_discard"));
     });
