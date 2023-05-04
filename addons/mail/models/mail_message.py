@@ -108,6 +108,7 @@ class Message(models.Model):
         ('email', 'Email'),
         ('comment', 'Comment'),
         ('notification', 'System notification'),
+        ('auto_comment', 'Automated Targeted Notification'),
         ('user_notification', 'User Specific Notification')],
         'Type', required=True, default='email',
         help="Message type: email for email message, notification for system "
