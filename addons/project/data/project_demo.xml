@@ -2,6 +2,11 @@
 <odoo>
     <data noupdate="1">
 
+        <record id="default_analytic_plan_id" model="ir.config_parameter">
+            <field name="key" eval="'default_analytic_plan_id_' + str(ref('base.main_company'))"/>
+            <field name="value" ref="analytic.analytic_plan_projects"/>
+        </record>
+
         <!-- Users -->
         <record id="base.user_demo" model="res.users">
             <field name="groups_id" eval="[
