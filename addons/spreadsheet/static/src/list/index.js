@@ -40,6 +40,7 @@ cellMenuRegistry.add("list_see_record", {
         const position = env.model.getters.getActivePosition();
         return SEE_RECORD_LIST_VISIBLE(position, env);
     },
+    icon: "o-spreadsheet-Icon.SEE_RECORDS",
 });
 
 inverseCommandRegistry
