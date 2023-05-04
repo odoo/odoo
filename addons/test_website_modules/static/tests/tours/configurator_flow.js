@@ -16,7 +16,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
         run: 'text Website Test',
     }, {
         content: "validate the website creation modal",
-        trigger: 'button.btn-primary',
+        trigger: 'button.btn-primary:contains("Create")',
     },
     // Configurator first screen
     {
@@ -88,7 +88,7 @@ registry.category("web_tour.tours").add('configurator_flow', {
                 }
             }
             for (const url of ['/', '/event', '/slides', '/pricing', '/blog/', '/blog/', '/contactus']) {
-                if (!$iframe.contents().find(`#top_menu a[href^='${url}'`).length) {
+                if (!$iframe.contents().find(`#top_menu a[href^='${url}']`).length) {
                     console.error(`Missing ${url} menu URL. It should have been created by the configurator.`);
                 }
             }
