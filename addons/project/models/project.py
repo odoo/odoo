@@ -18,7 +18,6 @@ from odoo.tools.misc import get_lang
 from .project_task_recurrence import DAYS, WEEKS
 from .project_update import STATUS_COLOR
 
-
 PROJECT_TASK_READABLE_FIELDS = {
     'id',
     'active',
@@ -1513,7 +1512,7 @@ class Task(models.Model):
                 task.repeat_week,
                 task.repeat_month,
                 count=number_occurrences)
-            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format or get_lang(self.env).date_format
             if recurrence_left == 0:
                 recurrence_title = _('There are no more occurrences.')
             else:
