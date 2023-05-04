@@ -40,43 +40,16 @@
                 <tree string="Users" editable="bottom" create="false" delete="false">
                     <field name="user_id" invisible="1"/>
                     <field name="user_login" force_save="1"/>
-                    <field name="new_passwd" required="True" password="True"/>
+                    <field name="new_passwd" password="True"/>
                 </tree>
             </field>
         </record>
-
-        <record id="change_password_user_form_view" model="ir.ui.view">
-            <field name="name">Change Password User</field>
-            <field name="model">change.password.user</field>
-            <field name="arch" type="xml">
-                <form string="Change Password">
-                    <field name="user_id" invisible="1"/>
-                    <group>
-                        <group>
-                            <field name="user_login"/>
-                        </group>
-                        <group>
-                            <field name="new_passwd" required="True" password="True" force_save="1"/>
-                        </group>
-                    </group>
-                    <footer>
-                        <button string="Change Password" name="change_password_button" type="object" class="btn-primary" data-hotkey="q"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" data-hotkey="z"/>
-                    </footer>
-                </form>
-            </field>
-        </record>
-
-        <record id="change_password_action_server" model="ir.actions.server">
+        <record id="change_password_wizard_action" model="ir.actions.act_window">
             <field name="name">Change Password</field>
-            <field name="model_id" ref="base.model_res_users"/>
+            <field name="res_model">change.password.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
             <field name="binding_model_id" ref="base.model_res_users"/>
-            <field name="groups_id" eval="[(4,ref('base.group_erp_manager'))]"/>
-            <field name="state">code</field>
-            <field name="code">
-if records:
-    action = records.action_change_password()
-            </field>
         </record>
 
         <record id="identity_check_wizard" model="ir.ui.view">
