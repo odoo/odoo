@@ -2076,7 +2076,10 @@ class BaseModel(metaclass=MetaModel):
                 continue
 
             field = self._fields.get(term)
-            if traverse_many2one and field and field.type == 'many2one':
+            if (
+                traverse_many2one and field and field.type == 'many2one'
+                and self.env[field.comodel_name]._order != 'id'
+            ):
                 # this generates an extra clause to add in the group by
                 sql_order = self._order_to_sql(f'{term} {direction} {nulls}', query)
                 orderby_terms.append(sql_order)
@@ -5165,6 +5168,17 @@ class BaseModel(metaclass=MetaModel):
                 return
             self = self.with_context(__m2o_order_seen=frozenset((field, *seen)))
 
+            # figure out the applicable order_by for the m2o
+            comodel = self.env[field.comodel_name]
+            coorder = comodel._order
+            if not regex_order.match(coorder):
+                # _order is complex, can't use it here, so we default to _rec_name
+                coorder = comodel._rec_name
+
+            if coorder == 'id':
+                sql_field = self._field_to_sql(alias, field_name, query)
+                return SQL("%s %s %s", sql_field, direction, nulls)
+
             # instead of ordering by the field's raw value, use the comodel's
             # order on many2one values
             terms = []
@@ -5174,19 +5188,12 @@ class BaseModel(metaclass=MetaModel):
                 terms.append(SQL("%s IS NULL", self._field_to_sql(alias, field_name, query)))
 
             # LEFT JOIN the comodel table, in order to include NULL values, too
-            comodel = self.env[field.comodel_name]
             coalias = query.make_alias(alias, field_name)
             query.add_join('LEFT JOIN', coalias, comodel._table, SQL(
                 "%s = %s",
                 self._field_to_sql(alias, field_name, query),
                 SQL.identifier(coalias, 'id'),
             ))
-
-            # figure out the applicable order_by for the m2o
-            coorder = comodel._order
-            if not regex_order.match(coorder):
-                # _order is complex, can't use it here, so we default to _rec_name
-                coorder = comodel._rec_name
 
             # delegate the order to the comodel
             reverse = direction.code == 'DESC'
