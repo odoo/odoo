@@ -21,4 +21,11 @@ export class ProductCard extends Component {
             this.env.navigate("/products/" + product.product_id);
         }
     }
+    qtyInCart() {
+        const cart = this.selfOrder.cart;
+        const product = this.props.product;
+        return cart
+            .filter((x) => x.product_id === product.product_id)
+            .reduce((sum, x) => sum + x.qty, 0);
+    }
 }

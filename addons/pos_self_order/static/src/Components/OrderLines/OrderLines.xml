@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.OrderLines" owl="1">
         <t t-foreach="props.lines" t-as="cartItem" t-key="selfOrder.product_uniqueness_keys.map((key) => cartItem[key])">
             <t t-set="product" t-value="selfOrder.products.find(x => x.product_id === cartItem.product_id)"/>
-            <ProductCard product="(({ description_sale, ...rest }) => rest)(product)" cartItem="cartItem"/>
+            <ProductCard product="(({ description_sale, has_image, ...rest }) => ({has_image: false, ...rest}))(product)" cartItem="cartItem"/>
         </t>
     </t>
 </templates>

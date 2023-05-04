@@ -5,6 +5,11 @@
             t-on-click="() => this.clickOnProduct(props.product)"
             t-ref="currentProductCard">
             <div class="d-flex flex-column w-100 py-1">
+                <t t-set="qtyInCart" t-value="!props.cartItem and this.qtyInCart()" />
+
+                <!-- TODO: use this qtyInCart variable -->
+                <h1 t-esc="qtyInCart"/>
+
                 <h3 t-attf-class="mb-0 text-900 fw-bold fs-6" 
                     t-esc="props.product.name" />
                 <!-- this description represents the list of attributes of the product  -->
