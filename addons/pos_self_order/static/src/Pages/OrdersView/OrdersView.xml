@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.OrdersView" owl="1">
-        <NavBar customText="'Orders'"/>
+        <NavBar customText="'Orders'" goBack="'/'"/>
         <div class="overflow-auto h-100 pb-5">
             <t t-if="selfOrder.orders" t-foreach="selfOrder.orders" t-as="order" t-key="order.pos_reference">
                 <Order order="order"/>

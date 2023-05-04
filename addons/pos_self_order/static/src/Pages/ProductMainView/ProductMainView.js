@@ -25,8 +25,6 @@ export class ProductMainView extends Component {
         this.selfOrder.currentProduct = this.props.product.product_id;
 
         this.privateState = useState({
-            // we look in the cart too see if the current product is already in it
-            // if it is, we set the qty to the qty in the cart
             qty: this.selfOrder?.cartItem?.qty || 1,
             customer_note: this.selfOrder?.cartItem?.customer_note || "",
             selectedVariants: Object.fromEntries(
@@ -82,21 +80,40 @@ export class ProductMainView extends Component {
         if (cartItem) {
             return this.privateState.qty;
         }
-        return this.selfOrder.cart.filter((item) => this.isSameProduct(item, {}))?.qty;
+        return (
+            (this.selfOrder.cart.find((item) =>
+                this.selfOrder.isSameProduct(item, this.preFormOrderline())
+            )?.qty || 0) + this.privateState.qty
+        );
     }
-    
-
-    addToCartButtonClicked() {
-        this.selfOrder.updateCart({
+    preFormOrderline() {
+        return {
             product_id: this.selfOrder.currentProduct,
-            qty: this.privateState.qty,
             customer_note: this.privateState.customer_note,
             description: Object.values(this.privateState.selectedVariants).join(", "),
+        };
+    }
+
+    formOrderLine() {
+        return {
+            ...this.preFormOrderline(),
+            qty: this.findQty(),
             price_extra: this.getAllPricesExtra(
                 this.privateState.selectedVariants,
                 this.props.product.attributes
             ),
-        });
+        };
+    }
+
+    addToCartButtonClicked() {
+        this.selfOrder.updateCart(this.formOrderLine());
+        if (this.selfOrder.cartItem) {
+            this.closeComponent();
+            return;
+        }
         this.env.navigate("/products");
+    }
+    closeComponent() {
+        this.selfOrder.cartItem = null;
     }
 }

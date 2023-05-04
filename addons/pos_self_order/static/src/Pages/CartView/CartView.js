@@ -1,6 +1,6 @@
 /** @odoo-module */
 
-import { Component, onMounted, useRef } from "@odoo/owl";
+import { Component, onMounted, useEffect, useRef } from "@odoo/owl";
 import { NavBar } from "@pos_self_order/Components/NavBar/NavBar";
 import { ProductCard } from "@pos_self_order/Components/ProductCard/ProductCard";
 import { OrderLines } from "@pos_self_order/Components/OrderLines/OrderLines";
@@ -18,5 +18,13 @@ export class CartView extends Component {
             // TODO: replace this logic with dvh once it is supported
             this.main.el.style.height = `${window.innerHeight}px`;
         });
+        useEffect(
+            (cart) => {
+                if (!cart.length) {
+                    this.env.navigate("/products");
+                }
+            },
+            () => [this.selfOrder.cart]
+        );
     }
 }

@@ -19,7 +19,6 @@ export class SelfOrder {
             notification,
             ...session.pos_self_order,
             currentProduct: 0,
-            // The cart and orders variables contain all the global state of the app
             cart: JSON.parse(localStorage.getItem("cart")) ?? [],
             orders: JSON.parse(localStorage.getItem("orders")) ?? [],
         });

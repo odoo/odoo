@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.CartView" owl="1">
         <div t-ref="main" class="d-flex flex-column">
-            <NavBar customText="'Cart'"/>
+            <NavBar customText="'Cart'" goBack="'/products'"/>
             <!-- <main class="o_self_order_cart bg-100 overflow-auto"> -->
             <main class="h-100 bg-100 overflow-auto">
                 <OrderLines lines="selfOrder.cart"/>

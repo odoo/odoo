@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.SelfOrderRoot" owl="1">
+        <ProductMainView t-if="selfOrder.cartItem" 
+            product="selfOrder.products.find(x => x.product_id === selfOrder.cartItem.product_id)"/>
         <Router pos_config_id="selfOrder.pos_config_id">
             <t t-set-slot="default">
                 <LandingPage/>
