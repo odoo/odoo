@@ -14,6 +14,8 @@ from collections import defaultdict, deque
 from contextlib import closing, suppress
 from enum import IntEnum
 from psycopg2.pool import PoolError
+from urllib.parse import urlparse
+from fnmatch import fnmatch
 from weakref import WeakSet
 
 from werkzeug.local import LocalStack
@@ -795,7 +797,7 @@ class WebsocketConnectionHandler:
     _HANDSHAKE_GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11'
     _REQUIRED_HANDSHAKE_HEADERS = {
         'connection', 'host', 'sec-websocket-key',
-        'sec-websocket-version', 'upgrade',
+        'sec-websocket-version', 'upgrade', 'origin',
     }
 
     @classmethod
@@ -808,7 +810,7 @@ class WebsocketConnectionHandler:
         versions the client supports and those we support.
         :raise: BadRequest if the handshake data is incorrect.
         """
-        response = cls._get_handshake_response(request.httprequest.headers)
+        response = cls._get_handshake_response(request)
         response.call_on_close(functools.partial(
             cls._serve_forever,
             Websocket(request.httprequest.environ['socket'], request.session),
@@ -821,24 +823,42 @@ class WebsocketConnectionHandler:
         return response
 
     @classmethod
-    def _get_handshake_response(cls, headers):
+    def _get_handshake_response(cls, request):
         """
         :return: Response indicating the server performed a connection
         upgrade.
         :raise: BadRequest
         :raise: UpgradeRequired
         """
-        cls._assert_handshake_validity(headers)
+        cls._assert_origin_validity(request)
+        cls._assert_handshake_validity(request.httprequest.headers)
         # sha-1 is used as it is required by
         # https://datatracker.ietf.org/doc/html/rfc6455#page-7
         accept_header = hashlib.sha1(
-            (headers['sec-websocket-key'] + cls._HANDSHAKE_GUID).encode()).digest()
+            (request.httprequest.headers['sec-websocket-key'] + cls._HANDSHAKE_GUID).encode()).digest()
         accept_header = base64.b64encode(accept_header)
         return Response(status=101, headers={
             'Upgrade': 'websocket',
             'Connection': 'Upgrade',
             'Sec-WebSocket-Accept': accept_header,
         })
+
+    @classmethod
+    def _assert_origin_validity(cls, request):
+        """ :raise: BadRequest if the origin is invalid. """
+        headers = request.httprequest.headers
+        # Verify origin as we're not covered by CORS/SOP protection. Host and Origin include port.
+        origin_url = urlparse(headers['origin'])
+        if origin_url.netloc == headers['host'] and origin_url.scheme == request.httprequest.scheme:
+            return
+        whitelist = [
+            origin.strip() for origin in
+            request.env['ir.config_parameter'].sudo().get_param('bus.cross_origin_whitelist', '').split(',')
+        ]
+        if any([url and fnmatch(headers['origin'], url) for url in whitelist]):
+            return
+        _logger.debug('Invalid origin: %s. Whitelist: %s', headers['origin'], whitelist)
+        raise BadRequest('Invalid origin')
 
     @classmethod
     def _assert_handshake_validity(cls, headers):

@@ -290,3 +290,21 @@ class TestWebsocketCaryall(WebsocketCase):
             with patch('odoo.addons.bus.websocket.acquire_cursor') as mock:
                 self.websocket_connect()
                 self.assertFalse(mock.called)
+
+    def test_cross_origin_connection_refused(self):
+        with self.assertRaises(WebSocketBadStatusException) as error_catcher:
+            self.websocket_connect(origin='https://www.example.com')
+        self.assertEqual(error_catcher.exception.status_code, 400)
+
+    def test_cross_origin_whitelist(self):
+        self.env['ir.config_parameter'].set_param('bus.cross_origin_whitelist', 'https://*.example.com, https://other-example.com')
+        self.assertEqual(
+            self.env['ir.config_parameter'].get_param('bus.cross_origin_whitelist'),
+            'https://*.example.com, https://other-example.com'
+        )
+        self.websocket_connect(origin='https://xxx.example.com')
+        self.websocket_connect(origin='https://other-example.com')
+        with self.assertRaises(WebSocketBadStatusException) as error_catcher:
+            self.websocket_connect(origin='http://xxx.example.com')
+        self.assertEqual(error_catcher.exception.status_code, 400)
+
