@@ -91,6 +91,24 @@ class Users(models.Model):
         _logger.info("2FA enable: SUCCESS for %s %r", self, self.login)
         return True
 
+    def _check_credentials_mfa_totp(self, fn, w):
+        cookies = request.httprequest.cookies
+        key = cookies.get('td_id')
+        if key:
+            user_match = request.env['auth_totp.device']._check_credentials_for_uid(
+                scope="browser", key=key, uid=self.id)
+            if not user_match:
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'res.users.mfacheck',
+                    'res_id': w.id,
+                    'name': _("Security Control"),
+                    'target': 'new',
+                    'views': [(False, 'form')],
+                }
+            else:
+                return fn
+
     @check_identity
     def action_totp_disable(self):
         logins = ', '.join(map(repr, self.mapped('login')))
