@@ -23,15 +23,14 @@ class HrApplicant(models.Model):
         for applicant in self:
             applicant.skill_ids = applicant.applicant_skill_ids.skill_id
 
-    def create_employee_from_applicant(self):
-        self.ensure_one()
-        action = super().create_employee_from_applicant()
-        action['context']['default_employee_skill_ids'] = [(0, 0, {
+    def _get_employee_create_vals(self):
+        vals = super()._get_employee_create_vals()
+        vals['employee_skill_ids'] = [(0, 0, {
             'skill_id': applicant_skill.skill_id.id,
             'skill_level_id': applicant_skill.skill_level_id.id,
             'skill_type_id': applicant_skill.skill_type_id.id,
         }) for applicant_skill in self.applicant_skill_ids]
-        return action
+        return vals
 
     def _update_employee_from_applicant(self):
         vals_list = []
