@@ -201,3 +201,7 @@ class SaleOrderLine(models.Model):
 
         undeletable_lines = super()._check_line_unlink()
         return undeletable_lines.filtered(lambda line: not line.is_delivery)
+
+    def get_discount_amount(self):
+        # TO BE OVERRIDE
+        return 0

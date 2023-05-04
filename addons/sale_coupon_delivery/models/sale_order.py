@@ -63,3 +63,22 @@ class SalesOrderLine(models.Model):
         only_free_shipping_line_orders = orders.filtered(lambda order: len(order.order_line.ids) == 1 and order.order_line.is_reward_line)
         super(SalesOrderLine, only_free_shipping_line_orders.mapped('order_line')).unlink()
         return res
+
+    def get_discount_amount(self):
+        discount = super().get_discount_amount()
+        for coupon_program in self.order_id._get_applied_programs_with_rewards_on_current_order():
+            if coupon_program.reward_type == "discount":
+                if coupon_program.reward_id.discount_apply_on == "cheapest_product":
+                    if self == self.order_id._get_cheapest_line():
+                        discount += sum(self.order_id.order_line.filtered(lambda l: l.product_id == coupon_program.discount_line_product_id).mapped('price_total'))
+                elif coupon_program.reward_id.discount_apply_on in ("specific_products", "on_order"):
+                    if coupon_program.reward_id.discount_apply_on == "specific_products":
+                        func = lambda l: l.product_id in coupon_program.reward_id.discount_specific_product_ids
+                    else:
+                        func = lambda l: not (l.is_reward_line or l.is_delivery)
+                    lines = self.order_id.order_line.filtered(func)
+                    discount_amount = sum(self.order_id.order_line.filtered(lambda l: l.product_id == coupon_program.discount_line_product_id).mapped('price_total'))
+                    discount += (self.price_total / sum(lines.mapped('price_total'))) * discount_amount
+            elif coupon_program.reward_type == "product" and self.product_id == coupon_program.reward_id.reward_product_id:
+                discount += self.price_total
+        return discount * -1

@@ -50,7 +50,8 @@ class StockMoveLine(models.Model):
     def _compute_sale_price(self):
         for move_line in self:
             if move_line.move_id.sale_line_id:
-                unit_price = move_line.move_id.sale_line_id.price_reduce_taxinc
+                discount = move_line.move_id.sale_line_id.get_discount_amount()
+                unit_price = (move_line.move_id.sale_line_id.price_total - discount) / move_line.move_id.sale_line_id.product_uom_qty
                 qty = move_line.product_uom_id._compute_quantity(move_line.qty_done, move_line.move_id.sale_line_id.product_uom)
             else:
                 unit_price = move_line.product_id.list_price
