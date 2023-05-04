@@ -426,8 +426,13 @@ class ReportMoOverview(models.AbstractModel):
         return replenishments
 
     def _add_transit_line(self, move_raw, forecast, production, level, current_index):
-        in_transit = next(filter(lambda line: line.get('in_transit') and line.get('document_out') and line['document_out'].get('id') == production.id, forecast), None)
-        if not in_transit:
+        def is_related_to_production(document, production):
+            if not document:
+                return False
+            return document.get('_name') == production._name and document.get('id') == production.id
+
+        in_transit = next(filter(lambda line: line.get('in_transit') and is_related_to_production(line.get('document_out'), production), forecast), None)
+        if not in_transit or is_related_to_production(in_transit.get('reservation'), production):
             return None
 
         product = move_raw.product_id
