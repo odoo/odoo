@@ -508,7 +508,7 @@ const Link = Widget.extend({
      * @param {boolean} force
      */
     _updateLinkContent($link, linkInfos, { force = false } = {}) {
-        if (force || (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url)) {
+        if (force || (this.needLabel && (linkInfos.content !== this.data.originalText || linkInfos.url !== this.data.url))) {
             if (linkInfos.content === this.data.originalText) {
                 $link.html(this.data.originalHTML);
             } else if (linkInfos.content && linkInfos.content.length) {
