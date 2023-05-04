@@ -2075,7 +2075,11 @@ class BaseModel(metaclass=MetaModel):
                 except ValueError as e:
                     raise ValueError(f"Order term {order_part!r} is not a valid aggregate nor valid groupby") from e
 
-            if traverse_many2one and order_field in self and self._fields[order_field].type == 'many2one':
+            field = self._fields.get(order_field)
+            if (
+                traverse_many2one and field and field.type == 'many2one'
+                and self.env[field.comodel_name]._order != 'id'
+            ):
                 # It will generated extra clause to add in the group by.
                 extra_order = self._generate_order_by(f'{order_field} {order_direction} {order_nulls}', query)
                 extra_order = extra_order.replace(' ORDER BY ', '')
@@ -4829,6 +4833,9 @@ class BaseModel(metaclass=MetaModel):
         # figure out the applicable order_by for the m2o
         dest_model = self.env[field.comodel_name]
         m2o_order = dest_model._order
+        if m2o_order == 'id':
+            order_direction = 'DESC' if reverse_direction else ''
+            return ['"%s"."%s" %s' % (alias, order_field, order_direction)]
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
