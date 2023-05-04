@@ -1,28 +1,33 @@
 /** @odoo-module */
 
-import { useService } from "@web/core/utils/hooks";
-
-import { registry } from "@web/core/registry";
 import { Component, onWillStart } from "@odoo/owl";
+
+import { useService } from "@web/core/utils/hooks";
+import { registry } from "@web/core/registry";
+
 import { Record } from "@web/views/record";
 import { KanbanMany2ManyTagsAvatarUserField } from "@mail/web/fields/many2many_avatar_user_field/many2many_avatar_user_field";
-import { Field } from "@web/views/fields/field";
+import { Field, getFieldFromRegistry } from "@web/views/fields/field";
 import { standardWidgetProps } from "@web/views/widgets/standard_widget_props";
 
 export class SubtaskKanbanList extends Component {
     setup() {
         this.actionService = useService("action");
         this.orm = useService("orm");
-        this.subTaskIds = [];
+        this.subTasksRead = [];
+        this.subTaskClosed = new Set();
 
         onWillStart(this.onWillStart);
     }
 
     async onWillStart() {
-        this.subTaskIds = await this.orm.search(this.props.record.resModel, [
-            ["parent_id", "=", this.props.record.resId],
-            ["state", "not in", ["1_done", "1_canceled"]],
-        ]);
+        this.subTasksRead = await this.orm.searchRead(
+            this.props.record.resModel, [
+                ["parent_id", "=", this.props.record.resId],
+                ["state", "not in", ["1_done", "1_canceled"]],
+            ],
+            this.fieldNames
+        );
     }
 
     async goToSubtask(subtask_id) {
@@ -38,44 +43,44 @@ export class SubtaskKanbanList extends Component {
         });
     }
 
-    get fieldsInfo() {
+    get fieldNames() {
+        return Object.keys(this.fields);
+    }
+
+    get fields() {
+        const { display_name, state, user_ids } = this.props.record.fields;
         return {
-            child_ids: {
-                type: "one2many",
-                relation: "project.task",
-                relatedFields: {
-                    display_name: { type: "char" },
-                    state: {
-                        selection: [
-                            ["01_in_progress", "In Progress"],
-                            ["02_changes_requested", "Changes Requested"],
-                            ["03_approved", "Approved"],
-                            ["04_waiting_normal", "Waiting"],
-                            ["1_done", "Done"],
-                            ["1_canceled", "Canceled"],
-                        ],
-                        string: "Status",
-                        type: "selection",
-                        field: this.props.record.activeFields.state.field,
-                        viewType: this.props.record.activeFields.state.viewType,
-                        attrs: this.props.record.activeFields.state.attrs,
-                        options: this.props.record.activeFields.state.options,
-                    },
-                    user_ids: {
-                        type: "many2many",
-                        relation: "res.users",
-                        field: this.props.record.activeFields.user_ids.field,
-                        relatedFields: this.props.record.activeFields.user_ids.relatedFields,
-                        attrs: this.props.record.activeFields.user_ids.attrs,
-                        options: this.props.record.activeFields.user_ids.options,
-                    },
-                },
+            display_name,
+            state,
+            user_ids,
+        };
+    }
+
+    get activeFields() {
+        return {
+            display_name: {},
+            state: {
+                viewType: "kanban",
+                field: getFieldFromRegistry(this.fields.state.type, "project_task_state_selection", "kanban"),
+            },
+            user_ids: {
+                field: getFieldFromRegistry(this.fields.user_ids.type, "many2many_avatar_user", "kanban"),
             },
         };
     }
 
-    get values() {
-        return { child_ids: this.subTaskIds };
+    async onSubTaskSaved(subTask) {
+        const isKnownAsClosed = this.subTaskClosed.has(subTask.resId);
+        const isClosed = subTask.data.state.startsWith("1_");
+        if (isKnownAsClosed && !isClosed) {
+            this.subTaskClosed.delete(subTask.resId);
+        } else if (!isKnownAsClosed && isClosed) {
+            this.subTaskClosed.add(subTask.resId);
+        } else { // nothing to do
+            return;
+        }
+        await this.props.record.load();
+        this.props.record.model.notify();
     }
 }
 
