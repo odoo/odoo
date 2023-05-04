@@ -17,6 +17,13 @@ class TestFrontend(odoo.tests.HttpCase):
 
         drinks_category = self.env['pos.category'].create({'name': 'Drinks'})
 
+        printer = self.env['pos.printer'].create({
+            'name': 'Preparation Printer',
+            'epson_printer_ip': '127.0.0.1',
+            'printer_type': 'epson_epos',
+            'product_categories_ids': [drinks_category.id]
+        })
+
         main_company = self.env.ref('base.main_company')
 
         second_cash_journal = self.env['account.journal'].create({
@@ -41,6 +48,7 @@ class TestFrontend(odoo.tests.HttpCase):
             'iface_orderline_notes': True,
             'iface_start_categ_id': drinks_category.id,
             'start_category': True,
+            'printer_ids': [(4, printer.id)],
         })
 
         main_floor = self.env['restaurant.floor'].create({
