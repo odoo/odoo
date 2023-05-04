@@ -296,8 +296,9 @@ class MailThread(models.AbstractModel):
                 # based on tracked field to stay consistent with write
                 # we don't consider that a falsy field is a change, to stay consistent with previous implementation,
                 # but we may want to change that behaviour later.
-                thread._message_track_post_template(changes)
-
+                if changes:
+                    self.env.cr.precommit.add(thread._track_post_template_finalize)  # call to _track_post_template_finalize bound to this record
+                    self.env.cr.precommit.data.setdefault(f'mail.tracking.create.{self._name}.{thread.id}', changes)
         return threads
 
     def write(self, values):
@@ -549,6 +550,11 @@ class MailThread(models.AbstractModel):
         authors = self.env.cr.precommit.data.setdefault(f'mail.tracking.author.{self._name}', {})
         for id_ in self.ids:
             authors[id_] = author
+
+    def _track_post_template_finalize(self):
+        """Call the tracking template method with right values from precommit."""
+        self._message_track_post_template(self.env.cr.precommit.data.pop(f'mail.tracking.create.{self._name}.{self.id}', []))
+        self.env.flush_all()
 
     def _track_set_log_message(self, message):
         """ Link tracking to a message logged as body, in addition to subtype
