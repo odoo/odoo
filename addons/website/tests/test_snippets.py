@@ -56,3 +56,6 @@ class TestSnippets(odoo.tests.HttpCase):
 
     def test_07_snippet_images_wall(self):
         self.start_tour('/', 'snippet_images_wall', login='admin')
+
+    def test_08_parallax(self):
+        self.start_tour('/', 'test_parallax', login='admin')
