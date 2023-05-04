@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="web.DateTimePickerPopover" owl="1">
+        <DateTimePicker t-props="props.pickerProps">
+            <t t-set-slot="buttons">
+                <t t-if="props.pickerProps.type === 'datetime' or Array.isArray(props.pickerProps.value)">
+                    <button class="o_apply btn btn-primary btn-sm" t-on-click="props.close">
+                        <i class="fa fa-check" />
+                    </button>
+                </t>
+            </t>
+        </DateTimePicker>
+    </t>
+</templates>

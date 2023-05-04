@@ -261,7 +261,7 @@ registry.category("web_tour.tours").add('sale_timesheet_tour', {
     content: "Edit new Milestone",
     run: 'text New milestone',
 }, {
-    trigger: "div[name=deadline] .datetimepicker-input",
+    trigger: "input[data-field=deadline]",
     content: "Edit new Milestone",
     run: 'text 12/12/2099',
 }, {

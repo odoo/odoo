@@ -1,21 +1,63 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
-
     <t t-name="web.DateTimeField" owl="1">
-        <t t-if="props.readonly">
-            <span t-esc="formattedValue" />
-        </t>
-        <t t-else="">
-            <DateTimePicker
-                t-props="props.pickerOptions"
-                date="props.record.data[props.name]"
-                inputId="props.id"
-                placeholder="props.placeholder"
-                onDateTimeChanged="(datetime) => this.onDateTimeChanged(datetime)"
-                onInput.bind="onDatePickerInput"
-                onUpdateInput.bind="onUpdateInput"
-            />
-        </t>
+        <div class="d-flex gap-2 align-items-center" t-ref="root">
+            <!-- Primary date -->
+            <t t-if="props.readonly">
+                <div class="d-inline-block w-100" t-esc="formatDisplayValue(values[0])" />
+            </t>
+            <t t-else="">
+                <input
+                    t-ref="start-date"
+                    type="text"
+                    t-att-id="props.id"
+                    class="o_input cursor-pointer"
+                    autocomplete="off"
+                    t-att-placeholder="props.placeholder"
+                    t-att-data-field="props.name"
+                    t-on-input="onInput"
+                />
+                <span
+                    t-if="props.warnFuture and isDateInTheFuture(0)"
+                    class="fa fa-exclamation-triangle text-danger"
+                    title="This date is on the future. Make sure it is what you expected."
+                />
+            </t>
+            <t t-if="showEndDateInput">
+                <t t-if="emptyField and !props.readonly and !props.required">
+                    <!-- Add date button -->
+                    <button class="o_add_date btn btn-secondary btn-sm w-100" t-on-click="addDate">
+                        <i class="fa fa-plus me-2" />
+                        <t t-if="emptyField === props.name">Add start date</t>
+                        <t t-else="">Add end date</t>
+                    </button>
+                </t>
+                <t t-else="">
+                    <!-- Separator -->
+                    <i class="fa fa-long-arrow-right" aria-label="Arrow icon" title="Arrow" />
+                    <!-- Secondary date -->
+                    <t t-if="props.readonly">
+                        <div class="d-inline-block w-100" t-esc="formatDisplayValue(values[1])" />
+                    </t>
+                    <t t-else="">
+                        <input
+                            t-ref="end-date"
+                            type="text"
+                            t-att-id="props.startDateField and props.id"
+                            class="o_input cursor-pointer"
+                            autocomplete="off"
+                            t-att-placeholder="props.placeholder"
+                            t-att-data-field="props.endDateField"
+                            t-on-input="onInput"
+                        />
+                        <span
+                            t-if="props.warnFuture and isDateInTheFuture(1)"
+                            class="fa fa-exclamation-triangle text-danger"
+                            title="This date is on the future. Make sure it is what you expected."
+                        />
+                    </t>
+                </t>
+            </t>
+        </div>
     </t>
-
 </templates>

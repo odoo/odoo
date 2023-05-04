@@ -143,7 +143,7 @@ export class PropertiesField extends Component {
      * @returns {boolean}
      */
     checkPopoverClose(target) {
-        if (target.closest(".bootstrap-datetimepicker-widget")) {
+        if (target.closest(".o_datetime_picker")) {
             // selected a datetime, do not close the definition popover
             return false;
         }

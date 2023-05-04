@@ -1,11 +1,11 @@
 /** @odoo-module */
 
-import { ActivityMenu } from "@mail/web/activity/activity_menu";
-import { patch } from "@web/core/utils/patch";
-import { useRef, useState, useEffect } from "@odoo/owl";
-import { useService } from "@web/core/utils/hooks";
-import { DatePicker } from "@web/core/datepicker/datepicker";
 import { onExternalClick } from "@mail/utils/hooks";
+import { ActivityMenu } from "@mail/web/activity/activity_menu";
+import { useEffect, useRef, useState } from "@odoo/owl";
+import { DateTimeInput } from "@web/core/datetime/datetime_input";
+import { useService } from "@web/core/utils/hooks";
+import { patch } from "@web/core/utils/patch";
 
 patch(ActivityMenu.prototype, "note", {
     setup() {
@@ -25,7 +25,7 @@ patch(ActivityMenu.prototype, "note", {
         onExternalClick("noteInput", (ev) => {
             if (
                 ev.target.closest(".o-mail-ActivityMenu-show") ||
-                ev.target.closest(".bootstrap-datetimepicker-widget")
+                ev.target.closest(".o_datetime_picker")
             ) {
                 return;
             }
@@ -69,5 +69,5 @@ patch(ActivityMenu.prototype, "note", {
 
 ActivityMenu.components = {
     ...ActivityMenu.components,
-    DatePicker,
+    DateTimeInput,
 };

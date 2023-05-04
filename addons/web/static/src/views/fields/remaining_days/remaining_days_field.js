@@ -1,53 +1,38 @@
 /** @odoo-module **/
 
-import { DatePicker, DateTimePicker } from "@web/core/datepicker/datepicker";
+import { Component } from "@odoo/owl";
 import { formatDate, formatDateTime } from "@web/core/l10n/dates";
 import { localization } from "@web/core/l10n/localization";
-import { registry } from "@web/core/registry";
 import { _lt } from "@web/core/l10n/translation";
+import { registry } from "@web/core/registry";
+import { DateTimeField } from "../datetime/datetime_field";
 import { standardFieldProps } from "../standard_field_props";
 
-import { Component } from "@odoo/owl";
+const { DateTime } = luxon;
 
 export class RemainingDaysField extends Component {
+    static components = { DateTimeField };
+
+    static props = standardFieldProps;
+
     static template = "web.RemainingDaysField";
-    static props = {
-        ...standardFieldProps,
-    };
-
-    get hasTime() {
-        return this.props.record.fields[this.props.name].type === "datetime";
-    }
-
-    get pickerComponent() {
-        return this.hasTime ? DateTimePicker : DatePicker;
-    }
 
     get diffDays() {
-        if (!this.props.record.data[this.props.name]) {
+        const { record, name } = this.props;
+        const value = record.data[name];
+        if (!value) {
             return null;
         }
-        const today = luxon.DateTime.local().startOf("day");
-        return Math.floor(
-            this.props.record.data[this.props.name].startOf("day").diff(today, "days").days
-        );
+        const today = DateTime.local().startOf("day");
+        const diff = value.startOf("day").diff(today, "days");
+        return Math.floor(diff.days);
     }
 
     get formattedValue() {
-        return this.hasTime
-            ? formatDateTime(this.props.record.data[this.props.name], {
-                  format: localization.dateFormat,
-              })
-            : formatDate(this.props.record.data[this.props.name]);
-    }
-
-    onDateTimeChanged(datetime) {
-        if (datetime) {
-            this.props.record.update({ [this.props.name]: datetime });
-        } else if (typeof datetime === "string") {
-            // when the date is cleared
-            this.props.record.update({ [this.props.name]: false });
-        }
+        const { record, name } = this.props;
+        return record.fields[name].type === "datetime"
+            ? formatDateTime(record.data[name], { format: localization.dateFormat })
+            : formatDate(record.data[name]);
     }
 }
 

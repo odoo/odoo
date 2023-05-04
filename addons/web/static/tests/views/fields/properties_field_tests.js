@@ -5,6 +5,7 @@ import {
     clickDiscard,
     clickSave,
     editInput,
+    editSelect,
     getFixture,
     nextTick,
     patchWithCleanup,
@@ -16,6 +17,11 @@ import { SelectCreateDialog } from "@web/views/view_dialogs/select_create_dialog
 import { browser } from "@web/core/browser/browser";
 import { fieldService } from "@web/core/field_service";
 import { registry } from "@web/core/registry";
+import {
+    getPickerApplyButton,
+    getPickerCell,
+    getTimePickers,
+} from "../../core/datetime/datetime_test_helpers";
 
 let serverData;
 let target;
@@ -333,15 +339,16 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(type.value, "Date & Time", "Should have changed the property type");
 
         // Choosing a date in the date picker should not close the definition popover
-        await click(target, ".o_field_property_definition_value .o_datepicker_input");
-        await click(document, ".datepicker-days tr:first-child .day:nth-child(3)");
-        assert.ok(
-            document.querySelector(".picker-switch .fa-check"),
-            "Should not close the definition popover after selecting a date"
-        );
-        await click(document, ".picker-switch .fa-check");
-        assert.ok(
-            target.querySelector(".o_property_field_popover"),
+        await click(target, ".o_field_property_definition_value .o_datetime_input");
+        await click(getPickerCell("3").at(0));
+
+        assert.containsOnce(target, ".o_datetime_picker");
+
+        await click(getPickerApplyButton());
+
+        assert.containsOnce(
+            target,
+            ".o_property_field_popover",
             "Should not close the definition popover after selecting a date"
         );
 
@@ -354,7 +361,7 @@ QUnit.module("Fields", (hooks) => {
             "My Datetime",
             "Should have updated the property label"
         );
-        const datetimeComponent = field.querySelector(".o_property_field_value .o_datepicker");
+        const datetimeComponent = field.querySelector(".o_property_field_value .o_datetime_input");
         assert.ok(datetimeComponent, "Should have changed the property type");
 
         // Check that the value is reset (because the type changed)
@@ -1173,7 +1180,7 @@ QUnit.module("Fields", (hooks) => {
                             name: "property_2",
                             string: "My DateTime",
                             type: "datetime",
-                            value: "2018-12-31 11:01:01",
+                            value: "2018-12-31 11:05:00",
                         },
                     ]);
                 }
@@ -1193,20 +1200,18 @@ QUnit.module("Fields", (hooks) => {
 
         // edit date property
         await click(target, ".o_property_field[property-name=property_1] input");
-        await click(document.body, ".datepicker [data-day='12/31/2018']");
+        await click(getPickerCell("31").at(0));
         assert.equal(target.querySelector("[property-name=property_1] input").value, "12/31/2018");
 
         // edit date time property
         await click(target, ".o_property_field[property-name=property_2] input");
-        await click(document.body, ".datepicker [data-day='12/31/2018']");
-        await click(document.body, ".picker-switch [data-action=togglePicker]");
-        await click(document.body, ".timepicker [data-action=incrementHours]");
-        await click(document.body, ".timepicker [data-action=incrementMinutes]");
-        await click(document.body, ".timepicker [data-action=incrementSeconds]");
-        await click(document.body, ".picker-switch [data-action=close]");
+        await click(getPickerCell("31").at(0));
+        const [hourSelect, minuteSelect] = getTimePickers().at(0);
+        await editSelect(hourSelect, null, "12");
+        await editSelect(minuteSelect, null, "5");
         assert.equal(
             target.querySelector("[property-name=property_2] input").value,
-            "12/31/2018 12:01:01"
+            "12/31/2018 12:05:00"
         );
 
         // save
