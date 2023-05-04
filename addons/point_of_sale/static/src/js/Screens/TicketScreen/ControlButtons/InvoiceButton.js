@@ -15,7 +15,7 @@ export class InvoiceButton extends Component {
         this.invoiceButton = useRef("invoice-button");
         this.popup = useService("popup");
         this.orm = useService("orm");
-        this.action = useService("action");
+        this.report = useService("report");
     }
     get isAlreadyInvoiced() {
         if (!this.props.order) {
@@ -38,12 +38,10 @@ export class InvoiceButton extends Component {
                 ["account_move"],
                 { load: false }
             );
-            if (orderWithInvoice && orderWithInvoice.account_move) {
-                await this.action.doAction("account.account_invoices", {
-                    additionalContext: {
-                        active_ids: [orderWithInvoice.account_move],
-                    },
-                });
+            if (orderWithInvoice?.account_move) {
+                await this.report.download("account.account_invoices", [
+                    orderWithInvoice.account_move,
+                ]);
             }
         } catch (error) {
             if (error instanceof Error) {
