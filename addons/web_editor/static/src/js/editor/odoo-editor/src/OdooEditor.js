@@ -1852,13 +1852,13 @@ export class OdooEditor extends EventTarget {
     bindExecCommand(element) {
         for (const buttonEl of element.querySelectorAll('[data-call]')) {
             buttonEl.addEventListener('click', ev => {
-                const sel = this.document.getSelection();
-                if (sel.anchorNode && ancestors(sel.anchorNode).includes(this.editable)) {
-                    this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
-
-                    ev.preventDefault();
-                    this._updateToolbar();
+                if (!this.isSelectionInEditable()) {
+                    this.historyResetLatestComputedSelection(true);
                 }
+                this.execCommand(buttonEl.dataset.call, buttonEl.dataset.arg1);
+
+                ev.preventDefault();
+                this._updateToolbar();
             });
         }
     }
