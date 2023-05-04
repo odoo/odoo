@@ -40,7 +40,6 @@ options.registry.CoverProperties.include({
      * @override
      */
     updateUI: async function () {
-        await this._super(...arguments);
         const isBlogCover = this.$target[0].classList.contains('o_wblog_post_page_cover');
         if (!isBlogCover) {
             return;
@@ -55,6 +54,7 @@ options.registry.CoverProperties.include({
         $coverFull.children('div').text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
         $coverMid.children('div').text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
         $coverAuto.children('div').text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
+        return this._super(...arguments);
     },
 });
 
