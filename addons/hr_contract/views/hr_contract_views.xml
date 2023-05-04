@@ -139,7 +139,7 @@
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
                 <form string="Current Contract">
-                    <header>
+                    <header attrs="{'invisible': [('employee_id', '=', False)]}">
                         <field name="state" groups="!hr_contract.group_hr_contract_manager" widget="statusbar"/>
                         <field name="state" groups="hr_contract.group_hr_contract_manager" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
