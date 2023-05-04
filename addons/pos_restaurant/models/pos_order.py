@@ -32,6 +32,12 @@ class PosOrder(models.Model):
         ])
         return fields
 
+    def _prepare_order_line(self, order_line):
+        order_line = super(PosOrder, self)._prepare_order_line(order_line)
+        order_line["refunded_orderline_id"] = order_line["refunded_orderline_id"] and \
+                                              order_line["refunded_orderline_id"][0]
+        return order_line
+
     def _get_fields_for_draft_order(self):
         fields = super()._get_fields_for_draft_order()
         fields.extend([
