@@ -37,13 +37,13 @@ registry.category("web_tour.tours").add('hr_holidays_tour', {
         in_modal: false,
     },
     {
-        trigger: '.o_field_widget[name="request_date_from"] input',
+        trigger: 'input[data-field=request_date_from]',
         content: _t("You can select the period you need to take off, from start date to end date"),
         position: 'right',
         run: `text ${leaveDateFrom}`,
     },
     {
-        trigger: '.o_field_widget[name="request_date_to"] input',
+        trigger: 'input[data-field=request_date_to]',
         content: _t("You can select the period you need to take off, from start date to end date"),
         position: 'right',
         run: `text ${leaveDateTo}`,

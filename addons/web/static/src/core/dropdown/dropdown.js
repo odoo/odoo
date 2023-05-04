@@ -311,7 +311,7 @@ export class Dropdown extends Component {
             return;
         }
 
-        if (ev.target.closest(".bootstrap-datetimepicker-widget")) {
+        if (ev.target.closest(".o_datetime_picker")) {
             return;
         }
 

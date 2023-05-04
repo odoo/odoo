@@ -1,17 +1,24 @@
 /** @odoo-module **/
 
-import { registry } from "@web/core/registry";
+import {
+    getPickerApplyButton,
+    getPickerCell,
+    getTimePickers,
+    zoomOut,
+} from "@web/../tests/core/datetime/datetime_test_helpers";
 import { makeFakeLocalizationService } from "@web/../tests/helpers/mock_services";
 import {
     click,
     clickSave,
     editInput,
+    editSelect,
     getFixture,
     patchTimeZone,
     triggerEvent,
     triggerEvents,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
+import { registry } from "@web/core/registry";
 
 let serverData;
 let target;
@@ -55,7 +62,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("DatetimeField");
 
-    QUnit.test("DatetimeField in form view", async function (assert) {
+    QUnit.test("DatetimeField in form view", async (assert) => {
         patchTimeZone(120);
 
         await makeView({
@@ -70,56 +77,32 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_field_datetime input").value,
             expectedDateString,
-            "the datetime should be correctly displayed in readonly"
-        );
-
-        assert.strictEqual(
-            target.querySelector(".o_datepicker_input").value,
-            expectedDateString,
-            "the datetime should be correct in edit mode"
+            "the datetime should be correctly displayed"
         );
 
         // datepicker should not open on focus
-        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+        assert.containsNone(target, ".o_datetime_picker");
 
-        await click(target, ".o_datepicker_input");
-        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+        await click(target, ".o_field_datetime input");
+        assert.containsOnce(target, ".o_datetime_picker");
 
-        // select 22 February at 8:25:35
-        await click(
-            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
-        );
-        await click(
-            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]);
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[3]);
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .day[data-day*='/22/']")
-        );
-        await click(document.body.querySelector(".bootstrap-datetimepicker-widget .fa-clock-o"));
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-hour")
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .hour")[8]);
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-minute")
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .minute")[5]);
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-second")
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .second")[7]);
+        // select 22 April 2018 at 8:25
+        await zoomOut();
+        await zoomOut();
+        await click(getPickerCell("2018"));
+        await click(getPickerCell("Apr"));
+        await click(getPickerCell("22"));
+        const [hourSelect, minuteSelect] = getTimePickers().at(0);
+        await editSelect(hourSelect, null, "8");
+        await editSelect(minuteSelect, null, "25");
+        // Close the datepicker
+        await click(target, ".o_form_view_container");
 
-        assert.containsNone(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be closed"
-        );
+        assert.containsNone(target, ".o_datetime_picker", "datepicker should be closed");
 
-        const newExpectedDateString = "04/22/2017 08:25:35";
+        const newExpectedDateString = "04/22/2018 08:25:00";
         assert.strictEqual(
-            target.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_field_datetime input").value,
             newExpectedDateString,
             "the selected date should be displayed in the input"
         );
@@ -134,8 +117,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "DatetimeField does not trigger fieldChange before datetime completly picked",
-        async function (assert) {
+        "DatetimeField only triggers fieldChange when a day is picked and when an hour/minute is selected",
+        async (assert) => {
             patchTimeZone(120);
 
             serverData.models.partner.onchanges = {
@@ -154,60 +137,38 @@ QUnit.module("Fields", (hooks) => {
                 },
             });
 
-            await click(target, ".o_datepicker_input");
-            assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+            await click(target, ".o_field_datetime input");
 
-            // select a date and time
-            await click(
-                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
-            );
-            await click(
-                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
-            );
-            await click(
-                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]
-            );
-            await click(
-                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[3]
-            );
-            await click(
-                document.body.querySelector(
-                    ".bootstrap-datetimepicker-widget .day[data-day*='/22/']"
-                )
-            );
-            await click(
-                document.body.querySelector(".bootstrap-datetimepicker-widget .fa-clock-o")
-            );
-            await click(
-                document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-hour")
-            );
-            await click(
-                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .hour")[8]
-            );
-            await click(
-                document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-minute")
-            );
-            await click(
-                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .minute")[5]
-            );
-            await click(
-                document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-second")
-            );
-            assert.verifySteps([], "should not have done any onchange yet");
-            await click(
-                document.body.querySelectorAll(".bootstrap-datetimepicker-widget .second")[7]
-            );
+            assert.containsOnce(target, ".o_datetime_picker");
 
-            assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
+            // select 22 April 2018 at 8:25
+            await zoomOut();
+            await zoomOut();
+            await click(getPickerCell("2018"));
+            await click(getPickerCell("Apr"));
+            await click(getPickerCell("22"));
+
+            assert.verifySteps([]);
+
+            const [hourSelect, minuteSelect] = getTimePickers().at(0);
+            await editSelect(hourSelect, null, "8");
+            await editSelect(minuteSelect, null, "25");
+
+            assert.verifySteps([]);
+
+            // Close the datepicker
+            await click(target);
+
+            assert.containsNone(target, ".o_datetime_picker");
             assert.strictEqual(
-                target.querySelector(".o_datepicker_input").value,
-                "04/22/2017 08:25:35"
+                target.querySelector(".o_field_datetime input").value,
+                "04/22/2018 08:25:00"
             );
-            assert.verifySteps(["onchange"], "should have done only one onchange");
+            assert.verifySteps(["onchange"]);
         }
     );
 
-    QUnit.test("DatetimeField with datetime formatted without second", async function (assert) {
+    QUnit.test("DatetimeField with datetime formatted without second", async (assert) => {
         patchTimeZone(0);
 
         serverData.models.partner.fields.datetime.default = "2017-08-02 12:00:05";
@@ -234,14 +195,13 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             target.querySelector(".o_field_datetime input").value,
             expectedDateString,
-            "the datetime should be correctly displayed in readonly"
+            "the datetime should be correctly displayed"
         );
 
         await click(target, ".o_form_button_cancel");
-        assert.containsNone(document.body, ".modal", "there should not be a Warning dialog");
+        assert.containsNone(target, ".modal", "there should not be a Warning dialog");
     });
-
-    QUnit.test("DatetimeField in editable list view", async function (assert) {
+    QUnit.test("DatetimeField in editable list view", async (assert) => {
         patchTimeZone(120);
 
         await makeView({
@@ -256,69 +216,51 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(
             cell.textContent,
             expectedDateString,
-            "the datetime should be correctly displayed in readonly"
+            "the datetime should be correctly displayed"
         );
 
         // switch to edit mode
         await click(target.querySelector(".o_data_row .o_data_cell"));
         assert.containsOnce(
             target,
-            "input.o_datepicker_input",
+            ".o_field_datetime input",
             "the view should have a date input for editable mode"
         );
         assert.strictEqual(
-            target.querySelector("input.o_datepicker_input"),
+            target.querySelector(".o_field_datetime input"),
             document.activeElement,
             "date input should have the focus"
         );
 
         assert.strictEqual(
-            target.querySelector("input.o_datepicker_input").value,
+            target.querySelector(".o_field_datetime input").value,
             expectedDateString,
             "the date should be correct in edit mode"
         );
 
-        assert.containsNone(document.body, ".bootstrap-datetimepicker-widget");
-        await click(target, ".o_datepicker_input");
-        assert.containsOnce(document.body, ".bootstrap-datetimepicker-widget");
+        assert.containsNone(target, ".o_datetime_picker");
+        await click(target, ".o_field_datetime input");
+        assert.containsOnce(target, ".o_datetime_picker");
 
-        // select 22 February at 8:25:35
-        await click(
-            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[0]
-        );
-        await click(
-            document.body.querySelectorAll(".bootstrap-datetimepicker-widget .picker-switch")[1]
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .year")[8]);
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .month")[3]);
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .day[data-day*='/22/']")
-        );
-        await click(document.body.querySelector(".bootstrap-datetimepicker-widget .fa-clock-o"));
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-hour")
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .hour")[8]);
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-minute")
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .minute")[5]);
-        await click(
-            document.body.querySelector(".bootstrap-datetimepicker-widget .timepicker-second")
-        );
-        await click(document.body.querySelectorAll(".bootstrap-datetimepicker-widget .second")[7]);
+        // select 22 April 2018 at 8:25
+        await zoomOut();
+        await zoomOut();
+        await click(getPickerCell("2018"));
+        await click(getPickerCell("Apr"));
+        await click(getPickerCell("22"));
+        const [hourSelect, minuteSelect] = getTimePickers().at(0);
+        await editSelect(hourSelect, null, "8");
+        await editSelect(minuteSelect, null, "25");
+        // Apply changes
+        await click(getPickerApplyButton());
 
-        assert.containsNone(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be closed"
-        );
+        assert.containsNone(target, ".o_datetime_picker", "datepicker should be closed");
 
-        const newExpectedDateString = "04/22/2017 08:25:35";
+        const newExpectedDateString = "04/22/2018 08:25:00";
         assert.strictEqual(
-            target.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_field_datetime input").value,
             newExpectedDateString,
-            "the selected datetime should be displayed in the input"
+            "the date should be updated in the input"
         );
 
         // save
@@ -331,8 +273,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "multi edition of DatetimeField in list view: edit date in input",
-        async function (assert) {
+        "multi edition of DatetimeField in list view: edit date in input [REQUIRE FOCUS]",
+        async (assert) => {
             await makeView({
                 serverData,
                 type: "list",
@@ -348,10 +290,12 @@ QUnit.module("Fields", (hooks) => {
 
             await click(rows[0], ".o_data_cell");
 
-            assert.containsOnce(target, "input.o_datepicker_input");
-            await editInput(target, ".o_datepicker_input", "10/02/2019 09:00:00");
+            assert.containsOnce(target, ".o_field_datetime input");
 
-            assert.containsOnce(document.body, ".modal");
+            await editInput(target, ".o_field_datetime input", "10/02/2019 09:00:00");
+
+            assert.containsOnce(target, ".modal");
+
             await click(target.querySelector(".modal .modal-footer .btn-primary"));
 
             assert.strictEqual(
@@ -366,8 +310,8 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
-        "multi edition of DatetimeField in list view: clear date in input",
-        async function (assert) {
+        "multi edition of DatetimeField in list view: clear date in input [REQUIRE FOCUS]",
+        async (assert) => {
             serverData.models.partner.records[1].datetime = "2017-02-08 10:00:00";
 
             await makeView({
@@ -385,10 +329,12 @@ QUnit.module("Fields", (hooks) => {
 
             await click(rows[0], ".o_data_cell");
 
-            assert.containsOnce(target, "input.o_datepicker_input");
-            await editInput(target, ".o_datepicker_input", "");
+            assert.containsOnce(target, ".o_field_datetime input");
 
-            assert.containsOnce(document.body, ".modal");
+            await editInput(target, ".o_field_datetime input", "");
+
+            assert.containsOnce(target, ".modal");
+
             await click(target, ".modal .modal-footer .btn-primary");
 
             assert.strictEqual(
@@ -402,7 +348,7 @@ QUnit.module("Fields", (hooks) => {
         }
     );
 
-    QUnit.test("DatetimeField remove value", async function (assert) {
+    QUnit.test("DatetimeField remove value", async (assert) => {
         assert.expect(4);
 
         patchTimeZone(120);
@@ -425,16 +371,16 @@ QUnit.module("Fields", (hooks) => {
         });
 
         assert.strictEqual(
-            target.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_field_datetime input").value,
             "02/08/2017 12:00:00",
             "the date time should be correct in edit mode"
         );
 
-        const input = target.querySelector(".o_datepicker_input");
+        const input = target.querySelector(".o_field_datetime input");
         input.value = "";
         await triggerEvents(input, null, ["input", "change", "focusout"]);
         assert.strictEqual(
-            target.querySelector(".o_datepicker_input").value,
+            target.querySelector(".o_field_datetime input").value,
             "",
             "should have an empty input"
         );
@@ -449,8 +395,8 @@ QUnit.module("Fields", (hooks) => {
     });
 
     QUnit.test(
-        "DatetimeField with date/datetime widget (with day change)",
-        async function (assert) {
+        "DatetimeField with date/datetime widget (with day change) does not care about widget",
+        async (assert) => {
             patchTimeZone(-240);
 
             serverData.models.partner.records[0].p = [2];
@@ -484,16 +430,16 @@ QUnit.module("Fields", (hooks) => {
             // switch to form view
             await click(target, ".o_field_widget[name='p'] .o_data_cell");
             assert.strictEqual(
-                document.body.querySelector(".modal .o_field_date[name='datetime'] input").value,
-                "02/07/2017",
+                target.querySelector(".modal .o_field_date[name='datetime'] input").value,
+                "02/07/2017 22:00:00",
                 "the datetime (date widget) should be correctly displayed in form view"
             );
         }
     );
 
     QUnit.test(
-        "DatetimeField with date/datetime widget (without day change)",
-        async function (assert) {
+        "DatetimeField with date/datetime widget (without day change) does not care about widget",
+        async (assert) => {
             patchTimeZone(-240);
 
             serverData.models.partner.records[0].p = [2];
@@ -527,44 +473,14 @@ QUnit.module("Fields", (hooks) => {
             // switch to form view
             await click(target, ".o_field_widget[name='p'] .o_data_cell");
             assert.strictEqual(
-                document.body.querySelector(".modal .o_field_date[name='datetime'] input").value,
-                "02/08/2017",
+                target.querySelector(".modal .o_field_date[name='datetime'] input").value,
+                "02/08/2017 06:00:00",
                 "the datetime (date widget) should be correctly displayed in form view"
             );
         }
     );
 
-    QUnit.test("datepicker option: daysOfWeekDisabled", async function (assert) {
-        serverData.models.partner.fields.datetime.default = "2017-08-02 12:00:05";
-        serverData.models.partner.fields.datetime.required = true;
-
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: `
-                <form>
-                    <field name="datetime" options="{'datepicker': { 'daysOfWeekDisabled': [0, 6] }}" />
-                </form>`,
-        });
-
-        await click(target, ".o_datepicker_input");
-
-        for (const el of document.body.querySelectorAll(".day:nth-child(2), .day:last-child")) {
-            assert.hasClass(el, "disabled", "first and last days must be disabled");
-        }
-
-        // the assertions below could be replaced by a single hasClass classic on the jQuery set using the idea
-        // All not <=> not Exists. But we want to be sure that the set is non empty. We don't have an helper
-        // function for that.
-        for (const el of document.body.querySelectorAll(
-            ".day:not(:nth-child(2)):not(:last-child)"
-        )) {
-            assert.doesNotHaveClass(el, "disabled", "other days must stay clickable");
-        }
-    });
-
-    QUnit.test("datetime field: hit enter should update value", async function (assert) {
+    QUnit.test("datetime field: hit enter should update value", async (assert) => {
         // This test verifies that the field datetime is correctly computed when:
         //     - we press enter to validate our entry
         //     - we click outside the field to validate our entry
@@ -609,34 +525,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(value, datetimeValue);
     });
 
-    QUnit.test(
-        "datetime field with date widget: hit enter should update value",
-        async function (assert) {
-            /**
-             * Don't think this test is usefull in the new system.
-             */
-            patchTimeZone(120);
-
-            await makeView({
-                serverData,
-                type: "form",
-                resModel: "partner",
-                arch: '<form><field name="datetime" widget="date"/></form>',
-                resId: 1,
-            });
-
-            await editInput(target, ".o_field_widget input", "01/08/22");
-            await triggerEvent(target, ".o_field_widget input", "keydown", { key: "Enter" });
-
-            assert.strictEqual(target.querySelector(".o_field_widget input").value, "01/08/2022");
-
-            // Click outside the field to check that the field is not changed
-            await clickSave(target);
-            assert.strictEqual(target.querySelector(".o_field_widget input").value, "01/08/2022");
-        }
-    );
-
-    QUnit.test("DateTimeField with label opens datepicker on click", async function (assert) {
+    QUnit.test("DateTimeField with label opens datepicker on click", async (assert) => {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -650,10 +539,6 @@ QUnit.module("Fields", (hooks) => {
         });
 
         await click(target.querySelector("label.o_form_label"));
-        assert.containsOnce(
-            document.body,
-            ".bootstrap-datetimepicker-widget",
-            "datepicker should be opened"
-        );
+        assert.containsOnce(target, ".o_datetime_picker", "datepicker should be opened");
     });
 });

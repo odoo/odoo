@@ -14,6 +14,7 @@ import { registerCleanup } from "../helpers/cleanup";
 import { makeTestEnv } from "../helpers/mock_env";
 import { makeFakeLocalizationService } from "../helpers/mock_services";
 import { click, editInput, editSelect, getFixture, mount, triggerEvent } from "../helpers/utils";
+import { getPickerApplyButton, getPickerCell } from "./datetime/datetime_test_helpers";
 import { openModelFieldSelectorPopover } from "./model_field_selector_tests";
 
 let serverData;
@@ -218,23 +219,17 @@ QUnit.module("Components", (hooks) => {
         await mountComponent(Parent);
 
         // Check that there is a datepicker to choose the date
-        assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
+        assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
         // The input field should display the date and time in the user's timezone
-        assert.equal(target.querySelector(".o_datepicker_input").value, "03/27/2017 16:42:00");
+        assert.equal(target.querySelector(".o_datetime_input").value, "03/27/2017 16:42:00");
 
         // Change the date in the datepicker
-        await click(target, ".o_datepicker_input");
-        await click(
-            document.body.querySelector(
-                `.bootstrap-datetimepicker-widget :not(.today)[data-action="selectDay"]`
-            )
-        ); // => February 26th
-        await click(
-            document.body.querySelector(`.bootstrap-datetimepicker-widget a[data-action="close"]`)
-        );
+        await click(target, ".o_datetime_input");
+        await click(getPickerCell("26").at(0)); // => February 26th
+        await click(getPickerApplyButton());
 
         // The input field should display the date and time in the user's timezone
-        assert.equal(target.querySelector(".o_datepicker_input").value, "02/26/2017 16:42:00");
+        assert.equal(target.querySelector(".o_datetime_input").value, "02/26/2017 16:42:00");
     });
 
     QUnit.test("building a domain with a datetime: context_today()", async (assert) => {
@@ -251,19 +246,17 @@ QUnit.module("Components", (hooks) => {
         });
 
         // Check that there is a datepicker to choose the date
-        assert.containsOnce(target, ".o_datepicker", "there should be a datepicker");
+        assert.containsOnce(target, ".o_datetime_input", "there should be a datepicker");
         // The input field should display that the date is invalid
-        assert.equal(target.querySelector(".o_datepicker_input").value, "Invalid DateTime");
+        assert.equal(target.querySelector(".o_datetime_input").value, "Invalid DateTime");
 
         // Open and close the datepicker
-        await click(target, ".o_datepicker_input");
-        await click(
-            document.body.querySelector(`.bootstrap-datetimepicker-widget [data-action=close]`)
-        );
+        await click(target, ".o_datetime_input");
+        await click(target);
 
         // The input field should continue displaying 'Invalid DateTime'.
         // The value is still invalid.
-        assert.equal(target.querySelector(".o_datepicker_input").value, "Invalid DateTime");
+        assert.equal(target.querySelector(".o_datetime_input").value, "Invalid DateTime");
         assert.verifySteps([]);
     });
 

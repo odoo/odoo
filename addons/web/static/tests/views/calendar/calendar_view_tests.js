@@ -5,6 +5,7 @@ import { defaultLocalization } from "../../helpers/mock_services";
 import {
     click,
     editInput,
+    editSelect,
     getFixture,
     makeDeferred,
     nextTick,
@@ -43,6 +44,7 @@ import { registry } from "@web/core/registry";
 import { userService } from "@web/core/user_service";
 import { CharField } from "@web/views/fields/char/char_field";
 import { actionService } from "@web/webclient/actions/action_service";
+import { getTimePickers } from "../../core/datetime/datetime_test_helpers";
 
 const fieldRegistry = registry.category("fields");
 const preloadedDataRegistry = registry.category("preloadedData");
@@ -1622,44 +1624,12 @@ QUnit.module("Views", ({ beforeEach }) => {
             );
 
             // use datepicker to enter a date: 12/13/2016 08:00:00
-            await click(target, `.o_field_widget[name="start"] .o_datepicker .o_datepicker_input`);
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]`
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .timepicker .timepicker-hour`
-            );
-            await click(
-                document.body.querySelectorAll(
-                    `.bootstrap-datetimepicker-widget .timepicker-hours td.hour`
-                )[8]
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]`
-            );
+            await click(target, `.o_field_widget[name="start"] input`);
+            await editSelect(getTimePickers().at(0).at(0), null, "8");
 
             // use datepicker to enter a date: 12/13/2016 10:00:00
-            await click(target, `.o_field_widget[name="stop"] .o_datepicker .o_datepicker_input`);
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]`
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .timepicker .timepicker-hour`
-            );
-            await click(
-                document.body.querySelectorAll(
-                    `.bootstrap-datetimepicker-widget .timepicker-hours td.hour`
-                )[10]
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]`
-            );
+            await click(target, `.o_field_widget[name="stop"] input`);
+            await editSelect(getTimePickers().at(0).at(0), null, "10");
 
             await click(target, ".modal-footer .o_form_button_save");
             assert.strictEqual(
@@ -1859,44 +1829,12 @@ QUnit.module("Views", ({ beforeEach }) => {
             );
 
             // use datepicker to enter a date: 12/13/2016 08:00:00
-            await click(target, `.o_field_widget[name="start"] .o_datepicker .o_datepicker_input`);
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]`
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .timepicker .timepicker-hour`
-            );
-            await click(
-                document.body.querySelectorAll(
-                    `.bootstrap-datetimepicker-widget .timepicker-hours td.hour`
-                )[8]
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]`
-            );
+            await click(target, `.o_field_widget[name="start"] input`);
+            await editSelect(getTimePickers().at(0).at(0), null, "8");
 
             // use datepicker to enter a date: 12/13/2016 10:00:00
-            await click(target, `.o_field_widget[name="stop"] .o_datepicker .o_datepicker_input`);
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]`
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .timepicker .timepicker-hour`
-            );
-            await click(
-                document.body.querySelectorAll(
-                    `.bootstrap-datetimepicker-widget .timepicker-hours td.hour`
-                )[10]
-            );
-            await click(
-                document.body,
-                `.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]`
-            );
+            await click(target, `.o_field_widget[name="stop"] input`);
+            await editSelect(getTimePickers().at(0).at(0), null, "10");
 
             await click(target, ".modal-footer button.btn-primary:not(.d-none)");
             assert.strictEqual(
@@ -3856,38 +3794,12 @@ QUnit.module("Views", ({ beforeEach }) => {
         await click(target.querySelector(`.o_field_widget[name="allday"] input`));
 
         // use datepicker to enter a date: 12/20/2016 07:00:00
-        await click(target, `.o_field_widget[name="start"] .o_datepicker .o_datepicker_input`);
-        await click(
-            document.body,
-            `.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]`
-        );
-        await click(document.body, `.bootstrap-datetimepicker-widget .timepicker .timepicker-hour`);
-        await click(
-            document.body.querySelectorAll(
-                `.bootstrap-datetimepicker-widget .timepicker-hours td.hour`
-            )[7]
-        );
-        await click(
-            document.body,
-            `.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]`
-        );
+        await click(target, `.o_field_widget[name="start"] input`);
+        await editSelect(getTimePickers().at(0).at(0), null, "7");
 
         // use datepicker to enter a date: 12/20/2016 19:00:00
-        await click(target, `.o_field_widget[name="stop"] .o_datepicker .o_datepicker_input`);
-        await click(
-            document.body,
-            `.bootstrap-datetimepicker-widget .picker-switch a[data-action="togglePicker"]`
-        );
-        await click(document.body, `.bootstrap-datetimepicker-widget .timepicker .timepicker-hour`);
-        await click(
-            document.body.querySelectorAll(
-                `.bootstrap-datetimepicker-widget .timepicker-hours td.hour`
-            )[19]
-        );
-        await click(
-            document.body,
-            `.bootstrap-datetimepicker-widget .picker-switch a[data-action="close"]`
-        );
+        await click(target, `.o_field_widget[name="stop"] input`);
+        await editSelect(getTimePickers().at(0).at(0), null, "19");
 
         await click(target.querySelector(".modal .o_form_button_save"));
 

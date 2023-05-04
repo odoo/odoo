@@ -1,0 +1,159 @@
+.o_datetime_picker {
+    --DateTimePicker__Cell-size-md: 3rem;
+    --DateTimePicker__Cell-size-lg: 5rem;
+    --DateTimePicker__Template-rows: 3;
+    --DateTimePicker__Template-columns: 4;
+    --DateTimePicker__Day-template-rows: 6;
+    --DateTimePicker__Today-highlight-color: white;
+
+    // Header
+
+    .o_datetime_picker_header .o_header_part {
+        text-transform: none;
+    }
+
+    // Day
+
+    .o_active {
+        --DateTimePicker__Cell-border-radius-left: 0;
+        --DateTimePicker__Cell-border-radius-right: 0;
+
+        // border-radius: var(--DateTimePicker__Cell-border-radius-left)
+        //     var(--DateTimePicker__Cell-border-radius-right)
+        //     var(--DateTimePicker__Cell-border-radius-right)
+        //     var(--DateTimePicker__Cell-border-radius-left);
+
+        &.o_active_start,
+        &.o_active_end {
+            color: var(--DateTimePicker__Today-highlight-color);
+        }
+
+        &:not(.o_active_start):not(.o_active_end) {
+            --bg-opacity: 0.4;
+        }
+    }
+
+    .o_active_start {
+        &.o_cell_md {
+            --DateTimePicker__Cell-border-radius-left: 100vmax;
+        }
+        &.o_cell_lg {
+            --DateTimePicker__Cell-border-radius-left: 0.5rem;
+        }
+    }
+
+    .o_active_end {
+        &.o_cell_md {
+            --DateTimePicker__Cell-border-radius-right: 100vmax;
+        }
+        &.o_cell_lg {
+            --DateTimePicker__Cell-border-radius-right: 0.5rem;
+        }
+    }
+
+    .o_preview_active {
+        border-width: 2px 0 2px 0;
+
+        &.o_preview_start {
+            border-width: 2px 0 2px 2px;
+        }
+
+        &.o_preview_end {
+            border-width: 2px 2px 2px 0;
+        }
+    }
+
+    .o_today:not(.o_out_of_range) {
+        --DateTimePicker__Today-border-color: var(--primary);
+        --DateTimePicker__Today-border-offset: 2px;
+        --DateTimePicker__Today-border-width: 5px;
+
+        color: var(--DateTimePicker__Today-border-color);
+        position: relative;
+        box-shadow: inset 0 0 0 var(--DateTimePicker__Today-border-offset)
+            var(--DateTimePicker__Today-border-color);
+        font-weight: bold;
+
+        &.o_active {
+            --DateTimePicker__Today-border-color: white;
+        }
+
+        &:before {
+            content: "";
+            right: var(--DateTimePicker__Today-border-offset);
+            bottom: var(--DateTimePicker__Today-border-offset);
+            border: solid transparent;
+            border-width: 0 0 var(--DateTimePicker__Today-border-width)
+                var(--DateTimePicker__Today-border-width);
+            border-bottom-color: var(--DateTimePicker__Today-border-color);
+            position: absolute;
+        }
+    }
+
+    .o_out_of_range {
+        color: var(--gray-400);
+        --bg-opacity: 0.5;
+    }
+
+    .o_time_picker_select {
+        background-image: none;
+
+        &:focus,
+        &:hover {
+            border-color: var(--primary);
+        }
+    }
+
+    // Grids
+
+    .o_date_picker {
+        grid-template-rows: repeat(var(--DateTimePicker__Day-template-rows), 1fr);
+        grid-template-columns: repeat(var(--DateTimePicker__Day-template-columns), 1fr);
+    }
+
+    .o_date_item_picker {
+        grid-template-rows: repeat(var(--DateTimePicker__Template-rows), 1fr);
+        grid-template-columns: repeat(var(--DateTimePicker__Template-columns), 1fr);
+    }
+
+    // Utilities
+
+    .o_datetime_button {
+        &:hover {
+            background-color: var(--gray-100);
+            border-color: var(--gray-200);
+        }
+    }
+
+    .o_center {
+        display: grid;
+        place-items: center;
+    }
+
+    .o_cell_md {
+        padding: 0.4rem;
+        width: var(--DateTimePicker__Cell-size-md);
+        height: var(--DateTimePicker__Cell-size-md);
+    }
+
+    .o_cell_lg {
+        width: var(--DateTimePicker__Cell-size-lg);
+        height: var(--DateTimePicker__Cell-size-lg);
+    }
+
+    .o_text_sm {
+        font-size: 0.875rem;
+    }
+
+    .o_bg_inherit {
+        background-color: inherit;
+    }
+
+    .o_text_inherit {
+        color: inherit;
+    }
+
+    .o_hover_primary:hover {
+        color: var(--primary);
+    }
+}

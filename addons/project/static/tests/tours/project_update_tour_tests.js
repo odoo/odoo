@@ -106,7 +106,7 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: "div.o_field_widget[name=name] input",
     run: 'text New milestone'
 }, {
-    trigger: "div[name=deadline] .datetimepicker-input",
+    trigger: "input[data-field=deadline]",
     run: 'text 12/12/2099'
 }, {
     trigger: ".modal-footer .o_form_button_save"
@@ -116,14 +116,14 @@ registry.category("web_tour.tours").add('project_update_tour', {
     trigger: "div.o_field_widget[name=name] input",
     run: 'text Second milestone'
 }, {
-    trigger: "div[name=deadline] .datetimepicker-input",
+    trigger: "input[data-field=deadline]",
     run: 'text 12/12/2022'
 }, {
     trigger: ".modal-footer .o_form_button_save"
 }, {
     trigger: ".o_rightpanel_milestone:eq(1) .o_milestone_detail",
 }, {
-    trigger: "div[name=deadline] .datetimepicker-input",
+    trigger: "input[data-field=deadline]",
     run: 'text 12/12/2100'
 }, {
     trigger: ".modal-footer .o_form_button_save"
