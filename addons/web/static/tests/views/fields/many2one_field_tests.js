@@ -26,8 +26,7 @@ import {
 import {
     editSearch,
     getFacetTexts,
-    toggleFilterMenu,
-    toggleGroupByMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
     validateSearch,
 } from "@web/../tests/search/helpers";
@@ -626,7 +625,7 @@ QUnit.module("Fields", (hooks) => {
 
         const modal = target.querySelector(".modal");
 
-        await toggleFilterMenu(modal);
+        await toggleSearchBarMenu(modal);
         await toggleMenuItem(modal, "Filter");
 
         assert.strictEqual($("tr.o_data_row").length, 0, "should display 0 records");
@@ -3980,32 +3979,14 @@ QUnit.module("Fields", (hooks) => {
         await click(target, `.o_field_widget[name="trululu"] .o_m2o_dropdown_option_search_more`);
 
         // dropdown selector
-        const filterMenuCss = ".o_search_options > .o_filter_menu";
-        const groupByMenuCss = ".o_search_options > .o_group_by_menu";
+        const searchDropdown = ".o_control_panel_actions .o-dropdown";
 
-        await click(document.querySelector(`${filterMenuCss} > .dropdown-toggle`));
+        await click(document.querySelector(`${searchDropdown} .dropdown-toggle`));
 
-        assert.hasClass(document.querySelector(filterMenuCss), "show");
+        assert.hasClass(document.querySelector(searchDropdown), "show");
         assert.isVisible(
-            document.querySelector(`${filterMenuCss} > .dropdown-menu`),
-            "the filter dropdown menu should be visible"
-        );
-        assert.doesNotHaveClass(document.querySelector(groupByMenuCss), "show");
-        assert.isNotVisible(
-            document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
-            "the Group by dropdown menu should be not visible"
-        );
-
-        await click(document.querySelector(`${groupByMenuCss} > .dropdown-toggle`));
-        assert.hasClass(document.querySelector(groupByMenuCss), "show");
-        assert.isVisible(
-            document.querySelector(`${groupByMenuCss} > .dropdown-menu`),
-            "the group by dropdown menu should be visible"
-        );
-        assert.doesNotHaveClass(document.querySelector(filterMenuCss), "show");
-        assert.isNotVisible(
-            document.querySelector(`${filterMenuCss} > .dropdown-menu`),
-            "the filter dropdown menu should be not visible"
+            document.querySelector(`${searchDropdown} > .dropdown-menu`),
+            "the search bar dropdown menu should be visible"
         );
     });
 
@@ -4198,7 +4179,7 @@ QUnit.module("Fields", (hooks) => {
 
         await selectDropdownItem(target, "trululu", "Search More...");
         const modal = target.querySelector(".modal");
-        await toggleGroupByMenu(modal);
+        await toggleSearchBarMenu(modal);
         await toggleMenuItem(modal, "Bar");
 
         await click(modal.querySelectorAll(".o_group_header")[1]);
@@ -4371,20 +4352,23 @@ QUnit.module("Fields", (hooks) => {
         const target = getFixture();
         await doAction(webClient, 1);
         assert.containsOnce(target, "a.o_form_uri", "should display 1 m2o link in form");
-        assert.containsN(
+        assert.containsOnce(
             target,
-            ".breadcrumb-item",
-            1,
+            ".o_breadcrumb",
             "Should only contain one breadcrumb at the start"
         );
 
         await click(target.querySelector("a.o_form_uri"));
         assert.verifySteps(["get_formview_action"]);
-        assert.containsN(
+        assert.containsOnce(
             target,
             ".breadcrumb-item",
-            2,
-            "Should contain 2 breadcrumbs after the clicking on the link"
+            "Should contain 1 breadcrumb link after the clicking on the link"
+        );
+        assert.containsOnce(
+            target,
+            ".o_breadcrumb",
+            "Should also contain the active breadcrumb item"
         );
     });
 
@@ -4440,7 +4424,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".o_field_widget .o_external_button");
 
         assert.verifySteps(["get_formview_action"]);
-        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "first recordNew");
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "first record");
     });
 
     QUnit.test("external_button opens a FormViewDialog in dialogs", async function (assert) {

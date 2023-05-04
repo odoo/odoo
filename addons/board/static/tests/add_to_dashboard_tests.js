@@ -12,10 +12,7 @@ import {
     applyGroup,
     removeFacet,
     toggleAddCustomGroup,
-    toggleComparisonMenu,
-    toggleFavoriteMenu,
-    toggleFilterMenu,
-    toggleGroupByMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
     toggleMenuItemOption,
 } from "@web/../tests/search/helpers";
@@ -142,13 +139,11 @@ QUnit.module("Board", (hooks) => {
         await click(document.querySelector(".o_column_sortable"));
 
         // Group It
-        await toggleGroupByMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleAddCustomGroup(target);
         await applyGroup(target);
 
         // add this action to dashboard
-        await toggleFavoriteMenu(target);
-
         await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
         await testUtils.fields.editInput($(".o_add_to_board input"), "a name");
         await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
@@ -202,11 +197,10 @@ QUnit.module("Board", (hooks) => {
 
         var filter_count = 0;
         // Add a first filter
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Filter on a");
 
         // Add it to dashboard
-        await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent($(".o_add_to_board button.dropdown-toggle"), "mouseenter");
         await testUtils.dom.click($(".o_add_to_board .dropdown-menu button"));
 
@@ -214,11 +208,10 @@ QUnit.module("Board", (hooks) => {
         await removeFacet(target);
 
         // Add the second filter
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Filter on b");
 
         // Add it to dashboard
-        await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent(
             target.querySelector(".o_add_to_board button.dropdown-toggle"),
             "mouseenter"
@@ -263,11 +256,10 @@ QUnit.module("Board", (hooks) => {
         });
 
         // Add a filter
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Filter");
 
         // Add it to dashboard
-        await toggleFavoriteMenu(target);
         await testUtils.dom.triggerEvent(
             target.querySelector(".o_add_to_board button.dropdown-toggle"),
             "mouseenter"
@@ -292,7 +284,7 @@ QUnit.module("Board", (hooks) => {
             type: "ir.actions.act_window",
             views: [[false, "pivot"]],
         });
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         assert.containsNone(target, ".o_add_to_board");
 
         // Sanity check
@@ -302,7 +294,7 @@ QUnit.module("Board", (hooks) => {
             type: "ir.actions.act_window",
             views: [[false, "pivot"]],
         });
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         assert.containsOnce(target, ".o_add_to_board");
     });
 
@@ -357,16 +349,14 @@ QUnit.module("Board", (hooks) => {
             });
 
             // filter on July 2020
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "Date");
             await toggleMenuItemOption(target, "Date", "July");
 
             // compare July 2020 to June 2020
-            await toggleComparisonMenu(target);
             await toggleMenuItem(target, 0);
 
             // add the view to the dashboard
-            await toggleFavoriteMenu(target);
 
             await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
             const input = target.querySelector(".o_add_to_board .dropdown-menu input");
@@ -403,7 +393,7 @@ QUnit.module("Board", (hooks) => {
             views: [[false, "pivot"]],
         });
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
         const input = target.querySelector(".o_add_to_board .dropdown-menu input");
         await testUtils.fields.editInput(input, "Pipeline");
@@ -445,7 +435,7 @@ QUnit.module("Board", (hooks) => {
             context: { search_default_filter: 1 },
         });
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await mouseEnter(target.querySelector(".o_add_to_board .dropdown-toggle"));
         const input = target.querySelector(".o_add_to_board .dropdown-menu input");
         await testUtils.fields.editInput(input, "Pipeline");
