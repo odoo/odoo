@@ -10,6 +10,7 @@ import itertools
 import json
 import logging
 import os
+import re
 import time
 from collections import defaultdict
 from functools import wraps
@@ -136,7 +137,6 @@ def check_mfa(fn):
             raise UserError(_("This method can only be accessed over HTTP"))
 
         if request.session.get('mfa-check-last', 0) > time.time() - 10 * 60:
-            # update mfa-check-last like github?
             return fn(self)
 
         w = self.sudo().env['res.users.mfacheck'].create({
@@ -150,7 +150,10 @@ def check_mfa(fn):
                 fn.__name__
             ])
         })
-        if self._mfa_type() != None:
+        if self._mfa_type() is None:
+            w.run_check()
+            return fn(self)
+        elif self._mfa_type() == 'totp':
             return {
                 'type': 'ir.actions.act_window',
                 'res_model': 'res.users.mfacheck',
@@ -159,9 +162,16 @@ def check_mfa(fn):
                 'target': 'new',
                 'views': [(False, 'form')],
             }
-        else:
-            w.run_check()
-            return fn(self)
+        elif self._mfa_type() == 'totp_mail':
+            self._send_totp_mail_code()
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'res.users.mfacheck',
+                'res_id': w.id,
+                'name': _("Security Control"),
+                'target': 'new',
+                'views': [(False, 'form')],
+            }
     wrapped.__has_check_mfa = True
     return wrapped
 
@@ -1894,10 +1904,18 @@ class CheckMFA(models.TransientModel):
     _description = "MFA Check Wizard"
 
     request = fields.Char(readonly=True, groups=fields.NO_ACCESS)
+    code = fields.Char()
 
     def run_check(self):
         assert request, "This method can only be accessed over HTTP"
-
+        try:
+            user = self.create_uid
+            if user._mfa_type() == 'totp':
+                user._totp_check(int(re.sub(r'\s', '', self.code)))
+            elif user._mfa_type() == 'totp_mail':
+                user._totp_check(int(re.sub(r'\s', '', self.code)))
+        except AccessDenied:
+            raise UserError(_("Incorrect code, please try again."))        
         request.session['mfa-check-last'] = time.time()
         ctx, model, ids, method = json.loads(self.sudo().request)
         method = getattr(self.env(context=ctx)[model].browse(ids), method)
@@ -2019,7 +2037,6 @@ class APIKeysUser(models.Model):
         raise AccessDenied()
 
     @check_identity
-    @check_mfa
     def api_key_wizard(self):
         return {
             'type': 'ir.actions.act_window',

@@ -78,7 +78,12 @@
             <field name="arch" type="xml">
                 <form string="MFA Confirmation">
                     <sheet class="bg-primary">
-                        <span class="text-muted">Empty</span>
+                        <h3><strong>Please enter your 2FA code to confirm you own this account</strong></h3>
+                        <br/>
+                        <div>
+                            <field name="code" class="form-control mb-2" autocomplete="off" 
+                                inputmode="numeric" autofocus="autofocus" required="True" placeholder="e.g. 123456"/>
+                        </div>
                     </sheet>
                     <footer>
                         <button string="Confirm" type="object" name="run_check" class="btn btn-primary" data-hotkey="q"/>
