@@ -108,7 +108,6 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     trigger: ".o_selected_row .o_required_modifier[name=product_id] input",
     content: _t("Click here to open kanban search mobile."),
     position: "bottom",
-    run: "click",
 }, {
     mobile: true,
     trigger: ".modal-dialog .btn:contains('New')",
@@ -331,9 +330,22 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     position: 'bottom',
 }, {
     mobile: false,
-    trigger: ".breadcrumb-item:first",
-    content: Markup(_t("Use the breadcrumbs to <b>go back to products</b>.")),
-    position: "bottom"
+    trigger: '.breadcrumb .o_back_button',
+    extra_trigger: ".o_breadcrumb .active:contains('the_flow.product')",
+    content: _t('Go back'),
+    position: 'bottom',
+}, {
+    mobile: false,
+    trigger: '.breadcrumb .o_back_button',
+    extra_trigger: ".o_breadcrumb .active:contains('Bill of Materials')",
+    content: _t('Go back'),
+    position: 'bottom',
+}, {
+    mobile: false,
+    trigger: '.breadcrumb .o_back_button',
+    extra_trigger: ".o_breadcrumb .active:contains('the_flow.product')",
+    content: _t('Go back'),
+    position: 'bottom',
 },
 ...stepUtils.goBackBreadcrumbsMobile(
         Markup(_t("Use the breadcrumbs to <b>go back to products</b>.")),
@@ -787,17 +799,17 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('Quotations')"),
 }, {
     mobile: false,
     trigger: ".o_data_cell:contains('the_flow.customer')",
-    extra_trigger: '.o_control_panel .breadcrumb:contains("Sales Orders")',
+    extra_trigger: '.o_control_panel .o_breadcrumb:contains("Sales Orders")',
     content: _t("Go to the last sale order"),
     position: "right"
 }, {
     mobile: true,
     trigger: ".o_kanban_record .o_kanban_record_title:contains('the_flow.customer')",
-    extra_trigger: '.o_control_panel .breadcrumb:contains("Sales Orders")',
+    extra_trigger: '.o_control_panel .o_breadcrumb:contains("Sales Orders")',
     content: _t("Go to the last sale order"),
     position: "bottom"
 },
-stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .breadcrumb:contains("S0")')),
+stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .o_breadcrumb:contains("S0")')),
 {
     mobile: false,
     trigger: '.o-form-buttonbox .oe_stat_button:has(div[name=tasks_count])',
@@ -806,7 +818,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .brea
 }, {
     mobile: true,
     trigger: '.o-form-buttonbox .oe_stat_button:has(div[name=tasks_count])',
-    extra_trigger: '.o_control_panel .breadcrumb:contains("S0")',
+    extra_trigger: '.o_control_panel .o_breadcrumb:contains("S0")',
     content: _t('See Tasks'),
     position: 'bottom',
 }, {
