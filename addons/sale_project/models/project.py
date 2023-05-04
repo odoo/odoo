@@ -9,6 +9,7 @@ from odoo.osv import expression
 from odoo.tools import Query
 
 from datetime import date
+from functools import reduce
 
 class Project(models.Model):
     _inherit = 'project.project'
@@ -370,20 +371,27 @@ class Project(models.Model):
     def _get_revenues_items_from_sol(self, domain=None, with_action=True):
         sale_line_read_group = self.env['sale.order.line'].sudo()._read_group(
             self._get_profitability_sale_order_items_domain(domain),
-            ['product_id'],
-            ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum'],
+            ['currency_id', 'product_id'],
+            ['id:array_agg', 'untaxed_amount_to_invoice:sum', 'untaxed_amount_invoiced:sum']
         )
         display_sol_action = with_action and len(self) == 1 and self.user_has_groups('sales_team.group_sale_salesman')
         revenues_dict = {}
         total_to_invoice = total_invoiced = 0.0
         if sale_line_read_group:
-            sols_per_product = {
-                product.id: (
-                    untaxed_amount_to_invoice,
-                    untaxed_amount_invoiced,
-                    ids,
-                ) for product, ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group
-            }
+            # Get conversion rate from currencies of the sale order lines to currency of project
+            currency_ids = list(set([currency_id.id for currency_id, *_ in sale_line_read_group] + [self.currency_id.id]))
+            rates = self.env['res.currency'].browse(currency_ids)._get_rates(self.company_id, date.today())
+            conversion_rates = {cid: rates[self.currency_id.id] / rate_from for cid, rate_from in rates.items()}
+
+            sols_per_product = {}
+            for currency, product, sol_ids, untaxed_amount_to_invoice, untaxed_amount_invoiced in sale_line_read_group:
+                sols_total_amounts = sols_per_product.setdefault(product.id, (0, 0, []))
+                sols_current_amounts = (
+                    untaxed_amount_to_invoice * conversion_rates[currency.id],
+                    untaxed_amount_invoiced * conversion_rates[currency.id],
+                    sol_ids,
+                )
+                sols_per_product[product.id] = tuple(reduce(lambda x, y: x + y, pair) for pair in zip(sols_total_amounts, sols_current_amounts))
             product_read_group = self.env['product.product'].sudo()._read_group(
                 [('id', 'in', list(sols_per_product)), ('expense_policy', '=', 'no')],
                 ['invoice_policy', 'service_type', 'type'],
