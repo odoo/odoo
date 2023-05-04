@@ -1847,6 +1847,33 @@ class UsersView(models.Model):
             })
         return res
 
+    @check_identity
+    def action_change_password(self):
+        if len(self) == 1:
+            view_id = self.env.ref('base.change_password_user_form_view').id
+            return {
+                'name': _('Change Password'),
+                'view_mode': 'form',
+                'target': 'new',
+                'res_model': 'change.password.user',
+                'type': 'ir.actions.act_window',
+                'view_id': view_id,
+                'views': [(view_id, 'form')],
+                'context': {
+                    'default_user_id': self.id,
+                    'default_user_login': self.login,
+                },
+            }
+        else:
+            return {
+                'name': _('Change Passwords'),
+                'view_mode': 'form',
+                'target': 'new',
+                'res_model': 'change.password.wizard',
+                'type': 'ir.actions.act_window',
+                'views': [[False, 'form']],
+            }
+
 class CheckIdentity(models.TransientModel):
     """ Wizard used to re-check the user's credentials (password)
 
@@ -1899,7 +1926,7 @@ class CheckMFA(models.TransientModel):
             elif user._mfa_type() == 'totp_mail':
                 user._totp_check(int(re.sub(r'\s', '', self.code)))
         except AccessDenied:
-            raise UserError(_("Incorrect code, please try again."))        
+            raise UserError(_("Incorrect code, please try again."))
         request.session['mfa-check-last'] = time.time()
         ctx, model, ids, method = json.loads(self.sudo().request)
         method = getattr(self.env(context=ctx)[model].browse(ids), method)
@@ -1942,6 +1969,7 @@ class ChangePasswordUser(models.TransientModel):
     user_login = fields.Char(string='User Login', readonly=True)
     new_passwd = fields.Char(string='New Password', default='')
 
+    @check_identity
     def change_password_button(self):
         for line in self:
             if line.new_passwd:
@@ -2021,6 +2049,7 @@ class APIKeysUser(models.Model):
         raise AccessDenied()
 
     @check_identity
+    @check_mfa
     def api_key_wizard(self):
         return {
             'type': 'ir.actions.act_window',
@@ -2126,6 +2155,7 @@ class APIKeyDescription(models.TransientModel):
     name = fields.Char("Description", required=True)
 
     @check_identity
+    @check_mfa
     def make_key(self):
         # only create keys for users who can delete their keys
         self.check_access_make_key()

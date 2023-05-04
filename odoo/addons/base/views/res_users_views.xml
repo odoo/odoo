@@ -81,12 +81,11 @@
                         <h3><strong>Please enter your 2FA code to confirm you own this account</strong></h3>
                         <br/>
                         <div>
-                            <field name="code" class="form-control mb-2" autocomplete="off" 
-                                inputmode="numeric" autofocus="autofocus" required="True" placeholder="e.g. 123456"/>
+                            <field class="o_field_highlight col-10 col-md-6 px-0" name="code" inputmode="numeric" required="True" placeholder="e.g. 123456"/>
                         </div>
                     </sheet>
                     <footer>
-                        <button string="Confirm" type="object" name="run_check" class="btn btn-primary" data-hotkey="q"/>
+                        <button string="Confirm Code" type="object" name="run_check" class="btn btn-primary" data-hotkey="q"/>
                         <button string="Cancel" special="cancel" data-hotkey="z" class="btn btn-secondary"/>
                     </footer>
                 </form>

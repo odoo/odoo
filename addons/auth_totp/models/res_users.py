@@ -8,7 +8,7 @@ import os
 import re
 
 from odoo import _, api, fields, models
-from odoo.addons.base.models.res_users import check_identity
+from odoo.addons.base.models.res_users import check_identity, check_mfa
 from odoo.exceptions import AccessDenied, UserError
 from odoo.http import request
 from odoo.tools import sql
@@ -110,6 +110,7 @@ class Users(models.Model):
                 return fn
 
     @check_identity
+    @check_mfa
     def action_totp_disable(self):
         logins = ', '.join(map(repr, self.mapped('login')))
         if not (self == self.env.user or self.env.user._is_admin() or self.env.su):
