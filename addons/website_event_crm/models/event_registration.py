@@ -24,3 +24,12 @@ class EventRegistration(models.Model):
         res = super(EventRegistration, self)._get_lead_description_fields()
         res.append('registration_answer_ids')
         return res
+
+    def _get_lead_values(self, rule):
+        """Update lead values from Lead Generation rules to include the visitor and their language"""
+        lead_values = super()._get_lead_values(rule)
+        lead_values.update({
+            'visitor_ids': self.visitor_id,
+            'lang_id': self.visitor_id.lang_id.id,
+        })
+        return lead_values
