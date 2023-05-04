@@ -150,28 +150,29 @@ def check_mfa(fn):
                 fn.__name__
             ])
         })
-        if self._mfa_type() is None:
+        user = w.create_uid
+        if user._mfa_type() is None:
             w.run_check()
             return fn(self)
-        elif self._mfa_type() == 'totp':
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.users.mfacheck',
-                'res_id': w.id,
-                'name': _("Security Control"),
-                'target': 'new',
-                'views': [(False, 'form')],
-            }
-        elif self._mfa_type() == 'totp_mail':
-            self._send_totp_mail_code()
-            return {
-                'type': 'ir.actions.act_window',
-                'res_model': 'res.users.mfacheck',
-                'res_id': w.id,
-                'name': _("Security Control"),
-                'target': 'new',
-                'views': [(False, 'form')],
-            }
+        elif user._mfa_type() in ['totp','totp_mail']:
+            cookies = request.httprequest.cookies
+            key = cookies.get('td_id')
+            if key:
+                user_match = request.env['auth_totp.device']._check_credentials_for_uid(
+                    scope="browser", key=key, uid=user.id)
+                if not user_match:
+                    if user._mfa_type() == 'totp_mail':
+                        user._send_totp_mail_code()
+                    return {
+                        'type': 'ir.actions.act_window',
+                        'res_model': 'res.users.mfacheck',
+                        'res_id': w.id,
+                        'name': _("Security Control"),
+                        'target': 'new',
+                        'views': [(False, 'form')],
+                    }
+                else:
+                    return fn(self)
     wrapped.__has_check_mfa = True
     return wrapped
 
