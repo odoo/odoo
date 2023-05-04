@@ -11,14 +11,20 @@ import { registry } from "@web/core/registry";
 
 startSteps();
 
-FloorScreen.do.clickTable("5");
+ProductScreen.do.confirmOpeningPopup();
 
 // Create first order
-ProductScreen.do.confirmOpeningPopup();
+FloorScreen.do.clickTable("5");
+ProductScreen.check.orderBtnIsPresent();
 ProductScreen.do.clickDisplayedProduct("Coca-Cola");
 ProductScreen.check.selectedOrderlineHas("Coca-Cola");
 ProductScreen.do.clickDisplayedProduct("Water");
 ProductScreen.check.selectedOrderlineHas("Water");
+ProductScreen.check.orderlineIsToOrder("Water");
+ProductScreen.check.orderlineIsToOrder("Coca-Cola");
+ProductScreen.do.clickOrderButton();
+ProductScreen.check.orderlinesHaveNoChange();
+ProductScreen.check.isPrintingError();
 ProductScreen.check.totalAmountIs("4.40");
 
 // Create 2nd order (paid)
