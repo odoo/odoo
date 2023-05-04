@@ -377,17 +377,15 @@ QUnit.module("DebugMenu", (hooks) => {
         await doAction(webClient, 1234);
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
-        assert.containsN(target, ".breadcrumb-item", 2);
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").textContent,
-            "Edit view"
-        );
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb .active");
+        assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");
         assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "18");
 
         await click(target, ".breadcrumb .o_back_button");
-        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb .active");
         assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").textContent,
+            target.querySelector(".o_breadcrumb .active").textContent,
             "Reporting Ponies"
         );
     });
@@ -423,11 +421,9 @@ QUnit.module("DebugMenu", (hooks) => {
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
-        assert.containsN(target, ".breadcrumb-item", 2);
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").textContent,
-            "Edit view"
-        );
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb .active");
+        assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");
         assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "293");
     });
 
@@ -488,11 +484,9 @@ QUnit.module("DebugMenu", (hooks) => {
         await click(target.querySelector(".o_debug_manager button"));
         await click(target.querySelector(".o_debug_manager .dropdown-item"));
         await legacyExtraNextTick();
-        assert.containsN(target, ".breadcrumb-item", 2);
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").textContent,
-            "Edit view"
-        );
+        assert.containsOnce(target, ".breadcrumb-item");
+        assert.containsOnce(target, ".o_breadcrumb .active");
+        assert.strictEqual(target.querySelector(".o_breadcrumb .active").textContent, "Edit view");
         assert.strictEqual(target.querySelector(".o_field_widget[name=id] input").value, "293");
     });
 

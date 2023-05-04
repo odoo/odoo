@@ -296,7 +296,7 @@ QUnit.module("Components", (hooks) => {
         });
         assert.strictEqual(
             target.lastElementChild.innerText,
-            `This domain is not supported. RESET DOMAIN`
+            `This domain is not supported. Reset domain`
         );
     });
 
