@@ -119,13 +119,12 @@ import json
 import logging
 import reprlib
 import traceback
-import warnings
 from datetime import date, datetime, time
 
 from psycopg2.sql import Composable, SQL
 
 import odoo.modules
-from ..models import BaseModel, check_property_field_value_name
+from odoo.models import BaseModel, check_property_field_value_name
 from odoo.tools import pycompat, Query, _generate_table_alias, sql
 
 
@@ -1072,7 +1071,7 @@ class expression(object):
             elif operator in ('any', 'not any') and field.store and field.type == 'many2one' and field.auto_join:
                 # res_partner.state_id = res_partner__state_id.id
                 coalias = self.query.left_join(
-                    alias, left, comodel._table, 'id', left,
+                    alias, field.name, comodel._table, 'id', field.name,
                 )
 
                 if operator == 'not any':
@@ -1336,7 +1335,7 @@ class expression(object):
                         expr, params = self.__leaf_to_sql(leaf, model, alias)
                         push_result(expr, params)
 
-                elif field.translate and isinstance(right, str):
+                elif field.translate and isinstance(right, str) and left == field.name:
                     sql_operator = {'=like': 'like', '=ilike': 'ilike'}.get(operator, operator)
                     expr = ''
                     params = []
@@ -1346,7 +1345,7 @@ class expression(object):
                         right = field.convert_to_column(right, model, validate=False).adapted['en_US']
 
                     if (need_wildcard and not right) or (right and sql_operator in NEGATIVE_TERM_OPERATORS):
-                        expr += f'"{alias}"."{left}" is NULL OR '
+                        expr += f'"{alias}"."{field.name}" is NULL OR '
 
                     if self._has_trigram and field.index == 'trigram' and sql_operator in ('=', 'like', 'ilike'):
                         # a prefilter using trigram index to speed up '=', 'like', 'ilike'
@@ -1358,7 +1357,7 @@ class expression(object):
 
                         if _right != '%':
                             _unaccent = self._unaccent(field)
-                            _left = _unaccent(f'''jsonb_path_query_array("{alias}"."{left}", '$.*')::text''')
+                            _left = _unaccent(f'''jsonb_path_query_array("{alias}"."{field.name}", '$.*')::text''')
                             _sql_operator = 'like' if sql_operator == '=' else sql_operator
                             expr += f"{_left} {_sql_operator} {_unaccent('%s')} AND "
                             params.append(_right)
@@ -1366,9 +1365,9 @@ class expression(object):
                     unaccent = self._unaccent(field) if sql_operator.endswith('like') else lambda x: x
                     lang = model.env.lang or 'en_US'
                     if lang == 'en_US':
-                        left = unaccent(f""""{alias}"."{left}"->>'en_US'""")
+                        left = unaccent(f""""{alias}"."{field.name}"->>'en_US'""")
                     else:
-                        left = unaccent(f'''COALESCE("{alias}"."{left}"->>'{lang}', "{alias}"."{left}"->>'en_US')''')
+                        left = unaccent(f'''COALESCE("{alias}"."{field.name}"->>'{lang}', "{alias}"."{field.name}"->>'en_US')''')
 
                     if need_wildcard:
                         right = f'%{right}%'
@@ -1377,24 +1376,24 @@ class expression(object):
                     params.append(right)
                     push_result(f'({expr})', params)
 
-                elif field.translate and operator in ['in', 'not in'] and isinstance(right, (list, tuple)):
+                elif field.translate and operator in ['in', 'not in'] and isinstance(right, (list, tuple)) and left == field.name:
                     params = [it for it in right if it is not False and it is not None]
                     check_null = len(params) < len(right)
                     if params:
                         params = [field.convert_to_column(p, model, validate=False).adapted['en_US'] for p in params]
                         lang = model.env.lang or 'en_US'
                         if lang == 'en_US':
-                            query = f'''("{alias}"."{left}"->>'en_US' {operator} %s)'''
+                            query = f'''("{alias}"."{field.name}"->>'en_US' {operator} %s)'''
                         else:
-                            query = f'''(COALESCE("{alias}"."{left}"->>'{lang}', "{alias}"."{left}"->>'en_US') {operator} %s)'''
+                            query = f'''(COALESCE("{alias}"."{field.name}"->>'{lang}', "{alias}"."{field.name}"->>'en_US') {operator} %s)'''
                         params = [tuple(params)]
                     else:
                         # The case for (left, 'in', []) or (left, 'not in', []).
                         query = 'FALSE' if operator == 'in' else 'TRUE'
                     if (operator == 'in' and check_null) or (operator == 'not in' and not check_null):
-                        query = '(%s OR %s."%s" IS NULL)' % (query, alias, left)
+                        query = f'({query} OR "{alias}"."{field.name}" IS NULL)'
                     elif operator == 'not in' and check_null:
-                        query = '(%s AND %s."%s" IS NOT NULL)' % (query, alias, left)  # needed only for TRUE.
+                        query = f'({query} AND "{alias}"."{field.name}" IS NOT NULL)'  # needed only for TRUE.
                     push_result(query, params)
                 else:
                     expr, params = self.__leaf_to_sql(leaf, model, alias)
