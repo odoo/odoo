@@ -18,7 +18,6 @@ from odoo.tools.misc import get_lang, format_date
 
 from .project_update import STATUS_COLOR
 
-
 PROJECT_TASK_READABLE_FIELDS = {
     'id',
     'active',
@@ -1440,6 +1439,106 @@ class Task(models.Model):
                     else:
                         task[f] = False
 
+<<<<<<< HEAD
+||||||| parent of eb8ed98f23d (temp)
+    def _get_weekdays(self, n=1):
+        self.ensure_one()
+        if self.repeat_unit == 'week':
+            return [fn(n) for day, fn in DAYS.items() if self[day]]
+        return [DAYS.get(self.repeat_weekday)(n)]
+
+    def _get_recurrence_start_date(self):
+        return fields.Date.today()
+
+    @api.depends(
+        'recurring_task', 'repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until',
+        'repeat_number', 'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri',
+        'sat', 'sun', 'repeat_day', 'repeat_week', 'repeat_month', 'repeat_weekday')
+    def _compute_recurrence_message(self):
+        self.recurrence_message = False
+        for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
+            date = task._get_recurrence_start_date()
+            recurrence_left = task.recurrence_id.recurrence_left if task.recurrence_id  else task.repeat_number
+            number_occurrences = min(5, recurrence_left if task.repeat_type == 'after' else 5)
+            delta = task.repeat_interval if task.repeat_unit == 'day' else 1
+            recurring_dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+                date + timedelta(days=delta),
+                task.repeat_interval,
+                task.repeat_unit,
+                task.repeat_type,
+                task.repeat_until,
+                task.repeat_on_month,
+                task.repeat_on_year,
+                task._get_weekdays(WEEKS.get(task.repeat_week)),
+                task.repeat_day,
+                task.repeat_week,
+                task.repeat_month,
+                count=number_occurrences)
+            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format
+            if recurrence_left == 0:
+                recurrence_title = _('There are no more occurrences.')
+            else:
+                recurrence_title = _('A new task will be created on the following dates:')
+            task.recurrence_message = '<p><span class="fa fa-check-circle"></span> %s</p><ul>' % recurrence_title
+            task.recurrence_message += ''.join(['<li>%s %s</li>' % (
+                format_date(self.env, date, date_format="EEE"), date.strftime(date_format)
+            ) for date in recurring_dates[:5]])
+            if task.repeat_type == 'after' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
+                task.recurrence_message += '<li>...</li>'
+            task.recurrence_message += '</ul>'
+            if task.repeat_type == 'until':
+                task.recurrence_message += _('<p><em>Number of tasks: %(tasks_count)s</em></p>') % {'tasks_count': len(recurring_dates)}
+
+=======
+    def _get_weekdays(self, n=1):
+        self.ensure_one()
+        if self.repeat_unit == 'week':
+            return [fn(n) for day, fn in DAYS.items() if self[day]]
+        return [DAYS.get(self.repeat_weekday)(n)]
+
+    def _get_recurrence_start_date(self):
+        return fields.Date.today()
+
+    @api.depends(
+        'recurring_task', 'repeat_interval', 'repeat_unit', 'repeat_type', 'repeat_until',
+        'repeat_number', 'repeat_on_month', 'repeat_on_year', 'mon', 'tue', 'wed', 'thu', 'fri',
+        'sat', 'sun', 'repeat_day', 'repeat_week', 'repeat_month', 'repeat_weekday')
+    def _compute_recurrence_message(self):
+        self.recurrence_message = False
+        for task in self.filtered(lambda t: t.recurring_task and t._is_recurrence_valid()):
+            date = task._get_recurrence_start_date()
+            recurrence_left = task.recurrence_id.recurrence_left if task.recurrence_id  else task.repeat_number
+            number_occurrences = min(5, recurrence_left if task.repeat_type == 'after' else 5)
+            delta = task.repeat_interval if task.repeat_unit == 'day' else 1
+            recurring_dates = self.env['project.task.recurrence']._get_next_recurring_dates(
+                date + timedelta(days=delta),
+                task.repeat_interval,
+                task.repeat_unit,
+                task.repeat_type,
+                task.repeat_until,
+                task.repeat_on_month,
+                task.repeat_on_year,
+                task._get_weekdays(WEEKS.get(task.repeat_week)),
+                task.repeat_day,
+                task.repeat_week,
+                task.repeat_month,
+                count=number_occurrences)
+            date_format = self.env['res.lang']._lang_get(self.env.user.lang).date_format or get_lang(self.env).date_format
+            if recurrence_left == 0:
+                recurrence_title = _('There are no more occurrences.')
+            else:
+                recurrence_title = _('A new task will be created on the following dates:')
+            task.recurrence_message = '<p><span class="fa fa-check-circle"></span> %s</p><ul>' % recurrence_title
+            task.recurrence_message += ''.join(['<li>%s %s</li>' % (
+                format_date(self.env, date, date_format="EEE"), date.strftime(date_format)
+            ) for date in recurring_dates[:5]])
+            if task.repeat_type == 'after' and recurrence_left > 5 or task.repeat_type == 'forever' or len(recurring_dates) > 5:
+                task.recurrence_message += '<li>...</li>'
+            task.recurrence_message += '</ul>'
+            if task.repeat_type == 'until':
+                task.recurrence_message += _('<p><em>Number of tasks: %(tasks_count)s</em></p>') % {'tasks_count': len(recurring_dates)}
+
+>>>>>>> eb8ed98f23d (temp)
     def _is_recurrence_valid(self):
         self.ensure_one()
         return self.repeat_interval > 0 and\
