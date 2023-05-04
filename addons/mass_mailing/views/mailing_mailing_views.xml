@@ -58,7 +58,7 @@
             <field name="model">mailing.mailing</field>
             <field name="arch" type="xml">
                 <form string="Mailing" class="o_mass_mailing_mailing_form">
-                    <header style="min-height:31px;">
+                    <header class="pt-3">
                         <button name="action_launch" type="object" class="oe_highlight" string="Send"
                             attrs="{'invisible': [('state', 'in', ('in_queue',  'sending', 'done'))]}" data-hotkey="v"
                             confirm="This will send the email to all recipients. Are you sure you want to proceed?"
@@ -74,7 +74,7 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert"
+                    <div class="alert alert-info my-0 mx-3 text-center" role="alert"
                         attrs="{'invisible': ['&amp;','&amp;','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('canceled', '=', 0),('scheduled', '=', 0),('failed', '=', 0),('warning_message', '=', False)]}">
                         <div class="o_mails_canceled" attrs="{'invisible': [('canceled', '=', 0)]}">
                             <button class="btn-link py-0"
