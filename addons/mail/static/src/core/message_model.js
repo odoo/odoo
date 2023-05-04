@@ -113,6 +113,10 @@ export class Message {
         return this.datetime.toLocaleString(DateTime.DATETIME_SHORT);
     }
 
+    get isAutomatedMessage() {
+        return this.type === "auto_comment";
+    }
+
     get isSelfMentioned() {
         return this.recipients.some((recipient) => recipient === this._store.self);
     }
