@@ -85,3 +85,9 @@ class AccountMove(models.Model):
             self.expense_sheet_id.state = 'approve'
             self.expense_sheet_id.account_move_id = False # cannot change to delete='set null' in stable
         return super().unlink()
+
+    def button_draft(self):
+        for line in self.line_ids:
+            if line.expense_id:
+                line.expense_id.sheet_id.write({'state': 'post'})
+        return super().button_draft()
