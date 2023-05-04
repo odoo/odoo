@@ -71,3 +71,6 @@ class TestSnippets(HttpCase):
             'url': base + '/web/image/website.s_banner_default_image.jpg',
         })
         self.start_tour("/", "snippet_image_gallery_remove", login='admin')
+
+    def test_10_parallax(self):
+        self.start_tour(self.env['website'].get_client_action_url('/'), 'test_parallax', login='admin')
