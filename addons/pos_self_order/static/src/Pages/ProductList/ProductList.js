@@ -52,19 +52,18 @@ export class ProductList extends Component {
         onMounted(() => {
             // TODO: replace this logic with dvh once it is supported
             this.main.el.style.height = `${window.innerHeight}px`;
-            // this.main.el.style.height = `100%`;
 
             this.headerHeight = this.header.el.offsetHeight;
             this.navbarHeight = this.header.el.querySelector("nav").offsetHeight;
-            // TODO: add dvh once it is supported
-            // this.productsList.el.style.height = `calc(${window.innerHeight}px - ${this.navbarHeight}px)`;
-            this.productsList.el.style.height = `${
-                window.innerHeight - this.headerHeight - this.orderButton?.el?.offsetHeight
+
+            this.productPage.el.style.height = `${
+                window.innerHeight - (this.orderButton?.el?.offsetHeight ?? 0)
             }px`;
-            // this.productsList.el.style.height = `100%`;
-            // this.productsList.el.style.paddingBottom = `100px`;
-            this.productsList.el.style.paddingBottom = `0px`;
-            console.log("productsList", this.productsList.el.innerHeight);
+
+            // The productList has to have a height; otherwise overflow-auto won't scroll
+            this.productsList.el.style.height = `${
+                window.innerHeight - this.headerHeight - (this.orderButton?.el?.offsetHeight ?? 0)
+            }px`;
 
             // if the user is coming from the product page
             // we scroll back to the product card that he was looking at before
@@ -141,14 +140,9 @@ export class ProductList extends Component {
                         root: this.productsList.el,
                         rootMargin: `0px 0px -${
                             this.productsList.el.offsetHeight -
-                            parseInt(this.productsList.el.style.paddingBottom) -
+                            (parseInt(this.productsList.el?.style?.paddingBottom) || 0) -
                             OBSERVING_WINDOW_HEIGHT
                         }px 0px`,
-                        // rootMargin: `0px 0px -${
-                        //     this.productsList.el.height -
-                        //     parseInt(this.productsList.el.style.paddingBottom) -
-                        //     OBSERVING_WINDOW_HEIGHT
-                        // }px 0px`,
                     }
                 );
                 Object.keys(this.productGroup).forEach((tag) => {
@@ -166,20 +160,31 @@ export class ProductList extends Component {
      * @param {boolean} hide - true if the navbar should be hidden, false otherwise
      */
     toggleNavbar(hide) {
-        const animationSteps = hide
+        this.privateState.navbarIsShown = !this.privateState.navbarIsShown;
+
+        const defaultHeight =
+            window.innerHeight - this.headerHeight - (this.orderButton?.el?.offsetHeight ?? 0);
+        const elongate = hide
+            ? [
+                  { height: `${defaultHeight}px` },
+                  { height: `${defaultHeight + this.navbarHeight}px` },
+              ]
+            : [
+                  { height: `${defaultHeight + this.navbarHeight}px` },
+                  { height: `${defaultHeight}px` },
+              ];
+        const slide = hide
             ? [{ top: "0px" }, { top: `-${this.navbarHeight}px` }]
             : [{ top: `-${this.navbarHeight}px` }, { top: "0px" }];
-        this.productPage.el.animate(animationSteps, {
+
+        this.productPage.el.animate(slide, {
             duration: 200,
             fill: "forwards",
         });
-        this.privateState.navbarIsShown = !this.privateState.navbarIsShown;
-        this.productsList.el.style.height = `${
-            window.innerHeight -
-            this.headerHeight -
-            // this.orderButton.el.offsetHeight +
-            this.navbarHeight * !this.privateState.navbarIsShown
-        }px`;
+        this.productsList.el.animate(elongate, {
+            duration: 200,
+            fill: "forwards",
+        });
     }
 
     scrollToTop() {

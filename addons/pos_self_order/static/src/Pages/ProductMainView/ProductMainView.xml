@@ -31,7 +31,7 @@
                 </t>
                 <div t-if="selfOrder.table">
                     <label class="form-label fw-bold" for="note">Add a note for the chef:</label>
-                    <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="3" placeholder="No onions please" t-model="this.privateState.customer_note"/>
+                    <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="this.privateState.customer_note"/>
                 </div>
             </div>
             <div t-if="props.product.description_sale"
