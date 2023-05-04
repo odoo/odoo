@@ -24,12 +24,13 @@ QUnit.module('Subtask Kanban List tests', {
             { name: "User One", login: 'one', password: 'one' },
         ]);
         pyEnv['project.task'].create([
-            { name: 'task one', project_id: projectId, closed_subtask_count: 2, subtask_count: 3, child_ids: [2, 3, 4], state: '01_in_progress', user_ids: [userId] },
+            { name: 'task one', project_id: projectId, closed_subtask_count: 1, subtask_count: 4, child_ids: [2, 3, 4, 7], state: '01_in_progress', user_ids: [userId] },
             { name: 'task two', parent_id: 1, closed_subtask_count: 0, subtask_count: 0, child_ids: [], state: '03_approved' },
             { name: 'task three', parent_id: 1, closed_subtask_count: 0, subtask_count: 0, child_ids: [], state: '02_changes_requested' },
             { name: 'task four', parent_id: 1, closed_subtask_count: 0, subtask_count: 0, child_ids: [], state: '1_done' },
             { name: 'task five', closed_subtask_count: 0, subtask_count: 1, child_ids: [6], state: '03_approved' },
             { name: 'task six', parent_id: 5, closed_subtask_count: 0, subtask_count: 0, child_ids: [], state: '1_canceled' },
+            { name: 'task seven', parent_id: 1, closed_subtask_count: 0, subtask_count: 0, child_ids: [], state: '01_in_progress', user_ids: [userId] },
         ]);
         this.views = {
             "project.task,false,kanban":
@@ -39,15 +40,15 @@ QUnit.module('Subtask Kanban List tests', {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="name" widget="name_with_subtask_count"/>
-                                <field name="user_ids" invisible="1"/>
-                                <field name="state" invisible="1"/>
+                                <field name="name"/>
+                                <field name="user_ids" invisible="1" widget="many2many_avatar_user"/>
+                                <field name="state" invisible="1" widget="project_task_state_selection"/>
                                 <a t-if="record.closed_subtask_count.raw_value">
                                     <span title="See Subtasks" class="subtask_list_button fa fa-check-square-o me-1"/>
                                     <t t-out="record.closed_subtask_count.value"/>/<t t-out="record.subtask_count.value"/>
                                 </a>
+                                <div class="kanban_bottom_subtasks_section"/>
                             </div>
-                            <div class="kanban_bottom_subtasks_section"/>
                         </t>
                     </templates>
                 </kanban>`,
@@ -72,13 +73,44 @@ QUnit.module('Subtask Kanban List tests', {
         await click(target, '.subtask_list_button');
 
         assert.containsOnce(target, '.subtask_list', "Clicking on the button should make the subtask list render, in this case we are expectig 1 list");
-        assert.containsN(target, '.subtask_list_row', 2, "The list rendered should show the open subtasks of the task, in this case 2");
-        assert.containsN(target, '.subtask_state_widget_col', 2, "Each of the list's rows should have 1 state widget, thus we are looking for 2 in total");
-        assert.containsN(target, '.subtask_user_widget_col', 2, "Each of the list's rows should have 1 user widgets, thus we are looking for 2 in total");
-        assert.containsN(target, '.subtask_name_col', 2, "Each of the list's rows should display the subtask's name, thus we are looking for 2 in total");
+        assert.containsN(target, '.subtask_list_row', 3, "The list rendered should show the open subtasks of the task, in this case 3");
+        assert.containsN(target, '.subtask_state_widget_col', 3, "Each of the list's rows should have 1 state widget, thus we are looking for 3 in total");
+        assert.containsN(target, '.subtask_user_widget_col', 3, "Each of the list's rows should have 1 user widgets, thus we are looking for 3 in total");
+        assert.containsN(target, '.subtask_name_col', 3, "Each of the list's rows should display the subtask's name, thus we are looking for 3 in total");
 
         await click(target, '.subtask_list_button');
 
         assert.containsNone(target, '.subtask_list', "If the drawdown button is clicked again, the subtasks list should be hidden again");
+    });
+
+    QUnit.test("Update closed subtask count in the kanban card when the state of a subtask is set to Done.", async function (assert) {
+        let checkSteps = false;
+        const { openView } = await start({
+            serverData: { views: this.views },
+            mockRPC(route, { model, method }) {
+                if (checkSteps) {
+                    assert.step(`${model}/${method}`);
+                }
+            },
+        });
+        await openView({
+            res_model: "project.task",
+            views: [[false, "kanban"]],
+        });
+
+        assert.strictEqual(target.querySelector(".subtask_list_button").parentElement.textContent, "1/4");
+        checkSteps = true;
+        await click(target, '.subtask_list_button');
+        const subtaskEl = target.querySelector(".subtask_list");
+        assert.containsOnce(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .o_status:not(.o_status_green,.o_status_bubble)", "The state of the subtask should be in progress");
+        await click(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .o_status:not(.o_status_green,.o_status_bubble)");
+        assert.containsNone(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .o_status:not(.o_status_green,.o_status_bubble)", "The state of the subtask should no longer be in progress");
+        assert.containsOnce(subtaskEl, ".o_field_widget.o_field_project_task_state_selection.subtask_state_widget_col .fa-check-circle.text-success", "The state of the subtask should be Done");
+        assert.verifySteps([
+            "project.task/search_read",
+            "project.task/write",
+            "project.task/read",
+            "project.task/read", // read the parent task to recompute the subtask count
+        ]);
     });
 });
