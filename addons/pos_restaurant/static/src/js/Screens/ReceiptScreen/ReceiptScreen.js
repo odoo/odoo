@@ -16,7 +16,7 @@ patch(ReceiptScreen.prototype, "pos_restaurant.ReceiptScreen", {
         this.pos = usePos();
         onWillUnmount(() => {
             // When leaving the receipt screen to the floor screen the order is paid and can be removed
-            if (this.pos.mainScreen.component === FloorScreen) {
+            if (this.pos.mainScreen.component === FloorScreen && this.currentOrder.finalized) {
                 this.env.pos.removeOrder(this.currentOrder);
             }
         });
