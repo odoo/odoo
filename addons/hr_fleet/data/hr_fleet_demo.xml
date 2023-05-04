@@ -16,7 +16,7 @@
         <field name="driver_employee_id" ref="hr.employee_jep"/>
     </record>
 
-    <!-- recompute driver_employee_id as we assigned a proper address_home_id to some employees -->
+    <!-- recompute driver_employee_id as we assigned a proper work_contact_id to some employees -->
     <function model="fleet.vehicle.assignation.log" name="_compute_driver_employee_id">
         <value model="fleet.vehicle.assignation.log" eval="obj().search([('driver_employee_id', '=', False), ('driver_id', '!=', False)]).ids"/>
     </function>

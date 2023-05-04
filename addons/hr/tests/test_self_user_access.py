@@ -112,13 +112,12 @@ class TestSelfAccessRights(TestHrCommon):
         cls.richard_emp = cls.env['hr.employee'].create({
             'name': 'Richard',
             'user_id': cls.richard.id,
-            'address_home_id': cls.env['res.partner'].create({'name': 'Richard', 'phone': '21454', 'type': 'private'}).id,
+            'private_phone': '21454',
         })
         cls.hubert = new_test_user(cls.env, login='hub', groups='base.group_user', name='Simple employee', email='hub@example.com')
         cls.hubert_emp = cls.env['hr.employee'].create({
             'name': 'Hubert',
             'user_id': cls.hubert.id,
-            'address_home_id': cls.env['res.partner'].create({'name': 'Hubert', 'type': 'private'}).id,
         })
 
         cls.protected_fields_emp = OrderedDict([(k, v) for k, v in cls.env['hr.employee']._fields.items() if v.groups == 'hr.group_hr_user'])
