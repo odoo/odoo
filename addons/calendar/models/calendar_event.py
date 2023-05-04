@@ -718,6 +718,14 @@ class Meeting(models.Model):
         copied_event.write({'partner_ids': [(Command.set(self.partner_ids.ids))]})
         return copied_event
 
+    @api.model
+    def _get_mail_message_access(self, res_ids, operation, model_name=None):
+        if operation == 'read' and (not model_name or model_name == 'event.event'):
+            for event in self.browse(res_ids):
+                if event.privacy == "private" and self.env.user.partner_id not in event.attendee_ids.partner_id:
+                    return 'write'
+        return super()._get_mail_message_access(res_ids, operation, model_name=model_name)
+
     def _attendees_values(self, partner_commands):
         """
         :param partner_commands: ORM commands for partner_id field (0 and 1 commands not supported)
