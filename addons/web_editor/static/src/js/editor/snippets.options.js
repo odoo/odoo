@@ -8,6 +8,7 @@ import Dialog from "web.Dialog";
 import {scrollTo} from "web.dom";
 import rpc from "web.rpc";
 import time from "web.time";
+import { throttleForAnimation, debounce } from "@web/core/utils/timing";
 import utils from "web.utils";
 import Widget from "web.Widget";
 import { ColorPaletteWidget } from "web_editor.ColorPalette";
@@ -34,10 +35,10 @@ import {
 import * as OdooEditorLib from "@web_editor/js/editor/odoo-editor/src/OdooEditor";
 import {SIZES, MEDIAS_BREAKPOINTS} from "@web/core/ui/ui_service";
 import { sprintf } from "@web/core/utils/strings";
-import { debounce } from "@web/core/utils/timing";
 
 var qweb = core.qweb;
 var _t = core._t;
+const _lt = core._lt;
 const preserveCursor = OdooEditorLib.preserveCursor;
 const descendants = OdooEditorLib.descendants;
 
@@ -948,6 +949,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     events: {
         'click': '_onClick',
     },
+    PLACEHOLDER_TEXT: _lt("None"),
 
     /**
      * @override
@@ -959,7 +961,10 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             this.containerEl.insertBefore(this.options.valueEl, this.menuEl);
         }
 
+        this.menuEl.dataset.placeholderText = this.PLACEHOLDER_TEXT;
+
         this.menuTogglerEl = document.createElement('we-toggler');
+        this.menuTogglerEl.dataset.placeholderText = this.PLACEHOLDER_TEXT;
         this.iconEl = this.imgEl || null;
         const icon = this.el.dataset.icon;
         if (icon) {
@@ -1036,7 +1041,7 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
                 }
             }
         } else {
-            textContent = "/";
+            textContent = this.PLACEHOLDER_TEXT;
         }
 
         this.menuTogglerEl.textContent = textContent;
@@ -2447,42 +2452,28 @@ const RangeUserValueWidget = UnitUserValueWidget.extend({
 const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     className: (SelectUserValueWidget.prototype.className || '') + ' o_we_select_pager',
     events: Object.assign({}, SelectUserValueWidget.prototype.events, {
-        'click .o_we_pager_next, .o_we_pager_prev': '_onPageChange',
+        'click .o_pager_nav_btn': '_onClickScrollPage',
+        'click .o_pager_nav_angle': '_onClickCloseMenu',
     }),
-
     /**
      * @override
      */
     async start() {
         const _super = this._super.bind(this);
-        this.pages = this.options.childNodes.filter(node => node.matches && node.matches('we-select-page'));
-        this.numPages = this.pages.length;
-
-        const prev = document.createElement('i');
-        prev.classList.add('o_we_pager_prev', 'fa', 'fa-chevron-left');
-
-        this.pageNum = document.createElement('span');
-        this.currentPage = 0;
-
-        const next = document.createElement('i');
-        next.classList.add('o_we_pager_next', 'fa', 'fa-chevron-right');
-
-        const pagerControls = document.createElement('div');
-        pagerControls.classList.add('o_we_pager_controls');
-        pagerControls.appendChild(prev);
-        pagerControls.appendChild(this.pageNum);
-        pagerControls.appendChild(next);
-
-        this.pageName = document.createElement('b');
-        const pagerHeader = document.createElement('div');
-        pagerHeader.classList.add('o_we_pager_header');
-        pagerHeader.appendChild(this.pageName);
-        pagerHeader.appendChild(pagerControls);
 
         await _super(...arguments);
-        this.menuEl.classList.add('o_we_has_pager');
-        $(this.menuEl).prepend(pagerHeader);
-        this._updatePage();
+        this.menuEl.classList.add('o_we_has_pager', 'position-fixed', 'top-0', 'end-0', 'z-index-1', 'rounded-0');
+        this.menuTogglerEl.classList.add('o_we_toggler_pager');
+
+        this.__onScroll = throttleForAnimation(this._onScroll.bind(this));
+        this.el.querySelector('.o_pager_container').addEventListener('scroll', this.__onScroll);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.el.querySelector('.o_pager_container').removeEventListener('scroll', this.__onScroll);
     },
 
     //--------------------------------------------------------------------------
@@ -2493,18 +2484,7 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     _shouldIgnoreClick(ev) {
-        return !!ev.target.closest('.o_we_pager_header') || this._super(...arguments);
-    },
-    /**
-     * Updates the pager's page number display.
-     *
-     * @private
-     */
-    _updatePage() {
-        this.pages.forEach((page, i) => page.classList.toggle('active', i === this.currentPage));
-        this.pageNum.textContent = `${this.currentPage + 1}/${this.numPages}`;
-        const activePage = this.pages.find((page, i) => i === this.currentPage);
-        this.pageName.textContent = activePage.getAttribute('string');
+        return !!ev.target.closest('.o_pager_nav') || this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -2512,31 +2492,44 @@ const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Goes to the previous/next page with wrap-around.
+     * Scrolls to the requested section.
      *
      * @private
      */
-    _onPageChange(ev) {
-        ev.preventDefault();
-        ev.stopPropagation();
-        const delta = ev.target.matches('.o_we_pager_next') ? 1 : -1;
-        this.currentPage = (this.currentPage + this.numPages + delta) % this.numPages;
-        this._updatePage();
+    _onClickScrollPage(ev) {
+        const navButtonEl = ev.currentTarget;
+        const attribute = navButtonEl.dataset.scrollTo;
+        const destinationOffset = this.menuEl.querySelector('.' + attribute).offsetTop;
+
+        const pagerContainerEl = this.menuEl.querySelector('.o_pager_container');
+        const pagerNavEl = this.menuEl.querySelector('.o_pager_nav');
+        pagerContainerEl.scrollTop = destinationOffset - pagerNavEl.offsetHeight;
     },
     /**
-     * @override
+     * @private
      */
-    _onClick(ev) {
-        const activeButton = this._getActiveSubWidget();
-        if (activeButton) {
-            const currentPage = this.pages.indexOf(activeButton.el.closest('we-select-page'));
-            if (currentPage !== -1) {
-                this.currentPage = currentPage;
-                this._updatePage();
-            }
-        }
-        return this._super(...arguments);
+    _onClickCloseMenu(ev) {
+        this.close();
     },
+    /**
+     * @private
+     */
+    _onScroll(ev) {
+        const pagerContainerEl = ev.currentTarget;
+        const pagerContainerHeight = pagerContainerEl.getBoundingClientRect().height;
+        // The threshold for when a menu element is defined as 'active' is half
+        // of the container's height. This has a drawback as if a section
+        // is too small it might never get `active` if it's the last section.
+        const threshold = pagerContainerEl.scrollTop + (pagerContainerHeight / 2);
+        const anchorElements = this.menuEl.querySelectorAll('[data-scroll-to]');
+        for (const anchorEl of anchorElements) {
+            const destination = anchorEl.getAttribute('data-scroll-to');
+            const sectionEl = this.menuEl.querySelector(`.${destination}`);
+            const nextSectionEl = sectionEl.nextElementSibling;
+            anchorEl.classList.toggle('active', sectionEl.offsetTop < threshold &&
+            (!nextSectionEl || nextSectionEl.offsetTop > threshold));
+        }
+    }
 });
 
 const m2oRpcCache = {};
@@ -5917,15 +5910,24 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
 
 /**
  * @param {Element} containerEl
+ * @param {boolean} labelIsDimension - Optional display imgsize attribute instead of animated
  * @returns {Element}
  */
-const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl) {
+const _addAnimatedShapeLabel = function addAnimatedShapeLabel(containerEl, labelIsDimension = false) {
     const labelEl = document.createElement('span');
     labelEl.classList.add('o_we_shape_animated_label');
-    const labelStr = _t("Animated");
-    labelEl.textContent = labelStr[0];
+    let labelStr = _t("Animated");
     const spanEl = document.createElement('span');
-    spanEl.textContent = labelStr.substr(1);
+    if (labelIsDimension) {
+        const dimensionIcon = document.createElement('i');
+        labelStr = containerEl.dataset.imgSize;
+        dimensionIcon.classList.add('fa', 'fa-expand');
+        labelEl.append(dimensionIcon);
+        spanEl.textContent = labelStr;
+    } else {
+        labelEl.textContent = labelStr[0];
+        spanEl.textContent = labelStr.substr(1);
+    }
     labelEl.appendChild(spanEl);
     containerEl.classList.add('position-relative');
     containerEl.appendChild(labelEl);
@@ -6340,6 +6342,8 @@ registry.ImageTools = ImageHandlerOption.extend({
 
             if (btn.dataset.animated) {
                 _addAnimatedShapeLabel(btn);
+            } else if (btn.dataset.imgSize) {
+                _addAnimatedShapeLabel(btn, true);
             }
         });
     },
@@ -7208,7 +7212,7 @@ registry.BackgroundShape = SnippetOptionWidget.extend({
      * @param {String} shapeId identifier of the shape
      */
     _getShapeDefaultColors(shapeId) {
-        const $shapeContainer = this.$el.find(".o_we_shape_menu we-button[data-shape='" + shapeId + "'] div.o_we_shape");
+        const $shapeContainer = this.$el.find(".o_we_bg_shape_menu we-button[data-shape='" + shapeId + "'] div.o_we_shape");
         const shapeContainer = $shapeContainer[0];
         const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
         const url = new URL(shapeSrc, window.location.origin);
