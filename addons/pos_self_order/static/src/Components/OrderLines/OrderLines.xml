@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.OrderLines" owl="1">
-        <t t-foreach="props.lines" t-as="cartItem" t-key="selfOrder.product_uniqueness_keys.map((key) => cartItem[key])">
-            <t t-set="product" t-value="selfOrder.products.find(x => x.product_id === cartItem.product_id)"/>
-            <ProductCard product="(({ description_sale, has_image, ...rest }) => ({has_image: false, ...rest}))(product)" cartItem="cartItem"/>
+        <t t-foreach="props.lines" t-as="orderLine" t-key="selfOrder.orderline_unique_keys.map((key) => orderLine[key])">
+            <t t-set="product" t-value="selfOrder.getProduct({ id: orderLine.product_id })"/>
+            <ProductCard product="formatProduct(product)" 
+                        orderLine="orderLine"
+                        />
         </t>
     </t>
 </templates>

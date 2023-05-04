@@ -3,7 +3,6 @@
     <t t-name="pos_self_order.CartView" owl="1">
         <div t-ref="main" class="d-flex flex-column">
             <NavBar customText="'Cart'" goBack="'/products'"/>
-            <!-- <main class="o_self_order_cart bg-100 overflow-auto"> -->
             <main class="h-100 bg-100 overflow-auto">
                 <OrderLines lines="selfOrder.cart"/>
             </main>
@@ -12,7 +11,7 @@
     </t>
         
     <t t-name="pos_self_order.OrderButton" owl="1">
-        <div class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg">
+        <div class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg z-index-1">
             <PriceDetails tax="selfOrder.getTotalCartTax()" total="selfOrder.getTotalCartCost()"/>
             <button t-on-click="this.selfOrder.sendOrder" class="o_self_order_floating_button btn btn-primary w-100 px-2 py-3 rounded">
                 Order

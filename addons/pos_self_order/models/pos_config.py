@@ -7,15 +7,15 @@ import base64
 from odoo import api, fields, models, modules
 
 from odoo.addons.pos_self_order.models.product_product import ProductProduct
+from odoo.addons.pos_self_order.models.pos_order import PosOrderLine
 
 
 class PosConfig(models.Model):
     _inherit = "pos.config"
 
-
     def _self_order_default_image_name(self) -> str:
         return "default_background.jpg"
-# FIXME: this image does not get applied to the demo data pos
+
     def _self_order_default_image(self) -> bytes:
         image_path = modules.get_module_resource(
             "pos_self_order", "static/img", self._self_order_default_image_name()
@@ -131,3 +131,25 @@ class PosConfig(models.Model):
                 order="pos_categ_id.sequence asc nulls last",
             )
         )
+
+    def _get_self_order_data(self) -> Dict:
+        self.ensure_one()
+        return {
+            "pos_config_id": self.id,
+            "company_name": self.company_id.name,
+            "currency_id": self.currency_id.id,
+            "show_prices_with_tax_included": self.iface_tax_included == "total",
+            "custom_links": self._get_self_order_custom_links(),
+            "products": self._get_available_products()._get_self_order_data(self),
+            "has_active_session": self.has_active_session,
+            "orderline_unique_keys": PosOrderLine._get_unique_keys(),
+        }
+
+    @api.model
+    def set_default_image(self):
+        """
+        We need to do this because the default image is not set in the demo data
+        """
+        for pos_config in self.env["pos.config"].search([("self_order_view_mode", "=", True)]):
+            pos_config.self_order_image = pos_config._self_order_default_image()
+            pos_config.self_order_image_name = pos_config._self_order_default_image_name()

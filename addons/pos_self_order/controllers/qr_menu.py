@@ -6,7 +6,12 @@ import werkzeug
 from odoo import http
 from odoo.http import request
 
-from odoo.addons.pos_self_order.controllers.utils import PosSelfOrderUtils
+from odoo.addons.pos_self_order.controllers.utils import (
+    _raise,
+    _get_pos_config_sudo,
+    _get_any_pos_config_sudo,
+    _get_table_sudo,
+)
 from odoo.addons.pos_self_order.models.pos_config import PosConfig
 from odoo.addons.pos_self_order.models.pos_restaurant import RestaurantTable
 
@@ -16,10 +21,6 @@ TODO:
 test custom links name, url , color,  order, pos id restriction
 test pos restrict categ
 test pos categs orderer
-
-- with this module each restaurant table gets a unique access token; The restaurant owner would 
-    need to print the QR code with the access token and place it on the table. What happens if the access tokens
-    of the tables change?
 """
 
 
@@ -35,7 +36,7 @@ class PosQRMenuController(http.Controller):
 
     @http.route("/menu", auth="public")
     def pos_self_order_redirect(self):
-        return request.redirect(f"/menu/{PosSelfOrderUtils._get_any_pos_config_sudo(self).id}")
+        return request.redirect(f"/menu/{_get_any_pos_config_sudo().id}")
 
     @http.route(
         [
@@ -70,8 +71,8 @@ class PosQRMenuController(http.Controller):
                     **request.env["ir.http"].get_frontend_session_info(),
                     "currencies": request.env["ir.http"].get_currencies(),
                     "pos_self_order": self._get_self_order_config(
-                        PosSelfOrderUtils._get_pos_config_sudo(self, pos_name),
-                        PosSelfOrderUtils._get_table_sudo(self, table_access_token=id),
+                        _get_pos_config_sudo(pos_name),
+                        _get_table_sudo(table_access_token=id),
                     ),
                 }
             },
@@ -93,7 +94,7 @@ class PosQRMenuController(http.Controller):
             or an exception if there is no pos configured as self order.
         :rtype: binary
         """
-        if not PosSelfOrderUtils._get_any_pos_config_sudo(self):
+        if not _get_any_pos_config_sudo():
             raise werkzeug.exceptions.Unauthorized()
 
         return (
@@ -114,7 +115,7 @@ class PosQRMenuController(http.Controller):
         :return: the bg image
         :rtype: binary
         """
-        pos_config_sudo = PosSelfOrderUtils._get_pos_config_sudo(self, pos_config_id)
+        pos_config_sudo = _get_pos_config_sudo(pos_config_id)
 
         if not pos_config_sudo.self_order_image:
             raise werkzeug.exceptions.NotFound()
@@ -132,16 +133,7 @@ class PosQRMenuController(http.Controller):
         Returns the necessary information for the POS Self Order App
         """
         return {
-            "pos_config_id": pos_config_sudo.id,
-            "company_name": pos_config_sudo.company_id.name,
-            "currency_id": pos_config_sudo.currency_id.id,
-            "show_prices_with_tax_included": pos_config_sudo.iface_tax_included == "total",
-            "custom_links": pos_config_sudo._get_self_order_custom_links(),
-            "products": pos_config_sudo._get_available_products()._get_self_order_data(
-                pos_config_sudo
-            ),
-            "has_active_session": pos_config_sudo.has_active_session,
-            "product_uniqueness_keys": PosSelfOrderUtils._get_product_uniqueness_keys(self),
+            **pos_config_sudo._get_self_order_data(),
             **(
                 table_sudo
                 and pos_config_sudo.has_active_session

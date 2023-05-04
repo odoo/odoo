@@ -11,8 +11,8 @@
                 <t t-foreach="selfOrder.custom_links" t-as="link" t-key="link.id">
                     <a type="button" 
                         t-attf-href="{{!link.url.startsWith('/') and link.url}}"
-                        t-on-click="(event)=> link.url.startsWith('/') and env.navigate(link.url, event)"
-                        t-attf-class="btn btn-{{link.style}} py-3 my-1 rounded">
+                        t-on-click="(event)=> link.url.startsWith('/') and selfOrder.setPage(link.url)"
+                        class="btn btn-{{link.style}} py-3 my-1 rounded">
                         <t t-esc="link.name"/>
                     </a>
                 </t>
@@ -20,8 +20,8 @@
                     <hr class="bg-500"/>
                     <a 
                         type="button" 
-                        t-on-click="()=> env.navigate('/orders')"
-                        t-attf-class="btn btn-outline-light py-3 my-2">
+                        t-on-click="()=> selfOrder.setPage('/orders')"
+                        class="btn btn-outline-light py-3 my-2">
                         My orders
                     </a>
                 </t>

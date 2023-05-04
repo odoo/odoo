@@ -34,6 +34,10 @@ class PosOrderLine(models.Model):
             return description[-1]
         return ""
 
+    @staticmethod
+    def _get_unique_keys():
+        return ["product_id", "description", "customer_note"]
+
 
 class PosOrder(models.Model):
     _inherit = "pos.order"
@@ -55,7 +59,7 @@ class PosOrder(models.Model):
                     "product_id": line.product_id.id,
                     "qty": line.qty,
                     "customer_note": line.customer_note,
-                    "price_extra": line.product_id._get_self_order_price(
+                    "price_extra": line.product_id._get_price_info(
                         self.config_id,
                         line.price_extra,
                     ),

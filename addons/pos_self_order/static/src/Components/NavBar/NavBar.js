@@ -6,17 +6,9 @@ export class NavBar extends Component {
     static template = "pos_self_order.NavBar";
     static props = {
         customText: { type: String, optional: true },
-        goBack: { type: String, optional: true },
+        goBack: { type: String },
     };
     setup() {
         this.selfOrder = useSelfOrder();
-    }
-    goBack() {
-        if (this.props.goBack) {
-            this.env.navigate(this.props.goBack);
-            return;
-        }
-
-        this.selfOrder.cartItem = null;
     }
 }

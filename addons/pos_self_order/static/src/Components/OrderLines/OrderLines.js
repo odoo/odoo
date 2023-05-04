@@ -11,4 +11,9 @@ export class OrderLines extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
     }
+    formatProduct(product) {
+        return (({ description_sale, has_image, ...rest }) => ({ has_image: false, ...rest }))(
+            product
+        );
+    }
 }

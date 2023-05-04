@@ -3,7 +3,7 @@
     <t t-name="pos_self_order.ProductMainView" owl="1">
 
     <div t-ref="main" class="d-flex flex-column">
-        <NavBar goBack="selfOrder.cartItem ? '' : '/products'" />
+        <NavBar goBack="returnRoute()"/>
         <div class="bg-white d-flex flex-column pt-3 overflow-auto h-100">
             <div class="px-3 border-bottom">
                 <img t-if="props.product.has_image"
@@ -16,6 +16,10 @@
                     <h4 class="text-primary"
                         t-esc="selfOrder.formatMonetary(props.product.price_info.list_price)"/>
                 </div>
+            </div>
+            <div t-if="props.product.description_sale"
+                class="o_self_order_main_desc px-3 py-4 text-muted">
+                    <t t-esc="props.product.description_sale"/>    
             </div>
             <div class="o_self_order_main_options px-3 py-4 border-bottom bg-100">
                 <t t-if="props.product.attributes"
@@ -31,12 +35,8 @@
                 </t>
                 <div t-if="selfOrder.table">
                     <label class="form-label fw-bold" for="note">Add a note for the chef:</label>
-                    <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="this.privateState.customer_note"/>
+                    <textarea class="form-control rounded bg-white" id="note" type="textarea" rows="1" placeholder="No onions please" t-model="this.orderLine.customer_note"/>
                 </div>
-            </div>
-            <div t-if="props.product.description_sale"
-                class="o_self_order_main_desc px-3 py-4 text-muted">
-                    <t t-esc="props.product.description_sale"/>    
             </div>
         </div>
         <t t-if="selfOrder.table" t-call="pos_self_order.AddToCartButton"/>
@@ -52,7 +52,7 @@
                     t-att-name="attribute.id" 
                     t-att-value="value.name"
                     t-attf-id="{{ attribute.id }}_{{ value.id }}" 
-                    t-model="this.privateState.selectedVariants[attribute.name]"
+                    t-model="this.orderLine.selectedVariants[attribute.name]"
                     />
                 <span class="flex-grow-1">
                     <t t-esc="value.name"/>
@@ -66,7 +66,7 @@
 
     <t t-name="pos_self_order.SelectProductAttribute" owl="1">
         <select class="configurator_select form-select"
-            t-model="this.privateState.selectedVariants[attribute.name]">
+            t-model="this.orderLine.selectedVariants[attribute.name]">
             <option t-foreach="attribute.values" t-as="value" t-key="value.id" t-att-value="value.name">
                 <t t-esc="value.name"/>
                 <t t-if="value.price_extra.list_price">
@@ -89,7 +89,7 @@
                             t-att-name="attribute.id" 
                             t-att-value="value.name"
                             t-attf-id="{{ attribute.id }}_{{ value.id }}" 
-                            t-model="this.privateState.selectedVariants[attribute.name]"
+                            t-model="this.orderLine.selectedVariants[attribute.name]"
                             />
                     </label>
                     <span class="flex-grow-1">
@@ -103,10 +103,10 @@
         </div>
     </t>
     <t t-name="pos_self_order.AddToCartButton" owl="1">
-        <div class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg">
-            <IncrementCounter onClick="incrementQty" value="this.privateState.qty"/>
+        <div class="d-flex flex-column align-items-center w-100 p-3 bg-white shadow-lg z-index-1">
+            <IncrementCounter onClick="incrementQty" value="this.orderLine.qty"/>
             <button t-on-click="addToCartButtonClicked" class="o_self_order_floating_button btn btn-primary w-100 px-2 py-3 mt-2 rounded">
-                    <t t-if="selfOrder.cart.some(item => item.product_id === selfOrder.currentProduct)">
+                    <t t-if="selfOrder.currentlyEditedOrderLine">
                         Update Cart
                     </t>
                     <t t-else="">

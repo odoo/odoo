@@ -6,22 +6,21 @@ import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
-    static props = ["product", "cartItem?", "currentProductCard?"];
+    static props = ["product", "orderLine?", "currentProductCard?"];
     setup() {
         this.selfOrder = useSelfOrder();
         useForwardRefToParent("currentProductCard");
     }
     clickOnProduct(product) {
-        const cartItem = this.props?.cartItem;
-        if (cartItem) {
-            this.selfOrder.cartItem = cartItem;
-            return;
-        }
         if (!this.canOpenProductMainView(product)) {
             return;
         }
-        this.env.navigate("/products/" + product.product_id);
+        if (this.selfOrder.page === "/cart") {
+            this.selfOrder.setCurrentlyEditedOrderLine(this.props?.orderLine);
+        }
+        this.selfOrder.setPage("/products/" + product.product_id);
     }
+
     canOpenProductMainView(product) {
         return (
             this.selfOrder.table ||

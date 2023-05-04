@@ -22,7 +22,7 @@ function parseParams(matches, paramSpecs) {
     );
 }
 export class Router extends Component {
-    static props = { pos_config_id: Number, slots: Object };
+    static props = { slots: Object };
     static template = xml`<t t-slot="{{state.activeSlot}}" t-props="state.slotProps"/>`;
     setup() {
         this.selfOrder = useSelfOrder();
@@ -75,15 +75,10 @@ export class Router extends Component {
      * We use the history API to navigate to it.
      * (this means that we don't make aditional requests to the server)
      * @param {string} route
-     * @param {Event} event
      */
-    navigate(route, event = null) {
-        if (!route.startsWith("/")) {
-            return;
-        }
-        event?.preventDefault();
+    navigate(route, pos_config_id) {
         const url = new URL(browser.location.href);
-        url.pathname = `menu/${this.props.pos_config_id}${route}`;
+        url.pathname = `menu/${pos_config_id}${route}`;
         history.pushState({}, "", url);
         this.matchURL();
     }

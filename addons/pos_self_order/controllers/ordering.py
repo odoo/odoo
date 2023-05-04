@@ -7,9 +7,12 @@ import uuid
 from odoo import http, fields
 from odoo.http import request
 
-from odoo.addons.pos_self_order.controllers.utils import PosSelfOrderUtils
-from odoo.addons.point_of_sale.models.product import ProductProduct
-from odoo.addons.point_of_sale.models.pos_order import PosOrder
+from odoo.addons.pos_self_order.controllers.utils import (
+    _get_pos_config_sudo,
+    _get_table_sudo,
+)
+from odoo.addons.pos_self_order.models.product_product import ProductProduct
+from odoo.addons.pos_self_order.models.pos_order import PosOrder, PosOrderLine
 from odoo.addons.pos_self_order.models.pos_config import PosConfig
 
 
@@ -25,59 +28,62 @@ class PosSelfOrderController(http.Controller):
         cart: List[Dict],
         pos_config_id: int,
         table_access_token: Optional[str] = None,
-        order_id: Optional[str] = None,
+        order_pos_reference: Optional[str] = None,
         order_access_token: Optional[str] = None,
     ) -> Dict[str, str]:
         """
         There are 2 types of self order configurations:
         1. Order at table and pay after each order
-                ==> pos_allows_ongoing_orders = False
+                ==> pos doesn't allow ongoing orders
         2. Order at table and pay at the end of the meal
-                ==> pos_allows_ongoing_orders = True
+                ==> pos allows ongoing orders
         (order at table means order from personal device (smartphone))
         In case 1. we will create a new order each time the user sends an order
         In case 2. we will create a new order only if the user does not have an ongoing order
             (we will look whether there is an order with state = 'draft'
-            with the same order_id and order_access_token as the ones that the user has provided)
-        :param cart: the cart variable contains the order; list of dictionaries
+            with the same pos_reference and order_access_token as the ones that the user has provided)
+        :param cart: order lines
         :param pos_config_id: the id of the POS where the order is being sent
         :param table_access_token: the access token of the table where the order is being sent (UUID v4)
-        :param order_id: the id of the order that is being edited; ex: "Order 00001-001-0001"
-        :param access_token: the access token of the order that is being edited (UUID v4)
-        :return: dictionary with keys: pos_reference, access_token
+        :param pos_reference: the id of the order that is being edited; ex: "Order 00001-001-0001"
+        :param order_access_token: the access token of the order that is being edited (UUID v4)
+        :return: dictionary with keys: pos_reference, order_access_token
         """
-        # we will only respond with the order "access_token" and "id". After clicking on order, the customer will be redirected to the landing page,
-        # from where the view order route will be automatically called anyways, so he will get the order details that way
+        # we will only respond with the order "access_token" and "id". After clicking on the `Order` button,
+        # the customer will be redirected to the landing page.
+        # From the `landing page`, the customer can go to the `My Orders` page.
+        # on this page, the app will autmatically make a request to the `view-order` route,
+        # so the customer will get the order details that way
 
-        pos_config_sudo = PosSelfOrderUtils._get_pos_config_sudo(self, pos_config_id)
+        pos_config_sudo = _get_pos_config_sudo(pos_config_id)
 
         if not pos_config_sudo.self_order_table_mode:
             raise werkzeug.exceptions.BadRequest()
 
+        posted_order_id = (
+            request.env["pos.order"]
+            .sudo()
+            .create_from_ui(
+                [
+                    self._form_order(
+                        self._create_order_data(
+                            cart,
+                            pos_config_sudo,
+                            table_access_token,
+                            order_pos_reference,
+                            order_access_token,
+                        )
+                    )
+                ],
+                draft=True,
+            )[0]
+            .get("id")
+        )
+
         return (
             request.env["pos.order"]
             .sudo()
-            .browse(
-                int(
-                    request.env["pos.order"]
-                    .sudo()
-                    .create_from_ui(
-                        [
-                            self._form_order(
-                                self._create_order_data(
-                                    cart,
-                                    pos_config_sudo,
-                                    table_access_token,
-                                    order_id,
-                                    order_access_token,
-                                )
-                            )
-                        ],
-                        draft=True,
-                    )[0]
-                    .get("id")
-                )
-            )
+            .browse(posted_order_id)
             .read(["pos_reference", "access_token"])[0]
         )
 
@@ -88,8 +94,6 @@ class PosSelfOrderController(http.Controller):
         # # every time the user adds a new item to the order
         # request.env["pos.order"].sudo().browse(order_resp.get("id")).is_trusted = False
 
-    # TODO: QUESTION: this function returns another function, which itself returns a dictionary. Is it ok to write the type hint of the return value of this
-    # function as a dictionary?
     @http.route("/pos-self-order/view-order", auth="public", type="json", website=True)
     def pos_self_order_view_order(self, pos_reference: str, access_token: str) -> Dict:
         """
@@ -133,7 +137,11 @@ class PosSelfOrderController(http.Controller):
                 or self._create_new_order_data(pos_config_sudo, table_access_token)
             ),
             "lines": self._create_orderlines(
-                order_sudo and self._update_cart(cart, order_sudo.lines.export_for_ui()) or cart,
+                order_sudo
+                and self._merge_orderlines(
+                    cart, order_sudo.lines.export_for_ui(), order_sudo.config_id
+                )
+                or cart,
                 pos_config_sudo,
             ),
         }
@@ -159,7 +167,7 @@ class PosSelfOrderController(http.Controller):
         :param table_access_token: the access token of the table for which we want to create the order
         :return: a dictionary containing the data that we need to create a new order
         """
-        table_sudo = PosSelfOrderUtils._get_table_sudo(self, table_access_token)
+        table_sudo = _get_table_sudo(table_access_token)
         pos_session_sudo = pos_config_sudo.current_session_id
         if not table_sudo or not pos_session_sudo:
             raise werkzeug.exceptions.Unauthorized()
@@ -174,10 +182,11 @@ class PosSelfOrderController(http.Controller):
             "table_id": table_sudo.id,
         }
 
-    def _update_cart(
+    def _merge_orderlines(
         self,
-        cart: List[Dict],
+        incoming_orderlines: List[Dict],
         existing_orderlines: List[Dict],
+        pos_config_sudo: PosConfig,
     ) -> List[Dict]:
         """
         If the customer has an existing order, we will add the items from the existing order to the current cart.
@@ -185,60 +194,78 @@ class PosSelfOrderController(http.Controller):
         :param cart: The cart from the frontend.
         :return: list of dictionaries with the items from the cart and the items from the existing order
         """
+        orderlines_to_be_merged = [
+            item
+            for item in incoming_orderlines
+            if self._has_merge_candidate(item, existing_orderlines)
+        ]
+        orderlines_to_be_appended = [
+            item
+            for item in incoming_orderlines
+            if not self._has_merge_candidate(item, existing_orderlines)
+        ]
 
-        return self._get_updated_orderlines(
-            existing_orderlines,
-            [item for item in cart if self._is_in_cart(item, existing_orderlines)],
-        ) + [item for item in cart if not self._is_in_cart(item, existing_orderlines)]
+        return (
+            self._get_updated_orderlines(
+                existing_orderlines, orderlines_to_be_merged, pos_config_sudo
+            )
+            + orderlines_to_be_appended
+        )
 
-    def _get_updated_orderlines(self, orderlines: List[Dict], cart: List[Dict]) -> List[Dict]:
+    def _has_merge_candidate(self, item: Dict, existing_orderlines: List[Dict]) -> bool:
+        return any(self._can_be_merged(item, line) for line in existing_orderlines)
+
+    def _can_be_merged(self, orderline1, orderline2):
+        return self._is_pos_groupable(orderline1["product_id"]) and all(
+            orderline1.get(key, "") == orderline2.get(key, "")
+            for key in PosOrderLine._get_unique_keys()
+        )
+
+    def _get_updated_orderlines(
+        self, orderlines: List[Dict], cart: List[Dict], pos_config_sudo: PosConfig
+    ) -> List[Dict]:
         """
         :returns updated version of orderlines that takes into account the new items from the cart
         """
         return [
-            self._get_updated_orderline(line, updated_item)
+            self._get_updated_orderline(line, updated_item, pos_config_sudo)
             if (
                 updated_item := next(
-                    (item for item in cart if self._is_same_product(item, line)), None
+                    (item for item in cart if self._can_be_merged(item, line)), None
                 )
             )
             else line
             for line in orderlines
         ]
 
-    def _get_updated_orderline(self, line: Dict, updated_item: Dict) -> Dict:
+    def _get_updated_orderline(
+        self, line: Dict, updated_item: Dict, pos_config_sudo: PosConfig
+    ) -> Dict:
         """
         This function assumes that the price of the product was not changed between the time the
         first items were added to the order and the time the new items were added to the order.
         """
-        qty_ratio = (updated_item["qty"] + line["qty"]) / line["qty"]
+        new_qty = updated_item["qty"] + line["qty"]
+        new_price = (
+            request.env["product.product"]
+            .sudo()
+            .browse(int(line["product_id"]))
+            ._get_price_info(pos_config_sudo, qty=new_qty)
+        )
         return {
             **line,
             **{
-                "price_subtotal": line["price_subtotal"] * qty_ratio,
-                "price_subtotal_incl": line["price_subtotal_incl"] * qty_ratio,
-                "qty": line["qty"] + updated_item["qty"],
+                "price_subtotal": new_price["price_without_tax"],
+                "price_subtotal_incl": new_price["price_with_tax"],
+                "qty": new_qty,
                 "customer_note": updated_item.get("customer_note") or line.get("customer_note"),
             },
         }
 
-    def _is_in_cart(self, item: Dict, existing_orderlines: List[Dict]) -> bool:
-        """
-        :return: True if the item is in any of the orderlines, False otherwise
-        """
-        return any(self._is_same_product(item, line) for line in existing_orderlines)
-
-    def _is_same_product(self, item, orderline):
-        """
-        :return: True if the item is the same product as the one in the orderline, False otherwise
-        """
-        return self._is_pos_groupable(item["product_id"]) and all(
-            item.get(key, '') == orderline.get(key, '')
-            for key in PosSelfOrderUtils._get_product_uniqueness_keys(self)
-        )
-
     def _is_pos_groupable(self, product_id: int) -> bool:
-        return request.env["product.product"].sudo().browse(int(product_id)).uom_id.is_pos_groupable
+        return (
+            request.env["product.product"].sudo().browse(int(product_id)).uom_id.is_pos_groupable
+        )
 
     def _get_full_product_name(self, name: str, description: str) -> str:
         """
@@ -263,7 +290,7 @@ class PosSelfOrderController(http.Controller):
                 self._create_orderline(
                     item,
                     pos_config_sudo,
-                )
+                ),
             ]
             # having the "full product name" means that the orderline is already in the db
             # so we don't need to create a new object
@@ -305,7 +332,7 @@ class PosSelfOrderController(http.Controller):
             else 0
         )
         price_unit = product_sudo.lst_price + price_extra
-        price_subtotal_info = product_sudo._get_self_order_price(
+        price_subtotal_info = product_sudo._get_price_info(
             pos_config_sudo, price_unit, item.get("qty")
         )
 
@@ -362,7 +389,7 @@ class PosSelfOrderController(http.Controller):
                 #  'pricelist_id': 1,
                 "partner_id": False,
                 "user_id": request.session.uid,
-                # we only need the digits of the order_id, not the whole id, which starts with word "Order"
+                # we only need the digits of the pos_reference, not the whole id, which starts with word "Order"
                 "uid": order.get("id")[6:],
                 "sequence_number": order.get("sequence_number"),
                 "creation_date": str(fields.Datetime.now()),
@@ -388,7 +415,7 @@ class PosSelfOrderController(http.Controller):
             for orderline in lines
         )
 
-    # the 2nd argument of order_id is the login number;
+    # the 2nd argument of pos_reference is the login number;
     # the regular pos receives the login number from the backend on the first load
     # the problem is that if the pos has login number 1, for example
     # and we create a new order in the database, with sequence number 1, for example,

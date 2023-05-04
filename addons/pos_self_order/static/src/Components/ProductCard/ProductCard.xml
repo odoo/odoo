@@ -1,35 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductCard" owl="1">
-        <div class="o_self_order_item_card d-flex align-items-start w-100 w-md-50 w-xl-25 px-3 py-2 bg-white overflow-hidden" 
+        <div class="o_self_order_item_card position-relative d-flex align-items-start w-100 w-md-50 w-xl-25 px-3 py-2 bg-white overflow-hidden" 
             t-on-click="() => this.clickOnProduct(props.product)"
             t-ref="currentProductCard">
-            <div class="d-flex flex-column w-100 py-1">
-                <t t-set="qtyInCart" t-value="!props.cartItem and this.qtyInCart()" />
+            
+            <t t-set="qtyInCart" t-value="!props.orderLine and this.qtyInCart()" />
 
-                <!-- TODO: use this qtyInCart variable -->
-                <h1 t-esc="qtyInCart"/>
-
-                <h3 t-attf-class="mb-0 text-900 fw-bold fs-6" 
-                    t-esc="props.product.name" />
-                <!-- this description represents the list of attributes of the product  -->
-                <span t-if="props.cartItem?.description" class="m-0 text-muted small break-line"
-                    t-esc="props.cartItem.description" />
-                
-                <div t-if="props.cartItem?.customer_note" class="d-inline-block m-0 text-muted small break-line">
-                    <i class="fa fa-pencil-square-o" aria-hidden="true" />
-                    <span t-esc="props.cartItem.customer_note" class="ms-1" />
+            <div t-attf-class="d-flex {{ props.product.has_image ? 'flex-column' : 'flex-row justify-content-between' }} w-100 py-1">
+                <div t-attf-class="d-flex {{ props.orderLine?.qty ? 'flex-column align-items-start' : 'flex-row align-items-center' }} text-900 fw-bold fs-6">
+                    <span class="d-flex align-items-center me-1 text-primary fw-bolder" t-if="qtyInCart > 0"><t t-out="qtyInCart"/>x</span>
+                    <h3 class="mb-0" t-esc="props.product.name" />
+                    <span t-if="props.orderLine?.qty" class="flex-grow-1 me-3 small text-muted"
+                    t-esc="`${props.orderLine.qty} x ${selfOrder.formatMonetary(props.product.price_info.list_price + (props.orderLine?.price_extra.list_price or 0))}`" />
                 </div>
-
-                <span t-if="props.cartItem?.qty" class="m-0 text-muted small break-line"
-                    t-esc="`${props.cartItem.qty} x ${selfOrder.formatMonetary(props.product.price_info.list_price + (props.cartItem?.price_extra.list_price or 0))}`" />
+                <!-- this description represents the list of attributes of the product  -->
+                <span t-if="props.orderLine?.description" class="m-0 text-muted small break-line"
+                    t-esc="props.orderLine.description" />
+                
+                <div t-if="props.orderLine?.customer_note" class="d-inline-block m-0 text-muted small break-line">
+                    <i class="fa fa-pencil-square-o" aria-hidden="true" />
+                    <span t-esc="props.orderLine.customer_note" class="ms-1" />
+                </div>
 
                 <span t-attf-class="card-text small" 
                     t-esc="selfOrder.formatMonetary( 
-                        (props.cartItem?.qty or 1) * 
-                        (props.product.price_info.list_price + (props.cartItem?.price_extra.list_price or 0)) 
+                        (props.orderLine?.qty or 1) * 
+                        (props.product.price_info.list_price + (props.orderLine?.price_extra.list_price or 0)) 
                         )" 
-                />
+                        />
 
                 <p t-if="props.product.description_sale" class="m-0 text-muted small break-line" t-esc="props.product.description_sale" />
             </div>
@@ -39,6 +38,12 @@
                 alt="Product image" 
                 loading="lazy" 
                 onerror="this.remove()" />
+            
+            <t t-if="qtyInCart > 0">
+                <span class="position-absolute top-0 start-0 h-100 border-start border-5 border-primary"/>
+            </t>
+
         </div>
+
     </t>
 </templates>

@@ -89,8 +89,8 @@
     </t>
 
     <t t-name="pos_self_order.GoToCartButton" owl="1">
-        <div t-ref="orderButton" class="d-flex align-items-center w-100 p-3 bg-white shadow-lg">
-            <button t-on-click="() => env.navigate('/cart')" class="btn btn-primary w-100 p-2 py-3 rounded">
+        <div t-ref="orderButton" class="d-flex align-items-center w-100 p-3 bg-white shadow-lg z-index-1">
+            <button t-on-click="() => selfOrder.setPage('/cart')" class="btn btn-primary w-100 p-2 py-3 rounded">
                 <div class="d-flex align-items-center justify-content-between mx-2">
                     <i class="fa fa-shopping-cart pe-2" aria-hidden="true"/>
                     <p class="m-0">

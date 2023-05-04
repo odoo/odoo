@@ -20,7 +20,8 @@
             </xpath>
             <xpath expr="//div[hasclass('o_kanban_card_header_title_name')]" position="after">
                 <field name="self_order_table_mode" invisible="1" />
-                <div class="badge text-bg-info o_kanban_inline_block mx-2"
+                <!-- FIXME: the me-2 does not actually appear in the web page -->
+                <div class="badge text-bg-info o_kanban_inline_block me-2"
                     attrs="{'invisible': [('self_order_table_mode','=',False)]}">
                     Self Ordering Enabled
                 </div>

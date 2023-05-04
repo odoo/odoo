@@ -21,7 +21,7 @@ export class CartView extends Component {
         useEffect(
             (cart) => {
                 if (!cart.length) {
-                    this.env.navigate("/products");
+                    this.selfOrder.setPage("/products");
                 }
             },
             () => [this.selfOrder.cart]
