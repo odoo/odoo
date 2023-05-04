@@ -728,3 +728,40 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
         self.assertTrue(self.test_move.line_ids.unlink())
+
+    def test_account_root_multiple_companies(self):
+        account = self.env['account.account'].create({
+            'name': 'account',
+            'code': 'ZZ',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': self.env.company.id,
+        })
+        other_company = self.env['res.company'].create({'name': 'other company'})
+        self.env['account.account'].create({
+            'name': 'other account',
+            'code': 'ZZ',
+            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'company_id': other_company.id,
+        })
+        self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2016-01-01'),
+            'line_ids': [
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': account.id,
+                    'debit': 500.0,
+                    'credit': 0.0,
+                }),
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                }),
+            ]
+        })
+        balance = self.env["account.move.line"].read_group(
+            [("account_id", "=", account.id)], ["balance:sum"], ["account_root_id"]
+        )[0]["balance"]
+        self.assertEqual(balance, 500)
