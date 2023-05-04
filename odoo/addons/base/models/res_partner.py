@@ -880,7 +880,7 @@ class Partner(models.Model):
             self = self.with_context(context)
         name, email = self._parse_partner_name(name)
         if self._context.get('force_email') and not email:
-            raise UserError(_("Couldn't create contact without email address!"))
+            raise ValidationError(_("Couldn't create contact without email address!"))
 
         create_values = {self._rec_name: name or email}
         if email:  # keep default_email in context
