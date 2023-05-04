@@ -19,7 +19,7 @@ var BarChart = publicWidget.Widget.extend({
      */
     init: function (parent, beginDate, endDate, dates) {
         this._super.apply(this, arguments);
-        this.beginDate = beginDate;
+        this.beginDate = beginDate.locale("en");
         this.endDate = endDate;
         this.number_of_days = this.endDate.diff(this.beginDate, 'days') + 2;
         this.dates = dates;
@@ -161,11 +161,18 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
             var formattedClicksByDay = {};
             var beginDate;
             for (var i = 0; i < _clicksByDay.length; i++) {
-                var date = moment(_clicksByDay[i]['create_date:day'], 'DD MMMM YYYY');
+                // This is a trick to get the date without the local formatting.
+                // We can't simply do .locale("en") because some Odoo languages
+                // are not supported by moment.js (eg: Arabic Syria).
+                const date = moment(
+                    _clicksByDay[i]["__domain"].find((el) => el.length && el.includes(">="))[2]
+                        .split(" ")[0], "YYYY MM DD"
+                );
                 if (i === 0) {
                     beginDate = date;
                 }
-                formattedClicksByDay[date.format('YYYY-MM-DD')] = _clicksByDay[i]['create_date_count'];
+                formattedClicksByDay[date.locale("en").format("YYYY-MM-DD")] =
+                    _clicksByDay[i]["create_date_count"];
             }
 
             // Process all time line chart data
@@ -240,11 +247,14 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
      * @private
      */
     _lastWeekClicksByCountry: function () {
-        var interval = moment().subtract(7, 'days').format('YYYY-MM-DD');
+        // 7 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds.
+        const aWeekAgoDate = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+        // get the date in the format YYYY-MM-DD.
+        const aWeekAgoString = aWeekAgoDate.toISOString().split("T")[0];
         return this._rpc({
             model: 'link.tracker.click',
             method: 'read_group',
-            args: [[this.links_domain, ['create_date', '>', interval]], ['country_id']],
+            args: [[this.links_domain, ["create_date", ">", aWeekAgoString]], ["country_id"]],
             kwargs: {groupby: 'country_id'},
         });
     },
@@ -252,11 +262,14 @@ publicWidget.registry.websiteLinksCharts = publicWidget.Widget.extend({
      * @private
      */
     _lastMonthClicksByCountry: function () {
-        var interval = moment().subtract(30, 'days').format('YYYY-MM-DD');
+        // 30 days * 24 hours * 60 minutes * 60 seconds * 1000 milliseconds.
+        const aMonthAgoDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+        // get the date in the format YYYY-MM-DD.
+        const aMonthAgoString = aMonthAgoDate.toISOString().split("T")[0];
         return this._rpc({
             model: 'link.tracker.click',
             method: 'read_group',
-            args: [[this.links_domain, ['create_date', '>', interval]], ['country_id']],
+            args: [[this.links_domain, ["create_date", ">", aMonthAgoString]], ["country_id"]],
             kwargs: {groupby: 'country_id'},
         });
     },
