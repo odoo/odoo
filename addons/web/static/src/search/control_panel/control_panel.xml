@@ -29,7 +29,9 @@
                         </section>
                     </t>
                     <t t-else="">
-                        <t t-call="web.Breadcrumbs"/>
+                        <t t-slot="control-panel-breadcrumb">
+                            <t t-call="web.Breadcrumbs"/>
+                        </t>
                     </t>
                     <span class="d-none d-xl-block me-auto"/> <!-- Spacer -->
                 </div>
