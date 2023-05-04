@@ -37,9 +37,11 @@ $o-rightpanel-p-tiny: $o-rightpanel-p-small*0.5;
         .o_form_view {
             .oe_button_box {
                 margin: -1px (-$o-rightpanel-p) 0;
+                box-shadow: inset 0 -1px 0 $border-color;
 
                 .oe_stat_button {
                     flex-basis: 25%;
+                    margin: 0;
 
                     &:nth-child(4n):not(:last-child) {
                         border-right-width: 0;
