@@ -382,9 +382,8 @@ export async function editPager(el, value) {
  * @param {string} [menuFinder="Action"]
  * @returns {Promise}
  */
-export async function toggleActionMenu(el, menuFinder = "Action") {
-    const dropdown = findItem(el, `.o_cp_action_menus button`, menuFinder);
-    await click(dropdown);
+export async function toggleActionMenu(el) {
+    await click(el.querySelector(".o_cp_action_menus .dropdown-toggle"));
 }
 
 /** SearchBarMenu */

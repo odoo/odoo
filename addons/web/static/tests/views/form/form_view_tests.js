@@ -8091,10 +8091,9 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.containsNone(target, ".o_cp_action_menus .dropdown-toggle:contains(Print)");
-        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle:contains(Action)");
-
         await toggleActionMenu(target);
+        assert.containsNone(target, ".o_cp_action_menus .dropdown-menu_group:contains(Print)");
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-menu_group:contains(Action)");
         assert.containsN(
             target,
             ".o_cp_action_menus .dropdown-item",
@@ -8143,7 +8142,7 @@ QUnit.module("Views", (hooks) => {
             },
         });
 
-        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle:contains(Action)");
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle");
 
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Action Partner");
@@ -8194,7 +8193,7 @@ QUnit.module("Views", (hooks) => {
             "My little Foo Value"
         );
         await editInput(target, ".o_field_widget[name='foo'] input", "test");
-        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle:contains(Action)");
+        assert.containsOnce(target, ".o_cp_action_menus .dropdown-toggle");
 
         await toggleActionMenu(target);
         await toggleMenuItem(target, "Action Partner");
@@ -13036,7 +13035,7 @@ QUnit.module("Views", (hooks) => {
         assert.isVisible(target.querySelector(".o_form_status_indicator_buttons"));
 
         await click(target, ".o_cp_action_menus .dropdown-toggle");
-        await click(target.querySelectorAll(".o_cp_action_menus .dropdown-item")[1]);
+        await click(target.querySelectorAll(".o_cp_action_menus .dropdown-item")[2]);
         assert.containsOnce(target, ".modal");
 
         await click(target, ".modal-footer button.btn-primary");
