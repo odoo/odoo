@@ -437,7 +437,11 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'product.pricelist.item',
+        fields: ['product_tmpl_id', 'product_id', 'categ_id', 'min_quantity', 'base', 'base_pricelist_id', 
+        'pricelist_id', 'price_surcharge', 'price_discount', 'price_round', 'price_min_margin',
+        'price_max_margin', 'date_start', 'date_end', 'compute_price', 'fixed_price', 'percent_price'],
         domain: function(self) { return [['pricelist_id', 'in', _.pluck(self.pricelists, 'id')]]; },
+        readLoad: '_no_display_name',
         loaded: function(self, pricelist_items){
             var pricelist_by_id = {};
             _.each(self.pricelists, function (pricelist) {
@@ -445,9 +449,9 @@ exports.PosModel = Backbone.Model.extend({
             });
 
             _.each(pricelist_items, function (item) {
-                var pricelist = pricelist_by_id[item.pricelist_id[0]];
+                var pricelist = pricelist_by_id[item.pricelist_id];
                 pricelist.items.push(item);
-                item.base_pricelist = pricelist_by_id[item.base_pricelist_id[0]];
+                item.base_pricelist = pricelist_by_id[item.base_pricelist_id];
             });
         },
     },{
@@ -726,6 +730,7 @@ exports.PosModel = Backbone.Model.extend({
                     var context = typeof model.context === 'function' ? model.context(self,tmp) : model.context || {};
                     var ids     = typeof model.ids === 'function'     ? model.ids(self,tmp) : model.ids;
                     var order   = typeof model.order === 'function'   ? model.order(self,tmp):    model.order;
+                    var readLoad = (typeof model.readLoad === 'function' ? model.readLoad(self, tmp): model.readLoad) || '_classic_read';
                     progress += progress_step;
 
                     if(model.model ){
@@ -736,12 +741,13 @@ exports.PosModel = Backbone.Model.extend({
 
                         if (model.ids) {
                             params.method = 'read';
-                            params.args = [ids, fields];
+                            params.args = [ids, fields, readLoad];
                         } else {
                             params.method = 'search_read';
                             params.domain = domain;
                             params.fields = fields;
                             params.orderBy = order;
+                            params.kwargs = {'load': readLoad};
                         }
 
                         self.rpc(params).then(function (result) {
@@ -1962,6 +1968,10 @@ exports.load_fields = function(model_name, fields) {
 //  context: [Dict|function] the openerp context for the model read
 //  condition: [function] do not load the models if it evaluates to
 //             false.
+//  readLoad: [[string]|function] the load method of _read_format.
+//            either '_classic_read' or an arbitrary string.
+//            The former returns (id, display_name) for many2one, the
+//            latter returns id.
 //  loaded: [function(self,model)] this function is called once the
 //          models have been loaded, with the data as second argument
 //          if the function returns a promise, the next model will
@@ -2051,9 +2061,9 @@ exports.Product = Backbone.Model.extend({
         }
 
         var pricelist_items = _.filter(pricelist.items, function (item) {
-            return (! item.product_tmpl_id || item.product_tmpl_id[0] === self.product_tmpl_id) &&
-                   (! item.product_id || item.product_id[0] === self.id) &&
-                   (! item.categ_id || _.contains(category_ids, item.categ_id[0])) &&
+            return (! item.product_tmpl_id || item.product_tmpl_id === self.product_tmpl_id) &&
+                   (! item.product_id || item.product_id === self.id) &&
+                   (! item.categ_id || _.contains(category_ids, item.categ_id)) &&
                    (! item.date_start || moment.utc(item.date_start).isSameOrBefore(date)) &&
                    (! item.date_end || moment.utc(item.date_end).isSameOrAfter(date));
         });
