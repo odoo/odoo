@@ -339,7 +339,14 @@ odoo.define('website.s_website_form', function (require) {
                     }
                     switch (successMode) {
                         case 'redirect': {
-                            successPage = successPage.startsWith("/#") ? successPage.slice(1) : successPage;
+                            if (successPage.includes('#')) {
+                                // Consider only the anchor if the link stays on
+                                // the current page, to simply scroll to it.
+                                const currentPage = window.location.pathname;
+                                const anchorIndex = successPage.indexOf('#');
+                                successPage = successPage.slice(0, anchorIndex) === currentPage ?
+                                    successPage.slice(anchorIndex) : successPage;
+                            }
                             if (successPage.charAt(0) === "#") {
                                 await dom.scrollTo($(successPage)[0], {
                                     duration: 500,
