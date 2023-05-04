@@ -2236,7 +2236,8 @@ class BaseModel(metaclass=MetaModel):
             order_split = order_part.split()
             order_field = order_split[0]
             if order_field == 'id' or order_field in groupby_fields:
-                if self._fields[order_field.split(':')[0]].type == 'many2one':
+                field = self._fields[order_field.split(':')[0]]
+                if field.type == 'many2one' and self.env[field.comodel_name]._order != 'id':
                     order_clause = self._generate_order_by(order_part, query).replace('ORDER BY ', '')
                     if order_clause:
                         orderby_terms.append(order_clause)
@@ -4561,6 +4562,9 @@ Fields:
         # figure out the applicable order_by for the m2o
         dest_model = self.env[field.comodel_name]
         m2o_order = dest_model._order
+        if m2o_order == 'id':
+            order_direction = 'DESC' if reverse_direction else ''
+            return ['"%s"."%s" %s' % (alias, order_field, order_direction)]
         if not regex_order.match(m2o_order):
             # _order is complex, can't use it here, so we default to _rec_name
             m2o_order = dest_model._rec_name
