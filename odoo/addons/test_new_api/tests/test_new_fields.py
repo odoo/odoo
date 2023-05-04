@@ -2148,6 +2148,16 @@ class TestFields(TransactionCaseWithUserDemo):
             [('author_partner.name', '=', 'Marc Demo')])
         self.assertEqual(messages, self.env.ref('test_new_api.message_0_1'))
 
+    def test_51_search_many2one_ordered(self):
+        """ test search on many2one ordered by id """
+        with self.assertQueries(['''
+            SELECT "test_new_api_message".id FROM "test_new_api_message"
+            WHERE ("test_new_api_message"."active" = %s)
+            ORDER BY  "test_new_api_message"."discussion"
+        ''']):
+            self.env['test_new_api.message'].search([], order='discussion')
+
+
     def test_60_one2many_domain(self):
         """ test the cache consistency of a one2many field with a domain """
         discussion = self.env.ref('test_new_api.discussion_0')
