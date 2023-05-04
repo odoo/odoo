@@ -3597,7 +3597,6 @@ const SnippetOptionWidget = Widget.extend({
      *
      * @param {string} name - an identifier for a type of update
      * @param {*} data
-     * @returns {Promise}
      */
     notify: function (name, data) {
         if (name === 'target') {
