@@ -37,6 +37,14 @@ const LinkPopoverWidget = Widget.extend({
         this.$copyLink = this.$('.o_we_copy_link');
         this.$fullUrl = this.$('.o_we_full_url');
 
+        // Use the right ClipboardJS with respect to the prototype of this.el
+        // since, starting with Firefox 109, a widget element prototype that is
+        // adopted by an iframe will not be instanceof its original constructor.
+        // See: https://github.com/webcompat/web-bugs/issues/118350
+        const ClipboardJS =
+            this.el instanceof HTMLElement
+                ? window.ClipboardJS
+                : this.el.ownerDocument.defaultView.ClipboardJS;
         // Copy onclick handler
         // ClipboardJS uses "instanceof" to verify the elements passed to its
         // constructor. Unfortunately, when the element is within an iframe,

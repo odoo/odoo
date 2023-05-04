@@ -136,7 +136,7 @@ class StockRule(models.Model):
                     vals = self._update_purchase_order_line(procurement.product_id,
                         procurement.product_qty, procurement.product_uom, company_id,
                         procurement.values, po_line)
-                    po_line.write(vals)
+                    po_line.sudo().write(vals)
                 else:
                     if float_compare(procurement.product_qty, 0, precision_rounding=procurement.product_uom.rounding) <= 0:
                         # If procurement contains negative quantity, don't create a new line that would contain negative qty

@@ -2815,6 +2815,8 @@ var SnippetsMenu = Widget.extend({
         var selectors = [];
         var $styles = $html.find('[data-selector]');
         const snippetAdditionDropIn = $styles.filter('#so_snippet_addition').data('drop-in');
+        const oldFooterSnippetsSelector = 'footer .oe_structure > *';
+        const newFooterSnippetsSelector = 'footer #footer.oe_structure > *:not(.s_popup)';
         $styles.each(function () {
             var $style = $(this);
             var selector = $style.data('selector');
@@ -2829,6 +2831,23 @@ var SnippetsMenu = Widget.extend({
                 let dropInPatch = $style[0].dataset.dropIn.split(', ');
                 dropInPatch = dropInPatch.map(selector => selector === '.content' ? '.content:not(.row)' : selector);
                 $style[0].dataset.dropIn = dropInPatch.join(', ');
+            }
+
+            // Fix in stable: we have removed the option for setting the
+            // background color for snippets in the footer. However, this should
+            // not affect the snippets in the "All pages" popup which is also
+            // located in the footer.
+            if (($style[0].dataset.js === 'ColoredLevelBackground') && exclude) {
+                exclude = exclude
+                    .split(', ')
+                    .map(selector => selector === oldFooterSnippetsSelector ? newFooterSnippetsSelector : selector)
+                    .join(', ');
+            }
+            if (($style[0].dataset.js === 'BackgroundToggler')) {
+                selector = selector
+                    .split(', ')
+                    .map(selector => selector === oldFooterSnippetsSelector ? newFooterSnippetsSelector : selector)
+                    .join(', ');
             }
 
             var target = $style.data('target');

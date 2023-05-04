@@ -11,7 +11,7 @@ import { toPyValue } from "./py_js/py_utils";
  * @typedef {DomainListRepr | string | Domain} DomainRepr
  */
 
-class InvalidDomainError extends Error {}
+export class InvalidDomainError extends Error {}
 
 /**
  * Javascript representation of an Odoo domain

@@ -35,7 +35,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             patched.assert_called_once_with(ANY, logged_in=ANY, sale_order_id=ANY)
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.sale_order.amount_total)
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
@@ -56,7 +56,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_sudo.sale_order_ids, self.sale_order)
         self.assertEqual(tx_sudo.amount, self.amount)
-        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_id)
+        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.sale_order.currency_id)
         self.assertEqual(tx_sudo.reference, self.sale_order.name)
@@ -81,7 +81,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.amount)
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
@@ -99,7 +99,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_sudo.sale_order_ids, self.sale_order)
         self.assertEqual(tx_sudo.amount, self.amount)
-        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_id)
+        self.assertEqual(tx_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx_sudo.currency_id, self.sale_order.currency_id)
         self.assertEqual(tx_sudo.reference, self.reference)
@@ -118,7 +118,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
-        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_id.id)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
         self.assertEqual(tx_context['amount'], self.amount)
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
@@ -136,7 +136,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         self.assertEqual(tx2_sudo.sale_order_ids, self.sale_order)
         self.assertEqual(tx2_sudo.amount, self.amount)
-        self.assertEqual(tx2_sudo.partner_id, self.sale_order.partner_id)
+        self.assertEqual(tx2_sudo.partner_id, self.sale_order.partner_invoice_id)
         self.assertEqual(tx2_sudo.company_id, self.sale_order.company_id)
         self.assertEqual(tx2_sudo.currency_id, self.sale_order.currency_id)
 

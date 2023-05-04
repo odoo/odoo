@@ -42,13 +42,13 @@
 # Łukasz Grzenkowicz <lukasz.grzenkowicz@gmail.com>, 2022
 # Cécile Collart <cco@odoo.com>, 2022
 # Grzegorz Grzelak <grzegorz.grzelak@openglobe.pl>, 2023
-# danielkowalczyk007, 2023
 # Anita Kosobucka, 2023
 # Maksym <ms@myodoo.pl>, 2023
 # Paweł Wodyński <pw@myodoo.pl>, 2023
 # przemekjaroc, 2023
-# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # Martin Trigaux, 2023
+# danielkowalczyk007, 2023
+# Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -56,7 +56,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Tadeusz Karpiński <tadeuszkarpinski@gmail.com>, 2023\n"
 "Language-Team: Polish (https://app.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8379,7 +8379,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
 #, python-format
 msgid "Journal:"
-msgstr ""
+msgstr "Dziennik:"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -8786,7 +8786,7 @@ msgstr "Pozwól swoim klientom zapłacić faktury online"
 #: code:addons/account/static/src/js/tours/account.js:0
 #, python-format
 msgid "Let's send the invoice."
-msgstr ""
+msgstr "Wyślij fakturę"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_report_line__hierarchy_level
@@ -10067,6 +10067,10 @@ msgid ""
 "a placeholder expression that provides the appropriate language, e.g. {{ "
 "object.partner_id.lang }}."
 msgstr ""
+"Opcjonalny język tłumaczenia (kod ISO) do wyboru podczas wysyłania "
+"wiadomości e-mail. Jeśli nie jest ustawiony, zostanie użyta wersja "
+"angielska. Powinno to być zazwyczaj wyrażenie placeholder, które zapewnia "
+"odpowiedni język, np. {{ object.partner_id.lang }}."
 
 #. module: account
 #. odoo-python
@@ -10808,6 +10812,15 @@ msgstr ""
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+
+#. module: account
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -11618,7 +11631,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Reset To Draft"
-msgstr ""
+msgstr "Resetuj do szkicu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form

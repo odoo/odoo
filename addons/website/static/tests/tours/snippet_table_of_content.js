@@ -38,11 +38,10 @@ wTourUtils.registerWebsitePreviewTour('snippet_table_of_content', {
     checkTOCNavBar(1, 0),
     scrollToHeading(3),
     checkTOCNavBar(1, 1),
-    wTourUtils.clickOnEdit(),
+    ...wTourUtils.clickOnEditAndWaitEditMode(),
     {
         content: "Click on the first TOC's title",
         trigger: 'iframe .s_table_of_content:eq(0) h1',
-        extra_trigger: "#oe_snippets.o_loaded",
     },
     {
         content: "Hide the first TOC on mobile",

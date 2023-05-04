@@ -1067,11 +1067,11 @@ msgstr ""
 "você precisa colocar os intervalos de números que lhe foram atribuídos\n"
 "pelo governo em Contabilidade> Clientes> e-Faktur\n"
 "\n"
-"Quando você valida uma fatura, onde o parceiro tem o ID PKP\n"
-"campo marcado, um número de imposto será atribuído a essa fatura.\n"
+"Quando você valida uma fatura, onde o parceiro tem o campo ID PKP\n"
+"marcado, um número de imposto será atribuído a essa fatura.\n"
 "Depois, você pode filtrar as notas fiscais ainda para exportar no\n"
 "lista de faturas e clique em Ação> Baixar e-Faktur para baixar\n"
-"o csv e carregue-o no site do governo.\n"
+"o CSV e carregue-o no site do governo.\n"
 "\n"
 "Você pode substituir uma fatura já enviada por outra, indicando\n"
 "a fatura substituída e a nova e você pode redefinir uma fatura\n"
@@ -1251,9 +1251,9 @@ msgid ""
 msgstr ""
 "\n"
 "        O propósito desse módulo é implementar campos \"esparsos\" e.g,. campos que\n"
-"        são quase sempre null. Essa implementação faz contorno à limitação de números \n"
+"        são quase sempre nulos. Essa implementação contorna a limitação de números \n"
 "        de colunas em uma tabela do PostgreSQL. Esses valores são todos campos esparsos\n"
-"        armazenados em um campo \"serializado\" na forma de um mapeamento JSON.\n"
+"        armazenados em um campo \"seriado\" na forma de um mapeamento JSON.\n"
 "            "
 
 #. module: base
@@ -1333,7 +1333,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Este módulo adiciona suporte para a geração de código QR de transferência de crédito SEPA.\n"
+"        Este módulo adiciona suporte para a geração de QR code de transferência de crédito SEPA.\n"
 "    "
 
 #. module: base
@@ -1460,7 +1460,7 @@ msgstr ""
 "coletar um conjunto de pagamentos.\n"
 "\n"
 "Para ser elegível para este método de pagamento, o cliente deve primeiro ter\n"
-"devolveu mandato à empresa, dando consentimento para a utilização do débito direto.\n"
+"retornado o mandato à empresa, dando consentimento para a utilização do débito direto.\n"
 "Este consentimento deve ter sido codificado como um 'mandato do cliente' no Odoo.\n"
 "\n"
 "Você também precisa atender aos seguintes requisitos para poder\n"
@@ -1470,19 +1470,19 @@ msgstr ""
 "- Sua empresa deve ter definido um diário para receber pagamentos SDD (novamente, nas 'configurações' do módulo de contabilidade)\n"
 "- Cada cliente para o qual você gera um pagamento deve ter um número de conta IBAN válido.\n"
 "\n"
-"O Odoo irá informá-lo se algum desses requisitos não for satisfeito.\n"
+"O Odoo irá informá-lo se algum desses requisitos não for preenchido.\n"
 "\n"
 "Qualquer fatura que seja validada para um cliente com mandato será\n"
 "definido automaticamente no estado 'pago' e um pagamento será gerado. A\n"
 "opção no painel irá permitir que você visualize todos os pagamentos gerados\n"
 "via SDD e para gerar um arquivo de coleta XML para eles, agrupando-os como\n"
-"você vê o ajuste.\n"
+"você ajustar.\n"
 "\n"
 "Um método de pagamento dedicado 'Débito Direto SEPA' também está disponível para\n"
 "abrir faturas, ao selecionar uma conta bancária no assistente 'registrar pagamento'.\n"
 "Use-o para gerar um pagamento SDD para as faturas se você adicionou um mandato\n"
 "para seu proprietário após sua validação. Você verá uma mensagem de erro se você\n"
-"tente usar este método em uma fatura para cujo pagamento nenhum mandato pode ser usado."
+"tentar usar este método em uma fatura para cujo pagamento nenhum mandato pode ser usado."
 
 #. module: base
 #: model:ir.module.module,description:base.module_google_recaptcha
@@ -1855,14 +1855,6 @@ msgid ""
 "    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
 "    "
 msgstr ""
-"\n"
-"    Manage discounts with deliveries in taxclouds computations.\n"
-"    This module follows the same logic as \"Account Taxcloud - Sale (coupon)\".\n"
-"    More information can be found there on how discount computations are made for TaxCloud.\n"
-"\n"
-"    There is an added option for discount (free shipping) on deliveries.\n"
-"    With Sale coupon delivery, the discount computation does not apply on delivery lines.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet_attendance
@@ -1968,11 +1960,6 @@ msgid ""
 "    - a Chart of Accounts customised to Ireland\n"
 "    - VAT Rates and Structure"
 msgstr ""
-"\n"
-"    This module is for all the Irish SMEs who would like to setup their accounting quickly. The module provides:\n"
-"\n"
-"    - a Chart of Accounts customised to Ireland\n"
-"    - VAT Rates and Structure"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_account_edi_ubl_cii_tests
@@ -2023,23 +2010,6 @@ msgid ""
 "* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
 "\n"
 msgstr ""
-"\n"
-"* Add VAT Book report which is a legal requirement in Argentina and that holds the VAT detail info of sales or purchases made in a period of time.\n"
-"* Add a VAT summary report that is used to analyze invoicing\n"
-"* Add Digital VAT Book functionality that let us generate TXT files to import in AFIP. The ones we implement are:\n"
-"\n"
-"    * LIBRO_IVA_DIGITAL_VENTAS_CBTE\n"
-"    * LIBRO_IVA_DIGITAL_VENTAS_ALICUOTAS\n"
-"    * LIBRO_IVA_DIGITAL_COMPRAS_CBTE\n"
-"    * LIBRO_IVA_DIGITAL_COMPRAS_ALICUOTAS\n"
-"    * LIBRO_IVA_DIGITAL_IMPORTACION_BIENES_ALICUOTA\n"
-"\n"
-"Official Documentation AFIP\n"
-"\n"
-"* Digital VAT Book - record design https://www.afip.gob.ar/libro-iva-digital/documentos/libro-iva-digital-diseno-registros.pdf\n"
-"* CITI - record design (same as the Digital VAT Book): https://www.afip.gob.ar/comprasyventas/documentos/RegimendeInformaciondeComprasyVentasDisenosdeRegistros1.xls\n"
-"* CITI - specification (provides more information on how to format the numbers and the fillings of the numeric / alphanumeric fields): https://www.afip.gob.ar/comprasyventas/documentos/Regimen-Informacion-Compras-Ventas-Especificaciones.doc\n"
-"\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid
@@ -2215,102 +2185,6 @@ msgid ""
 "    When validating a batch payment, the ABA file will be generated.  It can\n"
 "    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
-"\n"
-"ABA Credit Transfer\n"
-"===================\n"
-"\n"
-"This module allows the generation of payment batches as ABA (Australian\n"
-"Bankers Association) text files.  The generated 'aba' file can be uploaded\n"
-"to many Australian banks.\n"
-"\n"
-"Setup\n"
-"-----\n"
-"\n"
-"- *Account > Configuration > invoicing > Journals*\n"
-"\n"
-"    If needed, create new journal or choose an existing journal with **Type**\n"
-"    set to *“Bank”*.\n"
-"\n"
-"    On **Advanced Settings**, ensure ABA Credit Transfer is ticked.\n"
-"\n"
-"    On the **Bank Account** tab, enter the **Account Number**.\n"
-"\n"
-"    On the same tab, ensure the ABA transfer information is set up.\n"
-"\n"
-"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Financial Institution Code** - Required (provided by bank or can be found\n"
-"    on Google).  It is three uppercase 3 characters.\n"
-"\n"
-"    **Supplying User Name** - Some banks allow this to be freeform, some banks\n"
-"    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
-"    cannot be longer than 26 characters.\n"
-"\n"
-"    **APCA Identification Number** - User Identification number is bank\n"
-"    allocated.  It is 6 digits.\n"
-"\n"
-"    **Include Self Balancing Transaction** - Some institutions require that the\n"
-"    last be a self balancing transaction which is used as a verification.\n"
-"\n"
-"- *Accounting > Configuration > Payments > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the journal name.\n"
-"\n"
-"    Editing will show the **Account Number**.  This is important as it is used by\n"
-"    the ABA process.\n"
-"\n"
-"    **Bank** is optional.\n"
-"\n"
-"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
-"\n"
-"    Paying account will show up in list as the account number.\n"
-"\n"
-"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
-"    validated by the banks on ABA file transfers, but may show up on the payee\n"
-"    bank statement against the payment.\n"
-"\n"
-"- Vendor bank accounts can be set up in the same place, however, it is\n"
-"  generally easier to set them up from the partner from for the Vendor.\n"
-"\n"
-"- *Accounting > Vendors > Vendors*\n"
-"\n"
-"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
-"    vendor bank account can be created or edited.\n"
-"\n"
-"    **Account Number** - Required, must be less than 9 digits.\n"
-"\n"
-"    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Account Holder Name** - Optional.\n"
-"\n"
-"Use\n"
-"---\n"
-"\n"
-"- Create a vendor payment in the normal way.\n"
-"\n"
-"    Ensure the **Vendor** is one with a valid ABA payment account.\n"
-"\n"
-"    Choose the correct **Payment Journal** which is set for ABA payments.\n"
-"\n"
-"    Select **ABA Credit Transfer** radio button.\n"
-"\n"
-"    If the vendor has multiple bank account, you may need to select the\n"
-"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
-"    need the correct bank account associated with it.\n"
-"\n"
-"    Enter payment amount, etc.\n"
-"\n"
-"- *Vendors > Payments*\n"
-"\n"
-"    After payment(s) are confirmed, they will show up in the payments list.\n"
-"\n"
-"    Using filters, or sorting, select the payments to be included.  Under\n"
-"    *Actions* choose *Create batch payment*.\n"
-"\n"
-"- *Vendors > Batch Payments*\n"
-"\n"
-"    When validating a batch payment, the ABA file will be generated.  It can\n"
-"    be regenerated.  This file can then be uploaded to the bank.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_auto_transfer
@@ -2814,8 +2688,8 @@ msgstr ""
 "Adicionar e-mail modelos de produtos a enviar na confirmação da fatura\n"
 "================================================== ================\n"
 "\n"
-"Com este módulo , vincular seus produtos a um modelo para enviar informações e ferramentas completa para o seu cliente .\n"
-"Por exemplo, quando uma faturação de formação, a agenda de treinamento e materiais serão automaticamente enviados para seus clientes \" .\n"
+"Com este módulo , é possível vincular seus produtos a um modelo para enviar informações e ferramentas completas para o seu cliente .\n"
+"Por exemplo, quando uma formação é faturada, a agenda de treinamento e materiais serão automaticamente enviados para seus clientes \" .\n"
 "    "
 
 #. module: base
@@ -2825,7 +2699,7 @@ msgid ""
 "Add relation information between Sale Orders and Purchase Orders if Make to Order (MTO) is activated on one sold product.\n"
 msgstr ""
 "\n"
-"Adicione informações de relação entre Pedidos de Venda e Pedidos de Compra se a opção Produção sob Encomenda (PSE) estiver ativada em um produto vendido.\n"
+"Adicione informações de relação entre Pedidos de Venda e Pedidos de Compra se a opção Reabastecer no Pedido estiver ativada em um produto vendido.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_facturx_chorus_pro
@@ -2947,7 +2821,7 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Permitir clientes a agendar Reuniões através do Website\n"
+"Permitir clientes a agendar Reuniões através do Site\n"
 "-------------------------------------------------------------\n"
 "\n"
 
@@ -2973,8 +2847,8 @@ msgstr ""
 "Permitir pagamentos de POS com cartão de crédito\n"
 "================================\n"
 "\n"
-"Este módulo permite que os clientes paguem seus pedidos com crédito\n"
-"cartões. As transações são processadas por Vantiv (desenvolvido por Wells\n"
+"Este módulo permite que os clientes paguem seus pedidos com cartões\n"
+"de crédito. As transações são processadas por Vantiv (desenvolvido por Wells\n"
 "Fargo Bank). Uma conta de comerciante Vantiv é necessária. Permite o\n"
 "Segue:\n"
 "\n"
@@ -3131,12 +3005,12 @@ msgid ""
 "have real delivered quantities in sales orders.\n"
 msgstr ""
 "\n"
-"Permite criar planilhas de horários em sua ordem de venda\n"
+"Permite criar planilhas de horas em sua ordem de venda\n"
 "=======================================================\n"
 "\n"
-"Este módulo define o produto certo em todas as linhas da planilha de horários\n"
-"de acordo com a(o) ordem/contrato que você trabalhar. Isto permite\n"
-"ter quantidades verdadeiras entregue nos pedidos de vendas.\n"
+"Este módulo define o produto certo em todas as linhas da planilha de horas\n"
+"de acordo com a ordem/contrato em que você trabalhar. Isso permite\n"
+"ter quantidades precisas entregues nos pedidos de vendas.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_iot
@@ -3147,7 +3021,7 @@ msgid ""
 msgstr ""
 "\n"
 "Permite utilizar no Ponto de Venda os aparelhos que estejam conectados a uma IoT Box.\n"
-"Os dispositivos suportados incluem terminais de pagamento, impressoras de recibos, balanças e visores de clientes.\n"
+"Os dispositivos suportados incluem terminais de pagamento, impressoras de recibos, balanças e expositores de clientes.\n"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_stock_renting
@@ -3383,30 +3257,6 @@ msgid ""
 "The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
 "    "
 msgstr ""
-"\n"
-"Australian Accounting Module\n"
-"============================\n"
-"\n"
-"Taxable Payments Annual Reports (TPAR) for Australia\n"
-"\n"
-"The Taxable payments annual report (TPAR) allows:\n"
-"\n"
-"    • Payments made to contractors (or subcontractors) for services, or\n"
-"    • Grants paid by government entities to ABN holders\n"
-"\n"
-"to be reported where required under the Taxable Payments Reporting System (TPRS) and the Taxable Government Grants and Payments reporting measure.\n"
-"\n"
-"The TPAR is due by 28th August each year.\n"
-"\n"
-"Penalties may apply if you don’t lodge your TPAR on time.\n"
-"\n"
-"For further information on who is required to lodge a Taxable payments annual report refer to\n"
-"https://softwaredevelopers.ato.gov.au/tprs\n"
-"\n"
-"The annual report must be provided to the Commissioner no later than 28 August after the end of the financial year. Reports can be sent more frequently for those that wish to do so.\n"
-"\n"
-"The report uses tax tags ``Service`` and ``Tax Withheld`` in order to find adequate journal items. These are set using the fiscal positions, and the right type of product (Services).\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_be_hr_payroll_dimona
@@ -3800,7 +3650,7 @@ msgstr ""
 "Certificações e Habilidades para RH\n"
 "===============================\n"
 "\n"
-"Este módulo acrescenta certificação para o currículo dos empregados.\n"
+"Este módulo acrescenta certificação para o currículo dos funcionários.\n"
 "        "
 
 #. module: base
@@ -3906,10 +3756,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Compare planilhas de tempo e previsão para seus projetos.\n"
+"Compare planilhas de horas e estimativas para seus projetos.\n"
 "==================================================\n"
 "\n"
-"Em seu plano de projeto, você pode comparar suas planilhas de tempo e sua previsão para melhor agendar seus recursos. "
+"Em seu plano de projeto, você pode comparar suas planilhas de horas e suas estimativas para programar melhor  seus recursos. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast
@@ -4278,7 +4128,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Faça Design de emails incríveis\n"
+"Faça Design incríveis para seus emails\n"
 "    "
 
 #. module: base
@@ -4322,7 +4172,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Mostre seus estandes no seu site para que os usuários possam se registrar.\n"
+"Exiba seus estandes no seu site para que os usuários possam se registrar.\n"
 "    "
 
 #. module: base
@@ -4397,19 +4247,6 @@ msgid ""
 "\n"
 "    "
 msgstr ""
-"\n"
-"EDI Chilean Localization\n"
-"========================\n"
-"This code allows to generate the DTE document for Chilean invoicing.\n"
-"- DTE (Electronic Taxable Document) format in XML\n"
-"- Direct Communication with SII (Servicio de Impuestos Internos) to send invoices and other tax documents related to sales.\n"
-"- Communication with Customers to send sale DTEs.\n"
-"- Communication with Suppliers (vendors) to accept DTEs from them.\n"
-"- Direct Communication with SII informing the acceptance or rejection of vendor bills or other DTEs.\n"
-"\n"
-" In order to see the barcode on the invoice, you need the pdf417gen library.\n"
-"\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ec_edi
@@ -4522,7 +4359,7 @@ msgid ""
 "Easily access your documents from your employee profile.\n"
 msgstr ""
 "\n"
-"Acesse facilmente seus documentos de seu perfil de funcionário.\n"
+"Acesse facilmente seus documentos no seu perfil de funcionário.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_edi
@@ -4596,7 +4433,7 @@ msgid ""
 "Enable management of UTM trackers: campaign, medium, source.\n"
 msgstr ""
 "\n"
-"Habilite o gerenciamento de rastreadores UTM: campanha, mídia, origem..\n"
+"Habilite o gerenciamento de rastreadores UTM: campanha, mídia, origem.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_website_appointment_crm
@@ -5064,7 +4901,7 @@ msgstr ""
 "\n"
 "Gera relatório XML Intrastat para declaração\n"
 "Com base em faturas.\n"
-"Adiciona a possibilidade de especificar o país de origem das mercadorias e o IVA do parceiro no relatório XML Intrastat."
+"Adiciona a possibilidade de especificar o país de origem das mercadorias e o imposto do parceiro no relatório XML Intrastat."
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_nl_intrastat
@@ -5128,7 +4965,7 @@ msgstr ""
 "Hardware Poxy\n"
 "=============\n"
 "\n"
-"Este módulo permite que você use remotamente periféricos conectados a este servidor.\n"
+"Este módulo permite que você use periféricos remotamente conectados a este servidor.\n"
 "\n"
 "Este módulo contém apenas a estrutura de habilitação. Os drivers de dispositivos reais\n"
 "são encontrados em outros módulos que devem ser instalados separadamente.\n"
@@ -5179,7 +5016,7 @@ msgid ""
 "Helpdesk integration with knowledge\n"
 msgstr ""
 "\n"
-"Integração de central de ajuda com conhecimento\n"
+"Integração de Central de Ajuda com Conhecimento\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_holidays
@@ -5188,7 +5025,7 @@ msgid ""
 "Helpdesk integration with time off\n"
 msgstr ""
 "\n"
-"Integração da Central de Ajuda com folga\n"
+"Integração da Central de Ajuda com Folga\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
@@ -5467,11 +5304,11 @@ msgstr ""
 "Página inicial do IoT Box\n"
 "================\n"
 "\n"
-"Este módulo substitui a interface da web Odoo para exibir um simples\n"
+"Este módulo substitui a interface da web Odoo para exibir umq simples\n"
 "Página inicial que explica o que é o iotbox e mostra o status,\n"
 "e onde encontrar a documentação.\n"
 "\n"
-"Se você ativar este módulo, você não será capaz de acessar o\n"
+"Se você ativar este módulo, você não será mais capaz de acessar o\n"
 "interface regular Odoo.\n"
 
 #. module: base
@@ -5540,9 +5377,9 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Landed Gestão Custos Adicionais\n"
+"Gestão de Custos no Destino\n"
 "=======================\n"
-"Este módulo permite que você facilmente adicionar custos extras em separações e decidir a divisão destes custos entre os seus movimentos de ações, a fim de levá-los em conta na sua avaliação de estoque."
+"Este módulo permite que você adicione facilmente custos extras em seleções e decida a divisão destes custos entre os seus movimentos de estoque a fim de levá-los em conta na sua avaliação de estoque."
 
 #. module: base
 #: model:ir.module.module,description:base.module_board
@@ -5640,7 +5477,7 @@ msgstr ""
 "==================\n"
 "* Manutenção preventiva vs. manutenção corretiva\n"
 "* Definir diferentes etapas para as solicitações de manutenção\n"
-"* Planejar solicitações de manutenção (também preventiva periódica)\n"
+"* Planejar solicitações de manutenção (inclusive preventiva periódica)\n"
 "* Equipamentos relacionados com os centros de trabalho\n"
 "* MTBF, MTTR, ...\n"
 
@@ -5696,20 +5533,20 @@ msgstr ""
 "Gerencie a correspondência de 3 vias nas contas do fornecedor\n"
 "=====================================\n"
 "\n"
-"Na indústria de produção, as pessoas geralmente recebem as contas do fornecedor antes\n"
-"recebendo sua compra, mas eles não querem pagar a conta até que a mercadoria\n"
-"foram entregues.\n"
+"Na indústria, as pessoas geralmente recebem as contas do fornecedor antes\n"
+"de receber sua compra, mas eles não querem pagar a conta até que a mercadoria\n"
+"seja entregue.\n"
 "\n"
-"A solução para esta situação é criar a conta do fornecedor quando você obtê-lo\n"
-"(com base em quantidades ordenadas), mas só pague a fatura quando o recebido\n"
+"A solução para esta situação é criar a conta do fornecedor quando você recebe-la\n"
+"(com base em quantidades solicitadas), mas só pague a fatura quando o recebido\n"
 "quantidades (nas linhas PO) correspondem à conta do fornecedor gravado.\n"
 "\n"
 "Este módulo introduz um mecanismo de \"liberação para pagar\" que marca para cada fornecedor\n"
 "projeto de lei se ele pode ser pago ou não.\n"
 "\n"
-"Cada projeto de lei do fornecedor recebe um dos seguintes três estados:\n"
+"Cada fatura do fornecedor recebe um dos seguintes três estados:\n"
 "\n"
-"- Sim (A conta pode ser paga)\n"
+"    - Sim (A conta pode ser paga)\n"
 "    - Não (a conta não pode ser paga, nada foi entregue ainda)\n"
 "    - Exceção (as quantidades recebidas e faturadas diferem) "
 
@@ -5761,7 +5598,7 @@ msgstr ""
 "Gerenciar pedidos de envio direto\n"
 "===========================\n"
 "\n"
-"Este módulo adiciona um tipo de operação Drop Shipping pré-configurado\n"
+"Esse módulo adiciona um tipo de operação Drop Shipping pré-configurado\n"
 "bem como uma rota de aquisição que permite configurar o Drop\n"
 "Envio de produtos e pedidos.\n"
 "\n"
@@ -5845,18 +5682,18 @@ msgstr ""
 "Gerenciar cotações e pedidos de vendas\n"
 "==================================\n"
 "\n"
-"Esta aplicação permite-lhe gerir as suas metas de vendas de uma forma eficaz e eficiente, mantendo o controle de todas as ordens de vendas e histórico.\n"
+"Esse aplicativo te permite gerir as suas metas de vendas de uma forma eficaz e eficiente, mantendo o controle de todas as ordens de vendas e histórico.\n"
 "\n"
 "Ele lida com o fluxo de trabalho de vendas completo:\n"
 "\n"
 "* ** Cotação ** -> ** Pedido de venda ** -> ** Fatura **\n"
 "\n"
-"Preferências (somente com o Warehouse Management instalado)\n"
+"Preferências (somente com o Gerenciamento de Armazém instalado)\n"
 "-------------------------------------------------- ----\n"
 "\n"
-"Se você também instalou o Warehouse Management, poderá lidar com as seguintes preferências:\n"
+"Se você também instalou o Gerenciamento de Armazém, poderá lidar com as seguintes preferências:\n"
 "\n"
-"* Frete: Escolha de entrega de uma vez ou entrega parcial\n"
+"* Frete: escolha entre a entrega total ou entrega parcial\n"
 "* Faturamento: escolha como as faturas serão pagas\n"
 "* Incoterms: termos comerciais internacionais\n"
 "\n"
@@ -6104,7 +5941,7 @@ msgstr ""
 "Módulo para definir o objeto de contabilidade analítica.\n"
 "===============================================\n"
 "\n"
-"Em Odoo, as contas analíticas são vinculadas a contas gerais, mas são tratadas\n"
+"No Odoo, as contas analíticas são vinculadas a contas gerais, mas são tratadas\n"
 "totalmente de forma independente. Assim, você pode inserir várias operações analíticas diferentes\n"
 "que não têm contrapartida nas contas financeiras gerais.\n"
 "    "
@@ -6125,8 +5962,8 @@ msgstr ""
 "Módulo para gestão de recursos.\n"
 "===============================\n"
 "\n"
-"Um recurso representa algo que pode ser agendada (um desenvolvedor em uma tarefa ou um\n"
-"centro de trabalho em ordens de fabricação). Este módulo gerencia um calendário de recursos\n"
+"Um recurso representa algo que pode ser agendado (um desenvolvedor em uma tarefa ou um\n"
+"centro de trabalho em ordens de produção). Este módulo gerencia um calendário de recursos\n"
 "associada a cada recurso. Ele também gerencia as ausências de todos os recursos.\n"
 "    "
 
@@ -6137,7 +5974,7 @@ msgid ""
 "Module holding mail improvements for website. It holds the follow widget.\n"
 msgstr ""
 "\n"
-"Módulo contendo melhorias de mail para o site. Ele contém o widget de acompanhamento..\n"
+"Módulo contendo melhorias de email para o site. Ele contém o widget de acompanhamento..\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_followup
@@ -6229,7 +6066,7 @@ msgstr ""
 "Módulo de importar extratos bancários CODA.\n"
 "======================================\n"
 "\n"
-"Suportados são arquivos CODA simples em formato V2 de contas bancárias belgas.\n"
+"Os arquivos suportados são CODA simples em formato V2 de contas bancárias belgas.\n"
 "----------------------------------------------------------------------\n"
 "    * Apoio CODA v1.\n"
 "    * Apoio CODA v2.2.\n"
@@ -6317,7 +6154,7 @@ msgstr ""
 "Módulo para importar extratos bancários OFX.\n"
 "==========================================\n"
 "\n"
-"Este módulo permite-lhe importar arquivos OFX no Odoo: eles são analisados e armazenados em formato legível em\n"
+"Este módulo te permite importar arquivos OFX no Odoo: eles são analisados e armazenados em formato legível em\n"
 "Contabilidade \\ Banco e Caixa \\ Extratos Bancários.\n"
 "\n"
 "Extratos bancários podem ser gerados contendo um subconjunto das informações OFX (apenas as linhas de transação que são necessárias para a\n"
@@ -6343,7 +6180,7 @@ msgstr ""
 "Módulo para importar extratos bancários QIF.\n"
 "==========================================\n"
 "\n"
-"Este módulo permite-lhe importar arquivos QIF no Odoo: eles são analisados e armazenados em formato legível em\n"
+"Este módulo te permite importar arquivos QIF no Odoo: eles são analisados e armazenados em formato legível em\n"
 "Contabilidade \\ Banco e Caixa \\ Extratos Bancários.\n"
 "\n"
 "Nota importante\n"
@@ -6367,19 +6204,8 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Módulo para automatizar cobranças para faturas não pagas, com retorno multi-nível.\n"
-"=========================================================================\n"
-"\n"
-"Você pode definir seus vários níveis de retorno através do menu:\n"
-"---------------------------------------------------------------\n"
-"    Níveis de configuração / follow-up / follow-up\n"
-"    \n"
-"Uma vez definido, você pode imprimir automaticamente retorno de todos os dias através de simplesmente clicar no menu:\n"
-"------------------------------------------------------------------------------------------------------\n"
-"    Acompanhamento de pagamento / Enviar e-mail e cartas\n"
-"\n"
-"Ele vai gerar um PDF / enviar e-mails / definir ações manuais de acordo com os diferentes níveis \n"
-"de recall definido. Você pode definir diferentes políticas para diferentes empresas. "
+"Módulo com as configurações requeridas para conectar com OnSIP.\n"
+"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mn_reports
@@ -6458,9 +6284,9 @@ msgstr ""
 "Nova importação de arquivo extensível para o Odoo\n"
 "======================================\n"
 "\n"
-"Reimprimi o sistema de importação de arquivos do Odoo:\n"
+"Reimplementa o sistema de importação de arquivos do Odoo:\n"
 "\n"
-"* No lado do servidor, o sistema anterior força a maior parte da lógica para o\n"
+"* Do lado do servidor, o sistema anterior força a maior parte da lógica para o\n"
 "   cliente que duplica o esforço (entre clientes), faz com que o\n"
 "   sistema de importação muito mais difícil de usar sem um cliente (RPC direta ou\n"
 "   outras formas de automação) e faz conhecimento sobre o\n"
@@ -6569,9 +6395,6 @@ msgid ""
 "(N+1, N+2, direct subordinates)\n"
 "        "
 msgstr ""
-"\n"
-"Odoo Web tours.\n"
-"======================== "
 
 #. module: base
 #: model:ir.module.module,description:base.module_event
@@ -6704,9 +6527,6 @@ msgid ""
 "* Every Appraisal Form filled by employees, colleague, collaborator, can be viewed in a PDF form.\n"
 "* Meeting Requests are created manually according to employees appraisals.\n"
 msgstr ""
-"\n"
-"Geolocalização de Parceiros\n"
-"========================\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_phone_validation
@@ -6730,9 +6550,9 @@ msgstr ""
 "\n"
 "Esse módulo adiciona a funcionalidade de validar e formatar números de telefone de acordo com o país de destino.\n"
 "\n"
-"Também adiciona a gestão de telefones bloqueados através de um modelo específico de armazenamento de telefones na lista negra\n"
+"Também adiciona a gestão de telefones bloqueados através de um modelo específico de armazenamento de telefones na lista de bloqueio\n"
 "\n"
-"Adiciona mail.thread.phone mixin que lida com o armazenamento dos registros na lista negra"
+"Adiciona mail.thread.phone mixin que lida com o armazenamento dos registros na lista de bloqueio"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_it
@@ -6772,7 +6592,7 @@ msgid ""
 "Planning integration with time off\n"
 msgstr ""
 "\n"
-"Planejando integração com folgas\n"
+"Planejando integração com Folgas\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_product_matrix
@@ -6929,9 +6749,9 @@ msgstr ""
 "\n"
 "Controle de Qualidade\n"
 "===============\n"
-"* Defina pontos de qualidade que gerarão verificações de qualidade nas escolhas,\n"
-"  ordens de produçãoou ordens de serviço (quality_mrp)\n"
-"* Alertas de qualidade podem ser criados de forma independente ou relacionada a verificações de qualidade\n"
+"* Defina pontos de qualidade que vão gerar verificações de qualidade nas seleções,\n"
+"  ordens de produção ou ordens de serviço (quality_mrp)\n"
+"* Alertas de qualidade podem ser criados de forma independente ou relacionados a verificações de qualidade\n"
 "* Possibilidade de adicionar uma medida à verificação de qualidade com uma tolerância mínima/máxima\n"
 "* Defina suas etapas para os alertas de qualidade\n"
 
@@ -6962,11 +6782,11 @@ msgid ""
 "This module allow to reinvoice employee expense, by setting the SO directly on the expense.\n"
 msgstr ""
 "\n"
-"Refaturar Despesa de Empregado\n"
+"Refaturar Despesa de Funcionário\n"
 "==========================\n"
 "\n"
 "Crie alguns produtos para os quais você pode faturar novamente os custos.\n"
-"Este módulo permite reinventar as despesas dos funcionários, definindo o ordem de venda diretamente na despesa.\n"
+"Este módulo permite refaturar as despesas dos funcionários, definindo o ordem de venda diretamente na despesa.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_helpdesk_repair
@@ -7027,7 +6847,7 @@ msgstr ""
 "\n"
 "Painel de assinatura de venda\n"
 "===========================\n"
-"Ele adiciona dashboards a:\n"
+"Ele adiciona dashboards para:\n"
 "1) Analisar a receita recorrente e outras métricas para assinaturas\n"
 "2) Analisar as modificações de assinaturas por vendedor e calcular seu valor. "
 
@@ -7240,11 +7060,11 @@ msgstr ""
 "Estúdio - Personalize o Odoo\n"
 "=======================\n"
 "\n"
-"Este addon permite que o usuário personalize a maioria dos elementos da interface do usuário, em um\n"
+"Este addon permite que o usuário personalize a maioria dos elementos da interface do usuário,\n"
 "de forma simples e gráfica. Tem duas características principais:\n"
 "\n"
-"* criar uma nova aplicação (adicionar módulo, item de menu de nível superior e ação padrão)\n"
-"* personalizar uma aplicação existente (editar menus, ações, vistas, traduções, ...)\n"
+"* criar uma novo aplicativo (adicionar módulo, item de menu de nível superior e ação padrão)\n"
+"* personalizar aplicativo existente (editar menus, ações, vistas, traduções, ...)\n"
 "\n"
 "Nota: Somente o usuário admin tem permissão para fazer essas personalizações.\n"
 
@@ -7260,11 +7080,11 @@ msgid ""
 "\n"
 msgstr ""
 "\n"
-"Studio - Personalize Odoo\n"
+"Estúdio- Personalize o Odoo\n"
 "=======================\n"
 "\n"
 "Este addon permite que o usuário exiba todos os formulários do site vinculados a um determinado\n"
-"Modelo. Além disso, você pode criar um novo formulário de site ou editar um já existente.\n"
+"modelo. Além disso, você pode criar um novo formulário de site ou editar um já existente.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_se
@@ -7318,10 +7138,10 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Sincronização das entradas da folha de tempo com o aplicativo de planilha de tempo externo.\n"
+"Sincronização das entradas da planilha de horas com o aplicativo de planilha de horas externo.\n"
 "=============================================================================\n"
 "\n"
-"Se você usar o aplicativo de folha de tempo externo, este módulo permite sincronizar as entradas da folha de tempo entre o Odoo e o aplicativo. "
+"Se você usar o aplicativo de planilha de horas externo, este módulo permite sincronizar as entradas da planilha de horas entre o Odoo e o aplicativo. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_appointment_hr
@@ -7564,7 +7384,7 @@ msgstr ""
 "Este é um sistema completo de agenda.\n"
 "========================================\n"
 "\n"
-"Suporta::\n"
+"Suporta:\n"
 "------------\n"
 "    - Eventos agendados\n"
 "    - Eventos recorrentes\n"
@@ -7631,7 +7451,7 @@ msgstr ""
 "========================================================================\n"
 "\n"
 "Variantes de suporte de produtos, diferentes métodos de preços, informações de fornecedores,\n"
-"fazer para estoque/pedido, diferentes unidades de medida, embalagem e propriedades.\n"
+"gerenciar estoque/pedido, diferentes unidades de medida, embalagem e propriedades.\n"
 "\n"
 "Suporte a listas de preços:\n"
 "-------------------\n"
@@ -7642,7 +7462,7 @@ msgstr ""
 "        * Preço de lista\n"
 "        * Preço do fornecedor\n"
 "\n"
-"Preferências de pricelists por produto e/ou parceiros.\n"
+"Preferências de lista de preços por produto e/ou parceiros.\n"
 "\n"
 "Imprima etiquetas de produtos com código de barras. "
 
@@ -8032,10 +7852,6 @@ msgid ""
 "======================================================================\n"
 "This module applies to companies based in Algeria.\n"
 msgstr ""
-"\n"
-"This is the module to manage the accounting chart for Algeria in Odoo.\n"
-"======================================================================\n"
-"This module applies to companies based in Algeria.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_fr
@@ -8097,15 +7913,6 @@ msgid ""
 "\n"
 "Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC\n"
 msgstr ""
-"\n"
-"This is the module to manage the accounting chart for Mongolia.\n"
-"===============================================================\n"
-"\n"
-"    * the Mongolia Official Chart of Accounts,\n"
-"    * the Tax Code Chart for Mongolia\n"
-"    * the main taxes used in Mongolia\n"
-"\n"
-"Financial requirement contributor: Baskhuu Lodoikhuu. BumanIT LLC\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_vn
@@ -8204,7 +8011,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Este módulo adiciona um atalho em um ou vários casos de oportunidade no CRM.\n"
+"Este módulo adiciona um atalho em uma ou várias oportunidades no CRM.\n"
 "========================================================== ===========================\n"
 "\n"
 "Este atalho permite que você gere um pedido de aluguel com base no caso selecionado."
@@ -8225,15 +8032,15 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Este módulo adiciona um atalho em um ou vários casos de oportunidade no CRM.\n"
+"Este módulo adiciona um atalho em uma ou várias casos oportunidades no CRM.\n"
 "===========================================================================\n"
 "\n"
 "Este atalho permite gerar uma ordem de venda com base no caso selecionado.\n"
 "Se diferentes casos estiverem abertos (uma lista), ele gera uma ordem de venda por caso.\n"
 "O caso é então encerrado e vinculado à ordem de venda gerada.\n"
 "\n"
-"Sugerimos que você instale este módulo, se você instalou tanto a venda quanto o crm\n"
-"Módulos. "
+"Sugerimos que você instale este módulo, se você instalou tanto a venda quanto os módulos\n"
+"de CRM. "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_appraisal_survey
@@ -8243,7 +8050,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Este módulo adiciona uma integração com a Pesquisa para pedir feedbacks a qualquer funcionário, com base em uma pesquisa a ser preenchida."
+"Este módulo adiciona uma integração com Pesquisas para pedir feedbacks a qualquer funcionário, com base em uma pesquisa a ser preenchida."
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale_product_configurator
@@ -8280,15 +8087,6 @@ msgid ""
 "of this module is to allow the display of a customer portal without having\n"
 "a dependency towards website editing and customization capabilities."
 msgstr ""
-"\n"
-"This module adds required base code for a fully integrated customer portal.\n"
-"It contains the base controller class and base templates. Business addons\n"
-"will add their specific templates and controllers to extend the customer\n"
-"portal.\n"
-"\n"
-"This module contains most code coming from odoo v10 website_portal. Purpose\n"
-"of this module is to allow the display of a customer portal without having\n"
-"a dependency towards website editing and customization capabilities."
 
 #. module: base
 #: model:ir.module.module,description:base.module_event_barcode
@@ -8472,23 +8270,6 @@ msgid ""
 "- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
 "    "
 msgstr ""
-"\n"
-"This module allows to print your payments on pre-printed check paper.\n"
-"You can configure the output (layout, stubs information, etc.) in company settings, and manage the\n"
-"checks numbering (if you use pre-printed checks without numbers) in journal settings.\n"
-"\n"
-"Supported formats\n"
-"-----------------\n"
-"This module supports the three most common check formats and will work out of the box with the linked checks from checkdepot.net.\n"
-"\n"
-"View all checks at: https://www.checkdepot.net/checks/laser/Odoo.htm\n"
-"\n"
-"You can choose between:\n"
-"\n"
-"- Check on top: Quicken / QuickBooks standard (https://www.checkdepot.net/checks/checkorder/laser_topcheck.htm)\n"
-"- Check on middle: Peachtree standard (https://www.checkdepot.net/checks/checkorder/laser_middlecheck.htm)\n"
-"- Check on bottom: ADP standard (https://www.checkdepot.net/checks/checkorder/laser_bottomcheck.htm)\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ca_check_printing
@@ -8564,7 +8345,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Esse módulo permite aos usuários a identificar facilmente pedidos de subcontratação quando aplicados custos de desembarque,\n"
+"Esse módulo permite aos usuários identificar facilmente pedidos de subcontratação quando aplicados custos de desembarque,\n"
 "também mostrando a seleção de referência associada na visão de busca.\n"
 "    "
 
@@ -8577,11 +8358,6 @@ msgid ""
 "take them into account in your stock valuation.\n"
 "    "
 msgstr ""
-"\n"
-"This module allows you to easily add extra costs on manufacturing order \n"
-"and decide the split of these costs among their stock moves in order to \n"
-"take them into account in your stock valuation.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_membership
@@ -8650,8 +8426,8 @@ msgstr ""
 "Este módulo permite gerenciar seus contratos de compra.\n"
 "================================================== =========\n"
 "\n"
-"Gerencie as chamadas para licitações e pedidos gerais. Os concursos são usados para obter\n"
-"concorrer com ofertas de diferentes fornecedores e selecionar os melhores. Pedidos de cobertor\n"
+"Gerencie as chamadas para licitações e pedidos gerais. Os concursos são usados para\n"
+"concorrer com ofertas de diferentes fornecedores e selecionar os melhores. Pedidos de compra em aberto\n"
 "são acordos que você tem com fornecedores para se beneficiar de um preço predeterminado.\n"
 
 #. module: base
@@ -8673,7 +8449,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Esse módulo permite vender produtos alugados na sua Lista de Desejo do eCommerce.\n"
+"Esse módulo permite vender produtos alugados na sua Lista de Desejos do eCommerce.\n"
 "    "
 
 #. module: base
@@ -8805,7 +8581,7 @@ msgstr ""
 "Este módulo fornece uma estrutura para mensagens de texto SMS\n"
 "----------------------------------------------------\n"
 "\n"
-"O serviço é prestado pela plataforma In App Purchase Odoo.\n"
+"O serviço é prestado pela plataforma Compras no Aplicativo Odoo.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_contacts
@@ -8815,7 +8591,7 @@ msgid ""
 "You can track your vendors, customers and other contacts.\n"
 msgstr ""
 "\n"
-"Este módulo dá-lhe uma visualização rápida do seu diretório de contatos, acessível a partir da sua página inicial.\n"
+"Este módulo  te dá uma visualização rápida do seu diretório de contatos, acessível a partir da sua página inicial.\n"
 "Você pode rastrear seus fornecedores, clientes e outros contatos.\n"
 
 #. module: base
@@ -8847,12 +8623,6 @@ msgid ""
 "It adds a timer to a view for time recording purpose\n"
 "    "
 msgstr ""
-"\n"
-"This module implements a timer.\n"
-"==========================================\n"
-"\n"
-"It adds a timer to a view for time recording purpose\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_hr_timesheet
@@ -8870,7 +8640,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Este módulo implementa um sistema de quadro de horários.\n"
+"Este módulo implementa um sistema de planilha de horas.\n"
 "==========================================\n"
 "\n"
 "Cada funcionário pode codificar e acompanhar o tempo gasto nos diferentes projetos.\n"
@@ -8970,17 +8740,6 @@ msgid ""
 "creates next activities for the related approvers.\n"
 "    "
 msgstr ""
-"\n"
-"This module manages approvals workflow\n"
-"======================================\n"
-"\n"
-"This module manages approval requests like business trips,\n"
-"out of office, overtime, borrow items, general approvals,\n"
-"procurements, contract approval, etc.\n"
-"\n"
-"According to the approval type configuration, a request\n"
-"creates next activities for the related approvers.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_account_check_printing
@@ -9005,7 +8764,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Este modulo da uma aparência de Enterprise sobrescrevendo as funcionalidades da comunidade "
+"Este módulo dá uma aparência de Enterprise transcrevendo as funcionalidades da comunidade para o Site"
 
 #. module: base
 #: model:ir.module.module,description:base.module_timesheet_grid_holidays
@@ -9033,7 +8792,7 @@ msgstr ""
 "Este módulo fornece facilidade ao usuário para instalar o mrp e módulos de compras de cada vez.\n"
 "================================================== ======================================\n"
 "\n"
-"É basicamente usado quando queremos acompanhar as ordens de produção geradas\n"
+"É usado quando queremos acompanhar as ordens de produção geradas\n"
 "do pedido de compra.\n"
 "    "
 
@@ -9053,7 +8812,7 @@ msgstr ""
 "================================================== ==================================\n"
 "\n"
 "É basicamente usado quando se quer manter o controle de ordens de produção geradas\n"
-"em pedidos de vendas. Acrescenta Nome na venda e referência de vendas na ordem de produção.\n"
+"em pedidos de vendas. Acrescenta nome na venda e referência de vendas na ordem de produção.\n"
 "    "
 
 #. module: base
@@ -9094,7 +8853,7 @@ msgid ""
 "certification flow including purchase, certification, failure and success.\n"
 msgstr ""
 "\n"
-"Este módulo testará o fluxo de certificação principal do Odoo. Ele instalará os aplicativos de cursos online, pesquisa e e-commerce e fará uma certificação\n"
+"Este módulo vai testar o fluxo de certificação principal do Odoo. Ele va instalar os aplicativos de cursos online, pesquisa e e-commerce e vai completar o\n"
 "fluxo de certificação incluindo compra, certificação, falha e sucesso.\n"
 
 #. module: base
@@ -9118,8 +8877,8 @@ msgid ""
 "It will install some main apps and will try to execute the most important actions.\n"
 msgstr ""
 "\n"
-"Este módulo testará o fluxo de trabalho principal do Odoo.\n"
-"Ele instalará alguns aplicativos principais e tentará executar as ações mais importantes.\n"
+"Este módulo vai testar o fluxo de trabalho principal do Odoo.\n"
+"Ele vai instalar alguns aplicativos principais e tentar executar as ações mais importantes.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_ke
@@ -9170,14 +8929,14 @@ msgstr ""
 "Acompanhe datas diferentes em produtos e lotes de produção.\n"
 "======================================================\n"
 "\n"
-"Seguintes datas podem ser rastreados:\n"
+"As seguintes datas podem ser rastreadas:\n"
 "-------------------------------\n"
 "     - fim da vida\n"
 "     - melhor antes da data\n"
-"     - Data de remoção\n"
-"     - Data alerta\n"
+"     - data de remoção\n"
+"     - data alerta\n"
 "\n"
-"Também implementa a estratégia de remoção Primeira Expiração First Out (PEPE) amplamente utilizado, por exemplo, em indústrias de alimentos.\n"
+"Também implementa a estratégia de remoção PVPS (Primeiro que Vence, Primeiro que Sai) amplamente utilizada, por exemplo, em indústrias de alimentos.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_transifex
@@ -9558,7 +9317,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"Integração de slides do site para o módulo helpdesk\n"
+"Integração de slides do site para o módulo central de ajuda\n"
 "==================================================\n"
 "\n"
 "Adicione apresentações de slides à sua equipe para que os clientes que procuram ajuda possam vê-los antes de enviar novos ingressos. "
@@ -9936,7 +9695,7 @@ msgid ""
 "%(xmlid)s is of type %(xmlid_model)s, expected a subclass of "
 "ir.actions.actions"
 msgstr ""
-"%(xmlid)s é do tipo %(xmlid_model)s, esperava-se uma subclasse de "
+"%(xmlid)s é do tipo %(xmlid_model)s, é esperada uma subclasse de "
 "ir.actions.actions"
 
 #. module: base
@@ -10200,7 +9959,7 @@ msgstr "-Este módulo não cria relatório"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "-This module does not create views."
-msgstr "-Este módulo não cria visões"
+msgstr "-Este módulo não cria visualizações"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
@@ -11100,8 +10859,8 @@ msgid ""
 "A partner with the same <span><span class=\"o_vat_label\">Tax "
 "ID</span></span> already exists ("
 msgstr ""
-"Um parceiro com o mesmo <span><span class=\"o_vat_label\">Tax "
-"ID</span></span> já existe ("
+"Um parceiro com o mesmo <span><span class=\"o_vat_label\">CNPJ</span></span>"
+" já existe ("
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment_razorpay
@@ -11392,7 +11151,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.category,name:base.module_category_accounting_localizations_account_charts
 msgid "Account Charts"
-msgstr "Planos de Contas"
+msgstr "Gráfico de Contas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_us_consolidation_demo
@@ -11424,7 +11183,7 @@ msgstr "Extrato da fatura da conta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_invoice_extract_purchase
 msgid "Account Invoice Extract Purchase"
-msgstr "Account Invoice Extract Purchase"
+msgstr "Extrato de fatura de conta compra"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_partner_bank__acc_number
@@ -11439,7 +11198,7 @@ msgstr "Segurança da Conta"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr "Nuvem de Taxas da Conta"
+msgstr "TaxCloud da Conta"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_account_taxcloud
@@ -11449,7 +11208,7 @@ msgstr "Conta TaxCloud - eCommerce"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_account_taxcloud
 msgid "Account TaxCloud - Sale"
-msgstr "Account TaxCloud - Venda"
+msgstr "TaxCloud da Conta - Venda"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_loyalty_taxcloud
@@ -11464,7 +11223,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_winbooks_import
 msgid "Account Winbooks Import"
-msgstr "Importação de conta Winbooks"
+msgstr "Importação de Conta Winbooks"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_partner_bank__acc_holder_name
@@ -11486,7 +11245,7 @@ msgstr "Contabilidade"
 #: model:ir.module.module,shortdesc:base.module_mrp_account
 #: model:ir.module.module,shortdesc:base.module_mrp_account_enterprise
 msgid "Accounting - MRP"
-msgstr "Contabilidade - PCP"
+msgstr "Contabilidade - MRP"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_mrp_subcontracting_account_enterprise
@@ -11501,7 +11260,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_test
 msgid "Accounting Consistency Tests"
-msgstr "Testes de consistência de contabilidade"
+msgstr "Testes de Consistência de Contabilidade"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_base_import
@@ -11685,7 +11444,7 @@ msgstr "Janela de ação"
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_close
 msgid "Action Window Close"
-msgstr "Janela de ação fechar"
+msgstr "Fechar janela de ação"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_actions_act_window_view
@@ -11801,7 +11560,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_loyalty_delivery
 msgid "Add a free shipping option to your rewards"
-msgstr "Adicionar opção de frete grátis as suas recompensas"
+msgstr "Adicionar opção de frete grátis às suas recompensas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -11844,7 +11603,7 @@ msgstr "Adicione funcionalidade de base de caixa para relatórios"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_slides_survey
 msgid "Add certification capabilities to your courses"
-msgstr "Adicione recursos de certificação a seus curtos"
+msgstr "Adicione recursos de certificação a seus cursos"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_skills_survey
@@ -11859,7 +11618,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_social_crm
 msgid "Add crm UTM info on social"
-msgstr "Add crm UTM info on social"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_event_sale_dashboard
@@ -11907,13 +11666,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm
 msgid "Add lead / opportunities UTM info on mass mailing"
-msgstr ""
-"Adicionar informações utm de chumbo / oportunidades sobre envio em massa"
+msgstr "Adicionar informações UTM de lead/ oportunidades sobre envio em massa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_crm_sms
 msgid "Add lead / opportunities info on mass mailing sms"
-msgstr "Adicione informações de leads/oportunidades em envios massivos de SMS"
+msgstr "Adicione informações de leads/oportunidades em envios de SMS em massa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_im_livechat_mail_bot
@@ -11928,12 +11686,13 @@ msgstr "Adicionar informações UTM de venda nas redes sociais"
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale
 msgid "Add sale order UTM info on mass mailing"
-msgstr "Adicionar informações utm do pedido de venda no envio em massa"
+msgstr ""
+"Adicionar informações utm do pedido de venda no envio de emails em massa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale_sms
 msgid "Add sale order info on mass mailing sms"
-msgstr "Adicione pedidos de venda em envios massivos de SMS"
+msgstr "Adicione pedidos de venda em envios de SMS em massa"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mass_mailing_sale_subscription
@@ -12278,7 +12037,7 @@ msgstr "Recursos avançados para Ações"
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_account_enterprise
 msgid "Advanced features for stock_account"
-msgstr "Contém recursos avançados para CRM, como novas visualizações"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_subonctracting_landed_costs
@@ -12419,7 +12178,7 @@ msgstr "Empresas Permitidas"
 #. module: base
 #: model:ir.module.module,summary:base.module_mail_plugin
 msgid "Allows integration with mail plugins."
-msgstr "Permite integrações com plugins de e-mails."
+msgstr "Permite integrações com plugins de emails."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_stock_barcode_mrp_subcontracting
@@ -12502,7 +12261,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon
 msgid "Amazon Connector"
-msgstr "Amazon Connector"
+msgstr "Conector Amazon"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_sale_amazon_taxcloud
@@ -12586,7 +12345,7 @@ msgid ""
 " its dependencies are satisfied. If the module has no dependency, it is "
 "always installed."
 msgstr ""
-"Um módulo auto-instalável é instalado automaticamente pelo sistema quando "
+"Um módulo autoinstalável é instalado automaticamente pelo sistema quando "
 "estiverem satisfeitas todas as suas dependências. Se o módulo não tem uma "
 "dependência, ele sempre é instalado."
 
@@ -12684,7 +12443,7 @@ msgid ""
 " header)."
 msgstr ""
 "Aparece por padrão no canto superior direito dos documentos impressos "
-"(cabeçalho de relatório)."
+"(cabeçalho do relatório)."
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_asset__directive__append
@@ -12716,7 +12475,7 @@ msgstr "Aplicar"
 #: model_terms:ir.ui.view,arch_db:base.view_base_module_upgrade_install
 #, python-format
 msgid "Apply Schedule Upgrade"
-msgstr "Aplicar atualizações agendas"
+msgstr "Aplicar atualizações de agenda"
 
 #. module: base
 #: model:ir.ui.menu,name:base.menu_view_base_module_upgrade
@@ -12726,7 +12485,7 @@ msgstr "Aplicar Atualizações Agendadas"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_create
 msgid "Apply for Create"
-msgstr "Permissão de Criar"
+msgstr "Permissão para Criar"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_rule__perm_unlink
@@ -12833,7 +12592,7 @@ msgstr "Apps:"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_db
 msgid "Arch Blob"
-msgstr "Borrão de Arco"
+msgstr "Arch Blob"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_fs
@@ -12879,14 +12638,14 @@ msgstr "Arquivado"
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Are you sure to execute the automatic merge of your contacts ?"
 msgstr ""
-"Tem certeza de que deseja executar a junção automática de seus contatos?"
+"Tem certeza de que deseja executar a mesclagem automática de seus contatos?"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid ""
 "Are you sure to execute the list of automatic merges of your contacts ?"
 msgstr ""
-"Tem certeza de que deseja executar a lista da junção automática de seus "
+"Tem certeza de que deseja executar a lista da mesclagem automática de seus "
 "contatos?"
 
 #. module: base
@@ -12922,7 +12681,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__params
 msgid "Arguments sent to the client along with the view tag"
-msgstr "Argumentos enviados ao cliente junto com o marcador de visualização"
+msgstr "Argumentos enviados ao cliente junto com a tag de visualização"
 
 #. module: base
 #: model:res.country,name:base.am
@@ -12947,12 +12706,12 @@ msgstr "Como equipe, estamos felizes em contribuir para este evento."
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_appraisal
 msgid "Assess your employees"
-msgstr "Funcionários"
+msgstr "Avalie seus funcionários"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_asset
 msgid "Asset"
-msgstr "Patrimônio"
+msgstr "Ativo"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_asset
@@ -12961,12 +12720,12 @@ msgstr "Patrimônio"
 #: model_terms:ir.ui.view,arch_db:base.asset_view_search
 #: model_terms:ir.ui.view,arch_db:base.asset_view_tree
 msgid "Assets"
-msgstr "Patrimônios"
+msgstr "Ativos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset
 msgid "Assets Management"
-msgstr "Gestão Patrimonial"
+msgstr "Gestão de Ativos"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_asset_fleet
@@ -13006,7 +12765,7 @@ msgstr "Ao menos uma linguagem deve estar ativa."
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_attachment
 msgid "Attach a new document"
-msgstr "Novo"
+msgstr "Anexe um novo documento"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_attachment_form
@@ -13058,7 +12817,7 @@ msgstr "Leitura de código de barras de presenças no celular"
 #: model:ir.module.module,summary:base.module_website_mass_mailing
 #: model:ir.module.module,summary:base.module_website_mass_mailing_sms
 msgid "Attract visitors to subscribe to mailing lists"
-msgstr "Atrair visitantes para se inscrever em listas de discussão"
+msgstr "Atrair visitantes para se inscrever em listas de emails"
 
 #. module: base
 #. odoo-python
@@ -13090,7 +12849,7 @@ msgstr "Relatórios da Austrália - Contabilidade"
 #. module: base
 #: model:res.country,name:base.at
 msgid "Austria"
-msgstr "Austria"
+msgstr "Áustria"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_at
@@ -13175,12 +12934,12 @@ msgstr "Instalação Automática"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.base_partner_merge_automatic_wizard_form
 msgid "Automatic Merge Wizard"
-msgstr "Assistente de Junção Automática"
+msgstr "Assistente de Mesclagem Automática"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr "Instalação Automática"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -13188,7 +12947,7 @@ msgstr "Instalação Automática"
 #, python-format
 msgid "Automatic install of downloaded Apps is currently disabled."
 msgstr ""
-"A instalação automática de Aplicativos baixados está atualmente desativada."
+"A instalação automática de aplicativos baixados está atualmente desativada."
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_contract_salary_holidays
@@ -13212,7 +12971,7 @@ msgstr "Automação"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_filters_view_form
 msgid "Available for User"
-msgstr "Disponível para usuário"
+msgstr "Disponível para o usuário"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_avatar_mixin__avatar_1920
@@ -13425,8 +13184,7 @@ msgstr "Conta Bancária"
 msgid ""
 "Bank account type: Normal or IBAN. Inferred from the bank account number."
 msgstr ""
-"Tipo de conta bancária: Normal ou IBAN. Inferido do número da conta "
-"bancária."
+"Tipo de conta bancária: Normal ou IBAN. Obtido do número da conta bancária."
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_res_bank_form
@@ -13477,7 +13235,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control
 msgid "Barcode Quality bridge module"
-msgstr "Módulo de ponte de qualidade de código de barras"
+msgstr "Módulo de  de qualidade de código de barras"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_picking_batch
@@ -13487,12 +13245,12 @@ msgstr "Código de barras para Transferência em Lote"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_mobile
 msgid "Barcode in Mobile"
-msgstr "Código de barras"
+msgstr "Código de barras nos Dispositivos Móveis"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_barcodes_mobile
 msgid "Barcode scan in Mobile"
-msgstr "Varredura de código de barras em Mobile"
+msgstr "Leitura de código de barras nos Dispositivos Móveis"
 
 #. module: base
 #. odoo-python
@@ -13511,7 +13269,7 @@ msgstr "Barcode type, eg: UPCA, EAN13, Code128"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_quality_control_picking_batch
 msgid "Barcode/Quality/Batch Transfer bridge module"
-msgstr "Módulo Ponte Código de Barras/Qualidade/Transferência em Loge"
+msgstr "Módulo Ponte Código de Barras/Qualidade/Transferência em Lote"
 
 #. module: base
 #: model:ir.model,name:base.model_base
@@ -13557,7 +13315,7 @@ msgstr "Propriedades Base"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_base
 msgid "Base View Architecture"
-msgstr "Arquitetura da Visão Base"
+msgstr "Arquitetura da Visualização Base"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_import
@@ -13572,7 +13330,7 @@ msgstr "Módulo base de importação"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_ui_view__mode__primary
 msgid "Base view"
-msgstr "Visão base"
+msgstr "Visualização base"
 
 #. module: base
 #: model:ir.actions.server,name:base.autovacuum_job_ir_actions_server
@@ -13593,7 +13351,7 @@ msgstr "Visualização Básica de Cohort para odoo"
 #. module: base
 #: model:ir.module.module,summary:base.module_quality
 msgid "Basic Feature for Quality"
-msgstr "Basic Feature for Quality"
+msgstr "Funcionalidade Básica para Qualidade"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_iap
@@ -13604,12 +13362,12 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_iot
 msgid "Basic models and helpers to support Internet of Things."
-msgstr "Basic models and helpers to support Internet of Things."
+msgstr "Modelos básicos e assistentes para suporte de IoT."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_batch_payment
 msgid "Batch Payment"
-msgstr "Batch Payment"
+msgstr "Pagamento em Lote"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_delivery_stock_picking_batch
@@ -13629,7 +13387,7 @@ msgid ""
 "Be aware that editing the architecture of a standard view is not advised, since the changes will be overwritten during future module updates.<br/>\n"
 "                        We recommend applying modifications to standard views through inherited views or customization with Odoo Studio."
 msgstr ""
-"Esteja ciente de que editar a arquitetura de uma visualização padrão não é aconselhável, uma vez que as alterações serão sobrescritas durante futuras atualizações do módulo.<br/>\n"
+"Esteja ciente de que editar a arquitetura de uma visualização padrão não é aconselhável, uma vez que as alterações serão ressaltadas durante futuras atualizações do módulo.<br/>\n"
 "                        Recomendamos aplicar modificações às visualizações padrão por meio de visualizações herdadas ou personalização com Odoo Studio."
 
 #. module: base
@@ -13654,12 +13412,11 @@ msgstr "Antes do valor"
 msgid ""
 "Before clicking on 'Change Password', you have to write a new password."
 msgstr ""
-"Before clicking on 'Change Password', you have to write a new password."
 
 #. module: base
 #: model:res.country,name:base.by
 msgid "Belarus"
-msgstr "Bielo-Rússia"
+msgstr "Bielorússia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_intrastat
@@ -13719,7 +13476,7 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll
 msgid "Belgium - Payroll"
-msgstr "Bélgica - folha de pagamento"
+msgstr "Bélgica - Folha de pagamento"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_be_hr_payroll_dimona
@@ -13766,7 +13523,7 @@ msgstr "Butão"
 #. module: base
 #: model:ir.module.module,summary:base.module_website_delivery_ups
 msgid "Bill to your UPS account number"
-msgstr "Bill to your UPS account number"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_property__type__binary
@@ -13783,7 +13540,7 @@ msgstr "Binário"
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__binding_model_id
 #: model:ir.model.fields,field_description:base.field_ir_cron__binding_model_id
 msgid "Binding Model"
-msgstr "Binding Model"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_url__binding_type
@@ -13915,7 +13672,7 @@ msgstr "Ponte entre IAP e CRM"
 #: model:ir.module.module,description:base.module_iap_mail
 #: model:ir.module.module,summary:base.module_iap_mail
 msgid "Bridge between IAP and mail"
-msgstr "Ponte entre IAP e e-mail"
+msgstr "Ponte entre IAP e email"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_account_accountant
@@ -14021,7 +13778,7 @@ msgstr "Módulo ponte para comparações de venda e lista de desejos do Site"
 #: model:ir.module.module,description:base.module_website_helpdesk
 #: model:ir.module.module,summary:base.module_website_helpdesk
 msgid "Bridge module for helpdesk modules using the website."
-msgstr "Bridge module for helpdesk modules using the website."
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_project_enterprise
@@ -14079,12 +13836,12 @@ msgstr "Gerenciamento de Despesas"
 #. module: base
 #: model:ir.module.module,summary:base.module_marketing_automation
 msgid "Build automated mailing campaigns"
-msgstr "Build automated mailing campaigns"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_quotation_builder
 msgid "Build great quotation templates"
-msgstr "Build great quotation templates"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_board
@@ -14198,8 +13955,8 @@ msgid ""
 "CSV format: you may edit it directly with your favorite spreadsheet software,\n"
 "                                the rightmost column (value) contains the translations"
 msgstr ""
-"Formato CSV: você pode editá-lo diretamente com o seu software de planilha "
-"favorito,"
+"Formato CSV: você pode editá-lo diretamente com o seu software de planilha favorito,\n"
+"                            A coluna mais à direita (valor) contém as traduções"
 
 #. module: base
 #: model:res.country,vat_label:base.ar
@@ -14241,7 +13998,7 @@ msgstr "Camarões"
 msgid ""
 "Can not create Many-To-One records indirectly, import the field separately"
 msgstr ""
-"Não posso criar registros many2one indiretamente, importe o campo "
+"Não é possível criar registros many2one indiretamente, importe o campo "
 "separadamente"
 
 #. module: base
@@ -14256,7 +14013,7 @@ msgstr "Impossível atualizar o módulo '%s'. Ele não está instalado."
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "Can only rename one field at a time!"
-msgstr "Só pode renomear um campo de cada vez!"
+msgstr "É possível renomear apenas um campo de cada vez!"
 
 #. module: base
 #. odoo-python
@@ -14349,14 +14106,14 @@ msgstr ""
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by contacts."
-msgstr "Não é possível desativar um idioma usado atualmente por contatos."
+msgstr "Não é possível desativar um idioma que está sendo usado por contatos."
 
 #. module: base
 #. odoo-python
 #: code:addons/base/models/res_lang.py:0
 #, python-format
 msgid "Cannot deactivate a language that is currently used by users."
-msgstr "Cannot deactivate a language that is currently used by users."
+msgstr "Não é possível desativar um idioma que está sendo usado por usuários."
 
 #. module: base
 #. odoo-python
@@ -14866,8 +14623,8 @@ msgid ""
 "Comma-separated list of allowed view modes, such as 'form', 'tree', "
 "'calendar', etc. (Default: tree,form)"
 msgstr ""
-"Lista separada por virgula, permite modos de visão como 'form', 'tree', "
-"'calendar', etc. (Default: tree,form)"
+"Lista separada por virgula, permite modos de visualização como 'form', "
+"'tree', 'calendar', etc. (Default: tree,form)"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__comment
@@ -15731,7 +15488,7 @@ msgstr "Menus Criados"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_form
 msgid "Created Views"
-msgstr "Visões criadas"
+msgstr "Visualizações criadas"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_base_enable_profiling_wizard__create_uid
@@ -16116,7 +15873,7 @@ msgstr "Personalizações"
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_search
 #: model_terms:ir.ui.view,arch_db:base.view_view_custom_tree
 msgid "Customized Views"
-msgstr "Visões Personalizadas"
+msgstr "Visualizações Personalizadas"
 
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.action_ui_view_custom
@@ -18675,7 +18432,7 @@ msgid ""
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
 "Arquivo de onde a visualização se origina.\n"
-"                                                          Útil para redefinir visões quebradas (difícil) ou para ler a arquitetura do arquivo no modo dev-xml."
+"                                                          Útil para redefinir visões quebradas (difíceis) ou para ler a arquitetura do arquivo no modo dev-xml."
 
 #. module: base
 #: model:ir.model,name:base.model_ir_binary
@@ -25951,8 +25708,8 @@ msgid ""
 "Optional help text for the users with a description of the target view, such"
 " as its usage and purpose."
 msgstr ""
-"Texto de ajuda opcional para os usuários, com uma descrição da visão de "
-"destino, e de sua utilização e finalidade."
+"Texto de ajuda opcional para os usuários, com uma descrição da visualização "
+"de destino, e de sua utilização e finalidade."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_client__res_model
@@ -29301,7 +29058,7 @@ msgstr "Pesquisar Indústria de Parceiro"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view
 msgid "Search View"
-msgstr "Visão de Busca"
+msgstr "Visualização de Busca"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__search_view_id
@@ -31627,7 +31384,7 @@ msgstr "Modelo a que este campo pertence"
 #: code:addons/base/models/ir_actions.py:0
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
-msgstr "Os modelos em view_mode não devem estar duplicados: %s"
+msgstr "Os modelos em view_mode não devem ser duplicados: %s"
 
 #. module: base
 #. odoo-python
@@ -33551,8 +33308,8 @@ msgstr ""
 msgid ""
 "Used for custom many2many fields to define a custom relation table name"
 msgstr ""
-"Usado para campos many2many personalizado para definir um nome de tabela de "
-"relação personalizada"
+"Usado para campos many2many personalizados para definir um nome de tabela de"
+" relação personalizada"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__usage
@@ -33567,7 +33324,7 @@ msgstr "Usado para logar no sistema"
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__sequence
 msgid "Used to order Companies in the company switcher"
-msgstr "Used to order Companies in the company switcher"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_base_language_install__first_lang_id
@@ -33631,7 +33388,7 @@ msgstr "Tipos de usuário"
 #. module: base
 #: model:ir.model,name:base.model_change_password_user
 msgid "User, Change Password Wizard"
-msgstr "User, Change Password Wizard"
+msgstr ""
 
 #. module: base
 #: model:ir.model,name:base.model_change_password_own
@@ -33764,12 +33521,12 @@ msgstr "Uzbequistão"
 #: model:res.country,vat_label:base.uk
 #, python-format
 msgid "VAT"
-msgstr "Imposto"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_vat
 msgid "VAT Number Validation"
-msgstr "Validação do Número do IVA"
+msgstr ""
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_productivity_voip
@@ -33885,7 +33642,7 @@ msgstr "Fornecedor"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_3way_match
 msgid "Vendor Bill: Release to Pay"
-msgstr "Vendor Bill: Release to Pay"
+msgstr ""
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_partner_supplier_form
@@ -33900,7 +33657,7 @@ msgstr "Venezuela"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ve
 msgid "Venezuela - Accounting"
-msgstr "Contabilidade - Venezuelana"
+msgstr "Venezuela - Contabilidade"
 
 #. module: base
 #. odoo-python
@@ -33925,7 +33682,7 @@ msgstr "Vietnã - Contabilidade"
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_id
 #: model_terms:ir.ui.view,arch_db:base.view_view_search
 msgid "View"
-msgstr "Ver"
+msgstr "Visualização"
 
 #. module: base
 #. odoo-python
@@ -33953,24 +33710,24 @@ msgstr "Ver Arquitetura"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_mode
 msgid "View Mode"
-msgstr "Modo de Visão"
+msgstr "Modo de Visualização"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__name
 #: model:ir.model.fields,field_description:base.field_reset_view_arch_wizard__view_name
 msgid "View Name"
-msgstr "Nome da Visão"
+msgstr "Nome da Visualização"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__view_id
 msgid "View Ref."
-msgstr "Ref. de visão"
+msgstr "Ref. de visualização"
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window_view__view_mode
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__type
 msgid "View Type"
-msgstr "Tipo de Visão"
+msgstr "Tipo de Visualização"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports
@@ -33992,7 +33749,7 @@ msgstr "Visualizar sessões de live chat para leads"
 #: code:addons/base/models/ir_model.py:0
 #, python-format
 msgid "View: %s"
-msgstr "Vista: %s"
+msgstr "Visualização: %s"
 
 #. module: base
 #: model:ir.actions.act_window,name:base.action_ui_view
@@ -34016,8 +33773,9 @@ msgid ""
 "Views allows you to personalize each view of Odoo. You can add new fields, "
 "move fields, rename them or delete the ones that you do not need."
 msgstr ""
-"Visões permitem personalizar cada modo de visão do Odoo. Você pode adicionar"
-" novos campos, mover campos, renomeá-los ou apagar as que você não precisa."
+"Visualizações permitem personalizar cada modo de visualização do Odoo. Você "
+"pode adicionar novos campos, mover campos, renomear ou excluir os campos que"
+" você não precisa."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__inherit_children_ids
@@ -34211,7 +33969,7 @@ msgstr "Teste Cohort Web"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_address_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 msgid "Website"
-msgstr "Website"
+msgstr "Site"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment_authorize
@@ -34258,7 +34016,7 @@ msgstr "Central de Ajuda do Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
-msgstr "Website IM Livechat Helpdesk"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_jitsi
@@ -34280,7 +34038,7 @@ msgstr "Live chat do Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail
 msgid "Website Mail"
-msgstr "Correio Site"
+msgstr "Site do e-mail"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_mail_group
@@ -34305,7 +34063,7 @@ msgstr "Site Parceiro"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_payment
 msgid "Website Payment"
-msgstr "Website Payment"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_product_configurator
@@ -34320,7 +34078,7 @@ msgstr "Configurador de Estoque de Produto de Venda em Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_sale_dashboard
 msgid "Website Sales Dashboard"
-msgstr "Website Sales Dashboard"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides_forum
@@ -34330,12 +34088,12 @@ msgstr "Slides do Fórum de Central de Ajuda do Site"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_slides
 msgid "Website Slides Helpdesk"
-msgstr "Website Slides Helpdesk"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_studio
 msgid "Website Studio"
-msgstr "Website Studio"
+msgstr "Studio do Site"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_website
@@ -34362,7 +34120,7 @@ msgstr "Perfil do site"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_lang__week_start__3
 msgid "Wednesday"
-msgstr "Quarta"
+msgstr "Quarta-feira"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_cron__interval_type__weeks
@@ -34559,7 +34317,7 @@ msgstr "Ordens de Serviço, Planejamento, Relatórios de Estoque."
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_worksheet
 msgid "Worksheet"
-msgstr "Folha de Desenho"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_control_worksheet
@@ -34611,7 +34369,7 @@ msgstr "Iêmen"
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.demo_force_install_form
 msgid "Yes, I understand the risks"
-msgstr "Yes, I understand the risks"
+msgstr ""
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_simple_form
@@ -34676,7 +34434,6 @@ msgstr "You are trying to install incompatible modules in category \"%s\":"
 msgid ""
 "You are trying to remove a module that is installed or will be installed."
 msgstr ""
-"You are trying to remove a module that is installed or will be installed."
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_users_form
@@ -34741,7 +34498,7 @@ msgstr ""
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot activate the superuser."
-msgstr "You cannot activate the superuser."
+msgstr "Você não pode ativar o super usuário."
 
 #. module: base
 #. odoo-python
@@ -34794,7 +34551,7 @@ msgid ""
 "You cannot archive this Outgoing Mail Server (%s) because it is still used in the following case(s):\n"
 "%s"
 msgstr ""
-"Você não pode arquivar esses Servidores de E-mail (%s) porque ainda estão sendo usados nos seguintes casos:\n"
+"Você não pode arquivar esses Servidores de E-mail (%s) porque ainda estão sendo usados nos casos seguintes :\n"
 "%s"
 
 #. module: base
@@ -34802,7 +34559,7 @@ msgstr ""
 #: code:addons/base/models/res_partner.py:0
 #, python-format
 msgid "You cannot create recursive Partner hierarchies."
-msgstr "Você não pode criar hierarquias Parceiros recursivas."
+msgstr "Você não pode criar hierarquias de parceiros recursivas."
 
 #. module: base
 #. odoo-python
@@ -34823,7 +34580,7 @@ msgstr "Você não pode criar visualizações herdadas recursivas."
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid "You cannot deactivate the user you're currently logged in as."
-msgstr "You cannot deactivate the user you're currently logged in as."
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -34865,8 +34622,8 @@ msgid ""
 "You cannot delete the language which is Active!\n"
 "Please de-activate the language first."
 msgstr ""
-"Você não pode excluir a língua que está ativo! \n"
-"favor de-activar a primeira língua."
+"Você não pode excluir o idioma que está ativo! \n"
+"Favor desativar o idioma primeiro."
 
 #. module: base
 #. odoo-python
@@ -34874,7 +34631,6 @@ msgstr ""
 #, python-format
 msgid "You cannot delete the language which is the user's preferred language."
 msgstr ""
-"You cannot delete the language which is the user's preferred language."
 
 #. module: base
 #. odoo-python
@@ -34968,7 +34724,7 @@ msgid ""
 "created user under the Settings / Users menu."
 msgstr ""
 "Você será capaz de definir direitos de acesso adicionais editando o usuário "
-"recém-criado no menu Configurações / Users."
+"recém-criado no menu Configurações / Usuários."
 
 #. module: base
 #. odoo-python
@@ -35093,7 +34849,7 @@ msgstr "binary_field_real_user deveria ser um registro res.users."
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__boolean
 msgid "boolean"
-msgstr "boolean"
+msgstr "booleano"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_delivery_bpost
@@ -35125,7 +34881,7 @@ msgstr "id da base de dados"
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__date
 msgid "date"
-msgstr "date"
+msgstr "data"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__ir_model_fields__ttype__datetime
@@ -35173,7 +34929,7 @@ msgstr "ex: BE0477472701"
 #: model_terms:ir.ui.view,arch_db:base.view_partner_form
 #: model_terms:ir.ui.view,arch_db:base.view_partner_simple_form
 msgid "e.g. Brandom Freeman"
-msgstr "ex.: Maria Silva"
+msgstr "ex.: João Silva"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_base_import_language
@@ -35349,7 +35105,8 @@ msgstr "proibido para os grupos %s"
 #, python-format
 msgid "format() must be given exactly one %char format specifier"
 msgstr ""
-"format() deve ser dado com exatamente um especificador de formato %char "
+"format() deve ser fornecido com exatamente um especificador de formato %char"
+" "
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__state__get
@@ -35581,7 +35338,7 @@ msgstr "referência"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget_sale
 msgid "sale"
-msgstr "venda"
+msgstr "Venda"
 
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales
@@ -35608,7 +35365,7 @@ msgstr "snailmail_account"
 #. module: base
 #: model:ir.module.category,name:base.module_category_services_sales_subscriptions
 msgid "subscriptions"
-msgstr "assinaturas"
+msgstr "Assinaturas"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_test_data_module_install
@@ -35723,7 +35480,7 @@ msgstr "text"
 #. module: base
 #: model:ir.module.category,name:base.module_category_account_budget_sale_timesheet
 msgid "timesheet"
-msgstr "planilha de horas"
+msgstr "Planilha de Horas"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.res_config_installer

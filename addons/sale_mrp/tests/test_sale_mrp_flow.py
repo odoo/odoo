@@ -2238,3 +2238,43 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
         cogs_aml = amls.filtered(lambda aml: aml.account_id == categ.property_account_expense_categ_id)
         self.assertEqual(cogs_aml.debit, 10)
         self.assertEqual(cogs_aml.credit, 0)
+
+    def test_avoid_removing_kit_bom_in_use(self):
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': self.kit_1.name,
+                    'product_id': self.kit_1.id,
+                    'product_uom_qty': 1.0,
+                    'product_uom': self.kit_1.uom_id.id,
+                    'price_unit': 5,
+                    'tax_id': False,
+                })],
+        })
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.toggle_active()
+
+        so.action_confirm()
+        with self.assertRaises(UserError):
+            self.bom_kit_1.toggle_active()
+        with self.assertRaises(UserError):
+            self.bom_kit_1.unlink()
+
+        for move in so.order_line.move_ids:
+            move.quantity_done = move.product_uom_qty
+        so.picking_ids.button_validate()
+
+        self.assertEqual(so.picking_ids.state, 'done')
+        with self.assertRaises(UserError):
+            self.bom_kit_1.toggle_active()
+        with self.assertRaises(UserError):
+            self.bom_kit_1.unlink()
+
+        invoice = so._create_invoices()
+        invoice.action_post()
+
+        self.assertEqual(invoice.state, 'posted')
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.toggle_active()
+        self.bom_kit_1.unlink()

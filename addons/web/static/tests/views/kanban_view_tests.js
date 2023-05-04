@@ -10000,6 +10000,36 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
+    QUnit.test("keyboard navigation on kanban when the kanban has a oe_kanban_global_click class", async (assert) => {
+        assert.expect(1);
+        await makeView({
+            type: "kanban",
+            resModel: "partner",
+            serverData,
+            arch:
+                `<kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <field name="name"/>
+                            </div>
+                            <a name="action_test" type="object" />
+                        </t>
+                    </templates>
+                </kanban>`,
+            selectRecord(recordId) {
+                assert.strictEqual(
+                    recordId,
+                    1,
+                    "should call its selectRecord prop with the selected record"
+                );
+            },
+        });
+        const firstCard = getCard(0);
+        firstCard.focus();
+        await triggerEvent(firstCard, null, "keydown", { key: "Enter" });
+    });
+
     QUnit.test("set cover image", async (assert) => {
         assert.expect(10);
 

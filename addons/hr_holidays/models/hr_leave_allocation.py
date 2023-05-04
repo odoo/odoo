@@ -194,7 +194,7 @@ class HolidaysAllocation(models.Model):
 
     @api.depends('employee_id', 'holiday_status_id', 'taken_leave_ids.number_of_days', 'taken_leave_ids.state')
     def _compute_leaves(self):
-        employee_days_per_allocation = self.holiday_status_id._get_employees_days_per_allocation(self.employee_id.ids)
+        employee_days_per_allocation = self.holiday_status_id.with_context(ignore_future=True)._get_employees_days_per_allocation(self.employee_id.ids)
         for allocation in self:
             allocation.max_leaves = allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days
             allocation.leaves_taken = employee_days_per_allocation[allocation.employee_id.id][allocation.holiday_status_id][allocation]['leaves_taken']
@@ -558,6 +558,8 @@ class HolidaysAllocation(models.Model):
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
         for values in vals_list:
+            if 'state' in values and values['state'] not in ('draft', 'confirm'):
+                raise UserError(_('Incorrect state for new allocation'))
             employee_id = values.get('employee_id', False)
             if not values.get('department_id'):
                 values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})

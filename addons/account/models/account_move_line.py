@@ -1337,6 +1337,21 @@ class AccountMoveLine(models.Model):
                 vals['balance'] = vals.pop('debit', 0) - vals.pop('credit', 0)
         return vals
 
+    def _prepare_create_values(self, vals_list):
+        result_vals_list = super()._prepare_create_values(vals_list)
+        for init_vals, res_vals in zip(vals_list, result_vals_list):
+            # Allow computing the balance based on the amount_currency if it wasn't specified in the create vals.
+            if (
+                'amount_currency' in init_vals
+                and 'balance' not in init_vals
+                and 'debit' not in init_vals
+                and 'credit' not in init_vals
+            ):
+                res_vals.pop('balance', 0)
+                res_vals.pop('debit', 0)
+                res_vals.pop('credit', 0)
+        return result_vals_list
+
     @contextmanager
     def _sync_invoice(self, container):
         if container['records'].env.context.get('skip_invoice_line_sync'):

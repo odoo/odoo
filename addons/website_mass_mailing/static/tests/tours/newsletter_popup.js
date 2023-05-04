@@ -1,13 +1,13 @@
 odoo.define("website_mass_mailing.tour.newsletter_popup_edition", function (require) {
 "use strict";
 
-const tour = require('web_tour.tour');
 const wTourUtils = require('website.tour_utils');
 const newsletterPopupUseTour = require('website_mass_mailing.tour.newsletter_popup_use');
 
-tour.register('newsletter_popup_edition', {
+wTourUtils.registerWebsitePreviewTour("newsletter_popup_edition", {
     test: true,
-    url: '/?enable_editor=1',
+    url: "/",
+    edition: true,
 }, [
     wTourUtils.dragNDrop({
         id: 's_newsletter_subscribe_popup',

@@ -234,7 +234,13 @@ export class CustomFilterItem extends Component {
                 );
             } else {
                 domainValue = [condition.value];
-                descriptionArray.push(`"${condition.value}"`);
+                if (field.type === "selection") {
+                    descriptionArray.push(
+                        `"${field.selection.find((v) => v[0] === condition.value)[1]}"`
+                    );
+                } else {
+                    descriptionArray.push(`"${condition.value}"`);
+                }
             }
             // Operator specifics
             if (operator.symbol === "between") {

@@ -43,13 +43,20 @@ msgid ""
 "                </p>\n"
 "            "
 msgstr ""
+"\n"
+"                <p class=\"o_view_nocontent_smiling_face\">\n"
+"                    Virstanpylväitä ei löytynyt. Luodaan sellainen!\n"
+"                </p><p>\n"
+"                    Seuraa tärkeimpiä edistymiskohtia, jotka on saavutettava menestyksen saavuttamiseksi.\n"
+"                </p>\n"
+"            "
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "%(name)s's Sales Order"
-msgstr ""
+msgstr "%(name)s:n myyntitilaus"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_sale_order_line__qty_delivered_method
@@ -71,21 +78,21 @@ msgstr ""
 #: code:addons/sale_project/static/src/components/project_right_side_panel/project_right_side_panel.xml:0
 #, python-format
 msgid "All items have been loaded"
-msgstr ""
+msgstr "Kaikki kohteet on ladattu"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Delivered Quantity (Manual)"
-msgstr ""
+msgstr "Toimitetun määrän perusteella (manuaalinen)"
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Based on Milestones"
-msgstr ""
+msgstr "Virstanpylväiden perusteella"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__allow_billable
@@ -107,7 +114,7 @@ msgstr "Luo lasku"
 #: model:ir.model.fields,field_description:sale_project.field_product_product__service_tracking
 #: model:ir.model.fields,field_description:sale_project.field_product_template__service_tracking
 msgid "Create on Order"
-msgstr ""
+msgstr "Luo tilauksesta"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_milestone__project_partner_id
@@ -129,12 +136,12 @@ msgstr "Kuvaus"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__display_sale_order_button
 msgid "Display Sales Order"
-msgstr ""
+msgstr "Näytä myyntitilaus"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__visible_project
 msgid "Display project"
-msgstr ""
+msgstr "Näytä projekti"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__project_id
@@ -149,12 +156,12 @@ msgstr "Generoitu tehtävä"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_to_invoice
 msgid "Has SO to Invoice"
-msgstr ""
+msgstr "Kohteella on myyntitilaus, johon lasku kohdistetaan"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__has_any_so_with_nothing_to_invoice
 msgid "Has a SO with an invoice status of No"
-msgstr ""
+msgstr "Kohteella on myyntitilaus ja laskun status N:ro"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_project__invoice_count
@@ -166,7 +173,7 @@ msgstr "Laskujen lukumäärä"
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice ordered quantities as soon as this service is sold."
-msgstr ""
+msgstr "Laskuta tilatut määrät heti, kun palvelu on myyty."
 
 #. module: sale_project
 #. odoo-python
@@ -177,6 +184,9 @@ msgid ""
 " for the order with a task for each sales order line to track the time "
 "spent."
 msgstr ""
+"Laskuta tilatut määrät heti, kun palvelu on myyty. Luo tilausta varten "
+"projekti, jossa jokaiselle myyntitilausriville on oma tehtävänsä, jotta voit"
+" seurata käytettyä aikaa."
 
 #. module: sale_project
 #. odoo-python
@@ -186,6 +196,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create a task in"
 " an existing project to track the time spent."
 msgstr ""
+"Laskuta tilatut määrät heti, kun palvelu on myyty. Luo tehtävä olemassa "
+"olevaan projektiin kuluneen ajan seuraamiseksi."
 
 #. module: sale_project
 #. odoo-python
@@ -195,6 +207,8 @@ msgid ""
 "Invoice ordered quantities as soon as this service is sold. Create an empty "
 "project for the order to track the time spent."
 msgstr ""
+"Laskuta tilatut määrät heti, kun palvelu on myyty. Luo tilaukselle tyhjä "
+"projekti, jotta voit seurata käytettyä aikaa."
 
 #. module: sale_project
 #. odoo-python
@@ -204,6 +218,8 @@ msgid ""
 "Invoice this service when it is delivered (set the quantity by hand on your "
 "sales order lines). "
 msgstr ""
+"Laskuta tämä palvelu, kun se toimitetaan (määritä määrä käsin "
+"myyntitilausrivillä)."
 
 #. module: sale_project
 #. odoo-python
@@ -214,6 +230,9 @@ msgid ""
 "sales order lines). Create a project for the order with a task for each "
 "sales order line to track the time spent."
 msgstr ""
+"Laskuta tämä palvelu, kun se toimitetaan (määritä määrä käsin "
+"myyntitilausrivillä). Luo tilaukselle projekti, jossa on tehtävä jokaiselle "
+"myyntitilausriville, jotta voit seurata käytettyä aikaa."
 
 #. module: sale_project
 #. odoo-python
@@ -224,6 +243,9 @@ msgid ""
 "sales order lines). Create a task in an existing project to track the time "
 "spent."
 msgstr ""
+"Laskuta tämä palvelu, kun se toimitetaan (määritä määrä käsin "
+"myyntitilausrivillä). Luo tehtävä olemassa olevaan projektiin kuluneen ajan "
+"seuraamiseksi."
 
 #. module: sale_project
 #. odoo-python
@@ -234,13 +256,16 @@ msgid ""
 "sales order lines). Create an empty project for the order to track the time "
 "spent."
 msgstr ""
+"Laskuta tämä palvelu, kun se toimitetaan (määritä määrä käsin "
+"myyntitilausrivillä). Luo tilaukselle tyhjä projekti, jotta voit seurata "
+"käytettyä aikaa."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Invoice your milestones when they are reached."
-msgstr ""
+msgstr "Laskuta virstanpylväitä, kun ne on saavutettu."
 
 #. module: sale_project
 #. odoo-python
@@ -250,6 +275,9 @@ msgid ""
 "Invoice your milestones when they are reached. Create a project for the "
 "order with a task for each sales order line to track the time spent."
 msgstr ""
+"Laskuta virstanpylväitä, kun ne on saavutettu. Luo tilausta varten projekti,"
+" jossa on tehtävä jokaiselle myyntitilausriville, jotta voit seurata "
+"käytettyä aikaa."
 
 #. module: sale_project
 #. odoo-python
@@ -259,6 +287,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create a task in an existing "
 "project to track the time spent."
 msgstr ""
+"Laskuta virstanpylväitä, kun ne on saavutettu. Luo tehtävä olemassa olevaan "
+"projektiin, jotta voit seurata kulunutta aikaa."
 
 #. module: sale_project
 #. odoo-python
@@ -268,6 +298,8 @@ msgid ""
 "Invoice your milestones when they are reached. Create an empty project for "
 "the order to track the time spent."
 msgstr ""
+"Laskuta virstanpylväitä, kun ne on saavutettu. Luo tilausta varten tyhjä "
+"projekti, jotta voit seurata käytettyä aikaa."
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
@@ -299,7 +331,7 @@ msgstr "Laskutus perustuu"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__is_product_milestone
 msgid "Is Product Milestone"
-msgstr ""
+msgstr "Onko tuote virstanpylväs"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__is_service
@@ -345,7 +377,7 @@ msgstr "Menetelmä päivittääkseen toimitettuja määriä"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__milestone_count
 msgid "Milestone Count"
-msgstr ""
+msgstr "Virstanpylväiden määrä"
 
 #. module: sale_project
 #. odoo-python
@@ -377,7 +409,7 @@ msgstr "Ei myyntitilausriviä"
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_form
 #: model_terms:ir.ui.view,arch_db:sale_project.project_milestone_view_tree
 msgid "Non-billable"
-msgstr ""
+msgstr "Ei-laskutettava"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__no
@@ -387,7 +419,7 @@ msgstr "Ei mitään"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order__project_count
 msgid "Number of Projects"
-msgstr ""
+msgstr "Projektien lukumäärä"
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_product_product__service_tracking
@@ -396,13 +428,15 @@ msgid ""
 "On Sales order confirmation, this product can generate a project and/or task.         From those, you can track the service you are selling.\n"
 "         'In sale order's project': Will use the sale order's configured project if defined or fallback to         creating a new project based on the selected template."
 msgstr ""
+"Myyntitilauksen vahvistuksen yhteydessä tämä tuote voi luoda projektin ja/tai tehtävän.         Niistä voit seurata myytävää palvelua.\n"
+"         'Myyntitilauksen projektissa': Käyttää myyntitilauksen määritettyä projektia, jos sellainen on määritetty, tai luo uuden projektin valitun mallin perusteella."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/project.py:0
 #, python-format
 msgid "Other Revenues"
-msgstr ""
+msgstr "Muut tulot"
 
 #. module: sale_project
 #. odoo-python
@@ -417,13 +451,15 @@ msgid ""
 "Percentage of the ordered quantity that will automatically be delivered once"
 " the milestone is reached."
 msgstr ""
+"Prosenttiosuus tilatusta määrästä, joka toimitetaan automaattisesti, kun "
+"virstanpylväs on saavutettu."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/product.py:0
 #, python-format
 msgid "Prepaid/Fixed Price"
-msgstr ""
+msgstr "Ennakkomaksettu / kiinteä hinta"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_product_template
@@ -447,17 +483,17 @@ msgstr "Projektit"
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_tracking__task_in_project
 msgid "Project & Task"
-msgstr ""
+msgstr "Projekti ja tehtävä"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_milestone
 msgid "Project Milestone"
-msgstr ""
+msgstr "Projektin virstanpylväs"
 
 #. module: sale_project
 #: model:ir.model.fields.selection,name:sale_project.selection__product_template__service_type__milestones
 msgid "Project Milestones"
-msgstr ""
+msgstr "Projektin virstanpylväät"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_product_product__project_template_id
@@ -492,7 +528,7 @@ msgstr "Määrä"
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_sale_order_line__reached_milestones_ids
 msgid "Reached Milestones"
-msgstr ""
+msgstr "Saavutetut virstanpylväät"
 
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
@@ -515,7 +551,7 @@ msgstr "Myynti"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.view_edit_project_inherit_form
 msgid "Sales & Invoicing"
-msgstr ""
+msgstr "Myynti ja laskutus"
 
 #. module: sale_project
 #. odoo-python
@@ -534,7 +570,7 @@ msgstr "Myyntitilaus"
 #. module: sale_project
 #: model_terms:ir.ui.view,arch_db:sale_project.project_sharing_inherit_project_task_view_search
 msgid "Sales Order Id"
-msgstr ""
+msgstr "Myyntitilauksen tunnus"
 
 #. module: sale_project
 #. odoo-python
@@ -554,7 +590,7 @@ msgstr "Myyntitilausrivi"
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_milestone__sale_line_id
 msgid "Sales Order Item that will be updated once the milestone is reached."
-msgstr ""
+msgstr "Myyntitilauserä, joka päivitetään, kun virstanpylväs on saavutettu."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_task__sale_line_id
@@ -563,6 +599,9 @@ msgid ""
 "By default the sales order item set on the project will be selected. In the absence of one, the last prepaid sales order item that has time remaining will be used.\n"
 "Remove the sales order item in order to make this task non billable. You can also change or remove the sales order item of each timesheet entry individually."
 msgstr ""
+"Myyntitilauksen kohde, johon tähän tehtävään käytetty aika lisätään, jotta se voidaan laskuttaa asiakkaalta.\n"
+"Oletusarvoisesti valitaan projektille asetettu myyntitilauserä. Jos sellaista ei ole, käytetään viimeisintä ennakkoon maksettua myyntitilauserää, jolla on aikaa jäljellä.\n"
+"Poista myyntitilauserä, jotta tämä tehtävä ei ole laskutettava. Voit myös muuttaa tai poistaa myyntitilauserän kustakin työaikakirjanpidon merkinnästä erikseen."
 
 #. module: sale_project
 #. odoo-javascript
@@ -591,6 +630,8 @@ msgid ""
 "Sales order item that will be selected by default on the tasks and timesheets of this project, except if the employee set on the timesheets is explicitely linked to another sales order item on the project.\n"
 "It can be modified on each task and timesheet entry individually if necessary."
 msgstr ""
+"Myyntitilauserä, joka valitaan oletusarvoisesti tämän projektin tehtäviin ja työaikatauluihin, paitsi jos työaikataulujen työntekijä on nimenomaisesti linkitetty toiseen projektin myyntitilauserään.\n"
+"Sitä voidaan tarvittaessa muuttaa jokaisessa tehtävässä ja työaikataulussa erikseen."
 
 #. module: sale_project
 #: model:ir.model.fields,help:sale_project.field_project_project__sale_order_id
@@ -653,7 +694,7 @@ msgstr "Tehtävä"
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "Task Created (%s): %s"
-msgstr ""
+msgstr "Tehtävä luotu (%s): %s"
 
 #. module: sale_project
 #: model:ir.model,name:sale_project.model_project_task_recurrence
@@ -684,6 +725,7 @@ msgid ""
 "The product %s should not have a global project since it will generate a "
 "project."
 msgstr ""
+"Tuotteella %s ei pitäisi olla yleistä projektia, koska se luo projektin."
 
 #. module: sale_project
 #. odoo-python
@@ -693,6 +735,8 @@ msgid ""
 "The product %s should not have a project nor a project template since it "
 "will not generate project."
 msgstr ""
+"Tuotteella %s ei pitäisi olla projektia eikä projektimallia, koska se ei luo"
+" projektia."
 
 #. module: sale_project
 #. odoo-python
@@ -702,13 +746,15 @@ msgid ""
 "The product %s should not have a project template since it will generate a "
 "task in a global project."
 msgstr ""
+"Tuotteella %s ei pitäisi olla projektimallia, koska se luo tehtävän "
+"yleisessä projektissa."
 
 #. module: sale_project
 #. odoo-python
 #: code:addons/sale_project/models/sale_order_line.py:0
 #, python-format
 msgid "This task has been created from: %s (%s)"
-msgstr ""
+msgstr "Tämä tehtävä on luotu: %s (%s)"
 
 #. module: sale_project
 #: model:ir.model.fields,field_description:sale_project.field_project_task__task_to_invoice
@@ -742,3 +788,5 @@ msgid ""
 "You cannot link the order item %(order_id)s - %(product_id)s to this task "
 "because it is a re-invoiced expense."
 msgstr ""
+"Et voi yhdistää tilauserää %(order_id)s - %(product_id)s tähän tehtävään, "
+"koska se on asiakkaalta laskutettava kulu."

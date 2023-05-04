@@ -18,10 +18,10 @@
 # Jose Alejandro Echeverri Valencia <josealejandroeche@gmail.com>, 2023
 # Óscar Fonseca <tecnico@extreme-micro.com>, 2023
 # Camille Dantinne <cmd@odoo.com>, 2023
-# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # Sonia Viciana, 2023
 # Gelo, 2023
 # Martin Trigaux, 2023
+# Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,7 +29,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Martin Trigaux, 2023\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@tecnativa.com>, 2023\n"
 "Language-Team: Spanish (https://app.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11103,6 +11103,18 @@ msgstr ""
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+"Revise el país fiscal de la compañía %s. (Ajustes > Contabilidad > País "
+"fiscal) Solo se pueden actualizar los impuestos si están en el país fiscal "
+"de la compañía (%s) o en el país de la localización (%s)."
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
 "Please check these taxes. They might be outdated. We did not update them. "
 "Indeed, they do not exactly match the taxes of the original version of the "
 "localization module.<br/>You might want to archive or adapt them.<br/><ul>"
@@ -14960,6 +14972,8 @@ msgid ""
 "There was an error when trying to add the banner to the original PDF.\n"
 "Please make sure the source file is valid."
 msgstr ""
+"Ocurrió un error al tratar de agregar el rótulo al PDF original.\n"
+"Asegúrese de que el archivo original sea válido."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form

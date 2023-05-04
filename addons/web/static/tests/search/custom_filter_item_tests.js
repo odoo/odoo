@@ -406,7 +406,7 @@ QUnit.module("Search", (hooks) => {
         await editConditionField(target, 0, "color");
         await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(target), ['Color is "black"']);
+        assert.deepEqual(getFacetTexts(target), ['Color is "Black"']);
         assert.deepEqual(getDomain(controlPanel), [["color", "=", "black"]]);
 
         assert.containsN(target, ".o_menu_item", 1);
@@ -427,7 +427,7 @@ QUnit.module("Search", (hooks) => {
         );
         await applyFilter(target);
 
-        assert.deepEqual(getFacetTexts(target), ['Color is "white"']);
+        assert.deepEqual(getFacetTexts(target), ['Color is "White"']);
         assert.deepEqual(getDomain(controlPanel), [["color", "=", "white"]]);
 
         assert.containsN(target, ".o_menu_item", 2);

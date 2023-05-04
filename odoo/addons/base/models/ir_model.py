@@ -914,13 +914,9 @@ class IrModelFields(models.Model):
 
         # names of the models to patch
         patched_models = set()
-
-        # write callable(self._fields[fname].translate) means changing content
-        translate_only = self.env.lang not in (None, 'en_US') and all(self._fields[fname].translate is True for fname in vals)
-
         if vals and self:
             for item in self:
-                if item.state != 'manual' and not translate_only:
+                if item.state != 'manual':
                     raise UserError(_('Properties of base fields cannot be altered in this manner! '
                                       'Please modify them through Python code, '
                                       'preferably through a custom addon!'))
@@ -987,6 +983,12 @@ class IrModelFields(models.Model):
             models = self.pool.descendants(patched_models, '_inherits')
             self.pool.init_models(self._cr, models, dict(self._context, update_custom_fields=True))
 
+        return res
+
+    def update_field_translations(self, field_name, translations):
+        res = super().update_field_translations(field_name, translations)
+        if res:
+            self.clear_caches()
         return res
 
     def name_get(self):

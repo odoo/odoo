@@ -917,7 +917,7 @@ msgstr "Hinzugefügter Werttyp"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Adds"
-msgstr ""
+msgstr "Fügt"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -1901,6 +1901,9 @@ msgid ""
 "\n"
 "        Not Allowed: User cannot request an allocation."
 msgstr ""
+"Anfrage zusätzlicher Tage erlaubt: Benutzer kann eine Zuweisung für sich selbst anfragen.\n"
+"\n"
+"        Nicht erlaubt: Benutzer kann keine Zuweisung anfragen."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__feb
@@ -2095,7 +2098,7 @@ msgstr "Hat gültige Zuordnung"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_hatched
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_hatched
 msgid "Hatched"
-msgstr ""
+msgstr "Schraffiert"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__multi_employee
@@ -2182,6 +2185,9 @@ msgid ""
 "If Accrual Allocation: Number of days allocated in addition to the ones you "
 "will get via the accrual' system."
 msgstr ""
+"Wenn Zuweisung von Urlaubsrückstellung: Anzahl der Tage, die zusätzlich zu "
+"den Tagen, die Sie über das Urlaubsrückstelllungssystem erhalten, zugeteilt "
+"werden."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__number_of_hours_display
@@ -2189,6 +2195,9 @@ msgid ""
 "If Accrual Allocation: Number of hours allocated in addition to the ones you"
 " will get via the accrual' system."
 msgstr ""
+"Wenn Zuweisung von Urlaubsrückstellung: Anzahl der Stunden, die zusätzlich "
+"zu den Stunden, die Sie über das Urlaubsrückstelllungssystem erhalten, "
+"zugeteilt werden."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
@@ -2208,6 +2217,9 @@ msgid ""
 "If checked, the rate will be prorated on time off type where type is set on "
 "Working Time in the configuration."
 msgstr ""
+"Wenn diese Option aktiviert ist, wird der Satz nach der Abwesenheitsart "
+"anteilig berechnet, wenn die Art in der Konfiguration auf „Arbeitszeit“ "
+"eingestellt ist."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__active_employee
@@ -2419,7 +2431,7 @@ msgstr "Legende"
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Let's approve it"
-msgstr ""
+msgstr "Lassen Sie ihn uns genehmigen"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2433,7 +2445,7 @@ msgstr "Entdecken wir gemeinsam die Abwesenheiten-App."
 #: code:addons/hr_holidays/static/src/tours/hr_holidays_tour.js:0
 #, python-format
 msgid "Let's go validate it"
-msgstr ""
+msgstr "Lassen Sie es uns überprüfen"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -2452,7 +2464,7 @@ msgstr "Level"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "Level <span class=\"o_hr_holidays_plan_level_level\"/>"
-msgstr ""
+msgstr "Ebene <span class=\"o_hr_holidays_plan_level_level\"/>"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__transition_mode
@@ -2586,7 +2598,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_level__postpone_max_days
 msgid "Maximum amount of accruals to transfer"
-msgstr ""
+msgstr "Maximalbetrag der zu übertragenden Rückstellungen"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_accrual_level__first_month__may
@@ -2801,7 +2813,7 @@ msgstr "Kein Limit"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_accrual_plan_view_form
 msgid "No rule has been set up for this accrual plan."
-msgstr ""
+msgstr "Für diesen Rückstellungsplan wurde keine Regeln festgelegt."
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_validation_type__no
@@ -3337,6 +3349,9 @@ msgid ""
 "        - No validation needed: The employee's request is automatically approved.\n"
 "        - Approved by Time Off Officer: The employee's request need to be manually approved by the Time Off Officer."
 msgstr ""
+"Wählen Sie aus, welche Genehmigungsebene bei Mitarbeiteranfragen erforderlich ist\n"
+"        - Keine Validierung notwendig: Die Mitarbeiteranfrage wird automatisch genehmigt.\n"
+"        - Vom Abwesenheitsbeauftragten genehmigt: Die Mitarbeiteranfrage muss vom Abwesenheitsbeauftragten manuell genehmigt werden."
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3385,7 +3400,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_accrual_plan__show_transition_mode
 msgid "Show Transition Mode"
-msgstr ""
+msgstr "Übertragungsmodus anzeigen"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
@@ -3488,7 +3503,7 @@ msgstr "Tage mit Anwesenheitspflicht"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__is_striked
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__is_striked
 msgid "Striked"
-msgstr ""
+msgstr "Gestrichen"
 
 #. module: hr_holidays
 #. odoo-javascript
@@ -3588,6 +3603,9 @@ msgid ""
 "The distinction between working time (ex. Attendance) and absence (ex. "
 "Training) will be used in the computation of Accrual's plan rate."
 msgstr ""
+"Die Unterscheidung zwischen Arbeitszeit (z. B. Anwesenheit) und Abwesenheit "
+"(z. B. Fortbildung) wird bei der Berechnung der Rate des Rückstellungsplans "
+"verwendet."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_allocation_duration_check
@@ -3640,7 +3658,7 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_stress_day_date_from_after_day_to
 msgid "The start date must be anterior than the end date."
-msgstr ""
+msgstr "Das Startdatum muss vor dem Enddatum liegen."
 
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
@@ -4354,6 +4372,9 @@ msgid ""
 "\n"
 "              No Limit: Time Off requests can be taken without any prior allocation."
 msgstr ""
+"Ja: Abwesenheitsanfrage muss eine gültige Validierung haben.\n"
+"\n"
+"              Kein Limit: Abwesenheitsanfrage kann ohne vorherige Zuweisung gestellt werden."
 
 #. module: hr_holidays
 #. odoo-python

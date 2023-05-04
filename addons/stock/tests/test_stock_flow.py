@@ -2443,3 +2443,39 @@ class TestStockFlow(TestStockCommon):
         receipt.button_validate()
 
         self.assertEqual(receipt.move_ids.move_line_ids.location_dest_id, sub_loc)
+
+    def test_multi_picking_validation(self):
+        """ This test ensures that the validation of 2 pickings is successfull even if they have different operation types """
+
+        self.env.user.write({'groups_id': [(4, self.env.ref('stock.group_reception_report').id)]})
+        picking_A, picking_B = self.PickingObj.create([{
+            'picking_type_id': self.picking_type_in,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location
+        }, {
+            'picking_type_id': self.picking_type_out,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+        }])
+        self.MoveObj.create([{
+            'name': self.DozA.name,
+            'product_id': self.DozA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.DozA.uom_id.id,
+            'quantity_done': 10,
+            'picking_id': picking_A.id,
+            'location_id': self.supplier_location,
+            'location_dest_id': self.stock_location
+        }, {
+            'name': self.DozA.name,
+            'product_id': self.DozA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.DozA.uom_id.id,
+            'quantity_done': 10,
+            'picking_id': picking_B.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location
+        }])
+        pickings = picking_A | picking_B
+        pickings.button_validate()
+        self.assertTrue(all(pickings.mapped(lambda p: p.state == 'done')), "Pickings should be set as done")
