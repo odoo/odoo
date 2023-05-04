@@ -65,19 +65,10 @@ export class KanbanMany2OneAvatarUserField extends KanbanMany2OneAvatarField {
      * All props are normally passed to the Many2OneField however since
      * we add a new one, we need to filter it out.
      */
-    get m2oFieldProps() {
-        const props = {
-            ...this.props,
-        };
+    get popoverProps() {
+        const props = super.popoverProps;
         delete props.displayAvatarName;
         return props;
-    }
-
-    get popoverProps() {
-        return {
-            ...this.m2oFieldProps,
-            readonly: false,
-        };
     }
 }
 patch(KanbanMany2OneAvatarUserField.prototype, "mail", userChatter);
