@@ -1093,3 +1093,40 @@ class TestAccountMove(AccountTestInvoicingCommon):
         move = move_form.save()
         tax_line = move.line_ids.filtered('tax_repartition_line_id')
         self.assertEqual(tax_line.debit, 721.43)
+
+    def test_account_root_multiple_companies(self):
+        account = self.env['account.account'].create({
+            'name': 'account',
+            'code': 'ZZ',
+            'account_type': 'asset_current',
+            'company_id': self.env.company.id,
+        })
+        other_company = self.env['res.company'].create({'name': 'other company'})
+        self.env['account.account'].create({
+            'name': 'other account',
+            'code': 'ZZ',
+            'account_type': 'asset_current',
+            'company_id': other_company.id,
+        })
+        self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': fields.Date.from_string('2016-01-01'),
+            'line_ids': [
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': account.id,
+                    'debit': 500.0,
+                    'credit': 0.0,
+                }),
+                (0, None, {
+                    'name': 'revenue line 1',
+                    'account_id': self.company_data['default_account_tax_sale'].id,
+                    'debit': 0.0,
+                    'credit': 500.0,
+                }),
+            ]
+        })
+        balance = self.env["account.move.line"].read_group(
+            [("account_id", "=", account.id)], ["balance:sum"], ["account_root_id"]
+        )[0]["balance"]
+        self.assertEqual(balance, 500)
