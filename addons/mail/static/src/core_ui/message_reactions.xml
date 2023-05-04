@@ -4,9 +4,9 @@
     <div class="position-relative d-flex flex-wrap"
         t-att-class="{
             'flex-row-reverse me-3': env.inChatWindow and env.alignedRight,
-            'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.isDiscussion or props.message.isAutomatedMessage),
+            'ms-3': !(env.inChatWindow and env.alignedRight) and (props.message.isDiscussion),
         }"
-        t-attf-class="{{ (props.message.isDiscussion or props.message.isAutomatedMessage) ? 'mt-n2' : 'mt-1' }}">
+        t-attf-class="{{ props.message.isDiscussion ? 'mt-n2' : 'mt-1' }}">
         <button t-foreach="props.message.reactions" t-as="reaction" t-key="reaction.content" class="o-mail-MessageReaction btn d-flex p-0 border rounded-1 mb-1"
             t-on-click="() => this.onClickReaction(reaction)"
             t-on-contextmenu="onContextMenu"

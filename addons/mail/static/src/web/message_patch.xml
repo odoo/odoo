@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
     <t t-inherit="mail.Message" t-inherit-mode="extension">
         <xpath expr="//div[hasclass('o-mail-Message-content')]/*[1]" position="before">
-            <t name="hasTrackingValue" t-if="message.type === 'notification' or message.isTransient or message.trackingValues.length > 0">
+            <t t-if="message.type === 'notification' or message.isTransient or message.trackingValues.length > 0" name="hasTrackingValue">
                 <t t-if="message.subtypeDescription">
                     <p class="mb-0">
                         <t t-esc="message.subtypeDescription"/>

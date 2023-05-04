@@ -73,76 +73,65 @@
                                 </span>
                             </div>
                             <div t-if="message.originThread === props.thread and message.notifications.length > 0" t-att-class="{ 'ms-2': !isAlignedRight }">
-                                <span t-if="message.failureNotifications.length > 0" class="o-mail-Message-notification cursor-pointer text-danger" role="button" tabindex="0" t-on-click="onClickFailure">
-                                    <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
-                                </span>
-                                <span t-else="" class="o-mail-Message-notification text-600 cursor-pointer" t-on-click="onClickNotificationIcon" t-ref="notificationIcon">
+                                <span class="o-mail-Message-notification cursor-pointer text-danger" t-att-class="message.failureNotifications.length > 0 ? 'text-danger' : text-600" role="button" tabindex="0" t-on-click="onClickNotification">
                                     <i t-att-class="message.notifications[0].icon" role="img" aria-label="Delivery failure"/> <span t-if="message.notifications[0].label" t-out="message.notifications[0].label"/>
                                 </span>
                             </div>
                         </div>
-
                         <div
                             class="position-relative d-flex align-items-start"
                             t-att-class="{
                                    'justify-content-end': isAlignedRight,
-                                   'pe-4': env.inChatWindow and !isAlignedRight and !state.isEditing,
                                    'ps-4': env.inChatWindow and isAlignedRight and !state.isEditing,
-                                   'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    'ps-2': env.inChatWindow and isAlignedRight and state.isEditing,
+                                   'pe-4': env.inChatWindow and !isAlignedRight and !state.isEditing,
+                                   'pe-2': env.inChatWindow and !isAlignedRight and composerViewInEditing,
                                    }"
                         >
-                            <div t-if="!state.isEditing" class="o-mail-Message-content position-relative d-flex">
+                            <div class="o-mail-Message-content position-relative" t-att-class="{ 'd-flex': !state.isEditing, 'w-100': state.isEditing }">
                                 <t t-if="message.type !== 'notification' and !message.isTransient and (message.hasTextContent or message.subtypeDescription)">
-                                    <t t-if="!message.linkPreviewSquash">
+                                    <LinkPreviewList t-if="!state.isEditing and message.linkPreviewSquash" linkPreviews="message.linkPreviews" deletable="false"/>
+                                    <t t-else="">
                                         <div class="position-relative">
                                             <div class="o-mail-Message-bubble rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                                        'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
-                                                        'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
-                                                        }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
+                                                'border': state.isEditing,
+                                                'bg-info-light border border-info opacity-25': !message.isSelfAuthored and !message.isNote,
+                                                'bg-success-light border border-success opacity-25': message.isSelfAuthored and !message.isNote,
+                                                }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
                                             <div class="position-relative" t-att-class="{
                                                         'p-1': message.isNote,
-                                                        'o-mail-Message-body align-self-start text-break mb-0 rounded-end-3 rounded-bottom-3 p-3': !message.isNote,
-                                                        'flex-grow-1': state.isEditing,
+                                                        'o-mail-Message-body mb-0 p-3': !message.isNote,
+                                                        'align-self-start text-break rounded-end-3 rounded-bottom-3': !state.isEditing and !message.isNote,
+                                                        'o-mail-Message-editable flex-grow-1': state.isEditing,
                                                         }" t-ref="body">
-                                                <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
-                                                <t t-if="message.body" t-out="message.body"/>
-                                                <small t-if="message.editDate" class="ms-2 fst-italic text-muted" t-att-title="message.editDatetimeHuge">(edited)</small>
-                                                <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
+                                                <Composer t-if="state.isEditing" autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'"/>
+                                                <t t-else="">
+                                                    <em t-if="message.subject and !message.isSubjectSimilarToOriginThreadName and !message.isSubjectDefault" class="mb-1 me-2">Subject: <t t-esc="message.subject"/></em>
+                                                    <t t-if="message.body" t-out="message.body"/>
+                                                    <small t-if="message.editDate" class="ms-2 fst-italic text-muted" t-att-title="message.editDatetimeHuge">(edited)</small>
+                                                    <t t-if="showSubtypeDescription" t-out="message.subtypeDescription"/>
+                                                </t>
                                             </div>
                                         </div>
                                     </t>
-                                    <LinkPreviewList t-else="" linkPreviews="message.linkPreviews" deletable="false"/>
                                 </t>
-                            </div>
-                            <div t-else="" class="position-relative w-100">
-                                <div class="o-mail-Message-bubble border rounded-bottom-3 position-absolute top-0 start-0 w-100 h-100" t-att-class="{
-                                     'bg-info-light border-info': !message.isSelfAuthored,
-                                     'bg-success-light border-success opacity-25': message.isSelfAuthored,
-                                }" t-attf-class="{{ isAlignedRight ? 'rounded-start-3' : 'rounded-end-3' }}"/>
-                                <div class="o-mail-Message-editable position-relative flex-grow-1" t-att-class="{
-                                    'p-1': message.isNote,
-                                    'o-mail-Message-body mb-0 p-3': !message.isNote,
-                                }">
-                                    <Composer autofocus="true" composer="message.composer" messageComponent="constructor" onDiscardCallback.bind="exitEditMode" onPostCallback.bind="exitEditMode" mode="'compact'"/>
-                                </div>
                             </div>
                             <div t-if="props.hasActions and !message.isTransient" class="o-mail-Message-actions bg-view"
                                 t-att-class="{
                                     'position-absolute top-0': !env.inDiscussApp,
                                     'start-0 ms-3': isAlignedRight,
                                     'end-0 me-3': env.inChatWindow and !isAlignedRight or env.inChatter,
-                                    'mt-n4': env.inChatter and (message.isDiscussion or message.isNotification or message.isAutomatedMessage),
-                                    'mt-n5': env.inChatter and !(message.isDiscussion or message.isNotification or message.isAutomatedMessage),
-                                    'mt-2': env.inDiscussApp and (message.isDiscussion or message.isNotification or message.isAutomatedMessage),
+                                    'mt-n4': env.inChatter and (message.isDiscussion or message.isNotification),
+                                    'mt-n5': env.inChatter and !(message.isDiscussion or message.isNotification),
+                                    'mt-2': env.inDiscussApp and (message.isDiscussion or message.isNotification),
                                     'mt-n3': env.inChatWindow,
                                     'ms-2': env.inDiscussApp,
                                     'invisible': !isActive,
                                     'o-expanded': state.expandOptions
                                 }"
                             >
-                                <div class="d-flex rounded-1 shadow-sm overflow-hidden alignedRight" t-att-class="{
-                                        'mt-3': env.inChatter and !(message.isDiscussion or message.isNotification or message.isAutomatedMessage),
+                                <div class="d-flex rounded-1 shadow-sm overflow-hidden" t-att-class="{
+                                        'mt-3': env.inChatter and !(message.isDiscussion or message.isNotification),
                                         'flex-row-reverse': env.inChatWindow and isAlignedRight,
                                     }"
                                 >

@@ -459,8 +459,12 @@ export class Message extends Component {
         this.state.isEditing = false;
     }
 
-    onClickNotificationIcon(ev) {
-        this.popover.open(ev.target, { message: this.message });
+    onClickNotification(ev) {
+        if (this.message.failureNotifications.length > 0) {
+            this.onClickFailure(ev);
+        } else {
+            this.popover.open(ev.target, { message: this.message });
+        }
     }
 
     onClickFailure(ev) {
