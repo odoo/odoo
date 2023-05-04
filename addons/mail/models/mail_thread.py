@@ -649,6 +649,9 @@ class MailThread(models.AbstractModel):
         for _field_name, (template, post_kwargs) in templates.items():
             if not template:
                 continue
+            # defaults to automated notifications targeting customer
+            # whose answers should be considered as comments
+            post_kwargs.setdefault('message_type', 'auto_comment')
             if isinstance(template, str):
                 self._fallback_lang().message_post_with_view(template, **post_kwargs)
             else:
@@ -1610,12 +1613,22 @@ class MailThread(models.AbstractModel):
                 order='create_date DESC, id DESC',
                 limit=1)
         if parent_ids:
-            msg_dict['parent_id'] = parent_ids.id
-            msg_dict['is_internal'] = parent_ids.subtype_id and parent_ids.subtype_id.internal or False
+            msg_dict.update(self._message_parse_extract_from_parent(parent_ids))
 
         msg_dict.update(self._message_parse_extract_payload(message, save_original=save_original))
         msg_dict.update(self._message_parse_extract_bounce(message, msg_dict))
         return msg_dict
+
+    def _message_parse_extract_from_parent(self, parent_message):
+        """Derive message values from the parent."""
+        if parent_message:
+            parent_is_internal = bool(parent_message.subtype_id and parent_message.subtype_id.internal)
+            parent_is_auto_comment = parent_message.message_type == 'auto_comment'
+            return {
+                'is_internal': parent_is_internal and not parent_is_auto_comment,
+                'parent_id': parent_message.id,
+            }
+        return {}
 
     # ------------------------------------------------------
     # RECIPIENTS MANAGEMENT TOOLS
