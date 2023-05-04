@@ -8,7 +8,7 @@ import { ActionpadWidget } from "@point_of_sale/js/Screens/ProductScreen/Actionp
 patch(ActionpadWidget.prototype, "point_of_sale.ActionpadWidget", {
     get swapButton() {
         return (
-            this.props.actionName === "Payment" &&
+            this.props.actionType === "payment" &&
             this.pos.globalState.config.module_pos_restaurant &&
             this.pos.globalState.printers_category_ids_set.size
         );
