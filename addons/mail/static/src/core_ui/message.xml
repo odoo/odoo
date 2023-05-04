@@ -132,9 +132,9 @@
                                     'position-absolute top-0': !env.inDiscussApp,
                                     'start-0 ms-3': isAlignedRight,
                                     'end-0 me-3': env.inChatWindow and !isAlignedRight or env.inChatter,
-                                    'mt-n4': env.inChatter and (message.isDiscussion or message.isNotification),
-                                    'mt-n5': env.inChatter and !(message.isDiscussion or message.isNotification),
-                                    'mt-2': env.inDiscussApp and (message.isDiscussion or message.isNotification),
+                                    'mt-n4': env.inChatter and (message.isDiscussion or message.isNotification or message.isAutomatedMessage),
+                                    'mt-n5': env.inChatter and !(message.isDiscussion or message.isNotification or message.isAutomatedMessage),
+                                    'mt-2': env.inDiscussApp and (message.isDiscussion or message.isNotification or message.isAutomatedMessage),
                                     'mt-n3': env.inChatWindow,
                                     'ms-2': env.inDiscussApp,
                                     'invisible': !isActive,
@@ -142,7 +142,7 @@
                                 }"
                             >
                                 <div class="d-flex rounded-1 shadow-sm overflow-hidden alignedRight" t-att-class="{
-                                        'mt-3': env.inChatter and !(message.isDiscussion or message.isNotification),
+                                        'mt-3': env.inChatter and !(message.isDiscussion or message.isNotification or message.isAutomatedMessage),
                                         'flex-row-reverse': env.inChatWindow and isAlignedRight,
                                     }"
                                 >

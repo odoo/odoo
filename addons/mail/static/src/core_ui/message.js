@@ -190,6 +190,9 @@ export class Message extends Component {
         if (this.props.message.type === "notification") {
             return _t("System notification");
         }
+        if (this.props.message.type === "auto_comment") {
+            return _t("Automated message");
+        }
         if (!this.props.message.isDiscussion && this.props.message.type !== "user_notification") {
             return _t("Note");
         }

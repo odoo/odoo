@@ -130,6 +130,7 @@ class MailComposer(models.TransientModel):
         compute='_compute_record_name', readonly=False, store=True)  # useful only in monorecord comment mode
     # characteristics
     message_type = fields.Selection([
+        ('auto_comment', 'Automated Targeted Notification'),
         ('comment', 'Comment'),
         ('notification', 'System notification')],
         'Type', required=True, default='comment',
