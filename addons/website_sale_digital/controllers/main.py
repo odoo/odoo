@@ -83,7 +83,7 @@ class WebsiteSaleDigital(CustomerPortal):
             return redirect(self.orders_page)
 
         try:
-            self.env['ir.attachment'].browse(attachment_id).check('read')
+            request.env['ir.attachment'].browse(attachment_id).check('read')
         except AccessError:  # The user does not have read access on the attachment.
             # Check if access can be granted through their purchases.
             res_model = attachment['res_model']
