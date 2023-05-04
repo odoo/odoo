@@ -12,6 +12,8 @@ import {
     doAction,
     getActionManagerServerData,
 } from "@web/../tests/webclient/helpers";
+import { downloadReport } from "@web/webclient/actions/reports/utils";
+import { registerCleanup } from "../../../helpers/cleanup";
 
 let serverData;
 let target;
@@ -23,6 +25,9 @@ QUnit.module("ActionManager", (hooks) => {
         serverData = getActionManagerServerData();
         target = getFixture();
         clearRegistryWithCleanup(registry.category("main_components"));
+        registerCleanup(() => {
+            delete downloadReport.wkhtmltopdfStatusProm;
+        });
     });
 
     QUnit.module("Report actions");
@@ -111,8 +116,8 @@ QUnit.module("ActionManager", (hooks) => {
                 "/web/webclient/load_menus",
                 "/web/action/load",
                 "/report/check_wkhtmltopdf",
-                "notify",
                 "/report/download",
+                "notify",
             ]);
         }
     );

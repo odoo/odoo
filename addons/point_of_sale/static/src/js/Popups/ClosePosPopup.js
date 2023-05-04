@@ -23,7 +23,7 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         this.pos = usePos();
         this.popup = useService("popup");
         this.orm = useService("orm");
-        this.action = useService("action");
+        this.report = useService("report");
         this.hardwareProxy = useService("hardware_proxy");
         this.manualInputCashCount = false;
         this.cashControl = this.pos.globalState.config.cash_control;
@@ -92,11 +92,9 @@ export class ClosePosPopup extends AbstractAwaitablePopup {
         }
     }
     async downloadSalesReport() {
-        await this.action.doAction("point_of_sale.sale_details_report", {
-            additionalContext: {
-                active_ids: [this.pos.globalState.pos_session.id],
-            },
-        });
+        return this.report.download("point_of_sale.sale_details_report", [
+            this.pos.globalState.pos_session.id,
+        ]);
     }
     handleInputChange(paymentId) {
         let expectedAmount;
