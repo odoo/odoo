@@ -22,7 +22,7 @@
         <field name="name">crm.team.form</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <form string="Sales Team">
+            <form string="Sales Team" class="o_crm_team_form_view">
                 <div class="alert alert-info text-center" role="alert"
                     attrs="{'invisible': ['|', ('is_membership_multi', '=', True), ('member_warning', '=', False)]}">
                     <field name="member_warning"/>
