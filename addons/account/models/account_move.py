@@ -681,22 +681,19 @@ class AccountMove(models.Model):
         highest_name = self[0]._get_last_sequence(lock=False) if self else False
 
         for move in self:
-            if not highest_name and move == self[0] and not move.posted_before and move.date and (not move.name or move.name == '/'):
+            name_not_set = not move.name or move.name == '/'
+            if not highest_name and move == self[0] and not move.posted_before and move.date and name_not_set:
                 # In the form view, we need to compute a default sequence so that the user can edit
                 # it. We only check the first move as an approximation (enough for new in form view)
                 move._set_next_sequence()
             elif move.quick_edit_mode and not move.posted_before:
                 # We always suggest the next sequence as the default name of the new move
-                move._set_next_sequence()
-            elif (move.name and move.name != '/') or move.state != 'posted':
-                try:
-                    move._constrains_date_sequence()
-                    # The name matches the date: we don't recompute
-                except ValidationError:
-                    # Has never been posted and the name doesn't match the date: recompute it
+                if name_not_set or not move._sequence_matches_date():
                     move._set_next_sequence()
-            else:
-                # The name is not set yet and it is posted
+            elif not move.posted_before and not move._sequence_matches_date():
+                # The date changed before posting on first move of period
+                move._set_next_sequence()
+            elif (name_not_set and move.state == 'posted'):
                 move._set_next_sequence()
 
         self.filtered(lambda m: not m.name).name = '/'
