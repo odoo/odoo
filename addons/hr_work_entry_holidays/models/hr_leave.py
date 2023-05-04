@@ -206,7 +206,7 @@ Contracts:
 
     def _get_leaves_on_public_holiday(self):
         return super()._get_leaves_on_public_holiday().filtered(
-            lambda l: l.holiday_status_id.work_entry_type_id.code not in ['LEAVE110', 'LEAVE280'])
+            lambda l: l.holiday_status_id.work_entry_type_id.code not in ['LEAVE110', 'LEAVE210', 'LEAVE280'])
 
     def _validate_leave_request(self):
         super(HrLeave, self)._validate_leave_request()
