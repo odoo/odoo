@@ -551,11 +551,11 @@ class Web_Editor(http.Controller):
                 user_colors.append([tools.html_escape(value), colorMatch.group(1)])
             elif key == 'flip':
                 if value == 'x':
-                    svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ')
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleX(-1);" ', 1)
                 elif value == 'y':
-                    svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ')
+                    svg = svg.replace('<svg ', '<svg style="transform: scaleY(-1)" ', 1)
                 elif value == 'xy':
-                    svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ')
+                    svg = svg.replace('<svg ', '<svg style="transform: scale(-1)" ', 1)
 
         default_palette = {
             '1': '#3AADAA',
