@@ -6,11 +6,11 @@
             t-att-class="{
                 'o_Message_active': isActive,
                 'o-clicked': state.isClicked,
-                'o-discussion': messageView and (messageView.message.is_discussion or messageView.message.is_notification),
+                'o-discussion': messageView and (messageView.message.is_automated_message or messageView.message.is_discussion or messageView.message.is_notification),
                 'o-has-message-selection': threadView and threadView.replyingToMessageView,
                 'o-highlighted': messageView and (messageView.message.isHighlighted or messageView.isHighlighted),
                 'o-mobile': messaging and messaging.device.isMobile,
-                'o-not-discussion': messageView and !(messageView.message.is_discussion or messageView.message.is_notification),
+                'o-not-discussion': messageView and !(messageView.message.is_automated_message or messageView.message.is_discussion or messageView.message.is_notification),
                 'o-notification': messageView and messageView.message.message_type === 'notification',
                 'o-selected': isSelected,
                 'o-squashed': messageView and messageView.isSquashed,
