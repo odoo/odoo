@@ -407,8 +407,8 @@ export async function clickSave(htmlElement) {
     }
     if (htmlElement.querySelectorAll(".o_form_button_save").length) {
         return click(htmlElement, ".o_form_button_save");
-    } else if (htmlElement.querySelectorAll(".o_list_button_save").length) {
-        return click(htmlElement.querySelector(".o_list_button_save"), null, true);
+    } else if ($(htmlElement).find(".o_list_button_save:visible").length) {
+        return click($(htmlElement).find(".o_list_button_save:visible").get(0));
     } else {
         throw new Error("No save button found to be clicked.");
     }

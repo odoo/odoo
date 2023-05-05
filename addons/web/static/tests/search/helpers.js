@@ -199,14 +199,7 @@ export function getMenuItemTexts(target) {
 }
 
 export function getButtons(el) {
-    return [
-        ...el.querySelectorAll(
-            `div.o_control_panel_breadcrumbs button, div.o_control_panel_actions button`
-        ),
-    ].filter((btn) => {
-        const isVisible = !!(btn.offsetWidth || btn.offsetHeight || btn.getClientRects().length);
-        return isVisible && !btn.classList.contains("dropdown-toggle");
-    });
+    return [...el.querySelectorAll(`div.o_control_panel_breadcrumbs button`)];
 }
 
 export function getVisibleButtons(el) {
