@@ -230,6 +230,21 @@ registry.category("web_tour.tours").add('totp_login_device', {
 }, {
     content: "Confirm",
     trigger: "button:contains(Confirm Password)",
+}, {
+    content: "Input code",
+    extra_trigger: 'div:contains("enter your 2FA code")',
+    trigger: '[name=code] input',
+    async run(helpers) {
+        const $secret = this.$anchor.closest('div').find('[name=secret] span:first-child');
+        const $copyBtn = $secret.find('button');
+        $copyBtn.remove();
+        const token = await ajax.jsonRpc('/totphook', 'call', {
+            secret: $secret.text()
+        });
+        helpers.text(token, '[name=code] input');
+        helpers.click('button.btn-primary:contains(Activate)');
+        $('body').addClass('got-token')
+    }
 },
 ...openRoot(),
 ...openUserProfileAtSecurityTab(),
