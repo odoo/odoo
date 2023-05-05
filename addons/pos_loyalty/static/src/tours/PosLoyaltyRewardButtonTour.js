@@ -157,3 +157,17 @@ PosLoyalty.check.hasRewardLine('$ 10 per order on specific products', '-10.00', 
 PosLoyalty.check.orderTotalIs('60.00');
 
 Tour.register('PosLoyaltySpecificDiscountTour', { test: true, url: '/pos/web' }, getSteps());
+
+startSteps();
+
+ProductScreen.do.confirmOpeningPopup();
+ProductScreen.do.clickHomeCategory();
+
+ProductScreen.do.clickDisplayedProduct('Test Product A');
+ProductScreen.do.clickDisplayedProduct('Test Product C');
+PosLoyalty.check.orderTotalIs('130.00');
+PosLoyalty.check.isRewardButtonHighlighted(true);
+PosLoyalty.do.clickRewardButton();
+PosLoyalty.check.orderTotalIs('130.00');
+
+Tour.register('PosLoyaltySpecificDiscountWithFreeProductTour', { test: true, url: '/pos/web' }, getSteps());
