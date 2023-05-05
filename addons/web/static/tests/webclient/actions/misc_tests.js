@@ -5,7 +5,6 @@ import { registry } from "@web/core/registry";
 import { session } from "@web/session";
 import AbstractAction from "web.AbstractAction";
 import core from "web.core";
-import testUtils from "web.test_utils";
 import { makeTestEnv } from "../../helpers/mock_env";
 import {
     click,
@@ -272,10 +271,10 @@ QUnit.module("ActionManager", (hooks) => {
             const webClient = await createWebClient({ serverData });
             await doAction(webClient, "ClientAction");
             assert.containsOnce(target, ".my_button");
-            await testUtils.dom.click(target.querySelector(".my_button"));
+            await click(target.querySelector(".my_button"));
             await legacyExtraNextTick();
             assert.containsOnce(target, ".o_kanban_view");
-            await testUtils.dom.click($(target).find(".o_control_panel .breadcrumb a:first"));
+            await click($(target).find(".o_control_panel .breadcrumb a:first"));
             await legacyExtraNextTick();
             assert.containsOnce(target, ".my_button");
             assert.verifySteps(["on_reverse_breadcrumb"]);
@@ -284,7 +283,7 @@ QUnit.module("ActionManager", (hooks) => {
     );
 
     QUnit.test('handles "history_back" event', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
         let list;
         patchWithCleanup(listView.Controller.prototype, {
             setup() {
@@ -295,13 +294,13 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 4);
         await doAction(webClient, 3);
-        assert.containsN(target, ".o_control_panel .breadcrumb-item", 2);
+        assert.containsOnce(target, "ol.breadcrumb");
+        assert.containsOnce(target, ".o_breadcrumb span");
         list.env.config.historyBack();
-        await testUtils.nextTick();
-        await legacyExtraNextTick();
-        assert.containsOnce(target, ".o_control_panel .breadcrumb-item");
+        await nextTick();
+        assert.containsOnce(target, ".o_breadcrumb span");
         assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item").text(),
+            target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "Partners Action 4",
             "breadcrumbs should display the display_name of the action"
         );
