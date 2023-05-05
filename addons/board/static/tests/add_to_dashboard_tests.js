@@ -354,7 +354,7 @@ QUnit.module("Board", (hooks) => {
             await toggleMenuItemOption(target, "Date", "July");
 
             // compare July 2020 to June 2020
-            await toggleMenuItem(target, 0);
+            await toggleMenuItem(target.querySelector(".o_comparison_menu"), 0);
 
             // add the view to the dashboard
 
