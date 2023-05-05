@@ -426,14 +426,9 @@ patch(Order.prototype, "pos_loyalty.Order", {
     wait_for_push_order() {
         return (
             !_.isEmpty(this.couponPointChanges) ||
-            this._has_gift_card_product() ||
             this._get_reward_lines().length ||
             this._super(...arguments)
         );
-    },
-    _has_gift_card_product() {
-        const orderLines = this.get_orderlines();
-        return orderLines.some((line) => line.eWalletGiftCardProgram);
     },
     /**
      * Add additional information for our ticket, such as new coupons and loyalty point gains.
@@ -978,12 +973,8 @@ patch(Order.prototype, "pos_loyalty.Order", {
                             ) {
                                 continue;
                             }
-                            let price_to_use = line.get_price_with_tax();
-                            if (program.program_type === 'gift_card') {
-                                price_to_use = line.price;
-                            }
                             const pointsPerUnit = round_precision(
-                                (rule.reward_point_amount * price_to_use) /
+                                (rule.reward_point_amount * line.get_price_with_tax()) /
                                     line.get_quantity(),
                                 0.01
                             );
