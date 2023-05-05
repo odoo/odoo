@@ -202,6 +202,10 @@ export function getButtons(el) {
     return [...el.querySelectorAll(`div.o_control_panel_breadcrumbs button`)];
 }
 
+export function getVisibleButtons(el) {
+    return [...$(el).find(`div.o_control_panel_breadcrumbs button:visible`)];
+}
+
 /** Filter menu */
 
 export async function toggleFilterMenu(el) {

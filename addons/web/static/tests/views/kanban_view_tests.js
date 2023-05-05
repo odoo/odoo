@@ -19,7 +19,7 @@ import {
     triggerHotkey,
 } from "@web/../tests/helpers/utils";
 import {
-    getButtons,
+    getVisibleButtons,
     getFacetTexts,
     getPagerLimit,
     getPagerValue,
@@ -103,7 +103,7 @@ function getTooltips(groupIndex) {
 
 // Record
 async function createRecord() {
-    await click(target, "button.o-kanban-button-new");
+    await click(target, ".o_control_panel_main_buttons .d-none button.o-kanban-button-new");
 }
 
 async function quickCreateRecord(groupIndex) {
@@ -1572,7 +1572,7 @@ QUnit.module("Views", (hooks) => {
         assert.containsN(target, ".o_kanban_group", 2);
         assert.containsNone(target, ".o_kanban_quick_add");
 
-        await click(target.querySelector(".o-kanban-button-new"));
+        await createRecord();
 
         assert.containsNone(target, ".o_kanban_quick_create");
         assert.verifySteps(["create record"]);
@@ -1594,7 +1594,10 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsN(target, ".o_kanban_group.o_group_draggable", 2);
-        assert.containsOnce(target, ".btn-primary.o-kanban-button-new");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
         assert.containsOnce(target, ".o_column_quick_create");
 
         await createRecord();
@@ -1968,7 +1971,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await click(target, ".o-kanban-button-new");
+            await createRecord();
             assert.strictEqual(
                 document.activeElement,
                 target.querySelector(".o_field_widget[name=int_field] input")
@@ -1999,7 +2002,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["bar"],
             });
 
-            await click(target, ".o-kanban-button-new");
+            await createRecord();
             assert.strictEqual(
                 document.activeElement,
                 target.querySelector(".o_field_widget[name=foo] input")
@@ -8559,7 +8562,10 @@ QUnit.module("Views", (hooks) => {
         await editColumnName("new column");
         await validateColumn();
 
-        assert.containsOnce(target, ".o-kanban-button-new");
+        assert.containsOnce(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button.o-kanban-button-new"
+        );
     });
 
     QUnit.test("group_by_tooltip option when grouping on a many2one", async (assert) => {
@@ -11287,7 +11293,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps([]);
 
-        await click(target, ".o-kanban-button-new");
+        await createRecord();
 
         assert.verifySteps(["create record"]);
         assert.containsNone(target, ".o_kanban_quick_create");
@@ -11371,7 +11377,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.verifySteps([]);
 
-        await click(target, ".o-kanban-button-new");
+        await createRecord();
 
         assert.verifySteps(["create record"]);
         assert.containsNone(target, ".o_kanban_quick_create");
@@ -11431,11 +11437,11 @@ QUnit.module("Views", (hooks) => {
             `,
         });
 
-        assert.containsNone(target, ".dropdown-menu");
+        assert.containsNone(target, ".o_content .dropdown-menu");
         await click(target, ".o_kanban_renderer .dropdown-toggle");
-        assert.containsOnce(target, ".dropdown-menu");
+        assert.containsOnce(target, ".o_content .dropdown-menu");
         await click(target, ".o_kanban_renderer .dropdown-menu .dropdown-item");
-        assert.containsNone(target, ".dropdown-menu");
+        assert.containsNone(target, ".o_content .dropdown-menu");
     });
 
     QUnit.test("can use JSON in kanban template", async (assert) => {
@@ -12998,7 +13004,7 @@ QUnit.module("Views", (hooks) => {
                 },
             });
 
-            const cpButtons = getButtons(target);
+            const cpButtons = getVisibleButtons(target);
             assert.deepEqual(
                 [...cpButtons].map((button) => button.textContent.trim()),
                 ["New", "display"]
