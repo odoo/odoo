@@ -248,15 +248,15 @@
                         <button name="%(plan_wizard_action)d" type="action" string="Launch Plan" context="{'action_plan': True}"/>
                     </header>
                     <field name="name" readonly="1"/>
-                    <field name="work_phone" class="o_force_ltr" readonly="1"/>
+                    <field name="work_phone" class="o_force_ltr" readonly="1" optional="show"/>
                     <field name="work_email"/>
-                    <field name="activity_ids" widget="list_activity"/>
+                    <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
-                    <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
-                    <field name="company_id" groups="base.group_multi_company" readonly="1"/>
+                    <field name="activity_date_deadline" widget="remaining_days" options="{'allow_order': '1'}" optional="show"/>
+                    <field name="company_id" groups="base.group_multi_company" readonly="1" optional="show"/>
                     <field name="department_id"/>
                     <field name="job_id"/>
-                    <field name="parent_id" widget="many2one_avatar_user"/>
+                    <field name="parent_id" widget="many2one_avatar_user" optional="show"/>
                     <field name="address_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="work_location_id" optional="hide"/>
