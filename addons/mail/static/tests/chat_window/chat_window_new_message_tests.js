@@ -8,6 +8,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import { makeDeferred } from "@web/../tests/helpers/utils";
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
@@ -81,13 +83,13 @@ QUnit.test(
             {
                 name: "channel-1",
                 channel_member_ids: [
-                    [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                    Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
                 ],
             },
             {
                 name: "channel-2",
                 channel_member_ids: [
-                    [0, 0, { is_minimized: false, partner_id: pyEnv.currentPartnerId }],
+                    Command.create({ is_minimized: false, partner_id: pyEnv.currentPartnerId }),
                 ],
             },
         ]);
@@ -163,7 +165,7 @@ QUnit.test(
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
             name: "Partner 131",

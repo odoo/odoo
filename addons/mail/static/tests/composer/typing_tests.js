@@ -8,6 +8,8 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import { LONG_TYPING, SHORT_TYPING } from "@mail/composer/composer";
 import { OTHER_LONG_TYPING } from "@mail/core/messaging_service";
 
@@ -19,8 +21,8 @@ QUnit.test('receive other member typing status "is typing"', async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "channel",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { env, openDiscuss } = await start();
@@ -46,8 +48,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "channel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         const { env, openDiscuss } = await start();
@@ -84,8 +86,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "channel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
@@ -116,8 +118,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "channel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         const { advanceTime, env, openDiscuss } = await start({ hasTimeControl: true });
@@ -162,10 +164,10 @@ QUnit.test('receive several other members typing status "is typing"', async (ass
     const channelId = pyEnv["discuss.channel"].create({
         name: "channel",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
-            [0, 0, { partner_id: partnerId_3 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
+            Command.create({ partner_id: partnerId_3 }),
         ],
     });
     const { env, openDiscuss } = await start();
@@ -327,8 +329,8 @@ QUnit.test("chat: correspondent is typing", async (assert) => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });

@@ -7,6 +7,7 @@ import {
     CHAT_WINDOW_INBETWEEN_WIDTH,
     CHAT_WINDOW_WIDTH,
 } from "@mail/web/chat_window/chat_window_service";
+import { Command } from "@mail/../tests/helpers/command";
 
 QUnit.module("chat window manager");
 
@@ -15,17 +16,17 @@ QUnit.test("chat window does not fetch messages if hidden", async (assert) => {
     pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
         },
     ]);
@@ -54,17 +55,17 @@ QUnit.test("click on hidden chat window should fetch its messages", async (asser
     pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
         },
         {
             channel_member_ids: [
-                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
         },
     ]);

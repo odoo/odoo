@@ -2,6 +2,7 @@
 
 import { TEST_USER_IDS } from "@bus/../tests/helpers/test_constants";
 import { patchUiSize } from "@mail/../tests/helpers/patch_ui_size";
+import { Command } from "@mail/../tests/helpers/command";
 
 import {
     isScrolledToBottom,
@@ -369,22 +370,22 @@ QUnit.test("sidebar: chat im_status rendering", async (assert) => {
     pyEnv["discuss.channel"].create([
         {
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId_1 }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId_1 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId_2 }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId_2 }),
             ],
             channel_type: "chat",
         },
         {
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId_3 }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId_3 }),
             ],
             channel_type: "chat",
         },
@@ -457,8 +458,8 @@ QUnit.test("sidebar: chat custom name", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { custom_channel_name: "Marc", partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ custom_channel_name: "Marc", partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -738,7 +739,7 @@ QUnit.test("sidebar: chat rendering with unread counter", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 100, partner_id: pyEnv.currentPartnerId }],
+            Command.create({ message_unread_counter: 100, partner_id: pyEnv.currentPartnerId }),
         ],
         channel_type: "chat",
     });
@@ -1009,8 +1010,8 @@ QUnit.test("auto-focus composer on opening thread", async (assert) => {
         { name: "General" },
         {
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         },
@@ -1168,8 +1169,8 @@ QUnit.test("should auto-pin chat when receiving a new DM", async (assert) => {
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -1205,8 +1206,8 @@ QUnit.test("'Add Users' button should be displayed in the topbar of chats", asyn
     const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -1220,8 +1221,8 @@ QUnit.test("'Add Users' button should be displayed in the topbar of groups", asy
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
     });
@@ -1283,36 +1284,36 @@ QUnit.test(
         pyEnv["discuss.channel"].create([
             {
                 channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: partnerId_1 }],
+                    Command.create({ partner_id: pyEnv.currentPartnerId }),
+                    Command.create({ partner_id: partnerId_1 }),
                 ],
                 channel_type: "chat",
             },
             {
                 channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: partnerId_2 }],
+                    Command.create({ partner_id: pyEnv.currentPartnerId }),
+                    Command.create({ partner_id: partnerId_2 }),
                 ],
                 channel_type: "chat",
             },
             {
                 channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: partnerId_3 }],
+                    Command.create({ partner_id: pyEnv.currentPartnerId }),
+                    Command.create({ partner_id: partnerId_3 }),
                 ],
                 channel_type: "chat",
             },
             {
                 channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: partnerId_4 }],
+                    Command.create({ partner_id: pyEnv.currentPartnerId }),
+                    Command.create({ partner_id: partnerId_4 }),
                 ],
                 channel_type: "chat",
             },
             {
                 channel_member_ids: [
-                    [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                    [0, 0, { partner_id: TEST_USER_IDS.odoobotId }],
+                    Command.create({ partner_id: pyEnv.currentPartnerId }),
+                    Command.create({ partner_id: TEST_USER_IDS.odoobotId }),
                 ],
                 channel_type: "chat",
             },
@@ -1814,7 +1815,9 @@ QUnit.test(
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
             name: "General",
-            channel_member_ids: [[0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }]],
+            channel_member_ids: [
+                Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
+            ],
             group_based_subscription: true,
         });
         const { openDiscuss } = await start();
@@ -1886,7 +1889,7 @@ QUnit.test("Message shows up even if channel data is incomplete", async (assert)
                     partner_id: pyEnv.currentPartnerId,
                 },
             ],
-            [0, 0, { partner_id: correspondentPartnerId }],
+            Command.create({ partner_id: correspondentPartnerId }),
         ],
         channel_type: "chat",
     });

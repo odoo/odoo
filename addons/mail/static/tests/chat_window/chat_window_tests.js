@@ -12,6 +12,8 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import {
     CHAT_WINDOW_END_GAP_WIDTH,
     CHAT_WINDOW_INBETWEEN_WIDTH,
@@ -31,8 +33,8 @@ QUnit.test(
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -57,7 +59,7 @@ QUnit.test(
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
             ],
         });
         patchUiSize({ size: SIZES.SM });
@@ -119,7 +121,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { fold_state: "closed", partner_id: pyEnv.currentPartnerId }],
+                Command.create({ fold_state: "closed", partner_id: pyEnv.currentPartnerId }),
             ],
         });
         patchUiSize({ size: SIZES.SM });
@@ -195,7 +197,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { fold_state: "open", partner_id: pyEnv.currentPartnerId }],
+                Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
             ],
         });
         patchUiSize({ size: SIZES.SM });
@@ -217,7 +219,9 @@ QUnit.test(
 QUnit.test("chat window: close on ESCAPE", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        channel_member_ids: [[0, 0, { is_minimized: true, partner_id: pyEnv.currentPartnerId }]],
+        channel_member_ids: [
+            Command.create({ is_minimized: true, partner_id: pyEnv.currentPartnerId }),
+        ],
     });
     await start({
         mockRPC(route, args) {
@@ -246,8 +250,8 @@ QUnit.test(
         pyEnv["discuss.channel"].create({
             name: "general",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId, is_minimized: true }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         await start();
@@ -264,7 +268,7 @@ QUnit.test(
         pyEnv["discuss.channel"].create({
             name: "general",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId, is_minimized: true }],
+                Command.create({ partner_id: pyEnv.currentPartnerId, is_minimized: true }),
             ],
         });
         await start();
@@ -562,7 +566,7 @@ QUnit.test(
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -603,8 +607,8 @@ QUnit.test(
         });
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -628,8 +632,8 @@ QUnit.test("chat window should open when receiving a new DM", async (assert) => 
     const userId = pyEnv["res.users"].create({ partner_id: partnerId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -653,8 +657,8 @@ QUnit.test("chat window should not open when receiving a new DM from odoobot", a
     const userId = pyEnv["res.users"].create({ partner_id: pyEnv.odoobotId });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { is_pinned: false, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.odoobotId }],
+            Command.create({ is_pinned: false, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: pyEnv.odoobotId }),
         ],
         channel_type: "chat",
     });
@@ -720,7 +724,7 @@ QUnit.test("chat window should remain folded when new message is received", asyn
                     partner_id: pyEnv.currentPartnerId,
                 },
             ],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -833,7 +837,7 @@ QUnit.test(
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -977,7 +981,9 @@ QUnit.test("folded chat window should hide member-list and settings buttons", as
 QUnit.test("Chat window in mobile are not foldable", async (assert) => {
     const pyEnv = await startServer();
     pyEnv["discuss.channel"].create({
-        channel_member_ids: [[0, 0, { fold_state: "open", partner_id: pyEnv.currentPartnerId }]],
+        channel_member_ids: [
+            Command.create({ fold_state: "open", partner_id: pyEnv.currentPartnerId }),
+        ],
     });
     patchUiSize({ size: SIZES.SM });
     await start();

@@ -1,6 +1,7 @@
 /** @odoo-module **/
 
 import { startServer, start, afterNextRender } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
 
 QUnit.module("message_seen_indicator");
 
@@ -11,9 +12,9 @@ QUnit.test("rendering when just one has received the message", async (assert) =>
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "chat", // only chat channel have seen notification
     });
@@ -45,9 +46,9 @@ QUnit.test("rendering when everyone have received the message", async (assert) =
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "chat",
     });
@@ -76,9 +77,9 @@ QUnit.test("rendering when just one has seen the message", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "chat",
     });
@@ -114,9 +115,9 @@ QUnit.test("rendering when just one has seen & received the message", async (ass
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "chat",
     });
@@ -148,9 +149,9 @@ QUnit.test("rendering when just everyone has seen the message", async (assert) =
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
         ],
         channel_type: "chat",
     });
@@ -178,8 +179,8 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async (
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -212,8 +213,8 @@ QUnit.test("'channel_seen' notification received is correctly handled", async (a
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -248,8 +249,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -296,8 +297,8 @@ QUnit.test(
             name: "test",
             channel_type: "chat",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         const messageId = pyEnv["mail.message"].create({
@@ -324,8 +325,8 @@ QUnit.test(
             name: "test",
             channel_type: "chat",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         const [, messageId_2] = pyEnv["mail.message"].create([
@@ -367,8 +368,8 @@ QUnit.test(
             name: "test",
             channel_type: "chat",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         const messageId = pyEnv["mail.message"].create({

@@ -1,6 +1,8 @@
 /* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import { createLocalId } from "@mail/utils/misc";
 import { nextTick } from "@web/../tests/helpers/utils";
 
@@ -14,8 +16,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "channel",
         });
@@ -33,8 +35,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "channel",
         });
@@ -51,8 +53,8 @@ QUnit.test("should have correct members in member list", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
@@ -72,8 +74,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "channel",
         });
@@ -91,8 +93,8 @@ QUnit.test("chat with member should be opened after clicking on channel member",
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "channel",
     });
@@ -111,7 +113,7 @@ QUnit.test(
         const channel_member_ids = [];
         for (let i = 0; i < 101; i++) {
             const partnerId = pyEnv["res.partner"].create({ name: "name" + i });
-            channel_member_ids.push([0, 0, { partner_id: partnerId }]);
+            channel_member_ids.push(Command.create({ partner_id: partnerId }));
         }
         const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
@@ -131,7 +133,7 @@ QUnit.test("Load more button should load more members", async (assert) => {
     const channel_member_ids = [];
     for (let i = 0; i < 101; i++) {
         const partnerId = pyEnv["res.partner"].create({ name: "name" + i });
-        channel_member_ids.push([0, 0, { partner_id: partnerId }]);
+        channel_member_ids.push(Command.create({ partner_id: partnerId }));
     }
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
@@ -168,8 +170,8 @@ QUnit.test("Channel member count update after user left", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { env, openDiscuss } = await start();

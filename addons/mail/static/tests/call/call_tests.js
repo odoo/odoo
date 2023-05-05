@@ -9,6 +9,7 @@ import {
 } from "@mail/../tests/helpers/test_utils";
 import { editInput, nextTick, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
+import { Command } from "../helpers/command";
 
 QUnit.module("call");
 
@@ -39,8 +40,8 @@ QUnit.test("no call with odoobot", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: pyEnv.odoobotId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: pyEnv.odoobotId }),
         ],
         channel_type: "chat",
     });

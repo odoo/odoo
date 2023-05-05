@@ -8,6 +8,8 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 import { patchWithCleanup, triggerHotkey } from "@web/../tests/helpers/utils";
 import { patchBrowserNotification } from "@mail/../tests/helpers/patch_notifications";
@@ -317,8 +319,8 @@ QUnit.test("mark unread channel as read", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const [messagId_1] = pyEnv["mail.message"].create([
@@ -356,7 +358,7 @@ QUnit.test("mark failure as read", async (assert) => {
     pyEnv["discuss.channel"].create({
         message_ids: [messageId],
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId, seen_message_id: messageId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId, seen_message_id: messageId }),
         ],
     });
     pyEnv["mail.notification"].create({
@@ -841,7 +843,7 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "Test",
             channel_member_ids: [
-                [0, 0, { message_unread_counter: 2, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ message_unread_counter: 2, partner_id: pyEnv.currentPartnerId }),
             ],
         });
         const messageId = pyEnv["mail.message"].create({
@@ -882,8 +884,8 @@ QUnit.test("chat should show unread counter on receiving new messages", async (a
     const channelId = pyEnv["discuss.channel"].create({
         channel_type: "chat",
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     await start();

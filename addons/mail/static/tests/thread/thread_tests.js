@@ -13,6 +13,7 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
 
 import {
     makeDeferred,
@@ -240,8 +241,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -429,7 +430,7 @@ QUnit.test(
         const pyEnv = await startServer();
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
             ],
             channel_type: "channel",
             name: "General",
@@ -470,7 +471,7 @@ QUnit.test("new messages separator on receiving new message [REQUIRE FOCUS]", as
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
         ],
         channel_type: "channel",
         name: "General",
@@ -513,7 +514,7 @@ QUnit.test("no new messages separator on posting message (no message history)", 
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+            Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
         ],
         channel_type: "channel",
         name: "General",
@@ -538,8 +539,8 @@ QUnit.test("Mention a partner with special character (e.g. apostrophe ')", async
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { openDiscuss } = await start();
@@ -569,9 +570,9 @@ QUnit.test("mention 2 different partners that have the same name", async (assert
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
         ],
     });
     const { openDiscuss } = await start();
@@ -669,8 +670,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
         });
         const { openDiscuss } = await start();
@@ -960,8 +961,8 @@ QUnit.test("can be marked as read while loading", async function (assert) {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
