@@ -9,7 +9,7 @@ from odoo import api, fields, models, _
 class ResourceCalendarAttendance(models.Model):
     _name = "resource.calendar.attendance"
     _description = "Work Detail"
-    _order = 'week_type, dayofweek, hour_from'
+    _order = 'sequence, week_type, dayofweek, hour_from'
 
     name = fields.Char(required=True)
     dayofweek = fields.Selection([
@@ -27,10 +27,15 @@ class ResourceCalendarAttendance(models.Model):
         help="Start and End time of working.\n"
              "A specific value of 24:00 is interpreted as 23:59:59.999999.")
     hour_to = fields.Float(string='Work to', required=True)
+    # For the hour duration, the compute function is used to compute the value
+    # unambiguously, while the duration in days is computed for the default
+    # value based on the day_period but can be manually overridden.
+    duration_hours = fields.Float(compute='_compute_duration_hours', string='Duration (hours)')
+    duration_days = fields.Float(compute='_compute_duration_days', string='Duration (days)', store=True, readonly=False)
     calendar_id = fields.Many2one("resource.calendar", string="Resource's Calendar", required=True, ondelete='cascade')
     day_period = fields.Selection([
         ('morning', 'Morning'),
-        ('lunch', 'Lunch'),
+        ('lunch', 'Break'),
         ('afternoon', 'Afternoon')], required=True, default='morning')
     resource_id = fields.Many2one('resource.resource', 'Resource')
     week_type = fields.Selection([
@@ -63,6 +68,19 @@ class ResourceCalendarAttendance(models.Model):
         # It ensures that an even week number always follows an odd week number. With classical week number,
         # some years have 53 weeks. Therefore, two consecutive odd week number follow each other (53 --> 1).
         return int(math.floor((date.toordinal() - 1) / 7) % 2)
+
+    @api.depends('hour_from', 'hour_to')
+    def _compute_duration_hours(self):
+        for attendance in self:
+            attendance.duration_hours = (attendance.hour_to - attendance.hour_from) if attendance.day_period != 'lunch' else 0
+
+    @api.depends('day_period', 'hour_from', 'hour_to')
+    def _compute_duration_days(self):
+        for attendance in self:
+            if attendance.day_period == 'lunch':
+                attendance.duration_days = 0
+            else:
+                attendance.duration_days = 0.5 if attendance.duration_hours <= attendance.calendar_id.hours_per_day * 3 / 4 else 1
 
     @api.depends('week_type')
     def _compute_display_name(self):

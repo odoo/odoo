@@ -104,7 +104,6 @@ class ResourceMixin(models.AbstractModel):
                 for calendar_resource in calendar_resources:
                     result[calendar_resource.id] = {'days': 0, 'hours': 0}
                 continue
-            day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
 
             # actual hours per day
             if compute_leaves:
@@ -113,7 +112,7 @@ class ResourceMixin(models.AbstractModel):
                 intervals = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
 
             for calendar_resource in calendar_resources:
-                result[calendar_resource.id] = calendar._get_days_data(intervals[calendar_resource.id], day_total[calendar_resource.id])
+                result[calendar_resource.id] = calendar._get_attendance_intervals_days_data(intervals[calendar_resource.id])
 
         # convert "resource: result" into "employee: result"
         return {mapped_employees[r.id]: result[r.id] for r in resources}
@@ -142,16 +141,13 @@ class ResourceMixin(models.AbstractModel):
             mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
-            day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
-
             # compute actual hours per day
             attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
             leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
 
             for calendar_resource in calendar_resources:
-                result[calendar_resource.id] = calendar._get_days_data(
-                    attendances[calendar_resource.id] & leaves[calendar_resource.id],
-                    day_total[calendar_resource.id]
+                result[calendar_resource.id] = calendar._get_attendance_intervals_days_data(
+                    attendances[calendar_resource.id] & leaves[calendar_resource.id]
                 )
 
         # convert "resource: result" into "employee: result"
