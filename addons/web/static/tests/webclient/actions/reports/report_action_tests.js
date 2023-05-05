@@ -166,7 +166,12 @@ QUnit.module("ActionManager", (hooks) => {
                 ".o_content iframe",
                 "should have opened the report client action"
             );
-            assert.containsOnce(target, "button[title='Print']", "should have a print button");
+            // the control panel has the content twice and a d-none class is toggled depending the screen size
+            assert.containsOnce(
+                target,
+                ":not(.d-none) > button[title='Print']",
+                "should have a print button"
+            );
             assert.verifySteps([
                 "/web/webclient/load_menus",
                 "/web/action/load",
