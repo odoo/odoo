@@ -44,7 +44,9 @@ export class X2ManyField extends Component {
         );
 
         this.archInfo = this.props.views?.[this.props.viewMode] || {};
-        this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc);
+        if (this.props.viewMode) {
+            this.className = computeViewClassName(this.props.viewMode, this.archInfo.xmlDoc);
+        }
 
         const { activeActions, creates } = this.archInfo;
         if (this.props.viewMode === "kanban") {
