@@ -59,6 +59,7 @@ import {
     toggleSearchBarMenu,
     toggleMenuItem,
     toggleSaveFavorite,
+    validateSearch,
 } from "../search/helpers";
 import { createWebClient, doAction, loadState } from "../webclient/helpers";
 import { makeView, makeViewInDialog, setupViewRegistries } from "./helpers";
@@ -70,7 +71,11 @@ let serverData;
 let target;
 
 async function reloadListView(target) {
-    await editPager(target, getPagerValue(target));
+    if (target.querySelector(".o_searchview_input")) {
+        await validateSearch(target);
+    } else {
+        await editPager(target, getPagerValue(target));
+    }
 }
 
 function getDataRow(position) {
