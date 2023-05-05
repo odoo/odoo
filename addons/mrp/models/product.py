@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import collections
 from datetime import timedelta
 from itertools import groupby
 import operator as py_operator
@@ -213,20 +214,27 @@ class ProductProduct(models.Model):
         # compute kit quantities
         for product in bom_kits:
             bom_sub_lines = bom_sub_lines_per_kit[product]
+            # group lines by component
+            bom_sub_lines_grouped = collections.defaultdict(list)
+            for info in bom_sub_lines:
+                bom_sub_lines_grouped[info[0].product_id].append(info)
             ratios_virtual_available = []
             ratios_qty_available = []
             ratios_incoming_qty = []
             ratios_outgoing_qty = []
             ratios_free_qty = []
-            for bom_line, bom_line_data in bom_sub_lines:
-                component = bom_line.product_id.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
-                if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
-                    # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
-                    # to avoid a division by zero. The same logic is applied to non-storable products as those
-                    # products have 0 qty available.
-                    continue
-                uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
-                qty_per_kit = bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
+
+            for component, bom_sub_lines in bom_sub_lines_grouped.items():
+                component = component.with_context(mrp_compute_quantities=qties).with_prefetch(prefetch_component_ids)
+                qty_per_kit = 0
+                for bom_line, bom_line_data in bom_sub_lines:
+                    if component.type != 'product' or float_is_zero(bom_line_data['qty'], precision_rounding=bom_line.product_uom_id.rounding):
+                        # As BoMs allow components with 0 qty, a.k.a. optionnal components, we simply skip those
+                        # to avoid a division by zero. The same logic is applied to non-storable products as those
+                        # products have 0 qty available.
+                        continue
+                    uom_qty_per_kit = bom_line_data['qty'] / bom_line_data['original_qty']
+                    qty_per_kit += bom_line.product_uom_id._compute_quantity(uom_qty_per_kit, bom_line.product_id.uom_id, round=False, raise_if_failure=False)
                 if not qty_per_kit:
                     continue
                 rounding = component.uom_id.rounding
