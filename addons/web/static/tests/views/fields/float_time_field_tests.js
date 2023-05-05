@@ -176,4 +176,19 @@ QUnit.module("Fields", (hooks) => {
             "Placeholder"
         );
     });
+
+    QUnit.test("float_time field does not have an inputmode attribute", async function (assert) {
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="qux" widget="float_time" placeholder="Placeholder"/>
+                </form>`,
+        });
+
+        const input = target.querySelector(".o_field_widget[name='qux'] input");
+        assert.notOk(input.attributes.inputMode);
+    });
 });
