@@ -11,6 +11,7 @@
                 <field name="user_id"/>
                 <field name="member_ids"/>
                 <group expand="0" string="Group By...">
+                    <filter string="Company" name="company" domain="[]" context="{'group_by': 'company_id'}" groups="base.group_multi_company"/>
                     <filter string="Team Leader" name="team_leader" domain="[]" context="{'group_by': 'user_id'}"/>
                 </group>
             </search>
@@ -21,7 +22,7 @@
         <field name="name">crm.team.form</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <form string="Sales Team">
+            <form string="Sales Team" class="o_crm_team_form_view">
                 <div class="alert alert-info text-center" role="alert"
                     attrs="{'invisible': ['|', ('is_membership_multi', '=', True), ('member_warning', '=', False)]}">
                     <field name="member_warning"/>
@@ -34,7 +35,7 @@
                         <h1>
                             <field class="text-break" name="name" placeholder="e.g. North America"/>
                         </h1>
-                        <div name="options_active"/>
+                        <div name="options_active" class="o_row"/>
                     </div>
                     <group>
                         <group name="left" string="Team Details">
@@ -52,7 +53,7 @@
                     <notebook>
                         <page string="Members" name="members_users">
                             <field name="member_ids" mode="kanban"
-                                class="w-100">
+                                class="w-100" context="{'allow_create_employee': False}">
                                 <kanban>
                                     <field name="id"/>
                                     <field name="name"/>
