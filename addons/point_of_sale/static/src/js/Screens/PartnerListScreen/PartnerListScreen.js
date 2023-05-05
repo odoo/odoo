@@ -53,6 +53,7 @@ export class PartnerListScreen extends Component {
         };
         this.updatePartnerList = debounce(this.updatePartnerList, 70);
         onWillUnmount(this.updatePartnerList.cancel);
+        this.partnerEditor = {}; // create an imperative handle for PartnerDetailsEdit
     }
     // Lifecycle hooks
     back() {

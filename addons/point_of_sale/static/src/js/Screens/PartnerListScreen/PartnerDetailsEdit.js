@@ -4,7 +4,7 @@ import { _t } from "@web/core/l10n/translation";
 import { getDataURLFromFile } from "@web/core/utils/urls";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
-import { Component, onMounted, onWillUnmount } from "@odoo/owl";
+import { Component } from "@odoo/owl";
 
 export class PartnerDetailsEdit extends Component {
     static template = "PartnerDetailsEdit";
@@ -19,13 +19,8 @@ export class PartnerDetailsEdit extends Component {
             state_id: partner.state_id && partner.state_id[0],
             property_product_pricelist: this.setDefaultPricelist(partner),
         };
-
-        onMounted(() => {
-            this.env.bus.on("save-partner", this, this.saveChanges);
-        });
-
-        onWillUnmount(() => {
-            this.env.bus.off("save-partner", this);
+        Object.assign(this.props.imperativeHandle, {
+            save: () => this.saveChanges(),
         });
     }
     setDefaultPricelist(partner) {
