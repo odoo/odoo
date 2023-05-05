@@ -145,6 +145,9 @@ export class NavigableList extends Component {
     }
 
     onKeydown(ev) {
+        if (!this.show) {
+            return;
+        }
         const hotkey = getActiveHotkey(ev);
         switch (hotkey) {
             case "enter":
@@ -155,29 +158,17 @@ export class NavigableList extends Component {
                 this.selectOption(ev, this.state.activeOption);
                 break;
             case "escape":
-                if (!this.show) {
-                    return;
-                }
                 markEventHandled(ev, "NavigableList.close");
                 this.close();
                 break;
             case "tab":
                 this.navigate("next");
-                if (!this.show) {
-                    this.open();
-                }
                 break;
             case "arrowup":
                 this.navigate("previous");
-                if (!this.show) {
-                    this.open();
-                }
                 break;
             case "arrowdown":
                 this.navigate("next");
-                if (!this.show) {
-                    this.open();
-                }
                 break;
             default:
                 return;
