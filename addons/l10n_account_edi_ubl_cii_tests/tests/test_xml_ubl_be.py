@@ -249,6 +249,39 @@ class TestUBLBE(TestUBLCommon):
             expected_file='from_odoo/bis3_out_invoice_public_admin.xml',
         )
 
+    def test_rounding_price_unit(self):
+        """ OpenPeppol states that:
+        * All document level amounts shall be rounded to two decimals for accounting
+        * Invoice line net amount shall be rounded to two decimals
+        See: https://docs.peppol.eu/poacc/billing/3.0/bis/#_rounding
+        Do not round the unit prices. It allows to obtain the correct line amounts when prices have more than 2
+        digits.
+        """
+        # Set the allowed number of digits for the price_unit
+        decimal_precision = self.env['decimal.precision'].search([('name', '=', 'Product Price')], limit=1)
+        self.assertTrue(bool(decimal_precision), "The decimal precision for Product Price is required for this test")
+        decimal_precision.digits = 4
+
+        invoice = self._generate_move(
+            self.partner_1,
+            self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[
+                {
+                    'product_id': self.product_a.id,
+                    'quantity': 10000,
+                    'price_unit': 0.4567,
+                    'tax_ids': [(6, 0, self.tax_21.ids)],
+                }
+            ],
+        )
+
+        self._assert_invoice_attachment(
+            invoice.ubl_cii_xml_id,
+            xpaths=None,
+            expected_file='from_odoo/bis3_out_invoice_rounding.xml',
+        )
+
     ####################################################
     # Test import
     ####################################################
