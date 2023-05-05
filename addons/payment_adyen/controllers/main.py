@@ -245,6 +245,11 @@ class AdyenController(http.Controller):
                 acquirer_sudo = PaymentTransaction.sudo()._get_tx_from_feedback_data(
                     'adyen', notification_data
                 ).acquirer_id  # Find the acquirer based on the transaction
+            except ValidationError:
+                # Warn rather than log the traceback to avoid noise when a POS payment notification
+                # is received and the corresponding `payment.transaction` record is not found.
+                _logger.warning("unable to find the transaction; skipping to acknowledge")
+            else:
                 if not self._verify_notification_signature(
                     received_signature, notification_data, acquirer_sudo.adyen_hmac_key
                 ):
@@ -263,11 +268,13 @@ class AdyenController(http.Controller):
                     notification_data['resultCode'] = 'Authorised' if success else 'Error'
                 else:
                     continue  # Don't handle unsupported event codes and failed events
-
-                # Handle the notification data as a regular feedback
-                PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
-            except ValidationError:  # Acknowledge the notification to avoid getting spammed
-                _logger.exception("unable to handle the notification data; skipping to acknowledge")
+                try:
+                    # Handle the notification data as a regular feedback
+                    PaymentTransaction.sudo()._handle_feedback_data('adyen', notification_data)
+                except ValidationError:  # Acknowledge the notification to avoid getting spammed
+                    _logger.exception(
+                        "unable to handle the notification data;skipping to acknowledge"
+                    )
 
         return '[accepted]'  # Acknowledge the notification
 
