@@ -135,6 +135,38 @@ class TestVirtualAvailable(TestStockCommon):
         self.env['stock.quant']._unlink_zero_quants()
         product.company_id = company2.id  # Should work this time.
 
+    def test_change_product_company_02(self):
+        """ Checks we can't change the product's company if this product has
+        stock move line in another company. """
+        company1 = self.env.ref('base.main_company')
+        company2 = self.env['res.company'].create({'name': 'Second Company'})
+        product = self.env['product.product'].create({
+            'name': 'Product [TEST - Change Company]',
+            'type': 'consu',
+        })
+        picking = self.env['stock.picking'].create({
+            'location_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.ref('stock.picking_type_in'),
+        })
+        self.env['stock.move'].create({
+            'name': 'test',
+            'location_id': self.env.ref('stock.stock_location_customers').id,
+            'location_dest_id': self.env.ref('stock.stock_location_stock').id,
+            'product_id': product.id,
+            'product_uom': product.uom_id.id,
+            'product_uom_qty': 1,
+            'picking_id': picking.id,
+        })
+        picking.action_confirm()
+        wizard_data = picking.button_validate()
+        wizard = Form(self.env[wizard_data['res_model']].with_context(wizard_data['context'])).save()
+        wizard.process()
+
+        product.company_id = company1.id
+        with self.assertRaises(UserError):
+            product.company_id = company2.id
+
     def test_change_product_company_exclude_vendor_and_customer_location(self):
         """ Checks we can change product company where only exist single company
         and exist quant in vendor/customer location"""
