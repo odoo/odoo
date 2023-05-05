@@ -765,14 +765,12 @@ class ProductTemplate(models.Model):
         if 'company_id' in vals and vals['company_id']:
             products_changing_company = self.filtered(lambda product: product.company_id.id != vals['company_id'])
             if products_changing_company:
-                # Forbid changing a product's company when quant(s) exist in another company.
-                quant = self.env['stock.quant'].sudo().search([
+                move_lines = self.env['stock.move.line'].search([
                     ('product_id', 'in', products_changing_company.product_variant_ids.ids),
                     ('company_id', 'not in', [vals['company_id'], False]),
-                    ('quantity', '!=', 0),
                 ], order=None, limit=1)
-                if quant:
-                    raise UserError(_("This product's company cannot be changed as long as there are quantities of it belonging to another company."))
+                if move_lines:
+                    raise UserError(_("This product's company cannot be changed as long as there are stock move line of it belonging to another company."))
 
         if 'uom_id' in vals:
             new_uom = self.env['uom.uom'].browse(vals['uom_id'])
