@@ -3,6 +3,7 @@
 import {
     click,
     getFixture,
+    getNodesTextContent,
     legacyExtraNextTick,
     makeDeferred,
     nextTick,
@@ -25,6 +26,10 @@ import {
 
 import { Component, xml } from "@odoo/owl";
 const actionRegistry = registry.category("actions");
+
+function getBreadCrumbTexts(target) {
+    return getNodesTextContent(target.querySelectorAll(".breadcrumb-item, .o_breadcrumb .active"));
+}
 
 let serverData;
 let target;
@@ -109,12 +114,7 @@ QUnit.module("ActionManager", (hooks) => {
         doAction(webClient, 4);
         def.resolve();
         await nextTick();
-        await legacyExtraNextTick();
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item.active").text(),
-            "Partners Action 4",
-            "action 4 should be loaded"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
     });
 
     QUnit.test("clicking quickly on breadcrumbs...", async function (assert) {
@@ -140,11 +140,7 @@ QUnit.module("ActionManager", (hooks) => {
         // resolve the form view read
         def.resolve();
         await nextTick();
-        assert.strictEqual(
-            $(target).find(".o_control_panel .breadcrumb-item.active").text(),
-            "Partners Action 4",
-            "action 4 should be loaded and visible"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
     });
 
     QUnit.test(
@@ -335,11 +331,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view", "should display the kanban view of action 4");
         assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -370,11 +362,7 @@ QUnit.module("ActionManager", (hooks) => {
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view", "should display the kanban view of action 4");
         assert.containsNone(target, ".o_list_view", "should not display the list view of action 3");
-        assert.containsOnce(
-            target,
-            ".o_control_panel .breadcrumb-item",
-            "there should be one controller in the breadcrumbs"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners Action 4"]);
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -468,10 +456,7 @@ QUnit.module("ActionManager", (hooks) => {
             def.resolve();
             await nextTick();
             assert.containsOnce(target, ".o_list_view");
-            assert.strictEqual(
-                target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-                "Partners"
-            );
+            assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
             assert.containsNone(target, ".o_form_view");
             assert.verifySteps([
                 "/web/webclient/load_menus",
@@ -505,10 +490,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-            "Partners"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         assert.containsNone(target, ".o_list_view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -540,10 +522,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-            "Partners"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         assert.containsNone(target, ".o_list_view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -575,10 +554,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_kanban_view");
-        assert.strictEqual(
-            target.querySelector(".o_control_panel .breadcrumb-item").textContent,
-            "Partners"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners"]);
         assert.containsNone(target, ".o_list_view");
         assert.verifySteps([
             "/web/webclient/load_menus",
@@ -616,18 +592,12 @@ QUnit.module("ActionManager", (hooks) => {
         await click(row1.querySelector(".o_data_cell"));
         await click(row2.querySelector(".o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").innerText,
-            "Second record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
 
         def.resolve();
         await nextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.strictEqual(
-            target.querySelector(".breadcrumb-item.active").innerText,
-            "Second record"
-        );
+        assert.deepEqual(getBreadCrumbTexts(target), ["Partners", "Second record"]);
     });
 
     QUnit.test("local state, global state, and race conditions", async function (assert) {
