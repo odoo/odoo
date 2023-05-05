@@ -50,6 +50,8 @@ QUnit.module("Web Components", (hooks) => {
                 setMode: () => {},
                 setUseWorker: () => {},
                 setOptions: () => {},
+                getValue: () => {},
+                setValue: () => {},
             },
             renderer: {
                 setOptions: () => {},
@@ -61,6 +63,10 @@ QUnit.module("Web Components", (hooks) => {
             setTheme: () => {},
             resize: () => {},
             destroy: () => {},
+            setSession: () => {},
+            getSession() {
+                return this.session;
+            },
         };
     }
 

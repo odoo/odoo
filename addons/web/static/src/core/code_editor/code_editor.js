@@ -41,6 +41,7 @@ export class CodeEditor extends Component {
             validate: (theme) => CodeEditor.THEMES.includes(theme),
         },
         maxLines: { type: Number, optional: true },
+        sessionId: { type: [Number, String], optional: true },
     };
     static defaultProps = {
         readonly: false,
@@ -48,6 +49,7 @@ export class CodeEditor extends Component {
         onChange: () => {},
         class: "",
         theme: "",
+        sessionId: 1,
     };
 
     static MODES = ["js", "xml", "qweb", "scss", "python"];
@@ -58,6 +60,7 @@ export class CodeEditor extends Component {
 
         onWillStart(async () => loadBundle(await getBundle("web.ace_lib")));
 
+        const sessions = {};
         useEffect(
             (el) => {
                 if (!el) {
@@ -71,16 +74,16 @@ export class CodeEditor extends Component {
                 this.aceEditor.setOptions({
                     maxLines: this.props.maxLines,
                     showPrintMargin: false,
-                });
-                this.aceEditor.session.setOptions({
                     useWorker: false,
-                    tabSize: 2,
-                    useSoftTabs: true,
                 });
                 this.aceEditor.$blockScrolling = true;
 
-                this.aceEditor.setValue(this.props.value);
-                this.aceEditor.session.on("change", () => {
+                const session = aceEditor.getSession();
+                if (!sessions[this.props.sessionId]) {
+                    sessions[this.props.sessionId] = session;
+                }
+                aceEditor.setValue(this.props.value);
+                session.on("change", () => {
                     if (this.props.onChange) {
                         this.props.onChange(this.aceEditor.getValue());
                     }
@@ -91,20 +94,6 @@ export class CodeEditor extends Component {
                 };
             },
             () => [this.editorRef.el]
-        );
-
-        useEffect(
-            (value) => {
-                if (value !== this.aceEditor.getValue()) {
-                    this.aceEditor.setValue(value);
-                }
-            },
-            () => [this.props.value]
-        );
-
-        useEffect(
-            (mode) => this.aceEditor.session.setMode(mode ? `ace/mode/${mode}` : ""),
-            () => [this.props.mode]
         );
 
         useEffect(
@@ -130,6 +119,34 @@ export class CodeEditor extends Component {
                     : "block";
             },
             () => [this.props.readonly]
+        );
+
+        useEffect(
+            (sessionId, mode, value) => {
+                let session = sessions[sessionId];
+                if (session) {
+                    if (session.getValue() !== value) {
+                        session.setValue(value);
+                    }
+                } else {
+                    session = new window.ace.EditSession(value);
+                    session.setUndoManager(new window.ace.UndoManager());
+                    session.setOptions({
+                        useWorker: false,
+                        tabSize: 2,
+                        useSoftTabs: true,
+                    });
+                    session.on("change", () => {
+                        if (this.props.onChange) {
+                            this.props.onChange(this.aceEditor.getValue());
+                        }
+                    });
+                    sessions[sessionId] = session;
+                }
+                session.setMode(mode ? `ace/mode/${mode}` : "");
+                this.aceEditor.setSession(session);
+            },
+            () => [this.props.sessionId, this.props.mode, this.props.value]
         );
 
         const debouncedResize = useDebounced(() => {
