@@ -2,8 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import base64
-from odoo import api, fields, models
+import json
+from odoo import api, fields, models, _
 from odoo.addons.spreadsheet.utils import empty_spreadsheet_data_base64
+from odoo.exceptions import ValidationError
 
 class SpreadsheetMixin(models.AbstractModel):
     _name = "spreadsheet.mixin"
@@ -28,3 +30,12 @@ class SpreadsheetMixin(models.AbstractModel):
                 spreadsheet.spreadsheet_binary_data = False
             else:
                 spreadsheet.spreadsheet_binary_data = base64.b64encode(spreadsheet.spreadsheet_data.encode())
+
+    @api.onchange('spreadsheet_binary_data')
+    def _onchange_data_(self):
+        if self.spreadsheet_binary_data:
+            try:
+                data_str = base64.b64decode(self.spreadsheet_binary_data).decode('utf-8')
+                json.loads(data_str)
+            except:
+                raise ValidationError(_('Invalid JSON Data'))
