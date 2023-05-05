@@ -89,13 +89,15 @@
                         <group>
                             <field name="partner_id"/>
                             <field name="resource_ref" string="Course"/>
-                            <field name="feedback" attrs="{'invisible': [('feedback','=',False)]}"/>
+                            <field name="create_date"/>
                         </group>
                         <group>
                             <field name="rating"/>
-                            <field name="create_date"/>
                             <field name="is_internal"/>
                         </group>
+                    </group>
+                    <group class="mw-100" attrs="{'invisible': [('feedback', '=', False)]}">
+                        <field name="feedback"/>
                     </group>
                 </sheet>
             </form>
