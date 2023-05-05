@@ -581,6 +581,19 @@ QUnit.test("quick edit last self-message from UP arrow", async (assert) => {
 
     await afterNextRender(() => triggerHotkey("ArrowUp"));
     assert.containsOnce($, ".o-mail-Message .o-mail-Composer");
+
+    await afterNextRender(() => triggerHotkey("Escape"));
+    assert.containsNone($, ".o-mail-Message .o-mail-Composer");
+    assert.strictEqual(document.activeElement, $(".o-mail-Composer-input")[0]);
+
+    // non-empty composer should not trigger quick edit
+    await insertText(".o-mail-Composer-input", "Shrek");
+    await triggerHotkey("ArrowUp");
+    // Navigable List relies on useEffect, which behaves with 2 animation frames
+    // Wait 2 animation frames to make sure it doesn't show quick edit
+    await nextTick();
+    await nextTick();
+    assert.containsNone($, ".o-mail-Message .o-mail-Composer");
 });
 
 QUnit.test("Select composer suggestion via Enter does not send the message", async (assert) => {

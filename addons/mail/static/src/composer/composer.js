@@ -325,10 +325,7 @@ export class Composer extends Component {
     onKeydown(ev) {
         switch (ev.key) {
             case "ArrowUp":
-                if (this.hasSuggestions) {
-                    return;
-                }
-                if (this.props.messageEdition) {
+                if (this.props.messageEdition && this.props.composer.textInputContent === "") {
                     const messageToEdit = this.props.composer.thread.lastEditableMessageOfSelf;
                     if (messageToEdit) {
                         this.props.messageEdition.editingMessage = messageToEdit;
