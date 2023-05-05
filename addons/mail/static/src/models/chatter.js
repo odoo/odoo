@@ -262,7 +262,9 @@ Model({
          * @param {string[]} [fieldNames]
          */
         async reloadParentView({ fieldNames } = {}) {
-            await this.saveRecord();
+            if (this.saveRecord) {
+                await this.saveRecord();
+            }
             if (this.webRecord) {
                 await this.webRecord.model.root.load(
                     { resId: this.threadId },
