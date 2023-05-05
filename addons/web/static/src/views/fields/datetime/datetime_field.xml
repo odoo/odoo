@@ -10,11 +10,11 @@
                 <input
                     t-ref="start-date"
                     type="text"
-                    t-att-id="props.id"
+                    t-att-id="showRange ? props.endDateField and props.id : props.id"
                     class="o_input cursor-pointer"
                     autocomplete="off"
                     t-att-placeholder="props.placeholder"
-                    t-att-data-field="props.name"
+                    t-att-data-field="emptyField !== startDateField ? startDateField : endDateField"
                     t-on-input="onInput"
                 />
                 <span
@@ -23,12 +23,12 @@
                     title="This date is on the future. Make sure it is what you expected."
                 />
             </t>
-            <t t-if="showEndDateInput">
+            <t t-if="showRange">
                 <t t-if="emptyField and !props.readonly and !props.required">
                     <!-- Add date button -->
                     <button class="o_add_date btn btn-secondary btn-sm w-100" t-on-click="addDate">
                         <i class="fa fa-plus me-2" />
-                        <t t-if="emptyField === props.name">Add start date</t>
+                        <t t-if="emptyField === startDateField">Add start date</t>
                         <t t-else="">Add end date</t>
                     </button>
                 </t>
@@ -47,7 +47,7 @@
                             class="o_input cursor-pointer"
                             autocomplete="off"
                             t-att-placeholder="props.placeholder"
-                            t-att-data-field="props.endDateField"
+                            t-att-data-field="endDateField"
                             t-on-input="onInput"
                         />
                         <span

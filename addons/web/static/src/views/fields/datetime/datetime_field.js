@@ -26,6 +26,7 @@ import { standardFieldProps } from "../standard_field_props";
  *  placeholder?: string;
  *  required?: boolean;
  *  rounding?: number;
+ *  startDateField?: string;
  *  warnFuture?: boolean;
  * }} DateTimeFieldProps
  *
@@ -42,6 +43,7 @@ export class DateTimeField extends Component {
         placeholder: { type: String, optional: true },
         required: { type: Boolean, optional: true },
         rounding: { type: Number, optional: true },
+        startDateField: { type: String, optional: true },
         warnFuture: { type: Boolean, optional: true },
     };
 
@@ -50,6 +52,10 @@ export class DateTimeField extends Component {
     //-------------------------------------------------------------------------
     // Getters
     //-------------------------------------------------------------------------
+
+    get endDateField() {
+        return this.props.endDateField || this.props.name;
+    }
 
     get hasEmptyField() {
         return this.values.length < 2 || !this.values.every(Boolean);
@@ -60,8 +66,16 @@ export class DateTimeField extends Component {
         return this.inputRefs.map((ref) => ref.el?.value);
     }
 
-    get showEndDateInput() {
-        return this.props.endDateField && this.values.filter(Boolean).length;
+    get relatedField() {
+        return this.props.startDateField || this.props.endDateField;
+    }
+
+    get showRange() {
+        return this.relatedField && this.values.filter(Boolean).length;
+    }
+
+    get startDateField() {
+        return this.props.startDateField || this.props.name;
     }
 
     get values() {
@@ -73,7 +87,7 @@ export class DateTimeField extends Component {
     //-------------------------------------------------------------------------
 
     setup() {
-        const { endDateField, name } = this.props; // should not change
+        const { name } = this.props; // should not change
 
         this.rootRef = useRef("root");
         this.inputRefs = [useRef("start-date"), useRef("end-date")];
@@ -84,9 +98,9 @@ export class DateTimeField extends Component {
             onChange: (value) => {
                 if (Array.isArray(value)) {
                     if (value.every(Boolean)) {
-                        this.emptyField = false;
+                        this.emptyField = null;
                     } else {
-                        this.emptyField = value[0] ? endDateField : name;
+                        this.emptyField = value[1] ? this.startDateField : this.endDateField;
                         this.state.value = value.find(Boolean);
                     }
                 }
@@ -96,10 +110,10 @@ export class DateTimeField extends Component {
                 const toUpdate = {};
                 if (Array.isArray(value)) {
                     // Value is already a range
-                    [toUpdate[name], toUpdate[endDateField]] = value;
+                    [toUpdate[this.startDateField], toUpdate[this.endDateField]] = value;
                 } else {
-                    toUpdate[this.emptyField === name ? endDateField : name] = value;
-                    if (endDateField && this.emptyField) {
+                    toUpdate[this.emptyField === name ? this.relatedField : name] = value;
+                    if (this.relatedField && this.emptyField) {
                         toUpdate[this.emptyField] = false;
                     }
                 }
@@ -124,7 +138,7 @@ export class DateTimeField extends Component {
 
     async addDate() {
         const [value] = this.values;
-        this.state.focusedDateIndex = this.emptyField === this.props.name ? 0 : 1;
+        this.state.focusedDateIndex = this.emptyField === this.startDateField ? 0 : 1;
         this.state.value = [value, value];
     }
 
@@ -139,14 +153,15 @@ export class DateTimeField extends Component {
      * @param {DateTimeFieldProps} props
      */
     getPickerProps(props) {
-        const { endDateField, record, name, maxDate, minDate, rounding } = props;
+        const { record, name, maxDate, minDate, rounding } = props;
         const value = this.getValueFromProps(props);
 
         // Compute own props
         this.type = record.fields[name].type;
-        if (endDateField) {
+        if (this.relatedField) {
             this.emptyField =
-                !Array.isArray(value) && (record.data[endDateField] ? name : endDateField);
+                !Array.isArray(value) &&
+                (record.data[this.relatedField] ? name : this.relatedField);
         }
 
         // Compute picker props
@@ -168,14 +183,17 @@ export class DateTimeField extends Component {
      * @param {DateTimeFieldProps} props
      * @returns {DateTimePickerProps["value"]}
      */
-    getValueFromProps({ endDateField, record, required, name }) {
+    getValueFromProps({ endDateField, name, record, required, startDateField }) {
         const value = record.data[name];
-        if (endDateField) {
-            const endValue = record.data[endDateField];
-            if (required || (value && endValue)) {
-                return [value, endValue];
+        const relatedField = startDateField || endDateField;
+        if (relatedField) {
+            const relatedValue = record.data[relatedField];
+            if (required || (value && relatedValue)) {
+                const range = [value, value];
+                range[startDateField ? 0 : 1] = relatedValue;
+                return range;
             } else if (!value) {
-                return endValue;
+                return relatedValue;
             }
         }
         return value;
@@ -217,6 +235,7 @@ export class DateTimeField extends Component {
     }
 }
 
+const START_DATE_FIELD_OPTION = "start_date_field";
 const END_DATE_FIELD_OPTION = "end_date_field";
 
 export const dateField = {
@@ -250,12 +269,23 @@ export const dateField = {
         placeholder: attrs.placeholder,
         required: Boolean(modifiers.required),
         rounding: parseInt(options.rounding),
+        startDateField: options[START_DATE_FIELD_OPTION],
         warnFuture: archParseBoolean(options.warn_future),
     }),
-    fieldDependencies: ({ type, modifiers, options }) =>
-        options[END_DATE_FIELD_OPTION] && [
-            { name: options[END_DATE_FIELD_OPTION], type, modifiers },
-        ],
+    fieldDependencies: ({ type, modifiers, options }) => {
+        const deps = [];
+        if (options[START_DATE_FIELD_OPTION]) {
+            deps.push({ name: options[START_DATE_FIELD_OPTION], type, modifiers });
+            if (options[END_DATE_FIELD_OPTION]) {
+                console.warn(
+                    `A field cannot have both ${START_DATE_FIELD_OPTION} and ${END_DATE_FIELD_OPTION} options at the same time`
+                );
+            }
+        } else if (options[END_DATE_FIELD_OPTION]) {
+            deps.push({ name: options[END_DATE_FIELD_OPTION], type, modifiers });
+        }
+        return deps;
+    },
 };
 
 export const dateTimeField = {
@@ -280,8 +310,14 @@ export const dateRangeField = {
     supportedOptions: [
         ...dateTimeField.supportedOptions,
         {
+            label: _lt("Start date field"),
+            name: START_DATE_FIELD_OPTION,
+            type: "field",
+            availableTypes: ["date", "datetime"],
+        },
+        {
             label: _lt("End date field"),
-            name: "end_date_field",
+            name: END_DATE_FIELD_OPTION,
             type: "field",
             availableTypes: ["date", "datetime"],
         },
