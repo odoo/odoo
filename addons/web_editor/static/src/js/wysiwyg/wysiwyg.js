@@ -1161,6 +1161,7 @@ const Wysiwyg = Widget.extend({
                 needLabel: true
             }, undefined, link);
             linkDialog.open();
+            this.odooEditor.document.getSelection().collapseToEnd(); //To hide toolbar when link dialog is open.
             linkDialog.on('save', this, data => {
                 if (!data) {
                     return;
