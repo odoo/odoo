@@ -166,10 +166,11 @@ class ResourceCalendar(models.Model):
             and not attendance.resource_id and not attendance.display_type)
 
     def _get_hours_per_day(self, attendances):
+        """
+        Calculate the average hours worked per workday.
+        """
         if not attendances:
             return 0
-
-        attendances = attendances.filtered(lambda a: a.day_period != 'lunch')
 
         hour_count = 0.0
         for attendance in attendances:
@@ -470,6 +471,31 @@ class ResourceCalendar(models.Model):
     # Private Methods / Helpers
     # --------------------------------------------------
 
+    def _get_attendance_intervals_days_data(self, attendance_intervals):
+        """
+        helper function to compute duration of `intervals` that have
+        'resource.calendar.attendance' records as payload (3rd element in tuple).
+        expressed in days and hours.
+
+        resource.calendar.attendance records have durations associated
+        with them so this method merely calculates the proportion that is
+        covered by the intervals.
+        """
+        day_hours = defaultdict(float)
+        day_days = defaultdict(float)
+        for start, stop, meta in attendance_intervals:
+            # If the interval covers only a part of the original attendance, we
+            # take durations in days proportionally to what is left of the interval.
+            interval_hours = (stop - start).total_seconds() / 3600
+            day_hours[start.date()] += interval_hours
+            day_days[start.date()] += meta.duration_days * interval_hours / meta.duration_hours
+
+        return {
+            # Round the number of days to the closest 16th of a day.
+            'days': sum(float_utils.round(ROUNDING_FACTOR * day_days[day]) / ROUNDING_FACTOR for day in day_days),
+            'hours': sum(day_hours.values()),
+        }
+
     def _get_days_data(self, intervals, day_total):
         """
         helper function to compute duration of `intervals`
@@ -607,15 +633,13 @@ class ResourceCalendar(models.Model):
         from_datetime, dummy = make_aware(from_datetime)
         to_datetime, dummy = make_aware(to_datetime)
 
-        day_total = self._get_resources_day_total(from_datetime, to_datetime)[False]
-
         # actual hours per day
         if compute_leaves:
             intervals = self._work_intervals_batch(from_datetime, to_datetime, domain=domain)[False]
         else:
             intervals = self._attendance_intervals_batch(from_datetime, to_datetime, domain=domain)[False]
 
-        return self._get_days_data(intervals, day_total)
+        return self._get_attendance_intervals_days_data(intervals)
 
     def plan_hours(self, hours, day_dt, compute_leaves=False, domain=None, resource=None):
         """

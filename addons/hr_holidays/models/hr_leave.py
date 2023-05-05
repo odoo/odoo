@@ -375,19 +375,18 @@ class HolidaysRequest(models.Model):
                 if (holiday.request_unit_half or holiday.request_unit_hours) and holiday.request_date_to != holiday.request_date_from:
                     holiday.request_date_to = holiday.request_date_from
 
-                attendance_from, attendance_to = holiday._get_attendances(holiday.request_date_from, holiday.request_date_to)
+
+                day_period = {
+                    'am': 'morning',
+                    'pm': 'afternoon'
+                }.get(holiday.request_date_from_period, None) if holiday.request_unit_half else None
+
+                attendance_from, attendance_to = holiday._get_attendances(holiday.request_date_from, holiday.request_date_to, day_period=day_period)
 
                 compensated_request_date_from = holiday.request_date_from
                 compensated_request_date_to = holiday.request_date_to
 
-                if holiday.request_unit_half:
-                    if holiday.request_date_from_period == 'am':
-                        hour_from = attendance_from.hour_from
-                        hour_to = attendance_from.hour_to
-                    else:
-                        hour_from = attendance_to.hour_from
-                        hour_to = attendance_to.hour_to
-                elif holiday.request_unit_hours:
+                if holiday.request_unit_hours:
                     hour_from = holiday.request_hour_from
                     hour_to = holiday.request_hour_to
                 else:
@@ -526,8 +525,6 @@ class HolidaysRequest(models.Model):
                 False)
             hours = resource_calendar.get_work_hours_count(self.date_from, self.date_to)
             days = hours / (today_hours or HOURS_PER_DAY)
-        if self.request_unit_half and hours > 0 and hours < HOURS_PER_DAY:
-            days = 0.5
         return (days, hours)
 
 
@@ -1568,13 +1565,15 @@ class HolidaysRequest(models.Model):
         holiday_tz = timezone(resource.tz or self.env.user.tz or 'UTC')
         return holiday_tz.localize(datetime.combine(date, hour)).astimezone(UTC).replace(tzinfo=None)
 
-    def _get_attendances(self, request_date_from, request_date_to):
+    def _get_attendances(self, request_date_from, request_date_to, day_period=None):
         self.ensure_one()
         domain = [
             ('calendar_id', '=', self.resource_calendar_id.id),
             ('display_type', '=', False),
             ('day_period', '!=', 'lunch'),
         ]
+        if day_period:
+            domain.append(('day_period', '=', day_period))
         attendances = self.env['resource.calendar.attendance']._read_group(domain,
             ['week_type', 'dayofweek', 'day_period'],
             ['hour_from:min', 'hour_to:max'])
