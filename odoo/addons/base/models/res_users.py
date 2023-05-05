@@ -154,7 +154,6 @@ def check_mfa(fn):
         if hasattr(user, f"_check_credentials_mfa_{user._mfa_type()}"):
             return getattr(user, f"_check_credentials_mfa_{user._mfa_type()}")(fn(self), w)
         else:
-            w.run_check()
             return fn(self)
     wrapped.__has_check_mfa = True
     return wrapped
