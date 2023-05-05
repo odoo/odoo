@@ -246,25 +246,68 @@ class AssetsBundle(object):
         """
         is_css = extension in ['css', 'min.css', 'css.map']
         unique = "%" if ignore_version else self.get_version('css' if is_css else 'js')
-
+        extra = '%s' % ('rtl/' if is_css and self.rtl else '')
         url_pattern = self.get_asset_url(
             unique=unique,
-            extra='%s' % ('rtl/' if is_css and self.rtl else ''),  # not sure about css.map
+            extra=extra,  # not sure about css.map
             name=self.name,
             sep='.',
             extension=extension,
         )
-        self.env.cr.execute("""
+        query = """
              SELECT max(id)
                FROM ir_attachment
               WHERE create_uid = %s
                 AND url like %s
+                AND res_model = 'ir.ui.view'
+                AND res_id = 0
+                AND public = true
            GROUP BY name
            ORDER BY name
-         """, [SUPERUSER_ID, url_pattern])
+        """
+        self.env.cr.execute(query, [SUPERUSER_ID, url_pattern])
 
-        attachment_ids = [r[0] for r in self.env.cr.fetchall()]
-        return self.env['ir.attachment'].sudo().browse(attachment_ids)
+        attachment_id = [r[0] for r in self.env.cr.fetchall()]
+        if not attachment_id and not ignore_version:
+            fallback_url_pattern = self.get_asset_url(
+                unique=unique,
+                extra='%', #ignore website_id and rtl
+                name=self.name,
+                sep='.',
+                extension='%s' % extension,
+            )
+
+            self.env.cr.execute(query, [SUPERUSER_ID, fallback_url_pattern])
+            similar_attachment_ids = [r[0] for r in self.env.cr.fetchall()]
+            if similar_attachment_ids:
+                similar = self.env['ir.attachment'].sudo().browse(similar_attachment_ids)
+                _logger.info('Found a similar attachment for %s, copying from %s', url_pattern, similar.url)
+                values = {
+                    'name': similar.name,
+                    'mimetype': similar.mimetype,
+                    'res_model': 'ir.ui.view',
+                    'res_id': False,
+                    'type': 'binary',
+                    'public': True,
+                    'raw': similar.raw,
+                }
+
+                self.add_post_rollback()
+                attachment = self.env['ir.attachment'].with_user(SUPERUSER_ID).create(values)
+                url = self.get_asset_url(
+                    id=attachment.id,
+                    unique=unique,
+                    extra=extra,
+                    name=self.name,
+                    sep='.',
+                    extension=extension,
+                )
+                attachment.url = url
+                attachment_id = attachment.id
+                if self.env.context.get('commit_assetsbundle') is True:
+                    self.env.cr.commit()
+
+        return self.env['ir.attachment'].sudo().browse(attachment_id)
 
     def add_post_rollback(self):
         """
@@ -314,7 +357,7 @@ class AssetsBundle(object):
             unique=self.get_version('css' if is_css else 'js'),
             extra='%s' % ('rtl/' if extension in ['css', 'min.css'] and self.rtl else ''),
             name=self.name,
-            sep='.',  # included in fname
+            sep='.',
             extension=extension,
         )
         attachment.url = url
