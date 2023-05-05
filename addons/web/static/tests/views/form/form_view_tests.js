@@ -50,6 +50,11 @@ import { companyService } from "@web/webclient/company_service";
 let target;
 let serverData;
 
+// Record
+async function createRecord() {
+    await click(target, ".o_control_panel_main_buttons .d-none button.o_form_button_create");
+}
+
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
         target = getFixture();
@@ -1712,7 +1717,7 @@ QUnit.module("Views", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
 
-        await click(target.querySelector(".o_list_button_add"));
+        await click(target, ".o_control_panel_main_buttons .d-none button.o_list_button_add");
         assert.containsOnce(target, ".o_form_view");
         // sanity check: notebook active page is first page
         assert.hasClass(target.querySelector(".o_notebook .nav-link"), "active");
@@ -1724,7 +1729,7 @@ QUnit.module("Views", (hooks) => {
         await click(target.querySelector(".o_control_panel .o_form_button_cancel"));
         assert.containsNone(target, ".o_form_view");
 
-        await click(target.querySelector(".o_list_button_add"));
+        await click(target, ".o_control_panel_main_buttons .d-none button.o_list_button_add");
         assert.containsOnce(target, ".o_form_view");
         // check notebook active page is first page again
         assert.hasClass(target.querySelector(".o_notebook .nav-link"), "active");
@@ -3641,7 +3646,7 @@ QUnit.module("Views", (hooks) => {
 
         const n = serverData.models.partner.records.length;
 
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
         assert.containsOnce(target, ".o_form_editable");
         assert.strictEqual(
             target.querySelector(".o_field_char input").value,
@@ -3789,7 +3794,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsOnce(target, ".o_cp_action_menus");
 
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
 
         assert.containsOnce(target, ".o_cp_action_menus");
 
@@ -3906,7 +3911,7 @@ QUnit.module("Views", (hooks) => {
             "first record",
             "should have the display name of the record as title"
         );
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
         assert.strictEqual(
             target.querySelector(".o_control_panel .o_breadcrumb").textContent,
             "New",
@@ -5478,7 +5483,7 @@ QUnit.module("Views", (hooks) => {
             await click(target, ".o_back_button");
 
             // Create a new record
-            await click(target, ".o_list_button_add");
+            await click(target, ".o_control_panel_main_buttons .d-none button.o_list_button_add");
             notebooks = target.querySelectorAll(".o_notebook");
             assert.hasClass(notebooks[0].querySelector(".nav-link"), "active");
             assert.doesNotHaveClass(notebooks[0].querySelectorAll(".nav-link")[1], "active");
@@ -5503,7 +5508,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_pager_value").textContent, "1");
         assert.strictEqual(target.querySelector(".o_pager_limit").textContent, "2");
 
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
 
         assert.containsNone(target, ".o_pager");
 
@@ -5555,7 +5560,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsNone(target, ".foo_field");
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
         assert.containsOnce(target, ".foo_field");
     });
 
@@ -5580,7 +5585,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_field_empty");
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
         assert.containsNone(target, ".o_field_empty");
     });
 
@@ -5881,7 +5886,7 @@ QUnit.module("Views", (hooks) => {
 
         // create mode (leave edition first!)
         await clickDiscard(target);
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
         assert.containsOnce(
             target,
             ".oe_stat_button",
@@ -7555,7 +7560,7 @@ QUnit.module("Views", (hooks) => {
 
         function getVisibleButtonTexts() {
             return [...target.querySelectorAll(".modal-footer button:not(.d-none)")].map((x) =>
-                x.innerHTML.trim()
+                x.textContent.trim()
             );
         }
     });
@@ -7622,7 +7627,7 @@ QUnit.module("Views", (hooks) => {
         );
 
         await clickDiscard(target);
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
         assert.strictEqual(
             target.querySelector(".o_field_widget[name=foo] input").value,
             "",
@@ -9200,11 +9205,11 @@ QUnit.module("Views", (hooks) => {
                 </form>`,
             resId: 1,
         });
-
+        // Contains invisible buttons that are only displayed under xl screens
         assert.containsN(
             target,
-            ".o_control_panel button:not(.fa):not(:disabled)",
-            4,
+            ".o_control_panel_breadcrumbs button:not(.fa):not(:disabled)",
+            5,
             "control panel buttons should be enabled"
         );
         assert.containsN(
@@ -9225,8 +9230,8 @@ QUnit.module("Views", (hooks) => {
         // The unresolved promise lets us check the state of the buttons
         assert.containsN(
             target,
-            ".o_control_panel button:not(.fa):disabled",
-            4,
+            ".o_control_panel_breadcrumbs button:not(.fa):disabled",
+            5,
             "control panel buttons should be disabled"
         );
         assert.containsN(
@@ -9245,8 +9250,8 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         assert.containsN(
             target,
-            ".o_control_panel button:not(.fa):not(:disabled)",
-            4,
+            ".o_control_panel_breadcrumbs button:not(.fa):not(:disabled)",
+            5,
             "control panel buttons should be enabled"
         );
         assert.containsN(
@@ -9301,8 +9306,8 @@ QUnit.module("Views", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_control_panel button:not(.fa):not(:disabled)",
-            4,
+            ".o_control_panel_breadcrumbs button:not(.fa):not(:disabled)",
+            5,
             "control panel buttons should be enabled"
         );
         assert.containsN(
@@ -9322,7 +9327,7 @@ QUnit.module("Views", (hooks) => {
         // The unresolved promise lets us check the state of the buttons
         assert.containsN(
             target,
-            ".o_control_panel button:not(.fa):disabled",
+            ".o_control_panel_breadcrumbs button:not(.fa):disabled",
             4,
             "control panel buttons should be disabled"
         );
@@ -9342,8 +9347,8 @@ QUnit.module("Views", (hooks) => {
         await nextTick();
         assert.containsN(
             target,
-            ".o_control_panel button:not(.fa):not(:disabled)",
-            4,
+            ".o_control_panel_breadcrumbs button:not(.fa):not(:disabled)",
+            5,
             "control panel buttons should be enabled"
         );
         assert.containsN(
@@ -10654,7 +10659,7 @@ QUnit.module("Views", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 1);
 
-        await click(target, ".o_list_button_add");
+        await click(target, ".o_control_panel_main_buttons .d-none button.o_list_button_add");
 
         // edit foo to trigger a delayed onchange
         onchangeDef = makeDeferred();
@@ -10827,7 +10832,7 @@ QUnit.module("Views", (hooks) => {
                 resId: 1,
             });
 
-            await click(target.querySelector(".o_form_button_create"));
+            await createRecord();
             await click(target.querySelector(".o-kanban-button-new"));
 
             assert.containsOnce(target, ".modal");
@@ -12405,7 +12410,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_form_readonly");
-        await click(target.querySelector(".o_form_button_create"));
+        await createRecord();
         assert.containsOnce(target, ".o_form_editable");
     });
 
@@ -12571,7 +12576,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
-        await click(target.querySelector(".o_list_view .o_list_button_add"));
+        await click(target, ".o_control_panel_main_buttons .d-none button.o_list_button_add");
         assert.containsOnce(target, ".o_form_view");
         await click(target.querySelector(".o_form_view .breadcrumb-item a"));
         assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
@@ -12607,7 +12612,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         assert.containsOnce(target, ".o_list_view .o_content.o_view_sample_data");
-        await click(target.querySelector(".o_list_view .o_list_button_add"));
+        await click(target, ".o_control_panel_main_buttons .d-none button.o_list_button_add");
         assert.containsOnce(target, ".o_form_view .o_field_x2many .o_kanban_renderer");
         assert.containsNone(target, ".o_view_nocontent");
     });
