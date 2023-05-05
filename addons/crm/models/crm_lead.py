@@ -995,13 +995,6 @@ class Lead(models.Model):
             self.write(dict(additional_values))
         return res
 
-    @api.model
-    def action_set_lost_with_reason(self):
-        action = self.env['ir.actions.act_window']._for_xml_id('crm.crm_lead_lost_action')
-        action.update({'context': {**self.env.context, **literal_eval(action.get('context', '{}'))}})
-        action.setdefault('default_lead_ids', self.ids)
-        return action
-
     def action_set_won(self):
         """ Won semantic: probability = 100 (active untouched) """
         self.action_unarchive()
