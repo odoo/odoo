@@ -17598,7 +17598,7 @@ QUnit.module("Views", (hooks) => {
 
         assert.verifySteps(["name_get"]);
 
-        await click($(".o_list_button_save:visible").get(0));
+        await clickSave(target);
         assert.deepEqual(
             [...target.querySelectorAll(".o_data_row td[name=m2o]")].map((el) => el.innerText),
             ["Value 3", "Value 2", "Value 1", "Value 1"]
