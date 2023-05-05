@@ -608,7 +608,7 @@ QUnit.module("ActionManager", (hooks) => {
         );
     });
 
-    QUnit.debug('can restore an action in target="main"', async function (assert) {
+    QUnit.test('can restore an action in target="main"', async function (assert) {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, {
             name: "Partner Action",
