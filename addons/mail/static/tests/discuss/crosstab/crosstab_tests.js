@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { click, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
 
 QUnit.module("crosstab");
 
@@ -29,8 +30,8 @@ QUnit.test("Remove member from channel", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { env, openDiscuss } = await start();

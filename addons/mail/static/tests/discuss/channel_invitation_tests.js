@@ -1,6 +1,7 @@
 /* @odoo-module */
 
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
 
 QUnit.module("channel invitation form");
 
@@ -16,8 +17,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "channel",
         });
@@ -45,8 +46,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "TestChanel",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId_1 }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId_1 }),
             ],
             channel_type: "channel",
         });
@@ -70,7 +71,7 @@ QUnit.test("Invitation form should display channel group restriction", async (as
     });
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
-        channel_member_ids: [[0, 0, { partner_id: pyEnv.currentPartnerId }]],
+        channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
         channel_type: "channel",
         group_public_id: groupId,
     });
@@ -98,8 +99,8 @@ QUnit.test("should be able to create a new group chat from an existing chat", as
     const channelId = pyEnv["discuss.channel"].create({
         name: "TestChanel",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
         ],
         channel_type: "chat",
     });

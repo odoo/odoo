@@ -7,6 +7,7 @@ import {
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
 
 QUnit.module("messaging");
 
@@ -18,8 +19,8 @@ QUnit.test(
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -45,8 +46,8 @@ QUnit.test(
         const userId = pyEnv["res.users"].create({ partner_id: partnerId });
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -72,8 +73,8 @@ QUnit.test(
         const partnerId = pyEnv["res.partner"].create({ name: "Dumbledore" });
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });

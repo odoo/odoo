@@ -2,6 +2,8 @@
 
 import { UPDATE_BUS_PRESENCE_DELAY } from "@bus/im_status_service";
 import { start, startServer, afterNextRender, click } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import { createLocalId } from "@mail/utils/misc";
 import { nextTick } from "@web/../tests/helpers/utils";
 
@@ -100,8 +102,8 @@ QUnit.test("show im status in messaging menu preview of chat", async (assert) =>
     const partnerId = pyEnv["res.partner"].create({ name: "Demo", im_status: "online" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });

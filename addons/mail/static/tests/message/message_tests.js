@@ -9,6 +9,8 @@ import {
     nextAnimationFrame,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import { deserializeDateTime } from "@web/core/l10n/dates";
 const { DateTime } = luxon;
 import {
@@ -642,8 +644,8 @@ QUnit.test("redirect to author (open chat)", async (assert) => {
         { name: "General" },
         {
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         },
@@ -668,7 +670,7 @@ QUnit.test("open chat from avatar should not work on self-authored messages", as
     const [channelId] = pyEnv["discuss.channel"].create([
         { name: "General" },
         {
-            channel_member_ids: [[0, 0, { partner_id: pyEnv.currentPartnerId }]],
+            channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
             channel_type: "chat",
         },
     ]);
@@ -1273,8 +1275,8 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "test",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
