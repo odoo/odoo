@@ -5,7 +5,7 @@
         <div class="partnerlist-screen screen">
             <div class="screen-content">
                 <div class="top-content">
-                    <div class="button highlight" t-if="state.detailIsShown" t-on-click="() => this.env.bus.trigger('save-partner')">
+                    <div class="button highlight" t-if="state.detailIsShown" t-on-click="() => this.partnerEditor.save()">
                         <i t-if="env.isMobile" class="fa fa-floppy-o"/>
                         <t t-if="!env.isMobile">
                             <span> Save</span>
@@ -39,7 +39,7 @@
                         <section class="subwindow collapsed">
                             <div class="subwindow-container collapsed">
                                 <div t-if="state.detailIsShown" class="partner-details-contents subwindow-container-fix">
-                                    <PartnerDetailsEdit t-props="state.editModeProps" saveChanges.bind="saveChanges" />
+                                    <PartnerDetailsEdit t-props="state.editModeProps" saveChanges.bind="saveChanges" imperativeHandle="partnerEditor" />
                                 </div>
                             </div>
                         </section>
