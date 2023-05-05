@@ -41,9 +41,8 @@ class TestLeadConvert(crm_common.TestCrmCommon):
         self.assertEqual(update_message.subtype_id, self.env.ref('mail.mt_note'))
 
         # mark as lost using the wizard
-        lost_wizard = self.env['crm.lead.lost'].with_context({
-            'active_ids': lead.ids,
-        }).create({
+        lost_wizard = self.env['crm.lead.lost'].create({
+            'lead_ids': lead.ids,
             'lost_reason_id': self.lost_reason.id,
             'lost_feedback': '<p></p>',  # void content
         })
@@ -76,9 +75,8 @@ class TestLeadConvert(crm_common.TestCrmCommon):
         self.assertEqual(len(leads), 10)
         self.flush_tracking()
 
-        lost_wizard = self.env['crm.lead.lost'].with_context({
-            'active_ids': leads.ids,
-        }).create({
+        lost_wizard = self.env['crm.lead.lost'].create({
+            'lead_ids': leads.ids,
             'lost_reason_id': self.lost_reason.id,
             'lost_feedback': '<p>I cannot find it. It was in my closet and pouf, disappeared.</p>',
         })
@@ -121,12 +119,12 @@ class TestLeadConvert(crm_common.TestCrmCommon):
                 'name': 'Test Reason'
             })
 
-        lost_wizard = self.env['crm.lead.lost'].with_context({
-            'active_ids': lead.ids
-        }).create({
-            'lost_reason_id': lost_reason.id
-        })
-
         # nice try little salesman, you cannot invoke a wizard to update other people leads
         with self.assertRaises(AccessError):
+            # wizard needs to be here due to cache clearing in assertRaises
+            # (ORM does not load m2m records unavailable to the user from database)
+            lost_wizard = self.env['crm.lead.lost'].create({
+                'lead_ids': lead.ids,
+                'lost_reason_id': lost_reason.id
+            })
             lost_wizard.action_lost_reason_apply()
