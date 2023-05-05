@@ -172,7 +172,8 @@ class ProjectTask(models.Model):
                 sale_order_id = task.sale_line_id.sudo().order_id
             elif task.project_id.sale_order_id:
                 sale_order_id = task.project_id.sale_order_id
-            if task.commercial_partner_id != sale_order_id.partner_id.commercial_partner_id:
+            if task.commercial_partner_id not in (sale_order_id.partner_id.commercial_partner_id +
+                                                  sale_order_id.partner_shipping_id.commercial_partner_id):
                 sale_order_id = False
             if sale_order_id and not task.partner_id:
                 task.partner_id = sale_order_id.partner_id
