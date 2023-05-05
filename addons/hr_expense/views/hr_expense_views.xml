@@ -564,7 +564,7 @@
             <field name="name">product.product.expense.categories.tree.view</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <tree>
+                <tree class="o_expense_categories">
                     <field name="name" readonly="1"/>
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="description" widget="html" string="Internal Note" optional="show" readonly="1"/>
