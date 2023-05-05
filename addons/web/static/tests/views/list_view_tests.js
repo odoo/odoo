@@ -1190,7 +1190,7 @@ QUnit.module("Views", (hooks) => {
         ]);
     });
 
-    QUnit.debug("simple editable rendering", async function (assert) {
+    QUnit.test("simple editable rendering", async function (assert) {
         await makeView({
             type: "list",
             resModel: "foo",
