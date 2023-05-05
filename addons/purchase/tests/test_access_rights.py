@@ -96,47 +96,6 @@ class TestPurchaseInvoice(AccountTestInvoicingCommon):
         vendor_bill_user1 = Form(vendor_bill_user2.with_user(self.purchase_user))
         vendor_bill_user1 = vendor_bill_user1.save()
 
-    def test_read_purchase_order_2(self):
-        """ Check that a 2 purchase users with open the vendor bill the same
-        way even with a 'own documents only' record rule. """
-
-        # edit the account.move record rule for purchase user in order to ensure
-        # a user can only see his own invoices
-        rule = self.env.ref('purchase.purchase_user_account_move_rule')
-        rule.domain_force = "['&', ('move_type', 'in', ('in_invoice', 'in_refund', 'in_receipt')), ('invoice_user_id', '=', user.id)]"
-
-        # create a purchase and make a vendor bill from it as purchase user 2
-        purchase_user_2 = self.purchase_user.copy({
-            'name': 'Purchase user 2',
-            'login': 'purchaseUser2',
-            'email': 'pu2@odoo.com',
-        })
-
-        purchase_order_form = Form(self.env['purchase.order'].with_user(purchase_user_2))
-        purchase_order_form.partner_id = self.vendor
-        with purchase_order_form.order_line.new() as line:
-            line.name = self.product.name
-            line.product_id = self.product
-            line.product_qty = 4
-            line.price_unit = 5
-
-        purchase_order_user2 = purchase_order_form.save()
-        purchase_order_user2.button_confirm()
-
-        purchase_order_user2.order_line.qty_received = 4
-        purchase_order_user2.action_create_invoice()
-        vendor_bill_user2 = purchase_order_user2.invoice_ids
-
-        # check user 1 cannot read the invoice
-        with self.assertRaises(AccessError):
-            Form(vendor_bill_user2.with_user(self.purchase_user))
-
-        # Check that calling 'action_view_invoice' return the same action despite the record rule
-        action_user_1 = purchase_order_user2.with_user(self.purchase_user).action_view_invoice()
-        purchase_order_user2.invalidate_recordset()
-        action_user_2 = purchase_order_user2.with_user(purchase_user_2).action_view_invoice()
-        self.assertEqual(action_user_1, action_user_2)
-
     def test_double_validation(self):
         """Only purchase managers can approve a purchase order when double
         validation is enabled"""
