@@ -52,8 +52,8 @@
                     <group name="requests">
                         <group>
                             <div  class="o_row py-3">
-                                <field name="lead_number" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline pe-2 o_input_3ch"/>
-                                <field name="search_type" widget="selection" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline"/>
+                                <field name="lead_number" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline pe-2 o_input_3ch o_field_highlight"/>
+                                <field name="search_type" widget="selection" attrs="{'readonly': [('state', '=', 'done')]}" nolabel="1" class="oe_inline o_field_highlight"/>
                             </div>
                         </group>
                     </group>
@@ -62,10 +62,10 @@
                         <group name="companies">
                             <field name="country_ids" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'done')]}" required="True" options="{'no_create': True, 'no_open': True}"/>
                             <field name="available_state_ids" invisible="1"/>
-                            <field name="state_ids" widget="many2many_tags"
+                            <field name="state_ids" widget="many2many_tags" placeholder="Pick States..."
                                 attrs="{'invisible': ['|', ('country_ids', '=', []), ('available_state_ids', '=', [])], 'readonly': [('state', '=', 'done')]}"
                                 domain="[('id', 'in', available_state_ids)]" options="{'no_create': True, 'no_open': True}"/>
-                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_create': True, 'no_open': True}" class="o_industry" required="1"/>
+                            <field name="industry_ids" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'done')]}" options="{'no_create': True, 'no_open': True}" class="o_industry o_field_highlight" required="1"/>
                             <field name="filter_on_size" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <label for="company_size_min" attrs="{'invisible': [('filter_on_size', '=', False)]}"/>
                             <div attrs="{'invisible': [('filter_on_size', '=', False)]}">
@@ -80,8 +80,8 @@
                         <group name="lead_info">
                             <field name="lead_type" groups="crm.group_use_lead" invisible="context.get('is_modal')" attrs="{'readonly': [('state', '=', 'done')]}"/>
                             <field name="team_id" no_create="1" no_open="1" attrs="{'readonly': [('state', '=', 'done')]}" context="{'kanban_view_ref': 'sales_team.crm_team_view_kanban'}"/>
-                            <field name="user_id" no_create="1" no_open="1" attrs="{'readonly': [('state', '=', 'done')]}"/>
-                            <field name="tag_ids" string="Default Tags" widget="many2many_tags" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                            <field name="user_id" no_create="1" no_open="1" attrs="{'readonly': [('state', '=', 'done')]}" widget="many2one_avatar_user"/>
+                            <field name="tag_ids" string="Default Tags" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}" attrs="{'readonly': [('state', '=', 'done')]}"/>
                         </group>
                     </group>
 
