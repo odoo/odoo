@@ -344,7 +344,7 @@ class StockWarehouseOrderpoint(models.Model):
                 warehouse=warehouse.id,
                 to_date=fields.datetime.now() + relativedelta.relativedelta(days=days)
             ).read(['virtual_available'])
-            for qty in qties:
+            for (product, qty) in zip(products, qties):
                 if float_compare(qty['virtual_available'], 0, precision_rounding=product.uom_id.rounding) >= 0:
                     key_to_remove.append((qty['id'], warehouse.id))
                 else:
