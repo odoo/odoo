@@ -77,7 +77,8 @@
                     </block>
 
                     <block title="Privacy" id="website_settings" attrs="{'invisible': [('website_id', '=', False)]}">
-                        <setting id="website_cookies_bar_setting" help="Display a customizable cookies bar on your website">
+                        <setting id="website_cookies_bar_setting" help="Display a customizable cookies bar on your website"
+                            documentation="/applications/websites/website/configuration/cookies_bar.html">
                             <field name="website_cookies_bar"/>
                         </setting>
                         <setting id="shared_user_account_setting" groups="website.group_multi_website" help="Accounts are usable across all your multiple websites">
