@@ -37,16 +37,12 @@ function getBreadCrumbTexts(target) {
 }
 
 async function clickKanbanNew(target) {
-    await click(target.querySelectorAll(".o_control_panel .o-kanban-button-new")[1]); // there is an hidden button --> should be fixed
+    await click(target.querySelectorAll(".o_control_panel .o-kanban-button-new")[1]);
 }
 
 async function clickListNew(target) {
-    await click(target.querySelectorAll(".o_control_panel .o_list_button_add")[1]); // there is an hidden button --> should be fixed
+    await click(target.querySelectorAll(".o_control_panel .o_list_button_add")[1]);
 }
-
-QUnit.skipMilk = function () {
-    QUnit.skip(...arguments);
-};
 
 QUnit.module("ActionManager", (hooks) => {
     hooks.beforeEach(() => {
@@ -917,7 +913,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skipMilk("execute smart button and back", async function (assert) {
+    QUnit.test("execute smart button and back", async function (assert) {
         const mockRPC = async (route, args) => {
             if (args.method === "read") {
                 assert.step("read");
@@ -931,18 +927,18 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 24);
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         await testUtils.dom.click(target.querySelector(".oe_stat_button"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_kanban_view");
         await testUtils.dom.click(target.querySelector(".breadcrumb-item"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         assert.verifySteps(["read", "web_search_read", "read"]);
     });
 
-    QUnit.skipMilk("execute smart button and fails", async function (assert) {
+    QUnit.test("execute smart button and fails", async function (assert) {
         assert.expect(13);
         const mockRPC = async (route, args) => {
             assert.step(route);
@@ -953,11 +949,11 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, 24);
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         await testUtils.dom.click(target.querySelector(".oe_stat_button"));
         await legacyExtraNextTick();
         assert.containsOnce(target, ".o_form_view");
-        assert.containsOnce(target, ".o_form_button_create:not([disabled])");
+        assert.containsOnce(target, ".o_form_button_create:not([disabled]):visible");
         assert.verifySteps([
             "/web/webclient/load_menus",
             "/web/action/load",
@@ -1248,8 +1244,7 @@ QUnit.module("ActionManager", (hooks) => {
         assert.containsN(target, ".o_kanban_record:not(.o_kanban_ghost)", 2);
     });
 
-    QUnit.skipMilk("go back to a previous action using the breadcrumbs", async function (assert) {
-        // check on runbot
+    QUnit.test("go back to a previous action using the breadcrumbs", async function (assert) {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
         // open a record in form view
@@ -1382,7 +1377,7 @@ QUnit.module("ActionManager", (hooks) => {
         ]);
     });
 
-    QUnit.skipMilk("execute action with unknown view type", async function (assert) {
+    QUnit.test("execute action with unknown view type", async function (assert) {
         serverData.views["partner,false,unknown"] = "<unknown/>";
         serverData.actions[33] = {
             id: 33,
@@ -1399,7 +1394,7 @@ QUnit.module("ActionManager", (hooks) => {
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 33);
         assert.containsOnce(target, ".o_list_view");
-        assert.containsN(target, ".o_cp_switch_buttons button", 2);
+        assert.containsN(target, "nav.o_cp_switch_buttons button", 2);
     });
 
     QUnit.test("flags field of ir.actions.act_window is used", async function (assert) {
@@ -1857,7 +1852,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipMilk(
+    QUnit.test(
         "create a new record in a form view, execute action, and come back",
         async function (assert) {
             assert.expect(8);
@@ -1962,7 +1957,7 @@ QUnit.module("ActionManager", (hooks) => {
         }
     );
 
-    QUnit.skipMilk(
+    QUnit.test(
         "executing a window action with onchange warning does not hide it",
         async function (assert) {
             serverData.views["partner,false,form"] = `<form><field name="foo"/></form>`;
