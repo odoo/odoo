@@ -3229,14 +3229,15 @@ var SnippetsMenu = Widget.extend({
      *    false: always fobid
      */
     _insertDropzone: function ($hook, vertical, style, canBeSanitizedUnless) {
+        const skip = $hook.closest('[data-oe-sanitize="no_block"]').length;
         let forbidSanitize;
         if (canBeSanitizedUnless === 'form') {
-            forbidSanitize = $hook.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"])').length;
+            forbidSanitize = $hook.closest('[data-oe-sanitize]:not([data-oe-sanitize="allow_form"]):not([data-oe-sanitize="no_block"])').length;
         } else {
-            forbidSanitize = !canBeSanitizedUnless && $hook.closest('[data-oe-sanitize]').length;
+            forbidSanitize = !canBeSanitizedUnless && $hook.closest('[data-oe-sanitize]:not([data-oe-sanitize="no_block"])').length;
         }
         var $dropzone = $('<div/>', {
-            'class': 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : '') +
+            'class': skip ? 'd-none' : 'oe_drop_zone oe_insert' + (vertical ? ' oe_vertical' : '') +
                 (forbidSanitize ? ' text-center oe_drop_zone_danger' : ''),
         });
         if (style) {
