@@ -161,6 +161,7 @@ const PosLoyaltyGlobalState = (PosGlobalState) => class PosLoyaltyGlobalState ex
                     if (oldOrder.partner && oldOrder.partner.id === order.partner_id) {
                         order.partner = oldOrder.partner;
                     }
+
                     order.couponPointChanges = oldOrder.couponPointChanges;
 
                     Object.keys(order.couponPointChanges).forEach(index => {
@@ -417,7 +418,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
         }
     }
     wait_for_push_order() {
-        return (!_.isEmpty(this.couponPointChanges) || this._has_gift_card_product() || this._get_reward_lines().length || super.wait_for_push_order(...arguments));
+        return (!_.isEmpty(this.couponPointChanges) || this._get_reward_lines().length || super.wait_for_push_order(...arguments));
     }
     /**
      * Add additional information for our ticket, such as new coupons and loyalty point gains.
@@ -474,10 +475,6 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
     get_last_orderline() {
         const orderLines = super.get_orderlines(...arguments).filter((line) => !line.is_reward_line);
         return orderLines[orderLines.length - 1];
-    }
-    _has_gift_card_product() {
-        const orderLines = super.get_orderlines(...arguments);
-        return orderLines.some((line) => line.eWalletGiftCardProgram);
     }
     set_pricelist(pricelist) {
         super.set_pricelist(...arguments);
@@ -893,11 +890,7 @@ const PosLoyaltyOrder = (Order) => class PosLoyaltyOrder extends Order {
                                 || line.ignoreLoyaltyPoints({ program })) {
                                 continue;
                             }
-                            let price_to_use = line.get_price_with_tax();
-                            if (program.program_type === 'gift_card') {
-                                price_to_use = line.price;
-                            }
-                            const pointsPerUnit = round_precision(rule.reward_point_amount * price_to_use / line.get_quantity(), 0.01);
+                            const pointsPerUnit = round_precision(rule.reward_point_amount * line.get_price_with_tax() / line.get_quantity(), 0.01);
                             if (pointsPerUnit > 0) {
                                 splitPoints.push(...Array.apply(null, Array(line.get_quantity())).map(() => {
                                     if (line.giftBarcode && line.get_quantity() == 1) {

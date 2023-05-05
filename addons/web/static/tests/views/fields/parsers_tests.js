@@ -129,6 +129,7 @@ QUnit.module("Fields", (hooks) => {
         assert.strictEqual(parseMonetary("100.00\u00a0€"), 100);
         assert.strictEqual(parseMonetary("-100.00"), -100);
         assert.strictEqual(parseMonetary("1,000.00"), 1000);
+        assert.strictEqual(parseMonetary(".1"), 0.1);
         assert.strictEqual(parseMonetary("1,000,000.00"), 1000000);
         assert.strictEqual(parseMonetary("$\u00a0125.00"), 125);
         assert.strictEqual(parseMonetary("1,000.00\u00a0€"), 1000);
