@@ -580,7 +580,89 @@ QUnit.module("Fields", (hooks) => {
         );
     });
 
-    QUnit.test("initial empty start date", async (assert) => {
+    QUnit.test("Render with initial empty value and optional start date", async (assert) => {
+        patchDate(2014, 7, 14, 12, 34, 56);
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime_end" widget="daterange" options="{'start_date_field': 'datetime'}"/>
+                </form>`,
+        });
+
+        await click(target, "input[data-field=datetime_end]");
+
+        assert.containsOnce(target, ".o_datetime_picker", "check that the datepicker is opened");
+        assert.containsNone(target, ".o_add_date");
+
+        // Select a value (today)
+        await click(target.querySelector(".o_today"));
+
+        assert.strictEqual(
+            target.querySelectorAll(".o_field_daterange input")[0].value,
+            "08/14/2014 12:00:00",
+            "end date should be set properly"
+        );
+        assert.notOk(isHiddenByCSS(target.querySelector(".o_add_date")));
+        assert.strictEqual(
+            target.querySelector(".o_add_date").innerText.trim().toLowerCase(),
+            "add start date"
+        );
+
+        // Add an end date
+        await click(target.querySelector(".o_add_date"));
+
+        const [startInput, endInput] = target.querySelectorAll(".o_field_daterange input");
+        assert.strictEqual(
+            startInput.value,
+            endInput.value,
+            "the end date should be set to the same value as the start date"
+        );
+    });
+
+    QUnit.test("initial empty date with optional start date", async (assert) => {
+        patchDate(2014, 7, 14, 12, 34, 56);
+
+        serverData.models.partner.records[0].datetime = "2017-03-13 00:00:00";
+        serverData.models.partner.records[0].datetime_end = false;
+
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="datetime_end" widget="daterange" options="{'start_date_field': 'datetime'}"/>
+                </form>`,
+            resId: 1,
+        });
+
+        assert.ok(isHiddenByCSS(target.querySelector(".o_add_date")));
+
+        target.querySelector(".o_field_daterange input").focus();
+        await nextTick();
+
+        assert.notOk(isHiddenByCSS(target.querySelector(".o_add_date")));
+        assert.strictEqual(
+            target.querySelector(".o_add_date").innerText.trim().toLowerCase(),
+            "add end date"
+        );
+
+        // Add an end date
+        await click(target.querySelector(".o_add_date"));
+
+        const [startInput, endInput] = target.querySelectorAll(".o_field_daterange input");
+        assert.strictEqual(
+            startInput.value,
+            endInput.value,
+            "the end date should be set to the same value as the start date"
+        );
+    });
+
+    QUnit.test("initial empty date with optional end date", async (assert) => {
         // 2014-08-14 12:34:56 -> the day E. Zuckerman, who invented pop-up ads, has apologised.
         patchDate(2014, 7, 14, 12, 34, 56);
 
@@ -609,14 +691,14 @@ QUnit.module("Fields", (hooks) => {
             "add start date"
         );
 
-        // Add an start date
+        // Add a start date
         await click(target.querySelector(".o_add_date"));
 
         const [startInput, endInput] = target.querySelectorAll(".o_field_daterange input");
         assert.strictEqual(
             startInput.value,
             endInput.value,
-            "the end date should be set to the same value as the start date"
+            "the start date should be set to the same value as the end date"
         );
     });
 
