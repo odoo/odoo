@@ -205,6 +205,47 @@ QUnit.module("test_mail", {}, function () {
         );
     });
 
+    QUnit.test(
+        "activity view: there is no default limit of 80 in the relationalModel",
+        async function (assert) {
+            const mailActivityTypeIds = pyEnv["mail.activity.type"].search([]);
+
+            const recordsToCreate = [];
+            const activityToCreate = [];
+
+            for (let i = 0; i < 81; i++) {
+                activityToCreate.push({
+                    display_name: "An activity " + i,
+                    date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                    can_write: true,
+                    state: "planned",
+                    activity_type_id: mailActivityTypeIds[0],
+                });
+            }
+            const createdActivity = pyEnv["mail.activity"].create(activityToCreate);
+            for (let i = 0; i < 81; i++) {
+                // The default limit of the RelationalModel is 80, test if it is overwrited by creating more than 80 records
+                recordsToCreate.push({ name: i + "", activity_ids: [createdActivity[i]] });
+            }
+            pyEnv["mail.test.activity"].create(recordsToCreate);
+
+            const { openView } = await start({
+                serverData,
+            });
+            await openView({
+                res_model: "mail.test.activity",
+                views: [[false, "activity"]],
+            });
+
+            const activityRecords = document.querySelectorAll(".o_activity_record");
+            assert.strictEqual(
+                activityRecords.length,
+                83,
+                "The 83 records should have been loaded"
+            );
+        }
+    );
+
     QUnit.test("activity view: no content rendering", async function (assert) {
         assert.expect(2);
 
