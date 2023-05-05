@@ -93,6 +93,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'hour_to': 10,
                                    'day_period': 'morning',
                                    'dayofweek': '0',
+                                   'duration_days': 0.25,
                                }),
                                (0, 0, {
                                    'name': 'monday morning 2',
@@ -100,6 +101,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'hour_to': 12.25,
                                    'day_period': 'morning',
                                    'dayofweek': '0',
+                                   'duration_days': 0.25,
                                }),
                                (0, 0, {
                                    'name': 'monday lunch',
@@ -114,6 +116,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'hour_to': 17,
                                    'day_period': 'afternoon',
                                    'dayofweek': '0',
+                                   'duration_days': 0.5,
                                })]
         })
         employee = self.employee_emp
@@ -135,9 +138,6 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             self.assertEqual(leave_form.number_of_hours_text, '4 Hours')
 
     def test_attendance_on_morning(self):
-        # TODO: temporarily fixed this test. The behaviour of half-day leaves
-        #       currently not very well defined. This will be handled in an
-        #       upcoming task.
         calendar = self.env['resource.calendar'].create({
             'name': 'Morning only',
             'attendance_ids': [(5, 0, 0),
@@ -165,8 +165,8 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             # Ask for afternoon
             leave_form.request_date_from_period = 'pm'
 
-            self.assertEqual(leave_form.number_of_days_display, 1)
-            self.assertEqual(leave_form.number_of_hours_text, '8 Hours')
+            self.assertEqual(leave_form.number_of_days_display, 0)
+            self.assertEqual(leave_form.number_of_hours_text, '0 Hours')
 
     def test_attendance_next_day(self):
         self.env.user.tz = 'Europe/Brussels'
@@ -241,6 +241,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'day_period': 'morning',
                                    'dayofweek': '0',
                                    'week_type': '0',
+                                   'duration_days': 0.5,
                                }),
                                (0, 0, {
                                    'name': 'monday morning even week',
@@ -249,6 +250,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
                                    'day_period': 'morning',
                                    'dayofweek': '0',
                                    'week_type': '1',
+                                   'duration_days': 0.25
                                })]
         })
         employee = self.employee_emp
@@ -262,7 +264,7 @@ class TestAutomaticLeaveDates(TestHrHolidaysCommon):
             leave_form.request_unit_half = True
             leave_form.request_date_from_period = 'am'
 
-            self.assertEqual(leave_form.number_of_days_display, 0.5)
+            self.assertEqual(leave_form.number_of_days_display, 0.25)
             self.assertEqual(leave_form.number_of_hours_text, '2 Hours')
             self.assertEqual(leave_form.date_from, datetime(2019, 9, 2, 8, 0, 0))
             self.assertEqual(leave_form.date_to, datetime(2019, 9, 2, 10, 0, 0))
