@@ -38,18 +38,20 @@ export function useSuggestion() {
             if (selectionStart > 0) {
                 candidatePositions.push(selectionStart - 1);
             }
+            const supportedDelimiters = suggestionService.getSupportedDelimiters(
+                comp.props.composer.thread
+            );
             for (const candidatePosition of candidatePositions) {
                 if (candidatePosition < 0 || candidatePosition >= content.length) {
                     continue;
                 }
                 const candidateChar = content[candidatePosition];
-                if (candidateChar === "/" && candidatePosition !== 0) {
-                    continue;
-                }
                 if (
-                    !suggestionService
-                        .getSupportedDelimiters(comp.props.composer.thread)
-                        .includes(candidateChar)
+                    !supportedDelimiters.find(
+                        ([delimiter, allowedPosition]) =>
+                            delimiter === candidateChar &&
+                            (allowedPosition === undefined || allowedPosition === candidatePosition)
+                    )
                 ) {
                     continue;
                 }
@@ -124,10 +126,11 @@ export function useSuggestion() {
                 { thread: comp.props.composer.thread },
                 true
             );
-            if (!suggestions) {
+            const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
+            if (!mainSuggestions.length && !extraSuggestions.length) {
+                self.clearSearch();
                 return;
             }
-            const { type, mainSuggestions, extraSuggestions = [] } = suggestions;
             // arbitrary limit to avoid displaying too many elements at once
             // ideally a load more mechanism should be introduced
             const limit = 8;
