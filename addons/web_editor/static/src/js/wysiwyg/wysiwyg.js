@@ -22,6 +22,7 @@ import weWidgets from "wysiwyg.widgets";
 import Link from "wysiwyg.widgets.Link";
 import * as wysiwygUtils from "@web_editor/js/common/wysiwyg_utils";
 import weUtils from "web_editor.utils";
+import { isSelectionInSelectors } from '@web_editor/js/editor/odoo-editor/src/utils/utils';
 import { PeerToPeer } from "@web_editor/js/wysiwyg/PeerToPeer";
 import { uniqueId } from "@web/core/utils/functions";
 import { groupBy } from "@web/core/utils/arrays";
@@ -2070,6 +2071,25 @@ const Wysiwyg = Widget.extend({
 
         return finalOptions;
     },
+    _getBannerCommand: function (title, alertClass, iconClass, description, priority) {
+        return {
+            category: _t('Banner'),
+            name: title,
+            priority: priority,
+            description: description,
+            fontawesome: iconClass,
+            isDisabled: () => isSelectionInSelectors('.o_editor_banner') || !this.odooEditor.isSelectionInBlockRoot(),
+            callback: () => {
+                const bannerElement = $(QWeb.render('web_editor.banner', {
+                    label: title,
+                    alertClass: alertClass,
+                    iconClass: iconClass
+                }))[0];
+                this.odooEditor.execCommand('insert', bannerElement);
+                setSelection(bannerElement.querySelector('.o_editor_banner > div'), 0);
+            },
+        }
+    },
     _insertSnippetMenu: function () {
         return this.snippetsMenu.insertBefore(this.$el);
     },
@@ -2120,8 +2140,12 @@ const Wysiwyg = Widget.extend({
     },
     _getPowerboxOptions: function () {
         const editorOptions = this.options;
-        const categories = [];
+        const categories = [{ name: _t('Banners'), priority: 65 },];
         const commands = [
+            this._getBannerCommand(_t('Banner Info'), 'info', 'fa-info-circle', _t('Insert an info banner section'), 24),
+            this._getBannerCommand(_t('Banner Success'), 'success', 'fa-check-circle', _t('Insert a success banner section'), 23),
+            this._getBannerCommand(_t('Banner Warning'), 'warning', 'fa-exclamation-triangle', _t('Insert a warning banner section'), 22),
+            this._getBannerCommand(_t('Banner Danger'), 'danger', 'fa-exclamation-circle', _t('Insert a danger banner section'), 21),
             {
                 category: _t('Structure'),
                 name: _t('Quote'),
