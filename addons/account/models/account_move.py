@@ -989,6 +989,7 @@ class AccountMove(models.Model):
                 domain = [
                     ('company_id', '=', self.company_id.id),
                     ('internal_type', '=', 'receivable' if self.move_type in ('out_invoice', 'out_refund', 'out_receipt') else 'payable'),
+                    ('deprecated', '=', False),
                 ]
                 return self.env['account.account'].search(domain, limit=1)
 
