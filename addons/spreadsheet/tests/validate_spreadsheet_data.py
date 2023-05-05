@@ -1,8 +1,10 @@
 from collections import defaultdict
 from itertools import chain
+import base64
 import json
 import re
-from odoo.tests.common import TransactionCase
+from odoo.tests.common import TransactionCase, Form
+from odoo.exceptions import ValidationError
 
 markdown_link_regex = r"^\[([^\[]+)\]\((.+)\)$"
 
@@ -216,3 +218,14 @@ class ValidateSpreadsheetData(TransactionCase):
                 raise AssertionError(
                     f"xml id '{xml_id}' used in spreadsheet '{spreadsheet_name}' does not exist"
                 )
+
+    def test_onchange_json_data(self):
+        group = self.env["spreadsheet.dashboard.group"].create(
+            {"name": "a group"}
+        )
+        spreadsheet_form = Form(self.env['spreadsheet.dashboard'])
+        spreadsheet_form.name = 'Test spreadsheet'
+        spreadsheet_form.dashboard_group_id = group
+        spreadsheet_form.spreadsheet_binary_data = base64.b64encode(json.dumps({'key': 'value'}).encode('utf-8'))
+        with self.assertRaises(ValidationError, msg='Invalid JSON Data'):
+            spreadsheet_form.spreadsheet_binary_data = base64.b64encode('invalid json'.encode('utf-8'))
