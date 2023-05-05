@@ -203,7 +203,14 @@ export function getButtons(el) {
 }
 
 export function getVisibleButtons(el) {
-    return [...$(el).find(`div.o_control_panel_breadcrumbs button:visible`)];
+    return [
+        ...$(el).find(
+            [
+                "div.o_control_panel_breadcrumbs button:visible", // button in the breadcrumbs
+                "div.o_control_panel_actions button:visible", // buttons for list selection
+            ].join(",")
+        ),
+    ];
 }
 
 /** Filter menu */

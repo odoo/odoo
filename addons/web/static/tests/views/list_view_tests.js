@@ -853,7 +853,12 @@ QUnit.module("Views", (hooks) => {
             let cpButtons = getVisibleButtons(target);
             assert.deepEqual(
                 [...cpButtons].map((button) => button.textContent.trim()),
-                ["New", "display"]
+                [
+                    "New",
+                    "display",
+                    "", // cog dropdown
+                    "", // search btn
+                ]
             );
 
             await click(
@@ -871,7 +876,12 @@ QUnit.module("Views", (hooks) => {
             cpButtons = getVisibleButtons(target);
             assert.deepEqual(
                 [...cpButtons].map((button) => button.textContent.trim()),
-                ["New", "display"]
+                [
+                    "New",
+                    "display",
+                    "", // cog dropdown
+                    "", // search btn
+                ]
             );
         }
     );
@@ -1229,7 +1239,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.containsNone(target, ".o_list_record_selector input:enabled");
 
-        await click($(".o_list_button_save:visible"));
+        await click($(".o_list_button_save:visible").get(0));
 
         assert.containsN(
             target,
