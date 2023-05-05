@@ -10,8 +10,6 @@ import { LinkPreview } from "./link_preview_model";
 import { NotificationGroup } from "./notification_group_model";
 import { assignDefined, createLocalId } from "../utils/misc";
 
-const commandRegistry = registry.category("discuss.channel_commands");
-
 const { DateTime } = luxon;
 
 export class MessageService {
@@ -64,18 +62,6 @@ export class MessageService {
             body: "",
             message_id: message.id,
         });
-    }
-
-    getCommandFromText(thread, content) {
-        if (content.startsWith("/")) {
-            const firstWord = content.substring(1).split(/\s/)[0];
-            const command = commandRegistry.get(firstWord, false);
-            if (command) {
-                return command.channel_types?.includes(thread.type) || thread.isChannel
-                    ? command
-                    : false;
-            }
-        }
     }
 
     /**

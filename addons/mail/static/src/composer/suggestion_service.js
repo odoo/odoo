@@ -3,8 +3,6 @@
 import { cleanTerm } from "@mail/utils/format";
 import { registry } from "@web/core/registry";
 
-const commandRegistry = registry.category("discuss.channel_commands");
-
 export class SuggestionService {
     constructor(env, services) {
         this.orm = services.orm;
@@ -19,7 +17,7 @@ export class SuggestionService {
     }
 
     getSupportedDelimiters(thread) {
-        return ["@", "#", "/"];
+        return [["@"], ["#"]];
     }
 
     async fetchSuggestions({ delimiter, term }, { thread, onFetched } = {}) {
@@ -31,8 +29,6 @@ export class SuggestionService {
             }
             case "#":
                 this.fetchThreads(cleanedSearchTerm).then(onFetched);
-                break;
-            case "/":
                 break;
         }
     }
@@ -81,7 +77,7 @@ export class SuggestionService {
      * Returns suggestions that match the given search term from specified type.
      *
      * @param {Object} [param0={}]
-     * @param {String} [param0.delimiter] can be one one of the following: ["@", "#", "/"]
+     * @param {String} [param0.delimiter] can be one one of the following: ["@", "#"]
      * @param {String} [param0.term]
      * @param {Object} [options={}]
      * @param {Integer} [options.thread] prioritize and/or restrict
@@ -96,72 +92,11 @@ export class SuggestionService {
             }
             case "#":
                 return this.searchChannelSuggestions(cleanedSearchTerm, thread, sort);
-            case "/":
-                return this.searchChannelCommand(cleanedSearchTerm, thread, sort);
         }
         return {
             type: undefined,
             mainSuggestions: [],
             extraSuggestions: [],
-        };
-    }
-
-    searchChannelCommand(cleanedSearchTerm, thread, sort) {
-        if (!thread.isChannel) {
-            // channel commands are channel specific
-            return;
-        }
-        const commands = commandRegistry
-            .getEntries()
-            .filter(([name, command]) => {
-                if (!cleanTerm(name).includes(cleanedSearchTerm)) {
-                    return false;
-                }
-                if (command.channel_types) {
-                    return command.channel_types.includes(thread.type);
-                }
-                return true;
-            })
-            .map(([name, command]) => {
-                return {
-                    channel_types: command.channel_types,
-                    help: command.help,
-                    id: command.id,
-                    name,
-                };
-            });
-        const sortFunc = (c1, c2) => {
-            if (c1.channel_types && !c2.channel_types) {
-                return -1;
-            }
-            if (!c1.channel_types && c2.channel_types) {
-                return 1;
-            }
-            const cleanedName1 = cleanTerm(c1.name || "");
-            const cleanedName2 = cleanTerm(c2.name || "");
-            if (
-                cleanedName1.startsWith(cleanedSearchTerm) &&
-                !cleanedName2.startsWith(cleanedSearchTerm)
-            ) {
-                return -1;
-            }
-            if (
-                !cleanedName1.startsWith(cleanedSearchTerm) &&
-                cleanedName2.startsWith(cleanedSearchTerm)
-            ) {
-                return 1;
-            }
-            if (cleanedName1 < cleanedName2) {
-                return -1;
-            }
-            if (cleanedName1 > cleanedName2) {
-                return 1;
-            }
-            return c1.id - c2.id;
-        };
-        return {
-            type: "ChannelCommand",
-            mainSuggestions: sort ? commands.sort(sortFunc) : commands,
         };
     }
 

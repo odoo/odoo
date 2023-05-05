@@ -179,7 +179,7 @@ export class Composer extends Component {
     }
 
     onInput(ev) {
-        if (!this.typingNotified && !ev.target.value.startsWith("/")) {
+        if (!this.typingNotified && ev.target.value) {
             this.notifyIsTyping();
             this.typingNotified = true;
             browser.setTimeout(() => {
