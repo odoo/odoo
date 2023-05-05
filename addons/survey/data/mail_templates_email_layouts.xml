@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="survey_mail_notification_layout"
+                  name="Mail: mail notification layout for survey"
+                  inherit_id="mail.mail_notification_layout" primary="True">
+            <xpath expr="//td[@id='button_access_title']
+" position="replace">
+                <td t-att-style="'border-radius: 3px; text-align: center; background: '+ (company.email_secondary_color or '#875A7B') + ';'">
+                     <a t-att-href="url" style="background-color: #875A7B;margin-top:15px; margin-bottom:15px;  padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                        <t t-out="title"/>
+                    </a>
+                </td>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -58,7 +58,7 @@ class TestRecruitmentSurvey(common.TransactionCase):
     def test_send_survey(self):
         Answer = self.env['survey.user_input']
         invite_recruitment = self._prepare_invite(self.survey_sysadmin, self.job_applicant)
-        invite_recruitment.action_invite()
+        invite_recruitment.with_context(active_model="hr.applicant").action_invite()
 
         self.assertEqual(invite_recruitment.applicant_id, self.job_applicant)
         self.assertNotEqual(self.job_applicant.response_ids.ids, False)
@@ -71,21 +71,21 @@ class TestRecruitmentSurvey(common.TransactionCase):
 
         # Tests ACL
         # Manager: ok for survey type recruitment
-        invite_recruitment.with_user(self.hr_recruitment_manager).action_invite()
+        invite_recruitment.with_user(self.hr_recruitment_manager).with_context(active_model="hr.applicant").action_invite()
         with self.assertRaises(AccessError):
             self.survey_custom.with_user(self.hr_recruitment_manager).read(['title'])
         # Interviewer and User: need to be set as interviewer for the job or the applicant
         for user in (self.hr_recruitment_interviewer, self.hr_recruitment_user):
             with self.subTest(user=user):
                 with self.assertRaises(AccessError):
-                    invite_recruitment.with_user(user).action_invite()
+                    invite_recruitment.with_user(user).with_context(active_model="hr.applicant").action_invite()
                 self.job.interviewer_ids = user
-                invite_recruitment.with_user(user).action_invite()
+                invite_recruitment.with_user(user).with_context(active_model="hr.applicant").action_invite()
                 self.job.interviewer_ids = False
                 with self.assertRaises(AccessError):
-                    invite_recruitment.with_user(user).action_invite()
+                    invite_recruitment.with_user(user).with_context(active_model="hr.applicant").action_invite()
                 self.job_applicant.interviewer_ids = user
-                invite_recruitment.with_user(user).action_invite()
+                invite_recruitment.with_user(user).with_context(active_model="hr.applicant").action_invite()
 
     @mute_logger('odoo.addons.base.models.ir_rule')
     def test_print_survey(self):
