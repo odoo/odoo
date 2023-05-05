@@ -13,6 +13,7 @@ import {
     pasteFiles,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
 
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 const { inputFiles } = file;
@@ -412,8 +413,8 @@ QUnit.test("add an emoji after a partner mention", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "Mario Party",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { openDiscuss } = await start();
@@ -548,8 +549,8 @@ QUnit.test("leave command on chat", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck Norris" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -591,8 +592,8 @@ QUnit.test(
         const partnerId = pyEnv["res.partner"].create({ name: "Marc Demo" });
         const channelId = pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId }),
             ],
             channel_type: "chat",
         });
@@ -651,8 +652,8 @@ QUnit.test("Select composer suggestion via Enter does not send the message", asy
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { openDiscuss } = await start({

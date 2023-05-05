@@ -6,6 +6,7 @@ import { MockServer } from "@web/../tests/helpers/mock_server";
 import { datetime_to_str } from "web.time";
 import { assignDefined } from "@mail/utils/misc";
 import { formatDate } from "@web/core/l10n/dates";
+import { Command } from "@mail/../tests/helpers/command";
 
 patch(MockServer.prototype, "mail/models/discuss_channel", {
     async _performRPC(route, args) {
@@ -768,7 +769,9 @@ patch(MockServer.prototype, "mail/models/discuss_channel", {
         const partners = this.getRecords("res.partner", [["id", "in", partners_to]]);
         const id = this.pyEnv["discuss.channel"].create({
             channel_type: "group",
-            channel_member_ids: partners.map((partner) => [0, 0, { partner_id: partner.id }]),
+            channel_member_ids: partners.map((partner) =>
+                Command.create({ partner_id: partner.id })
+            ),
             name: "",
         });
         this._mockDiscussChannel_broadcast(

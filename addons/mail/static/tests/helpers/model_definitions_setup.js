@@ -7,6 +7,7 @@ import {
     insertModelFields,
     insertRecords,
 } from "@bus/../tests/helpers/model_definitions_helpers";
+import { Command } from "@mail/../tests/helpers/command";
 
 //--------------------------------------------------------------------------
 // Models
@@ -61,7 +62,7 @@ insertModelFields("discuss.channel", {
     avatarCacheKey: { string: "Avatar Cache Key", type: "datetime" },
     channel_member_ids: {
         default() {
-            return [[0, 0, { partner_id: this.currentPartnerId }]];
+            return [Command.create({ partner_id: this.currentPartnerId })];
         },
     },
     channel_type: { default: "channel" },

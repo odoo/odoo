@@ -2,6 +2,8 @@
 
 import { Composer } from "@mail/composer/composer";
 import { click, insertText, start, startServer } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import {
     makeDeferred,
     nextTick,
@@ -34,9 +36,9 @@ QUnit.test('display partner mention suggestions on typing "@"', async (assert) =
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId_1 }],
-            [0, 0, { partner_id: partnerId_2 }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId_1 }),
+            Command.create({ partner_id: partnerId_2 }),
         ],
     });
     const { openDiscuss } = await start();
@@ -63,9 +65,9 @@ QUnit.test(
         const channelId = pyEnv["discuss.channel"].create({
             name: "general",
             channel_member_ids: [
-                [0, 0, { partner_id: pyEnv.currentPartnerId }],
-                [0, 0, { partner_id: partnerId_1 }],
-                [0, 0, { partner_id: partnerId_2 }],
+                Command.create({ partner_id: pyEnv.currentPartnerId }),
+                Command.create({ partner_id: partnerId_1 }),
+                Command.create({ partner_id: partnerId_2 }),
             ],
         });
         const { openDiscuss } = await start();
@@ -99,8 +101,8 @@ QUnit.test("show other channel member in @ mention", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { openDiscuss } = await start();
@@ -118,8 +120,8 @@ QUnit.test("select @ mention insert mention text in composer", async (assert) =>
     const channelId = pyEnv["discuss.channel"].create({
         name: "general",
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
     });
     const { openDiscuss } = await start();

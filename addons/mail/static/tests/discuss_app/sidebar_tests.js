@@ -9,6 +9,8 @@ import {
     startServer,
     waitUntil,
 } from "@mail/../tests/helpers/test_utils";
+import { Command } from "@mail/../tests/helpers/command";
+
 import { editInput, makeDeferred, nextTick } from "@web/../tests/helpers/utils";
 import { makeFakeNotificationService } from "@web/../tests/helpers/mock_services";
 
@@ -242,8 +244,8 @@ QUnit.test("sidebar: basic chat rendering", async (assert) => {
     const partnerId = pyEnv["res.partner"].create({ name: "Demo" });
     pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -284,7 +286,11 @@ QUnit.test("sidebar: open channel and leave it", async (assert) => {
     const channelId = pyEnv["discuss.channel"].create({
         name: "General",
         channel_member_ids: [
-            [0, 0, { fold_state: "open", is_minimized: true, partner_id: pyEnv.currentPartnerId }],
+            Command.create({
+                fold_state: "open",
+                is_minimized: true,
+                partner_id: pyEnv.currentPartnerId,
+            }),
         ],
     });
     const { openDiscuss } = await start({
@@ -332,8 +338,8 @@ QUnit.test("chat - channel should count unread message [REQUIRE FOCUS]", async (
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -357,7 +363,7 @@ QUnit.test("mark channel as seen on last message visible [REQUIRE FOCUS]", async
     const channelId = pyEnv["discuss.channel"].create({
         name: "test",
         channel_member_ids: [
-            [0, 0, { message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }],
+            Command.create({ message_unread_counter: 1, partner_id: pyEnv.currentPartnerId }),
         ],
     });
     pyEnv["mail.message"].create({
@@ -498,7 +504,7 @@ QUnit.test(
         });
         pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
             ],
             channel_type: "chat",
         });
@@ -518,7 +524,7 @@ QUnit.test(
         });
         pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }),
             ],
             channel_type: "chat",
         });
@@ -538,7 +544,7 @@ QUnit.test(
         });
         pyEnv["discuss.channel"].create({
             channel_member_ids: [
-                [0, 0, { message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }],
+                Command.create({ message_unread_counter: 0, partner_id: pyEnv.currentPartnerId }),
             ],
             channel_type: "chat",
         });
@@ -559,13 +565,19 @@ QUnit.test(
         pyEnv["discuss.channel"].create([
             {
                 channel_member_ids: [
-                    [0, 0, { message_unread_counter: 10, partner_id: pyEnv.currentPartnerId }],
+                    Command.create({
+                        message_unread_counter: 10,
+                        partner_id: pyEnv.currentPartnerId,
+                    }),
                 ],
                 channel_type: "chat",
             },
             {
                 channel_member_ids: [
-                    [0, 0, { message_unread_counter: 20, partner_id: pyEnv.currentPartnerId }],
+                    Command.create({
+                        message_unread_counter: 20,
+                        partner_id: pyEnv.currentPartnerId,
+                    }),
                 ],
                 channel_type: "chat",
             },
@@ -652,7 +664,7 @@ QUnit.test(
     async (assert) => {
         const pyEnv = await startServer();
         pyEnv["discuss.channel"].create({
-            channel_member_ids: [[0, 0, { partner_id: pyEnv.currentPartnerId }]],
+            channel_member_ids: [Command.create({ partner_id: pyEnv.currentPartnerId })],
             channel_type: "channel",
             group_public_id: false,
             name: "test",
@@ -1002,8 +1014,8 @@ QUnit.test("chat - avatar: should have correct avatar", async (assert) => {
     });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "chat",
     });
@@ -1033,7 +1045,7 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
-                [0, 0, { partner_id: demo_id }],
+                Command.create({ partner_id: demo_id }),
             ],
             channel_type: "chat",
         },
@@ -1047,7 +1059,7 @@ QUnit.test("chat should be sorted by last activity time [REQUIRE FOCUS]", async 
                         partner_id: pyEnv.currentPartnerId,
                     },
                 ],
-                [0, 0, { partner_id: yoshi_id }],
+                Command.create({ partner_id: yoshi_id }),
             ],
             channel_type: "chat",
         },
@@ -1146,8 +1158,8 @@ QUnit.test("Group unread counter up to date after mention is marked as seen", as
     const partnerId = pyEnv["res.partner"].create({ name: "Chuck" });
     const channelId = pyEnv["discuss.channel"].create({
         channel_member_ids: [
-            [0, 0, { partner_id: pyEnv.currentPartnerId }],
-            [0, 0, { partner_id: partnerId }],
+            Command.create({ partner_id: pyEnv.currentPartnerId }),
+            Command.create({ partner_id: partnerId }),
         ],
         channel_type: "group",
     });
