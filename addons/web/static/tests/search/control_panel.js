@@ -65,8 +65,9 @@ QUnit.module("Search", (hooks) => {
             searchMenuTypes: [],
         });
 
-        assert.containsN(target, ".breadcrumb li.breadcrumb-item", 2);
-        const breadcrumbItems = target.querySelectorAll("li.breadcrumb-item");
+        const breadcrumbsSelector = ".o_breadcrumb li.breadcrumb-item, .o_breadcrumb .active";
+        assert.containsN(target, breadcrumbsSelector, 2);
+        const breadcrumbItems = target.querySelectorAll(breadcrumbsSelector);
         assert.strictEqual(breadcrumbItems[0].innerText, "Previous");
         assert.hasClass(breadcrumbItems[1], "active");
         assert.strictEqual(breadcrumbItems[1].innerText, "Current");
