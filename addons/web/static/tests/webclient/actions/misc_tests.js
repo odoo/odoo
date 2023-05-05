@@ -206,10 +206,10 @@ QUnit.module("ActionManager", (hooks) => {
         serverData.actions[4].context = { no_breadcrumbs: true };
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 3);
-        assert.containsOnce(target, ".o_control_panel .breadcrumb-item");
+        assert.containsOnce(target, ".o_control_panel .o_breadcrumb");
         // push another action flagged with 'no_breadcrumbs=true'
         await doAction(webClient, 4);
-        assert.containsNone(target, ".o_control_panel .breadcrumb-item");
+        assert.containsNone(target, ".o_control_panel .o_breadcrumb");
     });
 
     QUnit.test("document's title is updated when an action is executed", async function (assert) {
