@@ -1321,6 +1321,9 @@ patch(Order.prototype, "pos_loyalty.Order", {
         let cheapestLine = false;
         for (const lines of Object.values(discountLinesPerReward)) {
             const lineReward = this.pos.reward_by_id[lines[0].reward_id];
+            if (lineReward.reward_type !== 'discount') {
+                continue;
+            }
             let discountedLines = orderLines;
             if (lineReward.discount_applicability === "cheapest") {
                 cheapestLine = cheapestLine || this._getCheapestLine();
