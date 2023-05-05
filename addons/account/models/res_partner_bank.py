@@ -249,6 +249,12 @@ class ResPartnerBank(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         # EXTENDS base res.partner.bank
+
+        if not self.user_has_groups('account.group_validate_bank_account'):
+            for vals in vals_list:
+                # force the allow_out_payment field to False in order to prevent scam payments on newly created bank accounts
+                vals['allow_out_payment'] = False
+
         res = super().create(vals_list)
         for account in res:
             msg = escape(_("Bank Account %s created")) % account._get_html_link(title=f"#{account.id}")
