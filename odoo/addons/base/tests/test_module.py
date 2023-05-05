@@ -6,7 +6,7 @@ from os.path import join as opj
 from unittest.mock import patch
 
 import odoo.addons
-from odoo.modules.module import load_manifest
+from odoo.modules.module import load_manifest, reset_modules
 from odoo.release import major_version
 from odoo.tests.common import BaseCase
 
@@ -19,11 +19,14 @@ class TestModuleManifest(BaseCase):
         cls.addons_path = cls._tmp_dir.name
 
         patcher = patch.object(odoo.addons, '__path__', [cls.addons_path])
+        cls.addClassCleanup(reset_modules)
         cls.startClassPatcher(patcher)
+        reset_modules()
 
     def setUp(self):
         self.module_root = tempfile.mkdtemp(prefix='odoo-test-module-', dir=self.addons_path)
         self.module_name = os.path.basename(self.module_root)
+        self.addCleanup(reset_modules)
 
     def test_default_manifest(self):
         with open(opj(self.module_root, '__manifest__.py'), 'w') as file:

@@ -15,7 +15,7 @@ class LintCase(BaseCase):
         """ Yields the paths of all the module files matching the provided globs
         (AND-ed)
         """
-        for modroot in map(get_module_path, get_modules()):
+        for modroot in get_modules().values():
             for root, _, fnames in os.walk(modroot):
                 fnames = [j(root, n) for n in fnames]
                 for glob in globs:

@@ -18,6 +18,8 @@ import odoo
 import odoo.tools as tools
 import odoo.release as release
 from odoo.tools import pycompat
+from odoo.tools.misc import frozendict
+
 
 MANIFEST_NAMES = ('__manifest__.py', '__openerp__.py')
 README = ['README.rst', 'README.md', 'README.txt']
@@ -138,12 +140,9 @@ def get_module_path(module, downloaded=False, display_warning=True):
     path if nothing else is found.
 
     """
-    for adp in odoo.addons.__path__:
-        files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
-                [opj(adp, module + '.zip')]
-        if any(os.path.exists(f) for f in files):
-            return opj(adp, module)
-
+    module_path = get_modules().get(module, False)
+    if module_path:
+        return module_path
     if downloaded:
         return opj(tools.config.addons_data_dir, module)
     if display_warning:
@@ -391,6 +390,8 @@ def load_openerp_module(module_name):
 def get_modules():
     """Returns the list of module names
     """
+    if get_modules.__modules is not None:
+        return get_modules.__modules
     def listdir(dir):
         def clean(name):
             name = os.path.basename(name)
@@ -402,19 +403,25 @@ def get_modules():
             for mname in MANIFEST_NAMES:
                 if os.path.isfile(opj(dir, name, mname)):
                     return True
-        return [
-            clean(it)
+        return {
+            clean(it): os.sep.join([dir, it])
             for it in os.listdir(dir)
             if is_really_module(it)
-        ]
+        }
 
-    plist = []
+    modules = {}
     for ad in odoo.addons.__path__:
         if not os.path.exists(ad):
             _logger.warning("addons path does not exist: %s", ad)
             continue
-        plist.extend(listdir(ad))
-    return list(set(plist))
+        modules.update(listdir(ad))
+    get_modules.__modules = frozendict(modules)
+    return get_modules.__modules
+
+def reset_modules():
+    get_modules.__modules = None
+
+reset_modules()
 
 def get_modules_with_version():
     modules = get_modules()
