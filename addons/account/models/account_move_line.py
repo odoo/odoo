@@ -543,6 +543,7 @@ class AccountMoveLine(models.Model):
                       FROM account_account account
                      WHERE account.company_id = ANY(%(company_ids)s)
                        AND account.account_type IN ('asset_receivable', 'liability_payable')
+                       AND account.deprecated = 'f'
                 )
                 SELECT * FROM previous
                 UNION ALL
