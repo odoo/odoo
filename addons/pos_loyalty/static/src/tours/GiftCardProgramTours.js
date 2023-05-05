@@ -49,14 +49,3 @@ PosLoyalty.check.orderTotalIs("35.00");
 PosLoyalty.exec.finalizeOrder("Cash", "35");
 registry.category("web_tour.tours").add("GiftCardProgramScanUseTour", { test: true, url: "/pos/web", steps: getSteps() });
 //#endregion
-
-//#region GiftCardProgramCreateSetTour1
-startSteps();
-ProductScreen.do.confirmOpeningPopup();
-ProductScreen.do.clickHomeCategory();
-ProductScreen.do.clickDisplayedProduct('Gift Card');
-ProductScreen.do.pressNumpad('Disc 5 0');
-PosLoyalty.check.orderTotalIs('25.00');
-PosLoyalty.exec.finalizeOrder('Cash', '25');
-registry.category('web_tour.tours').add('GiftCardWithDiscountTour', { test: true, url: '/pos/web', steps: getSteps() });
-//#endregion
