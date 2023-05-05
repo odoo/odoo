@@ -124,14 +124,20 @@
                                 <group name="group_documents_analytics" string="Analytics" col="1" class="row mt16 o_settings_container" attrs="{'invisible': [('allow_rating', '=', False)]}">
                                     <div>
                                         <field name="allow_rating" invisible="1"/>
-                                        <setting name="analytic_div" help="Get customer feedback" groups="project.group_project_rating">
+                                        <setting name="analytic_div" help="Get customer feedback and evaluate the performance of your employees" groups="project.group_project_rating">
                                             <field name="rating_active"/>
                                             <div class="mt16" attrs="{'invisible':[('rating_active','==',False)]}">
-                                                <field name="rating_status" widget="radio" />
+                                                <span class="text-muted o_row ps-1 pb-3">Send a rating request:</span>
+                                                <field name="rating_status" widget="radio" class="o_row"/>
                                                 <div  attrs="{'required': [('rating_status','=','periodic')], 'invisible': [('rating_status','!=','periodic')]}">
-                                                    <label for="rating_status_period"/>
+                                                    <label for="rating_status_period" string="Frequency"/>
                                                     <field name="rating_status_period"/>
                                                 </div>
+                                                <span colspan="2" class="text-muted o_row ps-1">
+                                                    <i class="fa fa-lightbulb-o pe-2"/>
+                                                    <span attrs="{'invisible': [('rating_status','=','periodic')]}">A rating request will be sent as soon as the task reaches a stage on which a Rating Email Template is defined.</span>
+                                                    <span attrs="{'invisible': [('rating_status','=','stage')]}">Rating requests will be sent as long as the task remains in a stage on which a Rating Email Template is defined.</span>
+                                                </span>
                                                 <div class="content-group">
                                                     <div class="mt8">
                                                         <button name="%(project.open_task_type_form_domain)d" context="{'project_id':id}" icon="oi-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
