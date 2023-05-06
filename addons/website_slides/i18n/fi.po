@@ -6379,6 +6379,15 @@ msgid "Yes"
 msgstr "Kyllä"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid ""
+"You are not allowed to add members to this course. Please contact the course"
+" responsible or an administrator."
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -6447,9 +6456,9 @@ msgstr "Et voi merkitä diaa katsotuksi, jos et ole sen osallistujissa."
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"You cannot mark a slide quiz as completed if you are not among its members."
+"You cannot mark a slide quiz as completed if you are not among its members "
+"or it is unpublished."
 msgstr ""
-"Et voi merkitä dian kyselyä valmiiksi jos et ole sen jäsenten joukossa."
 
 #. module: website_slides
 #. odoo-python
@@ -6457,10 +6466,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
-"members."
+"members or it is unpublished."
 msgstr ""
-"Et voi merkitä dia-tehtävää suorittamattomaksi, jos et ole sen jäsenten "
-"joukossa."
 
 #. module: website_slides
 #. odoo-python

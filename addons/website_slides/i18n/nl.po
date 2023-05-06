@@ -6379,6 +6379,17 @@ msgid "Yes"
 msgstr "Ja"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid ""
+"You are not allowed to add members to this course. Please contact the course"
+" responsible or an administrator."
+msgstr ""
+"Je hebt geen toestemming om leden toe te voegen aan deze cursus. Contacteer "
+"de cursusverantwoordelijke of een beheerder."
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -6449,9 +6460,11 @@ msgstr "Je kunt een slide niet als bekeken markeren als je geen lid bent."
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"You cannot mark a slide quiz as completed if you are not among its members."
+"You cannot mark a slide quiz as completed if you are not among its members "
+"or it is unpublished."
 msgstr ""
-"Je kunt een slide quit niet als compleet markeren als je geen lid bent."
+"Je kan een diaquiz niet als voltooid markeren als je geen lid bent of als "
+"hij niet gepubliceerd is."
 
 #. module: website_slides
 #. odoo-python
@@ -6459,9 +6472,10 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
-"members."
+"members or it is unpublished."
 msgstr ""
-"Je kunt een diaquiz niet markeren als niet voltooid als je geen lid bent."
+"Je kan een diaquiz niet als niet voltooid markeren als je geen lid bent of "
+"als hij niet gepubliceerd is."
 
 #. module: website_slides
 #. odoo-python

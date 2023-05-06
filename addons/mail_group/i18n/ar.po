@@ -192,6 +192,8 @@ msgid ""
 "<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">Whitelisted</span>\n"
 "                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">Banned</span>"
 msgstr ""
+"<span class=\"ms-2 badge text-bg-success\" attrs=\"{'invisible': [('author_moderation', '!=', 'allow')]}\">تم رفع الحظر</span>\n"
+"                            <span class=\"ms-2 badge text-bg-danger\" attrs=\"{'invisible': [('author_moderation', '!=', 'ban')]}\">محظور</span>"
 
 #. module: mail_group
 #: model_terms:ir.ui.view,arch_db:mail_group.message_footer
@@ -725,12 +727,12 @@ msgstr "مدير مجموعة البريد الإلكتروني "
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_subscribe
 msgid "Mail Group: Mailing List Subscription"
-msgstr ""
+msgstr "المجموعة البريدية: اشتراك القائمة البريدية "
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_list_unsubscribe
 msgid "Mail Group: Mailing List Unsubscription"
-msgstr ""
+msgstr "المجموعة البريدية: إلغاء الاشتراك في القائمة البريدية "
 
 #. module: mail_group
 #: model:mail.template,name:mail_group.mail_template_guidelines
@@ -1240,11 +1242,13 @@ msgstr "إرسال إرشادات للمشتركين الجدد"
 #: model:mail.template,description:mail_group.mail_template_guidelines
 msgid "Sent to people who subscribed to a mailing group with group guidelines"
 msgstr ""
+"يتم إرسالها إلى الأشخاص المشتركين في قائمة بريدية وتحوي على توجيهات المجموعة"
+" "
 
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_unsubscribe
 msgid "Sent to people who unsubscribed from a mailing group"
-msgstr ""
+msgstr "يتم إرسالها إلى الأشخاص الذين ألغوا اشتراكهم من مجموعة بريدية "
 
 #. module: mail_group
 #: model:ir.model.fields,field_description:mail_group.field_mail_group_message__moderation_status
@@ -1276,7 +1280,7 @@ msgstr "اشتراك"
 #. module: mail_group
 #: model:mail.template,description:mail_group.mail_template_list_subscribe
 msgid "Subscription confirmation to a mailing group"
-msgstr ""
+msgstr "رسالة تأكيد الاشتراك إلى مجموعة بريدية "
 
 #. module: mail_group
 #: code:addons/mail_group/models/mail_group.py:0
