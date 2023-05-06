@@ -354,24 +354,6 @@
         }
     }
 
-    &.o_field_selection_badge {
-        .o_selection_badge {
-            display: inline-block;
-            margin: 0px 0px 4px 4px;
-            padding: 1px 6px;
-            color: $o-main-color-muted;
-            border: 1px solid map-get($grays, '300');
-            cursor: pointer;
-            &.active {
-                color: $o-brand-primary;
-                border-color: $o-brand-primary;
-            }
-            &:hover:not(.active) {
-                color: $o-gray-600;
-                border-color: $o-gray-600;
-            }
-        }
-    }
     // Radio buttons
     &.o_field_radio {
         @include media-breakpoint-down(md) {

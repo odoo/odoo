@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates xml:space="preserve">
 
-    <t t-name="web.BadgeSelectionField" owl="1">
+    <div t-name="web.BadgeSelectionField" owl="1" class="d-flex flex-wrap gap-1 mb-3">
         <t t-if="props.readonly">
             <span t-esc="string" t-att-raw-value="value" />
         </t>
         <t t-else="">
             <t t-foreach="options" t-as="option" t-key="option[0]">
                 <span
-                    class="o_selection_badge"
+                    class="o_selection_badge btn btn-secondary mb-1"
                     t-att-class="{ active: value === option[0] }"
                     t-att-value="stringify(option[0])"
                     t-esc="option[1]"
@@ -16,6 +16,6 @@
                 />
             </t>
         </t>
-    </t>
+    </div>
 
 </templates>
