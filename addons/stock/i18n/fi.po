@@ -56,7 +56,10 @@ msgid ""
 "\n"
 "\n"
 "%s --> Product UoM is %s (%s) - Move UoM is %s (%s)"
-msgstr " %s -> Tuotteen UoM on %s (%s) - Siirrä UoM on %s (%s) \n"
+msgstr ""
+"\n"
+"\n"
+"%s --> Tuotteen yksikkö on %s (%s) - Siirrettävä yksikkö on %s (%s)"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -141,8 +144,8 @@ msgid ""
 "location will be automatically set at the defined frequency."
 msgstr ""
 " Kun arvo on eri kuin 0, tässä paikassa varastoitujen tuotteiden "
-"inventaarion laskentapäivä asetetaan automaattisesti määritellyn taajuuden "
-"mukaan."
+"inventaarion laskentapäivä asetetaan automaattisesti määritellyn "
+"toistuvuuden mukaan."
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -176,7 +179,7 @@ msgstr "&gt;"
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_inventory
 msgid "'Count Sheet'"
-msgstr "'Määrälomake'"
+msgstr "'Määrä/inventaariolomake'"
 
 #. module: stock
 #: model:ir.actions.report,print_report_name:stock.action_report_delivery
@@ -223,7 +226,6 @@ msgid ""
 "* Available: When products are reserved, it is set to 'Available'.\n"
 "* Done: When the shipment is processed, the state is 'Done'."
 msgstr ""
-"\n"
 "* Uusi: Kun varastotilaus on luotu ja sitä ei ole vielä vahvistettu.\n"
 "* Odotetaan toista liikettä: Tämä tila näkyy, kun siirto odottaa toista, esimerkiksi ketjussa.\n"
 "* Odotetaan Saatavuutta: Tämä tila saavutetaan, kun hankintaratkaisu ei ole suora. Se saattaa vaatia aikataulutuksen suorittamista, joka on valmistettava komponentti ...\n"
@@ -247,7 +249,7 @@ msgstr ""
 "* Asiakkaan sijainti: Virtuaalinen sijainti, joka edustaa asiakkaillesi lähetettyjen tuotteiden kohdesijaintia\n"
 "* Varastohäviö: Virtuaalinen sijainti, joka toimii vastineena varastotoimille, joita käytetään varastotasojen korjaamiseen (fyysiset varastot)\n"
 "* Tuotanto: Virtuaalinen vastinpaikka tuotantotoimintoja varten: tämä paikka kuluttaa komponentit ja valmistaa valmiita tuotteita\n"
-"* Kuljetuspaikka: Vastapuolen sijainti, jota tulisi käyttää yritysten tai varastojen välisissä toimissa"
+"* Kuljetuspaikka/Transit: Vastapuolen sijainti, jota tulisi käyttää yritysten tai varastojen välisissä toimissa"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -4546,7 +4548,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_search_view
 msgid "My Counts"
-msgstr "Omat laskut"
+msgstr "Omat inventoinnit"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
@@ -5798,7 +5800,7 @@ msgstr "Tuotteet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__products_availability_state
 msgid "Products Availability State"
-msgstr "Tuotteen saatavuuden tila"
+msgstr "Tuotteiden saatavuuden tila"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__priority
@@ -6386,7 +6388,7 @@ msgstr "Raportointi"
 #: model:ir.actions.act_window,name:stock.action_stock_request_count
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree_inventory_editable
 msgid "Request a Count"
-msgstr "Pyydä laskentaa"
+msgstr "Pyydä inventointia"
 
 #. module: stock
 #: model:res.groups,name:stock.group_stock_sign_delivery
@@ -7383,7 +7385,7 @@ msgstr "Varaston täydennyksen raportti"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_request_count
 msgid "Stock Request an Inventory Count"
-msgstr "Varasto Pyydä inventaarion laskentaa"
+msgstr "Pyydä inventaarion laskentaa"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_rule
@@ -7830,7 +7832,7 @@ msgstr "Tuotetta ei ole saatavilla riittävästi"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__inventory_quantity
 msgid "The product's counted quantity."
-msgstr "Tuotteen laskettu määrä."
+msgstr "Tuotteen laskettu ja inventoitu määrä."
 
 #. module: stock
 #: code:addons/stock/models/stock_move_line.py:0
@@ -8157,7 +8159,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.inventory_warning_reset_view
 msgid "This will discard all unapplied counts, do you want to proceed?"
-msgstr "Tämä hylkää kaikki soveltamattomat laskennat, haluatko jatkaa?"
+msgstr "Tämä hylkää kaikki tallentamattomat inventoinnit, haluatko jatkaa?"
 
 #. module: stock
 #: model:digest.tip,name:stock.digest_tip_stock_0
@@ -8645,7 +8647,7 @@ msgstr "Käyttäjä"
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__user_id
 msgid "User assigned to do product count."
-msgstr "Käyttäjä, jolle on annettu tehtäväksi tuotteiden laskenta."
+msgstr "Käyttäjä, jolle on annettu tehtäväksi tuotteiden inventointi."
 
 #. module: stock
 #: model:ir.actions.server,name:stock.action_validate_picking
@@ -8664,7 +8666,7 @@ msgstr "Vahvista inventaario"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_change_product_qty__product_variant_count
 msgid "Variant Count"
-msgstr "Vaihtoehtojen määrä"
+msgstr "Varianttien määrä"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_location_search
@@ -9313,8 +9315,8 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on "
 "<i>apply</i> Odoo will process all the quantities."
 msgstr ""
-"Et ole kirjannut <i>tehtyjä</i> määriä vielä, klikkaamalla <i>Käytä</i> EC "
-"käsittelee kaikki määrät."
+"Et ole kirjannut <i>tehtyjä/valmiita</i> määriä vielä, joten klikkaamalla "
+"<i>Käytä</i> Odoo käsittelee kaikki määrät."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_backorder_confirmation
