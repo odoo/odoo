@@ -2808,7 +2808,7 @@ msgstr ""
 #. module: product
 #: model_terms:ir.ui.view,arch_db:product.product_supplierinfo_form_view
 msgid "Unit Price"
-msgstr "Cena"
+msgstr "Vienības cena"
 
 #. module: product
 #: model:ir.model.fields,field_description:product.field_product_packaging__product_uom_id
@@ -3193,7 +3193,8 @@ msgstr ""
 #, python-format
 msgid ""
 "You cannot delete the value %s because it is used on the following products:\n"
-"%s"
+"%s\n"
+" If the value has been associated to a product in the past, you will not be able to delete it."
 msgstr ""
 
 #. module: product
@@ -3213,6 +3214,13 @@ msgid ""
 "(%s)\n"
 ", they are used in other pricelist(s):\n"
 "%s"
+msgstr ""
+
+#. module: product
+#. odoo-python
+#: code:addons/product/models/product_attribute.py:0
+#, python-format
+msgid "You cannot delete value %s because it was used in some products."
 msgstr ""
 
 #. module: product

@@ -1236,6 +1236,8 @@ msgid ""
 "Below text serves as a suggestion and doesn’t engage Odoo S.A. "
 "responsibility."
 msgstr ""
+"Teks di bawah berfungsi sebagai saran dan penggunaannya tidak merupakan "
+"tanggung jawab Odoo S.A."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__res_partner__picking_warn__block
@@ -2250,6 +2252,12 @@ msgid ""
 "Closet location: products/lots closest to the target location will be moved out first.\n"
 "FEFO: products/lots with the closest removal date will be moved out first (the availability of this method depends on the \"Expiration Dates\" setting)."
 msgstr ""
+"Tetapkan metode default yang digunakan untuk menyarankan lokasi pasti (rak) produk, di lot mana dsb untuk lokasi ini. Metode ini dapat dipaksakan pada tingkat kategori produk, dan fallback dibuat pada lokasi parent bila tidak ada lokasi yang ditetapkan di sini.\n"
+"\n"
+"FIFO: produk/lot yang distok pertama akan dikeluarkan lebih dulu.\n"
+"LIFO: produk/lot yang distok terakhir akan dikeluarkan pertama.\n"
+"Closet location: produk/lot yang terdekat dengan lokasi tujuan akan dikeluarkan lebih dulu.\n"
+"FEFO: produk/lot dengan tanggal pemindahan terdekat akan dikeluarkan lebih dulu (ketersediaan metode ini tergantung pada pengaturan \"Tanggal Kadaluarsa\")."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert_date

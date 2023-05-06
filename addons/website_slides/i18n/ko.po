@@ -6094,6 +6094,15 @@ msgid "Yes"
 msgstr "예"
 
 #. module: website_slides
+#. odoo-python
+#: code:addons/website_slides/wizard/slide_channel_invite.py:0
+#, python-format
+msgid ""
+"You are not allowed to add members to this course. Please contact the course"
+" responsible or an administrator."
+msgstr ""
+
+#. module: website_slides
 #. odoo-javascript
 #: code:addons/website_slides/static/src/js/tours/slides_tour.js:0
 #, python-format
@@ -6158,8 +6167,9 @@ msgstr "회원이 아닌 경우 슬라이드를 봤음으로 표시할 수 없�
 #: code:addons/website_slides/models/slide_slide.py:0
 #, python-format
 msgid ""
-"You cannot mark a slide quiz as completed if you are not among its members."
-msgstr "회원이 아닌 경우 슬라이드 문제를 완료함으로 표시할 수 없습니다."
+"You cannot mark a slide quiz as completed if you are not among its members "
+"or it is unpublished."
+msgstr ""
 
 #. module: website_slides
 #. odoo-python
@@ -6167,7 +6177,7 @@ msgstr "회원이 아닌 경우 슬라이드 문제를 완료함으로 표시할
 #, python-format
 msgid ""
 "You cannot mark a slide quiz as not completed if you are not among its "
-"members."
+"members or it is unpublished."
 msgstr ""
 
 #. module: website_slides

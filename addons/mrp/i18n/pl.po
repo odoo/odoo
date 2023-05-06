@@ -1302,9 +1302,9 @@ msgstr ""
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
-"Oblicz dni potrzebne do uzupełnienia wszystkich komponentów z BoM, zarówno "
-"poprzez zakup jak i produkcję komponentów lub podzespołów."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1496,8 +1496,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
 
 #. module: mrp
@@ -3340,7 +3340,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "OEE"
-msgstr ""
+msgstr "OEE"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__oee_target
@@ -4755,7 +4755,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_product_product_replenishment
 msgid "Stock Replenishment Report"
-msgstr ""
+msgstr "Raport uzupełnienia zapasów"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
@@ -4797,7 +4797,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
 msgid "Subcontracting"
-msgstr ""
+msgstr "Podwykonawstwo"
 
 #. module: mrp
 #: model:product.template,name:mrp.product_product_computer_desk_product_template
@@ -5705,6 +5705,8 @@ msgid ""
 "Wizard in case of consumption in warning/strict and more component has been "
 "used for a MO (related to the bom)"
 msgstr ""
+"Kreator w przypadku zużycia w trybie ostrzegawczym/ostrzegawczym i więcej "
+"składnika zostało zużyte na MO (związane z BOM)"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_production_split_multi
@@ -6145,6 +6147,7 @@ msgid ""
 "You must indicate a non-zero amount consumed for at least one of your "
 "components"
 msgstr ""
+"Należy wskazać niezerową ilość zużytą dla co najmniej jednego z komponentów."
 
 #. module: mrp
 #. odoo-python

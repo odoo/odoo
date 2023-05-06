@@ -7,6 +7,7 @@
 # Cécile Collart <cco@odoo.com>, 2022
 # Martin Trigaux, 2022
 # Patricia Gutiérrez Capetillo <pagc@odoo.com>, 2022
+# Iran Villalobos López, 2023
 # Fernanda Alvarez, 2023
 # 
 msgid ""
@@ -53,11 +54,17 @@ msgstr ""
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_a_nz
 msgid "A-NZ BIS Billing 3.0"
-msgstr ""
+msgstr "Facturación A-NZ BIS 3.0"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
+#, python-format
+msgid "A payment of %s was detected."
+msgstr "Se detectó un pago de %s."
+
+#. module: account_edi_ubl_cii
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Articles 226 items 11 to 15 Directive 2006/112/EN"
@@ -273,7 +280,7 @@ msgstr "Acción de reporte"
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_sg
 msgid "SG BIS Billing 3.0"
-msgstr ""
+msgstr "Facturación SG BIS 3.0"
 
 #. module: account_edi_ubl_cii
 #: model:ir.model,name:account_edi_ubl_cii.model_account_edi_xml_ubl_nl
@@ -285,7 +292,7 @@ msgstr "SI-UBL 2.0 (NLCIUS)"
 #: code:addons/account_edi_ubl_cii/models/account_edi_common.py:0
 #, python-format
 msgid "Tax '%s' is invalid: %s"
-msgstr ""
+msgstr "El impuesto \"%s\" no es válido: %s"
 
 #. module: account_edi_ubl_cii
 #. odoo-python
@@ -358,6 +365,8 @@ msgid ""
 "The journal in which to upload should either be a sale or a purchase "
 "journal."
 msgstr ""
+"El diario en el que se va a cargar debe ser un diario de ventas o de "
+"compras."
 
 #. module: account_edi_ubl_cii
 #. odoo-python

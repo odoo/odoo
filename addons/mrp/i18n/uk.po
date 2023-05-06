@@ -208,7 +208,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
-msgstr ""
+msgstr "<span attrs=\"{'invisible': [('state', '=', 'draft')]}\">/</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -224,7 +224,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
 msgid "<span class=\"fw-bold text-nowrap\">To Produce</span>"
-msgstr ""
+msgstr "<span class=\"fw-bold text-nowrap\">Виготовити</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_form_view
@@ -1299,9 +1299,9 @@ msgstr "Обчислити зі специфікації"
 msgid ""
 "Compute the days required to resupply all components from BoM, by either "
 "buying or manufacturing the components and/or subassemblies."
+"                                       Also note that purchase security lead"
+" times will be added when appropriate."
 msgstr ""
-"Обчисліть дні, необхідні для поповнення всіх компонентів зі специфікації, "
-"купуючи або виготовляючи компоненти та/або вузли."
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_computed_on
@@ -1496,11 +1496,9 @@ msgstr "Створіть нову продуктивність робочих з
 #: model:ir.model.fields,help:mrp.field_product_product__days_to_prepare_mo
 #: model:ir.model.fields,help:mrp.field_product_template__days_to_prepare_mo
 msgid ""
-"Create and confirm Manufacturing Orders these many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
-"Note that this does not affect the MO scheduled date, which still respects the just-in-time mechanism."
+"Create and confirm Manufacturing Orders this many days in advance, to have enough time to replenish components or manufacture semi-finished products.\n"
+"Note that security lead times will also be considered when appropriate."
 msgstr ""
-"Створюйте та підтверджуйте замовлення на виробництво за багато днів наперед, щоб мати достатньо часу для поповнення компонентів або виробництва напівфабрикатів.\n"
-"Зауважте, що це не впливає на заплановану дату MO, яка все ще поважає механізм вчасно."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_backorder_form
@@ -2869,7 +2867,7 @@ msgstr "Ручне обчислення"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__manual_consumption_readonly
 msgid "Manual Consumption Readonly"
-msgstr ""
+msgstr "Ручне споживання лише для читання"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_routing_workcenter__time_cycle_manual
@@ -4505,7 +4503,7 @@ msgstr "Серійне масове виробництво"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_consumption_warning_form
 msgid "Set Quantities & Validate"
-msgstr ""
+msgstr "Встановіть Кількість та Підтвердіть"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_routing_workcenter__time_mode__manual
@@ -6394,7 +6392,7 @@ msgstr "Вам необхідно надати партію для готово�
 #: code:addons/mrp/wizard/mrp_consumption_warning.py:0
 #, python-format
 msgid "You need to supply Lot/Serial Number"
-msgstr ""
+msgstr "Вам необхідно вказати Партійний/Serial NumberСерійний номер"
 
 #. module: mrp
 #. odoo-python
