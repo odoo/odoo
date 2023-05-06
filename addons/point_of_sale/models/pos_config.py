@@ -231,7 +231,7 @@ class PosConfig(models.Model):
                 order="stop_at desc", limit=1)
             if session:
                 timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
-                pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date()
+                pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date() if not isinstance(session[0]['stop_at'], bool) else False
                 pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
             else:
                 pos_config.last_session_closing_cash = 0
@@ -635,7 +635,7 @@ class PosConfig(models.Model):
                 )    OR p.id=%(tip_product_id)s
              ORDER BY t.priority DESC,
                       t.detailed_type DESC,
-                      COALESCE(pm.date,p.write_date) DESC 
+                      COALESCE(pm.date,p.write_date) DESC
                 LIMIT %(limit)s
         """
         params = {
