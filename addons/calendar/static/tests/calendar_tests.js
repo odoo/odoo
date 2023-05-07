@@ -91,11 +91,11 @@ QUnit.module(
             );
             assert.containsN(
                 target,
-                '.o_field_widget[name="partner_ids"] .badge',
+                '.o_field_widget[name="partner_ids"] .o_tag',
                 2,
                 "there should be 2 tags"
             );
-            const badges = target.querySelectorAll('.o_field_widget[name="partner_ids"] .badge');
+            const badges = target.querySelectorAll('.o_field_widget[name="partner_ids"] .o_tag');
             assert.strictEqual(
                 badges[0].textContent.trim(),
                 "Jesus",

@@ -336,20 +336,8 @@
         }
 
         // No Color
-        &:first-child > a {
-            position: relative;
-            &::before {
-                content: "";
-                @include o-position-absolute(-2px, $left: 10px);
-                display: block;
-                width: 1px;
-                height: 20px;
-                transform: rotate(45deg);
-                background-color: red;
-            }
-            &::after {
-                background-color: white;
-            }
+        &:first-child > a:after {
+            background: linear-gradient(45deg, rgba($dropdown-bg, 0) 0%, rgba($dropdown-bg, 0) 48%, $danger 48%, $danger 52%, rgba($dropdown-bg, 0) 52%, rgba($dropdown-bg, 0) 100%);
         }
     }
 }
