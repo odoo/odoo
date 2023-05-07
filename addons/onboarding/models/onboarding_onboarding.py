@@ -17,11 +17,6 @@ class Onboarding(models.Model):
 
     is_per_company = fields.Boolean('Should be done per company?', default=True)
 
-    panel_background_color = fields.Selection(
-        [('orange', 'Orange'), ('blue', 'Blue'), ('violet', 'Violet'), ('none', 'None')],
-        string="Panel's Background color", default='orange',
-        help="Color gradient added to the panel's background.")
-    panel_background_image = fields.Binary("Panel's background image")
     panel_close_action_name = fields.Char(
         'Closing action', help='Name of the onboarding model action to execute when closing the panel.')
 
@@ -95,9 +90,6 @@ class Onboarding(models.Model):
     def _prepare_rendering_values(self):
         self.ensure_one()
         values = {
-            'bg_image': f'/web/image/onboarding.onboarding/{self.id}/panel_background_image',
-            'classes': f'o_onboarding_{self.panel_background_color}'
-                       if self.panel_background_color not in {False, 'none'} else '',
             'close_method': self.panel_close_action_name,
             'close_model': 'onboarding.onboarding',
             'steps': self.step_ids,

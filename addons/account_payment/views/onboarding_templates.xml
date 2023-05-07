@@ -11,6 +11,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Online Payments</t>
             <t t-set="description">Enable credit &amp; debit card payments supported by Stripe</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_bank-account.png'"/>
+            <t t-set="alt" t-value="'Online Payments'"/>
             <t t-set="btn_text">Activate Stripe</t>
             <t t-set="done_text">Online payments enabled</t>
             <t t-set="model" t-value="'res.company'"/>
