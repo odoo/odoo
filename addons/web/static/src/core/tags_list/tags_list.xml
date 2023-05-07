@@ -3,15 +3,23 @@
 
     <t t-name="web.TagsList" owl="1">
         <t t-foreach="visibleTags" t-as="tag" t-key="tag.id or tag_index">
-            <span t-attf-class="{{`o_tag_color_${ tag.colorIndex or 0 } ${props.displayBadge ? 'badge rounded-pill' : ''}`}} o_tag d-inline-flex align-items-center" t-att-class="tag.className" tabindex="-1" t-att-data-color="tag.colorIndex" t-att-title="tag.text" t-on-click="(ev) => tag.onClick and tag.onClick(ev)" t-on-keydown="tag.onKeydown">
-                <img t-if="tag.img" t-att-src="tag.img" class="o_m2m_avatar rounded-circle" t-att-class="tag.imageClass"/>
-                <i t-if="tag.icon" t-attf-class="p-1 fa {{ tag.icon }}"/>
-                <div t-if="props.displayBadge and props.displayText" class="o_tag_badge_text px-1" t-esc="tag.text" />
-                <t t-elif="props.displayText">
-                    <span />
-                    <div t-esc="tag.text" />
-                </t>
-                <a tabIndex="-1" t-if="tag.onDelete" t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)" href="#" class="fa fa-times o_delete pe-1" title="Delete" aria-label="Delete"></a>
+            <span
+                class="o_tag position-relative d-inline-flex align-items-center user-select-none"
+                t-att-class="{
+                    'o_avatar opacity-trigger-hover' : tag.img,
+                    'o_badge badge rounded-pill': !tag.img,
+                }"
+                t-attf-class="{{ !tag.img ? 'o_tag_color_' + (tag.colorIndex ? tag.colorIndex : '0') : '' }}"
+                tabindex="-1"
+                t-att-data-color="tag.colorIndex"
+                t-att-title="tag.text"
+                t-on-click="(ev) => tag.onClick and tag.onClick(ev)"
+                t-on-keydown="tag.onKeydown">
+
+                <img t-if="tag.img" t-att-src="tag.img" class="o_avatar o_m2m_avatar rounded" t-att-class="tag.imageClass"/>
+                <i t-if="tag.icon" t-attf-class="p-1 fa {{ tag.icon }}" t-att-class="tag.className"/>
+                <div t-if="props.displayText" class="o_tag_badge_text" t-att-class="{'ms-1' : tag.img}" t-esc="tag.text" />
+                <a tabIndex="-1" t-if="tag.onDelete" t-on-click.stop.prevent="(ev) => tag.onDelete and tag.onDelete(ev)" href="#" class="o_delete oi oi-close ps-1" title="Delete" aria-label="Delete"/>
             </span>
         </t>
         <span t-if="props.tags and otherTags.length" class="o_m2m_avatar_empty rounded-circle text-center fw-bold" data-tooltip-template="web.TagsList.Tooltip" data-tooltip-position="right" t-att-data-tooltip-info="tooltipInfo">
