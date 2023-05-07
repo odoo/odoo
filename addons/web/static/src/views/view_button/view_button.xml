@@ -18,7 +18,7 @@
         t-att-tabindex="props.tabindex"
         t-on-click.stop="onClick"
     >
-      <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class" t-att-src="icon.src"/>
+      <t t-if="icon" t-tag="icon.tag" t-att-class="icon.class + (props.string ? ' me-1' : '')" t-att-src="icon.src"/>
       <t t-slot="contents"><span t-if="props.string" t-esc="props.string"/></t>
     </t>
   </t>

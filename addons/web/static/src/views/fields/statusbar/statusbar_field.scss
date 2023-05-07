@@ -1,4 +1,6 @@
 .o_field_statusbar {
+    $-btn-secondary-design: map-get($o-btns-custom, "secondary");
+
     > .o_statusbar_status {
         display: flex;
         align-content: space-around;
@@ -8,37 +10,42 @@
         align-items: stretch;
 
         > .o_arrow_button {
-            min-height: $o-statusbar-height;
             position: relative;
             padding-left: $o-statusbar-arrow-width*2;
-            border-width: 0;
             border-radius: 0;
-            font-size: $font-size-sm;
 
             &:first-child {
+                @include border-end-radius($border-radius);
                 padding-right: $o-horizontal-padding; // Compensate container padding
                 overflow-x: hidden; // to prevent horizontal scroll due to last arrow
             }
+
             &:last-child {
-                padding-left: $o-horizontal-padding - 1;
-                border-left: $border-width solid $border-color;
+                @include border-start-radius($border-radius);
+                padding-left: $o-horizontal-padding;
             }
 
-            &:not(:first-child):before, &:not(:first-child):after {
-                content: " ";
-                display: block;
-                @include o-position-absolute(0, -$o-statusbar-arrow-width + 1);
+            &:not(:first-child) {
+                &:before, &:after {
+                    @include o-position-absolute(-$border-width, -$o-statusbar-arrow-width);
+                    display: block;
 
-                border-top: floor($o-statusbar-height/2) solid transparent;
-                border-bottom: ceil($o-statusbar-height/2) solid transparent;
-                border-right: none;
-                border-left: $o-statusbar-arrow-width solid $o-view-background-color;
-                -moz-transform: scale(0.9999); // Smooth the triangle on firefox
-            }
+                    border-top: floor($o-statusbar-height/2) solid transparent;
+                    border-bottom: ceil($o-statusbar-height/2) solid transparent;
+                    border-right: none;
+                    border-left: $o-statusbar-arrow-width solid map-get($-btn-secondary-design, background);
+                    -moz-transform: scale(0.9999); // Smooth the triangle on firefox
+                    content: " ";
+                }
 
-            &:not(:first-child):before {
-                right: -$o-statusbar-arrow-width;
-                border-left-color: $border-color!important;
+                &:before {
+                    right: -$o-statusbar-arrow-width - $border-width;
+                    border-left-color: $o-view-background-color;
+                }
+
+                &:hover:after {
+                    border-left-color: map-get($-btn-secondary-design, hover-background);
+                }
             }
 
             &.disabled {
@@ -52,12 +59,19 @@
                 }
             }
 
-            &.o_arrow_button_current.disabled {
-                background-color: $o-brand-odoo;
-                color: color-contrast($o-brand-odoo);
+            &.o_arrow_button_current.disabled, &:active:not(:first-child) {
+                background-color: map-get($-btn-secondary-design, active-background);
+                border-color: map-get($-btn-secondary-design, active-border);
+                color: map-get($-btn-secondary-design, active-color);
 
-                &:after, &:before {
-                    border-left-color: $o-brand-odoo;
+                &:after {
+                    border-left-color: map-get($-btn-secondary-design, active-background);
+                }
+
+                &, & + .btn {
+                    &:before {
+                        border-left-color: map-get($-btn-secondary-design, active-border);
+                    }
                 }
             }
         }

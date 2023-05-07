@@ -4,6 +4,7 @@
     // Default KanbanView values
 
     --Kanban-background: #{$o-kanban-background};
+    --Kanban-gap: unset;
     --Kanban-padding: 0;
 
     --KanbanGroup-background: var(--Kanban-background);
@@ -33,6 +34,7 @@
     border-top: $border-width solid var(--Kanban-background);
     background: var(--Kanban-background);
     padding: var(--Kanban-padding);
+    gap: var(--Kanban-gap);
 
     @include media-breakpoint-down(md) {
         --KanbanRecord-padding-h: #{$o-kanban-inside-hgutter * 2};

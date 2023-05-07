@@ -4,16 +4,11 @@
 
 .o-mail-Form-chatter {
     --ChatterTopbar-padding-v: #{map-get($spacers, 2)};
-
-    @include media-breakpoint-down(md) {
-        --ChatterTopbar-padding-left: #{$o-horizontal-padding};
-        --ChatterTopbar-padding-right: #{$o-horizontal-padding};
-    }
+    --ChatterTopbar-padding-left: #{$o-horizontal-padding};
+    --ChatterTopbar-padding-right: #{$o-horizontal-padding};
 
     &.o-aside {
         --Chatter-max-width: #{$o-form-view-sheet-max-width};
-        --ChatterTopbar-padding-left: #{$o-horizontal-padding};
-        --ChatterTopbar-padding-right: #{$o-horizontal-padding};
 
         flex-shrink: 0;
         flex-grow: 1;
@@ -33,13 +28,10 @@
 
     &.o-isInFormSheetBg {
         background-color: $white;
-        width: auto;
         border-top: 1px solid $border-color;
     }
 
     &:not(.o-aside):not(.o-full-width) .o-mail-Chatter {
-        @include make-container-max-widths();
-
         margin-left: auto;
         margin-right: auto;
     }
