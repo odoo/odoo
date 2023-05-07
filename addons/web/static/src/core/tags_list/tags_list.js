@@ -9,6 +9,7 @@ export class TagsList extends Component {
         displayText: true,
     };
     static props = {
+        className: { type: String, optional: true },
         displayBadge: { type: Boolean, optional: true },
         displayText: { type: Boolean, optional: true },
         itemsVisible: { type: Number, optional: true },
