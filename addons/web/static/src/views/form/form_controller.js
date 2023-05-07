@@ -18,8 +18,14 @@ import { isX2Many } from "@web/views/utils";
 import { useViewButtons } from "@web/views/view_button/view_button_hook";
 import { useSetupView } from "@web/views/view_hook";
 import { FormStatusIndicator } from "./form_status_indicator/form_status_indicator";
+import { ButtonBox } from "./button_box/button_box";
+import { ViewButton } from "@web/views/view_button/view_button";
+import { Field } from "@web/views/fields/field";
 
 import { Component, onRendered, useEffect, useRef, useState } from "@odoo/owl";
+import { useViewCompiler } from "../view_compiler";
+import { FormCompiler } from "./form_compiler";
+import { evalDomain } from "../utils";
 
 const viewRegistry = registry.category("views");
 
@@ -178,6 +184,17 @@ export class FormController extends Component {
             this.footerArchInfo.xmlDoc.append(...footers);
             this.footerArchInfo.arch = this.footerArchInfo.xmlDoc.outerHTML;
             this.archInfo.arch = this.archInfo.xmlDoc.outerHTML;
+        }
+
+        const xmlDocButtonBox = this.archInfo.xmlDoc.querySelector("div[name='button_box']");
+        if (xmlDocButtonBox) {
+            const buttonBoxTemplates = useViewCompiler(
+                this.props.Compiler || FormCompiler,
+                xmlDocButtonBox.outerHTML,
+                { ButtonBox: xmlDocButtonBox },
+                { isSubView: true }
+            );
+            this.buttonBoxTemplate = buttonBoxTemplates.ButtonBox;
         }
 
         const rootRef = useRef("root");
@@ -471,10 +488,21 @@ export class FormController extends Component {
         result["o_field_highlight"] = size < SIZES.SM || hasTouch();
         return result;
     }
+
+    evalDomainFromRecord(record, expr) {
+        return evalDomain(expr, record.evalContext);
+    }
 }
 
 FormController.template = `web.FormView`;
-FormController.components = { ActionMenus, FormStatusIndicator, Layout };
+FormController.components = {
+    ActionMenus,
+    FormStatusIndicator,
+    Layout,
+    ButtonBox,
+    ViewButton,
+    Field,
+};
 FormController.props = {
     ...standardViewProps,
     discardRecord: { type: Function, optional: true },

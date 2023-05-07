@@ -402,46 +402,6 @@
     // Percent pie
     &.o_field_percent_pie {
         align-items: center;
-
-        > .o_pie {
-            position: relative;
-            display: inline-block;
-            vertical-align: middle;
-            margin-right: 10px;
-            border-radius: 100%;
-            overflow: hidden;
-            background-color: $o-brand-primary;
-
-            &:after { // Outside pie border to go over border-radius irregularities
-                content: " ";
-                @include o-position-absolute(0, 0);
-                width: 100%;
-                height: 100%;
-                border-radius: 100%;
-            }
-
-            .o_mask {
-                @include o-position-absolute(0, 0);
-                transform-origin: 0;
-                width: 50%;
-                height: 100%;
-                background-color: $o-view-background-color;
-                &.o_full {
-                    background-color: inherit;
-                }
-            }
-
-            .o_pie_value {
-                display: flex;
-                justify-content: center;
-                align-items: center;
-
-                border-radius: 100%;
-
-                font-weight: 700;
-                color: $o-brand-odoo;
-            }
-        }
     }
 
     // Ace editor

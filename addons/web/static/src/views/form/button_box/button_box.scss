@@ -1,49 +1,54 @@
 .o-form-buttonbox {
-    --o-input-border-color: #{map-get($grays, '600')};
-    margin-bottom: $o-sheet-vpadding;
-    margin-top: -$o-sheet-vpadding;
-    @include o-form-sheet-negative-margin;
-    // Use box-shadow instead of border-bottom because some button boxes are
-    // empty in some cases and we do not want to see a floating border in
-    // that cases.
-    box-shadow: inset 0 -1px 0 $border-color;
+    // Compute the expected oe_stat_button's height according to the default btn size.
+    $-stat-button-inner-size: ($btn-padding-y * 2) + ($btn-font-size * $btn-line-height);
+    $-stat-button-height: $-stat-button-inner-size + o-to-rem($btn-border-width * 2);
 
-    .btn.oe_stat_button, > .o_field_widget {
-        flex: 0 0 auto;
-        width: percentage(1/3); // Adapt the number of visible buttons for each screen width
-        @include media-breakpoint-up(md) {
-            width: percentage(1/5);
-        }
-        @include media-breakpoint-up(lg) {
-            width: percentage(1/7);
-        }
-        @include media-breakpoint-up(xl) {
-            width: percentage(1/8);
-        }
+    $-stat-button-icon-size: 1.5em;
+    $-stat-button-icon-margin-end: $btn-padding-x * 0.5;
+
+    %-stat-button-container {
+        display: flex;
+        flex-direction: column;
+        max-width: 100%;
+        text-align: left;
+        font-weight: $font-weight-normal;
+        line-height: 1;
     }
 
-    &.o_full > *:first-child {
-        border-left: none !important;
-        box-shadow: -1px 0 0 $border-color;
+    %-stat-button-text {
+        @include o-text-overflow(block);
+        order: 1;
+        font-size: $o-font-size-base-smaller;
+        line-height: $line-height-sm;
     }
-    
-    .btn.oe_stat_button {
-        height: $o-statbutton-height;
 
-        > .o_button_icon {
-            display: inline-block;
-            vertical-align: middle;
-            line-height: $o-statbutton-height;
-            width: 30%;
+    %-stat-button-value {
+        order: 2;
+        font-weight: $font-weight-bold;
+        color: $o-brand-primary;
+        font-size: $o-font-size-base-smaller;
+    }
+
+    %-stat-button-figure-offset {
+        margin-left: $btn-padding-x * -0.33;
+    }
+
+    .oe_stat_button {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        flex-grow: 1;
+        padding-top: 0;
+        padding-bottom: 0;
+        height: $-stat-button-height;
+
+        .o_button_icon {
+            font-size: $-stat-button-icon-size;
+            color: $primary;
 
             &:before {
-                font-size: 22px;
-                vertical-align: middle;
+                margin-right: $-stat-button-icon-margin-end;
             }
-        }
-
-        > .o_field_percent_pie {
-            margin-left: $o-statbutton-spacing; // To create the button padding left (firefox bug)
         }
 
         // Some buttons only display text without using StatInfo template
@@ -52,26 +57,18 @@
             white-space: normal; // text on several lines if needed
         }
 
-        > .o_stat_info, > span, > .o_field_statinfo { // contains the value and text
-            display: inline-block;
-            vertical-align: middle;
-            font-weight: $font-weight-normal;
+        .o_stat_info, > span, .o_field_statinfo {
+            @extend %-stat-button-container;
 
-            max-width: 70%;
-            padding-right: $o-statbutton-spacing;
-            line-height: 1.3;
-
-            > .o_stat_value, > .o_stat_text {
-                @include o-text-overflow(block);
-                line-height: 1.2;
+            .o_stat_text {
+                @extend %-stat-button-text;
             }
 
             .o_stat_value {
-                font-weight: $font-weight-bold;
-                color: map-get($o-theme-text-colors, 'odoo');
+                @extend %-stat-button-value;
             }
 
-            .o_stat_text .o_field_empty {
+            .o_field_empty {
                 display: none;
             }
         }
@@ -82,6 +79,10 @@
             }
         }
 
+        &:not(:first-child) .o_button_icon {
+            @extend %-stat-button-figure-offset;
+        }
+
         &:not(:hover) .o_stat_info > .o_hover {
             display: none !important;
         }
@@ -89,11 +90,21 @@
             display: none !important
         }
     }
-    .oe_stat_button {
-        border-left: 1px solid $border-color;
+
+    > * + * {
+        margin-left: -$border-width;
     }
-    &.o_full > .oe_stat_button:first-child {
-        border-left: none;
+
+    .oe_stat_button, > div > button {
+        border-radius: 0;
+    }
+
+    .oe_stat_button:first-child, div:first-child > button {
+        @include border-start-radius($border-radius);
+    }
+
+    .oe_stat_button:last-child, div:last-child > button {
+        @include border-end-radius($border-radius);
     }
 
     // "More" button and dropdown
@@ -101,25 +112,43 @@
         > .o_button_more {
             width: 100%;
             height: 100%;
+
             &:after {
                 margin-left: 5px;
                 @include o-caret-down;
             }
         }
-        &.show > .o_button_more {
-            &:after {
-                @include o-caret-up;
-            }
-        }
 
         .o_dropdown_more {
             width: 150px;
-            > .dropdown-item {
-                .oe_stat_button {
-                    border: none;
-                    width: 100%;
-                }
+
+            .oe_stat_button {
+                height: auto;
+                width: 100%;
+                border: none;
+                padding-top: map-get($spacers, 2);
+                padding-bottom: map-get($spacers, 2);
             }
         }
+    }
+
+    // Piechart
+    --PercentPieField-size: #{$-stat-button-icon-size};
+    --PercentPieField-gap: #{$-stat-button-icon-margin-end};
+
+    .oe_stat_button:not(:first-child) .o_pie {
+        @extend %-stat-button-figure-offset;
+    }
+
+    .o_pie_info {
+        @extend %-stat-button-container;
+    }
+
+    .o_pie_text {
+        @extend %-stat-button-text;
+    }
+
+    .o_pie_value {
+        @extend %-stat-button-value;
     }
 }
