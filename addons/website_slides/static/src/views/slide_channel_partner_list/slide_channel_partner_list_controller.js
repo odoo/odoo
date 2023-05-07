@@ -33,3 +33,4 @@ export default class SlideChannelPartnerListController extends ListController {
         });
     }
 }
+SlideChannelPartnerListController.template = "website_slides.SlideChannelPartnerListView";
