@@ -8,7 +8,7 @@ import { Component } from "@odoo/owl";
 export class ButtonBox extends Component {
     setup() {
         const ui = useService("ui");
-        this.getMaxButtons = () => [2, 2, 2, 4][ui.size] || 7;
+        this.getMaxButtons = () => [3, 3, 3, 7, 3, 4, 7][ui.size] || 7;
     }
 
     getButtons() {
