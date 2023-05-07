@@ -8,6 +8,7 @@
 # Lucia Pacheco <lpo@odoo.com>, 2023
 # Martin Trigaux, 2023
 # Braulio D. López Vázquez <bdl@odoo.com>, 2023
+# Iran Villalobos López, 2023
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-17 08:00+0000\n"
 "PO-Revision-Date: 2023-01-17 11:06+0000\n"
-"Last-Translator: Braulio D. López Vázquez <bdl@odoo.com>, 2023\n"
+"Last-Translator: Iran Villalobos López, 2023\n"
 "Language-Team: Spanish (Mexico) (https://app.transifex.com/odoo/teams/41243/es_MX/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -385,6 +386,8 @@ msgid ""
 "<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', "
 "False)]}\">Mailing Contact</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('mailing_on_mailing_list', '=', "
+"False)]}\">Contacto de correo</span>"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.view_mail_mass_mailing_kanban
@@ -922,6 +925,12 @@ msgid ""
 "is hidden on the unsubscription page. The 'come Back' button will always be "
 "visible in any case to allow leads and partners to re-subscribe."
 msgstr ""
+"Permita que los destinatarios gestionen ellos mismos su estado en las listas"
+" negras a través de la página de cancelar suscripción. Si la opción está "
+"activa, el botón de \"Ponerme en la lista negra\" estará escondido en la "
+"página de cancelar suscripción. De cualquier forma, el botón \"Regresar\" "
+"siempre estará visible para permitir que los leads y partners se vuelvan a "
+"suscribir.  "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_masonry_block_options
@@ -1084,7 +1093,7 @@ msgstr "Color de fondo"
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_mailing__mailing_on_mailing_list
 msgid "Based on Mailing Lists"
-msgstr ""
+msgstr "Basado en las listas de correo"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_comparisons
@@ -1148,7 +1157,7 @@ msgstr "Direcciones de correo electrónico incluidas en la lista negra"
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist removal request from portal"
-msgstr ""
+msgstr "Solicitud de quitar de la lista de bloqueo desde el portal "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1158,13 +1167,15 @@ msgid ""
 "Blocklist removal request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"Solicitud de quitar de la lista de bloqueo desde el portal de correo "
+"%(mailing_link)s (documento%(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
 #: code:addons/mass_mailing/controllers/main.py:0
 #, python-format
 msgid "Blocklist request from portal"
-msgstr ""
+msgstr "Solicitud de lista de bloqueo desde el portal "
 
 #. module: mass_mailing
 #. odoo-python
@@ -1174,6 +1185,8 @@ msgid ""
 "Blocklist request from portal of mailing %(mailing_link)s (document "
 "%(record_link)s)"
 msgstr ""
+"Solicitud de lista de bloqueo desde el portal de correo %(mailing_link)s "
+"(documento %(record_link)s)"
 
 #. module: mass_mailing
 #. odoo-python
@@ -1183,6 +1196,8 @@ msgid ""
 "Blocklist request from unsubscribe link of mailing %(mailing_link)s "
 "(document %(record_link)s)"
 msgstr ""
+"Solicitud de lista de bloqueo desde el enlace de cancelar suscripción del "
+"correo %(mailing_link)s (documento %(record_link)s)"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -1822,7 +1837,7 @@ msgstr "Descartar"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Discount Offer"
-msgstr ""
+msgstr "Oferta de descuento"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_media_list
@@ -2178,12 +2193,12 @@ msgstr "Icono de Font Awesome ej. fa-tasks"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footer Center"
-msgstr ""
+msgstr "Centro del pie de página "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Footer Left"
-msgstr ""
+msgstr "Lado izquierdo del pie de página "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
@@ -2581,12 +2596,12 @@ msgstr "Izquierda"
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Left Logo"
-msgstr ""
+msgstr "Logo a la izquierda"
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.email_designer_snippets
 msgid "Left Text"
-msgstr ""
+msgstr "Texto a la izquierda "
 
 #. module: mass_mailing
 #. odoo-javascript
@@ -3853,7 +3868,7 @@ msgstr "Asistente para el correo de prueba"
 #: code:addons/mass_mailing/static/src/xml/mailing_filter_widget.xml:0
 #, python-format
 msgid "Save as Favorite Filter"
-msgstr ""
+msgstr "Guardar como filtro favorito "
 
 #. module: mass_mailing
 #: model:ir.model.fields,field_description:mass_mailing.field_mailing_filter__create_uid
@@ -4489,6 +4504,8 @@ msgid ""
 "This email has been automatically added in blocklist because of too much "
 "bounced."
 msgstr ""
+"Este correo se agregó automáticamente a la lista de bloqueo debido a "
+"demasiados correos rebotados. "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.mailing_contact_view_form
@@ -4898,6 +4915,9 @@ msgid ""
 "                To save the same criteria for future use, you can add it to the favorite list\n"
 "                by clicking on <i class=\"fa fa-floppy-o text-warning\"></i> icon next to \"Recipients\"."
 msgstr ""
+"Al diseñar el correo, puede definir las reglas para filtrar a los destinatarios.\n"
+"                Para guardar los mismos criterios y usarlos despúes, puede agregarlos a la lista de favoritos\n"
+"                al hacer clic en <i class=\"fa fa-floppy-o text-warning\"></i> el icono junto a \"Destinatarios\". "
 
 #. module: mass_mailing
 #: model_terms:ir.ui.view,arch_db:mass_mailing.s_hr_options

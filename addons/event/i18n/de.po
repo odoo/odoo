@@ -6,6 +6,7 @@
 # Friederike Fasterling-Nesselbosch, 2023
 # Felix Schubert <felix.schubert@go-erp.com>, 2023
 # Martin Trigaux, 2023
+# Mahamadasif Ansari, 2023
 # Larissa Manderfeld, 2023
 # 
 msgid ""
@@ -88,14 +89,14 @@ msgid ""
 "'Foldable Badge - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"„Faltbarer Veranstaltungsausweis - %s - “ % ((object.event_id.name or "
+"'Faltbarer Veranstaltungsausweis - %s - ' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_foldable_badge
 msgid "'Foldable Badge - %s' % (object.name or 'Event').replace('/','')"
 msgstr ""
-"„Faltbarer Veranstaltungsausweis - %s“ % (object.name or "
+"'Faltbarer Veranstaltungsausweis - %s' % (object.name or "
 "'Event').replace('/','')"
 
 #. module: event
@@ -104,20 +105,20 @@ msgid ""
 "'Full Page Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 msgstr ""
-"„Ganzseitiges Ticket - %s - %s“ % ((object.event_id.name or "
+"'Ganzseitiges Ticket - %s - %s' % ((object.event_id.name or "
 "'Event').replace('/',''), (object.name or '').replace('/',''))"
 
 #. module: event
 #: model:ir.actions.report,print_report_name:event.action_report_event_event_full_page_ticket
 msgid "'Full Page Ticket - %s' % (object.name or 'Event').replace('/','')"
-msgstr "„Ganzseitiges Ticket - %s“ % (object.name or 'Event').replace('/','')"
+msgstr "'Ganzseitiges Ticket - %s' % (object.name or 'Event').replace('/','')"
 
 #. module: event
 #. odoo-python
 #: code:addons/event/models/event_event.py:0
 #, python-format
 msgid "- \"%(event_name)s\": Missing %(nb_too_many)i seats."
-msgstr "- „%(event_name)s“: fehlende %(nb_too_many)i Plätze."
+msgstr "- \\\"%(event_name)s\\\": fehlende %(nb_too_many)i Plätze."
 
 #. module: event
 #. odoo-python
@@ -1985,7 +1986,7 @@ msgstr "Abonnenten (Partner)"
 #: model:ir.model.fields,help:event.field_event_event__activity_type_icon
 #: model:ir.model.fields,help:event.field_event_registration__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome Icon, z. B. fa-tasks"
+msgstr "FontAwesome-Icon, z. B. fa-tasks"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -2149,7 +2150,7 @@ msgstr "Symbol, um eine Ausnahmeaktivität anzuzeigen."
 #: model:ir.model.fields,help:event.field_event_event__message_needaction
 #: model:ir.model.fields,help:event.field_event_registration__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_has_error
@@ -2157,7 +2158,8 @@ msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error
 #: model:ir.model.fields,help:event.field_event_registration__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
+msgstr ""
+"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__start_sale_datetime
@@ -2433,7 +2435,7 @@ msgstr "Medium"
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
 #: model:ir.model.fields,field_description:event.field_event_registration__message_has_error
 msgid "Message Delivery error"
-msgstr "Fehler beim Senden der Nachricht"
+msgstr "Nachricht mit Zustellungsfehler"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_ids
@@ -2492,7 +2494,7 @@ msgstr "Nächste Aktivitätsfrist"
 #: model:ir.model.fields,field_description:event.field_event_event__activity_summary
 #: model:ir.model.fields,field_description:event.field_event_registration__activity_summary
 msgid "Next Activity Summary"
-msgstr "Zusammenfassung nächste Aktion"
+msgstr "Zusammenfassung der nächsten Aktion"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__activity_type_id
@@ -2585,7 +2587,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:event.field_event_event__message_has_error_counter
 #: model:ir.model.fields,help:event.field_event_registration__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_registration_search
@@ -3288,8 +3290,8 @@ msgstr ""
 #, python-format
 msgid "Use the <b>breadcrumbs</b> to go back to your kanban overview."
 msgstr ""
-"Verwenden Sie die \"<b>Brotkrumen</b>\", um zu Ihrer Kanban-Übersicht "
-"zurückzukehren."
+"Verwenden Sie die <b>Brotkrümelnavigation</b>, um zurück zu Ihrer Kanban-"
+"Übersicht zu gelangen."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event_ticket__seats_used

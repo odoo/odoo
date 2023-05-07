@@ -40,14 +40,14 @@ msgstr ""
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 #, python-format
 msgid " days"
-msgstr "Tage"
+msgstr " Tage"
 
 #. module: hr_holidays
 #. odoo-python
 #: code:addons/hr_holidays/models/hr_leave_type.py:0
 #, python-format
 msgid " hours"
-msgstr "Stunden"
+msgstr " Stunden"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -579,7 +579,7 @@ msgstr "<i class=\"fa fa-thumbs-up\"/> Genehmigen"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "<i class=\"fa fa-times\"/> Refuse"
-msgstr "<i class=\"fa fa-times\"/> Verweigern"
+msgstr "<i class=\"fa fa-times\"/> Ablehnen"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -613,7 +613,7 @@ msgid ""
 "<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Present but on leave\" name=\"presence_absent_active\">\n"
 "                    </span>"
 msgstr ""
-"<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Anwesend, aber im Urlaub\" name=\"presence_absent_active\">\n"
+"<span class=\"fa fa-plane text-success\" role=\"img\" aria-label=\"Present but on leave\" title=\"Present but on leave\" name=\"presence_absent_active\">\n"
 "                    </span>"
 
 #. module: hr_holidays
@@ -1334,7 +1334,7 @@ msgstr "Nach Unternehmen"
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__holiday_type__department
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__holiday_type__department
 msgid "By Department"
-msgstr "nach Abteilung"
+msgstr "Nach Abteilung"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave__holiday_type__employee
@@ -2005,7 +2005,7 @@ msgstr "Abonnenten (Partner)"
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__activity_type_icon
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr "FontAwesome Icon, z. B. fa-tasks"
+msgstr "FontAwesome-Icon, z. B. fa-tasks"
 
 #. module: hr_holidays
 #. odoo-python
@@ -2036,7 +2036,7 @@ msgstr "Von"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "From %(date_from)s To %(date_to)s - %(state)s"
-msgstr "von %(date_from)s bis %(date_to)s - %(state)s"
+msgstr "Vom %(date_from)s bis %(date_to)s - %(state)s"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__leave_date_from
@@ -2214,13 +2214,14 @@ msgstr ""
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_needaction
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr "Falls markiert, benötigen neue Nachrichten Ihre Kenntnisnahme."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Wenn gewählt, ist das Senden einiger Nachrichten fehlgeschlagen."
+msgstr ""
+"Falls markiert, weisen einige Nachrichten einen Zustellungsfehler auf."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_accrual_level__is_based_on_worked_time
@@ -2515,7 +2516,7 @@ msgstr "Mai"
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_holiday_allocation_id
 msgid "Meet the time off dashboard."
-msgstr "Willkommen auf dem Abwesenheits-Dashboard."
+msgstr "Willkommen auf dem Abwesenheitsdashboard."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__meeting_id
@@ -2526,7 +2527,7 @@ msgstr "Meeting"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_has_error
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__message_has_error
 msgid "Message Delivery error"
-msgstr "Fehler beim Senden der Nachricht"
+msgstr "Nachricht mit Zustellungsfehler"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_mail_message_subtype
@@ -2678,7 +2679,7 @@ msgstr "Nächste Aktivitätsfrist"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_summary
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__activity_summary
 msgid "Next Activity Summary"
-msgstr "Zusammenfassung nächste Aktion"
+msgstr "Zusammenfassung der nächsten Aktion"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__activity_type_id
@@ -2763,7 +2764,7 @@ msgstr "Anzahl der Tage"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__leaves_count
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__leaves_count
 msgid "Number of Time Off"
-msgstr "Anzahl Abwesenheiten"
+msgstr "Anzahl der Abwesenheiten"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__number_of_days_display
@@ -3544,8 +3545,8 @@ msgid ""
 "The employee, department, company or employee category of this request is "
 "missing. Please make sure that your user login is linked to an employee."
 msgstr ""
-"Der Mitarbeiter, die Abteilung, die Unternehmung oder die Mitarbeitergruppe "
-"dieser Anfrage fehlt. Bitte stellen Sie sicher, dass Ihr User an einen "
+"Der Mitarbeiter, die Abteilung, das Unternehmen oder die Mitarbeitergruppe "
+"dieser Anfrage fehlt. Bitte stellen Sie sicher, dass Ihr Benutzer an einen "
 "Mitarbeiter gelinkt ist."
 
 #. module: hr_holidays
@@ -3588,7 +3589,7 @@ msgstr "Das Startdatum muss vor dem Enddatum liegen."
 #. module: hr_holidays
 #: model:ir.model.constraint,message:hr_holidays.constraint_hr_leave_date_check2
 msgid "The start date must be anterior to the end date."
-msgstr "Das Start Datum muss vor dem Ende Datum sein"
+msgstr "Das Startdatum muss vor dem Enddatum liegen."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__state
@@ -3657,8 +3658,8 @@ msgstr ""
 msgid ""
 "This area is automatically filled by the user who validate the time off"
 msgstr ""
-"Dieser Bereich wird automatisch ausgefüllt vom User, der Abwesenheiten "
-"validiert"
+"Dieser Bereich wird automatisch vom Benutzer, der Abwesenheiten validiert, "
+"ausgefüllt."
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave__second_approver_id
@@ -3981,8 +3982,8 @@ msgid ""
 "Time off request state must be \"Refused\" or \"To Approve\" in order to be "
 "reset to draft."
 msgstr ""
-"Abwesenheitsanfrage muss \"Abgelehnt\" oder \"Zur Genehmigung\" sein, um "
-"diese zurück auf Entwurf setzen zu können."
+"Abwesenheitsanfrage muss „Abgelehnt“ oder „Zur Genehmigung“ sein, um diese "
+"zurück auf Entwurf setzen zu können."
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report_calendar__tz

@@ -89,7 +89,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_tasks_list
 msgid "#{task.stage_id.name}"
-msgstr ""
+msgstr "#{task.stage_id.name}"
 
 #. module: project
 #. odoo-python
@@ -616,7 +616,7 @@ msgstr "<span class=\"o_stat_text\">Subtareas</span>"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_milestone_view_form
 msgid "<span class=\"o_stat_text\">Tasks</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Tareas</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1075,7 +1075,7 @@ msgstr "Asignar un responsable a su tarea"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Assign each new project to this plan"
-msgstr ""
+msgstr "Asigne cada proyecto nuevo a este plan"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_sharing_project_task_view_form
@@ -1126,7 +1126,7 @@ msgstr "Asignados"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Assignement Date"
-msgstr ""
+msgstr "Fecha de asignación"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_assign
@@ -2242,7 +2242,7 @@ msgstr "Favorita"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form_base
 msgid "Favorite Projects"
-msgstr ""
+msgstr "Proyectos favoritos"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_task__repeat_month__february
@@ -2685,7 +2685,7 @@ msgstr "Función agregada no válida %r."
 #: code:addons/project/report/project_task_burndown_chart_report.py:0
 #, python-format
 msgid "Invalid field %r on model %r"
-msgstr ""
+msgstr "Campo %r no válido en el modelo %r"
 
 #. module: project
 #. odoo-python
@@ -3477,7 +3477,7 @@ msgstr "Sin bloquear"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Not Implemented."
-msgstr ""
+msgstr "No se implementó"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_share_wizard__note
@@ -4058,7 +4058,7 @@ msgstr "Visibilidad del proyecto"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Project description..."
-msgstr ""
+msgstr "Descripción del proyecto..."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -4515,7 +4515,7 @@ msgstr "Sábado"
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Schedule your activity once it is ready."
-msgstr ""
+msgstr "Programe su actividad una vez que esté lista."
 
 #. module: project
 #. odoo-javascript
@@ -4670,7 +4670,7 @@ msgstr ""
 #: code:addons/project/static/src/views/fields/project_task_priority_switch_field.js:0
 #, python-format
 msgid "Set priority as %s"
-msgstr ""
+msgstr "Establecer prioridad como %s"
 
 #. module: project
 #: model:mail.template,description:project.rating_project_request_email_template
@@ -4828,7 +4828,7 @@ msgstr "Descripción de la etapa e información sobre las herramientas"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__stage_display
 msgid "Stage Display"
-msgstr ""
+msgstr "Visualización de la etapa"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__user_id
@@ -5099,7 +5099,7 @@ msgstr "Tarea bloqueada"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Task description..."
-msgstr ""
+msgstr "Descripción de la tarea"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_progress
@@ -5225,7 +5225,7 @@ msgstr ""
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The end date should be in the future"
-msgstr ""
+msgstr "La fecha final debe ser en el futuro"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_update_default_description
@@ -5242,7 +5242,7 @@ msgstr "Se agregaron los siguientes objetivos:"
 #: code:addons/project/models/project_task_recurrence.py:0
 #, python-format
 msgid "The interval should be greater than 0"
-msgstr ""
+msgstr "El intervalo debe ser mayor a 0"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__alias_model_id
@@ -5303,7 +5303,7 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "The search does not support the %s operator or %s value."
-msgstr ""
+msgstr "La búsqueda no admite el operador %s o el valor %s."
 
 #. module: project
 #. odoo-python
@@ -5547,6 +5547,9 @@ msgid ""
 "timesheets are linked to an analytic account and any analytic account "
 "belongs to a plan."
 msgstr ""
+"Realize el seguimiento de la rentabilidad de sus proyectos. Cualquier "
+"proyecto, sus tareas y hojas de horas están vinculados a una cuenta "
+"analítica y cualquier cuenta analítica pertenece a un plan."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -5972,14 +5975,14 @@ msgstr ""
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot read %s fields in task."
-msgstr ""
+msgstr "No puede leer los campos %s en la tarea."
 
 #. module: project
 #. odoo-python
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "You cannot write on %s fields in task."
-msgstr ""
+msgstr "No puede escribir en los campos %s en la tarea."
 
 #. module: project
 #. odoo-python
@@ -6158,7 +6161,7 @@ msgstr "registrado"
 #. module: project
 #: model:ir.actions.server,name:project.action_server_view_my_task
 msgid "menu view My Tasks"
-msgstr ""
+msgstr "vista del menú Mis tareas"
 
 #. module: project
 #: model_terms:digest.tip,tip_description:project.digest_tip_project_1

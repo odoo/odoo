@@ -32,14 +32,14 @@ msgstr "# Benutzer"
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "%s has joined the challenge"
-msgstr "%s nimmt an der Challenge teil."
+msgstr "%s nimmt an der Herausforderung teil."
 
 #. module: gamification
 #. odoo-python
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "%s has refused the challenge"
-msgstr "%s hat die Challenge abgelehnt."
+msgstr "%s hat die Herausforderung abgelehnt."
 
 #. module: gamification
 #. odoo-python
@@ -194,7 +194,7 @@ msgid ""
 "aria-label=\"Goal in Progress\"/>"
 msgstr ""
 "<i role=\"img\" class=\"fa fa-clock-o fa-3x\" title=\"Goal in Progress\" "
-"aria-label=\"Ziel in Bearbeitung\"/>"
+"aria-label=\"Goal in Progress\"/>"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_kanban_view
@@ -671,7 +671,7 @@ msgstr ""
 "                        </t>\n"
 "                        <t t-else=\"\">\n"
 "                            <span style=\"color:#A8A8A8;font-size:13px;\">\n"
-"                                Challenge: <strong t-out=\"object.name or ''\"/>.\n"
+"                                Herausforderung: <strong t-out=\"object.name or ''\"/>.\n"
 "                            </span> \n"
 "                            <t t-foreach=\"challenge_lines\" t-as=\"line\">\n"
 "                                <!-- Header + Button table -->\n"
@@ -892,7 +892,7 @@ msgstr "Archiviert"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Assign Challenge to"
-msgstr "Challenge zuweisen an"
+msgstr "Herausforderung zuweisen an"
 
 #. module: gamification
 #: model_terms:ir.actions.act_window,help:gamification.challenge_list_action
@@ -902,7 +902,7 @@ msgid ""
 "                The goals are created for the specified users or member of the group."
 msgstr ""
 "Ordnen Sie ausgewählten Benutzern eine Liste von Zielen zu, um sie auszuwerten.\n"
-"Die Challenge kann einen Zeitraum (wöchentlich, monatlich...) für die automatische Erstellung von Zielen verwenden.\n"
+"Die Herausforderung kann einen Zeitraum (wöchentlich, monatlich...) für die automatische Erstellung von Zielen verwenden.\n"
 "Die Ziele werden für die angegebenen Benutzer oder Mitglieder der Gruppe angelegt."
 
 #. module: gamification
@@ -979,11 +979,11 @@ msgid ""
 "end date of a challenge (if no periodicity is set) or when the challenge is "
 "manually closed."
 msgstr ""
-"Die Auszeichnungen werden vergeben, wenn die Challenge erfolgreich "
+"Die Auszeichnungen werden vergeben, wenn die Herausforderung erfolgreich "
 "abgeschlossen wurde.  Die Vergabe erfolgt entweder zum Ende einer laufenden "
-"Periode (z. B. zum Ende einer monatlichen Challenge), am offiziellen "
-"Enddatum der Challenge (wenn keine Periode zugeordnet wurde) oder wenn die "
-"Challenge manuell als abgeschlossen eingestuft wird."
+"Periode (z. B. zum Ende einer monatlichen Herausforderung), am offiziellen "
+"Enddatum der Herausforderung (wenn keine Periode zugeordnet wurde) oder wenn"
+" die Herausforderung manuell als abgeschlossen eingestuft wird."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__batch_mode
@@ -1041,22 +1041,22 @@ msgstr "Kategorie"
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__challenge_id
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Challenge"
-msgstr "Challenge"
+msgstr "Herausforderung"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__line_id
 msgid "Challenge Line"
-msgstr "Challenge Zeilen"
+msgstr "Herausforderung Zeilen"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_line_list_view
 msgid "Challenge Lines"
-msgstr "Challenge Zeilen"
+msgstr "Herausforderung Zeilen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__name
 msgid "Challenge Name"
-msgstr "Bezeichnung Challenge"
+msgstr "Bezeichnung Herausforderung"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_goal__challenge_id
@@ -1064,8 +1064,8 @@ msgid ""
 "Challenge that generated the goal, assign challenge to users to generate "
 "goals with a value in this field."
 msgstr ""
-"Challenge, die das Ziel generiert hat. Weisen Sie den Benutzern eine "
-"Challenge zu, um Ziele mit einem Wert in diesem Feld zu generieren."
+"Herausforderung, die das Ziel generiert hat. Weisen Sie den Benutzern eine "
+"Herausforderung zu, um Ziele mit einem Wert in diesem Feld zu generieren."
 
 #. module: gamification
 #: model:ir.actions.act_window,name:gamification.challenge_list_action
@@ -1235,7 +1235,8 @@ msgstr ""
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__challenge_category
 msgid "Define the visibility of the challenge through menus"
-msgstr "Legen Sie fest, in welchen Menüs die Challenge sichtbar sein soll"
+msgstr ""
+"Legen Sie fest, in welchen Menüs die Herausforderung sichtbar sein soll"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal__definition_condition
@@ -1444,7 +1445,7 @@ msgstr "Gamification-Auszeichnung"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr "Gamification Challenge"
+msgstr "Gamification Herausforderung"
 
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_goal
@@ -1479,7 +1480,7 @@ msgstr "Gamification Benutzer Badge Assistent"
 #. module: gamification
 #: model:ir.model,name:gamification.model_gamification_challenge_line
 msgid "Gamification generic goal for challenge"
-msgstr "Gamification - allgemeines Ziel für die Challenge"
+msgstr "Gamification - allgemeines Ziel für die Herausforderung"
 
 #. module: gamification
 #: model:mail.template,name:gamification.email_template_badge_received
@@ -1494,7 +1495,7 @@ msgstr "Gamification: Herausforderungsbericht"
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_check_challenge_ir_actions_server
 msgid "Gamification: Goal Challenge Check"
-msgstr "Gamification: Überprüfung der Challenge"
+msgstr "Gamification: Überprüfung der Herausforderung"
 
 #. module: gamification
 #: model:ir.actions.server,name:gamification.ir_cron_consolidate_last_month_ir_actions_server
@@ -1674,7 +1675,7 @@ msgstr "ID"
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_goal_definition__res_id_field
 msgid "ID Field of user"
-msgstr "ID Feld des Benutzers"
+msgstr "ID-Feld des Benutzers"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__remaining_sending
@@ -1685,9 +1686,7 @@ msgstr "Wenn ein Maximum gesetzt ist"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_needaction
 msgid "If checked, new messages require your attention."
-msgstr ""
-"Wenn dieses Kontrollkästchen aktiviert ist, erfordern neue Nachrichten Ihre "
-"Aufmerksamkeit."
+msgstr "Falls markiert, erfordern neue Nachrichten Ihre Aufmerksamkeit."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error
@@ -1758,10 +1757,10 @@ msgid ""
 "goal not linked to a challenge."
 msgstr ""
 "Es werden Erinnerungen versendet, wenn ein manuelles Ziel nicht weiter "
-"bearbeitet wurde (das Intervall wird bei der Definitition der Challenge "
-"festgelegt). Die Einstellung wird ignoriert, wenn es sich um ein nicht-"
-"manuelles Ziel bzw. um ein Ziel, das nicht mit einer Challenge verlinkt ist,"
-" handelt."
+"bearbeitet wurde (das Intervall wird bei der Definitition der "
+"Herausforderung festgelegt). Die Einstellung wird ignoriert, wenn es sich um"
+" ein nicht-manuelles Ziel bzw. um ein Ziel, das nicht mit einer "
+"Herausforderung verlinkt ist, handelt."
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_goal__state__inprogress
@@ -1877,7 +1876,7 @@ msgstr "Master"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error
 msgid "Message Delivery error"
-msgstr "Fehler beim Senden der Nachricht"
+msgstr "Nachricht mit Zustellungsfehler"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_ids
@@ -2012,7 +2011,7 @@ msgstr "So gut meistert kein anderer Challenges!"
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_badge__rule_auth__nobody
 msgid "No one, assigned through challenges"
-msgstr "Niemand, Zuordnung erfolgt durch die Challenge"
+msgstr "Niemand, Zuordnung erfolgt durch die Herausforderung"
 
 #. module: gamification
 #. odoo-python
@@ -2060,7 +2059,7 @@ msgstr "Anzahl der Nachrichten, die eine Aktion erfordern"
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Anzahl der Nachrichten mit einem Fehler beim Senden."
+msgstr "Anzahl der Nachrichten mit Zustellungsfehler."
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__granted_users_count
@@ -2296,8 +2295,8 @@ msgstr "Verantwortlich"
 #, python-format
 msgid "Retrieving progress for personal challenge without user information"
 msgstr ""
-"Erhalten Sie Fortschrittsmeldungen für eine Challenge, ohne den zugeordneten"
-" Benutzer zu informieren."
+"Erhalten Sie Fortschrittsmeldungen für eine Herausforderung, ohne den "
+"zugeordneten Benutzer zu informieren."
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
@@ -2328,7 +2327,7 @@ msgstr "Verliehen von"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 msgid "Rewards for challenges"
-msgstr "Belohnungen für Challenge"
+msgstr "Belohnungen für Herausforderung"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
@@ -2469,7 +2468,7 @@ msgstr "Anzahl Silberabzeichen"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_form_view
 msgid "Start Challenge"
-msgstr "Challenge beginnen"
+msgstr "Herausforderung beginnen"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__start_date
@@ -2543,7 +2542,7 @@ msgstr "Diese Aktion wird ausgeführt, um den Zielwert zu aktualisieren."
 #: code:addons/gamification/models/gamification_challenge.py:0
 #, python-format
 msgid "The challenge %s is finished."
-msgstr "Die Challenge %s ist abgeschlossen."
+msgstr "Die Herausforderung %s ist abgeschlossen."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge_line__definition_full_suffix
@@ -2563,9 +2562,9 @@ msgid ""
 "The day a new challenge will be automatically closed. If no periodicity is "
 "set, will use this date as the goal end date."
 msgstr ""
-"Der Tag, an dem eine neue Challenge automatisch abgeschlossen wird. Wenn "
-"keine Periodizität festgelegt ist, wird dieses Datum als Enddatum für das "
-"Ziel verwendet."
+"Der Tag, an dem eine neue Herausforderung automatisch abgeschlossen wird. "
+"Wenn keine Periodizität festgelegt ist, wird dieses Datum als Enddatum für "
+"das Ziel verwendet."
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_challenge__start_date
@@ -2573,9 +2572,9 @@ msgid ""
 "The day a new challenge will be automatically started. If no periodicity is "
 "set, will use this date as the goal start date."
 msgstr ""
-"Der Tag an dem eine neue Challenge automatisch gestartet wird. Wenn bei den "
-"zugeordneten Einzelzielen keine Zeiträume angegeben werden, gilt dieses "
-"Datum auch als Startdatum für das Einzelziel."
+"Der Tag an dem eine neue Herausforderung automatisch gestartet wird. Wenn "
+"bei den zugeordneten Einzelzielen keine Zeiträume angegeben werden, gilt "
+"dieses Datum auch als Startdatum für das Einzelziel."
 
 #. module: gamification
 #. odoo-python
@@ -2865,8 +2864,8 @@ msgid ""
 "badges are still rewarded only at the end of the challenge."
 msgstr ""
 "Wenn Sie diese Option wählen, kann ein Benutzer eine Auszeichnung nur einmal"
-" erhalten. Die Top 3 Auszeichnungen werden erst bei Abschluss der Challenge "
-"verliehen."
+" erhalten. Die Top 3 Auszeichnungen werden erst bei Abschluss der "
+"Herausforderung verliehen."
 
 #. module: gamification
 #: model_terms:gamification.badge,description:gamification.badge_idea
