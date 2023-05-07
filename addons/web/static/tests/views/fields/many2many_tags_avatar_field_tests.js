@@ -455,24 +455,24 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_field_many2many_tags_avatar.o_field_widget .badge",
+            ".o_field_many2many_tags_avatar.o_field_widget .o_tag",
             2,
             "should have 2 records"
         );
 
         await click(
-            target.querySelector(".o_field_many2many_tags_avatar.o_field_widget .badge .o_delete")
+            target.querySelector(".o_field_many2many_tags_avatar.o_field_widget .o_tag .o_delete")
         );
         assert.containsOnce(
             target,
-            ".o_field_many2many_tags_avatar.o_field_widget .badge",
+            ".o_field_many2many_tags_avatar.o_field_widget .o_tag",
             "should have 1 record"
         );
 
         await clickSave(target);
         assert.containsOnce(
             target,
-            ".o_field_many2many_tags_avatar.o_field_widget .badge",
+            ".o_field_many2many_tags_avatar.o_field_widget .o_tag",
             "should have 1 record"
         );
     });

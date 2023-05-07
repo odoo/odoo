@@ -11,11 +11,6 @@
 
     .o_tags_input {
         padding: 1px 0;
-
-        .o_tag {
-            padding-left: 0.6em;
-            padding-right: 0.6em;
-        }
     }
 
     .o_field_many2many_selection {
@@ -29,12 +24,7 @@
 
     .badge {
         flex: 0 0 auto;
-        margin: 1px 2px 1px 0;
-        border: none;
-        font-size: 12px;
-        user-select: none;
         display: flex;
-        max-width: 100%;
 
         &.dropdown {
             cursor: pointer;
@@ -47,15 +37,6 @@
         .o_badge_text, .o_tag_badge_text {
             @include o-text-overflow(inline-block);
             max-width: 200px;
-            color: inherit;
-            line-height: 1.1;
-        }
-
-        .o_delete {
-            color: inherit;
-            cursor: pointer;
-            padding-left: 4px;
-            line-height: 1;
         }
     }
 }

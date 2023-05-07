@@ -48,8 +48,8 @@ QUnit.module("Components", () => {
         const secondBtn = target.querySelectorAll(".o_colorlist button")[1];
         assert.strictEqual(
             secondBtn.attributes.title.value,
-            "Fuchsia",
-            "second button color is Fuchsia"
+            "Raspberry",
+            "second button color is Raspberry"
         );
         assert.hasClass(
             secondBtn,

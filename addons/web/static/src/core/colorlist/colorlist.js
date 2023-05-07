@@ -40,14 +40,14 @@ ColorList.COLORS = [
     _lt("Red"),
     _lt("Orange"),
     _lt("Yellow"),
-    _lt("Light blue"),
-    _lt("Dark purple"),
-    _lt("Salmon pink"),
-    _lt("Medium blue"),
-    _lt("Dark blue"),
-    _lt("Fuchsia"),
-    _lt("Green"),
+    _lt("Cyan"),
     _lt("Purple"),
+    _lt("Almond"),
+    _lt("Teal"),
+    _lt("Blue"),
+    _lt("Raspberry"),
+    _lt("Green"),
+    _lt("Violet"),
 ];
 ColorList.template = "web.ColorList";
 ColorList.defaultProps = {
