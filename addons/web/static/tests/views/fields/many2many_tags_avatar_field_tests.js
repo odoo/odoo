@@ -59,12 +59,12 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_field_many2many_tags_avatar.o_field_widget .badge",
+            ".o_field_many2many_tags_avatar.o_field_widget .o_avatar",
             2,
             "should have 2 records"
         );
         assert.strictEqual(
-            target.querySelector(".o_field_many2many_tags_avatar.o_field_widget .badge img").dataset
+            target.querySelector(".o_field_many2many_tags_avatar.o_field_widget .o_avatar img").dataset
                 .src,
             "/web/image/partner/2/avatar_128",
             "should have correct avatar image"
@@ -116,13 +116,13 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_tag:not(.o_m2m_avatar_empty)",
+            ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:not(.o_m2m_avatar_empty)",
             4,
             "should have 4 records"
         );
         assert.containsN(
             target,
-            ".o_data_row:nth-child(3) .o_field_many2many_tags_avatar .o_tag:not(.o_m2m_avatar_empty)",
+            ".o_data_row:nth-child(3) .o_field_many2many_tags_avatar .o_avatar:not(.o_m2m_avatar_empty)",
             5,
             "should have 5 records"
         );
@@ -149,21 +149,21 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_tag:nth-child(2) img.o_m2m_avatar"
+                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(2) img.o_m2m_avatar"
             ).dataset.src,
             "/web/image/partner/2/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_tag:nth-child(3) img.o_m2m_avatar"
+                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(3) img.o_m2m_avatar"
             ).dataset.src,
             "/web/image/partner/4/avatar_128",
             "should have correct avatar image"
         );
         assert.strictEqual(
             target.querySelector(
-                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_tag:nth-child(4) img.o_m2m_avatar"
+                ".o_data_row:nth-child(2) .o_field_many2many_tags_avatar .o_avatar:nth-child(4) img.o_m2m_avatar"
             ).dataset.src,
             "/web/image/partner/5/avatar_128",
             "should have correct avatar image"
@@ -175,7 +175,7 @@ QUnit.module("Fields", (hooks) => {
         );
         assert.containsN(
             target,
-            ".o_data_row:nth-child(4) .o_field_many2many_tags_avatar .o_tag:not(.o_m2m_avatar_empty)",
+            ".o_data_row:nth-child(4) .o_field_many2many_tags_avatar .o_avatar:not(.o_m2m_avatar_empty)",
             4,
             "should have 4 records"
         );
@@ -213,7 +213,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_data_row .o_many2many_tags_avatar_cell"));
         assert.containsN(
             target,
-            ".o_data_row.o_selected_row .o_many2many_tags_avatar_cell .badge",
+            ".o_data_row.o_selected_row .o_many2many_tags_avatar_cell .o_avatar",
             1,
             "should have 1 many2many badges in edit mode"
         );
@@ -222,7 +222,7 @@ QUnit.module("Fields", (hooks) => {
         await click(target.querySelector(".o_list_button_save"));
         assert.containsN(
             target,
-            ".o_data_row:first-child .o_field_many2many_tags_avatar .o_tag",
+            ".o_data_row:first-child .o_field_many2many_tags_avatar .o_avatar",
             2,
             "should have 2 records"
         );
@@ -333,13 +333,13 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_tag",
+            ".o_kanban_record:nth-child(2) .o_field_many2many_tags_avatar .o_avatar",
             2,
             "should have 2 records"
         );
         assert.containsN(
             target,
-            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_tag",
+            ".o_kanban_record:nth-child(3) .o_field_many2many_tags_avatar .o_avatar",
             2,
             "should have 2 records"
         );
@@ -374,7 +374,7 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(
             target,
-            ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_tag",
+            ".o_kanban_record:nth-child(4) .o_field_many2many_tags_avatar .o_avatar",
             2,
             "should have 2 records"
         );

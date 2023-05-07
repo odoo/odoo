@@ -391,15 +391,15 @@
         margin-bottom: 10px;
 
         .img {
-            max-width: $o-avatar-size;
-            max-height: $o-avatar-size;
+            max-width: $o-form-picture-size;
+            max-height: $o-form-picture-size;
             vertical-align: top;
             border: 1px solid $o-gray-300;
         }
 
         @include media-breakpoint-down(sm) {
             + .oe_title {
-                max-width: calc(100% - #{$o-avatar-size} - #{map-get($spacers, 2)});
+                max-width: calc(100% - #{$o-form-picture-size} - #{map-get($spacers, 2)});
             }
         }
     }

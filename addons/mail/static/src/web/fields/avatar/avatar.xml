@@ -2,8 +2,8 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Avatar" owl="1">
-        <div class="o-mail-Avatar d-flex align-items-center">
-            <img class="rounded-circle me-2"
+        <div class="o-mail-Avatar o_avatar d-flex align-items-center">
+            <img class="rounded me-2"
                 t-attf-src="/web/image/{{props.resModel}}/{{props.resId}}/avatar_128"
                 t-on-click.stop.prevent="onClickAvatar"
             />

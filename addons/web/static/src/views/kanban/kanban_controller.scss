@@ -127,6 +127,7 @@
                 display: flex;
                 align-items: center;
                 min-height: 20px;
+                gap: map-get($map: $spacers, $key: 1);
             }
             .oe_kanban_bottom_left {
                 flex: 1 1 auto;
@@ -147,17 +148,6 @@
             }
             .oe_kanban_bottom_right {
                 flex: 0 1 auto;
-
-                .oe_kanban_avatar {
-                    border-radius: 50%;
-                    object-fit: cover;
-                }
-                .oe_kanban_avatar,
-                .o_field_many2one_avatar > div > .o_m2o_avatar {
-                    width: 20px;
-                    height: 20px;
-                    margin-left: 6px;
-                }
             }
             .o_link_muted {
                 color: $body-color;
@@ -314,7 +304,6 @@
         .o_field_many2many_tags {
             display: block;
             margin-bottom: var(--KanbanRecord-gap-v);
-            line-height: 1.2;
             word-break: break-all;
 
             &.avatar {
@@ -326,22 +315,9 @@
             }
 
             .o_tag {
-                display: inline-block;
-                margin-right: 4px;
-                font-size: 11px;
-                font-weight: 500;
-                background-color: transparent;
-                color: inherit;
-                box-shadow: none;
+                --Tag-max-width: MAX(200px, 100%);
+                --Tag-font-size: #{$o-font-size-base-smaller};
                 @include o-kanban-tag-color;
-
-                span {
-                    display: inline-block;
-                    width: 6px;
-                    height: 6px;
-                    margin-right: 4px;
-                    border-radius: 100%;
-                }
             }
         }
 
