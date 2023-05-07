@@ -25,7 +25,7 @@ function iconFromString(iconString) {
     const icon = {};
     if (iconString.startsWith("fa-")) {
         icon.tag = "i";
-        icon.class = `fa fa-fw o_button_icon ${iconString}`;
+        icon.class = `o_button_icon fa ${iconString}`;
     } else {
         icon.tag = "img";
         icon.src = iconString;

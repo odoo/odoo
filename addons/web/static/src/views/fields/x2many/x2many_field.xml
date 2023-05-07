@@ -3,7 +3,7 @@
 
     <t t-name="web.X2ManyField" owl="1">
         <div t-att-class="className">
-            <div class="o_x2m_control_panel">
+            <div class="o_x2m_control_panel d-empty-none mb-2">
                 <t t-if="displayControlPanelButtons">
                     <div class="o_cp_buttons" role="toolbar" aria-label="Control panel buttons" t-ref="buttons">
                         <t t-foreach="creates" t-as="create" t-key="create_index">
@@ -28,8 +28,8 @@
                         </t>
                     </div>
                 </t>
-                <div class="o_cp_pager" role="search">
-                    <Pager t-if="props.record.data[props.name].count > props.record.data[props.name].limit" t-props="pagerProps"/>
+                <div t-if="props.record.data[props.name].count > props.record.data[props.name].limit" class="o_cp_pager" role="search">
+                    <Pager t-props="pagerProps"/>
                 </div>
             </div>
             <ListRenderer t-if="props.viewMode === 'list'" t-props="rendererProps" />

@@ -184,7 +184,7 @@ QUnit.module("Form Compiler", (hooks) => {
         const expected = /*xml*/ `
             <t>
             <div class="o_form_renderer o_form_nosheet" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-block {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons/></div>
+                <div class="o_form_statusbar position-relative d-flex justify-content-between pb-3 px-3"><StatusBarButtons/></div>
                 <div>someDiv</div>
             </div>
             </t>`;
@@ -206,10 +206,10 @@ QUnit.module("Form Compiler", (hooks) => {
         const expected = /*xml*/ `
             <t>
             <div class="o_form_renderer" t-att-class="__comp__.props.class" t-attf-class="{{__comp__.props.record.isInEdition ? 'o_form_editable' : 'o_form_readonly'}} d-flex {{ __comp__.uiService.size &lt; 6 ? &quot;flex-column&quot; : &quot;flex-nowrap h-100&quot; }} {{ __comp__.props.record.isDirty ? 'o_form_dirty' : !__comp__.props.record.isNew ? 'o_form_saved' : '' }}" t-ref="compiled_view_root">
-                <div class="o_form_sheet_bg">
-                    <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom"><StatusBarButtons/></div>
+                <div class="o_form_sheet_bg pt-2">
+                    <div class="o_form_statusbar position-relative d-flex justify-content-between pb-3 px-3"><StatusBarButtons/></div>
                     <div>someDiv</div>
-                    <div class="o_form_sheet position-relative clearfix">
+                    <div class="o_form_sheet position-relative clearfix px-3">
                         <div>inside sheet</div>
                     </div>
                 </div>
@@ -267,7 +267,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
+            <div class="o_form_statusbar position-relative d-flex justify-content-between pb-3 px-3">
                <StatusBarButtons>
                   <t t-set-slot="button_0" isVisible="true">
                      <div>someDiv</div>
@@ -285,7 +285,7 @@ QUnit.module("Form Compiler", (hooks) => {
             </form>`;
 
         const expected = /*xml*/ `
-            <div class="o_form_statusbar position-relative d-flex justify-content-between border-bottom">
+            <div class="o_form_statusbar position-relative d-flex justify-content-between pb-3 px-3">
                <StatusBarButtons/>
             </div>`;
 

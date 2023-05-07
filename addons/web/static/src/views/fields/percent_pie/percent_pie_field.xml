@@ -2,14 +2,17 @@
 <templates xml:space="preserve">
 
     <t t-name="web.PercentPieField" owl="1">
-        <div class="o_pie">
-            <div class="o_mask" t-attf-class="{{transform.value >= 360 ? 'o_full' : ''}}" t-attf-style="transform: rotate({{transform.left}}deg)"/>
-            <div class="o_mask" t-attf-class="{{transform.value >= 180 ? 'o_full' : ''}}" t-attf-style="transform: rotate({{transform.right}}deg)"/>
-            <div class="o_pie_value">
-                <span t-esc="props.record.data[props.name] + '%'"/>
-            </div>
+        <figure class="o_pie mb-0 rounded-circle"
+                t-attf-style="background: conic-gradient(
+                    var(--PercentPieField-color-active) 0% {{props.record.data[props.name]}}%,
+                    var(--PercentPieField-color-static) 0% 100%
+                )"
+        />
+
+        <div class="o_pie_info">
+            <span class="o_pie_value" t-esc="props.record.data[props.name] + '%'"/>
+            <span class="o_pie_text" t-esc="props.string"/>
         </div>
-        <span t-esc="props.string"/>
     </t>
 
 </templates>
