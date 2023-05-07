@@ -5,6 +5,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Invoice Layout</t>
             <t t-set="description">Customize the look of your invoices.</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_quotation-layout.png'"/>
+            <t t-set="alt" t-value="'Invoice Layout'"/>
             <t t-set="done_icon" t-value="'fa-star'" />
             <t t-set="btn_text">Customize</t>
             <t t-set="done_text">Looks great!</t>
@@ -19,6 +21,8 @@
             <t t-set="description">
                 Create your first invoice.
             </t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_order-confirmation.png'"/>
+            <t t-set="alt" t-value="'Onboarding Create Invoice'"/>
             <t t-set="btn_text">Create</t>
             <t t-set="done_text">First invoice sent!</t>
             <t t-set="method" t-value="'action_open_account_onboarding_create_invoice'" />
@@ -32,6 +36,8 @@
             <t t-set="description">
                 Connect your financial accounts in seconds.
             </t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_puzzle.png'"/>
+            <t t-set="alt" t-value="'Onboarding Bank Account'"/>
             <t t-set="btn_text">Add a bank account</t>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'setting_init_bank_account_action'" />
@@ -43,6 +49,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Accounting Periods</t>
             <t t-set="description">Define your fiscal years &amp; tax returns periodicity.</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_accounting-periods.png'"/>
+            <t t-set="alt" t-value="'Onboarding Accounting Periods'"/>
             <t t-set="btn_text">Configure</t>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'setting_init_fiscal_year_action'" />
@@ -54,6 +62,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Chart of Accounts</t>
             <t t-set="description">Setup your chart of accounts and record initial balances.</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_chart-of-accounts.png'"/>
+            <t t-set="alt" t-value="'Onboarding Chart of Accounts'"/>
             <t t-set="btn_text">Review</t>
             <t t-set="done_text">Chart of accounts set.</t>
             <t t-set="method" t-value="'setting_chart_of_accounts_action'" />
@@ -65,6 +75,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Taxes</t>
             <t t-set="description">Set default Taxes for sales and purchase transactions.</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_taxes.png'"/>
+            <t t-set="alt" t-value="'Onboarding Taxes'"/>
             <t t-set="btn_text">Review</t>
             <t t-set="done_text">Taxes set.</t>
             <t t-set="method" t-value="'action_open_taxes_onboarding'" />
@@ -75,8 +87,6 @@
     <!-- ONBOARDING PANELS -->
     <template id="account_invoice_onboarding_panel" name="account.invoice.onboarding.panel">
         <t t-call="base.onboarding_container">
-            <t t-set="classes" t-value="'o_onboarding_blue'"/>
-            <t t-set="bg_image" t-value="'/account/static/src/img/account_invoice_onboarding_bg.jpg'"/>
             <t t-set="close_method" t-value="'action_close_account_invoice_onboarding'"/>
             <t t-set="close_model" t-value="'res.company'"/>
             <t t-set="text_completed">Congratulations! You are all set.</t>
@@ -89,8 +99,6 @@
     </template>
     <template id="account_dashboard_onboarding_panel" name="account.dashboard.onboarding.panel">
         <t t-call="base.onboarding_container">
-            <t t-set="classes" t-value="'o_onboarding_orange'"/>
-            <t t-set="bg_image" t-value="'/account/static/src/img/account_dashboard_onboarding_bg.jpg'"/>
             <t t-set="close_method" t-value="'action_close_account_dashboard_onboarding'"/>
             <t t-set="close_model" t-value="'res.company'"/>
 
@@ -114,6 +122,8 @@
             <t t-set="title">Taxes</t>
             <t t-set="description">Choose a default sales tax for your products.</t>
             <t t-set="btn_text">Set taxes</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_taxes.png'"/>
+            <t t-set="alt" t-value="'Onboarding Taxes'"/>
             <t t-set="done_text">Step Completed!</t>
             <t t-set="method" t-value="'action_open_account_onboarding_sale_tax'" />
             <t t-set="model" t-value="'res.company'" />

@@ -22,6 +22,9 @@ class OnboardingStep(models.Model):
     done_icon = fields.Char('Font Awesome Icon when completed', default='fa-star')
     done_text = fields.Char(
         'Text to show when step is completed', default=_('Step Completed! - Click to review'), translate=True)
+    step_image = fields.Binary("Step Image")
+    step_image_alt = fields.Char(
+        'Alt Text for the Step Image', translate=True, help='Show when impossible to load the image')
     panel_step_open_action_name = fields.Char(
         string='Opening action', required=True,
         help='Name of the onboarding step model action to execute when opening the step, '
