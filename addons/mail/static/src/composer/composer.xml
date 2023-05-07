@@ -13,7 +13,7 @@
                     'o-hasSelfAvatar px-3': !env.inChatWindow and thread,
                 }" t-attf-class="{{ props.className }}">
             <div class="o-mail-Composer-sidebarMain flex-shrink-0" t-if="!compact">
-                <img class="o-mail-Composer-avatar mt-1 rounded-circle" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
+                <img class="o-mail-Composer-avatar o_avatar rounded" t-att-src="threadService.avatarUrl(store.self, props.composer.thread)" alt="Avatar of user"/>
             </div>
             <div class="o-mail-Composer-coreHeader text-truncate small p-2" t-if="props.composer.thread and props.messageToReplyTo?.thread === props.composer.thread">
                 <span class="cursor-pointer" t-on-click="() => env.messageHighlight?.highlightMessage(props.messageToReplyTo.message.id, props.composer.thread)">
