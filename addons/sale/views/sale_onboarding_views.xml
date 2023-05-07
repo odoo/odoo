@@ -5,6 +5,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Quotation Layout</t>
             <t t-set="description">Customize the look of your quotations.</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_quotation-layout.png'"/>
+            <t t-set="alt" t-value="'Onboarding Quotation Layout'"/>
             <t t-set="done_icon" t-value="'fa-star'" />
             <t t-set="done_text">Looks great!</t>
             <t t-set="btn_text">Customize</t>
@@ -17,6 +19,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Order Confirmation</t>
             <t t-set="description">Choose between electronic signatures or online payments.</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_order-confirmation.png'"/>
+            <t t-set="alt" t-value="'Onboarding Quotation Layout'"/>
             <t t-set="btn_text">Set payments</t>
             <t t-set="method" t-value="'action_open_sale_onboarding_payment_provider'" />
             <t t-set="model" t-value="'res.company'" />
@@ -27,6 +31,8 @@
         <t t-call="base.onboarding_step">
             <t t-set="title">Sample Quotation</t>
             <t t-set="description">Send a quotation to test the customer portal.</t>
+            <t t-set="image" t-value="'/base/static/img/onboarding_sample-quotation.png'"/>
+            <t t-set="alt" t-value="'Onboarding Quotation Layout'"/>
             <t t-set="btn_text">Send sample</t>
             <t t-set="method" t-value="'action_open_sale_onboarding_sample_quotation'" />
             <t t-set="model" t-value="'res.company'" />
@@ -37,8 +43,6 @@
     <!-- ONBOARDING PANEL-->
     <template id="sale_quotation_onboarding_panel" name="sale.quotation.onboarding.panel">
         <t t-call="base.onboarding_container">
-            <t t-set="classes" t-value="'o_onboarding_violet'" />
-            <t t-set="bg_image" t-value="'/sale/static/src/img/sale_quotation_onboarding_bg.jpg'"/>
             <t t-set="close_method" t-value="'action_close_sale_quotation_onboarding'" />
             <t t-set="close_model" t-value="'res.company'" />
             <t t-call="base.onboarding_company_step" name="company_step" />

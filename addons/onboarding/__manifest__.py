@@ -3,7 +3,7 @@
 
 {
     'name': 'Onboarding Toolbox',
-    'version': '1.0',
+    'version': '1.1',
     'category': 'Hidden',
     'sequence': 9001,
     'description': """
