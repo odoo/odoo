@@ -3114,6 +3114,7 @@ msgstr "قطع الاتصال من نداء RTC بواسطة الخادم "
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/components/thread_view_topbar/thread_view_topbar.xml:0
+#: code:addons/mail/static/src/models/discuss.js:0
 #: model:ir.actions.client,name:mail.action_discuss
 #: model:ir.ui.menu,name:mail.mail_menu_technical
 #: model:ir.ui.menu,name:mail.menu_root_discuss
@@ -8146,6 +8147,13 @@ msgstr "SSL/TLS"
 
 #. module: mail
 #. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "SSL might not be set up properly"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "SUV"
@@ -9640,7 +9648,7 @@ msgstr "اليوم "
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_search
 #: model_terms:ir.ui.view,arch_db:mail.res_partner_view_search_inherit_mail
 msgid "Today Activities"
-msgstr "نشاطات اليوم"
+msgstr "أنشطة اليوم "
 
 #. module: mail
 #. odoo-javascript
@@ -20622,7 +20630,7 @@ msgstr "حجاب "
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "health care"
-msgstr ""
+msgstr "الرعاية الصحية "
 
 #. module: mail
 #. odoo-javascript
@@ -20630,7 +20638,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "healthcare"
-msgstr ""
+msgstr "الرعاية الصحية "
 
 #. module: mail
 #. odoo-javascript
@@ -20638,7 +20646,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "hear"
-msgstr ""
+msgstr "يسمع "
 
 #. module: mail
 #. odoo-javascript
@@ -20646,7 +20654,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "hear-no-evil monkey"
-msgstr ""
+msgstr "قرد لا يسمع "
 
 #. module: mail
 #. odoo-javascript
@@ -20654,7 +20662,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "hearing impaired"
-msgstr ""
+msgstr "أصم "
 
 #. module: mail
 #. odoo-javascript
@@ -20667,7 +20675,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heart"
-msgstr ""
+msgstr "قلب "
 
 #. module: mail
 #. odoo-javascript
@@ -20675,7 +20683,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heart decoration"
-msgstr ""
+msgstr "قلب مع زينة "
 
 #. module: mail
 #. odoo-javascript
@@ -20683,7 +20691,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heart exclamation"
-msgstr ""
+msgstr "قلب بعلامة تعجب "
 
 #. module: mail
 #. odoo-javascript
@@ -20699,7 +20707,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heart with arrow"
-msgstr ""
+msgstr "قلب مع سهم "
 
 #. module: mail
 #. odoo-javascript
@@ -20707,28 +20715,28 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heart with ribbon"
-msgstr ""
+msgstr "قلب مع شريطة "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heartbeat"
-msgstr ""
+msgstr "قلب ينبض "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "hearts"
-msgstr ""
+msgstr "قلوب "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heat stroke"
-msgstr ""
+msgstr "ضربة شمس "
 
 #. module: mail
 #. odoo-javascript
@@ -20736,28 +20744,28 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heavy dollar sign"
-msgstr ""
+msgstr "دولار "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heavy minus sign"
-msgstr ""
+msgstr "ناقص "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heavy multiplication sign"
-msgstr ""
+msgstr "ضرب "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heavy tick mark"
-msgstr ""
+msgstr "صح "
 
 #. module: mail
 #. odoo-javascript
@@ -20765,14 +20773,14 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "hedgehog"
-msgstr ""
+msgstr "قنفذ "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heel"
-msgstr ""
+msgstr "كعب "
 
 #. module: mail
 #. odoo-javascript
@@ -20780,14 +20788,14 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "helicopter"
-msgstr ""
+msgstr "هليكوبتر "
 
 #. module: mail
 #. odoo-javascript
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "helmet"
-msgstr ""
+msgstr "خوذة "
 
 #. module: mail
 #. odoo-javascript
@@ -20803,7 +20811,7 @@ msgstr "المساعدة"
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "herb"
-msgstr ""
+msgstr "عشبة "
 
 #. module: mail
 #. odoo-javascript
@@ -20812,7 +20820,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "hero"
-msgstr ""
+msgstr "بطل "
 
 #. module: mail
 #. odoo-javascript
@@ -20820,7 +20828,7 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "heroine"
-msgstr ""
+msgstr "بطلة "
 
 #. module: mail
 #. odoo-javascript
@@ -24293,6 +24301,13 @@ msgstr ""
 #: code:addons/mail/static/src/models_data/emoji_data.js:0
 #, python-format
 msgid "medal"
+msgstr ""
+
+#. module: mail
+#. odoo-javascript
+#: code:addons/mail/static/src/models/call_settings_menu.js:0
+#, python-format
+msgid "Media devices unobtainable"
 msgstr ""
 
 #. module: mail

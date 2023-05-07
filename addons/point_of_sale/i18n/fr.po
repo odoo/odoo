@@ -489,7 +489,7 @@ msgstr "Ajouter"
 #: code:addons/point_of_sale/static/src/js/Screens/ProductScreen/ControlButtons/OrderlineCustomerNoteButton.js:0
 #, python-format
 msgid "Add Customer Note"
-msgstr "Ajouter une note pour le client"
+msgstr "Ajouter une note au client"
 
 #. module: point_of_sale
 #. odoo-javascript
@@ -1763,7 +1763,7 @@ msgstr "Facture client"
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_order_line__customer_note
 #, python-format
 msgid "Customer Note"
-msgstr "Note pour le client"
+msgstr "Note au client"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_order__access_url
@@ -2180,7 +2180,7 @@ msgid ""
 "Do you want to accept payments difference and post a profit/loss journal "
 "entry?"
 msgstr ""
-"Voulez-vous accepter un écart de paiement et l'enregistrer au compte de "
+"Voulez-vous accepter un écart de règlement et l'enregistrer au compte de "
 "résultat ?"
 
 #. module: point_of_sale
@@ -4308,7 +4308,7 @@ msgstr "Paiements"
 #: code:addons/point_of_sale/static/src/js/Popups/ClosePosPopup.js:0
 #, python-format
 msgid "Payments Difference"
-msgstr "Écart de paiement"
+msgstr "Écart de règlement"
 
 #. module: point_of_sale
 #: model:ir.actions.act_window,name:point_of_sale.action_payment_methods_tree
@@ -5077,7 +5077,7 @@ msgstr "Variantes de produit"
 #: code:addons/point_of_sale/static/src/xml/Popups/ProductInfoPopup.xml:0
 #, python-format
 msgid "Product information"
-msgstr "Information du produit"
+msgstr "Informations sur le produit"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -7678,6 +7678,15 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+#, python-format
+msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
+msgstr ""
+"Vous ne pouvez pas archiver '%s' comme c'est utilisé par une configuration "
+"PdV '%s'."
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -8052,3 +8061,13 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "a été dupliqué de commandes existantes"
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr ""
+"Vous n'avez pas les droits d'accès pour obtenir les données de contrôle de "
+"clôture du point de vente."

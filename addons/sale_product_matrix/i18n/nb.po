@@ -3,16 +3,17 @@
 # 	* sale_product_matrix
 # 
 # Translators:
-# Martin Trigaux, 2019
+# Martin Trigaux, 2023
+# Marius Stedjan <marius@stedjan.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server 16.0beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
-"Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
+"POT-Creation-Date: 2022-10-04 09:25+0000\n"
+"PO-Revision-Date: 2023-03-23 10:40+0000\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2023\n"
+"Language-Team: Norwegian Bokmål (https://app.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,38 +23,54 @@ msgstr ""
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,field_description:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order_line__product_add_mode
 msgid "Add product mode"
+msgstr "Legg til produktmodus"
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Choose Product Variants"
 msgstr ""
+
+#. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Close"
+msgstr "Lukk"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_product_product__product_add_mode
 #: model:ir.model.fields,help:sale_product_matrix.field_product_template__product_add_mode
+#: model:ir.model.fields,help:sale_product_matrix.field_sale_order_line__product_add_mode
 msgid ""
-"Configurator: choose attribute values to add the matching         product variant to the order.\n"
+"Configurator: choose attribute values to add the matching product variant to the order.\n"
 "Grid: add several variants at once from the grid of attribute values"
 msgstr ""
 
 #. module: sale_product_matrix
+#. openerp-web
+#: code:addons/sale_product_matrix/static/src/js/sale_product_field.js:0
+#, python-format
+msgid "Confirm"
+msgstr "Bekreft"
+
+#. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_product_tmpl_id
 msgid "Grid Product Tmpl"
-msgstr ""
+msgstr "Matrise Produktmal"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid_update
 msgid "Grid Update"
-msgstr ""
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__report_grids
-msgid ""
-"If set, the matrix of the products configurable by matrix will be shown on "
-"the report of the order."
-msgstr ""
+msgstr "Oppdater Matrise"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__grid
 msgid "Matrix local storage"
-msgstr ""
+msgstr "Matrise lokal lagring"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__matrix
@@ -63,17 +80,17 @@ msgstr ""
 #. module: sale_product_matrix
 #: model:ir.model.fields,field_description:sale_product_matrix.field_sale_order__report_grids
 msgid "Print Variant Grids"
-msgstr ""
+msgstr "Bruk variantmatrise"
+
+#. module: sale_product_matrix
+#: model:ir.model,name:sale_product_matrix.model_product_template
+msgid "Product"
+msgstr "Produkt"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields.selection,name:sale_product_matrix.selection__product_template__product_add_mode__configurator
 msgid "Product Configurator"
-msgstr ""
-
-#. module: sale_product_matrix
-#: model:ir.model,name:sale_product_matrix.model_product_template
-msgid "Product Template"
-msgstr "Produktmal"
+msgstr "Produktkonfigurator"
 
 #. module: sale_product_matrix
 #: model:ir.model,name:sale_product_matrix.model_sale_order
@@ -81,32 +98,28 @@ msgid "Sales Order"
 msgstr "Salgsordre"
 
 #. module: sale_product_matrix
-#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
-msgid "Sales Variant Selection"
-msgstr ""
+#: model:ir.model,name:sale_product_matrix.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Salgsordrelinje"
 
 #. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_product_tmpl_id
-msgid "Technical field for product_matrix functionalities."
-msgstr ""
+#: model_terms:ir.ui.view,arch_db:sale_product_matrix.product_template_grid_view_form
+msgid "Sales Variant Selection"
+msgstr "Valg av variant"
 
 #. module: sale_product_matrix
 #: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid
 msgid ""
 "Technical local storage of grid. \n"
-"If grid_update, will be loaded on the SO. \n"
+"If grid_update, will be loaded on the SO.\n"
 "If not, represents the matrix to open."
-msgstr ""
-
-#. module: sale_product_matrix
-#: model:ir.model.fields,help:sale_product_matrix.field_sale_order__grid_update
-msgid "Whether the grid field contains a new matrix to apply or not."
 msgstr ""
 
 #. module: sale_product_matrix
 #: code:addons/sale_product_matrix/models/sale_order.py:0
 #, python-format
 msgid ""
-"You cannot change the quantity of a product present in multiple purchase "
-"lines."
+"You cannot change the quantity of a product present in multiple sale lines."
 msgstr ""
+"Du kan ikke endre antall for et produkt som allerede eksisterer i flere "
+"salgslinjer."

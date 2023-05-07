@@ -7539,6 +7539,13 @@ msgstr ""
 
 #. module: point_of_sale
 #. odoo-python
+#: code:addons/point_of_sale/models/stock_picking.py:0
+#, python-format
+msgid "You cannot archive '%s' as it is used by a POS configuration '%s'."
+msgstr "لا يمكنك أرشفة '%s' حيث إنه مستخدم في تهيئة نقطة البيع '%s'. "
+
+#. module: point_of_sale
+#. odoo-python
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ""
@@ -7899,3 +7906,11 @@ msgstr ""
 #, python-format
 msgid "were duplicates of existing orders"
 msgstr "كانت نسخًا من طلبات موجودة "
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_session.py:0
+#, python-format
+msgid ""
+"You don't have the access rights to get the point of sale closing control "
+"data."
+msgstr "لا تملك صلاحية الوصول إلى- بيانات التحكم في إقفال نقطة البيع. "
