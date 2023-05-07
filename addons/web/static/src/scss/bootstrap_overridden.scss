@@ -64,7 +64,7 @@ $enable-negative-margins: true !default;
 $enable-cssgrid: true !default;
 
 // Spacing
-$spacer: 1rem !default;
+$spacer: $o-spacer !default;
 
 // Body
 //
@@ -155,8 +155,22 @@ $table-active-bg-factor: .05 !default;
 $table-active-color: $headings-color !default;
 $table-th-font-weight: $headings-font-weight !default;
 
+// Buttons + Forms
+//
+// Shared variables that are reassigned to `$input-` and `$btn-` specific variables.
+
+$input-btn-padding-y: o-to-rem(5) !default;
+$input-btn-padding-x: o-to-rem(10) !default;
+
+$input-btn-padding-y-sm: o-to-rem(3) !default;
+$input-btn-padding-x-sm: o-to-rem(8) !default;
+
+$input-btn-padding-y-lg: o-to-rem(6) !default;
+$input-btn-padding-x-lg: o-to-rem(12) !default;
+
 // Buttons
 //
+// For each of Bootstrap's buttons, define text, background, and border color.
 
 $btn-font-weight: $font-weight-bold !default;
 $btn-disabled-opacity: $o-opacity-disabled !default;
