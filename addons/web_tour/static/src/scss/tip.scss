@@ -238,3 +238,7 @@ $o-tip-size-delay-in: $o-tip-duration-in - $o-tip-size-duration-in;
         display: none !important;
     }
 }
+
+.tab-pane.active .o_list_renderer.o_tooltip_parent {
+    z-index: $zindex-dropdown - 1;
+}

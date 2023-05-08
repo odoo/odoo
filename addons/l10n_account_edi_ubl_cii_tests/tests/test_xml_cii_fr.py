@@ -293,7 +293,71 @@ class TestCIIFR(TestUBLCommon):
     ####################################################
 
     def test_import_partner_facturx(self):
-        self._test_import_partner('facturx_1_0_05', 'factur-x.xml')
+        """
+        Given an invoice where partner_1 is the vendor and partner_2 is the customer with an EDI attachment.
+        * Uploading the attachment as an invoice should create an invoice with the buyer = partner_2.
+        * Uploading the attachment as a vendor bill should create a bill with the vendor = partner_1.
+        """
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        new_invoice = self._import_invoice_attachment(invoice, 'facturx_1_0_05', self.company_data['default_journal_sale'])
+        self.assertEqual(self.partner_2, new_invoice.partner_id)
+
+        new_invoice = self._import_invoice_attachment(invoice, 'facturx_1_0_05', self.company_data['default_journal_purchase'])
+        self.assertEqual(self.partner_1, new_invoice.partner_id)
+
+    def test_import_journal_facturx(self):
+        """
+        If the context contains the info about the current default journal, we should use it
+        instead of infering the journal from the move type.
+        """
+        journal2 = self.company_data['default_journal_sale'].copy()
+        journal2.default_account_id = self.company_data['default_account_revenue'].id
+        invoice = self._generate_move(
+            seller=self.partner_1,
+            buyer=self.partner_2,
+            move_type='out_invoice',
+            invoice_line_ids=[{'product_id': self.product_a.id}],
+        )
+        edi_attachment = invoice._get_edi_attachment(self.env.ref('account_edi_ubl_cii.edi_facturx_1_0_05')).id
+
+        new_invoice = self.env['account.journal'].with_context(default_move_type='out_invoice')._create_document_from_attachment(edi_attachment)
+        self.assertEqual(new_invoice.journal_id, self.company_data['default_journal_sale'])
+
+        new_invoice = self.env['account.journal'].with_context(default_journal_id=journal2.id)._create_document_from_attachment(edi_attachment)
+        self.assertEqual(new_invoice.journal_id, journal2)
+
+    def test_import_and_create_partner_facturx(self):
+        """ Tests whether the partner is created at import if no match is found when decoding the EDI attachment
+        """
+        partner_vals = {
+            'name': "Buyer",
+            'mail': "buyer@yahoo.com",
+            'phone': "1111",
+            'vat': "FR89215010646",
+        }
+        # assert there is no matching partner
+        partner_match = self.env['account.edi.format']._retrieve_partner(**partner_vals)
+        self.assertFalse(partner_match)
+
+        # Import attachment as an invoice
+        invoice = self.env['account.move'].create({
+            'move_type': 'out_invoice',
+            'journal_id': self.company_data['default_journal_sale'].id,
+        })
+        self.update_invoice_from_file(
+            module_name='l10n_account_edi_ubl_cii_tests',
+            subfolder='tests/test_files/from_odoo',
+            filename='facturx_test_import_partner.xml',
+            invoice=invoice)
+
+        # assert a new partner has been created
+        partner_vals['email'] = partner_vals.pop('mail')
+        self.assertRecordValues(invoice.partner_id, [partner_vals])
 
     def test_import_tax_included(self):
         """
@@ -348,4 +412,4 @@ class TestCIIFR(TestUBLCommon):
             amount_total=108, amount_tax=8, list_line_subtotals=[-5, 10, 60, 28, 7])
         # source: Facture_F20220029_EN_16931_K.pdf, credit note labelled as an invoice with negative amounts
         self._assert_imported_invoice_from_file(subfolder=subfolder, filename='facturx_invoice_negative_amounts.xml',
-            amount_total=90, amount_tax=0, list_line_subtotals=[-5, 10, 60, 30, 5, 0, -10], move_type='in_refund')
+            amount_total=100, amount_tax=0, list_line_subtotals=[-5, 10, 60, 30, 5], move_type='in_refund')

@@ -5,8 +5,8 @@
 # Translators:
 # Martin Trigaux, 2022
 # Mustafa J. Kadhem <safi2266@gmail.com>, 2022
-# Malaz Abuidris <msea@odoo.com>, 2022
 # Niyas Raphy, 2022
+# Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -14,8 +14,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-10 10:23+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Niyas Raphy, 2022\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -81,7 +81,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
 msgid "<span> or to specify the country code.</span>"
-msgstr ""
+msgstr "<span> أو لتحديد رمز الدولة.</span> "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -89,6 +89,8 @@ msgid ""
 "<strong>Invalid number:</strong>\n"
 "                        <span> make sure to set a country on the </span>"
 msgstr ""
+"<strong>رقم غير صالح:</strong>\n"
+"                        <span> تأكد من تعيين دولة في </span>"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_needaction
@@ -129,6 +131,8 @@ msgid ""
 "Are you sure you want to reset these sms templates to their original "
 "configuration? Changes and translations will be lost."
 msgstr ""
+"هل أنت متأكد من أنك ترغب في إعادة ضبط قوالب الرسائل النصية القصيرة هذه إلى "
+"الإعدادات الأصلية؟ ستضيع كافة التغييرات والترجمات. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_attachment_count
@@ -717,6 +721,8 @@ msgid ""
 "Phone number of the recipient. If changed, it will be recorded on "
 "recipient's profile."
 msgstr ""
+"رقم الهاتف الخاص بالمستلم. إذا تم تغييره، سيتم تسجيله في ملف المستلم "
+"التعريفي. "
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_res_partner__phone_mobile_search
@@ -827,7 +833,7 @@ msgstr "إعادة إرسال الإشعار "
 #. module: sms
 #: model:ir.actions.act_window,name:sms.sms_template_reset_action
 msgid "Reset SMS Template"
-msgstr ""
+msgstr "إعادة تعيير قالب الرسائل النصية القصيرة "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
@@ -861,7 +867,7 @@ msgstr "الرسائل النصية القصيرة "
 #: code:addons/sms/static/src/components/sms_widget/fields_sms_widget.xml:0
 #, python-format
 msgid "SMS ("
-msgstr ""
+msgstr "الرسالة النصية القصيرة ("
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
@@ -936,7 +942,7 @@ msgstr "معاينة قالب الرسائل النصية القصيرة "
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_reset
 msgid "SMS Template Reset"
-msgstr ""
+msgstr "إعادة تعيين قالب الرسائل النصية القصيرة "
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template
@@ -951,7 +957,7 @@ msgstr "قوالب الرسائل النصية القصيرة "
 #: code:addons/sms/wizard/sms_template_reset.py:0
 #, python-format
 msgid "SMS Templates have been reset"
-msgstr ""
+msgstr "تم إعادة تعيين قوالب الرسائل النصية القصيرة "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -980,7 +986,7 @@ msgstr "البحث في قوالب الرسائل النصية القصيرة "
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Send & Close"
-msgstr ""
+msgstr "إرسال وإغلاق "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_composer_view_form
@@ -1059,6 +1065,8 @@ msgstr "الفشل في الإرسال "
 #, python-format
 msgid "Sending SMS can only be done on a mail.thread or a transient model"
 msgstr ""
+"يمكنك إرسال رسائل نصية قصيرة فقط في نموذج mail.thread أو في نموذج عابر "
+"(transient) "
 
 #. module: sms
 #: model:ir.model.fields.selection,name:sms.selection__sms_sms__state__sent
@@ -1327,6 +1335,7 @@ msgid ""
 "recipients have an invalid phone number and will not receive this text "
 "message."
 msgstr ""
+"مستلمين لديهم أرقام هواتف غير صحيحة ولن يتمكنوا من استلام هذه الرسالة. "
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form

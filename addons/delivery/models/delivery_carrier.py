@@ -6,6 +6,7 @@ import re
 
 from odoo import api, fields, models, registry, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_round
+from odoo.tools.misc import groupby
 from odoo.exceptions import UserError
 
 from .delivery_request_objects import DeliveryCommodity, DeliveryPackage
@@ -194,7 +195,8 @@ class DeliveryCarrier(models.Model):
             # save the real price in case a free_over rule overide it to 0
             res['carrier_price'] = res['price']
             # free when order is large enough
-            if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
+            amount_without_delivery = order._compute_amount_total_without_delivery()
+            if res['success'] and self.free_over and self._compute_currency(order, amount_without_delivery, 'pricelist_to_company') >= self.amount:
                 res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.') % (self.amount)
                 res['price'] = 0.0
             return res
@@ -395,14 +397,17 @@ class DeliveryCarrier(models.Model):
     def _get_commodities_from_stock_move_lines(self, move_lines):
         commodities = []
 
-        for line in move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu']):
-            if line.state == 'done':
-                unit_quantity = line.product_uom_id._compute_quantity(line.qty_done, line.product_id.uom_id)
-            else:
-                unit_quantity = line.product_uom_id._compute_quantity(line.reserved_uom_qty, line.product_id.uom_id)
+        product_lines = move_lines.filtered(lambda line: line.product_id.type in ['product', 'consu'])
+        for product, lines in groupby(product_lines, lambda x: x.product_id):
+            unit_quantity = sum(
+                line.product_uom_id._compute_quantity(
+                    line.qty_done if line.state == 'done' else line.reserved_uom_qty,
+                    product.uom_id)
+                for line in lines)
             rounded_qty = max(1, float_round(unit_quantity, precision_digits=0))
-            country_of_origin = line.product_id.country_of_origin.code or line.picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
-            commodities.append(DeliveryCommodity(line.product_id, amount=rounded_qty, monetary_value=line.sale_price, country_of_origin=country_of_origin))
+            country_of_origin = product.country_of_origin.code or lines[0].picking_id.picking_type_id.warehouse_id.partner_id.country_id.code
+            unit_price = sum(line.sale_price for line in lines) / rounded_qty
+            commodities.append(DeliveryCommodity(product, amount=rounded_qty, monetary_value=unit_price, country_of_origin=country_of_origin))
 
         return commodities
 

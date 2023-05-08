@@ -744,7 +744,9 @@ class AccountPaymentRegister(models.TransientModel):
         :param edit_mode:   Is the wizard in edition mode.
         """
 
-        payments = self.env['account.payment'].create([x['create_vals'] for x in to_process])
+        payments = self.env['account.payment']\
+            .with_context(skip_invoice_sync=True)\
+            .create([x['create_vals'] for x in to_process])
 
         for payment, vals in zip(payments, to_process):
             vals['payment'] = payment

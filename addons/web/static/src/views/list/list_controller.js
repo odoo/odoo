@@ -258,6 +258,7 @@ export class ListController extends Component {
                         body: this.env._t(
                             "Are you sure that you want to archive all the selected records?"
                         ),
+                        confirmLabel: this.env._t("Archive"),
                         confirm: () => {
                             this.toggleArchiveState(true);
                         },

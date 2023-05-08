@@ -1392,25 +1392,27 @@ class MailThread(models.AbstractModel):
                 filename = part.get_filename()  # I may not properly handle all charsets
                 encoding = part.get_content_charset()  # None if attachment
 
+                content = part.get_content()
+                info = {'encoding': encoding}
                 # 0) Inline Attachments -> attachments, with a third part in the tuple to match cid / attachment
                 if filename and part.get('content-id'):
-                    inner_cid = part.get('content-id').strip('><')
-                    attachments.append(self._Attachment(filename, part.get_content(), {'cid': inner_cid}))
+                    info['cid'] = part.get('content-id').strip('><')
+                    attachments.append(self._Attachment(filename, content, info))
                     continue
                 # 1) Explicit Attachments -> attachments
                 if filename or part.get('content-disposition', '').strip().startswith('attachment'):
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', content, info))
                     continue
                 # 2) text/plain -> <pre/>
                 if part.get_content_type() == 'text/plain' and (not alternative or not body):
-                    body = tools.append_content_to_html(body, tools.ustr(part.get_content(),
+                    body = tools.append_content_to_html(body, tools.ustr(content,
                                                                          encoding, errors='replace'), preserve=True)
                 # 3) text/html -> raw
                 elif part.get_content_type() == 'text/html':
                     # mutlipart/alternative have one text and a html part, keep only the second
                     # mixed allows several html parts, append html content
                     append_content = not alternative or (html and mixed)
-                    html = tools.ustr(part.get_content(), encoding, errors='replace')
+                    html = tools.ustr(content, encoding, errors='replace')
                     if not append_content:
                         body = html
                     else:
@@ -1419,7 +1421,7 @@ class MailThread(models.AbstractModel):
                     body = tools.html_sanitize(body, sanitize_tags=False, strip_classes=True)
                 # 4) Anything else -> attachment
                 else:
-                    attachments.append(self._Attachment(filename or 'attachment', part.get_content(), {}))
+                    attachments.append(self._Attachment(filename or 'attachment', content, info))
 
         return self._message_parse_extract_payload_postprocess(message, {'body': body, 'attachments': attachments})
 
@@ -1851,13 +1853,15 @@ class MailThread(models.AbstractModel):
                 cid = False
                 if len(attachment) == 2:
                     name, content = attachment
+                    info = {}
                 elif len(attachment) == 3:
                     name, content, info = attachment
                     cid = info and info.get('cid')
                 else:
                     continue
                 if isinstance(content, str):
-                    content = content.encode('utf-8')
+                    encoding = info and info.get('encoding')
+                    content = content.encode(encoding or 'utf-8')
                 elif isinstance(content, EmailMessage):
                     content = content.as_bytes()
                 elif content is None:
@@ -2037,8 +2041,9 @@ class MailThread(models.AbstractModel):
             ])
             prioritary_attachments = all_attachments.filtered(lambda x: x.mimetype.endswith('pdf')) \
                                      or all_attachments.filtered(lambda x: x.mimetype.startswith('image')) \
-                                     or all_attachments
-            self.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
+                                     or all_attachments.filtered(lambda x: not x.mimetype.endswith('xml'))
+            if prioritary_attachments:
+                self.with_context(tracking_disable=True).write({'message_main_attachment_id': prioritary_attachments[0].id})
 
     def _message_post_after_hook(self, message, msg_vals):
         """ Hook to add custom behavior after having posted the message. Both

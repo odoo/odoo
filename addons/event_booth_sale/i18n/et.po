@@ -7,20 +7,20 @@
 # Algo Kärp <algokarp@gmail.com>, 2022
 # Rivo Zängov <eraser@eraser.ee>, 2022
 # Triine Aavik <triine@avalah.ee>, 2022
-# Eneli Õigus <enelioigus@gmail.com>, 2022
 # Martin Trigaux, 2022
 # Arma Gedonsky <armagedonsky@hot.ee>, 2022
 # Anna, 2023
-# Jana Jaakson, 2023
+# JanaAvalah, 2023
+# Eneli Õigus <enelioigus@gmail.com>, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 16.0beta\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-10-04 09:24+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
-"Last-Translator: Jana Jaakson, 2023\n"
-"Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2023\n"
+"Language-Team: Estonian (https://app.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -166,7 +166,6 @@ msgstr "Sündmus"
 #. module: event_booth_sale
 #: model:ir.model,name:event_booth_sale.model_event_booth
 #: model:ir.model.fields.selection,name:event_booth_sale.selection__product_template__detailed_type__event_booth
-#: model:product.product,name:event_booth_sale.product_product_event_booth
 msgid "Event Booth"
 msgstr "Ürituste stend"
 
@@ -289,6 +288,7 @@ msgstr "Hinnalandus koos maksudega"
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_booth_configurator__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_event_type_booth__product_id
 #: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_line__product_id
+#: model:ir.model.fields,field_description:event_booth_sale.field_sale_order_template_option__product_id
 msgid "Product"
 msgstr "Toode"
 
@@ -309,11 +309,17 @@ msgid "Quotation Template Line"
 msgstr "Pakkumise põhja rida"
 
 #. module: event_booth_sale
+#: model:ir.model,name:event_booth_sale.model_sale_order_template_option
+msgid "Quotation Template Option"
+msgstr "Pakkumise põhja valik"
+
+#. module: event_booth_sale
 #: model_terms:ir.ui.view,arch_db:event_booth_sale.event_booth_view_form_from_event
 msgid "Registrations"
 msgstr "Registreerimised"
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid "Registrations from the same Order Line must belong to a single event."
@@ -351,6 +357,7 @@ msgid "Select an event booth"
 msgstr "Vali stend"
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/sale_order_line.py:0
 #, python-format
 msgid ""
@@ -370,16 +377,12 @@ msgid "Total"
 msgstr "Kokku"
 
 #. module: event_booth_sale
-#: model:product.product,uom_name:event_booth_sale.product_product_event_booth
-msgid "Units"
-msgstr "tk"
-
-#. module: event_booth_sale
 #: model:ir.model.fields,help:event_booth_sale.field_sale_order_line__event_booth_pending_ids
 msgid "Used to create registration when providing the desired event booth."
 msgstr "Used to create registration when providing the desired event booth."
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/event_booth.py:0
 #, python-format
 msgid ""
@@ -390,12 +393,14 @@ msgstr ""
 "%(booths)s"
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/wizard/event_booth_configurator.py:0
 #, python-format
 msgid "You have to select at least one booth."
 msgstr "Peate valima vähemalt ühe stendi."
 
 #. module: event_booth_sale
+#. odoo-python
 #: code:addons/event_booth_sale/models/event_booth_registration.py:0
 #, python-format
 msgid ""

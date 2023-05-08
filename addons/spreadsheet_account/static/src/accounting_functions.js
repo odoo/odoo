@@ -126,7 +126,7 @@ const ODOO_FIN_ARGS = `
     date_range (string, date) ${_t(`The date range. Supported formats are "21/12/2022", "Q1/2022", "12/2022", and "2022".`)}
     offset (number, default=0) ${_t("Year offset applied to date_range.")}
     company_id (number, optional) ${_t("The company to target (Advanced).")}
-    include_unposted (boolean, default=TRUE) ${_t("Set to TRUE to include unposted entries.")}
+    include_unposted (boolean, default=FALSE) ${_t("Set to TRUE to include unposted entries.")}
 `
 
 functionRegistry.add("ODOO.CREDIT", {
@@ -138,7 +138,7 @@ functionRegistry.add("ODOO.CREDIT", {
         dateRange,
         offset = 0,
         companyId = null,
-        includeUnposted = true
+        includeUnposted = false
     ) {
         accountCodes = toString(accountCodes).split(",").sort();
         offset = toNumber(offset);
@@ -157,7 +157,7 @@ functionRegistry.add("ODOO.CREDIT", {
         dateRange,
         offset = 0,
         companyId = null,
-        includeUnposted = true
+        includeUnposted = false
     ) {
         return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
     },
@@ -172,7 +172,7 @@ functionRegistry.add("ODOO.DEBIT", {
         dateRange,
         offset = 0,
         companyId = null,
-        includeUnposted = true
+        includeUnposted = false
     ) {
         accountCodes = toString(accountCodes).split(",").sort();
         offset = toNumber(offset);
@@ -191,7 +191,7 @@ functionRegistry.add("ODOO.DEBIT", {
         dateRange,
         offset = 0,
         companyId = null,
-        includeUnposted = true
+        includeUnposted = false
     ) {
         return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
     },
@@ -206,7 +206,7 @@ functionRegistry.add("ODOO.BALANCE", {
         dateRange,
         offset = 0,
         companyId = null,
-        includeUnposted = true
+        includeUnposted = false
     ) {
         accountCodes = toString(accountCodes).split(",").sort();
         offset = toNumber(offset);
@@ -234,7 +234,7 @@ functionRegistry.add("ODOO.BALANCE", {
         dateRange,
         offset = 0,
         companyId = null,
-        includeUnposted = true
+        includeUnposted = false
     ) {
         return this.getters.getCompanyCurrencyFormat(companyId && companyId.value) || "#,##0.00";
     },

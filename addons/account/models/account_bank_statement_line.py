@@ -420,6 +420,7 @@ class AccountBankStatementLine(models.Model):
             bank_account = self.env['res.partner.bank'].create({
                 'acc_number': self.account_number,
                 'partner_id': self.partner_id.id,
+                'journal_id': None,
             })
         return bank_account
 

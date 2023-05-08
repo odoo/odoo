@@ -329,7 +329,7 @@ class MrpWorkorder(models.Model):
             order.duration = sum(order.time_ids.mapped('duration'))
             order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
             if order.duration_expected:
-                order.duration_percent = 100 * (order.duration_expected - order.duration) / order.duration_expected
+                order.duration_percent = max(-2147483648, min(2147483647, 100 * (order.duration_expected - order.duration) / order.duration_expected))
             else:
                 order.duration_percent = 0
 
@@ -440,9 +440,10 @@ class MrpWorkorder(models.Model):
 
     @api.onchange('finished_lot_id')
     def _onchange_finished_lot_id(self):
-        res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
-        if res is not True:
-            return res
+        if self.production_id:
+            res = self.production_id._can_produce_serial_number(sn=self.finished_lot_id)
+            if res is not True:
+                return res
 
     def write(self, values):
         if 'production_id' in values and any(values['production_id'] != w.production_id.id for w in self):

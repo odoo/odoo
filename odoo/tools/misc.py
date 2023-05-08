@@ -1299,14 +1299,14 @@ def get_lang(env, lang_code=False):
     """
     Retrieve the first lang object installed, by checking the parameter lang_code,
     the context and then the company. If no lang is installed from those variables,
-    fallback on the first lang installed in the system.
+    fallback on english or on the first lang installed in the system.
 
     :param env:
     :param str lang_code: the locale (i.e. en_US)
     :return res.lang: the first lang found that is installed on the system.
     """
     langs = [code for code, _ in env['res.lang'].get_installed()]
-    lang = langs[0]
+    lang = 'en_US' if 'en_US' in langs else langs[0]
     if lang_code and lang_code in langs:
         lang = lang_code
     elif env.context.get('lang') in langs:
@@ -1568,15 +1568,31 @@ def format_duration(value):
 
 consteq = hmac_lib.compare_digest
 
+_PICKLE_SAFE_NAMES = {
+    'builtins': [
+        'set',  # Required to support `set()` for Python < 3.8
+    ],
+    'datetime': [
+        'datetime',
+        'date',
+        'time',
+    ],
+    'pytz': [
+        '_p',
+        '_UTC',
+    ],
+}
+
+# https://docs.python.org/3/library/pickle.html#restricting-globals
 # forbid globals entirely: str/unicode, int/long, float, bool, tuple, list, dict, None
 class Unpickler(pickle_.Unpickler, object):
-    find_global = None # Python 2
-    find_class = None # Python 3
+    def find_class(self, module_name, name):
+        safe_names = _PICKLE_SAFE_NAMES.get(module_name, [])
+        if name in safe_names:
+            return super().find_class(module_name, name)
+        raise AttributeError("global '%s.%s' is forbidden" % (module_name, name))
 def _pickle_load(stream, encoding='ASCII', errors=False):
-    if sys.version_info[0] == 3:
-        unpickler = Unpickler(stream, encoding=encoding)
-    else:
-        unpickler = Unpickler(stream)
+    unpickler = Unpickler(stream, encoding=encoding)
     try:
         return unpickler.load()
     except Exception:
@@ -1588,6 +1604,7 @@ pickle.load = _pickle_load
 pickle.loads = lambda text, encoding='ASCII': _pickle_load(io.BytesIO(text), encoding=encoding)
 pickle.dump = pickle_.dump
 pickle.dumps = pickle_.dumps
+pickle.HIGHEST_PROTOCOL = pickle_.HIGHEST_PROTOCOL
 
 
 class DotDict(dict):

@@ -403,7 +403,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="pos_cash_rounding" string="Cash Rounding" />
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/shop/cash_rounding.html"
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/pricing/cash_rounding.html"
                                         title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Define the smallest coinage of the currency used to pay by cash
@@ -511,7 +511,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_pos_mercury" string="Vantiv (US &amp; Canada)"/>
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment/vantiv.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment_methods/terminals/vantiv.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Accept payments with a Vantiv payment terminal
                                     </div>
@@ -527,7 +527,7 @@
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_pos_six" string="Six"/>
-                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment/six.html" title="Documentation" class="o_doc_link" target="_blank"></a>
+                                    <a href="https://www.odoo.com/documentation/16.0/applications/sales/point_of_sale/payment_methods/terminals/six.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Accept payments with a Six payment terminal
                                     </div>
@@ -651,10 +651,6 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                        <h2 groups="base.group_no_one">Technical</h2>
-                        <div class="row mt16 o_settings_container" id="pos_technical_section" groups="base.group_no_one">
                             <div class="col-12 col-lg-6 o_setting_box" id="update_quantities_stock_setting" groups="base.group_no_one">
                                 <div class="o_setting_right_pane">
                                     <div>
@@ -669,6 +665,10 @@
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <h2 groups="base.group_no_one">Technical</h2>
+                        <div class="row mt16 o_settings_container" id="pos_technical_section" groups="base.group_no_one">
                             <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="pos_limited_products_loading"/>

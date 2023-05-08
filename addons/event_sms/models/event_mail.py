@@ -65,7 +65,8 @@ class EventMailScheduler(models.Model):
         super().set_template_ref_model()
         mail_model = self.env['sms.template']
         if self.notification_type == 'sms':
-            self.template_ref = "{},{}".format('sms.template', mail_model.search([('model', '=', 'event.registration')], limit=1).id)
+            record = mail_model.search([('model', '=', 'event.registration')], limit=1)
+            self.template_ref = "{},{}".format('sms.template', record.id) if record else False
 
 
 class EventMailRegistration(models.Model):

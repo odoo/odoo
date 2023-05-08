@@ -417,3 +417,11 @@ class TestProjectFlow(TestProjectCommon, MailCommon):
 
         self.assertEqual(len(project_A.message_ids), init_nb_log + 2,
             "should have 2 new messages: one for tracking, one for template")
+
+    def test_private_task_search_tag(self):
+        task = self.env['project.task'].create({
+            'name': 'Test Private Task',
+        })
+        # Tag name_search should not raise Error if project_id is False
+        task.tag_ids.with_context(project_id=task.project_id.id).name_search(
+            args=["!", ["id", "in", []]])

@@ -741,7 +741,11 @@ def connection_info_for(db_or_uri):
     :param str db_or_uri: database name or postgres dsn
     :rtype: (str, dict)
     """
-    app_name = "odoo-%d" % os.getpid()
+    if 'ODOO_PGAPPNAME' in os.environ:
+        # Using manual string interpolation for security reason and trimming at default NAMEDATALEN=63
+        app_name = os.environ['ODOO_PGAPPNAME'].replace('{pid}', str(os.getpid()))[0:63]
+    else:
+        app_name = "odoo-%d" % os.getpid()
     if db_or_uri.startswith(('postgresql://', 'postgres://')):
         # extract db from uri
         us = urls.url_parse(db_or_uri)

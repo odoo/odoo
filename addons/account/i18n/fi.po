@@ -32,9 +32,7 @@
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2022
 # Pekka Ikonen, 2022
 # Kimmo Lehtonen <leban@netzionale.com>, 2022
-# Joakim Weckman, 2022
 # Miku Laitinen <miku.laitinen@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Tommi Rintala <tommi.rintala@gmail.com>, 2022
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2022
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2022
@@ -42,15 +40,17 @@
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2022
 # Konsta Aavaranta, 2023
 # Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023
+# Joakim Weckman, 2023
+# Martin Trigaux, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 10:33+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Ossi Mantylahti <ossi.mantylahti@obs-solutions.fi>, 2023\n"
-"Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
+"Last-Translator: Martin Trigaux, 2023\n"
+"Language-Team: Finnish (https://app.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -97,6 +97,13 @@ msgstr ""
 "    - Prosenttiosuus hinnasta vero huomioiden: veron määrä on jako-osuus hinnasta:\n"
 "        esim. 180 / (1 - 10%) = 200 (ei sisällä hintaa)\n"
 "        esim. 200 * (1 - 10%) = 180 (sisältää hinnan) "
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid " (<b>%(amount)s</b> if paid before <b>%(date)s</b>)"
+msgstr " (<b>%(amount)s</b> loppusumma, jos maksetaan ennen %(date)s</b>)"
 
 #. module: account
 #. odoo-python
@@ -157,6 +164,13 @@ msgstr "%<span class=\"px-3\"/>("
 #, python-format
 msgid "%d moves"
 msgstr "%d tapahtumat"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account_tag.py:0
+#, python-format
+msgid "%s (%s)"
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -371,6 +385,17 @@ msgstr "30% Heti, loput 60 päivän kuluessa"
 #: model:account.payment.term,name:account.account_payment_term_45days
 msgid "45 Days"
 msgstr "45 päivää"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_payment_term.py:0
+#, python-format
+msgid ""
+"<b>%(count)s#</b> Installment of <b>%(amount)s</b> on <b style='color: "
+"#704A66;'>%(date)s</b>"
+msgstr ""
+"<b>%(count)s#</b> Erä kaikkiaan <b>%(amount)s</b> erästä, päivänä <b "
+"style='color: #704A66;'>%(date)s</b>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_register_form
@@ -781,6 +806,9 @@ msgid ""
 "                                dated\n"
 "                                <span class=\"mx-1\"/>"
 msgstr ""
+"<span class=\"mx-1\"/>\n"
+"                             päivätty\n"
+"                            <span class=\"mx-1\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1454,25 +1482,13 @@ msgstr "Toinen maksu luodaan automaattisesti kohdepäiväkirjaan."
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "A statement should only contain lines from the same journal."
-msgstr ""
+msgstr "Tiliote saa sisältää vain rivejä samasta päiväkirjasta."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
 msgid "A tax fiscal position could be defined only one time on same taxes."
 msgstr ""
 "Verotuksellinen asema voitaisiin määritellä vain kerran samoilla veroilla."
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_tax.py:0
-#, python-format
-msgid ""
-"A tax should only use tags from its country. You should use another tax and "
-"a fiscal position if you wish to uses the tags from foreign tax reports."
-msgstr ""
-"Veron tulisi käyttää vain oman maansa tunnisteita. Sinun on käytettävä "
-"toista veroa ja veropositiota, jos haluat käyttää ulkomaisten veroraporttien"
-" tunnisteita."
 
 #. module: account
 #. odoo-python
@@ -2895,6 +2911,11 @@ msgid "Attach a file"
 msgstr "Liitä tiedosto"
 
 #. module: account
+#: model:ir.model,name:account.model_ir_attachment
+msgid "Attachment"
+msgstr "Liite"
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_account_template__message_attachment_count
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__message_attachment_count
@@ -3166,11 +3187,6 @@ msgstr "BIC-koodi"
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
 msgid "Bank Journals"
 msgstr "Pankkipäiväkirjat"
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
-msgid "Bank Matched"
-msgstr "Täsmäytetty"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__bank_partner_id
@@ -4419,6 +4435,11 @@ msgid "Counterpart Entries"
 msgstr "Siirron vastapuoli"
 
 #. module: account
+#: model:ir.model.fields,help:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Countries for which the company has a VAT number"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_tag__country_id
 #: model:ir.model.fields,field_description:account.field_account_chart_template__country_id
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__country_id
@@ -4851,8 +4872,8 @@ msgid ""
 "Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
 "'draft' and '_draft' or '' }}"
 msgstr ""
-"Credit_note_{{ (object.name tai '').replace('/','_') }}{{{ object.state == "
-"'draft' and '_draft' tai '' }}"
+"Credit_note_{{ (object.name or '').replace('/','_') }}{{ object.state == "
+"'draft' and '_draft' or '' }}"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__cumulated_balance
@@ -4955,6 +4976,11 @@ msgstr "Nykyinen saldo"
 #: model:ir.model.fields.selection,name:account.selection__account_account_template__account_type__liability_current
 msgid "Current Liabilities"
 msgstr "Lyhytaikaiset velat"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__current_statement_balance
+msgid "Current Statement Balance"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_account__account_type__equity_unaffected
@@ -5160,8 +5186,8 @@ msgid "Data consistency check"
 msgstr "Tietojen yhdenmukaisuuden tarkistus"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/controllers/portal.py:0
 #: code:addons/account/static/src/components/account_resequence/account_resequence.xml:0
 #: model:ir.model.fields,field_description:account.field_account_accrued_orders_wizard__date
@@ -5310,7 +5336,6 @@ msgstr "Omistettu maksujakso"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__default_account_id
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
 msgid "Default Account"
 msgstr "Oletustili"
 
@@ -5885,6 +5910,13 @@ msgid "Download"
 msgstr "Lataa"
 
 #. module: account
+#. odoo-javascript
+#: code:addons/account/static/src/components/settings_form_view/res_config_dev_tool.xml:0
+#, python-format
+msgid "Download XSD files (XML validation)"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,help:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid ""
 "Downpayments posted on this account will be considered by the Tax Closing "
@@ -6037,6 +6069,11 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_reports
 msgid "Dynamic Reports"
 msgstr "Dynaamiset raportit"
+
+#. module: account
+#: model:ir.model.fields,help:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "Dynamic domain used for the tag that can be set on tax"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_l10n_eu_oss
@@ -6268,17 +6305,6 @@ msgstr "Oma pääoma"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/ir_actions_report.py:0
-#, python-format
-msgid ""
-"Error when reading the original PDF for: %r.\n"
-"Please make sure the file is valid."
-msgstr ""
-"Virhe alkuperäisen PDF-tiedoston lukemisessa: %r.\n"
-"Varmista, että tiedosto on kelvollinen."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/res_config_settings.py:0
 #, python-format
 msgid "Error!"
@@ -6320,8 +6346,8 @@ msgid "Example Preview"
 msgstr "Esimerkin Esikatselu"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/chart_template.py:0
 #: code:addons/account/static/src/components/account_payment_field/account_payment.xml:0
 #: code:addons/account/static/src/xml/legacy_account_payment.xml:0
@@ -6351,8 +6377,8 @@ msgid "Expects a Chart of Accounts"
 msgstr "Vaatii tilikartan"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/static/src/components/account_type_selection/account_type_selection.js:0
 #: code:addons/account/static/src/js/legacy_account_selection.js:0
 #: code:addons/account/wizard/accrued_orders.py:0
@@ -6592,6 +6618,7 @@ msgstr "Tilikaudet"
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_move__fiscal_position_id
 #: model:ir.model.fields,field_description:account.field_account_payment__fiscal_position_id
+#: model:ir.model.fields,field_description:account.field_res_company__fiscal_position_ids
 #: model:ir.model.fields,field_description:account.field_res_partner__property_account_position_id
 #: model:ir.model.fields,field_description:account.field_res_users__property_account_position_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
@@ -6798,6 +6825,11 @@ msgstr "Ulkomaan valuutta"
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat
 msgid "Foreign Tax ID"
 msgstr "Ulkomainen verotunniste"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_res_company__multi_vat_foreign_country_ids
+msgid "Foreign VAT countries"
+msgstr ""
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_fiscal_position__foreign_vat_header_mode
@@ -7097,6 +7129,11 @@ msgid "Has Sequence Holes"
 msgstr "Sisältää sekvenssiaukkoja"
 
 #. module: account
+#: model:ir.model.fields,field_description:account.field_account_journal__has_statement_lines
+msgid "Has Statement Lines"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_res_partner__has_unreconciled_entries
 #: model:ir.model.fields,field_description:account.field_res_users__has_unreconciled_entries
 msgid "Has Unreconciled Entries"
@@ -7336,13 +7373,6 @@ msgid ""
 msgstr ""
 "Jos maksuaika on määritetty, laskut sisältävät yksityiskohtaiset tiedot "
 "maksuaikatauluista ja niiden erääntyneistä määristä."
-
-#. module: account
-#: model_terms:ir.ui.view,arch_db:account.view_account_journal_form
-msgid "If set, this account is used to automatically balance entries."
-msgstr ""
-"Jos tämä tili on määritetty, sitä käytetään kirjausten automaattiseen "
-"tasapainottamiseen."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_account__non_trade
@@ -8074,7 +8104,7 @@ msgid ""
 "Invoice_{{ (object.name or '').replace('/','_') }}{{ object.state == 'draft'"
 " and '_draft' or '' }}"
 msgstr ""
-"Invoice_{{ (object.name tai '').replace('/','_') }}{{{ object.state == "
+"Invoice_{{ (object.name or '').replace('/','_') }}{{{ object.state == "
 "'draft' and '_draft' or '' }}"
 
 #. module: account
@@ -8326,8 +8356,8 @@ msgid "Journal Currency"
 msgstr "Päiväkirjan valuutta"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_journal_dashboard.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
 #: code:addons/account/static/src/js/legacy_mail_activity.js:0
@@ -8347,8 +8377,8 @@ msgid "Journal Entries by Date"
 msgstr "Päiväkirjamerkinnät päivämäärän mukaan"
 
 #. module: account
-#. odoo-javascript
 #. odoo-python
+#. odoo-javascript
 #: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_payment.py:0
 #: code:addons/account/static/src/components/journal_dashboard_activity/journal_dashboard_activity.js:0
@@ -9670,6 +9700,11 @@ msgid "No"
 msgstr "Ei"
 
 #. module: account
+#: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
+msgid "No Bank Matching"
+msgstr ""
+
+#. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__blocked
 msgid "No Follow-up"
 msgstr "Ei seurantaa"
@@ -9713,10 +9748,9 @@ msgstr ""
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid ""
-"No original vendor bills could be found for any of the selected vendor "
-"bills."
+"No original purchase document could be found for any of the selected "
+"purchase documents."
 msgstr ""
-"Valituille toimittajalaskuille ei löytynyt alkuperäisiä toimittajalaskuja."
 
 #. module: account
 #. odoo-python
@@ -10100,13 +10134,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
-msgid "One or more selected lines already belong to a complete statement."
-msgstr "Yksi tai useampi valittu rivi kuuluu jo täydelliseen tiliotteeseen."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
@@ -10149,11 +10176,8 @@ msgstr "Vain laskut voitiin tulostaa."
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment_register__group_payment
 msgid ""
-"Only one payment will be created by partner (bank), instead of one per "
-"billy."
+"Only one payment will be created by partner (bank), instead of one per bill."
 msgstr ""
-"Kumppaneittain (pankki) luodaan vain yksi maksu sen sijaan, että niitä olisi"
-" yksi per billy."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__period_lock_date
@@ -11043,6 +11067,15 @@ msgstr "Jakson vertailu"
 #: code:addons/account/models/chart_template.py:0
 #, python-format
 msgid ""
+"Please check the fiscal country of company %s. (Settings > Accounting > "
+"Fiscal Country)Taxes can only be updated if they are in the company's fiscal"
+" country (%s) or the localization's country (%s)."
+msgstr ""
+
+#. module: account
+#: code:addons/account/models/chart_template.py:0
+#, python-format
+msgid ""
 "Please check these taxes. They might be outdated. We did not update them. "
 "Indeed, they do not exactly match the taxes of the original version of the "
 "localization module.<br/>You might want to archive or adapt them.<br/><ul>"
@@ -11050,6 +11083,14 @@ msgstr ""
 "Tarkista verot. Ne saattavat olla vanhentuneita. Niitä ei ole päivitetty. Ne"
 " eivät vastaa täysin lokalisointimoduulin alkuperäisen version "
 "veroja.<br/>Haluat ehkä arkistoida tai mukauttaa ne.<br/><ul>"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/company.py:0
+#, python-format
+msgid "Please contact your accountant to print the Hash integrity result."
+msgstr ""
+"Ota yhteyttä kirjanpitäjääsi tulostaaksesi Hash-integraation tuloksen."
 
 #. module: account
 #. odoo-python
@@ -11325,6 +11366,11 @@ msgstr "Tulosta oletuksena"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Print checks to pay your vendors"
 msgstr "Tulosta sekit maksaaksesi toimittajille"
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_bank_statement__problem_description
+msgid "Problem Description"
+msgstr ""
 
 #. module: account
 #: model:ir.model,name:account.model_product_template
@@ -14576,6 +14622,13 @@ msgstr ""
 "Jäljelle jäävä määrä päiväkirjaosassa, joka on ilmoitettu yhtiön valuutassa."
 
 #. module: account
+#. odoo-python
+#: code:addons/account/models/account_bank_statement.py:0
+#, python-format
+msgid "The running balance (%s) doesn't match the specified ending balance."
+msgstr "Juokseva saldo (%s) ei vastaa määritettyä loppusaldoa."
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_automatic_entry_wizard_form
 msgid ""
 "The selected destination account is set to use a specific currency. Every entry transferred to it will be converted into this currency, causing\n"
@@ -14680,17 +14733,12 @@ msgstr ""
 #. odoo-python
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
-msgid "The running balance (%s) doesn't match the specified ending balance."
-msgstr ""
-
-#. module: account
-#. odoo-python
-#: code:addons/account/models/account_bank_statement.py:0
-#, python-format
 msgid ""
 "The starting balance doesn't match the ending balance of the previous "
 "statement, or an earlier statement is missing."
 msgstr ""
+"Tiliotteen alkusaldo ei vastaa edellisen tiliotteen loppusaldoa tai "
+"aikaisempi tiliote puuttuu."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_line_id
@@ -14851,6 +14899,7 @@ msgid "There was an error processing this page."
 msgstr "Tämän sivun käsittelyssä tapahtui virhe."
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
 msgid ""
@@ -15532,6 +15581,8 @@ msgid ""
 "Unable to create a statement due to missing transactions. You may want to "
 "reorder the transactions before proceeding."
 msgstr ""
+"Tiliotetta ei voida luoda puuttuvien tapahtumien vuoksi. Voit halutessasi "
+"järjestää tapahtumat uudelleen ennen jatkamista."
 
 #. module: account
 #. odoo-python
@@ -15595,6 +15646,7 @@ msgid "Unposted"
 msgstr "Kirjaamatta"
 
 #. module: account
+#. odoo-python
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "Unposted Entries"
@@ -15644,6 +15696,8 @@ msgstr "Täsmäyttämättömät tapahtumat"
 
 #. module: account
 #. odoo-python
+#: code:addons/account/models/account_move.py:0
+#: code:addons/account/models/account_move.py:0
 #: code:addons/account/models/account_tax.py:0
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__amount_untaxed
 #: model:ir.model.fields,field_description:account.field_account_move__amount_untaxed
@@ -16215,19 +16269,6 @@ msgstr "Vuosittainen"
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/account_account.py:0
-#, python-format
-msgid ""
-"You cannot import the \"openning_balance\" if the opening move (%s) is "
-"already posted. If you are absolutely sure you want to modify the opening "
-"balance of your accounts, reset the move to draft."
-msgstr ""
-"Et voi tuoda \"openning_balance\" -siirtoa, jos avauskirjaus (%s) on jo "
-"lähetetty. Jos olet aivan varma, että haluat muuttaa tilien alkusaldoa, "
-"palauta siirto luonnokseksi."
-
-#. module: account
-#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid "You are trying to reconcile some entries that are already reconciled."
@@ -16313,8 +16354,8 @@ msgstr "Voit muuttaa vain kirjattujen päiväkirjarivien kautta/tiliä."
 #. odoo-python
 #: code:addons/account/models/ir_actions_report.py:0
 #, python-format
-msgid "You can only print the original document for vendor bills."
-msgstr "Voit tulostaa alkuperäisen asiakirjan vain toimittajan laskuista."
+msgid "You can only print the original document for purchase documents."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -16541,13 +16582,6 @@ msgstr ""
 
 #. module: account
 #. odoo-python
-#: code:addons/account/models/company.py:0
-#, python-format
-msgid "Please contact your accountant to print the Hash integrity result."
-msgstr ""
-"Ota yhteyttä kirjanpitäjääsi tulostaaksesi Hash-integraation tuloksen."
-
-#. module: account
 #: code:addons/account/models/account_account.py:0
 #, python-format
 msgid ""
@@ -16661,6 +16695,16 @@ msgstr ""
 #. module: account
 #. odoo-python
 #: code:addons/account/models/account_move.py:0
+#, python-format
+msgid ""
+"You cannot edit the following fields due to restrict mode being activated on"
+" the journal: %s."
+msgstr ""
+"Et voi muokata seuraavia kenttiä, koska päiväkirjalla on aktivoitu "
+"päiväkirjavientien lukitus: %s."
+
+#. module: account
+#. odoo-python
 #: code:addons/account/models/account_move_line.py:0
 #, python-format
 msgid ""
@@ -16668,6 +16712,9 @@ msgid ""
 "The following entries are already hashed:\n"
 "%s"
 msgstr ""
+"Et voi muokata seuraavia kenttiä: %s.\n"
+"Seuraavat viennit on jo lukittu:\n"
+"%s"
 
 #. module: account
 #. odoo-python
@@ -16710,6 +16757,16 @@ msgid ""
 msgstr ""
 "Sinulla voi olla vain yksi tili, jonka tyypiksi on valittu kuluvan vuoden "
 "tulos. (tilit: %s)"
+
+#. module: account
+#. odoo-python
+#: code:addons/account/models/account_account.py:0
+#, python-format
+msgid ""
+"You cannot import the \"openning_balance\" if the opening move (%s) is "
+"already posted.                         If you are absolutely sure you want "
+"to modify the opening balance of your accounts, reset the move to draft."
+msgstr ""
 
 #. module: account
 #. odoo-python
@@ -17271,6 +17328,11 @@ msgid ""
 msgstr ""
 "pidättää itsellään oikeuden vaatia kiinteää korkoa, jonka määrä on 10% o "
 "prosenttia erääntyneestä summasta."
+
+#. module: account
+#: model:ir.model.fields,field_description:account.field_account_tax_repartition_line__tag_ids_domain
+msgid "tag domain"
+msgstr ""
 
 #. module: account
 #. odoo-python

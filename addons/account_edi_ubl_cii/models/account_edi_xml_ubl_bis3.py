@@ -50,6 +50,9 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
         # EXTENDS account.edi.xml.ubl_21
         vals_list = super()._get_partner_party_tax_scheme_vals_list(partner, role)
 
+        if not partner.vat:
+            return []
+
         for vals in vals_list:
             vals.pop('registration_name', None)
             vals.pop('registration_address_vals', None)
@@ -261,6 +264,7 @@ class AccountEdiXmlUBLBIS3(models.AbstractModel):
             'customization_id': 'urn:cen.eu:en16931:2017#compliant#urn:fdc:peppol.eu:2017:poacc:billing:3.0',
             'profile_id': 'urn:fdc:peppol.eu:2017:poacc:billing:01:1.0',
             'currency_dp': 2,
+            'ubl_version_id': None,
         })
         vals['vals']['legal_monetary_total_vals']['currency_dp'] = 2
 

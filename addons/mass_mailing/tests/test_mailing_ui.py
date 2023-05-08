@@ -11,6 +11,7 @@ class TestUi(HttpCaseWithUserDemo):
         super().setUp()
         self.user_demo.groups_id |= self.env.ref('mass_mailing.group_mass_mailing_user')
         self.user_demo.groups_id |= self.env.ref('mail.group_mail_template_editor')
+        self.user_demo.groups_id |= self.env.ref('mass_mailing.group_mass_mailing_campaign')
 
     def test_01_mass_mailing_editor_tour(self):
         self.start_tour("/web", 'mass_mailing_editor_tour', login="demo")
@@ -33,3 +34,9 @@ class TestUi(HttpCaseWithUserDemo):
 
     def test_04_mass_mailing_snippets_menu_hide(self):
         self.start_tour("/web", 'mass_mailing_snippets_menu_toolbar', login="demo")
+
+    def test_05_mass_mailing_basic_theme_toolbar(self):
+        self.start_tour('/web', 'mass_mailing_basic_theme_toolbar', login="demo")
+
+    def test_06_mass_mailing_campaign_new_mailing(self):
+        self.start_tour("/web", 'mass_mailing_campaing_new_mailing', login="demo")

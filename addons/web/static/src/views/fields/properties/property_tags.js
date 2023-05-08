@@ -184,8 +184,15 @@ export class PropertyTags extends Component {
      *
      * @param {string} newLabel
      */
-    onTagCreate(newLabel) {
+    async onTagCreate(newLabel) {
         if (!newLabel || !newLabel.length) {
+            return;
+        }
+
+        if (!await this.props.checkDefinitionWriteAccess()) {
+            this.notification.add(_lt("You need to be able to edit parent first to add property tags"), {
+                type: "warning",
+            });
             return;
         }
 
@@ -296,6 +303,7 @@ PropertyTags.props = {
     deleteAction: { type: String },
     readonly: { type: Boolean, optional: true },
     canChangeTags: { type: Boolean, optional: true },
+    checkDefinitionWriteAccess: { type: Function, optional: true },
     // Select a new value
     onValueChange: { type: Function, optional: true },
     // Change the tags definition (can also receive a second

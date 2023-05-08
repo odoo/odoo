@@ -35,8 +35,7 @@
                                 </button>
                             </t>
                         </t>
-                        <t t-set="_placeholder">Search Orders...</t>
-                        <SearchBar t-if="state.showSearchBar" config="getSearchBarConfig()" placeholder="_placeholder" />
+                        <SearchBar t-if="state.showSearchBar" config="getSearchBarConfig()" placeholder="constructor.searchPlaceholder" />
                         <div t-if="shouldShowPageControls()" class="item">
                             <div class="page-controls">
                                 <div class="previous" t-on-click="() => this.trigger('prev-page')">
@@ -119,9 +118,7 @@
                             <ReprintReceiptButton order="_selectedSyncedOrder" />
                         </div>
                         <div class="subpads">
-                            <!-- We set so that the term 'Refund' is translated. -->
-                            <t t-set="_actionName">Refund</t>
-                            <ActionpadWidget partner="getSelectedPartner()" actionName="_actionName" actionToTrigger="'do-refund'" isActionButtonHighlighted="getHasItemsToRefund()" />
+                            <ActionpadWidget partner="getSelectedPartner()" actionName="constructor.numpadActionName" actionToTrigger="'do-refund'" isActionButtonHighlighted="getHasItemsToRefund()" />
                             <NumpadWidget disabledModes="['price', 'discount']" activeMode="_selectedOrderlineId and 'quantity'" disableSign="true" />
                         </div>
                     </div>

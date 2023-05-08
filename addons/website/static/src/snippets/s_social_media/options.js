@@ -42,6 +42,12 @@ options.registry.SocialMedia = options.Class.extend({
      * @override
      */
     async cleanForSave() {
+        // When the snippet is cloned via its parent, the options UI won't be
+        // updated and DB values won't be fetched, the options `cleanForSave`
+        // will then update the website with empty values.
+        if (!dbSocialValues) {
+            return;
+        }
         // Update the DB links.
         let websiteId;
         this.trigger_up('context_get', {
@@ -122,7 +128,7 @@ options.registry.SocialMedia = options.Class.extend({
                     const faIcon = isDbField ? `fa-${entry.media}` : 'fa-pencil';
                     anchorEl.querySelector('i').classList.add(faIcon);
                     if (isDbField) {
-                        anchorEl.href = `/website/social/${entry.media}`;
+                        anchorEl.href = `/website/social/${encodeURIComponent(entry.media)}`;
                         anchorEl.classList.add(`s_social_media_${entry.media}`);
                     }
                 }
@@ -193,7 +199,7 @@ options.registry.SocialMedia = options.Class.extend({
             return {
                 id: generateHTMLId(),
                 display_name: media ? dbSocialValues[`social_${media}`] : el.getAttribute('href'),
-                placeholder: `https://${media || 'example'}.com/yourPage`,
+                placeholder: `https://${encodeURIComponent(media) || 'example'}.com/yourPage`,
                 undeletable: !!media,
                 notToggleable: !media,
                 selected: true,
@@ -205,13 +211,13 @@ options.registry.SocialMedia = options.Class.extend({
         // Adds the DB social media links that are not in the DOM.
         for (let [media, link] of Object.entries(dbSocialValues)) {
             media = media.split('social_').pop();
-            if (!this.$target[0].querySelector(`:scope > a[href="/website/social/${media}"]`)) {
+            if (!this.$target[0].querySelector(`:scope > a[href="/website/social/${encodeURIComponent(media)}"]`)) {
                 const entryNotInDom = this.entriesNotInDom.find(entry => entry.media === media);
                 if (!entryNotInDom) {
                     this.entriesNotInDom.push({
                         id: generateHTMLId(),
                         display_name: link,
-                        placeholder: `https://${media}.com/yourPage`,
+                        placeholder: `https://${encodeURIComponent(media)}.com/yourPage`,
                         undeletable: true,
                         selected: false,
                         listPosition: listPosition++,

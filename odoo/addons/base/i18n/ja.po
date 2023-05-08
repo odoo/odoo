@@ -3,21 +3,21 @@
 # 	* base
 # 
 # Translators:
-# Noma Yuki, 2022
 # 江口和志 <sandwhale1010@gmail.com>, 2022
-# Martin Trigaux, 2022
 # Yoshi Tashiro (Quartile) <tashiro@roomsfor.hk>, 2023
-# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # Andy Yiu, 2023
+# Martin Trigaux, 2023
+# Noma Yuki, 2023
+# Ryoko Tsuda <ryoko@quartile.co>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 11:00+0000\n"
+"POT-Creation-Date: 2023-04-14 06:17+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
-"Last-Translator: Andy Yiu, 2023\n"
-"Language-Team: Japanese (https://www.transifex.com/odoo/teams/41243/ja/)\n"
+"Last-Translator: Ryoko Tsuda <ryoko@quartile.co>, 2023\n"
+"Language-Team: Japanese (https://app.transifex.com/odoo/teams/41243/ja/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -457,6 +457,17 @@ msgstr ""
 "\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_pos_daily_sales_reports
+msgid ""
+"\n"
+"\n"
+"This module allows the cashier to quickly print a X and a Z sale report\n"
+"for a given session or a Sales Details for multiple sessions\n"
+"and configs.\n"
+"\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
 msgid ""
 "\n"
@@ -751,6 +762,14 @@ msgstr ""
 msgid ""
 "\n"
 "        Base module for Bulgarian reports\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mz_reports
+msgid ""
+"\n"
+"        Base module for Mozambican reports\n"
 "    "
 msgstr ""
 
@@ -1171,6 +1190,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
+msgid ""
+"\n"
+"        Mexico Month 13 Trial Balance Report\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec_import
 msgid ""
 "\n"
@@ -1189,6 +1216,14 @@ msgid ""
 "        FEC Testing tool from the tax authorities\n"
 "        https://github.com/DGFiP/Test-Compta-Demat\n"
 "\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mz
+msgid ""
+"\n"
+"        Mozambican Accounting localization\n"
 "    "
 msgstr ""
 
@@ -1861,6 +1896,16 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_lu_peppol_id
+msgid ""
+"\n"
+"    Some Luxembourg public institutions do not have a VAT number but have been assigned an arbitrary number \n"
+"    (see: https://pch.gouvernement.lu/fr/peppol.html). Thus, this module adds the Peppol Identifier field on \n"
+"    the account.move form view. If this field is set, it is then read when exporting electronic invoicing formats.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock
 msgid ""
 "\n"
@@ -2333,6 +2378,15 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hk_hr_payroll_account
+msgid ""
+"\n"
+"Accounting Data for Hong Kong Payroll Rules\n"
+"===========================================\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll_account
 msgid ""
 "\n"
@@ -2409,6 +2463,14 @@ msgid ""
 "===============================\n"
 "This module adds a notification when the tax report is ready to be sent\n"
 "to the administration.\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ee_reports
+msgid ""
+"\n"
+"Accounting Reports for Estonia\n"
 "    "
 msgstr ""
 
@@ -3544,31 +3606,13 @@ msgid ""
 "Legal\n"
 "-----\n"
 "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS platform\n"
-"for version 13.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
+"for version 16.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
 "\n"
 "An obfuscated and certified version of the pos_blackbox_be may be provided on\n"
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
-"\n"
-"ベルギーの登録されたキャッシュレジスター\n"
-"================================\n"
-"\n"
-"このモジュールは、Point Of Saleモジュールをベルギーの認定レジスターに変身させます。\n"
-"\n"
-"詳細はこちらをご覧ください。\n"
-"* http://www.systemedecaisseenregistreuse.be/\n"
-"* http://www.geregistreerdkassasysteem.be/\n"
-"\n"
-"リーガル\n"
-"-----\n"
-"**pos_blackbox_beソースの使用は、odoo.comのSaaSプラットフォームでのみ認定されています。\n"
-"バージョン13.0.0用 ** pos_blackbox_beモジュールをインストールする前に、Odoo SAにお問い合わせください。\n"
-"\n"
-"pos_blackbox_be の難読化された認証済みバージョンは\n"
-"オンプレミスでのインストールのためのリクエストを受け付けています。\n"
-"Odoo SAが認定し、サポートしている修正版はありません。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -4242,6 +4286,19 @@ msgstr ""
 "・・・略・・・"
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi
+msgid ""
+"\n"
+"EDI Ecuadorian Localization\n"
+"===========================\n"
+"Adds electronic documents with its XML, RIDE, with electronic signature and direct connection to tax authority SRI,\n"
+"\n"
+"The supported documents are Invoices, Credit Notes, Debit Notes, Purchase Liquidations and Withholds\n"
+"\n"
+"Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
 msgid ""
 "\n"
@@ -4425,6 +4482,16 @@ msgid ""
 "\n"
 "Enrich lead created automatically through an appointment with gathered website visitor information such as language, \n"
 "country and detailed information like pages browsed by the lead (through a link to website visitor).\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cl_edi_exports
+msgid ""
+"\n"
+"Even when the quantity of packages is apparently only inherent to stock application, we need a field for this \n"
+"in the invoice, because that info could also depend on the DUS declaration.\n"
+"We should also consider that there may be users without the inventory application installed and keep a less\n"
+"complex logic.\n"
 msgstr ""
 
 #. module: base
@@ -4774,6 +4841,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_reports_gstr_pos
+msgid ""
+"\n"
+"GSTR-1 return data set as per point of sale orders\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -4989,6 +5064,15 @@ msgstr ""
 msgid ""
 "\n"
 "Helpdesk integration with time off\n"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
+msgid ""
+"\n"
+"Hong Kong Payroll Rules.\n"
+"========================\n"
+"    "
 msgstr ""
 
 #. module: base
@@ -5277,6 +5361,16 @@ msgid ""
 "\n"
 "K.S.A. POS Localization\n"
 "=======================================================\n"
+"    "
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ke_hr_payroll_bik
+msgid ""
+"\n"
+"Kenyan Payroll Rules\n"
+"========================================\n"
+"This module is only temporary for its purpose is to add new fields in a stable version (16.0, 16.1).\n"
 "    "
 msgstr ""
 
@@ -7403,6 +7497,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ee
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Estonia in Odoo.\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
 msgid ""
 "\n"
@@ -8026,14 +8128,6 @@ msgid ""
 "    "
 msgstr ""
 "モジュールを使用すると、従業員(ユーザーではない)がバーコード、PIN番号、またはその両方を使用してPOSアプリケーションにログインできます。実際のティルにはまだ1人のユーザーが必要ですが、無制限の数の従業員がそのティルにログオンして販売を処理できます。"
-
-#. module: base
-#: model:ir.module.module,description:base.module_pos_hr_l10n_be
-msgid ""
-"\n"
-"This module allows Employees (and not users) to log in to the Point of Sale application using the fiscal data module\n"
-"    "
-msgstr "モジュールを使用すると、従業員(ユーザーではなく)が会計データモジュールを使用してPOSアプリケーションにログインできます。"
 
 #. module: base
 #: model:ir.module.module,description:base.module_rating
@@ -8739,6 +8833,24 @@ msgstr ""
 "- アラート日\n"
 "\n"
 "また、食品産業において、例えば、除去戦略、有効期限ファーストアウト(FEFO)の、広く使用されている実装がされています。\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_transifex
+msgid ""
+"\n"
+"Transifex integration\n"
+"=====================\n"
+"This module will add a link to the Transifex project in the translation view.\n"
+"The purpose of this module is to speed up translations of the main modules.\n"
+"\n"
+"To work, Odoo uses Transifex configuration files `.tx/config` to detect the\n"
+"project source. Custom modules will not be translated (as not published on\n"
+"the main Transifex project).\n"
+"\n"
+"The language the user tries to translate must be activated on the Transifex\n"
+"project.\n"
+"        "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_auth_totp
@@ -9559,7 +9671,7 @@ msgstr "%y - ２桁の西暦[00,99].\\\""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.language_install_view_form_lang_switch
 msgid "&amp; Close"
-msgstr "、そして閉じる"
+msgstr "＆ 閉じる"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.module_view_kanban
@@ -10633,7 +10745,7 @@ msgstr "APIキーのリスト"
 msgid ""
 "API Keys are used to connect to Odoo from external tools without the need "
 "for a password or Two-factor Authentication."
-msgstr ""
+msgstr "APIキーは、パスワードや2要素認証を必要とせず、外部ツールからOdooに接続するために使用します。"
 
 #. module: base
 #. odoo-python
@@ -10731,6 +10843,11 @@ msgstr "エクスポート機能へのアクセス"
 #, python-format
 msgid "Access to unauthorized or invalid companies."
 msgstr "許可されていない、または無効な会社へのアクセス。"
+
+#. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
+msgstr "勘定科目"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
@@ -11167,6 +11284,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Add a language"
 msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_transifex
+msgid "Add a link to edit a translation in Transifex"
+msgstr "Transifexで翻訳を編集するためのリンクを追加する"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_tax_reminder
@@ -12317,8 +12439,8 @@ msgstr "オーストラリア"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
-msgid "Australian - Accounting"
-msgstr "オーストラリア-会計"
+msgid "Australia - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_keypay
@@ -12907,11 +13029,6 @@ msgstr ""
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "ベルギーの登録レジ"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_pos_hr_l10n_be
-msgid "Belgian Registered Cash Register Employee module"
-msgstr "ベルギーの登録レジ従業員モジュール"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -13830,6 +13947,7 @@ msgid ""
 msgstr "実行される子サーバー・アクション。最後のリターンは、アクション値は、グローバル戻り値として返され使用されることに注意してください。"
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_localization_chile
 #: model:res.country,name:base.cl
 msgid "Chile"
 msgstr "チリ"
@@ -14711,6 +14829,13 @@ msgid "Country Name"
 msgstr "国名"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
 msgstr "都道府県/州"
@@ -15378,6 +15503,11 @@ msgstr ""
 #: model:ir.model.fields.selection,name:base.selection__report_paperformat__format__dle
 msgid "DLE 26 110 x 220 mm"
 msgstr "DLE 26 110 x 220 mm"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_pos_daily_sales_reports
+msgid "Daily X and Z sales reports of a Point of Sale session"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -16420,11 +16550,6 @@ msgid "EDI v4.0 for Mexico (COMEX)"
 msgstr ""
 
 #. module: base
-#: model:res.country,vat_label:base.us
-msgid "EIN"
-msgstr "EIN"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
 msgstr "ESC/POS ハードウエアドライバー"
@@ -16476,6 +16601,11 @@ msgstr "エクアドル"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuadorian Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi
+msgid "Ecuadorian Accounting EDI"
 msgstr ""
 
 #. module: base
@@ -16565,6 +16695,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock_20
 msgid "Electronic Delivery Note for Peru (REST API method)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_exports
+msgid "Electronic Exports of Goods for Chile"
 msgstr ""
 
 #. module: base
@@ -16896,6 +17031,16 @@ msgstr "エラー！再帰的なメニューを作成することはできませ
 #: model:res.country,name:base.ee
 msgid "Estonia"
 msgstr "エストニア"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ee
+msgid "Estonia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ee_reports
+msgid "Estonia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -18656,12 +18801,12 @@ msgstr "ギニアビサウ共和国"
 #. module: base
 #: model:res.country.group,name:base.gulf_cooperation_council
 msgid "Gulf Cooperation Council (GCC)"
-msgstr ""
+msgstr "湾岸協力会議 (GCC)"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_pos
 msgid "Gulf Cooperation Council - Point of Sale"
-msgstr ""
+msgstr "湾岸協力会議 - POS"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_gcc_invoice_stock_account
@@ -19064,6 +19209,16 @@ msgstr "香港"
 #: model:ir.module.module,shortdesc:base.module_l10n_hk
 msgid "Hong Kong - Accounting"
 msgstr "香港-会計"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll
+msgid "Hong Kong - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_account
+msgid "Hong Kong - Payroll with Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_host
@@ -19775,6 +19930,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr
 msgid "Indian - GSTR India eFiling"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_pos
+msgid "Indian - GSTR India eFiling with POS"
 msgstr ""
 
 #. module: base
@@ -20576,6 +20736,11 @@ msgid "Kenya - Payroll"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_bik
+msgid "Kenya - Payroll additionnal fields"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
 msgid "Kenya - Payroll with Accounting"
 msgstr ""
@@ -20612,7 +20777,7 @@ msgstr "キリバス"
 #: model:ir.module.category,name:base.module_category_productivity_knowledge
 #: model:ir.module.module,shortdesc:base.module_knowledge
 msgid "Knowledge"
-msgstr "知識"
+msgstr "ナレッジ"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_knowledge
@@ -21214,6 +21379,11 @@ msgid "Link Tracker"
 msgstr "リンクトラッカー"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_sale_stock_renting
+msgid "Link between PoS and Stock Rental."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_holidays
 msgid "Link between timesheet and time off"
 msgstr ""
@@ -21242,11 +21412,6 @@ msgstr "POSと販売の間のリンクモジュール"
 #: model:ir.module.module,summary:base.module_pos_sale_margin
 msgid "Link module between Point of Sale and Sales Margin"
 msgstr ""
-
-#. module: base
-#: model:ir.module.module,summary:base.module_pos_hr_l10n_be
-msgid "Link module between Pos Blackbox Be and Pos HR"
-msgstr "Pos BlackboxBeとPosHR間のリンクモジュール"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_product_configurator
@@ -21413,6 +21578,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_lu_hr_payroll_account
 msgid "Luxembourg - Payroll with Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lu_peppol_id
+msgid "Luxembourg - Peppol Identifier"
 msgstr ""
 
 #. module: base
@@ -22182,6 +22352,11 @@ msgid "Mexico - Electronic Delivery Guide Comex 4.0"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
+msgid "Mexico - Month 13 Trial Balance"
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.fm
 msgid "Micronesia"
 msgstr "ミクロネシア"
@@ -22658,6 +22833,16 @@ msgstr ""
 #: model:res.country,name:base.mz
 msgid "Mozambique"
 msgstr "モザンビーク"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mz
+msgid "Mozambique - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mz_reports
+msgid "Mozambique - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
@@ -25704,13 +25889,6 @@ msgstr "値選択の前に作成対象モデルを設定してください。"
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
-#, python-format
-msgid "Please specify a valid model for the object relation"
-msgstr "オブジェクト関係の有効なモデルを指定してください"
-
-#. module: base
-#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -25737,9 +25915,19 @@ msgid "Point of Sale - Coupons & Loyalty"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
+msgid "Point of Sale Daily Sales Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
 msgstr "POS値引"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_sale_stock_renting
+msgid "Point of Sale Rental Stock"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_settle_due
@@ -26734,8 +26922,13 @@ msgid "RTN"
 msgstr ""
 
 #. module: base
-#: model:res.country,vat_label:base.ec
+#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pe
 msgid "RUC"
+msgstr ""
+
+#. module: base
+#: model:res.country,vat_label:base.cl
+msgid "RUT"
 msgstr ""
 
 #. module: base
@@ -27132,7 +27325,7 @@ msgstr "レポートXML"
 #: model:ir.module.category,name:base.module_category_accounting_localizations_reporting
 #: model:ir.ui.menu,name:base.reporting_menuitem
 msgid "Reporting"
-msgstr "レポート作成"
+msgstr "レポーティング"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_ar_reports
@@ -27717,7 +27910,7 @@ msgstr "販売内部機械"
 #: model:ir.model.fields,field_description:base.field_res_users__user_id
 #: model_terms:ir.ui.view,arch_db:base.view_res_partner_filter
 msgid "Salesperson"
-msgstr "営業担当者"
+msgstr "販売担当者"
 
 #. module: base
 #: model:res.country,name:base.ws
@@ -29966,15 +30159,6 @@ msgid "The currency rate must be strictly positive."
 msgstr "為替レートは絶対に正でなければなりません。"
 
 #. module: base
-#. odoo-python
-#: code:addons/base/models/res_currency.py:0
-#, python-format
-msgid ""
-"The date for the current rate is empty.\n"
-"Please set it."
-msgstr ""
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
 msgstr "このユーザのデフォルト会社。"
@@ -30060,6 +30244,13 @@ msgid ""
 "for security reasons. It is possible that someone with higher privileges "
 "previously modified it, and you are therefore not able to modify it yourself"
 " while preserving the content."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "The following languages are not activated: %(missing_names)s"
 msgstr ""
 
 #. module: base
@@ -30169,6 +30360,15 @@ msgid "The modes in view_mode must not be duplicated: %s"
 msgstr "view_modeのモードを複製してはなりません:%s"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
+
+#. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
 msgid "The name of the country must be unique !"
 msgstr "国の名前は固有であるべきです。"
@@ -30252,7 +30452,7 @@ msgstr ""
 #: code:addons/model.py:0 code:addons/model.py:0
 #, python-format
 msgid "The operation cannot be completed: %s"
-msgstr ""
+msgstr "操作を完了することができません: %s"
 
 #. module: base
 #. odoo-python
@@ -30558,6 +30758,13 @@ msgstr ""
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "このカラムには、モジュールデータが含まれており、削除することはできません！"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__favicon
@@ -31173,7 +31380,7 @@ msgstr "機器の追跡とメンテナンス要求の管理"
 #. module: base
 #: model:ir.module.module,summary:base.module_crm
 msgid "Track leads and close opportunities"
-msgstr "リードを追跡し、機会を閉じる"
+msgstr "リードを追跡し、案件を閉じる"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
@@ -31211,6 +31418,11 @@ msgid "Transient: True"
 msgstr "過渡: True"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_transifex
+msgid "Transifex integration"
+msgstr "Transifexの連携機能"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__trans_implied_ids
 msgid "Transitively inherits"
 msgstr "推移的継承"
@@ -31229,6 +31441,14 @@ msgstr "翻訳可"
 #: model:ir.ui.menu,name:base.menu_translation
 msgid "Translations"
 msgstr "翻訳"
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"Translations for model translated fields only accept falsy values and str"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -31454,7 +31674,7 @@ msgstr "UTM 追跡"
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_crm
 msgid "UTM and mass mailing on lead / opportunities"
-msgstr "リード/機会に関するUTMと一括メーリング"
+msgstr "リード/案件に関するUTMと一括メーリング"
 
 #. module: base
 #: model:ir.module.module,description:base.module_mass_mailing_sale
@@ -31692,6 +31912,13 @@ msgstr "不明なフィールド %r が%rと依存関係にあります "
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr "不明なフィールド名 '%s' がリレーションフィールド '%s' にあります"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Unknown model name '%s' in Related Model"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -32419,6 +32646,11 @@ msgid "WMS Accounting"
 msgstr "WMS会計"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_data_merge_stock_account
+msgid "WMS Accounting Merge"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
 msgid "WMS Landed Costs"
 msgstr "WMS配送コスト"
@@ -32432,6 +32664,12 @@ msgstr "ウォリス・フツナ諸島"
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
 msgid "Warehouse Management: Batch Transfer"
 msgstr "倉庫管理:バッチ転送"
+
+#. module: base
+#: model:ir.module.module,description:base.module_data_merge_stock_account
+#: model:ir.module.module,summary:base.module_data_merge_stock_account
+msgid "Warn user in case of products merging"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -33323,7 +33561,6 @@ msgid "Zip Required"
 msgstr "Zip必須"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr ""

@@ -664,14 +664,15 @@ function makeActionManager(env) {
                             Promise.resolve().then(() => {
                                 throw error;
                             });
-                            return;
                         } else {
                             info = lastCt.__info__;
                             // the error occurred while rendering a new controller,
                             // so go back to the last non faulty controller
                             // (the error will be shown anyway as the promise
                             // has been rejected)
+                            restore(lastCt.jsId);
                         }
+                        return;
                     }
                     env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
@@ -823,10 +824,14 @@ function makeActionManager(env) {
      * @param {ActionOptions} options
      */
     function _executeActURLAction(action, options) {
+        let url = action.url;
+        if (url && !(url.startsWith("http") || url.startsWith("/"))) {
+            url = "/" + url;
+        }
         if (action.target === "self") {
-            env.services.router.redirect(action.url);
+            env.services.router.redirect(url);
         } else {
-            const w = browser.open(action.url, "_blank");
+            const w = browser.open(url, "_blank");
             if (!w || w.closed || typeof w.closed === "undefined") {
                 const msg = env._t(
                     "A popup window has been blocked. You may need to change your " +

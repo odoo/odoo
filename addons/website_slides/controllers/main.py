@@ -66,12 +66,20 @@ class WebsiteSlides(WebsiteProfile):
 
     def _set_viewed_slide(self, slide, quiz_attempts_inc=False):
         if not slide.channel_id.is_member:
-            # set(...) ensures backward compatibility for sessions created earlier using a list.
-            # TODO: remove for v16.1.
-            viewed_slides = set(request.session.setdefault('viewed_slides', set()))
+            if not isinstance(request.session.get('viewed_slides'), dict):
+                # Compatibility layer with Odoo 15.0,
+                # where `viewed_slides` are stored as `list` in sessions.
+                # For performance concerns, `viewed_slides` is changed to a dict,
+                # but sessions coming from Odoo 15.0 after an upgrade should still be compatible.
+                # This compatibility layer regarding `viewed_slides` must remain from Odoo 16.0 and above,
+                # as this is possible to do a jump of multiple versions in one go,
+                # and carry the sessions with the upgrade.
+                # e.g. upgrade from Odoo 15.0 to 18.0.
+                request.session.viewed_slides = dict.fromkeys(request.session.get('viewed_slides', []), 1)
+            viewed_slides = request.session['viewed_slides']
             if slide.id not in viewed_slides:
                 if tools.sql.increment_fields_skiplock(slide, 'public_views', 'total_views'):
-                    viewed_slides.add(slide.id)
+                    viewed_slides[slide.id] = 1
                     request.session.touch()
         else:
             slide.action_set_viewed(quiz_attempts_inc=quiz_attempts_inc)
@@ -137,17 +145,26 @@ class WebsiteSlides(WebsiteProfile):
 
     def _get_slide_quiz_data(self, slide):
         is_designer = request.env.user.has_group('website.group_website_designer')
+        slides_resources = slide.slide_resource_ids if slide.channel_id.is_member else []
         values = {
+            'slide_description': slide.description,
             'slide_questions': [{
+                'answer_ids': [{
+                    'comment': answer.comment if is_designer else None,
+                    'id': answer.id,
+                    'is_correct': answer.is_correct if slide.user_has_completed or is_designer else None,
+                    'text_value': answer.text_value,
+                } for answer in question.sudo().answer_ids],
                 'id': question.id,
                 'question': question.question,
-                'answer_ids': [{
-                    'id': answer.id,
-                    'text_value': answer.text_value,
-                    'is_correct': answer.is_correct if slide.user_has_completed or is_designer else None,
-                    'comment': answer.comment if is_designer else None
-                } for answer in question.sudo().answer_ids],
-            } for question in slide.question_ids]
+            } for question in slide.question_ids],
+            'slide_resource_ids': [{
+                'display_name' : resource.display_name,
+                'download_url': resource._get_download_url(),
+                'id': resource.id,
+                'link': resource.link,
+                'resource_type': resource.resource_type,
+            } for resource in slides_resources]
         }
         if 'slide_answer_quiz' in request.session:
             slide_answer_quiz = json.loads(request.session['slide_answer_quiz'])

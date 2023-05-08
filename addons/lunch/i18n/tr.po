@@ -11,7 +11,6 @@
 # UNIBRAVO SOFTWARE <unibravo@gmail.com>, 2022
 # Ahmet Altinisik <aaltinisik@altinkaya.com.tr>, 2022
 # abc Def <hdogan1974@gmail.com>, 2022
-# Halil, 2022
 # Tunç Sabah, 2022
 # Buket Şeker <buket_skr@hotmail.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
@@ -22,6 +21,7 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Martin Trigaux, 2022
 # Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022
+# Halil, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,8 +29,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:24+0000\n"
 "PO-Revision-Date: 2022-09-22 05:53+0000\n"
-"Last-Translator: Nadir Gazioglu <nadirgazioglu@gmail.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Halil, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -40,7 +40,7 @@ msgstr ""
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_temaki
 msgid "1 Avocado - 1 Salmon - 1 Eggs - 1 Tuna"
-msgstr "1 Avokado - 1 Somon - 1 Yumurta - 1 Ton Balığı "
+msgstr "1 Avokado - 1 Somon - 1 Yumurta - 1 Ton Balığı"
 
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_chirashi
@@ -86,6 +86,8 @@ msgid ""
 "<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
 "title=\"Send notification\"/>"
 msgstr ""
+"<i class=\"fa fa-envelope\" role=\"img\" aria-label=\"Send notification\" "
+"title=\"Send notification\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.view_lunch_cashmove_kanban
@@ -104,6 +106,8 @@ msgid ""
 "<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
 "title=\"Send button\"/>"
 msgstr ""
+"<i class=\"fa fa-paper-plane\" role=\"img\" aria-label=\"Send button\" "
+"title=\"Send button\"/>"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -129,7 +133,7 @@ msgid ""
 "<span class=\"o_form_label\">Lunch Overdraft</span>\n"
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
-"<span class=\"o_form_label\">Lunch Overdraft</span>\n"
+"<span class=\"o_form_label\">Öğle yemeği limiti</span>\n"
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: lunch
@@ -138,6 +142,8 @@ msgid ""
 "<span class=\"o_form_label\">Reception notification</span>\n"
 "                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Resepsiyon bildirimi</span>\n"
+"                                <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: lunch
 #: model:mail.template,body_html:lunch.lunch_order_mail_supplier
@@ -270,6 +276,133 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"padding-top: 16px; background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- HEADER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\">\n"
+"                    <span style=\"font-size: 10px;\">Öğle Yemeği Siparişi</span><br/>\n"
+"                </td><td valign=\"middle\" align=\"right\">\n"
+"                    <img t-attf-src=\"/logo.png?company={{ user.company_id.id }}\" style=\"padding: 0px; margin: 0px; height: auto; width: 80px;\" t-att-alt=\"user.company_id.name\"/>\n"
+"                </td></tr>\n"
+"                <tr><td colspan=\"2\" style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr>\n"
+"                    <td valign=\"top\" style=\"font-size: 13px;\">\n"
+"    <div>\n"
+"        <t t-set=\"lines\" t-value=\"ctx.get('lines', [])\"/>\n"
+"        <t t-set=\"order\" t-value=\"ctx.get('order')\"/>\n"
+"        <t t-set=\"currency\" t-value=\"user.env['res.currency'].browse(order.get('currency_id'))\"/>\n"
+"        <p>\n"
+"        Sevgili <t t-out=\"order.get('supplier_name', '')\">Laurie Poiret</t>,\n"
+"        </p><p>\n"
+"        İşte, bugün <t t-out=\"order.get('company_name', '')\">LunchCompany</t> için  siparişler:\n"
+"        </p>\n"
+"\n"
+"        <t t-if=\"sites\">\n"
+"            <br/>\n"
+"            <p>Lokasyon</p>\n"
+"            <t t-foreach=\"site\" t-as=\"site\">\n"
+"                <p><t t-out=\"site['name'] or ''\"/> : <t t-out=\"site['address'] or ''\"/></p>\n"
+"            </t>\n"
+"            <br/>\n"
+"        </t>\n"
+"\n"
+"        <table>\n"
+"            <thead>\n"
+"                <tr style=\"background-color:rgb(233,232,233);\">\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Ürün</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Yorumlar</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Personel</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\"><strong>Site</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Miktar</strong></th>\n"
+"                    <th style=\"width: 100%; min-width: 96px; font-size: 13px;\" align=\"center\"><strong>Fiyat</strong></th>\n"
+"                </tr>\n"
+"            </thead>\n"
+"            <tbody>\n"
+"                <tr t-foreach=\"lines\" t-as=\"line\">\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['product'] or ''\">Sushi salmon</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\">\n"
+"                    <t t-if=\"line['toppings']\">\n"
+"                        <t t-out=\"line['toppings'] or ''\">Soya sosu</t>\n"
+"                    </t>\n"
+"                    <t t-if=\"line['note']\">\n"
+"                        <div style=\"color: rgb(173,181,189);\" t-out=\"line['note'] or ''\">wasabi ile birlikte.</div>\n"
+"                    </t>\n"
+"                    </td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['username'] or ''\">tur</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" t-out=\"line['site'] or ''\">Ofis 1</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"line['quantity'] or ''\">10</td>\n"
+"                    <td style=\"width: 100%; font-size: 13px;\" valign=\"top\" align=\"right\" t-out=\"format_amount(line['price'], currency) or ''\">$ 1.00</td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td/>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\"><strong>Toplam</strong></td>\n"
+"                    <td style=\"width: 100%; font-size: 13px; border-top: 1px solid black;\" align=\"right\"><strong t-out=\"format_amount(order['amount_total'], currency) or ''\">$ 10.00</strong></td>\n"
+"                </tr>\n"
+"            </tbody>\n"
+"        </table>\n"
+"\n"
+"        <p>Herhangi bir sorunuz varsa bizimle iletişime geçmekten çekinmeyin.</p>\n"
+"    </div>\n"
+"                    </td>\n"
+"                </tr>\n"
+"                <tr>\n"
+"                    <td style=\"text-align:center;\">\n"
+"                        <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                    </td>\n"
+"                </tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"    <!-- FOOTER -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"middle\" align=\"left\">\n"
+"                    <t t-out=\"user.company_id.name or ''\">YourCompany</t>\n"
+"                </td></tr>\n"
+"                <tr><td valign=\"middle\" align=\"left\" style=\"opacity: 0.7;\">\n"
+"                    <t t-out=\"user.company_id.phone or ''\">+1 650-123-4567</t>\n"
+"                    <t t-if=\"user.company_id.phone and (user.company_id.email or user.company_id.website)\">|</t>\n"
+"                    <t t-if=\"user.company_id.email\">\n"
+"                        <a t-attf-href=\"'mailto:%s' % {{ user.company_id.email }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.email or ''\">info@yourcompany.com</a>\n"
+"                    </t>\n"
+"                    <t t-if=\"user.company_id.email and user.company_id.website\">|</t>\n"
+"                    <t t-if=\"user.company_id.website\">\n"
+"                        <a t-attf-href=\"'%s' % {{ user.company_id.website }}\" style=\"text-decoration:none; color: #454748;\" t-out=\"user.company_id.website or ''\">http://www.example.com</a>\n"
+"                    </t>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"<!-- POWERED BY -->\n"
+"<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
+"      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
+"        <a target=\"_blank\" href=\"https://www.odoo.com\" style=\"color: #875A7B;\">Odoo</a> tarafından gönderilmiştir\n"
+"      </td></tr>\n"
+"    </table>\n"
+"</td></tr>\n"
+"</table>\n"
+"        "
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
@@ -332,7 +465,7 @@ msgstr "Aktivite Simge Tipi"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "Add To Cart"
-msgstr "Add To Cart"
+msgstr "Sepete Ekle"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_location__address
@@ -358,7 +491,7 @@ msgstr "Ofis 3 için uyarı"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__alert
 msgid "Alert in app"
-msgstr "Alert in app"
+msgstr "Uygulamada uyarı"
 
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_alert_menu
@@ -387,7 +520,7 @@ msgstr "Arşivlendi"
 #: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_2
 #: model:ir.model.fields,help:lunch.field_lunch_order__available_toppings_3
 msgid "Are extras available for this product"
-msgstr "Are extras available for this product"
+msgstr "Bu ürün için ekstralar mevcut mu"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_attachment_count
@@ -397,7 +530,7 @@ msgstr "Ek Sayısı"
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_supplier_automatic_email_time_range
 msgid "Automatic Email Sending Time should be between 0 and 12"
-msgstr "Automatic Email Sending Time should be between 0 and 12"
+msgstr "Otomatik E-posta Gönderme Süresi 0 ile 12 arasında olmalıdır"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -412,17 +545,17 @@ msgstr "Bugün için mevcut"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_1
 msgid "Available Toppings 1"
-msgstr "Available Toppings 1"
+msgstr "Mevcut Malzemeler 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_2
 msgid "Available Toppings 2"
-msgstr "Available Toppings 2"
+msgstr "Mevcut Malzemeler 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_toppings_3
 msgid "Available Toppings 3"
-msgstr "Available Toppings 3"
+msgstr "Mevcut Malzemeler 3"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_bacon
@@ -486,12 +619,12 @@ msgstr "İptal Edildi"
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_action_payment
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_payment
 msgid "Cash Moves"
-msgstr "Cash Moves"
+msgstr "Nakit Hareketleri"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_cashmove_report
 msgid "Cashmoves report"
-msgstr "Cashmoves report"
+msgstr "Nakit hareket raporu"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_search
@@ -506,7 +639,7 @@ msgstr "Kategori"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__mode__chat
 msgid "Chat notification"
-msgstr "Chat notification"
+msgstr "Sohbet bildirimi"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_cheese_ham
@@ -522,7 +655,7 @@ msgstr "Çizburger"
 #. module: lunch
 #: model_terms:lunch.product,description:lunch.product_cheese_ham
 msgid "Cheese, Ham, Salad, Tomatoes, cucumbers, eggs"
-msgstr "peynir, domuz eti, salata, domates, salatalık, yumurta"
+msgstr "Peynir, domuz eti, salata, domates, salatalık, yumurta"
 
 #. module: lunch
 #: model:lunch.order,name:lunch.order_line_4
@@ -533,7 +666,7 @@ msgstr "körili tavuk"
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_chirashi
 msgid "Chirashi"
-msgstr ""
+msgstr "Çirashi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__city
@@ -548,15 +681,15 @@ msgid ""
 "            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
 "            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
 msgstr ""
-"Click on the <span class=\"fa fa-phone text-success\" title=\"Order button\"></span> to announce that the order is ordered.<br>\n"
-"            Click on the <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> to announce that the order is received.<br>\n"
-"            Click on the <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> red X to announce that the order isn't available."
+"Siparişin verildiğini duyurmak için <span class=\"fa fa-phone text-success\" title=\"Order button\"></span>üzerine tıklayın.<br>\n"
+"            Siparişin alındığını duyurmak için <span class=\"fa fa-check text-success\" title=\"Receive button\"></span> tıklayın.<br>\n"
+"            Siparişin mevcut olmadığını duyurmak için <span class=\"fa fa-times-circle text-danger\" title=\"Cancel button\"></span> kırmızı X'e tıklayın."
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_club
 #: model:lunch.product,name:lunch.product_club_0
 msgid "Club"
-msgstr ""
+msgstr "Kulüp"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_coke_0
@@ -593,7 +726,7 @@ msgstr "Yapılandırma"
 #: code:addons/lunch/static/src/mixins/lunch_renderer_mixin.js:0
 #, python-format
 msgid "Configure Your Order"
-msgstr "Configure Your Order"
+msgstr "Siparişinizi Yapılandırın"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
@@ -603,7 +736,7 @@ msgstr "Onayla"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Confirm Orders"
-msgstr ""
+msgstr "Siparişleri Onayla"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_cashmove_report_action_control_accounts
@@ -626,23 +759,23 @@ msgstr "Ülke"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_control_accounts
 msgid "Create a new payment"
-msgstr "Create a new payment"
+msgstr "Yeni ödeme oluşturma"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
 msgid "Create a new product category"
-msgstr "Create a new product category"
+msgstr "Yeni bir ürün kategorisi oluşturma"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_statbutton
 msgid "Create a new product for lunch"
-msgstr "Create a new product for lunch"
+msgstr "Öğle yemeği için yeni bir ürün oluşturun"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_alert_action
 msgid "Create new lunch alerts"
-msgstr "Create new lunch alerts"
+msgstr "Yeni öğle yemeği uyarıları oluşturma"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__create_uid
@@ -688,7 +821,7 @@ msgstr "Para Birimi"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_search
 msgid "Currently inactive"
-msgstr "Currently inactive"
+msgstr "Şu anda etkin değil"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_cashmove__date
@@ -736,7 +869,7 @@ msgstr "Görünüm Adı"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_reorder_button
 msgid "Display Reorder Button"
-msgstr ""
+msgstr "Ekran Yeniden Sipariş Düğmesi"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_drinks
@@ -748,7 +881,7 @@ msgstr "İçecekler"
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Edit order"
-msgstr ""
+msgstr "Siparişi Düzenle"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__email
@@ -759,17 +892,17 @@ msgstr "E-Posta"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_month
 msgid "Employee who ordered last month"
-msgstr "Employee who ordered last month"
+msgstr "Geçen ay sipariş veren çalışan"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_week
 msgid "Employee who ordered last week"
-msgstr "Employee who ordered last week"
+msgstr "Geçen hafta sipariş veren çalışan"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__last_year
 msgid "Employee who ordered last year"
-msgstr "Employee who ordered last year"
+msgstr "Geçen yıl sipariş veren çalışan"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__recipients__everyone
@@ -780,62 +913,62 @@ msgstr "Herkes"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_1
 msgid "Extra 1 Label"
-msgstr "Extra 1 Label"
+msgstr "Ekstra 1 Etiket"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_1
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_1
 msgid "Extra 1 Quantity"
-msgstr "Extra 1 Quantity"
+msgstr "Ekstra 1 Adet"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_2
 msgid "Extra 2 Label"
-msgstr "Extra 2 Label"
+msgstr "Ekstra 2 Etiket"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_2
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_2
 msgid "Extra 2 Quantity"
-msgstr "Extra 2 Quantity"
+msgstr "Ekstra 2 Adet"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_label_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_label_3
 msgid "Extra 3 Label"
-msgstr "Extra 3 Label"
+msgstr "Ekstra 3 Etiket"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_quantity_3
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_quantity_3
 msgid "Extra 3 Quantity"
-msgstr "Extra 3 Quantity"
+msgstr "Ekstra 3 Adet"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__display_toppings
 msgid "Extras"
-msgstr "Extras"
+msgstr "Ekstralar"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_1
 msgid "Extras 1"
-msgstr "Extras 1"
+msgstr "Ekstralar 1"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_2
 msgid "Extras 2"
-msgstr "Extras 2"
+msgstr "Ekstralar 2"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__topping_ids_3
 msgid "Extras 3"
-msgstr "Extras 3"
+msgstr "Ekstralar 3"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__favorite_lunch_product_ids
 msgid "Favorite Lunch Product"
-msgstr "Favorite Lunch Product"
+msgstr "Favori Öğle Yemeği Ürünü"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__favorite_user_ids
@@ -915,8 +1048,8 @@ msgid ""
 "create new products, cashmoves and to confirm or cancel orders."
 msgstr ""
 "Yemek gereksinimlerinizi yönetmenize yardım eder, bir yöneticiyseniz yeni "
-"ürünler, nakit hareketleri oluşturabilir ve siparişleri onayalayabilir ya da"
-" iptal edebilirsiniz."
+"ürünler, nakit hareketleri oluşturabilir ve siparişleri onaylayabilir ya da "
+"iptal edebilirsiniz."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_category_action
@@ -937,8 +1070,8 @@ msgid ""
 "Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
 "            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
 msgstr ""
-"Here you can see your cash moves.<br>A cash move can either be an expense or a payment.\n"
-"            An expense is automatically created when an order is received while a payment is a reimbursement to the company encoded by the manager."
+"Burada nakit hareketlerinizi görebilirsiniz.<br>Bir nakit hareketi bir gider veya ödeme olabilir.\n"
+"            Bir sipariş alındığında otomatik olarak bir gider oluşturulurken, ödeme yönetici tarafından kodlanmış şirkete yapılan bir geri ödemedir."
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__id
@@ -996,7 +1129,7 @@ msgstr "Görsel 128"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__image_1920
 msgid "Image 1920"
-msgstr "Image 1920"
+msgstr "Görsel 1920"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__image_256
@@ -1018,7 +1151,7 @@ msgstr "Bilgilendirim, alerjenler, ..."
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__available_today
 msgid "Is Displayed Today"
-msgstr "Is Displayed Today"
+msgstr "Bugün Görüntüleniyor"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_favorite
@@ -1033,12 +1166,12 @@ msgstr "Takipçi"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__is_new
 msgid "Is New"
-msgstr ""
+msgstr "Yeni!"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_users__last_lunch_location_id
 msgid "Last Lunch Location"
-msgstr "Last Lunch Location"
+msgstr "Son Öğle Yemeği Yeri"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert____last_update
@@ -1056,7 +1189,7 @@ msgstr "Son Düzenleme"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__last_order_date
 msgid "Last Order Date"
-msgstr "Last Order Date"
+msgstr "Son Sipariş Tarihi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__write_uid
@@ -1113,7 +1246,7 @@ msgstr "Öğle yemeği Uyarısı"
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_alert_action
 msgid "Lunch Alerts"
-msgstr "Lunch Alerts"
+msgstr "Öğle Yemeği Uyarıları"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_cashmove.py:0
@@ -1126,7 +1259,7 @@ msgstr "Öğle Yemeği Nakit Hareketi"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_topping
 msgid "Lunch Extras"
-msgstr "Lunch Extras"
+msgstr "Öğle Yemeği Ekstraları"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__lunch_location_id
@@ -1137,7 +1270,7 @@ msgstr "öğle yemeği yeri"
 #: model:ir.actions.act_window,name:lunch.lunch_location_action
 #: model:ir.model,name:lunch.model_lunch_location
 msgid "Lunch Locations"
-msgstr "Lunch Locations"
+msgstr "Öğle Yemeği Mekanları"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_maki
@@ -1147,12 +1280,12 @@ msgstr "Öğle Yemeği Maki 18 adet"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_minimum_threshold
 msgid "Lunch Minimum Threshold"
-msgstr "Lunch Minimum Threshold"
+msgstr "Öğle Yemeği Minimum Eşiği"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_company__lunch_notify_message
 msgid "Lunch Notify Message"
-msgstr ""
+msgstr "Öğle Yemeği Bildirim Mesajı"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_order
@@ -1162,12 +1295,12 @@ msgstr "Öğle yemeği Siparişi"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product
 msgid "Lunch Product"
-msgstr "Lunch Product"
+msgstr "Öğle Yemeği Ürünü"
 
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_product_category
 msgid "Lunch Product Category"
-msgstr "Lunch Product Category"
+msgstr "Öğle Yemeği Ürün Kategorisi"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_salmon
@@ -1177,7 +1310,7 @@ msgstr "Öğle Yemeği Somon 20 adet"
 #. module: lunch
 #: model:ir.model,name:lunch.model_lunch_supplier
 msgid "Lunch Supplier"
-msgstr "Lunch Supplier"
+msgstr "Öğle Yemeği Tedarikçisi"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_temaki
@@ -1188,12 +1321,12 @@ msgstr "Öğle Yemeği Temaki karışımı 3 adet"
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "Lunch notification"
-msgstr ""
+msgstr "Öğle yemeği bildirimi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_notify_message
 msgid "Lunch notification message"
-msgstr ""
+msgstr "Öğle yemeği bildirim mesajı"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_cancel
@@ -1208,42 +1341,42 @@ msgstr "Öğle Yemeği:Yemeği Teslim Al"
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_order_action_notify
 msgid "Lunch: Send notifications"
-msgstr ""
+msgstr "Öğle yemeği: Bildirim gönderme"
 
 #. module: lunch
 #: model:mail.template,name:lunch.lunch_order_mail_supplier
 msgid "Lunch: Supplier Order"
-msgstr ""
+msgstr "Öğle Yemeği: Tedarikçi Siparişi"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_alert_cron_sa_426
 msgid "Lunch: alert chat notification (Alert for Office 3)"
-msgstr ""
+msgstr "Öğle yemeği: uyarı sohbet bildirimi (Office 3 için uyarı)"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_427
 msgid "Lunch: send automatic email to Coin gourmand"
-msgstr ""
+msgstr "Öğle yemeği: Coin gurmand'a otomatik e-posta gönderin"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_422
 msgid "Lunch: send automatic email to Lunch Supplier"
-msgstr ""
+msgstr "Öğle yemeği: Öğle Yemeği Tedarikçisine otomatik e-posta gönderin"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_428
 msgid "Lunch: send automatic email to Pizza Inn"
-msgstr ""
+msgstr "Öğle yemeği: Pizza Inn'e otomatik e-posta gönderin"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_430
 msgid "Lunch: send automatic email to Sushi Shop"
-msgstr ""
+msgstr "Öğle yemeği: Sushi Shop'a otomatik e-posta gönderin"
 
 #. module: lunch
 #: model:ir.actions.server,name:lunch.lunch_supplier_cron_sa_429
 msgid "Lunch: send automatic email to The Corner"
-msgstr ""
+msgstr "Öğle yemeği: The Corner'a otomatik e-posta gönderin"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_main_attachment_id
@@ -1263,12 +1396,12 @@ msgstr "Yönetici"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_res_config_settings__company_lunch_minimum_threshold
 msgid "Maximum Allowed Overdraft"
-msgstr "Maximum Allowed Overdraft"
+msgstr "İzin Verilen Maksimum Fazla Çekim"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Maximum overdraft that your employees can reach"
-msgstr "Maximum overdraft that your employees can reach"
+msgstr "Çalışanlarınızın ulaşabileceği maksimum fazla çekim"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__message
@@ -1288,7 +1421,7 @@ msgstr "Mesajlar"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__moment
 msgid "Moment"
-msgstr "Moment"
+msgstr "An"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__mon
@@ -1319,7 +1452,7 @@ msgstr "Hesabım"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_cashmove_report_menu_form
 msgid "My Account History"
-msgstr "My Account History"
+msgstr "Hesap Geçmişim"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search
@@ -1340,7 +1473,7 @@ msgstr "Öğle Yemeğim"
 #. module: lunch
 #: model:ir.ui.menu,name:lunch.lunch_order_menu_tree
 msgid "My Order History"
-msgstr "My Order History"
+msgstr "Sipariş Geçmişim"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_order_action
@@ -1372,7 +1505,7 @@ msgstr "Yeni Sipariş"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_product__new_until
 msgid "New Until"
-msgstr "New Until"
+msgstr "Yeni Zamana Kadar"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__activity_calendar_event_id
@@ -1397,22 +1530,22 @@ msgstr "Sonraki Aktivite Türü"
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__delivery__no_delivery
 msgid "No Delivery"
-msgstr "No Delivery"
+msgstr "Teslimat Yok"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_cashmove_report_action_account
 msgid "No cash move yet"
-msgstr "No cash move yet"
+msgstr "Henüz nakit hareketi yok"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_control_suppliers
 msgid "No lunch order yet"
-msgstr "No lunch order yet"
+msgstr "Henüz öğle yemeği siparişi yok"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
 msgid "No previous order found"
-msgstr "No previous order found"
+msgstr "Önceki sipariş bulunamadı"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
@@ -1424,7 +1557,7 @@ msgstr "Hiçbiri"
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__0_more
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__0_more
 msgid "None or More"
-msgstr "None or More"
+msgstr "Hiçbiri veya Daha Fazlası"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -1439,27 +1572,27 @@ msgstr "Notlar"
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action_by_supplier
 msgid "Nothing to order today"
-msgstr "Nothing to order today"
+msgstr "Bugün sipariş edilecek bir şey yok"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_moment
 msgid "Notification Moment"
-msgstr "Notification Moment"
+msgstr "Bildirim Anı"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__notification_time
 msgid "Notification Time"
-msgstr "Notification Time"
+msgstr "Bildirim Süresi"
 
 #. module: lunch
 #: model:ir.model.constraint,message:lunch.constraint_lunch_alert_notification_time_range
 msgid "Notification time must be between 0 and 12"
-msgstr "Notification time must be between 0 and 12"
+msgstr "Bildirim süresi 0 ile 12 arasında olmalıdır"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__notified
 msgid "Notified"
-msgstr ""
+msgstr "Bildirildi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__message_needaction_counter
@@ -1486,14 +1619,14 @@ msgstr "Teslimat hatası olan mesaj adedi"
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1_more
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1_more
 msgid "One or More"
-msgstr "One or More"
+msgstr "Bir veya Daha Fazlası"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_1__1
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_2__1
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_supplier__topping_quantity_3__1
 msgid "Only One"
-msgstr "Only One"
+msgstr "Sadece bir"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
@@ -1510,7 +1643,7 @@ msgstr "Sipariş Tarihi"
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__order_deadline_passed
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__order_deadline_passed
 msgid "Order Deadline Passed"
-msgstr ""
+msgstr "Sipariş Son Tarihi Geçti"
 
 #. module: lunch
 #. openerp-web
@@ -1547,12 +1680,12 @@ msgstr "Siparişler"
 #. module: lunch
 #: model:mail.template,subject:lunch.lunch_order_mail_supplier
 msgid "Orders for {{ ctx['order']['company_name'] }}"
-msgstr ""
+msgstr "{{ ctx['order']['company_name'] }} için siparişler"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Overdraft"
-msgstr "Overdraft"
+msgstr "Fazla Çekim"
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_alert__notification_moment__pm
@@ -1646,7 +1779,7 @@ msgstr "Ürün Kategorileri"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_form
 msgid "Product Categories Form"
-msgstr "Product Categories Form"
+msgstr "Ürün Kategorileri Formu"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__category_id
@@ -1681,7 +1814,7 @@ msgstr "Ürün Arama"
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "Product is no longer available."
-msgstr "Product is no longer available."
+msgstr "Ürün artık mevcut değil."
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_product_action
@@ -1700,7 +1833,7 @@ msgstr "Ürün Formu"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_category_view_tree
 msgid "Products List"
-msgstr "Products List"
+msgstr "Ürün Listesi"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_product_view_tree
@@ -1767,7 +1900,7 @@ msgstr "Somon ve Avokado"
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sandwich
 msgid "Sandwich"
-msgstr "Sandwich"
+msgstr "Sandviç"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__sat
@@ -1800,22 +1933,22 @@ msgstr "Para Gönderme"
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_kanban
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Notification"
-msgstr ""
+msgstr "Bildirim Gönder"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__send_by
 msgid "Send Order By"
-msgstr "Send Order By"
+msgstr "Siparişi Gönder"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_tree
 msgid "Send Orders"
-msgstr ""
+msgstr "Sipariş Gönder"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.res_config_settings_view_form
 msgid "Send this message to your users when their order has been delivered."
-msgstr ""
+msgstr "Siparişleri teslim edildiğinde kullanıcılarınıza bu mesajı gönderin."
 
 #. module: lunch
 #: model:ir.model.fields.selection,name:lunch.selection__lunch_order__state__sent
@@ -1825,7 +1958,7 @@ msgstr "Gönderildi"
 #. module: lunch
 #: model:mail.template,description:lunch.lunch_order_mail_supplier
 msgid "Sent to vendor with the order of the day"
-msgstr ""
+msgstr "Günün siparişi ile satıcıya gönderilir"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_config_settings_action
@@ -1836,17 +1969,17 @@ msgstr "Ayarlar"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_confirm_button
 msgid "Show Confirm Button"
-msgstr ""
+msgstr "Onayla düğmesini göster"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__show_order_button
 msgid "Show Order Button"
-msgstr ""
+msgstr "Sipariş Düğmesini Göster"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__until
 msgid "Show Until"
-msgstr "Show Until"
+msgstr "Kadar Göster"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_spicy_tuna
@@ -1916,22 +2049,22 @@ msgstr "Pazar"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__supplier_id
 msgid "Supplier"
-msgstr ""
+msgstr "Tedarikçi"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_sushi
 msgid "Sushi"
-msgstr "Sushi"
+msgstr "Suşi"
 
 #. module: lunch
 #: model:lunch.product.category,name:lunch.categ_temaki
 msgid "Temaki"
-msgstr ""
+msgstr "Temaki"
 
 #. module: lunch
 #: model:lunch.product,name:lunch.product_country
 msgid "The Country"
-msgstr ""
+msgstr "Ülke..."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_product.py:0
@@ -1940,6 +2073,8 @@ msgid ""
 "The following product categories are archived. You should either unarchive the categories or change the category of the product.\n"
 "%s"
 msgstr ""
+"Aşağıdaki ürün kategorileri arşivlenir. Kategorileri arşivden çıkarmalı veya ürünün kategorisini değiştirmelisiniz.\n"
+"%s"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_product.py:0
@@ -1948,6 +2083,8 @@ msgid ""
 "The following suppliers are archived. You should either unarchive the suppliers or change the supplier of the product.\n"
 "%s"
 msgstr ""
+"Aşağıdaki tedarikçiler arşivlenir. Tedarikçileri arşivden çıkarmalı veya ürünün tedarikçisini değiştirmelisiniz.\n"
+"%s"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_product_category__product_count
@@ -1957,19 +2094,19 @@ msgstr "The number of products related to this category"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_form
 msgid "The orders for this vendor have already been sent."
-msgstr ""
+msgstr "Bu satıcının siparişleri zaten gönderildi."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been confirmed!"
-msgstr ""
+msgstr "Siparişler onaylandı!"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_supplier.py:0
 #, python-format
 msgid "The orders have been sent!"
-msgstr ""
+msgstr "Siparişler gönderildi!"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__responsible_id
@@ -1977,15 +2114,15 @@ msgid ""
 "The responsible is the person that will order lunch for everyone. It will be"
 " used as the 'from' when sending the automatic email."
 msgstr ""
-"The responsible is the person that will order lunch for everyone. It will be"
-" used as the 'from' when sending the automatic email."
+"Sorumlu, herkes için öğle yemeği sipariş edecek kişidir. Otomatik e-postayı "
+"gönderirken 'gönderen' olarak kullanılacaktır."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "The vendor related to this order is not available today."
-msgstr ""
+msgstr "Bu siparişle ilgili satıcı bugün mevcut değil."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_order_action
@@ -1999,18 +2136,18 @@ msgstr ""
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
 msgid "There is no product available today"
-msgstr "There is no product available today"
+msgstr "Bugün mevcut bir ürün yok"
 
 #. module: lunch
 #: model:ir.model.fields,help:lunch.field_lunch_supplier__recurrency_end_date
 msgid "This field is used in order to "
-msgstr "This field is used in order to "
+msgstr "Bu alan siparişte kullanılır"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__available_today
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__available_today
 msgid "This is True when if the supplier is available today"
-msgstr "This is True when if the supplier is available today"
+msgstr "Bu, tedarikçi bugün mevcut olduğunda geçerlidir"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_alert__thu
@@ -2037,12 +2174,15 @@ msgstr "Sipariş Ver"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_payment_dialog
 msgid "To add some money to your wallet, please contact your lunch manager."
-msgstr "To add some money to your wallet, please contact your lunch manager."
+msgstr ""
+"Cüzdanınıza biraz para eklemek için lütfen öğle yemeği yöneticinizle "
+"iletişime geçin."
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_location_action
 msgid "To see some locations, create one using the create button"
-msgstr "To see some locations, create one using the create button"
+msgstr ""
+"Bazı konumları görmek için, oluştur düğmesini kullanarak bir konum oluşturun"
 
 #. module: lunch
 #: model_terms:ir.actions.act_window,help:lunch.lunch_product_action_order
@@ -2050,8 +2190,8 @@ msgid ""
 "To see some products, check if your vendors are available today and that you"
 " have configured some products"
 msgstr ""
-"To see some products, check if your vendors are available today and that you"
-" have configured some products"
+"Bazı ürünleri görmek için satıcılarınızın bugün müsait olup olmadığını ve "
+"bazı ürünleri yapılandırdığınızı kontrol edin"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
@@ -2095,7 +2235,7 @@ msgstr "domates, mantar, Mozzarella peyniri"
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_topping__topping_category
 msgid "Topping Category"
-msgstr "Topping Category"
+msgstr "Topping Kategorisi"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_supplier__topping_ids_1
@@ -2171,7 +2311,7 @@ msgstr "Kullanıcı"
 #. module: lunch
 #: model:res.groups,name:lunch.group_lunch_user
 msgid "User : Order your meal"
-msgstr ""
+msgstr "Kullanıcı : Yemeğinizi sipariş edin"
 
 #. module: lunch
 #: model:ir.model.fields,field_description:lunch.field_lunch_order__supplier_id
@@ -2186,7 +2326,7 @@ msgstr "Tedarikçi"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_order_view_search
 msgid "Vendor Orders by Date"
-msgstr "Vendor Orders by Date"
+msgstr "Tarihe Göre Satıcı Siparişleri"
 
 #. module: lunch
 #: model:ir.actions.act_window,name:lunch.lunch_vendors_action
@@ -2223,20 +2363,20 @@ msgid ""
 "You are trying to impersonate another user, but this can only be done by a "
 "lunch manager"
 msgstr ""
-"You are trying to impersonate another user, but this can only be done by a "
-"lunch manager"
+"Başka bir kullanıcının kimliğine bürünmeye çalışıyorsunuz, ancak bu yalnızca"
+" bir öğle yemeği yöneticisi tarafından yapılabilir."
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You have to order one and only one %s"
-msgstr "You have to order one and only one %s"
+msgstr "Bir ve sadece bir tane %s sipariş etmelisiniz"
 
 #. module: lunch
 #: code:addons/lunch/models/lunch_order.py:0
 #, python-format
 msgid "You should order at least one %s"
-msgstr "You should order at least one %s"
+msgstr "En az bir %s sipariş etmelisiniz"
 
 #. module: lunch
 #. openerp-web
@@ -2250,7 +2390,7 @@ msgstr "Hesabınız"
 #: code:addons/lunch/static/src/components/lunch_dashboard.xml:0
 #, python-format
 msgid "Your Cart ("
-msgstr ""
+msgstr "Eşyaları sepetinize bıraktınız!"
 
 #. module: lunch
 #. openerp-web
@@ -2266,8 +2406,8 @@ msgid ""
 "Your wallet does not contain enough money to order that. To add some money "
 "to your wallet, please contact your lunch manager."
 msgstr ""
-"Your wallet does not contain enough money to order that. To add some money "
-"to your wallet, please contact your lunch manager."
+"Cüzdanınız bunu sipariş etmek için yeterli para içermiyor. Cüzdanınıza biraz"
+" para eklemek için lütfen öğle yemeği yöneticinizle iletişime geçin."
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
@@ -2282,7 +2422,7 @@ msgstr "PK"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "alert form"
-msgstr "alert form"
+msgstr "uyarı formu"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_form
@@ -2300,12 +2440,12 @@ msgstr "nakit hareketi ağacı"
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_alert_view_form
 msgid "e.g. Order before 11am"
-msgstr ""
+msgstr "Örneğin, saat 11'den önce sipariş verin"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_supplier_view_form
 msgid "e.g. The Pizzeria Inn"
-msgstr ""
+msgstr "örneğin Pizzeria Inn"
 
 #. module: lunch
 #: model_terms:ir.ui.view,arch_db:lunch.lunch_cashmove_report_view_search_2

@@ -169,14 +169,14 @@ class PosConfig(models.Model):
                                                    "When the session is open, we keep on loading all remaining products in the background.\n"
                                                    "In the meantime, you can click on the 'database icon' in the searchbar to load products from database.")
     limited_products_amount = fields.Integer(default=20000)
-    product_load_background = fields.Boolean(default=True)
+    product_load_background = fields.Boolean(default=False)
     limited_partners_loading = fields.Boolean('Limited Partners Loading',
                                               default=True,
                                               help="By default, 100 partners are loaded.\n"
                                                    "When the session is open, we keep on loading all remaining partners in the background.\n"
                                                    "In the meantime, you can use the 'Load Customers' button to load partners from database.")
     limited_partners_amount = fields.Integer(default=100)
-    partner_load_background = fields.Boolean(default=True)
+    partner_load_background = fields.Boolean(default=False)
 
     @api.depends('payment_method_ids')
     def _compute_cash_control(self):

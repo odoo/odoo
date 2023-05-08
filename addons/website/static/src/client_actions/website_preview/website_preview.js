@@ -8,8 +8,10 @@ import { WebsiteEditorComponent } from '../../components/editor/editor';
 import { WebsiteTranslator } from '../../components/translator/translator';
 import { unslugHtmlDataObject } from '../../services/website_service';
 import {OptimizeSEODialog} from '@website/components/dialog/seo';
+import { WebsiteDialog } from "@website/components/dialog/dialog";
 import { routeToUrl } from "@web/core/browser/router_service";
 import { getActiveHotkey } from "@web/core/hotkeys/hotkey_service";
+import { sprintf } from "@web/core/utils/strings";
 import wUtils from 'website.utils';
 
 const { Component, onWillStart, onMounted, onWillUnmount, useRef, useEffect, useState } = owl;
@@ -64,9 +66,20 @@ export class WebsitePreview extends Component {
                 // URL (event if it wasn't, it wouldn't be an issue as those are
                 // really considered as the same domain, the user will share the
                 // same session and CORS errors won't be a thing in such a case)
-                window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${this.websiteId}`;
+                this.dialogService.add(WebsiteDialog, {
+                    title: this.env._t("Redirecting..."),
+                    body: sprintf(this.env._t(
+                        "You are about to be redirected to the domain configured for your website ( %s ). " +
+                        "This is necessary to edit or view your website from the Website app. You might need to log back in."
+                    ), this.websiteDomain),
+                    showSecondaryButton: false,
+                }, {
+                    onClose: () => {
+                         window.location.href = `${this.websiteDomain}/web#action=website.website_preview&path=${encodedPath}&website_id=${encodeURIComponent(this.websiteId)}`;
+                    }
+                });
             } else {
-                this.initialUrl = `/website/force/${this.websiteId}?path=${encodedPath}`;
+                this.initialUrl = `/website/force/${encodeURIComponent(this.websiteId)}?path=${encodedPath}`;
             }
         });
 
@@ -145,7 +158,7 @@ export class WebsitePreview extends Component {
             // content of the previous URL before reaching the client action,
             // which was lost after being replaced for the frontend's URL.
             const handleBackNavigation = () => {
-                if (!window.location.pathname.startsWith('/@')) {
+                if (window.location.pathname === '/web') {
                     window.dispatchEvent(new HashChangeEvent('hashchange', {
                         newURL: window.location.href.toString()
                     }));
@@ -295,17 +308,24 @@ export class WebsitePreview extends Component {
      * the iframe's url (it is clearer for the user).
      */
     _replaceBrowserUrl() {
+        if (!wUtils.isHTTPSorNakedDomainRedirection(this.iframe.el.contentWindow.location.origin, window.location.origin)) {
+            // If another domain ends up loading in the iframe (for example,
+            // if the iframe is being redirected and has no initial URL, so it
+            // loads "about:blank"), do not push that into the history
+            // state as that could prevent the user from going back and could
+            // trigger a traceback.
+            history.replaceState({}, document.title, '/web');
+            return;
+        }
         // The original /web#action=... url is saved to be pushed on top of the
         // history when leaving the component, so that the webclient can
         // correctly find back and replay the client action.
         if (!this.backendUrl) {
             this.backendUrl = routeToUrl(this.router.current);
         }
-        const currentUrl = new URL(this.iframe.el.contentDocument.location.href);
-        currentUrl.pathname = `/@${currentUrl.pathname}`;
-        this.currentTitle = this.iframe.el.contentDocument.title;
-        history.replaceState({}, this.currentTitle, currentUrl.href);
-        this.title.setParts({ action: this.currentTitle });
+        const currentTitle = this.iframe.el.contentDocument.title;
+        history.replaceState({}, currentTitle, this.iframe.el.contentDocument.location.href);
+        this.title.setParts({ action: currentTitle });
     }
 
     _onPageLoaded() {

@@ -26,8 +26,7 @@ image_re = re.compile(r"data:(image/[A-Za-z]+);base64,(.*)")
 
 
 class MassMailing(models.Model):
-    """ MassMailing models a wave of emails for a mass mailign campaign.
-    A mass mailing is an occurence of sending emails. """
+    """ Mass Mailing models the sending of emails to a list of recipients for a mass mailing campaign."""
     _name = 'mailing.mailing'
     _description = 'Mass Mailing'
     _inherit = ['mail.thread',
@@ -1001,7 +1000,7 @@ class MassMailing(models.Model):
         res_ids = self._get_recipients()
         trace_domain = [('model', '=', self.mailing_model_real)]
         if self.ab_testing_enabled and self.ab_testing_pc == 100:
-            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', '=', self._get_ab_testing_siblings_mailings().ids)]])
+            trace_domain = expression.AND([trace_domain, [('mass_mailing_id', 'in', self._get_ab_testing_siblings_mailings().ids)]])
         else:
             trace_domain = expression.AND([trace_domain, [
                 ('res_id', 'in', res_ids),

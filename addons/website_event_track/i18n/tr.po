@@ -16,12 +16,12 @@
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2022
 # Umur Akın <umura@projetgrup.com>, 2022
 # Buket Şeker <buket_skr@hotmail.com>, 2022
-# Halil, 2022
 # Murat Durmuş <muratd@projetgrup.com>, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2022
 # Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022
+# Halil, 2023
 # 
 msgid ""
 msgstr ""
@@ -29,8 +29,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-10-04 09:26+0000\n"
 "PO-Revision-Date: 2022-09-22 05:56+0000\n"
-"Last-Translator: Ozlem Cikrikci <ozlemc@eskayazilim.com.tr>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Halil, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -53,13 +53,13 @@ msgstr "# İstek Listesi"
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s from %(company)s"
-msgstr "%(name)s den %(company)s"
+msgstr "%(company)s den %(name)s"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
 #, python-format
 msgid "%(name)s, %(function)s at %(company)s"
-msgstr "%(name)s, %(function)s at %(company)s"
+msgstr "%(company)s de %(name)s, %(function)s"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/website.py:0
@@ -149,10 +149,19 @@ msgid ""
 "    </t>\n"
 "</div>"
 msgstr ""
-"<div>Sevgili <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/><t t-out=\"object.name or ''\">Bu Etkinliğin Ne Hakkında Olduğu</t> teklifinizin <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> etkinliği için kabul edildiğini ve onaylandığını bildirmekten memnuniyet duyarız.<br/>Daha fazla ayrıntıyı burada bulabilirsiniz:    <div style=\"margin: 16px 0px 16px 0px;\">\n"
-"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">Konuşmayı Görüntüle        </a>\n"
+"<div>\n"
+"    Sevgili <t t-out=\"object.partner_id.name or object.partner_name or ''\">Brandon Freeman</t><br/>\n"
+"    <t t-out=\"object.name or ''\">Bu Etkinliğin Ne Hakkında Olduğu</t> teklifinizin <t t-out=\"object.event_id.name or ''\">OpenWood Collection Online Reveal</t> etkinliği için kabul edildiğini ve onaylandığını bildirmekten memnuniyet duyarız.\n"
+"    <br/>\n"
+"    Daha fazla ayrıntıyı burada bulabilirsiniz: \n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a t-attf-href=\"/event/{{ object.event_id.id }}/track/{{ object.id }}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"            Konuşmayı Görüntüle\n"
+"        </a>\n"
 "    </div>\n"
-"    <br/><br/>Teşekkürler    <t t-if=\"user.signature\">\n"
+"    <br/><br/>\n"
+"    Teşekkürler,\n"
+"    <t t-if=\"user.signature\">\n"
 "        <br/>\n"
 "        <t t-out=\"user.signature or ''\">--<br/>Mitchell Admin</t>\n"
 "    </t>\n"
@@ -161,17 +170,17 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "<i class=\"fa fa-ban me-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban me-2\"/>Yayımlanmamış"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_search
 msgid "<i class=\"fa fa-bell me-2 text-muted\"/> Favorite Talks"
-msgstr ""
+msgstr "<i class=\"fa fa-bell me-2 text-muted\"/> Favori Konuşmalar"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.session_topbar
 msgid "<i class=\"fa fa-folder-open\"/> Favorites"
-msgstr "<i j=\"0/\"> Sık kullanılanlar</i>"
+msgstr "<i class=\"fa fa-folder-open\"/> Favoriler"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
@@ -179,11 +188,13 @@ msgid ""
 "<i class=\"fa fa-fw fa-arrow-right\"/>\n"
 "                        Write one."
 msgstr ""
+"<i class=\"fa fa-fw fa-arrow-right\"/>\n"
+"                    Bir tane yazın."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
 msgid "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
-msgstr ""
+msgstr "<span class=\"d-none d-md-block ms-2\">&amp;bull;</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.res_config_settings_view_form
@@ -237,12 +248,12 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.agenda_topbar
 msgid "<span id=\"search_number\" class=\"me-1\">0</span>Results"
-msgstr ""
+msgstr "<span id=\"search_number\" class=\"me-1\">0</span>Sonuçlar"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "<span> - </span>"
-msgstr "<span>@</span>"
+msgstr "<span> - </span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content_partner_info
@@ -443,8 +454,8 @@ msgid ""
 msgstr ""
 "Daha önce duymuş olabileceğiniz gibi, kendi mobilyalarınızı yapmak aslında düşündüğünüz kadar zor veya karmaşık değildir.\n"
 "    Aslında, bazı projeler herkesin başarıyla tamamlayabileceği kadar kolaydır. Örneğin, sevimli bir tabure yapmak\n"
-"    Eski bir lastik gerçek bir kek parçasıdır ve bir sehpaya ihtiyacınız varsa, kullanarak kolayca bir araya getirebilirsiniz.\n"
-"    ahşap kasalar."
+"    Eski bir lastik gerçek bir kek parçasıdır ve bir sehpaya ihtiyacınız varsa, ahşap kasalar kullanarak kolayca bir araya\n"
+"     getirebilirsiniz."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_attachment_count
@@ -563,7 +574,7 @@ msgstr "Sıfırdan bir kendin yap kabini inşa etmek"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_url
 msgid "Button Target URL"
-msgstr "Hedef Düğme URL'si"
+msgstr "Hedef Buton URL'si"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_title
@@ -573,12 +584,12 @@ msgstr "Buton Başlığı"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_cta_delay
 msgid "Button appears"
-msgstr "Düğme görünür"
+msgstr "Buton görünür"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__is_website_cta_live
 msgid "CTA button is available"
-msgstr "CTA düğmesi kullanılabilir"
+msgstr "CTA butonu kullanılabilir"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -787,7 +798,7 @@ msgstr "Kanban durum yönetimini açıklayan etiketler tanımlayın."
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track_location__sequence
 msgid "Define the order in which the location will appear on \"Agenda\" page"
-msgstr ""
+msgstr "Konumun \"Gündem\" sayfasında görüneceği sırayı tanımlayın"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
@@ -929,7 +940,7 @@ msgstr "Konumlar"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Event Page"
-msgstr ""
+msgstr "Etkinlik Sayfası"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
@@ -964,12 +975,12 @@ msgstr "Etkinlik Parçası Aşaması"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_tag_tree
 msgid "Event Track Tag"
-msgstr "Etiket"
+msgstr "Etkinlik İzleme Etiketi"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag_category
 msgid "Event Track Tag Category"
-msgstr "Etkinlik Bölüm Etiketi Kategorisi"
+msgstr "Etkinlik İzleme Etiketi Kategorisi"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track
@@ -977,13 +988,13 @@ msgstr "Etkinlik Bölüm Etiketi Kategorisi"
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_calendar
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event Tracks"
-msgstr "Etkinlik"
+msgstr "Etkinlik İzleri"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr "Etkinlik Parçaları Menüleri"
+msgstr "Etkinlik İzleme Menüleri"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_7_track_21
@@ -993,7 +1004,7 @@ msgstr "Etkinlik Özeti"
 #. module: website_event_track
 #: model:mail.template,name:website_event_track.mail_template_data_track_confirmation
 msgid "Event: Track Confirmation"
-msgstr ""
+msgstr "Etkinlik: İzleme Onayı"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_res_config_settings__events_app_name
@@ -1028,7 +1039,7 @@ msgstr "Bölümleri Filtrele..."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.snippet_options
 msgid "Filter by Tags"
-msgstr ""
+msgstr "Etiketlere Göre Filtrele"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.tracks_display_list
@@ -1526,7 +1537,7 @@ msgid ""
 "Link to Q&amp;A here! The time has come to hide those old block walls. Love "
 "simple and transformation type projects like this! :)-"
 msgstr ""
-"Soru-Cevap linkini buradan alabilirsiniz! Bu eski blok duvarları gizlemenin "
+"Q&amp;A linkini buradan alabilirsiniz! Bu eski blok duvarları gizlemenin "
 "zamanı geldi. Bunun gibi basit ve dönüşüm tipi projeleri seviyorum! :)-"
 
 #. module: website_event_track
@@ -2031,6 +2042,8 @@ msgid ""
 "Sent to speakers whose track proposal is accepted (set the template on the "
 "right stage)"
 msgstr ""
+"Parça önerisi kabul edilen konuşmacılara gönderilir (şablonu doğru aşamada "
+"ayarlayın)"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__seo_name
@@ -2133,7 +2146,7 @@ msgstr "Aşama Adı"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
 msgid "Starting now!"
-msgstr ""
+msgstr "Şimdi başlıyoruz!"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
@@ -2333,7 +2346,7 @@ msgstr "Bu adım tamamlandı. Engellemek veya devam etmek için tıklayın."
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "This track does not have a description."
-msgstr ""
+msgstr "Bu parçanın bir açıklaması yok."
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -2341,8 +2354,8 @@ msgid ""
 "Timely release of presentation material (slides),\n"
 "                                    for publishing on our website."
 msgstr ""
-"Sitemizde yayınlanması için sunum malzemesi (slaytlar), \n"
-" zamanında bırakın."
+"Sitemizde yayınlanması için sunum malzemesi (slaytlar),\n"
+"                                    zamanında bırakın."
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__name
@@ -2788,7 +2801,7 @@ msgstr "Çevrimdışısınız!"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 msgid "a few seconds"
-msgstr ""
+msgstr "birkaç saniye"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_card
@@ -2798,13 +2811,13 @@ msgstr "önce"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"John Doe was born in...\""
-msgstr ""
+msgstr "örneğin, \"John Doe doğdu...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_content
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "e.g. \"This talk will be about...\""
-msgstr ""
+msgstr "örneğin, \"Bu konuşma hakkında olacak...\""
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form

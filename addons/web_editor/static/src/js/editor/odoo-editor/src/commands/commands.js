@@ -46,6 +46,9 @@ import {
     parseHTML,
     formatSelection,
     getDeepestPosition,
+    fillEmpty,
+    isEmptyBlock,
+    getCursorDirection,
 } from '../utils/utils.js';
 
 const TEXT_CLASSES_REGEX = /\btext-[^\s]*\b/g;
@@ -372,7 +375,7 @@ export const editorCommands = {
         const changedElements = [];
         const defaultDirection = editor.options.direction;
         const shouldApplyStyle = !isSelectionFormat(editor.editable, 'switchDirection');
-        for (const block of new Set(selectedTextNodes.map(textNode => closestBlock(textNode)))) {
+        for (const block of new Set(selectedTextNodes.map(textNode => closestElement(textNode, 'ul,ol') || closestBlock(textNode)))) {
             if (!shouldApplyStyle) {
                 block.removeAttribute('dir');
             } else {
@@ -428,25 +431,37 @@ export const editorCommands = {
     },
     unlink: editor => {
         const sel = editor.document.getSelection();
-        const closestEl = closestElement(sel.focusNode, 'a');
-        if (closestEl) {
-            // Remove the class otherwise Firefox transforms the link in a span.
-            closestEl.removeAttribute('class');
-            // Remove the contentEditable isolation of links before unlinking,
-            // otherwise the command fails since the link is the editable root.
-            if (closestEl.getAttribute('contenteditable') === 'true') {
-                editor._activateContenteditable();
+        const isCollapsed = sel.isCollapsed;
+        // If the selection is collapsed, unlink the whole link:
+        // `<a>a[]b</a>` => `a[]b`.
+        getDeepRange(editor.editable, { sel, splitText: true, select: true });
+        if (!isCollapsed) {
+            // If not, unlink only the part(s) of the link(s) that are selected:
+            // `<a>a[b</a>c<a>d</a>e<a>f]g</a>` => `<a>a</a>[bcdef]<a>g</a>`.
+            let { anchorNode, focusNode, anchorOffset, focusOffset } = sel;
+            const direction = getCursorDirection(anchorNode, anchorOffset, focusNode, focusOffset);
+            // Split the links around the selection.
+            const [startLink, endLink] = [closestElement(anchorNode, 'a'), closestElement(focusNode, 'a')];
+            if (startLink) {
+                anchorNode = splitAroundUntil(anchorNode, startLink);
+                anchorOffset = direction === DIRECTIONS.RIGHT ? 0 : nodeSize(anchorNode);
+                setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
+            }
+            // Only split the end link if it was not already done above.
+            if (endLink && endLink.isConnected) {
+                focusNode = splitAroundUntil(focusNode, endLink);
+                focusOffset = direction === DIRECTIONS.RIGHT ? nodeSize(focusNode) : 0;
+                setSelection(anchorNode, anchorOffset, focusNode, focusOffset, true);
             }
         }
-        if (sel.isCollapsed) {
+        const targetedNodes = isCollapsed ? [sel.anchorNode] : getSelectedNodes(editor.editable);
+        const links = new Set(targetedNodes.map(node => closestElement(node, 'a')).filter(a => a));
+        if (links.size) {
             const cr = preserveCursor(editor.document);
-            const node = closestElement(sel.focusNode, 'a');
-            setSelection(node, 0, node, node.childNodes.length, false);
-            editor.document.execCommand('unlink');
+            for (const link of links) {
+                unwrapContents(link);
+            }
             cr();
-        } else {
-            editor.document.execCommand('unlink');
-            setSelection(sel.anchorNode, sel.anchorOffset, sel.focusNode, sel.focusOffset);
         }
     },
 
@@ -533,7 +548,11 @@ export const editorCommands = {
         if (!range) return;
         const restoreCursor = preserveCursor(editor.document);
         // Get the <font> nodes to color
-        const selectedNodes = getSelectedNodes(editor.editable).filter(node => !closestElement(node, 'table.o_selected_table'));
+        const selectionNodes = getSelectedNodes(editor.editable);
+        if (isEmptyBlock(range.endContainer)) {
+            selectionNodes.push(range.endContainer, ...descendants(range.endContainer));
+        }
+        const selectedNodes = selectionNodes.filter(node => !closestElement(node, 'table.o_selected_table'))
         const fonts = selectedNodes.flatMap(node => {
             let font = closestElement(node, 'font') || closestElement(node, 'span');
             const children = font && descendants(font);
@@ -546,6 +565,7 @@ export const editorCommands = {
                     font = [];
                 }
             } else if ((node.nodeType === Node.TEXT_NODE && isVisibleStr(node))
+                    || (isEmptyBlock(node.parentNode))
                     || (node.nodeType === Node.ELEMENT_NODE &&
                         ['inline', 'inline-block'].includes(getComputedStyle(node).display) &&
                         isVisibleStr(node.textContent) &&
@@ -569,22 +589,28 @@ export const editorCommands = {
                 } else {
                     // No <font> found: insert a new one.
                     font = document.createElement('font');
-                    node.parentNode.insertBefore(font, node);
+                    node.after(font);
                 }
-                font.appendChild(node);
+                if (node.textContent) {
+                    font.appendChild(node);
+                } else {
+                    fillEmpty(font);
+                }
             } else {
                 font = []; // Ignore non-text or invisible text nodes.
             }
             return font;
         });
         // Color the selected <font>s and remove uncolored fonts.
-        for (const font of new Set(fonts)) {
+        const fontsSet = new Set(fonts);
+        for (const font of fontsSet) {
             colorElement(font, color, mode);
             if (!hasColor(font, mode) && !font.hasAttribute('style')) {
                 for (const child of [...font.childNodes]) {
                     font.parentNode.insertBefore(child, font);
                 }
                 font.parentNode.removeChild(font);
+                fontsSet.delete(font);
             }
         }
         restoreCursor();
@@ -596,7 +622,7 @@ export const editorCommands = {
             newSelection.removeAllRanges();
             newSelection.addRange(range);
         }
-        return [...fonts, ...coloredTds];
+        return [...fontsSet, ...coloredTds];
     },
     // Table
     insertTable: (editor, { rowNumber = 2, colNumber = 2 } = {}) => {

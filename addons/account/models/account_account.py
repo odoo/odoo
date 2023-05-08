@@ -586,10 +586,6 @@ class AccountAccount(models.Model):
     def _onchange_account_type(self):
         if self.internal_group == 'off_balance':
             self.tax_ids = False
-        elif self.internal_group == 'income' and not self.tax_ids:
-            self.tax_ids = self.company_id.account_sale_tax_id
-        elif self.internal_group == 'expense' and not self.tax_ids:
-            self.tax_ids = self.company_id.account_purchase_tax_id
 
     def _split_code_name(self, code_name):
         # We only want to split the name on the first word if there is a digit in it
@@ -699,7 +695,7 @@ class AccountAccount(models.Model):
         if 'import_file' in self.env.context:
             code, name = self._split_code_name(name)
             return self.create({'code': code, 'name': name}).name_get()[0]
-        raise UserError(_("Please create new accounts from the Chart of Accounts menu."))
+        raise ValidationError(_("Please create new accounts from the Chart of Accounts menu."))
 
     def write(self, vals):
         # Do not allow changing the company_id when account_move_line already exist

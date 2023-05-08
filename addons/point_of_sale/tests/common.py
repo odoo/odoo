@@ -362,7 +362,7 @@ class TestPoSCommon(ValuationReconciliationTestCommon):
             return cls.env['account.account.tag'].create({
                 'name': name,
                 'applicability': 'taxes',
-                'country_id': cls.env.company.country_id.id
+                'country_id': cls.env.company.account_fiscal_country_id.id
             })
 
         cls.tax_tag_invoice_base = create_tag('Invoice Base tag')

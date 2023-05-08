@@ -18,6 +18,7 @@ import { getClassNameFromDecoration } from "@web/views/utils";
 import { ViewButton } from "@web/views/view_button/view_button";
 import { useBounceButton } from "@web/views/view_hook";
 import { Widget } from "@web/views/widgets/widget";
+import { getFormattedValue } from "../utils";
 
 import {
     Component,
@@ -109,15 +110,18 @@ export class ListRenderer extends Component {
         onPatched(() => {
             const editedRecord = this.props.list.editedRecord;
             if (editedRecord && this.activeRowId !== editedRecord.id) {
-                let column = this.state.columns[0];
-                let forward;
                 if (this.cellToFocus && this.cellToFocus.record === editedRecord) {
-                    column = this.cellToFocus.column;
-                    forward = this.cellToFocus.forward;
+                    const column = this.cellToFocus.column;
+                    const forward = this.cellToFocus.forward;
+                    this.focusCell(column, forward);
+                } else if (this.lastEditedCell) {
+                    this.focusCell(this.lastEditedCell.column, true);
+                } else {
+                    this.focusCell(this.state.columns[0]);
                 }
-                this.focusCell(column, forward);
             }
             this.cellToFocus = null;
+            this.lastEditedCell = null;
         });
         let dataRowId;
         this.rootRef = useRef("root");
@@ -153,16 +157,16 @@ export class ListRenderer extends Component {
         }
 
         // not very beautiful but works: refactor at some point
-        this.lastCellFocused;
+        let lastCellBeforeDialogOpening;
         useBus(this.props.list.model, "list-confirmation-dialog-will-open", () => {
             if (this.tableRef.el.contains(document.activeElement)) {
-                this.lastCellFocused = document.activeElement.closest("td");
+                lastCellBeforeDialogOpening = document.activeElement.closest("td");
             }
         });
 
         useBus(this.props.list.model, "list-confirmation-dialog-closed", () => {
-            if (this.lastCellFocused) {
-                this.focus(this.lastCellFocused);
+            if (lastCellBeforeDialogOpening) {
+                this.focus(lastCellBeforeDialogOpening);
             }
         });
 
@@ -398,6 +402,7 @@ export class ListRenderer extends Component {
                     const toFocus = getElementToFocus(cell);
                     if (cell !== toFocus) {
                         this.focus(toFocus);
+                        this.lastEditedCell = { column, record: editedRecord };
                         break;
                     }
                 }
@@ -734,16 +739,7 @@ export class ListRenderer extends Component {
 
     getFormattedValue(column, record) {
         const fieldName = column.name;
-        const field = this.fields[fieldName];
-        const formatter = formatters.get(field.type, (val) => val);
-        const formatOptions = {
-            escape: false,
-            data: record.data,
-            isPassword: "password" in column.rawAttrs,
-            digits: column.rawAttrs.digits ? JSON.parse(column.rawAttrs.digits) : field.digits,
-            field: record.fields[fieldName],
-        };
-        return formatter(record.data[fieldName], formatOptions);
+        return getFormattedValue(record, fieldName, column.rawAttrs);
     }
 
     evalModifier(modifier, record) {
@@ -841,7 +837,7 @@ export class ListRenderer extends Component {
         return {
             offset: list.offset,
             limit: list.limit,
-            total: list.count,
+            total: group.count,
             onUpdate: async ({ offset, limit }) => {
                 await list.load({ limit, offset });
                 this.render(true);
@@ -1511,7 +1507,7 @@ export class ListRenderer extends Component {
     }
 
     showGroupPager(group) {
-        return !group.isFolded && group.list.limit < group.list.count;
+        return !group.isFolded && group.list.limit < group.count;
     }
 
     toggleGroup(group) {

@@ -21,7 +21,7 @@ export class WebsiteSwitcherSystray extends Component {
                 if (website.domain && !wUtils.isHTTPSorNakedDomainRedirection(website.domain, window.location.origin)) {
                     const { location: { pathname, search, hash } } = this.websiteService.contentWindow;
                     const path = pathname + search + hash;
-                    window.location.href = `${website.domain}/web#action=website.website_preview&path=${encodeURI(path)}&website_id=${website.id}`;
+                    window.location.href = `${website.domain}/web#action=website.website_preview&path=${encodeURIComponent(path)}&website_id=${encodeURIComponent(website.id)}`;
                 } else {
                     this.websiteService.goToWebsite({ websiteId: website.id });
                 }

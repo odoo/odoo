@@ -3,18 +3,18 @@
 # 	* sale
 # 
 # Translators:
-# Martin Trigaux, 2022
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # Jolien De Paepe, 2023
+# Martin Trigaux, 2023
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-10 09:48+0000\n"
+"POT-Creation-Date: 2023-04-14 05:52+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
+"Last-Translator: Erwin van der Ploeg <erwin@odooexperts.nl>, 2023\n"
+"Language-Team: Dutch (https://app.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -296,7 +296,7 @@ msgstr ""
 "            Bedankt voor je vertrouwen!\n"
 "        </t>\n"
 "        <t t-elif=\"transaction and transaction.state == 'pending'\">\n"
-"            is in afwachting. Het ontvangst van de betaling wordt bevestigd.\n"
+"            is in afwachting van. de betaling. Na ontvangst van de betaling wordt de order bevestigd.\n"
 "            <t t-if=\"object.reference\">\n"
 "                Je betalingskenmerk is <span style=\"font-weight:bold;\" t-out=\"object.reference or ''\"/>.\n"
 "            </t>\n"
@@ -643,7 +643,7 @@ msgstr "<i class=\"fa fa-print\"/> Afdrukken"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-times\"/> Reject"
-msgstr "<i class=\"fa fa-times\"/> Weiger"
+msgstr "<i class=\"fa fa-times\"/> Weigeren"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -723,10 +723,10 @@ msgstr "<span class=\"o_stat_text\">Verkocht</span>"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Amount</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Total Price</span>"
 msgstr ""
 "<span groups=\"account.group_show_line_subtotals_tax_excluded\">Bedrag</span>\n"
-"                                <span groups=\"account.group_show_line_subtotals_tax_included\">Totale prijs</span>"
+"                                    <span groups=\"account.group_show_line_subtotals_tax_included\">Totale Prijs</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1940,7 +1940,7 @@ msgstr "Vervaldatum"
 #. odoo-python
 #: code:addons/sale/models/sale_order.py:0
 #, python-format
-msgid "Expires on %(date)s"
+msgid "Expires on %(date)s"
 msgstr "Verloopt op %(date)s"
 
 #. module: sale
@@ -4806,7 +4806,7 @@ msgstr "Websiteberichten"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__website_message_ids
 msgid "Website communication history"
-msgstr "Website communicatie geschiedenis"
+msgstr "Website communicatiegeschiedenis"
 
 #. module: sale
 #. odoo-javascript

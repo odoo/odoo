@@ -193,7 +193,7 @@ export const websiteService = {
                 this.websiteRootInstance = undefined;
                 if (lang) {
                     invalidateSnippetCache = true;
-                    path = `/website/lang/${lang}?r=${encodeURIComponent(path)}`;
+                    path = `/website/lang/${encodeURIComponent(lang)}?r=${encodeURIComponent(path)}`;
                 }
                 action.doAction('website.website_preview', {
                     clearBreadcrumbs: true,

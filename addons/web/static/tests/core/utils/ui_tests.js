@@ -275,6 +275,45 @@ QUnit.module("UI", ({ beforeEach }) => {
         assert.ok(true, "No drag sequence should have been initiated");
     });
 
+    QUnit.test(
+        "Drag has a default tolerance of 10 pixels before initiating the dragging",
+        async (assert) => {
+            assert.expect(3);
+
+            class List extends Component {
+                setup() {
+                    useSortable({
+                        ref: useRef("root"),
+                        elements: ".item",
+                        onDragStart() {
+                            assert.step("Initation of the drag sequence");
+                        },
+                    });
+                }
+            }
+
+            List.template = xml`
+            <div t-ref="root" class="root">
+                <ul class="list">
+                    <li t-foreach="[1, 2, 3]" t-as="i" t-key="i" t-esc="i" class="item" />
+                </ul>
+            </div>`;
+
+            await mount(List, target);
+
+            // Move the element from only 5 pixels
+            await dragAndDrop(".item:first-child", ".item:first-child", { x: 5, y: 5 });
+            assert.verifySteps([], "No drag sequence should have been initiated");
+
+            // Move the element from more than 10 pixels
+            await dragAndDrop(".item:first-child", ".item:first-child", { x: 10, y: 10 });
+            assert.verifySteps(
+                ["Initation of the drag sequence"],
+                "A drag sequence should have been initiated"
+            );
+        }
+    );
+
     QUnit.test("Ignore specified elements", async (assert) => {
         assert.expect(6);
 

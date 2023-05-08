@@ -1328,7 +1328,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(groups[0], ".o_field_char", "should apply char widget");
         assert.strictEqual(
             groups[0].querySelector("strong").textContent,
-            "Custom Name : ",
+            "Custom Name: ",
             "label should be a 'Custom Name'"
         );
         assert.strictEqual(
@@ -1339,7 +1339,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         assert.containsOnce(groups[1], ".o_form_uri", "should apply m20 widget");
         assert.strictEqual(
             groups[1].querySelector("strong").textContent,
-            "user : ",
+            "user: ",
             "label should be a 'user'"
         );
         assert.strictEqual(
@@ -1424,6 +1424,85 @@ QUnit.module("Views", ({ beforeEach }) => {
         await clickEvent(target, 4);
         assert.containsOnce(target, ".o_cw_popover", "should open a popover clicking on event");
         assert.verifySteps(["_fetchSpecialDataForMyWidget"]);
+    });
+
+    QUnit.test("render popover: inside fullcalendar popover", async (assert) => {
+        assert.expect(13);
+
+        // add 10 records the same day
+        serverData.models.event.records = Array.from({ length: 10 }).map((_, i) => ({
+            id: i + 1,
+            name: `event ${i + 1}`,
+            start: "2016-12-14 10:00:00",
+            stop: "2016-12-14 15:00:00",
+            user_id: uid,
+        }));
+
+        let expectedRequest;
+        serviceRegistry.add(
+            "action",
+            {
+                ...actionService,
+                start() {
+                    const result = actionService.start(...arguments);
+                    const doAction = result.doAction;
+                    result.doAction = (request) => {
+                        assert.deepEqual(request, expectedRequest);
+                        return doAction(request);
+                    };
+                    return result;
+                },
+            },
+            { force: true }
+        );
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: `
+                <calendar date_start="start" date_stop="stop" mode="month">
+                    <field name="name" string="Custom Name" />
+                    <field name="partner_id" />
+                </calendar>
+            `,
+            mockRPC(route, { method }) {
+                if (method === "get_formview_id") {
+                    return Promise.resolve(false);
+                }
+            },
+        });
+
+        const visibleEventsSelector = ":not(.fc-limited) > :not(.fc-limited) > .fc-event";
+        assert.containsN(target, visibleEventsSelector, 4);
+
+        assert.containsOnce(target, ".fc-more");
+        assert.strictEqual(target.querySelector(".fc-more").textContent, "+6 more");
+
+        assert.containsNone(target, ".fc-popover");
+        await click(target, ".fc-more");
+        assert.containsOnce(target, ".fc-popover");
+        assert.containsN(target, `.fc-popover ${visibleEventsSelector}`, 10);
+
+        assert.containsNone(target, ".o_cw_popover");
+        await click(target, ".fc-popover .fc-event:nth-child(1)");
+        assert.containsOnce(target, ".o_cw_popover");
+
+        await triggerEvent(target, ".o_cw_popover .o_cw_popover_edit", "mousedown");
+        assert.containsOnce(target, ".o_cw_popover");
+        assert.containsOnce(target, ".fc-popover");
+
+        expectedRequest = {
+            type: "ir.actions.act_window",
+            res_model: "event",
+            res_id: 1,
+            views: [[false, "form"]],
+            target: "current",
+            context: {},
+        };
+        await click(target, ".o_cw_popover .o_cw_popover_edit");
+        assert.containsNone(target, ".o_cw_popover");
+        assert.containsOnce(target, ".fc-popover");
     });
 
     QUnit.test(`attributes hide_date and hide_time`, async (assert) => {
@@ -2571,6 +2650,41 @@ QUnit.module("Views", ({ beforeEach }) => {
         // Click on the "all" filter to reload all events
         await toggleFilter(target, "partner_ids", "all");
         assert.containsN(target, ".fc-event", 9, "should display 9 events on the week");
+    });
+
+    QUnit.test("dynamic filters with selection fields", async (assert) => {
+        serverData.models.event.fields.selection = {
+            name: "selection",
+            string: "Ambiance",
+            type: "selection",
+            selection: [
+                ["desert", "Desert"],
+                ["forest", "Forest"],
+            ],
+        };
+
+        serverData.models.event.records[0].selection = "forest";
+        serverData.models.event.records[1].selection = "desert";
+
+        await makeView({
+            type: "calendar",
+            resModel: "event",
+            serverData,
+            arch: /* xml */ `
+                <calendar date_start="start" date_stop="stop">
+                    <field name="selection" filters="1" />
+                </calendar>
+            `,
+        });
+
+        const section = findFilterPanelSection(target, "selection");
+        assert.deepEqual(section.querySelector(".o_cw_filter_label").textContent, "Ambiance");
+        assert.deepEqual(
+            [...section.querySelectorAll(".o_calendar_filter_item")].map((el) =>
+                el.textContent.trim()
+            ),
+            ["Forest", "Desert", "Undefined"]
+        );
     });
 
     QUnit.test("Colors: cycling through available colors", async (assert) => {
@@ -4542,7 +4656,7 @@ QUnit.module("Views", ({ beforeEach }) => {
 
         assert.strictEqual(
             target.querySelector(".o_cw_popover .o_cw_popover_fields_secondary").textContent,
-            "user : name : event 4"
+            "user: name: event 4"
         );
     });
 

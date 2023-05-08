@@ -360,7 +360,7 @@ def increment_fields_skiplock(records, *fields):
     """).format(
         table=Identifier(records._table),
         sets=SQL(', ').join(map(
-            SQL('{0} = {0} + 1').format,
+            SQL('{0} = COALESCE({0}, 0) + 1').format,
             map(Identifier, fields)
         ))
     )

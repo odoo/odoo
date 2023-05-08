@@ -9,7 +9,7 @@ import {
 } from "@web/core/l10n/dates";
 import { ORM } from "@web/core/orm_service";
 import { registry } from "@web/core/registry";
-import { groupBy as arrayGroupBy, sortBy as arraySortBy } from "@web/core/utils/arrays";
+import { cartesian, sortBy as arraySortBy } from "@web/core/utils/arrays";
 
 class UnimplementedRouteError extends Error {}
 
@@ -207,7 +207,7 @@ export class SampleServer {
         if (["date", "datetime"].includes(type)) {
             const fmt = SampleServer.FORMATS[interval];
             return parseDate(value).toFormat(fmt);
-        } else if (type === "many2one") {
+        } else if (["many2one", "many2many"].includes(type)) {
             const rec = this.data[relation].records.find(({ id }) => id === value);
             return [value, rec.display_name];
         } else {
@@ -450,20 +450,42 @@ export class SampleServer {
                 normalizedGroupBys.push(gb);
             }
         }
-        const groups = arrayGroupBy(records, (record) => {
-            const vals = {};
+
+        const groupsFromRecord = (record) => {
+            const values = [];
             for (const gb of normalizedGroupBys) {
                 const { fieldName, type } = gb;
-                let value;
+                let fieldVals;
                 if (["date", "datetime"].includes(type)) {
-                    value = this._formatValue(record[fieldName], gb);
+                    fieldVals = [this._formatValue(record[fieldName], gb)];
+                } else if (type === "many2many") {
+                    fieldVals = record[fieldName].length ? record[fieldName] : [false];
                 } else {
-                    value = record[fieldName];
+                    fieldVals = [record[fieldName]];
                 }
-                vals[fieldName] = value;
+                values.push(fieldVals.map((val) => ({ [fieldName]: val })));
             }
-            return JSON.stringify(vals);
-        });
+            const cart = cartesian(...values);
+            return cart.map((tuple) => {
+                if (!Array.isArray(tuple)) {
+                    tuple = [tuple];
+                }
+                return Object.assign({}, ...tuple);
+            });
+        };
+
+        const groups = {};
+        for (const record of records) {
+            const recordGroups = groupsFromRecord(record);
+            for (const group of recordGroups) {
+                const groupId = JSON.stringify(group);
+                if (!(groupId in groups)) {
+                    groups[groupId] = [];
+                }
+                groups[groupId].push(record);
+            }
+        }
+
         const measures = [];
         for (const measureSpec of params.fields || Object.keys(fields)) {
             const matches = measureSpec.match(MEASURE_SPEC_REGEX);
@@ -492,20 +514,26 @@ export class SampleServer {
             }
             group[countKey] = records.length;
             const firstElem = records[0];
+            const parsedId = JSON.parse(id);
             for (const gb of normalizedGroupBys) {
                 const { alias, fieldName, type } = gb;
-                group[alias] = this._formatValue(firstElem[fieldName], gb);
-                if (["date", "datetime"].includes(type)) {
-                    group.__range = {};
-                    const val = firstElem[fieldName];
-                    if (val) {
-                        const deserialize = type === "date" ? deserializeDate : deserializeDateTime;
-                        const serialize = type === "date" ? serializeDate : serializeDateTime;
-                        const from = deserialize(val).startOf(gb.interval);
-                        const to = SampleServer.INTERVALS[gb.interval](from);
-                        group.__range[alias] = { from: serialize(from), to: serialize(to) };
-                    } else {
-                        group.__range[alias] = false;
+                if (type === "many2many") {
+                    group[alias] = this._formatValue(parsedId[fieldName], gb);
+                } else {
+                    group[alias] = this._formatValue(firstElem[fieldName], gb);
+                    if (["date", "datetime"].includes(type)) {
+                        group.__range = {};
+                        const val = firstElem[fieldName];
+                        if (val) {
+                            const deserialize =
+                                type === "date" ? deserializeDate : deserializeDateTime;
+                            const serialize = type === "date" ? serializeDate : serializeDateTime;
+                            const from = deserialize(val).startOf(gb.interval);
+                            const to = SampleServer.INTERVALS[gb.interval](from);
+                            group.__range[alias] = { from: serialize(from), to: serialize(to) };
+                        } else {
+                            group.__range[alias] = false;
+                        }
                     }
                 }
             }

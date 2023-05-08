@@ -65,11 +65,6 @@ class Users(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        for values in vals_list:
-            if not values.get('login', False):
-                action = self.env.ref('base.action_res_users')
-                msg = _("You cannot create a new user from here.\n To create new user please go to configuration panel.")
-                raise exceptions.RedirectWarning(msg, action.id, _('Go to the configuration panel'))
 
         users = super(Users, self).create(vals_list)
 

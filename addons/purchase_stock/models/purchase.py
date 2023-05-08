@@ -50,7 +50,7 @@ class PurchaseOrder(models.Model):
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
         for order in self:
-            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'internal' and x.date_done)
+            pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage != 'supplier' and x.date_done)
             order.effective_date = min(pickings.mapped('date_done'), default=False)
 
     @api.depends('picking_ids', 'picking_ids.state')
@@ -364,15 +364,17 @@ class PurchaseOrderLine(models.Model):
                 lambda m: m.state not in ['cancel', 'done']
             ).product_packaging_id = values['product_packaging_id']
 
-        previous_product_qty = {line.id: line.product_uom_qty for line in lines}
+        previous_product_uom_qty = {line.id: line.product_uom_qty for line in lines}
+        previous_product_qty = {line.id: line.product_qty for line in lines}
         result = super(PurchaseOrderLine, self).write(values)
         if 'price_unit' in values:
             for line in lines:
                 # Avoid updating kit components' stock.move
                 moves = line.move_ids.filtered(lambda s: s.state not in ('cancel', 'done') and s.product_id == line.product_id)
-                moves.write({'price_unit': line.price_unit})
+                moves.write({'price_unit': line._get_stock_move_price_unit()})
         if 'product_qty' in values:
-            lines.with_context(previous_product_qty=previous_product_qty)._create_or_update_picking()
+            lines = lines.filtered(lambda l: float_compare(previous_product_qty[l.id], l.product_qty, precision_rounding=l.product_uom.rounding) != 0)
+            lines.with_context(previous_product_qty=previous_product_uom_qty)._create_or_update_picking()
         return result
 
     def action_product_forecast_report(self):

@@ -7,6 +7,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const { useListener } = require("@web/core/utils/hooks");
     const { parse } = require('web.field_utils');
+    const { _lt } = require('@web/core/l10n/translation');
 
     const { onMounted, onWillUnmount, useState } = owl;
 
@@ -495,7 +496,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
             return {
                 quantity: -qty,
                 price: orderline.price,
-                extras: { price_manually_set: true },
+                extras: { price_automatically_set: true },
                 merge: false,
                 refunded_orderline_id: orderline.id,
                 tax_ids: orderline.tax_ids,
@@ -658,6 +659,8 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
     };
 
     Registries.Component.add(TicketScreen);
+    TicketScreen.numpadActionName = _lt('Refund');
+    TicketScreen.searchPlaceholder = _lt('Search Orders...');
 
     return TicketScreen;
 });

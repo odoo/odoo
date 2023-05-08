@@ -74,6 +74,12 @@ export class HtmlFieldWysiwygAdapterComponent extends ComponentAdapter {
 
 export class HtmlField extends Component {
     setup() {
+        // readonly if nodes in <head> as the head will be removed on insertion in the DOM
+        // this prevents the field from overwriting the value with invalid HTML when relevant
+        const domParser = new DOMParser();
+        const parsedOriginal = domParser.parseFromString(this.props.value || '', 'text/html');
+        this.containsComplexHTML = !!parsedOriginal.head.innerHTML.trim();
+
         this.readonlyElementRef = useRef("readonlyElement");
         this.codeViewRef = useRef("codeView");
         this.iframeRef = useRef("iframe");
@@ -311,19 +317,21 @@ export class HtmlField extends Component {
     }
     /**
      * Toggle the code view and update the UI.
-     *
-     * @param {JQuery} $codeview
      */
     toggleCodeView() {
         this.state.showCodeView = !this.state.showCodeView;
 
-        this.wysiwyg.odooEditor.observerUnactive('toggleCodeView');
-        if (this.state.showCodeView) {
-            this.wysiwyg.odooEditor.toolbarHide();
-            const value = this.wysiwyg.getValue();
-            this.props.update(value);
-        } else {
-            this.wysiwyg.odooEditor.observerActive('toggleCodeView');
+        if (this.wysiwyg) {
+            this.wysiwyg.odooEditor.observerUnactive('toggleCodeView');
+            if (this.state.showCodeView) {
+                this.wysiwyg.odooEditor.toolbarHide();
+                const value = this.wysiwyg.getValue();
+                this.props.update(value);
+            } else {
+                this.wysiwyg.odooEditor.observerActive('toggleCodeView');
+            }
+        }
+        if (!this.state.showCodeView) {
             const $codeview = $(this.codeViewRef.el);
             const value = $codeview.val();
             this.props.update(value);
@@ -448,7 +456,7 @@ export class HtmlField extends Component {
                     cwindow.document.head.append(link);
                 }
                 for (const cssContent of asset.cssContents) {
-                    const style = cwindow.document.createElement('link');
+                    const style = cwindow.document.createElement('style');
                     style.setAttribute('type', 'text/css');
                     const textNode = cwindow.document.createTextNode(cssContent);
                     style.append(textNode);

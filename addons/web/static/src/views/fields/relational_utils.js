@@ -49,7 +49,7 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
     const env = useEnv();
     const addDialog = useOwnedDialogs();
 
-    function selectCreate({ domain, context, filters, title }) {
+    function selectCreate({ domain, context, filters, title, kanbanViewId }) {
         addDialog(SelectCreateDialog, {
             title: title || env._t("Select records"),
             noCreate: !activeActions.create,
@@ -61,6 +61,7 @@ export function useSelectCreate({ resModel, activeActions, onSelected, onCreateE
             onCreateEdit: () => onCreateEdit({ context }),
             dynamicFilters: filters,
             onUnselect,
+            kanbanViewId,
         });
     }
     return selectCreate;
@@ -252,12 +253,21 @@ export class Many2XAutocomplete extends Component {
                     try {
                         await this.props.quickCreate(request, params);
                     } catch (e) {
-                        if (e && e.name === "RPC_ERROR") {
+                        if (
+                            e &&
+                            e.name === "RPC_ERROR" &&
+                            e.exceptionName === "odoo.exceptions.ValidationError"
+                        ) {
                             const context = this.getCreationContext(request);
                             return this.openMany2X({ context });
                         }
                         // Compatibility with legacy code
-                        if (e && e.message && e.message.name === "RPC_ERROR") {
+                        if (
+                            e &&
+                            e.message &&
+                            e.message.name === "RPC_ERROR" &&
+                            e.message.exceptionName === "odoo.exceptions.ValidationError"
+                        ) {
                             // The event.preventDefault() is necessary because we still use the legacy
                             e.event.preventDefault();
                             const context = this.getCreationContext(request);
@@ -342,6 +352,7 @@ export class Many2XAutocomplete extends Component {
             context,
             filters: dynamicFilters,
             title,
+            kanbanViewId: this.props.kanbanViewId,
         });
     }
 

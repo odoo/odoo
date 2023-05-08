@@ -28,6 +28,7 @@ from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimety
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
 from odoo.addons.web.controllers.binary import Binary
+from odoo.addons.website.tools import get_base_domain
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +139,7 @@ class Website(Home):
 
         if not isredir and website.domain:
             domain_from = request.httprequest.environ.get('HTTP_HOST', '')
-            domain_to = werkzeug.urls.url_parse(website.domain).netloc
+            domain_to = get_base_domain(website.domain)
             if domain_from != domain_to:
                 # redirect to correct domain for a correct routing map
                 url_to = werkzeug.urls.url_join(website.domain, '/website/force/%s?isredir=1&path=%s' % (website.id, path))

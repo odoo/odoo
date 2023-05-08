@@ -11,7 +11,9 @@
         <field name="binding_view_types">list</field>
         <field name="state">code</field>
         <field name="code">
-if record:
+if not 'opportunity' in records.mapped('type'):
+    records.action_set_lost()
+elif records:
     action_values = env.ref('crm.crm_lead_lost_action').sudo().read()[0]
     action_values.update({'context': env.context})
     action = action_values

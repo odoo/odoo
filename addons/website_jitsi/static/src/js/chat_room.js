@@ -231,7 +231,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     _openMobileApplication: async function (roomName) {
         if (config.device.isMobile) {
             // we are on mobile, open the room in the application
-            window.location = `intent://${this.jitsiServer}/${roomName}#Intent;scheme=org.jitsi.meet;package=org.jitsi.meet;end`;
+            window.location = `intent://${this.jitsiServer}/${encodeURIComponent(roomName)}#Intent;scheme=org.jitsi.meet;package=org.jitsi.meet;end`;
             return true;
         }
         return false;

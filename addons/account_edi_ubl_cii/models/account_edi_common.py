@@ -2,8 +2,9 @@
 
 from odoo import _, models, Command
 from odoo.tools import float_repr
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.float_utils import float_round
+from odoo.tools.misc import formatLang
 
 from zeep import Client
 
@@ -110,6 +111,16 @@ class AccountEdiCommon(models.AbstractModel):
     # -------------------------------------------------------------------------
     # TAXES
     # -------------------------------------------------------------------------
+
+    def _validate_taxes(self, invoice):
+        """ Validate the structure of the tax repartition lines (invalid structure could lead to unexpected results)
+        """
+        for tax in invoice.invoice_line_ids.tax_ids:
+            try:
+                tax._validate_repartition_lines()
+            except ValidationError as e:
+                error_msg = _("Tax '%s' is invalid: %s", tax.name, e.args[0])  # args[0] gives the error message
+                raise ValidationError(error_msg)
 
     def _get_tax_unece_codes(self, invoice, tax):
         """
@@ -313,6 +324,16 @@ class AccountEdiCommon(models.AbstractModel):
 
         return invoice
 
+    def _import_retrieve_and_fill_partner(self, invoice, name, phone, mail, vat):
+        """ Retrieve the partner, if no matching partner is found, create it (only if he has a vat and a name)
+        """
+        invoice.partner_id = self.env['account.edi.format']._retrieve_partner(name=name, phone=phone, mail=mail, vat=vat)
+        if not invoice.partner_id and name and vat:
+            invoice.partner_id = self.env['res.partner'].create({'name': name, 'email': mail, 'phone': phone})
+            country_code = invoice.partner_id.commercial_partner_id.country_code
+            if vat and self.env['res.partner']._run_vat_test(vat, country_code, invoice.partner_id.is_company):
+                invoice.partner_id.vat = vat
+
     def _import_fill_invoice_allowance_charge(self, tree, invoice, journal, qty_factor):
         logs = []
         if '{urn:oasis:names:specification:ubl:schema:xsd' in tree.tag:
@@ -392,6 +413,7 @@ class AccountEdiCommon(models.AbstractModel):
 
     def _import_fill_invoice_down_payment(self, invoice, prepaid_node, qty_factor):
         """
+        DEPRECATED: removed in master
         Creates a down payment line on the invoice at import if prepaid_node (TotalPrepaidAmount in CII,
         PrepaidAmount in UBL) exists.
         qty_factor -1 if the xml is labelled as an invoice but has negative amounts -> conversion into a credit note
@@ -414,6 +436,19 @@ class AccountEdiCommon(models.AbstractModel):
                     }),
                 ]
             })
+
+    def _import_log_prepaid_amount(self, invoice_form, prepaid_node, qty_factor):
+        """
+        Log a message in the chatter at import if prepaid_node (TotalPrepaidAmount in CII, PrepaidAmount in UBL) exists.
+        """
+        prepaid_amount = float(prepaid_node.text) if prepaid_node is not None else 0.0
+        if not invoice_form.currency_id.is_zero(prepaid_amount):
+            amount = prepaid_amount * qty_factor
+            formatted_amount = formatLang(self.env, amount, currency_obj=invoice_form.currency_id)
+            return [
+                _("A payment of %s was detected.", formatted_amount)
+            ]
+        return []
 
     def _import_fill_invoice_line_values(self, tree, xpath_dict, invoice_line, qty_factor):
         """

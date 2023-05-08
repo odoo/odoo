@@ -4,8 +4,8 @@
     <t t-name="mass_mailing.MailingFilter" t-inherit="web.Many2OneField" primary="True" owl="1">
         <xpath expr="//div[hasclass('o_field_many2one_selection')]" position="inside">
             <div class="o_mass_mailing_filter_container">
-                <div t-attf-class="o_mass_mailing_save_filter_container pt-1 {{ !this.filter.canSaveFilter ? 'd-none': '' }}">
-                    <MailingFilterDropdown class="'o_mass_mailing_filter_dropdown'" togglerClass="'btn py-0'">
+                <div t-attf-class="o_mass_mailing_save_filter_container pt-0 pt-sm-1 {{ !this.filter.canSaveFilter ? 'd-none': '' }}">
+                    <MailingFilterDropdown class="'o_mass_mailing_filter_dropdown'" togglerClass="'btn py-0 ps-0 ps-sm-3'">
                         <t t-set-slot="toggler">
                             <span class="o_mass_mailing_add_filter">
                                 <span t-attf-class="o_mass_mailing_no_filter {{ this.props.record.data.mailing_filter_count ? 'd-none' : '' }}">Save as Favorite Filter</span>

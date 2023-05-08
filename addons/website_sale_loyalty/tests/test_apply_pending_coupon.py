@@ -1,10 +1,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo import http
+from odoo.tests import tagged, HttpCase
+
 from odoo.addons.sale_loyalty.tests.common import TestSaleCouponNumbersCommon
 from odoo.addons.website.tools import MockRequest
 from odoo.addons.website_sale_loyalty.controllers.main import WebsiteSale
-from odoo.tests import tagged
-from odoo.tests.common import HttpCase
 
 
 @tagged('-at_install', 'post_install')
@@ -33,9 +34,15 @@ class TestSaleCouponApplyPending(HttpCase, TestSaleCouponNumbersCommon):
             'points_granted': 1,
         }).generate_coupons()
         self.coupon = self.coupon_program.coupon_ids[0]
+        installed_modules = set(self.env['ir.module.module'].search([
+            ('state', '=', 'installed'),
+        ]).mapped('name'))
+        for _ in http._generate_routing_rules(installed_modules, nodb_only=False):
+            pass
 
     def test_01_activate_coupon_with_existing_program(self):
         order = self.empty_order
+        self.env['product.pricelist.item'].search([]).unlink()
 
         with MockRequest(self.env, website=self.website, sale_order_id=order.id, website_sale_current_pl=1) as request:
             self.WebsiteSaleController.cart_update_json(self.largeCabinet.id, set_qty=2)
@@ -51,18 +58,32 @@ class TestSaleCouponApplyPending(HttpCase, TestSaleCouponNumbersCommon):
 
     def test_02_pending_coupon_with_existing_program(self):
         order = self.empty_order
+        self.env['product.pricelist.item'].search([]).unlink()
 
         with MockRequest(self.env, website=self.website, sale_order_id=order.id, website_sale_current_pl=1) as request:
             self.WebsiteSaleController.cart_update_json(self.largeCabinet.id, set_qty=1)
             self.WebsiteSaleController.pricelist(self.global_program.rule_ids.code)
+            self.assertEqual(self.largeCabinet.lst_price, 320)
+            cabinet_sol = order.order_line.filtered(lambda sol: sol.product_id == self.largeCabinet)
+            promo_sol = (order.order_line - cabinet_sol)
+            self.assertTrue(cabinet_sol)
+            self.assertEqual(cabinet_sol.price_unit, 320)
+            self.assertEqual(cabinet_sol.price_total, 320)
+            self.assertEqual(promo_sol.price_total, -32)
+            self.assertEqual(order.amount_tax, 0)
+            self.assertEqual(order.cart_quantity, 1)
             self.assertEqual(order.amount_total, 288, "The order total should equal 288: 320 - 10%")
 
             self.WebsiteSaleController.activate_coupon(self.coupon.code)
             promo_code = request.session.get('pending_coupon_code')
+            self.assertEqual(order.amount_tax, 0)
+            self.assertEqual(order.cart_quantity, 1)
             self.assertEqual(order.amount_total, 288, "The order total should still equal 288 as the coupon for free product can't be applied since it requires 2 min qty")
             self.assertEqual(promo_code, self.coupon.code, "The promo code should be set in the pending coupon dict as it couldn't be applied, we save it for later reuse")
 
             self.WebsiteSaleController.cart_update_json(self.largeCabinet.id, add_qty=1)
             promo_code = request.session.get('pending_coupon_code')
             self.assertFalse(promo_code, "The promo code should be removed from the pending coupon dict as it should have been applied")
+            self.assertEqual(order.amount_tax, 0)
+            self.assertEqual(order.cart_quantity, 2)
             self.assertEqual(order.amount_total, 576, "The order total should equal 576: 2*320 - 0 (free product) - 10%")

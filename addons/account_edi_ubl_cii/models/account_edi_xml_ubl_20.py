@@ -345,6 +345,9 @@ class AccountEdiXmlUBL20(models.AbstractModel):
                 '_tax_category_vals_': tax_category_vals,
             }
 
+        # Validate the structure of the taxes
+        self._validate_taxes(invoice)
+
         # Compute the tax details for the whole invoice and each invoice line separately.
         taxes_vals = invoice._prepare_edi_tax_details(grouping_key_generator=grouping_key_generator)
 
@@ -463,6 +466,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
     # -------------------------------------------------------------------------
 
     def _import_fill_invoice_form(self, journal, tree, invoice, qty_factor):
+
+        def _find_value(xpath, element=tree):
+            # avoid 'TypeError: empty namespace prefix is not supported in XPath'
+            nsmap = {k: v for k, v in tree.nsmap.items() if k is not None}
+            return self.env['account.edi.format']._find_value(xpath, element, nsmap)
+
         logs = []
 
         if qty_factor == -1:
@@ -470,14 +479,12 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         # ==== partner_id ====
 
-        partner = self._import_retrieve_info_from_map(
-            tree,
-            self._import_retrieve_partner_map(self.env.company, journal.type),
-        )
-        if partner:
-            invoice.partner_id = partner
-        else:
-            logs.append(_("Could not retrieve the %s.", _("customer") if invoice.move_type in ('out_invoice', 'out_refund') else _("vendor")))
+        role = "Customer" if invoice.journal_id.type == 'sale' else "Supplier"
+        vat = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:CompanyID')
+        phone = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Telephone')
+        mail = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:ElectronicMail')
+        name = _find_value(f'//cac:Accounting{role}Party/cac:Party//cbc:Name')
+        self._import_retrieve_and_fill_partner(invoice, name=name, phone=phone, mail=mail, vat=vat)
 
         # ==== currency_id ====
 
@@ -554,10 +561,10 @@ class AccountEdiXmlUBL20(models.AbstractModel):
 
         logs += self._import_fill_invoice_allowance_charge(tree, invoice, journal, qty_factor)
 
-        # ==== Down Payment (prepaid amount) ====
+        # ==== Prepaid amount ====
 
         prepaid_node = tree.find('./{*}LegalMonetaryTotal/{*}PrepaidAmount')
-        self._import_fill_invoice_down_payment(invoice, prepaid_node, qty_factor)
+        logs += self._import_log_prepaid_amount(invoice, prepaid_node, qty_factor)
 
         # ==== invoice_line_ids: InvoiceLine/CreditNoteLine ====
 

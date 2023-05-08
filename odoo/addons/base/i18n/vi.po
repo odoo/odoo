@@ -6,17 +6,17 @@
 # Vo Thanh Thuy, 2022
 # Nancy Momoland <thanhnguyen.icsc@gmail.com>, 2022
 # Thin Tran <trvathin@gmail.com>, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Thi Huong Nguyen, 2023
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-02 11:00+0000\n"
+"POT-Creation-Date: 2023-04-14 06:17+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Thi Huong Nguyen, 2023\n"
-"Language-Team: Vietnamese (https://www.transifex.com/odoo/teams/41243/vi/)\n"
+"Language-Team: Vietnamese (https://app.transifex.com/odoo/teams/41243/vi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -552,7 +552,7 @@ msgid ""
 msgstr ""
 "\n"
 "\n"
-"Module này thêm một Đội ngũ Bán hàng tuỳ chỉnh vào POS. Việc này cho phép bạn xem và quản lý POS một cách dễ dàng hơn.\n"
+"Module này thêm một Đội ngũ Kinh doanh tuỳ chỉnh vào POS. Việc này cho phép bạn xem và quản lý POS một cách dễ dàng hơn.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_sale_margin
@@ -598,6 +598,17 @@ msgstr ""
 "Module này cho phép nhân viên thu ngân nhanh chóng giảm giá dựa trên\n"
 "tỷ lệ phần trăm cho khách hàng.\n"
 "\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_pos_daily_sales_reports
+msgid ""
+"\n"
+"\n"
+"This module allows the cashier to quickly print a X and a Z sale report\n"
+"for a given session or a Sales Details for multiple sessions\n"
+"and configs.\n"
+"\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_pos_epson_printer_restaurant
@@ -940,6 +951,14 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_mz_reports
+msgid ""
+"\n"
+"        Base module for Mozambican reports\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_project_timesheet_forecast_contract
 msgid ""
 "\n"
@@ -980,7 +999,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"        Cầu nối giữa Đội ngũ Hỗ trợ và Bán hàng FSM trong ngành\n"
+"        Cầu nối giữa Hỗ trợ và Bán hàng FSM trong ngành\n"
 "    "
 
 #. module: base
@@ -1184,7 +1203,7 @@ msgstr ""
 "\n"
 "        Xác định nhật ký mua hàng mặc định trên kho,\n"
 "        giúp chọn đúng nhật ký mua hàng trên đơn mua hàng khi\n"
-"        bạn thay đổi thao tác lấy hàng.\n"
+"        bạn thay đổi hoạt động lấy hàng.\n"
 "        hữu ích khi bạn thiết lập nhiều đơn vị GSTIN.\n"
 "    "
 
@@ -1210,7 +1229,7 @@ msgstr ""
 "\n"
 "        Xác định nhật ký bán hàng mặc định trên kho,\n"
 "        giúp chọn đúng nhật ký bán hàng trên đơn bán hàng khi\n"
-"        bạn thay đổi nhà kho.\n"
+"        bạn thay đổi kho hàng.\n"
 "        hữu ích khi bạn thiết lập nhiều đơn vị GSTIN.\n"
 "    "
 
@@ -1408,6 +1427,14 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,summary:base.module_l10n_mx_reports_closing
+msgid ""
+"\n"
+"        Mexico Month 13 Trial Balance Report\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_fr_fec_import
 msgid ""
 "\n"
@@ -1445,6 +1472,14 @@ msgstr ""
 "        https://github.com/DGFiP/Test-Compta-Demat\n"
 "\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_mz
+msgid ""
+"\n"
+"        Mozambican Accounting localization\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_sale_renting
@@ -1967,7 +2002,7 @@ msgid ""
 "    Adds Quality Control to workorders with IoT.\n"
 msgstr ""
 "\n"
-"     Thêm Kiểm soát Chất lượng vào lệnh làm việc với thiết bị IoT.\n"
+"     Thêm Kiểm soát Chất lượng vào công đoạn với thiết bị IoT.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp_workorder
@@ -1976,7 +2011,7 @@ msgid ""
 "    Adds Quality Control to workorders.\n"
 msgstr ""
 "\n"
-"     Thêm Kiểm soát Chất lượng vào lệnh làm việc\n"
+"     Thêm Kiểm soát Chất lượng vào công đoạn\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_mrp
@@ -1985,7 +2020,7 @@ msgid ""
 "    Adds workcenters to Quality Control\n"
 msgstr ""
 "\n"
-"    Thêm trung tâm làm việc vào Kiểm soát Chất lượng\n"
+"    Thêm khu vực sản xuất vào Kiểm soát Chất lượng\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gcc_invoice
@@ -2044,7 +2079,7 @@ msgid ""
 "    Create customizable quality worksheet for workorder.\n"
 msgstr ""
 "\n"
-"    Tạo bảng công tác chất lượng có thể tùy chỉnh cho lệnh làm việc.\n"
+"    Tạo bảng công tác chất lượng có thể tùy chỉnh cho công đoạn.\n"
 
 #. module: base
 #: model:ir.module.module,description:base.module_quality_control_worksheet
@@ -2224,6 +2259,16 @@ msgstr ""
 "\n"
 "    Lập kế hoạch cho đội ngũ và nhân viên với ca làm việc.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_lu_peppol_id
+msgid ""
+"\n"
+"    Some Luxembourg public institutions do not have a VAT number but have been assigned an arbitrary number \n"
+"    (see: https://pch.gouvernement.lu/fr/peppol.html). Thus, this module adds the Peppol Identifier field on \n"
+"    the account.move form view. If this field is set, it is then read when exporting electronic invoicing formats.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi_stock
@@ -2761,6 +2806,15 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_hk_hr_payroll_account
+msgid ""
+"\n"
+"Accounting Data for Hong Kong Payroll Rules\n"
+"===========================================\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_in_hr_payroll_account
 msgid ""
 "\n"
@@ -2871,6 +2925,14 @@ msgstr ""
 "Module này bổ sung thông báo khi báo cáo thuế đã sẵn sàng để gửi\n"
 "cho cơ quan quản lý.\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ee_reports
+msgid ""
+"\n"
+"Accounting Reports for Estonia\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_co_reports
@@ -3666,8 +3728,8 @@ msgstr ""
 "\n"
 "* Báo cáo cơ cấu chi phí\n"
 "\n"
-"Ngoài ra, cho phép tính toán giá thành của sản phẩm dựa trên Hoá đơn Nguyên vật liệu, sử dụng chi phí của các bộ phận và hoạt động của xưởng sản xuất.\n"
-"Một nút đã được thêm vào sản phẩm cùng với một hành động trong chế độ xem danh sách của sản phẩm.\n"
+"Ngoài ra, cho phép tính toán giá thành của sản phẩm dựa trên Hoá đơn Nguyên vật liệu, sử dụng chi phí của các bộ phận và hoạt động của khu vực sản xuất.\n"
+"Một nút đã được thêm vào sản phẩm cùng với một hoạt động trong chế độ xem danh sách của sản phẩm.\n"
 "Nếu tính năng định giá tồn kho tự động đang hoạt động, các bút toán kế toán cần thiết sẽ được tạo.\n"
 "\n"
 
@@ -4190,32 +4252,13 @@ msgid ""
 "Legal\n"
 "-----\n"
 "**The use of pos_blackbox_be sources is only certified on odoo.com SaaS platform\n"
-"for version 13.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
+"for version 16.0.** Contact Odoo SA before installing pos_blackbox_be module.\n"
 "\n"
 "An obfuscated and certified version of the pos_blackbox_be may be provided on\n"
 "requests for on-premise installations.\n"
 "No modified version is certified and supported by Odoo SA.\n"
 "    "
 msgstr ""
-"\n"
-"Máy tính Tiền đã Đăng ký của Bỉ\n"
-"================================\n"
-"\n"
-"Module này biến module POS thành máy tính tiền được chứng nhận của Bỉ.\n"
-"\n"
-"Thông tin bổ sung:\n"
-"  * http://www.systemedecaisseenregistreuse.be/\n"
-"  * http://www.geregistreerdkassasysteem.be/\n"
-"\n"
-"Tính hợp pháp\n"
-"-----\n"
-"**Việc sử dụng các nguồn pos_blackbox_be chỉ được chứng nhận trên nền tảng SaaS của odoo.com\n"
-"phiên bản 13.0.** Hãy liên hệ với Odoo SA trước khi cài đặt module pos_blackbox_be.\n"
-"\n"
-"Một phiên bản pos_blackbox_be đã được làm rối và chứng nhận có thể được cung cấp theo\n"
-"yêu cầu cài đặt on-premise.\n"
-"Odoo SA không chứng nhận và hỗ trợ bất kỳ phiên bản sửa đổi nào.\n"
-"    "
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_bo
@@ -5063,6 +5106,19 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ec_edi
+msgid ""
+"\n"
+"EDI Ecuadorian Localization\n"
+"===========================\n"
+"Adds electronic documents with its XML, RIDE, with electronic signature and direct connection to tax authority SRI,\n"
+"\n"
+"The supported documents are Invoices, Credit Notes, Debit Notes, Purchase Liquidations and Withholds\n"
+"\n"
+"Includes automations to easily predict the withholding tax to be applied to each purchase invoice\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_mx_edi
 msgid ""
 "\n"
@@ -5312,6 +5368,16 @@ msgstr ""
 "\n"
 "Gia tăng lead được tạo tự động thông qua cuộc hẹn với thông tin khách truy cập trang web được thu thập như ngôn ngữ, \n"
 "quốc gia và thông tin chi tiết chẳng hạn các trang mà lead đã truy cập (thông qua liên kết đến khách truy cập trang web).\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_cl_edi_exports
+msgid ""
+"\n"
+"Even when the quantity of packages is apparently only inherent to stock application, we need a field for this \n"
+"in the invoice, because that info could also depend on the DUS declaration.\n"
+"We should also consider that there may be users without the inventory application installed and keep a less\n"
+"complex logic.\n"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_address_extended
@@ -5842,6 +5908,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_in_reports_gstr_pos
+msgid ""
+"\n"
+"GSTR-1 return data set as per point of sale orders\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_gamification
 msgid ""
 "\n"
@@ -6077,6 +6151,15 @@ msgid ""
 msgstr ""
 "\n"
 "Tích hợp Hỗ trợ với Nghỉ phép\n"
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_hk_hr_payroll
+msgid ""
+"\n"
+"Hong Kong Payroll Rules.\n"
+"========================\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_base_import_module
@@ -6404,6 +6487,16 @@ msgstr ""
 "    "
 
 #. module: base
+#: model:ir.module.module,description:base.module_l10n_ke_hr_payroll_bik
+msgid ""
+"\n"
+"Kenyan Payroll Rules\n"
+"========================================\n"
+"This module is only temporary for its purpose is to add new fields in a stable version (16.0, 16.1).\n"
+"    "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_l10n_ke_hr_payroll
 msgid ""
 "\n"
@@ -6567,7 +6660,7 @@ msgstr ""
 "* Bảo trì phòng ngừa và khắc phục\n"
 "* Xác định các giai đoạn khác nhau cho các yêu cầu bảo trì của bạn\n"
 "* Lập kế hoạch yêu cầu bảo trì (đồng thời là phòng ngừa định kỳ)\n"
-"* Trang thiết bị liên quan đến trung tâm làm việc\n"
+"* Trang thiết bị liên quan đến khu vực sản xuất\n"
 "* MTBF, MTTR, ...\n"
 
 #. module: base
@@ -6965,7 +7058,7 @@ msgstr ""
 "Kế hoạch Sản xuất Tổng thể\n"
 "==========================\n"
 "\n"
-"Đôi khi bạn cần tạo đơn mua hàng cho các thành phần của\n"
+"Đôi khi bạn cần tạo đơn mua hàng cho các nguyên liệu của\n"
 "lệnh sản xuất mà sau này mới được tạo ra, hoặc cho lệnh sản xuất\n"
 "mà sau này bạn mới tạo đơn bán hàng. Giải pháp là \n"
 "dự báo doanh số và dựa vào đó bạn sẽ tạo ra một số lệnh sản xuất\n"
@@ -7058,7 +7151,7 @@ msgstr ""
 "===============================\n"
 "\n"
 "Một tài nguyên đại diện cho một yếu tố nào đó có thể được lên lịch (một nhà phát triển của một nhiệm\n"
-"vụ hoặc một xưởng sản xuất của các lệnh sản xuất). Module này quản lý một lịch tài nguyên \n"
+"vụ hoặc một khu vực sản xuất của các lệnh sản xuất). Module này quản lý một lịch tài nguyên \n"
 "được liên kết với mọi tài nguyên. Nó cũng quản lý nghỉ phép của mọi tài nguyên.\n"
 "    "
 
@@ -7641,7 +7734,7 @@ msgid ""
 "    "
 msgstr ""
 "\n"
-"PLM cho lệnh làm việc.\n"
+"PLM cho công đoạn.\n"
 "=================================================\n"
 "    "
 
@@ -7974,7 +8067,7 @@ msgstr ""
 "Cơ sở Chất lượng\n"
 "===============\n"
 "* Xác định các yếu tố chất lượng hình thành bản kiểm tra chất lượng cho những đợt lấy hàng,\n"
-"   lệnh sản xuất hoặc lệnh làm việc (quality_mrp)\n"
+"   lệnh sản xuất hoặc công đoạn (quality_mrp)\n"
 "* Cảnh báo chất lượng có thể được tạo riêng hoặc liên quan đến bản kiểm tra chất lượng\n"
 "* Yếu tố đo lường có thể được thêm vào bản kiểm tra chất lượng với mức độ tối thiểu/tối đa\n"
 "* Xác định các giai đoạn trong cảnh báo chất lượng\n"
@@ -7995,7 +8088,7 @@ msgstr ""
 "Kiểm soát Chất lượng\n"
 "===============\n"
 "* Xác định các yếu tố chất lượng hình thành bản kiểm tra chất lượng cho những đợt lấy hàng,\n"
-" lệnh sản xuất hoặc lệnh làm việc (quality_mrp)\n"
+" lệnh sản xuất hoặc công đoạn (quality_mrp)\n"
 "* Cảnh báo chất lượng có thể được tạo riêng hoặc liên quan đến bản kiểm tra chất lượng\n"
 "* Yếu tố đo lường có thể được thêm vào bản kiểm tra chất lượng với mức độ tối thiểu/tối đa\n"
 "* Xác định các giai đoạn trong cảnh báo chất lượng\n"
@@ -8648,7 +8741,7 @@ msgstr ""
 "\n"
 "     Bảo mật: xâu chuỗi thuật toán để xác minh tính không thể thay đổi\n"
 "\n"
-"     Lưu: chốt doanh số bán hàng tự động với việc tính toán toàn giai đoạn và tổng tích lũy (hàng ngày, hàng tháng, hàng năm)\n"
+"     Lưu: chốt doanh số bán hàng tự động với việc tính toán cả kỳ và tổng tích lũy (hàng ngày, hàng tháng, hàng năm)\n"
 "\n"
 "     Truy cập để tải xuống Chứng nhận Tuân thủ bắt buộc mà Odoo SA cung cấp (chỉ dành cho người dùng Odoo Enterprise)\n"
 
@@ -8876,6 +8969,14 @@ msgstr ""
 "Đây là module cơ sở để quản lý sơ đồ kế toán cho Ai Cập trong Odoo.\n"
 "==============================================================================\n"
 "    "
+
+#. module: base
+#: model:ir.module.module,description:base.module_l10n_ee
+msgid ""
+"\n"
+"This is the base module to manage the accounting chart for Estonia in Odoo.\n"
+"    "
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,description:base.module_l10n_gr
@@ -9581,17 +9682,6 @@ msgstr ""
 "    "
 
 #. module: base
-#: model:ir.module.module,description:base.module_pos_hr_l10n_be
-msgid ""
-"\n"
-"This module allows Employees (and not users) to log in to the Point of Sale application using the fiscal data module\n"
-"    "
-msgstr ""
-"\n"
-"Module này cho phép Nhân viên (không phải người dùng) đăng nhập vào ứng dụng POS bằng module dữ liệu tài chính\n"
-"    "
-
-#. module: base
 #: model:ir.module.module,description:base.module_rating
 msgid ""
 "\n"
@@ -9654,7 +9744,7 @@ msgstr ""
 "Sử dụng các hành động tự động để tự động kích hoạt hành động cho những màn hình khác nhau.\n"
 "\n"
 "**Ví dụ:** Một lead do một người dùng cụ thể tạo có thể tự động được gán cho một Đội ngũ \n"
-"Bán hàng cụ thể, hoặc một cơ hội vẫn ở trạng thái chờ xử lý sau 14 ngày có thể \n"
+"Kinh doanh cụ thể, hoặc một cơ hội vẫn ở trạng thái chờ xử lý sau 14 ngày có thể \n"
 "kích hoạt email nhắc nhở tự động.\n"
 "    "
 
@@ -9869,7 +9959,7 @@ msgstr ""
 "Module này cho phép bạn quản lý các Hợp đồng Mua hàng.\n"
 "===========================================================\n"
 "\n"
-"Quản lý thông báo mời thầu và đơn đặt hàng thường xuyên. Các thông báo mời thầu được sử dụng để nhận\n"
+"Quản lý thông báo mời thầu và hợp đồng khung. Các thông báo mời thầu được sử dụng để nhận\n"
 "báo giá cạnh tranh từ các nhà cung cấp khác nhau và chọn ra những báo giá tốt nhất. Đơn \n"
 "đặt hàng thường xuyên là thỏa thuận giữa bạn và nhà cung cấp để hưởng lợi từ mức giá ấn định trước.\n"
 
@@ -10043,7 +10133,7 @@ msgid ""
 "You can track your vendors, customers and other contacts.\n"
 msgstr ""
 "\n"
-"Module này cho bạn khả năng xem nhanh danh bạ mà bạn có thể truy cập từ trang chủ.\n"
+"Module này cho bạn khả năng xem nhanh liên hệ mà bạn có thể truy cập từ trang chủ.\n"
 "Bạn có thể theo dõi các nhà cung cấp, khách hàng và các địa chỉ liên hệ khác của mình.\n"
 
 #. module: base
@@ -10431,6 +10521,24 @@ msgstr ""
 "Đồng thời triển khai chiến lược xuất hàng Hết hạn trước Xuất trước (FEFO) được sử dụng rộng rãi, ví dụ như trong các ngành công nghiệp thực phẩm.\n"
 
 #. module: base
+#: model:ir.module.module,description:base.module_transifex
+msgid ""
+"\n"
+"Transifex integration\n"
+"=====================\n"
+"This module will add a link to the Transifex project in the translation view.\n"
+"The purpose of this module is to speed up translations of the main modules.\n"
+"\n"
+"To work, Odoo uses Transifex configuration files `.tx/config` to detect the\n"
+"project source. Custom modules will not be translated (as not published on\n"
+"the main Transifex project).\n"
+"\n"
+"The language the user tries to translate must be activated on the Transifex\n"
+"project.\n"
+"        "
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_auth_totp
 msgid ""
 "\n"
@@ -10600,7 +10708,7 @@ msgid ""
 " "
 msgstr ""
 "\n"
-"Nhờ việc sử dụng ứng dụng này, bạn có thể quản lý Đội ngũ kinh doanh bán hàng bằng CRM và/hoặc Bán hàng\n"
+"Nhờ việc sử dụng ứng dụng này, bạn có thể quản lý Đội ngũ kinh doanh bằng CRM và/hoặc Bán hàng\n"
 "=======================================================================\n"
 " "
 
@@ -12805,6 +12913,11 @@ msgid "Access to unauthorized or invalid companies."
 msgstr "Truy cập vào các công ty trái phép hoặc không hợp lệ."
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_account
+msgid "Account"
+msgstr "Tài khoản"
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_account_auto_transfer
 msgid "Account Automatic Transfers"
 msgstr "Tài khoản Chuyển khoản Tự động"
@@ -13245,6 +13358,11 @@ msgstr "Thêm tùy chọn giao hàng miễn phí vào phần thưởng của b�
 #: model_terms:ir.ui.view,arch_db:base.view_users_form_simple_modif
 msgid "Add a language"
 msgstr "Thêm một ngôn ngữ"
+
+#. module: base
+#: model:ir.module.module,summary:base.module_transifex
+msgid "Add a link to edit a translation in Transifex"
+msgstr "Thêm liên kết để chỉnh sửa bản dịch trong Transifex"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_account_reports_tax_reminder
@@ -14506,8 +14624,8 @@ msgstr "Úc"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_au
-msgid "Australian - Accounting"
-msgstr "Úc - Kế toán"
+msgid "Australia - Accounting"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_au_keypay
@@ -14902,7 +15020,7 @@ msgstr "Mã vạch %s"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_barcodes_gs1_nomenclature
 msgid "Barcode - GS1 Nomenclature"
-msgstr "Mã vạch - Quy tắc GS1"
+msgstr "Mã vạch - Phép đặt tên GS1"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_barcode_product_expiry
@@ -15111,11 +15229,6 @@ msgstr "Bảng lương Bỉ - Chuyên cần"
 #: model:ir.module.module,shortdesc:base.module_pos_blackbox_be
 msgid "Belgian Registered Cash Register"
 msgstr "Máy tính Tiền đã Đăng ký của Bỉ"
-
-#. module: base
-#: model:ir.module.module,shortdesc:base.module_pos_hr_l10n_be
-msgid "Belgian Registered Cash Register Employee module"
-msgstr "Máy tính Tiền đã Đăng ký của Bỉ Module Nhân viên"
 
 #. module: base
 #: model:res.country,name:base.be
@@ -16075,6 +16188,7 @@ msgstr ""
 " được trả về cuối cùng sẽ được sử dụng làm giá trị trả về chung."
 
 #. module: base
+#: model:ir.module.category,name:base.module_category_localization_chile
 #: model:res.country,name:base.cl
 msgid "Chile"
 msgstr "Chile"
@@ -16971,6 +17085,13 @@ msgid "Country Name"
 msgstr "Tên Quốc gia"
 
 #. module: base
+#. odoo-python
+#: code:addons/base/models/res_country.py:0
+#, python-format
+msgid "Country code cannot be empty"
+msgstr ""
+
+#. module: base
 #: model:ir.model,name:base.model_res_country_state
 msgid "Country state"
 msgstr "Tỉnh/TP/Bang"
@@ -17649,6 +17770,11 @@ msgid "DLE 26 110 x 220 mm"
 msgstr "DLE 26 110 x 220 mm"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_daily_sales_reports
+msgid "Daily X and Z sales reports of a Point of Sale session"
+msgstr ""
+
+#. module: base
 #. odoo-python
 #: code:addons/base/models/ir_qweb_fields.py:0
 #, python-format
@@ -17696,7 +17822,7 @@ msgstr "Cơ sở dữ liệu"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_attachment__db_datas
 msgid "Database Data"
-msgstr "Dữ liệu của Cơ sở dữ liệu"
+msgstr "Dữ liệu trong cơ sở dữ liệu"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_actions_act_window__res_id
@@ -18720,11 +18846,6 @@ msgid "EDI v4.0 for Mexico (COMEX)"
 msgstr "EDI v4.0 cho Mexico (COMEX)"
 
 #. module: base
-#: model:res.country,vat_label:base.us
-msgid "EIN"
-msgstr "EIN"
-
-#. module: base
 #: model:ir.module.module,shortdesc:base.module_hw_escpos
 msgid "ESC/POS Hardware Driver"
 msgstr "Trình điều khiển Phần cứng ESC/POS"
@@ -18779,6 +18900,11 @@ msgstr "Ecuador"
 #: model:ir.module.module,shortdesc:base.module_l10n_ec
 msgid "Ecuadorian Accounting"
 msgstr "Kế toán Ecuador"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ec_edi
+msgid "Ecuadorian Accounting EDI"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_P
@@ -18908,6 +19034,11 @@ msgstr "Phiếu Giao hàng Điện tử cho Peru (phương pháp OSE) và UBL 2.
 #. module: base
 #: model:ir.module.module,summary:base.module_l10n_pe_edi_stock_20
 msgid "Electronic Delivery Note for Peru (REST API method)"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_cl_edi_exports
+msgid "Electronic Exports of Goods for Chile"
 msgstr ""
 
 #. module: base
@@ -19159,7 +19290,7 @@ msgid ""
 "* Cost Structure report (mrp_account)"
 msgstr ""
 "Mở rộng Enterprise cho Sản xuất\n"
-"* Lập kế hoạch lệnh làm việc. Kiểm tra kế hoạch theo chế độ xem Gantt được nhóm theo đơn đặt hàng sản xuất/xưởng sản xuất\n"
+"* Lập kế hoạch công đoạn. Kiểm tra kế hoạch theo chế độ xem Gantt được nhóm theo đơn đặt hàng sản xuất/khu vực sản xuất\n"
 "* Báo cáo truy xuất nguồn gốc\n"
 "* Báo cáo Cấu trúc Chi phí (mrp_account)"
 
@@ -19257,6 +19388,16 @@ msgstr "Đã xảy ra lỗi! Bạn không thể tạo menu đệ quy."
 #: model:res.country,name:base.ee
 msgid "Estonia"
 msgstr "Estonia"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ee
+msgid "Estonia - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ee_reports
+msgid "Estonia - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.sz
@@ -21487,6 +21628,16 @@ msgid "Hong Kong - Accounting"
 msgstr "Hong Kong - Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll
+msgid "Hong Kong - Payroll"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_hk_hr_payroll_account
+msgid "Hong Kong - Payroll with Accounting"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,help:base.field_ir_mail_server__smtp_host
 msgid "Hostname or IP of SMTP server"
 msgstr "Tên máy chủ hoặc IP của máy chủ SMTP"
@@ -22242,6 +22393,11 @@ msgid "Indian - GSTR India eFiling"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_in_reports_gstr_pos
+msgid "Indian - GSTR India eFiling with POS"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_in_pos
 msgid "Indian - Point of Sale"
 msgstr "Ấn Độ - POS"
@@ -22779,7 +22935,7 @@ msgstr "Xmlid %(xmlid)s không hợp lệ cho nút loại hành động."
 #: model:ir.module.module,shortdesc:base.module_stock
 #: model_terms:ir.ui.view,arch_db:base.user_groups_view
 msgid "Inventory"
-msgstr "Tồn kho"
+msgstr "Kho"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_purchase_price_diff
@@ -23060,6 +23216,11 @@ msgstr "Kenya - Báo cáo Kế toán"
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll
 msgid "Kenya - Payroll"
 msgstr "Kenya - Bảng lương"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_bik
+msgid "Kenya - Payroll additionnal fields"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_l10n_ke_hr_payroll_account
@@ -23705,6 +23866,11 @@ msgid "Link Tracker"
 msgstr "Trình theo dõi Liên kết"
 
 #. module: base
+#: model:ir.module.module,summary:base.module_pos_sale_stock_renting
+msgid "Link between PoS and Stock Rental."
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_timesheet_grid_holidays
 msgid "Link between timesheet and time off"
 msgstr "Liên kết giữa bảng chấm công và nghỉ phép"
@@ -23733,11 +23899,6 @@ msgstr "Module liên kết giữa POS và Bán hàng"
 #: model:ir.module.module,summary:base.module_pos_sale_margin
 msgid "Link module between Point of Sale and Sales Margin"
 msgstr "Module liên kết module giữa POS và Biên lợi nhuận Bán hàng"
-
-#. module: base
-#: model:ir.module.module,summary:base.module_pos_hr_l10n_be
-msgid "Link module between Pos Blackbox Be and Pos HR"
-msgstr "Module liên kết giữa Pos Blackbox Be và Pos HR"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_pos_sale_product_configurator
@@ -23907,6 +24068,11 @@ msgid "Luxembourg - Payroll with Accounting"
 msgstr "Luxembourg - Tính lương với Kế toán"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_lu_peppol_id
+msgid "Luxembourg - Peppol Identifier"
+msgstr ""
+
+#. module: base
 #: model:res.partner.industry,full_name:base.res_partner_industry_M
 msgid "M - PROFESSIONAL, SCIENTIFIC AND TECHNICAL ACTIVITIES"
 msgstr "M - HOẠT ĐỘNG NGHIỆP VỤ VÀ KHOA HỌC KỸ THUẬT"
@@ -23954,7 +24120,7 @@ msgstr "Thầu phụ của MRP"
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_expiry
 msgid "MRP Workorder Expiry"
-msgstr "MRP Thời hạn lệnh làm việc"
+msgstr "MRP Thời hạn công đoạn"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_quality_mrp
@@ -24595,7 +24761,7 @@ msgstr "Gửi sms hàng loạt theo đơn đặt hàng"
 #: model:ir.module.module,shortdesc:base.module_mrp_mps
 #: model:ir.module.module,summary:base.module_mrp_mps
 msgid "Master Production Schedule"
-msgstr "Kế hoạch Sản xuât Chính"
+msgstr "Kế hoạch sản xuất tổng thể"
 
 #. module: base
 #: model:res.country,name:base.mr
@@ -24728,6 +24894,11 @@ msgstr "Mexico - Hướng dẫn Giao hàng Điện tử Comex"
 #: model:ir.module.module,shortdesc:base.module_l10n_mx_edi_stock_extended_40
 msgid "Mexico - Electronic Delivery Guide Comex 4.0"
 msgstr "Mexico - Hướng dẫn Giao hàng Điện tử Comex 4.0"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mx_reports_closing
+msgid "Mexico - Month 13 Trial Balance"
+msgstr ""
 
 #. module: base
 #: model:res.country,name:base.fm
@@ -25280,6 +25451,16 @@ msgstr "Ma-rốc - Kế toán"
 #: model:res.country,name:base.mz
 msgid "Mozambique"
 msgstr "Mozambique"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mz
+msgid "Mozambique - Accounting"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_l10n_mz_reports
+msgid "Mozambique - Accounting Reports"
+msgstr ""
 
 #. module: base
 #: model:res.partner.title,shortcut:base.res_partner_title_mister
@@ -26237,8 +26418,8 @@ msgstr ""
 "vì vậy mọi thành viên đều có thể làm việc hiệu quả.\n"
 "\n"
 "Tự động chuyển, sắp xếp và lọc các email đến. CRM của Odoo xử lý các email đến \n"
-"và chuyển chúng đến đúng cơ hội kinh doanh hoặc Đội ngũ Bán hàng. Các lead mới\n"
-"được tạo nhanh chóng và những nhân viên bán hàng quan tâm đến lead này sẽ nhận được thông báo tự động.\n"
+"và chuyển chúng đến đúng cơ hội kinh doanh hoặc Đội ngũ kinh doanh. Các lead mới\n"
+"được tạo nhanh chóng và những nhân viên kinh doanh quan tâm đến lead này sẽ nhận được thông báo tự động.\n"
 "Chương trình mang tính Hợp tác\n"
 "--------------------\n"
 "\n"
@@ -26273,11 +26454,11 @@ msgstr ""
 "\n"
 "Củng cố các thói quen tốt và cải thiện tỷ lệ thành công bằng việc vinh danh và\n"
 "trao thưởng tức thì được lấy cảm hứng từ [cơ chế trò chơi] (http://en.wikipedia.org/wiki/Gamification).\n"
-"Tổ chức các Đội ngũ kinh doanh bán hàng theo những mục tiêu kinh doanh rõ ràng và tạo cho họ các thách thức, mục tiêu cá nhân và bảng thành tích.\n"
+"Tổ chức các Đội ngũ kinh doanh theo những mục tiêu kinh doanh rõ ràng và tạo cho họ các thách thức, mục tiêu cá nhân và bảng thành tích.\n"
 "\n"
 "### Bảng thành tích\n"
 "\n"
-"Khuyến khích các trưởng nhóm và khả năng cạnh tranh giữa các đội ngũ bán hàng bằng cách sử dụng tỷ lệ hiệu suất.\n"
+"Khuyến khích các trưởng nhóm và khả năng cạnh tranh giữa các đội ngũ kinh doanh bằng cách sử dụng tỷ lệ hiệu suất.\n"
 "\n"
 "### Mục tiêu Cá nhân\n"
 "\n"
@@ -26556,11 +26737,11 @@ msgstr ""
 "Lập kế hoạch Tài nguyên Sản xuất của Odoo\n"
 "------------------------------------\n"
 "\n"
-"Quản lý Hóa đơn Nguyên vật liệu, lập kế hoạch lệnh sản xuất, theo dõi lệnh làm việc với\n"
+"Quản lý Hóa đơn Nguyên vật liệu, lập kế hoạch lệnh sản xuất, theo dõi công đoạn với\n"
 "ứng dụng <a href=\"https://www.odoo.com/app/manufacturing\">Sản xuất Mã nguồn Mở</a> của Odoo.\n"
 "\n"
 "Odoo giúp bạn quản lý toàn bộ hoạt động lắp ráp hoặc sản xuất. Lên lịch \n"
-"lệnh sản xuất và lệnh làm việc một cách tự động. Xem lại kế hoạch\n"
+"lệnh sản xuất và công đoạn một cách tự động. Xem lại kế hoạch\n"
 "được đề xuất với chế độ xem kanban và gantt thông minh. Sử dụng các tính năng phân tích\n"
 "nâng cao để phát hiện tình trạng tắc nghẽn nguồn tài nguyên và vị trí hàng tồn kho.\n"
 "\n"
@@ -27877,7 +28058,7 @@ msgid ""
 "Odoo is currently processing a scheduled action.\n"
 "Module operations are not possible at this time, please try again later or contact your system administrator."
 msgstr ""
-"Odoo hiện đang xử lý một hành động đã lên lịch.\n"
+"Odoo hiện đang xử lý một hoạt động đã lên lịch.\n"
 "Không thể triển khai module vào lúc này, vui lòng thử lại sau hoặc liên hệ với quản trị viên hệ thống của bạn."
 
 #. module: base
@@ -28715,7 +28896,7 @@ msgstr "PDF"
 #: model:ir.module.module,shortdesc:base.module_mrp_workorder_plm
 #: model:ir.module.module,summary:base.module_mrp_workorder_plm
 msgid "PLM for workorder"
-msgstr "PLM cho lệnh làm việc"
+msgstr "PLM cho công đoạn"
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__base_language_export__format__po
@@ -29358,13 +29539,6 @@ msgstr "Vui lòng chọn đối tượng để tạo trước khi chọn giá tr
 
 #. module: base
 #. odoo-python
-#: code:addons/base/models/ir_model.py:0
-#, python-format
-msgid "Please specify a valid model for the object relation"
-msgstr "Vui lòng chỉ định một đối tượng hợp lệ cho mối quan hệ đối tượng"
-
-#. module: base
-#. odoo-python
 #: code:addons/base/models/res_users.py:0
 #, python-format
 msgid ""
@@ -29393,9 +29567,19 @@ msgid "Point of Sale - Coupons & Loyalty"
 msgstr "Điểm bán hàng - Phiếu thưởng & Khách hàng thân thiết"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_daily_sales_reports
+msgid "Point of Sale Daily Sales Reports"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_discount
 msgid "Point of Sale Discounts"
 msgstr "Chiết khấu Điểm bán lẻ"
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_pos_sale_stock_renting
+msgid "Point of Sale Rental Stock"
+msgstr ""
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_pos_settle_due
@@ -30472,9 +30656,14 @@ msgid "RTN"
 msgstr "RTN"
 
 #. module: base
-#: model:res.country,vat_label:base.ec
+#: model:res.country,vat_label:base.ec model:res.country,vat_label:base.pe
 msgid "RUC"
 msgstr "RUC"
+
+#. module: base
+#: model:res.country,vat_label:base.cl
+msgid "RUT"
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields.selection,name:base.selection__res_company__font__raleway
@@ -32587,7 +32776,7 @@ msgstr ""
 #. module: base
 #: model_terms:ir.actions.act_window,help:base.res_partner_industry_action
 msgid "Specify industries to classify your contacts and draw up reports."
-msgstr "Chỉ định các ngành để phân loại danh bạ và lập báo cáo."
+msgstr "Chỉ định các ngành để phân loại liên hệ và lập báo cáo."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_profile__speedscope
@@ -32896,7 +33085,7 @@ msgstr "Bước không được là số không."
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder_iot
 msgid "Steps in MRP work orders with IoT devices"
-msgstr "Các bước trong lệnh làm việc với thiết bị IoT"
+msgstr "Các bước trong công đoạn với thiết bị IoT"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_sms
@@ -33773,17 +33962,6 @@ msgid "The currency rate must be strictly positive."
 msgstr "Tỷ giá tiền tệ bắt buộc phải là số dương."
 
 #. module: base
-#. odoo-python
-#: code:addons/base/models/res_currency.py:0
-#, python-format
-msgid ""
-"The date for the current rate is empty.\n"
-"Please set it."
-msgstr ""
-"Ngày tỷ giá hiện tại đang trống.\n"
-"Vui lòng đặt ngày."
-
-#. module: base
 #: model:ir.model.fields,help:base.field_res_users__company_id
 msgid "The default company for this user."
 msgstr "Công ty mặc định cho người dùng này."
@@ -33865,6 +34043,13 @@ msgid ""
 "for security reasons. It is possible that someone with higher privileges "
 "previously modified it, and you are therefore not able to modify it yourself"
 " while preserving the content."
+msgstr ""
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid "The following languages are not activated: %(missing_names)s"
 msgstr ""
 
 #. module: base
@@ -33982,6 +34167,15 @@ msgstr "Model chứa trường này"
 #, python-format
 msgid "The modes in view_mode must not be duplicated: %s"
 msgstr "Các chế độ trong view_mode không được trùng lặp: %s"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid ""
+"The name for the current rate is empty.\n"
+"Please set it."
+msgstr ""
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_country_name_uniq
@@ -34109,6 +34303,8 @@ msgid ""
 "The path to the main report file (depending on Report Type) or empty if the "
 "content is in another field"
 msgstr ""
+"The path to the main report file (depending on Report Type) or empty if the "
+"content is in another field"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_payment
@@ -34418,6 +34614,13 @@ msgstr "Tài khoản này có thể được sử dụng cho các khoản thanh 
 #, python-format
 msgid "This column contains module data and cannot be removed!"
 msgstr "Cột này chứa dữ liệu module và không thể bị xóa!"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/res_currency.py:0
+#, python-format
+msgid "This currency is set on a company and therefore cannot be deactivated."
+msgstr ""
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_company__favicon
@@ -35143,6 +35346,11 @@ msgid "Transient: True"
 msgstr "Tạm thời: Đúng"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_transifex
+msgid "Transifex integration"
+msgstr "Tích hợp dịch Transifex"
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_res_groups__trans_implied_ids
 msgid "Transitively inherits"
 msgstr "Kế thừa chuyển tiếp"
@@ -35161,6 +35369,14 @@ msgstr "Dịch"
 #: model:ir.ui.menu,name:base.menu_translation
 msgid "Translations"
 msgstr "Dịch thuật"
+
+#. module: base
+#. odoo-python
+#: code:addons/models.py:0
+#, python-format
+msgid ""
+"Translations for model translated fields only accept falsy values and str"
+msgstr ""
 
 #. module: base
 #: model:res.partner.industry,name:base.res_partner_industry_H
@@ -35650,6 +35866,13 @@ msgstr "Trường không xác định %r trong phụ thuộc %r"
 #, python-format
 msgid "Unknown field name '%s' in related field '%s'"
 msgstr "Tên trường không xác định '%s' trong trường liên quan '%s'"
+
+#. module: base
+#. odoo-python
+#: code:addons/base/models/ir_model.py:0
+#, python-format
+msgid "Unknown model name '%s' in Related Model"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -36402,6 +36625,11 @@ msgid "WMS Accounting"
 msgstr "Kế toán kho"
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_data_merge_stock_account
+msgid "WMS Accounting Merge"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,shortdesc:base.module_stock_landed_costs
 msgid "WMS Landed Costs"
 msgstr "Chi phí xếp dỡ hàng hóa Kho"
@@ -36415,6 +36643,12 @@ msgstr "Wallis và Futuna"
 #: model:ir.module.module,shortdesc:base.module_stock_picking_batch
 msgid "Warehouse Management: Batch Transfer"
 msgstr "Quản lý kho: Chuyển hàng loạt"
+
+#. module: base
+#: model:ir.module.module,description:base.module_data_merge_stock_account
+#: model:ir.module.module,summary:base.module_data_merge_stock_account
+msgid "Warn user in case of products merging"
+msgstr ""
 
 #. module: base
 #. odoo-python
@@ -36891,12 +37125,12 @@ msgstr "Công việc - Hợp đồng Enterprise"
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_work_entry_contract_planning
 msgid "Work Entries - Planning"
-msgstr "Lệnh làm việc - Kế hoạch"
+msgstr "Công đoạn - Kế hoạch"
 
 #. module: base
 #: model:ir.module.module,summary:base.module_mrp_workorder
 msgid "Work Orders, Planning, Stock Reports."
-msgstr "Lệnh làm việc, Kế hoạch, Báo cáo kho."
+msgstr "Công đoạn, Kế hoạch, Báo cáo kho."
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_worksheet
@@ -37372,7 +37606,6 @@ msgid "Zip Required"
 msgstr "Cần có mã bưu điện"
 
 #. module: base
-#: model:ir.module.category,name:base.module_category_account
 #: model:ir.module.category,name:base.module_category_services_payroll_account
 msgid "account"
 msgstr "account"

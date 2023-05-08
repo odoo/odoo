@@ -15,7 +15,7 @@ msgstr ""
 "POT-Creation-Date: 2023-02-02 10:33+0000\n"
 "PO-Revision-Date: 2022-09-22 05:57+0000\n"
 "Last-Translator: Tony Ng, 2023\n"
-"Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
+"Language-Team: Chinese (Taiwan) (https://app.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -120,7 +120,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "<b>Your order: </b>"
-msgstr "<b>你的訂單r: </b>"
+msgstr "<b>你的訂單：</b>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
@@ -148,7 +148,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.s_add_to_cart
 msgid "<i class=\"fa fa-cart-plus me-2\"/>Add to Cart"
-msgstr ""
+msgstr "<i class=\"fa fa-cart-plus me-2\"/>加入購物車"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address_kanban
@@ -222,6 +222,8 @@ msgid ""
 "<i class=\"fa fa-shopping-cart me-2\"/>\n"
 "                                                <span style=\"font-weight: bold\">ADD TO CART</span>"
 msgstr ""
+"<i class=\"fa fa-shopping-cart me-2\"/>\n"
+"                                                <span style=\"font-weight: bold\">加入購物車</span>"
 
 #. module: website_sale
 #. odoo-python
@@ -266,6 +268,8 @@ msgid ""
 "<span class=\"fa fa-chevron-down fa-border float-end\" role=\"img\" aria-"
 "label=\"Details\" title=\"Details\"/>"
 msgstr ""
+"<span class=\"fa fa-chevron-down fa-border float-end\" role=\"img\" aria-"
+"label=\"詳情\" title=\"詳情\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.shop_product_carousel
@@ -280,6 +284,8 @@ msgid ""
 "<span class=\"fa fa-chevron-left\"/>\n"
 "                                                <span>Continue<span class=\"d-none d-md-inline\"> Shopping</span></span>"
 msgstr ""
+"<span class=\"fa fa-chevron-left\"/>\n"
+"                                                <span>繼續<span class=\"d-none d-md-inline\">購物</span></span>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.extra_info
@@ -395,6 +401,8 @@ msgid ""
 "<span>Proceed to Checkout</span>\n"
 "                            <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>前往結賬</span>\n"
+"                            <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -402,6 +410,8 @@ msgid ""
 "<span>Process Checkout</span>\n"
 "                                                    <span class=\"fa fa-chevron-right\"/>"
 msgstr ""
+"<span>處理結賬</span>\n"
+"                                                    <span class=\"fa fa-chevron-right\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
@@ -409,6 +419,8 @@ msgid ""
 "<span>Sign In</span>\n"
 "                                                    <span class=\"fa fa-sign-in\"/>"
 msgstr ""
+"<span>登入</span>\n"
+"                                                    <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.short_cart_summary
@@ -416,6 +428,8 @@ msgid ""
 "<span>Sign In</span>\n"
 "                            <span class=\"fa fa-sign-in\"/>"
 msgstr ""
+"<span>登入</span>\n"
+"                            <span class=\"fa fa-sign-in\"/>"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -511,11 +525,53 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 0px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 0px 0px 0px; border-collapse:separate;\">\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <h1 style=\"color:#A9A9A9;\">喂，你的購物車仍有貨品！</h1>\n"
+"                    你想完成這次購物嗎？<br/><br/>\n"
+"                    <t t-if=\"object.order_line\">\n"
+"                        <t t-foreach=\"object.website_order_line\" t-as=\"line\">\n"
+"                            <hr/>\n"
+"                            <table width=\"100%\">\n"
+"                                <tr>\n"
+"                                    <td style=\"padding: 10px; width:150px;\">\n"
+"                                        <img t-attf-src=\"/web/image/product.product/{{ line.product_id.id }}/image_128\" style=\"width: 100px; height: 100px; object-fit: contain;\" alt=\"產品圖片\"/>\n"
+"                                    </td>\n"
+"                                    <td>\n"
+"                                        <strong t-out=\"line.product_id.display_name or ''\">[FURN_7800] 書桌組合</strong><br/><t t-out=\"line.name or ''\">[FURN_7800] 書桌組合 (書桌組合, 黑啡色)：椅 + 書桌 + 抽屜櫃</t>\n"
+"                                    </td>\n"
+"                                    <td width=\"100px\" align=\"right\">\n"
+"                                        <t t-out=\"int(line.product_uom_qty) or ''\">10000</t> <t t-out=\"line.product_uom.name or ''\">單位</t>\n"
+"                                    </td>\n"
+"                                </tr>\n"
+"                            </table>\n"
+"                        </t>\n"
+"                        <hr/>\n"
+"                    </t>\n"
+"                    <div style=\"text-align: center; padding: 16px 0px 16px 0px; font-size: 14px;\">\n"
+"                        <a t-attf-href=\"{{ object.get_base_url() }}/shop/cart?access_token={{ object.access_token }}\" target=\"_blank\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                            恢復訂單，繼續購物\n"
+"                        </a>\n"
+"                    </div>\n"
+"                    <t t-set=\"company\" t-value=\"object.company_id or object.user_id.company_id or user.company_id\"/>\n"
+"                    <div style=\"text-align: center;\"><strong>多謝惠顧 <t t-out=\"company.name or ''\">My Company (San Francisco)</t>！</strong></div>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"            "
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_custom_text
 msgid "<u>Terms and Conditions</u>"
-msgstr ""
+msgstr "<u>條款及條件</u>"
 
 #. module: website_sale
 #: model:ir.model.fields,help:website_sale.field_res_config_settings__terms_url
@@ -585,7 +641,7 @@ msgstr "關於產品交叉銷售"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Accept Terms & Conditions"
-msgstr ""
+msgstr "接受條款及細則"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_image_view_kanban
@@ -626,13 +682,13 @@ msgstr "增加"
 #: code:addons/website_sale/static/src/xml/website_sale_reorder_modal.xml:0
 #, python-format
 msgid "Add To Cart"
-msgstr "添加到購物車"
+msgstr "加入購物車"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_res_config_settings__add_to_cart_action
 #: model:ir.model.fields,field_description:website_sale.field_website__add_to_cart_action
 msgid "Add To Cart Action"
-msgstr ""
+msgstr "「加入購物車」操作"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product_product_view_form_easy_inherit_website_sale
@@ -688,6 +744,11 @@ msgid "Add to Cart"
 msgstr "加入購物車"
 
 #. module: website_sale
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
+msgid "Add to Cart Button"
+msgstr "「加入購物車」按鈕"
+
+#. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.wizard_checkout
 msgid "Address"
 msgstr "填寫資料"
@@ -732,7 +793,7 @@ msgstr "允許最終使用者選擇此價格表"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Allow your customer to add products from previous order in their cart."
-msgstr ""
+msgstr "容許顧客將先前訂單的產品，加至目前的購物車。"
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_alternative_products
@@ -919,7 +980,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Button url"
-msgstr ""
+msgstr "按鈕網址"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -986,7 +1047,7 @@ msgstr "Cards"
 #: model:ir.model.fields.selection,name:website_sale.selection__website__product_page_image_layout__carousel
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Carousel"
-msgstr ""
+msgstr "圖片循環播放"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -1128,7 +1189,7 @@ msgstr "點選右上角<i>的『新建』</i>來建立您的第一件產品。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "Click here"
-msgstr "點選這裡"
+msgstr "按這裏"
 
 #. module: website_sale
 #. odoo-javascript
@@ -1601,7 +1662,7 @@ msgstr "無權存取，跳過使用者摘要電子信件的此筆資料"
 #: code:addons/website_sale/static/src/js/website_sale_reorder.js:0
 #, python-format
 msgid "Do you wish to clear your cart before adding products to it?"
-msgstr ""
+msgstr "加入新產品至購物車之前，你想先清空購物車嗎？"
 
 #. module: website_sale
 #: model:ir.model.fields.selection,name:website_sale.selection__res_company__website_sale_onboarding_payment_provider_state__done
@@ -1859,7 +1920,7 @@ msgstr "隱藏"
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_website__prevent_zero_price_sale
 msgid "Hide 'Add To Cart' when price = 0"
-msgstr ""
+msgstr "當價錢 = 0 時，隱藏「加入購物車」"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -1879,7 +1940,7 @@ msgstr "我同意"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.reduction_code
 msgid "I have a promo code"
-msgstr "我有促銷代碼"
+msgstr "我有優惠碼"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_image__id
@@ -1893,7 +1954,7 @@ msgstr "ID"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "If product price equals 0, replace 'Add to Cart' by 'Contact us'."
-msgstr ""
+msgstr "若產品價格等於 0，隱藏「加入購物車」並以「聯絡我們」取代。"
 
 #. module: website_sale
 #: model:mail.template,description:website_sale.mail_template_sale_cart_recovery
@@ -1961,7 +2022,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Instant checkout, instead of adding to cart"
-msgstr ""
+msgstr "立即結賬，不加入購物車"
 
 #. module: website_sale
 #. odoo-python
@@ -2145,7 +2206,7 @@ msgstr "連結的訂單明細"
 #: model_terms:ir.ui.view,arch_db:website_sale.add_grid_or_list_option
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "List"
-msgstr "列表"
+msgstr "清單"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
@@ -2913,6 +2974,7 @@ msgstr "產品緞帶"
 #: model_terms:ir.ui.view,arch_db:website_sale.product_ribbon_form_view
 #: model_terms:ir.ui.view,arch_db:website_sale.product_searchbar_input_snippet_options
 #: model_terms:ir.ui.view,arch_db:website_sale.products_breadcrumb
+#: model_terms:ir.ui.view,arch_db:website_sale.snippets
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_page_view_search
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_sale.website_sale_visitor_view_tree
@@ -2962,7 +3024,7 @@ msgid ""
 "do so, attach some files to a product using the new Files button and publish"
 " them."
 msgstr ""
-"如果付款通過，則在結帳過程的確認頁面中向客戶提供特定於產品的連結或可下載的內容。為此，使用新的「文件」按鈕將一些文件附加到產品中並發佈出去。"
+"如果付款通過，則在結帳過程的確認頁面中向客戶提供特定於產品的連結或可下載的內容。為此，使用新的「文件」按鈕將一些文件附加到產品中並發佈出去."
 
 #. module: website_sale
 #. odoo-python
@@ -3023,7 +3085,7 @@ msgstr ""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.snippet_options
 msgid "Radio"
-msgstr "單選"
+msgstr "單項選擇按鈕"
 
 #. module: website_sale
 #: model:ir.model.fields,field_description:website_sale.field_product_template__rating_ids
@@ -3082,13 +3144,13 @@ msgstr ""
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_sold_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_sold_products
 msgid "Recently Sold Products"
-msgstr "最近銷售的產品"
+msgstr ""
 
 #. module: website_sale
 #: model:ir.actions.server,name:website_sale.dynamic_snippet_latest_viewed_products_action
 #: model:website.snippet.filter,name:website_sale.dynamic_filter_latest_viewed_products
 msgid "Recently Viewed Products"
-msgstr "最近瀏覽商品"
+msgstr ""
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.view_sales_order_filter_ecommerce_abondand
@@ -3424,7 +3486,7 @@ msgstr "商店－結帳"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "Shop - Checkout Process"
-msgstr ""
+msgstr "商店 － 結賬過程"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.confirmation
@@ -3704,14 +3766,14 @@ msgstr "通過網站存取此文件的完整網址。"
 #, python-format
 msgid ""
 "The given combination does not exist therefore it cannot be added to cart."
-msgstr "指定的組合不存在，因此無法添加到購物車。"
+msgstr "你要求的貨品組合不存在，無法加入購物車。"
 
 #. module: website_sale
 #. odoo-python
 #: code:addons/website_sale/models/sale_order.py:0
 #, python-format
 msgid "The given product does not exist therefore it cannot be added to cart."
-msgstr "指定的產品不存在，因此無法添加到購物車。"
+msgstr "你要求的貨品不存在，無法加入購物車。"
 
 #. module: website_sale
 #. odoo-python
@@ -3720,7 +3782,7 @@ msgstr "指定的產品不存在，因此無法添加到購物車。"
 msgid ""
 "The given product does not have a price therefore it cannot be added to "
 "cart."
-msgstr ""
+msgstr "你要求的貨品未有價錢，無法加入購物車。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
@@ -3792,7 +3854,7 @@ msgstr "此組合不存在。"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart
 msgid "This is your current cart."
-msgstr "這是您目前的購物車。"
+msgstr "這是你目前的購物車。"
 
 #. module: website_sale
 #. odoo-python
@@ -3809,7 +3871,7 @@ msgstr ""
 #: code:addons/website_sale/static/src/snippets/s_add_to_cart/000.js:0
 #, python-format
 msgid "This product does not exist therefore it cannot be added to cart."
-msgstr ""
+msgstr "此產品不存在，無法加入購物車。"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.product
@@ -3975,7 +4037,7 @@ msgstr "影片網址"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "View Cart ("
-msgstr "查看購物車("
+msgstr "查看購物車（"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.dynamic_filter_template_product_product_banner
@@ -4160,7 +4222,7 @@ msgstr "網站"
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.res_config_settings_view_form
 msgid "What should be done on \"Add to Cart\"?"
-msgstr ""
+msgstr "顧客按下「加入購物車」時，應該執行甚麼操作？"
 
 #. module: website_sale
 #. odoo-python
@@ -4234,8 +4296,8 @@ msgid ""
 "You'll find here all the carts abandoned by your visitors.\n"
 "                If they completed their address, you should send them a recovery email!"
 msgstr ""
-"您會在這裡找到所有被訪問者放棄的購物車。\n"
-"                如果他們填寫了email地址，您應該向他們發送恢復電子郵件！"
+"此處詳列所有遭網站訪客遺棄的購物車。\n"
+"                若有關訪客有提供電郵地址，你應該考慮向他們發送提醒電郵！"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address
@@ -4254,7 +4316,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_summary
 msgid "Your cart is empty!"
-msgstr "您的購物車是空的！"
+msgstr "購物車是空的"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.payment_confirmation_status
@@ -4353,7 +4415,7 @@ msgstr "於類別 \""
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.cart_popover
 msgid "item(s))"
-msgstr "項目)"
+msgstr "項目）"
 
 #. module: website_sale
 #: model_terms:ir.ui.view,arch_db:website_sale.address

@@ -310,8 +310,16 @@ class AccountEdiFormat(models.Model):
             res = {}
             _logger.error('Error while receiving file from SdiCoop: %s', e)
 
+        retrigger = False
         proxy_acks = []
         for id_transaction, fattura in res.items():
+
+            # The server has a maximum number of documents it can send at a time
+            # If that maximum is reached, then we search for more
+            # by re-triggering the download cron, avoiding the timeout.
+            current_num, max_num = fattura.get('current_num', 0), fattura.get('max_num', 0)
+            retrigger = retrigger or current_num == max_num > 0
+
             if self._save_incoming_attachment_fattura_pa(proxy_user, id_transaction, fattura['filename'], fattura['file'], fattura['key']):
                 proxy_acks.append(id_transaction)
 
@@ -322,6 +330,10 @@ class AccountEdiFormat(models.Model):
                     params={'transaction_ids': proxy_acks})
             except AccountEdiProxyError as e:
                 _logger.error('Error while receiving file from SdiCoop: %s', e)
+
+        if retrigger:
+            _logger.info('Retriggering "Receive invoices from the exchange system"...')
+            self.env.ref('l10n_it_edi.ir_cron_receive_fattura_pa_invoice')._trigger()
 
     def _save_incoming_attachment_fattura_pa(self, proxy_user, id_transaction, filename, content, key):
         ''' Save an incoming file from the SdI as an attachment.

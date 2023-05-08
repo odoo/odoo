@@ -91,10 +91,10 @@
           t-on-click="() => this.onColorClick(color)"
           t-attf-style="background-color:{{color}};">
           <div
-            t-if="props.currentColor === color"
+            t-if="isSameColor(props.currentColor, color)"
             align="center"
             t-attf-style="color:{{getCheckMarkColor()}}">
-            &#10004;
+            ✓
           </div>
         </div>
       </div>
@@ -117,10 +117,10 @@
           t-attf-style="background-color:{{color}};"
           t-on-click="() => this.onColorClick(color)">
           <div
-            t-if="props.currentColor === color"
+            t-if="isSameColor(props.currentColor, color)"
             align="center"
             t-attf-style="color:{{getCheckMarkColor()}}">
-            &#10004;
+            ✓
           </div>
         </div>
       </div>
@@ -692,7 +692,8 @@
       childHeight="cellPopover.Component.size.height"
       flipHorizontalOffset="cellPopover.cellWidth"
       flipVerticalOffset="cellPopover.cellHeight"
-      onMouseWheel="props.onMouseWheel">
+      onMouseWheel="props.onMouseWheel"
+      zIndex="zIndex">
       <t
         t-component="cellPopover.Component"
         t-props="{...cellPopover.props, onClosed : () => props.onClosePopover()}"
@@ -1469,7 +1470,7 @@
 
   <t t-name="o-spreadsheet-Menu" owl="1">
     <Popover
-      t-if="props.menuItems.length"
+      t-if="visibleMenuItems.length"
       position="props.position"
       childWidth="MENU_WIDTH"
       childHeight="menuHeight"
@@ -1483,7 +1484,7 @@
         t-on-wheel.stop=""
         t-on-click.stop=""
         t-on-contextmenu.prevent="">
-        <t t-foreach="props.menuItems" t-as="menuItem" t-key="menuItem.id">
+        <t t-foreach="visibleMenuItems" t-as="menuItem" t-key="menuItem.id">
           <t t-set="isMenuRoot" t-value="isRoot(menuItem)"/>
           <t t-set="isMenuEnabled" t-value="isEnabled(menuItem)"/>
           <div
@@ -2189,7 +2190,7 @@
           <ColorPicker
             t-if="state.openedColorPicker === 'backgroundColor'"
             onColorPicked="(color) => this.setColor(color, 'backgroundColor')"
-            currentColor="props.definition.brackground"
+            currentColor="props.definition.background"
             t-key="backgroundColor"
           />
         </div>
@@ -3247,7 +3248,7 @@
   </t>
 </odoo>
 <!--
-  __info__.version = '16.0.4';
-  __info__.date = '2023-03-16T12:14:58.080Z';
-  __info__.hash = 'ebbb1f0';
+  __info__.version = '16.0.9';
+  __info__.date = '2023-04-28T12:35:09.570Z';
+  __info__.hash = 'e06ca83';
 -->

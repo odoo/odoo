@@ -1,5 +1,5 @@
 import { parseHTML } from '../../src/utils/utils.js';
-import { BasicEditor, testEditor, unformat } from '../utils.js';
+import { BasicEditor, testEditor, unformat, insertText, deleteBackward } from '../utils.js';
 
 const span = text => {
     const span = document.createElement('span');
@@ -9,7 +9,7 @@ const span = text => {
 
 describe('insert HTML', () => {
     describe('collapsed selection', () => {
-        it('should insert html in an empty paragraph', async () => {
+        it('should insert html in an empty paragraph / empty editable', async () => {
             await testEditor(BasicEditor, {
                 contentBefore: '<p>[]<br></p>',
                 stepFunction: async editor => {
@@ -18,17 +18,6 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
                 contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
-            });
-        });
-        it('should insert html after an empty paragraph', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<p><br></p>[]',
-                stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
-                },
-                contentAfterEdit:
-                    '<p><br></p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]',
-                contentAfter: '<p><br></p><i class="fa fa-pastafarianism"></i>[]',
             });
         });
         it('should insert html between two letters', async () => {
@@ -40,16 +29,6 @@ describe('insert HTML', () => {
                 contentAfterEdit:
                     '<p>a<i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]b<br></p>',
                 contentAfter: '<p>a<i class="fa fa-pastafarianism"></i>[]b<br></p>',
-            });
-        });
-        it('should insert html in an empty editable', async () => {
-            await testEditor(BasicEditor, {
-                contentBefore: '<p>[]<br></p>',
-                stepFunction: async editor => {
-                    await editor.execCommand('insert', parseHTML('<i class="fa fa-pastafarianism"></i>'));
-                },
-                contentAfterEdit: '<p><i class="fa fa-pastafarianism" contenteditable="false">\u200b</i>[]<br></p>',
-                contentAfter: '<p><i class="fa fa-pastafarianism"></i>[]<br></p>',
             });
         });
         it('should insert html in between naked text in the editable', async () => {
@@ -88,6 +67,15 @@ describe('insert HTML', () => {
                     await editor.execCommand('insert', parseHTML('<pre>def</pre>'));
                 },
                 contentAfter: '<pre>abcdef[]<br>ghi</pre>',
+            });
+        });
+        it('should keep an "empty" block which contains fontawesome nodes when inserting multiple nodes', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<p>content[]</p>',
+                stepFunction: async editor => {
+                    await editor.execCommand('insert', parseHTML('<p>unwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after</p>'));
+                },
+                contentAfter: '<p>contentunwrapped</p><div><i class="fa fa-circle-o-notch"></i></div><p>culprit</p><p>after[]</p>',
             });
         });
     });
@@ -260,6 +248,25 @@ describe('insert HTML', () => {
                 ),
                 stepFunction: editor => editor.execCommand('insert', span('TEST')),
                 contentAfter: `<p><span>TEST</span>[]<br></p>`,
+            });
+        });
+    });
+});
+describe('insert text', () => {
+    describe('not collapsed selection', () => {
+        it('should insert a character in a fully selected font in a heading, preserving its style', async () => {
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1><font style="background-color: red;">[abc</font><br></h1><p>]def</p>',
+                stepFunction: async editor => insertText(editor, 'g'),
+                contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
+            });
+            await testEditor(BasicEditor, {
+                contentBefore: '<h1><font style="background-color: red;">[abc</font><br></h1><p>]def</p>',
+                stepFunction: async editor => {
+                    await deleteBackward(editor);
+                    await insertText(editor, 'g');
+                },
+                contentAfter: '<h1><font style="background-color: red;">g[]</font><br></h1><p>def</p>',
             });
         });
     });

@@ -390,7 +390,9 @@ class TestCalendar(SavepointCaseWithUserDemo):
             'partner_ids': [Command.link(new_partner) for new_partner in new_partners]
         })
         self.assertTrue(set(new_partners) == set(self.event_tech_presentation.videocall_channel_id.channel_partner_ids.ids), 'new partners must be invited to the channel')
-@tagged('post_install')
+
+
+@tagged('post_install', '-at_install')
 class TestCalendarTours(HttpCase):
     def test_calendar_month_view_start_hour_displayed(self):
         """ Test that the time is displayed in the month view. """

@@ -387,7 +387,9 @@ class WebsiteSale(http.Controller):
             domain = self._get_search_domain(search, category, attrib_values)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
-            from_clause, where_clause, where_params = Product._where_calc(domain).get_sql()
+            query = Product._where_calc(domain)
+            Product._apply_ir_rules(query, 'read')
+            from_clause, where_clause, where_params = query.get_sql()
             query = f"""
                 SELECT COALESCE(MIN(list_price), 0) * {conversion_rate}, COALESCE(MAX(list_price), 0) * {conversion_rate}
                   FROM {from_clause}
@@ -719,10 +721,10 @@ class WebsiteSale(http.Controller):
         # empty promo code is used to reset/remove pricelist (see `sale_get_order()`)
         if promo:
             pricelist_sudo = request.env['product.pricelist'].sudo().search([('code', '=', promo)], limit=1)
-            request.session['website_sale_current_pl'] = pricelist_sudo.id
             if not (pricelist_sudo and request.website.is_pricelist_available(pricelist_sudo.id)):
                 return request.redirect("%s?code_not_available=1" % redirect)
 
+            request.session['website_sale_current_pl'] = pricelist_sudo.id
             # TODO find the best way to create the order with the correct pricelist directly ?
             # not really necessary, but could avoid one write on SO record
             order_sudo = request.website.sale_get_order(force_create=True)
@@ -1399,7 +1401,10 @@ class WebsiteSale(http.Controller):
         # check that cart is valid
         order = request.website.sale_get_order()
         redirection = self.checkout_redirection(order)
-        if redirection:
+        open_editor = request.params.get('open_editor') == 'true'
+        # Do not redirect if it is to edit
+        # (the information is transmitted via the "open_editor" parameter in the url)
+        if not open_editor and redirection:
             return redirection
 
         values = {
@@ -1469,7 +1474,7 @@ class WebsiteSale(http.Controller):
         return {
             'website_sale_order': order,
             'errors': [],
-            'partner': order.partner_id,
+            'partner': order.partner_invoice_id,
             'order': order,
             'payment_action_id': request.env.ref('payment.action_payment_provider').id,
             # Payment form common (checkout and manage) values
@@ -1546,7 +1551,7 @@ class WebsiteSale(http.Controller):
             order = request.env['sale.order'].sudo().browse(sale_order_id)
             assert order.id == request.session.get('sale_last_order_id')
 
-        tx = order.get_portal_last_transaction()
+        tx = order.get_portal_last_transaction() if order else order.env['payment.transaction']
 
         if not order or (order.amount_total and not tx):
             return request.redirect('/shop')
@@ -1742,7 +1747,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         kwargs.update({
             'reference_prefix': None,  # Allow the reference to be computed based on the order
-            'partner_id': order_sudo.partner_id.id,
+            'partner_id': order_sudo.partner_invoice_id.id,
             'sale_order_id': order_id,  # Include the SO to allow Subscriptions to tokenize the tx
         })
         kwargs.pop('custom_create_values', None)  # Don't allow passing arbitrary create values

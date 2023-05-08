@@ -67,7 +67,7 @@ odoo.define('pos_discount.DiscountButton', function(require) {
                                 ) :
                             this.env._t('No tax')),
                         extras: {
-                            price_manually_set: true,
+                            price_automatically_set: true,
                         },
                     });
                 }

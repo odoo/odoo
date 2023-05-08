@@ -309,7 +309,7 @@
         }
 
         > .o_field_widget {
-            align-self: center;
+            align-self: flex-start;
             margin-bottom: 0px;
         }
 
@@ -724,9 +724,11 @@
         }
     }
 
-    .o_field_float_time.oe_inline {
-        &, input {
-            max-width: 7ch;
+    .o_field_float_time, .o_field_percentage {
+        &.oe_inline {
+            &, input {
+                max-width: 7ch;
+            }
         }
     }
 

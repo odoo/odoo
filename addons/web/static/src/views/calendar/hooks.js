@@ -5,30 +5,55 @@ import { browser } from "@web/core/browser/browser";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { useService } from "@web/core/utils/hooks";
 
-import { onMounted, onPatched, onWillStart, onWillUnmount, useComponent, useRef } from "@odoo/owl";
+import {
+    onMounted,
+    onPatched,
+    onWillStart,
+    onWillUnmount,
+    useComponent,
+    useExternalListener,
+    useRef,
+} from "@odoo/owl";
 
 export function useCalendarPopover(component) {
     const owner = useComponent();
     const popover = usePopover();
     const dialog = useService("dialog");
     let remove = null;
+    let fcPopover;
+    useExternalListener(
+        window,
+        "mousedown",
+        (ev) => {
+            if (fcPopover) {
+                // do not let fullcalendar popover close when our own popover is open
+                ev.stopPropagation();
+            }
+        },
+        { capture: true }
+    );
+    function cleanup() {
+        fcPopover = null;
+        remove = null;
+    }
     function close() {
         if (remove) {
             remove();
-            remove = null;
         }
+        cleanup();
     }
     return {
         close,
         open(target, props, popoverClass) {
             close();
+            fcPopover = target.closest(".fc-popover");
             if (owner.env.isSmall) {
-                remove = dialog.add(component, props, { onClose: () => (remove = null) });
+                remove = dialog.add(component, props, { onClose: cleanup });
             } else {
                 remove = popover.add(target, component, props, {
                     popoverClass,
                     position: "right",
-                    onClose: () => (remove = null),
+                    onClose: cleanup,
                 });
             }
         },

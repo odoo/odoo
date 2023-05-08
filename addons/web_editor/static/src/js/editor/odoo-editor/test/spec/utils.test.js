@@ -748,6 +748,7 @@ describe('Utils', () => {
                     triggerEvent(element, 'keyup', { key: '2' });
                     await nextTickFrame();
                     triggerEvent(editor.editable, 'keydown', { key: 'Enter' });
+                    await nextTickFrame();
                     const activeElement = document.activeElement;
                     setCursorStart(activeElement.lastElementChild);
                     await nextTickFrame();

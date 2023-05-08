@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
+# Larissa Manderfeld, 2023
 # 
 msgid ""
 msgstr ""
@@ -11,8 +12,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-06-09 14:06+0000\n"
 "PO-Revision-Date: 2022-09-22 05:54+0000\n"
-"Last-Translator: Martin Trigaux, 2022\n"
-"Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
+"Last-Translator: Larissa Manderfeld, 2023\n"
+"Language-Team: German (https://app.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -22,17 +23,17 @@ msgstr ""
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<i class=\"fa fa-fw fa-check\"/> <b>Manufactured</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-check\"/> <b>Gefertigt</b>"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Confirmed</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>Bestätigt</b>"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>In progress</b>"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-clock-o\"/> <b>In Bearbeitung</b>"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
@@ -52,6 +53,14 @@ msgstr "<span class=\"o_stat_text\">Verkaufen</span>"
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
 msgid "<strong>Manufacturing Orders</strong>"
+msgstr "<strong>Fertigungsaufträge:</strong>"
+
+#. module: sale_mrp
+#: code:addons/sale_mrp/models/mrp_bom.py:0
+#, python-format
+msgid ""
+"As long as there are some sale order lines that must be delivered/invoiced and are related to these bills of materials, you can not remove them.\n"
+"The error concerns these products: %s"
 msgstr ""
 
 #. module: sale_mrp
@@ -62,7 +71,7 @@ msgstr "Anzahl generierter Fertigungsaufträge"
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_mrp_production__sale_order_count
 msgid "Count of Source SO"
-msgstr ""
+msgstr "Anzahl der Verkaufsauftragsquellen"
 
 #. module: sale_mrp
 #: model_terms:ir.ui.view,arch_db:sale_mrp.sale_order_portal_content_inherit_sale_mrp
@@ -83,7 +92,7 @@ msgstr "Fertigungsaufträge generiert durch %s"
 #. module: sale_mrp
 #: model:ir.model.fields,field_description:sale_mrp.field_sale_order__mrp_production_ids
 msgid "Manufacturing orders associated with this sales order."
-msgstr ""
+msgstr "Fertigungsaufträge im Zusammenhang mit diesem Verkaufsauftrag."
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_stock_move_line
@@ -109,7 +118,7 @@ msgstr "Kundenauftragszeile"
 #: code:addons/sale_mrp/models/mrp_production.py:0
 #, python-format
 msgid "Sources Sale Orders of %s"
-msgstr ""
+msgstr "Quellen der Verkaufsaufträge von %s"
 
 #. module: sale_mrp
 #: model:ir.model,name:sale_mrp.model_stock_move

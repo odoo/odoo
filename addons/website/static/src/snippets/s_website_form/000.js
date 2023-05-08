@@ -71,6 +71,10 @@ odoo.define('website.s_website_form', function (require) {
             return res;
         },
         start: function () {
+            // Reset the form first, as it is still filled when coming back
+            // after a redirect.
+            this.$target[0].reset();
+
             // Prepare visibility data and update field visibilities
             const visibilityFunctionsByFieldName = new Map();
             for (const fieldEl of this.$target[0].querySelectorAll('[data-visibility-dependency]')) {
@@ -124,7 +128,13 @@ odoo.define('website.s_website_form', function (require) {
             // Data-fill-with attribute is given during registry and is used by
             // to know which user data should be used to prfill fields.
             const dataForEl = document.querySelector(`[data-for='${this.$target[0].id}']`);
-            if (dataForEl || Object.keys(this.preFillValues).length) {
+            this.editTranslations = !!this._getContext(true).edit_translations;
+            // On the "edit_translations" mode, a <span/> with a translated term
+            // will replace the attribute value, leading to some inconsistencies
+            // (setting again the <span> on the attributes after the editor's
+            // cleanup, setting wrong values on the attributes after translating
+            // default values...)
+            if (!this.editTranslations && (dataForEl || Object.keys(this.preFillValues).length)) {
                 const dataForValues = dataForEl ?
                     JSON.parse(dataForEl.dataset.values
                         .replace('False', '""')
@@ -358,7 +368,7 @@ odoo.define('website.s_website_form', function (require) {
 
                             self.$target[0].classList.add('d-none');
                             self.$target[0].parentElement.querySelector('.s_website_form_end_message').classList.remove('d-none');
-                            return;
+                            break;
                         }
                         default: {
                             // Prevent double-clicking on the send button and
@@ -456,7 +466,8 @@ odoo.define('website.s_website_form', function (require) {
                     if (_.isString(error_fields[field_name])) {
                         $field.popover({content: error_fields[field_name], trigger: 'hover', container: 'body', placement: 'top'});
                         // update error message and show it.
-                        $field.data("bs.popover").config.content = error_fields[field_name];
+                        const popover = Popover.getInstance($field);
+                        popover._config.content = error_fields[field_name];
                         $field.popover('show');
                     }
                     form_valid = false;

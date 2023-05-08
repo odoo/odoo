@@ -285,6 +285,10 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright-custom', $background: $-footer-color);
         @include o-add-gradient('copyright-gradient');
     }
+    .s_popup {
+        // The colors of the footer must not impact the "all pages" popup.
+        @include o-apply-colors(1);
+    }
 }
 
 h2, h3, h4, h5, h6 {
@@ -812,6 +816,10 @@ $-transition-duration: 200ms;
     }
 }
 
+.o_hoverable_dropdown .nav-link.dropdown-toggle:focus {
+    outline: none;
+}
+
 // Navbar
 .navbar .o_extra_menu_items > .show {
     > li {
@@ -899,14 +907,17 @@ header {
     #top_menu_container {
         flex-direction: inherit;
     }
-    @if $-hamburger-center {
-        .collapsing, .show {
-            #top_menu {
-                @if not $-off-canvas-hamburger {
+
+    .collapsing, .show {
+        #top_menu {
+            @if $-hamburger-center {
+                @if not $-off-canvas-hamburger and not o-website-value('header-template') == 'magazine' {
                     padding-top: 15vh;
                     padding-bottom: 15vh;
                 }
                 text-align: center !important;
+            } @else if $-hamburger-right {
+                text-align: right;
             }
         }
     }
@@ -933,11 +944,8 @@ header {
     #top_menu_collapse {
 
         &.collapsing, &.show {
-            // Note: position relatively to the header instead of the viewport
-            // because fixed position cannot work inside an element whose CSS
-            // transform is different to none, which the header element is
-            // because of header effects.
             @include o-position-absolute(0, 0, 0, 0);
+            position: fixed;
             z-index: $zindex-sticky;
             height: 100vh;
             max-height: 100vh;
@@ -980,6 +988,7 @@ header {
                 @if $-hamburger-center {
                     width: 100%;
                     max-width: none;
+                    text-align: center !important;
                 } @else {
                     max-width: 560px;
                     text-align: left !important;
@@ -1043,6 +1052,20 @@ header {
                     // Hide the language switcher button because it does not
                     // make sense to show it if the dropdown is always open.
                     display: none;
+                }
+            }
+            @if o-website-value('header-template') == 'vertical' {
+                .oe_structure_solo {
+                    // Hide the "oe_structure_solo" because it is outside the
+                    // menu when the off-canvas menu is open.
+                    display: none;
+                }
+                #top_menu {
+                    // This is useful because otherwise, the 'order-first' class
+                    // of the 'template_header_vertical' template puts the menu
+                    // behind the "backdrop" and it's no longer possible to
+                    // click on the menu links (only on Firefox).
+                    order: unset !important;
                 }
             }
         }
@@ -1199,7 +1222,7 @@ header {
 .o_mega_menu {
     width: 100%;
     padding: 0;
-    margin-top: 0;
+    margin-top: 0 !important;
     border-radius: 0;
     background-clip: unset; // Remove the 1px gap introduced by BS4
     background-color: transparent; // In order to allow the mega menu to be transparent
@@ -1381,6 +1404,7 @@ header {
     height: 1em;
     margin-right: 0.2em;
     border-radius: $border-radius-pill;
+    object-fit: cover;
 }
 a.js_change_lang:hover, a.o_add_language:hover {
     text-decoration: none;
@@ -1557,6 +1581,44 @@ ul.o_checklist > li.o_checked::after {
     display: none !important;
 }
 
+// On translation editor, inputs & textareas with translatable "placeholder" and
+// "value" will get HTML content as translation value for the attributes.
+// The goal here is to hide these values until the editor's code sets the right
+// ones on elements. The `o_text_content_invisible` class is mainly used on JS
+// to have the same behaviour for textareas, since it's not possible to target
+// them on CSS using the "value" attribute unlike inputs.
+.o_text_content_invisible {
+    color: transparent !important;
+}
+[placeholder*="data-oe-translation-initial-sha"] {
+    &::-webkit-input-placeholder{ /* WebKit */
+        color: transparent;
+        opacity: 0;
+    }
+    &::-moz-placeholder { /* Firefox */
+        color: transparent;
+        opacity: 0;
+    }
+}
+input[value*="data-oe-translation-initial-sha"] {
+    @extend .o_text_content_invisible;
+}
+[data-oe-translation-initial-sha] {
+    > .o_translation_select {
+        border: $input-border-width solid $input-border-color;
+        @include border-radius($input-border-radius, 0);
+
+        // Hide translatable `<select/>`s since we use `.o_translation_select`
+        // elements to handle translations.
+        + select {
+            display: none !important;
+        }
+        > div:not(:last-child) {
+            border-bottom: inherit;
+        }
+    }
+}
+
 //------------------------------------------------------------------------------
 // Website Animate
 //------------------------------------------------------------------------------
@@ -1587,6 +1649,17 @@ ul.o_checklist > li.o_checked::after {
 }
 .o_wanim_overflow_xy_hidden {
     overflow-x: hidden !important;
+
+    &.o_rtl {
+        // Fix for Chrome and Edge bug: resolves slow/stuck scrolling during
+        // left-overflowing animations on RTL web pages. Note: using overflow on
+        // the main element hides animated elements outside of it (e.g. "Framed"
+        // page layout). This may not be the ideal solution but could be the
+        // best workaround for now.
+        > main {
+            overflow-x: hidden;
+        }
+    }
     .o_footer_slideout {
         overflow-y: hidden !important;
     }

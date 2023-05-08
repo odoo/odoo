@@ -66,4 +66,18 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
     ReceiptScreen.check.customerNoteIsThere('Test customer note');
 
     Tour.register('ReceiptScreenTour', { test: true, url: '/pos/ui' }, getSteps());
+
+    startSteps();
+
+    ProductScreen.do.clickHomeCategory();
+    ProductScreen.exec.addOrderline('Test Product', '1');
+    ProductScreen.do.clickPricelistButton();
+    ProductScreen.do.selectPriceList('special_pricelist');
+    ProductScreen.check.discountOriginalPriceIs('7.0');
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Cash');
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.discountAmountIs('0.7');
+
+    Tour.register('ReceiptScreenDiscountWithPricelistTour', { test: true, url: '/pos/ui' }, getSteps());
 });

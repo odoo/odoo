@@ -119,6 +119,7 @@ class ReportBomStructure(models.AbstractModel):
             'bom_qty': bom_quantity,
             'is_variant_applied': self.env.user.user_has_groups('product.group_product_variant') and len(bom_product_variants) > 1,
             'is_uom_applied': self.env.user.user_has_groups('uom.group_uom'),
+            'precision': self.env['decimal.precision'].precision_get('Product Unit of Measure'),
         }
 
     @api.model
@@ -378,7 +379,7 @@ class ReportBomStructure(models.AbstractModel):
         if product_id:
             product = self.env['product.product'].browse(int(product_id))
         else:
-            product = bom.product_id or bom.product_tmpl_id.product_variant_id
+            product = bom.product_id or bom.product_tmpl_id.product_variant_id or bom.product_tmpl_id.with_context(active_test=False).product_variant_id
 
         if self.env.context.get('warehouse'):
             warehouse = self.env['stock.warehouse'].browse(self.env.context.get('warehouse'))
@@ -495,12 +496,13 @@ class ReportBomStructure(models.AbstractModel):
             wh_manufacture_rules = product._get_rules_from_location(product.property_stock_production, route_ids=warehouse.route_ids)
             wh_manufacture_rules -= rules
             rules_delay += sum(rule.delay for rule in wh_manufacture_rules)
+            manufacturing_lead = bom.company_id.manufacturing_lead if bom and bom.company_id else 0
             return {
                 'route_type': 'manufacture',
                 'route_name': manufacture_rules[0].route_id.display_name,
                 'route_detail': bom.display_name,
-                'lead_time': product.produce_delay + rules_delay,
-                'manufacture_delay': product.produce_delay + rules_delay,
+                'lead_time': product.produce_delay + rules_delay + manufacturing_lead,
+                'manufacture_delay': product.produce_delay + rules_delay + manufacturing_lead,
             }
         return {}
 

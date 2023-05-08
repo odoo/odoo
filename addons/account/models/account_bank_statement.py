@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from contextlib import contextmanager
+
 from odoo import api, fields, models, _, Command
 from odoo.exceptions import UserError
 from odoo.tools.misc import formatLang
@@ -23,6 +25,7 @@ class AccountBankStatement(models.Model):
 
     date = fields.Date(
         compute='_compute_date_index', store=True,
+        index=True,
     )
 
     # The internal index of the first line of a statement, it is used for sorting the statements
@@ -298,3 +301,39 @@ class AccountBankStatement(models.Model):
             defaults['line_ids'] = [Command.set(lines.ids)]
 
         return defaults
+
+    @contextmanager
+    def _check_attachments(self, container, values_list):
+        attachments_to_fix_list = []
+        for values in values_list:
+            attachment_ids = set()
+            for orm_command in values.get('attachment_ids', []):
+                if orm_command[0] == Command.LINK:
+                    attachment_ids.add(orm_command[1])
+                elif orm_command[0] == Command.SET:
+                    for attachment_id in orm_command[2]:
+                        attachment_ids.add(attachment_id)
+
+            attachments = self.env['ir.attachment'].browse(list(attachment_ids))
+            attachments_to_fix_list.append(attachments)
+
+        yield
+
+        for stmt, attachments in zip(container['records'], attachments_to_fix_list):
+            attachments.write({'res_id': stmt.id, 'res_model': stmt._name})
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        container = {'records': self.env['account.bank.statement']}
+        with self._check_attachments(container, vals_list):
+            container['records'] = stmts = super().create(vals_list)
+        return stmts
+
+    def write(self, values):
+        if len(self) != 1 and 'attachment_ids' in values:
+            values.pop('attachment_ids')
+
+        container = {'records': self}
+        with self._check_attachments(container, [values]):
+            result = super().write(values)
+        return result

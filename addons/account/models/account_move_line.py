@@ -446,7 +446,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             line.partner_id = line.move_id.partner_id.commercial_partner_id
 
-    @api.depends('move_id.date', 'move_id.currency_id')
+    @api.depends('move_id.currency_id')
     def _compute_currency_id(self):
         for line in self:
             if line.display_type == 'cogs':
@@ -456,7 +456,7 @@ class AccountMoveLine(models.Model):
             else:
                 line.currency_id = line.currency_id or line.company_id.currency_id
 
-    @api.depends('product_id', 'journal_id')
+    @api.depends('product_id')
     def _compute_name(self):
         for line in self:
             if line.display_type == 'payment_term':
@@ -541,6 +541,7 @@ class AccountMoveLine(models.Model):
                       FROM account_account account
                      WHERE account.company_id = ANY(%(company_ids)s)
                        AND account.account_type IN ('asset_receivable', 'liability_payable')
+                       AND account.deprecated = 'f'
                 )
                 SELECT * FROM previous
                 UNION ALL
@@ -593,7 +594,7 @@ class AccountMoveLine(models.Model):
                 previous_two_accounts = line.move_id.line_ids.filtered(
                     lambda l: l.account_id and l.display_type == line.display_type
                 )[-2:].account_id
-                if len(previous_two_accounts) == 1:
+                if len(previous_two_accounts) == 1 and len(line.move_id.line_ids) > 2:
                     line.account_id = previous_two_accounts
                 else:
                     line.account_id = line.move_id.journal_id.default_account_id
@@ -873,20 +874,16 @@ class AccountMoveLine(models.Model):
             # Out invoice.
             if self.product_id.taxes_id:
                 tax_ids = self.product_id.taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
-            elif self.account_id.tax_ids:
-                tax_ids = self.account_id.tax_ids
             else:
-                tax_ids = self.env['account.tax']
+                tax_ids = self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'sale')
             if not tax_ids and self.display_type == 'product':
                 tax_ids = self.move_id.company_id.account_sale_tax_id
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
             if self.product_id.supplier_taxes_id:
                 tax_ids = self.product_id.supplier_taxes_id.filtered(lambda tax: tax.company_id == self.move_id.company_id)
-            elif self.account_id.tax_ids:
-                tax_ids = self.account_id.tax_ids
             else:
-                tax_ids = self.env['account.tax']
+                tax_ids = self.account_id.tax_ids.filtered(lambda tax: tax.type_tax_use == 'purchase')
             if not tax_ids and self.display_type == 'product':
                 tax_ids = self.move_id.company_id.account_purchase_tax_id
         else:
@@ -915,6 +912,7 @@ class AccountMoveLine(models.Model):
                     'tax_tag_ids': [(6, 0, line.tax_tag_ids.ids)],
                     'partner_id': line.partner_id.id,
                     'move_id': line.move_id.id,
+                    'display_type': line.display_type,
                 })
             else:
                 line.tax_key = frozendict({'id': line.id})
@@ -959,6 +957,7 @@ class AccountMoveLine(models.Model):
                     'tax_tag_ids': [(6, 0, tax['tag_ids'])],
                     'partner_id': line.move_id.partner_id.id or line.partner_id.id,
                     'move_id': line.move_id.id,
+                    'display_type': line.display_type,
                 }): {
                     'name': tax['name'],
                     'balance': tax['amount'] / rate,
@@ -1019,7 +1018,7 @@ class AccountMoveLine(models.Model):
                         'account_id': line.account_id.id,
                         'analytic_distribution': line.analytic_distribution,
                         'tax_ids': [Command.set(taxes.ids)],
-                        'tax_tag_ids': [Command.set(line.tax_tag_ids.ids)],
+                        'tax_tag_ids': line.compute_all_tax[frozendict({'id': line.id})]['tax_tag_ids'],
                         'display_type': 'epd',
                     }),
                     {
@@ -1064,6 +1063,8 @@ class AccountMoveLine(models.Model):
                     is_refund = True
                 elif tax_type == {'purchase'} and line.debit == 0:
                     is_refund = True
+                if line.tax_repartition_line_id.factor_percent < 0:
+                    is_refund = not is_refund
             line.is_refund = is_refund
 
     @api.depends('date_maturity')
@@ -1101,7 +1102,7 @@ class AccountMoveLine(models.Model):
     def _inverse_partner_id(self):
         self._conditional_add_to_compute('account_id', lambda line: (
             line.display_type == 'payment_term'  # recompute based on settings
-            or line.display_type == 'product' and not line.product_id  # recompute based on most used account
+            or (line.move_id.is_invoice(True) and line.display_type == 'product' and not line.product_id)  # recompute based on most used account
         ))
 
     @api.onchange('product_id')
@@ -1318,6 +1319,7 @@ class AccountMoveLine(models.Model):
         """
         create_index(self._cr, 'account_move_line_partner_id_ref_idx', 'account_move_line', ["partner_id", "ref"])
         create_index(self._cr, 'account_move_line_date_name_id_idx', 'account_move_line', ["date desc", "move_name desc", "id"])
+        super().init()
 
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
@@ -1337,6 +1339,21 @@ class AccountMoveLine(models.Model):
             else:
                 vals['balance'] = vals.pop('debit', 0) - vals.pop('credit', 0)
         return vals
+
+    def _prepare_create_values(self, vals_list):
+        result_vals_list = super()._prepare_create_values(vals_list)
+        for init_vals, res_vals in zip(vals_list, result_vals_list):
+            # Allow computing the balance based on the amount_currency if it wasn't specified in the create vals.
+            if (
+                'amount_currency' in init_vals
+                and 'balance' not in init_vals
+                and 'debit' not in init_vals
+                and 'credit' not in init_vals
+            ):
+                res_vals.pop('balance', 0)
+                res_vals.pop('debit', 0)
+                res_vals.pop('credit', 0)
+        return result_vals_list
 
     @contextmanager
     def _sync_invoice(self, container):
@@ -2331,7 +2348,11 @@ class AccountMoveLine(models.Model):
                 raise UserError(_("Entries are not from the same account: %s != %s")
                                 % (account.display_name, line.account_id.display_name))
 
-        sorted_lines = self.sorted(key=lambda line: (line.date_maturity or line.date, line.currency_id, line.amount_currency))
+        if self._context.get('reduced_line_sorting'):
+            sorting_f = lambda line: (line.date_maturity or line.date, line.currency_id)
+        else:
+            sorting_f = lambda line: (line.date_maturity or line.date, line.currency_id, line.amount_currency)
+        sorted_lines = self.sorted(key=sorting_f)
 
         # ==== Collect all involved lines through the existing reconciliation ====
 
@@ -2525,6 +2546,7 @@ class AccountMoveLine(models.Model):
             'move_line_id': self.id,
             'user_id': self.move_id.invoice_user_id.id or self._uid,
             'company_id': account.company_id.id or self.company_id.id or self.env.company.id,
+            'category': 'invoice' if self.move_id.is_sale_document() else 'vendor_bill' if self.move_id.is_purchase_document() else 'other',
         }
 
     # -------------------------------------------------------------------------

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # Martin Trigaux, 2022
-# Mehjabin Farsana, 2022
 # Malaz Abuidris <msea@odoo.com>, 2023
 # 
 msgid ""
@@ -14,7 +13,7 @@ msgstr ""
 "POT-Creation-Date: 2022-09-27 15:12+0000\n"
 "PO-Revision-Date: 2022-09-22 05:45+0000\n"
 "Last-Translator: Malaz Abuidris <msea@odoo.com>, 2023\n"
-"Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
+"Language-Team: Arabic (https://app.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -46,6 +45,27 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        مرحباً،\n"
+"        <br/><br/>\n"
+"        <span style=\"font-weight: bold;\" t-out=\"object.user_id.name\"/> طلب تفعيل تطبيق <span style=\"font-weight: bold;\" t-out=\"object.module_id.shortdesc\"/>. هذا التطبيق مشمول في اشتراكك. لن يترتم على ذلك <span style=\"color: #875A7B; font-weight: bold;\">أي تكاليف إضافية</span>، ولكن يتطلب دور المدير لتفعيله.\n"
+"        <br/><br/>\n"
+"        <blockquote>\n"
+"            <t t-out=\"object.body_html\"/>\n"
+"        </blockquote>\n"
+"        <br/><br/>\n"
+"        <a style=\"background-color:#875A7B; padding:8px 16px 8px 16px; text-decoration:none; color:#fff; border-radius:5px\" t-attf-href=\"/web?#action=base_install_request.action_base_module_install_review&amp;active_id={{ object.module_id.id }}&amp;menu_id={{ ctx['menu_id'] }}\">مراجعة الطلب</a>\n"
+"        <br/><br/>\n"
+"        شكراً لك،\n"
+"        <t t-if=\"not is_html_empty(object.user_id.signature)\">\n"
+"            <br/><br/>\n"
+"            <t t-out=\"object.user_id.signature or ''\">--<br/>ميتشل آدمن</t>\n"
+"        </t>\n"
+"        <br/><br/>\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: base_install_request
 #: code:addons/base_install_request/models/ir_module_module.py:0
@@ -131,7 +151,7 @@ msgstr "التطبيق "
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_request
 msgid "Module Activation Request"
-msgstr "طلب تفعيل الوحدة"
+msgstr "طلب تفعيل التطبيق "
 
 #. module: base_install_request
 #: model:mail.template,subject:base_install_request.mail_template_base_install_request
@@ -141,17 +161,17 @@ msgstr "طلب تفعيل التطبيق \"{{ object.module_id.shortdesc }}\"- "
 #. module: base_install_request
 #: model:ir.model,name:base_install_request.model_base_module_install_review
 msgid "Module Activation Review"
-msgstr "مراجعة تنشيط الوحدة النمطية"
+msgstr "مراجعة تفعيل التطبيق "
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_review__modules_description
 msgid "Modules Description"
-msgstr "وصف الوحدات"
+msgstr "وصف التطبيقات "
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_review_view_form
 msgid "No extra cost, this application is free."
-msgstr ""
+msgstr "دون أي تكلفة إضافية، هذا التطبيق مجاني. "
 
 #. module: base_install_request
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
@@ -162,12 +182,12 @@ msgstr "لم يتم تحديد أي تطبيق. "
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.ir_module_module_view_kanban
 msgid "Request Access"
-msgstr "طلب الدخول"
+msgstr "طلب الوصول "
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
 msgid "Request Activation"
-msgstr "طلب التنشيط"
+msgstr "طلب التفعيل "
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_ids
@@ -184,7 +204,7 @@ msgstr "سيتم تثبيت التطبيقات التالية: "
 #: code:addons/base_install_request/wizard/base_module_install_request.py:0
 #, python-format
 msgid "The module is already installed."
-msgstr "الوحدة مثبتة بالفعل."
+msgstr "التطبيق مثبت بالفعل. "
 
 #. module: base_install_request
 #: model_terms:ir.ui.view,arch_db:base_install_request.base_module_install_request_view_form
@@ -192,6 +212,8 @@ msgid ""
 "This app is included in your subscription. It's free to activate, but only "
 "an administrator can do it. Fill this form to send an activation request."
 msgstr ""
+"هذا التطبيق مشمول في اشتراكك. يمكنك تفعيله مجاناً، ولكن وحده المدير يمكنه "
+"القيام بذلك. قم بتعبئة هذه الاستمارة لإرسال طلب تفعيل. "
 
 #. module: base_install_request
 #: model:ir.model.fields,field_description:base_install_request.field_base_module_install_request__user_id

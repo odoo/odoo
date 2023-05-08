@@ -1234,6 +1234,37 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(so.order_line[1].qty_delivered, 1)
         self.assertEqual(so.order_line[1].product_uom.id, uom_km_id)
 
+    def test_multiple_returns(self):
+        # Creates a sale order for 10 products.
+        sale_order = self._get_new_sale_order()
+        # Valids the sale order, then valids the delivery.
+        sale_order.action_confirm()
+        picking = sale_order.picking_ids
+        picking.move_ids.write({'quantity_done': 10})
+        picking.button_validate()
+
+        # Creates a return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Check that the correct quantity is set on the retrun
+        self.assertEqual(return_wizard.product_return_moves.quantity, 10)
+        return_wizard.product_return_moves.quantity = 2
+        # Valids the return picking.
+        res = return_wizard.create_returns()
+        return_picking = self.env['stock.picking'].browse(res['res_id'])
+        return_picking.move_ids.write({'quantity_done': 2})
+        return_picking.button_validate()
+
+        # Creates a second return from the delivery picking.
+        return_picking_form = Form(self.env['stock.return.picking']
+            .with_context(active_ids=picking.ids, active_id=picking.id,
+            active_model='stock.picking'))
+        return_wizard = return_picking_form.save()
+        # Check that the remaining quantity is set on the retrun
+        self.assertEqual(return_wizard.product_return_moves.quantity, 8)
+
     def test_return_with_mto_and_multisteps(self):
         """
         Suppose a product P and a 3-steps delivery.

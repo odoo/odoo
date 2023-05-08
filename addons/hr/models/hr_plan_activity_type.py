@@ -44,13 +44,13 @@ class HrPlanActivityType(models.Model):
             if not employee.coach_id:
                 warning = _('Coach of employee %s is not set.', employee.name)
             responsible = employee.coach_id.user_id
-            if not responsible:
-                warning = _('User of coach of employee %s is not set.', employee.name)
+            if employee.coach_id and not responsible:
+                warning = _("The user of %s's coach is not set.", employee.name)
         elif self.responsible == 'manager':
             if not employee.parent_id:
                 warning = _('Manager of employee %s is not set.', employee.name)
             responsible = employee.parent_id.user_id
-            if not responsible:
+            if employee.parent_id and not responsible:
                 warning = _("The manager of %s should be linked to a user.", employee.name)
         elif self.responsible == 'employee':
             responsible = employee.user_id

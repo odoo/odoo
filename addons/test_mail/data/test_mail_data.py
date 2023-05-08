@@ -214,6 +214,39 @@ Content-Type: text/html;
 --Apple-Mail=_9331E12B-8BD2-4EC7-B53E-01F3FBEC9227--
 """
 
+MAIL_FILE_ENCODING = """MIME-Version: 1.0
+Date: Sun, 26 Mar 2023 05:23:22 +0200
+Message-ID: {msg_id}
+Subject: {subject}
+From: "Sylvie Lelitre" <test.sylvie.lelitre@agrolait.com>
+To: groups@test.com
+Content-Type: multipart/mixed; boundary="000000000000b951de05f7c47a9e"
+
+--000000000000b951de05f7c47a9e
+Content-Type: multipart/alternative; boundary="000000000000b951da05f7c47a9c"
+
+--000000000000b951da05f7c47a9c
+Content-Type: text/plain; charset="UTF-8"
+
+Test Body
+
+--000000000000b951da05f7c47a9c
+Content-Type: text/html; charset="UTF-8"
+
+<div dir="ltr">Test Body</div>
+
+--000000000000b951da05f7c47a9c--
+--000000000000b951de05f7c47a9e
+Content-Type: text/plain; name="test.txt"{charset}
+Content-Disposition: attachment; filename="test.txt"
+Content-Transfer-Encoding: base64
+X-Attachment-Id: f_lfosfm0l0
+Content-ID: <f_lfosfm0l0>
+
+{content}
+
+--000000000000b951de05f7c47a9e--
+"""
 
 MAIL_MULTIPART_BINARY_OCTET_STREAM = """X-Original-To: raoul@grosbedon.fr
 Delivered-To: raoul@grosbedon.fr

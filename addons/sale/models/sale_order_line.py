@@ -691,7 +691,7 @@ class SaleOrderLine(models.Model):
         """
         # compute for analytic lines
         lines_by_analytic = self.filtered(lambda sol: sol.qty_delivered_method == 'analytic')
-        mapping = lines_by_analytic._get_delivered_quantity_by_analytic([('amount', '<=', 0.0)])
+        mapping = lines_by_analytic._get_delivered_quantity_by_analytic([])
         for so_line in lines_by_analytic:
             so_line.qty_delivered = mapping.get(so_line.id or so_line._origin.id, 0.0)
 
@@ -722,29 +722,20 @@ class SaleOrderLine(models.Model):
 
         # group analytic lines by product uom and so line
         domain = expression.AND([[('so_line', 'in', self.ids)], additional_domain])
-        data = self.env['account.analytic.line'].read_group(
-            domain,
-            ['so_line', 'unit_amount', 'product_uom_id'], ['product_uom_id', 'so_line'], lazy=False
-        )
-
-        # convert uom and sum all unit_amount of analytic lines to get the delivered qty of SO lines
-        # browse so lines and product uoms here to make them share the same prefetch
-        lines = self.browse([item['so_line'][0] for item in data])
-        lines_map = {line.id: line for line in lines}
-        product_uom_ids = [item['product_uom_id'][0] for item in data if item['product_uom_id']]
-        product_uom_map = {uom.id: uom for uom in self.env['uom.uom'].browse(product_uom_ids)}
-        for item in data:
-            if not item['product_uom_id']:
+        analytic_lines = self.env['account.analytic.line'].search(domain)
+        for line in analytic_lines:
+            if not line.product_uom_id:
                 continue
-            so_line_id = item['so_line'][0]
-            so_line = lines_map[so_line_id]
-            result.setdefault(so_line_id, 0.0)
-            uom = product_uom_map.get(item['product_uom_id'][0])
-            if so_line.product_uom.category_id == uom.category_id:
-                qty = uom._compute_quantity(item['unit_amount'], so_line.product_uom, rounding_method='HALF-UP')
+            result.setdefault(line.so_line.id, 0.0)
+            if line.so_line.product_uom.category_id == line.product_uom_id.category_id:
+                qty = line.product_uom_id._compute_quantity(line.unit_amount, line.so_line.product_uom, rounding_method='HALF-UP')
             else:
-                qty = item['unit_amount']
-            result[so_line_id] += qty
+                qty = line.unit_amount
+
+            # if greater than 0 -> refund
+            sign = line.amount and -line.amount / abs(line.amount) or 1
+
+            result[line.so_line.id] += sign * qty
 
         return result
 
@@ -958,16 +949,16 @@ class SaleOrderLine(models.Model):
 
     #=== CRUD METHODS ===#
     def _add_precomputed_values(self, vals_list):
-        """ In the specific case where the discount is provided in the create values
+        """ In case an editable precomputed field is provided in the create values
         without being rounded, we have to 'manually' round it otherwise it won't be,
-        because editable precomputed field values are kept 'as is'.
+        because those field values are kept 'as is'.
 
         This is a temporary fix until the problem is fixed in the ORM.
         """
-        precision = self.env['decimal.precision'].precision_get('Discount')
         for vals in vals_list:
-            if vals.get('discount'):
-                vals['discount'] = float_round(vals['discount'], precision_digits=precision)
+            for fname in ('discount', 'product_uom_qty'):
+                if fname in vals:
+                    vals[fname] = self._fields[fname].convert_to_cache(vals[fname], self)
         return super()._add_precomputed_values(vals_list)
 
     @api.model_create_multi
@@ -1120,6 +1111,7 @@ class SaleOrderLine(models.Model):
         if self.analytic_distribution and not self.display_type:
             res['analytic_distribution'] = self.analytic_distribution
         if analytic_account_id and not self.display_type:
+            analytic_account_id = str(analytic_account_id)
             if 'analytic_distribution' in res:
                 res['analytic_distribution'][analytic_account_id] = res['analytic_distribution'].get(analytic_account_id, 0) + 100
             else:

@@ -686,7 +686,10 @@ registry.mediaVideo = publicWidget.Widget.extend(MobileYoutubeAutoplayMixin, {
             iframeEl = this._generateIframe();
         }
 
-        if (!iframeEl) {
+        // We don't want to cause an error that would prevent entering edit mode
+        // if there is an iframe that doesn't have a src (this was possible for
+        // a while with the media dialog).
+        if (!iframeEl || !iframeEl.getAttribute('src')) {
             // Something went wrong: no iframe is present in the DOM and the
             // widget was unable to create one on the fly.
             return Promise.all(proms);
@@ -1189,6 +1192,20 @@ registry.BottomFixedElement = publicWidget.Widget.extend({
         // button which is the main reason of this code).
         const $bottomFixedElements = $('.o_bottom_fixed_element');
         if (!$bottomFixedElements.length) {
+            return;
+        }
+
+        // The bottom fixed elements are always hidden when a modal is open
+        // thanks to the CSS that is based on the 'modal-open' class added to
+        // the body. However, when the modal does not have a backdrop (e.g.
+        // cookies bar), this 'modal-open' class is not added. That's why we
+        // handle it here. Note that the popup widget code triggers a 'scroll'
+        // event when the modal is hidden to make the bottom fixed elements
+        // reappear.
+        if (this.el.querySelector('.s_popup_no_backdrop.show')) {
+            for (const el of $bottomFixedElements) {
+                el.classList.add('o_bottom_fixed_element_hidden');
+            }
             return;
         }
 

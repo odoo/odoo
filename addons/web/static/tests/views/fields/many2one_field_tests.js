@@ -785,6 +785,25 @@ QUnit.module("Fields", (hooks) => {
     );
 
     QUnit.test(
+        "using a many2one widget must take into account the decorations",
+        async function (assert) {
+            await makeView({
+                type: "list",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <tree>
+                    <field name="user_id" decoration-danger="int_field > 9" widget="many2one"/>
+                    <field name="int_field"/>
+                </tree>`,
+            });
+
+            assert.containsOnce(target, ".o_list_many2one a.text-danger");
+            assert.containsN(target, ".o_data_row", 3);
+        }
+    );
+
+    QUnit.test(
         "onchanges on many2ones trigger when editing record in form view",
         async function (assert) {
             assert.expect(10);
@@ -2949,18 +2968,63 @@ QUnit.module("Fields", (hooks) => {
         await click(target, ".modal .modal-footer .btn-primary");
     });
 
+    QUnit.test(
+        "failing quick create on a many2one because ValidationError",
+        async function (assert) {
+            assert.expect(5);
+
+            registry.category("services").add("error", errorService);
+
+            // remove the override in qunit.js that swallows unhandledrejection errors
+            // s.t. we let the error service handle them
+            const originalOnUnhandledRejection = window.onunhandledrejection;
+            window.onunhandledrejection = () => {};
+            registerCleanup(() => {
+                window.onunhandledrejection = originalOnUnhandledRejection;
+            });
+
+            serverData.views = {
+                "product,false,form": '<form><field name="name" /></form>',
+            };
+
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="product_id" /></form>',
+                mockRPC(route, { args, method }) {
+                    if (method === "name_create") {
+                        const error = new RPCError("Something went wrong");
+                        error.exceptionName = "odoo.exceptions.ValidationError";
+                        throw error;
+                    }
+                    if (method === "create") {
+                        assert.deepEqual(args[0], { name: "xyz" });
+                    }
+                },
+            });
+
+            await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
+            await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
+            await nextTick(); // wait for the error service to ensure that there's no error dialog
+            assert.containsNone(target, ".o_dialog_error");
+            assert.containsOnce(target, ".modal .o_form_view");
+            assert.strictEqual(
+                target.querySelector(".modal .o_field_widget[name='name'] input").value,
+                "abcd"
+            );
+
+            await editInput(target, ".modal .o_field_widget[name='name'] input", "xyz");
+            await click(target, ".modal .o_form_button_save");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='product_id'] input").value,
+                "xyz"
+            );
+        }
+    );
+
     QUnit.test("failing quick create on a many2one", async function (assert) {
-        assert.expect(5);
-
         registry.category("services").add("error", errorService);
-
-        // remove the override in qunit.js that swallows unhandledrejection errors
-        // s.t. we let the error service handle them
-        const originalOnUnhandledRejection = window.onunhandledrejection;
-        window.onunhandledrejection = () => {};
-        registerCleanup(() => {
-            window.onunhandledrejection = originalOnUnhandledRejection;
-        });
 
         serverData.views = {
             "product,false,form": '<form><field name="name" /></form>',
@@ -2973,75 +3037,66 @@ QUnit.module("Fields", (hooks) => {
             arch: '<form><field name="product_id" /></form>',
             mockRPC(route, { args, method }) {
                 if (method === "name_create") {
-                    throw new RPCError("Something went wrong");
-                }
-                if (method === "create") {
-                    assert.deepEqual(args[0], { name: "xyz" });
+                    return new RPCError("Something went wrong");
                 }
             },
         });
 
         await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
         await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
-        await nextTick(); // wait for the error service to ensure that there's no error dialog
-        assert.containsNone(target, ".o_dialog_error");
-        assert.containsOnce(target, ".modal .o_form_view");
-        assert.strictEqual(
-            target.querySelector(".modal .o_field_widget[name='name'] input").value,
-            "abcd"
-        );
-
-        await editInput(target, ".modal .o_field_widget[name='name'] input", "xyz");
-        await click(target, ".modal .o_form_button_save");
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name='product_id'] input").value,
-            "xyz"
-        );
+        await nextTick(); // wait for the error service
+        assert.containsOnce(target, ".o_dialog_error");
+        assert.containsNone(target, ".modal .o_form_view");
     });
 
-    QUnit.test("failing quick create on a many2one inside a one2many", async function (assert) {
-        assert.expect(4);
+    QUnit.test(
+        "failing quick create on a many2one inside a one2many  because ValidationError",
+        async function (assert) {
+            assert.expect(4);
 
-        serverData.views = {
-            "partner,false,list": `
+            serverData.views = {
+                "partner,false,list": `
                 <tree editable="bottom">
                     <field name="product_id" />
                 </tree>`,
-            "product,false,form": '<form><field name="name" /></form>',
-        };
+                "product,false,form": '<form><field name="name" /></form>',
+            };
 
-        await makeView({
-            type: "form",
-            resModel: "partner",
-            serverData,
-            arch: '<form><field name="p" /></form>',
-            mockRPC(route, { args, method }) {
-                if (method === "name_create") {
-                    throw new RPCError("Something went wrong");
-                }
-                if (method === "create") {
-                    assert.deepEqual(args[0], { name: "xyz" });
-                }
-            },
-        });
+            await makeView({
+                type: "form",
+                resModel: "partner",
+                serverData,
+                arch: '<form><field name="p" /></form>',
+                mockRPC(route, { args, method }) {
+                    if (method === "name_create") {
+                        const error = new RPCError("Something went wrong");
+                        error.exceptionName = "odoo.exceptions.ValidationError";
+                        throw error;
+                    }
+                    if (method === "create") {
+                        assert.deepEqual(args[0], { name: "xyz" });
+                    }
+                },
+            });
 
-        await click(target, ".o_field_x2many_list_row_add a");
-        await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
-        await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
+            await click(target, ".o_field_x2many_list_row_add a");
+            await editInput(target, ".o_field_widget[name='product_id'] input", "abcd");
+            await click(target.querySelector(".o_field_widget[name='product_id'] .dropdown-item"));
 
-        assert.containsOnce(target, ".modal .o_form_view");
-        assert.strictEqual(
-            target.querySelector(".modal .o_field_widget[name='name'] input").value,
-            "abcd"
-        );
+            assert.containsOnce(target, ".modal .o_form_view");
+            assert.strictEqual(
+                target.querySelector(".modal .o_field_widget[name='name'] input").value,
+                "abcd"
+            );
 
-        await editInput(target, ".modal .o_field_widget[name='name'] input", "xyz");
-        await click(target, ".modal .o_form_button_save");
-        assert.strictEqual(
-            target.querySelector(".o_field_widget[name='product_id'] input").value,
-            "xyz"
-        );
-    });
+            await editInput(target, ".modal .o_field_widget[name='name'] input", "xyz");
+            await click(target, ".modal .o_form_button_save");
+            assert.strictEqual(
+                target.querySelector(".o_field_widget[name='product_id'] input").value,
+                "xyz"
+            );
+        }
+    );
 
     QUnit.test("slow create on a many2one", async function (assert) {
         serverData.views = {
@@ -4526,5 +4581,53 @@ QUnit.module("Fields", (hooks) => {
             target.querySelector(".o_field_widget[name=trululu] input").value,
             "aaa"
         );
+    });
+
+    QUnit.test("many2one field with kanban_view_ref attribute", async function (assert) {
+        registry.category("services").add("ui", {
+            start(env) {
+                Object.defineProperty(env, "isSmall", {
+                    value: true,
+                });
+                return {
+                    activeElement: document.body,
+                    activateElement() {},
+                    deactivateElement() {},
+                    bus: new owl.EventBus(),
+                    size: 0,
+                    isSmall: true,
+                };
+            },
+        });
+        serverData.views = {
+            "partner,98,kanban": `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="display_name"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: '<form><field name="trululu" kanban_view_ref="98"/></form>',
+            resId: 1,
+            mockRPC(route, { method, kwargs }) {
+                if (method === "get_views") {
+                    assert.step(JSON.stringify(kwargs.views));
+                }
+            },
+        });
+
+        await click(target, ".o_field_many2one input");
+        assert.verifySteps([
+            '[[100000001,"form"],[100000002,"search"]]',
+            '[[98,"kanban"],[false,"search"]]',
+        ]);
     });
 });

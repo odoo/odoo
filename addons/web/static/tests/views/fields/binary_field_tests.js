@@ -12,6 +12,7 @@ import {
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { browser } from "@web/core/browser/browser";
+import { RPCError } from "@web/core/network/rpc_service";
 
 const BINARY_FILE =
     "R0lGODlhDAAMAKIFAF5LAP/zxAAAANyuAP/gaP///wAAAAAAACH5BAEAAAUALAAAAAAMAAwAAAMlWLPcGjDKFYi9lxKBOaGcF35DhWHamZUW0K4mAbiwWtuf0uxFAgA7";
@@ -429,5 +430,76 @@ QUnit.module("Fields", (hooks) => {
             `,
         });
         assert.containsNone(target, "button.fa-download");
+    });
+
+    QUnit.test("BinaryField filename is updated when using the pager", async function (assert) {
+        serverData.models.partner.records.push(
+            {
+                id: 1,
+                document: "abc",
+                foo: "abc.txt",
+            },
+            {
+                id: 2,
+                document: "def",
+                foo: "def.txt",
+            }
+        );
+        await makeView({
+            serverData,
+            type: "form",
+            resModel: "partner",
+            arch: `
+                <form>
+                    <field name="document" filename="foo"/>
+                    <field name="foo"/>
+                </form>
+            `,
+            resIds: [1, 2],
+            resId: 1,
+        });
+
+        assert.strictEqual(
+            target.querySelector(".o_field_binary input[type=text]").value,
+            "abc.txt",
+            'displayed value should be "abc.txt"'
+        );
+
+        await click(target.querySelector(".o_pager_next"));
+
+        assert.strictEqual(
+            target.querySelector(".o_field_binary input[type=text]").value,
+            "def.txt",
+            'displayed value should be changed to "def.txt"'
+        );
+    });
+
+    QUnit.test('isUploading state should be set to false after upload', async function(assert) {
+        assert.expect(1);
+        serverData.models.partner.onchanges = {
+            document: function (obj) {
+                if (obj.document) {
+                    const error = new RPCError();
+                    error.exceptionName = "odoo.exceptions.ValidationError";
+                    throw error;
+                }
+            },
+        };
+        await makeView({
+            type: "form",
+            resModel: "partner",
+            serverData,
+            arch: `
+                <form>
+                    <field name="document"/>
+                </form>`,
+        });
+        const file = new File(["test"], "fake_file.txt", { type: "text/plain" });
+        await editInput(target, ".o_field_binary .o_input_file", file);
+        assert.equal(
+            target.querySelector(".o_select_file_button").innerText,
+            "UPLOAD YOUR FILE",
+            "displayed value should be upload your file"
+        );
     });
 });

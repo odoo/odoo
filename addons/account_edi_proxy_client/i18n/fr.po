@@ -4,17 +4,17 @@
 # 
 # Translators:
 # Cécile Collart <cco@odoo.com>, 2022
-# Martin Trigaux, 2022
+# Martin Trigaux, 2023
 # Jolien De Paepe, 2023
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 15.0\n"
+"Project-Id-Version: Odoo Server 16.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-11-16 13:18+0000\n"
+"POT-Creation-Date: 2023-04-14 05:51+0000\n"
 "PO-Revision-Date: 2022-09-22 05:44+0000\n"
 "Last-Translator: Jolien De Paepe, 2023\n"
-"Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
+"Language-Team: French (https://app.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -30,6 +30,11 @@ msgstr "Compte EDI de l'utilisateur proxy"
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_res_company__account_edi_proxy_client_ids
 msgid "Account Edi Proxy Client"
 msgstr "Compte EDI du client proxy"
+
+#. module: account_edi_proxy_client
+#: model_terms:ir.ui.view,arch_db:account_edi_proxy_client.view_form_account_edi_proxy_client_user
+msgid "Account Journal"
+msgstr "Journal des comptes"
 
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__active
@@ -64,7 +69,17 @@ msgstr "Créé le"
 #. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__display_name
 msgid "Display Name"
-msgstr "Afficher le nom"
+msgstr "Nom d'affichage"
+
+#. module: account_edi_proxy_client
+#: model:ir.actions.act_window,name:account_edi_proxy_client.action_tree_account_edi_proxy_client_user
+msgid "EDI Proxy User"
+msgstr "EDI de l'utilisateur proxy"
+
+#. module: account_edi_proxy_client
+#: model:ir.ui.menu,name:account_edi_proxy_client.menu_account_proxy_client_user
+msgid "EDI Proxy Users"
+msgstr "EDI des utilisateurs proxy"
 
 #. module: account_edi_proxy_client
 #: model:ir.model,name:account_edi_proxy_client.model_account_edi_format
@@ -112,6 +127,11 @@ msgid "Private Key"
 msgstr "Clé privée"
 
 #. module: account_edi_proxy_client
+#: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__private_key_filename
+msgid "Private Key Filename"
+msgstr "Nom de dossier de la clé privée"
+
+#. module: account_edi_proxy_client
 #: model:ir.model.fields,field_description:account_edi_proxy_client.field_account_edi_proxy_client_user__refresh_token
 msgid "Refresh Token"
 msgstr "Actualiser le jeton"
@@ -131,6 +151,7 @@ msgstr ""
 " la TVA"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""
@@ -141,6 +162,7 @@ msgstr ""
 "contacter était %s"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""
@@ -151,6 +173,7 @@ msgstr ""
 "contacter était %s. %s"
 
 #. module: account_edi_proxy_client
+#. odoo-python
 #: code:addons/account_edi_proxy_client/models/account_edi_proxy_user.py:0
 #, python-format
 msgid ""

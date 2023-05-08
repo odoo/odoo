@@ -193,7 +193,7 @@ class DiscussController(http.Controller):
     @http.route('/mail/init_messaging', methods=['POST'], type='json', auth='public')
     def mail_init_messaging(self, **kwargs):
         if not request.env.user.sudo()._is_public():
-            return request.env.user.sudo(False)._init_messaging()
+            return request.env.user.sudo(request.env.user.has_group('base.group_portal'))._init_messaging()
         guest = request.env['mail.guest']._get_guest_from_request(request)
         if guest:
             return guest.sudo()._init_messaging()

@@ -8,11 +8,10 @@
 # Murat Kaplan <muratk@projetgrup.com>, 2022
 # Martin Trigaux, 2022
 # Ediz Duman <neps1192@gmail.com>, 2022
-# Tugay Hatıl <tugayh@projetgrup.com>, 2022
-# Umur Akın <umura@projetgrup.com>, 2022
 # Levent Karakaş <levent@mektup.at>, 2022
 # Halil, 2022
 # Murat Durmuş <muratd@projetgrup.com>, 2022
+# Tugay Hatıl <tugayh@projetgrup.com>, 2023
 # 
 msgid ""
 msgstr ""
@@ -20,8 +19,8 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-09-20 09:02+0000\n"
 "PO-Revision-Date: 2022-09-22 05:55+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2022\n"
-"Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
+"Last-Translator: Tugay Hatıl <tugayh@projetgrup.com>, 2023\n"
+"Language-Team: Turkish (https://app.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
@@ -41,7 +40,7 @@ msgstr ""
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.product_template_form_view_inherit
 msgid "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
-msgstr ""
+msgstr "<span class=\"fa fa-lg fa-building-o fa-fw\" title=\"Service to Purchase\"/>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.sale_order_inherited_form_purchase
@@ -62,6 +61,12 @@ msgid ""
 "                </span>\n"
 "            </span>"
 msgstr ""
+"<span id=\"display_invoice_alert\" position=\"after\">\n"
+"                <span id=\"display_purchase_orders_alert\" attrs=\"{'invisible': [('display_purchase_orders_alert', '=', False)]}\">\n"
+"                    Otomatik olarak iptal edilmeyen, bu satış siparişine bağlı etkin satınalma siparişleri var!\n"
+" <br/>\n"
+"                </span>\n"
+"            </span>"
 
 #. module: sale_purchase
 #: model_terms:ir.ui.view,arch_db:sale_purchase.exception_sale_on_purchase_cancellation
@@ -95,7 +100,7 @@ msgid ""
 "on the product."
 msgstr ""
 "İşaretlenirse, bu ürünü bir SO aracılığıyla her sattığınızda, ürünü satın "
-"almak için otomatik olarak bir RfQ oluşturulur. İpucu: üründe bir satıcı "
+"almak için otomatik olarak bir RFQ oluşturulur. İpucu: üründe bir satıcı "
 "ayarlamayı unutmayın."
 
 #. module: sale_purchase
@@ -136,6 +141,8 @@ msgid ""
 "Please define the vendor from whom you would like to purchase this service "
 "automatically."
 msgstr ""
+"Lütfen bu hizmeti otomatik olarak satın almak istediğiniz satıcıyı "
+"tanımlayın."
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_product_template
@@ -156,7 +163,7 @@ msgstr "Satınalma Siparişi"
 #. module: sale_purchase
 #: model:ir.model.fields,field_description:sale_purchase.field_sale_order_cancel__display_purchase_orders_alert
 msgid "Purchase Order Alert"
-msgstr ""
+msgstr "Satın Alma Siparişi Uyarısı"
 
 #. module: sale_purchase
 #: model:ir.model,name:sale_purchase.model_purchase_order_line
@@ -167,7 +174,7 @@ msgstr "Satınalma Sipariş Satırı"
 #: code:addons/sale_purchase/models/sale_order.py:0
 #, python-format
 msgid "Purchase Order generated from %s"
-msgstr " Satınalma Siparişinden oluşturulan%s"
+msgstr "%s'den oluşturulan Satın Alma Siparişi"
 
 #. module: sale_purchase
 #: model:ir.model.fields,help:sale_purchase.field_sale_order_line__purchase_line_ids
@@ -222,7 +229,7 @@ msgid ""
 "There is no vendor associated to the product %s. Please define a vendor for "
 "this product."
 msgstr ""
-"Ürünle ilişkili bir tedarikçi bulunmuyor %s. Bu ürün için lütfen bir "
+"%s ürünüyle ilişkilendirilmiş tedarikçi yok. Lütfen bu ürün için bir "
 "tedarikçi tanımlayın."
 
 #. module: sale_purchase

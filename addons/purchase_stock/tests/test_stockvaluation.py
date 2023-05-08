@@ -63,6 +63,72 @@ class TestStockValuation(TransactionCase):
         })
         cls.env.ref('base.EUR').active = True
 
+
+    def test_different_uom(self):
+        """ Set a quantity to replenish via the "Buy" route
+        where product_uom is different from purchase uom
+        """
+
+        self.env['ir.config_parameter'].sudo().set_param('stock.propagate_uom', False)
+
+        # Create and set a new weight unit.
+        kgm = self.env.ref('uom.product_uom_kgm')
+        ap = self.env['uom.uom'].create({
+            'category_id': kgm.category_id.id,
+            'name': 'Algerian Pounds',
+            'uom_type': 'bigger',
+            'ratio': 2.47541,
+            'rounding': 0.001,
+        })
+        kgm_price = 100
+        ap_price = kgm_price / ap.factor
+
+        self.product1.uom_id = ap
+        self.product1.uom_po_id = kgm
+
+        # Set vendor
+        vendor = self.env['res.partner'].create(dict(name='The Replenisher'))
+        supplierinfo = self.env['product.supplierinfo'].create({
+            'partner_id': vendor.id,
+            'price': kgm_price,
+        })
+        self.product1.seller_ids = [(4, supplierinfo.id, 0)]
+
+        # Automated stock valuation
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
+
+        # Create a manual replenishment
+        replenishment_uom_qty = 200
+        replenish_wizard = self.env['product.replenish'].create({
+            'product_id': self.product1.id,
+            'product_tmpl_id': self.product1.product_tmpl_id.id,
+            'product_uom_id': ap.id,
+            'quantity': replenishment_uom_qty,
+            'warehouse_id': self.env['stock.warehouse'].search([('company_id', '=', self.env.user.id)], limit=1).id,
+        })
+        replenish_wizard.launch_replenishment()
+
+        last_po_id = self.env['purchase.order'].search([
+            ('origin', 'ilike', '%Manual Replenishment%'),
+            ('partner_id', '=', vendor.id)
+        ])[-1]
+        order_line = last_po_id.order_line.search([('product_id', '=', self.product1.id)])
+        self.assertEqual(order_line.product_qty,
+            ap._compute_quantity(replenishment_uom_qty, kgm, rounding_method='HALF-UP'),
+            'Quantities does not match')
+
+        # Recieve products
+        last_po_id.button_confirm()
+        picking = last_po_id.picking_ids[0]
+        move = picking.move_ids[0]
+        move.quantity_done = move.product_uom_qty
+        picking.button_validate()
+
+        self.assertEqual(move.stock_valuation_layer_ids.unit_cost,
+            last_po_id.currency_id.round(ap_price),
+            "Wrong Unit price")
+
     def test_change_unit_cost_average_1(self):
         """ Confirm a purchase order and create the associated receipt, change the unit cost of the
         purchase order before validating the receipt, the value of the received goods should be set
@@ -1110,6 +1176,107 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
             {'balance': 27.86,  'amount_currency': 0.0,     'account_id': self.stock_input_account.id},
             {'balance': 15.0,   'amount_currency': 30.0,    'account_id': self.stock_input_account.id},
         ])
+        input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
+        self.assertEqual(len(input_aml), 3)
+
+    def test_average_realtime_with_delivery_anglo_saxon_valuation_multicurrency_same_dates(self):
+        """ Same than test_average_realtime_with_delivery_anglo_saxon_valuation_multicurrency_different_dates
+        but the rates change happens
+        """
+        company = self.env.user.company_id
+        company.anglo_saxon_accounting = True
+        company.currency_id = self.usd_currency
+        self.product1.product_tmpl_id.categ_id.property_cost_method = 'average'
+        self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
+
+        date = fields.Date.to_string(fields.Date.today())
+
+        product_avg = self.product1_copy
+        product_avg.write({
+            'purchase_method': 'purchase',
+            'name': 'AVG',
+            'standard_price': 60,
+        })
+
+        # SetUp currency and rates
+        self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
+        self.env['res.currency.rate'].search([]).unlink()
+        self.env['res.currency.rate'].create({
+            'name': date,
+            'rate': 1.0,
+            'currency_id': self.usd_currency.id,
+            'company_id': company.id,
+        })
+
+        eur_rate = self.env['res.currency.rate'].create({
+            'name': date,
+            'rate': 0.5,
+            'currency_id': self.eur_currency.id,
+            'company_id': company.id,
+        })
+
+        # Proceed
+        po = self.env['purchase.order'].create({
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': product_avg.name,
+                    'product_id': product_avg.id,
+                    'product_qty': 1.0,
+                    'product_uom': product_avg.uom_po_id.id,
+                    'price_unit': 30.0,
+                    'date_planned': date,
+                })
+            ],
+        })
+        po.button_confirm()
+
+        line_product_avg = po.order_line.filtered(lambda l: l.product_id == product_avg)
+        picking = po.picking_ids
+        (picking.move_ids
+            .filtered(lambda l: l.purchase_line_id == line_product_avg)
+            .write({'quantity_done': 1.0}))
+
+        picking.button_validate()
+        # 5 Units received at rate 2 = 42.86
+        self.assertAlmostEqual(product_avg.standard_price, 60)
+
+        eur_rate.rate = 0.25
+
+        inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
+            'move_type': 'in_invoice',
+            'invoice_date': date,
+            'date': date,
+            'currency_id': self.eur_currency.id,
+            'partner_id': self.partner_id.id,
+            'invoice_line_ids': [
+                (0, 0, {
+                    'name': product_avg.name,
+                    'price_unit': 30.0,
+                    'product_id': product_avg.id,
+                    'purchase_line_id': line_product_avg.id,
+                    'quantity': 1.0,
+                    'account_id': self.stock_input_account.id,
+                    'tax_ids': [],
+                })
+            ]
+        })
+        self.env['stock.move'].invalidate_model()
+        inv.action_post()
+        self.assertRecordValues(inv.line_ids, [
+            # pylint: disable=C0326
+            {'balance': 120.0,  'amount_currency': 30.0,    'account_id': self.stock_input_account.id},
+            {'balance': -120.0, 'amount_currency': -30.0,   'account_id': self.company_data['default_account_payable'].id},
+        ])
+        self.assertRecordValues(inv.line_ids.full_reconcile_id.reconciled_line_ids.sorted('id'), [
+            # pylint: disable=C0326
+            {'balance': -60.0,  'amount_currency': -30.0,   'account_id': self.stock_input_account.id},
+            {'balance': 120.0,  'amount_currency': 30.0,    'account_id': self.stock_input_account.id},
+            {'balance': -60.0,  'amount_currency': 0.0,     'account_id': self.stock_input_account.id},
+        ])
+        input_aml = self.env['account.move.line'].search([('account_id', '=', self.stock_input_account.id)])
+        self.assertEqual(len(input_aml), 3)
 
     def test_average_realtime_with_two_delivery_anglo_saxon_valuation_multicurrency_different_dates(self):
         """

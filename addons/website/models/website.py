@@ -21,7 +21,7 @@ from markupsafe import Markup
 from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, url_for
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.addons.website.tools import similarity_score, text_from_html
+from odoo.addons.website.tools import similarity_score, text_from_html, get_base_domain
 from odoo.addons.portal.controllers.portal import pager
 from odoo.addons.iap.tools import iap_tools
 from odoo.exceptions import AccessError, MissingError, UserError, ValidationError
@@ -321,6 +321,20 @@ class Website(models.Model):
         self._force()
         configurator_action_todo = self.env.ref('website.website_configurator_todo')
         return configurator_action_todo.action_launch()
+
+    def _is_indexable_url(self, url):
+        """
+        Returns True if the given url has to be indexed by search engines.
+        It is considered that the website must be indexed if the domain name
+        matches the URL. We check if they are equal while ignoring the www. and
+        http(s). This is to index the site even if the user put the www. in the
+        settings while he has a configuration that redirects the www. to the
+        naked domain for example (same thing for http and https).
+
+        :param url: the url to check
+        :return: True if the url has to be indexed, False otherwise
+        """
+        return get_base_domain(url, True) == get_base_domain(self.domain, True)
 
     # ----------------------------------------------------------
     # Configurator
@@ -915,6 +929,15 @@ class Website(models.Model):
 
     @api.model
     def get_current_website(self, fallback=True):
+        """ The current website is returned in the following order:
+        - the website forced in session `force_website_id`
+        - the website set in context
+        - (if frontend or fallback) the website matching the request's "domain"
+        - arbitrary the first website found in the database if `fallback` is set
+          to `True`
+        - empty browse record
+        """
+        is_frontend_request = request and getattr(request, 'is_frontend', False)
         if request and request.session.get('force_website_id'):
             website_id = self.browse(request.session['force_website_id']).exists()
             if not website_id:
@@ -927,16 +950,26 @@ class Website(models.Model):
         if website_id:
             return self.browse(website_id)
 
-        if not request and not fallback:
+        if not is_frontend_request and not fallback:
+            # It's important than backend requests with no fallback requested
+            # don't go through
             return self.browse(False)
+
+        # Reaching this point means that:
+        # - We didn't find a website in the session or in the context.
+        # - And we are either:
+        #   - in a frontend context
+        #   - in a backend context (or early in the dispatch stack) and a
+        #     fallback website is requested.
+        # We will now try to find a website matching the request host/domain (if
+        # there is one on request) or return a random one.
 
         # The format of `httprequest.host` is `domain:port`
         domain_name = request and request.httprequest.host or ''
-
         website_id = self._get_current_website_id(domain_name, fallback=fallback)
         return self.browse(website_id)
 
-    @tools.cache('domain_name', 'fallback')
+    @tools.ormcache('domain_name', 'fallback')
     @api.model
     def _get_current_website_id(self, domain_name, fallback=True):
         """Get the current website id.
@@ -970,7 +1003,7 @@ class Website(models.Model):
         def _filter_domain(website, domain_name, ignore_port=False):
             """Ignore `scheme` from the `domain`, just match the `netloc` which
             is host:port in the version of `url_parse` we use."""
-            website_domain = urls.url_parse(website.domain or '').netloc
+            website_domain = get_base_domain(website.domain)
             if ignore_port:
                 website_domain = _remove_port(website_domain)
                 domain_name = _remove_port(domain_name)

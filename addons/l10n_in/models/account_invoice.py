@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import logging
+
 from odoo import api, fields, models, _
-from odoo.exceptions import ValidationError, RedirectWarning
+from odoo.exceptions import ValidationError, RedirectWarning, UserError
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountMove(models.Model):
@@ -98,3 +102,27 @@ class AccountMove(models.Model):
         # TO OVERRIDE
         self.ensure_one()
         return False
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_l10n_in_except_once_post(self):
+        # Prevent deleting entries once it's posted for Indian Company only
+        if any(m.country_code == 'IN' and m.posted_before for m in self) and not self._context.get('force_delete'):
+            raise UserError(_("To keep the audit trail, you can not delete journal entries once they have been posted"))
+
+    def unlink(self):
+        # Add logger here becouse in api ondelete account.move.line is deleted and we can't get total amount
+        logger_msg = False
+        if any(m.country_code == 'IN' and m.posted_before for m in self):
+            if self._context.get('force_delete'):
+                moves_details = ", ".join("{entry_number} ({move_id}) amount {amount_total} {currency} and partner {partner_name}".format(
+                    entry_number=m.name,
+                    move_id=m.id,
+                    amount_total=m.amount_total,
+                    currency=m.currency_id.name,
+                    partner_name=m.partner_id.display_name)
+                    for m in self)
+                logger_msg = 'Force deleted Journal Entries %s by %s (%s)' % (moves_details, self.env.user.name, self.env.user.id)
+        res = super().unlink()
+        if logger_msg:
+            _logger.info(logger_msg)
+        return res

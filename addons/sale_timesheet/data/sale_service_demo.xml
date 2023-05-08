@@ -112,7 +112,7 @@
             <field name="type">service</field>
             <field name="uom_id" ref="uom.product_uom_unit"/>
             <field name="uom_po_id" ref="uom.product_uom_unit"/>
-            <field name="service_type">milestones</field>
+            <field name="service_type" model="product.product" eval="'milestones' if obj().env.user.has_group('project.group_project_milestone') else 'manual'" />
             <field name="service_tracking">task_in_project</field>
             <field name="project_template_id" ref="so_template_project"/>
         </record>

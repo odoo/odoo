@@ -184,13 +184,25 @@ class AccountTax(models.Model):
     def _parse_name_search(name):
         """
         Parse the name to search the taxes faster.
-        Technical:  0EUM    => 0%E%U%M
-                    21M     => 2%1%M%   where the % represents 0, 1 or multiple characters in a SQL 'LIKE' search.
-        Examples:   0EUM    => VAT 0% EU M.
-                    21M     => 21% M , 21% EU M and 21% M.Cocont.
+        Technical:  0EUM      => 0%E%U%M
+                    21M       => 2%1%M%   where the % represents 0, 1 or multiple characters in a SQL 'LIKE' search.
+                    21" M"    => 2%1% M%
+                    21" M"co  => 2%1% M%c%o%
+        Examples:   0EUM      => VAT 0% EU M.
+                    21M       => 21% M , 21% EU M, 21% M.Cocont and 21% EX M.
+                    21" M"    => 21% M and 21% M.Cocont.
+                    21" M"co  => 21% M.Cocont.
         """
-        name = re.sub(r"\W+", "", name)  # Remove non-alphanumeric characters.
-        return '%'.join(list(name))
+        regex = r"(\"[^\"]*\")"
+        list_name = re.split(regex, name)
+        for i, name in enumerate(list_name.copy()):
+            if not name:
+                continue
+            if re.search(regex, name):
+                list_name[i] = "%" + name.replace("%", "_").replace("\"", "") + "%"
+            else:
+                list_name[i] = '%'.join(re.sub(r"\W+", "", name))
+        return ''.join(list_name)
 
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
@@ -377,7 +389,7 @@ class AccountTax(models.Model):
 
         # We first need to find out whether this tax computation is made for a refund
         tax_type = self and self[0].type_tax_use
-        is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
+        is_refund = is_refund or (tax_type == 'sale' and price_unit > 0) or (tax_type == 'purchase' and price_unit < 0)
 
         rslt = self.with_context(caba_no_transition_account=True)\
                    .compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund, include_caba_tags=include_caba_tags)
@@ -681,7 +693,7 @@ class AccountTax(models.Model):
                     'amount': sign * line_amount,
                     'base': float_round(sign * tax_base_amount, precision_rounding=prec),
                     'sequence': tax.sequence,
-                    'account_id': repartition_line._get_aml_target_tax_account().id,
+                    'account_id': repartition_line._get_aml_target_tax_account(force_caba_exigibility=include_caba_tags).id,
                     'analytic': tax.analytic,
                     'use_in_tax_closing': repartition_line.use_in_tax_closing,
                     'price_include': price_include,
@@ -724,7 +736,7 @@ class AccountTax(models.Model):
             partner=None, currency=None, product=None, taxes=None, price_unit=None, quantity=None,
             discount=None, account=None, analytic_distribution=None, price_subtotal=None,
             is_refund=False, rate=None,
-            handle_price_include=None,
+            handle_price_include=True,
             extra_context=None,
     ):
         return {
@@ -765,7 +777,7 @@ class AccountTax(models.Model):
         }
 
     @api.model
-    def _get_generation_dict_from_base_line(self, line_vals, tax_vals):
+    def _get_generation_dict_from_base_line(self, line_vals, tax_vals, force_caba_exigibility=False):
         """ Take a tax results returned by the taxes computation method and return a dictionary representing the way
         the tax amounts will be grouped together. To do so, the dictionary will be converted into a string key.
         Then, the existing tax lines sharing the same key will be updated and the missing ones will be created.
@@ -775,7 +787,7 @@ class AccountTax(models.Model):
         :return:            A python dict.
         """
         tax_repartition_line = tax_vals['tax_repartition_line']
-        tax_account = tax_repartition_line._get_aml_target_tax_account() or line_vals['account']
+        tax_account = tax_repartition_line._get_aml_target_tax_account(force_caba_exigibility=force_caba_exigibility) or line_vals['account']
         return {
             'account_id': tax_account.id,
             'currency_id': line_vals['currency'].id,
@@ -821,12 +833,6 @@ class AccountTax(models.Model):
             price_unit_after_discount = remaining_part_to_consider * price_unit_after_discount
 
         if taxes:
-
-            if handle_price_include is None:
-                manage_price_include = bool(base_line['handle_price_include'])
-            else:
-                manage_price_include = handle_price_include
-
             taxes_res = taxes.with_context(**base_line['extra_context']).compute_all(
                 price_unit_after_discount,
                 currency=currency,
@@ -834,7 +840,7 @@ class AccountTax(models.Model):
                 product=base_line['product'],
                 partner=base_line['partner'],
                 is_refund=base_line['is_refund'],
-                handle_price_include=manage_price_include,
+                handle_price_include=base_line['handle_price_include'],
                 include_caba_tags=include_caba_tags,
             )
 
@@ -852,7 +858,7 @@ class AccountTax(models.Model):
                     product=base_line['product'],
                     partner=base_line['partner'],
                     is_refund=base_line['is_refund'],
-                    handle_price_include=manage_price_include,
+                    handle_price_include=base_line['handle_price_include'],
                     include_caba_tags=include_caba_tags,
                 )
                 for tax_res, new_taxes_res in zip(taxes_res['taxes'], new_taxes_res['taxes']):
@@ -943,6 +949,29 @@ class AccountTax(models.Model):
             tax_details['tax_amount'] += tax_values['tax_amount']
             tax_details['group_tax_details'].append(tax_values)
 
+        if self.env.company.tax_calculation_rounding_method == 'round_globally':
+            amount_per_tax_repartition_line_id = defaultdict(lambda: {
+                'delta_tax_amount': 0.0,
+                'delta_tax_amount_currency': 0.0,
+            })
+            for base_line, to_update_vals, tax_values_list in to_process:
+                currency = base_line['currency'] or self.env.company.currency_id
+                comp_currency = self.env.company.currency_id
+                for tax_values in tax_values_list:
+                    grouping_key = frozendict(self._get_generation_dict_from_base_line(base_line, tax_values))
+
+                    total_amounts = amount_per_tax_repartition_line_id[grouping_key]
+                    tax_amount_currency_with_delta = tax_values['tax_amount_currency'] \
+                                                     + total_amounts['delta_tax_amount_currency']
+                    tax_amount_currency = currency.round(tax_amount_currency_with_delta)
+                    tax_amount_with_delta = tax_values['tax_amount'] \
+                                            + total_amounts['delta_tax_amount']
+                    tax_amount = comp_currency.round(tax_amount_with_delta)
+                    tax_values['tax_amount_currency'] = tax_amount_currency
+                    tax_values['tax_amount'] = tax_amount
+                    total_amounts['delta_tax_amount_currency'] = tax_amount_currency_with_delta - tax_amount_currency
+                    total_amounts['delta_tax_amount'] = tax_amount_with_delta - tax_amount
+
         grouping_key_generator = grouping_key_generator or default_grouping_key_generator
 
         for base_line, to_update_vals, tax_values_list in to_process:
@@ -1022,7 +1051,6 @@ class AccountTax(models.Model):
         for base_line in base_lines:
             to_update_vals, tax_values_list = self._compute_taxes_for_single_line(
                 base_line,
-                handle_price_include=handle_price_include,
                 include_caba_tags=include_caba_tags,
             )
             to_process.append((base_line, to_update_vals, tax_values_list))
@@ -1053,7 +1081,7 @@ class AccountTax(models.Model):
                 existing_tax_line_map[grouping_key] = line_vals
 
         def grouping_key_generator(base_line, tax_values):
-            return self._get_generation_dict_from_base_line(base_line, tax_values)
+            return self._get_generation_dict_from_base_line(base_line, tax_values, force_caba_exigibility=include_caba_tags)
 
         # Update/create the tax lines.
         global_tax_details = self._aggregate_taxes(to_process, grouping_key_generator=grouping_key_generator)
@@ -1061,11 +1089,7 @@ class AccountTax(models.Model):
         for grouping_key, tax_values in global_tax_details['tax_details'].items():
             if tax_values['currency_id']:
                 currency = self.env['res.currency'].browse(tax_values['currency_id'])
-                tax = self.env['account.tax'].browse(grouping_key['tax_id'])
-                company = tax.company_id or self.company_id
-                tax_amount = tax_values['tax_amount']
-                if company.tax_calculation_rounding_method == 'round_per_line':
-                    tax_amount = currency.round(tax_values['tax_amount'])
+                tax_amount = currency.round(tax_values['tax_amount'])
                 res['totals'][currency]['amount_tax'] += tax_amount
 
             if grouping_key in existing_tax_line_map:
@@ -1152,7 +1176,7 @@ class AccountTax(models.Model):
                 matched_tax_lines = [
                     x
                     for x in tax_lines
-                    if (x['group_tax'] or x['tax_repartition_line'].tax_id).tax_group_id == tax_detail['tax_group']
+                    if x['tax_repartition_line'].tax_id.tax_group_id == tax_detail['tax_group']
                 ]
                 if matched_tax_lines:
                     tax_group_vals['tax_amount'] = sum(x['tax_amount'] for x in matched_tax_lines)
@@ -1275,6 +1299,14 @@ class AccountTaxRepartitionLine(models.Model):
         help="The order in which distribution lines are displayed and matched. For refunds to work properly, invoice distribution lines should be arranged in the same order as the credit note distribution lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry", default=True)
 
+    tag_ids_domain = fields.Binary(string="tag domain", help="Dynamic domain used for the tag that can be set on tax", compute="_compute_tag_ids_domain")
+
+    @api.depends('company_id.multi_vat_foreign_country_ids', 'company_id.account_fiscal_country_id')
+    def _compute_tag_ids_domain(self):
+        for rep_line in self:
+            allowed_country_ids = (False, rep_line.company_id.account_fiscal_country_id.id, *rep_line.company_id.multi_vat_foreign_country_ids.ids,)
+            rep_line.tag_ids_domain = [('applicability', '=', 'taxes'), ('country_id', 'in', allowed_country_ids)]
+
     @api.onchange('account_id', 'repartition_type')
     def _on_change_account_id(self):
         if not self.account_id or self.repartition_type == 'base':
@@ -1287,12 +1319,6 @@ class AccountTaxRepartitionLine(models.Model):
         for record in self:
             if record.invoice_tax_id and record.refund_tax_id:
                 raise ValidationError(_("Tax distribution lines should apply to either invoices or refunds, not both at the same time. invoice_tax_id and refund_tax_id should not be set together."))
-
-    @api.constrains('invoice_tax_id', 'refund_tax_id', 'tag_ids')
-    def validate_tags_country(self):
-        for record in self:
-            if record.tag_ids.country_id and record.tax_id.country_id != record.tag_ids.country_id:
-                raise ValidationError(_("A tax should only use tags from its country. You should use another tax and a fiscal position if you wish to uses the tags from foreign tax reports."))
 
     @api.depends('factor_percent')
     def _compute_factor(self):
@@ -1319,13 +1345,13 @@ class AccountTaxRepartitionLine(models.Model):
         if self.repartition_type == 'base':
             self.account_id = None
 
-    def _get_aml_target_tax_account(self):
+    def _get_aml_target_tax_account(self, force_caba_exigibility=False):
         """ Get the default tax account to set on a business line.
 
         :return: An account.account record or an empty recordset.
         """
         self.ensure_one()
-        if self.tax_id.tax_exigibility == 'on_payment' and not self._context.get('caba_no_transition_account'):
+        if not force_caba_exigibility and self.tax_id.tax_exigibility == 'on_payment' and not self._context.get('caba_no_transition_account'):
             return self.tax_id.cash_basis_transition_account_id
         else:
             return self.account_id

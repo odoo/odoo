@@ -171,8 +171,7 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'date_from': fields.Datetime.from_string('2017-01-01 00:00:00'),
                 'date_to': fields.Datetime.from_string('2017-06-01 00:00:00'),
                 'number_of_days': 10,
-                'state': 'validate',
-        })
+        }).action_validate()
 
         self.env['hr.leave'].with_user(self.user_employee_id).create({
             'name': 'Valid time period',
@@ -1003,3 +1002,49 @@ class TestLeaveRequests(TestHrHolidaysCommon):
                 'number_of_days': 1,
                 'supported_attachment_ids': [(6, 0, [])],  # Sent by webclient
             })
+
+    def test_prevent_misplacement_of_allocations_without_end_date(self):
+        """
+            The objective is to check that it is not possible to place leaves
+            for which the interval does not correspond to the interval of allocations.
+        """
+        holiday_type_A = self.env['hr.leave.type'].with_user(self.user_hrmanager_id).with_context(tracking_disable=True).create({
+            'name': 'Type A',
+            'requires_allocation': 'yes',
+            'employee_requests': 'yes',
+            'leave_validation_type': 'hr',
+        })
+
+        # Create allocations with no end date
+        allocations = self.env['hr.leave.allocation'].create([
+            {
+                'name': 'Type A march 1 day without date to',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': holiday_type_A.id,
+                'number_of_days': 1,
+                'state': 'confirm',
+                'date_from': '2023-01-03',
+            },
+            {
+                'name': 'Type A april 5 day without date to',
+                'employee_id': self.employee_emp_id,
+                'holiday_status_id': holiday_type_A.id,
+                'number_of_days': 5,
+                'state': 'confirm',
+                'date_from': '2023-04-01',
+            },
+        ])
+
+        allocations.action_validate()
+
+        trigger_error_leave = {
+            'name': 'Holiday Request',
+            'employee_id': self.employee_emp_id,
+            'holiday_status_id': holiday_type_A.id,
+            'date_from': '2023-03-14',
+            'date_to': '2023-03-16',
+            'number_of_days': 3,
+        }
+
+        with self.assertRaises(ValidationError):
+            self.env['hr.leave'].with_user(self.user_employee_id).create(trigger_error_leave)

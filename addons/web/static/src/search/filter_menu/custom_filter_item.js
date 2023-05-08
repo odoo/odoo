@@ -15,6 +15,7 @@ const formatters = registry.category("formatters");
 const parsers = registry.category("parsers");
 
 const FIELD_TYPES = {
+    binary: "binary",
     boolean: "boolean",
     char: "char",
     date: "date",
@@ -33,6 +34,10 @@ const FIELD_TYPES = {
 
 // FilterMenu parameters
 const FIELD_OPERATORS = {
+    binary: [
+        { symbol: "!=", description: _lt("is set"), value: false },
+        { symbol: "=", description: _lt("is not set"), value: false },
+    ],
     boolean: [
         { symbol: "=", description: _lt("is Yes"), value: true },
         { symbol: "!=", description: _lt("is No"), value: true },
@@ -229,7 +234,13 @@ export class CustomFilterItem extends Component {
                 );
             } else {
                 domainValue = [condition.value];
-                descriptionArray.push(`"${condition.value}"`);
+                if (field.type === "selection") {
+                    descriptionArray.push(
+                        `"${field.selection.find((v) => v[0] === condition.value)[1]}"`
+                    );
+                } else {
+                    descriptionArray.push(`"${condition.value}"`);
+                }
             }
             // Operator specifics
             if (operator.symbol === "between") {
