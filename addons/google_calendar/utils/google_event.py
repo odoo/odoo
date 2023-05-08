@@ -5,6 +5,7 @@ from odoo.tools import email_normalize
 import logging
 from typing import Iterator, Mapping
 from collections import abc
+import re
 
 _logger = logging.getLogger(__name__)
 
@@ -169,6 +170,31 @@ class GoogleEvent(abc.Set):
 
     def is_recurrence_follower(self):
         return bool(not self.originalStartTime or self.originalStartTime == self.start)
+
+    def full_recurring_event_id(self):
+        """
+            Give the complete identifier with elements
+            in `id` and `recurringEventId`.
+            :return: concatenation of the id created by the recurrence
+                    and the id created by the modification of a specific event
+            :rtype: string if recurrent event and correct ids, `None` otherwise
+        """
+        # Regex expressions to match elements (according to the google support [not documented]):
+        # - ID: [a-zA-Z0-9]+
+        # - RANGE: R[0-9]+T[0-9]+
+        # - TIMESTAMP: [0-9]+T[0-9]+Z
+        # With:
+        # - id: 'ID_TIMESTAMP'
+        # - recurringEventID: 'ID_RANGE'
+        # Find: 'ID_RANGE_TIMESTAMP'
+        if not self.is_recurrent():
+            return None
+        # Check if ids are the same
+        if re.match(r'(\w+_)', self.recurringEventId).group(1) != re.match(r'(\w+_)', self.id).group(1):
+            return None
+        ID_RANGE = re.search(r'\w+_R\d+T\d+', self.recurringEventId).group()
+        TIMESTAMP = re.search(r'\d+T\d+Z', self.id).group()
+        return f"{ID_RANGE}_{TIMESTAMP}"
 
     def cancelled(self):
         return self.filter(lambda e: e.status == 'cancelled')
