@@ -74,7 +74,6 @@ startSteps();
 
 ProductScreen.do.clickHomeCategory();
 ProductScreen.exec.addOrderline("Test Product", "1");
-ProductScreen.do.clickPricelistButton();
 ProductScreen.do.selectPriceList("special_pricelist");
 ProductScreen.check.discountOriginalPriceIs("7.0");
 ProductScreen.do.clickPayButton();

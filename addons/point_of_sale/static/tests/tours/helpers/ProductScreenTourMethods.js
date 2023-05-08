@@ -16,6 +16,11 @@ class Do {
     clickOrderline(name, quantity) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 content: `selecting orderline with product '${name}' and quantity '${quantity}'`,
                 trigger: `.order .orderline:not(:has(.selected)) .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
             },
@@ -23,6 +28,11 @@ class Do {
                 content: `orderline with product '${name}' and quantity '${quantity}' has been selected`,
                 trigger: `.order .orderline.selected .product-name:contains("${name}") ~ .info-list em:contains("${quantity}")`,
                 run: () => {},
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
@@ -76,12 +86,33 @@ class Do {
                 trigger,
             };
         }
-        return keys.split(" ").map(generateStep);
+        return [
+            {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            ...keys.split(" ").map(generateStep),
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
+            },
+        ];
     }
 
     clickPayButton(shouldCheck = true) {
         const steps = [
-            { content: "click pay button", trigger: ".product-screen .pay-order-button" },
+            {
+                content: "click pay button",
+                trigger: ".product-screen .pay-order-button",
+                mobile: false,
+            },
+            {
+                content: "click pay button",
+                trigger: ".btn-switchpane:contains('Pay')",
+                mobile: true,
+            },
         ];
         if (shouldCheck) {
             steps.push({
@@ -95,6 +126,11 @@ class Do {
 
     clickPartnerButton() {
         return [
+            {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
             { content: "click customer button", trigger: ".actionpad .button.set-partner" },
             {
                 content: "partner screen is shown",
@@ -110,11 +146,26 @@ class Do {
                 content: `select customer '${name}'`,
                 trigger: `.partnerlist-screen .partner-line td:contains("${name}")`,
             },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
+            },
         ];
     }
 
     clickOrderlineCustomerNoteButton() {
         return [
+            {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
+                content: "click more button",
+                trigger: ".control-button:contains('More')",
+                mobile: true,
+            },
             {
                 content: "click customer note button",
                 trigger: '.control-buttons .control-button span:contains("Customer Note")',
@@ -124,6 +175,16 @@ class Do {
     clickRefund() {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
+                content: "click more button",
+                trigger: ".control-button:contains('More')",
+                mobile: true,
+            },
+            {
                 trigger: '.control-button:contains("Refund")',
             },
         ];
@@ -131,14 +192,27 @@ class Do {
     confirmOpeningPopup() {
         return [{ trigger: '.opening-cash-control .button:contains("Open session")' }];
     }
-    clickPricelistButton() {
-        return [{ trigger: ".o_pricelist_button" }];
-    }
     selectPriceList(name) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
+                content: "click more button",
+                trigger: ".control-button:contains('More')",
+                mobile: true,
+            },
+            { trigger: ".o_pricelist_button" },
+            {
                 content: `select price list '${name}'`,
                 trigger: `.selection-item:contains("${name}")`,
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
@@ -154,12 +228,27 @@ class Do {
     changeFiscalPosition(name) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
+                content: "click more button",
+                trigger: ".control-button:contains('More')",
+                mobile: true,
+            },
+            {
                 content: "click fiscal position button",
                 trigger: ".o_fiscal_position_button",
             },
             {
                 content: "fiscal position screen is shown",
                 trigger: `.selection-item:contains("${name}")`,
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
@@ -200,6 +289,11 @@ class Check {
     selectedOrderlineHas(name, quantity, price) {
         const res = [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 // check first if the order widget is there and has orderlines
                 content: "order widget has orderlines",
                 trigger: ".order .orderlines",
@@ -225,14 +319,29 @@ class Check {
                 run: function () {}, // it's a check
             });
         }
+        res.push({
+            content: "go back to the products",
+            trigger: ".back-button",
+            mobile: true,
+        });
         return res;
     }
     orderIsEmpty() {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 content: `order is empty`,
                 trigger: `.order .order-empty`,
                 run: () => {},
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
@@ -249,18 +358,38 @@ class Check {
     totalAmountIs(amount) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 content: `order total amount is '${amount}'`,
                 trigger: `.order-container .order .summary .value:contains("${amount}")`,
                 run: () => {},
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
     modeIsActive(mode) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 content: `'${mode}' is active`,
                 trigger: `.numpad button.selected-mode:contains('${mode}')`,
                 run: function () {},
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
@@ -303,17 +432,37 @@ class Check {
     noDiscountApplied(originalPrice) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 content: "no discount is applied",
                 trigger: `.info:not(:contains(${originalPrice}))`,
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
     discountOriginalPriceIs(original_price) {
         return [
             {
+                content: "click review button",
+                trigger: ".btn-switchpane:contains('Review')",
+                mobile: true,
+            },
+            {
                 content: `discount original price is shown`,
                 trigger: `s:contains('${original_price}')`,
                 run: function () {},
+            },
+            {
+                content: "go back to the products",
+                trigger: ".back-button",
+                mobile: true,
             },
         ];
     }
@@ -386,6 +535,11 @@ class Execute {
         res.push(...this._do.clickOrderlineCustomerNoteButton());
         res.push(...TextAreaPopup._do.inputText(note));
         res.push(...TextAreaPopup._do.clickConfirm());
+        res.push({
+            content: "go back to the products",
+            trigger: ".back-button",
+            mobile: true,
+        });
         return res;
     }
 }
