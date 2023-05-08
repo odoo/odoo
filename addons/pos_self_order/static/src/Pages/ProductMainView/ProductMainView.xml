@@ -12,7 +12,9 @@
                     t-attf-src="/menu/get-image/{{ props.product.product_id }}/1920" 
                     alt="Product image"/>
                 <div class="pt-3">
-                    <h3 t-esc="props.product.name"/>
+                    <h3 t-esc="props.product.name"
+                        class="o_self_order_product_main_view_name"
+                        />
                     <h4 class="text-primary"
                         t-esc="selfOrder.formatMonetary(props.product.price_info.list_price)"/>
                 </div>

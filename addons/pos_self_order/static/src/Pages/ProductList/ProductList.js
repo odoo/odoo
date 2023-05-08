@@ -66,7 +66,7 @@ export class ProductList extends Component {
             // if the user is coming from the product page
             // we scroll back to the product card that he was looking at before
             if (this.selfOrder.currentProduct) {
-                this.scrollTo(this.currentProductCard);
+                this.scrollTo(this.currentProductCard, { behavior: "instant" });
             }
         });
         // this useEffect is used to hide the navbar when the user is scrolling down
@@ -197,7 +197,7 @@ export class ProductList extends Component {
      *            it takes into account the height of the header
      * @param {Object} ref - the ref to scroll to
      */
-    scrollTo(ref) {
+    scrollTo(ref, { behavior = "smooth" } = {}) {
         const y = ref?.el.offsetTop;
         // the intersection observer will detect on which product category we are and
         // it is possible that after scrolling we are a couple of pixels short of the desired category
@@ -206,7 +206,7 @@ export class ProductList extends Component {
         const scrollOffset = this.headerHeight - SCROLL_CORRECTION;
         this.productsList?.el?.scroll({
             top: y - scrollOffset,
-            behavior: "smooth",
+            behavior,
         });
     }
     /**

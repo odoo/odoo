@@ -13,7 +13,7 @@
 export function addProductsToCart(product_ids) {
     return product_ids
         .map((id) => [
-            ...testProductCard(id, { click: true }),
+            ...clickOnProductCard(id),
             // We should now be on the product main view screen
             ...clickOn("Add"),
             // We should now be on the product list screen
@@ -21,12 +21,12 @@ export function addProductsToCart(product_ids) {
         .flat();
 }
 
-export function testProductCard(product_id, { click = false }) {
+export function clickOnProductCard(product_id, { isCheck = false } = {}) {
     return [
         {
             content: `Click on the product card of Product ${product_id}`,
             trigger: `.o_self_order_item_card:has(p:contains('Product ${product_id}'))`,
-            isCheck: !click,
+            isCheck: isCheck,
         },
     ];
 }
@@ -40,11 +40,12 @@ export function clickOnBackButton() {
     ];
 }
 
-export function clickOn(element) {
+export function clickOn(element, { isCheck = false } = {}) {
     return [
         {
             content: `Click on '${element}' button`,
             trigger: `.btn:contains('${element}')`,
+            isCheck: isCheck,
         },
     ];
 }

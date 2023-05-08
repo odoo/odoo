@@ -3,7 +3,6 @@
 import { registry } from "@web/core/registry";
 import { clickOn } from "./tour_utils";
 
-// TODO: use custom class names for the selectors instead of bootstrap classes
 registry.category("web_tour.tours").add("pos_qr_menu_tour", {
     test: true,
     steps: [
@@ -113,12 +112,12 @@ registry.category("web_tour.tours").add("pos_qr_menu_tour", {
         },
         {
             content: "Test that the product description is present and click on it",
-            trigger: "p.text-muted.small.break-line",
+            trigger: "p.o_self_order_item_card_description",
         },
         // We should now be on the product screen
         {
             content: "Test that the product name is present in the product screen",
-            trigger: "div.d-flex.flex-column.py-3 > h3",
+            trigger: ".o_self_order_product_main_view_name",
             isCheck: true,
         },
         {
@@ -133,11 +132,7 @@ registry.category("web_tour.tours").add("pos_qr_menu_tour", {
         },
         // on the landing page, we look for the View Menu button
         // finding it also means that the back button works properly
-        {
-            content: "Test that the default View Menu button is present",
-            trigger: ".btn",
-            isCheck: true,
-        },
+        ...clickOn("View Menu", { isCheck: true }),
         {
             content: "Test that the back button is not present on the landing page",
             trigger: "body:not(:has(nav.o_self_order_navbar > button))",
