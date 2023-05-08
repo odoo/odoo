@@ -258,3 +258,43 @@ $-o-bg-colors-custom: null;
     background-color: $input-focus-bg;
     border-color: $o-input-hover-border-color;
 }
+
+// Switches
+// ============================================================================
+.form-switch {
+    .form-check-input:checked {
+        background-color: $o-success;
+        border-color: $o-success;
+    }
+
+    .form-check-input:focus {
+        border-color: $o-success;
+    }
+
+    &:hover .form-check-input:not(:disabled) {
+        border-color: $o-success;
+    }
+
+    // Creating a different styling for toggle switches with a purpose of switching
+    // from A to B (eg. switching between month and year) rather than ON/OFF.
+    // The 'o_switch_toggle' class should be use in addition to the default
+    // 'form-switch' Bootstrap class.
+    &.o_switch_toggle {
+        .form-check-input, .form-check-input:checked {
+            border-color: $o-action;
+            background-color: $o-view-background-color;
+            
+            &, &:focus, &:checked {
+                background-image: escape-svg(url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='-4 -4 8 8'><circle r='3' fill='#{$o-action}'/></svg>"));
+            }
+        }
+        
+        &:hover .form-check-input:not(:disabled) {
+            border-color: $o-action;
+        }
+    }
+
+    &:disabled, &.disabled, &[disabled] {
+        opacity: $o-opacity-disabled;
+    }
+}
