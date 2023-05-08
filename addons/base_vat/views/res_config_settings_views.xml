@@ -7,7 +7,8 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <setting id="eu_service" position="after">
-                <setting id="vies_service_setting" help="Verify VAT numbers using the European VIES service" company_dependent="1" title="If this checkbox is ticked, you will not be able to save a contact if its VAT number cannot be verified by the European VIES service.">
+                <setting id="vies_service_setting" help="Verify VAT numbers using the European VIES service" company_dependent="1" title="If this checkbox is ticked, you will not be able to save a contact if its VAT number cannot be verified by the European VIES service."
+                    documentation="/applications/finance/accounting/taxation/taxes/vat_validation.html">
                     <field name="vat_check_vies"/>
                 </setting>
             </setting>
