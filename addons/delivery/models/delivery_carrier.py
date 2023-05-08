@@ -139,7 +139,7 @@ class DeliveryCarrier(models.Model):
             return False
         if self.zip_prefix_ids:
             regex = re.compile('|'.join(['^' + zip_prefix for zip_prefix in self.zip_prefix_ids.mapped('name')]))
-            if not re.match(regex, partner.zip.upper()):
+            if not partner.zip or not re.match(regex, partner.zip.upper()):
                 return False
         return True
 
