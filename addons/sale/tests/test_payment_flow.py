@@ -19,7 +19,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
 
         # Replace PaymentCommon defaults by SaleCommon ones
         cls.currency = cls.sale_order.currency_id
-        cls.partner = cls.sale_order.partner_id
+        cls.partner = cls.sale_order.partner_invoice_id
 
     def test_11_so_payment_link(self):
         # test customized /payment/pay route with sale_order_id param
@@ -69,6 +69,17 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(self.sale_order.state, 'sale')
         self.assertTrue(tx_sudo.payment_id)
         self.assertEqual(tx_sudo.payment_id.state, 'posted')
+
+    def test_so_payment_link_with_different_partner_invoice(self):
+        # test customized /payment/pay route with sale_order_id param
+        # partner_id and partner_invoice_id different on the so
+        self.sale_order.partner_invoice_id = self.portal_partner
+        self.partner = self.sale_order.partner_invoice_id
+        route_values = self._prepare_pay_values()
+        route_values['sale_order_id'] = self.sale_order.id
+
+        tx_context = self._get_tx_checkout_context(**route_values)
+        self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
 
     def test_12_so_partial_payment_link(self):
         # test customized /payment/pay route with sale_order_id param
