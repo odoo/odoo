@@ -2,7 +2,6 @@
 
 import { Component, xml } from "@odoo/owl";
 import { SearchBar } from "@web/search/search_bar/search_bar";
-import { MainComponentsContainer } from "@web/core/main_components_container";
 import {
     click,
     editInput,
@@ -34,10 +33,9 @@ async function makeTestComponent(props) {
             this.id = 1; // used for t-key. We want to be sure that the control panel is rendered.
         }
     }
-    TestComponent.components = { MainComponentsContainer, SearchBar };
+    TestComponent.components = { SearchBar };
     TestComponent.template = xml`
         <div class="o_test_component">
-            <MainComponentsContainer/>
             <SearchBar t-key="id++"/>
         </div>
     `;
