@@ -12106,7 +12106,10 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(target.querySelector(".o_field_widget[name='foo'] input").value, "yop");
         await editInput(target, ".o_field_widget[name='foo'] input", "test");
 
-        await click(target, ".o_form_button_create");
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+        );
         assert.verifySteps(["write"]);
         assert.strictEqual(
             target.querySelector(".o_field_widget[name='foo'] input").value,

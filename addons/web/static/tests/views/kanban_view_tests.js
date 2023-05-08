@@ -13007,7 +13007,7 @@ QUnit.module("Views", (hooks) => {
             const cpButtons = getVisibleButtons(target);
             assert.deepEqual(
                 [...cpButtons].map((button) => button.textContent.trim()),
-                ["New", "display"]
+                ["New", "display", ""]
             );
             assert.hasClass(cpButtons[1], "display");
 
