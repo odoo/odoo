@@ -14,6 +14,7 @@ import {
 } from "@web/views/fields/many2many_tags_avatar/many2many_tags_avatar_field";
 import { useOpenChat } from "@mail/web/open_chat_hook";
 import { useAssignUserCommand } from "@mail/web/fields/assign_user_command_hook";
+import { useSubEnv } from "@odoo/owl";
 
 export class Many2ManyAvatarUserTagsList extends TagsList {}
 Many2ManyAvatarUserTagsList.template = "mail.Many2ManyAvatarUserTagsList";
@@ -39,6 +40,12 @@ export class Many2ManyTagsAvatarUserField extends Many2ManyTagsAvatarField {
         ...Many2ManyTagsAvatarField.components,
         TagsList: Many2ManyAvatarUserTagsList,
     };
+    setup() {
+        super.setup();
+        useSubEnv({
+            firstIdToPosition: this.env.services.user.userId,
+        });
+    }
 }
 patch(Many2ManyTagsAvatarUserField.prototype, "mail", userChatter);
 
@@ -60,6 +67,12 @@ export class KanbanMany2ManyTagsAvatarUserField extends KanbanMany2ManyTagsAvata
         ...KanbanMany2ManyTagsAvatarField.components,
         TagsList: KanbanMany2ManyAvatarUserTagsList,
     };
+    setup() {
+        super.setup();
+        useSubEnv({
+            firstIdToPosition: this.env.services.user.userId,
+        });
+    }
     get displayText() {
         return !this.props.readonly;
     }
@@ -78,7 +91,12 @@ export class ListMany2ManyTagsAvatarUserField extends ListMany2ManyTagsAvatarFie
         ...ListMany2ManyTagsAvatarField.components,
         TagsList: Many2ManyAvatarUserTagsList,
     };
-
+    setup() {
+        super.setup();
+        useSubEnv({
+            firstIdToPosition: this.env.services.user.userId,
+        });
+    }
     get displayText() {
         return this.props.record.data[this.props.name].records.length === 1 || !this.props.readonly;
     }

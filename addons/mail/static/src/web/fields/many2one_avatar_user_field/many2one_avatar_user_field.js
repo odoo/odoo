@@ -11,6 +11,7 @@ import {
 import { useOpenChat } from "@mail/web/open_chat_hook";
 import { useAssignUserCommand } from "@mail/web/fields/assign_user_command_hook";
 import { patch } from "@web/core/utils/patch";
+import { useSubEnv } from "@odoo/owl";
 
 const userChatter = {
     setup() {
@@ -37,6 +38,12 @@ export class Many2OneAvatarUserField extends Many2OneAvatarField {
         domain: { type: [Array, Function], optional: true },
         withCommand: { type: Boolean, optional: true },
     };
+    setup() {
+        super.setup();
+        useSubEnv({
+            firstIdToPosition: this.env.services.user.userId,
+        });
+    }
 }
 patch(Many2OneAvatarUserField.prototype, "mail", userChatter);
 
@@ -61,6 +68,12 @@ export class KanbanMany2OneAvatarUserField extends KanbanMany2OneAvatarField {
         ...KanbanMany2OneAvatarField.props,
         displayAvatarName: { type: Boolean, optional: true },
     };
+    setup() {
+        super.setup();
+        useSubEnv({
+            firstIdToPosition: this.env.services.user.userId,
+        });
+    }
     /**
      * All props are normally passed to the Many2OneField however since
      * we add a new one, we need to filter it out.

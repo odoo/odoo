@@ -4,7 +4,7 @@ import { registry } from "@web/core/registry";
 import { usePopover } from "@web/core/popover/popover_hook";
 import { many2OneField, Many2OneField } from "../many2one/many2one_field";
 
-import { Component } from "@odoo/owl";
+import { Component, useSubEnv } from "@odoo/owl";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
 
 export class Many2OneAvatarField extends Component {
@@ -36,10 +36,17 @@ export class Many2OneFieldPopover extends Many2OneField {
     static props = {
         ...Many2OneField.props,
         close: { type: Function },
+        env: { type: Object, optional: true },
     };
     static components = {
         Many2XAutocomplete: AvatarMany2XAutocomplete,
     };
+    setup() {
+        super.setup();
+        useSubEnv({
+            ...this.props.env,
+        });
+    }
     get Many2XAutocompleteProps() {
         return {
             ...super.Many2XAutocompleteProps,
@@ -82,6 +89,7 @@ export class KanbanMany2OneAvatarField extends Many2OneAvatarField {
         }
         this.popover.open(ev.currentTarget, {
             ...this.popoverProps,
+            env: this.env,
             canCreate: false,
             canCreateEdit: false,
             canQuickCreate: false,

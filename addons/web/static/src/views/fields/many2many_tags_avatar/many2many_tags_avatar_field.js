@@ -8,6 +8,7 @@ import {
 } from "@web/views/fields/many2many_tags/many2many_tags_field";
 import { TagsList } from "@web/core/tags_list/tags_list";
 import { AvatarMany2XAutocomplete } from "@web/views/fields/relational_utils";
+import { useSubEnv } from "@odoo/owl";
 
 export class Many2ManyTagsAvatarField extends Many2ManyTagsField {
     static template = "web.Many2ManyTagsAvatarField";
@@ -56,10 +57,14 @@ export class Many2ManyTagsAvatarFieldPopover extends Many2ManyTagsAvatarField {
     static props = {
         ...Many2ManyTagsAvatarField.props,
         close: { type: Function },
+        env: { type: Object, optional: true },
     };
 
     setup() {
         super.setup();
+        useSubEnv({
+            ...this.props.env,
+        });
         const originalUpdate = this.update;
         this.update = async (recordList) => {
             await originalUpdate(recordList);
@@ -115,6 +120,7 @@ export class KanbanMany2ManyTagsAvatarFieldTagsList extends TagsList {
         }
         this.popover.open(ev.currentTarget.parentElement, {
             ...this.props.popoverProps,
+            env: this.env,
             readonly: false,
             canCreate: false,
             canCreateEdit: false,

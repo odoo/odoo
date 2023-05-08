@@ -10,6 +10,7 @@ import {
     useOwnedDialogs,
     useService,
 } from "@web/core/utils/hooks";
+import { Domain } from "@web/core/domain";
 import { sprintf } from "@web/core/utils/strings";
 import { createElement } from "@web/core/utils/xml";
 import { FormArchParser } from "@web/views/form/form_arch_parser";
@@ -226,12 +227,12 @@ export class Many2XAutocomplete extends Component {
         this.props.update([record], params);
     }
 
-    search(name) {
+    search(name, domain, limit) {
         return this.orm.call(this.props.resModel, "name_search", [], {
             name: name,
             operator: "ilike",
-            args: this.props.getDomain(),
-            limit: this.props.searchLimit + 1,
+            args: domain || this.props.getDomain(),
+            limit: limit || this.props.searchLimit + 1,
             context: this.props.context,
         });
     }
@@ -241,13 +242,38 @@ export class Many2XAutocomplete extends Component {
             label: result[1].split("\n")[0],
         };
     }
-    async loadOptionsSource(request) {
+
+    async getRecords(request) {
         if (this.lastProm) {
             this.lastProm.abort(false);
         }
         this.lastProm = this.search(request);
         const records = await this.lastProm;
 
+        const idToAdd = this.env.firstIdToPosition;
+        if (idToAdd) {
+            const index = records.findIndex(([id]) => id === idToAdd);
+            let valToAdd;
+            if (index > -1) {
+                [valToAdd] = records.splice(index, 1);
+                return [valToAdd, ...records];
+            } else if (records.length === this.props.searchLimit + 1) {
+                this.lastProm = this.search(
+                    request,
+                    Domain.and([[["id", "=", idToAdd]], this.props.getDomain() || []]).toList(),
+                    1
+                );
+                [valToAdd] = await this.lastProm;
+                if (valToAdd) {
+                    return [valToAdd, ...records];
+                }
+            }
+        }
+        return records;
+    }
+
+    async loadOptionsSource(request) {
+        const records = await this.getRecords(request);
         const options = records.map((result) => this.mapRecordToOption(result));
 
         if (this.props.quickCreate && request.length) {
