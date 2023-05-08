@@ -9,9 +9,10 @@ import {
     nextTick,
 } from "@web/../tests/helpers/utils";
 import { ControlPanel } from "@web/search/control_panel/control_panel";
+import { SearchBar } from "@web/search/search_bar/search_bar";
 import {
     isItemSelected,
-    toggleFilterMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
     switchView,
 } from "@web/../tests/search/helpers";
@@ -386,12 +387,12 @@ QUnit.module("ActionManager", (hooks) => {
         await doAction(webClient, 3);
         assert.containsOnce(target, ".o_list_view");
         assert.containsN(target, ".o_list_view .o_data_row", 5);
-        assert.containsOnce(target, ".o_control_panel .o_list_buttons");
+        assert.containsOnce(target, ".o_control_panel .d-none.d-xl-inline-flex .o_list_buttons");
         // reload (the search_read RPC will be blocked)
         def = makeDeferred();
         await switchView(target, "list");
         assert.containsN(target, ".o_list_view .o_data_row", 5);
-        assert.containsOnce(target, ".o_control_panel .o_list_buttons");
+        assert.containsOnce(target, ".o_control_panel .d-none.d-xl-inline-flex .o_list_buttons");
         // open a record in form view
         await click(target.querySelector(".o_list_view .o_data_cell"));
         assert.containsOnce(target, ".o_form_view");
@@ -629,15 +630,15 @@ QUnit.module("ActionManager", (hooks) => {
         ToyController.template = xml`
             <div class="o_toy_view">
                 <ControlPanel />
+                <SearchBar />
             </div>`;
-        ToyController.components = { ControlPanel };
+        ToyController.components = { ControlPanel, SearchBar };
 
         registry.category("views").add("toy", {
             type: "toy",
             display_name: "Toy",
             icon: "fab fa-android",
             multiRecord: true,
-            searchMenuTypes: ["filter"],
             Controller: ToyController,
         });
 
@@ -653,7 +654,7 @@ QUnit.module("ActionManager", (hooks) => {
             ],
         });
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "Foo");
         assert.ok(isItemSelected(target, "Foo"));
 
@@ -665,7 +666,7 @@ QUnit.module("ActionManager", (hooks) => {
         def.resolve();
         await nextTick();
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         assert.ok(isItemSelected(target, "Foo"));
         // this test is not able to detect that getGlobalState is put on the right place:
         // currentController.action.globalState contains in any case the search state

@@ -274,7 +274,7 @@ QUnit.module("ActionManager", (hooks) => {
             await click(target.querySelector(".my_button"));
             await legacyExtraNextTick();
             assert.containsOnce(target, ".o_kanban_view");
-            await click($(target).find(".o_control_panel .breadcrumb a:first"));
+            await click(target, ".o_control_panel .breadcrumb a");
             await legacyExtraNextTick();
             assert.containsOnce(target, ".my_button");
             assert.verifySteps(["on_reverse_breadcrumb"]);

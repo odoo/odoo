@@ -364,7 +364,11 @@ QUnit.module("ActionManager", (hooks) => {
         assert.verifySteps([
             "/report/html/ennio.morricone/99?context=%7B%22lang%22%3A%22en%22%2C%22uid%22%3A7%2C%22tz%22%3A%22taht%22%7D",
         ]);
-        await click(target.querySelector("button[title='Print']"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex button[title='Print']"
+            )
+        );
         assert.verifySteps(["/report/check_wkhtmltopdf", "/report/download"]);
     });
 
