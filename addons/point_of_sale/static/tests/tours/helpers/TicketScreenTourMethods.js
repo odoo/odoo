@@ -26,6 +26,11 @@ class Do {
     selectFilter(name) {
         return [
             {
+                content: "open search bar",
+                trigger: "button.search",
+                mobile: true,
+            },
+            {
                 trigger: `.pos-search-bar .filter`,
             },
             {
@@ -35,10 +40,20 @@ class Do {
             {
                 trigger: `.pos-search-bar .filter ul li:contains("${name}")`,
             },
+            {
+                content: "close search bar",
+                trigger: "button.arrow-left",
+                mobile: true,
+            },
         ];
     }
     search(field, searchWord) {
         return [
+            {
+                content: "open search bar",
+                trigger: "button.search",
+                mobile: true,
+            },
             {
                 trigger: ".pos-search-bar input",
                 run: `text ${searchWord}`,
@@ -57,6 +72,11 @@ class Do {
             },
             {
                 trigger: `.pos-search-bar .search ul li:contains("${field}")`,
+            },
+            {
+                content: "close search bar",
+                trigger: "button.arrow-left",
+                mobile: true,
             },
         ];
     }
@@ -130,7 +150,7 @@ class Check {
             },
         ];
     }
-    contains( string) {
+    contains(string) {
         return [
             {
                 trigger: `.ticket-screen .orders:contains("${string}")`,
@@ -157,8 +177,18 @@ class Check {
     filterIs(name) {
         return [
             {
+                content: "open search bar",
+                trigger: "button.search",
+                mobile: true,
+            },
+            {
                 trigger: `.ticket-screen .pos-search-bar .filter span:contains("${name}")`,
                 run: () => {},
+            },
+            {
+                content: "close search bar",
+                trigger: "button.arrow-left",
+                mobile: true,
             },
         ];
     }
