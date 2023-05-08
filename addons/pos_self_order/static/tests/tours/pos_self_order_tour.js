@@ -15,13 +15,11 @@ registry.category("web_tour.tours").add("self_order_pay_after_each_tour", {
         ...clickOn("Review"),
         // check that the products are in the card
         ...[1, 2].map((id) => clickOnProductCard(id, { isCheck: true })).flat(),
-        // TODO: test that product 1 is present twice in the cart
-        // {
-        //     content: "Check that Product 1 is present twice in the cart",
-        //     trigger:
-        //         ".o_self_order_item_card:has(p:contains('2 x ').o_self_order_item_card:contains('Product 1 test'))",
-        //     isCheck: true,
-        // },
+        {
+            content: "Check that Product 1 is present twice in the cart",
+            trigger: ".o_self_order_item_card:has(p:contains('2 x '):contains('Product 1 test'))",
+            isCheck: true,
+        },
         ...clickOn("Order"),
         // We should now be on the landing page screen ( because ordering redirects to the landing page )
         ...clickOn("My Orders"),
@@ -31,13 +29,11 @@ registry.category("web_tour.tours").add("self_order_pay_after_each_tour", {
             isCheck: true,
         },
         ...[1, 2].map((id) => clickOnProductCard(id, { isCheck: true })).flat(),
-        // TODO: test that product 1 is present twice in the order
-        // {
-        //     content: "Test that the first item is in the order and has the correct quantity",
-        //     trigger:
-        //         ".o_self_order_item_card:has(p:contains('2 x ').o_self_order_item_card:contains('Product 1'))",
-        //     isCheck: true,
-        // },
+        {
+            content: "Test that the first item is in the order and has the correct quantity",
+            trigger: ".o_self_order_item_card:has(p:contains('2 x '):contains('Product 1 test'))",
+            isCheck: true,
+        },
         ...clickOnBackButton(),
         // We should now be on the Landing Page
 
