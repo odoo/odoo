@@ -2,7 +2,7 @@
 
 import { AttachmentList } from "@mail/attachments/attachment_list";
 import { useAttachmentUploader } from "@mail/attachments/attachment_uploader_hook";
-import { onExternalClick, useSelection } from "@mail/utils/hooks";
+import { useSelection } from "@mail/utils/hooks";
 import { isDragSourceExternalFile, isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { Component, onMounted, useChildSubEnv, useEffect, useRef, useState } from "@odoo/owl";
 import { useDropzone } from "../dropzone/dropzone_hook";
@@ -167,14 +167,6 @@ export class Composer extends Component {
         );
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
-        });
-        onExternalClick("composer", async (ev) => {
-            // Let event be handled by bubbling handlers first.
-            await new Promise(setTimeout);
-            if (isEventHandled(ev, "message.replyTo") || isEventHandled(ev, "emoji.selectEmoji")) {
-                return;
-            }
-            this.props.messageToReplyTo?.cancel();
         });
     }
 

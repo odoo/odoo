@@ -5,7 +5,6 @@ import { AttachmentList } from "@mail/attachments/attachment_list";
 import { MessageInReply } from "./message_in_reply";
 import { isEventHandled, markEventHandled } from "@mail/utils/misc";
 import { convertBrToLineBreak, htmlToTextContentInline } from "@mail/utils/format";
-import { onExternalClick } from "@mail/utils/hooks";
 import { MessageReactionMenu } from "@mail/core_ui/message_reaction_menu";
 import {
     Component,
@@ -114,20 +113,6 @@ export class Message extends Component {
             },
             () => [this.props.messageEdition?.editingMessage]
         );
-        onExternalClick("root", async (ev) => {
-            // Let event be handled by bubbling handlers first.
-            await new Promise(setTimeout);
-            if (isEventHandled(ev, "emoji.selectEmoji")) {
-                return;
-            }
-            // Stop editing the message on click away.
-            if (!this.root.el || ev.target === this.root.el || this.root.el.contains(ev.target)) {
-                return;
-            }
-            if (this.state.isEditing) {
-                this.exitEditMode();
-            }
-        });
         onPatched(() => {
             if (this.props.highlighted && this.root.el) {
                 this.root.el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -340,7 +325,6 @@ export class Message extends Component {
     }
 
     onClickReplyTo(ev) {
-        markEventHandled(ev, "message.replyTo");
         this.props.messageToReplyTo.toggle(this.props.thread, this.props.message);
     }
 
