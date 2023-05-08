@@ -62,36 +62,44 @@ $o-cw-filter-avatar-size: 20px;
         }
 
         td {
+            position: relative;
             padding: 0;
 
             a,
             span {
+                position: relative;
                 display: flex;
                 width: 100%;
                 align-items: center;
                 justify-content: center;
                 aspect-ratio: 4/3;
                 background: none;
-                color: $headings-color;
                 line-height: 1;
             }
 
+            &:before {
+                @include o-position-absolute(0, $left: 50%);
+                transform: translateX(-50%);
+                display: none;
+                height: 100%;
+                aspect-ratio: 1;
+                border-radius: 100%;
+                border: var(--ui-datepicker-badge-border, 1px solid #{$o-component-active-border});
+                background: var(--ui-datepicker-badge-background, #{$o-component-active-bg});
+                content: "";
+            }
+
+            &:hover:before {
+                display: block;
+            }
+
             &.ui-datepicker-today, &.ui-datepicker-current-day {
-                &, a {
-                    position: relative;
+                &, a, span{
                     color: var(--ui-datepicker-badge-color, #{$o-component-active-color});
                 }
 
                 &:before {
-                    @include o-position-absolute(0, $left: 50%);
                     display: block;
-                    height: 100%;
-                    aspect-ratio: 1;
-                    border-radius: 100%;
-                    border: var(--ui-datepicker-badge-border, 1px solid #{$o-component-active-border});
-                    background: var(--ui-datepicker-badge-background, #{$o-component-active-bg});
-                    transform: translateX(-50%);
-                    content: "";
                 }
             }
 
