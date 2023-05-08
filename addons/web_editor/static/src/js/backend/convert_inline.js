@@ -3,8 +3,6 @@
 
 import { getAdjacentPreviousSiblings, isBlock, rgbToHex, commonParentGet } from '../editor/odoo-editor/src/utils/utils';
 
-/* global html2canvas */
-
 //--------------------------------------------------------------------------
 // Constants
 //--------------------------------------------------------------------------
@@ -16,6 +14,16 @@ const RE_PADDING_MATCH = /[ ]*padding[^;]*;/g;
 const RE_PADDING = /([\d.]+)/;
 const RE_WHITESPACE = /[\s\u200b]*/;
 const SELECTORS_IGNORE = /(^\*$|:hover|:before|:after|:active|:link|::|'|\([^(),]+[,(])/;
+// CSS properties relating to font, which Outlook seem to have trouble inheriting.
+const FONT_PROPERTIES_TO_INHERIT = [
+    'color',
+    'font-size',
+    'font-family',
+    'font-weight',
+    'font-style',
+    'text-decoration',
+    'text-transform',
+];
 // Attributes all tables should have in a mailing.
 const TABLE_ATTRIBUTES = {
     cellspacing: 0,
@@ -674,11 +682,11 @@ async function toInline($editable, cssRules, $iframe) {
     const rootFontSizeProperty = getComputedStyle(editable.ownerDocument.documentElement).fontSize;
     const rootFontSize = parseFloat(rootFontSizeProperty.replace(/[^\d\.]/g, ''));
     normalizeRem($editable, rootFontSize);
-    responsiveToStaticForOutlook(editable);
-    enforceTablesResponsivity(editable);
-    formatTables($editable);
     enforceImagesResponsivity(editable);
-    await flattenBackgroundImages(editable);
+    enforceTablesResponsivity(editable);
+    flattenBackgroundImages(editable);
+    formatTables($editable);
+    responsiveToStaticForOutlook(editable);
 
     // Remove contenteditable attributes
     [editable, ...editable.querySelectorAll('[contenteditable]')].forEach(node => node.removeAttribute('contenteditable'));
@@ -697,41 +705,22 @@ async function toInline($editable, cssRules, $iframe) {
     $editable.addClass('odoo-editor-editable');
 }
 /**
- * Take all elements with a `background-image` style and convert them, along
- * with their contents, to `png` images. The images are then appended to the
- * original elements stripped of their background images and padding, while all
- * of their children are removed.
+ * Take all elements with a `background-image` style and convert them to `vml`
+ * for Outlook.
  *
  * @param {Element} editable
  */
-async function flattenBackgroundImages(editable) {
-    for (const backgroundImage of editable.querySelectorAll('*[style*=background-image]')) {
-        if (backgroundImage.parentElement) { // If the image was nested, we removed it already.
-            const iframe = document.createElement('iframe');
-            const style = getComputedStyle(backgroundImage);
-            const clonedBackground = backgroundImage.cloneNode(true);
-            clonedBackground.style.height = style['height'];
-            clonedBackground.style.width = style['width'];
-            iframe.style.height = style['height'];
-            iframe.style.width = style['width'];
-            backgroundImage.after(iframe);
-            iframe.contentDocument.body.append(clonedBackground);
-            iframe.contentDocument.body.style.margin = 0;
-
-            const canvas = await html2canvas(clonedBackground, { scale: 1 });
-            const image = document.createElement('img');
-            image.setAttribute('src', canvas.toDataURL('png'));
-            image.setAttribute('width', canvas.getAttribute('width'));
-            image.setAttribute('height', canvas.getAttribute('height'));
-            image.style.setProperty('margin', 0);
-            image.style.setProperty('display', 'block'); // Ensure no added vertical space.
-            // Clean up the original element.
-            backgroundImage.replaceChildren();
-            backgroundImage.style.setProperty('padding', 0);
-            backgroundImage.style.removeProperty('background-image');
-            backgroundImage.prepend(image); // Add the image to the original element.
-            backgroundImage.className = backgroundImage.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
-            iframe.remove();
+function flattenBackgroundImages(editable) {
+    const backgroundImages = [...editable.querySelectorAll('*[style*=background-image]')]
+        .filter(el => !el.closest('.mso-hide'))
+        .reverse();
+    for (const backgroundImage of backgroundImages) {
+        const vml = _backgroundImageToVml(backgroundImage);
+        if (vml) {
+            // Put the Outlook version after the original one in an mso conditional.
+            backgroundImage.after(_createMso(vml));
+            // Hide the original element for Outlook.
+            backgroundImage.classList.add('mso-hide');
         }
     }
 }
@@ -1173,6 +1162,68 @@ function _applyColspan(element, colspan, tableWidth) {
     const width = Math.round(tableWidth * widthPercentage * 100) / 100;
     element.style.setProperty('max-width', width + 'px');
     element.classList.toggle('o_converted_col', true);
+}
+/**
+ * Take an element with a background image and return a string containing the
+ * VML code to display the same image properly in Outlook, with its contents
+ * inside.
+ * Note that this assumes:
+ *   - background-size: cover,
+ *   - background-repeat: no-repeat,
+ *   - size 100%
+ *   - content is centered x/y
+ * TODO: centering span probably not needed with `v-text-anchor:middle` present.
+ *
+ * @param {Element} backgroundImage
+ * @returns {string}
+ */
+function _backgroundImageToVml(backgroundImage) {
+    const matches = backgroundImage.style.backgroundImage.match(/url\("?(.+?)"?\)/);
+    const url = matches && matches[1];
+    if (url) {
+        // Create the outer structure.
+        const clone = backgroundImage.cloneNode(true);
+        const div = document.createElement('div');
+        div.replaceChildren(...clone.childNodes);
+        [['fontSize', 0], ['height', '100%'], ['width', '100%']].forEach(([k, v]) => div.style[k] = v);
+        const vmlContent = document.createElement('div');
+        vmlContent.append(div);
+
+        // Preserve important inherited properties without ancestor context.
+        const style = getComputedStyle(backgroundImage);
+        for (const prop of FONT_PROPERTIES_TO_INHERIT) {
+            div.style[prop] = backgroundImage.style[prop] || style[prop];
+        }
+        [...div.children].forEach(child => child.style.setProperty('font-size', child.style.fontSize || style.fontSize));
+
+        // Prepare the top element for hosting the VML image.
+        for (const prop of ['background', 'background-image', 'background-repeat', 'background-size']) {
+            clone.style.removeProperty(prop);
+        }
+        clone.style.padding = 0;
+        clone.className = clone.className.replace(/p[bt]\d+/g, ''); // Remove padding classes.
+        clone.setAttribute('background', url);
+        clone.setAttribute('valign', 'middle');
+
+        // Create the VML structure, with the content of the original element inside.
+        const [width, height] = [_getWidth(backgroundImage), _getHeight(backgroundImage)];
+        const vml = `<v:image xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" ` +
+            `style="border: 0; display: inline-block; width: ${width}px; height: ${height}px;" src="${url}"/>
+        <v:rect xmlns:v="urn:schemas-microsoft-com:vml" fill="true" stroke="false" ` +
+            `style="border: 0; display: inline-block; position: absolute; width:${width}px; height:${height}px; v-text-anchor:middle;">
+            <v:fill opacity="0%" color="#000000"/>
+            <v:textbox inset="0,0,0,0">
+                <table border="0" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td width="${width}" align="center" style="text-align: center;">${vmlContent.outerHTML}</td>
+                    </tr>
+                </table>
+            </v:textbox>
+        </v:rect>`;
+
+        // Wrap the VML in the original opening and closing tags.
+        return `${clone.outerHTML.replace(/<\/[\w-]+>[\s\n]*$/, '')}${vml}</${clone.nodeName.toLowerCase()}>`;
+    }
 }
 /**
  * Take a selector and return its specificity according to the w3 specification.

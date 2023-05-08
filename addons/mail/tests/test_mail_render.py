@@ -350,15 +350,25 @@ class TestMailRender(TestMailRenderCommon):
     @users('employee')
     def test_replace_local_links(self):
         local_links_template_bits = [
+            '<a href="/web/path?a=a&b=b"/>',
+            '<img src="/web/path?a=a&b=b"/>',
+            '<v:fill src="/web/path?a=a&b=b"/>',
+            '<v:image src="/web/path?a=a&b=b"/>',
             '<div style="background-image:url(/web/path?a=a&b=b);"/>',
             '<div style="background-image:url(\'/web/path?a=a&b=b\');"/>',
             '<div style="background-image:url(&#34;/web/path?a=a&b=b&#34;);"/>',
+            '<div background="/web/path?a=a&b=b"/>',
         ]
         base_url = self.env['mail.render.mixin'].get_base_url()
         rendered_local_links = [
+            '<a href="%s/web/path?a=a&b=b"/>' % base_url,
+            '<img src="%s/web/path?a=a&b=b"/>' % base_url,
+            '<v:fill src="%s/web/path?a=a&b=b"/>' % base_url,
+            '<v:image src="%s/web/path?a=a&b=b"/>' % base_url,
             '<div style="background-image:url(%s/web/path?a=a&b=b);"/>' % base_url,
             '<div style="background-image:url(\'%s/web/path?a=a&b=b\');"/>' % base_url,
-            '<div style="background-image:url(&#34;%s/web/path?a=a&b=b&#34;);"/>' % base_url
+            '<div style="background-image:url(&#34;%s/web/path?a=a&b=b&#34;);"/>' % base_url,
+            '<div background="%s/web/path?a=a&b=b"/>' % base_url,
         ]
         for source, expected in zip(local_links_template_bits, rendered_local_links):
             rendered = self.env['mail.render.mixin']._replace_local_links(source)
