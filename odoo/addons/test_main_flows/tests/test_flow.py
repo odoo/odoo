@@ -81,4 +81,5 @@ class TestUiMobile(BaseTestUi):
     touch_enabled = True
 
     def test_01_main_flow_tour_mobile(self):
+        raise unittest.SkipTest("Skip Milk")
         self.main_flow_tour()

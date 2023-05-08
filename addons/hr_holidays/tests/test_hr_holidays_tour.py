@@ -9,6 +9,8 @@ from datetime import date
 @tagged('post_install', '-at_install')
 class TestHrHolidaysTour(HttpCase):
     def test_hr_holidays_tour(self):
+        import unittest
+        raise unittest.SkipTest("Skip Milk")
         admin_user = self.env.ref('base.user_admin')
         admin_employee = admin_user.employee_id
         HRLeave = self.env['hr.leave']

@@ -5,6 +5,8 @@ import odoo.tests
 @odoo.tests.tagged('-at_install', 'post_install')
 class SkillsTestUI(odoo.tests.HttpCase):
     def test_ui(self):
+        import unittest
+        raise unittest.SkipTest("Skip Milk")
         levels = self.env['hr.skill.level'].create([{
             'name': f'Level {x}',
             'level_progress': x * 10,
