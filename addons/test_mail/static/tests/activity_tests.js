@@ -10,6 +10,7 @@ import {
     legacyExtraNextTick,
     patchWithCleanup,
     click,
+    patchDate,
 } from "@web/../tests/helpers/utils";
 import { doAction } from "@web/../tests/webclient/helpers";
 import { session } from "@web/session";
@@ -20,6 +21,7 @@ let pyEnv;
 QUnit.module("test_mail", {}, function () {
     QUnit.module("activity view", {
         async beforeEach() {
+            patchDate(2023, 4, 8, 10, 0, 0);
             pyEnv = await startServer();
             const mailTemplateIds = pyEnv["mail.template"].create([
                 { name: "Template1" },
@@ -216,7 +218,7 @@ QUnit.module("test_mail", {}, function () {
             for (let i = 0; i < 81; i++) {
                 activityToCreate.push({
                     display_name: "An activity " + i,
-                    date_deadline: moment().add(3, "days").format("YYYY-MM-DD"), // now
+                    date_deadline: moment().add(3, "days").format("YYYY-MM-DD"),
                     can_write: true,
                     state: "planned",
                     activity_type_id: mailActivityTypeIds[0],
@@ -238,6 +240,9 @@ QUnit.module("test_mail", {}, function () {
             });
 
             const activityRecords = document.querySelectorAll(".o_activity_record");
+            // 81 test.activity records in tests
+            // + 2 in global of all tests in this file
+            // = 83 records
             assert.strictEqual(
                 activityRecords.length,
                 83,
