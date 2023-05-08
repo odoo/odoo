@@ -114,7 +114,7 @@
                     self.currentVideoTime += 1;
                     if (self.totalVideoTime && self.currentVideoTime > self.totalVideoTime - 30){
                         clearInterval(self.tid);
-                        if (!self.slide.hasQuestion && !self.slide.completed){
+                        if (self.slide.isMember && !self.slide.hasQuestion && !self.slide.completed){
                             self.trigger_up('slide_mark_completed', self.slide);
                         }
                     }
@@ -216,7 +216,7 @@
          */
          _onVideoTimeUpdate: async function (eventData) {
             if (eventData.seconds > (this.videoDuration - 30)) {
-                if (!this.slide.hasQuestion && !this.slide.completed){
+                if (this.slide.isMember && !this.slide.hasQuestion && !this.slide.completed){
                     this.trigger_up('slide_mark_completed', this.slide);
                 }
             }
