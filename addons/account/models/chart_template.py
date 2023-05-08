@@ -429,7 +429,7 @@ class AccountChartTemplate(models.AbstractModel):
                     'values': deref(record, self.env[model]),
                     'noupdate': True,
                 })
-            created_vals[model] = self.env[model]._load_records(create_vals)
+            created_vals[model] = self.with_context(lang='en_US').env[model]._load_records(create_vals)
         return created_vals
 
     def _post_load_data(self, template_code, company, template_data):
