@@ -181,7 +181,7 @@ class WebsiteSaleDelivery(WebsiteSale):
                     product=carrier.product_id,
                     partner=order.partner_shipping_id,
                 )
-                if not is_express_checkout_flow and request.env.company.show_line_subtotals_tax_selection == 'tax_excluded':
+                if not is_express_checkout_flow and request.website.show_line_subtotals_tax_selection == 'tax_excluded':
                     rate['price'] = taxes['total_excluded']
                 else:
                     rate['price'] = taxes['total_included']
