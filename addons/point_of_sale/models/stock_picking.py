@@ -117,30 +117,31 @@ class StockPicking(models.Model):
 
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
-        if self.pos_order_id.to_ship and not self.pos_order_id.to_invoice:
-            order_cost = sum(line.total_cost for line in self.pos_order_id.lines)
-            move_vals = {
-                'journal_id': self.pos_order_id.sale_journal.id,
-                'date': self.pos_order_id.date_order,
-                'ref': self.pos_order_id.name,
-                'line_ids': [
-                    (0, 0, {
-                        'name': self.pos_order_id.name,
-                        'account_id': self.product_id.categ_id.property_account_income_categ_id.id,
-                        'debit': order_cost,
-                        'credit': 0.0,
-                    }),
-                    (0, 0, {
-                        'name': self.pos_order_id.name,
-                        'account_id': self.product_id.categ_id.property_account_expense_categ_id.id,
-                        'debit': 0.0,
-                        'credit': order_cost,
-                    })
-                ]
-            }
-            move = self.env['account.move'].create(move_vals)
-            self.pos_order_id.write({'account_move': move.id})
-            move.action_post()
+        for rec in self:
+            if rec.pos_order_id.to_ship and not rec.pos_order_id.to_invoice:
+                order_cost = sum(line.total_cost for line in rec.pos_order_id.lines)
+                move_vals = {
+                    'journal_id': rec.pos_order_id.sale_journal.id,
+                    'date': rec.pos_order_id.date_order,
+                    'ref': rec.pos_order_id.name,
+                    'line_ids': [
+                        (0, 0, {
+                            'name': rec.pos_order_id.name,
+                            'account_id': rec.product_id.categ_id.property_account_income_categ_id.id,
+                            'debit': order_cost,
+                            'credit': 0.0,
+                        }),
+                        (0, 0, {
+                            'name': rec.pos_order_id.name,
+                            'account_id': rec.product_id.categ_id.property_account_expense_categ_id.id,
+                            'debit': 0.0,
+                            'credit': order_cost,
+                        })
+                    ]
+                }
+                move = self.env['account.move'].create(move_vals)
+                rec.pos_order_id.write({'account_move': move.id})
+                move.action_post()
         return res
 
 class ProcurementGroup(models.Model):
