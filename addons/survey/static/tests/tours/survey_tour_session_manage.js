@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { TourError } from "@web_tour/tour_service/tour_utils";
+import { zip } from "@web/core/utils/arrays";
+
 import surveySessionTools from "survey.session_tour_tools";
 
 /**
@@ -9,10 +12,10 @@ import surveySessionTools from "survey.session_tour_tools";
  * This helper method returns the chart data (Chartjs framework specific) in the following structure:
  * [{ value, backgroundColor, labelColor }]
  */
-var getChartData = function () {
-    var chartData = [];
-    var rootWidget = odoo.__DEBUG__.services['root.widget'];
-    var surveyManagePublicWidget = rootWidget.publicWidgets.find(function (widget) {
+const getChartData = function () {
+    const chartData = [];
+    const rootWidget = odoo.__DEBUG__.services['root.widget'];
+    const surveyManagePublicWidget = rootWidget.publicWidgets.find(function (widget) {
         return widget.$el.hasClass('o_survey_session_manage');
     });
 
@@ -31,27 +34,27 @@ var getChartData = function () {
     return chartData;
 };
 
-var nextScreen = function () {
-    var e = $.Event('keydown');
+const nextScreen = function () {
+    const e = $.Event('keydown');
     e.keyCode = 39; // arrow-right
     $(document).trigger(e);
 };
 
-var previousScreen = function () {
-    var e = $.Event('keydown');
+const previousScreen = function () {
+    const e = $.Event('keydown');
     e.keyCode = 37; // arrow-left
     $(document).trigger(e);
 };
 
-var REGULAR_ANSWER_COLOR = '#212529';
-var CORRECT_ANSWER_COLOR = '#2CBB70';
-var WRONG_ANSWER_COLOR = '#D9534F';
+const REGULAR_ANSWER_COLOR = '#212529';
+const CORRECT_ANSWER_COLOR = '#2CBB70';
+const WRONG_ANSWER_COLOR = '#D9534F';
 
 /**
  * A 'regular' answer is an answer that is nor correct, nor incorrect.
  * The check is based on the specific opacity (0.8) and color of those answers.
  */
-var isRegularAnswer = function (answer) {
+const isRegularAnswer = function (answer) {
     return answer.backgroundColor.includes('0.8') &&
         answer.labelColor === REGULAR_ANSWER_COLOR;
 };
@@ -59,7 +62,7 @@ var isRegularAnswer = function (answer) {
 /**
  * The check is based on the specific opacity (0.8) and color of correct answers.
  */
-var isCorrectAnswer = function (answer) {
+const isCorrectAnswer = function (answer) {
     return answer.backgroundColor.includes('0.8') &&
         answer.labelColor === CORRECT_ANSWER_COLOR;
 };
@@ -67,9 +70,61 @@ var isCorrectAnswer = function (answer) {
 /**
  * The check is based on the specific opacity (0.2) and color of incorrect answers.
  */
-var isIncorrectAnswer = function (answer) {
+const isIncorrectAnswer = function (answer) {
     return answer.backgroundColor.includes('0.2') &&
         answer.labelColor === WRONG_ANSWER_COLOR;
+};
+
+const _checkAnswersCount = function (chartData, expectedCount) {
+    if (chartData.length !== expectedCount) {
+        throw new TourError(`Chart data should contain ${expectedCount} records!`);
+    }
+};
+
+const _checkAllZeros = function (chartData) {
+    if (chartData.find(answerData => answerData !== 0).length) {
+        throw new TourError('Chart data should all be 0!');
+    }
+};
+
+const _IS_ASPECT_ANSWER_DATA = {
+    "correct": [isCorrectAnswer, 'should be shown as "correct"!'],
+    "incorrect": [isIncorrectAnswer, 'should be shown as "incorrect"!'],
+    "regular": [isRegularAnswer, 'should not be shown as "correct" or "incorrect"!'],
+    "regularScored": [isRegularAnswer, "correctness shouldn't be shown!"],
+};
+const _INDEX_TO_LABEL = {
+    0: 'First',
+    1: 'Second',
+    2: 'Third',
+    3: 'Fourth',
+};
+
+/**
+ * Check the answers count and aspect.
+ *
+ * @param {object} chartData Object returned by `getChartData`.
+ * @param {{value: number, aspect: "correct" | "incorrect" | "regular" | "regularScored"}[]} expectedAnswersData with:
+ *  `value`: expected answers count (number of user inputs)
+ *  `aspect`: Appearance of the answers count. Use `regularScored` for scored question
+ *    (when the correctness should not be shown) to improve the error message
+ */
+const checkAnswers = function (chartData, expectedAnswersData) {
+    _checkAnswersCount(chartData, expectedAnswersData.length);
+
+    zip(chartData, expectedAnswersData).forEach(([actual, expected], index) => {
+        const [isAspectAnswer, aspectErrorMessage] = _IS_ASPECT_ANSWER_DATA[expected.aspect];
+        const questionLabel = _INDEX_TO_LABEL[index];
+        if (!isAspectAnswer(actual)) {
+            throw new Error(`${questionLabel} answer ${aspectErrorMessage}!`);
+        }
+        if (actual.value !== expected.value) {
+            throw new Error(expected.value ?
+                `${questionLabel} answer should be picked by ${expected.value} users!`:
+                `${questionLabel} answer should not be picked by any user!`
+            );
+        }
+    });
 };
 
 /**
@@ -175,197 +230,72 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     run: nextScreen
 }, {
     trigger: 'h1:contains("Regular Simple Choice")',
+    extra_trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
     run: function () {
-        var chartData = getChartData();
-        if (chartData.length !== 3) {
-            console.error('Chart data should contain 3 records!');
-            return;
-        }
-
-        var firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 2 || !isRegularAnswer(firstAnswerData)) {
-            console.error('First answer should be picked by 2 users!');
-            return;
-        }
-
-        var secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 1 || !isRegularAnswer(secondAnswerData)) {
-            console.error('Second answer should be picked by 1 user!');
-            return;
-        }
-
-        var thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 0 || !isRegularAnswer(thirdAnswerData)) {
-            console.error('Third answer should be picked by no users!');
-            return;
-        }
-
+        checkAnswers(getChartData(), [
+            {value: 2, aspect: "regular"},
+            {value: 1, aspect: "regular"},
+            {value: 0, aspect: "regular"},
+        ]);
         nextScreen();
     }
 }, {
     trigger: 'h1:contains("Scored Simple Choice")',
     run: function () {
-        var chartData = getChartData();
-        if (chartData.length !== 4) {
-            console.error('Chart data should contain 4 records!');
-            return;
-        }
-
-        for (var i = 0; i < chartData.length; i++) {
-            if (chartData[i].value !== 0) {
-                console.error(
-                    'Chart data should all be 0 because "next screen" that shows ' +
-                    'answers values is not triggered yet!');
-                return;
-            }
-        }
+        const chartData = getChartData();
+        _checkAnswersCount(chartData, 4);
+        _checkAllZeros(chartData);
 
         nextScreen();
-        chartData = getChartData();
-
-        var firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 1 || !isRegularAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 1 user and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
-        var secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 1 || !isRegularAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 1 user and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
-        var thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isRegularAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
-        var fourthAnswerData = chartData[3];
-        if (fourthAnswerData.value !== 0 || !isRegularAnswer(fourthAnswerData)) {
-            console.error(
-                'Fourth answer should be picked by no users and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
+    }
+}, {
+    trigger: 'h1:contains("Scored Simple Choice")',
+    extra_trigger: '.o_survey_session_navigation_next_label:contains("Show Correct Answer(s)")',
+    run: function () {
+        checkAnswers(getChartData(), [
+            {value: 1, aspect: "regularScored"},
+            {value: 1, aspect: "regularScored"},
+            {value: 1, aspect: "regularScored"},
+            {value: 0, aspect: "regularScored"},
+        ]);
         nextScreen();
-        chartData = getChartData();
-
-        firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 1 || !isCorrectAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 1 user and it should be correct!'
-            );
-            return;
-        }
-
-        secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 1 || !isIncorrectAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 1 user and it should be incorrect!'
-            );
-            return;
-        }
-
-        thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isIncorrectAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and it should be incorrect!'
-            );
-            return;
-        }
-
-        fourthAnswerData = chartData[3];
-        if (fourthAnswerData.value !== 0 || !isIncorrectAnswer(fourthAnswerData)) {
-            console.error(
-                'Fourth answer should be picked by no users and it should be incorrect!'
-            );
-            return;
-        }
-
+    }
+}, {
+    trigger: 'h1:contains("Scored Simple Choice")',
+    extra_trigger: '.o_survey_session_navigation_next_label:contains("Show Leaderboard")',
+    run: function () {
+        checkAnswers(getChartData(), [
+            {value: 1, aspect: "correct"},
+            {value: 1, aspect: "incorrect"},
+            {value: 1, aspect: "incorrect"},
+            {value: 0, aspect: "incorrect"},
+        ]);
         nextScreen();
         nextScreen();
     }
 }, {
     trigger: 'h1:contains("Timed Scored Multiple Choice")',
     run: function () {
-        var chartData = getChartData();
-        if (chartData.length !== 3) {
-            console.error('Chart data should contain 4 records!');
-            return;
-        }
-
-        for (var i = 0; i < chartData.length; i++) {
-            if (chartData[i].value !== 0) {
-                console.error(
-                    'Chart data should all be 0 because "next screen" that shows ' +
-                    'answers values is not triggered yet!');
-                return;
-            }
-        }
+        const chartData = getChartData();
+        _checkAnswersCount(chartData, 3);
+        _checkAllZeros(chartData);
 
         // after 1 second, results are displayed automatically because question timer runs out
         // we add 1 extra second because of the way the timer works:
         // it only triggers the time_up event 1 second AFTER the delay is passed
         setTimeout(function () {
-            chartData = getChartData();
-            var firstAnswerData = chartData[0];
-            if (firstAnswerData.value !== 2 || !isRegularAnswer(firstAnswerData)) {
-                console.error(
-                    'First answer should be picked by 2 users and its correctness should not be shown yet!'
-                );
-                return;
-            }
-
-            var secondAnswerData = chartData[1];
-            if (secondAnswerData.value !== 2 || !isRegularAnswer(secondAnswerData)) {
-                console.error(
-                    'Second answer should be picked by 2 users and its correctness should not be shown yet!'
-                );
-                return;
-            }
-
-            var thirdAnswerData = chartData[2];
-            if (thirdAnswerData.value !== 1 || !isRegularAnswer(thirdAnswerData)) {
-                console.error(
-                    'Third answer should be picked by 1 user and its correctness should not be shown yet!'
-                );
-                return;
-            }
+            checkAnswers(getChartData(), [
+                {value: 2, aspect: "regularScored"},
+                {value: 2, aspect: "regularScored"},
+                {value: 1, aspect: "regularScored"},
+            ]);
 
             nextScreen();
-            chartData = getChartData();
-
-            firstAnswerData = chartData[0];
-            if (firstAnswerData.value !== 2 || !isCorrectAnswer(firstAnswerData)) {
-                console.error(
-                    'First answer should be picked by 2 users and it should be correct!'
-                );
-                return;
-            }
-
-            secondAnswerData = chartData[1];
-            if (secondAnswerData.value !== 2 || !isCorrectAnswer(secondAnswerData)) {
-                console.error(
-                    'Second answer should be picked by 2 users and it should be correct!'
-                );
-                return;
-            }
-
-            thirdAnswerData = chartData[2];
-            if (thirdAnswerData.value !== 1 || !isIncorrectAnswer(thirdAnswerData)) {
-                console.error(
-                    'Third answer should be picked by 1 user and it should be incorrect!'
-                );
-                return;
-            }
+            checkAnswers(getChartData(), [
+                {value: 2, aspect: "correct"},
+                {value: 2, aspect: "correct"},
+                {value: 1, aspect: "incorrect"},
+            ]);
 
             nextScreen();
         }, 2100);
@@ -378,73 +308,24 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     run: function () {
         // previous screen testing
         previousScreen();
-        var chartData = getChartData();
-
-        var firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 2 || !isCorrectAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 2 users and it should be correct!'
-            );
-            return;
-        }
-
-        var secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 2 || !isCorrectAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 2 users and it should be correct!'
-            );
-            return;
-        }
-
-        var thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isIncorrectAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and it should be incorrect!'
-            );
-            return;
-        }
+        checkAnswers(getChartData(), [
+            {value: 2, aspect: "correct"},
+            {value: 2, aspect: "correct"},
+            {value: 1, aspect: "incorrect"},
+        ]);
 
         previousScreen();
-        chartData = getChartData();
-
-        firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 2 || !isRegularAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 2 users and its correctness should not be shown!'
-            );
-            return;
-        }
-
-        secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 2 || !isRegularAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 2 users and its correctness should not be shown!'
-            );
-            return;
-        }
-
-        thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isRegularAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and its correctness should not be shown!'
-            );
-            return;
-        }
+        checkAnswers(getChartData(), [
+            {value: 2, aspect: "regularScored"},
+            {value: 2, aspect: "regularScored"},
+            {value: 1, aspect: "regularScored"},
+        ]);
 
         previousScreen();
-        chartData = getChartData();
-
-        for (var i = 0; i < chartData.length; i++) {
-            if (chartData[i].value !== 0) {
-                console.error(
-                    'Chart data should all be 0 because "next screen" that shows ' +
-                    'answers values is not triggered yet!');
-                return;
-            }
-        }
+        _checkAllZeros(getChartData());
 
         // Now we go forward to the "Final Leaderboard" again (3 times)
-        for (i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             nextScreen();
         }
     }
