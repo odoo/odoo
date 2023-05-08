@@ -758,7 +758,7 @@ class MrpProduction(models.Model):
         else:
             self.workorder_ids = False
 
-    @api.constrains('move_byproduct_ids')
+    @api.constrains('move_finished_ids')
     def _check_byproducts(self):
         for order in self:
             if any(move.cost_share < 0 for move in order.move_byproduct_ids):
