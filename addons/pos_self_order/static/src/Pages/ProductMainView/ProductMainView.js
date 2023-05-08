@@ -3,14 +3,12 @@
 import { Component, onMounted, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { NavBar } from "@pos_self_order/Components/NavBar/NavBar";
-import { FloatingButton } from "@pos_self_order/Components/FloatingButton/FloatingButton";
 import { IncrementCounter } from "@pos_self_order/Components/IncrementCounter/IncrementCounter";
 export class ProductMainView extends Component {
     static template = "pos_self_order.ProductMainView";
     static props = { product: Object };
     static components = {
         NavBar,
-        FloatingButton,
         IncrementCounter,
     };
     setup() {

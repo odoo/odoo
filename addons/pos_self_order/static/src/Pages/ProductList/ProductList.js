@@ -4,7 +4,6 @@ import { Component, onMounted, useEffect, useRef, useState } from "@odoo/owl";
 import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { useAutofocus, useChildRef } from "@web/core/utils/hooks";
 import { NavBar } from "@pos_self_order/Components/NavBar/NavBar";
-import { FloatingButton } from "@pos_self_order/Components/FloatingButton/FloatingButton";
 import { ProductCard } from "@pos_self_order/Components/ProductCard/ProductCard";
 import { fuzzyLookup } from "@web/core/utils/search";
 export class ProductList extends Component {
@@ -12,7 +11,6 @@ export class ProductList extends Component {
     static props = [];
     static components = {
         NavBar,
-        FloatingButton,
         ProductCard,
     };
     setup() {

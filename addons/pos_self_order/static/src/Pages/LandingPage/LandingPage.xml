@@ -12,7 +12,7 @@
                     <a type="button" 
                         t-attf-href="{{!link.url.startsWith('/') and link.url}}"
                         t-on-click="(event)=> link.url.startsWith('/') and selfOrder.setPage(link.url)"
-                        class="btn btn-{{link.style}} py-3 my-1 rounded">
+                        t-attf-class="btn btn-{{link.style}} py-3 my-1 rounded">
                         <t t-esc="link.name"/>
                     </a>
                 </t>
