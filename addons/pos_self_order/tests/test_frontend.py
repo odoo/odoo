@@ -3,6 +3,7 @@
 
 import odoo.tests
 
+
 @odoo.tests.tagged("post_install", "-at_install")
 class TestFrontend(odoo.tests.HttpCase):
     def setUp(self):
@@ -17,7 +18,7 @@ class TestFrontend(odoo.tests.HttpCase):
             }
         )
         basic_product = lambda i: {
-            "name": f"Product {i}",
+            "name": f"Product {i} test",
             "type": "product",
             "available_in_pos": True,
             "list_price": i,
@@ -30,16 +31,20 @@ class TestFrontend(odoo.tests.HttpCase):
     #         self.pos_config._get_self_order_route(),
     #         "pos_qr_menu_tour",
     #         login=None,
+    #         watch=True,
+    #         step_delay=500,
     #     )
 
     def test_self_order_pay_after_each_tour(self):
-        self.pos_config.self_order_table_mode = True
+        # self.pos_config.self_order_table_mode = True
+        self.pos_config.open_ui()
         self.start_tour(
             self.pos_config._get_self_order_route(),
+            # "pos_qr_menu_tour",
             "self_order_pay_after_each_tour",
             login=None,
             watch=True,
-            step_delay=500,
+            step_delay=1000,
         )
 
     # def test_self_order_pay_after_meal_tour(self):

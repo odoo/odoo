@@ -20,13 +20,21 @@ export function addProductsToCart(product_ids) {
         ])
         .flat();
 }
+/**
+ * @param {string} selector
+ * @returns {string}
+ */
+export function doesNotExist(selector) {
+    return `body:not(:has(${selector}))`;
+}
 
-export function clickOnProductCard(product_id, { isCheck = false } = {}) {
+export function clickOnProductCard(product_id, { isCheck = false, isNot = false } = {}) {
+    const productCard = `.o_self_order_item_card:contains('Product ${product_id} test')`;
     return [
         {
             content: `Click on the product card of Product ${product_id}`,
-            trigger: `.o_self_order_item_card:has(p:contains('Product ${product_id}'))`,
-            isCheck: isCheck,
+            trigger: isNot ? doesNotExist(productCard) : productCard,
+            isCheck,
         },
     ];
 }
@@ -45,7 +53,7 @@ export function clickOn(element, { isCheck = false } = {}) {
         {
             content: `Click on '${element}' button`,
             trigger: `.btn:contains('${element}')`,
-            isCheck: isCheck,
+            isCheck,
         },
     ];
 }
