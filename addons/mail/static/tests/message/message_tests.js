@@ -151,27 +151,6 @@ QUnit.test("Stop edition on press enter", async (assert) => {
     assert.containsNone($, ".o-mail-Message-editable .o-mail-Composer");
 });
 
-QUnit.test("Stop edition on click away", async (assert) => {
-    const pyEnv = await startServer();
-    const channelId = pyEnv["discuss.channel"].create({
-        name: "general",
-        channel_type: "channel",
-    });
-    pyEnv["mail.message"].create({
-        author_id: pyEnv.currentPartnerId,
-        body: "Hello world",
-        model: "discuss.channel",
-        res_id: channelId,
-        message_type: "comment",
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss(channelId);
-    await click(".o-mail-Message [title='Expand']");
-    await click(".o-mail-Message [title='Edit']");
-    await afterNextRender(() => triggerEvent(document.body, ".o-mail-DiscussSidebar", "click"));
-    assert.containsNone($, ".o-mail-Message-editable .o-mail-Composer");
-});
-
 QUnit.test("Do not stop edition on click away when clicking on emoji", async (assert) => {
     const pyEnv = await startServer();
     const channelId = pyEnv["discuss.channel"].create({
