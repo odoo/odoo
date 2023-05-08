@@ -3711,6 +3711,24 @@ class AccountMove(models.Model):
             else 'account.email_template_edi_invoice'
         )
 
+    def _notify_get_recipients_groups(self, msg_vals=None):
+        groups = super()._notify_get_recipients_groups(msg_vals)
+        local_msg_vals = dict(msg_vals or {})
+        if self.move_type != 'entry':
+            # This allows partners added to the email list in the sending wizard to access this document.
+            for group_name, _group_method, group_data in groups:
+                if group_name == 'customer' and self._portal_ensure_token():
+                    access_link = self._notify_get_action_link(
+                        'view', **local_msg_vals, access_token=self.access_token)
+                    group_data.update({
+                        'has_button_access': True,
+                        'button_access': {
+                            'url': access_link,
+                        },
+                    })
+
+        return groups
+
     def _get_report_base_filename(self):
         return self._get_move_display_name()
 
