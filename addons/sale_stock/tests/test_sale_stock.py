@@ -1417,6 +1417,44 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
         self.assertEqual(ship01.move_lines.move_orig_ids, (pick01 | pick02).move_lines)
         self.assertEqual(ship02.move_lines.move_orig_ids, (pick01 | pick02).move_lines)
 
+    def test_incoterm_in_advance_payment(self):
+        """When generating a advance payment invoice from a SO, this invoice incoterm should be the same as the SO"""
+
+        incoterm = self.env['account.incoterms'].create({
+            'name': 'Test Incoterm',
+            'code': 'TEST',
+        })
+
+        so = self.env['sale.order'].create({
+            'partner_id': self.partner_a.id,
+            'incoterm': incoterm.id,
+            'order_line': [(0, 0, {
+                'name': self.product_a.name,
+                'product_id': self.product_a.id,
+                'product_uom_qty': 10,
+                'product_uom': self.product_a.uom_id.id,
+                'price_unit': 1,
+            })],
+        })
+        so.action_confirm()
+
+        advance_product = self.env['product.product'].create({
+            'name': 'Deposit',
+            'type': 'service',
+            'invoice_policy': 'order',
+        })
+
+        adv_wiz = self.env['sale.advance.payment.inv'].with_context(active_ids=[so.id]).create({
+            'advance_payment_method': 'percentage',
+            'amount': 5.0,
+            'product_id': advance_product.id,
+        })
+
+        act = adv_wiz.with_context(open_invoices=True).create_invoices()
+        invoice = self.env['account.move'].browse(act['res_id'])
+
+        self.assertEqual(invoice.invoice_incoterm_id.id, incoterm.id)
+
     def test_exception_delivery_partial_multi(self):
         """
         When a backorder is cancelled for a picking in multi-picking,
