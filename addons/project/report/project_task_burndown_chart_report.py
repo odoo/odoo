@@ -218,8 +218,7 @@ class ReportProjectTaskBurndownChart(models.AbstractModel):
         * A domain that only contains fields that are specific to `project.task.burndown.chart.report`
         * A domain that only contains fields that are specific to `project.task`
 
-        Fields that are not part of the constraint are replaced by either a `FALSE_LEAF` or a `TRUE_LEAF` in order
-        to ensure the complete domain evaluation. See `remove_domain_leaf` for more details.
+        See `filter_domain_leaf` for more details on the new domains.
 
         :param domain: The domain that has been passed to the read_group.
         :return: A tuple containing the non `project.task` specific domain and the `project.task` specific domain.
