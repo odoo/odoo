@@ -178,6 +178,11 @@ class ProductTemplate(models.Model):
         show_discount = pricelist and pricelist.discount_policy == 'without_discount'
 
         base_sales_prices = self._price_compute('list_price', currency=currency)
+        website = self.env['website'].get_current_website()
+        if website.show_line_subtotals_tax_selection == 'tax_excluded':
+            tax_display = 'total_excluded'
+        else:
+            tax_display = 'total_included'
 
         res = {}
         for template in self:
@@ -185,7 +190,6 @@ class ProductTemplate(models.Model):
 
             product_taxes = template.sudo().taxes_id.filtered(lambda t: t.company_id == t.env.company)
             taxes = fiscal_position.map_tax(product_taxes)
-            tax_display = 'total_excluded' if self.env.company.show_line_subtotals_tax_selection == 'tax_excluded' else 'total_included'
 
             template_price_vals = {
                 'price_reduce': price_reduce
@@ -312,10 +316,11 @@ class ProductTemplate(models.Model):
     def _price_with_tax_computed(
         self, price, product_taxes, taxes, company_id, currency, product, partner
     ):
+        website = self.env['website'].get_current_website()
         price = self.env['account.tax']._fix_tax_included_price_company(
             price, product_taxes, taxes, company_id
         )
-        show_tax = self.env.company.show_line_subtotals_tax_selection
+        show_tax = website.show_line_subtotals_tax_selection
         tax_display = 'total_excluded' if show_tax == 'tax_excluded' else 'total_included'
         # The list_price is always the price of one.
         return taxes.compute_all(price, currency, 1, product, partner)[tax_display]

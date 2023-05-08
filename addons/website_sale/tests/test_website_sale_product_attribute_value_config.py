@@ -58,7 +58,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         self.assertEqual(combination_info['has_discounted_price'], False)
 
         # CASE: B2C setting
-        self.env.company.show_line_subtotals_tax_selection = 'tax_included'
+        website.show_line_subtotals_tax_selection = 'tax_included'
 
         combination_info = product_template._get_combination_info(pricelist=pricelist)
         self.assertEqual(combination_info['price'], 2222 * discount_rate * currency_ratio * tax_ratio)
@@ -116,7 +116,7 @@ class TestWebsiteSaleProductAttributeValueConfig(AccountTestInvoicingCommon, Tes
         computer_ssd_attribute_lines.product_template_value_ids[0].price_extra = 200
 
         # Enable tax included
-        self.env.company.show_line_subtotals_tax_selection = 'tax_included'
+        website.show_line_subtotals_tax_selection = 'tax_included'
 
         combination_info = product._get_combination_info(pricelist=pricelist)
         self.assertEqual(combination_info['price'], 575, "500$ + 15% tax")

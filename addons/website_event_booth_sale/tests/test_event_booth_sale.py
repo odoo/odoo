@@ -13,47 +13,48 @@ from odoo.tests.common import tagged
 @tagged('post_install', '-at_install')
 class TestWebsiteEventBoothSale(HttpCase, TestWebsiteEventSaleCommon):
 
-    def setUp(self):
-        super().setUp()
-        self.env["res.company"].sudo().search([]).show_line_subtotals_tax_selection = 'tax_included'
-        self.tax = self.env['account.tax'].sudo().create({
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['website'].sudo().search([]).show_line_subtotals_tax_selection = 'tax_included'
+        cls.tax = cls.env['account.tax'].sudo().create({
             'name': 'Tax 10',
             'amount': 10,
         })
-        self.booth_product = self.env['product.product'].create({
+        cls.booth_product = cls.env['product.product'].create({
             'name': 'Test Booth Product',
             'description_sale': 'Mighty Booth Description',
             'list_price': 20,
             'standard_price': 60.0,
-            'taxes_id': [(6, 0, [self.tax.id])],
+            'taxes_id': [(6, 0, [cls.tax.id])],
             'detailed_type': 'event_booth',
         })
-        self.event_booth_category = self.env['event.booth.category'].create({
+        cls.event_booth_category = cls.env['event.booth.category'].create({
             'name': 'Standard',
             'description': '<p>Standard</p>',
-            'product_id': self.booth_product.id,
+            'product_id': cls.booth_product.id,
             'price': 100.0,
         })
-        self.event_type = self.env['event.type'].create({
+        cls.event_type = cls.env['event.type'].create({
             'name': 'Booth Type',
             'event_type_booth_ids': [
                 Command.create({
                     'name': 'Standard 1',
-                    'booth_category_id': self.event_booth_category.id,
+                    'booth_category_id': cls.event_booth_category.id,
                 }),
                 Command.create({
                     'name': 'Standard 2',
-                    'booth_category_id': self.event_booth_category.id,
+                    'booth_category_id': cls.event_booth_category.id,
                 }),
                 Command.create({
                     'name': 'Standard 3',
-                    'booth_category_id': self.event_booth_category.id,
+                    'booth_category_id': cls.event_booth_category.id,
                 }),
             ],
         })
-        self.env['event.event'].create({
+        cls.env['event.event'].create({
             'name': 'Test Event Booths',
-            'event_type_id': self.event_type.id,
+            'event_type_id': cls.event_type.id,
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
             'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
             'website_published': True,
