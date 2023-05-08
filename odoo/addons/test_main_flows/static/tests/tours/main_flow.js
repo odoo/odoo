@@ -324,8 +324,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     trigger: 'label:contains("Vendor Taxes")',
     // click somewhere else to exit cell focus
 }, {
-    mobile: false,
-    trigger: '.breadcrumb .o_back_button',
+    trigger: '.o_back_button',
     content: _t('Go back'),
     position: 'bottom',
 }, {
@@ -335,24 +334,16 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     content: _t('Go back'),
     position: 'bottom',
 }, {
-    mobile: false,
-    trigger: '.breadcrumb .o_back_button',
+    trigger: '.o_back_button',
     extra_trigger: ".o_breadcrumb .active:contains('Bill of Materials')",
     content: _t('Go back'),
     position: 'bottom',
 }, {
-    mobile: false,
-    trigger: '.breadcrumb .o_back_button',
+    trigger: '.o_back_button',
     extra_trigger: ".o_breadcrumb .active:contains('the_flow.product')",
     content: _t('Go back'),
     position: 'bottom',
 },
-...stepUtils.goBackBreadcrumbsMobile(
-        Markup(_t("Use the breadcrumbs to <b>go back to products</b>.")),
-        undefined,
-        ".o_breadcrumb .active:contains('Bill of Materials')",
-        ".o_breadcrumb .active:contains('the_flow.product')"
-    ),
 {
 // Add service product
     trigger: '.o-kanban-button-new',
@@ -715,7 +706,7 @@ stepUtils.openBurgerMenu(".o_breadcrumb .active:contains('OP/')"),
     content: _t("Apply"),
     position: "bottom",
 }, {
-    trigger: ".o_back_button a, .breadcrumb-item:not('.active'):last",
+    trigger: ".o_back_button, .breadcrumb-item:not('.active'):last",
     content: _t('go back to the purchase order'),
     position: 'bottom',
 },

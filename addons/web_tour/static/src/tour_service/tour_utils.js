@@ -498,7 +498,7 @@ export const stepUtils = {
     goBackBreadcrumbsMobile(description, ...extraTrigger) {
         return extraTrigger.map((element) => ({
             mobile: true,
-            trigger: ".breadcrumb-item.o_back_button",
+            trigger: ".o_back_button",
             extra_trigger: element,
             content: description,
             position: "bottom",
@@ -596,6 +596,11 @@ export const stepUtils = {
 
     mobileKanbanSearchMany2X(modalTitle, valueSearched) {
         return [
+            {
+                mobile: true,
+                trigger: `.o_control_panel_navigation .btn .fa-search`,
+                position: "bottom",
+            },
             {
                 mobile: true,
                 trigger: ".o_searchview_input",
