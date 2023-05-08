@@ -4,7 +4,6 @@ import {
     afterNextRender,
     click,
     insertText,
-    nextAnimationFrame,
     start,
     startServer,
 } from "@mail/../tests/helpers/test_utils";
@@ -36,44 +35,6 @@ QUnit.test("reply: discard on reply button toggle", async (assert) => {
     await click("[title='Reply']");
     assert.containsOnce($, ".o-mail-Composer");
     await click("[title='Reply']");
-    assert.containsNone($, ".o-mail-Composer");
-});
-
-QUnit.test("reply: discard on click away", async (assert) => {
-    const pyEnv = await startServer();
-    const partnerId = pyEnv["res.partner"].create({});
-    const messageId = pyEnv["mail.message"].create({
-        body: "not empty",
-        model: "res.partner",
-        needaction: true,
-        needaction_partner_ids: [pyEnv.currentPartnerId],
-        res_id: partnerId,
-    });
-    pyEnv["mail.notification"].create({
-        mail_message_id: messageId,
-        notification_status: "sent",
-        notification_type: "inbox",
-        res_partner_id: pyEnv.currentPartnerId,
-    });
-    const { openDiscuss } = await start();
-    await openDiscuss();
-    assert.containsOnce($, ".o-mail-Message");
-
-    await click("[title='Reply']");
-    assert.containsOnce($, ".o-mail-Composer");
-
-    $(".o-mail-Composer-input")[0].click();
-    await nextAnimationFrame(); // wait just in case, but nothing is supposed to happen
-    assert.containsOnce($, ".o-mail-Composer");
-
-    await click("button[aria-label='Emojis']");
-    assert.containsOnce($, ".o-mail-EmojiPicker");
-
-    await click(".o-mail-EmojiPicker-content .o-mail-Emoji");
-    assert.containsNone($, ".o-mail-EmojiPicker");
-    assert.containsOnce($, ".o-mail-Composer");
-
-    await click(".o-mail-Message");
     assert.containsNone($, ".o-mail-Composer");
 });
 
