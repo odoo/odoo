@@ -1978,7 +1978,7 @@ class AccountMove(models.Model):
     @contextmanager
     def _sync_rounding_lines(self, container):
         yield
-        for invoice in container['records']:
+        for invoice in container['records'].search([('state', '=', 'draft')]):
             invoice._recompute_cash_rounding_lines()
 
     @contextmanager
