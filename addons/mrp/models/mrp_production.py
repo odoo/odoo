@@ -1353,7 +1353,10 @@ class MrpProduction(models.Model):
         self.allow_workorder_dependencies = self.bom_id.allow_operation_dependencies
         if self.allow_workorder_dependencies:
             for workorder in self.workorder_ids:
-                workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id) for operation_id in workorder.operation_id.blocked_by_operation_ids]
+                workorder.blocked_by_workorder_ids = [Command.link(workorder_per_operation[operation_id].id)
+                                                      for operation_id in
+                                                      workorder.operation_id.blocked_by_operation_ids
+                                                      if operation_id in workorder_per_operation]
                 if not workorder.needed_by_workorder_ids:
                     last_workorder_per_bom[workorder.operation_id.bom_id] = workorder
         else:
