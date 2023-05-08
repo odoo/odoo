@@ -83,7 +83,7 @@
             <t t-if="env.isSmall">
                 <t t-set="previousBreadcrumb" t-value="visiblePathBreadcrumbs.slice(-1)"/>
                 <button class="o_back_button btn btn-link px-1" t-on-click.prevent="() => this.onBreadcrumbClicked(previousBreadcrumb.jsId)">
-                    <i class="fa fa-fw fa-arrow-left"/>
+                    <i class="oi oi-fw oi-arrow-left"/>
                 </button>
             </t>
             <t t-else="">

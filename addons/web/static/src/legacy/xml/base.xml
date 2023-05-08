@@ -285,7 +285,7 @@
         <span class="btn-group" aria-atomic="true">
             <!-- accesskeys not wanted in X2Many widgets -->
             <button type="button"
-                class="fa fa-chevron-left px-2 btn btn-secondary o_pager_previous rounded-start"
+                class="oi oi-chevron-left px-2 btn btn-secondary o_pager_previous rounded-start"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'p' : false"
                 aria-label="Previous page"
@@ -294,7 +294,7 @@
                 t-on-click="ev => this._changeSelection(-1, ev)"
             />
             <button type="button"
-                class="fa fa-chevron-right px-2 btn btn-secondary o_pager_next rounded-end"
+                class="oi oi-chevron-right px-2 btn btn-secondary o_pager_next rounded-end"
                 t-att-disabled="state.disabled || singlePage"
                 t-att-accesskey="props.withAccessKey ? 'n' : false"
                 aria-label="Next page"
@@ -778,7 +778,7 @@
 </div>
 <div  t-name="ModelFieldSelector.popover" class="o_field_selector_popover o_legacy_field_selector_popover d-none" tabindex="0">
     <div class="o_field_selector_popover_header text-center">
-        <i class="fa fa-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
+        <i class="oi oi-arrow-left o_field_selector_popover_option o_field_selector_prev_page" title="Previous" role="img" aria-label="Previous"/>
         <div class="o_field_selector_title"/>
         <i class="fa fa-times o_field_selector_popover_option o_field_selector_close" title="Close" role="img" aria-label="Close"/>
         <div t-if="widget.options.showSearchInput" class="o_field_selector_search mt-2">
@@ -798,7 +798,7 @@
 <t t-name="ModelFieldSelector.value">
     <t t-foreach="chain" t-as="fieldName" t-key="fieldName_index">
         <t t-if="fieldName_index > 0">
-            <i class="fa fa-chevron-right" role="img" aria-label="Followed by" title="Followed by"/>
+            <i class="oi oi-chevron-right" role="img" aria-label="Followed by" title="Followed by"/>
         </t>
         <span class="o_field_selector_chain_part">
             <t t-if="fieldName === '1'">
@@ -827,7 +827,7 @@
             t-att-data-name="line.name">
             <t t-esc="line.string"/>
             <div t-if="debug" class="text-muted o_field_selector_item_title"><t t-esc="line.name"/> (<t t-esc="line.type"/>)</div>
-            <i t-if="relationToFollow" class="fa fa-chevron-right o_field_selector_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow"/>
+            <i t-if="relationToFollow" class="oi oi-chevron-right o_field_selector_relation_icon" role="img" aria-label="Relation to follow" title="Relation to follow"/>
         </li>
     </t>
 </ul>

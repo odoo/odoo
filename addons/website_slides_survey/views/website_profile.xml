@@ -36,7 +36,7 @@
                     <p t-if="certification_search_terms">No certification found for the given search term.</p>
                     <p t-else="">You have not taken any certification yet.</p>
                     <a href="/slides/all?slide_category=certification">
-                        <i class="fa fa-arrow-right"/> See Certifications
+                        <i class="oi oi-arrow-right"/> See Certifications
                     </a>
                 </t>
                 <div t-else="" class="card p-3 mb-3" t-foreach="user_inputs" t-as="user_input">
@@ -96,7 +96,7 @@
             <div class="text-muted d-inline-block">No certifications yet!</div>
         </t>
         <div class="text-end d-inline-block pull-right">
-            <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="fa fa-arrow-right me-1"/>All Certifications</a>
+            <a href="/slides/all?slide_category=certification" class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Certifications</a>
         </div>
     </template>
 

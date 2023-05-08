@@ -115,7 +115,7 @@
         <div class="bg-100 text-1000 h6 my-0 text-decoration-none border-bottom d-flex align-items-center justify-content-between">
             <span class="p-2">Course content</span>
             <a href="#collapse_slide_aside" data-bs-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wslides_lesson_aside_collapse">
-                <i class="fa fa-chevron-down d-lg-none"/>
+                <i class="oi oi-chevron-down d-lg-none"/>
             </a>
         </div>
         <ul id="collapse_slide_aside" class="list-unstyled my-0 pb-3 collapse d-lg-block">
@@ -248,7 +248,7 @@
                 <a t-attf-class="o_wslides_nav_button btn btn-light border #{'disabled' if not previous_slide else ''} me-2"
                     role="button" t-att-aria-disabled="'disabled' if not previous_slide else None"
                     t-att-href="'/slides/slide/%s' % (slug(previous_slide)) if previous_slide else '#'">
-                    <i class="fa fa-chevron-left me-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
+                    <i class="oi oi-chevron-left me-2"></i> <span class="d-none d-sm-inline-block">Prev</span>
                 </a>
                 <t t-if="slide.channel_id.channel_type == 'documentation' and slide.channel_id.is_member">
                     <t t-set="is_quiz" t-value="slide.slide_category == 'quiz' or slide.question_ids"/>
@@ -276,7 +276,7 @@
                 <a t-attf-class="o_wslides_nav_button btn btn-light border #{'disabled' if not next_slide else ''}"
                     role="button" t-att-aria-disabled="'disabled' if not next_slide else None"
                     t-att-href="'/slides/slide/%s' % (slug(next_slide)) if next_slide else '#'">
-                    <span class="d-none d-sm-inline-block">Next</span> <i class="fa fa-chevron-right ms-2"></i>
+                    <span class="d-none d-sm-inline-block">Next</span> <i class="oi oi-chevron-right ms-2"></i>
                 </a>
             </div>
             <a class="btn btn-light border ms-2 my-1" role="button" t-att-href="'/slides/slide/%s?fullscreen=1' % (slug(slide))">

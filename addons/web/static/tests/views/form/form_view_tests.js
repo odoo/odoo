@@ -7642,7 +7642,7 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button string="Inventory Moves" class="oe_stat_button" icon="fa-arrows-v"/>
+                            <button string="Inventory Moves" class="oe_stat_button" icon="oi-arrows-v"/>
                         </div>
                     </sheet>
                 </form>`,
@@ -8396,7 +8396,7 @@ QUnit.module("Views", (hooks) => {
             serverData,
             arch: `
                 <form>
-                    <a type="action" name="42" class="btn-primary"><i class="fa fa-arrow-right"/> Click me !</a>
+                    <a type="action" name="42" class="btn-primary"><i class="oi oi-arrow-right"/> Click me !</a>
                 </form>`,
             resId: 1,
         });
@@ -12914,7 +12914,7 @@ QUnit.module("Views", (hooks) => {
                 <form>
                     <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
                         <field name="bar"/>
-                        <button name="buttonName" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                        <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
                     </setting>
                 </form>`,
         });

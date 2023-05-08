@@ -70,7 +70,7 @@
                                     <field name="pos_iface_available_categ_ids" widget="many2many_tags" attrs="{'readonly': [('pos_has_active_session','=', True)]}"/>
                                 </div>
                                 <div class="content-group mt16" attrs="{'invisible': [('pos_limit_categories', '=', False)]}">
-                                    <button name="%(product_pos_category_action)d" icon="fa-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
+                                    <button name="%(product_pos_category_action)d" icon="oi-arrow-right" type="action" string="PoS Product Categories" class="btn-link"/>
                                 </div>
                             </setting>
                             <setting help="Improve navigation for imprecise industrial touchscreens">
@@ -86,7 +86,7 @@
                                         <field name="pos_trusted_config_ids" widget="many2many_tags" options="{'no_create':'true'}" placeholder="Select PoS to start sharing orders"/>
                                     </div>
                                     <div>
-                                        <button name="%(point_of_sale.action_pos_config_tree)d" icon="fa-arrow-right" type="action" string="Point of Sales" class="btn-link"/>
+                                        <button name="%(point_of_sale.action_pos_config_tree)d" icon="oi-arrow-right" type="action" string="Point of Sales" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
@@ -103,7 +103,7 @@
                                     <field name="sale_tax_id" colspan="4" nolabel="1" domain="[('type_tax_use', 'in', ('sale', 'all')), ('company_id', '=', company_id)]"/>
                                 </div>
                                 <div class="mt8">
-                                    <button name="%(account.action_tax_form)d" icon="fa-arrow-right" type="action" string="Taxes" class="btn-link"/>
+                                    <button name="%(account.action_tax_form)d" icon="oi-arrow-right" type="action" string="Taxes" class="btn-link"/>
                                 </div>
                             </setting>
                             <setting groups="account.group_account_readonly">
@@ -126,7 +126,7 @@
                                         <field name="pos_fiscal_position_ids" widget="many2many_tags" options="{'no_create': True}" domain="['|',('company_id', '=', company_id),('company_id', '=', False)]"/>
                                     </div>
                                     <div>
-                                        <button name="%(account.action_account_fiscal_position_form)d" icon="fa-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
+                                        <button name="%(account.action_account_fiscal_position_form)d" icon="oi-arrow-right" type="action" string="Fiscal Positions" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
@@ -164,7 +164,7 @@
                                         <field name="pos_pricelist_id" domain="[('id', 'in', pos_allowed_pricelist_ids)]" options="{'no_create': True}"/>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                        <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>
@@ -176,7 +176,7 @@
                                 <div class="content-group">
                                     <a attrs="{'invisible': [('pos_iface_tax_included', '!=', 'total')]}"
                                         href="https://www.odoo.com/documentation/master/applications/finance/accounting/taxation/taxes/B2B_B2C.html"
-                                        target="_blank" class="oe-link"><i class="fa fa-fw fa-arrow-right"/>How to manage tax-included prices</a>
+                                        target="_blank" class="oe-link"><i class="oi oi-fw oi-arrow-right"/>How to manage tax-included prices</a>
                                 </div>
                             </setting>
                             <setting help="Allow cashiers to set a discount per line">
@@ -232,7 +232,7 @@
                             <setting id="payment_methods_new" string="Payment Methods" help="Payment methods available">
                                 <field name="pos_payment_method_ids" colspan="4" widget="many2many_tags" attrs="{'readonly': [('pos_has_active_session','=', True)], 'required': [('pos_company_has_template', '=', True)]}" options="{'no_create': True}" />
                                 <div>
-                                    <button name="%(action_payment_methods_tree)d" icon="fa-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
+                                    <button name="%(action_payment_methods_tree)d" icon="oi-arrow-right" type="action" string="Payment Methods" class="btn-link"/>
                                 </div>
                             </setting>
                             <setting string="Automatically validate order" help="Automatically validates orders paid with a payment terminal.">
@@ -251,7 +251,7 @@
                                     </div>
                                 </div>
                                 <div class="mt8">
-                                    <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
+                                    <button name="%(account.rounding_list_action)d" icon="oi-arrow-right"
                                             type="action" string="Cash Roundings" class="btn-link"
                                             attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
                                 </div>
@@ -341,7 +341,7 @@
                                         <field name="pos_printer_ids" widget="many2many_tags"/>
                                     </div>
                                     <div>
-                                        <button name="%(point_of_sale.action_pos_printer_form)d" icon="fa-arrow-right" type="action" string="Printers" class="btn-link"/>
+                                        <button name="%(point_of_sale.action_pos_printer_form)d" icon="oi-arrow-right" type="action" string="Printers" class="btn-link"/>
                                     </div>
                                 </div>
                             </setting>

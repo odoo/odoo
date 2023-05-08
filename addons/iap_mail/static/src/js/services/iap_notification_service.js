@@ -33,7 +33,7 @@ export const iapNotificationService = {
             // ℹ️ `_t` can only be inlined directly inside JS template literals
             // after Babel has been updated to version 2.12.
             const translatedText = _t("Buy more credits");
-            const message = Markup`<a class='btn btn-link' href='${notif.url}' target='_blank' ><i class='fa fa-arrow-right'></i> ${translatedText}</a>`;
+            const message = Markup`<a class='btn btn-link' href='${notif.url}' target='_blank' ><i class='oi oi-arrow-right'></i> ${translatedText}</a>`;
             notification.add(message, {
                 type: notif.error_type,
                 title: notif.title

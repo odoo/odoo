@@ -14,7 +14,7 @@
     <t t-name="web.ExportDataItem" owl="1">
         <div t-att-data-field_id="props.field.id" t-attf-class="o_export_tree_item cursor-pointer position-relative ps-4 {{ state.isExpanded ? 'o_expanded mb-2' : '' }} {{ props.field.parent ? '' : 'pe-3'}}" role="treeitem" t-on-click.stop="() => this.loadExpandedContent(props.field.id)" t-on-dblclick="() => this.onDoubleClick(props.field.id)">
             <div t-attf-class="o_tree_column d-flex align-items-center {{ props.field.required ? 'fw-bolder' : ''}}">
-                <span t-if="props.isFieldExpandable(props.field.id)" t-attf-class="ms-n3 float-start o_expand_parent small fa {{ state.isExpanded ? 'fa-chevron-down' : 'fa-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
+                <span t-if="props.isFieldExpandable(props.field.id)" t-attf-class="ms-n3 float-start o_expand_parent small oi {{ state.isExpanded ? 'oi-chevron-down' : 'oi-chevron-right' }}" role="img" aria-label="Show sub-fields" title="Show sub-fields" />
                 <span t-if="props.isDebug and props.field.id" class="overflow-hidden w-100" t-esc="`${props.field.string} (${props.field.id})`" />
                 <span t-else="" class="overflow-hidden w-100" t-esc="props.field.string" />
                 <span title="Select field" t-attf-class="fa fa-plus float-end m-1 o_add_field {{ isFieldSelected(props.field.id) ? 'o_inactive opacity-25' : '' }}" t-on-click.stop="(ev) => !this.isFieldSelected(this.props.field.id) and this.props.onAdd(this.props.field.id)" />

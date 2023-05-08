@@ -21,8 +21,8 @@
 
                 <!-- Buttons -->
                 <t t-if="hasSidebarButton">
-                    <i t-if="state.sidebar" class="o-mail-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute fa fa-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
-                    <i t-else="" class="o-mail-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute fa fa-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
+                    <i t-if="state.sidebar" class="o-mail-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-right" title="Hide sidebar" t-on-click="() => this.state.sidebar = false"/>
+                    <i t-else="" class="o-mail-Call-sidebarToggler p-2 fs-5 cursor-pointer position-absolute oi oi-arrow-left" title="Show sidebar" t-on-click="() => this.state.sidebar = true"/>
                 </t>
                 <div t-if="state.overlay or !isControllerFloating" class="o-mail-Call-overlay d-flex justify-content-center w-100 pb-1" t-att-class="{ 'o-isFloating position-absolute bottom-0 pb-3': isControllerFloating }">
                     <div t-on-mousemove="onMousemoveOverlay">
