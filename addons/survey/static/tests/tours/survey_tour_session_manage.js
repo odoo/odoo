@@ -1,6 +1,9 @@
 /** @odoo-module **/
 
 import { registry } from "@web/core/registry";
+import { zip } from "@web/core/utils/arrays";
+import { TourError } from "@web_tour/tour_service/tour_utils";
+
 import surveySessionTools from "survey.session_tour_tools";
 
 /**
@@ -9,10 +12,10 @@ import surveySessionTools from "survey.session_tour_tools";
  * This helper method returns the chart data (Chartjs framework specific) in the following structure:
  * [{ value, backgroundColor, labelColor }]
  */
-var getChartData = function () {
-    var chartData = [];
-    var rootWidget = odoo.__DEBUG__.services['root.widget'];
-    var surveyManagePublicWidget = rootWidget.publicWidgets.find(function (widget) {
+const getChartData = () => {
+    const chartData = [];
+    const rootWidget = odoo.__DEBUG__.services['root.widget'];
+    const surveyManagePublicWidget = rootWidget.publicWidgets.find((widget) => {
         return widget.$el.hasClass('o_survey_session_manage');
     });
 
@@ -20,7 +23,7 @@ var getChartData = function () {
         return chartData;
     }
 
-    surveyManagePublicWidget.resultsChart.chart.data.datasets[0].data.forEach(function (value, index) {
+    surveyManagePublicWidget.resultsChart.chart.data.datasets[0].data.forEach((value, index)=> {
         chartData.push({
             value: value,
             backgroundColor: surveyManagePublicWidget.resultsChart._getBackgroundColor({dataIndex: index}),
@@ -31,45 +34,89 @@ var getChartData = function () {
     return chartData;
 };
 
-var nextScreen = function () {
-    var e = $.Event('keydown');
+const nextScreen = () => {
+    const e = $.Event('keydown');
     e.keyCode = 39; // arrow-right
     $(document).trigger(e);
 };
 
-var previousScreen = function () {
-    var e = $.Event('keydown');
+const previousScreen = () => {
+    const e = $.Event('keydown');
     e.keyCode = 37; // arrow-left
     $(document).trigger(e);
 };
 
-var REGULAR_ANSWER_COLOR = '#212529';
-var CORRECT_ANSWER_COLOR = '#2CBB70';
-var WRONG_ANSWER_COLOR = '#D9534F';
+const REGULAR_ANSWER_COLOR = '#212529';
+const CORRECT_ANSWER_COLOR = '#2CBB70';
+const WRONG_ANSWER_COLOR = '#D9534F';
 
-/**
- * A 'regular' answer is an answer that is nor correct, nor incorrect.
- * The check is based on the specific opacity (0.8) and color of those answers.
- */
-var isRegularAnswer = function (answer) {
-    return answer.backgroundColor.includes('0.8') &&
-        answer.labelColor === REGULAR_ANSWER_COLOR;
+const INDEX_TO_ORDINAL = {
+    0: 'First',
+    1: 'Second',
+    2: 'Third',
+    3: 'Fourth',
 };
 
 /**
- * The check is based on the specific opacity (0.8) and color of correct answers.
+ * Check answer appearance (opacity and color).
+ *
+ * @param {string} answerLabel
+ * @param {{backgroundColor: string, labelColor: string, value?: number}} shownAnswer
+ * @param {"correct"|"incorrect"|"regular"} expectedAnswerType
  */
-var isCorrectAnswer = function (answer) {
-    return answer.backgroundColor.includes('0.8') &&
-        answer.labelColor === CORRECT_ANSWER_COLOR;
+const checkAnswerAppearance = (answerLabel, shownAnswer, expectedAnswerType) => {
+    if (expectedAnswerType === 'correct') {
+        if (!shownAnswer.backgroundColor.includes('0.8') || shownAnswer.labelColor !== CORRECT_ANSWER_COLOR) {
+            throw new TourError(`${answerLabel} should be shown as "correct"!`);
+        }
+    } else if (expectedAnswerType === 'incorrect') {
+        if (!shownAnswer.backgroundColor.includes('0.2') || shownAnswer.labelColor !== WRONG_ANSWER_COLOR) {
+            throw new TourError(`${answerLabel} should be shown as "incorrect"!`);
+        }
+    } else if (expectedAnswerType === 'regular') {
+        if (!shownAnswer.backgroundColor.includes('0.8') || shownAnswer.labelColor !== REGULAR_ANSWER_COLOR) {
+            throw new TourError(`${answerLabel} should not be shown as "correct" or "incorrect"!`);
+        }
+    } else {
+        throw new Error(`Unsupported answer type.`);
+    }
+};
+
+const checkAnswerValue = (answerLabel, shownAnswerValue, expectedAnswerValue) => {
+    if (shownAnswerValue !== expectedAnswerValue) {
+        throw new TourError(expectedAnswerValue === 0 ?
+            `${answerLabel} should not be picked by any user!` :
+            `${answerLabel} should be picked by ${expectedAnswerValue} users!`
+        );
+    }
 };
 
 /**
- * The check is based on the specific opacity (0.2) and color of incorrect answers.
+ * Check the answers count, values and appearance.
+ *
+ * @param {{value: number, backgroundColor: string, color: string}[]} chartData Data returned by `getChartData`.
+ * @param {{value: number, type: "correct" | "incorrect" | "regular"}[]} expectedAnswersData
  */
-var isIncorrectAnswer = function (answer) {
-    return answer.backgroundColor.includes('0.2') &&
-        answer.labelColor === WRONG_ANSWER_COLOR;
+const checkAnswers = (chartData, expectedAnswersData) => {
+    checkAnswersCount(chartData, expectedAnswersData.length);
+
+    zip(chartData, expectedAnswersData).forEach(([shownAnswerData, expectedAnswerData], answerIndex) => {
+        const answerLabel = `${INDEX_TO_ORDINAL[answerIndex]} answer`;
+        checkAnswerValue(answerLabel, shownAnswerData.value, expectedAnswerData.value);
+        checkAnswerAppearance(answerLabel, shownAnswerData, expectedAnswerData.type);
+    });
+};
+
+const checkAnswersAllZeros = (chartData) => {
+    if (chartData.find(answerData => answerData !== 0).length) {
+        throw new TourError('Chart data should all be 0!');
+    }
+};
+
+const checkAnswersCount = (chartData, expectedCount) => {
+    if (chartData.length !== expectedCount) {
+        throw new TourError(`Chart data should contain ${expectedCount} records!`);
+    }
 };
 
 /**
@@ -97,363 +144,192 @@ registry.category("web_tour.tours").add('test_survey_session_manage_tour', {
     trigger: 'button[name="action_open_session_manager"]',
 }, {
     trigger: 'h1:contains("Nickname")',
-    run: function () {} // check nickname question is displayed
+    isCheck: true // check nickname question is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
     trigger: 'h1:contains("Text Question")',
-    run: function () {} // check text question is displayed
+    isCheck: true // check text question is displayed
 }, {
     trigger: '.o_survey_session_progress_small:contains("3 / 3")',
-    run: function () {} // check we have 3 answers
+    isCheck: true // check we have 3 answers
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 1 is the best")',
-    run: function () {} // check attendee 1 answer is displayed
+    isCheck: true // check attendee 1 answer is displayed
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 2 rulez")',
-    run: function () {} // check attendee 2 answer is displayed
+    isCheck: true // check attendee 2 answer is displayed
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 3 will crush you")',
-    run: function () {} // check attendee 3 answer is displayed
+    isCheck: true // check attendee 3 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
-    run: function () {} // check we have 2 answers
+    isCheck: true // check we have 2 answers
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("10/10/2010")',
-    run: function () {} // check attendee 1 answer is displayed
+    isCheck: true // check attendee 1 answer is displayed
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("11/11/2011")',
-    run: function () {} // check attendee 2 answer is displayed
+    isCheck: true // check attendee 2 answer is displayed
 }, {
     trigger: 'h1',
     run: previousScreen
 }, {
     trigger: 'h1:contains("Text Question")',
-    run: function () {} // check text question is displayed
+    isCheck: true // check text question is displayed
 }, {
     trigger: '.o_survey_session_progress_small:contains("3 / 3")',
-    run: function () {} // check we have 3 answers
+    isCheck: true // check we have 3 answers
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 1 is the best")',
-    run: function () {} // check attendee 1 answer is displayed
+    isCheck: true // check attendee 1 answer is displayed
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 2 rulez")',
-    run: function () {} // check attendee 2 answer is displayed
+    isCheck: true // check attendee 2 answer is displayed
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("Attendee 3 will crush you")',
-    run: function () {} // check attendee 3 answer is displayed
+    isCheck: true // check attendee 3 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
-    run: function () {} // check we have 2 answers
+    isCheck: true // check we have 2 answers
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("10/10/2010")',
-    run: function () {} // check attendee 1 answer is displayed
+    isCheck: true // check attendee 1 answer is displayed
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("11/11/2011")',
-    run: function () {} // check attendee 2 answer is displayed
+    isCheck: true // check attendee 2 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
     trigger: '.o_survey_session_progress_small:contains("2 / 3")',
-    run: function () {} // check we have 2 answers
+    isCheck: true // check we have 2 answers
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("10/10/2010 10:00:00")',
-    run: function () {} // check attendee 2 answer is displayed
+    isCheck: true // check attendee 2 answer is displayed
 }, {
     trigger: '.o_survey_session_text_answer_container:contains("11/11/2011 15:55:55")',
-    run: function () {} // check attendee 3 answer is displayed
+    isCheck: true // check attendee 3 answer is displayed
 }, {
     trigger: 'h1',
     run: nextScreen
 }, {
     trigger: 'h1:contains("Regular Simple Choice")',
-    run: function () {
-        var chartData = getChartData();
-        if (chartData.length !== 3) {
-            console.error('Chart data should contain 3 records!');
-            return;
-        }
-
-        var firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 2 || !isRegularAnswer(firstAnswerData)) {
-            console.error('First answer should be picked by 2 users!');
-            return;
-        }
-
-        var secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 1 || !isRegularAnswer(secondAnswerData)) {
-            console.error('Second answer should be picked by 1 user!');
-            return;
-        }
-
-        var thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 0 || !isRegularAnswer(thirdAnswerData)) {
-            console.error('Third answer should be picked by no users!');
-            return;
-        }
+    // Wait for answers' data to be fetched (see commit message).
+    extra_trigger: '.o_survey_session_progress_small[style*="width: 100%"]',
+    run: () => {
+        checkAnswers(getChartData(), [
+            {value: 2, type: "regular"},
+            {value: 1, type: "regular"},
+            {value: 0, type: "regular"},
+        ]);
+        nextScreen();
+    }
+}, {
+    trigger: 'h1:contains("Scored Simple Choice")',
+    run: () => {
+        const chartData = getChartData();
+        checkAnswersCount(chartData, 4);
+        checkAnswersAllZeros(chartData);
 
         nextScreen();
     }
 }, {
     trigger: 'h1:contains("Scored Simple Choice")',
-    run: function () {
-        var chartData = getChartData();
-        if (chartData.length !== 4) {
-            console.error('Chart data should contain 4 records!');
-            return;
-        }
-
-        for (var i = 0; i < chartData.length; i++) {
-            if (chartData[i].value !== 0) {
-                console.error(
-                    'Chart data should all be 0 because "next screen" that shows ' +
-                    'answers values is not triggered yet!');
-                return;
-            }
-        }
-
+    // Wait for Button to be updated ("late" enough DOM change after onNext() is triggered).
+    extra_trigger: '.o_survey_session_navigation_next_label:contains("Show Correct Answer(s)")',
+    run: () => {
+        checkAnswers(getChartData(), [
+            {value: 1, type: "regular"},
+            {value: 1, type: "regular"},
+            {value: 1, type: "regular"},
+            {value: 0, type: "regular"},
+        ]);
         nextScreen();
-        chartData = getChartData();
-
-        var firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 1 || !isRegularAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 1 user and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
-        var secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 1 || !isRegularAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 1 user and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
-        var thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isRegularAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
-        var fourthAnswerData = chartData[3];
-        if (fourthAnswerData.value !== 0 || !isRegularAnswer(fourthAnswerData)) {
-            console.error(
-                'Fourth answer should be picked by no users and its correctness should not be shown yet!'
-            );
-            return;
-        }
-
-        nextScreen();
-        chartData = getChartData();
-
-        firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 1 || !isCorrectAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 1 user and it should be correct!'
-            );
-            return;
-        }
-
-        secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 1 || !isIncorrectAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 1 user and it should be incorrect!'
-            );
-            return;
-        }
-
-        thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isIncorrectAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and it should be incorrect!'
-            );
-            return;
-        }
-
-        fourthAnswerData = chartData[3];
-        if (fourthAnswerData.value !== 0 || !isIncorrectAnswer(fourthAnswerData)) {
-            console.error(
-                'Fourth answer should be picked by no users and it should be incorrect!'
-            );
-            return;
-        }
-
+    }
+}, {
+    trigger: 'h1:contains("Scored Simple Choice")',
+    // Same as above
+    extra_trigger: '.o_survey_session_navigation_next_label:contains("Show Leaderboard")',
+    run: () => {
+        checkAnswers(getChartData(), [
+            {value: 1, type: "correct"},
+            {value: 1, type: "incorrect"},
+            {value: 1, type: "incorrect"},
+            {value: 0, type: "incorrect"},
+        ]);
         nextScreen();
         nextScreen();
     }
 }, {
     trigger: 'h1:contains("Timed Scored Multiple Choice")',
-    run: function () {
-        var chartData = getChartData();
-        if (chartData.length !== 3) {
-            console.error('Chart data should contain 4 records!');
-            return;
-        }
-
-        for (var i = 0; i < chartData.length; i++) {
-            if (chartData[i].value !== 0) {
-                console.error(
-                    'Chart data should all be 0 because "next screen" that shows ' +
-                    'answers values is not triggered yet!');
-                return;
-            }
-        }
+    run: ()=> {
+        const chartData = getChartData();
+        checkAnswersCount(chartData, 3);
+        checkAnswersAllZeros(chartData);
 
         // after 1 second, results are displayed automatically because question timer runs out
         // we add 1 extra second because of the way the timer works:
         // it only triggers the time_up event 1 second AFTER the delay is passed
-        setTimeout(function () {
-            chartData = getChartData();
-            var firstAnswerData = chartData[0];
-            if (firstAnswerData.value !== 2 || !isRegularAnswer(firstAnswerData)) {
-                console.error(
-                    'First answer should be picked by 2 users and its correctness should not be shown yet!'
-                );
-                return;
-            }
-
-            var secondAnswerData = chartData[1];
-            if (secondAnswerData.value !== 2 || !isRegularAnswer(secondAnswerData)) {
-                console.error(
-                    'Second answer should be picked by 2 users and its correctness should not be shown yet!'
-                );
-                return;
-            }
-
-            var thirdAnswerData = chartData[2];
-            if (thirdAnswerData.value !== 1 || !isRegularAnswer(thirdAnswerData)) {
-                console.error(
-                    'Third answer should be picked by 1 user and its correctness should not be shown yet!'
-                );
-                return;
-            }
+        setTimeout(() => {
+            checkAnswers(getChartData(), [
+                {value: 2, type: "regular"},
+                {value: 2, type: "regular"},
+                {value: 1, type: "regular"},
+            ]);
 
             nextScreen();
-            chartData = getChartData();
-
-            firstAnswerData = chartData[0];
-            if (firstAnswerData.value !== 2 || !isCorrectAnswer(firstAnswerData)) {
-                console.error(
-                    'First answer should be picked by 2 users and it should be correct!'
-                );
-                return;
-            }
-
-            secondAnswerData = chartData[1];
-            if (secondAnswerData.value !== 2 || !isCorrectAnswer(secondAnswerData)) {
-                console.error(
-                    'Second answer should be picked by 2 users and it should be correct!'
-                );
-                return;
-            }
-
-            thirdAnswerData = chartData[2];
-            if (thirdAnswerData.value !== 1 || !isIncorrectAnswer(thirdAnswerData)) {
-                console.error(
-                    'Third answer should be picked by 1 user and it should be incorrect!'
-                );
-                return;
-            }
+            checkAnswers(getChartData(), [
+                {value: 2, type: "correct"},
+                {value: 2, type: "correct"},
+                {value: 1, type: "incorrect"},
+            ]);
 
             nextScreen();
         }, 2100);
     }
 }, {
     trigger: 'h1:contains("Final Leaderboard")',
-    run: function () {} // Final Leaderboard is displayed
+    isCheck: true // Final Leaderboard is displayed
 }, {
     trigger: 'h1',
-    run: function () {
+    run: () => {
         // previous screen testing
         previousScreen();
-        var chartData = getChartData();
-
-        var firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 2 || !isCorrectAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 2 users and it should be correct!'
-            );
-            return;
-        }
-
-        var secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 2 || !isCorrectAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 2 users and it should be correct!'
-            );
-            return;
-        }
-
-        var thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isIncorrectAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and it should be incorrect!'
-            );
-            return;
-        }
+        checkAnswers(getChartData(), [
+            {value: 2, type: "correct"},
+            {value: 2, type: "correct"},
+            {value: 1, type: "incorrect"},
+        ]);
 
         previousScreen();
-        chartData = getChartData();
-
-        firstAnswerData = chartData[0];
-        if (firstAnswerData.value !== 2 || !isRegularAnswer(firstAnswerData)) {
-            console.error(
-                'First answer should be picked by 2 users and its correctness should not be shown!'
-            );
-            return;
-        }
-
-        secondAnswerData = chartData[1];
-        if (secondAnswerData.value !== 2 || !isRegularAnswer(secondAnswerData)) {
-            console.error(
-                'Second answer should be picked by 2 users and its correctness should not be shown!'
-            );
-            return;
-        }
-
-        thirdAnswerData = chartData[2];
-        if (thirdAnswerData.value !== 1 || !isRegularAnswer(thirdAnswerData)) {
-            console.error(
-                'Third answer should be picked by 1 user and its correctness should not be shown!'
-            );
-            return;
-        }
+        checkAnswers(getChartData(), [
+            {value: 2, type: "regular"},
+            {value: 2, type: "regular"},
+            {value: 1, type: "regular"},
+        ]);
 
         previousScreen();
-        chartData = getChartData();
-
-        for (var i = 0; i < chartData.length; i++) {
-            if (chartData[i].value !== 0) {
-                console.error(
-                    'Chart data should all be 0 because "next screen" that shows ' +
-                    'answers values is not triggered yet!');
-                return;
-            }
-        }
+        checkAnswersAllZeros(getChartData());
 
         // Now we go forward to the "Final Leaderboard" again (3 times)
-        for (i = 0; i < 3; i++) {
+        for (let i = 0; i < 3; i++) {
             nextScreen();
         }
     }
 }, {
     trigger: 'h1:contains("Final Leaderboard")',
-    run: function () {} // Final Leaderboard is displayed
+    isCheck: true // Final Leaderboard is displayed
 }, {
     trigger: '.o_survey_session_close:has("i.fa-close")'
 }, {
     trigger: 'button[name="action_start_session"]',
-    run: function () {} // check that we can start another session
+    isCheck: true // check that we can start another session
 }])});
