@@ -72,7 +72,9 @@ PosLoyalty.check.hasRewardLine("50% on specific products", "-16.66"); // 17.55 -
 PosLoyalty.check.orderTotalIs("37.78");
 PosLoyalty.exec.finalizeOrder("Cash", "50");
 
-registry.category("web_tour.tours").add("PosLoyaltyTour1", { test: true, url: "/pos/web", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyTour1", { test: true, url: "/pos/web", steps: getSteps() });
 
 // --- PoS Loyalty Tour Basic Part 2 ---
 // Using the coupons generated from PosLoyaltyTour1.
@@ -156,7 +158,9 @@ PosLoyalty.check.hasRewardLine("90% on the cheapest product", "-2.87");
 PosLoyalty.check.orderTotalIs("16.27");
 PosLoyalty.exec.finalizeOrder("Cash", "20");
 
-registry.category("web_tour.tours").add("PosLoyaltyTour2", { test: true, url: "/pos/web", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyTour2", { test: true, url: "/pos/web", steps: getSteps() });
 
 // --- PoS Loyalty Tour Basic Part 3 ---
 
@@ -177,7 +181,9 @@ PosLoyalty.check.hasRewardLine("100% on specific products", "21.82");
 PosLoyalty.check.hasRewardLine("100% on specific products", "18.18");
 PosLoyalty.check.orderTotalIs("49.50");
 
-registry.category("web_tour.tours").add("PosLoyaltyTour3", { test: true, url: "/pos/web", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyTour3", { test: true, url: "/pos/web", steps: getSteps() });
 
 startSteps();
 
@@ -186,23 +192,25 @@ ProductScreen.do.clickHomeCategory();
 
 ProductScreen.exec.addOrderline("Test Product 1", "1");
 ProductScreen.exec.addOrderline("Test Product 2", "1");
-ProductScreen.do.clickPricelistButton();
 ProductScreen.do.selectPriceList("Public Pricelist");
 PosLoyalty.do.enterCode("abcda");
 PosLoyalty.check.orderTotalIs("0.00");
-ProductScreen.do.clickPricelistButton();
 ProductScreen.do.selectPriceList("Test multi-currency");
 PosLoyalty.check.orderTotalIs("0.00");
 
-registry.category("web_tour.tours").add("PosLoyaltyTour4", { test: true, url: "/pos/web", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosLoyaltyTour4", { test: true, url: "/pos/web", steps: getSteps() });
 
 startSteps();
 
 ProductScreen.do.clickHomeCategory();
 
-ProductScreen.exec.addOrderline('Test Product 1', '1.00', '100');
+ProductScreen.exec.addOrderline("Test Product 1", "1.00", "100");
 PosLoyalty.do.clickDiscountButton();
 PosLoyalty.do.clickConfirmButton();
-ProductScreen.check.totalAmountIs('92.00');
+ProductScreen.check.totalAmountIs("92.00");
 
-registry.category("web_tour.tours").add('PosCouponTour5', { test: true, url: '/pos/web', steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PosCouponTour5", { test: true, url: "/pos/web", steps: getSteps() });

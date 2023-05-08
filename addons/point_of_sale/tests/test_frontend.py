@@ -777,3 +777,8 @@ class TestUi(TestPointOfSaleHttpCommon):
 
         self.main_pos_config.open_ui()
         self.start_tour("/pos/ui?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenDiscountWithPricelistTour', login="accountman")
+
+# This class just runs the same tests as above but with mobile emulation
+class MobileTestUi(TestUi):
+    browser_size = '375x667'
+    touch_enabled = True

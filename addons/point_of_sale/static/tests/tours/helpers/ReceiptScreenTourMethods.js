@@ -61,6 +61,12 @@ class Check {
             {
                 trigger: `.receipt-screen .top-content h1:contains("${value}")`,
                 run: () => {},
+                mobile: false, // not rendered on mobile
+            },
+            {
+                trigger: `.receipt-screen`,
+                run: () => {},
+                mobile: true, // On mobile, at least wait for the receipt screen to show
             },
         ];
     }
@@ -95,7 +101,7 @@ class Check {
         return [
             {
                 trigger: `.orderlines:not(:contains('->'))`,
-                run: () => { },
+                run: () => {},
             },
         ];
     }

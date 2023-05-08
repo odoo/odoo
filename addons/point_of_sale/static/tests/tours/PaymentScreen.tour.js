@@ -3,7 +3,7 @@
 import { Chrome } from "@point_of_sale/../tests/tours/helpers/ChromeTourMethods";
 import { ProductScreen } from "@point_of_sale/../tests/tours/helpers/ProductScreenTourMethods";
 import { PaymentScreen } from "@point_of_sale/../tests/tours/helpers/PaymentScreenTourMethods";
-import { TicketScreen} from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
+import { TicketScreen } from "@point_of_sale/../tests/tours/helpers/TicketScreenTourMethods";
 import { getSteps, startSteps } from "@point_of_sale/../tests/tours/helpers/utils";
 import { registry } from "@web/core/registry";
 
@@ -67,7 +67,9 @@ PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.changeIs("0.0");
 PaymentScreen.check.validateButtonIsHighlighted(true);
 
-registry.category("web_tour.tours").add("PaymentScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PaymentScreenTour", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
@@ -81,115 +83,125 @@ PaymentScreen.do.pressNumpad("1 0 0 0");
 PaymentScreen.check.remainingIs("0.0");
 PaymentScreen.check.changeIs("0.0");
 
-registry.category("web_tour.tours").add("PaymentScreenTour2", { test: true, url: "/pos/ui", steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PaymentScreenTour2", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
 ProductScreen.do.clickHomeCategory();
-ProductScreen.exec.addOrderline('Product Test', '1');
+ProductScreen.exec.addOrderline("Product Test", "1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('2.00');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("2.00");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
-ProductScreen.exec.addOrderline('Product Test', '-1');
+ProductScreen.exec.addOrderline("Product Test", "-1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('-2.00');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("-2.00");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
-registry.category("web_tour.tours").add('PaymentScreenRoundingUp', { test: true, url: '/pos/ui', steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PaymentScreenRoundingUp", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
 ProductScreen.do.clickHomeCategory();
-ProductScreen.exec.addOrderline('Product Test', '1');
+ProductScreen.exec.addOrderline("Product Test", "1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('1.95');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("1.95");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
-ProductScreen.exec.addOrderline('Product Test', '-1');
+ProductScreen.exec.addOrderline("Product Test", "-1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('-1.95');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("-1.95");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
-registry.category("web_tour.tours").add('PaymentScreenRoundingDown', { test: true, url: '/pos/ui', steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PaymentScreenRoundingDown", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
 ProductScreen.do.clickHomeCategory();
-ProductScreen.exec.addOrderline('Product Test 1.2', '1');
+ProductScreen.exec.addOrderline("Product Test 1.2", "1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('1.00');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("1.00");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
-ProductScreen.exec.addOrderline('Product Test 1.25', '1');
+ProductScreen.exec.addOrderline("Product Test 1.25", "1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('1.5');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("1.5");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
 Chrome.do.clickMenuButton();
 Chrome.do.clickTicketButton();
 TicketScreen.do.clickNewTicket();
 
-ProductScreen.exec.addOrderline('Product Test 1.4', '1');
+ProductScreen.exec.addOrderline("Product Test 1.4", "1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('1.5');
-PaymentScreen.do.clickPaymentMethod('Cash');
+PaymentScreen.check.totalIs("1.5");
+PaymentScreen.do.clickPaymentMethod("Cash");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('0.0');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("0.0");
 
-registry.category("web_tour.tours").add('PaymentScreenRoundingHalfUp', { test: true, url: '/pos/ui', steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PaymentScreenRoundingHalfUp", { test: true, url: "/pos/ui", steps: getSteps() });
 
 startSteps();
 
 ProductScreen.do.confirmOpeningPopup();
 ProductScreen.do.clickHomeCategory();
-ProductScreen.exec.addOrderline('Product Test', '1');
+ProductScreen.exec.addOrderline("Product Test", "1");
 ProductScreen.do.clickPayButton();
 
-PaymentScreen.check.totalIs('1.95');
-PaymentScreen.do.clickPaymentMethod('Cash');
-PaymentScreen.do.pressNumpad('5');
+PaymentScreen.check.totalIs("1.95");
+PaymentScreen.do.clickPaymentMethod("Cash");
+PaymentScreen.do.pressNumpad("5");
 
-PaymentScreen.check.remainingIs('0.0');
-PaymentScreen.check.changeIs('3.05');
-PaymentScreen.check.totalDueIs('1.95');
+PaymentScreen.check.remainingIs("0.0");
+PaymentScreen.check.changeIs("3.05");
+PaymentScreen.check.totalDueIs("1.95");
 
-registry.category("web_tour.tours").add('PaymentScreenTotalDueWithOverPayment', { test: true, url: '/pos/ui', steps: getSteps() });
+registry
+    .category("web_tour.tours")
+    .add("PaymentScreenTotalDueWithOverPayment", { test: true, url: "/pos/ui", steps: getSteps() });

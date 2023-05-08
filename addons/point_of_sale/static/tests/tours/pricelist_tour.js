@@ -106,6 +106,16 @@ steps = steps.concat([
         run: "click",
     },
     {
+        content: "click review button",
+        trigger: ".btn-switchpane:contains('Review')",
+        mobile: true,
+    },
+    {
+        content: "click more button",
+        trigger: ".control-button:contains('More')",
+        mobile: true,
+    },
+    {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
     },
@@ -125,6 +135,11 @@ steps = steps.concat([
     {
         content: "select Deco Addict",
         trigger: ".partner-line:contains('Deco Addict')",
+    },
+    {
+        content: "click more button",
+        trigger: ".control-button:contains('More')",
+        mobile: true,
     },
     {
         content: "click pricelist button",
@@ -148,6 +163,11 @@ steps = steps.concat([
         trigger: ".partner-line:contains('Lumber Inc')",
     },
     {
+        content: "click more button",
+        trigger: ".control-button:contains('More')",
+        mobile: true,
+    },
+    {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
     },
@@ -161,8 +181,18 @@ steps = steps.concat([
         trigger: ".button.cancel:visible",
     },
     {
+        content: "go back to the products",
+        trigger: ".back-button",
+        mobile: true,
+    },
+    {
         content: "order 1 kg shelf",
         trigger: ".product:contains('Wall Shelf')",
+    },
+    {
+        content: "click review button",
+        trigger: ".btn-switchpane:contains('Review')",
+        mobile: true,
     },
     {
         trigger:
@@ -170,6 +200,11 @@ steps = steps.concat([
         extra_trigger:
             ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf') ~ .info-list .info em:contains('1.0')",
         run: function () {},
+    },
+    {
+        content: "click more button",
+        trigger: ".control-button:contains('More')",
+        mobile: true,
     },
     {
         content: "click pricelist button",
@@ -197,8 +232,18 @@ steps = steps.concat([
         run: function () {},
     },
     {
+        content: "go back to the products",
+        trigger: ".back-button",
+        mobile: true,
+    },
+    {
         content: "order different shelf",
         trigger: ".product:contains('Small Shelf')",
+    },
+    {
+        content: "click review button",
+        trigger: ".btn-switchpane:contains('Review')",
+        mobile: true,
     },
     {
         content: "Small Shelf line should be selected with quantity 1",
@@ -238,6 +283,11 @@ steps = steps.concat([
         run: function () {},
     },
     {
+        content: "click more button",
+        trigger: ".control-button:contains('More')",
+        mobile: true,
+    },
+    {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
     },
@@ -249,6 +299,11 @@ steps = steps.concat([
         content:
             "verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)",
         trigger: `.total > .value:contains('$${nbsp}8.96')`,
+    },
+    {
+        content: "click more button",
+        trigger: ".control-button:contains('More')",
+        mobile: true,
     },
     {
         content: "click pricelist button",

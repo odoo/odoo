@@ -44,6 +44,12 @@ class Do {
             {
                 content: "validate payment",
                 trigger: `.payment-screen .button.next.highlight`,
+                mobile: false,
+            },
+            {
+                content: "validate payment",
+                trigger: `.payment-screen .btn-switchpane:contains('Validate')`,
+                mobile: true,
             },
         ];
     }
@@ -143,6 +149,15 @@ class Check {
                     ? `.payment-screen .button.next.highlight`
                     : `.payment-screen .button.next:not(:has(.highlight))`,
                 run: () => {},
+                mobile: false,
+            },
+            {
+                content: `validate button is ${isHighlighted ? "highlighted" : "not highligted"}`,
+                trigger: isHighlighted
+                    ? `.payment-screen .btn-switchpane:not(.secondary):contains('Validate')`
+                    : `.payment-screen .btn-switchpane.secondary:contains('Validate')`,
+                run: () => {},
+                mobile: true,
             },
         ];
     }

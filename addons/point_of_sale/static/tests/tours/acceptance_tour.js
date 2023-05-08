@@ -9,15 +9,35 @@ function add_product_to_order(product_name) {
             trigger: '.product-list .product-name:contains("' + product_name + '")',
         },
         {
+            content: "click review button",
+            trigger: ".btn-switchpane:contains('Review')",
+            mobile: true,
+        },
+        {
             content: "the " + product_name + " have been added to the order",
             trigger: '.order .product-name:contains("' + product_name + '")',
             run: function () {},
+        },
+        {
+            content: "go back to the products",
+            trigger: ".back-button",
+            mobile: true,
         },
     ];
 }
 
 function set_fiscal_position_on_order(fp_name) {
     return [
+        {
+            content: "click review button",
+            trigger: ".btn-switchpane:contains('Review')",
+            mobile: true,
+        },
+        {
+            content: "click more button",
+            trigger: ".control-button:contains('More')",
+            mobile: true,
+        },
         {
             content: "set fiscal position",
             trigger: ".control-button.o_fiscal_position_button",
@@ -27,9 +47,19 @@ function set_fiscal_position_on_order(fp_name) {
             trigger: '.popups .popup .selection .selection-item:contains("' + fp_name + '")',
         },
         {
+            content: "click more button",
+            trigger: ".control-button:contains('More')",
+            mobile: true,
+        },
+        {
             content: "the fiscal position " + fp_name + " has been set to the order",
             trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
             run: function () {},
+        },
+        {
+            content: "go back to the products",
+            trigger: ".back-button",
+            mobile: true,
         },
     ];
 }
@@ -46,8 +76,18 @@ function press_payment_numpad(val) {
 function press_product_numpad(val) {
     return [
         {
+            content: "click review button",
+            trigger: ".btn-switchpane:contains('Review')",
+            mobile: true,
+        },
+        {
             content: `press ${val} on product screen numpad`,
             trigger: `.numpad .input-button:contains("${val}"):visible`,
+        },
+        {
+            content: "go back to the products",
+            trigger: ".back-button",
+            mobile: true,
         },
     ];
 }
@@ -64,7 +104,13 @@ function selected_payment_has(name, val) {
 }
 
 function selected_orderline_has({ product, price = null, quantity = null }) {
-    const result = [];
+    const result = [
+        {
+            content: "click review button",
+            trigger: ".btn-switchpane:contains('Review')",
+            mobile: true,
+        },
+    ];
     if (price !== null) {
         result.push({
             content: `Selected line has product '${product}' and price '${price}'`,
@@ -79,15 +125,30 @@ function selected_orderline_has({ product, price = null, quantity = null }) {
             run: function () {},
         });
     }
+    result.push({
+        content: "go back to the products",
+        trigger: ".back-button",
+        mobile: true,
+    });
     return result;
 }
 
 function verify_order_total(total_str) {
     return [
         {
+            content: "click review button",
+            trigger: ".btn-switchpane:contains('Review')",
+            mobile: true,
+        },
+        {
             content: "order total contains " + total_str,
             trigger: '.order .total .value:contains("' + total_str + '")',
             run: function () {}, // it's a check
+        },
+        {
+            content: "go back to the products",
+            trigger: ".back-button",
+            mobile: true,
         },
     ];
 }
@@ -97,6 +158,12 @@ function goto_payment_screen_and_select_payment_method() {
         {
             content: "go to payment screen",
             trigger: ".button.pay",
+            mobile: false,
+        },
+        {
+            content: "go to payment screen",
+            trigger: ".btn-switchpane:contains('Pay')",
+            mobile: true,
         },
         {
             content: "pay with cash",
@@ -110,6 +177,12 @@ function finish_order() {
         {
             content: "validate the order",
             trigger: ".payment-screen .button.next.highlight:visible",
+            mobile: false,
+        },
+        {
+            content: "validate the order",
+            trigger: ".payment-screen .btn-switchpane:contains('Validate')",
+            mobile: true,
         },
         {
             content: "verify that the order has been successfully sent to the backend",

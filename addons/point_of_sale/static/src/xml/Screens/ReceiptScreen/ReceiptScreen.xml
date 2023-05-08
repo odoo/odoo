@@ -4,9 +4,9 @@
     <t t-name="ReceiptScreen" owl="1">
         <div class="receipt-screen screen">
             <div class="screen-content">
-                <div class="top-content">
+                <div class="top-content" t-if="!env.isMobile">
                     <div class="top-content-center">
-                        <h1 t-if="!env.isMobile">
+                        <h1>
                             <t t-esc="orderAmountPlusTip" />
                         </h1>
                     </div>
