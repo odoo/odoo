@@ -117,6 +117,33 @@ QUnit.module("Components", (hooks) => {
     });
 
     QUnit.test(
+        "click on the button x triggers the close defined by a Child component",
+        async function (assert) {
+            assert.expect(3);
+            const env = await makeDialogTestEnv();
+            class Child extends Component {
+                static template = xml`<div>Hello</div>`;
+
+                setup() {
+                    this.env.dialogData.close = () => assert.step("close");
+                }
+            }
+            class Parent extends Component {}
+            Parent.template = xml`
+            <Dialog>
+                <Child/>
+            </Dialog>
+        `;
+            Parent.components = { Child, Dialog };
+            parent = await mount(Parent, target, { env });
+            assert.containsOnce(target, ".o_dialog");
+
+            await click(target, ".o_dialog header button.btn-close");
+            assert.verifySteps(["close"]);
+        }
+    );
+
+    QUnit.test(
         "click on the default footer button triggers the service close",
         async function (assert) {
             const env = await makeDialogTestEnv();
