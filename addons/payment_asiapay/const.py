@@ -41,6 +41,60 @@ CURRENCY_MAPPING = {
     'VND': '704',
 }
 
+# Mapping of both country codes (e.g., 'es') and IETF language tags (e.g.: 'fr-BE') to AsiaPay
+# language codes. If a language tag is not listed, the country code prefix can serve as fallback.
+LANGUAGE_CODES_MAPPING = {
+    'en': 'E',
+    'zh_HK': 'C',
+    'zh_TW': 'C',
+    'zh_CN': 'X',
+    'ja_JP': 'J',
+    'th_TH': 'T',
+    'fr': 'F',
+    'de': 'G',
+    'ru_RU': 'R',
+    'es': 'S',
+    'vi_VN': 'S',
+}
+
+# Mapping of payment method codes to AsiaPay codes.
+PAYMENT_METHODS_MAPPING = {
+    'card': 'CC',
+    'visa': 'VISA',
+    'mastercard': 'Master',
+    'jcs': 'JCB',
+    'amex': 'AMEX',
+    'diners': 'Diners',
+    'payme': 'PayMe',
+    'linepay': 'LINEPAY',
+    'paymaya': 'PayMaya',
+    'bpi': 'BPI',
+    'gcash': 'GCash',
+    'enets': 'ENETS',
+    'enetsbanking': 'ENETSBANKING',
+    'enetsqr': 'ENETSQR',
+    'fps': 'FPS',
+    'qris': 'QRIS',
+    'duitnow': 'DuitNow',
+    'ovo': 'OVO',
+    'dana': 'DANA',
+    'kredivo': 'KREDIVO',
+    'touchngo': 'TouchnGo',
+    'poli': 'POLI',
+    'payid': 'PAYID',
+    'humm': 'humm',
+    'zippay': 'ZIPPAY',
+    'hoolah': 'HOOLAH',
+    'atome': 'ATOME',
+    'pace': 'Pace',
+    'shopeepay': 'SHOPEEPAY',
+    'tendopay': 'TendoPay',
+    'eximbay': 'Eximbay',
+    'payu': 'PAYU',
+    'truemoney': 'TRUEMONEY',
+    'jkopay': 'JKOPAY',
+}
+
 # The keys of the values to use in the calculation of the signature.
 SIGNATURE_KEYS = {
     'outgoing': [
@@ -60,22 +114,6 @@ SIGNATURE_KEYS = {
         'Amt',
         'payerAuth',
     ],
-}
-
-# Mapping of both country codes (e.g., 'es') and IETF language tags (e.g.: 'fr-BE') to AsiaPay
-# language codes. If a language tag is not listed, the country code prefix can serve as fallback.
-LANGUAGE_CODES_MAPPING = {
-    'en': 'E',
-    'zh_HK': 'C',
-    'zh_TW': 'C',
-    'zh_CN': 'X',
-    'ja_JP': 'J',
-    'th_TH': 'T',
-    'fr': 'F',
-    'de': 'G',
-    'ru_RU': 'R',
-    'es': 'S',
-    'vi_VN': 'S',
 }
 
 # Mapping of transaction states to AsiaPay success codes.

@@ -3,8 +3,8 @@
 
     <!-- Company mismatch warning -->
     <template id="company_mismatch_warning" name="Company Mismatch Warning">
-        <!-- Variables description:
-            - 'expected_company' - The record of the company that the user should switch to.
+        <!-- Parameters description:
+            - expected_company: The record of the company that the user should switch to.
         -->
         <div class="row mr16">
             <div class="alert alert-warning col-lg-12 ms-3 me-3" role="alert">
@@ -348,24 +348,23 @@
     <!-- Express Checkout form -->
     <template id="express_checkout" name="Payment Express Checkout">
         <!-- Variables description:
-            - 'providers' - The payment providers compatible with the current transaction.
-            - 'reference_prefix' - The custom prefix to compute the full transaction reference.
-            - 'amount' - The amount to pay.
-            - 'minor_amount' - The amount to pay in the minor units of its currency.
-            - 'currency' - The currency of the transaction, as a `res.currency` record.
-            - 'merchant_name' - The merchant name.
-            - 'payment_access_token' - The access token used to authenticate the partner. Since this
-                                       template is loaded in the shopping cart, this parameter is
-                                       called `payment_access_token` to prevent mixing up with the
-                                       `access_token` used for abandoned carts.
-            - 'shipping_info_required' - Whether the shipping information is required or not.
-            - 'transaction_route' - The route used to create a transaction when the user clicks Pay.
-            - 'shipping_address_update_route' - The route where available carriers are computed
-                                                based on the (partial) shipping information
-                                                available. Optional
-            - 'express_checkout_route' - The route where the billing and shipping information are
-                                         sent.
-            - 'landing_route' - The route the user is redirected to after the transaction.
+            - providers: The payment providers compatible with the current transaction.
+            - reference_prefix: The custom prefix to compute the full transaction reference.
+            - amount: The amount to pay.
+            - minor_amount: The amount to pay in the minor units of its currency.
+            - currency: The currency of the transaction, as a `res.currency` record.
+            - merchant_name: The merchant name.
+            - payment_access_token: The access token used to authenticate the partner. Since this
+                                    template is loaded in the shopping cart, this parameter is
+                                    called `payment_access_token` to prevent mixing up with the
+                                    `access_token` used for abandoned carts.
+            - shipping_info_required: Whether the shipping information is required or not.
+            - transaction_route: The route used to create a transaction when the user clicks Pay.
+            - shipping_address_update_route: The route where available carriers are computed based
+                                             on the (partial) shipping information available.
+                                             Optional.
+            - express_checkout_route: The route where the billing and shipping information are sent.
+            - landing_route: The route the user is redirected to after the transaction.
         -->
         <form name="o_payment_express_checkout_form" class="container"
               t-att-data-reference-prefix="reference_prefix"
@@ -453,9 +452,9 @@
 
     <!-- Generic footer for payment forms -->
     <template id="footer" name="Payment Footer">
-        <!-- Variables description:
-            - 'label' - The label for the submit button
-            - 'icon_class' - The Font Awesome icon class (e.g. 'fa-lock') for the submit button
+        <!-- Parameters description:
+            - label: The label for the submit button.
+            - icon_class: The Font Awesome icon class (e.g. 'fa-lock') for the submit button.
         -->
         <div class="float-end mt-2">
             <button name="o_payment_submit_button"
@@ -470,8 +469,8 @@
 
     <!-- Transaction status in portal -->
     <template id="transaction_status">
-        <!-- Variables description:
-            - 'tx' - The transaction whose status must be displayed
+        <!-- Parameters description:
+            - tx: The transaction whose status must be displayed.
         -->
         <t t-if="tx.state == 'draft'">
             <t t-set="alert_style">info</t>

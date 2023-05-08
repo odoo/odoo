@@ -81,6 +81,7 @@
                                 <group string="Payment Form" name="payment_form">
                                     <field name="display_as" placeholder="If not defined, the provider name will be used."/>
                                     <field name="payment_method_ids"
+                                           domain="[('parent_id', '=', False)]"
                                            options="{'no_create': True, 'no_edit': True}"
                                            widget="many2many_tags"
                                            attrs="{'invisible': [('show_payment_method_ids', '=', False)]}" />

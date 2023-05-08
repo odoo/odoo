@@ -18,6 +18,7 @@
                     <group>
                         <group name="general_information">
                             <field name="payment_details"/>
+                            <field name="payment_method_id"/>
                             <field name="partner_id" />
                         </group>
                         <group name="technical_information">
@@ -38,6 +39,7 @@
             <tree string="Payment Tokens" create="false">
                 <field name="payment_details"/>
                 <field name="partner_id"/>
+                <field name="payment_method_id"/>
                 <field name="provider_id"/>
                 <field name="provider_ref"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>

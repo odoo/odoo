@@ -10,7 +10,7 @@ from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_stripe import utils as stripe_utils
-from odoo.addons.payment_stripe.const import STATUS_MAPPING, PAYMENT_METHOD_TYPES
+from odoo.addons.payment_stripe.const import STATUS_MAPPING
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
 
@@ -49,63 +49,20 @@ class PaymentTransaction(models.Model):
             }
 
     def _stripe_create_checkout_session(self):
-        """ Create and return a Checkout Session.
+        """ Create and return a new Checkout Session.
 
-        :return: The Checkout Session
+        :return: The Checkout Session.
         :rtype: dict
         """
-        def get_linked_pmts(linked_pms_):
-            linked_pmts_ = linked_pms_
-            card_pms_ = [
-                self.env.ref(f'payment.payment_method_{pm_code_}', raise_if_not_found=False)
-                for pm_code_ in ('visa', 'mastercard', 'american_express', 'discover')
-            ]
-            card_pms_ = [pm_ for pm_ in card_pms_ if pm_ is not None]  # Remove deleted card PMs.
-            if any(pm_.name.lower() in linked_pms_ for pm_ in card_pms_):
-                linked_pmts_ += ['card']
-            return linked_pmts_
-
-        # Filter payment method types by available payment method
-        existing_pms = [pm.name.lower() for pm in self.env['payment.method'].search([])] + ['card']
-        linked_pms = [pm.name.lower() for pm in self.provider_id.payment_method_ids]
-        pm_filtered_pmts = filter(
-            # If the PM record related to a PMT doesn't exist, don't filter out the PMT because the
-            # user couldn't even have linked it to the provider in the first place.
-            lambda pmt: pmt.name in get_linked_pmts(linked_pms) or pmt.name not in existing_pms,
-            PAYMENT_METHOD_TYPES,
-        )
-        # Filter payment method types by country code
-        country_code = self.partner_country_id and self.partner_country_id.code.lower()
-        country_filtered_pmts = filter(
-            lambda pmt: not pmt.countries or country_code in pmt.countries, pm_filtered_pmts
-        )
-        # Filter payment method types by currency name
-        currency_name = self.currency_id.name.lower()
-        currency_filtered_pmts = filter(
-            lambda pmt: not pmt.currencies or currency_name in pmt.currencies, country_filtered_pmts
-        )
-        # Filter payment method types by recurrence if the transaction must be tokenized
-        if self.tokenize:
-            recurrence_filtered_pmts = filter(
-                lambda pmt: pmt.recurrence == 'recurring', currency_filtered_pmts
-            )
-        else:
-            recurrence_filtered_pmts = currency_filtered_pmts
-        # Build the session values related to payment method types
-        pmt_values = {}
-        for pmt_id, pmt_name in enumerate(map(lambda pmt: pmt.name, recurrence_filtered_pmts)):
-            pmt_values[f'payment_method_types[{pmt_id}]'] = pmt_name
-
-        # Create the session according to the operation and return it
-        customer = self._stripe_create_customer()
-        common_session_values = self._get_common_stripe_session_values(pmt_values, customer)
         base_url = self.provider_id.get_base_url()
+        customer = self._stripe_create_customer()
+        common_session_values = self._get_common_stripe_session_values(customer)
         if self.operation == 'online_redirect':
             return_url = f'{urls.url_join(base_url, StripeController._checkout_return_url)}' \
                          f'?reference={urls.url_quote_plus(self.reference)}'
             # Specify a future usage for the payment intent to:
-            # 1. attach the payment method to the created customer
-            # 2. trigger a 3DS check if one if required, while the customer is still present
+            # 1. attach the payment method to the created customer;
+            # 2. trigger a 3DS check if one is required, while the customer is still present.
             future_usage = 'off_session' if self.tokenize else None
             capture_method = 'manual' if self.provider_id.capture_manually else 'automatic'
             checkout_session = self.provider_id._stripe_make_request(
@@ -127,7 +84,7 @@ class PaymentTransaction(models.Model):
             )
             self.stripe_payment_intent = checkout_session['payment_intent']
         else:  # 'validation'
-            # {CHECKOUT_SESSION_ID} is a template filled by Stripe when the Session is created
+            # {CHECKOUT_SESSION_ID} is a template filled in by Stripe when the Session is created.
             return_url = f'{urls.url_join(base_url, StripeController._validation_return_url)}' \
                          f'?reference={urls.url_quote_plus(self.reference)}' \
                          f'&checkout_session_id={{CHECKOUT_SESSION_ID}}'
@@ -163,22 +120,21 @@ class PaymentTransaction(models.Model):
         )
         return customer
 
-    def _get_common_stripe_session_values(self, pmt_values, customer):
+    def _get_common_stripe_session_values(self, customer):
         """ Return the Stripe Session values that are common to redirection and validation.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
-        :param dict pmt_values: The payment method types values
         :param dict customer: The Stripe customer to assign to the session
         :return: The common Stripe Session values
         :rtype: dict
         """
         return {
-            **pmt_values,
+            'payment_method_types[0]': self.payment_method_id.code,
             # Assign a customer to the session so that Stripe automatically attaches the payment
             # method to it in a validation flow. In checkout flow, a customer is automatically
-            # created if not provided but we still do it here to avoid requiring the customer to
-            # enter his email on the checkout page.
+            # created if not provided, but we still do it here to avoid requiring the customer to
+            # enter their email on the checkout page.
             'customer': customer['id'],
         }
 
@@ -400,7 +356,7 @@ class PaymentTransaction(models.Model):
         return tx
 
     def _process_notification_data(self, notification_data):
-        """ Override of payment to process the transaction based on Adyen data.
+        """ Override of `payment` to process the transaction based on Stripe data.
 
         Note: self.ensure_one()
 
@@ -416,7 +372,14 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'stripe':
             return
 
-        # Handle the provider reference and the status.
+        # Update the payment method if the customer paid by card.
+        payment_method_type = notification_data.get('payment_method', {}).get('type')
+        if self.payment_method_id.code == payment_method_type == 'card':
+            payment_method_code = notification_data['payment_method']['card']['brand']
+            payment_method = self.env['payment.method']._get_from_code(payment_method_code)
+            self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the provider reference and retrieve the payment state.
         if self.operation == 'validation':
             status = notification_data.get('setup_intent', {}).get('status')
         elif self.operation == 'refund':
@@ -426,11 +389,12 @@ class PaymentTransaction(models.Model):
             if 'charge' in notification_data:  # The online_redirect operation may include a charge.
                 self.provider_reference = notification_data['charge']['id']
             status = notification_data.get('payment_intent', {}).get('status')
+
+        # Update the payment state.
         if not status:
             raise ValidationError(
                 "Stripe: " + _("Received data with missing intent status.")
             )
-
         if status in STATUS_MAPPING['draft']:
             pass
         elif status in STATUS_MAPPING['pending']:
@@ -481,19 +445,17 @@ class PaymentTransaction(models.Model):
         :return: None
         """
         if self.operation == 'online_redirect':
-            payment_method_id = notification_data.get('charge', {}).get('payment_method')
             customer_id = notification_data.get('charge', {}).get('customer')
         else:  # 'validation'
-            payment_method_id = notification_data.get('payment_method', {}).get('id')
             customer_id = notification_data.get('setup_intent', {}).get('customer')
-        payment_method = notification_data.get('payment_method')
-        if not payment_method_id or not payment_method:
+        payment_method_data = notification_data.get('payment_method')
+        if not payment_method_data:
             _logger.warning(
                 "requested tokenization from notification data with missing payment method"
             )
             return
 
-        if payment_method.get('type') != 'card':
+        if payment_method_data['type'] != 'card':  # TODO ANV check if can be remove in this task
             # Only 'card' payment methods can be tokenized. This case should normally not happen as
             # non-recurring payment methods are not shown to the customer if the "Save my payment
             # details checkbox" is shown. Still, better be on the safe side..
@@ -502,11 +464,12 @@ class PaymentTransaction(models.Model):
 
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
-            'payment_details': payment_method['card'].get('last4'),
+            'payment_method_id': self.payment_method_id.id,
+            'payment_details': payment_method_data['card'].get('last4'),
             'partner_id': self.partner_id.id,
             'provider_ref': customer_id,
             'verified': True,
-            'stripe_payment_method': payment_method_id,
+            'stripe_payment_method': payment_method_data['id'],
         })
         self.write({
             'token_id': token,

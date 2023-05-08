@@ -106,51 +106,76 @@ class PaymentPortal(portal.CustomerPortal):
         if not currency or not currency.active:
             raise werkzeug.exceptions.NotFound()  # The currency must exist and be active.
 
-        # Select all providers and tokens that match the constraints
+        # Select all the payment methods and tokens that match the constraints.
         providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
             company_id, partner_sudo.id, amount, currency_id=currency.id, **kwargs
-        )  # In sudo mode to read the fields of providers and partner (if not logged in)
-        if provider_id in providers_sudo.ids:  # Only keep the desired provider if it's suitable
-            providers_sudo = providers_sudo.browse(provider_id)
-        tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
-            providers_sudo.ids, partner_sudo.id
-        )  # In sudo mode to be able to read tokens of other partners.
+        )  # In sudo mode to read the fields of providers and partner (if logged out).
+        payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
+            providers_sudo.ids
+        )
+        # if provider_id in providers_sudo.ids:  # Only keep the desired provider if it's suitable TODO ANV re-implement
+        #     providers_sudo = providers_sudo.browse(provider_id)
+        # tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
+        #     providers_sudo.ids, partner_sudo.id
+        # )  # In sudo mode to be able to read tokens of other partners. TODO ANV re-implement
+        # TODO remove me
+        request.env['payment.token'].sudo().search([]).unlink()
+        demo_provider = request.env['payment.provider'].search([('code', '=', 'demo')], limit=1)
+        stripe_provider = request.env['payment.provider'].search([('code', '=', 'stripe')], limit=1)
+        request.env['payment.token'].sudo().create({
+            'provider_id': demo_provider.id,
+            'payment_method_id': demo_provider.payment_method_ids[0].id,
+            'payment_details': 'some bullshit test data',
+            'partner_id': partner_sudo.id,
+            'provider_ref': 'nope',
+        })
+        request.env['payment.token'].sudo().create({
+            'provider_id': stripe_provider.id,
+            'payment_method_id': stripe_provider.payment_method_ids[0].id,
+            'payment_details': '1234',
+            'partner_id': partner_sudo.id,
+            'provider_ref': 'nope',
+        })
+        # TODO remove me
+        tokens_sudo = request.env['payment.token'].sudo().search([])
 
         # Make sure that the partner's company matches the company passed as parameter.
         company_mismatch = not PaymentPortal._can_partner_pay_in_company(partner_sudo, company)
 
-        # Compute the fees taken by providers supporting the feature
-        fees_by_provider = {
-            provider_sudo: provider_sudo._compute_fees(amount, currency, partner_sudo.country_id)
-            for provider_sudo in providers_sudo.filtered('fees_active')
-        }
+        # # Compute the fees taken by providers supporting the feature
+        # fees_by_provider = {
+        #     provider_sudo: provider_sudo._compute_fees(amount, currency, partner_sudo.country_id)
+        #     for provider_sudo in providers_sudo.filtered('fees_active')
+        # } TODO ANV re-implement
 
         # Generate a new access token in case the partner id or the currency id was updated
         access_token = payment_utils.generate_access_token(partner_sudo.id, amount, currency.id)
 
         portal_page_values = {
+            'res_company': company,  # Display the correct logo in a multi-company environment.
             'company_mismatch': company_mismatch,
             'expected_company': company,
             'partner_is_different': partner_is_different,
         }
         payment_form_values = {
-            'providers': providers_sudo,
-            'tokens': tokens_sudo,
-            'fees_by_provider': fees_by_provider,
-            'show_tokenize_input': self._compute_show_tokenize_input_mapping(
+            'mode': 'payment',
+            'show_tokenize_input_mapping': self._compute_show_tokenize_input_mapping(
                 providers_sudo, **kwargs
             ),
+        }
+        tx_context = {  # TODO ANV
             'reference_prefix': reference,
             'amount': amount,
             'currency': currency,
             'partner_id': partner_sudo.id,
-            'access_token': access_token,
+            'payment_methods_sudo': payment_methods_sudo,
+            'tokens_sudo': tokens_sudo,
             'transaction_route': '/payment/transaction',
             'landing_route': '/payment/confirmation',
-            'res_company': company,  # Display the correct logo in a multi-company environment
-            **self._get_custom_rendering_context_values(**kwargs),
+            'access_token': access_token,
+            # **self._get_custom_rendering_context_values(**kwargs),
         }
-        rendering_context = {**portal_page_values, **payment_form_values}
+        rendering_context = {**portal_page_values, **payment_form_values, **tx_context}
         return request.render(self._get_payment_page_template_xmlid(**kwargs), rendering_context)
 
     @staticmethod
@@ -242,14 +267,15 @@ class PaymentPortal(portal.CustomerPortal):
         return tx_sudo._get_processing_values()
 
     def _create_transaction(
-        self, payment_option_id, reference_prefix, amount, currency_id, partner_id, flow,
-        tokenization_requested, landing_route, is_validation=False,
+        self, payment_option_id, payment_method_id, reference_prefix, amount, currency_id,
+        partner_id, flow, tokenization_requested, landing_route, is_validation=False,
         custom_create_values=None, **kwargs
     ):
         """ Create a draft transaction based on the payment context and return it.
 
         :param int payment_option_id: The payment option handling the transaction, as a
                                       `payment.provider` id or a `payment.token` id
+        :param int payment_method_id: The payment method, as a `payment.method` id.
         :param str reference_prefix: The custom prefix to compute the full reference
         :param float|None amount: The amount to pay in the given currency.
                                   None if in a payment method validation operation
@@ -308,6 +334,7 @@ class PaymentPortal(portal.CustomerPortal):
         # Create the transaction
         tx_sudo = request.env['payment.transaction'].sudo().create({
             'provider_id': provider_sudo.id,
+            'payment_method_id': payment_method_id,
             'reference': reference,
             'amount': amount,
             'currency_id': currency_id,

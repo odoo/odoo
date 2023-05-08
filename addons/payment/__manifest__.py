@@ -11,6 +11,7 @@
         'data/payment_provider_data.xml',
         'data/payment_cron.xml',
 
+        'views/payment_form_templates.xml',
         'views/payment_portal_templates.xml',
         'views/payment_templates.xml',
 
@@ -28,15 +29,11 @@
         'wizards/payment_onboarding_views.xml',
     ],
     'assets': {
-        'web.assets_frontend': [
+        'web.assets_frontend': [  # TODO ANV use glob
             'payment/static/src/scss/payment_templates.scss',
             'payment/static/src/scss/payment_form.scss',
             'payment/static/lib/jquery.payment/jquery.payment.js',
-            'payment/static/src/js/checkout_form.js',
-            'payment/static/src/js/express_checkout_form.js',
-            'payment/static/src/js/manage_form.js',
-            'payment/static/src/js/payment_form_mixin.js',
-            'payment/static/src/js/post_processing.js',
+            'payment/static/src/js/*',
             'payment/static/src/xml/payment_post_processing.xml',
         ],
         'web.assets_backend': [

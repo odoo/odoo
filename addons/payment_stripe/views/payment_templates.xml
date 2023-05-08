@@ -13,6 +13,12 @@
         </xpath>
     </template>
 
+    <template id="payment_form" inherit_id="payment.form">
+        <xpath expr="." position="inside">
+            <t t-call="payment_stripe.sdk_assets"/>
+        </xpath>
+    </template>
+
     <template id="express_checkout" inherit_id="payment.express_checkout">
         <xpath expr="." position="inside">
             <t t-call="payment_stripe.sdk_assets"/>

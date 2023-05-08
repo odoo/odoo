@@ -3,6 +3,7 @@
 
 import checkoutForm from 'payment.checkout_form';
 import manageForm from 'payment.manage_form';
+import paymentForm from 'payment.form';
 import { StripeOptions } from '@payment_stripe/js/stripe_options';
 
 const stripeMixin = {
@@ -28,7 +29,7 @@ const stripeMixin = {
             // Instantiate the StripeOptions class to allow patching the method and add options.
             new StripeOptions()._prepareStripeOptions(processingValues),
         );
-        stripeJS.redirectToCheckout({
+        stripeJS['redirectToCheckout']({
             sessionId: processingValues['session_id']
         });
     },
@@ -36,3 +37,4 @@ const stripeMixin = {
 
 checkoutForm.include(stripeMixin);
 manageForm.include(stripeMixin);
+paymentForm.include(stripeMixin);

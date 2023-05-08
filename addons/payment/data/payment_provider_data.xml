@@ -79,16 +79,15 @@
         <field name="payment_method_ids"
                eval="[(6, 0, [
                    ref('payment.payment_method_bancontact'),
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_visa'),
-                   ref('payment.payment_method_american_express'),
+                   ref('payment.payment_method_card'),
+                   ref('payment.payment_method_paypal'),
                ])]"/>
     </record>
 
     <record id="payment_provider_demo" model="payment.provider">
         <field name="name">Demo</field>
-        <field name="sequence">40</field>
+        <!-- <field name="sequence">40</field> TODO ANV -->
+        <field name="sequence">0</field>
         <field name="image_128" type="base64" file="payment_demo/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_demo"/>
     </record>
@@ -230,13 +229,8 @@
         -->
         <field name="payment_method_ids"
                eval="[(6, 0, [
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_discover'),
-                   ref('payment.payment_method_diners_club_intl'),
-                   ref('payment.payment_method_jcb'),
-                   ref('payment.payment_method_american_express'),
-                   ref('payment.payment_method_visa'),
+                   ref('payment.payment_method_bancontact'),
+                   ref('payment.payment_method_card'),
                ])]"/>
     </record>
 

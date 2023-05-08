@@ -84,12 +84,11 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
             'params': data,
         })
 
-    def _get_tx_context(self, response, form_name):
+    def _get_tx_context(self, response):
         """Extracts txContext & other form info (provider & token ids)
-        from a payment response (with manage/checkout html form)
+        from a payment response
 
         :param response: http Response, with a payment form as text
-        :param str form_name: o_payment_manage / o_payment_checkout
         :return: Transaction context (+ provider_ids & token_ids)
         :rtype: dict
         """
@@ -100,9 +99,9 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
             response.text,
             parser=etree.HTMLParser(),
         )
-        checkout_form = html_tree.xpath(f"//form[@name='{form_name}']")[0]
+        payment_form = html_tree.xpath(f"//form[@name='o_payment_form']")[0]
         values = {}
-        for key, val in checkout_form.items():
+        for key, val in payment_form.items():
             if key.startswith("data-"):
                 formatted_key = key[5:].replace('-', '_')
                 if formatted_key.endswith('_id'):
@@ -165,12 +164,12 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         url = self._build_url(uri)
         return self._make_http_get_request(url, route_kwargs)
 
-    def _get_tx_checkout_context(self, **route_kwargs):
+    def _get_tx_checkout_context(self, **route_kwargs):  # TODO ANV probably needs to be merged with _get_tx_manage_context
         response = self._portal_pay(**route_kwargs)
 
         self.assertEqual(response.status_code, 200)
 
-        return self._get_tx_context(response, 'o_payment_checkout')
+        return self._get_tx_context(response)
 
     # /my/payment_method #
     ######################
@@ -185,12 +184,12 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         url = self._build_url(uri)
         return self._make_http_get_request(url, {})
 
-    def _get_tx_manage_context(self):
+    def _get_tx_manage_context(self):  # TODO ANV probably needs to be merged with _get_tx_checkout_context
         response = self._portal_payment_method()
 
         self.assertEqual(response.status_code, 200)
 
-        return self._get_tx_context(response, 'o_payment_manage')
+        return self._get_tx_context(response)
 
     # payment/transaction #
     #######################

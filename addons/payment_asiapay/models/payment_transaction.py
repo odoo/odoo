@@ -93,7 +93,7 @@ class PaymentTransaction(models.Model):
             'return_url': urls.url_join(base_url, AsiaPayController._return_url),
             'payment_type': 'N',
             'language': get_language_code(lang),
-            'payment_method': 'ALL',
+            'payment_method': const.PAYMENT_METHODS_MAPPING.get(self.payment_method_id.code, 'ALL'),
         }
         rendering_values.update({
             'secure_hash': self.provider_id._asiapay_calculate_signature(
@@ -144,13 +144,21 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'asiapay':
             return
 
+        # Update the provider reference.
         self.provider_reference = notification_data.get('PayRef')
 
+        # Update the payment method.
+        payment_method_code = notification_data.get('payMethod')
+        payment_method = self.env['payment.method']._get_from_code(
+            payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
+        )
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         success_code = notification_data.get('successcode')
         primary_response_code = notification_data.get('prc')
         if not success_code:
             raise ValidationError("AsiaPay: " + _("Received data with missing success code."))
-
         if success_code in const.SUCCESS_CODE_MAPPING['done']:
             self._set_done()
         elif success_code in const.SUCCESS_CODE_MAPPING['error']:
