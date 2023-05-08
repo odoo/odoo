@@ -2019,9 +2019,8 @@ class PosSession(models.Model):
     def get_total_discount(self):
         amount = 0
         for line in self.env['pos.order.line'].search([('order_id', 'in', self.order_ids.ids), ('discount', '>', 0)]):
-            normal_price = line.qty * line.price_unit
-            normal_price = normal_price + (normal_price / 100 * line.tax_ids.amount)
-            amount += normal_price - line.price_subtotal_incl
+            original_price = line.price_subtotal_incl / (1 - line.discount / 100)
+            amount += original_price * line.discount / 100
 
         return amount
 
