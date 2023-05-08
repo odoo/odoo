@@ -167,9 +167,7 @@ export function parsePercentage(value) {
  */
 export function parseMonetary(value) {
     value = value.trim();
-    // replace the decimal separator by a dot, as it could have multiple characters
-    value = value.replace(new RegExp(escapeRegExp(localization.decimalPoint), "g") || ".", ".");
-    const regex = new RegExp(`^[^\\d\\-+=.]*(?<strToParse>.*?)[^\\d]*$`);
+    const regex = new RegExp(`^[^\\d\\-+=]*(?<strToParse>.*?)[^\\d]*$`);
     const match = value.match(regex);
     if (!match) {
         throw new InvalidNumberError(`"${value}" is not a valid number.`);
