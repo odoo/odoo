@@ -5,20 +5,20 @@
     <div t-ref="main" class="d-flex flex-column">
         <NavBar goBack="returnRoute()"/>
         <div class="bg-white d-flex flex-column pt-3 overflow-auto h-100">
-            <div class="px-3 border-bottom">
+            <div class="px-3">
                 <img t-if="props.product.has_image"
                     class="w-100 rounded-3" 
                     style="max-height: 400px; object-fit: cover;" 
                     t-attf-src="/menu/get-image/{{ props.product.product_id }}/1920" 
                     alt="Product image"/>
-                <div class="py-3">
+                <div class="pt-3">
                     <h3 t-esc="props.product.name"/>
                     <h4 class="text-primary"
                         t-esc="selfOrder.formatMonetary(props.product.price_info.list_price)"/>
                 </div>
             </div>
             <div t-if="props.product.description_sale"
-                class="o_self_order_main_desc px-3 py-4 text-muted">
+                class="o_self_order_main_desc px-3 pb-3 text-muted">
                     <t t-esc="props.product.description_sale"/>    
             </div>
             <div class="o_self_order_main_options px-3 py-4 border-bottom bg-100">
