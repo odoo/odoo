@@ -32,3 +32,12 @@ class ResConfigSettings(models.TransientModel):
         self.env["account.edi.format"]._l10n_in_edi_authenticate(self.company_id)
         if not self.company_id.sudo()._l10n_in_edi_token_is_valid():
             raise UserError(_("Incorrect username or password, or the GST number on company does not match."))
+
+    def l10n_in_edi_buy_iap(self):
+        if not self.l10n_in_edi_production_env:
+            raise UserError(_("You must enable production environment to buy credits"))
+        return {
+            'type': 'ir.actions.act_url',
+            'url': self.env["iap.account"].get_credits_url(service_name="l10n_in_edi", base_url=''),
+            'target': '_new'
+        }
