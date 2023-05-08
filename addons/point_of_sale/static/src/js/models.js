@@ -191,6 +191,7 @@ export class PosGlobalState extends PosModel {
 
         this.ordersToUpdateSet = new Set(); // used to know which orders need to be sent to the back end when syncing
         this.loadingOrderState = false; // used to prevent orders fetched to be put in the update set during the reactive change
+        this.showOfflineWarning = true; // Allows to avoid the display of the offline popup when the user has already had it.
 
         // these dynamic attributes can be watched for change by other models or widgets
         Object.assign(this, {
@@ -1021,7 +1022,10 @@ export class PosGlobalState extends PosModel {
     set_synch(status, pending) {
         if (["connected", "connecting", "error", "disconnected"].indexOf(status) === -1) {
             console.error(status, " is not a known connection state.");
+        } else if (status === "connected") {
+            this.showOfflineWarning = true;
         }
+
         pending =
             pending || this.db.get_orders().length + this.db.get_ids_to_remove_from_server().length;
         this.synch = { status, pending };
