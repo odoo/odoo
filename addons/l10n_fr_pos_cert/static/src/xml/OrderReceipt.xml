@@ -11,7 +11,8 @@
 
     <t t-name="OrderLinesReceipt" t-inherit="point_of_sale.OrderLinesReceipt" t-inherit-mode="extension" owl="1">
         <xpath expr="//t[@t-foreach='receipt.orderlines']" position="inside">
-            <t t-if="receipt.l10n_fr_hash !== false and line.price_manually_set">
+            <!-- moda - manually -->
+            <t t-if="this.showOldPrice(receipt, line)">
                 <div class="pos-receipt-right-padding">
                     Old unit price:
                     <span class="oldPrice">

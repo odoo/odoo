@@ -127,7 +127,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 this.currentOrder.get_selected_orderline().set_discount(val);
             } else if (this.env.pos.numpadMode === "price") {
                 var selected_orderline = this.currentOrder.get_selected_orderline();
-                selected_orderline.price_manually_set = true;
+                // moda - manually
+                selected_orderline.price_changed = true;
                 selected_orderline.set_unit_price(val);
             }
         }
@@ -160,7 +161,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             Object.assign(options, {
                 price: code.value,
                 extras: {
-                    price_manually_set: true,
+                    // moda - manually
+                    price_changed: true,
                 },
             });
         } else if (code.type === "weight") {

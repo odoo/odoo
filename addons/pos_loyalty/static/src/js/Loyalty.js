@@ -510,7 +510,7 @@ patch(Order.prototype, "pos_loyalty.Order", {
             line.coupon_id = options.coupon_id;
             line.reward_identifier_code = options.reward_identifier_code;
             line.points_cost = options.points_cost;
-            line.price_automatically_set = true;
+            line.price_changed = true;
         }
         line.giftBarcode = options.giftBarcode;
         line.giftCardId = options.giftCardId;

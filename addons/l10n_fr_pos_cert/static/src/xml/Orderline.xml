@@ -3,7 +3,8 @@
 
     <t t-name="Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension" owl="1">
         <xpath expr="//ul[hasclass('info-list')]" position="inside">
-            <t t-if="env.pos.is_french_country() !== false and props.line.price_manually_set">
+            <!-- moda - manually -->
+            <t t-if="this.showOldPrice">
                 <li class="info">
                     Old unit price:
                     <span class="oldPrice">
