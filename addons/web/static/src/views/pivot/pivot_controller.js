@@ -1,6 +1,5 @@
 /** @odoo-module **/
 
-import { useService } from "@web/core/utils/hooks";
 import { Layout } from "@web/search/layout";
 import { useModel } from "@web/views/model";
 import { standardViewProps } from "@web/views/standard_view_props";
@@ -12,7 +11,6 @@ import { Component, useRef } from "@odoo/owl";
 
 export class PivotController extends Component {
     setup() {
-        this.actionService = useService("action");
         this.model = useModel(this.props.Model, this.props.modelParams);
 
         useSetupView({

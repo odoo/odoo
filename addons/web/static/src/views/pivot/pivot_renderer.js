@@ -11,10 +11,12 @@ import fieldUtils from "web.field_utils";
 
 import { Component, onWillUpdateProps, useRef } from "@odoo/owl";
 import { download } from "@web/core/network/download";
+import { useService } from "@web/core/utils/hooks";
 const formatters = registry.category("formatters");
 
 export class PivotRenderer extends Component {
     setup() {
+        this.actionService = useService("action");
         this.model = this.props.model;
         this.table = this.model.getTable();
         this.l10n = localization;
