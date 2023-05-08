@@ -812,7 +812,7 @@ class IrActionsReport(models.Model):
                 reader = PdfFileReader(stream)
                 writer.appendPagesFromReader(reader)
                 writer.write(result_stream)
-            except utils.PdfReadError:
+            except (utils.PdfReadError, TypeError):
                 unreadable_streams.append(stream)
 
         return unreadable_streams
