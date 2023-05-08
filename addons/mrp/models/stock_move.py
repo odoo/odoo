@@ -410,7 +410,11 @@ class StockMove(models.Model):
 
     @api.model
     def _prepare_merge_moves_distinct_fields(self):
-        return super()._prepare_merge_moves_distinct_fields() + ['created_production_id', 'cost_share', 'bom_line_id']
+        res = super()._prepare_merge_moves_distinct_fields()
+        res += ['created_production_id', 'cost_share']
+        if self.bom_line_id and ("phantom" in self.bom_line_id.bom_id.mapped('type')):
+            res.append('bom_line_id')
+        return res
 
     @api.model
     def _prepare_merge_negative_moves_excluded_distinct_fields(self):
