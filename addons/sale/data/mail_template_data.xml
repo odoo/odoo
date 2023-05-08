@@ -85,7 +85,7 @@
                 <td width="15%" align="center"><span style="font-weight:bold;">Quantity</span></td>
                 <td width="20%" align="right">
                     <span style="font-weight:bold;">
-                        <t t-if="object.company_id.tax_calculation_rounding_method == 'round_per_line'">
+                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
                             VAT Excl.
                         </t>
                         <t t-else="">
@@ -123,7 +123,7 @@
                         <td align="left" t-out="line.product_id.name or ''">	Taking care of Trees Course</td>
                         <td width="15%" align="center" t-out="line.product_uom_qty or ''">1</td>
                         <td width="20%" align="right"><span style="font-weight:bold;">
-                        <t t-if="object.company_id.tax_calculation_rounding_method == 'round_per_line'">
+                        <t t-if="object.website_id.show_line_subtotals_tax_selection == 'tax_excluded'">
                             <t t-out="format_amount(line.price_reduce_taxexcl, object.currency_id) or ''">$ 10.00</t>
                         </t>
                         <t t-else="">

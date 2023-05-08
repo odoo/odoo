@@ -26,6 +26,14 @@ class Website(models.Model):
     salesteam_id = fields.Many2one('crm.team',
         string='Sales Team', ondelete="set null",
         default=_default_salesteam_id)
+    show_line_subtotals_tax_selection = fields.Selection(
+        selection=[
+            ('tax_excluded', "Tax Excluded"),
+            ('tax_included', "Tax Included"),
+        ],
+        string="Line Subtotals Tax Display",
+        required=True, default='tax_excluded',
+    )
 
     pricelist_id = fields.Many2one(
         'product.pricelist', compute='_compute_pricelist_id', string="Default Pricelist if any")

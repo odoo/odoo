@@ -30,9 +30,7 @@ class SaleOrder(models.Model):
     amount_delivery = fields.Monetary(
         string="Delivery Amount",
         compute='_compute_amount_delivery',
-        help="The amount without tax.",
-        store=True,
-        tracking=True,
+        help="Tax included or excluded depending on the website configuration.",
     )
     access_point_address = fields.Json("Delivery Point Address")
 
@@ -79,13 +77,15 @@ class SaleOrder(models.Model):
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
             order.only_services = all(l.product_id.type == 'service' for l in order.website_order_line)
 
-    @api.depends('order_line.price_unit', 'order_line.tax_id', 'order_line.discount', 'order_line.product_uom_qty')
+    @api.depends('order_line.price_total', 'order_line.price_subtotal')
     def _compute_amount_delivery(self):
-        for order in self:
-            if self.env.company.show_line_subtotals_tax_selection == 'tax_excluded':
-                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_subtotal'))
+        self.amount_delivery = 0.0
+        for order in self.filtered('website_id'):
+            delivery_lines = order.order_line.filtered('is_delivery')
+            if order.website_id.show_line_subtotals_tax_selection == 'tax_excluded':
+                order.amount_delivery = sum(delivery_lines.mapped('price_subtotal'))
             else:
-                order.amount_delivery = sum(order.order_line.filtered('is_delivery').mapped('price_total'))
+                order.amount_delivery = sum(delivery_lines.mapped('price_total'))
 
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):

@@ -24,6 +24,5 @@ from . import test_website_sale_visitor
 from . import test_website_sale_product
 from . import test_website_sale_shop_variant_exclusion
 from . import test_website_editor
-from . import test_setting
 from . import test_website_sale_reorder_from_portal
 from . import test_website_sale_snippets
