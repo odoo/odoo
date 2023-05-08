@@ -86,7 +86,7 @@ class ResConfigSettings(models.TransientModel):
                     "id": table.id,
                     "name": table.name,
                     "url": url_quote(
-                        self.get_base_url() + self.pos_config_id.self_order_route(table.id)
+                        self.get_base_url() + self.pos_config_id._get_self_order_route(table.id)
                     ),
                 }
                 for table in tables_sudo
@@ -95,7 +95,7 @@ class ResConfigSettings(models.TransientModel):
             qr_codes_to_print = [
                 {
                     "id": 0,
-                    "url": url_quote(self.get_base_url() + self.pos_config_id.self_order_route()),
+                    "url": url_quote(self.get_base_url() + self.pos_config_id._get_self_order_route()),
                 }
                 for i in range(no_OF_QR_CODES_PER_PAGE)
             ]

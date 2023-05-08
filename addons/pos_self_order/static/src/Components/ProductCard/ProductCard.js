@@ -6,7 +6,7 @@ import { useForwardRefToParent } from "@web/core/utils/hooks";
 
 export class ProductCard extends Component {
     static template = "pos_self_order.ProductCard";
-    static props = ["product", "orderLine?", "currentProductCard?"];
+    static props = ["product", "orderLine?", "currentProductCard?", "class?"];
     setup() {
         this.selfOrder = useSelfOrder();
         useForwardRefToParent("currentProductCard");

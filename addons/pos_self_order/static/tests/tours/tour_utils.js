@@ -1,3 +1,5 @@
+/** @odoo-module */
+
 // HELPERS ////////////////////////////////
 // Each of the export functions below returns an array of steps
 // (even those that return a single step, for consistency)

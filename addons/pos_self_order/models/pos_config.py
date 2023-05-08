@@ -62,7 +62,7 @@ class PosConfig(models.Model):
             record.self_order_view_mode = record.module_pos_restaurant
             record.self_order_table_mode = record.module_pos_restaurant
 
-    def self_order_route(self, table_id: Optional[int] = None) -> str:
+    def _get_self_order_route(self, table_id: Optional[int] = None) -> str:
         self.ensure_one()
         base_route = f"/menu/{self.id}"
         if not self.self_order_table_mode:
@@ -84,7 +84,7 @@ class PosConfig(models.Model):
         self.ensure_one()
         return {
             "type": "ir.actions.act_url",
-            "url": self.self_order_route(),
+            "url": self._get_self_order_route(),
             "target": "new",
         }
 
