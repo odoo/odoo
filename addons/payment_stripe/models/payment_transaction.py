@@ -9,7 +9,7 @@ from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_stripe.const import STATUS_MAPPING
+from odoo.addons.payment_stripe import const
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
 
@@ -74,7 +74,7 @@ class PaymentTransaction(models.Model):
         self._handle_notification_data('stripe', notification_data)
 
     def _stripe_create_intent(self):
-        """ Create and return a PaymentIntent or a SetupIntent, depending on the operation.
+        """ Create and return a PaymentIntent or a SetupIntent object, depending on the operation.
 
         :return: The created PaymentIntent or SetupIntent object.
         :rtype: dict
@@ -115,7 +115,7 @@ class PaymentTransaction(models.Model):
         return intent
 
     def _stripe_prepare_setup_intent_payload(self):
-        """ Prepare the payload for the creation of a SetupIntent in Stripe format.
+        """ Prepare the payload for the creation of a SetupIntent object in Stripe format.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
@@ -126,24 +126,31 @@ class PaymentTransaction(models.Model):
         return {
             'customer': customer['id'],
             'description': self.reference,
-            'automatic_payment_methods[enabled]': True,
+            'payment_method_types[]': const.PAYMENT_METHODS_MAPPING.get(
+                self.payment_method_code, self.payment_method_code
+            ),
             **self._stripe_prepare_mandate_options(),
         }
 
     def _stripe_prepare_payment_intent_payload(self):
-        """ Prepare the payload for the creation of a PaymentIntent in Stripe format.
+        """ Prepare the payload for the creation of a PaymentIntent object in Stripe format.
 
         Note: This method serves as a hook for modules that would fully implement Stripe Connect.
 
         :return: The Stripe-formatted payload for the PaymentIntent request.
         :rtype: dict
         """
+        ppm_code = self.payment_method_id.primary_payment_method_id.code
+        payment_method_type = ppm_code or self.payment_method_code
         payment_intent_payload = {
             'amount': payment_utils.to_minor_currency_units(self.amount, self.currency_id),
             'currency': self.currency_id.name.lower(),
             'description': self.reference,
             'capture_method': 'manual' if self.provider_id.capture_manually else 'automatic',
-            'automatic_payment_methods[enabled]': True,
+            'payment_method_types[]': const.PAYMENT_METHODS_MAPPING.get(
+                payment_method_type, payment_method_type
+            ),
+            'expand[]': 'payment_method',
         }
         if self.operation in ['online_token', 'offline']:
             if not self.token_id.stripe_payment_method:  # Pre-SCA token, migrate it.
@@ -340,7 +347,7 @@ class PaymentTransaction(models.Model):
         return tx
 
     def _process_notification_data(self, notification_data):
-        """ Override of payment to process the transaction based on Stripe data.
+        """ Override of `payment` to process the transaction based on Stripe data.
 
         Note: self.ensure_one()
 
@@ -356,7 +363,16 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'stripe':
             return
 
-        # Handle the provider reference and the status.
+        # Update the payment method.
+        payment_method = notification_data.get('payment_method')
+        if isinstance(payment_method, dict):  # capture/void/refund requests receive a string.
+            payment_method_type = payment_method.get('type')
+            if self.payment_method_id.code == payment_method_type == 'card':
+                payment_method_type = notification_data['payment_method']['card']['brand']
+            payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+            self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the provider reference and the payment state.
         if self.operation == 'validation':
             self.provider_reference = notification_data['setup_intent']['id']
             status = notification_data['setup_intent']['status']
@@ -370,16 +386,15 @@ class PaymentTransaction(models.Model):
             raise ValidationError(
                 "Stripe: " + _("Received data with missing intent status.")
             )
-
-        if status in STATUS_MAPPING['draft']:
+        if status in const.STATUS_MAPPING['draft']:
             pass
-        elif status in STATUS_MAPPING['pending']:
+        elif status in const.STATUS_MAPPING['pending']:
             self._set_pending()
-        elif status in STATUS_MAPPING['authorized']:
+        elif status in const.STATUS_MAPPING['authorized']:
             if self.tokenize:
                 self._stripe_tokenize_from_notification_data(notification_data)
             self._set_authorized()
-        elif status in STATUS_MAPPING['done']:
+        elif status in const.STATUS_MAPPING['done']:
             if self.tokenize:
                 self._stripe_tokenize_from_notification_data(notification_data)
 
@@ -389,9 +404,9 @@ class PaymentTransaction(models.Model):
             # will not be triggered by a customer browsing the transaction from the portal.
             if self.operation == 'refund':
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
-        elif status in STATUS_MAPPING['cancel']:
+        elif status in const.STATUS_MAPPING['cancel']:
             self._set_canceled()
-        elif status in STATUS_MAPPING['error']:
+        elif status in const.STATUS_MAPPING['error']:
             if self.operation != 'refund':
                 last_payment_error = notification_data.get('payment_intent', {}).get(
                     'last_payment_error'
@@ -443,10 +458,10 @@ class PaymentTransaction(models.Model):
         # Create the token.
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
+            'payment_method_id': self.payment_method_id.id,
             'payment_details': payment_method[payment_method['type']]['last4'],
             'partner_id': self.partner_id.id,
             'provider_ref': customer_id,
-            'verified': True,
             'stripe_payment_method': payment_method['id'],
             'stripe_mandate': payment_method[payment_method['type']].get('mandate'),
         })

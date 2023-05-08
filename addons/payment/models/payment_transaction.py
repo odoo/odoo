@@ -31,10 +31,18 @@ class PaymentTransaction(models.Model):
         return self.env['res.lang'].get_installed()
 
     provider_id = fields.Many2one(
-        string="Provider", comodel_name='payment.provider', readonly=True, required=True)
-    provider_code = fields.Selection(related='provider_id.code')
+        string="Provider", comodel_name='payment.provider', readonly=True, required=True
+    )
+    provider_code = fields.Selection(string="Provider Code", related='provider_id.code')
     company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
-        related='provider_id.company_id', store=True, index=True)
+        related='provider_id.company_id', store=True, index=True
+    )
+    payment_method_id = fields.Many2one(
+        string="Payment Method", comodel_name='payment.method', readonly=True, required=True
+    )
+    payment_method_code = fields.Char(
+        string="Payment Method Code", related='payment_method_id.code'
+    )
     reference = fields.Char(
         string="Reference", help="The internal reference of the transaction", readonly=True,
         required=True)  # Already has an index from the UNIQUE SQL constraint.
@@ -635,6 +643,7 @@ class PaymentTransaction(models.Model):
 
         return self.create({
             'provider_id': self.provider_id.id,
+            'payment_method_id': self.payment_method_id.id,
             'reference': self._compute_reference(self.provider_code, prefix=reference_prefix),
             'amount': amount,
             'currency_id': self.currency_id.id,

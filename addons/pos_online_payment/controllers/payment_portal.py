@@ -56,8 +56,8 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if not payment_method:
             raise UserError(_("There is no online payment method configured for this Point of Sale order."))
         compatible_providers_sudo = request.env['payment.provider'].sudo()._get_compatible_providers(
-            pos_order_sudo.company_id.id, partner_id, amount_to_pay, currency_id=pos_order_sudo.currency_id.id)
-        # In sudo mode to read the fields of providers and partner (if not logged in)
+            pos_order_sudo.company_id.id, partner_id, amount_to_pay, currency_id=pos_order_sudo.currency_id.id
+        )  # In sudo mode to read the fields of providers and partner (if logged out).
         # Return the payment providers configured in the pos.payment.method that are compatible for the payment API
         return compatible_providers_sudo & payment_method._get_online_payment_providers(pos_order_sudo.config_id.id, error_if_invalid=False)
 
@@ -109,7 +109,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             'access_token': access_token,
             'transaction_route': f'/pos/pay/transaction/{pos_order_sudo.id}?access_token={access_token}{exit_route_arg}',
             'landing_route': self._get_landing_route(pos_order_sudo.id, access_token, exit_route_arg=exit_route_arg),
-            **self._get_custom_rendering_context_values(**kwargs),
+            **self._get_extra_payment_form_values(**kwargs),
         }
 
         currency_id = pos_order_sudo.currency_id
@@ -125,22 +125,29 @@ class PaymentPortal(payment_portal.PaymentPortal):
             return self._render_pay(rendering_context)
         rendering_context['amount'] = amount_to_pay
 
+        # Select all the payment methods and tokens that match the payment context.
         providers_sudo = self._get_allowed_providers_sudo(pos_order_sudo, partner_sudo.id, amount_to_pay)
-
+        payment_methods_sudo = request.env['payment.method'].sudo()._get_compatible_payment_methods(
+            providers_sudo.ids,
+            partner_sudo.id,
+            currency_id=currency_id.id,
+        )  # In sudo mode to read the fields of providers.
         if logged_in:
-            tokens_sudo = request.env['payment.token']._get_available_tokens(
-                providers_sudo.ids, partner_sudo.id)
-            show_tokenize_input = self._compute_show_tokenize_input_mapping(
+            tokens_sudo = request.env['payment.token'].sudo()._get_available_tokens(
+                providers_sudo.ids, partner_sudo.id
+            )  # In sudo mode to be able to read the fields of providers.
+            show_tokenize_input_mapping = self._compute_show_tokenize_input_mapping(
                 providers_sudo, **kwargs)
         else:
-            tokens_sudo = False
-            show_tokenize_input = dict.fromkeys(providers_sudo.ids, False)
+            tokens_sudo = request.env['payment.token']
+            show_tokenize_input_mapping = dict.fromkeys(providers_sudo.ids, False)
 
         rendering_context.update({
-            'providers': providers_sudo,
-            'tokens': tokens_sudo,
-            'show_tokenize_input': show_tokenize_input,
-            **self._get_custom_rendering_context_values(**kwargs),
+            'providers_sudo': providers_sudo,
+            'payment_methods_sudo': payment_methods_sudo,
+            'tokens_sudo': tokens_sudo,
+            'show_tokenize_input_mapping': show_tokenize_input_mapping,
+            **self._get_extra_payment_form_values(**kwargs),
         })
         return self._render_pay(rendering_context)
 
@@ -187,7 +194,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
         if not logged_in:
             if kwargs.get('tokenization_requested') or kwargs.get('flow') == 'token':
                 raise UserError(
-                    _("Tokenization is not available for logged off customers."))
+                    _("Tokenization is not available for logged out customers."))
             kwargs['custom_create_values']['tokenize'] = False
 
         currency_id = pos_order_sudo.currency_id
@@ -203,7 +210,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             raise ValidationError(
                 _("The amount to pay has changed. Please refresh the page."))
 
-        payment_option_id = kwargs.get('payment_option_id', None)
+        payment_option_id = kwargs.get('payment_method_id') or kwargs.get('token_id')
         if not payment_option_id:
             raise UserError(_("A payment option must be specified."))
         flow = kwargs.get('flow')
@@ -216,7 +223,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             if payment_option_id not in tokens_sudo.ids:
                 raise UserError(_("The payment token is invalid."))
         else:
-            if payment_option_id not in providers_sudo.ids:
+            if kwargs.get('provider_id') not in providers_sudo.ids:
                 raise UserError(_("The payment provider is invalid."))
 
         kwargs['reference_prefix'] = None  # Computed with pos_order_id

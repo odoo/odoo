@@ -1,6 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
+import pprint
 
 import requests
 from werkzeug import urls
@@ -64,8 +65,20 @@ class PaymentProvider(models.Model):
 
         try:
             response = requests.request(method, url, json=data, headers=headers, timeout=60)
-            response.raise_for_status()
-        except requests.exceptions.RequestException:
-            _logger.exception("unable to communicate with Mollie: %s", url)
-            raise ValidationError("Mollie: " + _("Could not establish the connection to the API."))
+            try:
+                response.raise_for_status()
+            except requests.exceptions.HTTPError:
+                _logger.exception(
+                    "Invalid API request at %s with data:\n%s", url, pprint.pformat(data)
+                )
+                raise ValidationError(
+                    "Mollie: " + _(
+                        "The communication with the API failed. Mollie gave us the following "
+                        "information: %s", response.json().get('detail', '')
+                    ))
+        except (requests.exceptions.ConnectionError, requests.exceptions.Timeout):
+            _logger.exception("Unable to reach endpoint at %s", url)
+            raise ValidationError(
+                "Mollie: " + _("Could not establish the connection to the API.")
+            )
         return response.json()

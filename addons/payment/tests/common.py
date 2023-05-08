@@ -61,6 +61,11 @@ class PaymentCommon(BaseCommon):
             'country_id': cls.country_belgium.id,
         })
 
+        # Activate pm
+        cls.env.ref('payment.payment_method_unknown').write({
+            'active': True,
+            'support_tokenization': True,
+        })
         # Create a dummy provider to allow basic tests without any specific provider implementation
         arch = """
         <form action="dummy" method="post">
@@ -79,6 +84,7 @@ class PaymentCommon(BaseCommon):
             'code': 'none',
             'state': 'test',
             'is_published': True,
+            'payment_method_ids': [Command.set([cls.env.ref('payment.payment_method_unknown').id])],
             'allow_tokenization': True,
             'redirect_form_view_id': redirect_form.id,
             'available_currency_ids': [Command.set(
@@ -87,6 +93,9 @@ class PaymentCommon(BaseCommon):
         })
 
         cls.provider = cls.dummy_provider
+        cls.payment_methods = cls.provider.payment_method_ids
+        cls.payment_method_id = cls.provider.payment_method_ids[:1].id
+        cls.payment_method_code = cls.provider.payment_method_ids[:1].code
         cls.amount = 1111.11
         cls.company = cls.env.company
         cls.company_id = cls.company.id
@@ -140,7 +149,10 @@ class PaymentCommon(BaseCommon):
             AND([provider_domain, [('company_id', '=', company.id)]]), limit=1
         )
         if not provider:
-            base_provider = cls.env['payment.provider'].sudo().search(provider_domain, limit=1)
+            if code != 'none':
+                base_provider = cls.env['payment.provider'].sudo().search(provider_domain, limit=1)
+            else:
+                base_provider = cls.provider
             if not base_provider:
                 _logger.error("no payment.provider found for code %s", code)
                 return cls.env['payment.provider']
@@ -157,6 +169,7 @@ class PaymentCommon(BaseCommon):
 
     def _create_transaction(self, flow, sudo=True, **values):
         default_values = {
+            'payment_method_id': self.payment_method_id,
             'amount': self.amount,
             'currency_id': self.currency.id,
             'provider_id': self.provider.id,
@@ -168,8 +181,9 @@ class PaymentCommon(BaseCommon):
 
     def _create_token(self, sudo=True, **values):
         default_values = {
-            'payment_details': "1234",
             'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'payment_details': "1234",
             'partner_id': self.partner.id,
             'provider_ref': "provider Ref (TEST)",
             'active': True,

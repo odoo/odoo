@@ -44,13 +44,14 @@
                             <div t-if="company_mismatch">
                                 <t t-call="payment.company_mismatch_warning"/>
                             </div>
-                            <div t-elif="providers or tokens" id="payment_method" class="text-start col-md-13">
-                                <t t-call="payment.checkout"/>
+                            <div t-elif="not payment_methods_sudo and not tokens_sudo"
+                                 class="alert alert-warning"
+                            >
+                                <strong>No suitable payment method could be found.</strong><br/>
+                                If you believe that it is an error, please contact the website
+                                administrator.
                             </div>
-                            <div t-else="" class="alert alert-warning">
-                                <strong>No suitable payment option could be found.</strong><br/>
-                                If you believe that it is an error, please contact the website administrator.
-                            </div>
+                            <t t-else="" t-call="payment.form"/>
                         </div>
                     </div>
                 </div>

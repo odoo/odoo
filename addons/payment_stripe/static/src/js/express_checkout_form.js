@@ -15,16 +15,16 @@ paymentExpressCheckoutForm.include({
      * @returns {Object} The information to be displayed on the payment form.
      */
     _getOrderDetails(deliveryAmount) {
-        const pending = this.txContext.shippingInfoRequired && deliveryAmount === undefined;
-        const amount = deliveryAmount ? this.txContext.minorAmount + deliveryAmount
-            : this.txContext.minorAmount;
+        const pending = this.paymentContext['shippingInfoRequired'] && deliveryAmount === undefined;
+        const amount = deliveryAmount ? this.paymentContext['minorAmount'] + deliveryAmount
+            : this.paymentContext['minorAmount'];
         const displayItems = [
             {
                 label: _t("Your order"),
-                amount: this.txContext.minorAmount,
+                amount: this.paymentContext['minorAmount'],
             },
         ];
-        if (this.txContext.shippingInfoRequired && deliveryAmount !== undefined) {
+        if (this.paymentContext['shippingInfoRequired'] && deliveryAmount !== undefined) {
             displayItems.push({
                 label: _t("Delivery"),
                 amount: deliveryAmount,
@@ -32,7 +32,7 @@ paymentExpressCheckoutForm.include({
         }
         return {
             total: {
-                label: this.txContext.merchantName,
+                label: this.paymentContext['merchantName'],
                 amount: amount,
                 // Delay the display of the amount until the shipping price is retrieved.
                 pending: pending,
@@ -55,7 +55,7 @@ paymentExpressCheckoutForm.include({
          * that case, the check is whether the variable is defined because the server doesn't send
          * the value when it equals '0'.
          */
-        if (providerData.providerCode !== 'stripe' || !this.txContext.amount) {
+        if (providerData.providerCode !== 'stripe' || !this.paymentContext['amount']) {
             this._super(...arguments);
             return;
         }
@@ -66,11 +66,11 @@ paymentExpressCheckoutForm.include({
         );
         const paymentRequest = stripeJS.paymentRequest({
             country: providerData.countryCode,
-            currency: this.txContext.currencyName,
+            currency: this.paymentContext['currencyName'],
             requestPayerName: true, // Force fetching the billing address for Apple Pay.
             requestPayerEmail: true,
             requestPayerPhone: true,
-            requestShipping: this.txContext.shippingInfoRequired,
+            requestShipping: this.paymentContext['shippingInfoRequired'],
             ...this._getOrderDetails(),
         });
         if (this.stripePaymentRequests === undefined) {
@@ -108,7 +108,7 @@ paymentExpressCheckoutForm.include({
                     state: ev.paymentMethod.billing_details.address.state,
                 }
             };
-            if (this.txContext.shippingInfoRequired) {
+            if (this.paymentContext['shippingInfoRequired']) {
                 addresses.shipping_address = {
                     name: ev.shippingAddress.recipient,
                     email: ev.payerEmail,
@@ -123,12 +123,12 @@ paymentExpressCheckoutForm.include({
                 addresses.shipping_option = ev.shippingOption;
             }
             // Update the customer addresses on the related document.
-            this.txContext.partnerId = parseInt(await this._rpc({
-                route: this.txContext.expressCheckoutRoute, params: addresses,
+            this.paymentContext.partnerId = parseInt(await this._rpc({
+                route: this.paymentContext['expressCheckoutRoute'], params: addresses,
             }));
             // Call the transaction route to create the transaction and retrieve the client secret.
             const { client_secret } = await this._rpc({
-                route: this.txContext.transactionRoute,
+                route: this.paymentContext['transactionRoute'],
                 params: this._prepareTransactionRouteParams(providerData.providerId),
             });
             // Confirm the PaymentIntent without handling eventual next actions (e.g. 3DS).
@@ -150,7 +150,7 @@ paymentExpressCheckoutForm.include({
             }
         });
 
-        if (this.txContext.shippingInfoRequired) {
+        if (this.paymentContext['shippingInfoRequired']) {
             // Wait until the express checkout form is loaded for Apple Pay and Google Pay to select
             // a default shipping address and trigger the `shippingaddresschange` event, so we can
             // fetch the available shipping options. When the customer manually selects a different
@@ -158,7 +158,7 @@ paymentExpressCheckoutForm.include({
             paymentRequest.on('shippingaddresschange', async (ev) => {
                 // Call the shipping address update route to fetch the shipping options.
                 const availableCarriers = await this._rpc({
-                    route: this.txContext.shippingAddressUpdateRoute,
+                    route: this.paymentContext['shippingAddressUpdateRoute'],
                     params: {
                         partial_shipping_address: {
                             zip: ev.shippingAddress.postalCode,

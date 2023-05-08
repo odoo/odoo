@@ -5,42 +5,13 @@ API_VERSION = '2019-05-16'  # The API version of Stripe implemented in this modu
 # Stripe proxy URL
 PROXY_URL = 'https://stripe.api.odoo.com/api/stripe/'
 
-# The payment methods for which Stripe supports tokenization.
-# See https://stripe.com/docs/payments/payment-methods/integration-options.
-PAYMENT_METHODS_TOKENIZATION_SUPPORT = {
-    'acss_debit': True,
-    'affirm': False,
-    'afterpay_clearpay': False,
-    'alipay': False,
-    'apple_pay': True,
-    'au_becs_debit': True,
-    'bacs_debit': False,  # Stripe doesn't support saving BACS with setupIntent.
-    'bancontact': False,
-    'blik': False,
-    'boleto': True,
-    'card': True,
-    'cashapp': True,
-    'customer_balance': False,
-    'eps': False,
-    'fpx': False,
-    'giropay': False,
-    'google_pay': True,
-    'grabpay': False,
-    'ideal': False,
-    'klarna': False,
-    'konbini': False,
-    'link': True,
-    'mobilepay': False,
-    'oxxo': False,
-    'p24': False,
-    'paynow': False,
-    'paypal': True,
-    'promptpay': False,
-    'sepa_debit': True,
-    'sofort': False,
-    'us_bank_account': True,
-    'wechat_pay': False,
-    'zip': False,
+# Mapping of payment method codes to Stripe codes.
+PAYMENT_METHODS_MAPPING = {
+    'ach_direct_debit': 'us_bank_account',
+    'bacs_direct_debit': 'bacs_debit',
+    'becs_direct_debit': 'au_becs_debit',
+    'afterpay': 'afterpay_clearpay',
+    'clearpay': 'afterpay_clearpay',
 }
 
 # Mapping of transaction states to Stripe objects ({Payment,Setup}Intent, Refund) statuses.

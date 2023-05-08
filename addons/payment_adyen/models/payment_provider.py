@@ -2,13 +2,13 @@
 
 import logging
 import re
-
+import json
 import requests
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-from odoo.addons.payment_adyen.const import API_ENDPOINT_VERSIONS
+from odoo.addons.payment_adyen import const
 
 _logger = logging.getLogger(__name__)
 
@@ -72,7 +72,7 @@ class PaymentProvider(models.Model):
             'support_tokenization': True,
         })
 
-    #=== BUSINESS METHODS ===#
+    #=== BUSINESS METHODS - PAYMENT FLOW ===#
 
     def _adyen_make_request(
         self, url_field_name, endpoint, endpoint_param=None, payload=None, method='POST'
@@ -111,7 +111,7 @@ class PaymentProvider(models.Model):
         self.ensure_one()
 
         base_url = self[url_field_name]  # Restrict request URL to the stored API URL fields
-        version = API_ENDPOINT_VERSIONS[endpoint]
+        version = const.API_ENDPOINT_VERSIONS[endpoint]
         endpoint = endpoint if not endpoint_param else endpoint.format(endpoint_param)
         url = _build_url(base_url, version, endpoint)
         headers = {'X-API-Key': self.adyen_api_key}
@@ -143,3 +143,22 @@ class PaymentProvider(models.Model):
         :rtype: str
         """
         return f'ODOO_PARTNER_{partner_id}'
+
+    #=== BUSINESS METHODS - GETTERS ===#
+
+    def _adyen_get_inline_form_values(self, pm_code):
+        """ Return a serialized JSON of the required values to render the inline form.
+
+        Note: `self.ensure_one()`
+
+        :param str pm_code: The code of the payment method whose inline form to render.
+        :return: The JSON serial of the required values to render the inline form.
+        :rtype: str
+        """
+        self.ensure_one()
+
+        inline_form_values = {
+            'client_key': self.adyen_client_key,
+            'adyen_pm_code': const.PAYMENT_METHODS_MAPPING.get(pm_code, pm_code),
+        }
+        return json.dumps(inline_form_values)

@@ -14,25 +14,6 @@ _logger = logging.getLogger(__name__)
 
 class AuthorizeController(http.Controller):
 
-    @http.route('/payment/authorize/get_provider_info', type='json', auth='public')
-    def authorize_get_provider_info(self, provider_id):
-        """ Return public information on the provider.
-
-        :param int provider_id: The provider handling the transaction, as a `payment.provider` id
-        :return: Information on the provider, namely: the state, payment method type, login ID, and
-                 public client key
-        :rtype: dict
-        """
-        provider_sudo = request.env['payment.provider'].sudo().browse(provider_id).exists()
-        return {
-            'state': provider_sudo.state,
-            'payment_method_type': provider_sudo.authorize_payment_method_type,
-            # The public API key solely used to identify the seller account with Authorize.Net
-            'login_id': provider_sudo.authorize_login,
-            # The public client key solely used to identify requests from the Accept.js suite
-            'client_key': provider_sudo.authorize_client_key,
-        }
-
     @http.route('/payment/authorize/payment', type='json', auth='public')
     def authorize_payment(self, reference, partner_id, access_token, opaque_data):
         """ Make a payment request and handle the response.

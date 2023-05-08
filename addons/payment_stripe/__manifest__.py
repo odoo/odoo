@@ -12,16 +12,15 @@
         'views/payment_stripe_templates.xml',
         'views/payment_templates.xml',  # Only load the SDK on pages with a payment form.
 
+        'data/payment_method_data.xml',
         'data/payment_provider_data.xml',  # Depends on views/payment_stripe_templates.xml
     ],
     'post_init_hook': 'post_init_hook',
     'uninstall_hook': 'uninstall_hook',
     'assets': {
         'web.assets_frontend': [
-            'payment_stripe/static/src/js/checkout_form.js',
             'payment_stripe/static/src/js/express_checkout_form.js',
-            'payment_stripe/static/src/js/manage_form.js',
-            'payment_stripe/static/src/js/stripe_mixin.js',
+            'payment_stripe/static/src/js/payment_form.js',
             'payment_stripe/static/src/js/stripe_options.js',
         ],
     },

@@ -13,19 +13,28 @@ class PaymentToken(models.Model):
     _check_company_auto = True
 
     provider_id = fields.Many2one(string="Provider", comodel_name='payment.provider', required=True)
-    provider_code = fields.Selection(related='provider_id.code')
+    provider_code = fields.Selection(string="Provider Code", related='provider_id.code')
+    company_id = fields.Many2one(
+        related='provider_id.company_id', store=True, index=True
+    )  # Indexed to speed-up ORM searches (from ir_rule or others).
+    payment_method_id = fields.Many2one(
+        string="Payment Method", comodel_name='payment.method', readonly=True, required=True
+    )
+    payment_method_code = fields.Char(
+        string="Payment Method Code", related='payment_method_id.code'
+    )
     payment_details = fields.Char(
         string="Payment Details", help="The clear part of the payment method's payment details.",
     )
     partner_id = fields.Many2one(string="Partner", comodel_name='res.partner', required=True)
-    company_id = fields.Many2one(  # Indexed to speed-up ORM searches (from ir_rule or others)
-        related='provider_id.company_id', store=True, index=True)
     provider_ref = fields.Char(
-        string="Provider Reference", help="The provider reference of the token of the transaction",
-        required=True)  # This is not the same thing as the provider reference of the transaction.
+        string="Provider Reference",
+        help="The provider reference of the token of the transaction.",
+        required=True,
+    )  # This is not the same thing as the provider reference of the transaction.
     transaction_ids = fields.One2many(
-        string="Payment Transactions", comodel_name='payment.transaction', inverse_name='token_id')
-    verified = fields.Boolean(string="Verified")
+        string="Payment Transactions", comodel_name='payment.transaction', inverse_name='token_id'
+    )
     active = fields.Boolean(string="Active", default=True)
 
     #=== COMPUTE METHODS ===#
