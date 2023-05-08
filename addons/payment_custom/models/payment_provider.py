@@ -38,7 +38,6 @@ class PaymentProvider(models.Model):
         super()._compute_view_configuration_fields()
         self.filtered(lambda p: p.code == 'custom').update({
             'show_credentials_page': False,
-            'show_payment_method_ids': False,
             'show_pre_msg': False,
             'show_done_msg': False,
             'show_cancel_msg': False,

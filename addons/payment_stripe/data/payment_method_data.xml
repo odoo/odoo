@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+
+    <!-- === PRIMARY PAYMENT METHODS === -->
+
+    <record id="payment.payment_method_card" model="payment.method">
+        <field name="active">True</field>
+    </record>
+    <record id="payment.payment_method_paypal" model="payment.method">
+        <field name="active">True</field>
+    </record>
+    <record id="payment.payment_method_bancontact" model="payment.method">
+        <field name="active">True</field>
+    </record>
+    <record id="payment.payment_method_ideal" model="payment.method">
+        <field name="active">True</field>
+    </record>
+
+    <!-- === BRAND PAYMENT METHODS === -->
+
+    <record id="payment.payment_method_visa" model="payment.method">
+        <field name="active">True</field>
+    </record>
+    <record id="payment.payment_method_mastercard" model="payment.method">
+        <field name="active">True</field>
+    </record>
+    <record id="payment.payment_method_amex" model="payment.method">
+        <field name="active">True</field>
+    </record>
+    <record id="payment.payment_method_discover" model="payment.method">
+        <field name="active">True</field>
+    </record>
+
+</odoo>

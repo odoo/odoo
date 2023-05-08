@@ -58,6 +58,7 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
             'referenceCode': self.reference,
             'amount': str(self.amount),
             'currency': self.currency.name,
+            'paymentMethods': self.payment_method_code,
             'tax': str(0),
             'taxReturnBase': str(0),
             'buyerEmail': self.partner.email,
@@ -130,7 +131,6 @@ class PayULatamTest(PayULatamCommon, PaymentHttpCommon):
         # Validate the transaction ('pending' state)
         self.env['payment.transaction']._handle_notification_data('payulatam', payulatam_post_data)
         self.assertEqual(tx.state, 'pending', 'Payulatam: wrong state after receiving a valid pending notification')
-        self.assertEqual(tx.state_message, payulatam_post_data['message'], 'Payulatam: wrong state message after receiving a valid pending notification')
         self.assertEqual(tx.provider_reference, 'b232989a-4aa8-42d1-bace-153236eee791', 'Payulatam: wrong txn_id after receiving a valid pending notification')
 
         # Reset the transaction

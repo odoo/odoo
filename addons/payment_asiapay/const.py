@@ -41,6 +41,78 @@ CURRENCY_MAPPING = {
     'VND': '704',
 }
 
+# Mapping of both country codes (e.g., 'es') and IETF language tags (e.g.: 'fr-BE') to AsiaPay
+# language codes. If a language tag is not listed, the country code prefix can serve as fallback.
+LANGUAGE_CODES_MAPPING = {
+    'en': 'E',
+    'zh_HK': 'C',
+    'zh_TW': 'C',
+    'zh_CN': 'X',
+    'ja_JP': 'J',
+    'th_TH': 'T',
+    'fr': 'F',
+    'de': 'G',
+    'ru_RU': 'R',
+    'es': 'S',
+    'vi_VN': 'S',
+}
+
+# Mapping of payment method codes to AsiaPay codes.
+PAYMENT_METHODS_MAPPING = {
+    'alipay_hk': 'ALIPAYHKONL',
+    'amex': 'AMEX',
+    'apple_pay': 'APPLEPAY',
+    'atome': 'ATOME',
+    'bangkok_bank': 'IBANKING',
+    'bpi': 'BPI',
+    'boa': 'KRUNGSRIONLINE',
+    'card': 'CC',
+    'cimb': 'CIMBCLICK',
+    'dana': 'DANA',
+    'ditnow': 'DuitNow',
+    'diners': 'Diners',
+    'enets': 'ENETS',
+    'enetsbanking': 'ENETSBANKING',
+    'enetsqr': 'ENETSQR',
+    'eximbay': 'Eximbay',
+    'fps': 'FPS',
+    'gcash': 'GCash',
+    'google_pay': 'GOOGLE',
+    'hoolah': 'HOOLAH',
+    'humm': 'humm',
+    'jkopay': 'JKOPAY',
+    'jcs': 'JCB',
+    'kungthai_bank': 'KTB',
+    'linepay': 'LINEPAY',
+    'maya': 'PayMaya',
+    'mastercard': 'Master',
+    'masterpass': 'MP',
+    'maybank': 'M2U',
+    'momo': 'MOMOPAY',
+    'ovo': 'OVO',
+    'pace': 'Pace',
+    'pay_id': 'PAYID',
+    'paymaya': 'PayMaya',
+    'payme': 'PayMe',
+    'payu': 'PAYU',
+    'poli': 'POLI',
+    'qris': 'QRIS',
+    'samsung_pay': 'SAMSUNG',
+    'shopeepay': 'SHOPEEPAY',
+    'tendopay': 'TendoPay',
+    'touch_n_go': 'TouchnGo',
+    'truemoney': 'TRUEMONEY',
+    'ttb': 'TMB',
+    'unionpay': 'CHINAPAY',
+    'visa': 'VISA',
+    'wechat_pay': 'WECHATONL',
+    'zip': 'ZIPPAY',
+    'zippay': 'ZIPPAY',
+    'tenpay': 'TENPAY',
+    'welend': 'WELEND',
+    'tmb': 'TMB',
+}
+
 # The keys of the values to use in the calculation of the signature.
 SIGNATURE_KEYS = {
     'outgoing': [
@@ -60,22 +132,6 @@ SIGNATURE_KEYS = {
         'Amt',
         'payerAuth',
     ],
-}
-
-# Mapping of both country codes (e.g., 'es') and IETF language tags (e.g.: 'fr-BE') to AsiaPay
-# language codes. If a language tag is not listed, the country code prefix can serve as fallback.
-LANGUAGE_CODES_MAPPING = {
-    'en': 'E',
-    'zh_HK': 'C',
-    'zh_TW': 'C',
-    'zh_CN': 'X',
-    'ja_JP': 'J',
-    'th_TH': 'T',
-    'fr': 'F',
-    'de': 'G',
-    'ru_RU': 'R',
-    'es': 'S',
-    'vi_VN': 'S',
 }
 
 # Mapping of transaction states to AsiaPay success codes.

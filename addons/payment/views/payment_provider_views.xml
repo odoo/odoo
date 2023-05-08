@@ -18,7 +18,6 @@
                 <field name="show_credentials_page" invisible="1"/>
                 <field name="show_allow_express_checkout" invisible="1"/>
                 <field name="show_allow_tokenization" invisible="1"/>
-                <field name="show_payment_method_ids" invisible="1"/>
                 <field name="show_pre_msg" invisible="1"/>
                 <field name="show_pending_msg" invisible="1"/>
                 <field name="show_auth_msg" invisible="1"/>
@@ -78,11 +77,21 @@
                         <page string="Configuration" name="configuration">
                             <group name="provider_config">
                                 <group string="Payment Form" name="payment_form">
-                                    <field name="display_as" placeholder="If not defined, the provider name will be used."/>
                                     <field name="payment_method_ids"
-                                           options="{'no_create': True, 'no_edit': True}"
+                                           domain="[('is_primary', '=', True)]"
+                                           readonly="True"
                                            widget="many2many_tags"
-                                           invisible="not show_payment_method_ids" />
+                                    />
+                                    <div colspan="2">
+                                        <a type="object"
+                                           name="action_view_payment_methods"
+                                           class="btn btn-link"
+                                           role="button"
+                                        >
+                                            <i class="oi oi-fw o_button_icon oi-arrow-right"/>
+                                            Enable Payment Methods
+                                        </a>
+                                    </div>
                                     <field name="allow_tokenization" invisible="not support_tokenization or not show_allow_tokenization"/>
                                     <field name="capture_manually" invisible="not support_manual_capture"/>
                                     <field name="allow_express_checkout" invisible="not support_express_checkout or not show_allow_express_checkout"/>
@@ -131,7 +140,7 @@
             <tree string="Payment Providers" create="false">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
-                <field name="code"/>
+                <field name="code" groups="base.group_no_one"/>
                 <field name="state"/>
                 <field name="available_country_ids" widget="many2many_tags" optional="hide"/>
                 <field name="company_id" groups="base.group_multi_company" optional="show"/>

@@ -1,9 +1,9 @@
 /** @odoo-module **/
 
-    import publicWidget from '@web/legacy/js/public/public_widget';
-    import { renderToElement } from '@web/core/utils/render';
-    import { markup } from "@odoo/owl";
-    import { _t } from '@web/core/l10n/translation';
+import publicWidget from '@web/legacy/js/public/public_widget';
+import { renderToElement } from '@web/core/utils/render';
+import { markup } from "@odoo/owl";
+import { _t } from '@web/core/l10n/translation';
 
 publicWidget.registry.PaymentPostProcessing = publicWidget.Widget.extend({
     selector: 'div[name="o_payment_status"]',

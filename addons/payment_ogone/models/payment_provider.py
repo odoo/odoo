@@ -8,7 +8,8 @@ import requests
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
-from .const import VALID_KEYS
+from odoo.addons.payment_ogone import const
+
 
 _logger = logging.getLogger(__name__)
 
@@ -94,7 +95,7 @@ class PaymentProvider(models.Model):
         """
 
         def _filter_key(_key):
-            return not incoming or _key in VALID_KEYS
+            return not incoming or _key in const.VALID_KEYS
 
         key = self.ogone_shakey_out if incoming else self.ogone_shakey_in  # Swapped for Ogone's POV
         if format_keys:

@@ -7,6 +7,11 @@
         <!-- Clear the default value before recomputing the pending_msg -->
         <field name="pending_msg" eval="False"/>
         <field name="custom_mode">wire_transfer</field>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment_custom.payment_method_wire_transfer'),
+                     ])]"
+        />
     </record>
 
     <function model="payment.provider"

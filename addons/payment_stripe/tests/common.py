@@ -24,7 +24,7 @@ class StripeCommon(PaymentCommon):
                     'id': 'pi_3KTk9zAlCFm536g81Wy7RCPH',
                     'charges': {'data': [{'amount': 36800}]},
                     'customer': 'cus_LBxMCDggAFOiNR',
-                    'payment_method': 'pm_1KVZSNAlCFm536g8sYB92I1G',
+                    'payment_method': {'type': 'pm_1KVZSNAlCFm536g8sYB92I1G'},
                     'description': cls.reference,
                     'status': 'succeeded',
                 }

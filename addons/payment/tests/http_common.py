@@ -76,12 +76,11 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
             yield
         self.assertEqual(cm.exception.code, 404)
 
-    def _get_tx_context(self, response, form_name):
-        """Extracts txContext & other form info (provider & token ids)
-        from a payment response (with manage/checkout html form)
+    def _get_payment_context(self, response):
+        """Extracts the payment context & other form info (provider & token ids)
+        from a payment response
 
         :param response: http Response, with a payment form as text
-        :param str form_name: o_payment_manage / o_payment_checkout
         :return: Transaction context (+ provider_ids & token_ids)
         :rtype: dict
         """
@@ -92,9 +91,9 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
             response.text,
             parser=etree.HTMLParser(),
         )
-        checkout_form = html_tree.xpath(f"//form[@name='{form_name}']")[0]
+        payment_form = html_tree.xpath('//form[@id="o_payment_form"]')[0]
         values = {}
-        for key, val in checkout_form.items():
+        for key, val in payment_form.items():
             if key.startswith("data-"):
                 formatted_key = key[5:].replace('-', '_')
                 if formatted_key.endswith('_id'):
@@ -106,21 +105,21 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
                 values[formatted_key] = formatted_val
 
         payment_options_inputs = html_tree.xpath("//input[@name='o_payment_radio']")
-        provider_ids = []
         token_ids = []
+        payment_method_ids = []
         for p_o_input in payment_options_inputs:
             data = dict()
             for key, val in p_o_input.items():
                 if key.startswith('data-'):
                     data[key[5:]] = val
-            if data['payment-option-type'] == 'provider':
-                provider_ids.append(int(data['payment-option-id']))
-            else:
+            if data['payment-option-type'] == 'token':
                 token_ids.append(int(data['payment-option-id']))
+            else:  # 'payment_method'
+                payment_method_ids.append(int(data['payment-option-id']))
 
         values.update({
-            'provider_ids': provider_ids,
             'token_ids': token_ids,
+            'payment_method_ids': payment_method_ids,
         })
 
         return values
@@ -148,7 +147,7 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         }
 
     def _portal_pay(self, **route_kwargs):
-        """/payment/pay txContext feedback
+        """/payment/pay payment context feedback
 
         NOTE: must be authenticated before calling method.
         Or an access_token should be specified in route_kwargs
@@ -157,18 +156,18 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         url = self._build_url(uri)
         return self._make_http_get_request(url, route_kwargs)
 
-    def _get_tx_checkout_context(self, **route_kwargs):
+    def _get_portal_pay_context(self, **route_kwargs):
         response = self._portal_pay(**route_kwargs)
 
         self.assertEqual(response.status_code, 200)
 
-        return self._get_tx_context(response, 'o_payment_checkout')
+        return self._get_payment_context(response)
 
     # /my/payment_method #
     ######################
 
     def _portal_payment_method(self):
-        """/my/payment_method txContext feedback
+        """/my/payment_method payment context feedback
 
         NOTE: must be authenticated before calling method
             validation flow is restricted to logged users
@@ -177,33 +176,35 @@ class PaymentHttpCommon(PaymentCommon, HttpCase):
         url = self._build_url(uri)
         return self._make_http_get_request(url, {})
 
-    def _get_tx_manage_context(self):
+    def _get_portal_payment_method_context(self):
         response = self._portal_payment_method()
 
         self.assertEqual(response.status_code, 200)
 
-        return self._get_tx_context(response, 'o_payment_manage')
+        return self._get_payment_context(response)
 
     # payment/transaction #
     #######################
 
-    def _prepare_transaction_values(self, payment_option_id, flow):
+    def _prepare_transaction_values(self, payment_method_id, token_id, flow):
         """ Prepare the basic payment/transaction route values.
 
         :param int payment_option_id: The payment option handling the transaction, as a
-                                      `payment.provider` id or a `payment.token` id
+                                      `payment.method` id or a `payment.token` id
         :param str flow: The payment flow
         :return: The route values
         :rtype: dict
         """
         return {
+            'provider_id': self.provider.id,
+            'payment_method_id': payment_method_id,
+            'token_id': token_id,
             'amount': self.amount,
             'currency_id': self.currency.id,
             'partner_id': self.partner.id,
             'access_token': self._generate_test_access_token(
                 self.partner.id, self.amount, self.currency.id
             ),
-            'payment_option_id': payment_option_id,
             'reference_prefix': 'test',
             'tokenization_requested': True,
             'landing_route': 'Test',

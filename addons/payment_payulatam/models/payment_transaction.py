@@ -10,6 +10,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_repr
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_payulatam import const
 from odoo.addons.payment_payulatam.controllers.main import PayuLatamController
 
 _logger = logging.getLogger(__name__)
@@ -74,6 +75,9 @@ class PaymentTransaction(models.Model):
             'tax': 0,
             'taxReturnBase': 0,
             'currency': self.currency_id.name,
+            'paymentMethods': const.PAYMENT_METHODS_MAPPING.get(
+                self.payment_method_code, self.payment_method_code
+            ),
             'accountId': self.provider_id.payulatam_account_id,
             'buyerFullName': self.partner_name,
             'buyerEmail': self.partner_email,
@@ -122,14 +126,21 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'payulatam':
             return
 
+        # Update the provider reference.
         self.provider_reference = notification_data.get('transactionId')
 
+        # Update the payment method.
+        payment_method_type = notification_data.get('lapPaymentMethod', '').lower()
+        payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         status = notification_data.get('lapTransactionState')
         state_message = notification_data.get('message')
         if status == 'PENDING':
-            self._set_pending(state_message=state_message)
+            self._set_pending()
         elif status == 'APPROVED':
-            self._set_done(state_message=state_message, extra_allowed_states=('cancel',))
+            self._set_done(extra_allowed_states=('cancel',))
         elif status in ('EXPIRED', 'DECLINED'):
             self._set_canceled(state_message=state_message)
         else:

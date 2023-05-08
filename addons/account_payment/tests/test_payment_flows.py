@@ -16,7 +16,7 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
         # Pay for this invoice (no impact even if amounts do not match)
         route_values = self._prepare_pay_values()
         route_values['invoice_id'] = self.invoice.id
-        tx_context = self._get_tx_checkout_context(**route_values)
+        tx_context = self._get_portal_pay_context(**route_values)
         self.assertEqual(tx_context['invoice_id'], self.invoice.id)
 
         # payment/transaction
@@ -33,8 +33,10 @@ class TestFlows(AccountPaymentCommon, PaymentHttpCommon):
             ]
         }
         route_values.update({
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
             'flow': 'direct',
-            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):

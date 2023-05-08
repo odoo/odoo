@@ -17,9 +17,10 @@ This is a bridge module that adds multi-website support for payment providers.
         'data/mail_templates.xml',
         'data/mail_template_data.xml',
         'data/ir_actions_server_data.xml',
+
+        'views/payment_form_templates.xml',
         'views/payment_provider.xml',
         'views/res_config_settings_views.xml',
-        'views/donation_templates.xml',
         'views/snippets/snippets.xml',
         'views/snippets/s_donation.xml',
     ],
@@ -30,8 +31,7 @@ This is a bridge module that adds multi-website support for payment providers.
             'website_payment/static/src/snippets/s_donation/options.xml',
         ],
         'web.assets_frontend': [
-            'website_payment/static/src/js/website_payment_donation.js',
-            'website_payment/static/src/js/website_payment_form.js',
+            'website_payment/static/src/js/**/*',
         ],
     },
     'license': 'LGPL-3',

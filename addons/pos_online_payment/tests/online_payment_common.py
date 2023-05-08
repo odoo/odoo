@@ -18,7 +18,7 @@ class OnlinePaymentCommon(PaymentHttpCommon):
 
     def _fake_open_pos_order_pay_page(self, pos_order_id, access_token):
         response = self._fake_http_get_request(PaymentPortal._get_pay_route(pos_order_id, access_token))
-        return self._get_tx_context(response, 'o_payment_checkout')
+        return self._get_payment_context(response)
 
     def _fake_request_pos_order_pay_transaction_page(self, pos_order_id, route_values):
         uri = f'/pos/pay/transaction/{pos_order_id}'
@@ -29,12 +29,12 @@ class OnlinePaymentCommon(PaymentHttpCommon):
         self._fake_http_get_request(PaymentPortal._get_landing_route(pos_order_id, access_token, tx_id=tx_id))
 
     def _fake_online_payment(self, pos_order_id, access_token, expected_payment_provider_id):
-        tx_context = self._fake_open_pos_order_pay_page(pos_order_id, access_token)
+        payment_context = self._fake_open_pos_order_pay_page(pos_order_id, access_token)
 
         # Code inspired by addons/payment/tests/test_flows.py
-        # Route values are taken from tx_context result of /pay route to correctly simulate the flow
+        # Route values are taken from payment_context result of /pay route to correctly simulate the flow
         route_values = {
-            k: tx_context[k]
+            k: payment_context[k]
             for k in [
                 'amount',
                 'currency_id',
@@ -44,11 +44,11 @@ class OnlinePaymentCommon(PaymentHttpCommon):
                 'landing_route',
             ]
         }
-        provider_id = tx_context['provider_ids'][0]
-        self.assertEqual(expected_payment_provider_id, provider_id, 'The available provider is unexpected')
         route_values.update({
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
             'flow': 'direct',
-            'payment_option_id': provider_id,
             'tokenization_requested': False,
         })
 

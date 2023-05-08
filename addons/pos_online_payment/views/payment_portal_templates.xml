@@ -11,25 +11,20 @@
             <div class="wrap">
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-7">
-                            <b>Order Reference:</b>
-                            <t t-esc="reference_prefix" />
-                            <br />
-                            <b>Order id:</b>
-                            <t t-esc="pos_order_id" />
-                            <br />
+                        <div class="mt-4 col-lg-7">
                             <div t-if="not currency" class="alert alert-danger">
                                 <strong>Error:</strong> The currency is missing or invalid. </div>
                             <div t-elif="not amount" class="alert alert-info">
                                 There is nothing to pay.
                             </div>
-                            <div t-elif="not providers and not tokens" class="alert alert-danger">
-                                <strong>No suitable payment option could be found.</strong><br /> If you believe that it is an error, please contact the website administrator. </div>
+                            <div t-elif="not payment_methods_sudo and not tokens_sudo" class="alert alert-danger">
+                                <strong>No suitable payment method could be found.</strong><br/>
+                                If you believe that it is an error, please contact the website
+                                administrator.
+                            </div>
                             <t t-else="">
-                                <b>Amount:</b>
-                                <t t-esc="amount"
-                                    t-options="{'widget': 'monetary', 'display_currency': currency}" />
-                                <t t-call="payment.checkout" />
+                                <t t-call="pos_online_payment.pay_summary"/>
+                                <t t-call="payment.form" />
                             </t>
                             <div class="col-md-4 offset-md-3 mt-2 ps-0" t-if="exit_route">
                                 <a role="button"
@@ -42,6 +37,35 @@
                 </div>
             </div>
         </t>
+    </template>
+
+    <template id="pay_summary">
+        <div class="o_cc o_cc2 row row-cols-1 row-cols-md-3 mx-0 py-2 rounded">
+            <div class="col my-3">
+                <label for="o_pos_summary_amount" class="d-block small text-muted">
+                    Amount
+                </label>
+                <span id="o_pos_summary_amount"
+                      t-out="amount"
+                      t-options="{'widget': 'monetary', 'display_currency': currency}"
+                      class="fs-4 fw-bold"
+                />
+            </div>
+            <hr class="d-md-none m-0 text-300 opacity-100"/>
+            <div class="o_payment_summary_separator col my-3">
+                <label for="o_pos_summary_reference" class="d-block small text-muted">
+                    Order Reference
+                </label>
+                <span id="o_pos_summary_reference" t-out="reference_prefix" class="fs-4 fw-bold"/>
+            </div>
+            <hr class="d-md-none m-0 text-300 opacity-100"/>
+            <div class="o_payment_summary_separator col my-3">
+                <label for="o_pos_summary_order_id" class="d-block small text-muted">
+                    Order ID
+                </label>
+                <span id="o_pos_summary_order_id" t-out="pos_order_id" class="fs-4 fw-bold"/>
+            </div>
+        </div>
     </template>
 
     <!-- Display of /pos/pay/confirmation -->

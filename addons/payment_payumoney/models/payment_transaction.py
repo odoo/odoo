@@ -85,9 +85,16 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'payumoney':
             return
 
-        status = notification_data.get('status')
+        # Update the provider reference.
         self.provider_reference = notification_data.get('payuMoneyId')
 
+        # Update the payment method
+        payment_method_type = notification_data.get('bankcode', '')
+        payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
+        status = notification_data.get('status')
         if status == 'success':
             self._set_done()
         else:  # 'failure'

@@ -120,12 +120,12 @@
     },
     {
         content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
     },
     {
         content: "Pay Now",
-        // extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
+        extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
+        trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
     },
     {
         content: "Sign up",
@@ -257,12 +257,12 @@
     },
     {
         content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
     },
     {
         content: "Pay Now",
-        extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
-        trigger: 'button[name="o_payment_submit_button"]:visible:not(:disabled)',
+        extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
+        trigger: 'button[name="o_payment_submit_button"]:not(:disabled)',
     },
     {
         content: "Open Dropdown for See quotation",
@@ -360,11 +360,11 @@
     },
     {
         content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
     },
     {
         content: "Pay Now",
-        extra_trigger: '#payment_method label:contains("Wire Transfer") input:checked,#payment_method:not(:has("input:radio:visible"))',
+        extra_trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]:checked',
         trigger: 'button[name="o_payment_submit_button"]:visible',
     },
     {

@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <template id="checkout" inherit_id="payment.checkout">
-        <xpath expr="." position="inside">
-            <t t-call="payment_stripe.sdk_assets"/>
-        </xpath>
-    </template>
-
-    <template id="manage" inherit_id="payment.manage">
+    <template id="payment_form" inherit_id="payment.form">
         <xpath expr="." position="inside">
             <t t-call="payment_stripe.sdk_assets"/>
         </xpath>
@@ -24,5 +18,4 @@
              placed in __manifest__.py. The following declaration fix this problem -->
         <script type="text/javascript" src="https://js.stripe.com/v3/"></script>
     </template>
-
 </odoo>

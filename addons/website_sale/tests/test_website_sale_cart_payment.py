@@ -18,6 +18,7 @@ class WebsiteSaleCartPayment(PaymentCommon):
         with MockRequest(cls.env, website=cls.website):
             cls.order = cls.website.sale_get_order(force_create=True)  # Create the cart to retrieve
         cls.tx = cls.env['payment.transaction'].create({
+            'payment_method_id': cls.payment_method_id,
             'amount': cls.amount,
             'currency_id': cls.currency.id,
             'provider_id': cls.provider.id,
