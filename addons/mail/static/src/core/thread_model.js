@@ -104,7 +104,7 @@ export class Thread {
     name;
     /** @type {number|false} */
     seen_message_id;
-    /** @type {'opened' | 'folded' | 'closed'} */
+    /** @type {'open' | 'folded' | 'closed'} */
     state;
     status = "new";
     /** @type {ScrollPosition} */
