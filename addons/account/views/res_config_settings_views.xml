@@ -24,7 +24,8 @@
                         <field name="has_chart_of_accounts" invisible="1"/>
                         <field name="has_accounting_entries" invisible="1"/>
                         <block title="Fiscal Localization" name="fiscal_localization_setting_container" attrs="{'invisible': [('has_accounting_entries','!=',False)]}">
-                            <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country">
+                            <setting string="Fiscal Localization" company_dependent="1" help="Taxes, fiscal positions, chart of accounts &amp; legal statements for your country"
+                                documentation="/applications/finance/fiscal_localizations.html">
                                 <div class="content-group">
                                     <div class="row mt16">
                                         <label for="chart_template_id" string="Package" class="col-2 o_light_label"/>
@@ -37,7 +38,8 @@
                             </setting>
                         </block>
                         <block title="Taxes" name="default_taxes_setting_container">
-                            <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied to local transactions" title="These taxes are set in any new product created.">
+                            <setting id="default_taxes" string="Default Taxes" company_dependent="1" help="Default taxes applied to local transactions" title="These taxes are set in any new product created."
+                                documentation="/applications/finance/accounting/taxation/taxes/default_taxes.html">
                                 <div class="content-group">
                                     <div class="row mt16">
                                         <label string="Sales Tax" for="sale_tax_id" class="col-lg-3 o_light_label"/>
@@ -52,16 +54,19 @@
                             <setting id="rounding_method" company_dependent="1" string="Rounding Method" help="How total tax amount is computed in orders and invoices" title="A rounding per line is advised if your prices are tax-included. That way, the sum of line subtotals equals the total with taxes.">
                                 <field name="tax_calculation_rounding_method" class="o_light_label mt16" widget="radio"/>
                             </setting>
-                            <setting string="Cash Discount Tax Reduction" company_dependent="1" help="When will the tax be reduced when offering a cash discount">
+                            <setting string="Cash Discount Tax Reduction" company_dependent="1" help="When will the tax be reduced when offering a cash discount"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/cash_discounts.html">
                                 <field name="early_pay_discount_computation"/>
                             </setting>
-                            <setting id="taxcloud_settings" string="TaxCloud" help="Compute tax rates based on U.S. ZIP codes">
+                            <setting id="taxcloud_settings" string="TaxCloud" help="Compute tax rates based on U.S. ZIP codes"
+                                documentation="/applications/finance/accounting/taxation/taxes/taxcloud.html">
                                 <field name="module_account_taxcloud" widget="upgrade_boolean"/>
                             </setting>
                             <setting id="eu_service" title="If you sell goods and services to customers in a foreign EU country, you must charge VAT based on the delivery address. This rule applies regardless of where you are located." documentation="/applications/finance/accounting/taxation/taxes/eu_distance_selling.html" help="Apply VAT of the EU country to which goods and services are delivered.">
                                 <field name="module_l10n_eu_oss"/>
                             </setting>
-                            <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation." groups="account.group_account_user">
+                            <setting id="tax_exigibility" company_dependent="1" help="Allow to configure taxes using cash basis" title="Select this if the taxes should use cash basis, which will create an entry for such taxes on a given account during reconciliation." groups="account.group_account_user"
+                                documentation="/applications/finance/accounting/taxation/taxes/cash_basis_taxes.html">
                                 <field name="tax_exigibility"/>
                                 <div class="content-group" attrs="{'invisible': [('tax_exigibility', '=', False)]}">
                                     <div class="row mt16">
@@ -79,7 +84,8 @@
                             </setting>
                         </block>
                         <block title="Currencies" name="main_currency_setting_container">
-                            <setting id="main_currency" string="Main Currency" company_dependent="1" help="Main currency of your company">
+                            <setting id="main_currency" string="Main Currency" company_dependent="1" help="Main currency of your company"
+                                documentation="/applications/finance/accounting/others/multi_currency.html">
                                 <div class="content-group">
                                     <div class="row mt16">
                                         <label for="currency_id" class="col-lg-3 o_light_label"/>
@@ -91,7 +97,8 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="update_exchange_rates" attrs="{'invisible': [('group_multi_currency', '=', False)]}" help="Update exchange rates automatically">
+                            <setting id="update_exchange_rates" attrs="{'invisible': [('group_multi_currency', '=', False)]}" help="Update exchange rates automatically"
+                                documentation="/applications/finance/accounting/others/multi_currency.html">
                                 <field name="module_currency_rate_live" widget="upgrade_boolean"/>
                             </setting>
                         </block>
@@ -113,7 +120,8 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="send_invoices_followups" help="Send invoices and payment follow-ups by post">
+                            <setting id="send_invoices_followups" help="Send invoices and payment follow-ups by post"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/snailmail.html">
                                 <field name="module_snailmail_account"/>
                             </setting>
                             <setting id="invoice_delivery_addresses" documentation="/applications/sales/sales/send_quotations/different_addresses.html" help="Select specific invoice and delivery addresses">
@@ -127,7 +135,8 @@
                             <setting id="get_invoice_warnings" string="Warnings" help="Get warnings when invoicing specific customers">
                                 <field name="group_warning_account"/>
                             </setting>
-                            <setting id="smallest_coinage_currency" help="Define the smallest coinage of the currency used to pay by cash">
+                            <setting id="smallest_coinage_currency" help="Define the smallest coinage of the currency used to pay by cash"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/cash_rounding.html">
                                 <field name="group_cash_rounding"/>
                                 <div class="mt8">
                                     <button name="%(account.rounding_list_action)d" icon="fa-arrow-right"
@@ -135,7 +144,8 @@
                                             attrs="{'invisible': [('group_cash_rounding', '=', False)]}"/>
                                 </div>
                             </setting>
-                            <setting id="intrastat_statistics" help="Collect information and produce statistics on the trade in goods in Europe with intrastat">
+                            <setting id="intrastat_statistics" help="Collect information and produce statistics on the trade in goods in Europe with intrastat"
+                                documentation="/applications/finance/accounting/reporting/declarations/intrastat.html">
                                 <field name="module_account_intrastat" widget="upgrade_boolean"/>
                             </setting>
                             <setting id="default_incoterm" string="Default Incoterm" help="Default Incoterm of your company">
@@ -179,13 +189,16 @@
                             </setting>
                         </block>
                         <block title="Customer Payments" id="pay_invoice_online_setting_container">
-                            <setting help="Let your customers pay their invoices online">
+                            <setting help="Let your customers pay their invoices online"
+                                documentation="/applications/finance/accounting/receivables/customer_payments/online_payment.html">
                                 <field name="module_account_payment"/>
                             </setting>
-                            <setting id="account_batch_payment" string="Batch Payments" help="Group payments into a single batch to ease the reconciliation process">
+                            <setting id="account_batch_payment" string="Batch Payments" help="Group payments into a single batch to ease the reconciliation process"
+                                documentation="/applications/finance/accounting/receivables/customer_payments/batch.html">
                                 <field name="module_account_batch_payment" widget="upgrade_boolean"/>
                             </setting>
-                            <setting id="collect_customer_payment" title="If you check this box, you will be able to collect payments using SEPA Direct Debit mandates." string="SEPA Direct Debit (SDD)" company_dependent="1" help="Collect customer payments in one-click using Euro SEPA Service">
+                            <setting id="collect_customer_payment" title="If you check this box, you will be able to collect payments using SEPA Direct Debit mandates." string="SEPA Direct Debit (SDD)" company_dependent="1" help="Collect customer payments in one-click using Euro SEPA Service"
+                                documentation="/applications/finance/accounting/receivables/customer_payments/batch_sdd.html">
                                 <field name="module_account_sepa_direct_debit" class="oe_inline" widget="upgrade_boolean"/>
                                 <div class="content-group" attrs="{'invisible': [('module_account_sepa_direct_debit', '=', False)]}">
                                     <div class="text-warning mt16 mb4">
@@ -193,7 +206,8 @@
                                     </div>
                                 </div>
                             </setting>
-                            <setting id="qr_code_invoices" title="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="QR Codes" company_dependent="1" help="Add a payment QR-code to your invoices">
+                            <setting id="qr_code_invoices" title="Add a QR-code to your invoices so that your customers can pay instantly with their mobile banking application." string="QR Codes" company_dependent="1" help="Add a payment QR-code to your invoices"
+                                documentation="/applications/finance/accounting/receivables/customer_invoices/epc_qr_code.html">
                                 <field name="qr_code" class="oe_inline"/>
                             </setting>
                         </block>
@@ -203,16 +217,19 @@
                             </setting>
                         </block>
                         <block title="Vendor Payments" id="print_vendor_checks_setting_container">
-                            <setting id="print_checks" groups="account.group_account_user" string="Checks" company_dependent="1" help="Print checks to pay your vendors">
+                            <setting id="print_checks" groups="account.group_account_user" string="Checks" company_dependent="1" help="Print checks to pay your vendors"
+                                documentation="/applications/finance/accounting/payables/pay/check.html">
                                 <field name="module_account_check_printing"/>
                             </setting>
-                            <setting id="sepa_payments" title="If you check this box, you will be able to register your payment using SEPA." company_dependent="1" help="Pay your bills in one-click using Euro SEPA Service">
+                            <setting id="sepa_payments" title="If you check this box, you will be able to register your payment using SEPA." company_dependent="1" help="Pay your bills in one-click using Euro SEPA Service"
+                                documentation="/applications/finance/accounting/payables/pay/sepa.html">
                                 <field name="module_account_sepa" widget="upgrade_boolean"/>
                             </setting>
                         </block>
 
                         <block title="Digitization" id="account_digitalization">
-                            <setting id="account_ocr_settings" help="Digitize your PDF or scanned documents with OCR and Artificial Intelligence">
+                            <setting id="account_ocr_settings" help="Digitize your PDF or scanned documents with OCR and Artificial Intelligence"
+                                documentation="/applications/finance/accounting/payables/supplier_bills/invoice_digitization.html">
                                 <field name="module_account_invoice_extract" widget="upgrade_boolean"/>
                                 <div id="msg_invoice_extract" class="content-group" attrs="{'invisible': [('module_account_invoice_extract', '=', False)]}">
                                     <div class="text-warning mt16 mb4">
@@ -300,10 +317,12 @@
                             </block>
                         </t>
                         <block title="Analytics" id="analytic">
-                            <setting id="track_costs_revenues" title="Allows you to use the analytic accounting." groups="account.group_account_user" help="Track costs &amp; revenues by project, department, etc">
+                            <setting id="track_costs_revenues" title="Allows you to use the analytic accounting." groups="account.group_account_user" help="Track costs &amp; revenues by project, department, etc"
+                                documentation="/applications/finance/accounting/others/analytic_accounting.html">
                                 <field name="group_analytic_accounting"/>
                             </setting>
-                            <setting id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." groups="account.group_account_user" help="Use budgets to compare actual with expected revenues and costs">
+                            <setting id="account_budget" title="This allows accountants to manage analytic and crossovered budgets. Once the master budgets and the budgets are defined, the project managers can set the planned amount on each analytic account." groups="account.group_account_user" help="Use budgets to compare actual with expected revenues and costs"
+                                documentation="/applications/finance/accounting/others/adviser/budget.html">
                                 <field name="module_account_budget" widget="upgrade_boolean"/>
                             </setting>
                             <setting id="monitor_product_margins" string="Margin Analysis" help="Monitor your product margins from invoices">
