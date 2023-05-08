@@ -25,6 +25,13 @@ class ThemePreviewControlPanel extends ControlPanel {
     close() {
         this.website.goToWebsite();
     }
+
+    get display() {
+        return {
+            layoutActions: false,
+            ...this.props.display,
+        };
+    }
 }
 ThemePreviewControlPanel.template = 'website.ThemePreviewKanban.ControlPanel';
 
