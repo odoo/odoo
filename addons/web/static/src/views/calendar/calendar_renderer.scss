@@ -1,4 +1,5 @@
 .o_calendar_renderer {
+    --o-circle-padding: calc(#{map-get($spacers, 1 )} / 2);
     flex: 1 1 auto;
     min-width: 0;
     height: 100%;
@@ -228,6 +229,46 @@
             }
         }
 
+        // ====== Both Month and Year agenda
+
+        .fc-dayGridYear-view, .fc-dayGridMonth-view {
+            .fc-content-skeleton {
+                --o-cw-circle-padding: calc(#{map-get($spacers, 1 )} / 2);
+                --o-cw-color: var(--body-color);
+
+                // Realigns the background color and the number
+                padding-bottom: 0;
+
+                .fc-day-number {
+                    position: relative;
+                    padding: var(--o-circle-padding);
+                    color: var(--o-cw-color);
+
+                    &:before {
+                        content:"";
+                        z-index: -1;
+                        @include o_position-absolute($top: calc(#{var(--o-circle-padding)} * -1), $left: 50%);
+                        transform: translateX(-50%);
+                        display: none;
+                        aspect-ratio: 1/1;
+                        height: 100%;
+                        border-radius: 100%;
+                        background: var(--o-cw-bg, none);
+                        padding: var(--o-circle-padding);
+                    }
+                }
+
+                .fc-today {
+                    --o-cw-color: #{$white};
+                    --o-cw-bg: #{$o-cw-color-today-accent};
+
+                    .fc-day-number:before {
+                        display: block;
+                    }
+                }
+            }
+        }
+
         // ====== Day only
         .fc-timeGridDay-view .fc-event {
             padding: 10px;
@@ -270,7 +311,6 @@
 
             .fc-week-number {
                 background: none;
-                font-size: 1.2rem;
                 padding: 0.1rem 0.3rem 0.1rem 0 !important;
                 line-height: 1;
             }
@@ -286,7 +326,6 @@
             .fc-day-number {
                 margin: 5px;
                 padding: 0.1rem 0.3rem 0.1rem 0;
-                font-size: 1.2rem;
                 color: map-get($grays, "900");
                 font-weight: 400;
                 line-height: 1;
@@ -310,17 +349,6 @@
             }
             .fc-bg .fc-today:not(.o_calendar_disabled) {
                 background: $o-view-background-color;
-            }
-
-            .fc-content-skeleton .fc-today .fc-day-number {
-                margin-top: 3px;
-                padding: 0.4em 0.4em 0.35em;
-                border-radius: 100%;
-                min-width: 1.1em;
-                background: $o-cw-color-today-accent;
-                text-align: center;
-                color: white;
-                font-size: 1.1rem;
             }
 
             .fc-more-cell {
@@ -404,11 +432,16 @@
 
             &:not(.fc-readonly-year-view) {
                 .fc-day-top:hover > .fc-day-number {
+                    --o-cw-color: #{map-get($grays, "900")};
+                    --o-cw-bg: #{rgba(#87c0d1, 0.5)};
+
+                    position: relative;
                     font-weight: bold;
-                    border-radius: 100%;
                     text-align: center;
-                    background-color: rgba(#87c0d1, 0.5);
-                    color: map-get($grays, "900");
+
+                    &:before {
+                        display: block;
+                    }
                 }
             }
 
@@ -455,6 +488,8 @@
                     }
 
                     .fc-week.fc-row {
+                        display: flex;
+                        align-items: center;
                         min-height: 2rem;
                     }
 
