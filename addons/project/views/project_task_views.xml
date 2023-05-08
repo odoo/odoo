@@ -291,7 +291,20 @@
                         </button>
                         <button name="%(project_task_action_sub_task)d" type="action" class="oe_stat_button" icon="fa-tasks"
                             invisible="not id or subtask_count == 0" context="{'default_user_ids': user_ids, 'default_project_id': project_id, 'default_milestone_id': milestone_id}">
-                            <field name="subtask_count" widget="statinfo" string="Sub-tasks"/>
+                            <div class="o_field_widget o_stat_info">
+                                <div class="d-flex align-items-baseline gap-1">
+                                    <span class="o_stat_value order-1">
+                                        <field name="subtask_count" widget="statinfo" nolabel="1"/>
+                                    </span>
+                                    <span class="o_stat_text order-2">Sub-tasks</span>
+                                </div>
+                                <div class="d-flex align-items-baseline gap-1">
+                                    <span class="o_stat_value">
+                                        <field name="closed_subtask_count" widget="statinfo" nolabel="1"/>
+                                    </span>
+                                    <span class="o_stat_text order-2">Closed</span>
+                                </div>
+                            </div>
                         </button>
                         <button name="action_dependent_tasks" type="object" invisible="dependent_tasks_count == 0" class="oe_stat_button" icon="fa-tasks" groups="project.group_project_task_dependencies">
                             <field name="dependent_tasks_count" widget="statinfo" string="Blocking Tasks" />
@@ -502,6 +515,27 @@
                         <field name="parent_id" invisible="1" groups="base.group_no_one"/>
                         <field name="description" invisible="1"/>
                     </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="project_task_convert_to_subtask_view_form" model="ir.ui.view">
+            <field name="name">project.task.convert.to.subtask.form</field>
+            <field name="model">project.task</field>
+            <field name="arch" type="xml">
+                <form>
+                    <div class="text-muted o_row mb-3">
+                        To transform a task into a sub-task, select a parent task. Alternatively, leave the parent task field blank to convert a sub-task into a standalone task.
+                    </div>
+                    <group>
+                        <field name="project_id" invisible="1" />
+                        <field name="company_id" invisible="1" />
+                        <field name="parent_id" domain="[('id', '!=', id)]" context="{'search_default_project_id': project_id, 'search_default_open_tasks': 1}" /> 
+                    </group>
+                    <footer>
+                        <button string="Convert Task" class="btn-primary" special="save" data-hotkey="q"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
+                    </footer>
                 </form>
             </field>
         </record>
@@ -978,6 +1012,17 @@
             <field name="state">code</field>
             <field name="code">
                 model._ensure_personal_stages(); action = env["ir.actions.actions"]._for_xml_id("project.action_view_my_task")
+            </field>
+        </record>
+
+        <record id="action_server_convert_to_subtask" model="ir.actions.server">
+            <field name="name">Convert to Task/Sub-Task</field>
+            <field name="model_id" ref="project.model_project_task"/>
+            <field name="binding_model_id" ref="project.model_project_task"/>
+            <field name="binding_view_types">form</field>
+            <field name="state">code</field>
+            <field name="code">
+                action = record.action_convert_to_subtask()
             </field>
         </record>
 
