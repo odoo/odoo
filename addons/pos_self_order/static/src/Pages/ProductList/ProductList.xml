@@ -41,8 +41,8 @@
                 <t t-foreach="selfOrder.productsGroupedByTag[tag]" t-as="product" t-key="product.product_id">
                     <!-- If this is the product that we last visited, we use currentProductCard to get a reference to it -->
                     <ProductCard product="product" 
-                                currentProductCard="product.product_id === selfOrder.currentProduct and currentProductCard" 
-                                class="w-100 w-md-50 w-xl-25"/>
+                                currentProductCard="product.product_id === selfOrder.currentProduct and currentProductCard"
+                                class="'w-md-50 w-xl-25'"/>
                 </t>
             </section>
         </t>
@@ -52,7 +52,8 @@
         <t t-set="filteredProducts" t-value="filteredProducts()"/>
         <t t-if="!filteredProducts?.length" t-call="pos_self_order.NoProductsMessage"/>
         <t t-foreach="filteredProducts" t-as="product" t-key="product.product_id">
-            <ProductCard product="product" />
+            <ProductCard product="product" 
+                        class="'w-md-50 w-xl-25'"/>
         </t>
     </t>
 

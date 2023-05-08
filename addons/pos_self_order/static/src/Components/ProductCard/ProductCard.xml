@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductCard" owl="1">
-<div t-attf-class="o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white {{ this.selfOrder.page === '/products' ? 'w-md-50 w-xl-25' : '' }} px-3 py-2 overflow-hidden"
+        <div t-attf-class="{{props.class}} o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white px-3 py-2 overflow-hidden"
             t-on-click="() => this.clickOnProduct(props.product)"
             t-ref="currentProductCard">
             
@@ -13,6 +13,7 @@
                     <h3 class="mb-0" t-esc="props.product.name" />
                     <span t-if="props.orderLine?.qty" class="flex-grow-1 me-3 small text-muted"
                     t-esc="`${props.orderLine.qty} x ${selfOrder.formatMonetary(props.product.price_info.list_price + (props.orderLine?.price_extra.list_price or 0))}`" />
+                    <!-- this description represents the list of selected variants of the product -->
                     <span t-if="props.orderLine?.description" class="m-0 text-muted small break-line"
                     t-esc="props.orderLine.description" />
                     <div t-if="props.orderLine?.customer_note" class="d-inline-block m-0 text-muted small break-line">
