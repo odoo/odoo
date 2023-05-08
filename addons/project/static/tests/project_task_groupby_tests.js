@@ -67,7 +67,7 @@ QUnit.module("Project", (hooks) => {
             views: [[false, "kanban"]],
         });
 
-        assert.strictEqual(target.querySelector(".o_column_title").innerText, "🔒 Private (1)");
+        assert.strictEqual(target.querySelector(".o_column_title").innerText, "🔒 Private\n1");
     });
 
     QUnit.test("Test group label for empty project in pivot", async function (assert) {
