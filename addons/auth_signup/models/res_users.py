@@ -10,6 +10,7 @@ from dateutil.relativedelta import relativedelta
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools import mute_logger
 from odoo.tools.misc import ustr
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
@@ -142,10 +143,11 @@ class ResUsers(models.Model):
         # create a copy of the template user (attached to a specific partner_id if given)
         values['active'] = True
         try:
-            with self.env.cr.savepoint():
+            with self.env.cr.savepoint(), mute_logger('odoo.sql_db'):
                 return template_user.with_context(no_reset_password=True).copy(values)
         except Exception as e:
             # copy may failed if asked login is not available.
+            _logger.warning("Signup error: %s", ustr(e), exc_info=True)
             raise SignupError(ustr(e))
 
     def reset_password(self, login):
