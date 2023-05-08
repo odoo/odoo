@@ -268,7 +268,11 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await editInput(target, 'div[name="float_field"] input', "18.8958938598598");
-        await click(target.querySelector(".o_list_button_save"));
+        await click(
+            target.querySelector(
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_save"
+            )
+        );
         assert.strictEqual(
             target.querySelector(".o_field_widget").textContent,
             "18.896",

@@ -652,7 +652,7 @@ QUnit.module("Fields", (hooks) => {
         );
 
         await clickSave(target);
-        await click(target, ".o_form_button_create");
+        await click(target, ".o_control_panel_main_buttons .d-none .o_form_button_create");
         assert.strictEqual(
             target.querySelector("img[data-alt='Binary file']").dataset.src,
             "/web/static/img/placeholder.png",

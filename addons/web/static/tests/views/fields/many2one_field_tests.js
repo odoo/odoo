@@ -1766,7 +1766,10 @@ QUnit.module("Fields", (hooks) => {
 
         assert.containsN(target, ".o_data_row", 3);
 
-        await click(target, ".o_list_button_add");
+        await click(
+            target,
+            ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_list_button_add"
+        );
 
         assert.containsN(target, ".o_data_row", 4);
 

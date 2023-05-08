@@ -375,7 +375,10 @@ QUnit.module("Fields", (hooks) => {
                 resId: 1,
             });
 
-            await click(target, ".o_form_button_create");
+            await click(
+                target,
+                ".o_control_panel_main_buttons .d-none.d-xl-inline-flex .o_form_button_create"
+            );
             await click(target, ".o_field_many2one[name='product_id'] input");
             await click(
                 target.querySelector(".o_field_many2one[name='product_id'] .dropdown-item")
