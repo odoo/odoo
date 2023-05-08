@@ -224,7 +224,7 @@ class Task(models.Model):
             [('task_id', 'in', self.ids)],
             ['task_id'],
         )
-        task_with_timesheets_ids = [task.id for task in timesheet_data]
+        task_with_timesheets_ids = [task.id for [task] in timesheet_data]
         if task_with_timesheets_ids:
             if len(task_with_timesheets_ids) > 1:
                 warning_msg = _("These tasks have some timesheet entries referencing them. Before removing these tasks, you have to remove these timesheet entries.")
