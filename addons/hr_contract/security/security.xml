@@ -46,7 +46,7 @@
         <record id="ir_rule_hr_contract_multi_company" model="ir.rule">
             <field name="name">HR Contract: Multi Company</field>
             <field name="model_id" ref="model_hr_contract"/>
-            <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids)]</field>
         </record>
 
         <record id="ir_rule_hr_payroll_structure_type_multi_company" model="ir.rule">

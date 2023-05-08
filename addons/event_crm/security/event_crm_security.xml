@@ -5,7 +5,7 @@
             <field name="name">Event CRM: Multi Company</field>
             <field name="model_id" ref="model_event_lead_rule"/>
             <field name="groups" eval="[(4, ref('base.group_multi_company'))]"/>
-            <field name="domain_force">['|', ('company_id','=',False), ('company_id', 'in', company_ids)]</field>
+            <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
         </record>
     </data>
 </odoo>

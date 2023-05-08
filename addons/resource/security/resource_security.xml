@@ -30,12 +30,12 @@
     <record id="resource_resource_multi_company" model="ir.rule">
         <field name="name">resource.resource multi-company</field>
         <field name="model_id" ref="model_resource_resource"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="resource_calendar_leaves_rule_multi_company">
         <field name="name">resource.calendar.leaves: multi-company rule</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
-        <field name="domain_force">['|', ('company_id', '=', False), ('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 </odoo>
