@@ -47,3 +47,13 @@ class TestExpression(TransactionCase):
         for idx, fields in enumerate(fields_to_remove):
             results = [normalize_domain(utils.filter_domain_leaf(dom, lambda field: field not in fields)) for dom in domains]
             self.assertEqual(results, expected_results[idx])
+
+        # Testing field mapping 1
+        self.assertEqual(
+            ['&', '!', ('field3', '=', False), ('field3', '!=', 'test')],
+            normalize_domain(utils.filter_domain_leaf(
+                ['|', ('field1', 'in', [1, 2]), '!', ('field2', '=', False), ('field3', '!=', 'test')],
+                lambda field: field == 'field3',
+                field_name_mapping={'field2': 'field3'},
+            ))
+        )
