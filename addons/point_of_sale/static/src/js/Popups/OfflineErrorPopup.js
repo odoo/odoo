@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { _lt } from "@web/core/l10n/translation";
 
@@ -11,20 +12,25 @@ export class OfflineErrorPopup extends ErrorPopup {
     static template = "OfflineErrorPopup";
     static dontShow = false;
     static defaultProps = {
-        confirmText: _lt("Ok"),
-        cancelText: _lt("Cancel"),
-        title: _lt("Offline Error"),
-        body: _lt("Either the server is inaccessible or browser is not connected online."),
+        confirmText: _lt("Continue with limited functionalities"),
+        title: _lt("You're offline"),
+        body: _lt(
+            "Meanwhile connection is back, Odoo Point of Sale will operate limited operations. Check your connection or continue with limited functionalities"
+        ),
     };
     setup() {
         super.setup(...arguments);
-        if (this.constructor.dontShow) {
+        this.pos = usePos();
+
+        if (!this.pos.globalState.showOfflineWarning) {
             this.cancel();
+        } else {
+            this.pos.globalState.set_synch("disconnected");
         }
     }
 
-    dontShowAgain() {
-        this.constructor.dontShow = true;
+    confirm() {
+        this.pos.globalState.showOfflineWarning = false;
         this.cancel();
     }
 }
