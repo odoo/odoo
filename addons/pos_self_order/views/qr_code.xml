@@ -21,7 +21,7 @@
     <template id="qr_codes_page">
         <t t-call="web.basic_layout">
             <div class="page">
-                <h1 class="mb-5 ms-2">
+                <h1 class="mb-4 ms-2">
                     QR Code Menu
                 </h1>
                 <!-- There is a very annoying problem here:
@@ -46,17 +46,19 @@
 
     <template id="qr_code">
         <t t-set="qr_code_size" t-value="180"/>
-        <div class="d-flex flex-column col align-items-center w-25 p-2" >
-            <div class="m-2 position-relative top-0 start-0">
-                <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" 
-                    class="position-relative top-0 start-0"
-                />
-                <t t-call="pos_self_order.first_letter_of_odoo_logo_svg"/>
+        <div style="border:1px solid #e1e1e1; padding: 0px 40px;">
+            <h4 class="fw-bold text-center" style="margin-top: 20px;" t-if="table['id']">
+                Table: <t t-esc="table['name']"/>
+            </h4>
+            <div class="p-2" >
+                <div class="mt-1 mb-4 position-relative top-0 start-0">
+                    <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" 
+                        class="position-relative top-0 start-0"
+                    />
+                    <t t-call="pos_self_order.first_letter_of_odoo_logo_svg"/>
+                </div>
             </div>
         </div>
-        <h4 t-if="table['id']">
-            Table: <t t-esc="table['name']"/>
-        </h4>
     </template>
 
     <template id="first_letter_of_odoo_logo_svg">
