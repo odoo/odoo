@@ -377,6 +377,9 @@ export class ListController extends Component {
 
     get display() {
         const { controlPanel } = this.props.display;
+        if (!controlPanel) {
+            return this.props.display;
+        }
         return {
             ...this.props.display,
             controlPanel: {
