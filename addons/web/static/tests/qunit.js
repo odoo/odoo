@@ -31,6 +31,11 @@ QUnit.debug = (name, cb) => {
     QUnit.only(name, cb);
 };
 
+// TODO remove me when milk task is done
+QUnit.skipMilk = function () {
+    QUnit.skip(...arguments);
+};
+
 // need to do this outside of the setup function so it is executed quickly
 QUnit.config.autostart = false;
 

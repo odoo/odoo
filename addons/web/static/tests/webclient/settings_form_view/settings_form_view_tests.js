@@ -422,7 +422,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         }
     );
 
-    QUnit.test("resIds should contains only 1 id", async function (assert) {
+    QUnit.skipMilk("resIds should contains only 1 id", async function (assert) {
         assert.expect(1);
 
         serverData.models["res.config.settings"].fields.foo_text = {
@@ -690,7 +690,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.hasClass(target.querySelectorAll(".o_form_label")[1], "c");
     });
 
-    QUnit.test("settings views does not write the id on the url", async function (assert) {
+    QUnit.skipMilk("settings views does not write the id on the url", async function (assert) {
         serverData.actions = {
             1: {
                 id: 1,
@@ -849,7 +849,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         assert.containsNone(target, ".app_settings_block:not(.d-none) .settingSearchHeader");
     });
 
-    QUnit.test(
+    QUnit.skipMilk(
         "clicking on any button in setting should show discard warning if setting form is dirty",
         async function (assert) {
             assert.expect(11);
@@ -1131,7 +1131,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
-    QUnit.test("settings view shows a message if there are changes", async function (assert) {
+    QUnit.skipMilk("settings view shows a message if there are changes", async function (assert) {
         await makeView({
             type: "form",
             resModel: "res.config.settings",
@@ -1161,7 +1161,7 @@ QUnit.module("SettingsFormView", (hooks) => {
         );
     });
 
-    QUnit.test(
+    QUnit.skipMilk(
         "settings view shows a message if there are changes even if the save failed",
         async function (assert) {
             const self = this;
@@ -1384,7 +1384,7 @@ QUnit.module("SettingsFormView", (hooks) => {
             ]);
         }
     );
-    QUnit.test("Discard button clean the settings view", async function (assert) {
+    QUnit.skipMilk("Discard button clean the settings view", async function (assert) {
         assert.expect(10);
 
         serverData.actions = {

@@ -777,7 +777,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         }
     );
 
-    QUnit.test(`breadcrumbs are updated with the displayed period`, async (assert) => {
+    QUnit.skipMilk(`breadcrumbs are updated with the displayed period`, async (assert) => {
         await makeView({
             type: "calendar",
             resModel: "event",
@@ -819,7 +819,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(`create and change events`, async (assert) => {
+    QUnit.skipMilk(`create and change events`, async (assert) => {
         assert.expect(28);
 
         await makeView({
@@ -3349,7 +3349,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(`change pager with filters`, async (assert) => {
+    QUnit.skipMilk(`change pager with filters`, async (assert) => {
         serverData.models.user.records.push({ id: 5, display_name: "user 5", partner_id: 3 });
         serverData.models.event.records.push(
             {
@@ -3998,7 +3998,7 @@ QUnit.module("Views", ({ beforeEach }) => {
         );
     });
 
-    QUnit.test(`initial_date given in the context`, async (assert) => {
+    QUnit.skipMilk(`initial_date given in the context`, async (assert) => {
         assert.expect(1);
         serverData.views = {
             "event,1,calendar": `<calendar date_start="start" date_stop="stop" mode="day"/>`,

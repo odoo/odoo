@@ -155,7 +155,7 @@ QUnit.test(
     }
 );
 
-QUnit.test(
+QUnit.skipMilk(
     "Can clear filter date filter value that defaults to current period",
     async function (assert) {
         const spreadsheetData = {

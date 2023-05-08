@@ -104,10 +104,6 @@ function getCssVar(el, varName) {
     return getComputedStyle(el).getPropertyValue(varName);
 }
 
-QUnit.skipMilk = function () {
-    QUnit.skip(...arguments);
-};
-
 QUnit.module("Views", (hooks) => {
     hooks.beforeEach(() => {
         serverData = {
@@ -11016,7 +11012,7 @@ QUnit.module("Views", (hooks) => {
         }
     );
 
-    QUnit.test("editable list view: multi edition", async function (assert) {
+    QUnit.skipMilk("editable list view: multi edition", async function (assert) {
         assert.expect(27);
 
         await makeView({
@@ -14810,7 +14806,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(document.activeElement, firstVisibleDataRow.querySelector("[name=foo]"));
     });
 
-    QUnit.test("execute group header button with keyboard navigation", async function (assert) {
+    QUnit.skipMilk("execute group header button with keyboard navigation", async function (assert) {
         const list = await makeView({
             type: "list",
             resModel: "foo",

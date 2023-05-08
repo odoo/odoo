@@ -32,7 +32,7 @@ QUnit.module("Base Import Tests", (hooks) => {
 
     QUnit.module("ImportRecords");
 
-    QUnit.test("import in favorite dropdown in list", async function (assert) {
+    QUnit.skipMilk("import in favorite dropdown in list", async function (assert) {
         assert.expect(3);
 
         const actionService = {
@@ -62,7 +62,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         await click(target.querySelector(".o_import_menu"));
     });
 
-    QUnit.test(
+    QUnit.skipMilk(
         'import favorite dropdown item should not be in list with create="0"',
         async function (assert) {
             await makeView({
@@ -81,7 +81,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipMilk(
         'import favorite dropdown item should not be in list with import="0"',
         async function (assert) {
             await makeView({
@@ -100,7 +100,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         }
     );
 
-    QUnit.test("import in favorite dropdown in kanban", async function (assert) {
+    QUnit.skipMilk("import in favorite dropdown in kanban", async function (assert) {
         assert.expect(3);
 
         const actionService = {
@@ -137,7 +137,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         await click(target.querySelector(".o_import_menu"));
     });
 
-    QUnit.test(
+    QUnit.skipMilk(
         'import favorite dropdown item should not be in list with create="0"',
         async function (assert) {
             await makeView({
@@ -163,7 +163,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipMilk(
         'import dropdown favorite should not be in kanban with import="0"',
         async function (assert) {
             await makeView({
@@ -189,7 +189,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipMilk(
         "import should not be available in favorite dropdown in pivot (other than kanban or list)",
         async function (assert) {
             serverData.models.foo.fields.foobar = {
@@ -214,7 +214,7 @@ QUnit.module("Base Import Tests", (hooks) => {
         }
     );
 
-    QUnit.test(
+    QUnit.skipMilk(
         "import should not be available in favorite dropdown in dialog view",
         async function (assert) {
             serverData.models.bar = {

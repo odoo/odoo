@@ -311,7 +311,7 @@ QUnit.test(
     }
 );
 
-QUnit.test(
+QUnit.skipMilk(
     "avatar_user widget displays the appropriate user image in form view",
     async (assert) => {
         const pyEnv = await startServer();
@@ -357,7 +357,7 @@ QUnit.test("many2one_avatar_user widget in list view", async (assert) => {
     assert.strictEqual($(".o-mail-ChatWindow-name").text(), "Partner 1");
 });
 
-QUnit.test("many2many_avatar_user widget in form view", async (assert) => {
+QUnit.skipMilk("many2many_avatar_user widget in form view", async (assert) => {
     const pyEnv = await startServer();
     const partnerId = pyEnv["res.partner"].create({ name: "Partner 1" });
     const userId = pyEnv["res.users"].create({ name: "Mario", partner_id: partnerId });

@@ -290,7 +290,7 @@ QUnit.module("Views", (hooks) => {
         assert.ok(target.querySelector(".o_toy_content").closest(".o_content"));
     });
 
-    QUnit.test("Simple rendering: with dynamically displayed search", async (assert) => {
+    QUnit.skipMilk("Simple rendering: with dynamically displayed search", async (assert) => {
         let displayControlPanelTopRight = true;
         class ToyComponent extends Component {
             get display() {

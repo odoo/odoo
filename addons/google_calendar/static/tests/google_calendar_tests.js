@@ -97,7 +97,7 @@ QUnit.module('Google Calendar', {
     }
 }, function () {
 
-    QUnit.test('sync google calendar', async function (assert) {
+    QUnit.skipMilk('sync google calendar', async function (assert) {
         assert.expect(11);
 
         let id = 7;

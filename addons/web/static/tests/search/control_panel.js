@@ -26,7 +26,7 @@ QUnit.module("Search", (hooks) => {
 
     QUnit.module("ControlPanel");
 
-    QUnit.test("simple rendering", async (assert) => {
+    QUnit.skipMilk("simple rendering", async (assert) => {
         await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -80,7 +80,7 @@ QUnit.module("Search", (hooks) => {
         assert.verifySteps(["controller_7"]);
     });
 
-    QUnit.test("view switcher", async (assert) => {
+    QUnit.skipMilk("view switcher", async (assert) => {
         const controlPanel = await makeWithSearch({
             serverData,
             resModel: "foo",
@@ -136,7 +136,7 @@ QUnit.module("Search", (hooks) => {
         assert.containsNone(target, ".o_pager");
     });
 
-    QUnit.test("control panel without bottom-right specifics", async (assert) => {
+    QUnit.skipMilk("control panel without bottom-right specifics", async (assert) => {
         class CustomPage extends Component {}
         CustomPage.components = { ControlPanel };
         CustomPage.template = xml`

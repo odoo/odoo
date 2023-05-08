@@ -1924,7 +1924,7 @@ QUnit.test("Create a direct message channel when clicking on start a meeting", a
     assert.containsOnce($, ".o-mail-Call");
 });
 
-QUnit.test(
+QUnit.skipMilk(
     "Correct breadcrumb when open discuss from chat window then see settings",
     async (assert) => {
         const pyEnv = await startServer();

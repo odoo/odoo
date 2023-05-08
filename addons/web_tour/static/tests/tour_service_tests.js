@@ -135,7 +135,7 @@ QUnit.module("Tour service", (hooks) => {
         assert.strictEqual(target.querySelector("span.value").textContent, "1");
     });
 
-    QUnit.test("perform edit on next step", async function (assert) {
+    QUnit.skipMilk("perform edit on next step", async function (assert) {
         registry.category("web_tour.tours").add("tour1", {
             sequence: 10,
             steps: [

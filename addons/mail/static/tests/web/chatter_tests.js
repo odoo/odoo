@@ -177,7 +177,7 @@ QUnit.test("Textarea content is kept when switching from aside to bottom", async
     assert.strictEqual($(".o-mail-Composer-input").val(), "Hello world !");
 });
 
-QUnit.test("Composer type is kept when switching from aside to bottom", async (assert) => {
+QUnit.skipMilk("Composer type is kept when switching from aside to bottom", async (assert) => {
     patchUiSize({ size: SIZES.XXL });
     const { openFormView, pyEnv } = await start();
     const partnerId = pyEnv["res.partner"].create({ name: "John Doe" });

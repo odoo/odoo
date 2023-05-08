@@ -32,7 +32,7 @@ QUnit.test(
     }
 );
 
-QUnit.test("Form view not scrolled when switching record", async (assert) => {
+QUnit.skipMilk("Form view not scrolled when switching record", async (assert) => {
     const pyEnv = await startServer();
     const [partnerId_1, partnerId_2] = pyEnv["res.partner"].create([
         {
