@@ -256,3 +256,13 @@ class Task(models.Model):
         uom_hour = self.env.ref('uom.product_uom_hour')
         uom_day = self.env.ref('uom.product_uom_day')
         return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
+
+    @api.model
+    def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
+        allowed_company_ids = self.env.context['allowed_company_ids']
+        if len(allowed_company_ids) > 1:  # multi-company setting
+            # implicit assertion that there is only 1 company_id condition in the domain
+            company_cond_idx = next((index for index, item in enumerate(args) if item[0] == 'company_id'), None)
+            if company_cond_idx is not None:
+                args[company_cond_idx] = ('company_id', 'in', allowed_company_ids)
+        return super(Task, self)._name_search(name, args, operator, limit, name_get_uid)
