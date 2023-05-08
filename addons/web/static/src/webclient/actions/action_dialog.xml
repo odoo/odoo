@@ -17,7 +17,7 @@
     </xpath>
     <xpath expr="//t[@t-slot='header']" position="replace">
       <t t-call="web.ActionDialog.header">
-        <t t-set="close" t-value="props.close"/>
+        <t t-set="close" t-value="() => this.data.close()"/>
         <t t-set="fullscreen" t-value="props.isFullscreen"/>
       </t>
     </xpath>
@@ -27,7 +27,7 @@
     <xpath expr="//t[@t-slot='footer']" position="replace">
       <t t-if="!isLegacy">
         <t t-slot="buttons">
-          <button class="btn btn-primary o-default-button" t-on-click="data.close">Ok</button>
+          <button class="btn btn-primary o-default-button" t-on-click="() => this.data.close()">Ok</button>
         </t>
       </t>
     </xpath>
