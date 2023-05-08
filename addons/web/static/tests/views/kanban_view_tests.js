@@ -7951,7 +7951,7 @@ QUnit.module("Views", (hooks) => {
                     <templates>
                         <div t-name="kanban-box">
                             <field name="foo"/>
-                            <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="fa fa-arrow-right"/> Click me !</a>
+                            <a type="action" name="42" class="btn-primary" style="margin-left: 10px"><i class="oi oi-arrow-right"/> Click me !</a>
                         </div>
                     </templates>
                 </kanban>`,

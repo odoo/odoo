@@ -380,9 +380,9 @@
         </div>
         <div class="text-end d-inline-block pull-right">
             <a t-if="not user.badge_ids and badge_category" t-attf-href="/profile/ranks_badges?badge_category=#{badge_category}&amp;url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
-            class="btn btn-link btn-sm"><i class="fa fa-arrow-right"/> All Badges</a>
+            class="btn btn-link btn-sm"><i class="oi oi-arrow-right"/> All Badges</a>
             <a t-else="" t-attf-href="/profile/ranks_badges?url_origin=#{request.httprequest.path}&amp;name_origin=#{user.name}"
-            class="btn btn-link btn-sm"><i class="fa fa-arrow-right me-1"/>All Badges</a>
+            class="btn btn-link btn-sm"><i class="oi oi-arrow-right me-1"/>All Badges</a>
         </div>
     </template>
 

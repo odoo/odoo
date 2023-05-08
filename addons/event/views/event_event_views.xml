@@ -184,7 +184,7 @@
                                     </div>
                                     <div><t t-esc="luxon.DateTime.fromISO(record.date_begin.raw_value).toFormat('t')"/></div>
                                         <div t-if="record.date_begin.raw_value !== record.date_end.raw_value">
-                                            <i class="fa fa-arrow-right me-2 o_event_fontsize_09" title="End date"/>
+                                            <i class="oi oi-arrow-right me-2 o_event_fontsize_09" title="End date"/>
                                             <t t-esc="luxon.DateTime.fromISO(record.date_end.raw_value).toFormat('d MMM')"/>
                                         </div>
                                 </div>

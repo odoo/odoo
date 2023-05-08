@@ -1325,8 +1325,8 @@
                                             </div>
                                             <div class="mb-0 py-2 col-12 s_website_form_submit s_website_form_no_submit_options">
                                                 <div style="width: 200px;" class="s_website_form_label"/>
-                                                <a role="button" href="/shop/checkout" class="btn btn-secondary float-start"><span class="fa fa-chevron-left"/> Previous</a>
-                                                <a role="button" class="btn btn-primary float-end s_website_form_send" href="/shop/confirm_order">Next <span class="fa fa-chevron-right" /></a>
+                                                <a role="button" href="/shop/checkout" class="btn btn-secondary float-start"><span class="oi oi-chevron-left"/> Previous</a>
+                                                <a role="button" class="btn btn-primary float-end s_website_form_send" href="/shop/confirm_order">Next <span class="oi oi-chevron-right" /></a>
                                                 <span id="s_website_form_result"></span>
                                             </div>
                                         </div>
@@ -1520,7 +1520,7 @@
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <a role="button" href="/shop" class="btn btn-secondary mb32">
-                                                <span class="fa fa-chevron-left" />
+                                                <span class="oi oi-chevron-left" />
                                                 <span>Continue<span class="d-none d-md-inline"> Shopping</span></span>
                                             </a>
                                         </div>
@@ -1535,7 +1535,7 @@
                                                 </t>
                                                 <t t-else="">
                                                     <span>Process Checkout</span>
-                                                    <span class="fa fa-chevron-right"/>
+                                                    <span class="oi oi-chevron-right"/>
                                                 </t>
                                             </a>
                                             <t t-call="payment.express_checkout"/>
@@ -1713,12 +1713,12 @@
                             </t>
                             <div class="d-flex justify-content-between mt-3">
                                 <a role="button" href="/shop/cart" class="btn btn-secondary mb32">
-                                    <i class="fa fa-chevron-left"/>
+                                    <i class="oi oi-chevron-left"/>
                                     <span>Return to Cart</span>
                                 </a>
                                 <a role="button" href="/shop/confirm_order" class="btn btn-primary mb32">
                                     <span>Confirm</span>
-                                    <i class="fa fa-chevron-right"/>
+                                    <i class="oi oi-chevron-right"/>
                                 </a>
                             </div>
                         </div>
@@ -1909,12 +1909,12 @@
 
                                     <div class="d-flex justify-content-between">
                                         <a role="button" t-att-href="mode == ('new', 'billing') and '/shop/cart' or '/shop/checkout'" class="btn btn-secondary mb32">
-                                            <i class="fa fa-chevron-left"/>
+                                            <i class="oi oi-chevron-left"/>
                                             <span>Back</span>
                                         </a>
                                         <a role="button" href="#" class="btn btn-primary mb32 a-submit a-submit-disable a-submit-loading">
                                             <span>Next</span>
-                                            <i class="fa fa-chevron-right"/>
+                                            <i class="oi oi-chevron-right"/>
                                         </a>
                                     </div>
                                 </form>
@@ -1996,7 +1996,7 @@
                                 <a role="button" class="btn-link"
                                     groups="base.group_system"
                                     t-attf-href="/web#action=#{payment_action_id}">
-                                        <i class="fa fa-arrow-right"></i> Add payment providers
+                                        <i class="oi oi-arrow-right"></i> Add payment providers
                                 </a>
                             </div>
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
@@ -2020,7 +2020,7 @@
              class="form-check mt-2 o_accept_tc_button"/>
         <div class="float-start mt-2">
             <a role="button" href="/shop/cart" class="btn btn-secondary">
-                <i class="fa fa-chevron-left"/> Return to Cart
+                <i class="oi oi-chevron-left"/> Return to Cart
             </a>
         </div>
         <div class="float-end mt-2">
@@ -2028,8 +2028,8 @@
                     type="submit"
                     class="btn btn-primary"
                     disabled="true"
-                    data-icon-class="fa-chevron-right">
-                <t t-esc="submit_button_label"/> <i class="fa fa-chevron-right"/>
+                    data-icon-class="oi-chevron-right">
+                <t t-esc="submit_button_label"/> <i class="oi oi-chevron-right"/>
             </button>
         </div>
     </template>
@@ -2063,7 +2063,7 @@
                         </t>
                         <t t-else="">
                             <span>Proceed to Checkout</span>
-                            <span class="fa fa-chevron-right"/>
+                            <span class="oi oi-chevron-right"/>
                         </t>
                     </a>
                 </div>
@@ -2080,7 +2080,7 @@
             <div class="card-body p-xl-0">
                 <div class="toggle_summary d-xl-none">
                     <b>Your order: </b> <span id="amount_total_summary" class="monetary_field" t-field="website_sale_order.amount_total" t-options='{"widget": "monetary", "display_currency": website_sale_order.currency_id}'/>
-                    <span class='fa fa-chevron-down fa-border float-end' role="img" aria-label="Details" title="Details"></span>
+                    <span class='oi oi-chevron-down fa-border float-end' role="img" aria-label="Details" title="Details"></span>
                 </div>
                 <div t-if="not website_sale_order or not website_sale_order.website_order_line" class="alert alert-info">
                     Your cart is empty!
@@ -2360,10 +2360,10 @@
                 </div>
                 <t t-if="len(product_images) > 1">
                     <a class="carousel-control-prev" href="#o-carousel-product" role="button" data-bs-slide="prev">
-                        <span class="fa fa-chevron-left fa-2x oe_unmovable" role="img" aria-label="Previous" title="Previous"/>
+                        <span class="oi oi-chevron-left fa-2x oe_unmovable" role="img" aria-label="Previous" title="Previous"/>
                     </a>
                     <a class="carousel-control-next" href="#o-carousel-product" role="button" data-bs-slide="next">
-                        <span class="fa fa-chevron-right fa-2x oe_unmovable" role="img" aria-label="Next" title="Next"/>
+                        <span class="oi oi-chevron-right fa-2x oe_unmovable" role="img" aria-label="Next" title="Next"/>
                     </a>
                 </t>
             </div>

@@ -26,6 +26,9 @@ function iconFromString(iconString) {
     if (iconString.startsWith("fa-")) {
         icon.tag = "i";
         icon.class = `o_button_icon fa ${iconString}`;
+    } else if (iconString.startsWith("oi-")) {
+        icon.tag = "i";
+        icon.class = `o_button_icon oi ${iconString}`;
     } else {
         icon.tag = "img";
         icon.src = iconString;

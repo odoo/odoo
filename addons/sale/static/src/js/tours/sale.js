@@ -128,7 +128,7 @@ registry.category("web_tour.tours").add("sale_quote_tour", {
         auto: true,
     }, {
         trigger: ".o_field_widget[name='price_unit'] input",
-        extra_trigger: ".fa-arrow-right",  // Wait for product creation
+        extra_trigger: ".oi-arrow-right",  // Wait for product creation
         content: Markup(_t("<b>Set a price</b>.")),
         position: "right",
         run: "text 10.0"

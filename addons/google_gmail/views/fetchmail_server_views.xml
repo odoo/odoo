@@ -18,7 +18,7 @@
                     <button type="object"
                         name="open_google_gmail_uri" class="btn-link px-0"
                         attrs="{'invisible': ['|', '|', ('google_gmail_uri', '=', False), ('server_type', '!=', 'gmail'), ('google_gmail_refresh_token', '!=', False)]}">
-                        <i class="fa fa-arrow-right"/>
+                        <i class="oi oi-arrow-right"/>
                         Connect your Gmail account
                     </button>
                     <button type="object"
@@ -27,7 +27,7 @@
                         <i class="fa fa-cog" title="Edit Settings"/>
                     </button>
                     <button class="alert alert-warning d-block mt-2 text-start"
-                        icon="fa-arrow-right" type="action" role="alert"
+                        icon="oi-arrow-right" type="action" role="alert"
                         name="%(base.res_config_setting_act_window)d"
                         attrs="{'invisible': ['|', ('server_type', '!=', 'gmail'), ('google_gmail_uri', '!=', False)]}">
                         Setup your Gmail API credentials in the general settings to link a Gmail account.

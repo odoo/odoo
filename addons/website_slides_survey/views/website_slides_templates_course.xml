@@ -12,7 +12,7 @@
                     <div>Begin your <b>certification</b> today!</div>
 
                     <a t-attf-href="#{'/slides_survey/slide/get_certification_url?slide_id=%s' %(first_slide.id) if first_slide.slide_category == 'certification' and channel.total_slides == 1 else '/slides/slide/%s?fullscreen=1' %(slug(first_slide))}" class="btn btn-success mt-2 mt-sm-0">
-                        <span>Start Now</span><i class="fa fa-chevron-right ms-2 align-middle"/>
+                        <span>Start Now</span><i class="oi oi-chevron-right ms-2 align-middle"/>
                     </a>
                 </div>
             </xpath>
