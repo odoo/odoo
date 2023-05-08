@@ -1031,6 +1031,10 @@ class Users(models.Model):
         self.ensure_one()
         return not self.sudo().share
 
+    def _is_portal(self):
+        self.ensure_one()
+        return self.has_group('base.group_portal')
+
     def _is_public(self):
         self.ensure_one()
         return self.has_group('base.group_public')
