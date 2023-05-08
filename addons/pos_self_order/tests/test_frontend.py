@@ -26,21 +26,20 @@ class TestFrontend(odoo.tests.HttpCase):
         }
         self.env["product.product"].create([basic_product(i) for i in range(1, 1000)])
 
-    # def test_self_order_view_mode_tour(self):
-    #     self.start_tour(
-    #         self.pos_config._get_self_order_route(),
-    #         "pos_qr_menu_tour",
-    #         login=None,
-    #         watch=True,
-    #         step_delay=500,
-    #     )
+    def test_self_order_view_mode_tour(self):
+        self.start_tour(
+            self.pos_config._get_self_order_route(),
+            "pos_qr_menu_tour",
+            login=None,
+            watch=True,
+            step_delay=500,
+        )
 
     def test_self_order_pay_after_each_tour(self):
         # self.pos_config.self_order_table_mode = True
         self.pos_config.open_ui()
         self.start_tour(
             self.pos_config._get_self_order_route(),
-            # "pos_qr_menu_tour",
             "self_order_pay_after_each_tour",
             login=None,
             watch=True,

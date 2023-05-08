@@ -48,11 +48,12 @@ export function clickOnBackButton() {
     ];
 }
 
-export function clickOn(element, { isCheck = false } = {}) {
+export function clickOn(element, { isCheck = false, isNot = false } = {}) {
+    const selector = `.btn:contains('${element}')`;
     return [
         {
             content: `Click on '${element}' button`,
-            trigger: `.btn:contains('${element}')`,
+            trigger: isNot ? doesNotExist(selector) : selector,
             isCheck,
         },
     ];

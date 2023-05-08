@@ -6,21 +6,15 @@ import { clickOn } from "./tour_utils";
 registry.category("web_tour.tours").add("pos_qr_menu_tour", {
     test: true,
     steps: [
+        ...clickOn("My Orders", { isCheck: true, isNot: true }),
         ...clickOn("View Menu"),
-        // {
-        //     content: "Test that the `My Orders` button is not present",
-        //     trigger: "body:not(:has(a:contains('No products found')))",
-        // },
         {
             content: "Test that products are present",
             trigger: ".o_self_order_item_card",
             isCheck: true,
         },
-        // {
-        //     content: "Test that the `Add to Cart` button is not present",
-        //     // TODO: add a class name to the button
-        //     trigger: "body:not(:has(button:))",
-        // },
+        ...clickOn("Add to Cart", { isCheck: true, isNot: true }),
+
         {
             content: "Test that the 'No products found' message is not present",
             trigger: "body:not(:has(p:contains('No products found')))",

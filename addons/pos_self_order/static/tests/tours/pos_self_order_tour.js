@@ -6,11 +6,7 @@ import { clickOn, clickOnBackButton, clickOnProductCard, addProductsToCart } fro
 registry.category("web_tour.tours").add("self_order_pay_after_each_tour", {
     test: true,
     steps: [
-        // {
-        //     content: "Test that the `My Orders` button is not present",
-        //     trigger: "body:not(:has(a:contains('No products found')))",
-        //     isCheck: true,
-        // },
+        ...clickOn("My Orders", { isCheck: true, isNot: true }),
         ...clickOn("View Menu"),
         // We should now be on the product list screen
         ...addProductsToCart([1, 2]),
