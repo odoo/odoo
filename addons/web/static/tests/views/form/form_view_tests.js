@@ -9267,6 +9267,7 @@ QUnit.module("Views", (hooks) => {
         );
     });
 
+    // TODO: some weird rerender timings happening here
     QUnit.test("buttons are disabled until button box action is resolved", async function (assert) {
         const def = makeDeferred();
         const actionService = {
@@ -10796,7 +10797,9 @@ QUnit.module("Views", (hooks) => {
 
         const webClient = await createWebClient({ serverData });
         await doAction(webClient, 1);
-        await click(target.querySelector(".o_control_panel .o-kanban-button-new"));
+        await click(
+            target.querySelector(".o_control_panel_main_buttons .d-none button.o-kanban-button-new")
+        );
 
         //cannot save because there is a required field
         await click(target.querySelector(".o_control_panel .o_form_button_save"));
@@ -12141,7 +12144,7 @@ QUnit.module("Views", (hooks) => {
         });
 
         await editInput(target, ".o_field_widget[name='foo'] input", "test");
-        await click(target, ".o_form_button_create");
+        await createRecord();
         assert.verifySteps(["write"]);
         await nextTick();
         assert.containsOnce(target, ".o_error_dialog");
