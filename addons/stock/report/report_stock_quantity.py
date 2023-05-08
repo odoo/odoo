@@ -52,7 +52,7 @@ WITH
             (whs.id IS NULL OR whd.id IS NULL OR whs.id != whd.id) AND
             m.product_qty != 0 AND
             m.state NOT IN ('draft', 'cancel') AND
-            (m.state != 'done' or m.date >= ((now() at time zone 'utc')::date - interval '3month'))
+            (m.state IN ('draft', 'waiting', 'confirmed', 'partially_available', 'assigned') or m.date >= ((now() at time zone 'utc')::date - interval '3month'))
     ),
     all_sm (id, product_id, tmpl_id, product_qty, date, state, company_id, whs_id, whd_id) AS (
         SELECT sm.id, sm.product_id, sm.tmpl_id,
