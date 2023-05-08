@@ -155,12 +155,12 @@
                         <field name="has_scrap_move" invisible="True"/>
                         <field name="has_tracking" invisible="True"/>
                         <button name="action_see_move_scrap" string="Scraps" type="object"
-                            class="oe_stat_button" icon="fa-arrows-v"
+                            class="oe_stat_button" icon="oi-arrows-v"
                             attrs="{'invisible': [('has_scrap_move', '=', False)]}"/>
                         <button name="action_see_packages" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
                             attrs="{'invisible': [('has_packages', '=', False)]}"/>
-                        <button name="%(action_stock_report)d" icon="fa-arrow-up" class="oe_stat_button" string="Traceability" type="action" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('has_tracking', '=', False)]}" groups="stock.group_production_lot"/>
+                        <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" string="Traceability" type="action" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('has_tracking', '=', False)]}" groups="stock.group_production_lot"/>
                         <button name="action_view_reception_report" string="Allocation" type="object"
                             context="{'default_picking_ids': [id]}"
                             class="oe_stat_button" icon="fa-list"
@@ -169,7 +169,7 @@
                         <!-- Use the following button to avoid onchange on one2many -->
                         <button name="action_picking_move_tree"
                             class="oe_stat_button"
-                            icon="fa-arrows-v"
+                            icon="oi-arrows-v"
                             type="object"
                             help="List view of operations"
                             groups="base.group_no_one"

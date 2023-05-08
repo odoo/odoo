@@ -80,7 +80,7 @@ QUnit.module("SettingsFormView", (hooks) => {
                         <block title="Title of group Bar">
                             <setting help="this is bar" documentation="/applications/technical/web/settings/this_is_a_test.html">
                                 <field name="bar"/>
-                                <button name="buttonName" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link"/>
+                                <button name="buttonName" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link"/>
                             </setting>
                             <setting>
                                 <label string="Big BAZ" for="baz"/>

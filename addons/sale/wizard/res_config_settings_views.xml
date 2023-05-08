@@ -14,7 +14,7 @@
                             <field name="group_product_variant"/>
                             <div class="content-group" attrs="{'invisible': [('group_product_variant','=',False)]}">
                                 <div class="mt8">
-                                    <button name="%(product.attribute_action)d" icon="fa-arrow-right" type="action" string="Attributes" class="btn-link"/>
+                                    <button name="%(product.attribute_action)d" icon="oi-arrow-right" type="action" string="Attributes" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
@@ -25,7 +25,7 @@
                             <field name="group_uom"/>
                             <div class="content-group" attrs="{'invisible': [('group_uom','=',False)]}">
                                 <div class="mt8">
-                                    <button name="%(uom.product_uom_categ_form_action)d" icon="fa-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
+                                    <button name="%(uom.product_uom_categ_form_action)d" icon="oi-arrow-right" type="action" string="Units of Measure" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
@@ -51,7 +51,7 @@
                                     <field name="product_pricelist_setting" widget="radio" class="o_light_label"/>
                                 </div>
                                 <div class="mt8">
-                                    <button name="%(product.product_pricelist_action2)d" icon="fa-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
+                                    <button name="%(product.product_pricelist_action2)d" icon="oi-arrow-right" type="action" string="Pricelists" groups="product.group_product_pricelist" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
@@ -91,7 +91,7 @@
                                     Request an online payment to confirm orders
                                 </div>
                                 <div class="mt8" attrs="{'invisible': [('portal_confirmation_pay', '=', False)]}">
-                                    <button name='%(payment.action_payment_provider)d' icon="fa-arrow-right" type="action" string="Payment Providers" class="btn-link"/>
+                                    <button name='%(payment.action_payment_provider)d' icon="oi-arrow-right" type="action" string="Payment Providers" class="btn-link"/>
                                 </div>
                                 <div class="mt16" title="Days between quotation proposal and expiration. 0 days means automatic expiration is disabled">
                                     <label for="quotation_validity_days"/>

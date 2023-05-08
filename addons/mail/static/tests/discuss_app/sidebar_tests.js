@@ -830,7 +830,7 @@ QUnit.test("channel - states: close from the bus", async (assert) => {
             },
         });
     });
-    assert.containsOnce($, ".o-mail-DiscussCategory-channel .fa-chevron-right");
+    assert.containsOnce($, ".o-mail-DiscussCategory-channel .oi-chevron-right");
     assert.containsNone($, "button:contains(test)");
 });
 
@@ -851,7 +851,7 @@ QUnit.test("channel - states: open from the bus", async (assert) => {
             },
         });
     });
-    assert.containsOnce($, ".o-mail-DiscussCategory-channel .fa-chevron-down");
+    assert.containsOnce($, ".o-mail-DiscussCategory-channel .oi-chevron-down");
     assert.containsOnce($, "button:contains(test)");
 });
 
@@ -866,7 +866,7 @@ QUnit.test(
         assert.containsOnce($, "button:contains(test).o-active");
 
         await click(".o-mail-DiscussCategory span:contains(Channels)");
-        assert.containsOnce($, ".o-mail-DiscussCategory-channel .fa-chevron-right");
+        assert.containsOnce($, ".o-mail-DiscussCategory-channel .oi-chevron-right");
         assert.containsOnce($, "button:contains(test)");
 
         await click("button:contains(Inbox)");
@@ -958,7 +958,7 @@ QUnit.test("chat - states: close from the bus", async (assert) => {
             },
         });
     });
-    assert.containsOnce($, ".o-mail-DiscussCategory-chat .fa-chevron-right");
+    assert.containsOnce($, ".o-mail-DiscussCategory-chat .oi-chevron-right");
     assert.containsNone($, "button:contains(Mitchell Admin)");
 });
 
@@ -979,7 +979,7 @@ QUnit.test("chat - states: open from the bus", async (assert) => {
             },
         });
     });
-    assert.containsOnce($, ".o-mail-DiscussCategory-chat .fa-chevron-down");
+    assert.containsOnce($, ".o-mail-DiscussCategory-chat .oi-chevron-down");
     assert.containsOnce($, "button:contains(Mitchell Admin)");
 });
 
@@ -990,18 +990,18 @@ QUnit.test(
         pyEnv["discuss.channel"].create({ channel_type: "chat" });
         const { openDiscuss } = await start();
         await openDiscuss();
-        assert.containsOnce($, ".o-mail-DiscussCategory-chat .fa-chevron-down");
+        assert.containsOnce($, ".o-mail-DiscussCategory-chat .oi-chevron-down");
         assert.containsOnce($, "button:contains(Mitchell Admin)");
 
         await click("button:contains(Mitchell Admin)");
         assert.containsOnce($, "button:contains(Mitchell Admin).o-active");
 
         await click(".o-mail-DiscussCategory-chat span:contains(Direct messages)");
-        assert.containsOnce($, ".o-mail-DiscussCategory-chat .fa-chevron-right");
+        assert.containsOnce($, ".o-mail-DiscussCategory-chat .oi-chevron-right");
         assert.containsOnce($, "button:contains(Mitchell Admin)");
 
         await click("button:contains(Inbox)");
-        assert.containsOnce($, ".o-mail-DiscussCategory-chat .fa-chevron-right");
+        assert.containsOnce($, ".o-mail-DiscussCategory-chat .oi-chevron-right");
         assert.containsNone($, "button:contains(Mitchell Admin)");
     }
 );

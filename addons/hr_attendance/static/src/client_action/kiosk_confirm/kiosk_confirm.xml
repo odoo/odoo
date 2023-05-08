@@ -13,7 +13,7 @@
     <CardLayout>
 
         <button class="o_hr_attendance_back_button btn btn-block btn-secondary btn-lg d-block d-md-none py-5">
-            <i class="fa fa-chevron-left me-2"/> Go back
+            <i class="oi oi-chevron-left me-2"/> Go back
         </button>
 
         <t t-if="employeeId" t-call="hr_attendance.UserBadge">
@@ -22,7 +22,7 @@
         </t>
 
         <button t-on-click="() => this.onClickBack()" class="o_hr_attendance_back_button o_hr_attendance_back_button_md btn btn-secondary d-none d-md-inline-flex align-items-center position-absolute top-0 start-0 rounded-circle">
-            <i class="fa fa-2x fa-fw fa-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
+            <i class="oi fa-2x fa-fw oi-chevron-left me-1" role="img" aria-label="Go back" title="Go back"/>
         </button>
 
         <div t-if="employeeId" class="flex-grow-1">

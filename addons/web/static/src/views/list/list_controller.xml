@@ -95,7 +95,7 @@
                 <t t-else="">
                     <b class="me-1" t-esc="nbSelected"/> selected
                     <a t-if="isPageSelected and nbTotal > nbSelected" href="#" class="o_list_select_domain ms-3 btn btn-sm btn-info p-1 me-n2 border-0 fw-normal" t-on-click="onSelectDomain">
-                        <i class="fa fa-fw fa-arrow-right"/> Select all <span t-esc="nbTotal"/>
+                        <i class="oi oi-fw oi-arrow-right"/> Select all <span t-esc="nbTotal"/>
                     </a>
                 </t>
                 <a href="#" title="Unselect All" class="o_list_unselect_all btn btn-link py-0 ms-2" t-on-click="onUnselectAll">

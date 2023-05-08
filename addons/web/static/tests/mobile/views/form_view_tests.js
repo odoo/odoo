@@ -422,7 +422,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
             );
 
             // click on back button
-            await click(fixture, ".modal .modal-header .fa-arrow-left");
+            await click(fixture, ".modal .modal-header .oi-arrow-left");
             assert.strictEqual(
                 window.scrollY,
                 265,

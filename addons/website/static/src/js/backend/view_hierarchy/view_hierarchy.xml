@@ -13,7 +13,7 @@
                 <div t-if="siblingViews.length > 0" class="alert alert-info m-1 p-1">
                     Multiple tree exists for this view
                     <a t-foreach="siblingViews" t-as="siblingView" t-key="siblingView.id" href="#" class="o_load_hierarchy" t-on-click.stop.prevent="() => this.onShowHierarchy(siblingView.id)">
-                        <i class="fa fa-arrow-right me-1"/>
+                        <i class="oi oi-arrow-right me-1"/>
                         <t t-esc="siblingView.display_name"/>
                         &lt;<t t-esc="siblingView.key"/>&gt;
                         <t t-if="siblingView.website_id">

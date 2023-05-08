@@ -268,8 +268,8 @@ publicWidget.registry.crmPartnerAssign = publicWidget.Widget.extend({
             icons: {
                 time: 'fa fa-clock-o',
                 date: 'fa fa-calendar',
-                up: 'fa fa-chevron-up',
-                down: 'fa fa-chevron-down',
+                up: 'oi oi-chevron-up',
+                down: 'oi oi-chevron-down',
             },
         };
         $calendarInputGroup.datetimepicker(calendarOptions);

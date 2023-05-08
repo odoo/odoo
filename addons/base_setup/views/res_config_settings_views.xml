@@ -25,7 +25,7 @@
                                     </span>
                                     <a href="https://www.odoo.com/documentation/master/applications/general/users.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <br/>
-                                    <button name="%(base.action_res_users)d" icon="fa-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
+                                    <button name="%(base.action_res_users)d" icon="oi-arrow-right" type="action" string="Manage Users" class="btn-link o_web_settings_access_rights"/>
                                 </setting>
                             </block>
                         </div>
@@ -44,10 +44,10 @@
                                         </span>
                                     </div>
                                     <div class="mt8">
-                                        <button name="%(base.action_view_base_language_install)d" icon="fa-arrow-right" type="action" string="Add Languages" class="btn-link"/>
+                                        <button name="%(base.action_view_base_language_install)d" icon="oi-arrow-right" type="action" string="Add Languages" class="btn-link"/>
                                     </div>
                                     <div class="mt8" groups="base.group_no_one">
-                                        <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
+                                        <button name="%(base.res_lang_act_window)d" icon="oi-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
                                     </div>
                                 </setting>
                             </block>
@@ -61,7 +61,7 @@
                                     <br/>
                                     <field name="company_informations" class="text-muted" style="width: 90%;"/>
                                     <br/>
-                                    <button name="open_company" icon="fa-arrow-right" type="object" string="Update Info" class="btn-link"/>
+                                    <button name="open_company" icon="oi-arrow-right" type="object" string="Update Info" class="btn-link"/>
                                 </setting>
                                 <setting id="companies_setting">
                                     <field name='company_count' nolabel="1" class="w-auto ps-1 fw-bold"/>
@@ -73,7 +73,7 @@
                                     </span>
                                     <br/>
                                     <div class="mt8">
-                                        <button name="%(base.action_res_company_form)d" icon="fa-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
+                                        <button name="%(base.action_res_company_form)d" icon="oi-arrow-right" type="action" string="Manage Companies" class="btn-link"/>
                                     </div>
                                 </setting>
                                 <setting id="document_layout_setting" string="Document Layout" help="Choose the layout of your documents" company_dependent="1">
@@ -82,11 +82,11 @@
                                             <label for="external_report_layout_id" string="Layout" class="col-3 col-lg-3 o_light_label"/>
                                             <field name="external_report_layout_id" domain="[('type','=', 'qweb')]" class="oe_inline"/>
                                         </div>
-                                            <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="fa-arrow-right"/>
+                                            <button name="%(web.action_base_document_layout_configurator)d" string="Configure Document Layout" type="action" class="oe_link" icon="oi-arrow-right"/>
                                             <br groups="base.group_no_one"/>
-                                            <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one" icon="fa-arrow-right"/>
+                                            <button name="edit_external_header" string="Edit Layout" type="object" class="oe_link" groups="base.group_no_one" icon="oi-arrow-right"/>
                                             <br groups="base.group_no_one"/>
-                                            <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one" icon="fa-arrow-right"/>
+                                            <button name="%(web.action_report_externalpreview)d" string="Preview Document" type="action" class="oe_link" groups="base.group_no_one" icon="oi-arrow-right"/>
                                     </div>
                                 </setting>
                                 <field name="company_id" invisible="1"/>
@@ -114,12 +114,12 @@
                             <field name="user_default_rights"/>
                             <div class="content-group" attrs="{'invisible': [('user_default_rights','=',False)]}">
                                 <div class="mt8">
-                                    <button type="object" name="open_default_user" string="Default Access Rights" icon="fa-arrow-right" class="btn-link"/>
+                                    <button type="object" name="open_default_user" string="Default Access Rights" icon="oi-arrow-right" class="btn-link"/>
                                 </div>
                             </div>
                         </setting>
                         <setting string="API Keys" help="API Keys allow your users to access Odoo with external tools when multi-factor authentication is enabled." groups="base.group_system">
-                            <button type="action" name="%(base.action_apikeys_admin)d" string="Manage API Keys" icon="fa-arrow-right" class="btn-link"/>
+                            <button type="action" name="%(base.action_apikeys_admin)d" string="Manage API Keys" icon="oi-arrow-right" class="btn-link"/>
                         </setting>
                         <setting string="Import &amp; Export" help="Allow users to import data from CSV/XLS/XLSX/ODS files" documentation="/applications/general/export_import_data.html" groups="base.group_no_one" id="allow_import">
                             <field name="module_base_import" />
