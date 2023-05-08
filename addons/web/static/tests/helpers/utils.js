@@ -410,7 +410,7 @@ export async function clickSave(htmlElement) {
     }
     const listSaveButtons = htmlElement.querySelectorAll(".o_list_button_save");
     if (listSaveButtons.length) {
-        return listSaveButtons.length === 2 ? click(listSaveButtons[1]) : click(listSaveButtons);
+        return listSaveButtons.length >= 2 ? click(listSaveButtons[1]) : click(listSaveButtons[0]);
     } else {
         throw new Error("No save button found to be clicked.");
     }

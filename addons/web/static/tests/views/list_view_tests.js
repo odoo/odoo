@@ -86,6 +86,15 @@ function getGroup(position) {
     return target.querySelectorAll(".o_group_header")[position - 1];
 }
 
+function clickAdd() {
+    const listAddButtons = target.querySelectorAll(".o_list_button_add");
+    if (listAddButtons.length) {
+        return listAddButtons.length >= 2 ? click(listAddButtons[1]) : click(listAddButtons[0]);
+    } else {
+        throw new Error("No add button found to be clicked.");
+    }
+}
+
 /**
  * @param {Element} el
  * @param {string} varName
@@ -17417,7 +17426,7 @@ QUnit.module("Views", (hooks) => {
                     </tree>`,
         });
 
-        await click($(".o_list_button_add:visible").get(0));
+        await clickAdd();
 
         assert.containsOnce(target, ".o_selected_row");
         assert.containsOnce(target, "div[name=foo] input:focus");
