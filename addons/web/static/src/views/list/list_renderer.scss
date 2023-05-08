@@ -16,6 +16,11 @@
         }
     }
 
+    th, td {
+        // This fixes a bug that was hidding part of cell borders on Firefox.
+        background-clip: padding-box;
+    }
+
     .o_list_view &  {
         --ListRenderer-thead-padding-y: #{$table-cell-padding-y-sm};
         --ListRenderer-table-padding-y: #{$o-horizontal-padding};
