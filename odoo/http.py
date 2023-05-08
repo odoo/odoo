@@ -198,10 +198,10 @@ class WebRequest(object):
     def __init__(self, httprequest):
         self.httprequest = httprequest
         self.httpresponse = None
-        self.disable_db = False
         self.endpoint = None
         self.endpoint_arguments = None
         self.auth_method = None
+        self._db = self.session.db
         self._cr = None
         self._uid = None
         self._context = None
@@ -285,7 +285,7 @@ class WebRequest(object):
             finally:
                 self._cr.close()
         # just to be sure no one tries to re-use the request
-        self.disable_db = True
+        self._db = None
         self.uid = None
 
     def set_handler(self, endpoint, arguments, auth):
@@ -393,7 +393,9 @@ class WebRequest(object):
         The database linked to this request. Can be ``None``
         if the current request uses the ``none`` authentication.
         """
-        return self.session.db if not self.disable_db else None
+        if not self._db:
+            self._db = self.session.db
+        return self._db
 
     def csrf_token(self, time_limit=None):
         """ Generates and returns a CSRF token for the current session
@@ -1033,7 +1035,6 @@ class OpenERPSession(sessions.Session):
         self.rotate = True
         self.db = db
         self.login = login
-        request.disable_db = False
 
         user = request.env(user=uid)['res.users'].browse(uid)
         if not user._mfa_url():
