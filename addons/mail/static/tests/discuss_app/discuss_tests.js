@@ -294,7 +294,7 @@ QUnit.test("Posting message should transform relevant data to emoji.", async (as
     await openDiscuss(channelId);
     await insertText(".o-mail-Composer-input", "test :P :laughing:");
     await click(".o-mail-Composer-send");
-    assert.equal($(".o-mail-Message-body").text(), "test 😛 😆");
+    assert.containsOnce($, ".o-mail-Message-body:contains(test 😛 😆)");
 });
 
 QUnit.test(
