@@ -131,7 +131,7 @@ function pay() {
 function payWithDemo() {
     return [{
         content: 'eCommerce: select Test payment provider',
-        trigger: '.o_payment_option_card:contains("Demo")'
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="demo"]'
     }, {
         content: 'eCommerce: add card number',
         trigger: 'input[name="customer_input"]',
@@ -148,7 +148,7 @@ function payWithDemo() {
 function payWithTransfer(redirect=false) {
     const first_step = {
         content: "Select `Wire Transfer` payment method",
-        trigger: '#payment_method label:contains("Wire Transfer")',
+        trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
     }
     if (!redirect) {
         return [

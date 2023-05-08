@@ -54,7 +54,7 @@ class TestPaymentTransaction(MercadoPagoCommon, PaymentHttpCommon):
             processing_values = tx._get_processing_values()
         form_info = self._extract_values_from_html_form(processing_values['redirect_form_html'])
         self.assertEqual(form_info['action'], 'https://dummy.com')
-        self.assertEqual(form_info['method'], 'post')
+        self.assertEqual(form_info['method'], 'get')
         self.assertDictEqual(form_info['inputs'], {})
 
     def test_processing_notification_data_confirms_transaction(self):

@@ -29,18 +29,6 @@ class PaymentLinkWizard(models.TransientModel):
                         amount=format_amount(wizard.env, remaining_amount, wizard.currency_id),
                     )
 
-    def _get_payment_provider_available(self, res_model, res_id, **kwargs):
-        """ Select and return the providers matching the criteria.
-
-        :param str res_model: active model
-        :param int res_id: id of 'active_model' record
-        :return: The compatible providers
-        :rtype: recordset of `payment.provider`
-        """
-        if res_model == 'sale.order':
-            kwargs['sale_order_id'] = res_id
-        return super()._get_payment_provider_available(**kwargs)
-
     def _get_additional_link_values(self):
         """ Override of `payment` to add `sale_order_id` to the payment link values.
 

@@ -25,7 +25,7 @@ registry.category("web_tour.tours").add('check_free_delivery', {
         },
         {
             content: "Select `Wire Transfer` payment method",
-            trigger: '#payment_method label:contains("Wire Transfer")',
+            trigger: 'input[name="o_payment_radio"][data-payment-method-code="wire_transfer"]',
         },
         tourUtils.pay(),
         {

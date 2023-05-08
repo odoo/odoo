@@ -100,6 +100,7 @@ class PaymentTransaction(models.Model):
             self._set_canceled(_("The customer left the payment page."))
             return
 
+        # Update the provider reference.
         txn_id = notification_data.get('txn_id')
         txn_type = notification_data.get('txn_type')
         if not all((txn_id, txn_type)):
@@ -112,6 +113,12 @@ class PaymentTransaction(models.Model):
         self.provider_reference = txn_id
         self.paypal_type = txn_type
 
+        # Force PayPal as the payment method if it exists.
+        self.payment_method_id = self.env['payment.method'].search(
+            [('code', '=', 'paypal')], limit=1
+        ) or self.payment_method_id
+
+        # Update the payment state.
         payment_status = notification_data.get('payment_status')
 
         if payment_status in PAYMENT_STATUS_MAPPING['pending']:

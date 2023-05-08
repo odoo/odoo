@@ -5,8 +5,6 @@ import logging
 from odoo import _, fields, models
 from odoo.exceptions import UserError, ValidationError
 
-from odoo.addons.payment import utils as payment_utils
-
 _logger = logging.getLogger(__name__)
 
 
@@ -159,8 +157,10 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'demo':
             return
 
+        # Update the provider reference.
         self.provider_reference = f'demo-{self.reference}'
 
+        # Create the token.
         if self.tokenize:
             # The reasons why we immediately tokenize the transaction regardless of the state rather
             # than waiting for the payment method to be validated ('authorized' or 'done') like the
@@ -170,6 +170,7 @@ class PaymentTransaction(models.Model):
             #   said simulated state.
             self._demo_tokenize_from_notification_data(notification_data)
 
+        # Update the payment state.
         state = notification_data['simulated_state']
         if state == 'pending':
             self._set_pending()
@@ -200,10 +201,10 @@ class PaymentTransaction(models.Model):
         state = notification_data['simulated_state']
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
+            'payment_method_id': self.payment_method_id.id,
             'payment_details': notification_data['payment_details'],
             'partner_id': self.partner_id.id,
             'provider_ref': 'fake provider reference',
-            'verified': True,
             'demo_simulated_state': state,
         })
         self.write({

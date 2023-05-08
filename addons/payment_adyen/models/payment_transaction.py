@@ -9,7 +9,7 @@ from odoo.tools import format_amount
 
 from odoo.addons.payment import utils as payment_utils
 from odoo.addons.payment_adyen import utils as adyen_utils
-from odoo.addons.payment_adyen.const import CURRENCY_DECIMALS, RESULT_CODES_MAPPING
+from odoo.addons.payment_adyen import const
 
 _logger = logging.getLogger(__name__)
 
@@ -33,7 +33,7 @@ class PaymentTransaction(models.Model):
             return res
 
         converted_amount = payment_utils.to_minor_currency_units(
-            self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
+            self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
         )
         return {
             'converted_amount': converted_amount,
@@ -61,7 +61,7 @@ class PaymentTransaction(models.Model):
             raise UserError("Adyen: " + _("The transaction is not linked to a token."))
 
         converted_amount = payment_utils.to_minor_currency_units(
-            self.amount, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
+            self.amount, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
         )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
@@ -71,7 +71,7 @@ class PaymentTransaction(models.Model):
             },
             'reference': self.reference,
             'paymentMethod': {
-                'recurringDetailReference': self.token_id.provider_ref,
+                'storedPaymentMethodId': self.token_id.provider_ref,
             },
             'shopperReference': self.token_id.adyen_shopper_reference,
             'recurringProcessingModel': 'Subscription',
@@ -103,7 +103,7 @@ class PaymentTransaction(models.Model):
             )
         except ValidationError as e:
             if self.operation == 'offline':
-                self._set_error(e)  # Log the error message on linked documents' chatter.
+                self._set_error(str(e))  # Log the error message on linked documents' chatter.
                 return  # There is nothing to process.
             else:
                 raise e
@@ -132,7 +132,7 @@ class PaymentTransaction(models.Model):
         converted_amount = payment_utils.to_minor_currency_units(
             -refund_tx.amount,  # The amount is negative for refund transactions
             refund_tx.currency_id,
-            arbitrary_decimal_number=CURRENCY_DECIMALS.get(refund_tx.currency_id.name)
+            arbitrary_decimal_number=const.CURRENCY_DECIMALS.get(refund_tx.currency_id.name)
         )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
@@ -172,7 +172,7 @@ class PaymentTransaction(models.Model):
 
         amount_to_capture = amount_to_capture or self.amount
         converted_amount = payment_utils.to_minor_currency_units(
-            amount_to_capture, self.currency_id, CURRENCY_DECIMALS.get(self.currency_id.name)
+            amount_to_capture, self.currency_id, const.CURRENCY_DECIMALS.get(self.currency_id.name)
         )
         data = {
             'merchantAccount': self.provider_id.adyen_merchant_account,
@@ -342,8 +342,6 @@ class PaymentTransaction(models.Model):
         :param payment.transaction source_tx: The source transaction for which a new operation is
                                               initiated.
         :param dict notification_data: The notification data sent by the provider
-        :param string operation: The operation of the child transaction, e.g. 'refund'. Defaults to
-                                 `self.operation`.
         :return: The newly created child transaction.
         :rtype: payment.transaction
         :raise ValidationError: If inconsistent data were received.
@@ -378,20 +376,35 @@ class PaymentTransaction(models.Model):
         # webhook notification.
         event_code = notification_data.get('eventCode', 'AUTHORISATION')
 
-        # Handle the provider reference. If the event code is 'CAPTURE' or 'CANCELLATION', we
+        # Update the provider reference. If the event code is 'CAPTURE' or 'CANCELLATION', we
         # discard the pspReference as it is different from the original pspReference of the tx.
         if 'pspReference' in notification_data and event_code in ['AUTHORISATION', 'REFUND']:
             self.provider_reference = notification_data.get('pspReference')
 
-        # Handle the payment state
+        # Update the payment method.
+        payment_method_data = notification_data.get('paymentMethod', '')
+        if isinstance(payment_method_data, dict):  # Not from webhook: the data contain the PM code.
+            payment_method_type = payment_method_data['type']
+            if payment_method_type == 'scheme':  # card
+                payment_method_code = payment_method_data['brand']
+            else:
+                payment_method_code = payment_method_type
+        else:  # Sent from the webhook: the PM code is directly received as a string.
+            payment_method_code = payment_method_data
+
+        payment_method = self.env['payment.method']._get_from_code(
+            payment_method_code, mapping=const.PAYMENT_METHODS_MAPPING
+        )
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         payment_state = notification_data.get('resultCode')
         refusal_reason = notification_data.get('refusalReason') or notification_data.get('reason')
         if not payment_state:
             raise ValidationError("Adyen: " + _("Received data with missing payment state."))
-
-        if payment_state in RESULT_CODES_MAPPING['pending']:
+        if payment_state in const.RESULT_CODES_MAPPING['pending']:
             self._set_pending()
-        elif payment_state in RESULT_CODES_MAPPING['done']:
+        elif payment_state in const.RESULT_CODES_MAPPING['done']:
             additional_data = notification_data.get('additionalData', {})
             has_token_data = 'recurring.recurringDetailReference' in additional_data
             if self.tokenize and has_token_data:
@@ -410,9 +423,9 @@ class PaymentTransaction(models.Model):
             # will not be triggered by a customer browsing the transaction from the portal.
             if self.operation == 'refund':
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
-        elif payment_state in RESULT_CODES_MAPPING['cancel']:
+        elif payment_state in const.RESULT_CODES_MAPPING['cancel']:
             self._set_canceled()
-        elif payment_state in RESULT_CODES_MAPPING['error']:
+        elif payment_state in const.RESULT_CODES_MAPPING['error']:
             if event_code in ['AUTHORISATION', 'REFUND']:
                 _logger.warning(
                     "the transaction with reference %s underwent an error. reason: %s",
@@ -437,7 +450,7 @@ class PaymentTransaction(models.Model):
                     self._set_error(_(failed_capture_msg, self.reference))
                 else:  # source tx with failed capture stays in its state, could be captured again
                     self._log_message_on_linked_documents(_(failed_capture_msg, self.reference))
-        elif payment_state in RESULT_CODES_MAPPING['refused']:
+        elif payment_state in const.RESULT_CODES_MAPPING['refused']:
             _logger.warning(
                 "the transaction with reference %s was refused. reason: %s",
                 self.reference, refusal_reason
@@ -465,11 +478,11 @@ class PaymentTransaction(models.Model):
         additional_data = notification_data['additionalData']
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
+            'payment_method_id': self.payment_method_id.id,
             'payment_details': additional_data.get('cardSummary'),
             'partner_id': self.partner_id.id,
             'provider_ref': additional_data['recurring.recurringDetailReference'],
             'adyen_shopper_reference': additional_data['recurring.shopperReference'],
-            'verified': True,  # The payment is authorized, so the payment method is valid
         })
         self.write({
             'token_id': token,

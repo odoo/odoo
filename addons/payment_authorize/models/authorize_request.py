@@ -37,7 +37,6 @@ class AuthorizeAPI:
         self.state = provider.state
         self.name = provider.authorize_login
         self.transaction_key = provider.authorize_transaction_key
-        self.payment_method_type = provider.authorize_payment_method_type
 
     def _make_request(self, operation, data=None):
         request = {
@@ -80,10 +79,12 @@ class AuthorizeAPI:
                 'x_response_reason_text': response.get('err_msg')
             }
         else:
+            tx_response = response.get('transactionResponse', {})
             return {
-                'x_response_code': response.get('transactionResponse', {}).get('responseCode'),
-                'x_trans_id': response.get('transactionResponse', {}).get('transId'),
+                'x_response_code': tx_response.get('responseCode'),
+                'x_trans_id': tx_response.get('transId'),
                 'x_type': operation,
+                'payment_method_code': tx_response.get('accountType'),
             }
 
     # Customer profiles
@@ -137,7 +138,7 @@ class AuthorizeAPI:
         })
 
         payment = response.get('paymentProfile', {}).get('payment', {})
-        if self.payment_method_type == 'credit_card':
+        if 'creditCard' in payment:
             # Authorize.net pads the card and account numbers with X's.
             res['payment_details'] = payment.get('creditCard', {}).get('cardNumber')[-4:]
         else:

@@ -9,7 +9,7 @@ from odoo import _, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_razorpay.const import PAYMENT_STATUS_MAPPING
+from odoo.addons.payment_razorpay import const
 from odoo.addons.payment_razorpay.controllers.main import RazorpayController
 
 
@@ -71,6 +71,7 @@ class PaymentTransaction(models.Model):
             'partner_name': self.partner_name,
             'partner_email': self.partner_email,
             'partner_phone': phone,
+            'method': self.payment_method_code,
             'return_url': url_join(
                 base_url, f'{RazorpayController._return_url}?{url_encode(return_url_params)}'
             ),
@@ -261,27 +262,37 @@ class PaymentTransaction(models.Model):
                 "Response of '/payments' request for transaction with reference %s:\n%s",
                 self.reference, pprint.pformat(entity_data)
             )
+
+        # Update the provider reference.
         entity_id = entity_data.get('id')
         if not entity_id:
             raise ValidationError("Razorpay: " + _("Received data with missing entity id."))
         self.provider_reference = entity_id
 
+        # Update the payment method.
+        payment_method_type = entity_data.get('method', '')
+        if payment_method_type == 'card':
+            payment_method_type = entity_data.get('card', {}).get('network').lower()
+        payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         entity_status = entity_data.get('status')
         if not entity_status:
             raise ValidationError("Razorpay: " + _("Received data with missing status."))
 
-        if entity_status in PAYMENT_STATUS_MAPPING['pending']:
+        if entity_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
-        elif entity_status in PAYMENT_STATUS_MAPPING['authorized']:
+        elif entity_status in const.PAYMENT_STATUS_MAPPING['authorized']:
             self._set_authorized()
-        elif entity_status in PAYMENT_STATUS_MAPPING['done']:
+        elif entity_status in const.PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
 
             # Immediately post-process the transaction if it is a refund, as the post-processing
             # will not be triggered by a customer browsing the transaction from the portal.
             if self.operation == 'refund':
                 self.env.ref('payment.cron_post_process_payment_tx')._trigger()
-        elif entity_status in PAYMENT_STATUS_MAPPING['error']:
+        elif entity_status in const.PAYMENT_STATUS_MAPPING['error']:
             _logger.warning(
                 "The transaction with reference %s underwent an error. Reason: %s",
                 self.reference, entity_data.get('error_description')

@@ -74,5 +74,6 @@ class PaymentProvider(models.Model):
                 values['referenceCode'],
                 float_repr(float(values['amount']), 2),
                 values['currency'],
+                values['paymentMethods'],
             ])
         return md5(data_string.encode('utf-8')).hexdigest()

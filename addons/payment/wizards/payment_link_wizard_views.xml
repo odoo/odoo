@@ -19,14 +19,10 @@
                         <field name="partner_id" invisible="1"/>
                         <field name="partner_email" invisible="1"/>
                         <field name="amount_max" invisible="1"/>
-                        <field name="available_provider_ids" invisible="1"/>
-                        <field name="has_multiple_providers" invisible="1"/>
                         <field name="description"/>
                         <field name="amount"/>
                         <field name="warning_message" invisible="1"/>
                         <field name="currency_id" invisible="1"/>
-                        <field name="payment_provider_selection"
-                            invisible="not has_multiple_providers"/>
                     </group>
                 </group>
                 <div name="payment_link_warning_information"
@@ -39,7 +35,7 @@
                     <field name="link"
                            string="Generate and Copy Payment Link"
                            readonly="1"
-                           disabled="warning_message != ''"
+                           disabled="bool(warning_message)"
                            widget="CopyClipboardButton"
                            data-hotkey="q"/>
                     <button string="Close"

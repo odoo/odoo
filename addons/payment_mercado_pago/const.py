@@ -27,6 +27,12 @@ SUPPORTED_CURRENCIES = [
     'VES',  # Sovereign Bolivar
 ]
 
+# Mapping of payment method codes to Mercado Pago codes.
+PAYMENT_METHODS_MAPPING = {
+    'card': 'debit_card,credit_card,prepaid_card',
+    'paypal': 'digital_wallet',
+}
+
 # Mapping of transaction states to Mercado Pago payment statuses.
 # See https://www.mercadopago.com.mx/developers/en/reference/payments/_payments_id/get.
 TRANSACTION_STATUS_MAPPING = {

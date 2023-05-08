@@ -26,7 +26,11 @@ class PaymentRefundWizard(models.TransientModel):
         string="Refund Amount", compute='_compute_amount_to_refund', store=True, readonly=False
     )
     currency_id = fields.Many2one(string="Currency", related='transaction_id.currency_id')
-    support_refund = fields.Selection(related='transaction_id.provider_id.support_refund')
+    support_refund = fields.Selection(
+        string="Type of Refund Supported",
+        selection=[('full_only', "Full Only"), ('partial', "Partial")],
+        compute='_compute_support_refund',
+    )
     has_pending_refund = fields.Boolean(
         string="Has a pending refund", compute='_compute_has_pending_refund'
     )
@@ -50,6 +54,18 @@ class PaymentRefundWizard(models.TransientModel):
         """ Set the default amount to refund to the amount available for refund. """
         for wizard in self:
             wizard.amount_to_refund = wizard.amount_available_for_refund
+
+    @api.depends('transaction_id.provider_id', 'transaction_id.payment_method_id')
+    def _compute_support_refund(self):
+        for wizard in self:
+            p_support_refund = wizard.transaction_id.provider_id.support_refund
+            pm_support_refund = wizard.transaction_id.payment_method_id.support_refund
+            if not p_support_refund or not pm_support_refund:
+                wizard.support_refund = False
+            elif p_support_refund == 'full_only' or pm_support_refund == 'full_only':
+                wizard.support_refund = 'full_only'
+            else:  # Both support partial refunds.
+                wizard.support_refund = 'partial'
 
     @api.depends('payment_id')  # To always trigger the compute
     def _compute_has_pending_refund(self):

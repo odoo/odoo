@@ -1,13 +1,14 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
 import logging
 import pprint
 
 from odoo import _, api, fields, models
-from odoo.fields import Command
 from odoo.exceptions import UserError, ValidationError
+from odoo.fields import Command
 
-from .authorize_request import AuthorizeAPI
+from odoo.addons.payment_authorize.models.authorize_request import AuthorizeAPI
 
 _logger = logging.getLogger(__name__)
 
@@ -27,25 +28,8 @@ class PaymentProvider(models.Model):
     authorize_client_key = fields.Char(
         string="API Client Key",
         help="The public client key. To generate directly from Odoo or from Authorize.Net backend.")
-    authorize_payment_method_type = fields.Selection(
-        string="Allow Payments From",
-        help="Determines with what payment method the customer can pay.",
-        selection=[('credit_card', "Credit Card"), ('bank_account', "Bank Account (USA Only)")],
-        default='credit_card',
-        required_if_provider='authorize',
-    )
 
     # === CONSTRAINT METHODS ===#
-
-    @api.constrains('authorize_payment_method_type')
-    def _check_payment_method_type(self):
-        for provider in self.filtered(lambda p: p.code == "authorize"):
-            if self.env['payment.token'].search([('provider_id', '=', provider.id)], limit=1):
-                raise ValidationError(_(
-                    "There are active tokens linked to this provider. To change the payment method "
-                    "type, please disable the provider and duplicate it. Then, change the payment "
-                    "method type on the duplicated provider."
-                ))
 
     # Authorize.Net supports only one currency: "One gateway account is required for each currency"
     # See https://community.developer.authorize.net/t5/The-Authorize-Net-Developer-Blog/Authorize-Net-UK-Europe-Update/ba-p/35957
@@ -67,24 +51,6 @@ class PaymentProvider(models.Model):
             'support_refund': 'full_only',
             'support_tokenization': True,
         })
-
-    # === ONCHANGE METHODS ===#
-
-    @api.onchange('authorize_payment_method_type')
-    def _onchange_authorize_payment_method_type(self):
-        if self.authorize_payment_method_type == 'bank_account':
-            self.display_as = _("Bank (powered by Authorize)")
-            self.payment_method_ids = [Command.clear()]
-        else:
-            self.display_as = _("Credit Card (powered by Authorize)")
-            self.payment_method_ids = [Command.set([self.env.ref(pm_xml_id).id for pm_xml_id in (
-                'payment.payment_method_maestro',
-                'payment.payment_method_mastercard',
-                'payment.payment_method_discover',
-                'payment.payment_method_diners_club_intl',
-                'payment.payment_method_jcb',
-                'payment.payment_method_visa',
-            )])]
 
     # === ACTION METHODS ===#
 
@@ -138,3 +104,20 @@ class PaymentProvider(models.Model):
             return res
 
         return self.available_currency_ids[0]
+
+    def _authorize_get_inline_form_values(self):
+        """ Return a serialized JSON of the required values to render the inline form.
+
+        Note: `self.ensure_one()`
+
+        :return: The JSON serial of the required values to render the inline form.
+        :rtype: str
+        """
+        self.ensure_one()
+
+        inline_form_values = {
+            'state': self.state,
+            'login_id': self.authorize_login,
+            'client_key': self.authorize_client_key,
+        }
+        return json.dumps(inline_form_values)

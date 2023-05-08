@@ -1,32 +1,27 @@
 /** @odoo-module **/
 
 import { debounce } from '@web/core/utils/timing';
-import checkoutForm from '@payment/js/checkout_form';
 import publicWidget from '@web/legacy/js/public/public_widget';
 
+import PaymentForm from '@payment/js/payment_form';
+
 const websiteSalePaymentMixin = {
+
+    // #=== WIDGET LIFECYCLE ===#
 
     /**
      * @override
      */
-    init: function () {
+    init() {
         this._onClickTCCheckbox = debounce(this._onClickTCCheckbox, 100, true);
         this._super(...arguments);
     },
 
-    /**
-     * @override
-     */
-    start: async function () {
-        this.$checkbox = this.$('#checkbox_tc');
-        this.$submitButton = this.$('button[name="o_payment_submit_button"]');
+    prepareInputs() {
+        this.$checkbox = $(document.getElementById('checkbox_tc'));
+        this.$submitButton = $(document.querySelector('[name="o_payment_submit_button"]'));
         this._adaptConfirmButton();
-        return await this._super(...arguments);
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
 
     /**
      * Update the data on the submit button with the status of the Terms and Conditions input.
@@ -34,7 +29,7 @@ const websiteSalePaymentMixin = {
      * @private
      * @return {void}
      */
-    _adaptConfirmButton: function () {
+    _adaptConfirmButton() {
         if (this.$checkbox.length > 0) {
             const disabledReasons = this.$submitButton.data('disabled_reasons') || {};
             disabledReasons.tc = !this.$checkbox.prop('checked');
@@ -44,32 +39,25 @@ const websiteSalePaymentMixin = {
 
 };
 
-checkoutForm.include(Object.assign({}, websiteSalePaymentMixin, {
-    events: Object.assign({}, checkoutForm.prototype.events, {
-        'change #checkbox_tc': '_onClickTCCheckbox',
-    }),
+PaymentForm.include(Object.assign({}, websiteSalePaymentMixin, {
 
-    //----------------------------------------------------------------------
-    // Private
-    //----------------------------------------------------------------------
+    // #=== WIDGET LIFECYCLE ===#
 
     /**
-     * Verify that the Terms and Condition checkbox is checked.
-     *
-     * @override method from @payment/js/payment_form_mixin
-     * @private
-     * @return {boolean} Whether the submit button can be enabled
+     * @override
      */
-    _isButtonReady: function () {
-        const disabledReasonFound = Object.values(
-                this.$submitButton.data('disabled_reasons') || {}
-            ).includes(true);
-        return !disabledReasonFound && this._super();
+    async start() {
+        this.prepareInputs();
+        if (this.$checkbox.length > 0) { // The checkbox is outside the payment form.
+            this.$checkbox[0].addEventListener('change', () => this._onClickTCCheckbox());
+        }
+        if (this.$submitButton.length > 0) {  // The button is outside the payment form.
+            this.$submitButton[0].addEventListener('click', ev => this._submitForm(ev));
+        }
+        return await this._super(...arguments);
     },
 
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
+    // #=== EVENT HANDLERS ===#
 
     /**
      * Enable the submit button if it all conditions are met.
@@ -77,12 +65,26 @@ checkoutForm.include(Object.assign({}, websiteSalePaymentMixin, {
      * @private
      * @return {void}
      */
-    _onClickTCCheckbox: function () {
+    _onClickTCCheckbox() {
+        this._disableButton();
         this._adaptConfirmButton();
+        this._enableButton();
+    },
 
-        if (!this._enableButton()) {
-            this._disableButton(false);
-        }
+    // #=== PAYMENT FLOW ===#
+
+    /**
+     * Verify that the Terms and Condition checkbox is checked.
+     *
+     * @override method from @payment/js/payment_form
+     * @private
+     * @return {boolean} Whether the form can be submitted.
+     */
+    _canSubmit() {
+        const disabledReasonFound = Object.values(
+            this.$submitButton.data('disabled_reasons') || {}
+        ).includes(true);
+        return !disabledReasonFound && this._super();
     },
 
 }));
@@ -94,12 +96,13 @@ publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend(
             'change #checkbox_tc': '_onClickTCCheckbox',
         },
 
+        // #=== WIDGET LIFECYCLE ===#
+
         /**
          * @override
          */
-        start: async function () {
-            this.$checkbox = this.$('#checkbox_tc');
-            this.$submitButton = this.$('button[name="o_payment_submit_button"]');
+        async start() {
+            this.prepareInputs();
             this._onClickTCCheckbox();
             return await this._super(...arguments);
         },
@@ -114,7 +117,7 @@ publicWidget.registry.WebsiteSalePayment = publicWidget.Widget.extend(
          * @private
          * @return {void}
          */
-        _onClickTCCheckbox: function () {
+        _onClickTCCheckbox() {
             this._adaptConfirmButton();
             const disabledReasonFound = Object.values(
                 this.$submitButton.data('disabled_reasons') || {}

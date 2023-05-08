@@ -118,6 +118,31 @@
 
             </menuitem>
 
+            <menuitem id="payment_menu"
+                      name="Online Payments"
+                      groups="base.group_system"
+                      sequence="45"
+            >
+                <menuitem id="payment_provider_menu"
+                          action="payment.action_payment_provider"
+                          sequence="10"
+                />
+                <menuitem id="payment_method_menu"
+                          action="payment.action_payment_method"
+                          sequence="20"
+                />
+                <menuitem id="payment_token_menu"
+                          action="payment.action_payment_token"
+                          groups="base.group_no_one"
+                          sequence="30"
+                />
+                <menuitem id="payment_transaction_menu"
+                          action="payment.action_payment_transaction"
+                          groups="base.group_no_one"
+                          sequence="40"
+                />
+            </menuitem>
+
             <menuitem id="next_id_16"
                 name="Units of Measure"
                 groups="uom.group_uom"

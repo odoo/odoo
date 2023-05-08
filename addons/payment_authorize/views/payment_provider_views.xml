@@ -23,11 +23,6 @@
                     </a>
                 </group>
             </group>
-            <field name="display_as" position="before">
-                <field name="authorize_payment_method_type"
-                       invisible="code != 'authorize'"
-                       required="code == 'authorize' and state != 'disabled'"/>
-            </field>
             <div name="available_currencies" position="inside">
                 <button string="Set Account Currency"
                         type="object"

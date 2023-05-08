@@ -80,26 +80,24 @@ class PaymentPortal(payment_portal.PaymentPortal):
             })
         return super().payment_pay(*args, amount=amount, access_token=access_token, **kwargs)
 
-    def _get_custom_rendering_context_values(self, invoice_id=None, **kwargs):
-        """ Override of `payment` to add the invoice id in the custom rendering context values.
+    def _get_extra_payment_form_values(self, invoice_id=None, **kwargs):
+        """ Override of `payment` to add the invoice id to the payment form values.
 
         :param int invoice_id: The invoice for which a payment id made, as an `account.move` id.
         :param dict kwargs: Optional data. This parameter is not used here.
         :return: The extended rendering context values.
         :rtype: dict
         """
-        rendering_context_values = super()._get_custom_rendering_context_values(
-            invoice_id=invoice_id, **kwargs
-        )
+        form_values = super()._get_extra_payment_form_values(invoice_id=invoice_id, **kwargs)
         if invoice_id:
-            rendering_context_values['invoice_id'] = invoice_id
+            form_values['invoice_id'] = invoice_id
 
             # Interrupt the payment flow if the invoice has been canceled.
             invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
             if invoice_sudo.state == 'cancel':
-                rendering_context_values['amount'] = 0.0
+                form_values['amount'] = 0.0
 
-        return rendering_context_values
+        return form_values
 
     def _create_transaction(self, *args, invoice_id=None, custom_create_values=None, **kwargs):
         """ Override of `payment` to add the invoice id in the custom create values.

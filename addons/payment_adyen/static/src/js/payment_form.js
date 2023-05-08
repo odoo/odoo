@@ -2,86 +2,175 @@
 /* global AdyenCheckout */
 
 import { _t } from '@web/core/l10n/translation';
-import checkoutForm from '@payment/js/checkout_form';
-import manageForm from '@payment/js/manage_form';
+import paymentForm from '@payment/js/payment_form';
 
-const adyenMixin = {
+paymentForm.include({
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+    adyenCheckout: undefined,
+    adyenComponents: undefined,
 
-    /**
-     * Handle the additional details event of the Adyen drop-in.
-     *
-     * @private
-     * @param {object} state - The state of the drop-in
-     * @param {object} dropin - The drop-in
-     * @return {void}
-     */
-    _dropinOnAdditionalDetails: function (state, dropin) {
-        return this._rpc({
-            route: '/payment/adyen/payment_details',
-            params: {
-                'provider_id': dropin.providerId,
-                'reference': this.adyenDropin.reference,
-                'payment_details': state.data,
-            },
-        }).then(paymentDetails => {
-            if (paymentDetails.action) { // Additional action required from the shopper
-                dropin.handleAction(paymentDetails.action);
-            } else { // The payment reached a final state, redirect to the status page
-                window.location = '/payment/status';
-            }
-        }).guardedCatch((error) => {
-            error.event.preventDefault();
-            this._displayError(
-                _t("Server Error"),
-                _t("We are not able to process your payment."),
-                error.message.data.message,
-            );
-        });
-    },
+    // #=== DOM MANIPULATION ===#
 
     /**
-     * Handle the error event of the Adyen drop-in.
+     * Prepare the inline form of Adyen for direct payment.
      *
+     * @override method from payment.payment_form
      * @private
-     * @param {object} error - The error in the drop-in
+     * @param {number} providerId - The id of the selected payment option's provider.
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {string} flow - The online payment flow of the selected payment option
      * @return {void}
      */
-    _dropinOnError: function (error) {
-        if (!this.$('div[name="o_payment_error"]')) { // Don't replace a specific server error.
-            this._displayError(
-                _t("Incorrect Payment Details"),
-                _t("Please verify your payment details."),
-            );
-        } else {
-            this._enableButton();
-            this.call('ui', 'unblock');
+    async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
+        if (providerCode !== 'adyen') {
+            this._super(...arguments);
+            return;
         }
+
+        // Check if instantiation of the component is needed.
+        this.adyenComponents ??= {}; // Store the component of each instantiated payment method.
+        if (flow === 'token') {
+            return; // No component for tokens.
+        } else if (this.adyenComponents[paymentOptionId]) {
+            this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation.
+            if (paymentMethodCode === 'paypal') { // PayPal uses its own button to submit.
+                this._hideInputs();
+            }
+            return; // Don't re-instantiate if already done for this payment method.
+        }
+
+        // Overwrite the flow of the selected payment method.
+        this._setPaymentFlow('direct');
+
+        // Extract and deserialize the inline form values.
+        const radio = document.querySelector('input[name="o_payment_radio"]:checked');
+        const inlineFormValues = JSON.parse(radio.dataset['inlineFormValues']);
+
+        // Create the checkout object if not already done for another payment method.
+        if (!this.adyenCheckout) {
+            await this._rpc({ // Await the RPC to let it create AdyenCheckout before using it.
+                route: '/payment/adyen/payment_methods',
+                params: {
+                    'provider_id': providerId,
+                    'partner_id': parseInt(this.paymentContext['partnerId']),
+                    'amount': this.paymentContext['amount']
+                        ? parseFloat(this.paymentContext['amount'])
+                        : undefined,
+                    'currency_id': this.paymentContext['currencyId']
+                        ? parseInt(this.paymentContext['currencyId'])
+                        : undefined,
+                },
+            }).then(async response => {
+                // Create the Adyen Checkout SDK.
+                const providerState = this._getProviderState(radio);
+                const configuration = {
+                    paymentMethodsResponse: response,
+                    clientKey: inlineFormValues['client_key'],
+                    locale: (this._getContext().lang || 'en-US').replace('_', '-'),
+                    environment: providerState === 'enabled' ? 'live' : 'test',
+                    onAdditionalDetails: this._adyenOnSubmitAdditionalDetails.bind(this),
+                    onError: this._adyenOnError.bind(this),
+                    onSubmit: this._adyenOnSubmit.bind(this),
+                };
+                this.adyenCheckout = await AdyenCheckout(configuration);
+            }).guardedCatch((error) => {
+                error.event.preventDefault();
+                this._displayErrorDialog(
+                    _t("Cannot display the payment form"), error.message.data.message
+                );
+                this._enableButton();
+            });
+        }
+
+        // Instantiate and mount the component.
+        const componentConfiguration = {
+            showBrandsUnderCardNumber: false,
+            showPayButton: false,
+            billingAddressRequired: false, // The billing address is included in the request.
+        };
+        if (paymentMethodCode === 'card') {
+            // Forbid Bancontact cards in the card component.
+            componentConfiguration['brands'] = ['mc', 'visa', 'amex', 'discover'];
+        }
+        else if (paymentMethodCode === 'paypal') {
+            // PayPal requires the form to be submitted with its own button.
+            Object.assign(componentConfiguration, {
+                style: {
+                    disableMaxWidth: true
+                },
+                showPayButton: true,
+                blockPayPalCreditButton: true,
+                blockPayPalPayLaterButton: true
+            });
+            this._hideInputs();
+            // Define necessary fields as the step _submitForm is missed.
+            Object.assign(this.paymentContext, {
+                tokenizationRequested: false,
+                providerId: providerId,
+                paymentMethodId: paymentOptionId,
+            });
+        }
+        const inlineForm = this._getInlineForm(radio);
+        const adyenContainer = inlineForm.querySelector('[name="o_adyen_component_container"]');
+        this.adyenComponents[paymentOptionId] = this.adyenCheckout.create(
+            inlineFormValues['adyen_pm_code'], componentConfiguration
+        ).mount(adyenContainer);
+    },
+
+    // #=== PAYMENT FLOW ===#
+
+    /**
+     * Trigger the payment processing by submitting the component.
+     *
+     * The component is submitted here instead of in `_processDirectFlow` because we use the native
+     * submit button for PayPal, which does not follow the standard flow. The transaction is created
+     * in `_adyenOnSubmit`.
+     *
+     * @override method from payment.payment_form
+     * @private
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the payment option handling the transaction.
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {string} flow - The online payment flow of the transaction.
+     * @return {void}
+     */
+    _initiatePaymentFlow(providerCode, paymentOptionId, paymentMethodCode, flow) {
+        if (providerCode !== 'adyen' || flow === 'token') {
+            this._super(...arguments); // Tokens are handled by the generic flow
+            return;
+        }
+
+        // The `onError` event handler is not used to validate inputs anymore since v5.0.0.
+        if (!this.adyenComponents[paymentOptionId].isValid) {
+            this._displayErrorDialog(_t("Incorrect payment details"));
+            this._enableButton();
+            return;
+        }
+        this.adyenComponents[paymentOptionId].submit();
     },
 
     /**
-     * Handle the submit event of the Adyen drop-in and initiate the payment.
+     * Handle the submit event of the component and initiate the payment.
      *
      * @private
-     * @param {object} state - The state of the drop-in
-     * @param {object} dropin - The drop-in
+     * @param {object} state - The state of the component.
+     * @param {object} component - The component.
      * @return {void}
      */
-    _dropinOnSubmit: function (state, dropin) {
-        // Create the transaction and retrieve the processing values
-        return this._rpc({
-            route: this.txContext.transactionRoute,
-            params: this._prepareTransactionRouteParams('adyen', dropin.providerId, 'direct'),
+    _adyenOnSubmit(state, component) {
+        // Create the transaction and retrieve the processing values.
+        this._rpc({
+            route: this.paymentContext['transactionRoute'],
+            params: this._prepareTransactionRouteParams(),
         }).then(processingValues => {
-            this.adyenDropin.reference = processingValues.reference; // Store final reference
-            // Initiate the payment
+            component.reference = processingValues.reference; // Store final reference.
+            // Initiate the payment.
             return this._rpc({
                 route: '/payment/adyen/payments',
                 params: {
-                    'provider_id': dropin.providerId,
+                    'provider_id': processingValues.provider_id,
                     'reference': processingValues.reference,
                     'converted_amount': processingValues.converted_amount,
                     'currency_id': processingValues.currency_id,
@@ -92,129 +181,62 @@ const adyenMixin = {
                 },
             });
         }).then(paymentResponse => {
-            if (paymentResponse.action) { // Additional action required from the shopper
-                this._hideInputs(); // Only the inputs of the inline form should be used
-                this.call('ui', 'unblock'); // The page is blocked at this point, unblock it
-                dropin.handleAction(paymentResponse.action);
-            } else { // The payment reached a final state, redirect to the status page
+            if (paymentResponse.action) { // An additional action is required from the shopper.
+                this._hideInputs(); // Only the inputs of the inline form should be used.
+                this.call('ui', 'unblock'); // The page is blocked at this point, unblock it.
+                component.handleAction(paymentResponse.action);
+            } else { // The payment reached a final state; redirect to the status page.
                 window.location = '/payment/status';
             }
         }).guardedCatch((error) => {
             error.event.preventDefault();
-            this._displayError(
-                _t("Server Error"),
-                _t("We are not able to process your payment."),
-                error.message.data.message,
-            );
+            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
+            this._enableButton();
         });
     },
 
     /**
-     * Prepare the inline form of Adyen for direct payment.
+     * Handle the additional details event of the component.
      *
-     * @override method from @payment/js/payment_form_mixin
      * @private
-     * @param {string} code - The code of the selected payment option's provider
-     * @param {number} paymentOptionId - The id of the selected payment option
-     * @param {string} flow - The online payment flow of the selected payment option
+     * @param {object} state - The state of the component.
+     * @param {object} component - The component.
      * @return {void}
      */
-    _prepareInlineForm: function (code, paymentOptionId, flow) {
-        if (code !== 'adyen') {
-            this._super(...arguments);
-            return;
-        }
-
-        // Check if instantiation of the drop-in is needed
-        if (flow === 'token') {
-            return; // No drop-in for tokens
-        } else if (this.adyenDropin && this.adyenDropin.providerId === paymentOptionId) {
-            this._setPaymentFlow('direct'); // Overwrite the flow even if no re-instantiation
-            return; // Don't re-instantiate if already done for this provider
-        }
-
-        // Overwrite the flow of the select payment option
-        this._setPaymentFlow('direct');
-
-        // Get public information on the provider (state, client_key)
+    _adyenOnSubmitAdditionalDetails(state, component) {
         this._rpc({
-            route: '/payment/adyen/provider_info',
+            route: '/payment/adyen/payments/details',
             params: {
-                'provider_id': paymentOptionId,
+                'provider_id': this.paymentContext['providerId'],
+                'reference': component.reference,
+                'payment_details': state.data,
             },
-        }).then(providerInfo => {
-            // Get the available payment methods
-            return this._rpc({
-                route: '/payment/adyen/payment_methods',
-                params: {
-                    'provider_id': paymentOptionId,
-                    'partner_id': parseInt(this.txContext.partnerId),
-                    'amount': this.txContext.amount
-                        ? parseFloat(this.txContext.amount)
-                        : undefined,
-                    'currency_id': this.txContext.currencyId
-                        ? parseInt(this.txContext.currencyId)
-                        : undefined,
-                },
-            }).then(paymentMethodsResult => {
-                // Instantiate the drop-in
-                const configuration = {
-                    paymentMethodsResponse: paymentMethodsResult,
-                    clientKey: providerInfo.client_key,
-                    locale: (this._getContext().lang || 'en-US').replace('_', '-'),
-                    environment: providerInfo.state === 'enabled' ? 'live' : 'test',
-                    onAdditionalDetails: this._dropinOnAdditionalDetails.bind(this),
-                    onError: this._dropinOnError.bind(this),
-                    onSubmit: this._dropinOnSubmit.bind(this),
-                };
-                const checkout = new AdyenCheckout(configuration);
-                this.adyenDropin = checkout.create(
-                    'dropin', {
-                        openFirstPaymentMethod: true,
-                        openFirstStoredPaymentMethod: false,
-                        showStoredPaymentMethods: false,
-                        showPaymentMethods: true,
-                        showPayButton: false,
-                        setStatusAutomatically: true,
-                    },
-                ).mount(`#o_adyen_${this.formType}_dropin_container_${paymentOptionId}`);
-                this.adyenDropin.providerId = paymentOptionId;
-            });
+        }).then(paymentDetails => {
+            if (paymentDetails.action) { // Additional action required from the shopper.
+                component.handleAction(paymentDetails.action);
+            } else { // The payment reached a final state; redirect to the status page.
+                window.location = '/payment/status';
+            }
         }).guardedCatch((error) => {
             error.event.preventDefault();
-            this._displayError(
-                _t("Server Error"),
-                _t("An error occurred when displayed this payment form."),
-                error.message.data.message,
-            );
+            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
+            this._enableButton();
         });
     },
 
     /**
-     * Trigger the payment processing by submitting the drop-in.
+     * Handle the error event of the component.
      *
-     * @override method from @payment/js/payment_form_mixin
+     * See https://docs.adyen.com/online-payments/build-your-integration/?platform=Web
+     * &integration=Components&version=5.49.1#handle-the-redirect.
+     *
      * @private
-     * @param {string} provider - The provider of the payment option's provider
-     * @param {number} paymentOptionId - The id of the payment option handling the transaction
-     * @param {string} flow - The online payment flow of the transaction
+     * @param {object} error - The error in the component.
      * @return {void}
      */
-    _processPayment(provider, paymentOptionId, flow) {
-        if (provider !== 'adyen' || flow === 'token') {
-            this._super(...arguments); // Tokens are handled by the generic flow
-            return;
-        }
-        if (this.adyenDropin === undefined) { // The drop-in has not been properly instantiated
-            this._displayError(
-                _t("Server Error"), _t("We are not able to process your payment.")
-            );
-        } else {
-            this.adyenDropin.submit();
-        }
+    _adyenOnError(error) {
+        this._displayErrorDialog(_t("Payment processing failed"), error.message);
+        this._enableButton();
     },
 
-};
-
-checkoutForm.include(adyenMixin);
-manageForm.include(adyenMixin);
+});

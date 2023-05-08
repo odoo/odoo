@@ -8,6 +8,7 @@ from odoo import _, api, models
 from odoo.exceptions import ValidationError
 
 from odoo.addons.payment import utils as payment_utils
+from odoo.addons.payment_aps import utils as aps_utils
 from odoo.addons.payment_aps.const import PAYMENT_STATUS_MAPPING
 from odoo.addons.payment_aps.controllers.main import APSController
 
@@ -54,6 +55,7 @@ class PaymentTransaction(models.Model):
 
         converted_amount = payment_utils.to_minor_currency_units(self.amount, self.currency_id)
         base_url = self.provider_id.get_base_url()
+        payment_option = aps_utils.get_payment_option(self.payment_method_id.code)
         rendering_values = {
             'command': 'PURCHASE',
             'access_code': self.provider_id.aps_access_code,
@@ -65,6 +67,8 @@ class PaymentTransaction(models.Model):
             'customer_email': self.partner_id.email_normalized,
             'return_url': urls.url_join(base_url, APSController._return_url),
         }
+        if payment_option:  # Not included if the payment method is 'card'.
+            rendering_values['payment_option'] = payment_option
         rendering_values.update({
             'signature': self.provider_id._aps_calculate_signature(
                 rendering_values, incoming=False
@@ -114,12 +118,18 @@ class PaymentTransaction(models.Model):
         if self.provider_code != 'aps':
             return
 
+        # Update the provider reference.
         self.provider_reference = notification_data.get('fort_id')
 
+        # Update the payment method.
+        payment_option = notification_data.get('payment_option', '')
+        payment_method = self.env['payment.method']._get_from_code(payment_option.lower())
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         status = notification_data.get('status')
         if not status:
             raise ValidationError("APS: " + _("Received data with missing payment state."))
-
         if status in PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
         elif status in PAYMENT_STATUS_MAPPING['done']:

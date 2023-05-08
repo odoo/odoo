@@ -9,7 +9,7 @@ from odoo import _, models
 from odoo.exceptions import UserError, ValidationError
 
 from odoo.addons.payment import utils as payment_utils
-from odoo.addons.payment_flutterwave.const import PAYMENT_STATUS_MAPPING
+from odoo.addons.payment_flutterwave import const
 from odoo.addons.payment_flutterwave.controllers.main import FlutterwaveController
 
 
@@ -48,6 +48,9 @@ class PaymentTransaction(models.Model):
                 'title': self.company_id.name,
                 'logo': urls.url_join(base_url, f'web/image/res.company/{self.company_id.id}/logo'),
             },
+            'payment_options': const.PAYMENT_METHODS_MAPPING.get(
+                self.payment_method_code, self.payment_method_code
+            ),
         }
         payment_link_data = self.provider_id._flutterwave_make_request('payments', payload=payload)
 
@@ -142,19 +145,30 @@ class PaymentTransaction(models.Model):
         )
         verified_data = verification_response_content['data']
 
-        # Process the verified notification data.
+        # Update the provider reference.
         self.provider_reference = verified_data['id']
+
+        # Update payment method.
+        payment_method_type = verified_data.get('payment_type', '')
+        if payment_method_type == 'card':
+            payment_method_type = verified_data.get('card', {}).get('type').lower()
+        payment_method = self.env['payment.method']._get_from_code(
+            payment_method_type, mapping=const.PAYMENT_METHODS_MAPPING
+        )
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         payment_status = verified_data['status'].lower()
-        if payment_status in PAYMENT_STATUS_MAPPING['pending']:
+        if payment_status in const.PAYMENT_STATUS_MAPPING['pending']:
             self._set_pending()
-        elif payment_status in PAYMENT_STATUS_MAPPING['done']:
+        elif payment_status in const.PAYMENT_STATUS_MAPPING['done']:
             self._set_done()
             has_token_data = 'token' in verified_data.get('card', {})
             if self.tokenize and has_token_data:
                 self._flutterwave_tokenize_from_notification_data(verified_data)
-        elif payment_status in PAYMENT_STATUS_MAPPING['cancel']:
+        elif payment_status in const.PAYMENT_STATUS_MAPPING['cancel']:
             self._set_canceled()
-        elif payment_status in PAYMENT_STATUS_MAPPING['error']:
+        elif payment_status in const.PAYMENT_STATUS_MAPPING['error']:
             self._set_error(_(
                 "An error occurred during the processing of your payment (status %s). Please try "
                 "again.", payment_status
@@ -178,11 +192,11 @@ class PaymentTransaction(models.Model):
 
         token = self.env['payment.token'].create({
             'provider_id': self.provider_id.id,
+            'payment_method_id': self.payment_method_id.id,
             'payment_details': notification_data['card']['last_4digits'],
             'partner_id': self.partner_id.id,
             'provider_ref': notification_data['card']['token'],
             'flutterwave_customer_email': notification_data['customer']['email'],
-            'verified': True,  # The payment is confirmed, so the payment method is valid.
         })
         self.write({
             'token_id': token,

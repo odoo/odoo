@@ -48,8 +48,8 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
         # Pay in company B
         route_values['company_id'] = self.company_b.id
 
-        tx_context = self._get_tx_checkout_context(**route_values)
-        for key, val in tx_context.items():
+        payment_context = self._get_portal_pay_context(**route_values)
+        for key, val in payment_context.items():
             if key in route_values:
                 if key == 'access_token':
                     continue # access_token was modified due to the change of partner.
@@ -59,12 +59,8 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
                 else:
                     self.assertEqual(val, route_values[key])
 
-        available_providers = self.env['payment.provider'].sudo().browse(tx_context['provider_ids'])
-        self.assertIn(self.provider_company_b, available_providers)
-        self.assertEqual(available_providers.company_id, self.company_b)
-
         validation_values = {
-            k: tx_context[k]
+            k: payment_context[k]
             for k in [
                 'amount',
                 'currency_id',
@@ -75,8 +71,10 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
             ]
         }
         validation_values.update({
+            'provider_id': self.provider_company_b.id,
+            'payment_method_id': self.provider_company_b.payment_method_ids[:1].id,
+            'token_id': None,
             'flow': 'direct',
-            'payment_option_id': self.provider_company_b.id,
             'tokenization_requested': False,
         })
         with mute_logger('odoo.addons.payment.models.payment_transaction'):
@@ -108,11 +106,9 @@ class TestMultiCompanyFlows(PaymentHttpCommon):
 
         # A partner should see all his tokens on the /my/payment_method route,
         # even if they are in other companies otherwise he won't ever see them.
-        manage_context = self._get_tx_manage_context()
-        self.assertEqual(manage_context['partner_id'], self.partner.id)
-        self.assertEqual(manage_context['provider_ids'], self.provider.ids)
-        self.assertIn(token.id, manage_context['token_ids'])
-        self.assertIn(token_company_b.id, manage_context['token_ids'])
+        payment_context = self._get_portal_payment_method_context()
+        self.assertIn(token.id, payment_context['token_ids'])
+        self.assertIn(token_company_b.id, payment_context['token_ids'])
 
     def test_archive_token_logged_in_another_company(self):
         """User archives his token from another company."""

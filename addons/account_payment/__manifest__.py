@@ -16,10 +16,10 @@
 
         'views/account_payment_menus.xml',
         'views/account_portal_templates.xml',
-        'views/payment_templates.xml',
         'views/account_move_views.xml',
         'views/account_journal_views.xml',
         'views/account_payment_views.xml',
+        'views/payment_form_templates.xml',
         'views/payment_provider_views.xml',
         'views/payment_transaction_views.xml',
 

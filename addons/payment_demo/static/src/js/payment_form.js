@@ -1,26 +1,50 @@
 /** @odoo-module **/
 
-import checkoutForm from '@payment/js/checkout_form';
-import manageForm from '@payment/js/manage_form';
+import { _t } from "@web/core/l10n/translation";
 
-const paymentDemoMixin = {
+import paymentForm from '@payment/js/payment_form';
 
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
+paymentForm.include({
+
+    // #=== DOM MANIPULATION ===#
+
+    /**
+     * Prepare the inline form of Demo for direct payment.
+     *
+     * @override method from @payment/js/payment_form
+     * @private
+     * @param {number} providerId - The id of the selected payment option's provider.
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {string} flow - The online payment flow of the selected payment option.
+     * @return {void}
+     */
+    async _prepareInlineForm(providerId, providerCode, paymentOptionId, paymentMethodCode, flow) {
+        if (providerCode !== 'demo') {
+            this._super(...arguments);
+            return;
+        } else if (flow === 'token') {
+            return;
+        }
+        this._setPaymentFlow('direct');
+    },
+
+    // #=== PAYMENT FLOW ===#
 
     /**
      * Simulate a feedback from a payment provider and redirect the customer to the status page.
      *
-     * @override method from @payment/js/payment_form_mixin
+     * @override method from payment.payment_form
      * @private
-     * @param {string} code - The code of the provider
-     * @param {number} providerId - The id of the provider handling the transaction
-     * @param {object} processingValues - The processing values of the transaction
+     * @param {string} providerCode - The code of the selected payment option's provider.
+     * @param {number} paymentOptionId - The id of the selected payment option.
+     * @param {string} paymentMethodCode - The code of the selected payment method, if any.
+     * @param {object} processingValues - The processing values of the transaction.
      * @return {void}
      */
-    _processDirectPayment: function (code, providerId, processingValues) {
-        if (code !== 'demo') {
+    async _processDirectFlow(providerCode, paymentOptionId, paymentMethodCode, processingValues) {
+        if (providerCode !== 'demo') {
             this._super(...arguments);
             return;
         }
@@ -36,30 +60,11 @@ const paymentDemoMixin = {
             },
         }).then(() => {
             window.location = '/payment/status';
+        }).guardedCatch(error => {
+            error.event.preventDefault();
+            this._displayErrorDialog(_t("Payment processing failed"), error.message.data.message);
+            this._enableButton(); // The button has been disabled before initiating the flow.
         });
     },
 
-    /**
-     * Prepare the inline form of Demo for direct payment.
-     *
-     * @override method from @payment/js/payment_form_mixin
-     * @private
-     * @param {string} code - The code of the selected payment option's provider
-     * @param {integer} paymentOptionId - The id of the selected payment option
-     * @param {string} flow - The online payment flow of the selected payment option
-     * @return {void}
-     */
-    _prepareInlineForm: function (code, paymentOptionId, flow) {
-        if (code !== 'demo') {
-            this._super(...arguments);
-            return;
-        } else if (flow === 'token') {
-            return;
-        }
-        this._setPaymentFlow('direct');
-    },
-
-};
-
-checkoutForm.include(paymentDemoMixin);
-manageForm.include(paymentDemoMixin);
+});

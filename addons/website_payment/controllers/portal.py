@@ -84,10 +84,10 @@ class PaymentPortal(payment_portal.PaymentPortal):
 
         return tx_sudo._get_processing_values()
 
-    def _get_custom_rendering_context_values(
+    def _get_extra_payment_form_values(
         self, donation_options=None, donation_descriptions=None, is_donation=False, **kwargs
     ):
-        rendering_context = super()._get_custom_rendering_context_values(
+        rendering_context = super()._get_extra_payment_form_values(
             donation_options=donation_options,
             donation_descriptions=donation_descriptions,
             is_donation=is_donation,
@@ -103,7 +103,6 @@ class PaymentPortal(payment_portal.PaymentPortal):
             # transaction and invoice partners are different).
             partner_sudo = user_sudo.partner_id
             partner_details = {}
-            countries = request.env['res.country']
             if logged_in:
                 partner_details = {
                     'name': partner_sudo.name,
@@ -120,6 +119,7 @@ class PaymentPortal(payment_portal.PaymentPortal):
             rendering_context.update({
                 'is_donation': True,
                 'partner': partner_sudo,
+                'submit_button_label': _("Donate"),
                 'transaction_route': '/donation/transaction/%s' % donation_options.get('minimumAmount', 0),
                 'partner_details': partner_details,
                 'error': {},

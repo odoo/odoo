@@ -12,3 +12,11 @@ SUPPORTED_CURRENCIES = [
     'PEN',
     'USD'
 ]
+
+# Mapping of payment method codes to PayU Latam codes.
+PAYMENT_METHODS_MAPPING = {
+    'bank_reference': 'BANK_REFERENCED',
+    'pix': 'PIX',
+    'card': 'VISA,VISA_DEBIT,MASTERCARD,MASTERCARD_DEBIT,AMEX,ARGENCARD,CABAL,CENCOSUD,DINERS,ELO,NARANJA,SHOPPING,HIPERCARD,TRANSBANK_DEBIT,CODENSA',
+    'bank_transfer': 'ITAU,PSE,SPEI',
+}

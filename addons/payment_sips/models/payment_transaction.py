@@ -123,7 +123,16 @@ class PaymentTransaction(models.Model):
             return
 
         data = self._sips_notification_data_to_object(notification_data.get('Data'))
+
+        # Update the provider reference.
         self.provider_reference = data.get('transactionReference')
+
+        # Update the payment method.
+        payment_method_type = notification_data.get('paymentMeanBrand', '').lower()
+        payment_method = self.env['payment.method']._get_from_code(payment_method_type)
+        self.payment_method_id = payment_method or self.payment_method_id
+
+        # Update the payment state.
         response_code = data.get('responseCode')
         if response_code in RESPONSE_CODES_MAPPING['pending']:
             status = "pending"

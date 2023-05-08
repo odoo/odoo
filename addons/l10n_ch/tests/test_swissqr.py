@@ -210,6 +210,7 @@ class TestSwissQR(AccountTestInvoicingCommon):
         })
         payment_transaction = self.env['payment.transaction'].create({
             'provider_id': provider.id,
+            'payment_method_id': self.env.ref('payment.payment_method_unknown').id,
             'sale_order_ids': [order.id],
             'partner_id': self.env['res.partner'].search([("name", '=', 'Partner')])[0].id,
             'amount': 100,

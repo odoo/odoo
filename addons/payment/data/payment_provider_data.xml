@@ -3,87 +3,217 @@
 
     <record id="payment_provider_adyen" model="payment.provider">
         <field name="name">Adyen</field>
-        <field name="display_as">Credit Card (powered by Adyen)</field>
         <field name="image_128" type="base64" file="payment_adyen/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_adyen"/>
         <!-- https://www.adyen.com/payment-methods -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                   ref('payment.payment_method_bancontact'),
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_visa'),
-                   ref('payment.payment_method_discover'),
-                   ref('payment.payment_method_diners_club_intl'),
-                   ref('payment.payment_method_jcb'),
-                   ref('payment.payment_method_unionpay'),
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_ach_direct_debit'),
+                         ref('payment.payment_method_affirm'),
+                         ref('payment.payment_method_afterpay'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_alipay_hk'),
+                         ref('payment.payment_method_alma'),
+                         ref('payment.payment_method_amazon_pay'),
+                         ref('payment.payment_method_apple_pay'),
+                         ref('payment.payment_method_bacs_direct_debit'),
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_benefit'),
+                         ref('payment.payment_method_bizum'),
+                         ref('payment.payment_method_blik'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_cash_app_pay'),
+                         ref('payment.payment_method_clearpay'),
+                         ref('payment.payment_method_dana'),
+                         ref('payment.payment_method_duitnow'),
+                         ref('payment.payment_method_elo'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_fpx'),
+                         ref('payment.payment_method_gcash'),
+                         ref('payment.payment_method_giropay'),
+                         ref('payment.payment_method_google_pay'),
+                         ref('payment.payment_method_gopay'),
+                         ref('payment.payment_method_hipercard'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_kakaopay'),
+                         ref('payment.payment_method_klarna'),
+                         ref('payment.payment_method_klarna_paynow'),
+                         ref('payment.payment_method_klarna_pay_over_time'),
+                         ref('payment.payment_method_knet'),
+                         ref('payment.payment_method_mbway'),
+                         ref('payment.payment_method_mobile_pay'),
+                         ref('payment.payment_method_momo'),
+                         ref('payment.payment_method_multibanco'),
+                         ref('payment.payment_method_napas_card'),
+                         ref('payment.payment_method_online_banking_czech_republic'),
+                         ref('payment.payment_method_online_banking_india'),
+                         ref('payment.payment_method_online_banking_slovakia'),
+                         ref('payment.payment_method_online_banking_thailand'),
+                         ref('payment.payment_method_open_banking'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_paybright'),
+                         ref('payment.payment_method_paysafecard'),
+                         ref('payment.payment_method_paynow'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_paytm'),
+                         ref('payment.payment_method_paytrail'),
+                         ref('payment.payment_method_pix'),
+                         ref('payment.payment_method_promptpay'),
+                         ref('payment.payment_method_ratepay'),
+                         ref('payment.payment_method_samsung_pay'),
+                         ref('payment.payment_method_sepa_direct_debit'),
+                         ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_swish'),
+                         ref('payment.payment_method_touch_n_go'),
+                         ref('payment.payment_method_trustly'),
+                         ref('payment.payment_method_twint'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_vipps'),
+                         ref('payment.payment_method_wallets_india'),
+                         ref('payment.payment_method_walley'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_zip'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_aps" model="payment.provider">
         <field name="name">Amazon Payment Services</field>
-        <field name="display_as">Amazon Payment Services</field>
         <field name="image_128" type="base64" file="payment_aps/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_aps"/>
         <!-- https://paymentservices.amazon.com/docs/EN/24.html -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                        ref('payment.payment_method_mastercard'),
-                        ref('payment.payment_method_visa'),
-                        ref('payment.payment_method_sadad'),
-                        ref('payment.payment_method_mada'),
-                    ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_mada'),
+                         ref('payment.payment_method_knet'),
+                         ref('payment.payment_method_meeza'),
+                         ref('payment.payment_method_naps'),
+                         ref('payment.payment_method_omannet'),
+                         ref('payment.payment_method_benefit'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_asiapay" model="payment.provider">
         <field name="name">Asiapay</field>
-        <field name="display_as">Credit Card (powered by Asiapay)</field>
         <field name="image_128" type="base64" file="payment_asiapay/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_asiapay"/>
         <!-- See https://www.asiapay.com/payment.html#option -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                    ref('payment.payment_method_mastercard'),
-                    ref('payment.payment_method_visa'),
-                    ref('payment.payment_method_unionpay'),
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_poli'),
+                         ref('payment.payment_method_afterpay'),
+                         ref('payment.payment_method_clearpay'),
+                         ref('payment.payment_method_humm'),
+                         ref('payment.payment_method_zip'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_atome'),
+                         ref('payment.payment_method_pace'),
+                         ref('payment.payment_method_shopback'),
+                         ref('payment.payment_method_grabpay'),
+                         ref('payment.payment_method_apple_pay'),
+                         ref('payment.payment_method_google_pay'),
+                         ref('payment.payment_method_samsung_pay'),
+                         ref('payment.payment_method_hoolah'),
+                         ref('payment.payment_method_boost'),
+                         ref('payment.payment_method_duitnow'),
+                         ref('payment.payment_method_touch_n_go'),
+                         ref('payment.payment_method_bancnet'),
+                         ref('payment.payment_method_gcash'),
+                         ref('payment.payment_method_paynow'),
+                         ref('payment.payment_method_linepay'),
+                         ref('payment.payment_method_bangkok_bank'),
+                         ref('payment.payment_method_krungthai_bank'),
+                         ref('payment.payment_method_uob'),
+                         ref('payment.payment_method_scb'),
+                         ref('payment.payment_method_bank_of_ayudhya'),
+                         ref('payment.payment_method_kasikorn_bank'),
+                         ref('payment.payment_method_rabbit_line_pay'),
+                         ref('payment.payment_method_truemoney'),
+                         ref('payment.payment_method_fpx'),
+                         ref('payment.payment_method_fps'),
+                         ref('payment.payment_method_hd'),
+                         ref('payment.payment_method_maybank'),
+                         ref('payment.payment_method_pay_id'),
+                         ref('payment.payment_method_promptpay'),
+                         ref('payment.payment_method_techcom'),
+                         ref('payment.payment_method_tienphong'),
+                         ref('payment.payment_method_ttb'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_vietcom'),
+                         ref('payment.payment_method_tendopay'),
+                         ref('payment.payment_method_alipay_hk'),
+                         ref('payment.payment_method_bharatqr'),
+                         ref('payment.payment_method_masterpass'),
+                         ref('payment.payment_method_momo'),
+                         ref('payment.payment_method_octopus'),
+                         ref('payment.payment_method_maya'),
+                         ref('payment.payment_method_uatp'),
+                         ref('payment.payment_method_tenpay'),
+                         ref('payment.payment_method_enets'),
+                         ref('payment.payment_method_jkopay'),
+                         ref('payment.payment_method_payme'),
+                         ref('payment.payment_method_tmb'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_authorize" model="payment.provider">
         <field name="name">Authorize.net</field>
-        <field name="display_as">Credit Card (powered by Authorize)</field>
         <field name="image_128"
                type="base64"
                file="payment_authorize/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_authorize"/>
         <!-- https://www.authorize.net/solutions/merchantsolutions/onlinemerchantaccount/ -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_discover'),
-                   ref('payment.payment_method_diners_club_intl'),
-                   ref('payment.payment_method_jcb'),
-                   ref('payment.payment_method_visa'),
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_ach_direct_debit'),
+                         ref('payment.payment_method_card'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_buckaroo" model="payment.provider">
         <field name="name">Buckaroo</field>
-        <field name="display_as">Credit Card (powered by Buckaroo)</field>
         <field name="image_128"
                type="base64"
                file="payment_buckaroo/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_buckaroo"/>
         <!-- https://www.buckaroo-payments.com/products/payment-methods/ -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                   ref('payment.payment_method_bancontact'),
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_visa'),
-                   ref('payment.payment_method_american_express'),
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_bank_reference'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_afterpay'),
+                         ref('payment.payment_method_sepa_direct_debit'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_apple_pay'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_payconiq'),
+                         ref('payment.payment_method_klarna'),
+                         ref('payment.payment_method_trustly'),
+                         ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_in3'),
+                         ref('payment.payment_method_tinka'),
+                         ref('payment.payment_method_billink'),
+                         ref('payment.payment_method_kbc_cbc'),
+                         ref('payment.payment_method_belfius'),
+                         ref('payment.payment_method_giropay'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_poste_pay'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_sepa_transfer'),
+                         ref('payment.payment_method_visa_electron'),
+                         ref('payment.payment_method_cartes_bancaires'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_demo" model="payment.provider">
@@ -100,20 +230,27 @@
                file="payment_flutterwave/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_flutterwave"/>
         <!-- https://developer.flutterwave.com/docs/collecting-payments/payment-methods/ -->
-        <field name="payment_method_ids" eval="[(6, 0, [
-                ref('payment.payment_method_visa'),
-                ref('payment.payment_method_mastercard'),
-                ref('payment.payment_method_american_express'),
-                ref('payment.payment_method_mpesa'),
-                ref('payment.payment_method_airtel_money'),
-                ref('payment.payment_method_mtn_mobile_money'),
-                ref('payment.payment_method_barter_by_flutterwave'),
-            ])]"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_mpesa'),
+                         ref('payment.payment_method_mobile_money_ghana'),
+                         ref('payment.payment_method_mobile_money_francophone_africa'),
+                         ref('payment.payment_method_mobile_money_uganda'),
+                         ref('payment.payment_method_mobile_money_rwanda'),
+                         ref('payment.payment_method_mobile_money_zambia'),
+                         ref('payment.payment_method_bank_transfer'),
+                         ref('payment.payment_method_bank_account'),
+                         ref('payment.payment_method_credit'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_ussd'),
+                         ref('payment.payment_method_nqr_by_flutterwave'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_mercado_pago" model="payment.provider">
         <field name="name">Mercado Pago</field>
-        <field name="display_as">Credit Card (powered by Mercado Pago)</field>
         <field name="image_128"
                type="base64"
                file="payment_mercado_pago/static/description/icon.png"/>
@@ -123,13 +260,12 @@
             https://www.mercadopago.com.ar/developers/en/reference/payment_methods/_payment_methods/
         -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                    ref('payment.payment_method_mastercard'),
-                    ref('payment.payment_method_visa'),
-                    ref('payment.payment_method_american_express'),
-                    ref('payment.payment_method_bbva_bancomer'),
-                    ref('payment.payment_method_citibanamex')
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_bank_transfer'),
+                         ref('payment.payment_method_paypal'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_mollie" model="payment.provider">
@@ -137,21 +273,23 @@
         <field name="image_128" type="base64" file="payment_mollie/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_mollie"/>
         <!-- https://www.mollie.com/en/payments -->
-        <field name="payment_method_ids" eval="[(6, 0, [
-                ref('payment.payment_method_visa'),
-                ref('payment.payment_method_american_express'),
-                ref('payment.payment_method_maestro'),
-                ref('payment.payment_method_mastercard'),
-                ref('payment.payment_method_bancontact'),
-                ref('payment.payment_method_eps'),
-                ref('payment.payment_method_giropay'),
-                ref('payment.payment_method_p24'),
-                ref('payment.payment_method_ideal'),
-                ref('payment.payment_method_paypal'),
-                ref('payment.payment_method_apple_pay'),
-                ref('payment.payment_method_sepa'),
-                ref('payment.payment_method_kbc')
-            ])]"/>
+        <field name="payment_method_ids"
+               eval="[Command.set([
+                         ref('payment.payment_method_apple_pay'),
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_bank_transfer'),
+                         ref('payment.payment_method_belfius'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_sepa_direct_debit'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_giropay'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_paysafecard'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_sofort'),
+                     ])]"
+        />
 
     </record>
 
@@ -161,33 +299,25 @@
         <field name="module_id" ref="base.module_payment_paypal"/>
         <!-- https://www.paypal.com/us/selfhelp/article/Which-credit-cards-can-I-accept-with-PayPal-Merchant-Services-FAQ1525#business -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_discover'),
-                   ref('payment.payment_method_diners_club_intl'),
-                   ref('payment.payment_method_jcb'),
-                   ref('payment.payment_method_american_express'),
-                   ref('payment.payment_method_unionpay'),
-                   ref('payment.payment_method_visa'),
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_paypal'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_razorpay" model="payment.provider">
         <field name="name">Razorpay</field>
-        <field name="display_as">Credit &amp; Debit Card, UPI (Powered by Razorpay)</field>
         <field name="image_128" type="base64" file="payment_razorpay/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_razorpay"/>
         <!-- https://razorpay.com/docs/payments/payment-methods/#supported-payment-methods -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_rupay'),
-                   ref('payment.payment_method_diners_club_intl'),
-                   ref('payment.payment_method_american_express'),
-                   ref('payment.payment_method_visa')
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_netbanking'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_wallets_india'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_sepa_direct_debit" model="payment.provider">
@@ -197,31 +327,41 @@
                type="base64"
                file="base/static/img/icons/payment_sepa_direct_debit.png"/>
         <field name="module_id" ref="base.module_payment_sepa_direct_debit"/>
+        <field name="payment_method_ids"
+           eval="[Command.set([
+                     ref('payment.payment_method_sepa_direct_debit'),
+                 ])]"
+        />
     </record>
 
     <record id="payment_provider_sips" model="payment.provider">
         <field name="name">Sips</field>
-        <field name="display_as">Credit Card (powered by Sips)</field>
         <field name="image_128" type="base64" file="payment_sips/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_sips"/>
         <!-- See http://sips.worldline.com/en-us/home/features/payment-types-and-acquirers.html -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_discover'),
-                   ref('payment.payment_method_diners_club_intl'),
-                   ref('payment.payment_method_jcb'),
-                   ref('payment.payment_method_american_express'),
-                   ref('payment.payment_method_bancontact'),
-                   ref('payment.payment_method_unionpay'),
-                   ref('payment.payment_method_visa'),
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_giropay'),
+                         ref('payment.payment_method_kbc_cbc'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_apple_pay'),
+                         ref('payment.payment_method_samsung_pay'),
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_lyfpay'),
+                         ref('payment.payment_method_lydia'),
+                         ref('payment.payment_method_floa_bank'),
+                         ref('payment.payment_method_cetelem'),
+                         ref('payment.payment_method_cofidis'),
+                         ref('payment.payment_method_frafinance'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_stripe" model="payment.provider">
         <field name="name">Stripe</field>
-        <field name="display_as">Credit &amp; Debit Card</field>
         <field name="image_128" type="base64" file="payment_stripe/static/description/icon.png"/>
         <field name="module_id" ref="base.module_payment_stripe"/>
         <!--
@@ -229,15 +369,45 @@
             See https://support.goteamup.com/hc/en-us/articles/115002089349-Which-cards-and-payment-types-can-I-accept-with-Stripe-
         -->
         <field name="payment_method_ids"
-               eval="[(6, 0, [
-                   ref('payment.payment_method_maestro'),
-                   ref('payment.payment_method_mastercard'),
-                   ref('payment.payment_method_discover'),
-                   ref('payment.payment_method_diners_club_intl'),
-                   ref('payment.payment_method_jcb'),
-                   ref('payment.payment_method_american_express'),
-                   ref('payment.payment_method_visa'),
-               ])]"/>
+               eval="[Command.set([
+                         ref('payment.payment_method_ach_direct_debit'),
+                         ref('payment.payment_method_acss_debit'),
+                         ref('payment.payment_method_affirm'),
+                         ref('payment.payment_method_afterpay'),
+                         ref('payment.payment_method_alipay'),
+                         ref('payment.payment_method_apple_pay'),
+                         ref('payment.payment_method_bacs_direct_debit'),
+                         ref('payment.payment_method_bancontact'),
+                         ref('payment.payment_method_becs_direct_debit'),
+                         ref('payment.payment_method_blik'),
+                         ref('payment.payment_method_card'),
+                         ref('payment.payment_method_cash_app_pay'),
+                         ref('payment.payment_method_clearpay'),
+                         ref('payment.payment_method_eps'),
+                         ref('payment.payment_method_fpx'),
+                         ref('payment.payment_method_giropay'),
+                         ref('payment.payment_method_google_pay'),
+                         ref('payment.payment_method_grabpay'),
+                         ref('payment.payment_method_ideal'),
+                         ref('payment.payment_method_klarna'),
+                         ref('payment.payment_method_link'),
+                         ref('payment.payment_method_mobile_pay'),
+                         ref('payment.payment_method_multibanco'),
+                         ref('payment.payment_method_netbanking'),
+                         ref('payment.payment_method_p24'),
+                         ref('payment.payment_method_paynow'),
+                         ref('payment.payment_method_paypal'),
+                         ref('payment.payment_method_pix'),
+                         ref('payment.payment_method_promptpay'),
+                         ref('payment.payment_method_revolut_pay'),
+                         ref('payment.payment_method_sepa_direct_debit'),
+                         ref('payment.payment_method_sepa_transfer'),
+                         ref('payment.payment_method_sofort'),
+                         ref('payment.payment_method_upi'),
+                         ref('payment.payment_method_wechat_pay'),
+                         ref('payment.payment_method_zip'),
+                     ])]"
+        />
     </record>
 
     <record id="payment_provider_transfer" model="payment.provider">

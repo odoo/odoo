@@ -63,23 +63,34 @@
         sequence="50">
 
         <menuitem id="menu_ecommerce_payment_providers"
-            name="Payment Providers"
-            action="payment.action_payment_provider"/>
-        <menuitem id="menu_ecommerce_payment_tokens"
-            action="payment.action_payment_token"
-            groups="base.group_no_one"/>
+                  name="Payment Providers"
+                  action="payment.action_payment_provider"
+                  sequence="10"
+        />
         <menuitem id="menu_ecommerce_payment_methods"
-            action="payment.action_payment_method"
-            groups="base.group_no_one"/>
+                  action="payment.action_payment_method"
+                  name="Payment Methods"
+                  sequence="20"
+        />
+        <menuitem id="menu_ecommerce_payment_tokens"
+                  action="payment.action_payment_token"
+                  groups="base.group_no_one"
+                  sequence="30"
+        />
         <menuitem id="menu_ecommerce_payment_transactions"
-            action="payment.action_payment_transaction"
-            groups="base.group_no_one"/>
+                  action="payment.action_payment_transaction"
+                  groups="base.group_no_one"
+                  sequence="40"
+        />
         <menuitem id="menu_ecommerce_delivery"
-            action="delivery.action_delivery_carrier_form"/>
+                  action="delivery.action_delivery_carrier_form"
+                  sequence="90"
+        />
         <menuitem id="menu_delivery_zip_prefix"
-            action="delivery.action_delivery_zip_prefix_list"
-            groups="base.group_no_one"
-            sequence="100"/>
+                  action="delivery.action_delivery_zip_prefix_list"
+                  groups="base.group_no_one"
+                  sequence="100"
+        />
 
     </menuitem>
 

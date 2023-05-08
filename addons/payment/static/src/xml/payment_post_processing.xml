@@ -54,12 +54,25 @@
                 </a>
             </div>
 
-            <div class="o_payment_details o_cc2 row row-cols-1 row-cols-md-3 mx-0 mb-3 py-2 rounded">
+            <div class="o_cc o_cc2 row row-cols-1 row-cols-md-2 mx-0 mb-3 py-2 rounded">
                 <div class="col py-3">
+                    <label for="o_payment_summary_amount" class="d-block small text-muted">
+                        Amount
+                    </label>
+                    <span id="o_payment_summary_amount"
+                          t-out="amount"
+                          class="fs-4 fw-bold"
+                    />
+                </div>
+                <hr class="d-md-none m-0 text-300 opacity-100"/>
+                <div class="o_payment_summary_separator col py-3">
                     <label for="o_payment_summary_reference" class="d-block small text-muted">
                         Reference
                     </label>
-                    <span id="o_payment_summary_reference" t-out="reference"/>
+                    <span id="o_payment_summary_reference"
+                          t-out="reference"
+                          class="fs-4 fw-bold"
+                    />
                 </div>
             </div>
         </div>

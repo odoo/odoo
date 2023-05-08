@@ -3,11 +3,15 @@
 
     <template id="inline_form">
         <t t-set="inline_form_values"
-           t-value="provider._stripe_get_inline_form_values(amount, currency, partner_id, form_type == 'manage', sale_order_id=sale_order_id)"
+           t-value="provider_sudo._stripe_get_inline_form_values(
+                        amount,
+                        currency,
+                        partner_id,
+                        mode == 'validation',
+                        sale_order_id=sale_order_id,
+                    )"
         />
-        <div t-attf-id="o_stripe_{{form_type}}_element_container_{{provider.id}}"
-             t-att-data-inline-form-values="inline_form_values"
-        />
+        <div name="o_stripe_element_container" t-att-data-inline-form-values="inline_form_values"/>
     </template>
 
     <template id="express_checkout_form">

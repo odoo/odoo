@@ -155,7 +155,7 @@ class Website(main.Website):
             'position': request.website.currency_id.position,
         }
 
-class WebsiteSale(http.Controller):
+class WebsiteSale(payment_portal.PaymentPortal):
     _express_checkout_route = '/shop/express_checkout'
     _express_checkout_shipping_route = '/shop/express/shipping_address_change'
 
@@ -177,7 +177,7 @@ class WebsiteSale(http.Controller):
         order = post.get('order') or request.env['website'].get_current_website().shop_default_sort
         return 'is_published desc, %s, id desc' % order
 
-    def _get_search_domain(self, search, category, attrib_values, search_in_description=True):
+    def _get_shop_domain(self, search, category, attrib_values, search_in_description=True):
         domains = [request.website.sale_product_domain()]
         if search:
             for srch in search.split(" "):
@@ -370,7 +370,7 @@ class WebsiteSale(http.Controller):
         if filter_by_price_enabled:
             # TODO Find an alternative way to obtain the domain through the search metadata.
             Product = request.env['product.template'].with_context(bin_size=True)
-            domain = self._get_search_domain(search, category, attrib_values)
+            domain = self._get_shop_domain(search, category, attrib_values)
 
             # This is ~4 times more efficient than a search for the cheapest and most expensive products
             query = Product._where_calc(domain)
@@ -1562,7 +1562,7 @@ class WebsiteSale(http.Controller):
         return payment_form_values
 
     def _get_shop_payment_values(self, order, **kwargs):
-        portal_page_values = {
+        checkout_page_values = {
             'website_sale_order': order,
             'errors': [],
             'partner': order.partner_invoice_id,
@@ -1576,10 +1576,11 @@ class WebsiteSale(http.Controller):
             **sale_portal.CustomerPortal._get_payment_values(
                 self, order, website_id=request.website.id
             ),
+            'display_submit_button': False,  # The submit button is re-added outside the form.
             'transaction_route': f'/shop/payment/transaction/{order.id}',
             'landing_route': '/shop/payment/validate',
         }
-        values = {**portal_page_values, **payment_form_values}
+        values = {**checkout_page_values, **payment_form_values}
         if request.website.enabled_delivery:
             has_storable_products = any(
                 line.product_id.type in ['consu', 'product'] for line in order.order_line
@@ -1637,8 +1638,8 @@ class WebsiteSale(http.Controller):
         render_values['only_services'] = order and order.only_services or False
 
         if render_values['errors']:
-            render_values.pop('providers', '')
-            render_values.pop('tokens', '')
+            render_values.pop('payment_methods_sudo', '')
+            render_values.pop('tokens_sudo', '')
 
         return request.render("website_sale.payment", render_values)
 

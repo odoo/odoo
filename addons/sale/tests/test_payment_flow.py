@@ -31,7 +31,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
             'odoo.addons.payment.controllers.portal.PaymentPortal'
             '._compute_show_tokenize_input_mapping'
         ) as patched:
-            tx_context = self._get_tx_checkout_context(**route_values)
+            tx_context = self._get_portal_pay_context(**route_values)
             patched.assert_called_once_with(ANY, sale_order_id=ANY)
 
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
@@ -40,8 +40,10 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
         route_values.update({
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
             'flow': 'direct',
-            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': None, # Force empty prefix to fallback on SO reference
@@ -78,7 +80,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         route_values = self._prepare_pay_values()
         route_values['sale_order_id'] = self.sale_order.id
 
-        tx_context = self._get_tx_checkout_context(**route_values)
+        tx_context = self._get_portal_pay_context(**route_values)
         self.assertEqual(tx_context['partner_id'], self.sale_order.partner_invoice_id.id)
 
     def test_12_so_partial_payment_link(self):
@@ -88,7 +90,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         route_values = self._prepare_pay_values()
         route_values['sale_order_id'] = self.sale_order.id
 
-        tx_context = self._get_tx_checkout_context(**route_values)
+        tx_context = self._get_portal_pay_context(**route_values)
 
         self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
@@ -97,8 +99,10 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
         route_values.update({
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
             'flow': 'direct',
-            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': tx_context['reference_prefix'],
@@ -125,7 +129,7 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         route_values = self._prepare_pay_values()
         route_values['sale_order_id'] = self.sale_order.id
 
-        tx_context = self._get_tx_checkout_context(**route_values)
+        tx_context = self._get_portal_pay_context(**route_values)
 
         self.assertEqual(tx_context['reference_prefix'], self.reference)
         self.assertEqual(tx_context['currency_id'], self.sale_order.currency_id.id)
@@ -134,8 +138,10 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         self.assertEqual(tx_context['sale_order_id'], self.sale_order.id)
 
         route_values.update({
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
             'flow': 'direct',
-            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': tx_context['reference_prefix'],
@@ -170,11 +176,13 @@ class TestSalePayment(AccountPaymentCommon, SaleCommon, PaymentHttpCommon):
         route_values = self._prepare_pay_values()
         route_values['sale_order_id'] = self.sale_order.id
 
-        tx_context = self._get_tx_checkout_context(**route_values)
+        tx_context = self._get_portal_pay_context(**route_values)
 
         route_values.update({
+            'provider_id': self.provider.id,
+            'payment_method_id': self.payment_method_id,
+            'token_id': None,
             'flow': 'direct',
-            'payment_option_id': self.provider.id,
             'tokenization_requested': False,
             'validation_route': False,
             'reference_prefix': tx_context['reference_prefix'],
