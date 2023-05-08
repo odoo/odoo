@@ -183,6 +183,140 @@ class TestPointOfSaleFlow(TestPointOfSaleCommon):
         self.assertEqual(refund.state, 'paid', "The refund is not marked as paid")
         current_session.action_pos_session_closing_control()
 
+    def test_ship_later_picking(self):
+        """
+            In order to test the picking's generated from the point of sale
+            using the ship later
+        """
+
+        # I click on create a new session button
+        self.pos_config.open_session_cb()
+        current_session = self.pos_config.current_session_id
+
+        # I create a PoS order with 1 units of PCSC234 at 450 EUR
+        # and 1 units of PCSC349 at 300 EUR.
+        untax1, atax1 = self.compute_tax(self.product3, 450, 1)
+        untax2, atax2 = self.compute_tax(self.product4, 300, 1)
+        self.pos_order_pos1 = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'partner_id': self.partner1.id,
+            'to_ship': True,
+            'lines': [(0, 0, {
+                'name': "OL/0001",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
+                'price_subtotal': untax1,
+                'price_subtotal_incl': untax1 + atax1,
+            }), (0, 0, {
+                'name': "OL/0002",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 0.0,
+                'qty': 1.0,
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
+                'price_subtotal': untax2,
+                'price_subtotal_incl': untax2 + atax2,
+            })],
+            'amount_tax': atax1 + atax2,
+            'amount_total': untax1 + untax2 + atax1 + atax2,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        context_make_payment = {
+            "active_ids": [self.pos_order_pos1.id],
+            "active_id": self.pos_order_pos1.id
+        }
+        self.pos_make_payment_1 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': untax1 + untax2 + atax1 + atax2
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos1.id}
+
+        self.pos_make_payment_1.with_context(context_payment).check()
+
+        # I create a second order
+        untax1, atax1 = self.compute_tax(self.product3, 450, 1)
+        untax2, atax2 = self.compute_tax(self.product4, 300, 1)
+        self.pos_order_pos2 = self.PosOrder.create({
+            'company_id': self.env.company.id,
+            'session_id': current_session.id,
+            'pricelist_id': self.partner1.property_product_pricelist.id,
+            'partner_id': self.partner1.id,
+            'to_ship': True,
+            'lines': [(0, 0, {
+                'name': "OL/0003",
+                'product_id': self.product3.id,
+                'price_unit': 450,
+                'discount': 0.0,
+                'qty': 1,
+                'tax_ids': [(6, 0, self.product3.taxes_id.ids)],
+                'price_subtotal': untax1,
+                'price_subtotal_incl': untax1 + atax1,
+            }), (0, 0, {
+                'name': "OL/0004",
+                'product_id': self.product4.id,
+                'price_unit': 300,
+                'discount': 0.0,
+                'qty': 1,
+                'tax_ids': [(6, 0, self.product4.taxes_id.ids)],
+                'price_subtotal': untax2,
+                'price_subtotal_incl': untax2 + atax2,
+            })],
+            'amount_tax': atax1 + atax2,
+            'amount_total': untax1 + untax2 + atax1 + atax2,
+            'amount_paid': 0,
+            'amount_return': 0,
+        })
+
+        context_make_payment = {
+            "active_ids": [self.pos_order_pos2.id],
+            "active_id": self.pos_order_pos2.id
+        }
+        self.pos_make_payment_2 = self.PosMakePayment.with_context(context_make_payment).create({
+            'amount': untax1 + untax2 + atax1 + atax2
+        })
+
+        # I click on the validate button to register the payment.
+        context_payment = {'active_id': self.pos_order_pos2.id}
+        self.pos_make_payment_2.with_context(context_payment).check()
+
+        current_session.picking_ids.move_ids_without_package.quantity_done = 1
+        current_session.picking_ids.button_validate()
+
+        # I test that the pickings are created as expected during payment
+        # One picking attached and having all the positive move lines in the correct state
+        self.assertEqual(
+            self.pos_order_pos1.picking_ids[0].state,
+            'done',
+            'Picking should be in done state.'
+        )
+        self.assertEqual(
+            self.pos_order_pos1.picking_ids[0].move_ids.mapped('state'),
+            ['done', 'done'],
+            'Move Lines should be in done state.'
+        )
+
+        self.assertEqual(
+            self.pos_order_pos2.picking_ids[0].state,
+            'done',
+            'Picking should be in done state.'
+        )
+        self.assertEqual(
+            self.pos_order_pos2.picking_ids[0].move_ids.mapped('state'),
+            ['done', 'done'],
+            'Move Lines should be in done state.'
+        )
+
+        # I close the session to generate the journal entries
+        self.pos_config.current_session_id.action_pos_session_closing_control()
+
     def test_order_to_picking(self):
         """
             In order to test the Point of Sale in module, I will do three orders from the sale to the payment,
