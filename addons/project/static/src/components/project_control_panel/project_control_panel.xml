@@ -10,10 +10,10 @@
 
     <t t-name="project.ProjectControlPanelContent" owl="1">
         <t t-if="showProjectUpdate">
-            <div t-if="isProjectUser" class="o_project_updates_breadcrumb" t-on-click="onStatusClick">
+            <div t-if="isProjectUser" class="o_project_updates_breadcrumb z-index-1" t-on-click="onStatusClick">
                 <t t-call="project.ProjectControlPanelContentBadge"></t>
             </div>
-            <div t-else="" class="o_project_updates_breadcrumb">
+            <div t-else="" class="o_project_updates_breadcrumb z-index-1">
                 <t t-call="project.ProjectControlPanelContentBadge"></t>
             </div>
         </t>
