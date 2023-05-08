@@ -11,7 +11,7 @@
 
         > .o_arrow_button {
             position: relative;
-            padding-left: $o-statusbar-arrow-width*2;
+            padding-left: $o-statusbar-arrow-width * 1.5;
             border-radius: 0;
 
             &:first-child {
@@ -39,7 +39,7 @@
                 }
 
                 &:before {
-                    right: -$o-statusbar-arrow-width - $border-width;
+                    right: calc(-#{$o-statusbar-arrow-width} - #{$border-width});
                     border-left-color: $o-view-background-color;
                 }
 
