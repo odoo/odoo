@@ -106,7 +106,8 @@ PIP_TO_INSTALL="
     pyusb \
     v4l2 \
     pysmb==1.2.9.1 \
-    cryptocode==0.1"
+    cryptocode==0.1 \
+    geoip2==2.9.0"
 
 pip3 install ${PIP_TO_INSTALL}
 
