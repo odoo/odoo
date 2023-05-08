@@ -149,7 +149,7 @@
     <record id="account_root_comp_rule" model="ir.rule">
         <field name="name">Account Root multi-company</field>
         <field name="model_id" ref="model_account_root"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record id="tax_group_comp_rule" model="ir.rule">
@@ -167,7 +167,7 @@
     <record id="tax_rep_comp_rule" model="ir.rule">
         <field name="name">Tax Repartition multi-company</field>
         <field name="model_id" ref="model_account_tax_repartition_line"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
     </record>
 
     <record id="invoice_analysis_comp_rule" model="ir.rule">
@@ -185,7 +185,7 @@
     <record model="ir.rule" id="account_bank_statement_comp_rule">
         <field name="name">Account bank statement company rule</field>
         <field name="model_id" ref="model_account_bank_statement"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <record model="ir.rule" id="account_bank_statement_line_comp_rule">
@@ -215,7 +215,7 @@
     <record model="ir.rule" id="account_payment_term_comp_rule">
         <field name="name">Account payment term company rule</field>
         <field name="model_id" ref="model_account_payment_term"/>
-        <field name="domain_force">['|',('company_id','=',False),('company_id', 'in', company_ids)]</field>
+        <field name="domain_force">[('company_id', 'in', company_ids + [False])]</field>
     </record>
 
     <!-- Billing record rules for account.move -->
