@@ -4,6 +4,7 @@
 import { start, startServer } from "@mail/../tests/helpers/test_utils";
 import { patchWithCleanup } from "@web/../tests/helpers/utils";
 import { AccountMoveFormRenderer } from "@account/components/account_move_form/account_move_form";
+import { accountMove as accountMoveService} from '@account/components/account_move_service/account_move_service';
 
 QUnit.module("Views", {}, function (hooks) {
     QUnit.module('MoveFormView');
@@ -25,6 +26,9 @@ QUnit.module("Views", {}, function (hooks) {
         };
         const { click, openView } = await start({
             serverData: { views },
+            services: {
+                'account_move': accountMoveService,
+            }
         });
         patchWithCleanup(AccountMoveFormRenderer.prototype, {
             saveBeforeTabChange() {
