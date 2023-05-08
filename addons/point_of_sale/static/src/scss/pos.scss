@@ -2622,7 +2622,8 @@ td {
 }
 
 .pos .popup .button.dont-show-again {
-    width: 130px;
+    width: auto;
+    padding: 0px 10px;
 }
 
 .pos .popup .button.icon {
@@ -2741,6 +2742,9 @@ td {
 .pos .popup-input.active {
     outline: none;
     box-shadow: 0px 0px 0px 3px $primary;
+}
+.pos .popup.offline {
+    max-width: 600px;
 }
 .pos .popup.popup-error,
 .pos .popup.popup-error .button {
