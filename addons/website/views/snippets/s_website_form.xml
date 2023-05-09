@@ -67,6 +67,12 @@
         </div>
 
         <!-- Field -->
+        <div data-js="WebsiteFormFieldRequired" data-selector=".s_website_form .s_website_form_model_required">
+            <!-- Disable the delete option of model required fields and show
+            alert and tooltip on delete buttons -->
+            <we-alert class="mt-2"></we-alert>
+        </div>
+
         <div data-js='WebsiteFieldEditor' data-selector=".s_website_form_field"
              data-exclude=".s_website_form_dnone" data-drop-near=".s_website_form_field">
             <we-select data-name="type_opt" string="Type" data-no-preview="true">
@@ -226,9 +232,6 @@
 
         <!-- Remove the duplicate option of model fields -->
         <div data-js="WebsiteFormFieldModel" data-selector=".s_website_form .s_website_form_field:not(.s_website_form_custom)"/>
-
-        <!-- Remove the delete option of model required fields -->
-        <div data-js="WebsiteFormFieldRequired" data-selector=".s_website_form .s_website_form_model_required"/>
 
         <!-- Remove the delete and duplicate option of the submit button -->
         <div data-js="WebsiteFormSubmitRequired" data-selector=".s_website_form .s_website_form_submit"/>
