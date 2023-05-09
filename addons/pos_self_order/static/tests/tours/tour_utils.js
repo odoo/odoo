@@ -28,11 +28,19 @@ export function doesNotExist(selector) {
     return `body:not(:has(${selector}))`;
 }
 
-export function clickOnProductCard(product_id, { isCheck = false, isNot = false } = {}) {
-    const productCard = `.o_self_order_item_card:contains('Product ${product_id} test')`;
+export function clickOnProductCard(
+    product_id,
+    { isCheck = false, isNot = false, qty = false } = {}
+) {
+    let productCard = `.o_self_order_item_card:contains(Product ${product_id} test)`;
+    if (qty) {
+        productCard = `${productCard}:has(span:contains(${qty} x )`;
+    }
     return [
         {
-            content: `Click on the product card of Product ${product_id}`,
+            content: `${isCheck ? "Test" : "Click"} the product card of Product ${product_id}${
+                qty ? ` with quantity ${qty}` : ""
+            }${isNot ? " (should not present)" : ""}`,
             trigger: isNot ? doesNotExist(productCard) : productCard,
             isCheck,
         },

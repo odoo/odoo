@@ -13,13 +13,12 @@ registry.category("web_tour.tours").add("self_order_pay_after_each_tour", {
         // this will allow us to test if the merging of orderlines works
         ...addProductsToCart([1]),
         ...clickOn("Review"),
+
         // check that the products are in the card
         ...[1, 2].map((id) => clickOnProductCard(id, { isCheck: true })).flat(),
-        {
-            content: "Check that Product 1 is present twice in the cart",
-            trigger: ".o_self_order_item_card:has(p:contains('2 x '):contains('Product 1 test'))",
-            isCheck: true,
-        },
+
+        ...clickOnProductCard(1, { isCheck: true, qty: 2 }),
+
         ...clickOn("Order"),
         // We should now be on the landing page screen ( because ordering redirects to the landing page )
         ...clickOn("My Orders"),
@@ -29,11 +28,9 @@ registry.category("web_tour.tours").add("self_order_pay_after_each_tour", {
             isCheck: true,
         },
         ...[1, 2].map((id) => clickOnProductCard(id, { isCheck: true })).flat(),
-        {
-            content: "Test that the first item is in the order and has the correct quantity",
-            trigger: ".o_self_order_item_card:has(p:contains('2 x '):contains('Product 1 test'))",
-            isCheck: true,
-        },
+
+        ...clickOnProductCard(1, { isCheck: true, qty: 2 }),
+
         ...clickOnBackButton(),
         // We should now be on the Landing Page
 
