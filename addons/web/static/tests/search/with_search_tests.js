@@ -2,16 +2,14 @@
 
 import { makeTestEnv } from "@web/../tests/helpers/mock_env";
 import { getFixture, nextTick } from "@web/../tests/helpers/utils";
-import { FilterMenu } from "@web/search/filter_menu/filter_menu";
-import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
+import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { WithSearch } from "@web/search/with_search/with_search";
 import { mount } from "../helpers/utils";
 import {
     getMenuItemTexts,
     makeWithSearch,
     setupControlPanelServiceRegistry,
-    toggleFilterMenu,
-    toggleGroupByMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
 } from "./helpers";
 
@@ -235,11 +233,10 @@ QUnit.module("Search", (hooks) => {
             assert.expect(3);
 
             class TestComponent extends Component {}
-            TestComponent.components = { FilterMenu, GroupByMenu };
+            TestComponent.components = { SearchBarMenu };
             TestComponent.template = xml`
                 <div class="o_test_component">
-                    <FilterMenu/>
-                    <GroupByMenu/>
+                    <SearchBarMenu/>
                 </div>
             `;
 
@@ -254,10 +251,10 @@ QUnit.module("Search", (hooks) => {
                 Component: TestComponent,
                 searchViewId: 1,
             });
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await assert.ok(getMenuItemTexts(target), ["True Domain"]);
 
-            await toggleGroupByMenu(target);
+            await toggleSearchBarMenu(target);
             await assert.ok(getMenuItemTexts(target), ["Name"]);
         }
     );
@@ -277,10 +274,10 @@ QUnit.module("Search", (hooks) => {
                     });
                 }
             }
-            TestComponent.components = { FilterMenu };
+            TestComponent.components = { SearchBarMenu };
             TestComponent.template = xml`
                 <div class="o_test_component">
-                    <FilterMenu/>
+                    <SearchBarMenu/>
                 </div>
             `;
 
@@ -290,7 +287,7 @@ QUnit.module("Search", (hooks) => {
                 Component: TestComponent,
                 searchViewId: 1,
             });
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "True domain");
         }
     );

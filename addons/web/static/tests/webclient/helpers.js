@@ -53,7 +53,7 @@ import { uiService } from "@web/core/ui/ui_service";
 import { ClientActionAdapter } from "@web/legacy/action_adapters";
 import { commandService } from "@web/core/commands/command_service";
 import { ConnectionAbortedError } from "@web/core/network/rpc_service";
-import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
+import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
 import { standaloneAdapter } from "web.OwlCompatibility";
 import { overlayService } from "@web/core/overlay/overlay_service";
 

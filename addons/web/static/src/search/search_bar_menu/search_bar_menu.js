@@ -8,7 +8,7 @@ import { DropdownItem } from "@web/core/dropdown/dropdown_item";
 import { registry } from "@web/core/registry";
 import { sortBy } from "@web/core/utils/arrays";
 import { useBus, useService } from "@web/core/utils/hooks";
-import { CustomGroupByItem } from "@web/search/group_by_menu/custom_group_by_item";
+import { CustomGroupByItem } from "@web/search/custom_group_by_item/custom_group_by_item";
 import { SearchDropdownItem } from "@web/search/search_dropdown_item/search_dropdown_item";
 import { FACET_ICONS, GROUPABLE_TYPES } from "@web/search/utils/misc";
 import { useGetDefaultLeafDomain } from "@web/core/domain_selector/utils";
