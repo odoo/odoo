@@ -303,7 +303,7 @@ class IrAttachment(models.Model):
             elif values.get('datas'):
                 raw = base64.b64decode(values['datas'])
             if raw:
-                mimetype = guess_mimetype(raw)
+                mimetype = guess_mimetype(raw, default=self.mimetype) if self.mimetype else guess_mimetype(raw)
         return mimetype or 'application/octet-stream'
 
     def _postprocess_contents(self, values):
