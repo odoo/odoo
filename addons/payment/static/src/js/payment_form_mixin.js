@@ -185,9 +185,14 @@ odoo.define('payment.payment_form_mixin', require => {
         _getInlineFormFromRadio: function (radio) {
             const paymentOptionId = this._getPaymentOptionIdFromRadio(radio);
             const paymentOptionType = $(radio).data('payment-option-type');
-            const $inlineForm = this.$(
+            let $inlineForm = this.$(
                 `#o_payment_${paymentOptionType}_inline_${this.formType}_form_${paymentOptionId}`
             );
+            if (!$inlineForm.length) { // The template was not updated; fallback to the old id.
+                $inlineForm = this.$(
+                    `#o_payment_${paymentOptionType}_inline_form_${paymentOptionId}`
+                );
+            }
             return $inlineForm;
         },
 

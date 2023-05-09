@@ -138,6 +138,8 @@ odoo.define('payment.manage_form', require => {
                         `[data-payment-option-type="token"]`
                     ).closest('div[name="o_payment_option_card"]');
                     $tokenCard.siblings(`#o_payment_token_inline_manage_form_${tokenId}`).remove();
+                    // Fallback to the old id in case the template was not updated.
+                    $tokenCard.siblings(`#o_payment_token_inline_form_${tokenId}`).remove();
                     $tokenCard.remove();
                     this._disableButton(false);
                 }).guardedCatch(error => {

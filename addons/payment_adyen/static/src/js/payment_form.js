@@ -165,6 +165,12 @@ odoo.define('payment_adyen.payment_form', require => {
                         onSubmit: this._dropinOnSubmit.bind(this),
                     };
                     const checkout = new AdyenCheckout(configuration);
+                    let $dropinContainer = this.$(
+                        `#o_adyen_${this.formType}_dropin_container_${paymentOptionId}`
+                    );
+                    if (!$dropinContainer.length) { // The template was not updated; fallback to the old id.
+                        $dropinContainer = this.$(`#o_adyen_dropin_container_${paymentOptionId}`);
+                    }
                     this.adyenDropin = checkout.create(
                         'dropin', {
                             openFirstPaymentMethod: true,
@@ -174,7 +180,7 @@ odoo.define('payment_adyen.payment_form', require => {
                             showPayButton: false,
                             setStatusAutomatically: true,
                         },
-                    ).mount(`#o_adyen_${this.formType}_dropin_container_${paymentOptionId}`);
+                    ).mount($dropinContainer[0]);
                     this.adyenDropin.providerId = paymentOptionId;
                 });
             }).guardedCatch((error) => {
