@@ -1261,6 +1261,7 @@ var SnippetsMenu = Widget.extend({
         'request_editable': '_onRequestEditable',
         'disable_loading_effect': '_onDisableLoadingEffect',
         'enable_loading_effect': '_onEnableLoadingEffect',
+        "update_invisible_dom": "_onUpdateInvisibleDom",
     },
     // enum of the SnippetsMenu's tabs.
     tabs: {
@@ -3195,6 +3196,14 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetDragAndDropStop: async function (ev) {
         this.snippetEditorDragging = false;
+        const visibleConditionalEls = [];
+        for (const snippetEditor of this.snippetEditors) {
+            const targetEl = snippetEditor.$target[0];
+            if (targetEl.dataset["visibility"] === "conditional" &&
+                !targetEl.classList.contains("o_conditional_hidden")) {
+                visibleConditionalEls.push(targetEl);
+            }
+        }
         const modalEl = ev.data.$snippet[0].closest('.modal');
         const carouselItemEl = ev.data.$snippet[0].closest('.carousel-item');
         // If the snippet is in a modal, destroy editors only in that modal.
@@ -3204,6 +3213,16 @@ var SnippetsMenu = Widget.extend({
         // first slide.
         await this._destroyEditors(carouselItemEl ? $(carouselItemEl) : modalEl ? $(modalEl) : null);
         await this._activateSnippet(ev.data.$snippet);
+        // Because of _destroyEditors(), all the snippets with a conditional
+        // visibility are hidden. Show the ones that were visible before the
+        // drag and drop.
+        for (const visibleConditionalEl of visibleConditionalEls) {
+            visibleConditionalEl.classList.remove("o_conditional_hidden");
+            delete visibleConditionalEl.dataset["invisible"];
+        }
+        // Update the "Invisible Elements" panel as the order of invisible
+        // snippets could have changed on the page.
+        await this._updateInvisibleDOM();
     },
     /**
      * Returns the droppable snippet from which a dropped snippet originates.
@@ -3659,6 +3678,14 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetSearchResetClick: function () {
         this._filterSnippets('');
+    },
+    /**
+     * Called when a child editor asks to update the "Invisible Elements" panel.
+     *
+     * @private
+     */
+    async _onUpdateInvisibleDom() {
+        await this._updateInvisibleDOM();
     },
     _addToolbar(toolbarMode = "text") {
         let titleText = _t("Inline Text");
