@@ -82,4 +82,4 @@ class TestUiMobile(BaseTestUi):
 
     def test_01_main_flow_tour_mobile(self):
         raise unittest.SkipTest("Skip Milk")
-        self.main_flow_tour()
+        # self.main_flow_tour()
