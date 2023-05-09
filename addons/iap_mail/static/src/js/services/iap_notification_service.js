@@ -7,15 +7,11 @@ export const iapNotificationService = {
     dependencies: ["bus_service", "notification"],
 
     start(env, { bus_service, notification }) {
-        bus_service.addEventListener('notification', ({ detail: notifications }) => {
-            for (const { payload, type } of notifications) {
-                if (type === 'iap_notification') {
-                    if (payload.error_type == 'success') {
-                        displaySuccessIapNotification(payload);
-                    } else if (payload.error_type == 'danger') {
-                        displayFailureIapNotification(payload);
-                    }
-                }
+        bus_service.subscribe("iap_notification", (payload) => {
+            if (payload.error_type == "success") {
+                displaySuccessIapNotification(payload);
+            } else if (payload.error_type == "danger") {
+                displayFailureIapNotification(payload);
             }
         });
         bus_service.start();

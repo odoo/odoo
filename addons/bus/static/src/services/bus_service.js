@@ -25,6 +25,7 @@ export const busService = {
 
     async start(env, { multi_tab: multiTab, "bus.parameters": params }) {
         const bus = new EventBus();
+        const notificationBus = new EventBus();
         let worker;
         let isActive = false;
         let isInitialized = false;
@@ -65,6 +66,9 @@ export const busService = {
             if (type === "notification") {
                 multiTab.setSharedValue("last_notification_id", data[data.length - 1].id);
                 data = data.map((notification) => notification.message);
+                for (const { type, payload } of data) {
+                    notificationBus.trigger(type, payload);
+                }
             } else if (type === "initialized") {
                 isInitialized = true;
                 connectionInitializedDeferred.resolve();
@@ -181,6 +185,17 @@ export const busService = {
             stop: () => {
                 send("leave");
                 isActive = false;
+            },
+            /**
+             * Subscribe to a single notification type.
+             *
+             * @param {string} notificationType
+             * @param {function} callback
+             */
+            subscribe(notificationType, callback) {
+                notificationBus.addEventListener(notificationType, ({ detail }) =>
+                    callback(detail)
+                );
             },
         };
     },
