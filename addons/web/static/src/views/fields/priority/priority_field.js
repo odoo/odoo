@@ -12,6 +12,7 @@ export class PriorityField extends Component {
     static props = {
         ...standardFieldProps,
         withCommand: { type: Boolean, optional: true },
+        autosave: { type: Boolean, optional: true },
     };
 
     setup() {
@@ -82,7 +83,9 @@ export class PriorityField extends Component {
 
     async updateRecord(value) {
         await this.props.record.update({ [this.props.name]: value });
-        return this.props.record.save();
+        if (this.props.autosave) {
+            return this.props.record.save();
+        }
     }
 }
 
@@ -90,10 +93,11 @@ export const priorityField = {
     component: PriorityField,
     displayName: _lt("Priority"),
     supportedTypes: ["selection"],
-    extractProps({ viewType }, dynamicInfo) {
+    extractProps({ options, viewType }, dynamicInfo) {
         return {
             withCommand: viewType === "form",
             readonly: dynamicInfo.readonly,
+            autosave: "autosave" in options ? !!options.autosave : true,
         };
     },
 };
