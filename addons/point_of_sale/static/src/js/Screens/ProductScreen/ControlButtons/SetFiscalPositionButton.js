@@ -4,16 +4,17 @@ import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductSc
 import { useService } from "@web/core/utils/hooks";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class SetFiscalPositionButton extends Component {
     static template = "SetFiscalPositionButton";
 
     setup() {
-        super.setup();
+        this.pos = usePos();
         this.popup = useService("popup");
     }
     get currentOrder() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
     get currentFiscalPositionName() {
         return this.currentOrder && this.currentOrder.fiscal_position
@@ -29,7 +30,7 @@ export class SetFiscalPositionButton extends Component {
                 isSelected: !currentFiscalPosition,
             },
         ];
-        for (const fiscalPos of this.env.pos.fiscal_positions) {
+        for (const fiscalPos of this.pos.globalState.fiscal_positions) {
             fiscalPosList.push({
                 id: fiscalPos.id,
                 label: fiscalPos.name,
@@ -60,7 +61,7 @@ export class SetFiscalPositionButton extends Component {
 ProductScreen.addControlButton({
     component: SetFiscalPositionButton,
     condition: function () {
-        return this.env.pos.fiscal_positions.length > 0;
+        return this.pos.globalState.fiscal_positions.length > 0;
     },
     position: ["before", "SetPricelistButton"],
 });

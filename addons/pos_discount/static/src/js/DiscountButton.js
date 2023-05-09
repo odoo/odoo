@@ -6,19 +6,20 @@ import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { Component } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class DiscountButton extends Component {
     static template = "DiscountButton";
 
     setup() {
-        super.setup();
+        this.pos = usePos();
         this.popup = useService("popup");
     }
     async click() {
         var self = this;
         const { confirmed, payload } = await this.popup.add(NumberPopup, {
             title: this.env._t("Discount Percentage"),
-            startingValue: this.env.pos.config.discount_pc,
+            startingValue: this.pos.globalState.config.discount_pc,
             isInputSelected: true,
         });
         if (confirmed) {
@@ -28,9 +29,10 @@ export class DiscountButton extends Component {
     }
 
     async apply_discount(pc) {
-        var order = this.env.pos.get_order();
-        var lines = order.get_orderlines();
-        var product = this.env.pos.db.get_product_by_id(this.env.pos.config.discount_product_id[0]);
+        const { globalState } = this.pos;
+        const order = globalState.get_order();
+        const lines = order.get_orderlines();
+        const product = globalState.db.get_product_by_id(globalState.config.discount_product_id[0]);
         if (product === undefined) {
             await this.popup.add(ErrorPopup, {
                 title: this.env._t("No discount product found"),
@@ -56,7 +58,14 @@ export class DiscountButton extends Component {
                 .filter((id) => id !== "")
                 .map((id) => Number(id));
 
-            const baseToDiscount = order.calculate_base_amount(tax_ids_array, lines.filter((line) => !this.env.pos.config.tip_product_id || line.product.id !== this.env.pos.config.tip_product_id[0]));
+            const baseToDiscount = order.calculate_base_amount(
+                tax_ids_array,
+                lines.filter(
+                    (line) =>
+                        !globalState.config.tip_product_id ||
+                        line.product.id !== globalState.config.tip_product_id[0]
+                )
+            );
 
             // We add the price as manually set to avoid recomputation when changing customer.
             const discount = (-pc / 100.0) * baseToDiscount;
@@ -72,7 +81,7 @@ export class DiscountButton extends Component {
                             ? sprintf(
                                   this.env._t("Tax: %s"),
                                   tax_ids_array
-                                      .map((taxId) => this.env.pos.taxes_by_id[taxId].amount + "%")
+                                      .map((taxId) => globalState.taxes_by_id[taxId].amount + "%")
                                       .join(", ")
                               )
                             : this.env._t("No tax")),
@@ -88,6 +97,7 @@ export class DiscountButton extends Component {
 ProductScreen.addControlButton({
     component: DiscountButton,
     condition: function () {
-        return this.env.pos.config.module_pos_discount && this.env.pos.config.discount_product_id;
+        const { module_pos_discount, discount_product_id } = this.pos.globalState.config;
+        return module_pos_discount && discount_product_id;
     },
 });

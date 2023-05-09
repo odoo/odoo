@@ -5,6 +5,7 @@ import { getDataURLFromFile } from "@web/core/utils/urls";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class PartnerDetailsEdit extends Component {
     static template = "PartnerDetailsEdit";
@@ -12,6 +13,7 @@ export class PartnerDetailsEdit extends Component {
     setup() {
         super.setup();
         this.popup = useService("popup");
+        this.pos = usePos();
         this.intFields = ["country_id", "state_id", "property_product_pricelist"];
         const partner = this.props.partner;
         this.changes = {
@@ -23,13 +25,12 @@ export class PartnerDetailsEdit extends Component {
             save: () => this.saveChanges(),
         });
     }
+    // FIXME POSREF naming
     setDefaultPricelist(partner) {
         if (partner.property_product_pricelist) {
             return partner.property_product_pricelist[0];
-        } else if (this.env.pos.default_pricelist) {
-            return this.env.pos.default_pricelist.id;
         }
-        return false;
+        return this.pos.globalState.default_pricelist?.id ?? false;
     }
 
     get partnerImageUrl() {
@@ -82,8 +83,6 @@ export class PartnerDetailsEdit extends Component {
             if (loadedImage) {
                 const resizedImage = await this._resizeImage(loadedImage, 800, 600);
                 this.changes.image_1920 = resizedImage.toDataURL();
-                // Rerender to reflect the changes in the screen
-                this.render(true);
             }
         }
     }

@@ -24,7 +24,7 @@ export class ProxyStatus extends Component {
                 iface_print_via_proxy,
                 iface_cashdrawer,
                 iface_electronic_scale,
-            } = this.env.pos.config;
+            } = this.pos.globalState.config;
             const devices = [
                 {
                     name: _t("Scanner"),

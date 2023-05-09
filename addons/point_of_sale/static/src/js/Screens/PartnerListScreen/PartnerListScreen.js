@@ -7,7 +7,7 @@ import { useService } from "@web/core/utils/hooks";
 import { PartnerLine } from "./PartnerLine";
 import { PartnerDetailsEdit } from "./PartnerDetailsEdit";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { Component, onWillUnmount, useRef } from "@odoo/owl";
+import { Component, onWillUnmount, useRef, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 
 /**
@@ -36,12 +36,7 @@ export class PartnerListScreen extends Component {
         this.notification = useService("pos_notification");
         this.searchWordInputRef = useRef("search-word-input-partner");
 
-        // We are not using useState here because the object
-        // passed to useState converts the object and its contents
-        // to Observer proxy. Not sure of the side-effects of making
-        // a persistent object, such as pos, into Observer. But it
-        // is better to be safe.
-        this.state = {
+        this.state = useState({
             query: null,
             selectedPartner: this.props.partner,
             detailIsShown: false,
@@ -50,7 +45,7 @@ export class PartnerListScreen extends Component {
             },
             previousQuery: "",
             currentOffset: 0,
-        };
+        });
         this.updatePartnerList = debounce(this.updatePartnerList, 70);
         onWillUnmount(this.updatePartnerList.cancel);
         this.partnerEditor = {}; // create an imperative handle for PartnerDetailsEdit
@@ -59,7 +54,6 @@ export class PartnerListScreen extends Component {
     back() {
         if (this.state.detailIsShown) {
             this.state.detailIsShown = false;
-            this.render(true);
         } else {
             this.props.resolve({ confirmed: false, payload: false });
             this.pos.closeTempScreen();
@@ -71,20 +65,19 @@ export class PartnerListScreen extends Component {
     }
     activateEditMode() {
         this.state.detailIsShown = true;
-        this.render(true);
     }
     // Getters
 
     get currentOrder() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
 
     get partners() {
         let res;
         if (this.state.query && this.state.query.trim() !== "") {
-            res = this.env.pos.db.search_partner(this.state.query.trim());
+            res = this.pos.globalState.db.search_partner(this.state.query.trim());
         } else {
-            res = this.env.pos.db.get_partners_sorted(1000);
+            res = this.pos.globalState.db.get_partners_sorted(1000);
         }
         res.sort(function (a, b) {
             return (a.name || "").localeCompare(b.name || "");
@@ -134,13 +127,11 @@ export class PartnerListScreen extends Component {
     _clearSearch() {
         this.searchWordInputRef.el.value = "";
         this.state.query = "";
-        this.render(true);
     }
     // We declare this event handler as a debounce function in
     // order to lower its trigger rate.
     async updatePartnerList(event) {
         this.state.query = event.target.value;
-        this.render(true);
     }
     clickPartner(partner) {
         if (this.state.selectedPartner && this.state.selectedPartner.id === partner.id) {
@@ -156,16 +147,15 @@ export class PartnerListScreen extends Component {
     }
     createPartner() {
         // initialize the edit screen with default details about country & state
-        this.state.editModeProps.partner = {
-            country_id: this.env.pos.company.country_id,
-            state_id: this.env.pos.company.state_id,
-        };
+        const { country_id, state_id } = this.pos.globalState.company;
+        this.state.editModeProps.partner = { country_id, state_id };
         this.activateEditMode();
     }
     async saveChanges(processedChanges) {
+        const { globalState } = this.pos;
         const partnerId = await this.orm.call("res.partner", "create_from_ui", [processedChanges]);
-        await this.env.pos.load_new_partners();
-        this.state.selectedPartner = this.env.pos.db.get_partner_by_id(partnerId);
+        await globalState.load_new_partners();
+        this.state.selectedPartner = globalState.db.get_partner_by_id(partnerId);
         this.confirm();
     }
     async searchPartner() {
@@ -173,8 +163,7 @@ export class PartnerListScreen extends Component {
             this.state.currentOffset = 0;
         }
         const result = await this.getNewPartners();
-        this.env.pos.addPartners(result);
-        this.render(true);
+        this.pos.globalState.addPartners(result);
         if (this.state.previousQuery == this.state.query) {
             this.state.currentOffset += result.length;
         } else {

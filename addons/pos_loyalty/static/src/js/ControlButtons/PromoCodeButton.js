@@ -4,12 +4,13 @@ import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductSc
 import { useService } from "@web/core/utils/hooks";
 import { TextInputPopup } from "@point_of_sale/js/Popups/TextInputPopup";
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class PromoCodeButton extends Component {
     static template = "PromoCodeButton";
 
     setup() {
-        super.setup();
+        this.pos = usePos();
         this.popup = useService("popup");
     }
 
@@ -22,7 +23,7 @@ export class PromoCodeButton extends Component {
         if (confirmed) {
             code = code.trim();
             if (code !== "") {
-                this.env.pos.get_order().activateCode(code);
+                this.pos.globalState.get_order().activateCode(code);
             }
         }
     }
@@ -31,7 +32,7 @@ export class PromoCodeButton extends Component {
 ProductScreen.addControlButton({
     component: PromoCodeButton,
     condition: function () {
-        return this.env.pos.programs.some((p) =>
+        return this.pos.globalState.programs.some((p) =>
             ["coupons", "promotion", "gift_card", "promo_code"].includes(p.program_type)
         );
     },

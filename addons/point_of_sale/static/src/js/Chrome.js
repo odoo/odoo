@@ -1,7 +1,6 @@
 /** @odoo-module */
 
 import { useService } from "@web/core/utils/hooks";
-import { batched } from "@point_of_sale/js/utils";
 import { throttleForAnimation } from "@web/core/utils/timing";
 import { Transition } from "@web/core/transition";
 import { MainComponentsContainer } from "@web/core/main_components_container";
@@ -36,16 +35,12 @@ export class Chrome extends Component {
             get isMobile() {
                 return window.innerWidth <= 768;
             },
-            pos: reactive(
-                reactivePos,
-                batched(() => this.render(true)) // FIXME POSREF remove render(true)
-            ),
         });
         let currentIsMobile = this.env.isMobile;
         const updateUI = throttleForAnimation(() => {
             if (this.env.isMobile !== currentIsMobile) {
                 currentIsMobile = this.env.isMobile;
-                // FIXME POSREF
+                // FIXME POSREF use reactive mobile instead
                 this.render(true);
             }
         });

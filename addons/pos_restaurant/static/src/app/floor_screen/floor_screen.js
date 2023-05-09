@@ -28,7 +28,7 @@ export class FloorScreen extends Component {
         this.pos = usePos();
         this.popup = useService("popup");
         this.orm = useService("orm");
-        const floor = this.props.floor ? this.props.floor : this.env.pos.floors[0];
+        const floor = this.props.floor || this.pos.globalState.floors[0];
         this.state = useState({
             selectedFloorId: floor ? floor.id : null,
             selectedTableIds: [],
@@ -36,11 +36,11 @@ export class FloorScreen extends Component {
             floorMapScrollTop: 0,
             isColorPicker: false,
         });
-        if (!this.env.pos.floorPlanStyle) {
+        if (!this.pos.globalState.floorPlanStyle) {
             if (this.env.isMobile) {
-                this.env.pos.floorPlanStyle = "kanban";
+                this.pos.globalState.floorPlanStyle = "kanban";
             } else {
-                this.env.pos.floorPlanStyle = "default";
+                this.pos.globalState.floorPlanStyle = "default";
             }
         }
         this.floorMapRef = useRef("floor-map-ref");
@@ -53,7 +53,7 @@ export class FloorScreen extends Component {
     onPatched() {
         this.floorMapRef.el.style.background = this.state.floorBackground;
         this.addFloorRef.el.style.background = this.state.floorBackground;
-        if (!this.env.pos.isEditMode && this.env.pos.floors.length > 0) {
+        if (!this.pos.globalState.isEditMode && this.pos.globalState.floors.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {
             this.addFloorRef.el.style.display = "initial";
@@ -64,7 +64,7 @@ export class FloorScreen extends Component {
         this.pos.openCashControl();
         this.floorMapRef.el.style.background = this.state.floorBackground;
         this.addFloorRef.el.style.background = this.state.floorBackground;
-        if (!this.env.pos.isEditMode && this.env.pos.floors.length > 0) {
+        if (!this.pos.globalState.isEditMode && this.pos.globalState.floors.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {
             this.addFloorRef.el.style.display = "initial";
@@ -249,20 +249,21 @@ export class FloorScreen extends Component {
         delete tableCopy.floor;
         const tableId = await this.orm.call("restaurant.table", "create_from_ui", [tableCopy]);
         table.id = tableId;
-        this.env.pos.tables_by_id[tableId] = table;
+        this.pos.globalState.tables_by_id[tableId] = table;
     }
     async _renameFloor(floorId, newName) {
         await this.orm.call("restaurant.floor", "rename_floor", [floorId, newName]);
     }
     async _tableLongpolling() {
-        if (this.env.pos.isEditMode) {
+        const { globalState } = this.pos;
+        if (globalState.isEditMode) {
             return;
         }
         const result = await this.orm.call("pos.config", "get_tables_order_count", [
-            this.env.pos.config.id,
+            globalState.config.id,
         ]);
         for (const table of result) {
-            if (!(table.id in this.env.pos.tables_by_id)) {
+            if (!(table.id in globalState.tables_by_id)) {
                 //We enter this condition if, after loading our PoS, a table is deleted on a PoS and not on another.
                 //This will lead in receiving information on orders from a table that we do not have.
                 //If we do not have a table in the PoS but still receive information about it, we reload the tables
@@ -270,13 +271,13 @@ export class FloorScreen extends Component {
                 const result = await this.orm.call("pos.session", "get_pos_ui_restaurant_floor", [
                     [odoo.pos_session_id],
                 ]);
-                if (this.env.pos.config.module_pos_restaurant) {
-                    this.env.pos.floors = result;
-                    this.env.pos.loadRestaurantFloor();
+                if (globalState.config.module_pos_restaurant) {
+                    globalState.floors = result;
+                    globalState.loadRestaurantFloor();
                 }
             }
-            const table_obj = this.env.pos.tables_by_id[table.id];
-            const unsynced_orders = this.env.pos.getTableOrders(table_obj.id).filter(
+            const table_obj = globalState.tables_by_id[table.id];
+            const unsynced_orders = globalState.getTableOrders(table_obj.id).filter(
                 (o) =>
                     o.server_id === undefined &&
                     (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
@@ -288,7 +289,7 @@ export class FloorScreen extends Component {
     }
     get activeFloor() {
         return this.state.selectedFloorId
-            ? this.env.pos.floors_by_id[this.state.selectedFloorId]
+            ? this.pos.globalState.floors_by_id[this.state.selectedFloorId]
             : null;
     }
     get activeTables() {
@@ -300,12 +301,12 @@ export class FloorScreen extends Component {
     get selectedTables() {
         const tables = [];
         this.state.selectedTableIds.forEach((id) => {
-            tables.push(this.env.pos.tables_by_id[id]);
+            tables.push(this.pos.globalState.tables_by_id[id]);
         });
         return tables;
     }
     get nbrFloors() {
-        return this.env.pos.floors.length;
+        return this.pos.globalState.floors.length;
     }
     movePinch(hypot) {
         const delta = hypot / this.scalehypot;
@@ -333,8 +334,8 @@ export class FloorScreen extends Component {
         this.state.selectedTableIds = [];
     }
     toggleEditMode() {
-        this.env.pos.toggleEditMode();
-        if (!this.env.pos.isEditMode && this.env.pos.floors.length > 0) {
+        this.pos.globalState.toggleEditMode();
+        if (!this.pos.globalState.isEditMode && this.pos.globalState.floors.length > 0) {
             this.addFloorRef.el.style.display = "none";
         } else {
             this.addFloorRef.el.style.display = "initial";
@@ -342,7 +343,8 @@ export class FloorScreen extends Component {
         this.state.selectedTableIds = [];
     }
     async onSelectTable(table, ev) {
-        if (this.env.pos.isEditMode) {
+        const { globalState } = this.pos;
+        if (globalState.isEditMode) {
             if (ev.ctrlKey || ev.metaKey) {
                 this.state.selectedTableIds.push(table.id);
             } else {
@@ -350,11 +352,11 @@ export class FloorScreen extends Component {
                 this.state.selectedTableIds.push(table.id);
             }
         } else {
-            if (this.env.pos.orderToTransfer) {
-                await this.env.pos.transferTable(table);
+            if (globalState.orderToTransfer) {
+                await globalState.transferTable(table);
             } else {
                 try {
-                    await this.env.pos.setTable(table);
+                    await globalState.setTable(table);
                 } catch (e) {
                     if (!(e.message instanceof ConnectionLostError)) {
                         throw e;
@@ -363,7 +365,7 @@ export class FloorScreen extends Component {
                     Promise.reject(e);
                 }
             }
-            const order = this.env.pos.get_order();
+            const order = globalState.get_order();
             this.pos.showScreen(order.get_screen_data().name);
         }
     }
@@ -377,15 +379,16 @@ export class FloorScreen extends Component {
         if (!confirmed) {
             return;
         }
+        const { globalState } = this.pos;
         const floor = await this.orm.call("restaurant.floor", "create_from_ui", [
             newName,
             "#ACADAD",
-            this.env.pos.config.id,
+            globalState.config.id,
         ]);
-        this.env.pos.floors_by_id[floor.id] = floor;
-        this.env.pos.floors.push(floor);
+        globalState.floors_by_id[floor.id] = floor;
+        globalState.floors.push(floor);
         this.selectFloor(floor);
-        this.env.pos.isEditMode = true;
+        globalState.isEditMode = true;
     }
     async createTable() {
         const newTable = await this._createTableHelper();
@@ -396,16 +399,17 @@ export class FloorScreen extends Component {
     }
     async duplicateTableOrFloor() {
         if (this.selectedTables.length == 0) {
+            const { globalState } = this.pos;
             const floor = this.activeFloor;
             const tables = this.activeFloor.tables;
             const newFloorName = floor.name + " (copy)";
             const newFloor = await this.orm.call("restaurant.floor", "create_from_ui", [
                 newFloorName,
                 floor.background_color,
-                this.env.pos.config.id,
+                globalState.config.id,
             ]);
-            this.env.pos.floors_by_id[newFloor.id] = newFloor;
-            this.env.pos.floors.push(newFloor);
+            globalState.floors_by_id[newFloor.id] = newFloor;
+            globalState.floors.push(newFloor);
             this.selectFloor(newFloor);
             for (const table of tables) {
                 await this._createTableHelper(table, true);
@@ -491,7 +495,6 @@ export class FloorScreen extends Component {
             selectedTable.shape = form;
             await this._save(selectedTable);
         });
-        this.render();
     }
     async setTableColor(color) {
         const selectedTables = this.selectedTables;
@@ -499,7 +502,6 @@ export class FloorScreen extends Component {
             selectedTable.color = color;
             await this._save(selectedTable);
         });
-        this.render();
         this.state.isColorPicker = false;
     }
     async setFloorColor(color) {
@@ -514,6 +516,7 @@ export class FloorScreen extends Component {
         this.state.isColorPicker = !this.state.isColorPicker;
     }
     async deleteFloorOrTable() {
+        const { globalState } = this.pos;
         if (this.selectedTables.length == 0) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: `Removing floor ${this.activeFloor.name}`,
@@ -528,28 +531,28 @@ export class FloorScreen extends Component {
             const originalSelectedFloorId = this.activeFloor.id;
             await this.orm.call("restaurant.floor", "deactivate_floor", [
                 originalSelectedFloorId,
-                this.env.pos.pos_session.id,
+                globalState.pos_session.id,
             ]);
-            const floor = this.env.pos.floors_by_id[originalSelectedFloorId];
-            const orderList = [...this.env.pos.get_order_list()];
+            const floor = globalState.floors_by_id[originalSelectedFloorId];
+            const orderList = [...globalState.get_order_list()];
             for (const order of orderList) {
                 if (floor.table_ids.includes(order.tableId)) {
-                    this.env.pos.removeOrder(order, false);
+                    globalState.removeOrder(order, false);
                 }
             }
             floor.table_ids.forEach((tableId) => {
-                delete this.env.pos.tables_by_id[tableId];
+                delete globalState.tables_by_id[tableId];
             });
-            delete this.env.pos.floors_by_id[originalSelectedFloorId];
-            this.env.pos.floors = this.env.pos.floors.filter(
+            delete globalState.floors_by_id[originalSelectedFloorId];
+            globalState.floors = globalState.floors.filter(
                 (floor) => floor.id != originalSelectedFloorId
             );
-            this.env.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
-            if (this.env.pos.floors.length > 0) {
-                this.selectFloor(this.env.pos.floors[0]);
+            globalState.TICKET_SCREEN_STATE.syncedOrders.cache = {};
+            if (globalState.floors.length > 0) {
+                this.selectFloor(globalState.floors[0]);
             } else {
-                this.env.pos.isEditMode = false;
-                this.env.pos.floorPlanStyle = "default";
+                globalState.isEditMode = false;
+                globalState.floorPlanStyle = "default";
                 this.state.floorBackground = null;
             }
             return;
@@ -568,17 +571,17 @@ export class FloorScreen extends Component {
             ]);
             if (!response) {
                 //remove order not send to server
-                for (const order of this.env.pos.get_order_list()) {
+                for (const order of globalState.get_order_list()) {
                     if (order.tableId == id) {
-                        this.env.pos.removeOrder(order, false);
+                        globalState.removeOrder(order, false);
                     }
                 }
-                this.env.pos.tables_by_id[id].active = false;
+                globalState.tables_by_id[id].active = false;
                 await this.orm.call("restaurant.table", "create_from_ui", [
                     { active: false, id: id },
                 ]);
                 this.activeFloor.tables = this.activeTables.filter((table) => table.id !== id);
-                delete this.env.pos.tables_by_id[id];
+                delete globalState.tables_by_id[id];
             } else {
                 await this.popup.add(ErrorPopup, {
                     title: this.env._t("Delete Error"),
@@ -600,7 +603,7 @@ export class FloorScreen extends Component {
         if (equalsCheck(this.state.selectedTableIds, originalSelectedTableIds)) {
             this.state.selectedTableIds = [];
         }
-        this.env.pos.TICKET_SCREEN_STATE.syncedOrders.cache = {};
+        globalState.TICKET_SCREEN_STATE.syncedOrders.cache = {};
     }
 }
 

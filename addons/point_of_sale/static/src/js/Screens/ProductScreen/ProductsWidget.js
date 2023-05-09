@@ -28,63 +28,63 @@ export class ProductsWidget extends Component {
         this.orm = useService("orm");
     }
     get selectedCategoryId() {
-        return this.env.pos.selectedCategoryId;
+        return this.pos.globalState.selectedCategoryId;
     }
     get searchWord() {
-        return this.env.pos.searchProductWord.trim();
+        return this.pos.globalState.searchProductWord.trim();
     }
     get productsToDisplay() {
+        const { db } = this.pos.globalState;
         let list = [];
         if (this.searchWord !== "") {
-            list = this.env.pos.db.search_product_in_category(
-                this.selectedCategoryId,
-                this.searchWord
-            );
+            list = db.search_product_in_category(this.selectedCategoryId, this.searchWord);
         } else {
-            list = this.env.pos.db.get_product_by_category(this.selectedCategoryId);
+            list = db.get_product_by_category(this.selectedCategoryId);
         }
         return list.sort(function (a, b) {
             return a.display_name.localeCompare(b.display_name);
         });
     }
     get subcategories() {
-        return this.env.pos.db
+        const { db } = this.pos.globalState;
+        return db
             .get_category_childs_ids(this.selectedCategoryId)
-            .map((id) => this.env.pos.db.get_category_by_id(id));
+            .map((id) => db.get_category_by_id(id));
     }
     get breadcrumbs() {
-        if (this.selectedCategoryId === this.env.pos.db.root_category_id) {
+        const { db } = this.pos.globalState;
+        if (this.selectedCategoryId === db.root_category_id) {
             return [];
         }
         return [
-            ...this.env.pos.db.get_category_ancestors_ids(this.selectedCategoryId).slice(1),
+            ...db.get_category_ancestors_ids(this.selectedCategoryId).slice(1),
             this.selectedCategoryId,
-        ].map((id) => this.env.pos.db.get_category_by_id(id));
+        ].map((id) => db.get_category_by_id(id));
     }
     get hasNoCategories() {
-        return this.env.pos.db.get_category_childs_ids(0).length === 0;
+        return this.pos.globalState.db.get_category_childs_ids(0).length === 0;
     }
     get shouldShowButton() {
         return this.productsToDisplay.length === 0 && this.searchWord;
     }
     switchCategory(categoryId) {
-        this.env.pos.setSelectedCategoryId(categoryId);
+        this.pos.globalState.setSelectedCategoryId(categoryId);
     }
     updateSearch(searchWord) {
-        this.env.pos.searchProductWord = searchWord;
+        this.pos.globalState.searchProductWord = searchWord;
     }
     clearSearch() {
-        this.env.pos.searchProductWord = "";
+        this.pos.globalState.searchProductWord = "";
     }
     updateProductList(event) {
-        this.render(true);
         this.switchCategory(0);
     }
     async onPressEnterKey() {
-        if (!this.env.pos.searchProductWord) {
+        const { searchProductWord } = this.pos.globalState;
+        if (!searchProductWord) {
             return;
         }
-        if (this.state.previousSearchWord != this.env.pos.searchProductWord) {
+        if (this.state.previousSearchWord !== searchProductWord) {
             this.state.currentOffset = 0;
         }
         const result = await this.loadProductFromDB();
@@ -93,28 +93,26 @@ export class ProductsWidget extends Component {
                 sprintf(
                     this.env._t('%s product(s) found for "%s".'),
                     result.length,
-                    this.env.pos.searchProductWord
+                    searchProductWord
                 ),
                 3000
             );
         } else {
             this.notification.add(
-                sprintf(
-                    this.env._t('No more product found for "%s".'),
-                    this.env.pos.searchProductWord
-                ),
+                sprintf(this.env._t('No more product found for "%s".'), searchProductWord),
                 3000
             );
         }
-        if (this.state.previousSearchWord == this.env.pos.searchProductWord) {
+        if (this.state.previousSearchWord === searchProductWord) {
             this.state.currentOffset += result.length;
         } else {
-            this.state.previousSearchWord = this.env.pos.searchProductWord;
+            this.state.previousSearchWord = searchProductWord;
             this.state.currentOffset = result.length;
         }
     }
     async loadProductFromDB() {
-        if (!this.env.pos.searchProductWord) {
+        const { searchProductWord } = this.pos.globalState;
+        if (!searchProductWord) {
             return;
         }
 
@@ -129,9 +127,9 @@ export class ProductsWidget extends Component {
                         ["available_in_pos", "=", true],
                         "|",
                         "|",
-                        ["name", "ilike", this.env.pos.searchProductWord],
-                        ["default_code", "ilike", this.env.pos.searchProductWord],
-                        ["barcode", "ilike", this.env.pos.searchProductWord],
+                        ["name", "ilike", searchProductWord],
+                        ["default_code", "ilike", searchProductWord],
+                        ["barcode", "ilike", searchProductWord],
                     ],
                 ],
                 {
@@ -140,7 +138,7 @@ export class ProductsWidget extends Component {
                 }
             );
             if (ProductIds.length) {
-                await this.env.pos._addProducts(ProductIds, false);
+                await this.pos.globalState._addProducts(ProductIds, false);
             }
             this.updateProductList();
             return ProductIds;

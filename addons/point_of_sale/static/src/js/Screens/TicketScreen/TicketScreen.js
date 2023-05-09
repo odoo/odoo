@@ -54,7 +54,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         this.numberBuffer.use({
             triggerAtInput: (event) => this._onUpdateSelectedOrderline(event),
         });
-        this._state = this.env.pos.TICKET_SCREEN_STATE;
+        this._state = this.pos.globalState.TICKET_SCREEN_STATE;
         this.state = useState({
             showSearchBar: !this.env.isMobile,
         });
@@ -62,7 +62,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             ? this._state.ui
             : {
                   selectedSyncedOrderId: null,
-                  searchDetails: this.env.pos.getDefaultSearchDetails(),
+                  searchDetails: this.pos.globalState.getDefaultSearchDetails(),
                   filter: null,
                   selectedOrderlineIds: {},
               };
@@ -115,13 +115,13 @@ export class TicketScreen extends IndependentToOrderScreen {
         }
     }
     onCreateNewOrder() {
-        this.env.pos.add_new_order();
+        this.pos.globalState.add_new_order();
         this.pos.showScreen("ProductScreen");
     }
     _selectNextOrder(currentOrder) {
         const currentOrderIndex = this._getOrderList().indexOf(currentOrder);
         const orderList = this._getOrderList();
-        this.env.pos.set_order(
+        this.pos.globalState.set_order(
             orderList[currentOrderIndex + 1] || orderList[currentOrderIndex - 1]
         );
     }
@@ -145,14 +145,15 @@ export class TicketScreen extends IndependentToOrderScreen {
                 return;
             }
         }
+        const { globalState } = this.pos;
         if (order && (await this._onBeforeDeleteOrder(order))) {
-            if (order === this.env.pos.get_order()) {
+            if (order === globalState.get_order()) {
                 this._selectNextOrder(order);
             }
-            this.env.pos.removeOrder(order);
+            globalState.removeOrder(order);
         }
-        if (this.env.pos.isOpenOrderShareable()) {
-            this.env.pos._removeOrdersFromServer();
+        if (globalState.isOpenOrderShareable()) {
+            globalState._removeOrdersFromServer();
         }
     }
     async onNextPage() {
@@ -168,7 +169,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         }
     }
     async onInvoiceOrder(orderId) {
-        this.env.pos._invalidateSyncedOrdersCache([orderId]);
+        this.pos.globalState._invalidateSyncedOrdersCache([orderId]);
         await this._fetchSyncedOrders();
     }
     onClickOrderline(orderline) {
@@ -178,7 +179,7 @@ export class TicketScreen extends IndependentToOrderScreen {
     }
     onClickRefundOrderUid(orderUid) {
         // Open the refund order.
-        const refundOrder = this.env.pos.orders.find((order) => order.uid == orderUid);
+        const refundOrder = this.pos.globalState.orders.find((order) => order.uid == orderUid);
         if (refundOrder) {
             this._setOrder(refundOrder);
         }
@@ -258,9 +259,10 @@ export class TicketScreen extends IndependentToOrderScreen {
                 ? this.props.destinationOrder
                 : this._getEmptyOrder(partner);
 
+        const { globalState } = this.pos;
         // Add orderline for each toRefundDetail to the destinationOrder.
         for (const refundDetail of allToRefundDetails) {
-            const product = this.env.pos.db.get_product_by_id(refundDetail.orderline.productId);
+            const product = globalState.db.get_product_by_id(refundDetail.orderline.productId);
             const options = this._prepareRefundOrderlineOptions(refundDetail);
             await destinationOrder.add_product(product, options);
             refundDetail.destinationOrderUid = destinationOrder.uid;
@@ -272,8 +274,8 @@ export class TicketScreen extends IndependentToOrderScreen {
             destinationOrder.updatePricelist(partner);
         }
 
-        if (this.env.pos.get_order().cid !== destinationOrder.cid) {
-            this.env.pos.set_order(destinationOrder);
+        if (globalState.get_order().cid !== destinationOrder.cid) {
+            globalState.set_order(destinationOrder);
         }
 
         this.onCloseScreen();
@@ -361,7 +363,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         const productScreenStatus = this._getScreenToStatusMap().ProductScreen;
         return (
             order.get_orderlines().length === 0 &&
-            this.env.pos.get_order_list().length === 1 &&
+            this.pos.globalState.get_order_list().length === 1 &&
             status === productScreenStatus &&
             order.get_paymentlines().length === 0
         );
@@ -385,12 +387,12 @@ export class TicketScreen extends IndependentToOrderScreen {
             const selectedOrder = this.getSelectedSyncedOrder();
             return selectedOrder ? order.backendId == selectedOrder.backendId : false;
         } else {
-            const activeOrder = this.env.pos.get_order();
+            const activeOrder = this.pos.globalState.get_order();
             return activeOrder ? activeOrder.uid == order.uid : false;
         }
     }
     showCardholderName() {
-        return this.env.pos.payment_methods.some((method) => method.use_payment_terminal);
+        return this.pos.globalState.payment_methods.some((method) => method.use_payment_terminal);
     }
     getSearchBarConfig() {
         return {
@@ -424,7 +426,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         if (this._doesOrderHaveSoleItem(order)) {
             return true;
         }
-        const total = Object.values(this.env.pos.toRefundLines)
+        const total = Object.values(this.pos.globalState.toRefundLines)
             .filter(
                 (toRefundDetail) =>
                     toRefundDetail.orderline.orderUid === order.uid &&
@@ -432,7 +434,7 @@ export class TicketScreen extends IndependentToOrderScreen {
             )
             .map((toRefundDetail) => toRefundDetail.qty)
             .reduce((acc, val) => acc + val, 0);
-        return !this.env.pos.isProductQtyZero(total);
+        return !this.pos.globalState.isProductQtyZero(total);
     }
     //#endregion
     //#region PRIVATE METHODS
@@ -447,7 +449,7 @@ export class TicketScreen extends IndependentToOrderScreen {
     _getEmptyOrder(partner) {
         let emptyOrderForPartner = null;
         let emptyOrder = null;
-        for (const order of this.env.pos.orders) {
+        for (const order of this.pos.globalState.orders) {
             if (order.get_orderlines().length === 0 && order.get_paymentlines().length === 0) {
                 if (order.get_partner() === partner) {
                     emptyOrderForPartner = order;
@@ -458,7 +460,7 @@ export class TicketScreen extends IndependentToOrderScreen {
                 }
             }
         }
-        return emptyOrderForPartner || emptyOrder || this.env.pos.add_new_order();
+        return emptyOrderForPartner || emptyOrder || this.pos.globalState.add_new_order();
     }
     _doesOrderHaveSoleItem(order) {
         const orderlines = order.get_orderlines();
@@ -467,7 +469,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         }
         const theOrderline = orderlines[0];
         const refundableQty = theOrderline.get_quantity() - theOrderline.refunded_qty;
-        return this.env.pos.isProductQtyZero(refundableQty - 1);
+        return this.pos.globalState.isProductQtyZero(refundableQty - 1);
     }
     _prepareAutoRefundOnOrder(order) {
         const selectedOrderlineId = this.getSelectedOrderlineId();
@@ -478,7 +480,7 @@ export class TicketScreen extends IndependentToOrderScreen {
 
         const toRefundDetail = this._getToRefundDetail(orderline);
         const refundableQty = orderline.get_quantity() - orderline.refunded_qty;
-        if (this.env.pos.isProductQtyZero(refundableQty - 1) && toRefundDetail.qty === 0) {
+        if (this.pos.globalState.isProductQtyZero(refundableQty - 1) && toRefundDetail.qty === 0) {
             toRefundDetail.qty = 1;
         }
         return true;
@@ -491,30 +493,30 @@ export class TicketScreen extends IndependentToOrderScreen {
      * @returns
      */
     _getToRefundDetail(orderline) {
-        if (orderline.id in this.env.pos.toRefundLines) {
-            return this.env.pos.toRefundLines[orderline.id];
-        } else {
-            const partner = orderline.order.get_partner();
-            const orderPartnerId = partner ? partner.id : false;
-            const newToRefundDetail = {
-                qty: 0,
-                orderline: {
-                    id: orderline.id,
-                    productId: orderline.product.id,
-                    price: orderline.price,
-                    qty: orderline.quantity,
-                    refundedQty: orderline.refunded_qty,
-                    orderUid: orderline.order.uid,
-                    orderBackendId: orderline.order.backendId,
-                    orderPartnerId,
-                    tax_ids: orderline.get_taxes().map((tax) => tax.id),
-                    discount: orderline.discount,
-                },
-                destinationOrderUid: false,
-            };
-            this.env.pos.toRefundLines[orderline.id] = newToRefundDetail;
-            return newToRefundDetail;
+        const { toRefundLines } = this.pos.globalState;
+        if (orderline.id in toRefundLines) {
+            return toRefundLines[orderline.id];
         }
+        const partner = orderline.order.get_partner();
+        const orderPartnerId = partner ? partner.id : false;
+        const newToRefundDetail = {
+            qty: 0,
+            orderline: {
+                id: orderline.id,
+                productId: orderline.product.id,
+                price: orderline.price,
+                qty: orderline.quantity,
+                refundedQty: orderline.refunded_qty,
+                orderUid: orderline.order.uid,
+                orderBackendId: orderline.order.backendId,
+                orderPartnerId,
+                tax_ids: orderline.get_taxes().map((tax) => tax.id),
+                discount: orderline.discount,
+            },
+            destinationOrderUid: false,
+        };
+        toRefundLines[orderline.id] = newToRefundDetail;
+        return newToRefundDetail;
     }
     /**
      * Select the lines from toRefundLines, as they can come from different orders.
@@ -527,9 +529,9 @@ export class TicketScreen extends IndependentToOrderScreen {
      * @returns {Array} refundableDetails
      */
     _getRefundableDetails(partner) {
-        return Object.values(this.env.pos.toRefundLines).filter(
+        return Object.values(this.pos.globalState.toRefundLines).filter(
             ({ qty, orderline, destinationOrderUid }) =>
-                !this.env.pos.isProductQtyZero(qty) &&
+                !this.pos.globalState.isProductQtyZero(qty) &&
                 (partner ? orderline.orderPartnerId == partner.id : true) &&
                 !destinationOrderUid
         );
@@ -553,14 +555,15 @@ export class TicketScreen extends IndependentToOrderScreen {
         };
     }
     _setOrder(order) {
-        if (this.env.pos.isOpenOrderShareable()) {
-            this.env.pos.sendDraftToServer();
+        const { globalState } = this.pos;
+        if (globalState.isOpenOrderShareable()) {
+            globalState.sendDraftToServer();
         }
-        this.env.pos.set_order(order);
+        globalState.set_order(order);
         this.close();
     }
     _getOrderList() {
-        return this.env.pos.get_order_list();
+        return this.pos.globalState.get_order_list();
     }
     _getFilterOptions() {
         const orderStates = this._getOrderStates();
@@ -659,20 +662,17 @@ export class TicketScreen extends IndependentToOrderScreen {
      * order is not fetched anymore, instead, we use info from cache.
      */
     async _fetchSyncedOrders() {
+        const { globalState } = this.pos;
         const domain = this._computeSyncedOrdersDomain();
         const limit = this._state.syncedOrders.nPerPage;
         const offset =
             (this._state.syncedOrders.currentPage - 1) * this._state.syncedOrders.nPerPage;
+        const config_id = globalState.config.id;
         const { ordersInfo, totalCount } = await this.orm.call(
             "pos.order",
             "search_paid_order_ids",
             [],
-            {
-                config_id: this.env.pos.config.id,
-                domain,
-                limit,
-                offset,
-            }
+            { config_id, domain, limit, offset }
         );
         const idsNotInCache = ordersInfo.filter(
             (orderInfo) => !(orderInfo[0] in this._state.syncedOrders.cache)
@@ -686,14 +686,14 @@ export class TicketScreen extends IndependentToOrderScreen {
         if (idsToLoad.length > 0) {
             const fetchedOrders = await this.orm.call("pos.order", "export_for_ui", [idsToLoad]);
             // Check for missing products and partners and load them in the PoS
-            await this.env.pos._loadMissingProducts(fetchedOrders);
-            await this.env.pos._loadMissingPartners(fetchedOrders);
+            await globalState._loadMissingProducts(fetchedOrders);
+            await globalState._loadMissingPartners(fetchedOrders);
             // Cache these fetched orders so that next time, no need to fetch
             // them again, unless invalidated. See `_onInvoiceOrder`.
             fetchedOrders.forEach((order) => {
                 this._state.syncedOrders.cache[order.id] = new Order(
                     {},
-                    { pos: this.env.pos, json: order }
+                    { pos: globalState, json: order }
                 );
             });
             //Update the datetime indicator of the cache refresh

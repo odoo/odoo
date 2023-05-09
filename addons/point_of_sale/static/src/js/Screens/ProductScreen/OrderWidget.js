@@ -6,6 +6,7 @@ import { EditListPopup } from "@point_of_sale/js/Popups/EditListPopup";
 import { Orderline } from "./Orderline";
 import { OrderSummary } from "./OrderSummary";
 import { Component, useEffect, useRef } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class OrderWidget extends Component {
     static components = { Orderline, OrderSummary };
@@ -13,6 +14,7 @@ export class OrderWidget extends Component {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         this.popup = useService("popup");
         this.numberBuffer = useService("number_buffer");
         this.scrollableRef = useRef("scrollable");
@@ -29,7 +31,7 @@ export class OrderWidget extends Component {
         );
     }
     get order() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
     get orderlinesArray() {
         return this.order ? this.order.get_orderlines() : [];

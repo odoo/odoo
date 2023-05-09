@@ -2,24 +2,27 @@
 
 import { ProductScreen } from "@point_of_sale/js/Screens/ProductScreen/ProductScreen";
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class ResetProgramsButton extends Component {
     static template = "ResetProgramsButton";
 
     setup() {
-        super.setup();
+        this.pos = usePos();
     }
     _isDisabled() {
-        return !this.env.pos.get_order().isProgramsResettable();
+        return !this.pos.globalState.get_order().isProgramsResettable();
     }
     click() {
-        this.env.pos.get_order()._resetPrograms();
+        this.pos.globalState.get_order()._resetPrograms();
     }
 }
 
 ProductScreen.addControlButton({
     component: ResetProgramsButton,
     condition: function () {
-        return this.env.pos.programs.some((p) => ["coupons", "promotion"].includes(p.program_type));
+        return this.pos.globalState.programs.some((p) =>
+            ["coupons", "promotion"].includes(p.program_type)
+        );
     },
 });

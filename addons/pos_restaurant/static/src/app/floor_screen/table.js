@@ -1,6 +1,7 @@
 /** @odoo-module */
 
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class Table extends Component {
     static template = "pos_restaurant.Table";
@@ -22,17 +23,24 @@ export class Table extends Component {
         },
     };
 
+    setup() {
+        this.pos = usePos();
+    }
     get style() {
         const table = this.props.table;
 
-        if (this.env.pos.floorPlanStyle == "kanban") {
+        if (this.pos.globalState.floorPlanStyle == "kanban") {
             const floor = table.floor;
             const index = floor.tables.indexOf(table);
             const minWidth = 100 + 20;
             const nbrHorizontal = Math.floor(window.innerWidth / minWidth);
-            const widthTable = (window.innerWidth - nbrHorizontal*10) / nbrHorizontal;
-            const position_h = widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
-            const position_v = widthTable * Math.floor(index / nbrHorizontal) + 5 + Math.floor(index / nbrHorizontal) * 10;
+            const widthTable = (window.innerWidth - nbrHorizontal * 10) / nbrHorizontal;
+            const position_h =
+                widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
+            const position_v =
+                widthTable * Math.floor(index / nbrHorizontal) +
+                5 +
+                Math.floor(index / nbrHorizontal) * 10;
             return `
                 width: ${widthTable}px;
                 height: ${widthTable}px;
@@ -57,20 +65,20 @@ export class Table extends Component {
         }
     }
     get fill() {
-        const customerCount = this.env.pos.getCustomerCount(this.props.table.id);
+        const customerCount = this.pos.globalState.getCustomerCount(this.props.table.id);
         return Math.min(1, Math.max(0, customerCount / this.props.table.seats));
     }
     get orderCount() {
         const table = this.props.table;
         return table.order_count !== undefined
             ? table.order_count
-            : this.env.pos
+            : this.pos.globalState
                   .getTableOrders(table.id)
                   .filter((o) => o.orderlines.length !== 0 || o.paymentlines.length !== 0).length;
     }
     get orderCountClass() {
         const countClass = { "order-count": true };
-        if (this.env.pos.orderPreparationCategories.size) {
+        if (this.pos.globalState.orderPreparationCategories.size) {
             const notifications = this._getNotifications();
             countClass["notify-printing"] = notifications.printing;
             countClass["notify-skipped"] = notifications.skipped;
@@ -78,10 +86,12 @@ export class Table extends Component {
         return countClass;
     }
     get customerCountDisplay() {
-        return `${this.env.pos.getCustomerCount(this.props.table.id)}/${this.props.table.seats}`;
+        return `${this.pos.globalState.getCustomerCount(this.props.table.id)}/${
+            this.props.table.seats
+        }`;
     }
     _getNotifications() {
-        const orders = this.env.pos.getTableOrders(this.props.table.id);
+        const orders = this.pos.globalState.getTableOrders(this.props.table.id);
 
         let hasChangesCount = 0;
         let hasSkippedCount = 0;

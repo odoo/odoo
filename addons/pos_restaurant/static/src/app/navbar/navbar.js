@@ -11,22 +11,23 @@ patch(Navbar.prototype, "pos_restaurant.Navbar", {
      * is floor screen, then the order count should be based on all the orders.
      */
     get orderCount() {
-        if (!this.env.pos || !this.env.pos.config) {
-            return 0;
-        }
-        if (this.env.pos.config.module_pos_restaurant && this.env.pos.table) {
-            return this.env.pos.getTableOrders(this.env.pos.table.id).length;
+        const { globalState } = this.pos;
+        if (globalState.config.module_pos_restaurant && globalState.table) {
+            return globalState.getTableOrders(globalState.table.id).length;
         }
         return this._super(...arguments);
     },
     _shouldLoadOrders() {
-        return this._super() || (this.env.pos.config.module_pos_restaurant && !this.env.pos.table);
+        return (
+            this._super() ||
+            (this.pos.globalState.config.module_pos_restaurant && !this.pos.globalState.table)
+        );
     },
     onSwitchButtonClick() {
-        this.env.pos.floorPlanStyle =
-            this.env.pos.floorPlanStyle == "kanban" ? "default" : "kanban";
+        this.pos.globalState.floorPlanStyle =
+            this.pos.globalState.floorPlanStyle == "kanban" ? "default" : "kanban";
     },
     toggleEditMode() {
-        this.env.pos.toggleEditMode();
+        this.pos.globalState.toggleEditMode();
     },
 });
