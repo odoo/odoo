@@ -3,7 +3,7 @@
 import { registry } from "@web/core/registry";
 import { clickOn, clickOnBackButton, clickOnProductCard, addProductsToCart } from "./tour_utils";
 
-registry.category("web_tour.tours").add("self_order_pay_after_each_tour", {
+registry.category("web_tour.tours").add("self_order_tour", {
     test: true,
     steps: [
         ...clickOn("My Orders", { isCheck: true, isNot: true }),

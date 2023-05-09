@@ -34,7 +34,7 @@ export function clickOnProductCard(
 ) {
     let productCard = `.o_self_order_item_card:contains(Product ${product_id} test)`;
     if (qty) {
-        productCard = `${productCard}:has(span:contains(${qty} x )`;
+        productCard = `${productCard}:has(span:contains(${qty} x ))`;
     }
     return [
         {

@@ -10,7 +10,7 @@ class TestFrontend(odoo.tests.HttpCase):
         super().setUp()
         self.pos_config = self.env["pos.config"].create(
             {
-                "name": "Bar",
+                "name": "BarTest",
                 "module_pos_restaurant": True,
                 "is_table_management": True,
                 "self_order_view_mode": True,
@@ -27,6 +27,7 @@ class TestFrontend(odoo.tests.HttpCase):
         self.env["product.product"].create([basic_product(i) for i in range(1, 1000)])
 
     def test_self_order_view_mode_tour(self):
+        self.pos_config.self_order_table_mode = False
         self.start_tour(
             self.pos_config._get_self_order_route(),
             "pos_qr_menu_tour",
@@ -35,23 +36,15 @@ class TestFrontend(odoo.tests.HttpCase):
             step_delay=500,
         )
 
-    def test_self_order_pay_after_each_tour(self):
-        # self.pos_config.self_order_table_mode = True
+    def test_self_order_tour(self):
+        self.pos_config.self_order_table_mode = True
+        self.pos_config.self_order_pay_after = "meal"
         self.pos_config.open_ui()
         self.start_tour(
             self.pos_config._get_self_order_route(),
-            "self_order_pay_after_each_tour",
+            "self_order_tour",
             login=None,
             watch=True,
             step_delay=1000,
         )
 
-    # def test_self_order_pay_after_meal_tour(self):
-    #     self.start_tour(
-    #         # f"/menu/{self.pos_config_pay_after_meal_mode.id}",
-    #         self.pos_config_pay_after_meal_mode._get_self_order_route(),
-    #         "self_order_pay_after_meal_tour",
-    #         login=None,
-    #         watch=True,
-    #         step_delay=500,
-    #     )

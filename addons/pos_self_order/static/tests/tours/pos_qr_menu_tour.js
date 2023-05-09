@@ -114,6 +114,7 @@ registry.category("web_tour.tours").add("pos_qr_menu_tour", {
             trigger: ".o_self_order_product_main_view_name",
             isCheck: true,
         },
+        ...clickOn("Add", { isCheck: true, isNot: true }),
         {
             content: "Test that the back button is present on the product screen and click on it",
             trigger: "nav.o_self_order_navbar > button",
