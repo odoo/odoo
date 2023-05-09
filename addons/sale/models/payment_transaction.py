@@ -146,11 +146,7 @@ class PaymentTransaction(models.Model):
                 lambda i: not i.is_move_sent and i.state == 'posted' and i._is_ready_to_be_sent()
             )
             invoice_to_send.is_move_sent = True # Mark invoice as sent
-            invoice_to_send.with_user(SUPERUSER_ID).message_post_with_source(
-                template,
-                email_layout_xmlid='mail.mail_notification_layout_with_responsible_signature',
-                subtype_xmlid='mail.mt_comment',
-            )
+            invoice_to_send.with_user(SUPERUSER_ID)._generate_pdf_and_send_invoice(template)
 
     def _cron_send_invoice(self):
         """
