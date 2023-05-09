@@ -125,7 +125,7 @@ class TestExpenses(TestExpenseCommon):
             # Receivable line (foreign currency):
             {
                 'debit': 0.0,
-                'credit': 750,
+                'credit': 500.0,
                 'amount_currency': -1500.0,
                 'account_id': self.company_data['default_account_payable'].id,
                 'product_id': False,
@@ -135,7 +135,7 @@ class TestExpenses(TestExpenseCommon):
             },
             # Tax line (foreign currency):
             {
-                'debit': 97.83,
+                'debit': 65.22,
                 'credit': 0.0,
                 'amount_currency': 195.652,
                 'account_id': self.company_data['default_account_tax_purchase'].id,
@@ -157,7 +157,7 @@ class TestExpenses(TestExpenseCommon):
             },
             # Product line (foreign currency):
             {
-                'debit': 652.17,
+                'debit': 434.78,
                 'credit': 0.0,
                 'amount_currency': 1304.348, # untaxed amount
                 'account_id': self.company_data['default_account_expense'].id,
@@ -188,7 +188,7 @@ class TestExpenses(TestExpenseCommon):
                 'currency_id': self.company_data['currency'].id,
             },
             {
-                'amount': -652.17,
+                'amount': -434.78,
                 'date': fields.Date.from_string('2017-01-01'),
                 'account_id': self.analytic_account_2.id,
                 'currency_id': self.company_data['currency'].id,
