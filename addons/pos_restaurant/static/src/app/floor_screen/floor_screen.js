@@ -54,6 +54,11 @@ export class FloorScreen extends Component {
             this.addFloorRef.el.style.display = "initial";
         }
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
+
+        const floorIds = Object.keys(this.pos.globalState.floors_by_id);
+        if (floorIds.length && !floorIds.includes(this.state.selectedFloorId.toString())) {
+            this.selectFloor(this.pos.globalState.floors[0]);
+        }
     }
     onMounted() {
         this.pos.openCashControl();
@@ -65,9 +70,6 @@ export class FloorScreen extends Component {
             this.addFloorRef.el.style.display = "initial";
         }
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
-        // call _tableLongpolling once then set interval of 5sec.
-        this._tableLongpolling();
-        this.tableLongpolling = setInterval(this._tableLongpolling.bind(this), 5000);
     }
     onWillUnmount() {
         clearInterval(this.tableLongpolling);
@@ -218,7 +220,7 @@ export class FloorScreen extends Component {
         newTable.floor_id = [this.activeFloor.id, ""];
         newTable.floor = this.activeFloor;
         await this._save(newTable);
-        this.activeTables.push(newTable);
+        this.activeFloor.tables.push(newTable);
         this.activeFloor.table_ids.push(newTable.id);
         return newTable;
     }
@@ -249,46 +251,13 @@ export class FloorScreen extends Component {
     async _renameFloor(floorId, newName) {
         await this.orm.call("restaurant.floor", "rename_floor", [floorId, newName]);
     }
-    async _tableLongpolling() {
-        const { globalState } = this.pos;
-        if (globalState.isEditMode) {
-            return;
-        }
-        const result = await this.orm.call("pos.config", "get_tables_order_count", [
-            globalState.config.id,
-        ]);
-        for (const table of result) {
-            if (!(table.id in globalState.tables_by_id)) {
-                //We enter this condition if, after loading our PoS, a table is deleted on a PoS and not on another.
-                //This will lead in receiving information on orders from a table that we do not have.
-                //If we do not have a table in the PoS but still receive information about it, we reload the tables
-                //from the server.
-                const result = await this.orm.call("pos.session", "get_pos_ui_restaurant_floor", [
-                    [odoo.pos_session_id],
-                ]);
-                if (globalState.config.module_pos_restaurant) {
-                    globalState.floors = result;
-                    globalState.loadRestaurantFloor();
-                }
-            }
-            const table_obj = globalState.tables_by_id[table.id];
-            const unsynced_orders = globalState.getTableOrders(table_obj.id).filter(
-                (o) =>
-                    o.server_id === undefined &&
-                    (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
-                    // do not count the orders that are already finalized
-                    !o.finalized
-            ).length;
-            table_obj.order_count = table.orders + unsynced_orders;
-        }
-    }
     get activeFloor() {
         return this.state.selectedFloorId
             ? this.pos.globalState.floors_by_id[this.state.selectedFloorId]
             : null;
     }
     get activeTables() {
-        return this.activeFloor ? this.activeFloor.tables : null;
+        return this.activeFloor ? this.activeFloor.tables.filter((t) => t.active) : null;
     }
     get isFloorEmpty() {
         return this.activeTables ? this.activeTables.length === 0 : true;
@@ -528,30 +497,10 @@ export class FloorScreen extends Component {
                 originalSelectedFloorId,
                 globalState.pos_session.id,
             ]);
-            const floor = globalState.floors_by_id[originalSelectedFloorId];
-            const orderList = [...globalState.get_order_list()];
-            for (const order of orderList) {
-                if (floor.table_ids.includes(order.tableId)) {
-                    globalState.removeOrder(order, false);
-                }
-            }
-            floor.table_ids.forEach((tableId) => {
-                delete globalState.tables_by_id[tableId];
-            });
-            delete globalState.floors_by_id[originalSelectedFloorId];
-            globalState.floors = globalState.floors.filter(
-                (floor) => floor.id != originalSelectedFloorId
-            );
-            globalState.TICKET_SCREEN_STATE.syncedOrders.cache = {};
-            if (globalState.floors.length > 0) {
-                this.selectFloor(globalState.floors[0]);
-            } else {
-                globalState.isEditMode = false;
-                globalState.floorPlanStyle = "default";
-                this.state.floorBackground = null;
-            }
             return;
         }
+
+        // Delete table
         const { confirmed } = await this.popup.add(ConfirmPopup, {
             title: this.env._t("Are you sure?"),
             body: this.env._t("Removing a table cannot be undone"),
@@ -560,11 +509,16 @@ export class FloorScreen extends Component {
             return;
         }
         const originalSelectedTableIds = [...this.state.selectedTableIds];
-        originalSelectedTableIds.forEach(async (id) => {
+
+        for (const tableId of originalSelectedTableIds) {
+            const table = this.pos.globalState.tables_by_id[tableId];
             const response = await this.orm.call("restaurant.table", "are_orders_still_in_draft", [
-                id,
+                table.id,
             ]);
             if (!response) {
+                table.active = false;
+                this.activeFloor.tables = this.activeTables.filter((t) => t.id !== table.id);
+
                 //remove order not send to server
                 for (const order of globalState.get_order_list()) {
                     if (order.tableId == id) {
@@ -585,7 +539,8 @@ export class FloorScreen extends Component {
                     ),
                 });
             }
-        });
+        }
+
         // Value of an object can change inside async function call.
         //   Which means that in this code block, the value of `state.selectedTableId`
         //   before the await call can be different after the finishing the await call.

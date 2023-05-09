@@ -53,6 +53,24 @@ class PosOrder(models.Model):
         "returns: list -- list of tuples that represents a domain.
         """
         return [('state', '=', 'draft'), ('table_id', 'in', table_ids)]
+    @api.model
+    def remove_from_ui(self, server_ids):
+        table_id = self.env['pos.order'].search([('id', 'in', server_ids)]).table_id
+        order_ids = super().remove_from_ui(server_ids)
+        self.sendTableCountNotification(table_id)
+        return order_ids
+
+    @api.model
+    def create_from_ui(self, orders, draft=False):
+        orders = super().create_from_ui(orders, draft)
+        order_ids = self.env['pos.order'].search([('id', 'in', [order['id'] for order in orders])])
+        self.sendTableCountNotification(order_ids.table_id)
+        return orders
+
+    def sendTableCountNotification(self, table_ids):
+        for config_id in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
+            order_count = config_id.get_tables_order_count()
+            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'table_order_count', order_count)
 
     @api.model
     def get_table_draft_orders(self, table_ids):

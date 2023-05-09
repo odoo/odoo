@@ -21,6 +21,11 @@ QUnit.module("Chrome", {
                 start() {
                     return { bus: new EventBus() };
                 },
+            })
+            .add("bus_service", {
+                start() {
+                    return { addChannel: () => {}, addEventListener: () => {} };
+                },
             });
 
         for (const service of [

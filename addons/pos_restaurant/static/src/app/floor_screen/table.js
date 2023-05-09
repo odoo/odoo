@@ -41,6 +41,13 @@ export class Table extends Component {
                 widthTable * Math.floor(index / nbrHorizontal) +
                 5 +
                 Math.floor(index / nbrHorizontal) * 10;
+            const widthTable = (window.innerWidth - nbrHorizontal * 10) / nbrHorizontal;
+            const position_h =
+                widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
+            const position_v =
+                widthTable * Math.floor(index / nbrHorizontal) +
+                5 +
+                Math.floor(index / nbrHorizontal) * 10;
             return `
                 width: ${widthTable}px;
                 height: ${widthTable}px;
@@ -70,7 +77,10 @@ export class Table extends Component {
     }
     get orderCount() {
         const table = this.props.table;
-        return table.order_count !== undefined
+        const orderOnTable = this.env.pos
+            .getTableOrders(table.id)
+            .filter((o) => o.orderlines.length > 0 || o.paymentlines.length > 0).length;
+        return table.order_count && table.order_count > orderOnTable
             ? table.order_count
             : this.pos.globalState
                   .getTableOrders(table.id)

@@ -22,17 +22,19 @@ export class PosStore extends Reactive {
         "number_buffer",
         "barcode_reader",
         "hardware_proxy",
+        "bus_service",
     ];
     constructor() {
         super();
         this.ready = this.setup(...arguments).then(() => this);
     }
     // use setup instead of constructor because setup can be patched.
-    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader }) {
+    async setup(env, { popup, orm, number_buffer, hardware_proxy, barcode_reader, bus_service }) {
         this.orm = orm;
         this.popup = popup;
         this.numberBuffer = number_buffer;
         this.barcodeReader = barcode_reader;
+        this.bus = bus_service;
         this.globalState = new PosGlobalState({ orm, env, hardwareProxy: hardware_proxy });
         this.hardwareProxy = hardware_proxy;
         // FIXME POSREF: the hardwareProxy needs the pos and the pos needs the hardwareProxy. Maybe
@@ -45,7 +47,17 @@ export class PosStore extends Reactive {
         this.closeOtherTabs();
         this.preloadImages();
         this.showScreen("ProductScreen");
+
+        // initialize bus_service and listen on pos_config-`id` channel
+        this.bus.addChannel(`pos_config-${this.globalState.config.id}`);
+        this.bus.addEventListener("notification", async (message) =>
+            message.detail.map((detail) => {
+                this.handleBusMessages(detail);
+            })
+        );
     }
+
+    handleBusMessages(message) {}
 
     showScreen(name, props) {
         const component = registry.category("pos_screens").get(name);

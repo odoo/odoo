@@ -102,6 +102,11 @@
             'web/static/src/webclient/barcode/barcode_scanner.js',
             'web/static/src/webclient/barcode/ZXingBarcodeDetector.js',
             'web/static/src/webclient/barcode/crop_overlay.js',
+            # bus service
+            'bus/static/src/services/bus_service.js',
+            'bus/static/src/bus_parameters_service.js',
+            'bus/static/src/multi_tab_service.js',
+            'bus/static/src/workers/*',
             # report download utils
             'web/static/src/webclient/actions/reports/utils.js',
             # libs

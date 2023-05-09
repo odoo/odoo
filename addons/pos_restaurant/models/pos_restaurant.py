@@ -70,6 +70,12 @@ class RestaurantFloor(models.Model):
             table.active = False
         self.active = False
 
+        for config_id in self.pos_config_ids:
+            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'disable_floor', {
+                'id': self.id,
+                'table_ids': self.table_ids.ids,
+            })
+
 class RestaurantTable(models.Model):
 
     _name = 'restaurant.table'
@@ -99,6 +105,9 @@ class RestaurantTable(models.Model):
             id, it will modify the existing table. It then
             returns the id of the table.
         """
+        if table.get('id'):
+            table_id = table['id']
+
         if table.get('floor_id'):
             table['floor_id'] = table['floor_id'][0]
 
@@ -108,6 +117,11 @@ class RestaurantTable(models.Model):
             self.browse(table_id).write(sanitized_table)
         else:
             table_id = self.create(sanitized_table).id
+
+        sanitized_table['id'] = table_id
+        for config_id in self.env['pos.config'].search([('floor_ids.table_ids', 'in', table_id)]):
+            self.env['bus.bus']._sendone(f'pos_config-{config_id.id}', 'table_changed', {'changes': sanitized_table})
+
         return table_id
 
     @api.ondelete(at_uninstall=False)

@@ -26,6 +26,86 @@ patch(PosStore.prototype, "pos_restaurant.PosStore", {
         if (this.globalState.config.module_pos_restaurant) {
             this.setActivityListeners();
             this.showScreen("FloorScreen", { floor: this.globalState.table?.floor || null });
+            this.initTableOrderCount();
+        }
+    },
+
+    async initTableOrderCount() {
+        const result = await this.orm.call("pos.config", "get_tables_order_count", [
+            this.globalState.config.id,
+        ]);
+        this.ws_syncTableCount(result);
+    },
+
+    // Will receive all messages coming from the server via
+    // the websocket and dispatch them to the different utility functions.
+    handleBusMessages(detail) {
+        this._super(...arguments);
+
+        if (detail.type === "table_order_count") {
+            this.ws_syncTableCount(detail.payload);
+        } else if (detail.type === "table_changed") {
+            this.ws_syncTableChanges(detail.payload);
+        } else if (detail.type === "disable_floor") {
+            this.ws_disableFloor(detail.payload);
+        }
+    },
+
+    // Handles server bus messages of type `disable_floor`,
+    // it will delete the floor and its tables.
+    ws_disableFloor(data) {
+        const floorId = data.id;
+        const floor = this.globalState.floors_by_id[floorId];
+        const orderList = [...this.globalState.get_order_list()];
+
+        if (!floor) {
+            return;
+        }
+
+        for (const order of orderList) {
+            if (floor.table_ids.includes(order.tableId)) {
+                this.globalState.removeOrder(order, false);
+            }
+        }
+
+        floor.table_ids.forEach((tableId) => {
+            delete this.globalState.tables_by_id[tableId];
+        });
+
+        delete this.globalState.floors_by_id[floorId];
+
+        this.globalState.floors = this.globalState.floors.filter((floor) => floor.id != floorId);
+        this.globalState.TICKET_SCREEN_STATE.syncedOrders.cache = {};
+        this.globalState.isEditMode = false;
+        this.globalState.floorPlanStyle = "default";
+    },
+
+    // Will fetch all the floors plan from the server when
+    // an action message will be sent to it.
+    async ws_syncTableChanges(data) {
+        return;
+        const newTable = data.changes;
+        const table = this.globalState.tables_by_id[newTable.id];
+
+        if (!newTable.active) {
+            delete this.globalState.tables_by_id[newTable.id];
+        } else if (table) {
+            for (const key in table) {
+                if (table[key] !== newTable[key]) {
+                    table[key] = newTable[key];
+                }
+            }
+        }
+    },
+
+    // Sync the number of orders on each table with other PoS
+    // using the same floorplan.
+    async ws_syncTableCount(data) {
+        for (const table of data) {
+            const table_obj = this.globalState.tables_by_id[table.id];
+            if (table_obj) {
+                table_obj.order_count = table.orders;
+            }
         }
     },
     setActivityListeners() {
