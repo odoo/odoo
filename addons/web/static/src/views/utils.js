@@ -122,7 +122,10 @@ export const computeReportMeasures = (fields, fieldAttrs, activeMeasures) => {
         if (isInvisible) {
             continue;
         }
-        if (["integer", "float", "monetary"].includes(field.type)) {
+        if (
+            ["integer", "float", "monetary"].includes(field.type) &&
+            field.group_operator !== undefined
+        ) {
             measures[fieldName] = field;
         }
     }
