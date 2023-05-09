@@ -23,7 +23,9 @@ export class ChatterComposer extends Component {
     onWillUpdateProps(nextProps) {
         this.clearErrors();
         this.state.message = '';
-        this.inputRef.el.value = "";
+        if (this.inputRef.el) {
+            this.inputRef.el.value = "";
+        }
         this.state.attachments = nextProps.attachments.map(file => file.state === 'done');
     }
 
