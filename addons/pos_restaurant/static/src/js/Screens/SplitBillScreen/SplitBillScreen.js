@@ -5,35 +5,28 @@ import { Order } from "@point_of_sale/js/models";
 import { SplitOrderline } from "./SplitOrderline";
 import { registry } from "@web/core/registry";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { Component, useState, onMounted } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 
 export class SplitBillScreen extends Component {
     static template = "SplitBillScreen";
     static components = { SplitOrderline };
 
     setup() {
-        super.setup();
         this.pos = usePos();
-        this.splitlines = useState(this._initSplitLines(this.env.pos.get_order()));
+        this.splitlines = useState(this._initSplitLines(this.pos.globalState.get_order()));
         this.newOrderLines = {};
         this.newOrder = undefined;
         this._isFinal = false;
-        onMounted(() => {
-            // Should create the new order outside of the constructor because
-            // sequence_number of pos_session is modified. which will trigger
-            // rerendering which will rerender this screen and will be infinite loop.
-            this.newOrder = new Order(
-                {},
-                {
-                    pos: this.env.pos,
-                    temporary: true,
-                }
-            );
-            this.render();
-        });
+        this.newOrder = new Order(
+            {},
+            {
+                pos: this.pos.globalState,
+                temporary: true,
+            }
+        );
     }
     get currentOrder() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
     get orderlines() {
         return this.currentOrder.get_orderlines();
@@ -59,13 +52,14 @@ export class SplitBillScreen extends Component {
 
             this.newOrder.set_screen_data({ name: "PaymentScreen" });
 
+            const { globalState } = this.pos;
             // for the kitchen printer we assume that everything
             // has already been sent to the kitchen before splitting
             // the bill. So we save all changes both for the old
             // order and for the new one. This is not entirely correct
             // but avoids flooding the kitchen with unnecessary orders.
             // Not sure what to do in this case.
-            if (this.env.pos.orderPreparationCategories.size) {
+            if (globalState.orderPreparationCategories.size) {
                 this.currentOrder.updateLastOrderChange();
                 this.newOrder.updateLastOrderChange();
             }
@@ -75,9 +69,9 @@ export class SplitBillScreen extends Component {
             this.currentOrder.setCustomerCount(newCustomerCount || 1);
             this.currentOrder.set_screen_data({ name: "ProductScreen" });
 
-            const reactiveNewOrder = this.env.pos.makeOrderReactive(this.newOrder);
-            this.env.pos.orders.add(reactiveNewOrder);
-            this.env.pos.selectedOrder = reactiveNewOrder;
+            const reactiveNewOrder = globalState.makeOrderReactive(this.newOrder);
+            globalState.orders.add(reactiveNewOrder);
+            globalState.selectedOrder = reactiveNewOrder;
         }
         this.pos.showScreen("PaymentScreen");
     }
@@ -97,7 +91,7 @@ export class SplitBillScreen extends Component {
 
         let totalQuantity = 0;
 
-        this.env.pos
+        this.pos.globalState
             .get_order()
             .get_orderlines()
             .forEach(function (orderLine) {
@@ -143,7 +137,7 @@ export class SplitBillScreen extends Component {
         }
     }
     _isFullPayOrder() {
-        const order = this.env.pos.get_order();
+        const order = this.pos.globalState.get_order();
         let full = true;
         const splitlines = this.splitlines;
         const groupedLines = _.groupBy(order.get_orderlines(), (line) => line.get_product().id);
@@ -167,7 +161,7 @@ export class SplitBillScreen extends Component {
         return full;
     }
     _setQuantityOnCurrentOrder() {
-        const order = this.env.pos.get_order();
+        const order = this.pos.globalState.get_order();
         for (var id in this.splitlines) {
             var split = this.splitlines[id];
             var line = this.currentOrder.get_orderline(parseInt(id));

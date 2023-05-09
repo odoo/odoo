@@ -14,7 +14,7 @@ export class ScaleScreen extends Component {
      * @param {Object} props.product The product to weight.
      */
     setup() {
-        super.setup();
+        this.pos = usePos();
         this.hardwareProxy = useService("hardware_proxy");
         useExternalListener(document, "keyup", this._onHotkeys);
         this.state = useState({ weight: 0 });
@@ -60,8 +60,8 @@ export class ScaleScreen extends Component {
         setTimeout(() => this._setWeight(), 500);
     }
     get _activePricelist() {
-        const current_order = this.env.pos.get_order();
-        let current_pricelist = this.env.pos.default_pricelist;
+        const current_order = this.pos.globalState.get_order();
+        let current_pricelist = this.pos.globalState.default_pricelist;
         if (current_order) {
             current_pricelist = current_order.pricelist;
         }
@@ -69,14 +69,14 @@ export class ScaleScreen extends Component {
     }
     get productWeightString() {
         const defaultstr = (this.state.weight || 0).toFixed(3) + " Kg";
-        if (!this.props.product || !this.env.pos) {
+        if (!this.props.product) {
             return defaultstr;
         }
         const unit_id = this.props.product.uom_id;
         if (!unit_id) {
             return defaultstr;
         }
-        const unit = this.env.pos.units_by_id[unit_id[0]];
+        const unit = this.pos.globalState.units_by_id[unit_id[0]];
         const weight = round_pr(this.state.weight || 0, unit.rounding);
         let weightstr = weight.toFixed(Math.ceil(Math.log(1.0 / unit.rounding) / Math.log(10)));
         weightstr += " " + unit.name;
@@ -90,14 +90,13 @@ export class ScaleScreen extends Component {
         return (product ? product.get_price(this._activePricelist, this.state.weight) : 0) || 0;
     }
     get productName() {
-        return (
-            (this.props.product ? this.props.product.display_name : undefined) || "Unnamed Product"
-        );
+        return this.props.product?.display_name || "Unnamed Product";
     }
     get productUom() {
-        return this.props.product
-            ? this.env.pos.units_by_id[this.props.product.uom_id[0]].name
-            : "";
+        if (!this.props.product) {
+            return "";
+        }
+        return this.pos.globalState.units_by_id[this.props.product.uom_id[0]].name;
     }
 }
 

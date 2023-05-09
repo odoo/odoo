@@ -2,6 +2,7 @@
 
 import { useService } from "@web/core/utils/hooks";
 import { Component } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 /**
  * @prop {'quantity' | 'price' | 'discount'} activeMode
@@ -15,18 +16,20 @@ export class NumpadWidget extends Component {
         disableSign: false,
     };
     setup() {
+        this.pos = usePos();
         this.numberBuffer = useService("number_buffer");
         this.localization = useService("localization");
     }
     get hasPriceControlRights() {
         return (
-            this.env.pos.cashierHasPriceControlRights() &&
+            this.pos.globalState.cashierHasPriceControlRights() &&
             !this.props.disabledModes.includes("price")
         );
     }
     get hasManualDiscount() {
         return (
-            this.env.pos.config.manual_discount && !this.props.disabledModes.includes("discount")
+            this.pos.globalState.config.manual_discount &&
+            !this.props.disabledModes.includes("discount")
         );
     }
     changeMode(mode) {
@@ -38,7 +41,7 @@ export class NumpadWidget extends Component {
         }
         this.numberBuffer.capture();
         this.numberBuffer.reset();
-        this.env.pos.numpadMode = mode;
+        this.pos.globalState.numpadMode = mode;
     }
     sendInput(key) {
         this.numberBuffer.sendKey(key);

@@ -76,21 +76,19 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         return this.currentOrder ? this.currentOrder.get_partner() : null;
     }
     get currentOrder() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
     async updateSelectedOrderline({ buffer, key }) {
-        if (this.env.pos.numpadMode === "quantity" && this.env.pos.disallowLineQuantityChange()) {
-            const order = this.env.pos.get_order();
+        const { globalState } = this.pos;
+        if (globalState.numpadMode === "quantity" && globalState.disallowLineQuantityChange()) {
+            const order = globalState.get_order();
             if (!order.orderlines.length) {
                 return;
             }
             const selectedLine = order.get_selected_orderline();
             const orderlines = order.orderlines;
             const lastId = orderlines.length !== 0 && orderlines.at(orderlines.length - 1).cid;
-            const currentQuantity = this.env.pos
-                .get_order()
-                .get_selected_orderline()
-                .get_quantity();
+            const currentQuantity = globalState.get_order().get_selected_orderline().get_quantity();
 
             if (selectedLine.noDecrease) {
                 this.popup.add(ErrorPopup, {
@@ -112,20 +110,21 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             this._setValue(val);
             if (val == "remove") {
                 this.numberBuffer.reset();
-                this.env.pos.numpadMode = "quantity";
+                globalState.numpadMode = "quantity";
             }
         }
     }
     _setValue(val) {
+        const { numpadMode } = this.pos.globalState;
         if (this.currentOrder.get_selected_orderline()) {
-            if (this.env.pos.numpadMode === "quantity") {
+            if (numpadMode === "quantity") {
                 const result = this.currentOrder.get_selected_orderline().set_quantity(val);
                 if (!result) {
                     this.numberBuffer.reset();
                 }
-            } else if (this.env.pos.numpadMode === "discount") {
+            } else if (numpadMode === "discount") {
                 this.currentOrder.get_selected_orderline().set_discount(val);
-            } else if (this.env.pos.numpadMode === "price") {
+            } else if (numpadMode === "price") {
                 var selected_orderline = this.currentOrder.get_selected_orderline();
                 selected_orderline.price_manually_set = true;
                 selected_orderline.set_unit_price(val);
@@ -133,7 +132,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         }
     }
     async _barcodeProductAction(code) {
-        let product = this.env.pos.db.get_product_by_barcode(code.base_code);
+        const { globalState } = this.pos;
+        let product = globalState.db.get_product_by_barcode(code.base_code);
         if (!product) {
             // find the barcode in the backend
             let foundProductIds = [];
@@ -141,9 +141,9 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
                 ["barcode", "=", code.base_code],
             ]);
             if (foundProductIds.length) {
-                await this.env.pos._addProducts(foundProductIds);
+                await globalState._addProducts(foundProductIds);
                 // assume that the result is unique.
-                product = this.env.pos.db.get_product_by_id(foundProductIds[0]);
+                product = globalState.db.get_product_by_id(foundProductIds[0]);
             } else {
                 return this.popup.add(ErrorBarcodePopup, { code: code.base_code });
             }
@@ -178,7 +178,7 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         this.numberBuffer.reset();
     }
     _barcodePartnerAction(code) {
-        const partner = this.env.pos.db.get_partner_by_barcode(code.code);
+        const partner = this.pos.globalState.db.get_partner_by_barcode(code.code);
         if (partner) {
             if (this.currentOrder.get_partner() !== partner) {
                 this.currentOrder.set_partner(partner);
@@ -207,8 +207,8 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         });
         const newQuantity = inputNumber && inputNumber !== "" ? parseFloat(inputNumber) : null;
         if (confirmed && newQuantity !== null) {
-            const order = this.env.pos.get_order();
-            const selectedLine = this.env.pos.get_order().get_selected_orderline();
+            const order = this.pos.globalState.get_order();
+            const selectedLine = order.get_selected_orderline();
             const currentQuantity = selectedLine.get_quantity();
             if (newQuantity >= currentQuantity) {
                 selectedLine.set_quantity(newQuantity);
@@ -230,22 +230,23 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
         }
     }
     async onClickPay() {
-        if (this.env.pos.get_order().server_id) {
+        const { globalState } = this.pos;
+        if (globalState.get_order().server_id) {
             try {
                 const isPaid = await this.orm.call("pos.order", "is_already_paid", [
-                    this.env.pos.get_order().server_id,
+                    globalState.get_order().server_id,
                 ]);
                 if (isPaid) {
                     const searchDetails = {
                         fieldName: "RECEIPT_NUMBER",
-                        searchTerm: this.env.pos.get_order().uid,
+                        searchTerm: globalState.get_order().uid,
                     };
                     this.pos.showScreen("TicketScreen", {
                         ui: { filter: "SYNCED", searchDetails },
                     });
                     this.notification.add(this.env._t("The order has been already paid."), 3000);
-                    this.env.pos.removeOrder(this.env.pos.get_order(), false);
-                    this.env.pos.add_new_order();
+                    globalState.removeOrder(globalState.get_order(), false);
+                    globalState.add_new_order();
                     return;
                 }
             } catch (error) {
@@ -257,14 +258,13 @@ export class ProductScreen extends ControlButtonsMixin(Component) {
             }
         }
         if (
-            this.env.pos
+            globalState
                 .get_order()
                 .orderlines.some(
                     (line) =>
                         line.get_product().tracking !== "none" && !line.has_valid_product_lot()
                 ) &&
-            (this.env.pos.picking_type.use_create_lots ||
-                this.env.pos.picking_type.use_existing_lots)
+            (globalState.picking_type.use_create_lots || globalState.picking_type.use_existing_lots)
         ) {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Some Serial/Lot Numbers are missing"),

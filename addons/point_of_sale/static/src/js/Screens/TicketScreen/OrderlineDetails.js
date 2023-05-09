@@ -4,6 +4,7 @@ import { Component } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "@web/views/fields/formatters";
 import { roundPrecision as round_pr } from "@web/core/utils/numbers";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 /**
  * @props {pos.order.line} line
@@ -11,12 +12,15 @@ import { roundPrecision as round_pr } from "@web/core/utils/numbers";
 export class OrderlineDetails extends Component {
     static template = "OrderlineDetails";
 
+    setup() {
+        this.pos = usePos();
+    }
     get line() {
         const line = this.props.line;
         const formatQty = (line) => {
             const quantity = line.get_quantity();
             const unit = line.get_unit();
-            const decimals = this.env.pos.dp["Product Unit of Measure"];
+            const decimals = this.pos.globalState.dp["Product Unit of Measure"];
             const rounding = Math.max(unit.rounding, Math.pow(10, -decimals));
             const roundedQuantity = round_pr(quantity, rounding);
             return formatFloat(roundedQuantity, { digits: [69, decimals] });
@@ -51,17 +55,17 @@ export class OrderlineDetails extends Component {
         return this.props.line.get_customer_note();
     }
     getToRefundDetail() {
-        return this.env.pos.toRefundLines[this.props.line.id];
+        return this.pos.globalState.toRefundLines[this.props.line.id];
     }
     hasRefundedQty() {
-        return !this.env.pos.isProductQtyZero(this.props.line.refunded_qty);
+        return !this.pos.globalState.isProductQtyZero(this.props.line.refunded_qty);
     }
     getFormattedRefundedQty() {
         return this.env.utils.formatProductQty(this.props.line.refunded_qty);
     }
     hasToRefundQty() {
         const toRefundDetail = this.getToRefundDetail();
-        return !this.env.pos.isProductQtyZero(toRefundDetail && toRefundDetail.qty);
+        return !this.pos.globalState.isProductQtyZero(toRefundDetail && toRefundDetail.qty);
     }
     getFormattedToRefundQty() {
         const toRefundDetail = this.getToRefundDetail();

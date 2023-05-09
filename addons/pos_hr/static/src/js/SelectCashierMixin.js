@@ -7,26 +7,26 @@ import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { SelectionPopup } from "@point_of_sale/js/Popups/SelectionPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { useService } from "@web/core/utils/hooks";
-import { useEnv } from "@odoo/owl";
 import { useBarcodeReader } from "@point_of_sale/app/barcode_reader_hook";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export function useCashierSelector(
     { onCashierChanged, exclusive } = { onCashierChanged: () => {}, exclusive: false }
 ) {
     const popup = useService("popup");
-    const env = useEnv();
+    const { globalState } = usePos();
     useBarcodeReader(
         {
             async cashier(code) {
-                const employee = env.pos.employees.find(
+                const employee = globalState.employees.find(
                     (emp) => emp.barcode === Sha1.hash(code.code)
                 );
                 if (
                     employee &&
-                    employee !== env.pos.get_cashier() &&
+                    employee !== globalState.get_cashier() &&
                     (!employee.pin || (await checkPin(employee)))
                 ) {
-                    env.pos.set_cashier(employee);
+                    globalState.set_cashier(employee);
                     if (onCashierChanged) {
                         onCashierChanged();
                     }
@@ -60,9 +60,9 @@ export function useCashierSelector(
      * Select a cashier, the returning value will either be an object or nothing (undefined)
      */
     return async function selectCashier() {
-        if (env.pos.config.module_pos_hr) {
-            const employeesList = env.pos.employees
-                .filter((employee) => employee.id !== env.pos.get_cashier().id)
+        if (globalState.config.module_pos_hr) {
+            const employeesList = globalState.employees
+                .filter((employee) => employee.id !== globalState.get_cashier().id)
                 .map((employee) => {
                     return {
                         id: employee.id,
@@ -80,7 +80,7 @@ export function useCashierSelector(
                 return;
             }
 
-            env.pos.set_cashier(employee);
+            globalState.set_cashier(employee);
             if (onCashierChanged) {
                 onCashierChanged();
             }

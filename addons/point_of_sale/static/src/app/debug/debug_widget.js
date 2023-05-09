@@ -8,6 +8,7 @@ import { OrderImportPopup } from "@point_of_sale/js/Popups/OrderImportPopup";
 import { useBus, useService } from "@web/core/utils/hooks";
 
 import { useEffect, useRef, useState, Component } from "@odoo/owl";
+import { usePos } from "../pos_hook";
 
 export class DebugWidget extends Component {
     static components = { Transition };
@@ -15,6 +16,7 @@ export class DebugWidget extends Component {
     static props = { state: { type: Object, shape: { showWidget: Boolean } } };
     setup() {
         super.setup();
+        this.pos = usePos();
         this.debug = useService("debug");
         this.popup = useService("popup");
         this.barcodeReader = useService("barcode_reader");
@@ -29,11 +31,11 @@ export class DebugWidget extends Component {
             buffer: numberBuffer.get(),
         });
         this.root = useRef("root");
-        this.pos = useState({ left: null, top: null });
+        this.position = useState({ left: null, top: null });
         useEffect(
             (root) => {
-                this.pos.left = root?.offsetLeft;
-                this.pos.top = root?.offsetTop;
+                this.position.left = root?.offsetLeft;
+                this.position.top = root?.offsetTop;
             },
             () => [this.root.el]
         );
@@ -41,12 +43,12 @@ export class DebugWidget extends Component {
         useMovable({
             ref: this.root,
             onMoveStart: () => {
-                posBeforeMove = { ...this.pos };
+                posBeforeMove = { ...this.position };
             },
             onMove: ({ dx, dy }) => {
                 const { minX, minY, maxX, maxY } = getLimits(this.root.el, document.body);
-                this.pos.left = constrain(posBeforeMove.left + dx, minX, maxX);
-                this.pos.top = constrain(posBeforeMove.top + dy, minY, maxY);
+                this.position.left = constrain(posBeforeMove.left + dx, minX, maxX);
+                this.position.top = constrain(posBeforeMove.top + dy, minY, maxY);
             },
         });
 
@@ -96,8 +98,8 @@ export class DebugWidget extends Component {
             ),
         });
         if (confirmed) {
-            this.env.pos.db.remove_all_orders();
-            this.env.pos.set_synch("connected", 0);
+            this.pos.globalState.db.remove_all_orders();
+            this.pos.globalState.set_synch("connected", 0);
         }
     }
     async deleteUnpaidOrders() {
@@ -108,7 +110,7 @@ export class DebugWidget extends Component {
             ),
         });
         if (confirmed) {
-            this.env.pos.db.remove_all_unpaid_orders();
+            this.pos.globalState.db.remove_all_unpaid_orders();
             window.location = "/";
         }
     }
@@ -122,7 +124,7 @@ export class DebugWidget extends Component {
     // The implementation can be better.
     preparePaidOrders() {
         try {
-            this.paidOrdersBlob = this._createBlob(this.env.pos.export_paid_orders());
+            this.paidOrdersBlob = this._createBlob(this.pos.globalState.export_paid_orders());
             this.state.isPaidOrdersReady = true;
         } catch (error) {
             console.warn(error);
@@ -138,7 +140,7 @@ export class DebugWidget extends Component {
     // FIXME POSREF why is this two steps?
     prepareUnpaidOrders() {
         try {
-            this.unpaidOrdersBlob = this._createBlob(this.env.pos.export_unpaid_orders());
+            this.unpaidOrdersBlob = this._createBlob(this.pos.globalState.export_unpaid_orders());
             this.state.isUnpaidOrdersReady = true;
         } catch (error) {
             console.warn(error);
@@ -154,7 +156,7 @@ export class DebugWidget extends Component {
     async importOrders(event) {
         const file = event.target.files[0];
         if (file) {
-            const report = this.env.pos.import_orders(await file.text());
+            const report = this.pos.globalState.import_orders(await file.text());
             await this.popup.add(OrderImportPopup, { report });
         }
     }
@@ -168,7 +170,7 @@ export class DebugWidget extends Component {
         return `"${this.state.buffer}"`;
     }
     get style() {
-        const { left, top } = this.pos;
+        const { left, top } = this.position;
         return top === null ? "" : `position: absolute; left: ${left}px; top: ${top}px;`;
     }
 }

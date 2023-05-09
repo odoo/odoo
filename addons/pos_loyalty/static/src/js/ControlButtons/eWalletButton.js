@@ -11,7 +11,6 @@ export class eWalletButton extends Component {
     static template = "point_of_sale.eWalletButton";
 
     setup() {
-        super.setup(...arguments);
         this.popup = useService("popup");
         this.pos = usePos();
     }
@@ -24,11 +23,13 @@ export class eWalletButton extends Component {
         return eWalletRewards;
     }
     _getEWalletPrograms() {
-        return this.env.pos.programs.filter((p) => p.program_type == "ewallet");
+        return this.pos.globalState.programs.filter((p) => p.program_type == "ewallet");
     }
     async _onClickWalletButton() {
-        const order = this.env.pos.get_order();
-        const eWalletPrograms = this.env.pos.programs.filter((p) => p.program_type == "ewallet");
+        const order = this.pos.globalState.get_order();
+        const eWalletPrograms = this.pos.globalState.programs.filter(
+            (p) => p.program_type == "ewallet"
+        );
         const orderTotal = order.get_total_with_tax();
         const eWalletRewards = this._getEWalletRewards(order);
         if (orderTotal < 0 && eWalletPrograms.length >= 1) {
@@ -49,7 +50,7 @@ export class eWalletButton extends Component {
                 }
             }
             if (selectedProgram) {
-                const eWalletProduct = this.env.pos.db.get_product_by_id(
+                const eWalletProduct = this.pos.globalState.db.get_product_by_id(
                     selectedProgram.trigger_product_ids[0]
                 );
                 this.pos.addProductFromUi(eWalletProduct, {
@@ -109,6 +110,6 @@ export class eWalletButton extends Component {
 ProductScreen.addControlButton({
     component: eWalletButton,
     condition: function () {
-        return this.env.pos.programs.filter((p) => p.program_type == "ewallet").length > 0;
+        return this.pos.globalState.programs.filter((p) => p.program_type == "ewallet").length > 0;
     },
 });

@@ -37,7 +37,7 @@ export class TipScreen extends Component {
         return this._totalAmount;
     }
     get currentOrder() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
     get percentageTips() {
         return [
@@ -48,8 +48,8 @@ export class TipScreen extends Component {
     }
     async validateTip() {
         const amount = parseFloat(this.state.inputTipAmount) || 0;
-        const order = this.env.pos.get_order();
-        const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
+        const order = this.pos.globalState.get_order();
+        const serverId = this.pos.globalState.validated_orders_name_server_id_map[order.name];
 
         if (!serverId) {
             this.popup.add(ErrorPopup, {
@@ -84,7 +84,7 @@ export class TipScreen extends Component {
         order.set_tip(amount);
         order.finalized = true;
 
-        const paymentline = this.env.pos.get_order().get_paymentlines()[0];
+        const paymentline = this.pos.globalState.get_order().get_paymentlines()[0];
         if (paymentline.payment_method.payment_terminal) {
             paymentline.amount += amount;
             await paymentline.payment_method.payment_terminal.send_payment_adjust(paymentline.cid);
@@ -96,16 +96,16 @@ export class TipScreen extends Component {
         this.goNextScreen();
     }
     goNextScreen() {
-        this.env.pos.removeOrder(this.currentOrder);
-        if (!this.env.pos.config.module_pos_restaurant) {
-            this.env.pos.add_new_order();
+        this.pos.globalState.removeOrder(this.currentOrder);
+        if (!this.pos.globalState.config.module_pos_restaurant) {
+            this.pos.globalState.add_new_order();
         }
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
     get nextScreen() {
-        if (this.env.pos.config.module_pos_restaurant) {
-            const table = this.env.pos.table;
+        if (this.pos.globalState.config.module_pos_restaurant) {
+            const table = this.pos.globalState.table;
             return { name: "FloorScreen", props: { floor: table ? table.floor : null } };
         } else {
             return { name: "ProductScreen" };

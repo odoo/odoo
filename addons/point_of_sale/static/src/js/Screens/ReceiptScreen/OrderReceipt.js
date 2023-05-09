@@ -1,5 +1,6 @@
 /** @odoo-module */
 
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { WrappedProductNameLines } from "./WrappedProductNameLines";
 import { Component, onWillUpdateProps } from "@odoo/owl";
 
@@ -9,6 +10,7 @@ export class OrderReceipt extends Component {
 
     setup() {
         super.setup();
+        this.pos = usePos();
         this._receiptEnv = this.props.order.getOrderReceiptEnv();
 
         onWillUpdateProps((nextProps) => {
