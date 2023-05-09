@@ -506,7 +506,7 @@ This module provides the core of the Odoo Web Client.
 
         'web._assets_primary_variables': [
             'web/static/src/scss/primary_variables.scss',
-            'web/static/src/**/**/*.variables.scss',
+            'web/static/src/**/*.variables.scss',
             'base/static/src/scss/onboarding.variables.scss',
         ],
         'web._assets_secondary_variables': [
