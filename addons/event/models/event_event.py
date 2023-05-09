@@ -6,7 +6,7 @@ import pytz
 
 from datetime import timedelta
 
-from odoo import _, api, Command, fields, models
+from odoo import _, api, Command, fields, models, tools
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError, ValidationError
 from odoo.osv import expression
@@ -676,6 +676,13 @@ class EventEvent(models.Model):
 
             result[event.id] = cal.serialize().encode('utf-8')
         return result
+
+    def _get_tickets_access_hash(self, registration_ids):
+        """ Returns the ground truth hash for accessing the tickets in route /event/<int:event_id>/my_tickets.
+        The dl links are always made event-dependant, hence the method linked to the record in self.
+        """
+        self.ensure_one()
+        return tools.hmac(self.env(su=True), 'event-registration-ticket-report-access', (self.id, sorted(registration_ids)))
 
     @api.autovacuum
     def _gc_mark_events_done(self):

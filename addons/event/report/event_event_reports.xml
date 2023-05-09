@@ -86,4 +86,12 @@
         <field name="paperformat_id" ref="paperformat_event_foldable_badge"/>
     </record>
 
+    <record id="action_report_event_registration_responsive_html_ticket" model="ir.actions.report">
+        <field name="name">Responsive Html Full Page Ticket</field>
+        <field name="model">event.registration</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">event.event_registration_report_template_responsive_html_ticket</field>
+        <field name="report_file">event.event_registration_report_template_responsive_html_ticket</field>
+    </record>
+
 </odoo>
