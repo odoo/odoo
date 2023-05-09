@@ -1786,10 +1786,13 @@ class PosSession(models.Model):
     def _get_pos_ui_pos_bill(self, params):
         return self.env['pos.bill'].search_read(**params['search_params'])
 
+    def _get_partners_domain(self):
+        return []
+
     def _loader_params_res_partner(self):
         return {
             'search_params': {
-                'domain': [],
+                'domain': self._get_partners_domain(),
                 'fields': [
                     'name', 'street', 'city', 'state_id', 'country_id', 'vat', 'lang', 'phone', 'zip', 'mobile', 'email',
                     'barcode', 'write_date', 'property_account_position_id', 'property_product_pricelist', 'parent_name'
