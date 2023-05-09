@@ -196,7 +196,35 @@ class TestExpenses(TestExpenseCommon):
                 'product_id': False,
                 'currency_id': self.company_data['currency'].id,
                 'tax_line_id': False,
+<<<<<<< HEAD
                 'analytic_distribution': False,
+||||||| parent of 98ecc91e353 (temp)
+                'analytic_account_id': False,
+            },
+            # Receivable line (foreign currency):
+            {
+                'debit': 0.0,
+                'credit': 750,
+                'amount_currency': -1500.0,
+                'account_id': self.company_data['default_account_payable'].id,
+                'product_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'tax_line_id': False,
+                'analytic_account_id': False,
+=======
+                'analytic_account_id': False,
+            },
+            # Receivable line (foreign currency):
+            {
+                'debit': 0.0,
+                'credit': 500.0,
+                'amount_currency': -1500.0,
+                'account_id': self.company_data['default_account_payable'].id,
+                'product_id': False,
+                'currency_id': self.currency_data['currency'].id,
+                'tax_line_id': False,
+                'analytic_account_id': False,
+>>>>>>> 98ecc91e353 (temp)
             },
             # Tax line (foreign currency):
             {
@@ -222,7 +250,13 @@ class TestExpenses(TestExpenseCommon):
             },
             # Product line (foreign currency):
             {
+<<<<<<< HEAD
                 'debit': 434.78, # 1500 * 1:3 (rate) / 1.15 (incl. tax)
+||||||| parent of 98ecc91e353 (temp)
+                'debit': 652.17,
+=======
+                'debit': 434.78,
+>>>>>>> 98ecc91e353 (temp)
                 'credit': 0.0,
                 'amount_currency': 434.78, # untaxed amount
                 'account_id': self.product_c.property_account_expense_id.id,
