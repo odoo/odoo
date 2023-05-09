@@ -4846,6 +4846,9 @@ registry.SnippetMove = SnippetOptionWidget.extend({
                 });
             }
         }
+        // Update the "Invisible Elements" panel as the order of invisible
+        // snippets could have changed on the page.
+        this.trigger_up("update_invisible_dom");
     },
 });
 
