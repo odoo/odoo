@@ -4015,6 +4015,15 @@ options.registry.Button = options.Class.extend({
     },
 });
 
+options.registry.layout_column.include({
+    /**
+     * @override
+     */
+    _isMobile() {
+        return wUtils.isMobile(this);
+    },
+});
+
 export default {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,

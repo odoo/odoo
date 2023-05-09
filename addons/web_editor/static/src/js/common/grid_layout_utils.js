@@ -223,7 +223,7 @@ function _placeColumns(columnEls, rowSize, rowGap, columnSize, columnGap) {
 
     for (const [i, columnEl] of [...columnEls].entries()) {
         // Removing padding and offset classes.
-        const regex = /^(pt|pb|col-|offset-)/;
+        const regex = /^(((pt|pb)\d{1,3}$)|col-lg-|offset-lg-)/;
         const toRemove = [...columnEl.classList].filter(c => {
             return regex.test(c);
         });

@@ -10,6 +10,7 @@ import Widget from "@web/legacy/js/core/widget";
 import { ColorPalette } from "@web_editor/js/wysiwyg/widgets/color_palette";
 import weUtils from "@web_editor/js/common/utils";
 import * as gridUtils from "@web_editor/js/common/grid_layout_utils";
+import {ColumnLayoutMixin} from "@web_editor/js/common/column_layout_mixin";
 const {
     normalizeColor,
     getBgImageURL,
@@ -4443,6 +4444,7 @@ registry.sizing = SnippetOptionWidget.extend({
     start: function () {
         const self = this;
         const def = this._super.apply(this, arguments);
+        let isMobile = weUtils.isMobileView(this.$target[0]);
 
         this.$handles = this.$overlay.find('.o_handle');
 
@@ -4450,12 +4452,7 @@ registry.sizing = SnippetOptionWidget.extend({
         this.$handles.on('mousedown', function (ev) {
             ev.preventDefault();
             self.options.wysiwyg.odooEditor.automaticStepUnactive('resizing');
-
-            // If the handle has the class 'readonly', don't allow to resize.
-            // (For the grid handles when we are in mobile view).
-            if (ev.currentTarget.classList.contains('readonly')) {
-                return;
-            }
+            isMobile = weUtils.isMobileView(self.$target[0]);
 
             // First update size values as some element sizes may not have been
             // initialized on option start (hidden slides, etc)
@@ -4513,7 +4510,7 @@ registry.sizing = SnippetOptionWidget.extend({
             // front of the other elements.
             const rowEl = self.$target[0].parentNode;
             let backgroundGridEl;
-            if (rowEl.classList.contains('o_grid_mode')) {
+            if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
                 self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
                 backgroundGridEl = gridUtils._addBackgroundGrid(rowEl, 0);
                 self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
@@ -4606,7 +4603,7 @@ registry.sizing = SnippetOptionWidget.extend({
                 // If we are in grid mode, removes the background grid.
                 // Also sync the col-* class with the g-col-* class so the
                 // toggle to normal mode and the mobile view are well done.
-                if (rowEl.classList.contains('o_grid_mode')) {
+                if (rowEl.classList.contains("o_grid_mode") && !isMobile) {
                     self.options.wysiwyg.odooEditor.observerUnactive('displayBackgroundGrid');
                     backgroundGridEl.remove();
                     self.options.wysiwyg.odooEditor.observerActive('displayBackgroundGrid');
@@ -4635,7 +4632,7 @@ registry.sizing = SnippetOptionWidget.extend({
         for (const [key, value] of Object.entries(resizeValues)) {
             this.$handles.filter('.' + key).toggleClass('readonly', !value);
         }
-        if (this.$target[0].classList.contains('o_grid_item')) {
+        if (!isMobile && this.$target[0].classList.contains("o_grid_item")) {
             this.$handles.filter('.o_grid_handle').toggleClass('readonly', false);
         }
 
@@ -4669,16 +4666,17 @@ registry.sizing = SnippetOptionWidget.extend({
         await this._super(...arguments);
 
         const isMobileView = weUtils.isMobileView(this.$target[0]);
-        const isGrid = this.$target[0].classList.contains('o_grid_item');
+        const isGridOn = this.$target[0].classList.contains("o_grid_item");
+        const isGrid = !isMobileView && isGridOn;
         if (this.$target[0].parentNode && this.$target[0].parentNode.classList.contains('row')) {
             // Hiding/showing the correct resize handles if we are in grid mode
             // or not.
             for (const handleEl of this.$handles) {
                 const isGridHandle = handleEl.classList.contains('o_grid_handle');
                 handleEl.classList.toggle('d-none', isGrid ^ isGridHandle);
-                // Disabling the resize if we are in mobile view.
-                const isHorizontalSizing = handleEl.matches('.e, .w');
-                handleEl.classList.toggle('readonly', isMobileView && (isHorizontalSizing || isGridHandle));
+                // Disabling the vertical resize if we are in mobile view.
+                const isVerticalSizing = handleEl.matches('.n, .s');
+                handleEl.classList.toggle("readonly", isMobileView && isVerticalSizing && isGridOn);
             }
 
             // Hiding the move handle in mobile view so we can't drag the
@@ -4688,7 +4686,7 @@ registry.sizing = SnippetOptionWidget.extend({
 
             // Show/hide the buttons to send back/front a grid item.
             const bringFrontBackEls = this.$overlay[0].querySelectorAll('.o_front_back');
-            bringFrontBackEls.forEach(button => button.classList.toggle('d-none', !isGrid || isMobileView));
+            bringFrontBackEls.forEach(button => button.classList.toggle("d-none", !isGrid));
         }
     },
 
@@ -4812,8 +4810,10 @@ registry['sizing_x'] = registry.sizing.extend({
         // Below condition is added to remove offset of target element only
         // and not its children to avoid design alteration of a container/block.
         if (options.isCurrent) {
-            var _class = this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-)([0-9-]+)/g, '');
-            this.$target.attr('class', _class);
+            const targetClassList = this.$target[0].classList;
+            const offsetClasses = [...targetClassList]
+                .filter(cls => cls.match(/^offset-(lg-)?([0-9]{1,2})$/));
+            targetClassList.remove(...offsetClasses);
         }
     },
 
@@ -4825,12 +4825,22 @@ registry['sizing_x'] = registry.sizing.extend({
      * @override
      */
     _getSize: function () {
+        const isMobileView = weUtils.isMobileView(this.$target[0]);
+        const resolutionModifier = isMobileView ? "" : "lg-";
         var width = this.$target.closest('.row').width();
         var gridE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
         var gridW = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
         this.grid = {
-            e: [gridE.map(v => ('col-lg-' + v)), gridE.map(v => width / 12 * v), 'width'],
-            w: [gridW.map(v => ('offset-lg-' + v)), gridW.map(v => width / 12 * v), 'margin-left'],
+            e: [
+                gridE.map(v => (`col-${resolutionModifier}${v}`)),
+                gridE.map(v => width / 12 * v),
+                "width",
+            ],
+            w: [
+                gridW.map(v => (`offset-${resolutionModifier}${v}`)),
+                gridW.map(v => width / 12 * v),
+                "margin-left",
+            ],
         };
         return this.grid;
     },
@@ -4838,34 +4848,51 @@ registry['sizing_x'] = registry.sizing.extend({
      * @override
      */
     _onResize: function (compass, beginClass, current) {
+        const targetEl = this.$target[0];
+        const isMobileView = weUtils.isMobileView(targetEl);
+        const resolutionModifier = isMobileView ? "" : "lg-";
+
         if (compass === 'w' || compass === 'e') {
-            const beginOffset = Number(beginClass.match(/offset-lg-([0-9-]+)|$/)[1] || beginClass.match(/offset-xl-([0-9-]+)|$/)[1] || 0);
+            // (?!\S): following char cannot be a non-space character
+            const offsetRegex = new RegExp(`(?:^|\\s+)offset-${resolutionModifier}(\\d{1,2})(?!\\S)`);
+            const colRegex = new RegExp(`(?:^|\\s+)col-${resolutionModifier}(\\d{1,2})(?!\\S)`);
+
+            const beginOffset = Number(beginClass.match(offsetRegex)?.[1] || 0);
 
             if (compass === 'w') {
                 // don't change the right border position when we change the offset (replace col size)
-                var beginCol = Number(beginClass.match(/col-lg-([0-9]+)|$/)[1] || 0);
-                var offset = Number(this.grid.w[0][current].match(/offset-lg-([0-9-]+)|$/)[1] || 0);
+                const beginCol = Number(beginClass.match(colRegex)?.[1] || 12);
+                let offset = Number(this.grid.w[0][current].match(offsetRegex)?.[1] || 0);
                 if (offset < 0) {
                     offset = 0;
                 }
-                var colSize = beginCol - (offset - beginOffset);
+                let colSize = beginCol - (offset - beginOffset);
                 if (colSize <= 0) {
                     colSize = 1;
                     offset = beginOffset + beginCol - 1;
                 }
-                this.$target.attr('class', this.$target.attr('class').replace(/\s*(offset-xl-|offset-lg-|col-lg-)([0-9-]+)/g, ''));
+                const offsetColRegex = new RegExp(`${offsetRegex.source}|${colRegex.source}`, "g");
+                targetEl.className = targetEl.className.replace(offsetColRegex, "");
+                targetEl.classList.add(`col-${resolutionModifier}${colSize > 12 ? 12 : colSize}`);
 
-                this.$target.addClass('col-lg-' + (colSize > 12 ? 12 : colSize));
                 if (offset > 0) {
-                    this.$target.addClass('offset-lg-' + offset);
+                    targetEl.classList.add(`offset-${resolutionModifier}${offset}`);
+                }
+                if (isMobileView && offset === 0) {
+                    targetEl.classList.remove("offset-lg-0");
+                } else if ((isMobileView && offset > 0 &&
+                        !targetEl.className.match(/(^|\s+)offset-lg-\d{1,2}(?!\S)/)) ||
+                        (!isMobileView && offset === 0 &&
+                        targetEl.className.match(/(^|\s+)offset-\d{1,2}(?!\S)/))) {
+                    targetEl.classList.add("offset-lg-0");
                 }
             } else if (beginOffset > 0) {
-                const endCol = Number(this.grid.e[0][current].match(/col-lg-([0-9]+)|$/)[1] || 0);
+                const endCol = Number(this.grid.e[0][current].match(colRegex)?.[1] || 0);
                 // Avoids overflowing the grid to the right if the
                 // column size + the offset exceeds 12.
                 if ((endCol + beginOffset) > 12) {
-                    this.$target[0].className = this.$target[0].className.replace(/\s*(col-lg-)([0-9-]+)/g, '');
-                    this.$target[0].classList.add('col-lg-' + (12 - beginOffset));
+                    targetEl.className = targetEl.className.replace(colRegex, "");
+                    targetEl.classList.add(`col-${resolutionModifier}${12 - beginOffset}`);
                 }
             }
         }
@@ -4875,6 +4902,10 @@ registry['sizing_x'] = registry.sizing.extend({
      * @override
      */
     async _notifyResizeChange() {
+        this.trigger_up("option_update", {
+            optionName: "layout_column",
+            name: "change_column_size",
+        });
         this.trigger_up('option_update', {
             optionName: 'StepsConnector',
             name: 'change_column_size',
@@ -5094,12 +5125,21 @@ registry.Box = SnippetOptionWidget.extend({
 
 
 
-registry.layout_column = SnippetOptionWidget.extend({
+registry.layout_column = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     /**
      * @override
      */
     cleanUI() {
         this._removeGridPreview();
+    },
+    /**
+     * @override
+     */
+    notify(name) {
+        if (name === "change_column_size") {
+            this.updateUI();
+        }
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -5112,6 +5152,10 @@ registry.layout_column = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     selectCount: async function (previewMode, widgetValue, params) {
+        // Make sure the "Custom" option is read-only.
+        if (widgetValue === "custom") {
+            return;
+        }
         const previousNbColumns = this.$('> .row').children().length;
         let $row = this.$('> .row');
         if (!$row.length) {
@@ -5122,7 +5166,7 @@ registry.layout_column = SnippetOptionWidget.extend({
         }
 
         const nbColumns = parseInt(widgetValue);
-        await this._updateColumnCount($row, (nbColumns || 1) - $row.children().length);
+        await this._updateColumnCount($row[0], (nbColumns || 1));
         // Yield UI thread to wait for event to bubble before activate_snippet is called.
         // In this case this lets the select handle the click event before we switch snippet.
         // TODO: make this more generic in activate_snippet event handler.
@@ -5280,7 +5324,9 @@ registry.layout_column = SnippetOptionWidget.extend({
      */
     _computeWidgetState: function (methodName, params) {
         if (methodName === 'selectCount') {
-            return this.$('> .row').children().length;
+            const isMobile = this._isMobile();
+            const columnEls = this.$target[0].querySelector(":scope > .row")?.children;
+            return this._getNbColumns(columnEls, isMobile);
         } else if (methodName === 'selectLayout') {
             const rowEl = this.$target[0].querySelector('.row');
             if (rowEl && rowEl.classList.contains('o_grid_mode')) {
@@ -5306,59 +5352,79 @@ registry.layout_column = SnippetOptionWidget.extend({
             // Hide the selectCount widget if the `s_nb_column_fixed` class is
             // on the row.
             return !this.$target[0].querySelector(":scope > .row.s_nb_column_fixed");
+        } else if (widgetName === "custom_cols_opt") {
+            // Show "Custom" if the user altered the columns in some way (i.e.
+            // by adding offsets or resizing a column). This is only shown as
+            // an indication, but shouldn't be selectable.
+            const isMobile = this._isMobile();
+            return this.$target[0].querySelector(":scope > .row") &&
+                this._areColsCustomized(this.$target[0].querySelector(":scope > .row").children,
+                isMobile);
         }
         return this._super(...arguments);
     },
     /**
-     * Adds new columns which are clones of the last column or removes the
-     * last x columns.
+     * If the number of columns requested is greater than the number of items,
+     * adds new columns which are clones of the last one. If there are less
+     * columns than the number of items, reorganizes the elements on the right
+     * amount of rows.
      *
      * @private
-     * @param {jQuery} $row - the row in which to update the columns
-     * @param {integer} count - positif to add, negative to remove
+     * @param {HTMLElement} rowEl - the row in which to update the columns
+     * @param {integer} nbColumns - the number of columns requested
      */
-    _updateColumnCount: async function ($row, count) {
-        if (!count) {
+    async _updateColumnCount(rowEl, nbColumns) {
+        const isMobile = this._isMobile();
+        // The number of elements per row before the update.
+        const prevNbColumns = this._getNbColumns(rowEl.children, isMobile);
+
+        if (nbColumns === prevNbColumns) {
             return;
         }
+        this._resizeColumns(rowEl.children, nbColumns);
 
-        if (count > 0) {
-            var $lastColumn = $row.children().last();
-            for (var i = 0; i < count; i++) {
-                await new Promise(resolve => {
-                    this.trigger_up('clone_snippet', {$snippet: $lastColumn, onSuccess: resolve});
-                });
+        const itemsDelta = nbColumns - rowEl.children.length;
+        if (itemsDelta > 0) {
+            const newItems = [];
+            for (let i = 0; i < itemsDelta; i++) {
+                const lastEl = rowEl.lastElementChild;
+                newItems.push(new Promise(resolve => {
+                    this.trigger_up("clone_snippet", {$snippet: $(lastEl), onSuccess: resolve});
+                }));
             }
-        } else {
-            var self = this;
-            for (const el of $row.children().slice(count)) {
-                await new Promise(resolve => {
-                    self.trigger_up('remove_snippet', {$snippet: $(el), onSuccess: resolve, shouldRecordUndo: false});
-                });
-            }
+            await Promise.all(newItems);
         }
 
-        this._resizeColumns($row.children());
         this.trigger_up('cover_update');
     },
     /**
-     * Resizes the columns so that they are kept on one row.
+     * Resizes the columns for the mobile or desktop view.
      *
      * @private
-     * @param {jQuery} $columns - the columns to resize
+     * @param {HTMLCollection} columnEls - the elements to resize
+     * @param {integer} nbColumns - the number of wanted columns
      */
-    _resizeColumns: function ($columns) {
-        const colsLength = $columns.length;
-        var colSize = Math.floor(12 / colsLength) || 1;
-        var colOffset = Math.floor((12 - colSize * colsLength) / 2);
-        var colClass = 'col-lg-' + colSize;
-        $columns.toArray().forEach((column) => {
-            var $column = $(column);
-            $column.attr('class', $column.attr('class').replace(/\b(col|offset)-lg(-\d+)?\b/g, ''));
-            $column.addClass(colClass);
-        });
-        if (colOffset) {
-            $columns.first().addClass('offset-lg-' + colOffset);
+    _resizeColumns(columnEls, nbColumns) {
+        const isMobile = this._isMobile();
+        const itemSize = Math.floor(12 / nbColumns) || 1;
+        const firstItem = this._getFirstItem(columnEls, isMobile);
+        const firstItemOffset = Math.floor((12 - itemSize * nbColumns) / 2);
+
+        const resolutionModifier = isMobile ? "" : "-lg";
+        const replacingRegex =
+            // (?!\S): following char cannot be a non-space character
+            new RegExp(`(?:^|\\s+)(col|offset)${resolutionModifier}(-\\d{1,2})?(?!\\S)`, "g");
+
+        for (const columnEl of columnEls) {
+            columnEl.className = columnEl.className.replace(replacingRegex, "");
+            columnEl.classList.add(`col${resolutionModifier}-${itemSize}`);
+
+            if (firstItemOffset && columnEl === firstItem) {
+                columnEl.classList.add(`offset${resolutionModifier}-${firstItemOffset}`);
+            }
+            const hasMobileOffset = columnEl.className.match(/(^|\s+)offset-\d{1,2}(?!\S)/);
+            const hasDesktopOffset = columnEl.className.match(/(^|\s+)offset-lg-[1-9][0-1]?(?!\S)/);
+            columnEl.classList.toggle("offset-lg-0", hasMobileOffset && !hasDesktopOffset);
         }
     },
     /**
@@ -5406,6 +5472,12 @@ registry.layout_column = SnippetOptionWidget.extend({
         }
         delete this.removeGridPreview;
         this.options.wysiwyg.odooEditor.observerActive("removeGridPreview");
+    },
+    /**
+     * @returns {boolean}
+     */
+    _isMobile() {
+        return weUtils.isMobileView(this.$target[0]);
     },
 });
 
@@ -5489,7 +5561,7 @@ registry.vAlignment = SnippetOptionWidget.extend({
 /**
  * Allows snippets to be moved before the preceding element or after the following.
  */
-registry.SnippetMove = SnippetOptionWidget.extend({
+registry.SnippetMove = SnippetOptionWidget.extend(ColumnLayoutMixin, {
     displayOverlayOptions: true,
 
     /**
@@ -5504,6 +5576,49 @@ registry.SnippetMove = SnippetOptionWidget.extend({
 
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    onClone(options) {
+        this._super.apply(this, arguments);
+        const mobileOrder = this._getItemMobileOrder(this.$target[0]);
+        // If the order has been adapted on mobile, it must be different
+        // for each clone.
+        if (options.isCurrent && mobileOrder) {
+            const siblingEls = this.$target[0].parentElement.children;
+            const cloneEls = [...siblingEls].filter(el => el.classList.contains(mobileOrder[0]));
+            // For cases in which multiple clones are made at the same time, we
+            // change the order for all clones at once. (e.g.: it happens when
+            // increasing the columns count.) This makes sure the clones get a
+            // mobile order in line with their DOM order.
+            cloneEls.forEach((el, i) => {
+                if (i > 0) {
+                    const newMobileOrder = siblingEls.length - cloneEls.length + i;
+                    el.classList.replace(mobileOrder[0], `o_we_mobile_order_${newMobileOrder}`);
+                }
+            });
+        }
+    },
+    /**
+     * @override
+     */
+    onRemove() {
+        this._super.apply(this, arguments);
+        const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+        // If the order has been adapted on mobile, the gap created by the
+        // removed snippet must be filled in.
+        if (targetMobileOrder) {
+            const targetOrder = parseInt(targetMobileOrder[1]);
+
+            [...this.$target[0].parentElement.children].forEach(el => {
+                const elOrder = parseInt(this._getItemMobileOrder(el)[1]);
+                if (elOrder > targetOrder) {
+                    el.classList.replace(`o_we_mobile_order_${elOrder}`,
+                        `o_we_mobile_order_${elOrder - 1}`);
+                }
+            });
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Options
@@ -5515,21 +5630,41 @@ registry.SnippetMove = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     moveSnippet: function (previewMode, widgetValue, params) {
+        const isMobile = weUtils.isMobileView(this.$target[0]);
         const isNavItem = this.$target[0].classList.contains('nav-item');
         const $tabPane = isNavItem ? $(this.$target.find('.nav-link')[0].hash) : null;
-        switch (widgetValue) {
-            case 'prev':
-                this.$target.prev().before(this.$target);
-                if (isNavItem) {
-                    $tabPane.prev().before($tabPane);
+        const moveLeftOrRight = ["move_left_opt", "move_right_opt"].includes(params.name);
+
+        let siblingEls, mobileOrder;
+        if (moveLeftOrRight) {
+            siblingEls = this.$target[0].parentElement.children;
+            mobileOrder = !!this._getItemMobileOrder(this.$target[0]);
+        }
+        if (moveLeftOrRight && isMobile && !isNavItem) {
+            if (!mobileOrder) {
+                this._addMobileOrders(siblingEls);
+            }
+            this._swapMobileOrders(widgetValue, siblingEls);
+        } else {
+            switch (widgetValue) {
+                case "prev":
+                    this.$target[0].previousElementSibling.before(this.$target[0]);
+                    if (isNavItem) {
+                        $tabPane.prev().before($tabPane);
+                    }
+                    break;
+                case "next":
+                    this.$target[0].nextElementSibling.after(this.$target[0]);
+                    if (isNavItem) {
+                        $tabPane.next().after($tabPane);
+                    }
+                    break;
+            }
+            if (mobileOrder) {
+                for (const el of siblingEls) {
+                    el.className = el.className.replace(/\bo_we_mobile_order_[0-9]+\b/, "");
                 }
-                break;
-            case 'next':
-                this.$target.next().after(this.$target);
-                if (isNavItem) {
-                    $tabPane.next().after($tabPane);
-                }
-                break;
+            }
         }
         if (!this.$target.is(this.data.noScroll)
                 && (params.name === 'move_up_opt' || params.name === 'move_down_opt')) {
@@ -5566,6 +5701,7 @@ registry.SnippetMove = SnippetOptionWidget.extend({
     async _computeWidgetVisibility(widgetName, params) {
         const moveUpOrLeft = widgetName === "move_up_opt" || widgetName === "move_left_opt";
         const moveDownOrRight = widgetName === "move_down_opt" || widgetName === "move_right_opt";
+        const moveLeftOrRight = widgetName === "move_left_opt" || widgetName === "move_right_opt";
 
         if (moveUpOrLeft || moveDownOrRight) {
             // The arrows are not displayed if the target is in a grid and if
@@ -5574,10 +5710,31 @@ registry.SnippetMove = SnippetOptionWidget.extend({
             if (!isMobileView && this.$target[0].classList.contains("o_grid_item")) {
                 return false;
             }
+            // On mobile, items' reordering is independent from desktop inside
+            // a snippet (left or right), not at a higher level (up or down).
+            if (moveLeftOrRight && isMobileView && this._getItemMobileOrder(this.$target[0])) {
+                const firstOrLast = widgetName === "move_left_opt" ? "0" :
+                    this.$target[0].parentElement.children.length - 1;
+                return !this.$target[0].classList.contains(`o_we_mobile_order_${firstOrLast}`);
+            }
             const firstOrLastChild = moveUpOrLeft ? ":first-child" : ":last-child";
             return !this.$target.is(firstOrLastChild);
         }
         return this._super(...arguments);
+    },
+    /**
+     * Swaps the mobile orders.
+     *
+     * @param {string} widgetValue
+     * @param {HTMLCollection} siblingEls
+     */
+    _swapMobileOrders(widgetValue, siblingEls) {
+        const targetMobileOrder = this._getItemMobileOrder(this.$target[0]);
+        const orderModifier = widgetValue === "prev" ? -1 : 1;
+        const newOrderClass = `o_we_mobile_order_${parseInt(targetMobileOrder[1]) + orderModifier}`;
+        const comparedEl = [...siblingEls].find(el => el.classList.contains(newOrderClass));
+        this.$target[0].classList.replace(targetMobileOrder[0], newOrderClass);
+        comparedEl.classList.replace(newOrderClass, targetMobileOrder[0]);
     },
 });
 
