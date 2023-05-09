@@ -362,6 +362,7 @@ class ApplyConfiguratorScreen extends Component {
             const data = {
                 'selected_features': selectedFeatures,
                 'industry_id': this.state.selectedIndustry.id,
+                'industry_name': this.state.selectedIndustry.label,
                 'selected_palette': selectedPalette,
                 'theme_name': themeName,
                 'website_purpose': WEBSITE_PURPOSES[
