@@ -11,7 +11,11 @@ export const assetsWatchdogService = {
         let isNotificationDisplayed = false;
         let bundleNotifTimerID = null;
 
-        bus_service.addEventListener("notification", onNotification.bind(this));
+        bus_service.subscribe("bundle_changed", ({ server_version }) => {
+            if (server_version !== session.server_version) {
+                displayBundleChangedNotification();
+            }
+        });
         bus_service.start();
 
         /**
@@ -55,23 +59,6 @@ export const assetsWatchdogService = {
          */
         function getBundleNotificationDelay() {
             return 10000 + Math.floor(Math.random() * 50) * 1000;
-        }
-
-        /**
-         * Reacts to bus's notification
-         *
-         * @param {CustomEvent} ev
-         * @param {Array} [ev.detail] list of received notifications
-         */
-        function onNotification({ detail: notifications }) {
-            for (const { payload, type } of notifications) {
-                if (type === "bundle_changed") {
-                    if (payload.server_version !== session.server_version) {
-                        displayBundleChangedNotification();
-                        break;
-                    }
-                }
-            }
         }
     },
 };
