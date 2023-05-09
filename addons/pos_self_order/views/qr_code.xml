@@ -21,7 +21,7 @@
     <template id="qr_codes_page">
         <t t-call="web.basic_layout">
             <div class="page">
-                <h1 class="mb-4 ms-2">
+                <h1 class="text-center" style="margin-bottom:128px;">
                     QR Code Menu
                 </h1>
                 <!-- There is a very annoying problem here:
@@ -29,7 +29,7 @@
                 This makes it so the bootstrap grid system does not work.
                 We have to do a workaround -->
                 <t t-foreach="pages_of_tables" t-as="page_of_tables">
-                    <div style="page-break-after:always;">
+                    <div style="break-after: page;">
                         <t t-foreach="page_of_tables" t-as="row_of_tables">
                         <!-- FIXME: align the qr codes -->
                             <div class="d-flex">
@@ -46,11 +46,11 @@
 
     <template id="qr_code">
         <t t-set="qr_code_size" t-value="180"/>
-        <div style="border:1px solid #e1e1e1; padding: 0px 40px;">
+        <div style="padding: 0px 40px; margin-bottom:40px;">
             <h4 class="fw-bold text-center" style="margin-top: 20px;" t-if="table['id']">
                 Table: <t t-esc="table['name']"/>
             </h4>
-            <div class="p-2" >
+            <div class="p-3" >
                 <div class="mt-1 mb-4 position-relative top-0 start-0">
                     <img t-att-src="'/report/barcode/QR/%s?width=%s&amp;height=%s&amp;barLevel=H' %(table['url'], qr_code_size, qr_code_size)" 
                         class="position-relative top-0 start-0"

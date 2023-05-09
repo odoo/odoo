@@ -74,8 +74,8 @@ class ResConfigSettings(models.TransientModel):
         """
         Generate the data needed to print the QR codes page
         """
-        no_OF_QR_CODES_PER_PAGE = 9
-        no_OF_QR_CODES_PER_LINE = 3
+        no_OF_QR_CODES_PER_PAGE = 16
+        no_OF_QR_CODES_PER_LINE = 4
 
         if self.pos_config_id.self_order_table_mode:
             tables_sudo = self.env["restaurant.table"].search(
