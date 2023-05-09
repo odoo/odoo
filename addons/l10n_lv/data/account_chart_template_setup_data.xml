@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Setup Chart of Accounts Template -->
+    <record id="chart_template_latvia" model="account.chart.template">
+        <field name="property_account_receivable_id" ref="a2310"/>
+        <field name="property_account_payable_id" ref="a5310"/>
+        <field name="property_account_expense_categ_id" ref="a7550"/>
+        <field name="property_account_income_categ_id" ref="a6110"/>
+        <field name="income_currency_exchange_account_id" ref="a8150"/>
+        <field name="expense_currency_exchange_account_id" ref="a8250"/>
+        <field name="default_pos_receivable_account_id" ref="a2613"/>
+        <field name="default_cash_difference_expense_account_id" ref="a8299"/>
+        <field name="default_cash_difference_income_account_id" ref="a8199"/>
+        <field name="account_journal_early_pay_discount_loss_account_id" ref="a8299"/>
+        <field name="account_journal_early_pay_discount_gain_account_id" ref="a8199"/>
+        <field name="account_journal_suspense_account_id" ref="a26291"/>
+        <field name="account_journal_payment_credit_account_id" ref="a26293"/>
+        <field name="account_journal_payment_debit_account_id" ref="a26292"/>
+        <field name="account_journal_suspense_account_id" ref="a26291"/>
+    </record>
+</odoo>
