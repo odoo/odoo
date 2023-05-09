@@ -183,6 +183,7 @@
             <t t-set="event" t-value="attendee.event_id._set_tz_context()"/>
             <t t-set="main_object" t-value="attendee"/>
             <t t-set="responsive_html" t-value="False"/>
+
             <t t-call="event.event_report_full_page_ticket_layout">
                 <t t-call="event.event_report_template_full_page_ticket"/>
             </t>
@@ -196,6 +197,7 @@
             <t t-set="event" t-value="event._set_tz_context()"/>
             <t t-set="main_object" t-value="event"/>
             <t t-set="responsive_html" t-value="False"/>
+
             <t t-call="event.event_report_full_page_ticket_layout">
                 <t t-call="event.event_report_template_full_page_ticket"/>
             </t>

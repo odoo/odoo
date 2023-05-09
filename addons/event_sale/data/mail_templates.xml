@@ -20,4 +20,17 @@
     </div>
 </template>
 
+<template id="event_subscription_additional_mail_details" inherit_id="event.event_subscription_additional_mail_details">
+    <xpath expr="//div[hasclass('o_event_subscription_additional_mail_details')]" position="inside">
+        <t t-if="object.sale_order_id">
+            <br/>
+            The order for this ticket has reference <t t-out="object.sale_order_id.name"/>
+            and was placed on <t t-out="object.sale_order_id.date_order.date()"/>
+            <t t-if="object.sale_order_line_id.price_unit"> for an amount of
+                <t t-out="object.sale_order_line_id.price_unit" t-options="{'widget': 'monetary', 'display_currency': object.sale_order_line_id.currency_id}"/>
+            </t>.
+        </t>
+    </xpath>
+</template>
+
 </odoo>
