@@ -14,7 +14,6 @@ from psycopg2 import sql
 from werkzeug import urls
 from werkzeug.datastructures import OrderedMultiDict
 from werkzeug.exceptions import NotFound
-from markupsafe import Markup
 
 from odoo import api, fields, models, tools, http, release, registry
 from odoo.addons.http_routing.models.ir_http import RequestUID, slugify, url_for
@@ -26,7 +25,7 @@ from odoo.exceptions import AccessError, MissingError, UserError, ValidationErro
 from odoo.http import request
 from odoo.modules.module import get_resource_path, get_manifest
 from odoo.osv.expression import AND, OR, FALSE_DOMAIN, get_unaccent_wrapper
-from odoo.tools.translate import _
+from odoo.tools.translate import _, xml_translate
 from odoo.tools import escape_psql, pycompat
 
 logger = logging.getLogger(__name__)
@@ -42,7 +41,8 @@ DEFAULT_CDN_FILTERS = [
     "^/website/image/",
 ]
 
-DEFAULT_ENDPOINT = 'https://website.api.odoo.com'
+DEFAULT_WEBSITE_ENDPOINT = 'https://website.api.odoo.com'
+DEFAULT_OLG_ENDPOINT = 'https://olg.api.odoo.com'
 
 
 class Website(models.Model):
@@ -333,12 +333,20 @@ class Website(models.Model):
     # ----------------------------------------------------------
     # Configurator
     # ----------------------------------------------------------
-    def _website_api_rpc(self, route, params):
+
+    def _api_rpc(self, route, params, endpoint_param_name, default_endpoint, **kwargs):
         params['version'] = release.version
         IrConfigParameter = self.env['ir.config_parameter'].sudo()
-        website_api_endpoint = IrConfigParameter.get_param('website.website_api_endpoint', DEFAULT_ENDPOINT)
-        endpoint = website_api_endpoint + route
-        return iap_tools.iap_jsonrpc(endpoint, params=params)
+        api_endpoint = IrConfigParameter.get_param(endpoint_param_name, default_endpoint)
+        return iap_tools.iap_jsonrpc(api_endpoint + route, params=params, **kwargs)
+
+    def _website_api_rpc(self, route, params):
+        # For industries, theme suggestions, ...
+        return self._api_rpc(route, params, 'website.website_api_endpoint', DEFAULT_WEBSITE_ENDPOINT)
+
+    def _OLG_api_rpc(self, route, params):
+        # For text content generation
+        return self._api_rpc(route, params, 'website.olg_api_endpoint', DEFAULT_OLG_ENDPOINT, timeout=300)
 
     def get_cta_data(self, website_purpose, website_type):
         return {'cta_btn_text': False, 'cta_btn_href': '/contactus'}
@@ -577,9 +585,55 @@ class Website(models.Model):
             {'theme': theme_name}
         )
 
-        # Configure the pages
-        requested_pages = list(pages_views.keys()) + ['homepage']
+        # Generate text for the pages
+        requested_pages = set(pages_views.keys()).union({'homepage'})
         snippet_lists = website.get_theme_snippet_lists(theme_name)
+        industry = kwargs['industry_name']
+
+        IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
+        snippets_cache = {}
+
+        def _compute_placeholder(term):
+            return xml_translate.get_text_content(term).strip()
+
+        def _render_snippet(key):
+            # Using this avoids rendering the same snippet multiple times
+            data = snippets_cache.get(key)
+            if data:
+                return data
+
+            render = IrQweb._render(key, cta_data)
+
+            terms = []
+            xml_translate(terms.append, render)
+            placeholders = [_compute_placeholder(term) for term in terms]
+
+            data = (render, placeholders)
+            snippets_cache[key] = data
+            return data
+
+        generated_content = {}
+        for page_code in requested_pages - {'privacy_policy'}:
+            snippet_list = snippet_lists.get(page_code, [])
+            for snippet in snippet_list:
+                render, placeholders = _render_snippet(f'website.{snippet}')
+                for placeholder in placeholders:
+                    generated_content[placeholder] = ''
+        try:
+            response = self._OLG_api_rpc('/api/olg/1/generate_placeholder', {
+                'placeholders': list(generated_content.keys()),
+                'lang': website.default_lang_id.name,
+                'industry': industry,
+            })
+            name_replace_parser = re.compile(r"XXXX", re.MULTILINE)
+            for key in generated_content:
+                if response.get(key):
+                    generated_content[key] = (name_replace_parser.sub(website.name, response[key], 0))
+        except AccessError:
+            # If IAP is broken continue normally (without generating text)
+            pass
+
+        # Configure the pages
         for page_code in requested_pages:
             snippet_list = snippet_lists.get(page_code, [])
             if page_code == 'homepage':
@@ -590,8 +644,14 @@ class Website(models.Model):
             nb_snippets = len(snippet_list)
             for i, snippet in enumerate(snippet_list, start=1):
                 try:
-                    IrQweb = self.env['ir.qweb'].with_context(website_id=website.id, lang=website.default_lang_id.code)
-                    render = IrQweb._render('website.' + snippet, cta_data)
+                    render, placeholders = _render_snippet(f'website.{snippet}')
+
+                    # Fill rendered block with AI text
+                    render = xml_translate(
+                        lambda x: generated_content.get(_compute_placeholder(x), x),
+                        render
+                    )
+
                     el = html.fromstring(render)
 
                     # Add the data-snippet attribute to identify the snippet
