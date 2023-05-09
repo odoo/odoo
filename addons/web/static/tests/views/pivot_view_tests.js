@@ -113,6 +113,12 @@ QUnit.module("Views", (hooks) => {
                             sortable: true,
                             store: true,
                         },
+                        price_nonaggregatable: {
+                            string: "Price non-aggregatable",
+                            type: "monetary",
+                            group_operator: undefined,
+                            store: true,
+                        },
                     },
                     records: [
                         {
@@ -440,6 +446,27 @@ QUnit.module("Views", (hooks) => {
             assert.strictEqual(
                 target.querySelector(".o_pivot_measure_row").innerText,
                 "Computed and not stored"
+            );
+        }
+    );
+
+    QUnit.test(
+        "pivot view do not add number field without group_operator",
+        async function (assert) {
+            await makeView({
+                type: "pivot",
+                resModel: "partner",
+                serverData,
+                arch: `
+                <pivot>
+                    <field name="price_nonaggregatable"/>
+                </pivot>`,
+            });
+
+            await click(target.querySelector(".o_cp_bottom_left button.dropdown-toggle"));
+            assert.containsNone(
+                target,
+                ".o_cp_bottom_left .dropdown-menu .dropdown-item:contains(Price non-aggregatable)"
             );
         }
     );
