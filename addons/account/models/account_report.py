@@ -477,6 +477,13 @@ class AccountReportExpression(models.Model):
         if 'formula' in vals and isinstance(vals['formula'], str):
             vals['formula'] = re.sub(r'\s+', ' ', vals['formula'].strip())
 
+    def _create_tax_tags(self, tag_name, country):
+        existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
+        if len(existing_tags) < 2:
+            # We can have only one tag in case we archived it and deleted its unused complement sign
+            tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
+            self.env['account.account.tag'].create(tag_vals)
+
     @api.model_create_multi
     def create(self, vals_list):
         # Overridden so that we create the corresponding account.account.tag objects when instantiating an expression
@@ -490,20 +497,22 @@ class AccountReportExpression(models.Model):
             tag_name = expression.formula if expression.engine == 'tax_tags' else None
             if tag_name:
                 country = expression.report_line_id.report_id.country_id
-                existing_tags = self.env['account.account.tag']._get_tax_tags(tag_name, country.id)
-
-                if len(existing_tags) < 2:
-                    # We can have only one tag in case we archived it and deleted its unused complement sign
-                    tag_vals = self._get_tags_create_vals(tag_name, country.id, existing_tag=existing_tags)
-                    self.env['account.account.tag'].create(tag_vals)
+                self._create_tax_tags(tag_name, country)
 
         return result
 
     def write(self, vals):
-        if 'formula' not in vals:
-            return super().write(vals)
 
         self._strip_formula(vals)
+
+        if vals.get('engine') == 'tax_tags':
+            tag_name = vals.get('formula') or self.formula
+            country = self.report_line_id.report_id.country_id
+            self._create_tax_tags(tag_name, country)
+            return super().write(vals)
+
+        if 'formula' not in vals:
+            return super().write(vals)
 
         tax_tags_expressions = self.filtered(lambda x: x.engine == 'tax_tags')
         former_formulas_by_country = defaultdict(lambda: [])
