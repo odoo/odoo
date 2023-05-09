@@ -111,3 +111,17 @@ class TestLoyalty(TransactionCase):
             ],
         })
         self.assertTrue(all(r.reward_type == 'product' for r in self.program.reward_ids))
+
+    def test_archiving_unarchiving(self):
+        self.program.write({
+            'reward_ids': [
+                Command.create({
+                    'description': 'Test Product',
+                }),
+            ],
+        })
+        before_archived_reward_ids = self.program.reward_ids
+        self.program.toggle_active()
+        self.program.toggle_active()
+        after_archived_reward_ids = self.program.reward_ids
+        self.assertEqual(before_archived_reward_ids, after_archived_reward_ids)
