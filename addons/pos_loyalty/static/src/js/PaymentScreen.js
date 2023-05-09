@@ -157,7 +157,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
             }
             if (payload.coupon_report) {
                 for (const [actionId, active_ids] of Object.entries(payload.coupon_report)) {
-                    await this.action.doAction(actionId, { additionalContext: { active_ids } });
+                    await this.report.download(actionId, active_ids);
                 }
             }
             order.new_coupon_info = payload.new_coupon_info;
