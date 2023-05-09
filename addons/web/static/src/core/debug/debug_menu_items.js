@@ -81,3 +81,7 @@ registry
     .add("becomeSuperuser", becomeSuperuser)
     .add("leaveDebugMode", leaveDebugMode)
     .add("activateTestsAssetsDebugging", activateTestsAssetsDebugging);
+
+.tooltip {
+    pointer-events: none !important;
+}
