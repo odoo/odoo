@@ -10,7 +10,6 @@ export class RewardButton extends Component {
     static template = "RewardButton";
 
     setup() {
-        super.setup();
         this.popup = useService("popup");
         this.pos = usePos();
         this.notification = useService("pos_notification");
@@ -31,7 +30,7 @@ export class RewardButton extends Component {
     }
 
     _getPotentialRewards() {
-        const order = this.env.pos.get_order();
+        const order = this.pos.globalState.get_order();
         // Claimable rewards excluding those from eWallet programs.
         // eWallet rewards are handled in the eWalletButton.
         let rewards = [];
@@ -62,14 +61,14 @@ export class RewardButton extends Component {
      * @param {Integer} coupon_id
      */
     async _applyReward(reward, coupon_id, potentialQty) {
-        const order = this.env.pos.get_order();
+        const order = this.pos.globalState.get_order();
         order.disabledRewards.delete(reward.id);
 
         const args = {};
         if (reward.reward_type === "product" && reward.multi_product) {
             const productsList = reward.reward_product_ids.map((product_id) => ({
                 id: product_id,
-                label: this.env.pos.db.get_product_by_id(product_id).display_name,
+                label: this.pos.globalState.db.get_product_by_id(product_id).display_name,
                 item: product_id,
             }));
             const { confirmed, payload: selectedProduct } = await this.popup.add(SelectionPopup, {
@@ -126,6 +125,6 @@ export class RewardButton extends Component {
 ProductScreen.addControlButton({
     component: RewardButton,
     condition: function () {
-        return this.env.pos.programs.length > 0;
+        return this.pos.globalState.programs.length > 0;
     },
 });

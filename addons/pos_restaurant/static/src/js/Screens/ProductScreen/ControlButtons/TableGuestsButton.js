@@ -6,16 +6,17 @@ import { NumberPopup } from "@point_of_sale/js/Popups/NumberPopup";
 import { ErrorPopup } from "@point_of_sale/js/Popups/ErrorPopup";
 import { Component } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 export class TableGuestsButton extends Component {
     static template = "TableGuestsButton";
 
     setup() {
-        super.setup();
+        this.pos = usePos();
         this.popup = useService("popup");
     }
     get currentOrder() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
     get nGuests() {
         return this.currentOrder ? this.currentOrder.getCustomerCount() : 0;
@@ -42,7 +43,7 @@ export class TableGuestsButton extends Component {
                 });
                 return;
             }
-            this.env.pos.get_order().setCustomerCount(guestCount);
+            this.currentOrder.setCustomerCount(guestCount);
         }
     }
 }
@@ -50,6 +51,6 @@ export class TableGuestsButton extends Component {
 ProductScreen.addControlButton({
     component: TableGuestsButton,
     condition: function () {
-        return this.env.pos.config.module_pos_restaurant;
+        return this.pos.globalState.config.module_pos_restaurant;
     },
 });

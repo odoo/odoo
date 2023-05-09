@@ -11,7 +11,7 @@ export class MobileOrderWidget extends Component {
         this.pos = usePos();
     }
     get order() {
-        return this.env.pos.get_order();
+        return this.pos.globalState.get_order();
     }
     get total() {
         const _total = this.order ? this.order.get_total_with_tax() : 0;

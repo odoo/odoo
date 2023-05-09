@@ -11,7 +11,7 @@ export class BackToFloorButton extends Component {
         this.pos = usePos();
     }
     get table() {
-        return this.env.pos.table;
+        return this.pos.globalState.table;
     }
     get floor() {
         return this.table ? this.table.floor : null;

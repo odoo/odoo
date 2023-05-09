@@ -46,7 +46,7 @@ export class Navbar extends Component {
     }
 
     get customerFacingDisplayButtonIsShown() {
-        return this.env.pos.config.iface_customer_facing_display;
+        return this.pos.globalState.config.iface_customer_facing_display;
     }
 
     onCashMoveButtonClick() {
@@ -58,14 +58,15 @@ export class Navbar extends Component {
             this.pos.closeScreen();
         } else {
             if (this._shouldLoadOrders()) {
+                const { globalState } = this.pos;
                 try {
-                    this.env.pos.setLoadingOrderState(true);
-                    const message = await this.env.pos._syncAllOrdersFromServer();
+                    globalState.setLoadingOrderState(true);
+                    const message = await globalState._syncAllOrdersFromServer();
                     if (message) {
                         this.notification.add(message, 5000);
                     }
                 } finally {
-                    this.env.pos.setLoadingOrderState(false);
+                    globalState.setLoadingOrderState(false);
                     this.pos.showScreen("TicketScreen");
                 }
             } else {
@@ -75,7 +76,7 @@ export class Navbar extends Component {
     }
 
     _shouldLoadOrders() {
-        return this.env.pos.config.trusted_config_ids.length > 0;
+        return this.pos.globalState.config.trusted_config_ids.length > 0;
     }
 
     get isTicketScreenShown() {
@@ -83,11 +84,7 @@ export class Navbar extends Component {
     }
 
     get orderCount() {
-        // FIXME POSREF: can this condition ever be false?
-        if (this.env.pos) {
-            return this.env.pos.get_order_list().length;
-        }
-        return 0;
+        return this.pos.globalState.get_order_list().length;
     }
 
     isBurgerMenuClosed() {

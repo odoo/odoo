@@ -3,6 +3,7 @@
 import { useAutofocus, useService } from "@web/core/utils/hooks";
 import { orderManagement } from "@point_of_sale/js/PosContext";
 import { Component, useState } from "@odoo/owl";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 // NOTE: These are constants so that they are only instantiated once
 // and they can be used efficiently by the OrderManagementControlPanel.
@@ -23,12 +24,12 @@ export class SaleOrderManagementControlPanel extends Component {
     static template = "SaleOrderManagementControlPanel";
 
     setup() {
-        super.setup();
+        this.pos = usePos();
         this.saleOrderFetcher = useService("sale_order_fetcher");
         this.orderManagementContext = useState(orderManagement);
         useAutofocus();
 
-        const currentPartner = this.env.pos.get_order().get_partner();
+        const currentPartner = this.pos.globalState.get_order().get_partner();
         if (currentPartner) {
             this.orderManagementContext.searchString = currentPartner.name;
         }

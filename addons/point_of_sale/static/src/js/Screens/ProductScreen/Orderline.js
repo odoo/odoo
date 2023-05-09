@@ -18,7 +18,7 @@ export class Orderline extends Component {
 
     selectLine() {
         const line = this.props.line; // the orderline
-        if (this.env.pos.get_order().selected_orderline.id !== line.id) {
+        if (this.pos.globalState.get_order().selected_orderline.id !== line.id) {
             this.mp_dbclk_time = new Date().getTime();
         } else if (!this.mp_dbclk_time) {
             this.mp_dbclk_time = new Date().getTime();

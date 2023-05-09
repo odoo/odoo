@@ -9,12 +9,13 @@ patch(Chrome.prototype, "l10n_fr_pos_cert.Chrome", {
     setup() {
         this._super(...arguments);
         onMounted(async () => {
-            if (this.env.pos.is_french_country() && this.env.pos.pos_session.start_at) {
+            const { globalState } = this.pos;
+            if (globalState.is_french_country() && globalState.pos_session.start_at) {
                 const now = Date.now();
-                const limitDate = new Date(this.env.pos.pos_session.start_at);
+                const limitDate = new Date(globalState.pos_session.start_at);
                 limitDate.setDate(limitDate.getDate() + 1);
                 if (limitDate.getTime() < now) {
-                    const info = await this.env.pos.getClosePosInfo();
+                    const info = await globalState.getClosePosInfo();
                     this.popup.add(ClosePosPopup, { info });
                 }
             }

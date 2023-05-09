@@ -96,7 +96,7 @@ const lookUpCodeTransaction = {
 patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     setup() {
         this._super(...arguments);
-        if (this.env.pos.getOnlinePaymentMethods().length !== 0) {
+        if (this.pos.globalState.getOnlinePaymentMethods().length !== 0) {
             useBarcodeReader({
                 credit: this.credit_code_action,
             });
@@ -123,7 +123,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     },
     _get_swipe_pending_line() {
         var i = 0;
-        var lines = this.env.pos.get_order().get_paymentlines();
+        var lines = this.pos.globalState.get_order().get_paymentlines();
 
         for (i = 0; i < lines.length; i++) {
             if (lines[i].mercury_swipe_pending) {
@@ -135,7 +135,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     },
     _does_credit_payment_line_exist(amount, card_number, card_brand, card_owner_name) {
         var i = 0;
-        var lines = this.env.pos.get_order().get_paymentlines();
+        var lines = this.pos.globalState.get_order().get_paymentlines();
 
         for (i = 0; i < lines.length; i++) {
             if (
@@ -191,7 +191,8 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
     },
     // Handler to manage the card reader string
     credit_code_transaction(parsed_result, old_deferred, retry_nr) {
-        var order = this.env.pos.get_order();
+        const { globalState } = this.pos.globalState;
+        const order = globalState.get_order();
         if (order.get_due(order.selected_paymentline) < 0) {
             this.popup.add(ErrorPopup, {
                 title: this.env._t("Refunds not supported"),
@@ -202,12 +203,11 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
             return;
         }
 
-        if (this.env.pos.getOnlinePaymentMethods().length === 0) {
+        if (globalState.getOnlinePaymentMethods().length === 0) {
             return;
         }
 
-        var self = this;
-        var decodedMagtek = self.env.pos.decodeMagtek(parsed_result.code);
+        var decodedMagtek = globalState.decodeMagtek(parsed_result.code);
 
         if (!decodedMagtek) {
             this.popup.add(ErrorPopup, {
@@ -219,13 +219,13 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
             return;
         }
 
-        var swipe_pending_line = self._get_swipe_pending_line();
+        var swipe_pending_line = this._get_swipe_pending_line();
         var purchase_amount = 0;
 
         if (swipe_pending_line) {
             purchase_amount = swipe_pending_line.get_amount();
         } else {
-            purchase_amount = self.env.pos.get_order().get_due();
+            purchase_amount = globalState.get_order().get_due();
         }
 
         var transaction = {
@@ -233,7 +233,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
             encrypted_block: decodedMagtek["encrypted_block"],
             transaction_type: "Credit",
             transaction_code: "Sale",
-            invoice_no: self.env.pos.get_order().uid.replace(/-/g, ""),
+            invoice_no: globalState.get_order().uid.replace(/-/g, ""),
             purchase: purchase_amount,
             payment_method_id: parsed_result.payment_method_id,
         };
@@ -255,15 +255,15 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         // FIXME POSREF timeout
         this.orm
             .call("pos_mercury.mercury_transaction", "do_payment", [transaction])
-            .then(function (data) {
+            .then((data) => {
                 // if not receiving a response from Vantiv, we should retry
                 if (data === "timeout") {
-                    self.retry_mercury_transaction(
+                    this.retry_mercury_transaction(
                         def,
                         null,
                         retry_nr,
                         true,
-                        self.credit_code_transaction,
+                        this.credit_code_transaction,
                         [parsed_result, def, retry_nr + 1]
                     );
                     return;
@@ -271,26 +271,26 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
 
                 if (data === "not setup") {
                     def.resolve({
-                        message: self.env._t("Please setup your Vantiv merchant account."),
+                        message: this.env._t("Please setup your Vantiv merchant account."),
                     });
                     return;
                 }
 
                 if (data === "internal error") {
                     def.resolve({
-                        message: self.env._t("Odoo error while processing transaction."),
+                        message: this.env._t("Odoo error while processing transaction."),
                     });
                     return;
                 }
 
-                var response = self.env.pos.decodeMercuryResponse(data);
+                var response = globalState.decodeMercuryResponse(data);
                 response.payment_method_id = parsed_result.payment_method_id;
 
                 if (response.status === "Approved") {
                     // AP* indicates a duplicate request, so don't add anything for those
                     if (
                         response.message === "AP*" &&
-                        self._does_credit_payment_line_exist(
+                        this._does_credit_payment_line_exist(
                             response.authorize,
                             decodedMagtek["number"],
                             response.card_type,
@@ -303,13 +303,13 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                         });
                     } else {
                         // If the payment is approved, add a payment line
-                        var order = self.env.pos.get_order();
+                        var order = globalState.get_order();
 
                         if (swipe_pending_line) {
                             order.select_paymentline(swipe_pending_line);
                         } else {
                             order.add_paymentline(
-                                self.payment_methods_by_id[parsed_result.payment_method_id]
+                                this.payment_methods_by_id[parsed_result.payment_method_id]
                             );
                         }
 
@@ -331,7 +331,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
 
                         if (response.message === "PARTIAL AP") {
                             def.resolve({
-                                message: self.env._t("Partially approved"),
+                                message: this.env._t("Partially approved"),
                                 auto_close: false,
                             });
                         } else {
@@ -347,12 +347,12 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                 else {
                     if (lookUpCodeTransaction["TimeoutError"][response.error]) {
                         // recoverable error
-                        self.retry_mercury_transaction(
+                        this.retry_mercury_transaction(
                             def,
                             response,
                             retry_nr,
                             true,
-                            self.credit_code_transaction,
+                            this.credit_code_transaction,
                             [parsed_result, def, retry_nr + 1]
                         );
                     } else {
@@ -364,13 +364,13 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                     }
                 }
             })
-            .catch(function () {
-                self.retry_mercury_transaction(
+            .catch(() => {
+                this.retry_mercury_transaction(
                     def,
                     null,
                     retry_nr,
                     false,
-                    self.credit_code_transaction,
+                    this.credit_code_transaction,
                     [parsed_result, def, retry_nr + 1]
                 );
             });
@@ -379,7 +379,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         return;
     },
     credit_code_action(parsed_result) {
-        var online_payment_methods = this.env.pos.getOnlinePaymentMethods();
+        var online_payment_methods = this.pos.globalState.getOnlinePaymentMethods();
 
         if (online_payment_methods.length === 1) {
             parsed_result.payment_method_id = online_payment_methods[0].item;
@@ -408,7 +408,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
         }
     },
     remove_paymentline_by_ref(line) {
-        this.env.pos.get_order().remove_paymentline(line);
+        this.pos.globalState.get_order().remove_paymentline(line);
         this.numberBuffer.reset();
     },
     do_reversal(line, is_voidsale, old_deferred, retry_nr) {
@@ -467,7 +467,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
                     return;
                 }
 
-                var response = self.env.pos.decodeMercuryResponse(data);
+                var response = self.pos.globalState.decodeMercuryResponse(data);
 
                 if (!is_voidsale) {
                     if (response.status != "Approved" || response.message != "REVERSED") {
@@ -520,7 +520,7 @@ patch(PaymentScreen.prototype, "pos_mercury.PaymentScreen", {
      * @override
      */
     addNewPaymentLine(paymentMethod) {
-        const order = this.env.pos.get_order();
+        const order = this.pos.globalState.get_order();
         const res = this._super(...arguments);
         if (res && paymentMethod.pos_mercury_config_id) {
             order.selected_paymentline.mercury_swipe_pending = true;

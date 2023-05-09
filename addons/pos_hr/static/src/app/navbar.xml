@@ -4,10 +4,10 @@
     <t t-name="pos_hr.Navbar" t-inherit="point_of_sale.Navbar" t-inherit-mode="extension" owl="1">
         <xpath expr="//div[hasclass('end-nav-button')]" position="replace">
             <div class="end-nav-button">
-                <BackendButton t-if="!env.pos.config.module_pos_hr"/>
-                <BackendButton t-elif="(env.pos.get_cashier().role === 'manager' || env.pos.get_cashier_user_id() === env.pos.user.id)"/>
-                <HeaderLockButton t-if="env.pos.config.module_pos_hr" />
-                <div class="close-button" t-if="!env.pos.config.module_pos_hr || env.pos.get_cashier().role === 'manager' || env.pos.get_cashier_user_id() === env.pos.user.id">
+                <BackendButton t-if="!pos.globalState.config.module_pos_hr"/>
+                <BackendButton t-elif="(pos.globalState.get_cashier().role === 'manager' || pos.globalState.get_cashier_user_id() === pos.globalState.user.id)"/>
+                <HeaderLockButton t-if="pos.globalState.config.module_pos_hr" />
+                <div class="close-button" t-if="!pos.globalState.config.module_pos_hr || pos.globalState.get_cashier().role === 'manager' || pos.globalState.get_cashier_user_id() === pos.globalState.user.id">
                     <HeaderButton/>
                 </div>
             </div>

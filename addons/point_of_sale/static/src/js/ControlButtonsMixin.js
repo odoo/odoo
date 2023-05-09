@@ -27,9 +27,11 @@ export const ControlButtonsMixin = (x) => {
      * @param {Object} controlButton
      * @param {new (...args: any[]) => Component} controlButton.component the
      *      component class
+     * FIXME POSREF: maybe just pass the pos explicitly to allow for arrow functions?
+     * Should probably refactor this so that it's not a mixin anymore.
      * @param {Function} controlButton.condition zero argument function that is bound
-     *      to the instance of ProductScreen, such that `this.env.pos` can be used
-     *      inside the function.
+     *      to the instance of ProductScreen. This gives the condition acces to
+     *      the pos store and related object which it may need.
      * @param {Array} [controlButton.position] array of two elements
      *      [locator, relativeTo]
      *      locator: string -> any of ('before', 'after', 'replace')

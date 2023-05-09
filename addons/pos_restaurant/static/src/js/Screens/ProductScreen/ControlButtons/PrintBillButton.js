@@ -12,7 +12,7 @@ export class PrintBillButton extends Component {
         this.pos = usePos();
     }
     _isDisabled() {
-        const order = this.env.pos.get_order();
+        const order = this.pos.globalState.get_order();
         return order.get_orderlines().length === 0;
     }
     click() {
@@ -23,6 +23,6 @@ export class PrintBillButton extends Component {
 ProductScreen.addControlButton({
     component: PrintBillButton,
     condition: function () {
-        return this.env.pos.config.iface_printbill;
+        return this.pos.globalState.config.iface_printbill;
     },
 });

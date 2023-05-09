@@ -8,15 +8,15 @@ export class RefundButton extends Component {
     static template = "point_of_sale.RefundButton";
 
     setup() {
-        super.setup();
         this.pos = usePos();
     }
     click() {
-        const partner = this.env.pos.get_order().get_partner();
+        const order = this.pos.globalState.get_order();
+        const partner = order.get_partner();
         const searchDetails = partner ? { fieldName: "PARTNER", searchTerm: partner.name } : {};
         this.pos.showScreen("TicketScreen", {
             ui: { filter: "SYNCED", searchDetails },
-            destinationOrder: this.env.pos.get_order(),
+            destinationOrder: order,
         });
     }
 }

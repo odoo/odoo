@@ -41,7 +41,7 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
             !selectedLine.manual_reward &&
             (key === "Backspace" || key === "Delete")
         ) {
-            const reward = this.env.pos.reward_by_id[selectedLine.reward_id];
+            const reward = this.pos.globalState.reward_by_id[selectedLine.reward_id];
             const { confirmed } = await this.popup.add(ConfirmPopup, {
                 title: this.env._t("Deactivating reward"),
                 body: sprintf(
@@ -87,13 +87,14 @@ patch(ProductScreen.prototype, "pos_loyalty.ProductScreen", {
         }
         if (selectedLine.is_reward_line && val === "remove") {
             this.currentOrder.disabledRewards.add(selectedLine.reward_id);
-            const coupon = this.env.pos.couponCache[selectedLine.coupon_id];
+            const { couponCache } = this.pos.globalState;
+            const coupon = couponCache[selectedLine.coupon_id];
             if (
                 coupon &&
                 coupon.id > 0 &&
                 this.currentOrder.codeActivatedCoupons.find((c) => c.code === coupon.code)
             ) {
-                delete this.env.pos.couponCache[selectedLine.coupon_id];
+                delete couponCache[selectedLine.coupon_id];
                 this.currentOrder.codeActivatedCoupons.splice(
                     this.currentOrder.codeActivatedCoupons.findIndex((coupon) => {
                         return coupon.id === selectedLine.coupon_id;

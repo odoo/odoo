@@ -8,11 +8,10 @@ export class TransferOrderButton extends Component {
     static template = "TransferOrderButton";
 
     setup() {
-        super.setup();
         this.pos = usePos();
     }
     async click() {
-        this.env.pos.setCurrentOrderToTransfer();
+        this.pos.globalState.setCurrentOrderToTransfer();
         this.pos.showScreen("FloorScreen");
     }
 }
@@ -20,6 +19,6 @@ export class TransferOrderButton extends Component {
 ProductScreen.addControlButton({
     component: TransferOrderButton,
     condition: function () {
-        return this.env.pos.config.module_pos_restaurant;
+        return this.pos.globalState.config.module_pos_restaurant;
     },
 });

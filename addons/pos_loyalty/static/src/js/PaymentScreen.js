@@ -41,17 +41,18 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                     [[], pointChanges, newCodes]
                 );
                 // Payload may contain the points of the concerned coupons to be updated in case of error. (So that rewards can be corrected)
+                const { couponCache } = this.pos.globalState;
                 if (payload && payload.updated_points) {
                     for (const pointChange of Object.entries(payload.updated_points)) {
-                        if (this.env.pos.couponCache[pointChange[0]]) {
-                            this.env.pos.couponCache[pointChange[0]].balance = pointChange[1];
+                        if (couponCache[pointChange[0]]) {
+                            couponCache[pointChange[0]].balance = pointChange[1];
                         }
                     }
                 }
                 if (payload && payload.removed_coupons) {
                     for (const couponId of payload.removed_coupons) {
-                        if (this.env.pos.couponCache[couponId]) {
-                            delete this.env.pos.couponCache[couponId];
+                        if (couponCache[couponId]) {
+                            delete couponCache[couponId];
                         }
                     }
                     this.currentOrder.codeActivatedCoupons =
@@ -79,22 +80,21 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
     async _postPushOrderResolve(order, server_ids) {
         // Compile data for our function
         const _super = this._super;
+        const { program_by_id, reward_by_id, couponCache } = this.pos.globalState;
         const rewardLines = order._get_reward_lines();
         const partner = order.get_partner();
         let couponData = Object.values(order.couponPointChanges).reduce((agg, pe) => {
             agg[pe.coupon_id] = Object.assign({}, pe, {
-                points:
-                    pe.points -
-                    order._getPointsCorrection(this.env.pos.program_by_id[pe.program_id]),
+                points: pe.points - order._getPointsCorrection(program_by_id[pe.program_id]),
             });
-            const program = this.env.pos.program_by_id[pe.program_id];
+            const program = program_by_id[pe.program_id];
             if (program.is_nominative && partner) {
                 agg[pe.coupon_id].partner_id = partner.id;
             }
             return agg;
         }, {});
         for (const line of rewardLines) {
-            const reward = this.env.pos.reward_by_id[line.reward_id];
+            const reward = reward_by_id[line.reward_id];
             if (!couponData[line.coupon_id]) {
                 couponData[line.coupon_id] = {
                     points: 0,
@@ -114,7 +114,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
         // We actually do not care about coupons for 'current' programs that did not claim any reward, they will be lost if not validated
         couponData = Object.fromEntries(
             Object.entries(couponData).filter(([key, value]) => {
-                const program = this.env.pos.program_by_id[value.program_id];
+                const program = program_by_id[value.program_id];
                 if (program.applies_on === "current") {
                     return value.line_codes && value.line_codes.length;
                 }
@@ -128,7 +128,7 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
             ]);
             if (payload.coupon_updates) {
                 for (const couponUpdate of payload.coupon_updates) {
-                    let dbCoupon = this.env.pos.couponCache[couponUpdate.old_id];
+                    let dbCoupon = couponCache[couponUpdate.old_id];
                     if (dbCoupon) {
                         dbCoupon.id = couponUpdate.id;
                         dbCoupon.balance = couponUpdate.points;
@@ -142,14 +142,14 @@ patch(PaymentScreen.prototype, "pos_loyalty.PaymentScreen", {
                             couponUpdate.points
                         );
                     }
-                    delete this.env.pos.couponCache[couponUpdate.old_id];
-                    this.env.pos.couponCache[couponUpdate.id] = dbCoupon;
+                    delete couponCache[couponUpdate.old_id];
+                    couponCache[couponUpdate.id] = dbCoupon;
                 }
             }
             // Update the usage count since it is checked based on local data
             if (payload.program_updates) {
                 for (const programUpdate of payload.program_updates) {
-                    const program = this.env.pos.program_by_id[programUpdate.program_id];
+                    const program = program_by_id[programUpdate.program_id];
                     if (program) {
                         program.total_order_count = programUpdate.usages;
                     }

@@ -9,7 +9,7 @@ import { Component, useState } from "@odoo/owl";
 patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     _getScreenToStatusMap() {
         return Object.assign(this._super(...arguments), {
-            PaymentScreen: this.env.pos.config.set_tip_after_payment
+            PaymentScreen: this.pos.globalState.config.set_tip_after_payment
                 ? "OPEN"
                 : this._super(...arguments).PaymentScreen,
             TipScreen: "TIPPING",
@@ -22,7 +22,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     //@override
     _getSearchFields() {
-        if (!this.env.pos.config.module_pos_restaurant) {
+        if (!this.pos.globalState.config.module_pos_restaurant) {
             return this._super(...arguments);
         }
         return Object.assign({}, this._super(...arguments), {
@@ -34,23 +34,23 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         });
     },
     async _setOrder(order) {
-        if (!this.env.pos.config.module_pos_restaurant || this.env.pos.table) {
-            this._super(order);
-        } else {
-            // we came from the FloorScreen
-            const orderTable = order.getTable();
-            await this.env.pos.setTable(orderTable, order.uid);
-            this.close();
+        const { globalState } = this.pos;
+        if (!globalState.config.module_pos_restaurant || globalState.table) {
+            return this._super(...arguments);
         }
+        // we came from the FloorScreen
+        const orderTable = order.getTable();
+        await globalState.setTable(orderTable, order.uid);
+        this.close();
     },
     get allowNewOrders() {
-        return this.env.pos.config.module_pos_restaurant
-            ? Boolean(this.env.pos.table)
+        return this.pos.globalState.config.module_pos_restaurant
+            ? Boolean(this.pos.globalState.table)
             : this._super(...arguments);
     },
     _getOrderList() {
-        if (this.env.pos.table) {
-            return this.env.pos.getTableOrders(this.env.pos.table.id);
+        if (this.pos.globalState.table) {
+            return this.pos.globalState.getTableOrders(this.pos.globalState.table.id);
         }
         return this._super(...arguments);
     },
@@ -58,7 +58,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
         // set tip in each order
         for (const order of this.getFilteredOrderList()) {
             const tipAmount = parseFloat(order.uiState.TipScreen.inputTipAmount || "0");
-            const serverId = this.env.pos.validated_orders_name_server_id_map[order.name];
+            const serverId = this.pos.globalState.validated_orders_name_server_id_map[order.name];
             if (!serverId) {
                 console.warn(
                     `${order.name} is not yet sync. Sync it to server before setting a tip.`
@@ -73,27 +73,29 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     //@override
     _selectNextOrder(currentOrder) {
-        if (this.env.pos.config.module_pos_restaurant && this.env.pos.table) {
+        if (this.pos.globalState.config.module_pos_restaurant && this.pos.globalState.table) {
             return this._super(...arguments);
         }
     },
     //@override
     async onDeleteOrder(order) {
         const _super = this._super;
-        if (this.env.pos.config.module_pos_restaurant) {
-            this.env.pos.setOrderToRemove(order);
-            if (!this.env.pos.table) {
-                await this.env.pos._removeOrdersFromServer();
+        const { globalState } = this.pos;
+        if (globalState.config.module_pos_restaurant) {
+            globalState.setOrderToRemove(order);
+            if (!globalState.table) {
+                await globalState._removeOrdersFromServer();
             }
         }
         await _super(...arguments);
     },
     async setTip(order, serverId, amount) {
+        const { globalState } = this.pos;
         try {
             const paymentline = order.get_paymentlines()[0];
             if (paymentline.payment_method.payment_terminal) {
                 paymentline.amount += amount;
-                this.env.pos.set_order(order, { silent: true });
+                globalState.set_order(order, { silent: true });
                 await paymentline.payment_method.payment_terminal.send_payment_adjust(
                     paymentline.cid
                 );
@@ -108,10 +110,10 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
                 const tip_line = order.selected_orderline;
                 await this.orm.call("pos.order", "set_tip", [serverId, tip_line.export_as_JSON()]);
             }
-            if (order === this.env.pos.get_order()) {
+            if (order === globalState.get_order()) {
                 this._selectNextOrder(order);
             }
-            this.env.pos.removeOrder(order);
+            globalState.removeOrder(order);
             return true;
         } catch {
             const { confirmed } = await this.popup.add(ConfirmPopup, {
@@ -126,7 +128,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     _getOrderStates() {
         const result = this._super(...arguments);
-        if (this.env.pos.config.set_tip_after_payment) {
+        if (this.pos.globalState.config.set_tip_after_payment) {
             result.delete("PAYMENT");
             result.set("OPEN", { text: this.env._t("Open"), indented: true });
             result.set("TIPPING", { text: this.env._t("Tipping"), indented: true });
@@ -135,15 +137,15 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     async onDoRefund() {
         const order = this.getSelectedSyncedOrder();
-        if (this.env.pos.config.module_pos_restaurant && order) {
-            this.env.pos.setTable(
-                order.table ? order.table : Object.values(this.env.pos.tables_by_id)[0]
+        if (this.pos.globalState.config.module_pos_restaurant && order) {
+            this.pos.globalState.setTable(
+                order.table ? order.table : Object.values(this.pos.globalState.tables_by_id)[0]
             );
         }
         this._super(...arguments);
     },
     isDefaultOrderEmpty(order) {
-        if (this.env.pos.config.module_pos_restaurant) {
+        if (this.pos.globalState.config.module_pos_restaurant) {
             return false;
         }
         return this._super(...arguments);

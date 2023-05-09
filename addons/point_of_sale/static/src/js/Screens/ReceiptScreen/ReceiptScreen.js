@@ -22,7 +22,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.orderReceipt = useRef("order-receipt");
         this.buttonMailReceipt = useRef("order-mail-receipt-button");
         this.buttonPrintReceipt = useRef("order-print-receipt-button");
-        this.currentOrder = this.env.pos.get_order();
+        this.currentOrder = this.pos.globalState.get_order();
         const partner = this.currentOrder.get_partner();
         this.orderUiState = this.currentOrder.uiState.ReceiptScreen;
         this.orderUiState.inputEmail =
@@ -52,7 +52,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         });
     }
     _addNewOrder() {
-        this.env.pos.add_new_order();
+        this.pos.globalState.add_new_order();
     }
     onSendEmail() {
         if (this.buttonMailReceipt.el.classList.contains("fa-spin")) {
@@ -92,8 +92,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
     get orderAmountPlusTip() {
         const order = this.currentOrder;
         const orderTotalAmount = order.get_total_with_tax();
-        const tip_product_id =
-            this.env.pos.config.tip_product_id && this.env.pos.config.tip_product_id[0];
+        const tip_product_id = this.pos.globalState.config.tip_product_id?.[0];
         const tipLine = order
             .get_orderlines()
             .find((line) => tip_product_id && line.product.id === tip_product_id);
@@ -134,19 +133,19 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         }
     }
     orderDone() {
-        this.env.pos.removeOrder(this.currentOrder);
+        this.pos.globalState.removeOrder(this.currentOrder);
         this._addNewOrder();
         const { name, props } = this.nextScreen;
         this.pos.showScreen(name, props);
     }
     resumeOrder() {
-        this.env.pos.removeOrder(this.currentOrder);
-        this.env.pos.selectNextOrder();
+        this.pos.globalState.removeOrder(this.currentOrder);
+        this.pos.globalState.selectNextOrder();
         const { name, props } = this.ticketScreen;
         this.pos.showScreen(name, props);
     }
     isResumeVisible() {
-        return this.env.pos.get_order_list().length > 1;
+        return this.pos.globalState.get_order_list().length > 1;
     }
     async printReceipt() {
         this.buttonPrintReceipt.el.className = "fa fa-fw fa-spin fa-circle-o-notch";
@@ -160,7 +159,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
         this.buttonPrintReceipt.el.className = "fa fa-print";
     }
     _shouldAutoPrint() {
-        return this.env.pos.config.iface_print_auto && !this.currentOrder._printed;
+        return this.pos.globalState.config.iface_print_auto && !this.currentOrder._printed;
     }
     _shouldCloseImmediately() {
         var invoiced_finalized = this.currentOrder.is_to_invoice()
@@ -168,7 +167,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             : true;
         return (
             this.hardwareProxy.printer &&
-            this.env.pos.config.iface_print_skip_screen &&
+            this.pos.globalState.config.iface_print_skip_screen &&
             invoiced_finalized
         );
     }
@@ -183,7 +182,7 @@ export class ReceiptScreen extends AbstractReceiptScreen {
             email: this.orderUiState.inputEmail,
             name: partner ? partner.name : this.orderUiState.inputEmail,
         };
-        const order_server_id = this.env.pos.validated_orders_name_server_id_map[orderName];
+        const order_server_id = this.pos.globalState.validated_orders_name_server_id_map[orderName];
         if (!order_server_id) {
             this.popup.add(OfflineErrorPopup, {
                 title: this.env._t("Unsynced order"),

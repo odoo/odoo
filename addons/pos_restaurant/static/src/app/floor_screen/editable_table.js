@@ -3,6 +3,7 @@
 import { getLimits, useMovable, constrain } from "@point_of_sale/app/movable_hook";
 import { onWillUnmount, useEffect, useRef, Component } from "@odoo/owl";
 import { Table } from "./table";
+import { usePos } from "@point_of_sale/app/pos_hook";
 
 const MIN_TABLE_SIZE = 30; // px
 
@@ -16,7 +17,7 @@ export class EditableTable extends Component {
     };
 
     setup() {
-        super.setup();
+        this.pos = usePos();
         useEffect(this._setElementStyle.bind(this));
         this.root = useRef("root");
         this.handles = {
@@ -43,7 +44,7 @@ export class EditableTable extends Component {
     }
 
     onMoveStart() {
-        if (this.env.pos.floorPlanStyle == 'kanban') {
+        if (this.pos.globalState.floorPlanStyle == "kanban") {
             return;
         }
         this.startTable = { ...this.props.table };
@@ -59,7 +60,7 @@ export class EditableTable extends Component {
     }
 
     onMove({ dx, dy }) {
-        if (this.env.pos.floorPlanStyle == 'kanban') {
+        if (this.pos.globalState.floorPlanStyle == "kanban") {
             return;
         }
         const { minX, minY, maxX, maxY } = getLimits(this.root.el, this.props.limit.el);
@@ -70,12 +71,12 @@ export class EditableTable extends Component {
             this.props.selectedTables[index].position_h = constrain(position_h + dx, minX, maxX);
             this.props.selectedTables[index].position_v = constrain(position_v + dy, minY, maxY);
         }
-        
+
         this._setElementStyle();
     }
 
     onResizeHandleMove([moveX, moveY], { dx, dy }) {
-        if (this.env.pos.floorPlanStyle == 'kanban') {
+        if (this.pos.globalState.floorPlanStyle == "kanban") {
             return;
         }
         // Working with min/max x and y makes constraints much easier to apply uniformly
@@ -127,14 +128,18 @@ export class EditableTable extends Component {
 
     _setElementStyle() {
         const table = this.props.table;
-        if (this.env.pos.floorPlanStyle == 'kanban') {
+        if (this.pos.globalState.floorPlanStyle == "kanban") {
             const floor = table.floor;
             const index = floor.tables.indexOf(table);
             const minWidth = 100 + 20;
             const nbrHorizontal = Math.floor(window.innerWidth / minWidth);
-            const widthTable = (window.innerWidth - nbrHorizontal*10) / nbrHorizontal;
-            const position_h = widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
-            const position_v = widthTable * Math.floor(index / nbrHorizontal) + 5 + Math.floor(index / nbrHorizontal) * 10;
+            const widthTable = (window.innerWidth - nbrHorizontal * 10) / nbrHorizontal;
+            const position_h =
+                widthTable * (index % nbrHorizontal) + 5 + (index % nbrHorizontal) * 10;
+            const position_v =
+                widthTable * Math.floor(index / nbrHorizontal) +
+                5 +
+                Math.floor(index / nbrHorizontal) * 10;
 
             Object.assign(this.root.el.style, {
                 left: `${position_h}px`,
@@ -145,7 +150,7 @@ export class EditableTable extends Component {
                 "line-height": `${widthTable}px`,
                 "border-radius": table.shape === "round" ? "1000px" : "3px",
                 "font-size": widthTable >= 150 ? "32px" : "16px",
-                "opacity": "0.7",
+                opacity: "0.7",
             });
             return;
         }

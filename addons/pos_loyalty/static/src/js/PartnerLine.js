@@ -1,13 +1,18 @@
 /** @odoo-module */
 
+import { usePos } from "@point_of_sale/app/pos_hook";
 import { PartnerLine } from "@point_of_sale/js/Screens/PartnerListScreen/PartnerLine";
 import { patch } from "@web/core/utils/patch";
 import { sprintf } from "@web/core/utils/strings";
 import { formatFloat } from "@web/views/fields/formatters";
 
 patch(PartnerLine.prototype, "pos_loyalty.PartnerLine", {
+    setup() {
+        this._super(...arguments);
+        this.pos = usePos();
+    },
     _getLoyaltyPointsRepr(loyaltyCard) {
-        const program = this.env.pos.program_by_id[loyaltyCard.program_id];
+        const program = this.pos.globalState.program_by_id[loyaltyCard.program_id];
         if (program.program_type === "ewallet") {
             return `${program.name}: ${this.env.utils.formatCurrency(loyaltyCard.balance)}`;
         }
