@@ -620,6 +620,15 @@ class AccountMove(models.Model):
 
             move._recompute_dynamic_lines()
 
+    @api.onchange('invoice_cash_rounding_id')
+    def _onchange_invoice_cash_rounding_id(self):
+        for move in self:
+            if move.invoice_cash_rounding_id and not move.invoice_cash_rounding_id.profit_account_id:
+                return {'warning':{
+                    'title': _("Warning for Cash Rounding Method: %s", move.invoice_cash_rounding_id.name),
+                    'message': _("You must specifiy the Profit Account (company dependent)")
+                }}
+
     @api.model
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
         ''' Create the dictionary based on a tax line that will be used as key to group taxes together.
