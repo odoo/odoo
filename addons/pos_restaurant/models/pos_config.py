@@ -28,6 +28,12 @@ class PosConfig(models.Model):
         skip_changes_map = defaultdict(lambda: 0)
 
         for line in linked_orderlines:
+            # For the moment, as this feature is not compatible with pos_self_order,
+            # we ignore last_order_preparation_change when it is set to false.
+            # In future, pos_self_order will send the various changes to the order.
+            if not line.order_id.last_order_preparation_change:
+                continue
+
             last_order_preparation_change = json.loads(line.order_id.last_order_preparation_change)
             prep_change = {}
             for line_uuid in last_order_preparation_change:

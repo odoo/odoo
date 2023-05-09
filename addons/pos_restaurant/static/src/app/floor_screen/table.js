@@ -35,10 +35,12 @@ export class Table extends Component {
         let boxShadow = "0px 3px rgba(0,0,0,0.07)";
         if (!this.isOccupied()) {
             background = "transparent";
-            const rgb = table.floor.background_color.substring(4, table.floor.background_color.length-1)
-                .replace(/ /g, '')
-                .split(',');
-            textColor = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2])/255 > 0.5 ? "black" : "white";
+            const rgb = table.floor.background_color
+                .substring(4, table.floor.background_color.length - 1)
+                .replace(/ /g, "")
+                .split(",");
+            textColor =
+                (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255 > 0.5 ? "black" : "white";
             border = "3px solid " + table.color;
             boxShadow = "none";
         }
@@ -90,13 +92,19 @@ export class Table extends Component {
     }
     get orderCount() {
         const table = this.props.table;
-
+        const unsynced_orders = this.pos.globalState.getTableOrders(table.id).filter(
+            (o) =>
+                o.server_id === undefined &&
+                (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
+                // do not count the orders that are already finalized
+                !o.finalized
+        );
         if (table.changes_count > 0) {
             return table.changes_count;
         } else if (table.skip_changes > 0) {
             return table.skip_changes;
         }
-        return table.order_count;
+        return table.order_count + unsynced_orders.length;
     }
     get orderCountClass() {
         const countClass = { "order-count": true };
@@ -121,6 +129,9 @@ export class Table extends Component {
         return hasChangesCount ? { printing: true } : hasSkippedCount ? { skipped: true } : {};
     }
     isOccupied() {
-        return this.pos.globalState.getCustomerCount(this.props.table.id) > 0 || this.props.table.order_count > 0;
+        return (
+            this.pos.globalState.getCustomerCount(this.props.table.id) > 0 ||
+            this.props.table.order_count > 0
+        );
     }
 }
