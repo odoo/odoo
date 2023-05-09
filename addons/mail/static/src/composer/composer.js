@@ -384,9 +384,7 @@ export class Composer extends Component {
         const options = {
             onClose: () => {
                 this.clear();
-                if (this.props.composer.thread) {
-                    this.threadService.fetchNewMessages(this.props.composer.thread);
-                }
+                this.props.composer.thread?.fetchNewMessages();
             },
         };
         await this.env.services.action.doAction(action, options);
@@ -394,7 +392,7 @@ export class Composer extends Component {
 
     clear() {
         this.attachmentUploader?.clear();
-        this.threadService.clearComposer(this.props.composer);
+        this.props.composer.clear();
     }
 
     onClickAddEmoji(ev) {
@@ -445,7 +443,7 @@ export class Composer extends Component {
                 rawMentions: this.props.composer.rawMentions,
                 parentId: this.props.messageToReplyTo?.message?.id,
             };
-            const message = await this.threadService.post(thread, value, postData);
+            const message = await thread.post(value, postData);
             if (this.props.composer.thread.type === "mailbox") {
                 this.env.services.notification.add(
                     sprintf(_t('Message posted on "%s"'), message.originThread.displayName),
@@ -482,8 +480,7 @@ export class Composer extends Component {
     async editMessage() {
         if (this.ref.el.value || this.props.composer.message.attachments.length > 0) {
             await this.processMessage(async (value) =>
-                this.messageService.edit(
-                    this.props.composer.message,
+                this.props.composer.message.edit(
                     value,
                     this.props.composer.attachments,
                     this.props.composer.rawMentions
@@ -493,7 +490,7 @@ export class Composer extends Component {
             this.env.services.dialog.add(MessageConfirmDialog, {
                 message: this.props.composer.message,
                 messageComponent: this.props.messageComponent,
-                onConfirm: () => this.messageService.delete(this.message),
+                onConfirm: () => this.message.delete(),
                 prompt: _t("Are you sure you want to delete this message?"),
             });
         }
@@ -511,8 +508,6 @@ export class Composer extends Component {
 
     onFocusin() {
         this.props.composer.isFocused = true;
-        if (this.props.composer.thread) {
-            this.threadService.markAsRead(this.props.composer.thread);
-        }
+        this.props.composer.thread?.markAsRead();
     }
 }

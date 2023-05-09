@@ -48,7 +48,7 @@ export class MessagingMenu extends Component {
             this.store.discuss.inbox.status !== "loading" &&
             this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
         ) {
-            this.threadService.fetchNewMessages(this.store.discuss.inbox);
+            this.store.discuss.inbox.fetchNewMessages();
         }
     }
 
@@ -62,10 +62,10 @@ export class MessagingMenu extends Component {
 
     markAsRead(thread) {
         if (thread.hasNeedactionMessages) {
-            this.threadService.markAllMessagesAsRead(thread);
+            thread.markAllMessagesAsRead();
         }
         if (thread.model === "discuss.channel") {
-            this.threadService.markAsRead(thread);
+            thread.markAsRead();
         }
     }
 
@@ -196,7 +196,7 @@ export class MessagingMenu extends Component {
     }
 
     openDiscussion(thread) {
-        this.threadService.open(thread);
+        thread.open();
         this.close();
     }
 
@@ -238,7 +238,7 @@ export class MessagingMenu extends Component {
             // and the chat window does not look good.
             this.store.chatWindows.find(({ thr }) => thr === thread)?.close();
         } else {
-            this.threadService.open(thread);
+            thread.open();
         }
         this.close();
     }

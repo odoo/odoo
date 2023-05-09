@@ -25,7 +25,7 @@ export class DiscussPublic extends Component {
             (welcome) => {
                 if (!welcome) {
                     this.threadService.setDiscussThread(this.thread, false);
-                    this.threadService.fetchChannelMembers(this.thread);
+                    this.thread.fetchChannelMembers();
                     const video = browser.localStorage.getItem("mail_call_preview_join_video");
                     const mute = browser.localStorage.getItem("mail_call_preview_join_mute");
                     if (this.thread.defaultDisplayMode === "video_full_screen") {

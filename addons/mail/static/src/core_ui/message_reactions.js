@@ -67,7 +67,7 @@ export class MessageReactions extends Component {
         if (this.hasSelfReacted(reaction)) {
             this.messageService.removeReaction(reaction);
         } else {
-            this.messageService.react(this.props.message, reaction.content);
+            this.props.message.react(reaction.content);
         }
     }
 

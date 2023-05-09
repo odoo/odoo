@@ -197,7 +197,7 @@ export class Messaging {
                             ...notif.payload,
                             model: "discuss.channel",
                         });
-                        this.threadService.remove(thread);
+                        thread.remove();
                         if (thread.localId === this.store.discuss.threadLocalId) {
                             this.store.discuss.threadLocalId = undefined;
                         }
@@ -361,7 +361,7 @@ export class Messaging {
                     }
                     inbox.counter = needaction_inbox_counter;
                     if (inbox.counter > inbox.messages.length) {
-                        this.threadService.fetchMoreMessages(inbox);
+                        inbox.fetchMoreMessages();
                     }
                     break;
                 }
@@ -369,7 +369,7 @@ export class Messaging {
                     const { message_ids: messageIds, starred } = notif.payload;
                     for (const messageId of messageIds) {
                         const message = this.messageService.insert({ id: messageId });
-                        this.messageService.updateStarred(message, starred);
+                        message.updateStarred(starred);
                     }
                     break;
                 }
@@ -510,7 +510,7 @@ export class Messaging {
             });
         }
         if (!channel.is_pinned) {
-            this.threadService.pin(channel);
+            channel.pin();
         }
 
         removeFromArrayWithPredicate(channel.messages, ({ id }) => id === messageData.temporary_id);
@@ -558,7 +558,7 @@ export class Messaging {
             if (channel.type !== "channel" && !this.store.guest) {
                 // disabled on non-channel threads and
                 // on "channel" channels for performance reasons
-                this.threadService.markAsFetched(channel);
+                channel.markAsFetched();
             }
         }
         if (
@@ -569,7 +569,7 @@ export class Messaging {
             !this.store.guest &&
             channel.newestPersistentMessage === channel.newestMessage
         ) {
-            this.threadService.markAsRead(channel);
+            channel.markAsRead();
         }
     }
 
@@ -637,7 +637,7 @@ export class Messaging {
                 message.originThread.pinnedMessages.unshift(message);
             }
             if (isStarred && message.isEmpty) {
-                this.messageService.updateStarred(message, false);
+                message.updateStarred(false);
             }
             if (message.pinned_at && message.isEmpty) {
                 message.pinned_at = false;

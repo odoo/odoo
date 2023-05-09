@@ -13,7 +13,7 @@ export class CallInvitation extends Component {
     }
 
     async onClickAccept(ev) {
-        this.threadService.open(this.props.thread);
+        this.props.thread.open();
         if (this.rtc.state.hasPendingRequest) {
             return;
         }
@@ -21,7 +21,7 @@ export class CallInvitation extends Component {
     }
 
     onClickAvatar(ev) {
-        this.threadService.open(this.props.thread);
+        this.props.thread.open();
     }
 
     onClickRefuse(ev) {

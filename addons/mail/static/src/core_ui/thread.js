@@ -70,12 +70,12 @@ export class Thread extends Component {
         this.messagesRef = useRef("messages");
         this.loadOlderState = useVisible("load-older", () => {
             if (this.loadOlderState.isVisible && !this.isJumpingRecent) {
-                this.threadService.fetchMoreMessages(this.props.thread);
+                this.props.thread.fetchMoreMessages();
             }
         });
         this.loadNewerState = useVisible("load-newer", () => {
             if (this.loadNewerState.isVisible && !this.isJumpingRecent) {
-                this.threadService.fetchMoreMessages(this.props.thread, "newer");
+                this.props.thread.fetchMoreMessages("newer");
             }
         });
         this.presentThresholdState = useVisible(
@@ -129,10 +129,10 @@ export class Thread extends Component {
             }
         });
         onWillStart(() => {
-            this.threadService.fetchNewMessages(this.props.thread);
+            this.props.thread.fetchNewMessages();
         });
         onWillUpdateProps((nextProps) => {
-            this.threadService.fetchNewMessages(nextProps.thread);
+            nextProps.thread.fetchNewMessages();
         });
     }
 
@@ -146,12 +146,12 @@ export class Thread extends Component {
     }
 
     onClickLoadOlder() {
-        this.threadService.fetchMoreMessages(this.props.thread);
+        this.props.thread.fetchMoreMessages();
     }
 
     async onClickJumpPresent() {
         this.isJumpingRecent = true;
-        await this.threadService.loadAround(this.props.thread);
+        await this.props.thread.loadAround();
         this.props.thread.loadNewer = false;
         this.present.el.scrollIntoView({
             behavior: this.props.order === "asc" ? "smooth" : "instant", // FIXME somehow smooth not working in desc mode

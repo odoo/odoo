@@ -115,7 +115,7 @@ export class Discuss extends Component {
                 this.thread.type === "chat" ||
                 this.thread.type === "group")
         ) {
-            await this.threadService.notifyThreadNameToServer(this.thread, newName);
+            await this.thread.notifyNameToServer(newName);
         }
     }
 
@@ -125,7 +125,7 @@ export class Discuss extends Component {
             return;
         }
         if (newDescription !== this.thread.description) {
-            await this.threadService.notifyThreadDescriptionToServer(this.thread, newDescription);
+            await this.thread.notifyDescriptionToServer(newDescription);
         }
     }
 

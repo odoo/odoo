@@ -19,11 +19,11 @@ export class PinnedMessagesPanel extends Component {
         this.store = useService("mail.store");
         this.rpc = useService("rpc");
         onWillStart(() => {
-            this.threadService.fetchPinnedMessages(this.props.thread);
+            this.props.thread.fetchPinnedMessages();
         });
         onWillUpdateProps(async (nextProps) => {
             if (nextProps.thread.id !== this.props.thread.id) {
-                this.threadService.fetchPinnedMessages(nextProps.thread);
+                nextProps.thread.fetchPinnedMessages();
             }
         });
         useSubEnv({
@@ -58,7 +58,7 @@ export class PinnedMessagesPanel extends Component {
             message,
             messageComponent: Message,
             prompt: _t("Are you sure you want to remove this pinned message?"),
-            onConfirm: () => this.messageService.setPin(message, false),
+            onConfirm: () => message.setPin(false),
         });
     }
 

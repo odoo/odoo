@@ -1,11 +1,39 @@
 /** @odoo-module */
 
+import { Thread } from "@mail/core/thread_model";
 import { ThreadService } from "@mail/core/thread_service";
 import { removeFromArray } from "@mail/utils/arrays";
 import { assignDefined, createLocalId } from "@mail/utils/misc";
 import { patch } from "@web/core/utils/patch";
 
 patch(ThreadService.prototype, "im_livechat", {
+    setup(env, services) {
+        this._super(env, services);
+        const store = services["mail.store"];
+        patch(Thread.prototype, "im_livechat", {
+            get canLeave() {
+                return this.type !== "livechat" && this._super();
+            },
+            get canUnpin() {
+                if (this.type === "livechat") {
+                    return this.message_unread_counter === 0;
+                }
+                return this._super();
+            },
+            getCounter() {
+                if (this.type === "livechat") {
+                    return this.message_unread_counter;
+                }
+                return this._super();
+            },
+            remove() {
+                if (this.type === "livechat") {
+                    removeFromArray(store.discuss.livechat.threads, this.localId);
+                }
+                this._super();
+            },
+        });
+    },
     insert(data) {
         const isUnknown = !(createLocalId(data.model, data.id) in this.store.threads);
         const thread = this._super(data);
@@ -30,30 +58,6 @@ patch(ThreadService.prototype, "im_livechat", {
         if (this.store.isSmall && thread.type === "livechat") {
             this.store.discuss.activeTab = "livechat";
         }
-    },
-    remove(thread) {
-        if (thread.type === "livechat") {
-            removeFromArray(this.store.discuss.livechat.threads, thread.localId);
-        }
-        this._super(thread);
-    },
-
-    canLeave(thread) {
-        return thread.type !== "livechat" && this._super(thread);
-    },
-
-    canUnpin(thread) {
-        if (thread.type === "livechat") {
-            return thread.message_unread_counter === 0;
-        }
-        return this._super(thread);
-    },
-
-    getCounter(thread) {
-        if (thread.type === "livechat") {
-            return thread.message_unread_counter;
-        }
-        return this._super(thread);
     },
 
     sortChannels() {

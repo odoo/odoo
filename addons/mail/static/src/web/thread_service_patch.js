@@ -9,11 +9,15 @@ import { markup } from "@odoo/owl";
 
 import { _t } from "@web/core/l10n/translation";
 import { patch } from "@web/core/utils/patch";
+import { Thread } from "@mail/core/thread_model";
 
 let nextId = 1;
 
 patch(ThreadService.prototype, "mail/web", {
     setup(env, services) {
+        const store = services["mail.store"];
+        const chatWindowService = services["mail.chat_window"];
+
         this._super(env, services);
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
@@ -21,6 +25,23 @@ patch(ThreadService.prototype, "mail/web", {
         this.activityService = services["mail.activity"];
         /** @type {import("@mail/chat/chat_window_service").ChatWindowService} */
         this.chatWindowService = services["mail.chat_window"];
+
+        patch(Thread.prototype, "mail/web", {
+            open(replaceNewMessageChatWindow) {
+                if (!store.discuss.isActive || store.isSmall) {
+                    const chatWindow = chatWindowService.insert({
+                        folded: false,
+                        thread: this,
+                        replaceNewMessageChatWindow,
+                    });
+                    chatWindow.autofocus++;
+                    this.state = "open";
+                    chatWindowService.notifyState(chatWindow);
+                    return;
+                }
+                this._super(replaceNewMessageChatWindow);
+            },
+        });
     },
     /**
      * @param {import("@mail/core/thread_model").Thread} thread
@@ -33,7 +54,7 @@ patch(ThreadService.prototype, "mail/web", {
         thread.isLoadingAttachments =
             thread.isLoadingAttachments || requestList.includes("attachments");
         if (requestList.includes("messages")) {
-            this.fetchNewMessages(thread);
+            thread.fetchNewMessages();
         }
         const result = await this.rpc("/mail/thread/data", {
             request_list: requestList,
@@ -76,7 +97,7 @@ patch(ThreadService.prototype, "mail/web", {
                 : undefined;
         }
         if (!thread.mainAttachment && thread.attachmentsInWebClientView.length > 0) {
-            this.setMainAttachmentFromIndex(thread, 0);
+            thread.setMainAttachmentFromIndex(0);
         }
         if ("followers" in result) {
             for (const followerData of result.followers) {
@@ -168,22 +189,6 @@ patch(ThreadService.prototype, "mail/web", {
             });
         }
         thread.suggestedRecipients = recipients;
-    },
-    open(thread, replaceNewMessageChatWindow) {
-        if (!this.store.discuss.isActive || this.store.isSmall) {
-            const chatWindow = this.chatWindowService.insert({
-                folded: false,
-                thread,
-                replaceNewMessageChatWindow,
-            });
-            chatWindow.autofocus++;
-            if (thread) {
-                thread.state = "open";
-            }
-            this.chatWindowService.notifyState(chatWindow);
-            return;
-        }
-        this._super(thread, replaceNewMessageChatWindow);
     },
     /**
      * @param {import("@mail/core/follower_model").Follower} follower

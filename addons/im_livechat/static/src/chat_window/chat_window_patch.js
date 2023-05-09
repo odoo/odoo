@@ -11,7 +11,7 @@ patch(ChatWindow.prototype, "im_livechat", {
             this.thread.isLoaded &&
             this.thread.messages.length === 0
         ) {
-            this.threadService.unpin(this.thread);
+            this.thread.unpin();
         }
     },
 });

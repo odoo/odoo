@@ -122,7 +122,7 @@ export class ChannelSelector extends Component {
             if (selectedPartners.length === 1) {
                 await this.threadService
                     .joinChat(selectedPartners[0])
-                    .then((chat) => this.threadService.open(chat, this.env.inChatWindow));
+                    .then((chat) => chat.open(this.env.inChatWindow));
             } else {
                 const partners_to = [...new Set([this.store.self.id, ...selectedPartners])];
                 await this.threadService.createGroupChat({ partners_to });

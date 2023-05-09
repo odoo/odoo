@@ -14,6 +14,12 @@ const { DateTime } = luxon;
 
 export class MessageService {
     constructor(env, services) {
+        const orm = services.orm;
+        const rpc = services.rpc;
+        const self = this;
+        const store = services.store;
+        const userService = services.user;
+
         this.env = env;
         /** @type {import("@mail/core/store_service").Store} */
         this.store = services["mail.store"];
@@ -24,43 +30,90 @@ export class MessageService {
         this.personaService = services["mail.persona"];
         /** @type {import("@mail/attachments/attachment_service").AttachmentService} */
         this.attachmentService = services["mail.attachment"];
-    }
 
-    async edit(message, body, attachments = [], rawMentions) {
-        if (convertBrToLineBreak(message.body) === body && attachments.length === 0) {
-            return;
-        }
-        const validMentions = this.getMentionsFromText(rawMentions, body);
-        await this.rpc("/mail/message/update_content", {
-            attachment_ids: attachments
-                .map(({ id }) => id)
-                .concat(message.attachments.map(({ id }) => id)),
-            body: await prettifyMessageContent(body, validMentions),
-            message_id: message.id,
-        });
-        if (!message.isEmpty && this.store.hasLinkPreviewFeature) {
-            this.rpc(
-                "/mail/link_preview",
-                { message_id: message.id, clear: true },
-                { silent: true }
-            );
-        }
-    }
-
-    async delete(message) {
-        if (message.isStarred) {
-            this.store.discuss.starred.counter--;
-            removeFromArrayWithPredicate(
-                this.store.discuss.starred.messages,
-                ({ id }) => id === message.id
-            );
-        }
-        message.body = "";
-        message.attachments = [];
-        await this.rpc("/mail/message/update_content", {
-            attachment_ids: [],
-            body: "",
-            message_id: message.id,
+        Object.assign(Message.prototype, {
+            get scheduledDateSimple() {
+                return this.scheduledDate.toLocaleString(DateTime.TIME_SIMPLE, {
+                    locale: userService.lang.replace("_", "-"),
+                });
+            },
+            get dateSimple() {
+                return this.datetime.toLocaleString(DateTime.TIME_SIMPLE, {
+                    locale: userService.lang.replace("_", "-"),
+                });
+            },
+            async delete() {
+                if (this.isStarred) {
+                    store.discuss.starred.counter--;
+                    removeFromArrayWithPredicate(
+                        store.discuss.starred.messages,
+                        ({ id }) => id === this.id
+                    );
+                }
+                this.body = "";
+                this.attachments = [];
+                await rpc("/mail/message/update_content", {
+                    attachment_ids: [],
+                    body: "",
+                    message_id: this.id,
+                });
+            },
+            async edit(body, attachments = [], rawMentions) {
+                if (convertBrToLineBreak(this.body) === body && attachments.length === 0) {
+                    return;
+                }
+                const validMentions = self.getMentionsFromText(rawMentions, body);
+                await rpc("/mail/message/update_content", {
+                    attachment_ids: attachments
+                        .map(({ id }) => id)
+                        .concat(this.attachments.map(({ id }) => id)),
+                    body: await prettifyMessageContent(body, validMentions),
+                    message_id: this.id,
+                });
+                if (!this.isEmpty && store.hasLinkPreviewFeature) {
+                    rpc(
+                        "/mail/link_preview",
+                        { message_id: this.id, clear: true },
+                        { silent: true }
+                    );
+                }
+            },
+            async react(content) {
+                await rpc(
+                    "/mail/message/reaction",
+                    {
+                        action: "add",
+                        content,
+                        message_id: this.id,
+                    },
+                    { silent: true }
+                );
+            },
+            async setDone() {
+                await orm.silent.call("mail.message", "set_message_done", [[this.id]]);
+            },
+            setPin(pinned) {
+                return orm.call("discuss.channel", "set_message_pin", [this.originThread.id], {
+                    message_id: this.id,
+                    pinned,
+                });
+            },
+            async toggleStar() {
+                await orm.silent.call("mail.message", "toggle_message_starred", [[this.id]]);
+            },
+            updateStarred(isStarred) {
+                this.isStarred = isStarred;
+                const starred = store.discuss.starred;
+                if (isStarred) {
+                    starred.counter++;
+                    if (!starred.messages.includes(this)) {
+                        starred.messages.push(this);
+                    }
+                } else {
+                    starred.counter--;
+                    removeFromArrayWithPredicate(starred.messages, ({ id }) => id === this.id);
+                }
+            },
         });
     }
 
@@ -126,38 +179,11 @@ export class MessageService {
         });
     }
 
-    async toggleStar(message) {
-        await this.orm.silent.call("mail.message", "toggle_message_starred", [[message.id]]);
-    }
-
-    async setDone(message) {
-        await this.orm.silent.call("mail.message", "set_message_done", [[message.id]]);
-    }
-
-    setPin(message, pinned) {
-        return this.orm.call("discuss.channel", "set_message_pin", [message.originThread.id], {
-            message_id: message.id,
-            pinned,
-        });
-    }
-
     async unstarAll() {
         // apply the change immediately for faster feedback
         this.store.discuss.starred.counter = 0;
         this.store.discuss.starred.messages = [];
         await this.orm.call("mail.message", "unstar_all");
-    }
-
-    async react(message, content) {
-        await this.rpc(
-            "/mail/message/reaction",
-            {
-                action: "add",
-                content,
-                message_id: message.id,
-            },
-            { silent: true }
-        );
     }
 
     async removeReaction(reaction) {
@@ -170,20 +196,6 @@ export class MessageService {
             },
             { silent: true }
         );
-    }
-
-    updateStarred(message, isStarred) {
-        message.isStarred = isStarred;
-        const starred = this.store.discuss.starred;
-        if (isStarred) {
-            starred.counter++;
-            if (!starred.messages.includes(message)) {
-                starred.messages.push(message);
-            }
-        } else {
-            starred.counter--;
-            removeFromArrayWithPredicate(starred.messages, ({ id }) => id === message.id);
-        }
     }
 
     /**
@@ -464,18 +476,6 @@ export class MessageService {
             }
         }
         group.resIds.add(data.resId);
-    }
-
-    scheduledDateSimple(message) {
-        return message.scheduledDate.toLocaleString(DateTime.TIME_SIMPLE, {
-            locale: this.userService.lang.replace("_", "-"),
-        });
-    }
-
-    dateSimple(message) {
-        return message.datetime.toLocaleString(DateTime.TIME_SIMPLE, {
-            locale: this.userService.lang.replace("_", "-"),
-        });
     }
 }
 

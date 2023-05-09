@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.Message" owl="1">
-        <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.messageService.setDone(this.message), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
+        <ActionSwiper onRightSwipe="hasTouch() and isInInbox ? { action: () => this.message.setDone(), bgColor: 'bg-success', icon: 'fa-check-circle' } : undefined">
             <div class="o-mail-Message position-relative py-1"
                 t-att-class="{
                     'o-pinnedPanel': env.pinnedPanel,
@@ -35,7 +35,7 @@
                         </div>
                         <t t-elif="!message.isTransient">
                             <small t-if="isActive" class="o-mail-Message-date text-muted opacity-50 ms-2">
-                                <t t-esc="messageService.dateSimple(message)"/>
+                                <t t-esc="message.dateSimple"/>
                             </small>
                             <div t-att-class="{ 'position-absolute bottom-0 mb-1': !env.inChatter }">
                                 <MessageSeenIndicator
@@ -67,7 +67,7 @@
                                     (from <a t-att-href="message.url">#<t t-esc="message.originThread?.displayName"/></a>)
                                 </t>
                             </small>
-                            <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="messageService.scheduledDateSimple(props.message)">
+                            <div t-if="props.message.scheduledDate" t-att-class="{ 'ms-2': props.isInChatWindow and isAlignedRight }" t-att-title="props.message.scheduledDateSimple">
                                 <span class="text-600 cursor-pointer">
                                     <i class="fa fa-calendar-o"/>
                                 </span>
@@ -137,14 +137,14 @@
                                 >
                                     <button t-if="canAddReaction" class="btn px-1 py-0" tabindex="1" title="Add a Reaction" aria-label="Add a Reaction" t-ref="emoji-picker"><i class="fa fa-lg fa-smile-o"/></button>
                                     <button t-if="canReplyTo" class="btn px-1 py-0" t-on-click.stop="onClickReplyTo" tabindex="1" title="Reply" aria-label="Reply"><i class="fa fa-lg fa-reply"/></button>
-                                    <button t-if="canToggleStar" class="btn px-1 py-0" t-on-click="() => messageService.toggleStar(props.message)" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
+                                    <button t-if="canToggleStar" class="btn px-1 py-0" t-on-click="() => props.message.toggleStar()" tabindex="0" title="Mark as Todo" aria-label="Mark as Todo"><i class="fa fa-lg" t-att-class="message.isStarred ? 'fa-star o-mail-Message-starred' : 'fa-star-o'"/></button>
                                     <Dropdown t-if="editable or deletable or isInInbox or props.thread?.model === 'discuss.channel'" onStateChanged="state => this.state.expandOptions = state.open" position="props.thread?.newestMessage === props.message ? 'top-start' : 'bottom-start'" togglerClass="`btn p-0 ${ state.expandOptions ? 'bg-200' : '' }`" menuClass="'d-flex flex-column py-0 o-mail-Message-moreMenu'" class="'d-flex'" title="expandText">
                                         <t t-set-slot="toggler">
                                             <i class="btn px-1 py-0 fa fa-lg fa-ellipsis-h" t-att-class="{ 'order-1': props.isInChatWindow }" tabindex="1"/>
                                         </t>
                                         <t t-set-slot="default">
                                             <DropdownItem t-if="message.reactions.length" class="'px-2 d-flex align-items-center'" title="'Reactions'" onSelected="() => this.openReactionMenu()"><i class="fa fa-lg fa-smile-o pe-2"/>View Reactions</DropdownItem>
-                                            <DropdownItem t-if="isInInbox" class="'px-2 d-flex align-items-center'" title="'Mark as Read'" onSelected="() => messageService.setDone(props.message)"><i class="fa fa-lg fa-check pe-2"/>Mark as Read</DropdownItem>
+                                            <DropdownItem t-if="isInInbox" class="'px-2 d-flex align-items-center'" title="'Mark as Read'" onSelected="() => props.message.setDone()"><i class="fa fa-lg fa-check pe-2"/>Mark as Read</DropdownItem>
                                             <DropdownItem t-if="store.user and props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center'" title="pinOptionText" onSelected="() => this.onClickPin()"><i class="fa fa-lg fa-thumb-tack pe-2"/><t t-esc="pinOptionText"/></DropdownItem>
                                             <DropdownItem t-if="props.thread.model === 'discuss.channel'" class="'px-2 d-flex align-items-center'" title="'Mark as Unread'" onSelected="() => this.onClickMarkAsUnread()"><i class="fa fa-lg fa-eye-slash pe-2"/>Mark as Unread</DropdownItem>
                                             <DropdownItem t-if="editable" class="'px-2 d-flex align-items-center'" title="'Edit'" onSelected="() => this.onClickEdit()"><i class="fa fa-lg fa-pencil pe-2"/>Edit</DropdownItem>

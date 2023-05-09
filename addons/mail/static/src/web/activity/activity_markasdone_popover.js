@@ -38,7 +38,7 @@ export class ActivityMarkAsDone extends Component {
         if (this.props.reload) {
             this.props.reload(this.props.activity.res_id, ["activities"]);
         }
-        await this.threadService.fetchNewMessages(thread);
+        await thread.fetchNewMessages();
     }
 
     async onClickDoneAndScheduleNext() {
@@ -53,7 +53,7 @@ export class ActivityMarkAsDone extends Component {
         const action = await this.env.services["mail.activity"].markAsDoneAndScheduleNext(
             this.props.activity
         );
-        this.threadService.fetchNewMessages(thread);
+        thread.fetchNewMessages();
         if (this.props.reload) {
             this.props.reload(this.props.activity.res_id, ["activities", "attachments"]);
         }

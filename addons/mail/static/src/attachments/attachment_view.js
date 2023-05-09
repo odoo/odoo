@@ -37,8 +37,7 @@ export class AttachmentView extends Component {
         const index = this.state.thread.attachmentsInWebClientView.findIndex(
             (attachment) => attachment.id === this.state.thread.mainAttachment.id
         );
-        this.threadService.setMainAttachmentFromIndex(
-            this.state.thread,
+        this.state.thread.setMainAttachmentFromIndex(
             index === this.state.thread.attachmentsInWebClientView.length - 1 ? 0 : index + 1
         );
     }
@@ -47,8 +46,7 @@ export class AttachmentView extends Component {
         const index = this.state.thread.attachmentsInWebClientView.findIndex(
             (attachment) => attachment.id === this.state.thread.mainAttachment.id
         );
-        this.threadService.setMainAttachmentFromIndex(
-            this.state.thread,
+        this.state.thread.setMainAttachmentFromIndex(
             index === 0 ? this.state.thread.attachmentsInWebClientView.length - 1 : index - 1
         );
     }

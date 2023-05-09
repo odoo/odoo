@@ -76,7 +76,7 @@ commandProviderRegistry.add("discuss.channel", {
         return channelsData.map((data) => ({
             async action() {
                 const channel = await threadService.joinChannel(data.id, data.name);
-                threadService.open(channel);
+                channel.open();
             },
             // todo: handle displayname in a way (seems like "group" channels
             // do not have a name

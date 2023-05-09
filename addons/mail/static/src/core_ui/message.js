@@ -127,7 +127,7 @@ export class Message extends Component {
                             personas.find((persona) => persona === this.store.self)
                     );
                     if (!reaction) {
-                        this.messageService.react(this.message, emoji);
+                        this.message.react(emoji);
                     }
                 },
             });
@@ -306,7 +306,7 @@ export class Message extends Component {
             message: this.message,
             messageComponent: Message,
             prompt: _t("Are you sure you want to delete this message?"),
-            onConfirm: () => this.messageService.delete(this.message),
+            onConfirm: () => this.message.delete(),
         });
     }
 
@@ -320,7 +320,7 @@ export class Message extends Component {
             message: this.message,
             messageComponent: Message,
             prompt,
-            onConfirm: () => this.messageService.setPin(this.message, !this.message.pinned_at),
+            onConfirm: () => this.message.setPin(!this.message.pinned_at),
         });
     }
 
@@ -376,7 +376,7 @@ export class Message extends Component {
         if (ev.target.closest(".o_channel_redirect")) {
             ev.preventDefault();
             const thread = this.threadService.insert({ model, id });
-            this.threadService.open(thread);
+            thread.open();
             return;
         }
         if (ev.target.closest(".o_mail_redirect")) {

@@ -108,7 +108,7 @@ export class Sidebar extends Component {
                 )
             );
         }
-        this.threadService.leaveChannel(thread);
+        thread.leave();
     }
 
     askConfirmation(body) {

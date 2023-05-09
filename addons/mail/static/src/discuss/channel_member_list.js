@@ -14,10 +14,10 @@ export class ChannelMemberList extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.threadService = useState(useService("mail.thread"));
-        onWillStart(() => this.threadService.fetchChannelMembers(this.props.thread));
+        onWillStart(() => this.props.thread.fetchChannelMembers());
         onWillUpdateProps((nextProps) => {
             if (nextProps.thread.channelMembers.length === 0) {
-                this.threadService.fetchChannelMembers(nextProps.thread);
+                nextProps.thread.fetchChannelMembers();
             }
         });
     }

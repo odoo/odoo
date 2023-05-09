@@ -20,7 +20,7 @@ patch(ThreadService.prototype, "discuss", {
                 command &&
                 (!command.channel_types || command.channel_types.includes(thread.type))
             ) {
-                await this.executeCommand(thread, command, body);
+                await thread.executeCommand(command, body);
                 return;
             }
         }
