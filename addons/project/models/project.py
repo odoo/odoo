@@ -2062,6 +2062,9 @@ class Task(models.Model):
             self.check_access_rule('write')
             portal_can_write = True
 
+        if 'project_id' in vals:
+            self.env['project.project'].browse(vals['project_id']).check_access_rule('write')
+
         now = fields.Datetime.now()
         if 'parent_id' in vals and vals['parent_id'] in self.ids:
             raise UserError(_("Sorry. You can't set a task as its parent task."))

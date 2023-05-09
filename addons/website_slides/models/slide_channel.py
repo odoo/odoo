@@ -159,6 +159,10 @@ class ChannelUsersRelation(models.Model):
         if mail_mail_values:
             self.env['mail.mail'].sudo().create(mail_mail_values)
 
+    def write(self, vals):
+        if 'channel_id' in vals:
+            self.env['slide.channel'].browse(vals['channel_id']).check_access_rule('write')
+        return super(ChannelUsersRelation, self).write(vals)
 
 class Channel(models.Model):
     """ A channel is a container of slides. """
