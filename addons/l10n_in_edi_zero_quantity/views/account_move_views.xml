@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="invoice_form_inherit_l10n_in_edi" model="ir.ui.view">
+        <field name="name">account.move.form.inherit.l10n.in.edi</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='invoice_line_ids']//field[@name='quantity']" position="after">
+                <field name="l10n_in_edi_is_zero_quantity"/>
+            </xpath>
+            <xpath expr="//field[@name='line_ids']//tree" position="inside">
+                <field name="l10n_in_edi_is_zero_quantity" widget="boolean_toggle" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
