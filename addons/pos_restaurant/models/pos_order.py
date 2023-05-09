@@ -55,6 +55,27 @@ class PosOrder(models.Model):
         return [('state', '=', 'draft'), ('table_id', 'in', table_ids)]
 
     @api.model
+    def remove_from_ui(self, server_ids):
+        tables = self.env['pos.order'].search([('id', 'in', server_ids)]).table_id
+        order_ids = super().remove_from_ui(server_ids)
+        self.send_table_count_notification(tables)
+        return order_ids
+
+    @api.model
+    def create_from_ui(self, orders, draft=False):
+        orders = super().create_from_ui(orders, draft)
+        order_ids = self.env['pos.order'].browse([order['id'] for order in orders])
+        self.send_table_count_notification(order_ids.table_id)
+        return orders
+
+    def send_table_count_notification(self, table_ids):
+        messages = []
+        for config in self.env['pos.config'].search([('floor_ids', 'in', table_ids.floor_id.ids)]):
+            order_count = config.get_tables_order_count_and_printing_changes()
+            messages.append((f'pos_config-{config.id}', 'TABLE_ORDER_COUNT', order_count))
+        self.env['bus.bus']._sendmany(messages)
+
+    @api.model
     def get_table_draft_orders(self, table_ids):
         """Generate an object of all draft orders for the given table.
 

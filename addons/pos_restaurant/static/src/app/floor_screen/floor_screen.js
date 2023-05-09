@@ -65,8 +65,27 @@ export class FloorScreen extends Component {
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
     }
     async onWillStart() {
+        const table = this.pos.globalState.table;
+        if (table) {
+            const orders = this.pos.globalState.get_order_list();
+            const tableOrders = orders.filter(
+                (order) => order.tableId === table.id && !order.finalized
+            );
+            const qtyChange = tableOrders.reduce(
+                (acc, order) => {
+                    const quantityChange = order.getOrderChanges();
+                    const quantitySkipped = order.getOrderChanges(true);
+                    acc.changed += quantityChange.count;
+                    acc.skipped += quantitySkipped.count;
+                    return acc;
+                },
+                { changed: 0, skipped: 0 }
+            );
+
+            table.changes_count = qtyChange.changed;
+            table.skip_changes = qtyChange.skipped;
+        }
         await this.pos.globalState.unsetTable();
-        await this._tableLongpolling();
     }
     onMounted() {
         this.pos.openCashControl();
@@ -78,9 +97,6 @@ export class FloorScreen extends Component {
             this.addFloorRef.el.style.display = "initial";
         }
         this.state.floorMapScrollTop = this.floorMapRef.el.getBoundingClientRect().top;
-        // call _tableLongpolling once then set interval of 5sec.
-
-        this.tableLongpolling = setInterval(this._tableLongpolling.bind(this), 5000);
     }
     onWillUnmount() {
         clearInterval(this.tableLongpolling);
@@ -261,43 +277,6 @@ export class FloorScreen extends Component {
     }
     async _renameFloor(floorId, newName) {
         await this.orm.call("restaurant.floor", "rename_floor", [floorId, newName]);
-    }
-    async _tableLongpolling() {
-        const { globalState } = this.pos;
-        if (globalState.isEditMode) {
-            return;
-        }
-        const result = await this.orm.call(
-            "pos.config",
-            "get_tables_order_count_and_printing_changes",
-            [globalState.config.id]
-        );
-        for (const table of result) {
-            if (!(table.id in globalState.tables_by_id)) {
-                //We enter this condition if, after loading our PoS, a table is deleted on a PoS and not on another.
-                //This will lead in receiving information on orders from a table that we do not have.
-                //If we do not have a table in the PoS but still receive information about it, we reload the tables
-                //from the server.
-                const result = await this.orm.call("pos.session", "get_pos_ui_restaurant_floor", [
-                    [odoo.pos_session_id],
-                ]);
-                if (globalState.config.module_pos_restaurant) {
-                    globalState.floors = result;
-                    globalState.loadRestaurantFloor();
-                }
-            }
-            const table_obj = globalState.tables_by_id[table.id];
-            const unsynced_orders = globalState.getTableOrders(table_obj.id).filter(
-                (o) =>
-                    o.server_id === undefined &&
-                    (o.orderlines.length !== 0 || o.paymentlines.length !== 0) &&
-                    // do not count the orders that are already finalized
-                    !o.finalized
-            );
-            table_obj.order_count = table.orders + unsynced_orders.length;
-            table_obj.changes_count = table.changes;
-            table_obj.skip_changes = table.skip_changes;
-        }
     }
     get activeFloor() {
         return this.state.selectedFloorId
