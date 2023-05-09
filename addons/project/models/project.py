@@ -878,15 +878,18 @@ class Task(models.Model):
         for task in self.with_context(prefetch_fields=False):
             portal_users = task.allowed_user_ids.filtered('share')
             internal_users = task.allowed_user_ids - portal_users
+            user_ids_to_write = set()
+            task_allowed_user_ids = set(task.allowed_user_ids.ids)
             if task.project_id.privacy_visibility == 'followers':
-                task.allowed_user_ids |= task.project_id.allowed_internal_user_ids
-                task.allowed_user_ids -= portal_users
+                user_ids_to_write |= task_allowed_user_ids | set(task.project_id.allowed_internal_user_ids.ids)
             elif task.project_id.privacy_visibility == 'portal':
-                task.allowed_user_ids |= task.project_id.allowed_portal_user_ids
+                user_ids_to_write |= task_allowed_user_ids | set(task.project_id.allowed_portal_user_ids.ids)
             if task.project_id.privacy_visibility != 'portal':
-                task.allowed_user_ids -= portal_users
+                user_ids_to_write -= set(portal_users.ids)
             elif task.project_id.privacy_visibility != 'followers':
-                task.allowed_user_ids -= internal_users
+                user_ids_to_write -= set(internal_users.ids)
+            if user_ids_to_write != task_allowed_user_ids:
+                task.allowed_user_ids = tuple(user_ids_to_write)
 
     @api.depends('create_date', 'date_end', 'date_assign')
     def _compute_elapsed(self):
