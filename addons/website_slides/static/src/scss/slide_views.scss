@@ -17,27 +17,3 @@ table.o_section_list_view tr.o_data_row.o_is_section {
     border-top: 1px solid #BBB;
     border-bottom: 1px solid #BBB;
 }
-
-// Ribbon specific style for channel and attendee kanban
-.o_slide_channel_kanban .o_kanban_renderer {
-    .ribbon {
-        &::before, &::after {
-            display: none;
-        }
-
-        span {
-            padding: 5px;
-            font-size: small;
-            z-index: unset;
-            height: auto;
-        }
-    }
-    .ribbon-top-right {
-        margin-top: -$o-kanban-dashboard-vpadding;
-
-        span {
-            left: 0px;
-            right: 30px;
-        }
-    }
-}
