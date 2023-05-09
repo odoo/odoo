@@ -676,5 +676,21 @@ QUnit.module(
                 ]);
             }
         );
+
+        QUnit.test("subscribe to single notification", async (assert) => {
+            const pyEnv = await startServer();
+            const env = await makeTestEnv({ activateMockServer: true });
+            env.services["bus_service"].start();
+            env.services["bus_service"].subscribe("message", (payload) => {
+                assert.deepEqual({ body: "hello", id: 1 }, payload);
+                assert.step("message");
+            });
+            pyEnv["bus.bus"]._sendone("channel1", "message", {
+                body: "hello",
+                id: 1,
+            });
+            await nextTick();
+            assert.verifySteps(["message"]);
+        });
     }
 );

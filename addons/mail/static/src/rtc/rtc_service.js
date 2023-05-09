@@ -1486,30 +1486,20 @@ export const rtcService = {
     ],
     start(env, services) {
         const rtc = new Rtc(env, services);
-        services["bus_service"].addEventListener("notification", (notifEvent) => {
-            for (const notif of notifEvent.detail) {
-                switch (notif.type) {
-                    case "discuss.channel.rtc.session/peer_notification":
-                        {
-                            const { sender, notifications } = notif.payload;
-                            for (const content of notifications) {
-                                rtc.handleNotification(sender, content);
-                            }
-                        }
-                        break;
-                    case "discuss.channel.rtc.session/ended":
-                        {
-                            const { sessionId } = notif.payload;
-                            if (rtc.state.selfSession?.id === sessionId) {
-                                rtc.endCall();
-                                services.notification.add(
-                                    _t("Disconnected from the RTC call by the server"),
-                                    { type: "warning" }
-                                );
-                            }
-                        }
-                        break;
+        services["bus_service"].subscribe(
+            "discuss.channel.rtc.session/peer_notification",
+            ({ sender, notifications }) => {
+                for (const content of notifications) {
+                    rtc.handleNotification(sender, content);
                 }
+            }
+        );
+        services["bus_service"].subscribe("discuss.channel.rtc.session/ended", ({ sessionId }) => {
+            if (rtc.state.selfSession?.id === sessionId) {
+                rtc.endCall();
+                services.notification.add(_t("Disconnected from the RTC call by the server"), {
+                    type: "warning",
+                });
             }
         });
         return rtc;

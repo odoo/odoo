@@ -12,12 +12,8 @@ export const calendarNotificationService = {
         let nextCalendarNotifTimeout = null;
         const displayedNotifications = new Set();
 
-        bus_service.addEventListener('notification', ({ detail: notifications }) => {
-            for (const { payload, type } of notifications) {
-                if (type === "calendar.alarm") {
-                    displayCalendarNotification(payload);
-                }
-            }
+        bus_service.subscribe("calendar.alarm", (payload) => {
+            displayCalendarNotification(payload);
         });
         bus_service.start();
 
