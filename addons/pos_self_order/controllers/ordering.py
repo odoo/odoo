@@ -324,7 +324,6 @@ class PosSelfOrderController(http.Controller):
     def _get_orderline_price_info(
         self, product_sudo: ProductProduct, item: Dict, pos_config_sudo: PosConfig
     ) -> Dict:
-        """ """
 
         price_extra = (
             self._compute_price_extra(product_sudo, item.get("description"), pos_config_sudo)
@@ -348,9 +347,8 @@ class PosSelfOrderController(http.Controller):
     ) -> float:
         """
         Function that computes the price_extra of a product based on the description.
-        :param product_sudo: The product object.
-        :param description: The description of the product.
-        :return: The price_extra of the product.
+        :param description: The description of the product. ex: "M, Leather"
+                            represents the selected values of the product's attributes.
         """
 
         return sum(
@@ -373,7 +371,6 @@ class PosSelfOrderController(http.Controller):
         # This is because the self order does not have the ability to update orders that were created on the POS,
         # because the app wouldn't know the access token of the order.
 
-        # TODO: there are some fields that are not set
         return {
             "id": order.get("id"),
             "data": {
@@ -385,8 +382,6 @@ class PosSelfOrderController(http.Controller):
                 "lines": order.get("lines"),
                 "statement_ids": [],
                 "pos_session_id": order.get("session_id"),
-                #  FIXME: find out what pricelist_id to use
-                #  'pricelist_id': 1,
                 "partner_id": False,
                 "user_id": request.session.uid,
                 # we only need the digits of the pos_reference, not the whole id, which starts with word "Order"

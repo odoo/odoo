@@ -2,7 +2,8 @@
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.ProductCard" owl="1">
     <!-- TODO: how can a prop have a default value? -->
-        <div t-attf-class="{{props.class or ''}} o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white px-3 py-2 overflow-hidden"
+        <!-- <div t-attf-class="{{props.class or ''}} o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white px-3 py-2 overflow-hidden" -->
+        <div t-attf-class="{{props.class}} o_self_order_item_card position-relative d-flex align-items-start w-100 bg-white px-3 py-2 overflow-hidden"
             t-on-click="() => this.clickOnProduct(props.product)"
             t-ref="currentProductCard">
             

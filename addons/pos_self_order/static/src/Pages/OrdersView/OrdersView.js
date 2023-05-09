@@ -11,7 +11,6 @@ export class OrdersView extends Component {
     static props = [];
     setup() {
         this.selfOrder = useSelfOrder();
-        // this.selfOrder.updateOrders();
         onWillStart(async () => {
             this.selfOrder.updateOrders();
         });
