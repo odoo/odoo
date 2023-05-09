@@ -49,7 +49,7 @@ class AccountMove(models.Model):
         # Also, expense' account moves are expressed in the company currency.
         super()._compute_needed_terms()
         for move in self:
-            if move.expense_sheet_id:
+            if move.expense_sheet_id and move.expense_sheet_id.payment_mode == 'company_account':
                 amount_currency = -sum(move.line_ids.filtered(lambda l: l.display_type != 'payment_term').mapped("amount_currency"))
                 move.needed_terms = {
                     frozendict(
