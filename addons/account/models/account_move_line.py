@@ -2878,7 +2878,11 @@ class AccountMoveLine(models.Model):
 
     def _get_attachment_domains(self):
         self.ensure_one()
-        domains = [[('res_model', '=', 'account.move'), ('res_id', '=', self.move_id.id)]]
+        domains = [[
+            ('res_model', '=', 'account.move'),
+            ('res_id', '=', self.move_id.id),
+            ('res_field', 'in', (False, 'invoice_pdf_report_file')),
+        ]]
         if self.statement_id:
             domains.append([('res_model', '=', 'account.bank.statement'), ('res_id', '=', self.statement_id.id)])
         if self.payment_id:
