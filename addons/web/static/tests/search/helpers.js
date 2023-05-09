@@ -19,13 +19,8 @@ import { notificationService } from "@web/core/notifications/notification_servic
 import { ormService } from "@web/core/orm_service";
 import { popoverService } from "@web/core/popover/popover_service";
 import { registry } from "@web/core/registry";
-import { CustomFavoriteItem } from "@web/search/favorite_menu/custom_favorite_item";
+import { CustomFavoriteItem } from "@web/search/custom_favorite_item/custom_favorite_item";
 import { WithSearch } from "@web/search/with_search/with_search";
-import { FilterMenu } from "@web/search/filter_menu/filter_menu";
-import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
-import { ComparisonMenu } from "@web/search/comparison_menu/comparison_menu";
-import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
-import { SearchBar } from "@web/search/search_bar/search_bar";
 import { getDefaultConfig } from "@web/views/view";
 import { viewService } from "@web/views/view_service";
 import { actionService } from "@web/webclient/actions/action_service";
@@ -408,26 +403,3 @@ export async function toggleActionMenu(el) {
 export async function toggleSearchBarMenu(el) {
     await click(findItem(el, `.o_searchview_dropdown_toggler`));
 }
-
-export class DropDownMenusTestComponent extends Component {
-    get components() {
-        const componentMapping = {
-            filter: FilterMenu,
-            groupBy: GroupByMenu,
-            comparison: ComparisonMenu,
-            favorite: FavoriteMenu,
-        };
-        return (
-            Array.from(this.env.searchModel.searchMenuTypes).map(
-                (comp) => componentMapping[comp]
-            ) || []
-        );
-    }
-}
-DropDownMenusTestComponent.template = xml`
-    <SearchBar/>
-    <t t-foreach="components" t-as="component" t-key="component">
-        <t t-component="component"/>
-    </t>
-`;
-DropDownMenusTestComponent.components = { SearchBar };

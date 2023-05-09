@@ -3,7 +3,7 @@
 import { getFixture, patchWithCleanup, triggerEvent } from "@web/../tests/helpers/utils";
 import { browser } from "@web/core/browser/browser";
 import { registry } from "@web/core/registry";
-import { FavoriteMenu } from "@web/search/favorite_menu/favorite_menu";
+import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { useSetupAction } from "@web/webclient/actions/action_hook";
 import {
     editFavoriteName,
@@ -13,7 +13,6 @@ import {
     saveFavorite,
     setupControlPanelFavoriteMenuRegistry,
     setupControlPanelServiceRegistry,
-    toggleFavoriteMenu,
     toggleSaveFavorite,
     toggleSearchBarMenu,
     validateSearch,
@@ -167,8 +166,8 @@ QUnit.module("Search", (hooks) => {
                 });
             }
         }
-        TestComponent.components = { FavoriteMenu };
-        TestComponent.template = xml`<div><FavoriteMenu/></div>`;
+        TestComponent.components = { SearchBarMenu };
+        TestComponent.template = xml`<div><SearchBarMenu/></div>`;
 
         const comp = await makeWithSearch({
             serverData,
@@ -188,7 +187,7 @@ QUnit.module("Search", (hooks) => {
 
         assert.verifySteps([]);
 
-        await toggleFavoriteMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleSaveFavorite(target);
         await editFavoriteName(target, "aaa");
         await saveFavorite(target);
@@ -378,11 +377,11 @@ QUnit.module("Search", (hooks) => {
                     }
                 },
                 resModel: "foo",
-                Component: FavoriteMenu,
+                Component: SearchBarMenu,
                 searchViewId: false,
             });
 
-            await toggleFavoriteMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleSaveFavorite(target);
             await saveFavorite(target);
         }
@@ -502,7 +501,7 @@ QUnit.module("Search", (hooks) => {
         // await applyFilter(".modal");
         // assert.containsNone(document.body, "tr.o_data_row", "should display 0 records");
         // // Save this search
-        // await toggleFavoriteMenu(".modal");
+        // await toggleSearchBarMenu(".modal");
         // await toggleSaveFavorite(".modal");
         // const filterNameInput = document.querySelector('.o_add_favorite input[type="text"]');
         // assert.isVisible(filterNameInput, "should display an input field for the filter name");
