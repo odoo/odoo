@@ -15,6 +15,9 @@ Allows customers to pay for their orders at a shop, instead of paying online.
         'views/templates.xml',
         'views/delivery_view.xml'
     ],
+    'demo': [
+        'data/demo.xml',
+    ],
     'assets': {
         'web.assets_frontend': [
             'website_sale_picking/static/src/js/checkout_form.js'

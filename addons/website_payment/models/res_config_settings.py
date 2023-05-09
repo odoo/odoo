@@ -49,9 +49,7 @@ class ResConfigSettings(models.TransientModel):
         self.ensure_one()
         if not self.is_stripe_supported_country:
             return False
-        menu = self.env.ref('website.menu_website_website_settings', raise_if_not_found=False)
-        menu_id = menu and menu.id
-        return self.env.company._run_payment_onboarding_step(menu_id=menu_id)
+        return self.env['ir.actions.actions']._for_xml_id('website_payment.action_activate_stripe')
 
     def action_configure_first_provider(self):
         self.ensure_one()
