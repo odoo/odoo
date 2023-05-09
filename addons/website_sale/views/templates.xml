@@ -1981,8 +1981,10 @@
                             <div class="oe_structure clearfix mt-3" id="oe_structure_website_sale_payment_1"/>
 
                             <t t-if="website_sale_order.amount_total">
-                                <div t-if="providers or tokens" id="payment_method" class="mt-3">
+                                <div class="mt-3">
                                     <h3 class="mb24">Pay with </h3>
+                                </div>
+                                <div t-if="providers or tokens" id="payment_method">
                                     <t t-call="payment.checkout">
                                         <t t-set="footer_template_id" t-value="'website_sale.payment_footer'"/>
                                         <t t-set="submit_button_label">Pay Now</t>
@@ -1990,17 +1992,31 @@
                                 </div>
                                 <div t-else="" class="alert alert-warning">
                                     <strong>No suitable payment option could be found.</strong><br/>
-                                    If you believe that it is an error, please contact the website administrator.
+                                    <div t-if="not request.env.is_admin()">
+                                        If you believe that it is an error, please contact the website administrator.
+                                    </div>
+                                    <div class="mt-2" groups="base.group_system">
+                                        <a t-if="request.env.company.country_id.is_stripe_supported_country"
+                                           t-attf-href="/web#action=#{action_activate_stripe_id}"
+                                           role="button"
+                                           class="btn btn-primary"
+                                           t-out="'ACTIVATE STRIPE'"
+                                        />
+                                        <div t-else=""
+                                             class="d-inline"
+                                             title="Stripe Connect is not available in your country, please use another payment provider."
+                                        >
+                                            <button t-out="'ACTIVATE STRIPE'" class="btn btn-primary" disabled="true"/>
+                                        </div>
+                                        <a role="button"
+                                           class="btn-link alert-warning ps-2"
+                                           t-attf-href="/web#action=#{payment_action_id}"
+                                        >
+                                            <strong><i class="oi oi-arrow-right"></i> View alternatives</strong>
+                                        </a>
+                                    </div>
                                 </div>
                             </t>
-
-                            <div t-if="not providers" class="mt-2">
-                                <a role="button" class="btn-link"
-                                    groups="base.group_system"
-                                    t-attf-href="/web#action=#{payment_action_id}">
-                                        <i class="oi oi-arrow-right"></i> Add payment providers
-                                </a>
-                            </div>
                             <div class="js_payment mt-3" t-if="not website_sale_order.amount_total" id="payment_method" name="o_website_sale_free_cart">
                                 <form name="o_wsale_confirm_order" target="_self" action="/shop/payment/validate" method="post">
                                     <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()" t-nocache="The csrf token must always be up to date."/>

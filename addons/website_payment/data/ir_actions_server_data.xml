@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record id="action_activate_stripe" model="ir.actions.server">
+        <field name="name">Activate Stripe</field>
+        <field name="model_id" ref="website_payment.model_payment_provider"/>
+        <field name="state">code</field>
+        <field name="code">
+menu = env.ref('website.menu_website_website_settings', raise_if_not_found=False)
+menu_id = menu and menu.id
+action = env.company._run_payment_onboarding_step(menu_id=menu_id)
+        </field>
+    </record>
+
+</odoo>

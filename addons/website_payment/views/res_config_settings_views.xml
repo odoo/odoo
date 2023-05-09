@@ -10,20 +10,40 @@
                 <block title="Shop - Payment" id="div_website_payment">
                     <setting id="website_payment" string="Activate Payments" help="Support most payment methods; Visa, Mastercard, Maestro, Google Pay, Apple Pay, etc. as well as recurring charges.">
                         <div class="content-group">
-                            <div class="row mt8 ms-4" attrs="{'invisible': [('providers_state', '=', 'other_than_paypal')]}">
+                            <div class="row" attrs="{'invisible': [('providers_state', '=', 'other_than_paypal')]}">
                                 <field name="providers_state" invisible="1"/>
                                 <field name="is_stripe_supported_country" invisible="1"/>
-                                <button attrs="{'invisible': [('is_stripe_supported_country', '=', False)]}"
-                                        name="action_activate_stripe" type="object" string="Activate Stripe" class="btn-primary col-auto"/>
-                                <div attrs="{'invisible': [('is_stripe_supported_country', '=', True)]}" class="col-auto" data-bs-toggle="tooltip" title="Stripe Connect is not available in your country, please use another payment provider.">
-                                    <button string="Activate Stripe" class="btn-primary pe-none" disabled=""
-                                            style="pointer-events: none;"/>
+                                <div class="oe_inline"
+                                     attrs="{'invisible': [('is_stripe_supported_country', '=', False)]}"
+                                >
+                                    <button string="Activate Stripe" name="action_activate_stripe" type="object" class="btn-primary"/>
                                 </div>
-                                <button type="action" name="%(payment.action_payment_provider)d" string="View Alternatives" class="btn-link" icon="oi-arrow-right"/>
+                                <div class="oe_inline"
+                                     title="Stripe Connect is not available in your country, please use another payment provider."
+                                     attrs="{'invisible': [('is_stripe_supported_country', '=', True)]}"
+                                >
+                                    <button string="Activate Stripe" class="btn-primary" disabled=""/>
+                                </div>
+                                <button type="action"
+                                        name="%(payment.action_payment_provider)d"
+                                        string="View Alternatives"
+                                        class="btn-link oe_inline"
+                                        icon="oi-arrow-right"
+                                />
                             </div>
-                            <div class="row mt8 ms-4" attrs="{'invisible': [('providers_state', '!=', 'other_than_paypal')]}">
-                                <button name="action_configure_first_provider" type="object" class="btn-primary col-auto"><field name="first_provider_label" nolabel="1" class="oe_inline"/></button>
-                                <button type="action" name="%(payment.action_payment_provider)d" string="View other providers " class="btn-link col-auto" icon="oi-arrow-right"/>
+                            <div attrs="{'invisible': [('providers_state', '!=', 'other_than_paypal')]}">
+                                <button name="action_configure_first_provider"
+                                        type="object"
+                                        class="btn-primary col-auto"
+                                >
+                                    <field name="first_provider_label" nolabel="1" class="oe_inline"/>
+                                </button>
+                                <button type="action"
+                                        name="%(payment.action_payment_provider)d"
+                                        string="View other providers "
+                                        class="btn-link col-auto"
+                                        icon="oi-arrow-right"
+                                />
                             </div>
                         </div>
                     </setting>
