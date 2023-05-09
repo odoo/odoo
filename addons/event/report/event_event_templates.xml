@@ -127,6 +127,7 @@
                             <t t-call="event.event_report_template_formatted_event_address"/>
                         </div>
                         <div t-if="not responsive_html" t-field="event.ticket_instructions" class="o_event_full_page_extra_instructions pt-3"></div>
+
                         <div class="row pt-3 g-0">
                             <h5 class="col-6" t-if="attendee" t-field="attendee.name"></h5>
                             <h5 class="col-6" t-elif="not attendee"><span>John Doe</span></h5>

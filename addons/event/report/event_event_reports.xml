@@ -93,5 +93,13 @@
         <field name="report_name">event.event_registration_report_template_responsive_html_ticket</field>
         <field name="report_file">event.event_registration_report_template_responsive_html_ticket</field>
     </record>
+    
+    <record id="action_report_event_registration_simplified_ticket" model="ir.actions.report">
+        <field name="name">Simplified Full Page Ticket</field>
+        <field name="model">event.registration</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">event.event_registration_report_template_simplified_ticket</field>
+        <field name="report_file">event.event_registration_report_template_simplified_ticket</field>
+    </record>
 
 </odoo>
