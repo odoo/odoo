@@ -20,6 +20,7 @@ export class StateSelectionField extends Component {
         ...standardFieldProps,
         showLabel: { type: Boolean, optional: true },
         withCommand: { type: Boolean, optional: true },
+        autosave: { type: Boolean, optional: true },
     };
     static defaultProps = {
         showLabel: true,
@@ -75,7 +76,9 @@ export class StateSelectionField extends Component {
 
     async updateRecord(value) {
         await this.props.record.update({ [this.props.name]: value });
-        return this.props.record.save();
+        if (this.props.autosave) {
+            return this.props.record.save();
+        }
     }
 }
 
@@ -86,6 +89,7 @@ export const stateSelectionField = {
     extractProps: ({ options, viewType }) => ({
         showLabel: viewType === "list" && !options.hide_label,
         withCommand: viewType === "form",
+        autosave: "autosave" in options ? !!options.autosave : true,
     }),
 };
 
