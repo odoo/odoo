@@ -80,7 +80,12 @@
                                 </div>
                                 <div class="col-lg-8 p-4">
                                     <h3 t-esc="event.name" />
-                                    <a class="btn btn-primary mb-2" t-attf-href="/event/#{ slug(event) }">Go to Event</a>
+                                    <t t-set="attendee_ids" t-value="attendee_ids_per_event.get(event, [])"/>
+                                    <a t-if="order.state == 'sale' and attendee_ids" class="btn btn-primary text-white mb-2 me-2" target="_blank"
+                                       t-attf-href="/event/{{ event.id }}/my_tickets?registration_ids={{ attendee_ids }}&amp;tickets_hash={{ event._get_tickets_access_hash(attendee_ids) }}">
+                                        Download Tickets <i class="ms-1 fa fa-download"/>
+                                    </a>
+                                    <a class="mb-2" t-attf-href="/event/#{ slug(event) }">Go to Event</a>
                                 </div>
                             </div>
                         </div>

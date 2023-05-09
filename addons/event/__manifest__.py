@@ -59,6 +59,7 @@ Key Features
         'web.report_assets_common': [
             '/event/static/src/scss/event_foldable_badge_report.scss',
             '/event/static/src/scss/event_full_page_ticket_report.scss',
+            '/event/static/src/scss/event_full_page_ticket_responsive_html_report.scss',
         ],
         'web.report_assets_pdf': [
             '/event/static/src/scss/event_full_page_ticket_report_pdf.scss',
