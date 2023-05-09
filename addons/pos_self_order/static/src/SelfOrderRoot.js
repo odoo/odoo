@@ -9,9 +9,10 @@ import { ProductMainView } from "@pos_self_order/Pages/ProductMainView/ProductMa
 import { CartView } from "@pos_self_order/Pages/CartView/CartView";
 import { ProductList } from "@pos_self_order/Pages/ProductList/ProductList";
 import { OrdersView } from "@pos_self_order/Pages/OrdersView/OrdersView";
-import { useSelfOrder } from "@pos_self_order/SelfOrderService";
 import { Router } from "@pos_self_order/router";
 import { MainComponentsContainer } from "@web/core/main_components_container";
+import { useSelfOrder } from "./SelfOrderService";
+import { Loading } from "@pos_self_order/Components/Loading/Loading";
 
 class SelfOrderRoot extends Component {
     static template = "pos_self_order.SelfOrderRoot";
@@ -24,6 +25,7 @@ class SelfOrderRoot extends Component {
         Router,
         CartView,
         OrdersView,
+        Loading,
         MainComponentsContainer,
     };
     /*
@@ -40,14 +42,6 @@ class SelfOrderRoot extends Component {
     */
     setup() {
         this.selfOrder = useSelfOrder();
-        if (!this.selfOrder.has_active_session && this.selfOrder.table) {
-            this.selfOrder.notification.add(
-                _t(
-                    "The restaurant is closed. You can still view the menu, but you will not be able to order."
-                ),
-                { type: "warning" }
-            );
-        }
     }
 }
 

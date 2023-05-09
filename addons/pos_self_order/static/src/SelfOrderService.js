@@ -24,6 +24,7 @@ export class SelfOrder {
             orders: JSON.parse(localStorage.getItem("orders")) ?? [],
             currentlyEditedOrderLine: null,
             page: null,
+            loading: false,
         });
         // we create a set with all the tags that are present in the menu
         this.tagList = new Set(this.products.map((product) => product.tag));
@@ -41,6 +42,14 @@ export class SelfOrder {
             },
             [this]
         );
+        if (!this.has_active_session) {
+            this.notification.add(
+                _t(
+                    "The restaurant is closed. You can still view the menu, but you will not be able to order."
+                ),
+                { type: "warning", sticky: true }
+            );
+        }
     }
     setPage(page) {
         this.page = page;
@@ -181,6 +190,14 @@ export class SelfOrder {
             description: orderLine.description,
             customer_note: orderLine.customer_note,
         }));
+    }
+
+    async updateOrders() {
+        const old_orders = this.orders;
+        // we set this to null so we have a way to see in the template
+        // that we are still loading the orders
+        this.orders = null;
+        this.orders = await this.getUpdatedOrdersFromServer(old_orders);
     }
 
     /**
