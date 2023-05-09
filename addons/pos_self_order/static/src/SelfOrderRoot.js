@@ -12,7 +12,6 @@ import { OrdersView } from "@pos_self_order/Pages/OrdersView/OrdersView";
 import { Router } from "@pos_self_order/router";
 import { MainComponentsContainer } from "@web/core/main_components_container";
 import { useSelfOrder } from "./SelfOrderService";
-import { Loading } from "@pos_self_order/Components/Loading/Loading";
 
 class SelfOrderRoot extends Component {
     static template = "pos_self_order.SelfOrderRoot";
@@ -25,7 +24,6 @@ class SelfOrderRoot extends Component {
         Router,
         CartView,
         OrdersView,
-        Loading,
         MainComponentsContainer,
     };
     /*

@@ -24,7 +24,6 @@ export class SelfOrder {
             orders: JSON.parse(localStorage.getItem("orders")) ?? [],
             currentlyEditedOrderLine: null,
             page: null,
-            loading: false,
         });
         // we create a set with all the tags that are present in the menu
         this.tagList = new Set(this.products.map((product) => product.tag));

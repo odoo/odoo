@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="pos_self_order.SelfOrderRoot" owl="1">
-        <Loading t-if="selfOrder.loading"/>
-        <Router t-else="">
+        <Router>
             <t t-set-slot="default">
                 <LandingPage/>
             </t>
