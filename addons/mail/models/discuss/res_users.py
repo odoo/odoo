@@ -47,3 +47,10 @@ class ResUsers(models.Model):
         current_cm.filtered(
             lambda cm: (cm.channel_id.channel_type == "channel" and cm.channel_id.group_public_id)
         ).unlink()
+
+    def _init_messaging(self):
+        self.ensure_one()
+        return {
+            'channels': self.partner_id._get_channels_as_member().channel_info(),
+            **super()._init_messaging(),
+        }
