@@ -621,7 +621,7 @@ class MailMail(models.Model):
                 raise
             except Exception as e:
                 failure_reason = tools.ustr(e)
-                _logger.exception('failed sending mail (id: %s) due to %s', mail.id, failure_reason)
+                _logger.warning('failed sending mail (id: %s) due to %s', mail.id, failure_reason, exc_info=True)
                 mail.write({'state': 'exception', 'failure_reason': failure_reason})
                 mail._postprocess_sent_message(success_pids=success_pids, failure_reason=failure_reason, failure_type='unknown')
                 if raise_exception:
