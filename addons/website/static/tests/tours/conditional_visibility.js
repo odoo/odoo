@@ -28,6 +28,18 @@ function checkEyeIcon(snippetName, visible) {
             run: () => {}, // it is a check
         };
 }
+function checkEyesIconAfterSave(footerIsHidden = true) {
+    const eyeIconChecks = [
+        checkEyeIcon("Header", false),
+        checkEyeIcon("Text - Image", true),
+        checkEyeIcon("Popup", false),
+        checkEyeIcon("Banner", true),
+    ];
+    if (footerIsHidden) {
+        eyeIconChecks.push(checkEyeIcon("Footer", false));
+    }
+    return eyeIconChecks;
+}
 wTourUtils.registerWebsitePreviewTour('conditional_visibility_1', {
     edition: true,
     url: '/',
@@ -122,9 +134,47 @@ checkEyeIcon("Header", false),
 checkEyeIcon("Banner", false),
 ...wTourUtils.clickOnSave(),
 ...wTourUtils.clickOnEditAndWaitEditMode(),
-checkEyeIcon("Header", false),
-checkEyeIcon("Text - Image", true),
-checkEyeIcon("Popup", false),
-checkEyeIcon("Banner", true),
-checkEyeIcon("Footer", false),
+...checkEyesIconAfterSave(),
+]);
+
+wTourUtils.registerWebsitePreviewTour("conditional_visibility_4", {
+    edition: true,
+    test: true,
+    url: "/",
+},
+[
+// Click on the "Text-Image" snippet.
+wTourUtils.clickOnSnippet(snippets[0]),
+{
+    content: "Click on the 'move down' option",
+    trigger: "iframe we-button.o_we_user_value_widget.fa-angle-down",
+},
+...checkEyesIconAfterSave(),
+{
+    content: "Check the order on the 'Invisible Elements' panel",
+    trigger: ".o_we_invisible_el_panel div:nth-child(3):contains('Banner')",
+    run: () => {}, // it is a check
+},
+{
+    content: "Toggle the visibility of the Footer",
+    trigger: ".o_we_invisible_el_panel .o_we_invisible_entry:contains('Footer')",
+},
+{
+    content: "Check that the footer is visible",
+    trigger: "iframe #wrapwrap footer",
+    run: () => {}, // it is a check
+},
+// Click on the "Banner" snippet.
+wTourUtils.clickOnSnippet(snippets[1]),
+{
+    content: "Drag the 'Banner' snippet to the end of the page",
+    trigger: "iframe .o_overlay_move_options .ui-draggable-handle",
+    run: "drag_and_drop iframe #wrapwrap footer",
+},
+...checkEyesIconAfterSave(false),
+{
+    content: "Check the order on the 'Invisible Elements' panel",
+    trigger: ".o_we_invisible_el_panel div:nth-child(3):contains('Text - Image')",
+    run: () => {}, // it is a check
+},
 ]);
