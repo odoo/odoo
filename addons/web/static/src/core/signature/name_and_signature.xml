@@ -53,7 +53,7 @@
                 <div class="card-header">
                     <div class="row g-0">
                         <div t-if="!props.noInputName or defaultName" class="col-auto">
-                            <a role="button" href="#" t-on-click.prevent="() => this.setMode('auto')" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ state.signMode === 'auto' ? 'active': '' }}">
+                            <a role="button" href="#" t-on-click.prevent="onClickSignAuto" t-attf-class="o_web_sign_auto_button me-2 btn btn-light {{ state.signMode === 'auto' ? 'active': '' }}">
                                 Auto
                             </a>
                         </div>
@@ -63,20 +63,14 @@
                             </a>
                         </div>
                         <div class="col-auto">
-                            <a role="button" href="#" t-on-click.prevent="() => this.setMode('load')" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ state.signMode === 'load' ? 'active': '' }}">
+                            <a role="button" href="#" t-on-click.prevent="onClickSignLoad" t-attf-class="o_web_sign_load_button me-2 btn btn-light {{ state.signMode === 'load' ? 'active': '' }}">
                                 Load
                             </a>
                         </div>
-                        <div t-if="state.signMode === 'draw'" t-attf-class="o_web_sign_draw_clear col-auto ms-auto">
-                            <a role="button" href="#" t-on-click.prevent="onClickSignDrawClear" class="btn btn-link">
-                                Clear
-                            </a>
-                        </div>
 
-                        <Dropdown t-if="state.signMode === 'auto'" class="'o_web_sign_auto_select_style col-auto ms-auto'" togglerClass="'btn btn-link'">
-                            <t t-set-slot="toggler">
-                                    Style
-                            </t>
+                        <div class="col-auto division ms-auto"></div>
+
+                        <Dropdown t-if="state.signMode === 'auto'" class="'o_web_sign_auto_select_style col-auto'" togglerClass="'btn btn-link fa fa-font'">
                             <t t-foreach="fonts" t-as="font" t-key="font_index">
                                 <DropdownItem onSelected="() => this.onSelectFont(font_index)">
                                     <img class="img-fluid" t-att-src="getSVGTextFont(font)"/>
@@ -84,8 +78,14 @@
                             </t>
                         </Dropdown>
 
+                        <div t-if="state.signMode === 'draw'" t-attf-class="o_web_sign_draw_clear col-auto">
+                            <a role="button" href="#" t-on-click.prevent="onClickSignDrawClear" class="btn btn-link fa fa-trash"/>
+                        </div>
+
                         <div t-if="state.signMode === 'load'" class="o_web_sign_load_file col-auto">
-                            <input t-ref="signInputLoad" type="file" role="button" name="files[]" class="btn btn-link py-0" t-on-change="onChangeSignLoadInput"/>
+                            <button type="button" id="loadFileXml" t-on-click="uploadFile"
+                                class="btn btn-link fa fa-upload" />
+                            <input t-ref="signInputLoad" type="file" role="button" name="files[]" class="d-none" t-on-change="onChangeSignLoadInput"/>
                         </div>
                     </div>
                 </div>
