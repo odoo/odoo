@@ -381,8 +381,8 @@
                                     <field name="allow_milestones" invisible="1"/>
                                     <field name="sequence" widget="handle"/>
                                     <field name="id" optional="hide"/>
-                                    <field name="priority" widget="priority" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1" options="{'hide_label': 1}"/>
+                                    <field name="priority" widget="priority" nolabel="1" options="{'autosave': False}"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1" options="{'hide_label': 1, 'autosave':  False}"/>
                                     <field name="name" widget="name_with_subtask_count"/>
                                     <field name="subtask_count" invisible="1"/>
                                     <field name="closed_subtask_count" invisible="1"/>
@@ -419,8 +419,8 @@
                                     <field name="subtask_count" invisible="1"/>
                                     <field name="closed_subtask_count" invisible="1"/>
                                     <field name="id" optional="hide"/>
-                                    <field name="priority" widget="priority" nolabel="1"/>
-                                    <field name="state" widget="project_task_state_selection" nolabel="1"/>
+                                    <field name="priority" widget="priority" nolabel="1" options="{'autosave': False}"/>
+                                    <field name="state" widget="project_task_state_selection" nolabel="1" options="{'autosave': False}"/>
                                     <field name="name" widget="name_with_subtask_count"/>
                                     <field name="project_id" optional="hide" options="{'no_open': 1}" />
                                     <field name="milestone_id"
