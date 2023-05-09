@@ -13,6 +13,16 @@ let env;
 let target;
 let props;
 
+const getNameAndSignatureButtonNames = (target) => {
+    return [...target.querySelectorAll(".card-header .col-auto")].reduce((names, el) => {
+        const text = el.textContent.trim();
+        if (text) {
+            names.push(text);
+        }
+        return names;
+    }, []);
+};
+
 QUnit.module("Components", ({ beforeEach }) => {
     beforeEach(async () => {
         const mockRPC = async (route, args) => {
@@ -37,11 +47,11 @@ QUnit.module("Components", ({ beforeEach }) => {
         const defaultName = "Don Toliver";
         props.signature.name = defaultName;
         await mount(NameAndSignature, target, { env, props });
-        assert.deepEqual(
-            [...target.querySelectorAll(".card-header .col-auto")].map((el) =>
-                el.textContent.trim()
-            ),
-            ["Auto", "Draw", "Load", "Style"]
+        assert.deepEqual(getNameAndSignatureButtonNames(target), ["Auto", "Draw", "Load"]);
+        assert.containsOnce(
+            target,
+            ".o_web_sign_auto_select_style",
+            "should show font selection dropdown"
         );
         assert.containsOnce(target, ".card-header .active");
         assert.strictEqual(target.querySelector(".card-header .active").textContent.trim(), "Auto");
@@ -49,26 +59,14 @@ QUnit.module("Components", ({ beforeEach }) => {
         assert.strictEqual(target.querySelector(".o_web_sign_name_group input").value, defaultName);
 
         await click(target, ".o_web_sign_draw_button");
-        assert.deepEqual(
-            [...target.querySelectorAll(".card-header .col-auto")].map((el) =>
-                el.textContent.trim()
-            ),
-            ["Auto", "Draw", "Load", "Clear"]
-        );
+        assert.deepEqual(getNameAndSignatureButtonNames(target), ["Auto", "Draw", "Load"]);
+        assert.containsOnce(target, ".o_web_sign_draw_clear");
         assert.containsOnce(target, ".card-header .active");
         assert.strictEqual(target.querySelector(".card-header .active").textContent.trim(), "Draw");
 
         await click(target, ".o_web_sign_load_button");
-        assert.deepEqual(
-            [...target.querySelectorAll(".card-header .col-auto")].map((el) =>
-                el.textContent.trim()
-            ),
-            ["Auto", "Draw", "Load", ""]
-        );
-        assert.hasClass(
-            target.querySelectorAll(".card-header .col-auto")[3],
-            "o_web_sign_load_file"
-        );
+        assert.deepEqual(getNameAndSignatureButtonNames(target), ["Auto", "Draw", "Load"]);
+        assert.containsOnce(target, ".o_web_sign_load_file");
         assert.containsOnce(target, ".card-header .active");
         assert.strictEqual(target.querySelector(".card-header .active").textContent.trim(), "Load");
     });
@@ -81,12 +79,8 @@ QUnit.module("Components", ({ beforeEach }) => {
 
         await editInput(target, ".o_web_sign_name_group input", "plop");
         await nextTick();
-        assert.deepEqual(
-            [...target.querySelectorAll(".card-header .col-auto")].map((el) =>
-                el.textContent.trim()
-            ),
-            ["Auto", "Draw", "Load", "Style"]
-        );
+        assert.deepEqual(getNameAndSignatureButtonNames(target), ["Auto", "Draw", "Load"]);
+        assert.containsOnce(target, ".o_web_sign_auto_select_style");
         assert.strictEqual(target.querySelector(".card-header .active").textContent.trim(), "Auto");
         assert.containsOnce(target, ".o_web_sign_name_group input");
         assert.strictEqual(target.querySelector(".o_web_sign_name_group input").value, "plop");
@@ -106,12 +100,8 @@ QUnit.module("Components", ({ beforeEach }) => {
             };
             props.signature.name = defaultName;
             await mount(NameAndSignature, target, { env, props });
-            assert.deepEqual(
-                [...target.querySelectorAll(".card-header .col-auto")].map((el) =>
-                    el.textContent.trim()
-                ),
-                ["Auto", "Draw", "Load", "Style"]
-            );
+            assert.deepEqual(getNameAndSignatureButtonNames(target), ["Auto", "Draw", "Load"]);
+            assert.containsOnce(target, ".o_web_sign_auto_select_style");
             assert.containsOnce(target, ".card-header .active");
             assert.strictEqual(
                 target.querySelector(".card-header .active").textContent.trim(),
@@ -128,12 +118,8 @@ QUnit.module("Components", ({ beforeEach }) => {
                 noInputName: true,
             };
             await mount(NameAndSignature, target, { env, props });
-            assert.deepEqual(
-                [...target.querySelectorAll(".card-header .col-auto")].map((el) =>
-                    el.textContent.trim()
-                ),
-                ["Draw", "Load", "Clear"]
-            );
+            assert.deepEqual(getNameAndSignatureButtonNames(target), ["Draw", "Load"]);
+            assert.containsOnce(target, ".o_web_sign_draw_clear");
             assert.containsOnce(target, ".card-header .active");
             assert.strictEqual(
                 target.querySelector(".card-header .active").textContent.trim(),
