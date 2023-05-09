@@ -12,13 +12,12 @@ import {
     makeWithSearch,
     setupControlPanelServiceRegistry,
     switchView,
-    toggleFilterMenu,
+    toggleSearchBarMenu,
     toggleMenuItem,
 } from "@web/../tests/search/helpers";
-import { createWebClient, doAction } from "@web/../tests/webclient/helpers";
+import { createWebClient, doAction }  from "@web/../tests/webclient/helpers";
 import { registry } from "@web/core/registry";
-import { FilterMenu } from "@web/search/filter_menu/filter_menu";
-import { GroupByMenu } from "@web/search/group_by_menu/group_by_menu";
+import { SearchBarMenu } from "@web/search/search_bar_menu/search_bar_menu";
 import { SearchPanel } from "@web/search/search_panel/search_panel";
 
 import { Component, xml } from "@odoo/owl";
@@ -122,12 +121,11 @@ function makeTestComponent({ onWillStart, onWillUpdateProps } = {}) {
         }
     }
 
-    TestComponent.components = { FilterMenu, GroupByMenu, SearchPanel };
+    TestComponent.components = { SearchBarMenu, SearchPanel };
     TestComponent.template = xml`
         <div class="o_test_component">
             <SearchPanel t-if="env.searchModel.display.searchPanel" />
-            <FilterMenu />
-            <GroupByMenu />
+            <SearchBarMenu />
         </div>`;
 
     return { TestComponent, getDomain: () => domain };
@@ -960,7 +958,7 @@ QUnit.module("Search", (hooks) => {
         );
         assert.containsN(target, ".o_search_panel_category_value", 5);
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, "True Domain");
 
         assert.hasClass(
@@ -1083,7 +1081,7 @@ QUnit.module("Search", (hooks) => {
         // Case 2: search domain changed so we wait for the search panel once again
         promise = makeDeferred();
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, 0);
 
         assert.verifySteps([]);
@@ -1285,7 +1283,7 @@ QUnit.module("Search", (hooks) => {
         // trigger a reload and delay the get_filter
         promise = makeDeferred();
 
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, 0);
 
         assert.deepEqual(getDomain(), []);
@@ -1434,7 +1432,7 @@ QUnit.module("Search", (hooks) => {
             assert.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
 
             // reload with another domain, so the filters should be reloaded
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, 0);
 
             assert.verifySteps(["search_panel_select_multi_range"]);
@@ -1476,7 +1474,7 @@ QUnit.module("Search", (hooks) => {
             assert.verifySteps(["search_panel_select_range", "search_panel_select_multi_range"]);
 
             // reload with another domain, so the filters should be reloaded
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, 0);
 
             assert.verifySteps(["search_panel_select_multi_range"]);
@@ -1533,7 +1531,7 @@ QUnit.module("Search", (hooks) => {
         ]);
 
         // reload with another domain, so the categories 'state' and 'company_id' should be reloaded
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, 0);
 
         assert.verifySteps(["search_panel_select_range", "state"]);
@@ -1593,7 +1591,7 @@ QUnit.module("Search", (hooks) => {
         assert.deepEqual(getCategoriesContent(target), ["All", "ABC", "DEF", "GHI"]);
 
         // reload with another domain, so the category 'state' should be reloaded
-        await toggleFilterMenu(target);
+        await toggleSearchBarMenu(target);
         await toggleMenuItem(target, 0);
 
         assert.verifySteps([]);
@@ -3322,7 +3320,7 @@ QUnit.module("Search", (hooks) => {
             assert.verifySteps(["search_panel_select_range"]);
 
             // select DEF in filter menu
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "DEF");
 
             assert.verifySteps(["search_panel_select_range"]);
@@ -3373,7 +3371,7 @@ QUnit.module("Search", (hooks) => {
             assert.deepEqual(getCategoriesContent(target), ["All", "ABC", "DEF", "GHI"]);
 
             // select DEF in filter menu --> the external domain changes --> the values should be updated
-            await toggleFilterMenu(target);
+            await toggleSearchBarMenu(target);
             await toggleMenuItem(target, "DEF");
 
             assert.verifySteps(["search_panel_select_range"]);

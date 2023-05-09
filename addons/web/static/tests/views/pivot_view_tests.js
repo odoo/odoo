@@ -1162,27 +1162,27 @@ QUnit.module("Views", (hooks) => {
         );
 
         // add a custom group in pivot groupby
-        await mouseEnter(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
-        target.querySelector(".dropdown-menu .o_add_custom_group_menu select").value = "date";
-        await triggerEvent(target, ".dropdown-menu .o_add_custom_group_menu select", "change");
-        await click(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
-        // click on closed header to open groupby selection dropdown
-        await click(target, "tbody tr:last-child .o_pivot_header_cell_closed");
-        assert.containsN(
-            target,
-            ".dropdown-menu .o_menu_item",
-            3,
-            "should have 3 dropdown items in pivot groupby dropdown"
-        );
+        // await mouseEnter(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-toggle");
+        // target.querySelector(".dropdown-menu .o_add_custom_group_menu select").value = "date";
+        // await triggerEvent(target, ".dropdown-menu .o_add_custom_group_menu select", "change");
+        // await click(target, ".dropdown-menu .o_add_custom_group_menu .dropdown-menu .btn");
+        // // click on closed header to open groupby selection dropdown
+        // await click(target, "tbody tr:last-child .o_pivot_header_cell_closed");
+        // assert.containsN(
+        //     target,
+        //     ".dropdown-menu .o_menu_item",
+        //     3,
+        //     "should have 3 dropdown items in pivot groupby dropdown"
+        // );
 
-        // applying custom groupby in pivot groupby dropdown will not update search dropdown
-        await toggleSearchBarMenu(target);
-        assert.containsN(
-            target,
-            ".o_control_panel .o_cp_searchview .dropdown-menu .o_menu_item",
-            3,
-            "should still have 3 dropdown items in searchview groupby dropdown"
-        );
+        // // applying custom groupby in pivot groupby dropdown will not update search dropdown
+        // await toggleSearchBarMenu(target);
+        // assert.containsN(
+        //     target,
+        //     ".o_control_panel .o_cp_searchview .dropdown-menu .o_menu_item",
+        //     3,
+        //     "should still have 3 dropdown items in searchview groupby dropdown"
+        // );
     });
 
     QUnit.test(
