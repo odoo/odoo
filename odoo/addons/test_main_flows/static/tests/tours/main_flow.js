@@ -873,7 +873,7 @@ stepUtils.mobileModifier(stepUtils.autoExpandMoreButtons('.o_control_panel .brea
 }, {
     edition: "community",
     content: "wait for payment registration to succeed",
-    trigger: "span.bg-success:contains('Paid')",
+    trigger: "span.text-bg-success:contains('Paid')",
     auto: true,
     run() {}
 },{
