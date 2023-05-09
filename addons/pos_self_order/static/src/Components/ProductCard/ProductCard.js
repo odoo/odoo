@@ -11,8 +11,10 @@ export class ProductCard extends Component {
     setup() {
         this.selfOrder = useSelfOrder();
         useForwardRefToParent("currentProductCard");
+        this.qtyInCart = !this.props.orderLine && this.qtyInCart();
     }
-    clickOnProduct(product) {
+    clickOnProduct() {
+        const product = this.props.product;
         if (!this.canOpenProductMainView(product)) {
             return;
         }
@@ -36,5 +38,18 @@ export class ProductCard extends Component {
         return cart
             .filter((x) => x.product_id === product.product_id)
             .reduce((sum, x) => sum + x.qty, 0);
+    }
+    getQtyInCartString() {
+        return `${this.props.orderLine.qty} x ${this.selfOrder.formatMonetary(
+            this.props.product.price_info.list_price +
+                (this.props.orderLine?.price_extra.list_price || 0)
+        )}`;
+    }
+    getTotalPriceString() {
+        return `${this.selfOrder.formatMonetary(
+            (this.props.orderLine?.qty || 1) *
+                (this.props.product.price_info.list_price +
+                    (this.props.orderLine?.price_extra.list_price || 0))
+        )}`;
     }
 }
