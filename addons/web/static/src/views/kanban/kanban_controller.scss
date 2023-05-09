@@ -36,6 +36,17 @@
     --KanbanColumn__highlight-border: #{$o-action};
 
     --o-view-nocontent-zindex: 1;
+
+    // ----------------------------------------------------------------------------
+    // Inner components contextual adaptations
+
+    --Ribbon-font-size: #{$font-size-sm};
+    --Ribbon-gap-top: calc(var(--KanbanRecord-padding-v) * -1 - #{$border-width});
+    --Ribbon-gap-right: 0;
+    --Ribbon-wrapper-width: 6.5rem;
+    --Ribbon-height:  calc(var(--Ribbon-font-size) * 2);
+    --Ribbon-z-index: 0;
+
     // ----------------------------------------------------------------------------
 
     border-top: $border-width solid var(--Kanban-background);

@@ -241,6 +241,9 @@
                                       o_survey_kanban_card #{record.certification.raw_value ? 'o_survey_kanban_card_certification' : ''}">
                         <!-- displayed in ungrouped mode -->
                         <div class="o_survey_kanban_card_ungrouped row mx-0">
+                            <widget name="web_ribbon" title="Archived"
+                                bg_color="text-bg-danger"
+                                attrs="{'invisible': [('active', '=', True)]}"/>
                             <div class="col-lg-2 col-sm-8 py-0 my-2 my-lg-0 col-12">
                                 <div class="d-flex flex-grow-1 flex-column my-0 my-lg-2">
                                     <span class="fw-bold"><field name="title"/></span>
@@ -324,9 +327,6 @@
                                     End Live Session
                                 </button>
                             </div>
-                            <widget name="web_ribbon" title="Archived"
-                                bg_color="text-bg-danger"
-                                attrs="{'invisible': [('active', '=', True)]}"/>
                         </div>
                         <!-- displayed in grouped mode -->
                         <div class="o_survey_kanban_card_grouped">
@@ -356,7 +356,7 @@
                                                 <a name="action_survey_user_input_certified" type="object" class="d-flex flex-column align-items-center">
                                                     <span class="fw-bold"> <t t-esc="Math.round(record.success_ratio.raw_value)"></t> %</span>
                                                     <span class="text-muted" >Success</span>
-                                                </a> 
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
