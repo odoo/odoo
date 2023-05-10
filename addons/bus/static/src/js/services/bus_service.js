@@ -82,6 +82,8 @@ var BusService =  CrossTab.extend(ServicesMixin, {
                 }
             }
         } else {
+            options.message = _.unescape(options.message)
+            options.title = _.unescape(options.title)
             this.displayNotification(options);
             if (this.isMasterTab()) {
                 this._beep();
