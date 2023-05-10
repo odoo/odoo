@@ -516,6 +516,38 @@ class TestFields(TransactionCaseWithUserDemo):
         record.foo = "Ho"
         self.assertEqual(record.baz, "<[Ho]>")
 
+    def test_12_unlink_cascade_active_store(self):
+        """ Test that `unlink` on many records doesn't raise a RecursionError
+        with a stored related `active` field.
+        """
+        message = self.env['test_new_api.message'].create({
+            'active': False,
+        })
+        self.env['test_new_api.emailmessage'].create(
+            [{'message': message.id}] * 101,
+        )
+        message.unlink()
+
+    def test_12_unlink_cascade_ir_rule_using_related(self):
+        """ Test that `unlink` on many records doesn't raise a RecursionError
+        when there is an ir.rule with a stored related field to compute.
+        """
+        message = self.env['test_new_api.message'].create({
+            'active': False,
+        })
+        self.env['test_new_api.emailmessage'].create(
+            [{'message': message.id}] * 101,
+        )
+
+        # Create an ir.rule, which forces to flush field 'active'
+        self.env['ir.rule'].create({
+            'model_id': self.env['ir.model']._get_id('test_new_api.emailmessage'),
+            'groups': [self.env.ref('base.group_user').id],
+            'domain_force': str([('active', '=', False)]),
+        })
+
+        message.with_user(self.user_demo).unlink()
+
     def test_12_dynamic_depends(self):
         Model = self.registry['test_new_api.compute.dynamic.depends']
         self.assertEqual(self.registry.field_depends[Model.full_name], ())

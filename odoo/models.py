@@ -6186,16 +6186,7 @@ class BaseModel(metaclass=MetaModel):
             # do not force recomputation on new records; those will be
             # recomputed by accessing the field on the records
             records = records.filtered('id')
-            try:
-                field.recompute(records)
-            except MissingError:
-                existing = records.exists()
-                field.recompute(existing)
-                # mark the field as computed on missing records, otherwise
-                # they remain forever in the todo list, and lead to an
-                # infinite loop...
-                for f in records.pool.field_computed[field]:
-                    self.env.remove_to_compute(f, records - existing)
+            field.recompute(records)
         else:
             self.env.cache.invalidate([(field, records._ids)])
             self.env.remove_to_compute(field, records)
