@@ -209,11 +209,38 @@ class AccountChartTemplate(models.AbstractModel):
         - tax tags
         - fiscal position mappings linked to new records
         """
+        def filter_used_ref(target_model, data):
+            def find_refs(target_model, data):
+                refs = set()
+                for model_name, records in data.items():
+                    _fields = self.env[model_name]._fields
+                    for record in records.values():
+                        for fname, value in record.items():
+                            field = _fields[fname]
+                            if field.type == 'many2one' and field.comodel_name == target_model:
+                                refs.add(value)
+                            if field.type in ('one2many', 'many2many'):
+                                for command, _id, subrec in value:
+                                    if command == Command.CREATE:
+                                        refs.update(find_refs(target_model, {field.comodel_name: {'sub': subrec}}))
+                                    if command == Command.LINK:
+                                        refs.add(_id)
+                                    if command == Command.SET:
+                                        refs.update(subrec)
+                return refs
+            all_refs = find_refs(target_model, data)
+            missing_refs = {jref for jref in all_refs if not self.ref(jref, raise_if_not_found=False)}
+            for xml_id in list(data.get(target_model, {})):
+                if xml_id not in missing_refs:
+                    del data[target_model][xml_id]
+
         for prop in list(template_data):
             if prop.startswith('property_'):
                 template_data.pop(prop)
         data.pop('account.reconcile.model', None)
 
+        # Only keep needed journals, and try to match on the code if possible
+        filter_used_ref('account.journal', data)
         for xmlid, journal_data in list(data.get('account.journal', {}).items()):
             if self.ref(xmlid, raise_if_not_found=False):
                 del data['account.journal'][xmlid]
@@ -258,8 +285,9 @@ class AccountChartTemplate(models.AbstractModel):
                     rec = self.ref(xmlid, raise_if_not_found=False)
                     if rec:
                         for fname in x2manyfields:
-                            for i, (line, vals) in enumerate(zip(rec[fname], values[fname])):
-                                values[fname][i] = Command.update(line.id, vals[2])
+                            for i, (line, (command, _id, vals)) in enumerate(zip(rec[fname], values[fname])):
+                                if command == Command.CREATE:
+                                    values[fname][i] = Command.update(line.id, vals)
 
                 if model_name == 'account.fiscal.position':
                     # Only add tax mappings containing new taxes
