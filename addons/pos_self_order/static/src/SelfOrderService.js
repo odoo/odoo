@@ -9,6 +9,19 @@ import { groupBy } from "@web/core/utils/arrays";
 import { effect } from "@point_of_sale/utils";
 
 /**
+ * @typedef {Object} Order
+ * @property {string} pos_reference
+ * @property {string} access_token
+ * @property {string} state
+ * @property {OrderLine[]} lines
+ * @property {number} amount_total
+ * @property {number} amount_tax
+ *
+ * @typedef {Object} ReducedOrder
+ * @property {string} pos_reference
+ * @property {string} access_token
+ * @property {string} [state]
+ *
  * @typedef {Object} OrderLine
  * @property {number} product_id
  * @property {number} qty
@@ -55,7 +68,13 @@ export class SelfOrder {
             ...session.pos_self_order,
             // Global state
             currentProduct: 0,
+            /**
+             * @type {OrderLine[]}
+             */
             cart: JSON.parse(localStorage.getItem("cart")) ?? [],
+            /**
+             * @type {ReducedOrder[] | Order[]}
+             */
             orders: JSON.parse(localStorage.getItem("orders")) ?? [],
             currentlyEditedOrderLine: null,
             page: null,
@@ -203,9 +222,9 @@ export class SelfOrder {
     }
 
     /**
-     * @param {OrderLine[]} orders
-     * @param {OrderLine[]} new_order
-     * @returns {OrderLine[]}
+     * @param {ReducedOrder[] |Order[]} orders
+     * @param {ReducedOrder | Order} new_order
+     * @returns {ReducedOrder[] | Order[]}
      */
     combineOrders(orders, new_order) {
         return [
@@ -223,6 +242,9 @@ export class SelfOrder {
             ( the user is adding more items to an existing order )
             we send the order items along with the order id and access_token to the server
             */
+            /**
+             * @type {ReducedOrder}
+             */
             const postedOrder = await this.rpc(`/pos-self-order/send-order`, this.getOrderData());
             this.orders = this.combineOrders(this.orders, postedOrder);
             this.notification.add(_t("Order sent successfully"), { type: "success" });
@@ -277,8 +299,8 @@ export class SelfOrder {
     }
 
     /**
-     * @param {Order[]} old_orders_list
-     * @returns {Order[]}
+     * @param {ReducedOrder[] | Order[]} old_orders_list
+     * @returns {ReducedOrder[] | Order[]}
      */
     async getUpdatedOrdersFromServer(old_orders_list) {
         return await Promise.all(
@@ -290,8 +312,8 @@ export class SelfOrder {
         );
     }
     /**
-     * @param {Order} order
-     * @returns {Order}
+     * @param {ReducedOrder | Order} old_orders_list
+     * @returns {ReducedOrder | Order}
      */
     async getUpdatedOrderFromServer(order) {
         try {
@@ -303,9 +325,6 @@ export class SelfOrder {
             console.log(error);
             return (({ state, ...rest }) => ({ state: "not found", ...rest }))(order);
         }
-    }
-    showProductMainView(orderLine) {
-        this.orderLine = orderLine;
     }
 }
 
