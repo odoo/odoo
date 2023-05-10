@@ -22,6 +22,7 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         stock_in_acc_id = product_category_all.property_stock_account_input_categ_id.id
         stock_out_acc_id = product_category_all.property_stock_account_output_categ_id.id
         stock_valu_acc_id = product_category_all.property_stock_valuation_account_id.id
+        stock_cop_acc_id = product_category_all.property_stock_account_production_cost_id.id
 
         # IN 10@10 comp1 10@20 comp2
         move1 = self.env['stock.move'].create({
@@ -85,13 +86,13 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
             # Receipt from subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 60.0, 'credit': 0.0},
             {'account_id': stock_in_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
-            {'account_id': stock_out_acc_id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
+            {'account_id': stock_cop_acc_id,    'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
             # Delivery com2 to subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
-            {'account_id': stock_out_acc_id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
+            {'account_id': stock_cop_acc_id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
             # Delivery com2 to subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
-            {'account_id': stock_out_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
+            {'account_id': stock_cop_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
         ])
 
         # Do the same without any additionnal cost
@@ -117,14 +118,14 @@ class TestAccountSubcontractingFlows(TestMrpSubcontractingCommon):
         amls = self.env['account.move.line'].search([('id', 'not in', all_amls_ids)])
         self.assertRecordValues(amls, [
             # Receipt from subcontractor
-            {'account_id': stock_in_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
+            {'account_id': stock_cop_acc_id,     'product_id': self.finished.id,    'debit': 0.0,   'credit': 30.0},
             {'account_id': stock_valu_acc_id,   'product_id': self.finished.id,    'debit': 30.0,  'credit': 0.0},
             # Delivery com2 to subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.comp2.id,       'debit': 0.0,   'credit': 20.0},
-            {'account_id': stock_out_acc_id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
+            {'account_id': stock_cop_acc_id,    'product_id': self.comp2.id,       'debit': 20.0,  'credit': 0.0},
             # Delivery com2 to subcontractor
             {'account_id': stock_valu_acc_id,   'product_id': self.comp1.id,       'debit': 0.0,   'credit': 10.0},
-            {'account_id': stock_out_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
+            {'account_id': stock_cop_acc_id,    'product_id': self.comp1.id,       'debit': 10.0,  'credit': 0.0},
         ])
 
     def test_subcontracting_account_backorder(self):

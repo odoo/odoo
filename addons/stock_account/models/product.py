@@ -758,22 +758,24 @@ class ProductCategory(models.Model):
         domain="[('company_id', '=', allowed_company_ids[0]), ('deprecated', '=', False)]", check_company=True,
         help="""When automated inventory valuation is enabled on a product, this account will hold the current value of the products.""",)
 
-    @api.constrains('property_valuation', 'property_stock_valuation_account_id', 'property_stock_account_output_categ_id', 'property_stock_account_input_categ_id')
-    def _check_valuation_accouts(self):
+    @api.model
+    def _get_stock_account_property_field_names(self):
+        return [
+            'property_stock_account_input_categ_id',
+            'property_stock_account_output_categ_id',
+            'property_stock_valuation_account_id',
+        ]
+
+    @api.constrains(lambda self: tuple(self._get_stock_account_property_field_names() + ['property_valuation']))
+    def _check_valuation_accounts(self):
+        fnames = self._get_stock_account_property_field_names()
         for category in self:
             # "compute" properties in constraint because ORM doesn't support computed properties
-            category.property_stock_account_input_categ_id = category.property_valuation == 'real_time' and (
-                category.property_stock_account_input_categ_id
-                or self.env['ir.property']._get('property_stock_account_input_categ_id', 'product.category')
-            )
-            category.property_stock_account_output_categ_id = category.property_valuation == 'real_time' and (
-                category.property_stock_account_output_categ_id
-                or self.env['ir.property']._get('property_stock_account_output_categ_id', 'product.category')
-            )
-            category.property_stock_valuation_account_id = category.property_valuation == 'real_time' and (
-                category.property_stock_valuation_account_id
-                or self.env['ir.property']._get('property_stock_valuation_account_id', 'product.category')
-            )
+            for property_field in fnames:
+                category[property_field] = category.property_valuation == 'real_time' and (
+                    category[property_field]
+                    or self.env['ir.property']._get(property_field, 'product.category')
+                )
 
             # Prevent to set the valuation account as the input or output account.
             valuation_account = category.property_stock_valuation_account_id
@@ -849,4 +851,4 @@ class ProductCategory(models.Model):
     @api.onchange('property_valuation')
     def onchange_property_valuation(self):
         # Remove or set the account stock properties if necessary
-        self._check_valuation_accouts()
+        self._check_valuation_accounts()
