@@ -1,10 +1,11 @@
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 import argparse
 import io
 import urllib.parse
+import sys
 import zipfile
 from functools import partial
 from pathlib import Path
-from sys import argv, stdout, stderr
 
 import requests
 
@@ -13,9 +14,10 @@ from .server import report_configuration
 from ..service.db import dump_db, exp_drop, exp_db_exist, exp_duplicate_database, exp_rename, restore_db
 from ..tools import config
 
-eprint = partial(print, file=stderr, flush=True)
+eprint = partial(print, file=sys.stderr, flush=True)
 
 class Db(Command):
+    """ Create, drop, dump, load databases """
     name = 'db'
 
     def run(self, cmdargs):
@@ -25,8 +27,8 @@ class Db(Command):
         all filestore-aware.
         """
         parser = argparse.ArgumentParser(
-            prog="%s %s" % (Path(argv[0]).name, self.name),
-            description=self.__doc__
+            prog=f'{Path(sys.argv[0]).name} {self.name}',
+            description=self.__doc__.strip()
         )
         parser.add_argument('-c', '--config')
         parser.add_argument('-D', '--data-dir')
@@ -138,7 +140,7 @@ class Db(Command):
 
     def dump(self, args):
         if args.dump_path == '-':
-            dump_db(args.database, stdout.buffer)
+            dump_db(args.database, sys.stdout.buffer)
         else:
             with open(args.dump_path, 'wb') as f:
                 dump_db(args.database, f)

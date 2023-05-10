@@ -128,6 +128,13 @@ class WebsiteSaleForm(WebsiteForm):
 
 
 class Website(main.Website):
+
+    def _login_redirect(self, uid, redirect=None):
+        # If we are logging in, clear the current pricelist to be able to find
+        # the pricelist that corresponds to the user afterwards.
+        request.session.pop('website_sale_current_pl', None)
+        return super()._login_redirect(uid, redirect=redirect)
+
     @http.route()
     def autocomplete(self, search_type=None, term=None, order=None, limit=5, max_nb_chars=999, options=None):
         options = options or {}
