@@ -41,11 +41,14 @@
                 <form string="Languages">
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button string="Activate and Translate"
-                                name="%(base.action_view_base_language_install)d"
+                            <button name="%(base.action_view_base_language_install)d"
                                 type="action"
                                 class="oe_stat_button"
-                                icon="fa-refresh" />
+                                icon="fa-refresh">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Activate and Translate</span>
+                                </div>
+                            </button>
                         </div>
                         <field name="flag_image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">

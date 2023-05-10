@@ -13,8 +13,7 @@
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
-                            <button
-                                icon="fa-eye"
+                            <button icon="fa-eye"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
                                 attrs="{'invisible': [('total_views', '=', 0)]}">
@@ -25,10 +24,7 @@
                                 icon="fa-files-o"
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
-                                <span>
-                                    <field name="total_slides" widget="statinfo" nolabel="1"/>
-                                    Published Contents
-                                </span>
+                                <field name="total_slides" widget="statinfo" string="Published Contents"/>
                             </button>
                             <button name="action_redirect_to_completed_members"
                                 type="object"

@@ -27,13 +27,21 @@
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <div class="oe_button_box" name="button_box">
                         <button name="%(resource_calendar_leaves_action_from_calendar)d" type="action"
-                                string="Time Off" icon="fa-plane"
+                                icon="fa-plane"
                                 class="oe_stat_button"
-                                groups="base.group_no_one"/>
+                                groups="base.group_no_one">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Time Off</span>
+                                </div>
+                        </button>
                         <button name="%(resource_resource_action_from_calendar)d" type="action"
-                                string="Work Resources" icon="fa-cogs"
+                                icon="fa-cogs"
                                 class="oe_stat_button"
-                                groups="base.group_user"/>
+                                groups="base.group_user">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_text">Work Resources</span>
+                                </div>
+                        </button>
                     </div>
                     <h1>
                         <field name="name"/>

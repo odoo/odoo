@@ -8,8 +8,8 @@
                     <span t-attf-class="o_status {{ statusColor(currentValue) }} d-inline-block"/>
                 </div>
                 <div class="ps-2">
-                    <div class="" t-out="string" t-att-raw-value="value"/>
-                    <div class="fw-normal" t-if="this.props.statusLabel" t-out="this.props.statusLabel"/>
+                    <div class="o_stat_text" t-if="this.props.statusLabel" t-out="this.props.statusLabel"/>
+                    <div class="o_stat_value" t-out="string" t-att-raw-value="value"/>
                 </div>
             </div>
         </xpath>
