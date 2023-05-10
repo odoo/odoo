@@ -1701,6 +1701,27 @@ class TestMailgateway(TestMailCommon):
         records = self.env['mail.test.gateway'].search([('name', 'ilike', 'Whitelist test alias loop %')])
         self.assertEqual(len(records), 10, msg='Email whitelisted should not have the restriction')
 
+    # --------------------------------------------------
+    # Corner cases / Bugs during message process
+    # --------------------------------------------------
+
+    def test_message_process_file_encoding_ascii(self):
+        """ Incoming email containing an xml attachment with unknown characters (�) but an ASCII charset should not
+        raise an Exception. UTF-8 is used as a safe fallback.
+        """
+        record = self.format_and_process(test_mail_data.MAIL_MULTIPART_INVALID_ENCODING, self.email_from, 'groups@test.com')
+
+        self.assertEqual(record.message_ids.attachment_ids.name, 'bis3_with_error_encoding_address.xml')
+        # NB: the xml received by email contains b"Chauss\xef\xbf\xbd\xef\xbf\xbde" with "\xef\xbf\xbd" being the
+        # replacement character � in UTF-8.
+        # When calling `_message_parse_extract_payload`, `part.get_content()` will be called on the attachment part of
+        # the email, triggering the decoding of the base64 attachment, so b"Chauss\xef\xbf\xbd\xef\xbf\xbde" is
+        # first retrieved. Then, `get_text_content` in `email` tries to decode this using the charset of the email
+        # part, i.e: `content.decode('us-ascii', errors='replace')`. So the errors are replaced using the Unicode
+        # replacement marker and the string "Chauss������e" is used to create the attachment.
+        # This explains the multiple "�" in the attachment.
+        self.assertIn("Chauss������e de Bruxelles", record.message_ids.attachment_ids.raw.decode())
+
 
 class TestMailThreadCC(TestMailCommon):
 
