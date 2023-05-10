@@ -130,7 +130,7 @@ patch(TicketScreen.prototype, "pos_restaurant.TicketScreen", {
     },
     async onDoRefund() {
         const order = this.getSelectedSyncedOrder();
-        if (this.pos.config.module_pos_restaurant && order) {
+        if (this.pos.config.module_pos_restaurant && order && !this.pos.table) {
             this.pos.setTable(
                 order.table ? order.table : Object.values(this.pos.tables_by_id)[0]
             );
