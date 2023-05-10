@@ -23,8 +23,10 @@ class OnboardingStep(models.Model):
     done_text = fields.Char(
         'Text to show when step is completed', default=_('Step Completed! - Click to review'), translate=True)
     step_image = fields.Binary("Step Image")
+    step_image_filename = fields.Char("Step Image Filename")
     step_image_alt = fields.Char(
-        'Alt Text for the Step Image', translate=True, help='Show when impossible to load the image')
+        'Alt Text for the Step Image', default='Onboarding Step Image', translate=True,
+        help='Show when impossible to load the image')
     panel_step_open_action_name = fields.Char(
         string='Opening action', required=True,
         help='Name of the onboarding step model action to execute when opening the step, '
@@ -72,6 +74,12 @@ class OnboardingStep(models.Model):
         if not step:
             return "NOT_FOUND"
         return "JUST_DONE" if step.action_set_just_done() else "WAS_DONE"
+
+    @api.model
+    def _get_placeholder_filename(self, field):
+        if field == "step_image":
+            return 'base/static/img/onboarding_default.png'
+        return super()._get_placeholder_filename(field)
 
     def _create_progress_steps(self):
         onboarding_progress_records = self.env['onboarding.progress'].search([
