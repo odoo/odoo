@@ -130,6 +130,8 @@ class ProjectCustomerPortal(CustomerPortal):
                 values['task_id'] = task_id
             return request.render("project.project_sharing_portal", values)
         project_sudo = project_sudo if access_token else project_sudo.with_user(request.env.user)
+        if not groupby:
+            groupby = 'stage'
         values = self._project_get_page_view_values(project_sudo, access_token, page, date_begin, date_end, sortby, search, search_in, groupby, **kw)
         return request.render("project.portal_my_project", values)
 
@@ -387,8 +389,6 @@ class ProjectCustomerPortal(CustomerPortal):
         # default group by value
         if not groupby or (groupby == 'milestone' and not milestones_allowed):
             groupby = 'project'
-        if project:
-            groupby = 'stage'
 
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
