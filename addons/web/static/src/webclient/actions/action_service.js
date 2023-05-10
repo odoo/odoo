@@ -667,14 +667,15 @@ function makeActionManager(env) {
                             Promise.resolve().then(() => {
                                 throw error;
                             });
-                            return;
                         } else {
                             info = lastCt.__info__;
                             // the error occurred while rendering a new controller,
                             // so go back to the last non faulty controller
                             // (the error will be shown anyway as the promise
                             // has been rejected)
+                            restore(lastCt.jsId);
                         }
+                        return;
                     }
                     env.bus.trigger("ACTION_MANAGER:UPDATE", info);
                 }
