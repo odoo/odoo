@@ -9,7 +9,26 @@ import { groupBy } from "@web/core/utils/arrays";
 import { effect } from "@point_of_sale/utils";
 
 /**
- * @typedef {import("@pos_self_order/jsDocTypes").OrderLine} OrderLine
+ * @typedef {Object} OrderLine
+ * @property {number} product_id
+ * @property {number} qty
+ * @property {string} customer_note
+ * @property {string} description
+ * @property {PriceInfo} price_extra
+ *
+ * @typedef {Object} PriceInfo
+ * @property {number} list_price
+ * @property {number} price_with_tax
+ * @property {number} price_without_tax
+ *
+ * @typedef {Object} Product
+ * @property {number} product_id
+ * @property {PriceInfo} price_info
+ * @property {string} tag
+ * @property {string} name
+ * @property {string} description_sale
+ * @property {boolean} has_image
+ * @property {[]} attributes
  */
 export class SelfOrder {
     constructor(env, rpc, notification) {
@@ -50,25 +69,42 @@ export class SelfOrder {
             );
         }
     }
+    /**
+     * @param {"/" | "/products" | "/products/{int}" | "/cart" | "/orders"} page
+     */
     setPage(page) {
         this.page = page;
         this.navigate(page, this.pos_config_id);
     }
 
+    /**
+     * @param {OrderLine} orderLine
+     */
     setCurrentlyEditedOrderLine(orderLine) {
         this.currentlyEditedOrderLine = orderLine;
     }
 
+    /**
+     * @param {number} price
+     * @returns {number}
+     */
     formatMonetary(price) {
         return formatMonetary(price, { currencyId: this.currency_id });
     }
 
+    /**
+     * @returns {number}
+     */
     getTotalCartQty() {
         const cart = this.cart;
         return cart.reduce((sum, orderLine) => {
             return sum + orderLine.qty;
         }, 0);
     }
+
+    /**
+     * @returns {number}
+     */
     getTotalCartCost() {
         const cart = this.cart;
         return cart.reduce((sum, orderLine) => {
@@ -81,18 +117,20 @@ export class SelfOrder {
         }, 0);
     }
 
+    /**
+     * @returns {number}
+     */
     getTotalCartTax = () => {
-        return this._getTotalCartTax(this.cart, this.products);
+        return this._getTotalCartTax(this.cart);
     };
     /**
      * From the server, for each product we get both the price with and without tax.
      * We never actually compute taxes on the frontend.
      * Here we add up the tax for each product in the cart
      * @param {OrderLine[]} cart
-     * @param {import("@pos_self_order/jsDocTypes").Product[]} products
      * @returns {number}
      */
-    _getTotalCartTax(cart, products) {
+    _getTotalCartTax(cart) {
         return cart.reduce((sum, orderLine) => {
             const product = this.getProduct({ id: orderLine.product_id });
             const getTax = (x) => x.price_with_tax - x.price_without_tax;
@@ -101,14 +139,16 @@ export class SelfOrder {
             );
         }, 0);
     }
-
     /**
-     * @param {OrderLine} orderline
+     * @param {OrderLine} orderLine
      */
     updateCart(orderline) {
         this.cart = this.getUpdatedCart(this.cart, orderline);
     }
 
+    /**
+     * @param {OrderLine} orderLine
+     */
     deleteOrderLine(orderline) {
         if (!orderline) {
             return;
@@ -127,17 +167,31 @@ export class SelfOrder {
             .filter((item) => !this.canBeMerged(item, orderline))
             .concat(orderline.qty ? [orderline] : []);
     }
-
-    canBeMerged(item, orderline) {
+    /**
+     * @param {OrderLine} orderline1
+     * @param {OrderLine} orderline2
+     * @returns {boolean}
+     */
+    canBeMerged(orderline1, orderline2) {
         return (
-            this.getProduct({ id: item.product_id }).is_pos_groupable &&
-            this.orderline_unique_keys.every((key) => item[key] === orderline[key])
+            this.getProduct({ id: orderline1.product_id }).is_pos_groupable &&
+            this.orderline_unique_keys.every((key) => orderline1[key] === orderline2[key])
         );
     }
+    /**
+     * @param {Object} options
+     * @param {number} options.id
+     * @returns {Product}
+     */
     getProduct({ id }) {
         return this.products.find((product) => product.product_id === id);
     }
 
+    /**
+     * @param {OrderLine[]} orders
+     * @param {OrderLine[]} new_order
+     * @returns {OrderLine[]}
+     */
     combineOrders(orders, new_order) {
         return [
             new_order,
@@ -167,6 +221,14 @@ export class SelfOrder {
             this.navigate("/");
         }
     };
+    /**
+     * @returns {Object}
+     * @property {number} pos_config_id
+    //  * @property {} cart
+     * @property {string} table_access_token
+     * @property {string} order_pos_reference
+     * @property {string} order_access_token
+     */
     getOrderData() {
         return {
             pos_config_id: this.pos_config_id,
