@@ -235,6 +235,10 @@ class Registry(Mapping):
         return self.descendants(model_names, '_inherit', '_inherits')
 
     def setup_models(self, cr):
+        with type(self)._lock:
+            self._setup_models(cr)
+
+    def _setup_models(self, cr):
         """ Complete the setup of models.
             This must be called after loading modules and before using the ORM.
         """
