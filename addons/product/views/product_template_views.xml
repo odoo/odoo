@@ -43,7 +43,8 @@
             </xpath>
             <field name="categ_id" position="after">
                 <field name="default_code" attrs="{'invisible': [('product_variant_count', '>', 1)]}"/>
-                <field name="barcode" attrs="{'invisible': ['|', ('product_variant_count', '>', 1), ('product_variant_count', '=', 0)]}"/>
+                <field name="valid_product_template_attribute_line_ids" invisible="1"/>
+                <field name="barcode" attrs="{'invisible': ['|', ('product_variant_count', '>', 1), '&amp;', ('product_variant_count', '=', 0), ('valid_product_template_attribute_line_ids', '!=', [])]}"/>
             </field>
 
             <div name="button_box" position="inside">
