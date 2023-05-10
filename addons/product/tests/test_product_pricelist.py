@@ -283,3 +283,16 @@ class TestProductPricelist(ProductCommon):
             msg="the product price should be converted using the specified uom and converted to the"
                 " correct currency",
         )
+
+    def test_30_pricelist_delete(self):
+        """ Test that `unlink` on many records doesn't raise a RecursionError. """
+        self.customer_pricelist = self.env['product.pricelist'].create({
+            'name': 'Customer Pricelist',
+            'item_ids': [
+                Command.create({
+                    'compute_price': 'formula',
+                    'base': 'pricelist',
+                }),
+            ] * 101,
+        })
+        self.customer_pricelist.unlink()
