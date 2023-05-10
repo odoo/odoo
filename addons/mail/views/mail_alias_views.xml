@@ -18,9 +18,13 @@
                             <button name="open_document" string="Open Document"
                                     type="object" class="oe_link" icon="fa-sitemap"
                                     attrs="{'invisible': ['|', ('alias_model_id', '=', False), ('alias_force_thread_id', '=', 0)]}"/>
-                            <button name="open_parent_document" string="Open Parent Document"
+                            <button name="open_parent_document"
                                     type="object" class="oe_link" icon="fa-sitemap"
-                                    attrs="{'invisible': ['|', ('alias_parent_model_id', '=', False), ('alias_parent_thread_id', '=', 0)]}"/>
+                                    attrs="{'invisible': ['|', ('alias_parent_model_id', '=', False), ('alias_parent_thread_id', '=', 0)]}">
+                                    <div class="o_field_widget o_stat_info">
+                                        <span class="o_stat_text">Open Parent Document</span>
+                                    </div>
+                            </button>
                         </div>
                         <div class="d-flex">
                             <h2 class="flex-grow-1"><field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline"/></h2>

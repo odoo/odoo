@@ -288,25 +288,29 @@
                                 attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                 class="oe_stat_button" icon="fa-exchange"
                                 groups="stock.group_stock_user">
-                                <div class="o_field_widget o_stat_info mr4">
-                                    <span class="o_stat_text">In:</span>
-                                    <span class="o_stat_text">Out:</span>
-                                </div>
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="nbr_moves_in"/></span>
-                                    <span class="o_stat_value"><field name="nbr_moves_out"/></span>
+                                <div class="d-flex flex-column">
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">In:</span>
+                                        <span class="o_stat_value"><field name="nbr_moves_in"/></span>
+                                    </div>
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">Out:</span>
+                                        <span class="o_stat_value"><field name="nbr_moves_out"/></span>
+                                    </div>
                                 </div>
                             </button>
                             <button name="action_view_orderpoints" type="object"
                                 attrs="{'invisible':['|',('type', 'not in', ['product', 'consu']),('nbr_reordering_rules', '!=', 1)]}"
                                 class="oe_stat_button" icon="fa-refresh">
-                                <div class="o_field_widget o_stat_info mr4">
-                                    <span class="o_stat_text">Min:</span>
-                                    <span class="o_stat_text">Max:</span>
-                                </div>
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="reordering_min_qty"/></span>
-                                    <span class="o_stat_value"><field name="reordering_max_qty"/></span>
+                                <div class="d-flex flex-column">
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">Min:</span>
+                                        <span class="o_stat_value"><field name="reordering_min_qty"/></span>
+                                    </div>
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">Max:</span>
+                                        <span class="o_stat_value"><field name="reordering_max_qty"/></span>
+                                    </div>
                                 </div>
                             </button>
                             <button type="object"
@@ -395,26 +399,30 @@
                                 attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                 class="oe_stat_button" icon="fa-exchange"
                                 groups="stock.group_stock_user">
-                                <div class="o_field_widget o_stat_info mr4">
-                                    <span class="o_stat_text">In:</span>
-                                    <span class="o_stat_text">Out:</span>
-                                </div>
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="nbr_moves_in"/></span>
-                                    <span class="o_stat_value"><field name="nbr_moves_out"/></span>
+                                <div class="d-flex flex-column">
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">In:</span>
+                                        <span class="o_stat_value"><field name="nbr_moves_in"/></span>
+                                    </div>
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">Out:</span>
+                                        <span class="o_stat_value"><field name="nbr_moves_out"/></span>
+                                    </div>
                                 </div>
                             </button>
                             <button type="object"
                                 name="action_view_orderpoints"
                                 attrs="{'invisible':['|',('type', '!=', 'product'),('nbr_reordering_rules', '!=', 1)]}"
                                 class="oe_stat_button" icon="fa-refresh">
-                                <div class="o_field_widget o_stat_info mr4">
-                                    <span class="o_stat_text">Min:</span>
-                                    <span class="o_stat_text">Max:</span>
-                                </div>
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="reordering_min_qty"/></span>
-                                    <span class="o_stat_value"><field name="reordering_max_qty"/></span>
+                                <div class="d-flex flex-column">
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">Min:</span>
+                                        <span class="o_stat_value"><field name="reordering_min_qty"/></span>
+                                    </div>
+                                    <div class="o_field_widget o_stat_info align-items-baseline flex-row gap-1 me-1">
+                                        <span class="o_stat_text">Max:</span>
+                                        <span class="o_stat_value"><field name="reordering_max_qty"/></span>
+                                    </div>
                                 </div>
                             </button>
                             <button type="object"
@@ -424,24 +432,36 @@
                                 icon="fa-refresh">
                                 <field name="nbr_reordering_rules" widget="statinfo"/>
                             </button>
-                            <button string="Lot/Serial Numbers" type="object"
+                            <button type="object"
                                 name="action_open_product_lot"
                                 attrs="{'invisible': [('tracking', '=', 'none')]}"
-                                class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot"/>
-                            <button string="Putaway Rules" type="object"
+                                class="oe_stat_button" icon="fa-bars" groups="stock.group_production_lot">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Lot/Serial Numbers</span>
+                                </div>
+                            </button>
+                            <button type="object"
                                 name="action_view_related_putaway_rules"
                                 class="oe_stat_button" icon="fa-random" groups="stock.group_stock_multi_locations"
                                 attrs="{'invisible': [('type', '=', 'service')]}"
                                 context="{
                                     'invisible_handle': True,
                                     'single_product': product_variant_count == 1,
-                                }"/>
-                            <button type="object" string="Storage Capacities"
+                                }">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Putaway Rules</span>
+                                    </div>
+                             </button>
+                            <button type="object"
                                 name="action_view_storage_category_capacity"
                                 groups="stock.group_stock_storage_categories"
                                 attrs="{'invisible':[('type', '=', 'service')]}"
                                 class="oe_stat_button"
-                                icon="fa-cubes"/>
+                                icon="fa-cubes">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Storage Capacities</span>
+                                </div>
+                            </button>
                         </t>
                     </div>
 

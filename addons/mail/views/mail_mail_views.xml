@@ -16,9 +16,13 @@
                         <field name="model" invisible="1"/>
                         <field name="res_id" invisible="1"/>
                         <div class="oe_button_box" name="button_box">
-                            <button name="action_open_document" string="Open Document"
+                            <button name="action_open_document"
                                     type="object" class="oe_link" icon="fa-file-text-o"
-                                    attrs="{'invisible': ['|', ('model', '=', False), ('res_id', '=', 0)]}"/>
+                                    attrs="{'invisible': ['|', ('model', '=', False), ('res_id', '=', 0)]}">
+                                    <div class="o_field_widget o_stat_info">
+                                        <span class="o_stat_text">Open Document</span>
+                                    </div>
+                            </button>
                         </div>
                         <field name="mail_message_id_int" required="0" invisible="1"/>
                         <label for="subject" class="oe_edit_only"/>

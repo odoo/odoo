@@ -160,12 +160,20 @@
                         <button name="action_see_packages" string="Packages" type="object"
                             class="oe_stat_button" icon="fa-cubes"
                             attrs="{'invisible': [('has_packages', '=', False)]}"/>
-                        <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" string="Traceability" type="action" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('has_tracking', '=', False)]}" groups="stock.group_production_lot"/>
-                        <button name="action_view_reception_report" string="Allocation" type="object"
+                        <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" type="action" attrs="{'invisible': ['|', ('state', '!=', 'done'), ('has_tracking', '=', False)]}" groups="stock.group_production_lot">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Traceability</span>
+                            </div>
+                        </button>
+                        <button name="action_view_reception_report" type="object"
                             context="{'default_picking_ids': [id]}"
                             class="oe_stat_button" icon="fa-list"
                             attrs="{'invisible': [('show_allocation', '=', False)]}"
-                            groups="stock.group_reception_report"/>
+                            groups="stock.group_reception_report">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Allocation</span>
+                            </div>
+                        </button>
                         <!-- Use the following button to avoid onchange on one2many -->
                         <button name="action_picking_move_tree"
                             class="oe_stat_button"
