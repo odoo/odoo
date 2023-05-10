@@ -303,6 +303,31 @@ patch(MockServer.prototype, "mail/models/mail_message", {
         });
     },
     /**
+     * Simulate `_message_format_personalize` on `mail.message` for the current partner.
+     *
+     * @private
+     * @returns {integer[]} ids
+     * @returns {Object[]}
+     */
+    _mockMailMessageFormatPersonalize(ids) {
+        const messages = this._mockMailMessageMessageFormat(ids);
+        messages.forEach(message => {
+            let user_follower_id = false;
+            if (message.model && message.res_id) {
+                const follower = this.getRecords("mail.followers", [
+                    ["res_model", "=", message.model],
+                    ["res_id", "=", message.res_id],
+                    ["partner_id", "=", this.pyEnv.currentPartnerId],
+                ]);
+                if (follower.length !== 0) {
+                    user_follower_id = follower[0].id;
+                }
+            }
+            message.user_follower_id = user_follower_id;
+        });
+        return messages;
+    },
+    /**
      * Simulates `_message_notification_format` on `mail.message`.
      *
      * @private

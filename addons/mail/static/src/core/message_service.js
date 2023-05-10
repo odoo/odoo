@@ -3,7 +3,9 @@
 import { Message } from "./message_model";
 import { removeFromArrayWithPredicate } from "../utils/arrays";
 import { convertBrToLineBreak, prettifyMessageContent } from "../utils/format";
+import { _t } from "@web/core/l10n/translation";
 import { registry } from "@web/core/registry";
+import { sprintf } from "@web/core/utils/strings";
 import { MessageReactions } from "./message_reactions_model";
 import { Notification } from "./notification_model";
 import { LinkPreview } from "./link_preview_model";
@@ -139,6 +141,18 @@ export class MessageService {
             message_id: message.id,
             pinned,
         });
+    }
+
+    async unfollow(message) {
+        if (message.isNeedaction) {
+            await this.setDone(message);
+        }
+        const thread = message.originThread;
+        await this.env.services["mail.thread"].removeFollower(thread.followerOfSelf);
+        this.env.services.notification.add(
+            sprintf(_t('You are no longer following "%(thread_name)s".'), { thread_name: thread.name }),
+            { type: "success" }
+        );
     }
 
     async unstarAll() {
@@ -284,6 +298,14 @@ export class MessageService {
         }
         if (data.res_model_name) {
             message.originThread.modelName = data.res_model_name;
+        }
+        if ("user_follower_id" in data && data.user_follower_id && this.store.self) {
+            this.env.services["mail.thread"].insertFollower({
+                followedThread: message.originThread,
+                id: data.user_follower_id,
+                isActive: true,
+                partner: this.store.self,
+            });
         }
         this._updateReactions(message, data.messageReactionGroups);
         if (message.isNotification && !message.notificationType) {
