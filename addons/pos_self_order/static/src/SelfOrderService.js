@@ -9,33 +9,41 @@ import { groupBy } from "@web/core/utils/arrays";
 import { effect } from "@point_of_sale/utils";
 
 /**
- * @typedef {Object} Order
- * @property {string} pos_reference
- * @property {string} access_token
- * @property {string} state
- * @property {OrderLine[]} lines
- * @property {number} amount_total
- * @property {number} amount_tax
- *
+ * @template T
+ * @typedef {{ [k in keyof T]: T[k] } & {}} Prettify
+ */
+
+/**
  * @typedef {Object} ReducedOrder
  * @property {string} pos_reference
  * @property {string} access_token
- * @property {"not found"} [state]
+ * @property {string} [state]
  *
+ /**
+ * @typedef {Prettify<ReducedOrder & {state: string, lines: OrderLine[], amount_total: number, amount_tax: number}>} Order
+ */
+
+/**
+ * The type of orderline that we send to the server
  * @typedef {Object} ReducedOrderLine
  * @property {number} product_id
  * @property {number} qty
  * @property {string} customer_note
  * @property {string} description
- *
- * @typedef {ReducedOrderLine & {price_extra: PriceInfo}}  OrderLine
- * The type of orderline that we send to the server
- *
+ */
+
+/**
+ * @typedef {Prettify<ReducedOrderLine & {price_extra: PriceInfo}>}  OrderLine
+ */
+
+/**
  * @typedef {Object} PriceInfo
  * @property {number} list_price
  * @property {number} price_with_tax
  * @property {number} price_without_tax
- *
+ */
+
+/**
  * @typedef {Object} Product
  * @property {number} product_id
  * @property {PriceInfo} price_info
@@ -44,19 +52,25 @@ import { effect } from "@point_of_sale/utils";
  * @property {string} description_sale
  * @property {boolean} has_image
  * @property {Attribute[]} attributes
- *
+ */
+
+/**
  * @typedef {Object} Attribute
  * @property {string} display_type - The type of display for the attribute.
  * @property {number} id - The unique identifier of the attribute.
  * @property {string} name - The name of the attribute.
- * @property {Object[]} values - An array of objects representing the attribute values.
+ * @property {Value[]} values
+ */
+
+/**
+ * @typedef {Object} Values - An array of objects representing the attribute values.
  * @property {bool | string} values.html_color - False if the value has no color, otherwise the color in hex format. ( ex: #FF0000 )
  * @property {number} values.id - The unique identifier of the value.
  * @property {boolean} values.is_custom
  * @property {string} values.name
  * @property {PriceInfo} values.price_extra
- *
  */
+
 export class SelfOrder {
     constructor(env, rpc, notification) {
         Object.assign(this, {
