@@ -43,8 +43,8 @@ export class ThreadService {
         this.personaService = services["mail.persona"];
         /** @type {import("@mail/core/message_service").MessageService} */
         this.messageService = services["mail.message"];
-        // FIXME this prevents cyclic dependencies between mail.thread and mail.message
-        this.env.bus.addEventListener("MESSAGE-SERVICE:INSERT_THREAD", ({ detail }) => {
+        // this prevents cyclic dependencies between mail.thread and other services
+        this.env.bus.addEventListener("mail.thread/insert", ({ detail }) => {
             const model = detail.model;
             const id = detail.id;
             const type = detail.type;
@@ -812,6 +812,20 @@ export class ThreadService {
                 );
             }
         }
+        if (
+            thread.type === "channel" &&
+            !this.store.discuss.channels.threads.includes(thread.localId)
+        ) {
+            this.store.discuss.channels.threads.push(thread.localId);
+        } else if (
+            (thread.type === "chat" || thread.type === "group") &&
+            !this.store.discuss.chats.threads.includes(thread.localId)
+        ) {
+            this.store.discuss.chats.threads.push(thread.localId);
+        }
+        if (!thread.type && !["mail.box", "discuss.channel"].includes(thread.model)) {
+            thread.type = "chatter";
+        }
     }
 
     /**
@@ -1046,7 +1060,7 @@ export class ThreadService {
     }
 
     /**
-     * @param {import('@mail/core/persona_model').Persona} persona
+     * @param {import("@mail/core/persona_model").Persona} persona
      * @param {import("@mail/core/thread_model").Thread} [thread]
      */
     avatarUrl(persona, thread) {

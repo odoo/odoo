@@ -40,7 +40,6 @@
                             t-ref="textarea"
                             style="height:40px;"
                             t-on-keydown="onKeydown"
-                            t-on-input="onInput"
                             t-on-focusin="onFocusin"
                             t-on-focusout="() => this.props.composer.isFocused = false"
                             t-on-click="(ev) => markEventHandled(ev, 'composer.onClickTextarea')"
@@ -95,9 +94,6 @@
                     attachments="props.composer.attachments"
                     unlinkAttachment="attachmentUploader.unlink"
                     imagesHeight="50"/>
-                <div t-if="thread and thread.type !== 'chatter' and !compact">
-                    <Typing channel="thread" size="'medium'"/>
-                </div>
             </div>
         </div>
         <span t-if="props.composer.message" class="text-muted">escape to <a href="#" t-on-click="props.onDiscardCallback">cancel</a>, enter to <a href="#" t-on-click="editMessage">save</a></span>

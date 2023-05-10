@@ -15,7 +15,7 @@ export class MessageInReply extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.user = useService("user");
-        /** @type {import('@mail/core/thread_service').ThreadService} */
+        /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
     }
 

@@ -8,8 +8,7 @@
                 <div t-if="!props.thread.authorizedGroupFullName" class="fa fa-fw fa-globe" title="Public Channel"/>
             </t>
             <t t-elif="props.thread.type === 'chat' and chatPartner">
-                <Typing t-if="props.thread.hasTypingMembers" channel="props.thread" size="props.size" displayText="false"/>
-                <t t-else="">
+                <t name="chat">
                     <t name="chat_static">
                         <div t-if="chatPartner.im_status === 'online'" class="fa fa-fw fa-circle text-success" title="Online"/>
                         <div t-elif="chatPartner.im_status === 'offline'" class="fa fa-fw fa-circle-o" title="Offline"/>

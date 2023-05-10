@@ -14,7 +14,7 @@ import { Deferred } from "@web/core/utils/concurrency";
  * @property {{id: number}} partner
  * @typedef SuggestedRecipient
  * @property {string} email
- * @property {import('@mail/core/persona_model').Persona|false} persona
+ * @property {import("@mail/core/persona_model").Persona|false} persona
  * @property {string} lang
  * @property {string} reason
  * @property {boolean} checked
@@ -110,7 +110,6 @@ export class Thread {
     /** @type {ScrollPosition} */
     scrollPosition = new ScrollPosition();
     showOnlyVideo = false;
-    typingMemberIds = [];
     /** @type {import("@mail/core/store_service").Store} */
     _store;
     /** @type {string} */
@@ -133,14 +132,6 @@ export class Thread {
             type: data.type,
             _store: store,
         });
-        if (this.type === "channel") {
-            this._store.discuss.channels.threads.push(this.localId);
-        } else if (this.type === "chat" || this.type === "group") {
-            this._store.discuss.chats.threads.push(this.localId);
-        }
-        if (!this.type && !["mail.box", "discuss.channel"].includes(this.model)) {
-            this.type = "chatter";
-        }
         store.threads[this.localId] = this;
     }
 
@@ -409,20 +400,12 @@ export class Thread {
         return this.memberCount - this.channelMembers.length;
     }
 
-    get hasTypingMembers() {
-        return this.typingMembers.length !== 0;
-    }
-
     get rtcInvitingSession() {
         return this._store.rtcSessions[this.invitingRtcSessionId];
     }
 
     get hasNeedactionMessages() {
         return this.needactionMessages.length > 0;
-    }
-
-    get typingMembers() {
-        return this.typingMemberIds.map((memberId) => this._store.channelMembers[memberId]);
     }
 
     get videoCount() {

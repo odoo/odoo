@@ -18,7 +18,7 @@ export class Attachment {
     url;
     /** @type {boolean} */
     uploading;
-    /** @type {import('@mail/core/message_model').Message} */
+    /** @type {import("@mail/core/message_model").Message} */
     message;
 
     /** @type {import("@mail/core/thread_model").Thread} */

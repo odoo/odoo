@@ -81,7 +81,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
     });
     const { env, openDiscuss } = await start();
     await openDiscuss(channelId);
-    assert.strictEqual($(".o-mail-Typing").text(), "");
+    assert.strictEqual($(".o-discuss-Typing").text(), "");
     const channel = pyEnv["discuss.channel"].searchRead([["id", "=", channelId]])[0];
     // simulate receive typing notification from livechat visitor "is typing"
     await afterNextRender(() =>
@@ -91,7 +91,7 @@ QUnit.test('Receives visitor typing status "is typing"', async (assert) => {
             uuid: channel.uuid,
         })
     );
-    assert.containsOnce($, ".o-mail-Typing:contains(Visitor 20 is typing...)");
+    assert.containsOnce($, ".o-discuss-Typing:contains(Visitor 20 is typing...)");
 });
 
 QUnit.test('display canned response suggestions on typing ":"', async (assert) => {

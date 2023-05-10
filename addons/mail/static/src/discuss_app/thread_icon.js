@@ -1,9 +1,8 @@
 /* @odoo-module */
 
-import { Component } from "@odoo/owl";
 import { useStore } from "@mail/core/messaging_hook";
-import { Typing } from "@mail/composer/typing";
 import { createLocalId } from "@mail/utils/misc";
+import { Component } from "@odoo/owl";
 
 /**
  * @typedef {Object} Props
@@ -14,7 +13,6 @@ import { createLocalId } from "@mail/utils/misc";
  */
 export class ThreadIcon extends Component {
     static template = "mail.ThreadIcon";
-    static components = { Typing };
     static props = ["thread", "size?", "className?"];
     static defaultProps = {
         size: "medium",
