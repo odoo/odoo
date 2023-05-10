@@ -115,9 +115,9 @@ class PosSelfOrderController(http.Controller):
         self,
         cart: List[Dict],
         pos_config_sudo: PosConfig,
-        table_access_token: str,
-        order_pos_reference: str,
-        order_access_token: str,
+        table_access_token: Optional[str],
+        order_pos_reference: Optional[str],
+        order_access_token: Optional[str],
     ) -> Dict[str, Union[int, str, List[Dict]]]:
         """
         Given the data, we decide whether we need to create a new order or update an existing one
@@ -435,7 +435,7 @@ class PosSelfOrderController(http.Controller):
         return f"Order {pos_session_id:0>5}-{900 + table_id :0>3}-{sequence_number:0>4}"
 
     def _find_order(
-        self, pos_reference: str, order_access_token: str, state: Optional[str] = None
+        self, pos_reference: Optional[str], order_access_token: Optional[str], state: Optional[str] = None
     ) -> PosOrder:
         """
         :return: pos order with the given pos_reference, access token and state
