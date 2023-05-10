@@ -252,6 +252,12 @@ msgid "Special Consumptions Tax (ICE)"
 msgstr "Impuesto a los Consumos Especiales (ICE)"
 
 #. module: l10n_ec
+#: model:ir.model.fields,help:l10n_ec.field_res_partner__l10n_ec_vat_validation
+#: model:ir.model.fields,help:l10n_ec.field_res_users__l10n_ec_vat_validation
+msgid "Error message when validating the Ecuadorian VAT"
+msgstr "Mensaje de error al validar la Cédula/RUC Ecuatoriana"
+
+#. module: l10n_ec
 #: model:ir.model,name:l10n_ec.model_account_tax
 msgid "Tax"
 msgstr "Impuesto"
@@ -312,22 +318,22 @@ msgstr "Desconocido"
 #: code:addons/l10n_ec/models/res_partner.py:0
 #, python-format
 msgid ""
-"VAT %s is not valid for an Ecuadorian DNI, it must be like this form "
-"1234567897"
+"The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+"(could be an old VAT number)"
 msgstr ""
-"Cédula %s no es valida para el DNI de Ecuador, debe ser de esta forma "
-"1234567897"
+"La Cédula %s parece no ser válida ya que el décimo dígito no cumple con el algoritmo de validación "
+"(podría ser un número de cédula antiguo)"
 
 #. module: l10n_ec
 #. odoo-python
 #: code:addons/l10n_ec/models/res_partner.py:0
 #, python-format
 msgid ""
-"VAT %s is not valid for an Ecuadorian company, it must be like this form "
-"1234567897001"
+"The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+"(SRI has stated that this validation is not required anymore for some VAT numbers)"
 msgstr ""
-"RUC %s no es valida para una compañía ecuatoriana, debe ser de esta forma "
-"1234567897001"
+"El RUC %s parece no ser válido ya que el décimo dígito no cumple con el algoritmo de validación "
+"(SRI ha declarado que esta validación ya no es necesaria para algunos números de RUC)"
 
 #. module: l10n_ec
 #: model:account.tax.group,name:l10n_ec.tax_group_vat0
@@ -352,6 +358,12 @@ msgstr "IVA 14%"
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__vat08
 msgid "VAT 8%"
 msgstr ""
+
+#. module: l10n_ec
+#: model:ir.model.fields,field_description:l10n_ec.field_res_partner__l10n_ec_vat_validation
+#: model:ir.model.fields,field_description:l10n_ec.field_res_users__l10n_ec_vat_validation
+msgid "VAT Error message validation"
+msgstr "Mensaje de error de validación de Cédula/RUC"
 
 #. module: l10n_ec
 #: model:account.tax.group,name:l10n_ec.tax_group_vat_exempt
