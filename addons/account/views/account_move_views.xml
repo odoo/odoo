@@ -683,22 +683,28 @@
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('payment_id', '=', False)]}"
-                                    string="1 Payment">
+                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('payment_id', '=', False)]}">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">1 Payment</span>
+                                    </div>
                             </button>
                             <button name="open_reconcile_view"
                                     class="oe_stat_button"
                                     icon="fa-bars"
                                     type="object"
-                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}"
-                                    string="Reconciled Items">
+                                    attrs="{'invisible': ['|', '|', ('move_type', '!=', 'entry'), ('id', '=', False), ('has_reconciled_entries', '=', False)]}">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Reconciled Items</span>
+                                    </div>
                             </button>
                             <button name="open_created_caba_entries"
                                     class="oe_stat_button"
                                     icon="fa-usd"
                                     type="object"
-                                    attrs="{'invisible': [('tax_cash_basis_created_move_ids', '=', [])]}"
-                                    string="Cash Basis Entries">
+                                    attrs="{'invisible': [('tax_cash_basis_created_move_ids', '=', [])]}">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Cash Basis Entries</span>
+                                    </div>
                             </button>
                         </div>
 

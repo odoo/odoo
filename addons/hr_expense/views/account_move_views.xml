@@ -10,10 +10,13 @@
                     <field name="expense_sheet_id" invisible="1"/>
                     <button name="action_open_expense_report"
                             class="oe_stat_button"
-                            string="Expense Report"
                             icon="fa-file-text-o"
                             type="object"
-                            attrs="{'invisible': [('expense_sheet_id', '=', [])]}"/>
+                            attrs="{'invisible': [('expense_sheet_id', '=', [])]}">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Expense Report</span>
+                            </div>
+                    </button>
                 </xpath>
             </field>
         </record>

@@ -51,39 +51,15 @@
                         </button>
                         <button name="action_view_contacts_bouncing"
                                 type="object" icon="fa-exchange" class="oe_stat_button">
-                            <div class="o_field_widget o_stat_info">
-                                <div class="oe_inline">
-                                    <span class="o_stat_value">
-                                        <field name="contact_pct_bounce" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_value">%</span>
-                                </div>
-                                <span class="o_stat_text">Bounce</span>
-                            </div>
+                                <field name="contact_pct_bounce" widget="statinfo" string="% Bounce"/>
                         </button>
                         <button name="action_view_contacts_opt_out"
                                 type="object" icon="fa-bell-slash-o" class="oe_stat_button">
-                            <div class="o_field_widget o_stat_info">
-                                <div class="oe_inline">
-                                    <span class="o_stat_value">
-                                        <field name="contact_pct_opt_out" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_value">%</span>
-                                </div>
-                                <span class="o_stat_text">Opt-out</span>
-                            </div>
+                                <field name="contact_pct_opt_out" widget="statinfo" string="% Opt-out"/>
                         </button>
                         <button name="action_view_contacts_blacklisted"
                                 type="object" icon="fa-ban" class="oe_stat_button">
-                            <div class="o_field_widget o_stat_info">
-                                <div class="oe_inline">
-                                    <span class="o_stat_value">
-                                        <field name="contact_pct_blacklisted" widget="statinfo" nolabel="1"/>
-                                    </span>
-                                    <span class="o_stat_value">%</span>
-                                </div>
-                                <span class="o_stat_text">Blacklist</span>
-                            </div>
+                                <field name="contact_pct_blacklisted" widget="statinfo" string="% Blacklist"/>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>

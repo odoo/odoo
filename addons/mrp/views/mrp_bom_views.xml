@@ -45,7 +45,11 @@
                                 </div>
                             </button>
                             <button name="%(action_report_mrp_bom)d" type="action"
-                                class="oe_stat_button" icon="fa-bars" string="Overview"/>
+                                class="oe_stat_button" icon="fa-bars">
+                                <div class="o_stat_info">
+                                    <span class="o_stat_text">Overview</span>
+                                </div>
+                            </button>
                         </div>
                         <widget name="web_ribbon" title="Archived" bg_color="text-bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                     <group>

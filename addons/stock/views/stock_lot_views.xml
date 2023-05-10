@@ -21,8 +21,16 @@
                                 <span class="o_stat_text">Transfers</span>
                             </div>
                         </button>
-                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" string="Location" type="object"/>
-                        <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" string="Traceability" type="action"/>
+                        <button name="action_lot_open_quants" icon="fa-arrows" class="oe_stat_button" type="object">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Location</span>
+                            </div>
+                        </button>
+                        <button name="%(action_stock_report)d" icon="oi-arrow-up" class="oe_stat_button" type="action">
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Traceability</span>
+                            </div>
+                        </button>
                 </div>
                 <div class="oe_title">
                     <label for="name"/>

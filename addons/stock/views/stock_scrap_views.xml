@@ -37,8 +37,12 @@
                                     attrs="{'invisible':[('picking_id','=',False)]}" icon="fa-cogs"/>
                             <field name="picking_id" invisible="1"/>
                             <button class="oe_stat_button" name="action_get_stock_move_lines"
-                                    string="Product Moves" type="object"
-                                    attrs="{'invisible':[('move_id','=',False)]}" icon="fa-exchange"/>
+                                    type="object"
+                                    attrs="{'invisible':[('move_id','=',False)]}" icon="fa-exchange">
+                                    <div class="o_stat_info">
+                                        <span class="o_stat_text">Product Moves</span>
+                                    </div>
+                            </button>
                             <field name="move_id" invisible="1"/>
                         </div>
                         <div class="oe_title">

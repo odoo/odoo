@@ -28,8 +28,11 @@
                 <field name="transaction_ids" invisible="1" />
                 <button name="action_view_payment_transactions" type="object"
                         class="oe_stat_button" icon="fa-money"
-                        string="Payment Transaction"
-                        attrs="{'invisible': [('transaction_ids', '=', [])]}" />
+                        attrs="{'invisible': [('transaction_ids', '=', [])]}">
+                        <div class="o_stat_info">
+                            <span class="o_stat_text">Payment Transaction</span>
+                        </div>
+                </button>
             </xpath>
         </field>
     </record>

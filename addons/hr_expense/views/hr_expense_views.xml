@@ -727,7 +727,9 @@
                             type="object"
                             attrs="{'invisible': ['|', ('state', 'not in', ['post', 'done']), ('account_move_id', '=', False)]}"
                             groups="account.group_account_invoice">
-                            Journal Entry
+                            <div class="o_stat_info">
+                                <span class="o_stat_text">Journal Entry</span>
+                            </div>
                         </button>
                         <button name="action_open_expense_view"
                             class="oe_stat_button"
