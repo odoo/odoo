@@ -789,6 +789,27 @@ class TestTranslationWrite(TransactionCase):
         with self.assertRaises(UserError):
             self.category.update_field_translations('name', {'fr_FR': {'English Name': 'French Name'}})
 
+    def test_update_field_translations_for_empty(self):
+        self.env['res.lang']._activate_lang('nl_NL')
+        self.env['res.lang']._activate_lang('fr_FR')
+        group = self.env['res.groups'].create({'name': 'test_group', 'comment': False})
+
+        groupEN = group.with_context(lang='en_US')
+        groupFR = group.with_context(lang='fr_FR')
+        groupNL = group.with_context(lang='nl_NL')
+        self.assertEqual(groupEN.comment, False)
+        groupFR.update_field_translations('comment', {'nl_NL': 'Dutch Name', 'fr_FR': 'French Name'})
+        self.assertEqual(groupEN.comment, 'French Name', 'fr_FR value as the current env.lang is chosen as the default en_US value')
+        self.assertEqual(groupFR.comment, 'French Name')
+        self.assertEqual(groupNL.comment, 'Dutch Name')
+
+        group.comment = False
+        groupFR.update_field_translations('comment', {'nl_NL': False, 'fr_FR': False})
+        groupFR.flush_recordset()
+        self.cr.execute("SELECT comment FROM res_groups WHERE id = %s", (group.id,))
+        (comment,) = self.cr.fetchone()
+        self.assertEqual(comment, None)
+
     def test_field_selection(self):
         """ Test translations of field selections. """
         self.env['res.lang']._activate_lang('fr_FR')
