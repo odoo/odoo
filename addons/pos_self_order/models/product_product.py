@@ -43,7 +43,9 @@ class ProductProduct(models.Model):
             pos_config_sudo,
         )
 
-    def _add_price_info_to_attributes(self, attributes: List[Dict], pos_config_sudo: PosConfig) -> List[Dict]:
+    def _add_price_info_to_attributes(
+        self, attributes: List[Dict], pos_config_sudo: PosConfig
+    ) -> List[Dict]:
         """
         Here we replace the price_extra of each attribute value with a price_extra
         dictionary that includes the price with taxes included and the price with taxes excluded
@@ -64,23 +66,41 @@ class ProductProduct(models.Model):
         self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
     ) -> Dict[str, float]:
         """
-        Function that returns an object with the price info of a given product, for
+        Function that returns a dict with the price info of a given product
         """
         self.ensure_one()
         # if price == None it means that a price was not passed as a parameter, so we use the product's list price
         # it could happen that a price was passed, but it was 0; in that case we want to use this 0 as the argument,
         # and not the product's list price
-        price_info = self.taxes_id.compute_all(
-            self.lst_price if price is None else price, pos_config.currency_id, qty, self
-        )
+        price = price if price is not None else self.lst_price
+        # fmt: off
+        price_info = ( pos_config
+                        .default_fiscal_position_id
+                        .map_tax(self.taxes_id)
+                        .compute_all(
+                                        price, 
+                                        pos_config.currency_id, 
+                                        qty, product=self
+                                    )
+                    )
 
         return {
             "list_price": price_info["total_included"]
-            if pos_config.iface_tax_included == "total"
-            else price_info["total_excluded"],
+                            if pos_config.iface_tax_included == "total"
+                            else price_info["total_excluded"],
             "price_without_tax": price_info["total_excluded"],
             "price_with_tax": price_info["total_included"],
         }
+        # fmt: on
+
+        # fpos = self.order_id.fiscal_position_id
+        # tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
+        # price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
+        # taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
+        # return {
+        #     'price_subtotal_incl': taxes['total_included'],
+        #     'price_subtotal': taxes['total_excluded'],
+        # }
 
     def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
         """
