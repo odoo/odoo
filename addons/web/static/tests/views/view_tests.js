@@ -16,6 +16,7 @@ import { View } from "@web/views/view";
 import { actionService } from "@web/webclient/actions/action_service";
 
 import { Component, onWillStart, onWillUpdateProps, useState, xml } from "@odoo/owl";
+import { CallbackRecorder } from "@web/webclient/actions/action_hook";
 
 const serviceRegistry = registry.category("services");
 const viewRegistry = registry.category("views");
@@ -1614,6 +1615,31 @@ QUnit.module("Views", (hooks) => {
         assert.hasClass(view, "o_custom_class_from_props_2", "should have the class from props");
         assert.hasClass(view, "o_custom_class_from_arch_1", "should have the class from arch");
         assert.hasClass(view, "o_custom_class_from_arch_2", "should have the class from arch");
+    });
+
+    QUnit.test("callback recorders are moved from props to subenv", async (assert) => {
+        assert.expect(5);
+        class ToyController extends Component {
+            setup() {
+                assert.ok(this.env.__getGlobalState__ instanceof CallbackRecorder); // put in env by View
+                assert.ok(this.env.__getContext__ instanceof CallbackRecorder); // put in env by View
+
+                assert.strictEqual(this.env.__getLocalState__, null); // set by View
+                assert.strictEqual(this.env.__beforeLeave__, null); // set by View
+
+                assert.ok(this.env.__getOrderBy__ instanceof CallbackRecorder); // put in env by WithSearch
+            }
+        }
+        ToyController.template = xml`<div/>`;
+        viewRegistry.add("toy", { type: "toy", Controller: ToyController }, { force: true });
+        const env = await makeTestEnv({ serverData });
+        const props = {
+            type: "toy",
+            resModel: "animal",
+            __getGlobalState__: new CallbackRecorder(),
+            __getContext__: new CallbackRecorder(),
+        };
+        await mount(View, target, { env, props });
     });
 
     ////////////////////////////////////////////////////////////////////////////

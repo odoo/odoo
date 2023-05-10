@@ -93,7 +93,7 @@ const CTX_KEY_REGEX =
     /^(?:(?:default_|search_default_|show_).+|.+_view_ref|group_by|group_by_no_leaf|active_id|active_ids|orderedBy)$/;
 
 // only register this template once for all dynamic classes ControllerComponent
-const ControllerComponentTemplate = xml`<t t-component="Component" t-props="props"/>`;
+const ControllerComponentTemplate = xml`<t t-component="Component" t-props="componentProps"/>`;
 
 function makeActionManager(env) {
     const keepLast = new KeepLast();
@@ -639,11 +639,13 @@ function makeActionManager(env) {
                         const beforeLeaveFns = this.__beforeLeave__.callbacks;
                         callbacks.push(...beforeLeaveFns);
                     });
-                    useChildSubEnv({
-                        __beforeLeave__: this.__beforeLeave__,
-                        __getGlobalState__: this.__getGlobalState__,
-                        __getLocalState__: this.__getLocalState__,
-                    });
+                    if (this.constructor.Component !== View) {
+                        useChildSubEnv({
+                            __beforeLeave__: this.__beforeLeave__,
+                            __getGlobalState__: this.__getGlobalState__,
+                            __getLocalState__: this.__getLocalState__,
+                        });
+                    }
                 }
                 this.isMounted = false;
 
@@ -734,6 +736,15 @@ function makeActionManager(env) {
                 if (action.target === "new" && dialogCloseResolve) {
                     dialogCloseResolve();
                 }
+            }
+            get componentProps() {
+                const componentProps = { ...this.props };
+                if (this.constructor.Component === View) {
+                    componentProps.__beforeLeave__ = this.__beforeLeave__;
+                    componentProps.__getGlobalState__ = this.__getGlobalState__;
+                    componentProps.__getLocalState__ = this.__getLocalState__;
+                }
+                return componentProps;
             }
         }
         ControllerComponent.template = ControllerComponentTemplate;
