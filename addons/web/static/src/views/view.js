@@ -109,6 +109,14 @@ export function getDefaultConfig() {
 
 export class ViewNotFoundError extends Error {}
 
+const CALLBACK_RECORDER_NAMES = [
+    "__beforeLeave__",
+    "__getGlobalState__",
+    "__getLocalState__",
+    "__getContext__",
+    "__getOrderBy__",
+];
+
 const STANDARD_PROPS = [
     "resModel",
     "type",
@@ -144,6 +152,8 @@ const STANDARD_PROPS = [
     "hideCustomGroupBy",
     "searchMenuTypes",
 
+    ...CALLBACK_RECORDER_NAMES,
+
     // LEGACY: remove this later (clean when mappings old state <-> new state are established)
     "searchPanel",
     "searchModel",
@@ -174,6 +184,9 @@ export class View extends Component {
                 ...getDefaultConfig(),
                 ...this.env.config,
             },
+            ...Object.fromEntries(
+                CALLBACK_RECORDER_NAMES.map((name) => [name, this.props[name] || null])
+            ),
         });
 
         this.handleActionLinks = useActionLinks({ resModel });
