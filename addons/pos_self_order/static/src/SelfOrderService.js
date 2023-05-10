@@ -16,6 +16,10 @@ import { effect } from "@point_of_sale/utils";
  * @property {string} description
  * @property {PriceInfo} price_extra
  *
+ *
+ * @typedef {Omit<OrderLine, 'price_extra'} ReducedOrderLine
+ * The type of orderline that we send to the server
+ *
  * @typedef {Object} PriceInfo
  * @property {number} list_price
  * @property {number} price_with_tax
@@ -28,7 +32,19 @@ import { effect } from "@point_of_sale/utils";
  * @property {string} name
  * @property {string} description_sale
  * @property {boolean} has_image
- * @property {[]} attributes
+ * @property {Attribute[]} attributes
+ *
+ * @typedef {Object} Attribute
+ * @property {string} display_type - The type of display for the attribute.
+ * @property {number} id - The unique identifier of the attribute.
+ * @property {string} name - The name of the attribute.
+ * @property {Object[]} values - An array of objects representing the attribute values.
+ * @property {bool | string} values.html_color - False if the value has no color, otherwise the color in hex format. ( ex: #FF0000 )
+ * @property {number} values.id - The unique identifier of the value.
+ * @property {boolean} values.is_custom
+ * @property {string} values.name
+ * @property {PriceInfo} values.price_extra
+ *
  */
 export class SelfOrder {
     constructor(env, rpc, notification) {
@@ -60,17 +76,16 @@ export class SelfOrder {
             },
             [this]
         );
-        if (!this.has_active_session) {
-            this.notification.add(
-                _t(
-                    "The restaurant is closed. You can still view the menu, but you will not be able to order."
-                ),
-                { type: "warning", sticky: true }
-            );
-        }
+        this.products.map((product) => console.log(product.attributes));
+        this.notification.add(
+            _t(
+                "The restaurant is closed. You can still view the menu, but you will not be able to order."
+            ),
+            { type: "warning", sticky: true }
+        );
     }
     /**
-     * @param {"/" | "/products" | "/products/{int}" | "/cart" | "/orders"} page
+     * @param {"/" | "/products" | "/products/int" | "/cart" | "/orders"} page
      */
     setPage(page) {
         this.page = page;
@@ -224,7 +239,7 @@ export class SelfOrder {
     /**
      * @returns {Object}
      * @property {number} pos_config_id
-    //  * @property {} cart
+     * @property {ReducedOrderLine[]} cart
      * @property {string} table_access_token
      * @property {string} order_pos_reference
      * @property {string} order_access_token
@@ -241,8 +256,8 @@ export class SelfOrder {
         };
     }
     /**
-     * @param {import("@pos_self_order/jsDocTypes").OrderLine[]} cart
-     * @returns {import("@pos_self_order/jsDocTypes").OrderLine[]}
+     * @param {OrderLine[]} cart
+     * @returns {ReducedOrderLine[]}
      */
     extractCartData(cart) {
         return cart.map((orderLine) => ({
