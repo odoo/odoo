@@ -2643,7 +2643,7 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
             method: 'name_search',
             kwargs: {
                 name: needle,
-                args: this.options.domain,
+                args: await this._getSearchDomain(),
                 operator: "ilike",
                 limit: this.options.limit + 1,
             },
@@ -2714,6 +2714,14 @@ const Many2oneUserValueWidget = SelectUserValueWidget.extend({
         this.waitingForSearch = false;
         this.afterSearch.forEach(cb => cb());
         this.afterSearch = [];
+    },
+    /**
+     * Returns the domain to use for the search.
+     *
+     * @private
+     */
+    async _getSearchDomain() {
+        return this.options.domain;
     },
     /**
      * Returns the display name for a given record.

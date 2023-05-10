@@ -13,12 +13,14 @@ const wLinkPopoverWidget = require('@website/js/widgets/link_popover_widget')[Sy
 const wUtils = require('website.utils');
 const {isImageSupportedForStyle} = require('web_editor.image_processing');
 require('website.s_popup_options');
+const {Domain} = require('@web/core/domain');
 
 var _t = core._t;
 var qweb = core.qweb;
 
 const InputUserValueWidget = options.userValueWidgetsRegistry['we-input'];
 const SelectUserValueWidget = options.userValueWidgetsRegistry['we-select'];
+const Many2oneUserValueWidget = options.userValueWidgetsRegistry['we-many2one'];
 
 options.UserValueWidget.include({
     loadMethodsData() {
@@ -37,6 +39,28 @@ options.UserValueWidget.include({
                 this._methodsNames[indexView] = 'customizeWebsiteVariable';
             }
         }
+    },
+});
+
+Many2oneUserValueWidget.include({
+    /**
+     * @override
+     */
+    async _getSearchDomain() {
+        // Add the current website's domain if the model has a website_id field.
+        // Note that the `_rpc` method is cached in Many2X user value widget,
+        // see `_rpcCache`.
+        const websiteIdField = await this._rpc({
+            model: this.options.model,
+            method: "fields_get",
+            args: [["website_id"]],
+        });
+        const modelHasWebsiteId = !!websiteIdField["website_id"];
+        if (modelHasWebsiteId && !this.options.domain.find(arr => arr[0] === "website_id")) {
+            this.options.domain =
+                Domain.and([this.options.domain, wUtils.websiteDomain(this)]).toList();
+        }
+        return this.options.domain;
     },
 });
 
