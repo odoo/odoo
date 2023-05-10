@@ -6672,6 +6672,7 @@ QUnit.module("Views", (hooks) => {
                 groupBy: ["product_id"],
                 domain: [["foo", "=", "abcd"]],
                 async mockRPC(route, args) {
+                    assert.step(args.method || route);
                     if (args.method === "web_read_group") {
                         return {
                             groups: [
@@ -6707,6 +6708,18 @@ QUnit.module("Views", (hooks) => {
                 ".o_view_nocontent",
                 "the nocontent helper is not displayed after cancelling the quick create"
             );
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "onchange",
+                "name_create",
+                "read",
+                "read_progress_bar",
+                "web_read_group",
+                "onchange",
+                "onchange",
+            ]);
         }
     );
 
@@ -8989,6 +9002,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.containsN(
@@ -9003,6 +9019,13 @@ QUnit.module("Views", (hooks) => {
             ["-4", "36"],
             "counter should display the sum of int_field values"
         );
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+        ]);
     });
 
     QUnit.test('column progressbars: "false" bar is clickable', async (assert) => {
@@ -9029,6 +9052,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
@@ -9059,6 +9085,14 @@ QUnit.module("Views", (hooks) => {
             "o_kanban_group_show_200"
         );
         assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+        ]);
     });
 
     QUnit.test('column progressbars: "false" bar with sum_field', async (assert) => {
@@ -9087,6 +9121,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
@@ -9101,6 +9138,15 @@ QUnit.module("Views", (hooks) => {
             "progress-bar-animated"
         );
         assert.deepEqual(getCounters(), ["-4", "15"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "web_read_group",
+        ]);
     });
 
     QUnit.test("column progressbars should not crash in non grouped views", async (assert) => {
@@ -9119,8 +9165,8 @@ QUnit.module("Views", (hooks) => {
                 "</div>" +
                 "</t></templates>" +
                 "</kanban>",
-            async mockRPC(route, { method }) {
-                assert.step(method);
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
             },
         });
 
@@ -9149,6 +9195,9 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["product_id"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             assert.containsN(target, ".o_kanban_counter", 2);
@@ -9164,6 +9213,15 @@ QUnit.module("Views", (hooks) => {
                 3,
                 "a new column with a new column progressbar should have been created"
             );
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "create",
+                "/web/dataset/resequence",
+            ]);
         }
     );
 
@@ -9182,6 +9240,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.deepEqual(getCounters(), ["1", "3"]);
@@ -9198,6 +9259,19 @@ QUnit.module("Views", (hooks) => {
             ["2", "3"],
             "kanban counters should have updated on quick create"
         );
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "onchange",
+            "name_create",
+            "read",
+            "read_progress_bar",
+            "onchange",
+            "onchange",
+        ]);
     });
 
     QUnit.test("column progressbars are working with load more", async (assert) => {
@@ -9216,6 +9290,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.deepEqual(getCardTexts(0), ["1"]);
@@ -9224,6 +9301,14 @@ QUnit.module("Views", (hooks) => {
         await loadMore(0);
 
         assert.deepEqual(getCardTexts(0), ["1", "2", "3"], "intended records are loaded");
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+        ]);
     });
 
     QUnit.test(
@@ -9248,6 +9333,9 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
                 groupBy: ["bar"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             await click(target, ".o_column_progress .progress-bar.bg-success");
@@ -9258,6 +9346,15 @@ QUnit.module("Views", (hooks) => {
             await loadMore(0);
 
             assert.deepEqual(getCardTexts(), ["5", "6", "7"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+            ]);
         }
     );
 
@@ -9284,6 +9381,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.deepEqual(getCounters(), ["-4", "36"], "counter should contain the correct value");
@@ -9303,6 +9403,17 @@ QUnit.module("Views", (hooks) => {
             ".progress-bar",
             "the counter progressbars should have been correctly updated"
         );
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "action_archive",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+        ]);
     });
 
     QUnit.test(
@@ -9334,6 +9445,9 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["bar"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             assert.deepEqual(getCardTexts(), ["4", "1", "2", "3"]);
@@ -9343,6 +9457,17 @@ QUnit.module("Views", (hooks) => {
             await clickColumnAction("Archive All");
 
             assert.deepEqual(getCardTexts(), ["1", "2", "3"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "action_archive",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+            ]);
         }
     );
 
@@ -9449,6 +9574,9 @@ QUnit.module("Views", (hooks) => {
                 "</t></templates>" +
                 "</kanban>",
             groupBy: ["product_id"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         // Unfold first column
@@ -9476,6 +9604,29 @@ QUnit.module("Views", (hooks) => {
         );
 
         assert.deepEqual(getCounters(), ["0", "1", "3"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "write",
+            "read_progress_bar",
+            "read",
+            "/web/dataset/resequence",
+            "read",
+            "write",
+            "read_progress_bar",
+            "read",
+            "/web/dataset/resequence",
+            "read",
+            "write",
+            "read_progress_bar",
+            "read",
+            "/web/dataset/resequence",
+            "read",
+        ]);
     });
 
     QUnit.test("progress bar subgroup count recompute", async (assert) => {
@@ -9492,6 +9643,9 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.deepEqual(getCounters(), ["1", "3"]);
@@ -9499,6 +9653,14 @@ QUnit.module("Views", (hooks) => {
         await click(target, ".o_kanban_group:nth-child(2) .bg-success");
 
         assert.deepEqual(getCounters(), ["1", "1"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+        ]);
     });
 
     QUnit.test(
@@ -9517,6 +9679,9 @@ QUnit.module("Views", (hooks) => {
                     </t></templates>
                 </kanban>`,
                 groupBy: ["bar"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             assert.deepEqual(getTooltips(), ["1 blip", "1 yop", "1 gnap", "1 blip"]);
@@ -9530,6 +9695,18 @@ QUnit.module("Views", (hooks) => {
 
             assert.deepEqual(getTooltips(), ["1 gnap", "1 blip", "1 yop", "1 blip"]);
             assert.deepEqual(getCounters(), ["2", "2"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "write",
+                "read_progress_bar",
+                "read",
+                "/web/dataset/resequence",
+                "read",
+            ]);
         }
     );
 
@@ -9596,6 +9773,9 @@ QUnit.module("Views", (hooks) => {
                     "</t></templates>" +
                     "</kanban>",
                 groupBy: ["bar"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             assert.deepEqual(getCounters(), ["-4", "36"]);
@@ -9609,6 +9789,21 @@ QUnit.module("Views", (hooks) => {
                 ["40", "36"],
                 "kanban counters should have been updated on quick create"
             );
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "get_views",
+                "onchange",
+                "create",
+                "read",
+                "read_progress_bar",
+                "web_read_group",
+                "onchange",
+                "onchange",
+            ]);
         }
     );
 
@@ -9636,6 +9831,9 @@ QUnit.module("Views", (hooks) => {
                     </kanban>
                 `,
                 groupBy: ["bar"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             await click(getColumn(0), ".progress-bar.bg-danger");
@@ -9665,6 +9863,29 @@ QUnit.module("Views", (hooks) => {
                 ["40", "36"],
                 "kanban counters should have been updated on quick create, respecting the active filter"
             );
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_read_group",
+                "get_views",
+                "onchange",
+                "create",
+                "read",
+                "read_progress_bar",
+                "web_read_group",
+                "onchange",
+                "onchange",
+                "create",
+                "read",
+                "read_progress_bar",
+                "web_read_group",
+                "onchange",
+                "onchange",
+            ]);
         }
     );
 
@@ -10585,6 +10806,9 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>
             `,
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             // Check that we have 2 columns and check their progressbar's state
@@ -10628,6 +10852,21 @@ QUnit.module("Views", (hooks) => {
             );
             assert.deepEqual(getTooltips(0), ["1 blip"]);
             assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+            ]);
         }
     );
 
@@ -10652,6 +10891,9 @@ QUnit.module("Views", (hooks) => {
                             </t>
                         </templates>
                     </kanban>`,
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             // Check that we have 2 columns, check their progressbar's state and check records
@@ -10706,6 +10948,23 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCardTexts(0), ["4blip"]);
             assert.deepEqual(getTooltips(1), ["1 yop", "1 blip", "1 Other"]);
             assert.deepEqual(getCardTexts(1), ["1yop", "2blip", "3gnap"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+            ]);
         }
     );
 
@@ -10731,6 +10990,9 @@ QUnit.module("Views", (hooks) => {
                     </templates>
                 </kanban>
             `,
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             // Check that we have 2 columns, check their progressbar's state, and check records
@@ -10778,6 +11040,19 @@ QUnit.module("Views", (hooks) => {
             assert.deepEqual(getCardTexts(0), []);
             assert.deepEqual(getTooltips(1), ["1 yop", "2 blip", "1 Other"]);
             assert.deepEqual(getCardTexts(1), ["1yop", "4blip"]);
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "write",
+                "read_progress_bar",
+                "read",
+                "/web/dataset/resequence",
+                "read",
+            ]);
         }
     );
 
@@ -11572,6 +11847,9 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
                 groupBy: ["bar"],
+                async mockRPC(route, args) {
+                    assert.step(args.method || route);
+                },
             });
 
             assert.containsN(target, ".o_kanban_group:nth-child(1) .progress-bar", 2);
@@ -11620,6 +11898,16 @@ QUnit.module("Views", (hooks) => {
                 ""
             );
             assert.containsNone(target, ".o_kanban_group:nth-child(2) .o_kanban_load_more");
+            assert.verifySteps([
+                "get_views",
+                "web_read_group",
+                "read_progress_bar",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+                "web_search_read",
+            ]);
         }
     );
 
@@ -11642,6 +11930,9 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         // Initial state: 2 columns, the "Yes" column contains 2 records "abc", 1 "def" and 1 "ghi"
@@ -11691,6 +11982,19 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(getProgressBars(1)[0].style.width, "25%"); // abc: 1
         assert.strictEqual(getProgressBars(1)[1].style.width, "50%"); // def: 2
         assert.strictEqual(getProgressBars(1)[2].style.width, "25%"); // ghi: 1
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "web_search_read",
+            "write",
+            "read",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+        ]);
     });
 
     QUnit.test("load more button shouldn't be visible when unfiltering column", async (assert) => {
@@ -12337,6 +12641,9 @@ QUnit.module("Views", (hooks) => {
                 </kanban>
             `,
             groupBy: ["bar"],
+            async mockRPC(route, args) {
+                assert.step(args.method || route);
+            },
         });
 
         assert.containsN(target, ".o_kanban_group", 2);
@@ -12371,6 +12678,16 @@ QUnit.module("Views", (hooks) => {
             ["100%"]
         );
         assert.deepEqual(getCounters(), ["-4"]);
+        assert.verifySteps([
+            "get_views",
+            "web_read_group",
+            "read_progress_bar",
+            "web_search_read",
+            "web_search_read",
+            "write",
+            "read_progress_bar",
+            "web_read_group",
+        ]);
     });
 
     QUnit.test("quick create record in grouped kanban in a form view dialog", async (assert) => {
