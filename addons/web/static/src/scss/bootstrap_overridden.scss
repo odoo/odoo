@@ -294,10 +294,14 @@ $badge-color: inherit !default;
 $badge-padding-y: 0.25em !default;
 $badge-padding-x: 0.82em !default;
 
-// Placeholder color 
+// Placeholder color
 $input-placeholder-color: $gray-300 !default;
 
 // Card
 
 $card-spacer-y: $spacer !default; // BS Default
 $card-cap-padding-y: $card-spacer-y !default;
+
+.user-select-none {
+    -webkit-user-select: none !important; // not included in BS by default
+}

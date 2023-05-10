@@ -160,18 +160,11 @@ QUnit.module("Components", (hooks) => {
         // Pressing Space when focus is on the input is a standard behavior
         // So we simulate it and verify that it will have its standard behavior.
         assert.strictEqual(document.activeElement, target.querySelector(".o-checkbox input"));
-        const event = triggerEvent(
-            document.activeElement,
-            null,
-            "keydown",
-            { key: "Space" },
-            { fast: true }
-        );
+        const event = await triggerEvent(document.activeElement, null, "keydown", { key: "Space" });
         assert.ok(!event.defaultPrevented);
         target.querySelector(".o-checkbox input").checked = true;
         assert.verifySteps([]);
-        triggerEvent(target, ".o-checkbox input", "change", {}, { fast: true });
-        await nextTick();
+        await triggerEvent(target, ".o-checkbox input", "change");
         assert.ok(target.querySelector(".o-checkbox input").checked);
         assert.verifySteps(["true"]);
     });

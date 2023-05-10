@@ -10764,7 +10764,7 @@ QUnit.module("Views", (hooks) => {
         nameInput.focus();
 
         const addButton = target.querySelector(".o_kanban_add");
-        const event = triggerEvent(nameInput, null, "keydown", { key: "Tab" }, { fast: true });
+        const event = triggerEvent(nameInput, null, "keydown", { key: "Tab" }, { sync: true });
         assert.strictEqual(getNextTabableElement(target), addButton);
         assert.ok(!event.defaultPrevented);
         addButton.focus();
@@ -13102,7 +13102,7 @@ QUnit.module("Views", (hooks) => {
         assert.strictEqual(content.scrollLeft, 0);
 
         // Cancel drag: click outside
-        await triggerEvent(content, ".o_kanban_renderer", "mousedown");
+        await triggerEvent(content, ".o_kanban_renderer", "pointerdown");
 
         assert.containsNone(target, ".o_kanban_record.o_dragged");
     });
