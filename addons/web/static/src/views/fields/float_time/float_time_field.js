@@ -45,7 +45,7 @@ export const floatTimeField = {
             type: "string",
         },
     ],
-    supportedTypes: ["float"],
+    supportedTypes: ["float","floattime"],
     isEmpty: () => false,
     extractProps: ({ attrs, options }) => ({
         inputType: options.type,

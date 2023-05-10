@@ -86,6 +86,8 @@ patch(Message.prototype, "mail/web", {
             }
             case "float":
                 return format.float(trackingValue.value);
+            case "floattime":
+              return format.float_time(trackingValue.value);
             case "integer":
                 return format.integer(trackingValue.value);
             case "text":

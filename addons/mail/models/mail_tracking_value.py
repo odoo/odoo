@@ -23,6 +23,7 @@ class MailTracking(models.Model):
     old_value_char = fields.Char('Old Value Char', readonly=1)
     old_value_text = fields.Text('Old Value Text', readonly=1)
     old_value_datetime = fields.Datetime('Old Value DateTime', readonly=1)
+    old_value_floattime = fields.Float('Old Value floatTime', readonly=1)
 
     new_value_integer = fields.Integer('New Value Integer', readonly=1)
     new_value_float = fields.Float('New Value Float', readonly=1)
@@ -30,6 +31,7 @@ class MailTracking(models.Model):
     new_value_char = fields.Char('New Value Char', readonly=1)
     new_value_text = fields.Text('New Value Text', readonly=1)
     new_value_datetime = fields.Datetime('New Value Datetime', readonly=1)
+    new_value_floattime = fields.Float('New Value floatTime', readonly=1)
 
     currency_id = fields.Many2one('res.currency', 'Currency', readonly=True, ondelete='set null',
         help="Used to display the currency when tracking monetary values")
@@ -59,6 +61,12 @@ class MailTracking(models.Model):
                 'old_value_%s' % col_info['type']: initial_value,
                 'new_value_%s' % col_info['type']: new_value
             })
+        elif col_info['type'] == 'floattime':
+            values.update({
+                'old_value_floattime': float(initial_value) if initial_value else 0.0,
+                'new_value_floattime': float(new_value) if new_value else 0.0
+            })
+
         elif col_info['type'] == 'date':
             values.update({
                 'old_value_datetime': initial_value and fields.Datetime.to_string(datetime.combine(fields.Date.from_string(initial_value), datetime.min.time())) or False,
@@ -111,6 +119,9 @@ class MailTracking(models.Model):
         for record in self:
             if record.field_type in ['integer', 'float', 'char', 'text', 'monetary']:
                 result.append(record[f'{prefix}_value_{record.field_type}'])
+            elif record.field_type == 'floattime':
+                result.append(record[f'{prefix}_value_floattime'])
+
             elif record.field_type == 'datetime':
                 if record[f'{prefix}_value_datetime']:
                     new_datetime = record[f'{prefix}_value_datetime']

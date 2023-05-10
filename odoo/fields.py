@@ -1629,7 +1629,24 @@ class Monetary(Field):
     def convert_to_write(self, value, record):
         return value
 
+class Floattime(Field):
+    type = 'floattime'
+    column_type = ('numeric', 'numeric')
 
+    def convert_to_column(self, value, record, values=None, validate=True):
+        return float(value) if value else 0.0
+
+    def convert_to_cache(self, value, record, validate=True):
+        return float(value) if value else 0.0
+
+    def convert_to_record(self, value, record):
+        return float(value) if value else 0.0
+
+    def convert_to_read(self, value, record, use_name_get=True):
+        return value
+
+    def convert_to_write(self, value, record):
+        return value
 class _String(Field):
     """ Abstract class for string fields. """
     translate = False                   # whether the field is translated
