@@ -32,6 +32,7 @@ export class PartnerListScreen extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.orm = useService("orm");
         this.notification = useService("pos_notification");
         this.searchWordInputRef = useRef("search-word-input-partner");

@@ -25,6 +25,7 @@ export class SaleOrderManagementControlPanel extends Component {
 
     setup() {
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.saleOrderFetcher = useService("sale_order_fetcher");
         this.orderManagementContext = useState(orderManagement);
         useAutofocus();

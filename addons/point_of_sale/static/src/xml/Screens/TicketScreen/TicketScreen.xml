@@ -6,20 +6,20 @@
             <div class="screen-full-width">
                 <div class="rightpane pane-border">
                     <div class="controls">
-                        <t t-if="!env.isMobile || !state.showSearchBar">
+                        <t t-if="!ui.isSmall || !state.showSearchBar">
                             <div class="buttons">
                                 <button class="discard" t-on-click="() => this.onCloseScreen()">
                                     <span class="search-icon">
                                         <i class="fa fa-angle-double-left"/>
                                     </span>
-                                    <t t-if="!env.isMobile">
+                                    <t t-if="!ui.isSmall">
                                         Back
                                     </t>
                                 </button>
                                 <button t-if="allowNewOrders" class="highlight" t-on-click="() => this.onCreateNewOrder()">New Order</button>
                             </div>
                         </t>
-                        <t t-if="env.isMobile">
+                        <t t-if="ui.isSmall">
                             <t t-if="state.showSearchBar">
                                 <button class="arrow-left" t-on-click="() => { state.showSearchBar = !state.showSearchBar }">
                                     <span class="search-icon">
@@ -58,7 +58,7 @@
                     <div class="orders">
                         <t t-set="_filteredOrderList" t-value="getFilteredOrderList()" />
                         <t t-if="_filteredOrderList.length !== 0">
-                            <div class="header-row" t-att-class="{ oe_hidden: env.isMobile }">
+                            <div class="header-row" t-att-class="{ oe_hidden: ui.isSmall }">
                                 <div class="col wide">Date</div>
                                 <div class="col wide">Receipt Number</div>
                                 <div class="col">Customer</div>
@@ -72,30 +72,30 @@
                                 <div class="order-row" t-att-class="{ highlight: isHighlighted(order) }" t-on-click="() => this.onClickOrder(order)">
                                     <div class="col wide">
                                         <div><t t-esc="getDate(order)"></t></div>
-                                        <div t-if="env.isMobile"><t t-esc="getTotal(order)"></t></div>
+                                        <div t-if="ui.isSmall"><t t-esc="getTotal(order)"></t></div>
                                     </div>
                                     <div class="col wide">
                                         <div><t t-esc="order.name"></t></div>
-                                        <div t-if="env.isMobile"><t t-esc="getStatus(order)"></t></div>
+                                        <div t-if="ui.isSmall"><t t-esc="getStatus(order)"></t></div>
                                     </div>
-                                    <div class="col" t-if="!env.isMobile">
+                                    <div class="col" t-if="!ui.isSmall">
                                         <div><t t-esc="getPartner(order)"></t></div>
                                     </div>
-                                    <div t-if="showCardholderName() &amp;&amp; !env.isMobile" class="col">
+                                    <div t-if="showCardholderName() and !ui.isSmall" class="col">
                                         <div><t t-esc="getCardholderName(order)"></t></div>
                                     </div>
                                     <div class="col">
-                                        <div t-if="env.isMobile"><t t-esc="getPartner(order)"></t></div>
-                                        <div t-att-class = "env.isMobile ? 'cashier':''"><t t-esc="getCashier(order)"></t></div>
+                                        <div t-if="ui.isSmall"><t t-esc="getPartner(order)"></t></div>
+                                        <div t-att-class = "ui.isSmall ? 'cashier':''"><t t-esc="getCashier(order)"></t></div>
                                     </div>
-                                    <div class="col end" t-if="!env.isMobile">
+                                    <div class="col end" t-if="!ui.isSmall">
                                         <div><t t-esc="getTotal(order)"></t></div>
                                     </div>
-                                    <div class="col narrow" t-if="!env.isMobile">
+                                    <div class="col narrow" t-if="!ui.isSmall">
                                         <div><t t-esc="getStatus(order)"></t></div>
                                     </div>
                                     <div t-if="!shouldHideDeleteButton(order)" class="col very-narrow delete-button" name="delete" t-on-click.stop="() => this.onDeleteOrder(order)">
-                                        <i class="fa fa-trash" aria-hidden="true"/><t t-if="env.isMobile"> Delete</t>
+                                        <i class="fa fa-trash" aria-hidden="true"/><t t-if="ui.isSmall"> Delete</t>
                                     </div>
                                     <div t-else="" class="col very-narrow"></div>
                                 </div>

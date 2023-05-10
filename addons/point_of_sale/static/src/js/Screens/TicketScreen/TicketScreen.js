@@ -48,6 +48,7 @@ export class TicketScreen extends IndependentToOrderScreen {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.popup = useService("popup");
         this.orm = useService("orm");
         this.numberBuffer = useService("number_buffer");
@@ -56,7 +57,7 @@ export class TicketScreen extends IndependentToOrderScreen {
         });
         this._state = this.pos.globalState.TICKET_SCREEN_STATE;
         this.state = useState({
-            showSearchBar: !this.env.isMobile,
+            showSearchBar: !this.ui.isSmall,
         });
         const defaultUIState = this.props.reuseSavedUIState
             ? this._state.ui

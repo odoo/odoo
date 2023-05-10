@@ -15,7 +15,7 @@ import { PaymentScreenNumpad } from "./PaymentScreenNumpad";
 import { PaymentScreenPaymentLines } from "./PaymentScreenPaymentLines";
 import { PaymentScreenStatus } from "./PaymentScreenStatus";
 import { usePos } from "@point_of_sale/app/pos_hook";
-import { Component } from "@odoo/owl";
+import { Component, useState } from "@odoo/owl";
 import { sprintf } from "@web/core/utils/strings";
 
 export class PaymentScreen extends Component {
@@ -29,6 +29,7 @@ export class PaymentScreen extends Component {
     setup() {
         super.setup();
         this.pos = usePos();
+        this.ui = useState(useService("ui"));
         this.orm = useService("orm");
         this.popup = useService("popup");
         this.report = useService("report");

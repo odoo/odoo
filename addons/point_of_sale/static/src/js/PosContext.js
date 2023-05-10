@@ -1,5 +1,5 @@
 /** @odoo-module */
 import { reactive } from "@odoo/owl";
 // Create global context objects
-// e.g. component.env.device = new Context({ isMobile: false });
+// FIXME POSREF singletons exported by modules are not testable, this should probably be a service
 export const orderManagement = reactive({ searchString: "", selectedOrder: null });
