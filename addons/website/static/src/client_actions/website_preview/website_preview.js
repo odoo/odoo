@@ -102,6 +102,14 @@ export class WebsitePreview extends Component {
                 this.websiteService.showLoader({ showTips: true });
             }
         }, () => [this.props.action.context.params]);
+        
+        useEffect(() => {
+            this.websiteContext.showAceEditor = false;
+        }, () => [
+            this.websiteContext.showNewContentModal,
+            this.websiteContext.edition,
+            this.websiteContext.translation,
+        ]);
 
         onMounted(() => {
             this.websiteService.blockPreview(true, 'load-iframe');
@@ -114,6 +122,7 @@ export class WebsitePreview extends Component {
         });
 
         onWillUnmount(() => {
+            this.websiteService.context.showAceEditor = false;
             const { pathname, search, hash } = this.iframe.el.contentWindow.location;
             this.websiteService.lastUrl = `${pathname}${search}${hash}`;
             this.websiteService.currentWebsiteId = null;
@@ -326,6 +335,11 @@ export class WebsitePreview extends Component {
     }
 
     _onPageLoaded() {
+        if (this.lastHiddenPageURL !== this.iframe.el.contentWindow.location.href) {
+            // Hide Ace Editor when moving to another page.
+            this.websiteService.context.showAceEditor = false;
+            this.lastHiddenPageURL = undefined;
+        }
         this.iframe.el.contentWindow.addEventListener('beforeunload', this._onPageUnload.bind(this));
         this._replaceBrowserUrl();
         this.iframe.el.contentWindow.addEventListener('hashchange', this._replaceBrowserUrl.bind(this));
@@ -452,6 +466,7 @@ export class WebsitePreview extends Component {
         }
     }
     _onPageHide() {
+        this.lastHiddenPageURL = this.iframe.el.contentWindow.location.href;
         // Normally, at this point, the websiteRootInstance is already set to
         // `undefined`, as we want to do that as early as possible to prevent
         // the editor to be in an unstable state. But some events not managed
