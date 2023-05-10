@@ -1,11 +1,11 @@
 /** @odoo-module **/
 import {
     click,
-    dragAndDrop,
     getFixture,
     makeDeferred,
     nextTick,
     patchWithCleanup,
+    triggerEvents,
 } from "@web/../tests/helpers/utils";
 import { makeView, setupViewRegistries } from "@web/../tests/views/helpers";
 import { NameAndSignature } from "@web/core/signature/name_and_signature";
@@ -55,7 +55,7 @@ QUnit.module("Fields", (hooks) => {
 
     QUnit.module("Signature Field");
 
-    QUnit.test("signature can be drawned", async function (assert) {
+    QUnit.test("signature can be drawn", async function (assert) {
         await makeView({
             type: "form",
             resModel: "partner",
@@ -85,9 +85,16 @@ QUnit.module("Fields", (hooks) => {
 
         // Use a drag&drop simulation to draw a signature
         const def = makeDeferred();
-        const $jSignatureEl = $(target.querySelector(".modal .o_web_sign_signature"));
-        $jSignatureEl.on("change", def.resolve);
-        await dragAndDrop("canvas.jSignature", "canvas.jSignature");
+        const jSignatureEl = target.querySelector(".modal .o_web_sign_signature");
+        $(jSignatureEl).on("change", def.resolve);
+        const { x, y, width, height } = target
+            .querySelector("canvas.jSignature")
+            .getBoundingClientRect();
+        await triggerEvents(jSignatureEl, "canvas.jSignature", [
+            ["mousedown", { clientX: x + 1, clientY: y + 1 }],
+            ["mousemove", { clientX: x + width - 1, clientY: height + height - 1 }],
+            ["mouseup", { clientX: x + width - 1, clientY: height + height - 1 }],
+        ]);
         await def; // makes sure the signature stroke is taken into account by jSignature
         await nextTick(); // await owl rendering
         assert.containsOnce(target, ".modal .btn.btn-primary:not([disabled])");

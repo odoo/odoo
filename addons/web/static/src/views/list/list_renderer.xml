@@ -20,7 +20,7 @@
                             <th t-if="column.type === 'field'"
                                 t-att-data-name="column.name"
                                 t-att-class="getColumnClass(column) + ' opacity-trigger-hover'"
-                                t-on-mouseup="onColumnTitleMouseUp"
+                                t-on-pointerup="onColumnTitleMouseUp"
                                 t-on-click="() => this.onClickSortColumn(column)"
                                 t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)"
                                 t-att-data-tooltip-template="isDebugMode ? 'web.FieldTooltip' : false"
@@ -36,7 +36,7 @@
                                     </div>
                                     <span t-if="!isEmpty"
                                           class="o_resize position-absolute top-0 end-0 bottom-0 ps-1 bg-black-25 opacity-0 opacity-50-hover z-index-1"
-                                          t-on-mousedown.stop.prevent="onStartResize"/>
+                                          t-on-pointerdown.stop.prevent="onStartResize"/>
                                 </t>
                             </th>
                             <th t-else="" t-on-keydown.synthetic="(ev) => this.onCellKeydown(ev)" t-att-class="{o_list_button: column.type === 'button_group'}"/>

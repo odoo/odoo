@@ -119,30 +119,19 @@ QUnit.test("UI active element: trap focus", async (assert) => {
     );
 
     // Pressing 'Tab'
-    let event = triggerEvent(
-        document.activeElement,
-        null,
-        "keydown",
-        { key: "Tab" },
-        { fast: true }
-    );
+    let event = await triggerEvent(document.activeElement, null, "keydown", { key: "Tab" });
     assert.strictEqual(event.defaultPrevented, true);
-    await nextTick();
     assert.strictEqual(
         document.activeElement,
         target.querySelector("input[placeholder=withFocus]")
     );
 
     // Pressing 'Shift + Tab'
-    event = triggerEvent(
-        document.activeElement,
-        null,
-        "keydown",
-        { key: "Tab", shiftKey: true },
-        { fast: true }
-    );
+    event = await triggerEvent(document.activeElement, null, "keydown", {
+        key: "Tab",
+        shiftKey: true,
+    });
     assert.strictEqual(event.defaultPrevented, true);
-    await nextTick();
     assert.strictEqual(
         document.activeElement,
         target.querySelector("input[placeholder=withFocus]")
@@ -177,43 +166,29 @@ QUnit.test("UI active element: trap focus - default focus with autofocus", async
     );
 
     // Pressing 'Tab'
-    let event = triggerEvent(
-        document.activeElement,
-        null,
-        "keydown",
-        { key: "Tab" },
-        { fast: true }
-    );
+    let event = await triggerEvent(document.activeElement, null, "keydown", { key: "Tab" });
     assert.strictEqual(event.defaultPrevented, true);
-    await nextTick();
     assert.strictEqual(
         document.activeElement,
         target.querySelector("input[placeholder=withoutFocus]")
     );
 
     // Pressing 'Shift + Tab'
-    event = triggerEvent(
-        document.activeElement,
-        null,
-        "keydown",
-        { key: "Tab", shiftKey: true },
-        { fast: true }
-    );
+    event = await triggerEvent(document.activeElement, null, "keydown", {
+        key: "Tab",
+        shiftKey: true,
+    });
     assert.strictEqual(event.defaultPrevented, true);
-    await nextTick();
     assert.strictEqual(
         document.activeElement,
         target.querySelector("input[placeholder=withAutoFocus]")
     );
 
     // Pressing 'Shift + Tab' (default)
-    event = triggerEvent(
-        document.activeElement,
-        null,
-        "keydown",
-        { key: "Tab", shiftKey: true },
-        { fast: true }
-    );
+    event = await triggerEvent(document.activeElement, null, "keydown", {
+        key: "Tab",
+        shiftKey: true,
+    });
     assert.strictEqual(event.defaultPrevented, false);
 });
 
@@ -244,26 +219,15 @@ QUnit.test("UI active element: trap focus - no focus element", async (assert) =>
         "when there is not other element, the focus is on the UI active element itself"
     );
     // Pressing 'Tab'
-    let event = triggerEvent(
-        document.activeElement,
-        null,
-        "keydown",
-        { key: "Tab" },
-        { fast: true }
-    );
+    let event = await triggerEvent(document.activeElement, null, "keydown", { key: "Tab" });
     assert.strictEqual(event.defaultPrevented, true);
-    await nextTick();
     assert.strictEqual(document.activeElement, target.querySelector("div[id=idActiveElement]"));
 
     // Pressing 'Shift + Tab'
-    event = triggerEvent(
-        document.activeElement,
-        null,
-        "keydown",
-        { key: "Tab", shiftKey: true },
-        { fast: true }
-    );
+    event = await triggerEvent(document.activeElement, null, "keydown", {
+        key: "Tab",
+        shiftKey: true,
+    });
     assert.strictEqual(event.defaultPrevented, true);
-    await nextTick();
     assert.strictEqual(document.activeElement, target.querySelector("div[id=idActiveElement]"));
 });

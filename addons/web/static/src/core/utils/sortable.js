@@ -44,7 +44,7 @@ import { pick } from "@web/core/utils/objects";
  * @property {(params: SortableHandlerParams) => any} [onDragEnd]
  *  called when the dragging sequence ends, regardless of the reason.
  * @property {(params: DropParams) => any} [onDrop] called when the dragging sequence
- *  ends on a mouseup action AND the dragged element has been moved elsewhere. The
+ *  ends on a pointerup action AND the dragged element has been moved elsewhere. The
  *  callback will be given an object with any useful element regarding the new position
  *  of the dragged element (@see DropParams ).
  */
@@ -91,10 +91,10 @@ export const useSortable = makeDraggableHook({
     // Runtime steps
     onDragStart({ ctx, addListener, addStyle, callHandler }) {
         /**
-         * Element "mouseenter" event handler.
-         * @param {MouseEvent} ev
+         * Element "pointerenter" event handler.
+         * @param {PointerEvent} ev
          */
-        const onElementMouseenter = (ev) => {
+        const onElementPointerEnter = (ev) => {
             const element = ev.currentTarget;
             if (
                 connectGroups ||
@@ -112,29 +112,29 @@ export const useSortable = makeDraggableHook({
         };
 
         /**
-         * Element "mouseleave" event handler.
-         * @param {MouseEvent} ev
+         * Element "pointerleave" event handler.
+         * @param {PointerEvent} ev
          */
-        const onElementMouseleave = (ev) => {
+        const onElementPointerLeave = (ev) => {
             const element = ev.currentTarget;
             callHandler("onElementLeave", { element });
         };
 
         /**
-         * Group "mouseenter" event handler.
-         * @param {MouseEvent} ev
+         * Group "pointerenter" event handler.
+         * @param {PointerEvent} ev
          */
-        const onGroupMouseenter = (ev) => {
+        const onGroupPointerEnter = (ev) => {
             const group = ev.currentTarget;
             group.appendChild(current.placeHolder);
             callHandler("onGroupEnter", { group });
         };
 
         /**
-         * Group "mouseleave" event handler.
-         * @param {MouseEvent} ev
+         * Group "pointerleave" event handler.
+         * @param {PointerEvent} ev
          */
-        const onGroupMouseleave = (ev) => {
+        const onGroupPointerLeave = (ev) => {
             const group = ev.currentTarget;
             callHandler("onGroupLeave", { group });
         };
@@ -154,16 +154,16 @@ export const useSortable = makeDraggableHook({
         // their parents and a 'groupSelector' has been provided.
         if (connectGroups && groupSelector) {
             for (const siblingGroup of ref.el.querySelectorAll(groupSelector)) {
-                addListener(siblingGroup, "mouseenter", onGroupMouseenter);
-                addListener(siblingGroup, "mouseleave", onGroupMouseleave);
+                addListener(siblingGroup, "pointerenter", onGroupPointerEnter);
+                addListener(siblingGroup, "pointerleave", onGroupPointerLeave);
             }
         }
 
         // Binds handlers on eligible elements
         for (const siblingEl of ref.el.querySelectorAll(elementSelector)) {
             if (siblingEl !== current.element && siblingEl !== current.placeHolder) {
-                addListener(siblingEl, "mouseenter", onElementMouseenter);
-                addListener(siblingEl, "mouseleave", onElementMouseleave);
+                addListener(siblingEl, "pointerenter", onElementPointerEnter);
+                addListener(siblingEl, "pointerleave", onElementPointerLeave);
             }
         }
 
@@ -202,5 +202,7 @@ export const useSortable = makeDraggableHook({
         current.placeHolder = current.element.cloneNode(false);
 
         addCleanup(() => current.placeHolder.remove());
+
+        return pick(current, "element", "group");
     },
 });

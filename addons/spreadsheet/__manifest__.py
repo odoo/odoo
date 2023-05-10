@@ -44,6 +44,7 @@
             'web/static/lib/owl/odoo_module.js',
             'web/static/src/core/utils/**/*.js',
             'web/static/src/core/browser/browser.js',
+            'web/static/src/core/browser/feature_detection.js',
             'web/static/src/core/registry.js',
             'web/static/src/core/assets.js',
             'web/static/src/session.js',
