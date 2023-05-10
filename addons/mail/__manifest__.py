@@ -101,6 +101,7 @@ For more specific needs, you may also assign custom-defined actions
         'views/mail_gateway_allowed_views.xml',
         'views/mail_guest_views.xml',
         'views/mail_message_reaction_views.xml',
+        'views/mail_templates_public.xml',
         'views/res_users_views.xml',
         'views/res_users_settings_views.xml',
         'views/mail_template_views.xml',

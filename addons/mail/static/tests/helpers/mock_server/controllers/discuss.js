@@ -336,7 +336,7 @@ patch(MockServer.prototype, "mail/controllers/discuss", {
     _mockRouteMailMessageInbox(after = false, before = false, around = false, limit = 30) {
         const domain = [["needaction", "=", true]];
         const messages = this._mockMailMessage_MessageFetch(domain, before, after, around, limit);
-        return this._mockMailMessageMessageFormat(messages.map((message) => message.id));
+        return this._mockMailMessageFormatPersonalize(messages.map((message) => message.id));
     },
     /**
      * Simulates the `/mail/starred/messages` route.
