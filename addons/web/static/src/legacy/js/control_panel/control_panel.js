@@ -154,7 +154,12 @@ odoo.define('web.ControlPanel', function (require) {
             });
 
             // Cannot use useEffect. See prepareForFinish in owl_compatibility.js
-            onMounted(() => this._attachAdditionalContent());
+            onMounted(() => {
+                this._attachAdditionalContent();
+                if (this.props.onContentLoaded) {
+                    this.props.onContentLoaded();
+                }
+            });
             onPatched(() => this._attachAdditionalContent());
             onWillUpdateProps((nextProps) => {
                 // Note: action and searchModel are not likely to change during
@@ -237,6 +242,7 @@ odoo.define('web.ControlPanel', function (require) {
         views: { type: Array, optional: true },
         withBreadcrumbs: { type: Boolean, optional: true },
         withSearchBar: { type: Boolean, optional: true },
+        onContentLoaded: { type: Function, optional: true },
     };
     ControlPanel.template = 'web.Legacy.ControlPanel';
 
