@@ -28,6 +28,9 @@ class PosController(PortalAccount):
         :type config_id: str.
         :returns: object -- The rendered pos session.
         """
+        is_internal_user = request.env.user.has_group('base.group_user')
+        if not is_internal_user:
+            return request.not_found()
         domain = [
                 ('state', 'in', ['opening_control', 'opened']),
                 ('user_id', '=', request.session.uid),
