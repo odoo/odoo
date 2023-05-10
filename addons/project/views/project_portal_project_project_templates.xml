@@ -3,7 +3,7 @@
     <template id="portal_layout" name="Portal layout: project menu entry" inherit_id="portal.portal_breadcrumbs" priority="40">
         <xpath expr="//ol[hasclass('o_portal_submenu')]" position="inside">
             <li t-if="page_name == 'project' or project" class="col-lg-2" t-attf-class="breadcrumb-item #{'active ' if not project else ''}">
-                <a t-if="project" t-attf-href="/my/projects?{{ keep_query() }}">Projects</a>
+                <a t-if="project" t-attf-href="/my/projects">Projects</a>
                 <t t-else="">Projects</t>
             </li>
             <li t-if="page_name in ['project_task', 'project_subtasks'] and project" class="breadcrumb-item active">
@@ -63,7 +63,7 @@
                 <tbody>
                     <tr t-foreach="projects" t-as="project">
                         <td>
-                            <a t-attf-href="/my/projects/#{project.id}?{{ keep_query() }}"><span t-field="project.name"/></a>
+                            <a t-attf-href="/my/projects/#{project.id}"><span t-field="project.name"/></a>
                         </td>
                         <td class="text-end">
                             <t t-out="project.task_count" />
