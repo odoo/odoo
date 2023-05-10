@@ -1,8 +1,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import enum
-
-from odoo import _, api, models
+import stdnum
+from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 
 
@@ -50,6 +50,12 @@ class ResPartner(models.Model):
 
     _inherit = "res.partner"
 
+    l10n_ec_vat_validation = fields.Char(
+        string="VAT Error message validation",
+        compute="_compute_l10n_ec_vat_validation",
+        help="Error message when validating the Ecuadorian VAT",
+    )
+
     @api.constrains("vat", "country_id", "l10n_latam_identification_type_id")
     def check_vat(self):
         it_ruc = self.env.ref("l10n_ec.ec_ruc", False)
@@ -69,21 +75,25 @@ class ResPartner(models.Model):
                     if partner.l10n_latam_identification_type_id.id == it_ruc.id and len(partner.vat) != 13:
                         raise ValidationError(_('If your identification type is %s, it must be 13 digits')
                                               % it_ruc.display_name)
-                    final_consumer = verify_final_consumer(partner.vat)
-                    if final_consumer:
-                        valid = True
-                    else:
-                        valid = self.is_valid_ruc_ec(partner.vat)
-                    if not valid:
-                        error_message = ""
-                        if partner.l10n_latam_identification_type_id.id == it_dni.id:
-                            error_message = _("VAT %s is not valid for an Ecuadorian DNI, "
-                                              "it must be like this form 1234567897") % partner.vat
-                        if partner.l10n_latam_identification_type_id.id == it_ruc.id:
-                            error_message = _("VAT %s is not valid for an Ecuadorian company, "
-                                              "it must be like this form 1234567897001") % partner.vat
-                        raise ValidationError(error_message)
         return super(ResPartner, self - ecuadorian_partners).check_vat()
+
+    @api.depends("vat", "country_id", "l10n_latam_identification_type_id")
+    def _compute_l10n_ec_vat_validation(self):
+        it_ruc = self.env.ref("l10n_ec.ec_ruc", False)
+        it_dni = self.env.ref("l10n_ec.ec_dni", False)
+        ruc = stdnum.util.get_cc_module("ec", "ruc")
+        ci = stdnum.util.get_cc_module("ec", "ci")
+        for partner in self:
+            partner.l10n_ec_vat_validation = False
+            if partner and partner.l10n_latam_identification_type_id in (it_ruc, it_dni) and partner.vat:
+                final_consumer = verify_final_consumer(partner.vat)
+                if not final_consumer:
+                    if partner.l10n_latam_identification_type_id.id == it_dni.id and not ci.is_valid(partner.vat):
+                        partner.l10n_ec_vat_validation = _("The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+                                                           "(could be an old VAT number)") % partner.vat
+                    if partner.l10n_latam_identification_type_id.id == it_ruc.id and not ruc.is_valid(partner.vat):
+                        partner.l10n_ec_vat_validation = _("The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+                                                           "(SRI has stated that this validation is not required anymore for some VAT numbers)") % partner.vat
 
     def _l10n_ec_get_identification_type(self):
         """Maps Odoo identification types to Ecuadorian ones.

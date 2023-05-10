@@ -39,7 +39,7 @@ _ref_vat = {
     'de': 'DE123456788',
     'dk': 'DK12345674',
     'do': 'DO1-01-85004-3 or 101850043',
-    'ec': 'EC1792060346-001',
+    'ec': '1792060346001 or 1792060346',
     'ee': 'EE123456780',
     'el': 'EL12345670',
     'es': 'ESA12345674',
@@ -327,15 +327,8 @@ class ResPartner(models.Model):
 
 
     def is_valid_ruc_ec(self, vat):
-        ci = stdnum.util.get_cc_module("ec", "ci")
-        ruc = stdnum.util.get_cc_module("ec", "ruc")
-        if len(vat) == 10:
-            return ci.is_valid(vat)
-        elif len(vat) == 13:
-            if vat[2] == "6" and ci.is_valid(vat[:10]):
-                return True
-            else:
-                return ruc.is_valid(vat)
+        if len(vat) in (10, 13) and vat.isdecimal():
+            return True
         return False
 
     def check_vat_ec(self, vat):
