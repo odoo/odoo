@@ -80,6 +80,8 @@ export class Composer extends Component {
         this.messageService = useState(useService("mail.message"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
+        /** @type {import("@mail/discuss/message_list_service").MessageListService} */
+        this.messageListService = useService("discuss.message_list");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
         this.typingNotified = false;
@@ -385,7 +387,7 @@ export class Composer extends Component {
             onClose: () => {
                 this.clear();
                 if (this.props.composer.thread) {
-                    this.threadService.fetchNewMessages(this.props.composer.thread);
+                    this.messageListService.fetchNewMessages(this.props.composer.thread);
                 }
             },
         };

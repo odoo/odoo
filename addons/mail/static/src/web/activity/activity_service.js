@@ -107,11 +107,11 @@ export class ActivityService {
                 this.delete(data.payload, { broadcast: false });
                 break;
             case "reload chatter": {
-                const thread = this.env.services["mail.thread"].getThread(
+                const thread = this.env.services["discuss.chatter"].getThread(
                     data.payload.resModel,
                     data.payload.resId
                 );
-                this.env.services["mail.thread"].fetchNewMessages(thread);
+                this.env.services["discuss.message_list"].fetchNewMessages(thread);
                 break;
             }
         }

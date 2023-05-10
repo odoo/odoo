@@ -52,6 +52,8 @@ export class Thread extends Component {
         this.state = useState({ isReplyingTo: false, showJumpPresent: false });
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import("@mail/discuss/message_list_service").MessageListService} */
+        this.messageListService = useService("discuss.message_list");
         if (!this.env.inChatter || !this.props.hasScrollAdjust) {
             useAutoScroll("messages", () => {
                 if (this.env.messageHighlight?.highlightedMessageId) {
@@ -70,12 +72,12 @@ export class Thread extends Component {
         this.messagesRef = useRef("messages");
         this.loadOlderState = useVisible("load-older", () => {
             if (this.loadOlderState.isVisible && !this.isJumpingRecent) {
-                this.threadService.fetchMoreMessages(this.props.thread);
+                this.messageListService.fetchMoreMessages(this.props.thread);
             }
         });
         this.loadNewerState = useVisible("load-newer", () => {
             if (this.loadNewerState.isVisible && !this.isJumpingRecent) {
-                this.threadService.fetchMoreMessages(this.props.thread, "newer");
+                this.messageListService.fetchMoreMessages(this.props.thread, "newer");
             }
         });
         this.presentThresholdState = useVisible(
@@ -129,10 +131,10 @@ export class Thread extends Component {
             }
         });
         onWillStart(() => {
-            this.threadService.fetchNewMessages(this.props.thread);
+            this.messageListService.fetchNewMessages(this.props.thread);
         });
         onWillUpdateProps((nextProps) => {
-            this.threadService.fetchNewMessages(nextProps.thread);
+            this.messageListService.fetchNewMessages(nextProps.thread);
         });
     }
 
@@ -146,12 +148,12 @@ export class Thread extends Component {
     }
 
     onClickLoadOlder() {
-        this.threadService.fetchMoreMessages(this.props.thread);
+        this.messageListService.fetchMoreMessages(this.props.thread);
     }
 
     async onClickJumpPresent() {
         this.isJumpingRecent = true;
-        await this.threadService.loadAround(this.props.thread);
+        await this.messageListService.loadAround(this.props.thread);
         this.props.thread.loadNewer = false;
         this.present.el.scrollIntoView({
             behavior: this.props.order === "asc" ? "smooth" : "instant", // FIXME somehow smooth not working in desc mode

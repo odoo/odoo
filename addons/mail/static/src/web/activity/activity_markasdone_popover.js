@@ -17,7 +17,9 @@ export class ActivityMarkAsDone extends Component {
 
     setup() {
         this.messaging = useMessaging();
+        this.chatterService = useService("discuss.chatter");
         this.threadService = useState(useService("mail.thread"));
+        this.messageListService = useService("discuss.message_list");
         this.textArea = useRef("textarea");
         onMounted(() => {
             this.textArea.el.focus();
@@ -33,17 +35,17 @@ export class ActivityMarkAsDone extends Component {
 
     async onClickDone() {
         const { res_id: resId, res_model: resModel } = this.props.activity;
-        const thread = this.threadService.getThread(resModel, resId);
+        const thread = this.chatterService.getThread(resModel, resId);
         await this.env.services["mail.activity"].markAsDone(this.props.activity);
         if (this.props.reload) {
             this.props.reload(this.props.activity.res_id, ["activities"]);
         }
-        await this.threadService.fetchNewMessages(thread);
+        await this.messageListService.fetchNewMessages(thread);
     }
 
     async onClickDoneAndScheduleNext() {
         const { res_id: resId, res_model: resModel } = this.props.activity;
-        const thread = this.threadService.getThread(resModel, resId);
+        const thread = this.chatterService.getThread(resModel, resId);
         if (this.props.onClickDoneAndScheduleNext) {
             this.props.onClickDoneAndScheduleNext();
         }
@@ -53,7 +55,7 @@ export class ActivityMarkAsDone extends Component {
         const action = await this.env.services["mail.activity"].markAsDoneAndScheduleNext(
             this.props.activity
         );
-        this.threadService.fetchNewMessages(thread);
+        this.messageListService.fetchNewMessages(thread);
         if (this.props.reload) {
             this.props.reload(this.props.activity.res_id, ["activities", "attachments"]);
         }

@@ -203,10 +203,11 @@ export function useScrollSnapshot(refName, { onWillPatch: p_onWillPatch, onPatch
  */
 export function useMessageHighlight(duration = 2000) {
     let timeout;
-    const threadService = useService("mail.thread");
+    /** @type {import("@mail/discuss/message_list_service").MessageListService} */
+    const messageListService = useService("discuss.message_list");
     const state = useState({
         async highlightMessage(msgId, thread) {
-            await threadService.loadAround(thread, msgId);
+            await messageListService.loadAround(thread, msgId);
             const lastHighlightedMessageId = state.highlightedMessageId;
             clearHighlight();
             if (lastHighlightedMessageId === msgId) {

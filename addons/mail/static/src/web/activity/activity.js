@@ -35,8 +35,12 @@ export class Activity extends Component {
         this.messaging = useMessaging();
         /** @type {import("@mail/web/activity/activity_service").ActivityService} */
         this.activityService = useService("mail.activity");
+        /** @type {import("@mail/discuss/web/chatter_service").ChatterService} */
+        this.chatterService = useService("discuss.chatter");
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
+        /** @type {import("@mail/discuss/message_list_service").MessageListService} */
+        this.messageListService = useService("discuss.message_list");
         this.state = useState({
             showDetails: false,
             delay: computeDelay(this.props.data.date_deadline),
@@ -85,7 +89,7 @@ export class Activity extends Component {
         const { id: attachmentId } = await this.attachmentUploader.uploadData(data);
         await this.activityService.markAsDone(this.props.data, [attachmentId]);
         this.props.onUpdate();
-        await this.threadService.fetchNewMessages(this.thread);
+        await this.messageListService.fetchNewMessages(this.thread);
     }
 
     async edit() {
@@ -101,6 +105,6 @@ export class Activity extends Component {
     }
 
     get thread() {
-        return this.threadService.getThread(this.props.data.res_model, this.props.data.res_id);
+        return this.chatterService.getThread(this.props.data.res_model, this.props.data.res_id);
     }
 }

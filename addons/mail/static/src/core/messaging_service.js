@@ -39,6 +39,8 @@ export class Messaging {
         this.userSettingsService = services["mail.user_settings"];
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = services["mail.thread"];
+        /** @type {import("@mail/discuss/message_list_service").MessageListService} */
+        this.messageListService = services["discuss.message_list"];
         /** @type {import("@mail/core/message_service").MessageService} */
         this.messageService = services["mail.message"];
         /** @type {import("@mail/core/persona_service").PersonaService} */
@@ -361,7 +363,7 @@ export class Messaging {
                     }
                     inbox.counter = needaction_inbox_counter;
                     if (inbox.counter > inbox.messages.length) {
-                        this.threadService.fetchMoreMessages(inbox);
+                        this.messageListService.fetchMoreMessages(inbox);
                     }
                     break;
                 }

@@ -30,6 +30,8 @@ export class MessagingMenu extends Component {
         this.chatWindowService = useState(useService("mail.chat_window"));
         /** @type {import('@mail/core/thread_service').ThreadService} */
         this.threadService = useState(useService("mail.thread"));
+        /** @type {import('@mail/discuss/message_list_service').MessageListService} */
+        this.messageListService = useService("discuss.message_list");
         this.action = useService("action");
         this.state = useState({
             addingChat: false,
@@ -48,7 +50,7 @@ export class MessagingMenu extends Component {
             this.store.discuss.inbox.status !== "loading" &&
             this.store.discuss.inbox.counter !== this.store.discuss.inbox.messages.length
         ) {
-            this.threadService.fetchNewMessages(this.store.discuss.inbox);
+            this.messageListService.fetchNewMessages(this.store.discuss.inbox);
         }
     }
 

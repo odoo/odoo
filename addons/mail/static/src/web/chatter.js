@@ -83,6 +83,8 @@ export class Chatter extends Component {
         this.activityService = useState(useService("mail.activity"));
         /** @type {import("@mail/core/thread_service").ThreadService} */
         this.threadService = useService("mail.thread");
+        /** @type {import("@mail/discuss/web/chatter_service").ChatterService} */
+        this.chatterService = useService("discuss.chatter");
         this.store = useStore();
         this.orm = useService("orm");
         this.rpc = useService("rpc");
@@ -94,7 +96,7 @@ export class Chatter extends Component {
         });
         this.unfollowHover = useHover("unfollow");
         this.attachmentUploader = useAttachmentUploader(
-            this.threadService.getThread(this.props.threadModel, this.props.threadId)
+            this.chatterService.getThread(this.props.threadModel, this.props.threadId)
         );
         this.scrollPosition = useScrollPosition("scrollable", undefined, "top");
         this.rootRef = useRef("root");
@@ -141,7 +143,7 @@ export class Chatter extends Component {
             if (nextProps.threadId === false) {
                 this.state.thread.composer.type = false;
             }
-            this.attachmentUploader.thread = this.threadService.getThread(
+            this.attachmentUploader.thread = this.chatterService.getThread(
                 nextProps.threadModel,
                 nextProps.threadId
             );
@@ -206,7 +208,7 @@ export class Chatter extends Component {
         requestList = ["followers", "attachments", "messages", "suggestedRecipients"]
     ) {
         const { threadModel } = this.props;
-        this.state.thread = this.threadService.getThread(threadModel, threadId);
+        this.state.thread = this.chatterService.getThread(threadModel, threadId);
         this.scrollPosition.model = this.state.thread.scrollPosition;
         if (!threadId) {
             return;
@@ -214,7 +216,7 @@ export class Chatter extends Component {
         if (this.props.hasActivities && !requestList.includes("activities")) {
             requestList.push("activities");
         }
-        this.threadService.fetchData(this.state.thread, requestList);
+        this.chatterService.fetchData(this.state.thread, requestList);
     }
 
     onClickAddFollowers() {
@@ -270,13 +272,13 @@ export class Chatter extends Component {
      * @param {import("@mail/core/follower_model").Follower} follower
      */
     async onClickRemove(ev, follower) {
-        await this.threadService.removeFollower(follower);
+        await this.chatterService.removeFollower(follower);
         this.onFollowerChanged();
         document.body.click(); // hack to close dropdown
     }
 
     async onClickUnfollow() {
-        await this.threadService.removeFollower(this.state.thread.followerOfSelf);
+        await this.chatterService.removeFollower(this.state.thread.followerOfSelf);
         this.onFollowerChanged();
     }
 

@@ -37,6 +37,8 @@ import { notificationPermissionService } from "@mail/core/notification_permissio
 import { session } from "@web/session";
 import { channelMemberService } from "@mail/core/channel_member_service";
 import { contextService } from "@mail/web/discuss_app/context_service";
+import { messageListService } from "@mail/discuss/message_list_service";
+import { chatterService } from "@mail/discuss/web/chatter_service";
 
 const ROUTES_TO_IGNORE = [
     "/web/webclient/load_menus",
@@ -120,6 +122,8 @@ export const setupManager = {
             im_status: imStatusService,
             effect: effectService,
             "discuss.channel.member": channelMemberService,
+            "discuss.chatter": chatterService,
+            "discuss.message_list": messageListService,
             "mail.context": contextService,
             "mail.notification.permission": notificationPermissionService,
             "mail.suggestion": suggestionService,
