@@ -19,7 +19,7 @@ from odoo.addons.payment.controllers import portal as payment_portal
 from odoo.addons.payment.controllers.post_processing import PaymentPostProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
-from odoo.exceptions import AccessError, MissingError, ValidationError
+from odoo.exceptions import AccessError, MissingError, ValidationError, UserError
 from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers import main
 from odoo.addons.website.controllers.form import WebsiteForm
@@ -1824,6 +1824,34 @@ class PaymentPortal(payment_portal.PaymentPortal):
         self._validate_transaction_for_order(tx_sudo, order_id)
 
         return tx_sudo._get_processing_values()
+
+    @http.route(['/shop/update_carrier'], type='json', auth='public', methods=['POST'], website=True, csrf=False)
+    def update_eshop_carrier(self, **post):
+        order = request.website.sale_get_order()
+        carrier_id = int(post['carrier_id'])
+        if order and carrier_id != order.carrier_id.id:
+            if any(tx.state not in ("canceled", "error", "draft") for tx in order.transaction_ids):
+                raise UserError(
+                    _('It seems that there is already a transaction for your order, you can not change the delivery method anymore'))
+            order._check_carrier_quotation(force_carrier_id=carrier_id)
+        return self._update_website_sale_delivery_return(order, **post)
+
+    def _update_website_sale_delivery_return(self, order, **post):
+        Monetary = request.env['ir.qweb.field.monetary']
+        carrier_id = int(post['carrier_id'])
+        currency = order.currency_id
+        if order:
+            return {
+                'status': order.delivery_rating_success,
+                'error_message': order.delivery_message,
+                'carrier_id': carrier_id,
+                'is_free_delivery': not bool(order.amount_delivery),
+                'new_amount_delivery': Monetary.value_to_html(order.amount_delivery, {'display_currency': currency}),
+                'new_amount_untaxed': Monetary.value_to_html(order.amount_untaxed, {'display_currency': currency}),
+                'new_amount_tax': Monetary.value_to_html(order.amount_tax, {'display_currency': currency}),
+                'new_amount_total': Monetary.value_to_html(order.amount_total, {'display_currency': currency}),
+                'new_amount_total_raw': order.amount_total,
+            }
 
 
 class CustomerPortal(sale_portal.CustomerPortal):
