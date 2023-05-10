@@ -12,6 +12,18 @@ import { registerCleanup } from "./cleanup";
 import { App, onMounted, onPatched, useComponent } from "@odoo/owl";
 
 /**
+ * @typedef {keyof HTMLElementEventMap | keyof WindowEventMap} EventType
+ *
+ * @typedef {Side | `${Side}-${Side}` | { x?: number, y?: number }} Position
+ *
+ * @typedef {"bottom" | "left" | "right" | "top"} Side
+ *
+ * @typedef TriggerEventOptions
+ * @property {boolean} [skipVisibilityCheck=false]
+ * @property {boolean} [sync=false]
+ */
+
+/**
  * Patch the native Date object
  *
  * Note that it will be automatically unpatched at the end of the test
@@ -168,155 +180,218 @@ export function findElement(el, selector) {
     return target;
 }
 
-function keyboardEventBubble(args) {
-    return Object.assign({}, args, { bubbles: true, keyCode: args.which, cancelable: true });
-}
+//-----------------------------------------------------------------------------
+// Event init attributes mappers
+//-----------------------------------------------------------------------------
 
-function pointerEventMapping(args) {
-    return {
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
-        pointerType: "mouse",
-        ...args,
-        bubbles: true,
-        cancelable: true,
-        view: window,
-    };
-}
+/** @param {EventInit} [args] */
+const mapBubblingEvent = (args) => ({ ...args, bubbles: true });
 
-function mouseEventMapping(args) {
-    return {
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
-        ...args,
-        bubbles: true,
-        cancelable: true,
-        view: window,
-    };
-}
+/** @param {EventInit} [args] */
+const mapNonBubblingEvent = (args) => ({ ...args, bubbles: false });
 
-function mouseEventNoBubble(args) {
-    return {
-        clientX: args ? args.pageX : undefined,
-        clientY: args ? args.pageY : undefined,
-        ...args,
-        bubbles: false,
-        cancelable: false,
-        view: window,
-    };
-}
+/** @param {EventInit} [args={}] */
+const mapBubblingPointerEvent = (args = {}) => ({
+    clientX: args.pageX,
+    clientY: args.pageY,
+    ...args,
+    bubbles: true,
+    cancelable: true,
+    view: window,
+});
 
-function touchEventMapping(args) {
-    return {
-        ...args,
-        cancelable: true,
-        bubbles: true,
-        composed: true,
-        view: window,
-        rotation: 0.0,
-        zoom: 1.0,
-        touches: args.touches ? [...args.touches.map((e) => new Touch(e))] : undefined,
-    };
-}
+/** @param {EventInit} [args] */
+const mapNonBubblingPointerEvent = (args) => ({
+    ...mapBubblingPointerEvent(args),
+    bubbles: false,
+    cancelable: false,
+});
 
-function touchEventCancelMapping(args) {
-    return {
-        ...touchEventMapping(args),
-        cancelable: false,
-    };
-}
+/** @param {EventInit} [args={}] */
+const mapCancelableTouchEvent = (args = {}) => ({
+    ...args,
+    bubbles: true,
+    cancelable: true,
+    composed: true,
+    rotation: 0.0,
+    touches: args.touches ? [...args.touches.map((e) => new Touch(e))] : undefined,
+    view: window,
+    zoom: 1.0,
+});
 
-function noBubble(args) {
-    return Object.assign({}, args, { bubbles: false });
-}
+/** @param {EventInit} [args] */
+const mapNonCancelableTouchEvent = (args) => ({
+    ...mapCancelableTouchEvent(args),
+    cancelable: false,
+});
 
-function onlyBubble(args) {
-    return Object.assign({}, args, { bubbles: true });
-}
+/** @param {EventInit} [args] */
+const mapKeyboardEvent = (args) => ({
+    ...args,
+    bubbles: true,
+    cancelable: true,
+    keyCode: args.which,
+});
 
-// TriggerEvent constructor/args processor mapping
-const EVENT_TYPES = {
-    auxclick: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    click: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    contextmenu: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    dblclick: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    mousedown: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    mouseup: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    mousemove: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    mouseenter: { constructor: MouseEvent, processParameters: mouseEventNoBubble },
-    mouseleave: { constructor: MouseEvent, processParameters: mouseEventNoBubble },
-    mouseover: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    mouseout: { constructor: MouseEvent, processParameters: mouseEventMapping },
-    pointerdown: { constructor: PointerEvent, processParameters: pointerEventMapping },
-    pointerup: { constructor: PointerEvent, processParameters: pointerEventMapping },
-    focus: { constructor: FocusEvent, processParameters: noBubble },
-    focusin: { constructor: FocusEvent, processParameters: onlyBubble },
-    blur: { constructor: FocusEvent, processParameters: noBubble },
-    cut: { constructor: ClipboardEvent, processParameters: onlyBubble },
-    copy: { constructor: ClipboardEvent, processParameters: onlyBubble },
-    paste: { constructor: ClipboardEvent, processParameters: onlyBubble },
-    keydown: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
-    keypress: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
-    keyup: { constructor: KeyboardEvent, processParameters: keyboardEventBubble },
-    drag: { constructor: DragEvent, processParameters: onlyBubble },
-    dragend: { constructor: DragEvent, processParameters: onlyBubble },
-    dragenter: { constructor: DragEvent, processParameters: onlyBubble },
-    dragstart: { constructor: DragEvent, processParameters: onlyBubble },
-    dragleave: { constructor: DragEvent, processParameters: onlyBubble },
-    dragover: { constructor: DragEvent, processParameters: onlyBubble },
-    drop: { constructor: DragEvent, processParameters: onlyBubble },
-    input: { constructor: InputEvent, processParameters: onlyBubble },
-    compositionstart: { constructor: CompositionEvent, processParameters: onlyBubble },
-    compositionend: { constructor: CompositionEvent, processParameters: onlyBubble },
+/**
+ * @template {typeof Event} T
+ * @param {EventType} eventType
+ * @returns {[T, (attrs: EventInit) => EventInit]}
+ */
+const getEventConstructor = (eventType) => {
+    switch (eventType) {
+        // Mouse events
+        case "auxclick":
+        case "click":
+        case "contextmenu":
+        case "dblclick":
+        case "mousedown":
+        case "mouseup":
+        case "mousemove":
+        case "mouseover":
+        case "mouseout": {
+            return [MouseEvent, mapBubblingPointerEvent];
+        }
+        case "mouseenter":
+        case "mouseleave": {
+            return [MouseEvent, mapNonBubblingPointerEvent];
+        }
+        // Pointer events
+        case "pointerdown":
+        case "pointerup":
+        case "pointermove":
+        case "pointerover":
+        case "pointerout": {
+            return [PointerEvent, mapBubblingPointerEvent];
+        }
+        case "pointerenter":
+        case "pointerleave": {
+            return [PointerEvent, mapNonBubblingPointerEvent];
+        }
+        // Focus events
+        case "focusin": {
+            return [FocusEvent, mapBubblingEvent];
+        }
+        case "focus":
+        case "blur": {
+            return [FocusEvent, mapNonBubblingEvent];
+        }
+        // Clipboard events
+        case "cut":
+        case "copy":
+        case "paste": {
+            return [ClipboardEvent, mapBubblingEvent];
+        }
+        // Keyboard events
+        case "keydown":
+        case "keypress":
+        case "keyup": {
+            return [KeyboardEvent, mapKeyboardEvent];
+        }
+        // Drag events
+        case "drag":
+        case "dragend":
+        case "dragenter":
+        case "dragstart":
+        case "dragleave":
+        case "dragover":
+        case "drop": {
+            return [DragEvent, mapBubblingEvent];
+        }
+        // Input events
+        case "input": {
+            return [InputEvent, mapBubblingEvent];
+        }
+        // Composition events
+        case "compositionstart":
+        case "compositionend": {
+            return [CompositionEvent, mapBubblingEvent];
+        }
+        // UI events
+        case "scroll": {
+            return [UIEvent, mapNonBubblingEvent];
+        }
+        // Touch events
+        case "touchstart":
+        case "touchend":
+        case "touchmove": {
+            return [TouchEvent, mapCancelableTouchEvent];
+        }
+        case "touchcancel": {
+            return [TouchEvent, mapNonCancelableTouchEvent];
+        }
+        // Default: base Event constructor
+        default: {
+            return [Event, mapBubblingEvent];
+        }
+    }
 };
 
-if (typeof TouchEvent === "function") {
-    Object.assign(EVENT_TYPES, {
-        touchstart: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchend: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchmove: { constructor: TouchEvent, processParameters: touchEventMapping },
-        touchcancel: { constructor: TouchEvent, processParameters: touchEventCancelMapping },
-    });
-}
-
-function _makeEvent(eventType, eventAttrs) {
-    let event;
-    if (eventType in EVENT_TYPES) {
-        const { constructor, processParameters } = EVENT_TYPES[eventType];
-        event = new constructor(eventType, processParameters(eventAttrs));
-    } else {
-        event = new Event(eventType, Object.assign({}, eventAttrs, { bubbles: true }));
-    }
-    return event;
-}
-
-export function triggerEvent(el, selector, eventType, eventAttrs = {}, options = {}) {
-    const event = _makeEvent(eventType, eventAttrs);
+/**
+ * @template {EventType} T
+ * @param {Element} el
+ * @param {string | null | undefined | false} selector
+ * @param {T} eventType
+ * @param {EventInit} [eventInit]
+ * @param {TriggerEventOptions} [options={}]
+ * @returns {GlobalEventHandlersEventMap[T] | Promise<GlobalEventHandlersEventMap[T]>}
+ */
+export function triggerEvent(el, selector, eventType, eventInit, options = {}) {
+    const errors = [];
     const target = findElement(el, selector);
+
+    // Error handling
+    if (typeof eventType !== "string") {
+        errors.push("event type must be a string");
+    }
     if (!target) {
-        throw new Error(`Can't find a target to trigger ${eventType} event`);
+        errors.push("cannot find target");
+    } else if (!options.skipVisibilityCheck && !isVisible(target)) {
+        errors.push("target is not visible");
     }
-    if (!options.skipVisibilityCheck) {
-        if (!isVisible(target)) {
-            throw new Error(`Called triggerEvent ${eventType} on invisible target`);
-        }
+    if (errors.length) {
+        throw new Error(
+            `Cannot trigger event${eventType ? ` "${eventType}"` : ""}${
+                selector ? ` (with selector "${selector}")` : ""
+            }: ${errors.join(" and ")}`
+        );
     }
+
+    // Actual dispatch
+    const [Constructor, processParams] = getEventConstructor(eventType);
+    const event = new Constructor(eventType, processParams(eventInit));
     target.dispatchEvent(event);
-    if (!options.fast) {
+
+    if (QUnit.config.debug) {
+        const group = `%c[${event.type.toUpperCase()}]`;
+        console.groupCollapsed(group, "color: #b52c9b");
+        console.log(target, event);
+        console.groupEnd(group, "color: #b52c9b");
+    }
+
+    if (options.sync) {
+        return event;
+    } else {
         return nextTick().then(() => event);
     }
-    return event;
 }
 
-export async function triggerEvents(el, querySelector, events, options) {
-    for (let e = 0; e < events.length; e++) {
-        if (Array.isArray(events[e])) {
-            triggerEvent(el, querySelector, events[e][0], events[e][1], options);
-        } else {
-            triggerEvent(el, querySelector, events[e], {}, options);
-        }
+/**
+ * @param {Element} el
+ * @param {string | null | undefined | false} selector
+ * @param {(EventType | [EventType, EventInit])[]} [eventDefs]
+ * @param {TriggerEventOptions} [options={}]
+ */
+export function triggerEvents(el, selector, eventDefs, options = {}) {
+    const events = [...eventDefs].map((eventDef) => {
+        const [eventType, eventInit] = Array.isArray(eventDef) ? eventDef : [eventDef, {}];
+        return triggerEvent(el, selector, eventType, eventInit, options);
+    });
+    if (options.sync) {
+        return events;
+    } else {
+        return nextTick().then(() => events);
     }
-    await nextTick();
 }
 
 /**
@@ -328,9 +403,9 @@ export async function triggerEvents(el, querySelector, events, options) {
  *
  * @param {Element} target target of the scroll event
  * @param {Object} coordinates
- * @param {Number} coordinates[left] coordinates to scroll horizontally
- * @param {Number} coordinates[top] coordinates to scroll vertically
- * @param {Boolean} canPropagate states if the scroll can propagate to a scrollable parent
+ * @param {number} coordinates.left coordinates to scroll horizontally
+ * @param {number} coordinates.top coordinates to scroll vertically
+ * @param {boolean} canPropagate states if the scroll can propagate to a scrollable parent
  */
 export async function triggerScroll(
     target,
@@ -362,15 +437,14 @@ export async function triggerScroll(
             }
         });
         target.scrollTo(scrollCoordinates);
-        target.dispatchEvent(new UIEvent("scroll"));
-        await nextTick();
+        await triggerEvent(target, null, "scroll");
         if (!canPropagate || !Object.entries(coordinates).length) {
             return;
         }
     }
     target.parentElement
         ? triggerScroll(target.parentElement, coordinates)
-        : window.dispatchEvent(new UIEvent("scroll"));
+        : triggerEvent(window, null, "scroll");
     await nextTick();
 }
 
@@ -552,11 +626,16 @@ export async function triggerHotkey(hotkey, addOverlayModParts = false, eventAtt
         eventAttrs.bubbles = true;
     }
 
-    const keydownEvent = new KeyboardEvent("keydown", eventAttrs);
-    const keyupEvent = new KeyboardEvent("keyup", eventAttrs);
-    document.activeElement.dispatchEvent(keydownEvent);
-    document.activeElement.dispatchEvent(keyupEvent);
-    await nextTick();
+    const [keydownEvent, keyupEvent] = await triggerEvents(
+        document.activeElement,
+        null,
+        [
+            ["keydown", eventAttrs],
+            ["keyup", eventAttrs],
+        ],
+        { skipVisibilityCheck: true }
+    );
+
     return { keydownEvent, keyupEvent };
 }
 
@@ -757,7 +836,7 @@ function getDifferentParents(n1, n2) {
  *
  * @param {Element | string} from
  * @param {Element | string} to
- * @param {"top" | "bottom" | "left" | "right"} [position]
+ * @param {Position} [position]
  */
 export async function dragAndDrop(from, to, position) {
     const { drop } = await drag(from);
@@ -799,13 +878,13 @@ export async function drag(from) {
 
     /**
      * @param {Element | string} [to]
-     * @param {"top" | "bottom" | "left" | "right"} [position]
+     * @param {Position} [position]
      */
     const drop = assertIsDragging(async function drop(to, position) {
         if (to) {
             await moveTo(to, position);
         }
-        await triggerEvent(target || source, null, "mouseup", targetPosition);
+        await triggerEvent(target || source, null, "pointerup", targetPosition);
     }, true);
 
     /**
@@ -815,36 +894,37 @@ export async function drag(from) {
         selector instanceof Element ? selector : fixture.querySelector(selector);
 
     /**
-     * @param {"top" | "bottom" | "left" | "right" | { x?: number, y?: number }} [position]
+     * @param {Position} [position]
      */
     const getTargetPosition = (position) => {
         const tRect = target.getBoundingClientRect();
-        const tPos = { clientX: tRect.x, clientY: tRect.y };
+        const tPos = {
+            clientX: Math.floor(tRect.x),
+            clientY: Math.floor(tRect.y),
+        };
         if (position && typeof position === "object") {
             // x and y coordinates start from the element's initial coordinates
             tPos.clientX += position.x || 0;
             tPos.clientY += position.y || 0;
         } else {
-            // relative positionning starts from the center of the element
-            tPos.clientX += tRect.width / 2;
-            tPos.clientY += tRect.height / 2;
-            switch (position) {
-                case "top": {
-                    tPos.clientY = tRect.y - 1;
-                    break;
-                }
-                case "bottom": {
-                    tPos.clientY = tRect.y + tRect.height + 1;
-                    break;
-                }
-                case "left": {
-                    tPos.clientX = tRect.x - 1;
-                    break;
-                }
-                case "right": {
-                    tPos.clientX = tRect.x + tRect.width + 1;
-                    break;
-                }
+            const positions = typeof position === "string" ? position.split("-") : [];
+
+            // X position
+            if (positions.includes("left")) {
+                tPos.clientX -= 1;
+            } else if (positions.includes("right")) {
+                tPos.clientX += Math.ceil(tRect.width) + 1;
+            } else {
+                tPos.clientX += Math.floor(tRect.width / 2);
+            }
+
+            // Y position
+            if (positions.includes("top")) {
+                tPos.clientY -= 1;
+            } else if (positions.includes("bottom")) {
+                tPos.clientY += Math.ceil(tRect.height) + 1;
+            } else {
+                tPos.clientY += Math.floor(tRect.height / 2);
             }
         }
         return tPos;
@@ -852,7 +932,7 @@ export async function drag(from) {
 
     /**
      * @param {Element | string} [to]
-     * @param {"top" | "bottom" | "left" | "right"} [position]
+     * @param {Position} [position]
      */
     const moveTo = assertIsDragging(async function moveTo(to, position) {
         target = getEl(to);
@@ -864,12 +944,12 @@ export async function drag(from) {
         targetPosition = getTargetPosition(position);
 
         // Move, enter and drop the element on the target
-        await triggerEvent(window, null, "mousemove", targetPosition);
+        await triggerEvent(source, null, "pointermove", targetPosition);
 
-        // "mouseenter" is fired on every parent of `target` that do not contain
+        // "pointerenter" is fired on every parent of `target` that do not contain
         // `from` (typically: different parent lists).
         for (const parent of getDifferentParents(source, target)) {
-            triggerEvent(parent, null, "mouseenter", targetPosition);
+            triggerEvent(parent, null, "pointerenter", targetPosition);
         }
         await nextTick();
 
@@ -886,8 +966,8 @@ export async function drag(from) {
     let target;
     let targetPosition;
 
-    // Mouse down on main target
-    await triggerEvent(source, null, "mousedown", {
+    // Pointer down on main target
+    await triggerEvent(source, null, "pointerdown", {
         clientX: sourceRect.x + sourceRect.width / 2,
         clientY: sourceRect.y + sourceRect.height / 2,
     });

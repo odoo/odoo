@@ -11914,7 +11914,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), nextInput);
             assert.ok(!event.defaultPrevented);
@@ -11992,7 +11992,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), nextInput);
             assert.ok(!event.defaultPrevented);
@@ -12155,7 +12155,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), firstCreateActionLink);
             assert.ok(!event.defaultPrevented);
@@ -12193,7 +12193,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), secondCreateActionLink);
             assert.ok(!event.defaultPrevented);
@@ -12207,7 +12207,7 @@ QUnit.module("Fields", (hooks) => {
                 null,
                 "keydown",
                 { key: "Tab" },
-                { fast: true }
+                { sync: true }
             );
             assert.strictEqual(getNextTabableElement(target), nextInput);
             assert.ok(!event.defaultPrevented);

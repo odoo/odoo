@@ -2,8 +2,8 @@
 
 import { markup } from "@odoo/owl";
 import { _t } from "@web/core/l10n/translation";
-import { _legacyIsVisible } from "@web/core/utils/ui";
 import { utils } from "@web/core/ui/ui_service";
+import { _legacyIsVisible } from "@web/core/utils/ui";
 
 /**
  * @typedef {string | (actions: RunningTourActionHelper) => void | Promise<void>} RunCommand
@@ -124,12 +124,31 @@ export function getConsumeEventType(element, runCommand) {
             (/^drag_and_drop_native/.test(runCommand) && classList.contains("o_draggable")) ||
             element.closest(".o_draggable")
         ) {
-            return "mousedown";
+            return "pointerdown";
         }
     }
 
     // Default: click
     return "click";
+}
+
+/**
+ * ! This function is a copy-paste of its namesake in web/static/tests/helpers/utils.js
+ * TODO: Unify utils for tests and tours since they're doing the exact same thing
+ * @param {Node} n1
+ * @param {Node} n2
+ * @returns {Node[]}
+ */
+function getDifferentParents(n1, n2) {
+    const parents = [n2];
+    while (parents[0].parentNode) {
+        const parent = parents[0].parentNode;
+        if (parent.contains(n1)) {
+            break;
+        }
+        parents.unshift(parent);
+    }
+    return parents;
 }
 
 /**
@@ -347,37 +366,60 @@ export class RunningTourActionHelper {
             $.Event("mouseup", { which: 1, pageX: toCenter.left, pageY: toCenter.top })
         );
     }
-    _drag_and_drop(element, to) {
-        const elementCenter = this._calculateCenter($(element));
-        const toCenter = this._calculateCenter($(to));
-        element.dispatchEvent(new Event("mouseenter"));
-        element.dispatchEvent(
-            new MouseEvent("mousedown", {
+    /**
+     * ! This function is a reduced version of "drag" in web/static/tests/helpers/utils.js
+     * TODO: Unify utils for tests and tours since they're doing the exact same thing
+     * @param {HTMLElement} source
+     * @param {HTMLElement} target
+     */
+    _drag_and_drop(source, target) {
+        const sourceRect = source.getBoundingClientRect();
+        const sourcePosition = {
+            clientX: sourceRect.x + sourceRect.width / 2,
+            clientY: sourceRect.y + sourceRect.height / 2,
+        };
+
+        const targetRect = target.getBoundingClientRect();
+        const targetPosition = {
+            clientX: targetRect.x + targetRect.width / 2,
+            clientY: targetRect.y + targetRect.height / 2,
+        };
+
+        source.dispatchEvent(
+            new PointerEvent("pointerdown", {
                 bubbles: true,
                 cancelable: true,
                 button: 0,
                 which: 1,
-                clientX: elementCenter.left,
-                clientY: elementCenter.top,
+                ...sourcePosition,
             })
         );
-        element.dispatchEvent(
-            new MouseEvent("mousemove", {
+
+        source.dispatchEvent(
+            new PointerEvent("pointermove", {
                 bubbles: true,
                 cancelable: true,
-                clientX: toCenter.left,
-                clientY: toCenter.top,
+                ...targetPosition,
             })
         );
-        to.dispatchEvent(
-            new Event("mouseenter", { clientX: toCenter.left, clientY: toCenter.top })
-        );
-        element.dispatchEvent(
-            new Event("mouseup", {
+
+        for (const parent of getDifferentParents(source, target)) {
+            parent.dispatchEvent(
+                new PointerEvent("pointerenter", {
+                    bubbles: false,
+                    cancelable: false,
+                    ...targetPosition,
+                })
+            );
+        }
+
+        target.dispatchEvent(
+            new PointerEvent("pointerup", {
                 bubbles: true,
                 cancelable: true,
                 button: 0,
                 which: 1,
+                ...targetPosition,
             })
         );
     }

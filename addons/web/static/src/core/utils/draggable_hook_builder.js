@@ -3,19 +3,13 @@
 import { onWillUnmount, reactive, useEffect, useExternalListener } from "@odoo/owl";
 import { clamp } from "@web/core/utils/numbers";
 import { setRecurringAnimationFrame, useThrottleForAnimation } from "@web/core/utils/timing";
+import { browser } from "../browser/browser";
+import { hasTouch, isBrowserFirefox, isIOS } from "../browser/feature_detection";
 
 /**
- * @typedef CleanupManager
- * @property {(cleanupFn: Function) => void} add
- * @property {() => void} cleanup
+ * @typedef {ReturnType<typeof makeCleanupManager>} CleanupManager
  *
- * @typedef DOMHelpers
- * @property {(el: HTMLElement, ...classNames: string[]) => void} addClass
- * @property {(el: EventTarget, event: string, callback: (...args: any[]) => any, options?: boolean | Record<string, boolean>) => void} addListener
- * @property {(el: HTMLElement, style: Record<string, string | number>) => void} addStyle
- * @property {(el: HTMLElement, options?: { adjust?: boolean }) => DOMRect} getRect
- * @property {(el: HTMLElement, ...classNames: string[]) => void} removeClass
- * @property {(el: HTMLElement, properties: string[]) => void} removeStyle
+ * @typedef {ReturnType<typeof makeDOMHelpers>} DOMHelpers
  *
  * @typedef DraggableBuilderParams
  * Hook params
@@ -40,8 +34,9 @@ import { setRecurringAnimationFrame, useThrottleForAnimation } from "@web/core/u
  * @property {boolean} [followCursor=true]
  * @property {string | null} [cursor=null]
  * @property {() => boolean} [enable=() => false]
- * @property {Position} [mouse={ x: 0, y: 0 }]
+ * @property {Position} [pointer={ x: 0, y: 0 }]
  * @property {EdgeScrollingOptions} [edgeScrolling]
+ * @property {number} [delay]
  * @property {number} [tolerance]
  * @property {DraggableHookCurrentContext} current
  *
@@ -54,6 +49,7 @@ import { setRecurringAnimationFrame, useThrottleForAnimation } from "@web/core/u
  * @property {DOMRect | null} [current.scrollParentXRect]
  * @property {HTMLElement | null} [current.scrollParentY]
  * @property {DOMRect | null} [current.scrollParentYRect]
+ * @property {number} [timeout]
  * @property {Position} [initialPosition]
  * @property {Position} [offset={ x: 0, y: 0 }]
  *
@@ -76,6 +72,9 @@ import { setRecurringAnimationFrame, useThrottleForAnimation } from "@web/core/u
  * @typedef {DOMHelpers & Position & { element: HTMLElement }} DraggableHandlerParams
  */
 
+const DRAGGABLE_CLASS = "o_draggable";
+const DRAGGED_CLASS = "o_dragged";
+
 const DEFAULT_ACCEPTED_PARAMS = {
     enable: [Boolean, Function],
     ref: [Object],
@@ -84,19 +83,21 @@ const DEFAULT_ACCEPTED_PARAMS = {
     ignore: [String, Function],
     cursor: [String],
     edgeScrolling: [Object, Function],
+    delay: [Number],
     tolerance: [Number],
 };
 const DEFAULT_DEFAULT_PARAMS = {
+    elements: `.${DRAGGABLE_CLASS}`,
     enable: true,
     edgeScrolling: {
         speed: 10,
         threshold: 30,
     },
+    delay: 0,
     tolerance: 10,
 };
-const DRAGGED_CLASS = "o_dragged";
 const LEFT_CLICK = 0;
-const MANDATORY_PARAMS = ["ref", "elements"];
+const MANDATORY_PARAMS = ["ref"];
 const WHITE_LISTED_KEYS = ["Alt", "Control", "Meta", "Shift"];
 
 /**
@@ -181,13 +182,12 @@ function getScrollParentY(el) {
 }
 
 /**
- * @param {Function} [defaultCleanupFn]
- * @returns {CleanupManager}
+ * @param {() => any} [defaultCleanupFn]
  */
 function makeCleanupManager(defaultCleanupFn) {
     /**
      * Registers the given cleanup function to be called when cleaning up hooks.
-     * @param {Function} [cleanupFn]
+     * @param {() => any} [cleanupFn]
      */
     const add = (cleanupFn) => typeof cleanupFn === "function" && cleanups.push(cleanupFn);
 
@@ -210,7 +210,6 @@ function makeCleanupManager(defaultCleanupFn) {
 
 /**
  * @param {CleanupManager} cleanup
- * @returns {DOMHelpers}
  */
 function makeDOMHelpers(cleanup) {
     /**
@@ -227,20 +226,21 @@ function makeDOMHelpers(cleanup) {
 
     /**
      * Adds an event listener to be cleaned up after the next drag sequence
-     * has stopped. An additionnal `timeout` param allows the handler to be
-     * delayed after a timeout.
+     * has stopped.
      * @param {EventTarget} el
      * @param {string} event
      * @param {(...args: any[]) => any} callback
-     * @param {boolean | Record<string, boolean>} [options]
+     * @param {AddEventListenerOptions & { noAddedStyle?: boolean }} [options]
      */
-    const addListener = (el, event, callback, options) => {
+    const addListener = (el, event, callback, options = {}) => {
         if (!el || !event || !callback) {
             return;
         }
+        const { noAddedStyle } = options;
+        delete options.noAddedStyle;
         el.addEventListener(event, callback, options);
-        if (/pointer|mouse/.test(event)) {
-            // Restore pointer events on elements listening on mouse/pointer events.
+        if (!noAddedStyle && /mouse|pointer|touch/.test(event)) {
+            // Restore pointer events on elements listening on mouse/pointer/touch events.
             addStyle(el, { pointerEvents: "auto" });
         }
         cleanup.add(() => el.removeEventListener(event, callback, options));
@@ -295,10 +295,22 @@ function makeDOMHelpers(cleanup) {
 
     /**
      * @param {HTMLElement} el
-     * @param  {...string} classNames
+     * @param {string} attribute
+     */
+    const removeAttribute = (el, attribute) => {
+        if (!el || !attribute) {
+            return;
+        }
+        cleanup.add(saveAttribute(el, attribute));
+        el.removeAttribute(attribute);
+    };
+
+    /**
+     * @param {HTMLElement} el
+     * @param {...string} classNames
      */
     const removeClass = (el, ...classNames) => {
-        if (!el || !classNames) {
+        if (!el || !classNames.length) {
             return;
         }
         cleanup.add(saveAttribute(el, "class"));
@@ -312,7 +324,7 @@ function makeDOMHelpers(cleanup) {
      * @param {...string} properties
      */
     const removeStyle = (el, ...properties) => {
-        if (!el || !properties?.length) {
+        if (!el || !properties.length) {
             return;
         }
         cleanup.add(saveAttribute(el, "style"));
@@ -321,7 +333,29 @@ function makeDOMHelpers(cleanup) {
         }
     };
 
-    return { addClass, addListener, addStyle, getRect, removeClass, removeStyle };
+    /**
+     * @param {HTMLElement} el
+     * @param {string} attribute
+     * @param {any} value
+     */
+    const setAttribute = (el, attribute, value) => {
+        if (!el || !attribute) {
+            return;
+        }
+        cleanup.add(saveAttribute(el, attribute));
+        el.setAttribute(attribute, String(value));
+    };
+
+    return {
+        addClass,
+        addListener,
+        addStyle,
+        getRect,
+        removeAttribute,
+        removeClass,
+        removeStyle,
+        setAttribute,
+    };
 }
 
 /**
@@ -333,10 +367,23 @@ function pixelValueToNumber(val) {
     return Number(val.endsWith("px") ? val.slice(0, -2) : val);
 }
 
+/**
+ * @param {Event} ev
+ * @param {{ stop?: boolean }} params
+ */
+function safePrevent(ev, { stop } = {}) {
+    if (ev.cancelable) {
+        ev.preventDefault();
+        if (stop) {
+            ev.stopPropagation();
+        }
+    }
+}
+
 function saveAttribute(el, attribute) {
     const restoreAttribute = () => {
         cache.delete(el);
-        if (originalValue) {
+        if (hasAttribute) {
             el.setAttribute(attribute, originalValue);
         } else {
             el.removeAttribute(attribute);
@@ -353,6 +400,7 @@ function saveAttribute(el, attribute) {
     }
 
     cache.add(el);
+    const hasAttribute = el.hasAttribute(attribute);
     const originalValue = el.getAttribute(attribute);
 
     return restoreAttribute;
@@ -437,7 +485,7 @@ export function makeDraggableHook(hookParams) {
                     return;
                 }
                 try {
-                    params[handlerName]({ ...dom, ...ctx.mouse, ...arg });
+                    params[handlerName]({ ...dom, ...ctx.pointer, ...arg });
                 } catch (err) {
                     dragEnd(null, true);
                     throw err;
@@ -446,16 +494,16 @@ export function makeDraggableHook(hookParams) {
 
             /**
              * Returns whether the user has moved from at least the number of pixels
-             * that are tolerated from the initial mouse position.
+             * that are tolerated from the initial pointer position.
              */
             const canStartDrag = () => {
                 const {
-                    mouse,
+                    pointer,
                     current: { initialPosition },
                 } = ctx;
                 return (
                     !ctx.tolerance ||
-                    Math.hypot(mouse.x - initialPosition.x, mouse.y - initialPosition.y) >=
+                    Math.hypot(pointer.x - initialPosition.x, pointer.y - initialPosition.y) >=
                         ctx.tolerance
                 );
             };
@@ -491,10 +539,7 @@ export function makeDraggableHook(hookParams) {
                     updateElementPosition();
                 }
 
-                dom.addStyle(document.body, {
-                    pointerEvents: "none",
-                    userSelect: "none",
-                });
+                dom.addClass(document.body, "pe-none", "user-select-none");
                 if (ctx.cursor) {
                     dom.addStyle(document.body, { cursor: ctx.cursor });
                 }
@@ -585,8 +630,7 @@ export function makeDraggableHook(hookParams) {
                     return;
                 }
                 if (!WHITE_LISTED_KEYS.includes(ev.key)) {
-                    ev.stopImmediatePropagation();
-                    ev.preventDefault();
+                    safePrevent(ev, { stop: true });
 
                     // Cancels drag sequences on every non-whitelisted key down event.
                     dragEnd(null);
@@ -594,13 +638,20 @@ export function makeDraggableHook(hookParams) {
             };
 
             /**
-             * Global (= ref) "mousedown" event handler.
-             * @param {MouseEvent} ev
+             * Global (= ref) "pointercancel" event handler.
              */
-            const onMouseDown = (ev) => {
-                updateMousePosition(ev);
+            const onPointerCancel = () => {
+                dragEnd(null);
+            };
 
-                // A drag sequence can still be in progress if the mouseup occurred
+            /**
+             * Global (= ref) "pointerdown" event handler.
+             * @param {PointerEvent} ev
+             */
+            const onPointerDown = (ev) => {
+                updatePointerPosition(ev);
+
+                // A drag sequence can still be in progress if the pointerup occurred
                 // outside of the window.
                 dragEnd(null);
 
@@ -616,29 +667,72 @@ export function makeDraggableHook(hookParams) {
                 // In FireFox: elements with `overflow: hidden` will prevent mouseenter and mouseleave
                 // events from firing on elements underneath them. This is the case when dragging a card
                 // by the `.o_kanban_record_headings` element. In such cases, we can prevent the default
-                // action on the mousedown event to allow mouse events to fire properly.
+                // action on the pointerdown event to allow pointer events to fire properly.
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=1352061
                 // https://bugzilla.mozilla.org/show_bug.cgi?id=339293
-                ev.preventDefault();
+                safePrevent(ev);
 
-                const { target } = ev;
-                ctx.current.initialPosition = { ...ctx.mouse };
+                const { currentTarget, pointerId, target } = ev;
+                ctx.current.initialPosition = { ...ctx.pointer };
 
-                willStartDrag(target);
+                if (target.hasPointerCapture(pointerId)) {
+                    target.releasePointerCapture(pointerId);
+                }
+
+                if (ctx.delay) {
+                    if (hasTouch()) {
+                        if (isBrowserFirefox()) {
+                            // On Firefox mobile, long-touch events trigger an unpreventable
+                            // context menu to appear. To prevent this, all linkes are removed
+                            // from the dragged elements during the drag sequence.
+                            const links = [...currentTarget.querySelectorAll("[href")];
+                            if (currentTarget.hasAttribute("href")) {
+                                links.unshift(currentTarget);
+                            }
+                            for (const link of links) {
+                                dom.removeAttribute(link, "href");
+                            }
+                        }
+                        if (isIOS()) {
+                            // On Safari mobile, any image can be dragged regardless
+                            // of the 'user-select' property.
+                            for (const image of currentTarget.getElementsByTagName("img")) {
+                                dom.setAttribute(image, "draggable", false);
+                            }
+                        }
+                    }
+
+                    ctx.current.timeout = browser.setTimeout(() => {
+                        ctx.current.initialPosition = { ...ctx.pointer };
+
+                        willStartDrag(target);
+
+                        const { x: px, y: py } = ctx.pointer;
+                        const { x, y, width, height } = dom.getRect(ctx.current.element);
+                        if (px < x || x + width < px || py < y || y + height < py) {
+                            // Pointer left the target
+                            // Note that the timeout is cleared in dragEnd
+                            dragEnd(null);
+                        }
+                    }, ctx.delay);
+                    cleanup.add(() => browser.clearTimeout(ctx.current.timeout));
+                } else {
+                    willStartDrag(target);
+                }
             };
 
             /**
-             * Window "mousemove" event handler.
-             * @param {MouseEvent} ev
+             * Window "pointermove" event handler.
+             * @param {PointerEvent} ev
              */
-            const onMouseMove = (ev) => {
-                updateMousePosition(ev);
+            const onPointerMove = (ev) => {
+                updatePointerPosition(ev);
 
                 if (!ctx.current.element || !ctx.enable()) {
                     return;
                 }
 
-                ev.preventDefault();
+                safePrevent(ev);
 
                 if (!state.dragging) {
                     if (!canStartDrag()) {
@@ -655,17 +749,17 @@ export function makeDraggableHook(hookParams) {
             };
 
             /**
-             * Window "mouseup" event handler.
-             * @param {MouseEvent} ev
+             * Window "pointerup" event handler.
+             * @param {PointerEvent} ev
              */
-            const onMouseUp = (ev) => {
-                updateMousePosition(ev);
+            const onPointerUp = (ev) => {
+                updatePointerPosition(ev);
                 dragEnd(ev.target);
             };
 
             /**
              * Updates the position of the current dragged element according to
-             * the current mouse position.
+             * the current pointer position.
              */
             const updateElementPosition = () => {
                 const { containerRect, element, elementRect, offset } = ctx.current;
@@ -674,18 +768,18 @@ export function makeDraggableHook(hookParams) {
 
                 // Updates the position of the dragged element.
                 dom.addStyle(element, {
-                    left: `${clamp(ctx.mouse.x - offset.x, cx, cx + cw - ew)}px`,
-                    top: `${clamp(ctx.mouse.y - offset.y, cy, cy + ch)}px`,
+                    left: `${clamp(ctx.pointer.x - offset.x, cx, cx + cw - ew)}px`,
+                    top: `${clamp(ctx.pointer.y - offset.y, cy, cy + ch)}px`,
                 });
             };
 
             /**
-             * Updates the current mouse position from a given event.
-             * @param {MouseEvent} ev
+             * Updates the current pointer position from a given event.
+             * @param {PointerEvent} ev
              */
-            const updateMousePosition = (ev) => {
-                ctx.mouse.x = ev.clientX;
-                ctx.mouse.y = ev.clientY;
+            const updatePointerPosition = (ev) => {
+                ctx.pointer.x = ev.clientX;
+                ctx.pointer.y = ev.clientY;
             };
 
             const updateRects = () => {
@@ -741,6 +835,14 @@ export function makeDraggableHook(hookParams) {
                 cleanup.add(() => (ctx.current = {}));
 
                 callBuildHandler("onWillStartDrag");
+
+                if (hasTouch()) {
+                    // Prevents panning/zooming after a long press
+                    dom.addListener(window, "touchmove", safePrevent, {
+                        passive: false,
+                        noAddedStyle: true,
+                    });
+                }
             };
 
             // Initialize helpers
@@ -783,7 +885,7 @@ export function makeDraggableHook(hookParams) {
                 fullSelector: null,
                 followCursor: true,
                 cursor: null,
-                mouse: { x: 0, y: 0 },
+                pointer: { x: 0, y: 0 },
                 edgeScrolling: { enabled: true },
                 get dragging() {
                     return state.dragging;
@@ -824,6 +926,7 @@ export function makeDraggableHook(hookParams) {
                     Object.assign(ctx.edgeScrolling, actualParams.edgeScrolling);
 
                     // Delay & tolerance
+                    ctx.delay = actualParams.delay;
                     ctx.tolerance = actualParams.tolerance;
 
                     callBuildHandler("onComputeParams", { params: actualParams });
@@ -833,21 +936,37 @@ export function makeDraggableHook(hookParams) {
                 },
                 () => computeParams(params)
             );
-            // Effect depending on the `ref.el` to add triggering mouse events listener.
+            // Effect depending on the `ref.el` to add triggering pointer events listener.
             useEffect(
                 (el) => {
                     if (el) {
-                        el.addEventListener("mousedown", onMouseDown);
-                        return () => el.removeEventListener("mousedown", onMouseDown);
+                        const { add, cleanup } = makeCleanupManager();
+                        const { addListener } = makeDOMHelpers({ add });
+                        addListener(el, "pointerdown", onPointerDown, { noAddedStyle: true });
+                        if (hasTouch()) {
+                            addListener(el, "contextmenu", safePrevent);
+                            // Adds a non-passive listener on touchstart: this allows
+                            // the subsequent "touchmove" events to be cancelable
+                            // and thus prevent parasitic "touchcancel" events to
+                            // be fired. Note that we DO NOT want to prevent touchstart
+                            // events since they're responsible of the native swipe
+                            // scrolling.
+                            addListener(el, "touchstart", () => {}, {
+                                passive: false,
+                                noAddedStyle: true,
+                            });
+                        }
+                        return cleanup;
                     }
                 },
                 () => [ctx.ref.el]
             );
             // Other global event listeners.
-            const throttledOnMouseMove = useThrottleForAnimation(onMouseMove);
-            useExternalListener(window, "mousemove", throttledOnMouseMove);
-            useExternalListener(window, "mouseup", onMouseUp);
-            useExternalListener(window, "keydown", onKeyDown, true);
+            const throttledOnPointerMove = useThrottleForAnimation(onPointerMove);
+            useExternalListener(window, "pointermove", throttledOnPointerMove, { passive: false });
+            useExternalListener(window, "pointerup", onPointerUp);
+            useExternalListener(window, "pointercancel", onPointerCancel);
+            useExternalListener(window, "keydown", onKeyDown, { capture: true });
             onWillUnmount(() => dragEnd(null));
 
             return state;

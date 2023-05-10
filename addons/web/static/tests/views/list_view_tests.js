@@ -9693,7 +9693,7 @@ QUnit.module("Views", (hooks) => {
             null,
             "keydown",
             { key: "Tab" },
-            { fast: true }
+            { sync: true }
         );
         assert.strictEqual(getNextTabableElement(target), nextInput);
         assert.ok(!event.defaultPrevented);
@@ -12013,7 +12013,7 @@ QUnit.module("Views", (hooks) => {
         );
         assert.strictEqual(document.activeElement, checkbox);
         assert.ok(!checkbox.checked);
-        let event = triggerEvent(checkbox, null, "keydown", { key: "Space" }, { fast: true });
+        let event = triggerEvent(checkbox, null, "keydown", { key: "Space" }, { sync: true });
         assert.ok(!event.defaultPrevented);
         checkbox.checked = true;
         await nextTick();
@@ -12032,7 +12032,7 @@ QUnit.module("Views", (hooks) => {
         checkbox = target.querySelector(".o_data_row:nth-child(4) .o_list_record_selector input");
         assert.strictEqual(document.activeElement, checkbox);
         assert.ok(!checkbox.checked);
-        event = triggerEvent(checkbox, null, "keydown", { key: "Space" }, { fast: true });
+        event = triggerEvent(checkbox, null, "keydown", { key: "Space" }, { sync: true });
         assert.ok(!event.defaultPrevented);
         checkbox.checked = true;
         await nextTick();
@@ -14918,13 +14918,8 @@ QUnit.module("Views", (hooks) => {
             target.querySelectorAll(".o_group_field_row_add a")[1]
         );
 
-        const event = triggerEvent(
-            document.activeElement,
-            null,
-            "keydown",
-            { key: "Enter" },
-            { fast: true }
-        ); // default Enter on a A tag
+        // default Enter on a A tag
+        const event = await triggerEvent(document.activeElement, null, "keydown", { key: "Enter" });
         assert.ok(!event.defaultPrevented);
         await click(target.querySelectorAll(".o_group_field_row_add a")[1]);
 
@@ -15256,13 +15251,9 @@ QUnit.module("Views", (hooks) => {
                 document.activeElement,
                 target.querySelector(".o_group_field_row_add a")
             );
-            const event = triggerEvent(
-                document.activeElement,
-                null,
-                "keydown",
-                { key: "Enter" },
-                { fast: true }
-            );
+            const event = await triggerEvent(document.activeElement, null, "keydown", {
+                key: "Enter",
+            });
             assert.ok(!event.defaultPrevented);
             // Simulate "enter" keydown
             await click(target, ".o_group_field_row_add a");
@@ -16112,17 +16103,16 @@ QUnit.module("Views", (hooks) => {
                 </tree>`,
         });
 
-        const originalWidths = [...target.querySelectorAll(".o_list_table th")].map(
-            (th) => th.offsetWidth
+        const originalWidths = [...target.querySelectorAll(".o_list_table th")].map((th) =>
+            Math.floor(th.offsetWidth)
         );
         const th = target.querySelector("th:nth-child(2)");
         const resizeHandle = th.querySelector(".o_resize");
-        const expectedWidth =
-            Math.round(originalWidths[1] / 2) + Math.round(resizeHandle.offsetWidth / 2);
+        const expectedWidth = Math.floor(originalWidths[1] / 2 + resizeHandle.offsetWidth / 2);
         await dragAndDrop(resizeHandle, th);
 
-        const finalWidths = [...target.querySelectorAll(".o_list_table th")].map(
-            (th) => th.offsetWidth
+        const finalWidths = [...target.querySelectorAll(".o_list_table th")].map((th) =>
+            Math.floor(th.offsetWidth)
         );
         assert.strictEqual(finalWidths[0], originalWidths[0]);
         assert.ok(Math.abs(finalWidths[1] - expectedWidth) <= 1); // rounding
@@ -16172,6 +16162,10 @@ QUnit.module("Views", (hooks) => {
     });
 
     QUnit.test("resize column with several x2many lists in form group", async function (assert) {
+        /** @param {number} index */
+        const getTableWidth = (index) =>
+            Math.floor(target.querySelectorAll(".o_field_x2many_list table")[index].offsetWidth);
+
         serverData.models.bar.fields.text = { string: "Text field", type: "char" };
         serverData.models.foo.records[0].o2m = [1, 2];
 
@@ -16201,37 +16195,24 @@ QUnit.module("Views", (hooks) => {
 
         const th = target.querySelector("th");
         const resizeHandle = th.querySelector(".o_resize");
-        const firstTableInitialWidth = target
-            .querySelectorAll(".o_field_x2many_list table")[0]
-            .getBoundingClientRect().width;
-        const secondTableInititalWidth = target
-            .querySelectorAll(".o_field_x2many_list table")[1]
-            .getBoundingClientRect().width;
+        const initialWidths = [getTableWidth(0), getTableWidth(1)];
 
         assert.strictEqual(
-            Math.floor(firstTableInitialWidth),
-            Math.floor(secondTableInititalWidth),
+            initialWidths[0],
+            initialWidths[1],
             "both table columns have same width"
         );
 
-        await dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], {
-            position: "right",
-        });
+        await dragAndDrop(resizeHandle, target.getElementsByTagName("th")[1], "right");
 
         assert.notEqual(
-            Math.floor(firstTableInitialWidth),
-            Math.floor(
-                target.querySelectorAll(".o_field_x2many_list table")[0].getBoundingClientRect()
-                    .width
-            ),
+            initialWidths[0],
+            getTableWidth(0),
             "first o2m table is resized and width of table has changed"
         );
         assert.strictEqual(
-            Math.floor(secondTableInititalWidth),
-            Math.floor(
-                target.querySelectorAll(".o_field_x2many_list table")[1].getBoundingClientRect()
-                    .width
-            ),
+            initialWidths[1],
+            getTableWidth(1),
             "second o2m table should not be impacted on first o2m in group resized"
         );
     });

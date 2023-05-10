@@ -97,7 +97,7 @@ export class ListRenderer extends Component {
          * will be triggered on the column title which will reorder the column.
          * Column resize that triggers a reorder is not a good UX and we prevent this
          * using the following state variables: `resizing` and `preventReorder` which
-         * are set during the column's click (onClickSortColumn), mouseup
+         * are set during the column's click (onClickSortColumn), pointerup
          * (onColumnTitleMouseUp) and onStartResize events.
          */
         this.resizing = false;
@@ -1865,7 +1865,7 @@ export class ListRenderer extends Component {
         const initialX = ev.clientX;
         const initialWidth = th.getBoundingClientRect().width;
         const initialTableWidth = table.getBoundingClientRect().width;
-        const resizeStoppingEvents = ["keydown", "mousedown", "mouseup"];
+        const resizeStoppingEvents = ["keydown", "pointerdown", "pointerup"];
 
         // fix the width so that if the resize overflows, it doesn't affect the layout of the parent
         if (!this.rootRef.el.style.width) {
@@ -1892,7 +1892,7 @@ export class ListRenderer extends Component {
             th.style.maxWidth = `${Math.floor(newWidth)}px`;
             table.style.width = `${Math.floor(initialTableWidth + tableDelta)}px`;
         };
-        window.addEventListener("mousemove", resizeHeader);
+        window.addEventListener("pointermove", resizeHeader);
 
         // Mouse or keyboard events : stop resize
         const stopResize = (ev) => {
@@ -1900,7 +1900,7 @@ export class ListRenderer extends Component {
             // freeze column size after resizing
             this.keepColumnWidths = true;
             // Ignores the 'left mouse button down' event as it used to start resizing
-            if (ev.type === "mousedown" && ev.which === 1) {
+            if (ev.type === "pointerdown" && ev.button === 0) {
                 return;
             }
             ev.preventDefault();
@@ -1913,7 +1913,7 @@ export class ListRenderer extends Component {
                 handler.classList.add("bg-black-25", "opacity-50-hover");
             }
 
-            window.removeEventListener("mousemove", resizeHeader);
+            window.removeEventListener("pointermove", resizeHeader);
             for (const eventType of resizeStoppingEvents) {
                 window.removeEventListener(eventType, stopResize);
             }
@@ -1924,8 +1924,8 @@ export class ListRenderer extends Component {
             document.activeElement.blur();
         };
         // We have to listen to several events to properly stop the resizing function. Those are:
-        // - mousedown (e.g. pressing right click)
-        // - mouseup : logical flow of the resizing feature (drag & drop)
+        // - pointerdown (e.g. pressing right click)
+        // - pointerup : logical flow of the resizing feature (drag & drop)
         // - keydown : (e.g. pressing 'Alt' + 'Tab' or 'Windows' key)
         for (const eventType of resizeStoppingEvents) {
             window.addEventListener(eventType, stopResize);
