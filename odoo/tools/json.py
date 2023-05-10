@@ -4,6 +4,13 @@ import re
 
 import markupsafe
 
+from datetime import date, datetime
+
+from odoo import fields
+from odoo.loglevels import ustr
+
+from .func import lazy
+
 JSON_SCRIPTSAFE_MAPPER = {
     '&': r'\u0026',
     '<': r'\u003c',
@@ -53,3 +60,15 @@ class JSON:
         """
         return _ScriptSafe(json_.dumps(*args, **kwargs))
 scriptsafe = JSON()
+
+def json_default(obj):
+    """
+    Properly serializes some odoo tools objects.
+    """
+    if isinstance(obj, datetime):
+        return fields.Datetime.to_string(obj)
+    if isinstance(obj, date):
+        return fields.Date.to_string(obj)
+    if isinstance(obj, lazy):
+        return obj._value
+    return ustr(obj)
