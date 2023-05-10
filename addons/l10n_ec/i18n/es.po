@@ -520,7 +520,6 @@ msgstr "Configuración ecuatoriana"
 #. module: l10n_ec
 #. odoo-python
 #: code:addons/l10n_ec/models/l10n_latam_document_type.py:0
-#, python-format
 msgid "Ecuadorian Document %s must be like 001-001-123456789"
 msgstr "Documento ecuatoriano %s debe ser como 001-001-123456789"
 
@@ -563,6 +562,12 @@ msgstr "Tipo de emisión"
 #: model:l10n_ec.sri.payment,name:l10n_ec.P21
 msgid "Endorsement of Securities"
 msgstr "Endoso de Títulos"
+
+#. module: l10n_ec
+#: model:ir.model.fields,help:l10n_ec.field_res_partner__l10n_ec_vat_validation
+#: model:ir.model.fields,help:l10n_ec.field_res_users__l10n_ec_vat_validation
+msgid "Error message when validating the Ecuadorian VAT"
+msgstr "Mensaje de error al validar la Cédula/RUC Ecuatoriana"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__outflows_tax
@@ -2146,22 +2151,22 @@ msgstr "AGENTE DE RETENCIÓN DEL IMPUESTO AL VALOR AGREGADO"
 #: code:addons/l10n_ec/models/res_partner.py:0
 #, python-format
 msgid ""
-"VAT %s is not valid for an Ecuadorian DNI, it must be like this form "
-"0915068258"
+"The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+"(could be an old VAT number)"
 msgstr ""
-"IVA %s no es válido para un DNI ecuatoriano, debe ser como este formulario "
-"0915068258"
+"La Cédula %s parece no ser válida ya que el décimo dígito no cumple con el algoritmo de validación "
+"(podría ser un número de cédula antiguo)"
 
 #. module: l10n_ec
 #. odoo-python
 #: code:addons/l10n_ec/models/res_partner.py:0
 #, python-format
 msgid ""
-"VAT %s is not valid for an Ecuadorian company, it must be like this form "
-"0993143790001"
+"The VAT %s seems to be invalid as the tenth digit doesn't comply with the validation algorithm "
+"(SRI has stated that this validation is not required anymore for some VAT numbers)"
 msgstr ""
-"IVA %s no es válido para una empresa ecuatoriana, debe ser como este "
-"formulario 0993143790001"
+"El RUC %s parece no ser válido ya que el décimo dígito no cumple con el algoritmo de validación "
+"(SRI ha declarado que esta validación ya no es necesaria para algunos números de RUC)"
 
 #. module: l10n_ec
 #: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__zero_vat
@@ -2179,9 +2184,10 @@ msgid "VAT 14%"
 msgstr "IVA 14%"
 
 #. module: l10n_ec
-#: model:ir.model.fields.selection,name:l10n_ec.selection__account_tax_group__l10n_ec_type__exempt_vat
-msgid "VAT Exempt"
-msgstr "IVA Exento"
+#: model:ir.model.fields,field_description:l10n_ec.field_res_partner__l10n_ec_vat_validation
+#: model:ir.model.fields,field_description:l10n_ec.field_res_users__l10n_ec_vat_validation
+msgid "VAT Error message validation"
+msgstr "Mensaje de error de validación de Cédula/RUC"
 
 #. module: l10n_ec
 #: model:account.report.line,name:l10n_ec.tax_report_line_parent_line_report_48

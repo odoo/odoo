@@ -3,7 +3,7 @@
     'name': 'Ecuadorian Accounting',
     'icon': '/account/static/description/l10n.png',
     'countries': ['ec'],
-    'version': '3.4',
+    'version': '3.5',
     'description': """
 Functional
 ----------
@@ -59,6 +59,7 @@ Master Data:
         'views/l10n_latam_document_type_view.xml',
         'views/l10n_ec_sri_payment.xml',
         'views/account_journal_view.xml',
+        "views/res_partner_view.xml",
     ],
     'demo': [
         'demo/demo_company.xml',
