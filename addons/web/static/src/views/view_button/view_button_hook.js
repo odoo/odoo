@@ -98,7 +98,6 @@ export function useViewButtons(model, ref, options = {}) {
                     await action.doActionButton(doActionParams);
                 } catch (_e) {
                     error = _e;
-                    await doActionParams.onClose();
                 }
                 await afterExecuteAction(clickParams);
                 if (closeDialog) {
@@ -113,8 +112,12 @@ export function useViewButtons(model, ref, options = {}) {
             if (clickParams.confirm) {
                 await new Promise((resolve) => {
                     const dialogProps = {
-                        ...(clickParams['confirm-title'] && { title: clickParams['confirm-title'] }),
-                        ...(clickParams['confirm-label'] && { confirmLabel: clickParams['confirm-label'] }),
+                        ...(clickParams["confirm-title"] && {
+                            title: clickParams["confirm-title"],
+                        }),
+                        ...(clickParams["confirm-label"] && {
+                            confirmLabel: clickParams["confirm-label"],
+                        }),
                         body: clickParams.confirm,
                         confirm: execute,
                         cancel: () => {},

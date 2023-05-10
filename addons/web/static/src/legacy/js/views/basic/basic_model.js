@@ -1193,6 +1193,13 @@ var BasicModel = AbstractModel.extend({
                                 );
                             } else {
                                 Object.assign(record.data, _changes);
+
+                                record._changes = {};
+                                for (const fieldName in record.fields) {
+                                    if (['many2many', 'one2many'].includes(record.fields[fieldName].type) && record.data[fieldName]) {
+                                        self.localData[record.data[fieldName]]._changes = [];
+                                    }
+                                }
                                 resolve(changedFields);
                             }
                         }).guardedCatch(reject);
