@@ -173,6 +173,10 @@ class MassMailing(models.Model):
         domain="[('mailing_model_name', '=', mailing_model_name)]")
     mailing_filter_domain = fields.Char('Favorite filter domain', related='mailing_filter_id.mailing_domain')
     mailing_filter_count = fields.Integer('# Favorite Filters', compute='_compute_mailing_filter_count')
+    bypass_blacklist = fields.Boolean('Include Blacklist',
+                                      help='Include all recipients, even the blacklisted ones. '
+                                           'To use with caution and for non-marketing-related issues '
+                                           '(shortage of service, emergencies, …)')
     # A/B Testing
     ab_testing_completed = fields.Boolean(related='campaign_id.ab_testing_completed')
     ab_testing_description = fields.Html('A/B Testing Description', compute="_compute_ab_testing_description")
@@ -1048,7 +1052,12 @@ class MassMailing(models.Model):
         return url
 
     def action_send_mail(self, res_ids=None):
-        author_id = self.env.user.partner_id.id
+        current_partner_id = self.env.user.partner_id.id
+        if self.env['ir.model.data']._xmlid_to_res_id('base.partner_root') == current_partner_id:
+            # If current user is odoobot, take mailing responsible as author
+            author_id = self.user_id.partner_id.id
+        else:
+            author_id = current_partner_id
 
         for mailing in self:
             context_user = mailing.user_id or mailing.write_uid or self.env.user
@@ -1076,6 +1085,7 @@ class MassMailing(models.Model):
                 'reply_to_force_new': mailing.reply_to_mode == 'new',
                 'subject': mailing.subject,
                 'template_id': False,
+                'bypass_blacklist': mailing.bypass_blacklist,
             }
             if mailing.reply_to_mode == 'new':
                 composer_values['reply_to'] = mailing.reply_to
@@ -1296,10 +1306,6 @@ class MassMailing(models.Model):
         mailing_domain = []
         if hasattr(self.env[self.mailing_model_name], '_mailing_get_default_domain'):
             mailing_domain = self.env[self.mailing_model_name]._mailing_get_default_domain(self)
-
-        if self.mailing_type == 'mail' and 'is_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([[('is_blacklisted', '=', False)], mailing_domain])
-
         return mailing_domain
 
     def _parse_mailing_domain(self):

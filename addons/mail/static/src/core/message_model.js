@@ -19,6 +19,8 @@ export class Message {
     author;
     /** @type {string} */
     body;
+    /** @type {boolean} */
+    bypassed_blacklist;
     /** @type {string} */
     defaultSubject;
     /** @type {number|string} */
@@ -41,6 +43,8 @@ export class Message {
     parentMessage;
     /** @type {MessageReactions[]} */
     reactions = [];
+    /** @type {boolean} */
+    mass_mode;
     /** @type {Notification[]} */
     notifications = [];
     /** @type {import("@mail/core/persona_model").Persona[]} */

@@ -169,6 +169,10 @@ class MailComposer(models.TransientModel):
         'Keep Message Copy',
         compute="_compute_auto_delete_keep_log", readonly=False, store=True,
         help='Keep a copy of the email content if emails are removed (mass mailing only)')
+    bypass_blacklist = fields.Boolean('Include Blacklist',
+                                      help='Include all recipients, even the blacklisted ones. '
+                                           'To use with caution and for non-marketing-related issues '
+                                           '(shortage of service, emergencies, …)')
     force_send = fields.Boolean(
         'Send mailing or notifications directly',
         compute='_compute_force_send', readonly=False, store=True)
@@ -181,7 +185,6 @@ class MailComposer(models.TransientModel):
         help="In comment mode: if set, postpone notifications sending. "
              "In mass mail mode: if sent, send emails after that date. "
              "This date is considered as being in UTC timezone.")
-    use_exclusion_list = fields.Boolean('Check Exclusion List', default=True)
 
     @api.constrains('res_ids')
     def _check_res_ids(self):
@@ -829,6 +832,8 @@ class MailComposer(models.TransientModel):
 
         values = {
             'author_id': self.author_id.id,
+            'bypassed_blacklist': self.bypass_blacklist,
+            'mass_mode': email_mode,
             'mail_activity_type_id': self.mail_activity_type_id.id,
             'mail_server_id': self.mail_server_id.id,
             'message_type': 'email' if email_mode else self.message_type,
@@ -1186,7 +1191,7 @@ class MailComposer(models.TransientModel):
 
     def _get_blacklist_record_ids(self, mail_values_dict, recipients_info=None):
         blacklisted_rec_ids = set()
-        if not self.use_exclusion_list:
+        if self.bypass_blacklist:
             return blacklisted_rec_ids
         if self.composition_mode == 'mass_mail':
             self.env['mail.blacklist'].flush_model(['email', 'active'])

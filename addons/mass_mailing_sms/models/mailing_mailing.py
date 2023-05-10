@@ -236,6 +236,7 @@ class Mailing(models.Model):
             'mailing_id': self.id,
             'mass_keep_log': self.keep_archives,
             'mass_force_send': self.sms_force_send,
+            'mass_bypass_blacklist': self.bypass_blacklist,
             'mass_sms_allow_unsubscribe': self.sms_allow_unsubscribe,
         }
 
@@ -307,13 +308,6 @@ class Mailing(models.Model):
     # --------------------------------------------------
     # TOOLS
     # --------------------------------------------------
-
-    def _get_default_mailing_domain(self):
-        mailing_domain = super(Mailing, self)._get_default_mailing_domain()
-        if self.mailing_type == 'sms' and 'phone_sanitized_blacklisted' in self.env[self.mailing_model_name]._fields:
-            mailing_domain = expression.AND([mailing_domain, [('phone_sanitized_blacklisted', '=', False)]])
-
-        return mailing_domain
 
     def convert_links(self):
         sms_mailings = self.filtered(lambda m: m.mailing_type == 'sms')

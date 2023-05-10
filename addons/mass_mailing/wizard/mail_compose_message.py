@@ -98,4 +98,5 @@ class MailComposeMessage(models.TransientModel):
             'sent_date': now,
             'state': 'done',
             'subject': self.subject,
+            'bypass_blacklist': self.bypass_blacklist,
         }

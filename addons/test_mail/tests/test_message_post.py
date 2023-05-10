@@ -310,6 +310,7 @@ class TestMessageNotify(TestMessagePostCommon):
              'notified_partner_ids': self.partner_1 | self.partner_employee_2 | self.partner_admin,
              'res_id': test_record.id,
              'subtype_id': self.env.ref('mail.mt_note'),
+             'mass_mode': False,
             }
         )
         self.assertNotIn(new_notification, self.test_record.message_ids)

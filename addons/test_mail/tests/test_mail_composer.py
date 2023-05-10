@@ -2411,7 +2411,7 @@ class TestComposerResultsMassStatus(TestMailComposer):
         composer_form = Form(self.env['mail.compose.message'].with_context(
             self._get_web_context(test_records, add_web=True,
                                   default_template_id=self.template.id,
-                                  default_use_exclusion_list=False)
+                                  default_bypass_blacklist=True)
         ))
         composer = composer_form.save()
         with self.mock_mail_gateway(mail_unlink_sent=False), self.mock_mail_app():

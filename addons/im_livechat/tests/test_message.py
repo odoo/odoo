@@ -45,6 +45,7 @@ class TestImLivechatMessage(TransactionCase):
             % (record_rating.rating_image_url, record_rating.rating, record_rating.feedback),
             rating_id=record_rating.id,
         )
+        self.maxDiff = None
         self.assertEqual(message.message_format(), [{
             'attachment_ids': [],
             'author': {
@@ -52,6 +53,7 @@ class TestImLivechatMessage(TransactionCase):
                 'name': "test1",
             },
             'body': message.body,
+            'bypassed_blacklist': False,
             'date': message.date,
             'write_date': message.write_date,
             'create_date': message.create_date,
@@ -62,6 +64,7 @@ class TestImLivechatMessage(TransactionCase):
             'is_discussion': False,
             'is_note': True,
             'linkPreviews': [],
+            'mass_mode': False,
             'message_type': 'notification',
             'messageReactionGroups': [],
             'model': 'discuss.channel',

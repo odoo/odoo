@@ -364,6 +364,8 @@
                                     <group string="Advanced" groups="base.group_no_one">
                                         <field name="mail_server_available" invisible="1"/>
                                         <field name="name" required="False" string="Name" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
+                                        <field name="bypass_blacklist"
+                                               attrs="{'readonly': [('state', 'not in', ('draft', ))]}"/>
                                         <field name="mail_server_id" attrs="{'readonly': [('state', 'in', ('sending', 'done'))],
                                          'invisible': [('mail_server_available', '=', False)]}"/>
                                         <field name="keep_archives" attrs="{'readonly': [('state', 'in', ('sending', 'done'))]}"/>
