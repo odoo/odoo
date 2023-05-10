@@ -5,7 +5,7 @@ import { useService } from "@web/core/utils/hooks";
 
 export function useSuggestion() {
     const comp = useComponent();
-    /** @type {import('@mail/composer/suggestion_service').SuggestionService} */
+    /** @type {import("@mail/composer/suggestion_service").SuggestionService} */
     const suggestionService = useService("mail.suggestion");
     const self = {
         clearRawMentions() {

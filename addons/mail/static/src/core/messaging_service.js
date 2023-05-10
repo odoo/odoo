@@ -6,13 +6,10 @@ import { cleanTerm } from "@mail/utils/format";
 import { removeFromArray, removeFromArrayWithPredicate } from "@mail/utils/arrays";
 import { LinkPreview } from "./link_preview_model";
 import { CannedResponse } from "./canned_response_model";
-import { browser } from "@web/core/browser/browser";
 import { sprintf } from "@web/core/utils/strings";
 import { _t } from "@web/core/l10n/translation";
 import { createLocalId } from "../utils/misc";
 import { registry } from "@web/core/registry";
-
-export const OTHER_LONG_TYPING = 60000;
 
 /**
  * @typedef {Messaging} Messaging
@@ -409,34 +406,6 @@ export class Messaging {
                     }
                     break;
                 }
-                case "discuss.channel.member/typing_status": {
-                    const isTyping = notif.payload.isTyping;
-                    const channel =
-                        this.store.threads[
-                            createLocalId("discuss.channel", notif.payload.channel.id)
-                        ];
-                    if (!channel) {
-                        return;
-                    }
-                    const member = this.channelMemberService.insert(notif.payload);
-                    if (member.persona === this.store.self) {
-                        return;
-                    }
-                    if (isTyping) {
-                        if (!channel.typingMembers.includes(member)) {
-                            channel.typingMemberIds.push(member.id);
-                        }
-                        if (member.typingTimer) {
-                            browser.clearTimeout(member.typingTimer);
-                        }
-                        member.typingTimer = browser.setTimeout(() => {
-                            removeFromArray(channel.typingMemberIds, member.id);
-                        }, OTHER_LONG_TYPING);
-                    } else {
-                        removeFromArray(channel.typingMemberIds, member.id);
-                    }
-                    break;
-                }
                 case "discuss.channel/unpin": {
                     const thread =
                         this.store.threads[createLocalId("discuss.channel", notif.payload.id)];
@@ -500,7 +469,7 @@ export class Messaging {
     async _handleNotificationNewMessage(notif) {
         const { id, message: messageData } = notif.payload;
         let channel = this.store.threads[createLocalId("discuss.channel", id)];
-        if (!channel) {
+        if (!channel || !channel.type) {
             const [channelData] = await this.orm.call("discuss.channel", "channel_info", [id]);
             channel = this.threadService.insert({
                 id: channelData.id,

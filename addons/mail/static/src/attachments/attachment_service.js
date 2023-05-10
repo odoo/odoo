@@ -49,8 +49,8 @@ export class AttachmentService {
             const threadData = Array.isArray(data.originThread)
                 ? data.originThread[0][1]
                 : data.originThread;
-            // FIXME this prevents cyclic dependencies between mail.thread and mail.message
-            this.env.bus.trigger("MESSAGE-SERVICE:INSERT_THREAD", {
+            // this prevents cyclic dependencies between mail.thread and mail.attachment
+            this.env.bus.trigger("mail.thread/insert", {
                 model: threadData.model,
                 id: threadData.id,
             });

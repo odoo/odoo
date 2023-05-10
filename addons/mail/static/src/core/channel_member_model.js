@@ -10,10 +10,11 @@ import { createLocalId } from "../utils/misc";
  * @property {number} threadId
  */
 export class ChannelMember {
+    /** @type {number} */
+    id;
     personaLocalId;
     rtcSessionId;
     threadId;
-    typingTimer;
     /** @type {import("@mail/core/store_service").Store} */
     _store;
 

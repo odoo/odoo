@@ -13,7 +13,7 @@ export class WelcomePage extends Component {
         this.messaging = useMessaging();
         this.store = useStore();
         this.rpc = useService("rpc");
-        /** @type {import('@mail/core/persona_service').PersonaService} */
+        /** @type {import("@mail/core/persona_service").PersonaService} */
         this.personaService = useService("mail.persona");
         this.state = useState({
             userName: "Guest",
