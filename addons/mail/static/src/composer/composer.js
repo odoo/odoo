@@ -12,18 +12,12 @@ import { useEmojiPicker } from "../emoji_picker/emoji_picker";
 import { sprintf } from "@web/core/utils/strings";
 import { escapeAndCompactTextContent } from "../utils/format.js";
 import { FileUploader } from "@web/views/fields/file_handler";
-import { Typing } from "./typing";
 import { NavigableList } from "@mail/composer/navigable_list";
-import { useDebounced } from "@web/core/utils/timing";
 import { useSuggestion } from "@mail/composer/suggestion_hook";
-import { browser } from "@web/core/browser/browser";
 
 import { _t } from "@web/core/l10n/translation";
 import { useService } from "@web/core/utils/hooks";
 import { MessageConfirmDialog } from "../core_ui/message_confirm_dialog";
-
-export const SHORT_TYPING = 5000;
-export const LONG_TYPING = 50000;
 
 /**
  * @typedef {Object} Props
@@ -44,7 +38,6 @@ export class Composer extends Component {
     static components = {
         AttachmentList,
         FileUploader,
-        Typing,
         NavigableList,
     };
     static defaultProps = {
@@ -82,15 +75,10 @@ export class Composer extends Component {
         this.threadService = useService("mail.thread");
         this.ref = useRef("textarea");
         this.fakeTextarea = useRef("fakeTextarea");
-        this.typingNotified = false;
         this.state = useState({
             autofocus: 0,
             active: true,
         });
-        this.stopTyping = useDebounced(() => {
-            this.notifyIsTyping(false);
-            this.typingNotified = false;
-        }, SHORT_TYPING);
         this.selection = useSelection({
             refName: "textarea",
             model: this.props.composer.selection,
@@ -168,17 +156,6 @@ export class Composer extends Component {
         onMounted(() => {
             this.ref.el.scrollTo({ top: 0, behavior: "instant" });
         });
-    }
-
-    onInput(ev) {
-        if (!this.typingNotified && ev.target.value) {
-            this.notifyIsTyping();
-            this.typingNotified = true;
-            browser.setTimeout(() => {
-                this.typingNotified = false;
-            }, LONG_TYPING);
-        }
-        this.stopTyping();
     }
 
     get placeholder() {
@@ -434,7 +411,7 @@ export class Composer extends Component {
     }
 
     async sendMessage() {
-        return this.processMessage(async (value) => {
+        await this.processMessage(async (value) => {
             const thread =
                 this.props.messageToReplyTo?.message?.originThread ?? this.props.composer.thread;
             const postData = {
@@ -454,29 +431,7 @@ export class Composer extends Component {
             }
             this.suggestion?.clearRawMentions();
             this.props.messageToReplyTo?.cancel();
-            if (this.typingNotified) {
-                this.typingNotified = false;
-                this.notifyIsTyping(false);
-            }
         });
-    }
-
-    /**
-     * Notify the server of the current typing status
-     *
-     * @param {boolean} [is_typing=true]
-     */
-    notifyIsTyping(is_typing = true) {
-        if (["chat", "channel", "group"].includes(this.thread?.type)) {
-            this.messaging.rpc(
-                "/discuss/channel/notify_typing",
-                {
-                    channel_id: this.thread.id,
-                    is_typing,
-                },
-                { silent: true }
-            );
-        }
     }
 
     async editMessage() {

@@ -27,9 +27,9 @@ QUnit.test("Public website visitor is typing", async (assert) => {
             uuid: channel.uuid,
         })
     );
-    assert.containsOnce($, ".o-mail-Discuss-header .o-mail-Typing-icon");
+    assert.containsOnce($, ".o-mail-Discuss-header .o-discuss-Typing-icon");
     assert.containsOnce(
         $,
-        ".o-mail-Discuss-header .o-mail-Typing-icon[title='Visitor 20 is typing...']"
+        ".o-mail-Discuss-header .o-discuss-Typing-icon[title='Visitor 20 is typing...']"
     );
 });

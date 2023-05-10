@@ -28,21 +28,21 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @return {import('@mail/attachments/attachment_model').Attachment[]}
+     * @return {import("@mail/attachments/attachment_model").Attachment[]}
      */
     get nonImagesAttachments() {
         return this.props.attachments.filter((attachment) => !attachment.isImage);
     }
 
     /**
-     * @return {import('@mail/attachments/attachment_model').Attachment[]}
+     * @return {import("@mail/attachments/attachment_model").Attachment[]}
      */
     get imagesAttachments() {
         return this.props.attachments.filter((attachment) => attachment.isImage);
     }
 
     /**
-     * @param {import('@mail/attachments/attachment_model').Attachment} attachment
+     * @param {import("@mail/attachments/attachment_model").Attachment} attachment
      */
     getImageUrl(attachment) {
         const { imagesHeight } = this.props;
@@ -62,14 +62,14 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import('@mail/attachments/attachment_model').Attachment} attachment
+     * @param {import("@mail/attachments/attachment_model").Attachment} attachment
      */
     canDownload(attachment) {
         return !attachment.uploading && !this.env.inComposer;
     }
 
     /**
-     * @param {import('@mail/attachments/attachment_model').Attachment} attachment
+     * @param {import("@mail/attachments/attachment_model").Attachment} attachment
      */
     onClickDownload(attachment) {
         const downloadLink = document.createElement("a");
@@ -82,7 +82,7 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import('@mail/attachments/attachment_model').Attachment} attachment
+     * @param {import("@mail/attachments/attachment_model").Attachment} attachment
      */
     onClickUnlink(attachment) {
         if (this.env.inComposer) {
@@ -96,7 +96,7 @@ export class AttachmentList extends Component {
     }
 
     /**
-     * @param {import('@mail/attachments/attachment_model').Attachment} attachment
+     * @param {import("@mail/attachments/attachment_model").Attachment} attachment
      */
     onConfirmUnlink(attachment) {
         this.props.unlinkAttachment(attachment);

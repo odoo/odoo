@@ -6,10 +6,15 @@ import { ChannelMember } from "./channel_member_model";
 
 export class ChannelMemberService {
     constructor(env, { "mail.store": store, "mail.persona": personaService }) {
+        this.env = env;
         this.store = store;
         this.personaService = personaService;
     }
 
+    /**
+     * @param {Object|Array} data
+     * @returns {ChannelMember}
+     */
     insert(data) {
         const memberData = Array.isArray(data) ? data[1] : data;
         let member = this.store.channelMembers[memberData.id];
@@ -34,10 +39,17 @@ export class ChannelMemberService {
             });
         }
         member.threadId = memberData.threadId ?? member.threadId ?? memberData.channel.id;
+        if (!member.thread) {
+            // this prevents cyclic dependencies between mail.thread and discuss.channel.member
+            this.env.bus.trigger("mail.thread/insert", {
+                id: member.threadId,
+                model: "discuss.channel",
+            });
+        }
         switch (command) {
             case "insert":
                 {
-                    if (!member.thread?.channelMembers?.includes(member)) {
+                    if (!member.thread.channelMembers.includes(member)) {
                         member.thread.channelMembers.push(member);
                     }
                 }

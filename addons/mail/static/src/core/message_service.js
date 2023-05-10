@@ -207,8 +207,8 @@ export class MessageService {
     insert(data) {
         let message;
         if (data.res_id) {
-            // FIXME this prevents cyclic dependencies between mail.thread and mail.message
-            this.env.bus.trigger("MESSAGE-SERVICE:INSERT_THREAD", {
+            // this prevents cyclic dependencies between mail.thread and mail.message
+            this.env.bus.trigger("mail.thread/insert", {
                 model: data.model,
                 id: data.res_id,
             });
