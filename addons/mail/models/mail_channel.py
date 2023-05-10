@@ -1001,9 +1001,16 @@ class Channel(models.Model):
             if member.fetched_message_id.id == last_message_id:
                 # last message fetched by user is already up-to-date
                 return
-            member.write({
-                'fetched_message_id': last_message_id,
-            })
+            # Avoid serialization error when multiple tabs are opened.
+            query = """
+                UPDATE mail_channel_member
+                SET fetched_message_id = %s
+                WHERE id IN (
+                    SELECT id FROM mail_channel_member WHERE id = %s
+                    FOR NO KEY UPDATE SKIP LOCKED
+                )
+            """
+            self.env.cr.execute(query, (last_message_id, member.id))
             self.env['bus.bus']._sendone(channel, 'mail.channel.member/fetched', {
                 'channel_id': channel.id,
                 'id': member.id,
