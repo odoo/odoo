@@ -22,15 +22,13 @@ import { effect } from "@point_of_sale/utils";
  * @property {string} access_token
  * @property {"not found"} [state]
  *
- * @typedef {Object} OrderLine
+ * @typedef {Object} ReducedOrderLine
  * @property {number} product_id
  * @property {number} qty
  * @property {string} customer_note
  * @property {string} description
- * @property {PriceInfo} price_extra
  *
- *
- * @typedef {Omit<OrderLine, 'price_extra'>} ReducedOrderLine
+ * @typedef {ReducedOrderLine & {price_extra: PriceInfo}}  OrderLine
  * The type of orderline that we send to the server
  *
  * @typedef {Object} PriceInfo
@@ -105,6 +103,7 @@ export class SelfOrder {
     }
     /**
      * @param {"/" | "/products" | "/products/int" | "/cart" | "/orders"} page
+     *
      */
     setPage(page) {
         this.page = page;
@@ -242,9 +241,7 @@ export class SelfOrder {
             ( the user is adding more items to an existing order )
             we send the order items along with the order id and access_token to the server
             */
-            /**
-             * @type {ReducedOrder}
-             */
+            /**@type {ReducedOrder} */
             const postedOrder = await this.rpc(`/pos-self-order/send-order`, this.getOrderData());
             this.orders = this.combineOrders(this.orders, postedOrder);
             this.notification.add(_t("Order sent successfully"), { type: "success" });
