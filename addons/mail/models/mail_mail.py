@@ -45,7 +45,7 @@ class MailMail(models.Model):
     mail_message_id = fields.Many2one('mail.message', 'Message', required=True, ondelete='cascade', index=True, auto_join=True)
     mail_message_id_int = fields.Integer(compute='_compute_mail_message_id_int', compute_sudo=True)
     body_html = fields.Text('Text Contents', help="Rich-text/HTML message")
-    body_content = fields.Html('Rich-text Contents', sanitize=True, compute='_compute_body_content')
+    body_content = fields.Html('Rich-text Contents', sanitize=True, compute='_compute_body_content', search="_search_body_content")
     references = fields.Text('References', help='Message references, such as identifiers of previous messages', readonly=1)
     headers = fields.Text('Headers', copy=False)
     restricted_attachment_count = fields.Integer('Restricted attachments', compute='_compute_restricted_attachments')
@@ -115,6 +115,9 @@ class MailMail(models.Model):
         for mail_sudo, mail in zip(self.sudo(), self):
             restricted_attaments = mail_sudo.attachment_ids - IrAttachment._filter_attachment_access(mail_sudo.attachment_ids.ids)
             mail_sudo.attachment_ids = restricted_attaments | mail.unrestricted_attachment_ids
+
+    def _search_body_content(self, operator, value):
+        return [('body_html', operator, value)]
 
     @api.model_create_multi
     def create(self, values_list):
