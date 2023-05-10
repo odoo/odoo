@@ -36,10 +36,12 @@ class ProductProduct(models.Model):
 
     def _get_attributes(self, pos_config_sudo: PosConfig) -> List[Dict]:
         self.ensure_one()
+
+        attributes = self._filter_applicable_attributes(
+            self.env["pos.session"].sudo()._get_attributes_by_ptal_id()
+        )
         return self._add_price_info_to_attributes(
-            self._filter_applicable_attributes(
-                self.env["pos.session"].sudo()._get_attributes_by_ptal_id()
-            ),
+            attributes,
             pos_config_sudo,
         )
 
@@ -62,6 +64,7 @@ class ProductProduct(models.Model):
                 )
         return attributes
 
+    # fmt: off
     def _get_price_info(
         self, pos_config: PosConfig, price: Optional[float] = None, qty: int = 1
     ) -> Dict[str, float]:
@@ -73,7 +76,6 @@ class ProductProduct(models.Model):
         # it could happen that a price was passed, but it was 0; in that case we want to use this 0 as the argument,
         # and not the product's list price
         price = price if price is not None else self.lst_price
-        # fmt: off
         price_info = ( pos_config
                         .default_fiscal_position_id
                         .map_tax(self.taxes_id)
@@ -92,15 +94,6 @@ class ProductProduct(models.Model):
             "price_with_tax": price_info["total_included"],
         }
         # fmt: on
-
-        # fpos = self.order_id.fiscal_position_id
-        # tax_ids_after_fiscal_position = fpos.map_tax(self.tax_ids)
-        # price = self.price_unit * (1 - (self.discount or 0.0) / 100.0)
-        # taxes = tax_ids_after_fiscal_position.compute_all(price, self.order_id.currency_id, self.qty, product=self.product_id, partner=self.order_id.partner_id)
-        # return {
-        #     'price_subtotal_incl': taxes['total_included'],
-        #     'price_subtotal': taxes['total_excluded'],
-        # }
 
     def _get_self_order_data(self, pos_config: PosConfig) -> List[Dict]:
         """
