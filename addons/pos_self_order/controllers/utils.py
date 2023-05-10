@@ -2,7 +2,6 @@
 
 
 import werkzeug
-from typing import List
 
 from odoo.http import request
 from odoo.addons.http_routing.models.ir_http import unslug

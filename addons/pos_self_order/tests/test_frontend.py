@@ -47,4 +47,3 @@ class TestFrontend(odoo.tests.HttpCase):
             watch=True,
             step_delay=1000,
         )
-

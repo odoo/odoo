@@ -30,7 +30,7 @@ class RestaurantTable(models.Model):
     @api.model
     def set_access_token_to_demo_data_records(self):
         """
-        We define a new access token field in this file. The problem is that 
+        We define a new access token field in this file. The problem is that
         the demo data records are writen in the database before this field is defined.
         So we need to set the access token for the demo data records manually.
         """

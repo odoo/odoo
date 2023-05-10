@@ -7,21 +7,12 @@ from odoo import http
 from odoo.http import request
 
 from odoo.addons.pos_self_order.controllers.utils import (
-    _raise,
     _get_pos_config_sudo,
     _get_any_pos_config_sudo,
     _get_table_sudo,
 )
 from odoo.addons.pos_self_order.models.pos_config import PosConfig
 from odoo.addons.pos_self_order.models.pos_restaurant import RestaurantTable
-
-
-"""
-TODO:
-test custom links name, url , color,  order, pos id restriction
-test pos restrict categ
-test pos categs orderer
-"""
 
 
 class PosQRMenuController(http.Controller):
