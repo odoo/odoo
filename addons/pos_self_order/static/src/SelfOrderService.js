@@ -20,7 +20,7 @@ import { effect } from "@point_of_sale/utils";
  * @typedef {Object} ReducedOrder
  * @property {string} pos_reference
  * @property {string} access_token
- * @property {string} [state]
+ * @property {"not found"} [state]
  *
  * @typedef {Object} OrderLine
  * @property {number} product_id
@@ -30,7 +30,7 @@ import { effect } from "@point_of_sale/utils";
  * @property {PriceInfo} price_extra
  *
  *
- * @typedef {Omit<OrderLine, 'price_extra'} ReducedOrderLine
+ * @typedef {Omit<OrderLine, 'price_extra'>} ReducedOrderLine
  * The type of orderline that we send to the server
  *
  * @typedef {Object} PriceInfo
@@ -307,7 +307,7 @@ export class SelfOrder {
             old_orders_list.map(async (order) =>
                 order.state === "paid" || order.state === "done"
                     ? order
-                    : await this.getUpdatedOrderFromServer(order)
+                    : this.getUpdatedOrderFromServer(order)
             )
         );
     }
