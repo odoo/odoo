@@ -6,6 +6,11 @@ import { clickOn } from "./tour_utils";
 registry.category("web_tour.tours").add("pos_qr_menu_tour", {
     test: true,
     steps: [
+        {
+            content: "Check that the `Pos is Closed` notification is present",
+            trigger: ".o_notification_content:contains(restaurant is closed)",
+            isCheck: true,
+        },
         ...clickOn("My Orders", { isCheck: true, isNot: true }),
         ...clickOn("View Menu"),
         {

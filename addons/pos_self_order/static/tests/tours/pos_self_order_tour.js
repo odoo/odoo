@@ -6,6 +6,11 @@ import { clickOn, clickOnBackButton, clickOnProductCard, addProductsToCart } fro
 registry.category("web_tour.tours").add("self_order_tour", {
     test: true,
     steps: [
+        {
+            content: "Check that the `Pos is Closed` notification is not present",
+            trigger: "body:not(:has(.o_notification_content:contains(restaurant is closed)))",
+            isCheck: true,
+        },
         ...clickOn("My Orders", { isCheck: true, isNot: true }),
         ...clickOn("View Menu"),
         // We should now be on the product list screen
@@ -41,38 +46,19 @@ registry.category("web_tour.tours").add("self_order_tour", {
 
         ...clickOn("View Menu"),
         // We should now be on the product list screen
-        ...addProductsToCart([3, 4]),
+        ...addProductsToCart([2, 3, 4]),
         ...clickOn("Review"),
         // We should now be on the cart screen
-        ...[1, 2].map((id) => clickOnProductCard(id, { isCheck: true, isNot: true })).flat(),
-        ...[3, 3].map((id) => clickOnProductCard(id, { isCheck: true })).flat(),
+        ...[1].map((id) => clickOnProductCard(id, { isCheck: true, isNot: true })).flat(),
+        ...[2, 3, 4].map((id) => clickOnProductCard(id, { isCheck: true })).flat(),
 
         ...clickOn("Order"),
         // We should now be on the landing page screen
         ...clickOn("My Orders"),
         // We should now be on the orders screen
 
-        ...[1, 2, 3, 4].map((id) => clickOnProductCard(id, { isCheck: true })).flat(),
-
-        // {
-        //     content: "Test that the 1st item is in the 1st order",
-        //     // TODO: add trigger
-        //     isCheck: true,
-        // },
-        // {
-        //     content: "Test that the 2nd item is in the 1st order",
-        //     // TODO: add trigger
-        //     isCheck: true,
-        // },
-        // {
-        //     content: "Test that the 3rd item is in the 2nd order",
-        //     // TODO: add trigger
-        //     isCheck: true,
-        // },
-        // {
-        //     content: "Test that the 4th item is in the 2nd order",
-        //     // TODO: add trigger
-        //     isCheck: true,
-        // },
+        // if the product 2 has qty 2, then the order was merged correctly
+        ...[1, 2].map((id) => clickOnProductCard(id, { isCheck: true, qty: 2 })).flat(),
+        ...[3, 4].map((id) => clickOnProductCard(id, { isCheck: true, qty: 1 })).flat(),
     ],
 });

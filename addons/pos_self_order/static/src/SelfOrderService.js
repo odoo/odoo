@@ -80,13 +80,9 @@ export class SelfOrder {
             ...session.pos_self_order,
             // Global state
             currentProduct: 0,
-            /**
-             * @type {OrderLine[]}
-             */
+            /** @type {OrderLine[]} */
             cart: JSON.parse(localStorage.getItem("cart")) ?? [],
-            /**
-             * @type {ReducedOrder[] | Order[]}
-             */
+            /** @type {ReducedOrder[] | Order[]} */
             orders: JSON.parse(localStorage.getItem("orders")) ?? [],
             currentlyEditedOrderLine: null,
             page: null,
@@ -108,12 +104,12 @@ export class SelfOrder {
             [this]
         );
         this.products.map((product) => console.log(product.attributes));
-        this.notification.add(
-            _t(
-                "The restaurant is closed. You can still view the menu, but you will not be able to order."
-            ),
-            { type: "warning", sticky: true }
-        );
+        if (!this.has_active_session) {
+            this.notification.add(
+                _t("The restaurant is closed. You can browse the menu, but ordering is disabled."),
+                { type: "warning", sticky: true }
+            );
+        }
     }
     /**
      * @param {"/" | "/products" | "/products/int" | "/cart" | "/orders"} page
@@ -258,7 +254,7 @@ export class SelfOrder {
             /**@type {ReducedOrder} */
             const postedOrder = await this.rpc(`/pos-self-order/send-order`, this.getOrderData());
             this.orders = this.combineOrders(this.orders, postedOrder);
-            this.notification.add(_t("Order sent successfully"), { type: "success" });
+            this.notification.add(_t("Your order has been placed!"), { type: "success" });
             // we only want to clear the cart if the order was sent successfully;
             // in the case of an unsuccessful order the user might want to try again
             this.cart = [];
