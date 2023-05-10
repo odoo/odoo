@@ -634,7 +634,7 @@ class AccountEdiCommon(models.AbstractModel):
         # for instance, when filling a down payment as an invoice line. The equation in the docstring is not
         # respected, and the result will not be correct, so we just follow the simple rule below:
         if net_price_unit == 0 and price_subtotal != net_price_unit * (billed_qty / basis_qty) - allow_charge_amount:
-            price_unit = price_subtotal / billed_qty
+            price_unit = price_subtotal / (billed_qty or 1)
 
         return {
             'quantity': quantity,
