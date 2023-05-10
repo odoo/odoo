@@ -739,6 +739,7 @@ QUnit.module("ViewDialogs", (hooks) => {
             activateElement: () => {},
             deactivateElement: () => {},
             size: 4,
+            isSmall: true,
         };
         const fakeUIService = {
             start(env) {

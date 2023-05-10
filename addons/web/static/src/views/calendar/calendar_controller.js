@@ -13,6 +13,7 @@ import { CalendarFilterPanel } from "./filter_panel/calendar_filter_panel";
 import { CalendarMobileFilterPanel } from "./mobile_filter_panel/calendar_mobile_filter_panel";
 import { CalendarQuickCreate } from "./quick_create/calendar_quick_create";
 import { SearchBar } from "@web/search/search_bar/search_bar";
+import { useSearchBarToggler } from "@web/search/search_bar/search_bar_toggler";
 import { ViewScaleSelector } from "@web/views/view_components/view_scale_selector";
 import { CogMenu } from "@web/search/cog_menu/cog_menu";
 
@@ -57,6 +58,8 @@ export class CalendarController extends Component {
         this.state = useState({
             showSideBar: !this.env.isSmall,
         });
+
+        this.searchBarToggler = useSearchBarToggler();
     }
 
     get rendererProps() {

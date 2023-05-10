@@ -11,7 +11,10 @@
                     <t t-call="{{ props.buttonTemplate }}"/>
                 </t>
                 <t t-set-slot="layout-actions">
-                    <SearchBar/>
+                    <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
                 <div class="o_calendar_container">
                     <MobileFilterPanel t-if="env.isSmall" t-props="mobileFilterPanelProps" />

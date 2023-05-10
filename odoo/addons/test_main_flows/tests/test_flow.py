@@ -1,8 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import odoo
 import odoo.tests
-import unittest
 
 class BaseTestUi(odoo.tests.HttpCase):
 
@@ -81,5 +79,4 @@ class TestUiMobile(BaseTestUi):
     touch_enabled = True
 
     def test_01_main_flow_tour_mobile(self):
-        raise unittest.SkipTest("Skip Milk")
-        # self.main_flow_tour()
+        self.main_flow_tour()

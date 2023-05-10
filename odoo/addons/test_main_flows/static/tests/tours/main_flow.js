@@ -419,7 +419,7 @@ stepUtils.autoExpandMoreButtons('.o_form_saved'),
     content: _t('Save'),
     position: 'right',
 }, {
-    trigger: '.o_form_button_save',
+    trigger: '.o_form_status_indicator .o_form_button_save',
     content: _t("Save this product and the modifications you've made to it."),
     position: 'bottom',
 }, {

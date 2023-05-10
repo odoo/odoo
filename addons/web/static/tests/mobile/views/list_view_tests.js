@@ -67,7 +67,7 @@ QUnit.module("Mobile Views", ({ beforeEach }) => {
         await triggerEvents(fixture, ".o_data_row:nth-child(1)", ["touchstart", "touchend"]);
         assert.containsOnce(fixture, ".o_list_selection_box");
         assert.containsNone(fixture, ".o_list_selection_box .o_list_select_domain");
-        assert.containsNone(fixture, ".o_control_panel .fa-search");
+        assert.containsNone(fixture, ".o_control_panel .o_cp_searchview");
         assert.ok(
             fixture.querySelector(".o_list_selection_box").textContent.includes("1 selected")
         );

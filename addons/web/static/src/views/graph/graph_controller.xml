@@ -57,7 +57,10 @@
                     <CogMenu/>
                 </t>
                 <t t-set-slot="layout-actions">
-                    <SearchBar/>
+                    <SearchBar t-if="searchBarToggler.state.showSearchBar"/>
+                </t>
+                <t t-set-slot="control-panel-navigation-additional">
+                    <t t-component="searchBarToggler.component" t-props="searchBarToggler.props"/>
                 </t>
                 <t t-if="model.data">
                     <t t-if="model.useSampleModel and props.info.noContentHelp" t-call="web.ActionHelper">
