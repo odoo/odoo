@@ -43,6 +43,7 @@ export class ProductDiscountField extends FloatField {
 
                     x2mList.applyCommands('order_line', commands);
                 },
+                cancel: () => {},
             });
         }
     }
