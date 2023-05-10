@@ -2787,13 +2787,20 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
         }));
 
         const $content = this.$target.find('.modal-content');
+        
+        // The order of selectors is significant since certain selectors may be 
+        // nested within others, and we want to preserve the nested ones.
+        // For instance, in the case of '.o_cookies_bar_text_policy' nested
+        // inside '.o_cookies_bar_text_secondary', the parent selector should be
+        // copied first, followed by the child selector to ensure that the
+        // content of the nested selector is not overwritten.
         const selectorsToKeep = [
             '.o_cookies_bar_text_button',
             '.o_cookies_bar_text_button_essential',
-            '.o_cookies_bar_text_policy',
             '.o_cookies_bar_text_title',
             '.o_cookies_bar_text_primary',
             '.o_cookies_bar_text_secondary',
+            '.o_cookies_bar_text_policy'
         ];
 
         if (this.$savedSelectors === undefined) {
