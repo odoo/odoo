@@ -21,22 +21,37 @@ QUnit.module("ActionManager", (hooks) => {
     QUnit.module("Error handling");
 
     QUnit.test("error in a client action (at rendering)", async function (assert) {
-        assert.expect(4);
+        assert.expect(11);
         class Boom extends Component {}
         Boom.template = xml`<div><t t-esc="a.b.c"/></div>`;
         actionRegistry.add("Boom", Boom);
-
-        const webClient = await createWebClient({ serverData });
-        assert.strictEqual(target.querySelector(".o_action_manager").innerHTML, "");
+        const mockRPC = (route, args) => {
+            if (args.method === "web_search_read") {
+                assert.step("web_search_read");
+            }
+        };
+        const webClient = await createWebClient({ serverData, mockRPC });
         await doAction(webClient, "1");
-        const contents = target.querySelector(".o_action_manager").innerHTML;
-        assert.ok(contents !== "");
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partners Action 1");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record span")].map((el) => el.textContent),
+            ["yop", "blip", "gnap", "plop", "zoup"]
+        );
+        assert.verifySteps(["web_search_read"]);
+
         try {
             await doAction(webClient, "Boom");
         } catch (e) {
             assert.ok(e.cause instanceof TypeError);
         }
-        assert.strictEqual(target.querySelector(".o_action_manager").innerHTML, contents);
+        assert.containsOnce(target, ".o_kanban_view");
+        assert.strictEqual(target.querySelector(".breadcrumb").textContent, "Partners Action 1");
+        assert.deepEqual(
+            [...target.querySelectorAll(".o_kanban_record span")].map((el) => el.textContent),
+            ["yop", "blip", "gnap", "plop", "zoup"]
+        );
+        assert.verifySteps(["web_search_read"]);
     });
 
     QUnit.test("error in a client action (after the first rendering)", async function (assert) {
